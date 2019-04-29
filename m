@@ -2,100 +2,93 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3CBC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C82C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D281215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E47021670
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbfD2Ugf (ORCPT
+        id S1729424AbfD2UiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:36:35 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31871 "EHLO mga02.intel.com"
+        Mon, 29 Apr 2019 16:38:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36894 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729212AbfD2Ugf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:36:35 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 13:36:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,411,1549958400"; 
-   d="scan'208";a="169068219"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 29 Apr 2019 13:36:31 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 29 Apr 2019 23:36:30 +0300
-Date:   Mon, 29 Apr 2019 23:36:30 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Michael Hirmke <opensuse@mike.franken.de>
-Cc:     bhelgaas@google.com, gregkh@linuxfoundation.org, jslaby@suse.cz,
-        linux-kernel@vger.kernel.org, lukas@wunner.de, tiwai@suse.de,
-        Christian Kellner <ckellner@redhat.com>
-Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and
- thunderbolt)
-Message-ID: <20190429203630.GW2583@lahna.fi.intel.com>
-References: <20190429195459.GU2583@lahna.fi.intel.com>
- <EkoOCx3N6GB@mike.franken.de>
- <20190429201347.GV2583@lahna.fi.intel.com>
+        id S1729252AbfD2UiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 16:38:17 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4B87F308626C;
+        Mon, 29 Apr 2019 20:38:16 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-123.ams2.redhat.com [10.36.116.123])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C76F01001959;
+        Mon, 29 Apr 2019 20:38:08 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jann Horn <jannh@google.com>, Kevin Easton <kevin@guarana.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Enrico Weigelt\, metux IT consult" <lkml@metux.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
+References: <20190414201436.19502-1-christian@brauner.io>
+        <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+        <20190415195911.z7b7miwsj67ha54y@yavin>
+        <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
+        <20190420071406.GA22257@ip-172-31-15-78>
+        <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
+        <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
+        <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com>
+Date:   Mon, 29 Apr 2019 22:38:06 +0200
+In-Reply-To: <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com>
+        (Linus Torvalds's message of "Mon, 29 Apr 2019 13:21:06 -0700")
+Message-ID: <87zho8bl8x.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190429201347.GV2583@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 29 Apr 2019 20:38:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 11:13:47PM +0300, Mika Westerberg wrote:
-> On Mon, Apr 29, 2019 at 10:03:00PM +0200, Michael Hirmke wrote:
-> > Hi all,
-> > 
-> > >On Mon, Apr 29, 2019 at 09:47:15PM +0200, Takashi Iwai wrote:
-> > >> Hi,
-> > 
-> > >Hi,
-> > 
-> > >> we've got a regression report wrt xhci_hcd and thunderbolt on a Dell
-> > >> machine.  5.0.7 is confirmed to work, so it must be a regression
-> > >> introduced by 5.0.8.
-> > >>
-> > >> The details are found in openSUSE Bugzilla entry:
-> > >>   https://bugzilla.opensuse.org/show_bug.cgi?id=1132943
-> > >>
-> > [...]
-> > >>
-> > >> I blindly suspected the commit 3943af9d01e9 and asked for a reverted
-> > >> kernel, but in vain.  And now it was confirmed that the problem is
-> > >> present with the latest 5.1-rc, too.
-> > >>
-> > >> I put some people who might have interest and the reporter (Michael)
-> > >> to Cc.  If anyone has an idea, feel free to join to the Bugzilla, or
-> > >> let me know if any help needed from the distro side.
-> > 
-> > >Since it exists in 5.1-rcX also it would be good if someone
-> > >who see the problem (Michael?) could bisect it.
-> > 
-> > I know the meaning of bisecting, but I'm not really a developer, so I am
-> > probably not able to interpret the results.
-> 
-> No worries. 
-> 
-> I'm adding Christian who reported similar (same?) problem last week.
-> Christian, this seems to exist in v5.1-rc6 at least. Can you try to
-> bisect it on your side?
-> 
-> I also have XPS 9370 but not that particular dock. I will check tomorrow
-> if I can reproduce it as well.
+* Linus Torvalds:
 
-There aren't too many changes between 5.0.7 and 5.0.8 that touch
-PCI/ACPI. This is just a shot in the dark but could you try to revert:
+> On Mon, Apr 29, 2019 at 12:55 PM Jann Horn <jannh@google.com> wrote:
+>>
+>> ... I guess that already has a name, and it's called vfork(). (Well,
+>> except that the Linux vfork() isn't a real vfork().)
+>
+> What?
+>
+> Linux vfork() is very much a real vfork(). What do you mean?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.0.y&id=da6a87fb0ad43ae811519d2e0aa325c7f792b13a
+In Linux-as-the-ABI (as opposed to Linux-as-the-implementation), vfork
+is sometimes implemented as fork, so applications cannot rely on the
+vfork behavior regarding the stopped parent and the shared address
+space.
 
-and see if it makes any difference?
+In fact, it would be nice to have a flag we can check in the posix_spawn
+implementation, so that we can support vfork-as-fork without any run
+time cost to native Linux.
+
+Thanks,
+Florian
