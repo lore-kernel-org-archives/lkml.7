@@ -2,115 +2,97 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4420BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8307FC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13BF320652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AF920652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:45:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TqMoLK/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfD2Nfk (ORCPT
+        id S1728218AbfD2NpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:35:40 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10022 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2Nfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:35:39 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 06:35:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
-   d="scan'208";a="153269775"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Apr 2019 06:35:36 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1hL6RT-0008Mj-IN; Mon, 29 Apr 2019 16:35:35 +0300
-Date:   Mon, 29 Apr 2019 16:35:35 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Esben Haabendal <esben@haabendal.dk>
-Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        He Zhe <zhe.he@windriver.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] serial: 8250: Allow port registration without
- UPF_BOOT_AUTOCONF
-Message-ID: <20190429133535.GG9224@smile.fi.intel.com>
-References: <20190426084038.6377-1-esben@geanix.com>
- <20190426084038.6377-2-esben@geanix.com>
- <20190426143946.GX9224@smile.fi.intel.com>
- <871s1og11u.fsf@haabendal.dk>
- <20190426215103.GD9224@smile.fi.intel.com>
- <87tvejakot.fsf@haabendal.dk>
- <CAHp75VfZMuQ3xagGSt6dXv1tZbSfanUdaw0SgjTqq3YET5YBKQ@mail.gmail.com>
- <87y33tz5oz.fsf@haabendal.dk>
- <CAHp75Vc6cLnLztXtvTcWisjAqDUTEWBBgv20CA34ZQmBEAvpbA@mail.gmail.com>
- <87ef5lxiqm.fsf@haabendal.dk>
+        Mon, 29 Apr 2019 09:45:00 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:36654 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725838AbfD2NpA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:45:00 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C3891C00C7;
+        Mon, 29 Apr 2019 13:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556545497; bh=KFEGEBvc2AV2G1HibQZsWwJ5igLQZzg0nEiClSfL5jw=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=TqMoLK/Dm8I9AH4ZobnzVJoyE5b13wyfv3pwZEMumuCuuFMr1Zdr4+oicb9Q4y4Mi
+         D7yMGG4UstHCJAuuF+3W1QBuYe0x6jlnti/pyVKJN37Xy2/FqlUBZEmW9s2+waqYWU
+         LPl4sCAWoyIpsyJoN39JsCqtrGb2Qiv6uWPF1C+S+QXqJFyfjoLsjOFTLPyRNbpLPC
+         jG4V4r5a37GRJ3ZwjiNTOSoBUMsHijXBrBEQNR0HP9SdsRG0xS5OJUdQxRD4vyCgym
+         aErimVjsElxcowsxtjp6lm9kdSCw8TioGZqmaYIrsXtCQdDXjFL4+B+K7LxBs471xB
+         5LxTTNJYqv+bQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 3FFC0A0066;
+        Mon, 29 Apr 2019 13:44:58 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 29 Apr 2019 06:44:58 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
+ 29 Apr 2019 15:44:57 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+CC:     "Voon, Weifeng" <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Subject: RE: [PATCH 0/7] net: stmmac: enable EHL SGMII
+Thread-Topic: [PATCH 0/7] net: stmmac: enable EHL SGMII
+Thread-Index: AQHU+n6UM7GU7OtY/UWKCWYebuRSxqZLMmUAgAEn3oCAAFapgIAAIdQAgAAMagCABaWxAIAAfmcAgAAqzmA=
+Date:   Mon, 29 Apr 2019 13:44:56 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46E367@DE02WEMBXB.internal.synopsys.com>
+References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
+ <20190424134854.GP28405@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC8146EF128@PGSMSX103.gar.corp.intel.com>
+ <20190425123801.GD8117@lunn.ch>
+ <AF233D1473C1364ABD51D28909A1B1B75C0B205D@pgsmsx114.gar.corp.intel.com>
+ <20190425152332.GD23779@lunn.ch>
+ <AF233D1473C1364ABD51D28909A1B1B75C0B8B35@pgsmsx114.gar.corp.intel.com>
+ <20190429131016.GE10772@lunn.ch>
+In-Reply-To: <20190429131016.GE10772@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ef5lxiqm.fsf@haabendal.dk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 11:29:05AM +0200, Esben Haabendal wrote:
-> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> > On Mon, Apr 29, 2019 at 9:27 AM Esben Haabendal <esben@haabendal.dk> wrote:
-> >> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> >> > On Sat, Apr 27, 2019 at 12:01 PM Esben Haabendal <esben@haabendal.dk> wrote:
-> >> >> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-> >> >> > On Fri, Apr 26, 2019 at 06:54:05PM +0200, Esben Haabendal wrote:
-> >> >> >> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+From: Andrew Lunn <andrew@lunn.ch>
+Date: Mon, Apr 29, 2019 at 14:10:16
 
-> So maybe we should go down that direction intead, extending 8250 driver
-> to replace mapbase with a resource struct instead?
-> 
-> > Btw, we have PCI MFD driver which enumerates 8250 (more precisely
-> > 8250_dw) w/o any issues.
-> 
-> I am aware of that (sm501.c).  It avoids the problem by not requesting
-> the parent memory region (sm->io_res), and requesting all child memory
-> regions directly in root instead of relative to the sm->io_res parent.
-> 
-> But as resoure management is designed for managing a parent/child
-> resource tree, this looks much more like a workaround than the right
-> solution.
-> 
-> >> It would be nice if child drivers requesting memory would pass the
-> >> parent memory resource.  Maybe 8250 driver could be changed to accept a
-> >> struct resource pointer instead of a simple mapbase value, allowing to
-> >> setup the resource with parent pointing to the MFD memory resource.
-> >
-> > I don't see the problem in certain driver, I guess you are trying to
-> > workaround existin Linux device resource model.
-> 
-> No, I actually try to do the right thing in relation to Linux device
-> resource model.  But 8250 is just not behaving very well in that
-> respect, not having been made really aware of the resource model.
+> Yes, if all i can do is SGMII, hard coding SGMII is fine. But you
+> should probably check phy-mode and return an error if it has a value
+> other than SGMII,
 
-The point here is that. MFD driver can re-use existing platform drivers which
-may be used standalone. They and only they are the right owners of the
-requesting *their* resources.
++1 because XPCS supports 1000Base-X but it seems this SoC doesn't.
 
-When parent request resources on the behalf of its child it simple will break
-this flexibility.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Jose Miguel Abreu
