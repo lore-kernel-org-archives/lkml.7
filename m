@@ -3,234 +3,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA2BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2401CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E33821655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC102075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556561726;
-	bh=BEuoxrHOikGMabdnmBmH6gHVmxkjNsT3ePXHftAPabs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z21SjAeQzdffwUh1aLtaQE9FA+eIHgnu42HbLqLcP0kbfa5tv1QtChJwefbKrv2Gh
-	 c0yqWohE2g3c76q9eTp2oAvMZvFK74lkctYwBU4uGDO+p0V1YWxgplFnGW46GevV3I
-	 Yk6bXy/IpzTwvh8oRirVkT97ss7iEJTOlQTmDmKA=
+	s=default; t=1556561731;
+	bh=fx4OITbER8lfWRFsjpKYjxmfmM4FFQhcrIIX7592miI=;
+	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
+	b=DpP+lnlEc7gFDIRMWbEewL9xfgyvxuEbsDMV0NTR29YW8Wr2okuAzR2QU9mKibP0B
+	 nwgke/8eUQLOWysoxv3xeO+59D0lNVeDPft7SBbpVA3MiDORa3ZgGAJvJHTj203v2v
+	 PUrcg97x2NWdUTXIOpZctCxlByg2iRSDTrpINQas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbfD2SPZ (ORCPT
+        id S1729118AbfD2SPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 29 Apr 2019 14:15:25 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36773 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729043AbfD2SPZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:15:25 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u17so8772989lfi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4rSXrLueo+dlB0QOA/Bz3QN8ayKh59Nj+1c63WoQALY=;
-        b=BGgMKVPsvqNoV6+19qjq9PyjRoQcgSyZoqJJgWGli2u+TA0JhPmNLWxVZNZngOTh0Z
-         bBbwt+/UwMXmo/5/P88lqtFZDjNDADrto7uZEZhKt3oRPWdU9IZgxI3xIN6kYaaq5rjS
-         q9ZRgMmDVcReuUcQT1NEHybGemWu/Bnwa48X8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4rSXrLueo+dlB0QOA/Bz3QN8ayKh59Nj+1c63WoQALY=;
-        b=Dx5l/sAkijuIDQ33s7Xq7x8OqI8DnsK34hBSmnP7BurwPKdPMNaraQqivwjZyjASFH
-         MbduerScFGqEVAqkGoXhkZdq5SbsaZG8EA//AdJTnGpO6w/ukSkEJ96STYPftPopXVEB
-         +nfo2R7OJdtz5i4QJT1l6m5czi/PeCfq6MUidu7jPzOS65AA7McrqRYONlygkKM67xXV
-         lPeJI9dLSiArhX7sVwCLKb2pT6FwsnROwyu+GQy9l+NkFOQL2IC/Lm5lfb7aAKe9pseU
-         zR7wb7rs507fjEvo2rTL6cXL0Gux5FD9iy24BDrK7srzLi97hICV9VCEiXA5J041ezSy
-         Ctjg==
-X-Gm-Message-State: APjAAAWoukUdoVWL9IF+v2ryZSg5QK6Cxymi1cZtPrSq2mGEVQFUO34m
-        QwvnCOsxW/erIwQkspLG4l2tTjL0veg=
-X-Google-Smtp-Source: APXvYqzErmMIGLcdXZHXsw/synAKpzehKQH0/BMvb5HgskNVqlBgCewlVtaqG0+XbS7UybY1k8zthQ==
-X-Received: by 2002:a19:a8c8:: with SMTP id r191mr33200338lfe.161.1556561722102;
-        Mon, 29 Apr 2019 11:15:22 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id y29sm538325ljd.85.2019.04.29.11.15.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 11:15:21 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id w23so8610521lfc.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:15:21 -0700 (PDT)
-X-Received: by 2002:a19:48c9:: with SMTP id v192mr32479159lfa.136.1556561234549;
- Mon, 29 Apr 2019 11:07:14 -0700 (PDT)
+Received: from mail.kernel.org ([198.145.29.99]:60518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728976AbfD2SPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 14:15:24 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 342122075E;
+        Mon, 29 Apr 2019 18:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556561724;
+        bh=fx4OITbER8lfWRFsjpKYjxmfmM4FFQhcrIIX7592miI=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=hBkCppFmJ6UYtguHRR5FERpqeoSf2uQwVsMZ3cArS4hrgDCvnGEo7gmPYlowPOfVb
+         quvs3JIhvpsjrbJpAU0yu4UAxQ2Ru3YE66nAaLGgP8bHIudOJNmemEVx5ZF4aSTejH
+         mQwBWkqB2SX2rwUhnemVjspcamqOIs9TjpSxXOTM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
- <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
-In-Reply-To: <20190428133826.3e142cfd@oasis.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 11:06:58 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
-Message-ID: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000007504920587af2741"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1556531652-27740-1-git-send-email-gerald.baeza@st.com>
+References: <1556531652-27740-1-git-send-email-gerald.baeza@st.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/1] clk: stm32mp1: Add ddrperfm clock
+To:     "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Gerald BAEZA <gerald.baeza@st.com>
+Cc:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gabriel FERNANDEZ <gabriel.fernandez@st.com>,
+        Gerald BAEZA <gerald.baeza@st.com>
+Message-ID: <155656172338.168659.837239195206058428@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Mon, 29 Apr 2019 11:15:23 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000007504920587af2741
-Content-Type: text/plain; charset="UTF-8"
+Quoting Gerald BAEZA (2019-04-29 02:54:44)
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>=20
+> Add ddrperfm clock for DDR Performance Monitor driver
+>=20
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+> ---
 
-On Sun, Apr 28, 2019 at 10:38 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> For optimization reasons, if there's only a single user of a function
-> it gets its own trampoline that sets up the call to its callback and
-> calls that callback directly:
+Applied to clk-next
 
-So this is the same issue as the static calls, and it has exactly the
-same solution.
-
-Which I already outlined once, and nobody wrote the code for.
-
-So here's a COMPLETELY UNTESTED patch that only works (_if_ it works) for
-
- (a) 64-bit
-
- (b) SMP
-
-but that's just because I've hardcoded the percpu segment handling.
-
-It does *not* emulate the "call" in the BP handler itself, instead if
-replace the %ip (the same way all the other BP handlers replace the
-%ip) with a code sequence that just does
-
-        push %gs:bp_call_return
-        jmp *%gs:bp_call_target
-
-after having filled in those per-cpu things.
-
-The reason they are percpu is that after the %ip has been changed, the
-target CPU goes its merry way, and doesn't wait for the text--poke
-semaphore serialization. But since we have interrupts disabled on that
-CPU, we know that *another* text poke won't be coming around and
-changing the values.
-
-THIS IS ENTIRELY UNTESTED! I've built it, and it at least seems to
-build, although with warnings
-
-  arch/x86/kernel/alternative.o: warning: objtool:
-emulate_call_irqoff()+0x9: indirect jump found in RETPOLINE build
-  arch/x86/kernel/alternative.o: warning: objtool:
-emulate_call_irqon()+0x8: indirect jump found in RETPOLINE build
-  arch/x86/kernel/alternative.o: warning: objtool:
-emulate_call_irqoff()+0x9: sibling call from callable instruction with
-modified stack frame
-  arch/x86/kernel/alternative.o: warning: objtool:
-emulate_call_irqon()+0x8: sibling call from callable instruction with
-modified stack frame
-
-that will need the appropriate "ignore this case" annotations that I didn't do.
-
-Do I expect it to work? No. I'm sure there's some silly mistake here,
-but the point of the patch is to show it as an example, so that it can
-actually be tested.
-
-With this, it should be possible (under the text rewriting lock) to do
-
-        replace_call(callsite, newcallopcode, callsize, calltargettarget);
-
-to do the static rewriting of the call at "callsite" to have the new
-call target.
-
-And again. Untested. But doesn't need any special code in the entry
-path, and the concept is simple even if there are probably stupid bugs
-just because it's entirely untested.
-
-Oh, and did I mention that I didn't test this?
-
-                Linus
-
---0000000000007504920587af2741
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jv2o33gb0>
-X-Attachment-Id: f_jv2o33gb0
-
-IGFyY2gveDg2L2tlcm5lbC9hbHRlcm5hdGl2ZS5jIHwgNTQgKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDUxIGluc2VydGlvbnMoKyks
-IDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2FsdGVybmF0aXZl
-LmMgYi9hcmNoL3g4Ni9rZXJuZWwvYWx0ZXJuYXRpdmUuYwppbmRleCA5YTc5Yzc4MDhmOWMuLjky
-YjU5OTU4Y2ZmMyAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL2FsdGVybmF0aXZlLmMKKysr
-IGIvYXJjaC94ODYva2VybmVsL2FsdGVybmF0aXZlLmMKQEAgLTczOSw3ICs3MzksMTEgQEAgc3Rh
-dGljIHZvaWQgZG9fc3luY19jb3JlKHZvaWQgKmluZm8pCiB9CiAKIHN0YXRpYyBib29sIGJwX3Bh
-dGNoaW5nX2luX3Byb2dyZXNzOwotc3RhdGljIHZvaWQgKmJwX2ludDNfaGFuZGxlciwgKmJwX2lu
-dDNfYWRkcjsKK3N0YXRpYyB2b2lkICpicF9pbnQzX2hhbmRsZXJfaXJxb2ZmLCAqYnBfaW50M19o
-YW5kbGVyX2lycW9uLCAqYnBfaW50M19hZGRyOworc3RhdGljIHZvaWQgKmJwX2ludDNfY2FsbF90
-YXJnZXQsICpicF9pbnQzX2NhbGxfcmV0dXJuOworCitzdGF0aWMgREVGSU5FX1BFUl9DUFUodm9p
-ZCAqLCBicF9jYWxsX3JldHVybik7CitzdGF0aWMgREVGSU5FX1BFUl9DUFUodm9pZCAqLCBicF9j
-YWxsX3RhcmdldCk7CiAKIGludCBwb2tlX2ludDNfaGFuZGxlcihzdHJ1Y3QgcHRfcmVncyAqcmVn
-cykKIHsKQEAgLTc2Miw3ICs3NjYsMjIgQEAgaW50IHBva2VfaW50M19oYW5kbGVyKHN0cnVjdCBw
-dF9yZWdzICpyZWdzKQogCQlyZXR1cm4gMDsKIAogCS8qIHNldCB1cCB0aGUgc3BlY2lmaWVkIGJy
-ZWFrcG9pbnQgaGFuZGxlciAqLwotCXJlZ3MtPmlwID0gKHVuc2lnbmVkIGxvbmcpIGJwX2ludDNf
-aGFuZGxlcjsKKwlyZWdzLT5pcCA9ICh1bnNpZ25lZCBsb25nKSBicF9pbnQzX2hhbmRsZXJfaXJx
-b247CisKKwkvKgorCSAqIElmIHdlIHdhbnQgYW4gaXJxb2ZmIGlycTMgaGFuZGxlciwgYW5kIGlu
-dGVycnVwdHMgd2VyZQorCSAqIG9uLCB3ZSB0dXJuIHRoZW0gb2ZmIGFuZCB1c2UgdGhlIHNwZWNp
-YWwgaXJxb2ZmIGhhbmRsZXIKKwkgKiBpbnN0ZWFkLgorCSAqLworCWlmIChicF9pbnQzX2hhbmRs
-ZXJfaXJxb2ZmKSB7CisJCXRoaXNfY3B1X3dyaXRlKGJwX2NhbGxfdGFyZ2V0LCBicF9pbnQzX2Nh
-bGxfdGFyZ2V0KTsKKwkJdGhpc19jcHVfd3JpdGUoYnBfY2FsbF9yZXR1cm4sIGJwX2ludDNfY2Fs
-bF9yZXR1cm4pOworCisJCWlmIChyZWdzLT5mbGFncyAmIFg4Nl9FRkxBR1NfSUYpIHsKKwkJCXJl
-Z3MtPmZsYWdzICY9IH5YODZfRUZMQUdTX0lGOworCQkJcmVncy0+aXAgPSAodW5zaWduZWQgbG9u
-ZykgYnBfaW50M19oYW5kbGVyX2lycW9mZjsKKwkJfQorCX0KIAogCXJldHVybiAxOwogfQpAQCAt
-NzkyLDcgKzgxMSw3IEBAIHZvaWQgKnRleHRfcG9rZV9icCh2b2lkICphZGRyLCBjb25zdCB2b2lk
-ICpvcGNvZGUsIHNpemVfdCBsZW4sIHZvaWQgKmhhbmRsZXIpCiB7CiAJdW5zaWduZWQgY2hhciBp
-bnQzID0gMHhjYzsKIAotCWJwX2ludDNfaGFuZGxlciA9IGhhbmRsZXI7CisJYnBfaW50M19oYW5k
-bGVyX2lycW9uID0gaGFuZGxlcjsKIAlicF9pbnQzX2FkZHIgPSAodTggKilhZGRyICsgc2l6ZW9m
-KGludDMpOwogCWJwX3BhdGNoaW5nX2luX3Byb2dyZXNzID0gdHJ1ZTsKIApAQCAtODMwLDcgKzg0
-OSwzNiBAQCB2b2lkICp0ZXh0X3Bva2VfYnAodm9pZCAqYWRkciwgY29uc3Qgdm9pZCAqb3Bjb2Rl
-LCBzaXplX3QgbGVuLCB2b2lkICpoYW5kbGVyKQogCSAqIHRoZSB3cml0aW5nIG9mIHRoZSBuZXcg
-aW5zdHJ1Y3Rpb24uCiAJICovCiAJYnBfcGF0Y2hpbmdfaW5fcHJvZ3Jlc3MgPSBmYWxzZTsKKwli
-cF9pbnQzX2hhbmRsZXJfaXJxb2ZmID0gTlVMTDsKIAogCXJldHVybiBhZGRyOwogfQogCitleHRl
-cm4gYXNtbGlua2FnZSB2b2lkIGVtdWxhdGVfY2FsbF9pcnFvbih2b2lkKTsKK2V4dGVybiBhc21s
-aW5rYWdlIHZvaWQgZW11bGF0ZV9jYWxsX2lycW9mZih2b2lkKTsKKworYXNtKAorCSIudGV4dFxu
-IgorCSIuZ2xvYmFsIGVtdWxhdGVfY2FsbF9pcnFvZmZcbiIKKwkiLnR5cGUgZW11bGF0ZV9jYWxs
-X2lycW9mZiwgQGZ1bmN0aW9uXG4iCisJImVtdWxhdGVfY2FsbF9pcnFvZmY6XG5cdCIKKwkJInB1
-c2ggJWdzOmJwX2NhbGxfcmV0dXJuXG5cdCIKKwkJInN0aVxuXHQiCisJCSJqbXAgKiVnczpicF9j
-YWxsX3RhcmdldFxuIgorCSIuc2l6ZSBlbXVsYXRlX2NhbGxfaXJxb2ZmLCAuLWVtdWxhdGVfY2Fs
-bF9pcnFvZmZcbiIKKworCSIuZ2xvYmFsIGVtdWxhdGVfY2FsbF9pcnFvblxuIgorCSIudHlwZSBl
-bXVsYXRlX2NhbGxfaXJxb24sIEBmdW5jdGlvblxuIgorCSJlbXVsYXRlX2NhbGxfaXJxb246XG5c
-dCIKKwkJInB1c2ggJWdzOmJwX2NhbGxfcmV0dXJuXG5cdCIKKwkJImptcCAqJWdzOmJwX2NhbGxf
-dGFyZ2V0XG4iCisJIi5zaXplIGVtdWxhdGVfY2FsbF9pcnFvbiwgLi1lbXVsYXRlX2NhbGxfaXJx
-b25cbiIKKwkiLnByZXZpb3VzXG4iKTsKKwordm9pZCByZXBsYWNlX2NhbGwodm9pZCAqYWRkciwg
-Y29uc3Qgdm9pZCAqb3Bjb2RlLCBzaXplX3QgbGVuLCB2b2lkICp0YXJnZXQpCit7CisJYnBfaW50
-M19jYWxsX3RhcmdldCA9IHRhcmdldDsKKwlicF9pbnQzX2NhbGxfcmV0dXJuID0gYWRkciArIGxl
-bjsKKwlicF9pbnQzX2hhbmRsZXJfaXJxb2ZmID0gZW11bGF0ZV9jYWxsX2lycW9mZjsKKwl0ZXh0
-X3Bva2VfYnAoYWRkciwgb3Bjb2RlLCBsZW4sIGVtdWxhdGVfY2FsbF9pcnFvbik7Cit9Cg==
---0000000000007504920587af2741--
