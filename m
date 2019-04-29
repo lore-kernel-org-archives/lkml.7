@@ -2,107 +2,71 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E268C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7B1C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0323A21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEWCWWgq"
+	by mail.kernel.org (Postfix) with ESMTP id 45E3A2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfD2UyO (ORCPT
+        id S1729369AbfD2VE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:54:14 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45939 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbfD2UyO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:54:14 -0400
-Received: by mail-qk1-f193.google.com with SMTP id d5so6826558qko.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VmD2zJl9VRTqeF0c7qjkyD1kuxGLq7RXf7ct1/Sfp0g=;
-        b=nEWCWWgqr3dLu4hMH3GH3xyuV9uXoHR9dL/NljrkX5dApsytLKGZz4iAQ2+aia6w3r
-         5Hoz6d/wYp563bSj7Uftp5ampIVFHNijv7eEQqmR8MUBBqTrFIV9tQ6LPQcjB42lEbzF
-         VhAsyzPzdd1cw5bQY+SRP1MtuzvXExFAsfLW3mLAncIrF9GB5+Vxs3X/h+KKue716FaL
-         rIv4LbeEPAejkEMMFC31GHrx+HlUfxQRfHDHcSqpeT3eo8wTNg1NpB81EAgU9IWyUibs
-         hnfUyuAXCZx5TiO6ezYVi/ThrdTSYmJn3WlU83sP0i5r67Kx5jk/kWZkLX/kEOg1NtZj
-         ZFig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VmD2zJl9VRTqeF0c7qjkyD1kuxGLq7RXf7ct1/Sfp0g=;
-        b=N881L4B36Y5F0Yy/oHvenJDQ2yuTHNwNaiL2Q7TwH9KnGXGbZmmBVzdyPnlw02JdR3
-         b1fQxv8FQkggoSItIs2UbhkI800Z7U4L/NzIa/k8Ec2Zo5gqgIaNV5CZ15yBQeD3GQ3U
-         UyGgUKOd9om3Vd46YB/yQ6/kt8ODDZFLFPrXPUOsHFBtYBUd9Ow7yipcey8JSJEBXzfU
-         DDr4tnA8rI0620BLFV5a131gsktopJmSwH1ZOmaKLWFHv8H2BKEFOS2k7s7IzWhC7XWC
-         +CVCYzZTWnUJ/Z0ImLv/KuPyVOEJg0Sxoj2bIHXleh+sqqHjQQAER9inm51116Mrvp9G
-         Y8gA==
-X-Gm-Message-State: APjAAAXKiN4IxemY32YyHZA0SMbYJn95gwc8P3+yEtVHbYVvsTopWddV
-        qmClRd/wmXUKQmswVwmDi+bx/3BlWdM2f8zcraNnhqSYyfk=
-X-Google-Smtp-Source: APXvYqwB9iCqmHYftTmnPK7+1Yso8Nu4yexXC1GgQKS+8CohPGVhTWiUZcRBB7yu+kToAD+J7g3yo5gkqQlm2R0VTd8=
-X-Received: by 2002:a05:620a:1018:: with SMTP id z24mr34385210qkj.3.1556571253224;
- Mon, 29 Apr 2019 13:54:13 -0700 (PDT)
+        Mon, 29 Apr 2019 17:04:28 -0400
+Received: from dcvr.yhbt.net ([64.71.152.64]:33350 "EHLO dcvr.yhbt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728071AbfD2VE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 17:04:28 -0400
+Received: from localhost (dcvr.yhbt.net [127.0.0.1])
+        by dcvr.yhbt.net (Postfix) with ESMTP id 407B71F453;
+        Mon, 29 Apr 2019 21:04:27 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 21:04:27 +0000
+From:   Eric Wong <e@80x24.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
+        Omar Kilani <omar.kilani@gmail.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: Strange issues with epoll since 5.0
+Message-ID: <20190429210427.dmfemfft2t2gdwko@dcvr>
+References: <CA+8F9hicnF=kvjXPZFQy=Pa2HJUS3JS+G9VswFHNQQynPMHGVQ@mail.gmail.com>
+ <20190424193903.swlfmfuo6cqnpkwa@dcvr>
+ <20190427093319.sgicqik2oqkez3wk@dcvr>
+ <CABeXuvrY9QdvF1gTfiMt-eVp7VtobwG9xzjQFkErq+3wpW_P3Q@mail.gmail.com>
+ <20190428004858.el3yk6hljloeoxza@dcvr>
+ <20190429204754.hkz7z736tdk4ucum@linux-r8p5>
 MIME-Version: 1.0
-References: <20190424094850.118323-1-yuchao0@huawei.com>
-In-Reply-To: <20190424094850.118323-1-yuchao0@huawei.com>
-From:   Ju Hyung Park <qkrwngud825@gmail.com>
-Date:   Tue, 30 Apr 2019 05:54:02 +0900
-Message-ID: <CAD14+f2nDurQ2mTp-temk92zhWQkKNaBA8CwpWJhOZEmzLw=VA@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
- in image
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190429204754.hkz7z736tdk4ucum@linux-r8p5>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao and Jaegeuk,
+Davidlohr Bueso <dave@stgolabs.net> wrote:
+> On Sun, 28 Apr 2019, Eric Wong wrote:
+> 
+> > Just running one test won't trigger since it needs a busy
+> > machine; but:
+> > 
+> > 	make test/mgmt_auto_adjust.log
+> > 	(and "rm make test/mgmt_auto_adjust.log" if you want to rerun)
+> 
+> fyi no luck reproducing on both either a large (280) or small (4 cpu)
+> machine, I'm running it along with a kernel build overcommiting cpus x2.
 
-On Wed, Apr 24, 2019 at 6:49 PM Chao Yu <yuchao0@huawei.com> wrote:
->
-> This patch fixes to do sanity with enabled features in image, if
-> there are features kernel can not recognize, just fail the mount.
->
+Thanks for taking a look.
 
-Surprised to see that this wasn't implemented yet.
-I was actually about to suggest this method to prevent mounting of the
-new extended bitmap layout images altogether for older kernels(by
-renaming the new, fixed layout to v2 or something), but looks like
-that isn't an option. :(
+> Is there any workload in particular you are using to stress the box?
 
-Also, something similar should be also done with fsck, if not already.
-The results from using older fsck with images with newer features
-would be disastrous.
+Just the "make -j$N check" I mentioned up-thread which spawns a
+lot of tests in parallel.  For the small 4 CPU machine,
+-j32 or -j16 ought to be reproducing the problem.
 
-I'm still very busy currently with my other projects.
-Sorry for the delays in testing new patchsets for layout fixes.
-
-And I apologize in advance in case I miss the Linux 5.2 merge window
-deadline, but I'd like to see it being fixed properly before shipping
-those patches to production.
-
-> +       /* check whether kernel supports all features */
-> +       if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
-> +               f2fs_msg(sb, KERN_INFO,
-> +                       "Unsupported feature:%u: supported:%u",
-> +                       le32_to_cpu(raw_super->feature),
-> +                       F2FS_ALL_FEATURES);
-> +               return 1;
-> +       }
-
-This should probably be a KERN_ERR instead of KERN_INFO.
-
-Thanks.
+I'll try to set aside some time this week to get familiar with
+kernel internals w.r.t. signal handling.
