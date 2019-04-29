@@ -2,100 +2,93 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D57FC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF42C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A68B2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556556521;
-	bh=G62UUeDTnAjbpDIAkXXjWZ1MD7yMfvPO9bm8UWwg+c0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o968yklHSBFN8SCePdlusjEzVxIEypBaj8MF8kPiVKNl1n8xNHjI+FSSI2nBY3oVg
-	 u6cUJm7TzFvjmUR6FWcKzqHwuEnu42eGQrN0Wr+VrAGMl77Jdt/1aznRtyYs1LZtRn
-	 L90KTwadvWw/lLZeXXQTtsOavOTaYFowbQfl5P9o=
+	by mail.kernel.org (Postfix) with ESMTP id B237321743
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfD2Qsk (ORCPT
+        id S1728816AbfD2Qtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:48:40 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35767 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728621AbfD2Qsj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:48:39 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z26so10041424ljj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 09:48:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tYehPJ6wJvH/t0sND63lM9JFmbpN65exB3Q2CmnY7pQ=;
-        b=boxZnEB7KXPFCHisvjFAhGhtDzlLRSPvSiTJOtc3E2UiH96le78g5Eu6tEp8R4Osak
-         n/blcnqZgtrT+GiEjey4L/qDFcJ8IB9NiYzOJeU9JfWishn6yS+CkMjZ5pQsM1el58FG
-         FVj/h+G4gJ2fDEqwqpUf1xoYFHH0+VbQCiodA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tYehPJ6wJvH/t0sND63lM9JFmbpN65exB3Q2CmnY7pQ=;
-        b=W6M3Ry4dAki15FE+k2uMkfVW3sAUXRmTlfqN+CfeBZ3ixDPxwvhmst7wHOT50owlJJ
-         0AfLpQl7uJJnbU95LC/ejOT2xiIq6+47IhI1EylkZ9WtZu5vXXYbcj0zYFvIWSPYbmeC
-         uKKG+bTUIhyePZo/aiHMbArsliGcgPFboA8Vyn+gNU3LsL70XiT+TvOX5wfFOCIMFNBi
-         Rvm0DvO2c2wbAlRYza0QKeDOB5Zm6sS5OSADioOU2Agc+E3STVWQ4ER3IJrTVCpMcVbL
-         P8cAbuEdvyilqFUEV0IcgGZUb5CwXBb1ylLwhuBkgCIQyZdNOcMw4PCNi1vNpeYxCZCz
-         hAGg==
-X-Gm-Message-State: APjAAAVP8quJNpaK8qx2L1ujjmK8EKYuWK4rvWDv94/gVjLmSdHUeN1x
-        jVwCfxdBB4hKpKUnCaY3r5VwgbYvwy4=
-X-Google-Smtp-Source: APXvYqyk/4DD4QjBS5cOOxbi4JamP4KIFDDgw0GxSRy0sCggF6twXOCRpwlg/v58oVYsXnvEsMQ3PQ==
-X-Received: by 2002:a2e:3e18:: with SMTP id l24mr32547701lja.68.1556556516811;
-        Mon, 29 Apr 2019 09:48:36 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id s3sm7439724lfc.25.2019.04.29.09.48.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 09:48:35 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id k8so10000892lja.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 09:48:35 -0700 (PDT)
-X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr34012924lje.22.1556556515412;
- Mon, 29 Apr 2019 09:48:35 -0700 (PDT)
+        Mon, 29 Apr 2019 12:49:32 -0400
+Received: from foss.arm.com ([217.140.101.70]:33752 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728621AbfD2Qtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:49:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F89C80D;
+        Mon, 29 Apr 2019 09:49:29 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2938F3F5AF;
+        Mon, 29 Apr 2019 09:49:28 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 17:49:23 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: fix pte_unmap() -Wunused-but-set-variable
+Message-ID: <20190429164923.GA26912@fuggles.cambridge.arm.com>
+References: <20190427012842.93737-1-cai@lca.pw>
 MIME-Version: 1.0
-References: <48cbd548d153d1d2a1cf6c4f2127a6cef5d55deb.camel@redhat.com>
-In-Reply-To: <48cbd548d153d1d2a1cf6c4f2127a6cef5d55deb.camel@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 09:48:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiYHXxkHrbDACc1-5bqJPuiMnmwbStSYBYo82zsO=gstQ@mail.gmail.com>
-Message-ID: <CAHk-=wiYHXxkHrbDACc1-5bqJPuiMnmwbStSYBYo82zsO=gstQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull rdma.git
-To:     Doug Ledford <dledford@redhat.com>
-Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Gunthorpe, Jason" <jgg@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190427012842.93737-1-cai@lca.pw>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 9:29 AM Doug Ledford <dledford@redhat.com> wrote:
->
->
->  drivers/infiniband/core/uverbs_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Apr 26, 2019 at 09:28:42PM -0400, Qian Cai wrote:
+> Many compilation warnings due to pte_unmap() compiles away. Fixed it by
+> making it an static inline function.
+> 
+> mm/gup.c: In function 'gup_pte_range':
+> mm/gup.c:1727:16: warning: variable 'ptem' set but not used
+> [-Wunused-but-set-variable]
+> mm/gup.c: At top level:
+> mm/memory.c: In function 'copy_pte_range':
+> mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
+> [-Wunused-but-set-variable]
+> mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
+> [-Wunused-but-set-variable]
+> mm/swap_state.c: In function 'swap_ra_info':
+> mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
+> [-Wunused-but-set-variable]
+> mm/madvise.c: In function 'madvise_free_pte_range':
+> mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
+> [-Wunused-but-set-variable]
+> 
+> Also, remove pte_unmap_nested() as nobody uses it anymore since the
+> commit ece0e2b6406a ("mm: remove pte_*map_nested()").
 
-This trivial one-liner is actually incorrect.
+Can you post that as a separate patch which also removes
+pte_offset_map_nested(), please?
 
-It should use 'vmf->address', because the point of the ZERO_PAGE
-argument is to pick the page with the right virtual address alias for
-broken architectures that need those kinds.
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/arm64/include/asm/pgtable.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index de70c1eabf33..7543e345e078 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -478,6 +478,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+>  	return __pmd_to_phys(pmd);
+>  }
+>  
+> +static inline void pte_unmap(pte_t *pte) { }
 
-I'm actually surprised s390 wants it, usually it's just MIPS that has
-the horribly broken virtual address translation stuff. But it looks
-like for s390 it's at least only a performance issue (ie it causes
-some aliases in L1 that cause cacheline ping-pong rather than anything
-else).
+Hmm, is this guaranteed to stop the compiler from warning? Assuming the
+pte_unmap() call is inlined, I'd expect it to keep complaining. What
+compiler are you using?
 
-                 Linus
+Also, there are a bunch of other architectures that I would expect to have
+this same issue because they defined pte_unmap() exactly the same way.
+
+Will
