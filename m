@@ -2,255 +2,144 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86A4C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655C7C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BD220652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WXH8zV6s"
+	by mail.kernel.org (Postfix) with ESMTP id 3DCDE20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfD2Nzp (ORCPT
+        id S1728279AbfD2Nz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:55:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40790 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2Nzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:55:45 -0400
-Received: from zn.tnic (p200300EC2F073600329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:3600:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 38CAF1EC014A;
-        Mon, 29 Apr 2019 15:55:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556546143;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pkKmQx1hXyy8yc+54Irk8GBhU0FUwLSYEGMtUyIifSQ=;
-        b=WXH8zV6ssFWvah6GS6OaGyVtonfgmw3FoGJwMsdAf4qccou6hk/IPHMk/bjUAn0ARuYxHl
-        EOKAAnJYV0oISYMsL6g7ybg6XGU6XPdz6ZFFT8yPUHD/7lVnl5tonjLhRKbyO89iLsUtFE
-        VIm6zXvR7AKAshtaT2unlq8odKNypn8=
-Date:   Mon, 29 Apr 2019 15:55:36 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com, dyoung@redhat.com,
-        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, tglx@linutronix.de
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190429135536.GC2324@zn.tnic>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv>
+        Mon, 29 Apr 2019 09:55:59 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:37433 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfD2Nz6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:55:58 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MwPjf-1gT9H42mKz-00sLKc; Mon, 29 Apr 2019 15:54:35 +0200
+Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
+ card
+To:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+References: <20190409144250.7237-1-TheSven73@gmail.com>
+ <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
+ <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
+ <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+ <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
+ <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
+ <CAGngYiVJwRh_ESLfSYWak4RU60T2D1HW0-3Hg1CZbRjWhaSN5Q@mail.gmail.com>
+ <7ceaeb70-f937-bd84-95e5-d7a6baeb5d87@metux.net>
+ <CAGngYiUPZ+g4eXJKvgA9GSJXgOFAAf6Q3qqAheiqNSnJ+Dbx+w@mail.gmail.com>
+ <e07f7575-2617-a11a-fd78-d068b10a8171@metux.net>
+ <06024a8a-ad00-8062-215b-01b2f95a6e24@hartkopp.net>
+ <c1b783b0-9773-17f5-d043-35e28f7797f0@suse.de>
+ <d54b294e-d641-bb14-84ed-39d9a9079dc7@hartkopp.net>
+ <CAGngYiX_xxDWEAbxQ=XeZPYAA+zgQ32U0Ov=CG86yE=6=qTfpg@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <2bed794d-4960-df09-df16-e063cc41eaae@metux.net>
+Date:   Mon, 29 Apr 2019 15:54:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <CAGngYiX_xxDWEAbxQ=XeZPYAA+zgQ32U0Ov=CG86yE=6=qTfpg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190429002318.GA25400@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:XKZ+U9p2e+DR5HEHnRD3a5YgCyikZoBUmNnTjxGi9hDiE/mOW05
+ MWW8x9pjhr0I3vtT2M9L+ZdxFYT2ydXVisV1SSZ4hu9gz4ovnbPz1NTvo5JQXim7xMcH7tP
+ 6Od4jzmaMi36swtR+Wdrmha4aSlss0Dfv9o+1HZuyWDeK9Fz9UhWkTft5ncMplULHCuAgla
+ lrqMyJPjIzrg+38RmVIfA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YGZf1uj3/6I=:uILxPV5x+bGgNNEKC7e4j3
+ ZRnzQN+YTtXwsHoDQMyaNWvu6Jm7U6Qcha21dg/ejOZ71z2RNiORCtPH1g+emerxdEwWlWC4v
+ NJUVRdpmXdaLcpHejA/Z9q0bjPLg0EGzJXtPjCkgGdQd7ZUp3i7s6OcI+QCZ2IjXVzsFSi4cE
+ TmEIqfQagpIzOJ7bf2j7RimRZXupWLauRVEoTaEx7TgoUI8iskH3gf93pfdDVbJBTRs5bZhci
+ ch31pjCpbIcoHExjCYiqFoQJ78lPhME0GbbKsfurukisZqmem9FdEC15H8Et68fC1yYuwLjms
+ L7tRPSfDyMBZcOnig8r1HdMyoMVz66tBunZi/cWtCNc7WO5l/NyCLVugUVXxUyVAG6n0jc2Cz
+ Y2k1p3aHTRiABAPzLC/yL4uZHDTRDE2FD75HqlklkPSk279L2bISEYkMRGHSug7NJd/yQ2fDs
+ 2dKUHCjIZrGbtQnAujSvjQ3pRvstKFZ3Y6t5To45/MvG3RwhK0zfdSzISNVZnFJ63PnV+8im5
+ sEfUC21/QW4Pg/y1lyKCQ3micL1i4PTJJz8OkBFcmMdzzuf6AiR3Jc8QkFIxuBT64PrzEC0ZP
+ /KbTFQOI7ZuUa1GmQZvQN4UUitAS7JxFwcudbo2NV2LSBoQu9hy3Z3WWuNJwD3Ki3OFoe6zeI
+ Xm/xlbRLcs8VhaKrrGsDeD+kVcjSyKZAmFR04lBir4zLsbSATgJmeL6LPOiMWPJL9Vmo+LiYW
+ WnIOZoTymEHcEagvuhA2+r973IIV3lfRv9SZZ8h1cqtsiZ/0XtHRbM3onu8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 08:23:18AM +0800, Baoquan He wrote:
-> +static int
-> +map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
-> +{
-> +	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	struct init_pgtable_data data;
-> +
-> +	data.info = info;
-> +	data.level4p = level4p;
-> +	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-> +				   &data, mem_region_callback);
-> +}
-> +#else
-> +static int init_acpi_pgtable(struct x86_mapping_info *info,
+On 24.04.19 17:10, Sven Van Asbroeck wrote:
 
-Did you at least build-test the !CONFIG_ACPI case?
+> The subsystem is called fieldbus_dev "fieldbus device" because it> abstracts Linux fieldbus clients that want to expose themselves as>
+e.g. an actuator, motor, console light, switch, ...
+Sounds a bit confusing. With that description, I'd expect highlevel
+interfaces similar to LED, input, IIO, etc ... but you're actually
+implementing an distributed process memory system. This in turn is
+just a subset of the fieldbus world.
 
-arch/x86/kernel/machine_kexec_64.c: In function ‘init_pgtable’:
-arch/x86/kernel/machine_kexec_64.c:237:11: error: implicit declaration of function ‘map_acpi_tables’; did you mean ‘init_acpi_pgtable’? [-Werror=implicit-function-declaration]
-  result = map_acpi_tables(&info, level4p);
-           ^~~~~~~~~~~~~~~
-           init_acpi_pgtable
+> During one of the eleven review cycles, drivers/fieldbus_dev got> truncated to drivers/fieldbus because the reviewers felt that> _dev
+was redundant, given the lack of other fieldbus> subsystems.
+There is at least one: CAN. Sometimes CAN is used in the IEC61158-way,
+but also completely different, even both in combination.
+
+> These cards are not controllers, but slaves on the bus.
+
+Do they really implement the process memory part or just the lower
+layer communications ?
+
+> I'm by no means a fieldbus expert. It seems that the term> 'fieldbus' is much broader than these process-memory based> standards?
+
+Yes, indeed.
+
+> I am open to any _concrete_ naming suggestion
+> that can get consensus.
+Maybe IEC61158 ?
+
+> I'm a bit confused by Wikipedia's entry for fieldbus.
+> It suggests that IEC 61158 and Fieldbus are
+> interchangeable?
+> https://en.wikipedia.org/wiki/Fieldbus
+
+That's wrong.
+
+> <quote>
+> Fieldbus is the name of a family of industrial computer
+> network protocols used for real-time distributed control,
+> standardized as IEC 61158.
+> </quote>
+
+IEC 61158 only standardizes one particular approach: the distributed
+process memory.
+
+> Given that CAN/EtherCAT are not process memory based
+> (that I know of), the fieldbus_dev subsystem is probably
+> not a good fit.
+
+ACK. Neither are MVB+friends.
 
 
-I don't think so. ;-(
-
-Sigh, next time at least build-test your patch before hurrying it out. I
-fixed it up along with decyphering the commit message:
-
----
-From: Kairui Song <kasong@redhat.com>
-Date: Mon, 29 Apr 2019 08:23:18 +0800
-Subject: [PATCH] x86/kexec: Add the EFI system tables and ACPI tables to the ident map
-
-Currently, only the whole physical memory is identity-mapped for the
-kexec kernel and the regions reserved by firmware are ignored.
-
-However, the recent addition of RSDP parsing in the decompression stage
-and especially:
-
-  33f0df8d843d ("x86/boot: Search for RSDP in the EFI tables")
-
-which tries to access EFI system tables and to dig out the RDSP address
-from there, becomes a problem because in certain configurations, they
-might not be mapped in the kexec'ed kernel's address space.
-
-What is more, this problem doesn't appear on all systems because the
-kexec kernel uses gigabyte pages to build the identity mapping. And
-the EFI system tables and ACPI tables can, depending on the system
-configuration, end up being mapped as part of all physical memory, if
-they share the same 1 GB area with the physical memory.
-
-Therefore, make sure they're always mapped.
-
- [ bp: productize half-baked patch:
-   - rewrite commit message.
-   - s/init_acpi_pgtable/map_acpi_tables/ in the !ACPI case. ]
-
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: dyoung@redhat.com
-Cc: fanc.fnst@cn.fujitsu.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: j-nomura@ce.jp.nec.com
-Cc: kexec@lists.infradead.org
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Lianbo Jiang <lijiang@redhat.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190429002318.GA25400@MiWiFi-R3L-srv
----
- arch/x86/kernel/machine_kexec_64.c | 75 ++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index ceba408ea982..3c77bdf7b32a 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -18,6 +18,7 @@
- #include <linux/io.h>
- #include <linux/suspend.h>
- #include <linux/vmalloc.h>
-+#include <linux/efi.h>
- 
- #include <asm/init.h>
- #include <asm/pgtable.h>
-@@ -29,6 +30,43 @@
- #include <asm/setup.h>
- #include <asm/set_memory.h>
- 
-+#ifdef CONFIG_ACPI
-+/*
-+ * Used while adding mapping for ACPI tables.
-+ * Can be reused when other iomem regions need be mapped
-+ */
-+struct init_pgtable_data {
-+	struct x86_mapping_info *info;
-+	pgd_t *level4p;
-+};
-+
-+static int mem_region_callback(struct resource *res, void *arg)
-+{
-+	struct init_pgtable_data *data = arg;
-+	unsigned long mstart, mend;
-+
-+	mstart = res->start;
-+	mend = mstart + resource_size(res) - 1;
-+
-+	return kernel_ident_mapping_init(data->info, data->level4p, mstart, mend);
-+}
-+
-+static int
-+map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
-+{
-+	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	struct init_pgtable_data data;
-+
-+	data.info = info;
-+	data.level4p = level4p;
-+	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-+				   &data, mem_region_callback);
-+}
-+#else
-+static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
-+#endif
-+
- #ifdef CONFIG_KEXEC_FILE
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 		&kexec_bzImage64_ops,
-@@ -36,6 +74,31 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
- };
- #endif
- 
-+static int
-+map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
-+{
-+#ifdef CONFIG_EFI
-+	unsigned long mstart, mend;
-+
-+	if (!efi_enabled(EFI_BOOT))
-+		return 0;
-+
-+	mstart = (boot_params.efi_info.efi_systab |
-+			((u64)boot_params.efi_info.efi_systab_hi<<32));
-+
-+	if (efi_enabled(EFI_64BIT))
-+		mend = mstart + sizeof(efi_system_table_64_t);
-+	else
-+		mend = mstart + sizeof(efi_system_table_32_t);
-+
-+	if (!mstart)
-+		return 0;
-+
-+	return kernel_ident_mapping_init(info, level4p, mstart, mend);
-+#endif
-+	return 0;
-+}
-+
- static void free_transition_pgtable(struct kimage *image)
- {
- 	free_page((unsigned long)image->arch.p4d);
-@@ -159,6 +222,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 			return result;
- 	}
- 
-+	/*
-+	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
-+	 * not covered by pfn_mapped.
-+	 */
-+	result = map_efi_systab(&info, level4p);
-+	if (result)
-+		return result;
-+
-+	result = map_acpi_tables(&info, level4p);
-+	if (result)
-+		return result;
-+
- 	return init_transition_pgtable(image, level4p);
- }
- 
--- 
-2.21.0
+--mtx
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
