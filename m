@@ -2,112 +2,104 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B7CC04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57EAC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3630D2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907692075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XRN9VSnX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TN1+azQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfD2UCY (ORCPT
+        id S1729281AbfD2UDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:02:24 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:50507 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729185AbfD2UCX (ORCPT
+        Mon, 29 Apr 2019 16:03:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35010 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729163AbfD2UDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:02:23 -0400
-Received: by mail-it1-f194.google.com with SMTP id q14so1057145itk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=d5+AR4ZQ6S8Je85I3GXhGfH5pQCSFdPGrCwlud052ps=;
-        b=XRN9VSnXHB9YOZLhHV+j78/FmX9TQONi+10x6wv8ySgEM5Q3gC4vGptmW/bxkiWCCY
-         rbcj40eh19ktqbvfBBaI7hdAi4X7nV/L6e/YdSS+D+EnzRxv2YhH95gH9aH/gutPNhO4
-         RJsx+Ng3drdHuugTlgCMR2KJLCwrOUInFIlaTNKgT+fEPSEflUTe81/58oCezp2WB53J
-         Tdx9M6r9uvjF5dJT3y8Nur7B6mBnp1vd2obduvs8Sw5WW76/Khxa+GnxKWThbOxThEYI
-         WW9SEpLLQwn3CoVL/FBE6o4G0S4hGvPjxIUy76C2Ys9mrLSEiwClLRCuBLFDnHirvptg
-         mgMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=d5+AR4ZQ6S8Je85I3GXhGfH5pQCSFdPGrCwlud052ps=;
-        b=GL9eLAEMGqIC6c8vXFUXNLvsQzsGDt4DUOHkJD5ln45d9w4CCBRCAQpiK5wONv4kb+
-         Km0azecp4+8Pql5S9qYNcDpqou0jg5GO4TGgbQejN2JN3xaDwBzCHvF6yvbmU8DLqAaT
-         UPe4X3S2joJ1eWuVot54ueqBYCmnVhWc9Sm+yURxtHlzu/100aCr2RJhq2ZTRaj+fJdw
-         ouILfLkXqoRmZSHW9IOtPYxM4lzR5pyjx/aN7msLrTY/frjBs1maKG6u7tNhME9bvQV0
-         HvgepgAmqw6pOO6p7Cc5boqH99RtX5/ywKx5zXebr1eYx62NUZN6amzb6oXShi5jlLK9
-         HHXw==
-X-Gm-Message-State: APjAAAW9NS1A6dCzFl+eMB5gxQgRi7d8GwOltpQmLfyPyDfXGCsW4FvG
-        3W/8fseVyr/yqkQveaASN9mfCg==
-X-Google-Smtp-Source: APXvYqw118+txrOO593MhkfuosJ78cNcNeAwZ0b8WAls8UIMDjjD/RyZt63kf1zMwrwLeq+0e7uoZQ==
-X-Received: by 2002:a24:1f06:: with SMTP id d6mr645397itd.11.1556568142581;
-        Mon, 29 Apr 2019 13:02:22 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id v25sm7723994ioh.41.2019.04.29.13.02.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 13:02:21 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 13:02:21 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Anup Patel <anup@brainfault.org>
-cc:     Christoph Hellwig <hch@infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH] tty: Don't force RISCV SBI console as preferred
- console
-In-Reply-To: <CAAhSdy1nVFCwiP6vyy9i2f+S2WxLodmdwpwUKZUHYz15YfR64g@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1904291254300.7063@viisi.sifive.com>
-References: <20190425133435.56065-1-anup.patel@wdc.com> <9a8be7ef-e62e-2a93-9170-e3dc70dfb25f@wdc.com> <20190426062133.GA28529@infradead.org> <CAAhSdy1nVFCwiP6vyy9i2f+S2WxLodmdwpwUKZUHYz15YfR64g@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Mon, 29 Apr 2019 16:03:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gXBZVUg4jQbTWNl/rOtvrBvT8zt4gzjmR4Rn7XZccXU=; b=TN1+azQlisq62Mso/YE6137jh
+        dstuCHzj9XfNBJXgcAAm+Heqp8Vrft4jW4co4zD6xNMZt1YpgbG84RFfEunMIJxDVi86SaXtJJMCN
+        IdUGN3+vF9/1ap56HXZq206cDipNDutppFbktg705F5ZdiuIGqR27GlLTOTTVM1cPqyP3De7MThCi
+        En/BcrH3CglsKGIkLWiKGsVMyBqNik4jODOTi2TjxPJcVUy0mpKMFniparDi3tb919wEfIdpfGIaC
+        4nrqM+FZGig2pP0yXHPcISAgCR8JBUGSYR/ZdpcdjgRvf3Xllvu3x4FVn2PGQ62+7bKTtZfaZhC3T
+        zS+K+Q3XQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLCV0-0005Qy-Ty; Mon, 29 Apr 2019 20:03:38 +0000
+Date:   Mon, 29 Apr 2019 13:03:38 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, kevin.tian@intel.com,
+        ashok.raj@intel.com, dima@arista.com, tmurphy@arista.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        jacob.jun.pan@intel.com
+Subject: Re: [PATCH v3 5/8] iommu/vt-d: Implement def_domain_type iommu ops
+ entry
+Message-ID: <20190429200338.GA8412@infradead.org>
+References: <20190429020925.18136-1-baolu.lu@linux.intel.com>
+ <20190429020925.18136-6-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429020925.18136-6-baolu.lu@linux.intel.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019, Anup Patel wrote:
+> @@ -3631,35 +3607,30 @@ static int iommu_no_mapping(struct device *dev)
+>  	if (iommu_dummy(dev))
+>  		return 1;
+>  
+> -	if (!iommu_identity_mapping)
+> -		return 0;
+> -
 
-> On Fri, Apr 26, 2019 at 11:51 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Thu, Apr 25, 2019 at 09:41:21PM -0700, Atish Patra wrote:
-> > > Do we even need HVC_SBI console to be enabled by default? Disabling
-> > > CONFIG_HVC_RISCV_SBI seems to be fine while running in QEMU.
-> > >
-> > > If we don't need it, I suggest we should remove the config option from
-> > > defconfig in addition to this patch.
-> >
-> > I think the whole concept of the SBI console is a little dangerous.
-> > It means that for one piece of physical hardware (usually the uart)
-> > we have two entiries (the M-mode firmware and the OS) in control,
-> > which tends to rarely end well.
-> 
-> I think the SBI console is only useful for early SOC bringup and early
-> SOC debugging when most drivers are not available in upstream
-> kernel. It cannot (and should not) be used in production deployments.
+FYI, iommu_no_mapping has been refactored in for-next:
 
-Usually the primary use-case for an abstract console interface is for 
-desktop and server users.  Usually Linux distributions want a hardware 
-platform-specific bootloader or BIOS to specify and control the console.  
+https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/commit/?h=x86/vt-d&id=48b2c937ea37a3bece0094b46450ed5267525289
 
-Originally I suspect this was implemented in the SBI for semi-hosting 
-purposes, but that's no longer really applicable.
+>  	found = identity_mapping(dev);
+>  	if (found) {
+> +		/*
+> +		 * If the device's dma_mask is less than the system's memory
+> +		 * size then this is not a candidate for identity mapping.
+> +		 */
+> +		u64 dma_mask = *dev->dma_mask;
+> +
+> +		if (dev->coherent_dma_mask &&
+> +		    dev->coherent_dma_mask < dma_mask)
+> +			dma_mask = dev->coherent_dma_mask;
+> +
+> +		if (dma_mask < dma_get_required_mask(dev)) {
 
+I know this is mostly existing code moved around, but it really needs
+some fixing.  For one dma_get_required_mask is supposed to return the
+required to not bounce mask for the given device.  E.g. for a device
+behind an iommu it should always just return 32-bit.  If you really
+want to check vs system memory please call dma_direct_get_required_mask
+without the dma_ops indirection.
 
-- Paul
+Second I don't even think we need to check the coherent_dma_mask,
+dma_direct is pretty good at always finding memory even without
+an iommu.
+
+Third this doesn't take take the bus_dma_mask into account.
+
+This probably should just be:
+
+		if (min(*dev->dma_mask, dev->bus_dma_mask) <
+		    dma_direct_get_required_mask(dev)) {
