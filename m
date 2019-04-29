@@ -2,124 +2,87 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD33C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65415C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B324F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3707720673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556560104;
-	bh=7uEIB2ZsBAHxnHKWhlK5gogZ9GfNL0z6khQg0FJEfEE=;
+	s=default; t=1556560132;
+	bh=W9V6CouoTRQEgUu60bewd9p9Zh9JwiwDRPhGYdBsLWw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A5/D26tV7WYQCAn+qyhGHSHzu1TZVpFYxJB8MSsv8g8VFXh3LTd+JZCyfvWHHEqyc
-	 9Q+OPggyymtYP1MLrM5Yuv1FTXRf3jFLGp0uD/ZqfuqKXJLtmFPHX1iIZiH08YVLcm
-	 Cnq1GAM33g1ddY1Nh9eoNTkWRtbPF6dHeIgj2BYs=
+	b=dmqrgJN08vvB1IK7c9bUS5bwxRWlZ7POCcgeSjdjMbyq4t7fUBhv0FqRCt+lnHEl2
+	 dVrBVISSCz48ScAkWlub0w+/CHH0Zgy9U9af1E5mz4QHj/Gv5b1aBhNpv5gaUYCeg5
+	 OjJRE+Oy3ll1rMDW7lHiSU/EYgRcZaOHFjYnu80I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbfD2RsX (ORCPT
+        id S1728996AbfD2Rsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:48:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39078 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728748AbfD2RsX (ORCPT
+        Mon, 29 Apr 2019 13:48:51 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42386 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbfD2Rsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:48:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id o39so9438726ota.6;
-        Mon, 29 Apr 2019 10:48:23 -0700 (PDT)
+        Mon, 29 Apr 2019 13:48:50 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f23so9406613otl.9;
+        Mon, 29 Apr 2019 10:48:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eZFE5rOYc7aUDrk0hdPVUsnyCLMzSmYtEJdwfTLpnBA=;
-        b=YWCeHmIVWTl/QvwU4N8KLYWfQckvznEHYecOBLbmTObdq8p4TOiKvTrZJ23P5RN689
-         Si0EFXy+D6oeXcEJSaBtvJutwk/UAfu5AT8+DQxwGVtAUoMf5vhjRplYikEscdRcTQ+V
-         MsVlxf/w/svYJepjIAyI/tCDCvCANk8Zf1vviZ+dE58w+DVeTZ6VIFS/TO5u5u6+l1BB
-         yOtnJ1BlhYpqQfUL9m6iAOI7Y0S6BJciE6ps7JnrtKrCRZEwwPcvkiTFwuYRW12zX0J6
-         pP8e3FDfT9MNrWbp745LCDJCCbw46pB8CjjuhKDigUJOsdaYVmxqEEY2XpFdV1hoaZDo
-         ItmA==
-X-Gm-Message-State: APjAAAWiH6i5r5aLGzjxlM0NAScZ/mF14+QN7YOT1pV8TBI3ePiTx47B
-        jKyDiH/9TxSe3rNsHr8RYQ==
-X-Google-Smtp-Source: APXvYqxFcsWvYzC0Egzh1oIYiDnPVKr/WIFOW4gi1acr2+enruy3cklggGK48CwdHxAoIDG0T61mPQ==
-X-Received: by 2002:a9d:68c6:: with SMTP id i6mr15444685oto.330.1556560102605;
-        Mon, 29 Apr 2019 10:48:22 -0700 (PDT)
+        bh=96Pv4XmpD2oLDllhCoFarHwO67SqW17W7Bz6iMLIAPg=;
+        b=rro8PmO9SauQzfgaGbcdQ65eTnHnGoelwLQS/F6iqYmShMH0jKxolNpbaOm9FARLrk
+         V0bvxnjuv+sU2fUav9af8rlHcKuLXvC3itH/Iom6iIcad2wkRn/z/J01JplqzwKBZYmW
+         Z45eA9dx1jjtKxESU3hJluDB6/jJCTMKqoe4titHVpmm0R5ZxNc+LG5Y/MJgHuQ8WhT4
+         CrVuFAbYL5BucFOQJSsgJdogwBwucpZ32K4YdtwfUcHe7vlggWHBg0VHYWmzxbi9x/si
+         kkZsA47s4RXVBmz0o9UoA2fAH2VIRsY9z8C0O1dNWeQJCbd7hNL3P4YqPy6GlE2sxu4D
+         r0Tg==
+X-Gm-Message-State: APjAAAW77g9Kx5qS558M/bWTibrCFIveRE/0jOXRnXNhCAsaH/hZIkGI
+        dgOSEoBB+VL7+K0vbRIUsA==
+X-Google-Smtp-Source: APXvYqy5RZ6ixsBcrAfarmCt6sR4eTlJQvc1g+ILNKDBjbhglFflOHlsQy2h1OTxaR6NC5Gvde0Lhg==
+X-Received: by 2002:a9d:4a9c:: with SMTP id i28mr9855983otf.326.1556560130035;
+        Mon, 29 Apr 2019 10:48:50 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w5sm7766257oib.6.2019.04.29.10.48.21
+        by smtp.gmail.com with ESMTPSA id i17sm13852752otr.36.2019.04.29.10.48.49
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 10:48:21 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 12:48:21 -0500
+        Mon, 29 Apr 2019 10:48:49 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 12:48:48 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     richard.gong@linux.intel.com
-Cc:     gregkh@linuxfoundation.org, mark.rutland@arm.com,
-        dinguyen@kernel.org, atull@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv1 2/6] dt-bindings, firmware: add Intel Stratix10 remote
- system update binding
-Message-ID: <20190429174821.GA22717@bogus>
-References: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
- <1554835562-25056-3-git-send-email-richard.gong@linux.intel.com>
+To:     Otavio Salvador <otavio@ossystems.com.br>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Otavio Salvador <otavio@ossystems.com.br>,
+        devicetree@vger.kernel.org,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add support for
+ imx6ul-pico-nymph
+Message-ID: <20190429174848.GA27422@bogus>
+References: <20190410010013.17259-1-otavio@ossystems.com.br>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1554835562-25056-3-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <20190410010013.17259-1-otavio@ossystems.com.br>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 01:45:58PM -0500, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
+On Tue,  9 Apr 2019 22:00:12 -0300, Otavio Salvador wrote:
+> From: Fabio Estevam <festevam@gmail.com>
 > 
-> Add a device tree binding for the Intel Stratix10 remote system
-> update (RSU) driver
+> Add support for TechNexion's imx6ul-pico-nymph board.
 > 
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> Reviewed-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 > ---
->  .../bindings/firmware/intel,stratix10-rsu.txt      | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt b/Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt
-> new file mode 100644
-> index 0000000..b6250eb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt
-> @@ -0,0 +1,31 @@
-> +Intel Remote System Update Driver for Stratix10 SoC
-> +============================================
-> +The Intel Remote System Update (RSU) driver exposes interfaces
-> +accessed through the Intel Service Layer to user space via sysfs
-> +interface. The RSU interfaces report and control some of the optional
-> +RSU features on Intel Stratix 10 SoC.
-> +
-> +The RSU feature provides a way for customers to update the boot
-> +configuration of a Intel Stratix 10 SoC device with significantly reduced
-> +risk of corrupting the bitstream storage and bricking the system.
-> +
-> +Required properties:
-> +-------------------
-> +The rsu node has the following mandatory properties, must be located under
-> +the firmware/svc node.
-> +
-> +- compatible: "intel,stratix10-rsu"
-> +
-> +Example:
-> +-------
-> +	firmware {
-> +		svc {
-> +			compatible = "intel,stratix10-svc";
-> +			method = "smc";
-> +			memory-region = <&service_reserved>;
-> +
-> +			rsu: rsu {
-> +				compatible = "intel,stratix10-rsu";
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-There's no DT resources, so why does this need to be in DT. Just make 
-the driver for the parent instantiate the driver for this.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
