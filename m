@@ -2,130 +2,112 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAECC004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B865C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E112075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:17:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556522264;
-	bh=60loMRXLLtm4dp1Y5T4hPjrTfuTqUxu/fQbhti34uZo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uG/cjaHmT0xH8EgNWXKq4VOYIzbr9RZcsvQbEqMSy4dLZ+G2aX8NndlpPpO4hrqZb
-	 5nvZDH5M/lN8tLfSw2AE7FQJMX1boN+9tX57YRn/0Oxgxu4HNHSkVVth2LAJx3+JO4
-	 0aNsQpzowO+Q0yk+PZF5XyNuwBwYLQLutJvO7baw=
+	by mail.kernel.org (Postfix) with ESMTP id 4B82E2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:19:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vpsxKVmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfD2HRn convert rfc822-to-8bit (ORCPT
+        id S1727458AbfD2HTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:17:43 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37183 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbfD2HRn (ORCPT
+        Mon, 29 Apr 2019 03:19:06 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46150 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727306AbfD2HTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:17:43 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k6so7517836oic.4;
-        Mon, 29 Apr 2019 00:17:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=U0ILNQQnANwDaULFq9BnSLE4JegKbYYRqIG6pRQ8vEk=;
-        b=AzPOYPlmRlFY1ZMZ6XdFpNqOKSufwIYjmGx6OGsZaW2CFkoWeQ6tQ3+x8AJxK/B3W+
-         ZbZAhrJa90LxJVakt7HwjulDgHy/2xw6As8QtZsW2n/WnB5hJqwdl0ykQm6y2X/C42ix
-         LOmm27gFtTdSz+yQxeiQwWEtDhffXj6EpLDK6K8V4T2mShRuJr8EQHCjInEEHawPOU+V
-         6llXpBVfNduP81z5Ct+rJ/0Sq6EfdbDspDf+b/7h7dGaaW1m9PodJQNAWvcJg+U/zOvZ
-         otiXCGk3DVoUrGE1a38sOpdzQCrQfyHOP2J8i9Kj2y6ZvgkXfFxxZjtirDpNm8a2vhCu
-         C3tw==
-X-Gm-Message-State: APjAAAW+sC75NcFvGrNR6Dnmegz+pmG7Kt6jSOnLArpu9xnCNvoWj+gG
-        yIQPSz+QhR7tAsqdEy4koU9PwEyhKqJnfdw+0bknmRLI
-X-Google-Smtp-Source: APXvYqwr1JzPOuSpeIEP+9sUUFOH+slhC9WrQ3DVJQkPqRABjuPtCwtvgu2tX7fhE9UKdsflW3QhNDNgQMdTGy0lX/Q=
-X-Received: by 2002:aca:4a8a:: with SMTP id x132mr7422695oia.68.1556522262049;
- Mon, 29 Apr 2019 00:17:42 -0700 (PDT)
+        Mon, 29 Apr 2019 03:19:05 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3T7BApm016465;
+        Mon, 29 Apr 2019 09:18:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=TykFYt9jpvTCwyKhyahs+89NrVvncrSmdvgdWwwYztk=;
+ b=vpsxKVmdKayCtuheOa+LEhE9Hcpk7rlGwuMKQum+17xVVfQrvFfnO40kzSgCbA84AUwH
+ L7SlOnCyZSO6lBJafRag5na2endexM3rAmXLyb+9FX1d3/Fp0Y9LXo9tCgLKmZbSVRiD
+ JT3SIbLns4QyIg4IOxlefXJLcmjxlB5f+iIuKr0rglt2G9yRqur/OkXoVTvkPSgQyhbr
+ nXHarlN5rFyPXEdrmmZlVsBlRfprzHc3Jfi16QGK6iYtvca8BiWCw3G/k3EuUN/JVPqV
+ z2bZZIRjM0do9BmEnoL/IwY57OVi9H2q1HSY/7I0/7YQtbPw3yU/IcvISF0I/ju5oi/m KQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2s5u5d0g7p-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 29 Apr 2019 09:18:44 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9757B31;
+        Mon, 29 Apr 2019 07:18:43 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 357AD122C;
+        Mon, 29 Apr 2019 07:18:43 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 29 Apr
+ 2019 09:18:43 +0200
+Subject: Re: [PATCH 2/6] net: stmmac: fix csr_clk can't be zero issue
+To:     Biao Huang <biao.huang@mediatek.com>,
+        Jose Abreu <joabreu@synopsys.com>, <davem@davemloft.net>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <jianguo.zhang@mediatek.com>
+References: <1556433009-25759-1-git-send-email-biao.huang@mediatek.com>
+ <1556433009-25759-3-git-send-email-biao.huang@mediatek.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <24f4b268-aa7f-e1f7-59fc-2bc163eb8277@st.com>
+Date:   Mon, 29 Apr 2019 09:18:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <5fdabbb9-0a62-4802-f1ca-f83584f935fa@molgen.mpg.de>
-In-Reply-To: <5fdabbb9-0a62-4802-f1ca-f83584f935fa@molgen.mpg.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 29 Apr 2019 09:17:26 +0200
-Message-ID: <CAJZ5v0gobp60Pn5cdh0CohGAXSBs-EvntNqKc_dj_UTnOiogkQ@mail.gmail.com>
-Subject: Re: Why is suspend with s2idle available on POWER8 systems?
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1556433009-25759-3-git-send-email-biao.huang@mediatek.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 12:54 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Dear Linux folks,
->
->
-> Updating an IBM S822LC from Ubuntu 18.10 to 19.04 some user space stuff
-> seems to have changed, so that going into sleep/suspend is enabled.
->
-> That raises two questions.
->
-> 1.  Is suspend actually supported on a POWER8 processor?
+Hi
 
-Suspend-to-idle is a special variant of system suspend that does not
-depend on any special platform support.  It works by suspending
-devices and letting all of the CPUs in the system go idle (hence the
-name).
+On 4/28/19 8:30 AM, Biao Huang wrote:
+> The specific clk_csr value can be zero, and
+> stmmac_clk is necessary for MDC clock which can be set dynamically.
+> So, change the condition from plat->clk_csr to plat->stmmac_clk to
+> fix clk_csr can't be zero issue.
+> 
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 818ad88..9e89b94 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -4376,7 +4376,7 @@ int stmmac_dvr_probe(struct device *device,
+>   	 * set the MDC clock dynamically according to the csr actual
+>   	 * clock input.
+>   	 */
+> -	if (!priv->plat->clk_csr)
+> +	if (priv->plat->stmmac_clk)
+>   		stmmac_clk_csr_set(priv);
+>   	else
+>   		priv->clk_csr = priv->plat->clk_csr;
+> 
 
-Also see https://www.kernel.org/doc/html/latest/admin-guide/pm/sleep-states.html#suspend-to-idle
-
->
-> > Apr 27 10:18:13 power NetworkManager[7534]: <info>  [1556353093.7224] manager: sleep: sleep requested (sleeping: no  e
-> > Apr 27 10:18:13 power systemd[1]: Reached target Sleep.
-> > Apr 27 10:18:13 power systemd[1]: Starting Suspend...
-> > Apr 27 10:18:13 power systemd-sleep[82190]: Suspending system...
-> > Apr 27 10:18:13 power kernel: PM: suspend entry (s2idle)
-> > -- Reboot --
->
-> > $ uname -m
-> > ppc64le
-> > $ more /proc/version
-> > Linux version 5.1.0-rc6+ (joey@power) (gcc version 8.3.0 (Ubuntu 8.3.0-6ubuntu1)) #1 SMP Sat Apr 27 10:01:48 CEST 2019
-> > $ more /sys/power/mem_sleep
-> > [s2idle]
-> > $ more /sys/power/state
-> > freeze mem
-> > $ grep _SUSPEND /boot/config-5.0.0-14-generic # also enabled in Ubuntu’s configuration
-> > CONFIG_ARCH_SUSPEND_POSSIBLE=y
-> > CONFIG_SUSPEND=y
-> > CONFIG_SUSPEND_FREEZER=y
-> > # CONFIG_SUSPEND_SKIP_SYNC is not set
-> > # CONFIG_PM_TEST_SUSPEND is not set
->
-> Should the Kconfig symbol `SUSPEND` be selectable? If yes, should their
-> be some detection during runtime?
->
-> 2.  If it is supported, what are the ways to getting it to resume? What
-> would the IPMI command be?
-
-That would depend on the distribution.
-
-Generally, you need to set up at least one device to generate wakeup interrupts.
-
-The interface to do that are the /sys/devices/.../power/wakeup files,
-but that has to cause enble_irq_wake() to be called for the given IRQ,
-so some support in the underlying drivers need to be present for it to
-work.
-
-USB devices generally work as wakeup sources if the controllers reside
-on a PCI bus, for example.
-
-Thanks,
-Rafael
+So, as soon as stmmac_clk will be declared, it is no longer possible to 
+fix a CSR through the device tree ?
