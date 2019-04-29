@@ -2,278 +2,196 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C16DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC83C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F722087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E16E21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TycfkZor"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWXpB251"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfD2SnR (ORCPT
+        id S1729219AbfD2SnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:43:17 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38479 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728946AbfD2SnQ (ORCPT
+        Mon, 29 Apr 2019 14:43:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44052 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728946AbfD2SnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:43:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIflTo1028667
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 29 Apr 2019 11:41:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIflTo1028667
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556563309;
-        bh=PMdREJg1WMpV+hP2zxMZsYKdiGZN9LGo/wO162TcVwI=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=TycfkZori0NML3vhK4cIt+4tF0z9gwpbPYi42CrT3aZKUbycY/PaAufyrqknSx+aC
-         hXAIAR0QfiBOK+C3N2JPGpAJud348+dNq1ekaXBnyeBka71shj/pvcbI5Qv5fVnncs
-         bf/t5JdXKR/OsF8wn55VNC8zK68RW6j30ujuNv1lnu9dEK4NES5iG7L92tPmsXBj0W
-         GE3u+6P/p8njzwPSHzfXLh5MTy3ZTSsk50DQn8+v6CcNrRy74bHIAhxkGutULrdg7q
-         /l8Y2iQMVtxktfsuhoedldD4pvLyo5f8pVFygZIi6sfGB/LPvJQlCKEZPh/22ktsYr
-         fGG7iwozZoz4Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIflta1028663;
-        Mon, 29 Apr 2019 11:41:47 -0700
-Date:   Mon, 29 Apr 2019 11:41:47 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-487f3c7fb1a07ceff78bb18688eb8538a4775227@git.kernel.org>
-Cc:     rodrigo.vivi@intel.com, dsterba@suse.com,
-        tom.zanussi@linux.intel.com, akinobu.mita@gmail.com,
-        maarten.lankhorst@linux.intel.com, adobriyan@gmail.com,
-        jthumshirn@suse.de, daniel@ffwll.ch, mbenes@suse.cz, hpa@zytor.com,
-        glider@google.com, rppt@linux.vnet.ibm.com, snitzer@redhat.com,
-        akpm@linux-foundation.org, hch@lst.de, jpoimboe@redhat.com,
-        joonas.lahtinen@linux.intel.com, robin.murphy@arm.com,
-        catalin.marinas@arm.com, rientjes@google.com, airlied@linux.ie,
-        linux-kernel@vger.kernel.org, mingo@kernel.org, penberg@kernel.org,
-        clm@fb.com, tglx@linutronix.de, agk@redhat.com,
-        josef@toxicpanda.com, luto@kernel.org, m.szyprowski@samsung.com,
-        cl@linux.com, dvyukov@google.com, rostedt@goodmis.org,
-        jani.nikula@linux.intel.com, aryabinin@virtuozzo.com
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org, airlied@linux.ie,
-          rientjes@google.com, catalin.marinas@arm.com,
-          joonas.lahtinen@linux.intel.com, robin.murphy@arm.com,
-          clm@fb.com, agk@redhat.com, tglx@linutronix.de,
-          penberg@kernel.org, luto@kernel.org, josef@toxicpanda.com,
-          aryabinin@virtuozzo.com, dvyukov@google.com, rostedt@goodmis.org,
-          jani.nikula@linux.intel.com, m.szyprowski@samsung.com,
-          cl@linux.com, akinobu.mita@gmail.com,
-          maarten.lankhorst@linux.intel.com, tom.zanussi@linux.intel.com,
-          rodrigo.vivi@intel.com, dsterba@suse.com, jthumshirn@suse.de,
-          adobriyan@gmail.com, glider@google.com, mbenes@suse.cz,
-          hpa@zytor.com, daniel@ffwll.ch, jpoimboe@redhat.com, hch@lst.de,
-          akpm@linux-foundation.org, rppt@linux.vnet.ibm.com,
-          snitzer@redhat.com
-In-Reply-To: <20190425094802.622094226@linutronix.de>
-References: <20190425094802.622094226@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/stacktrace] drm: Simplify stacktrace handling
-Git-Commit-ID: 487f3c7fb1a07ceff78bb18688eb8538a4775227
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 29 Apr 2019 14:43:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z16so5567333pgv.11;
+        Mon, 29 Apr 2019 11:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=BQ3C86GZREydUaCz0afmFgD6JoCVkrw+ph7zwQtPSd8=;
+        b=gWXpB2518rHeRXMNSaY9SOXHzJEDw2gQPD3i97nYJ9iSAh3gS/Dsy3MpHdLqKD7O9j
+         7M3CFmerec2nVCIgaTBiAkfJsluQ3s8UW2f4A6KX2KVg7n2luzCdtMIaYZVEPkTLlHYk
+         QhpGRQ04kgHeTvXEuERtT5f1XZfc7W4Di8Ql+dPNdGcKKecDTnSLLtZ0tien+fodFgNp
+         UaCHhY5b6AWmpr7Fx6TYp4VC7fo7ul19GNyNGApyBS041uwDBqpcIzZWr3YnhsWg9V8Y
+         TtIjfR8Add42KdkZfYiMBuV4P944MF3feEAuCDdccwBHTvJ3eIzQPWSoJVXIC6VJWNDV
+         bZkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=BQ3C86GZREydUaCz0afmFgD6JoCVkrw+ph7zwQtPSd8=;
+        b=c9XVFlF+87botix4XGr/k7EHwI9a6cOxhnLnCwikN2+GSDQSUqzjOrH2f86ZvYgvKQ
+         uU9QEm3JaPvjli2fdc5Mqj8z5yHLmImxgUKwdfzQWRBCr4QgLtrUOcZJ91twwHXlYAfd
+         Ljoz7Ta6RDIqblVUh07tb24EMMErB1OLSItO3KOg0roUk1opeSp0gRWK8NLmOW/mFwvC
+         rHOUNPLsOOVoCkIdsi5W4Od55b+YpQYJn3bnc0gzIMF33H43c+sFRtmZ0sgZT6G3gssA
+         ckPFcGYl2nSG9qQ71Ag7Zkr/vsY5RwwQMr+I5WrOjVkEujc3fi3YnEL2pjrhfNRGX6Vl
+         rnhA==
+X-Gm-Message-State: APjAAAWUpD/s3ukUaz6Anw7Qa/vtDwUPQkiZgIyf9qE6JGSoU2Ob6BN/
+        vKdiyYow1SEMpKmJApKP2j4=
+X-Google-Smtp-Source: APXvYqwMKjexBovL0Lkg0tmEZR0WTj2q5zpdxwqjddZNLVGfdIAQMESAaCnzw2RLu/9Jh97Fe6bkjQ==
+X-Received: by 2002:a63:521c:: with SMTP id g28mr60165132pgb.431.1556563398136;
+        Mon, 29 Apr 2019 11:43:18 -0700 (PDT)
+Received: from [172.27.227.196] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id d8sm37252833pgv.34.2019.04.29.11.43.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 11:43:16 -0700 (PDT)
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+To:     David Ahern <dsahern@gmail.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Julian Anastasov <ja@ssi.bg>, Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000007d22100573d66078@google.com>
+ <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
+ <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
+ <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
+ <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
+ <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
+ <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
+ <057735f0-4475-7a7b-815f-034b1095fa6c@gmail.com>
+ <6e57bc11-1603-0898-dfd4-0f091901b422@i-love.sakura.ne.jp>
+ <f71dd5cd-c040-c8d6-ab4b-df97dea23341@gmail.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <d56b7989-8ac6-36be-0d0b-43251e1a2907@gmail.com>
+Date:   Mon, 29 Apr 2019 12:43:14 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <f71dd5cd-c040-c8d6-ab4b-df97dea23341@gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------A130DC68AA00417E350956C2"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  487f3c7fb1a07ceff78bb18688eb8538a4775227
-Gitweb:     https://git.kernel.org/tip/487f3c7fb1a07ceff78bb18688eb8538a4775227
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Thu, 25 Apr 2019 11:45:09 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 29 Apr 2019 12:37:53 +0200
+This is a multi-part message in MIME format.
+--------------A130DC68AA00417E350956C2
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-drm: Simplify stacktrace handling
+On 4/29/19 12:34 PM, David Ahern wrote:
+> On 4/27/19 10:22 PM, Tetsuo Handa wrote:
+>> On 2019/04/28 8:52, Eric Dumazet wrote:
+>>> On 4/27/19 3:33 PM, Tetsuo Handa wrote:
+>>>>
+>>>> I'm waiting for davem why it is safe to move the dst entry from
+>>>> "a device to unregister" to "a loopback device in that namespace".
+>>>> I'm waiting for an explanation how the dst entry which was moved to
+>>>> "a loopback device in that namespace" is released (i.e. what the
+>>>> expected shutdown sequence is).
+>>>
+>>> The most probable explanation is that we make sure the loopback device
+>>> is the last one to be dismantled at netns deletion,
+>>> and this would obviously happen after all dst have been released.
+>>>
+>>
+>> rt_flush_dev() becomes a no-op if "dev" == "a loopback device in that
+>> namespace". And according to debug printk(), rt_flush_dev() is called
+>> on "a loopback device in that namespace" itself.
+>>
+>> If "a loopback device in that namespace" is the last "one" (== "a network
+>> device in that namespace" ?), which shutdown sequence should have called
+>> dev_put("a loopback device in that namespace") before unregistration of
+>> "a loopback device in that namespace" starts?
+>>
+>> Since I'm not a netdev person, I appreciate if you can explain
+>> that shutdown sequence using a flow chart.
+>>
+> 
+> The attached patch adds a tracepoint to notifier_call_chain. If you have
+> KALLSYMS enabled it will show the order of the function handlers:
+> 
+> perf record -e notifier:* -a -g &
+> 
+> ip netns del <NAME>
+> <wait a few seconds>
+> 
+> fg
+> <ctrl-c on perf-record>
+> 
+> perf script
+> 
 
-Replace the indirection through struct stack_trace by using the storage
-array based interfaces.
+with the header file this time.
 
-The original code in all printing functions is really wrong. It allocates a
-storage array on stack which is unused because depot_fetch_stack() does not
-store anything in it. It overwrites the entries pointer in the stack_trace
-struct so it points to the depot storage.
+--------------A130DC68AA00417E350956C2
+Content-Type: text/plain; charset=UTF-8; x-mac-type="0"; x-mac-creator="0";
+ name="0001-notifier-add-tracepoint-to-notifier_call_chain.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename*0="0001-notifier-add-tracepoint-to-notifier_call_chain.patch"
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Acked-by: Daniel Vetter <daniel@ffwll.ch>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: linux-mm@kvack.org
-Cc: David Rientjes <rientjes@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: kasan-dev@googlegroups.com
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: iommu@lists.linux-foundation.org
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: David Sterba <dsterba@suse.com>
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-btrfs@vger.kernel.org
-Cc: dm-devel@redhat.com
-Cc: Mike Snitzer <snitzer@redhat.com>
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc: Miroslav Benes <mbenes@suse.cz>
-Cc: linux-arch@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190425094802.622094226@linutronix.de
-
----
- drivers/gpu/drm/drm_mm.c                | 22 +++++++---------------
- drivers/gpu/drm/i915/i915_vma.c         | 11 ++++-------
- drivers/gpu/drm/i915/intel_runtime_pm.c | 21 +++++++--------------
- 3 files changed, 18 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_mm.c b/drivers/gpu/drm/drm_mm.c
-index 69552777e13a..8b4cd31ce7bd 100644
---- a/drivers/gpu/drm/drm_mm.c
-+++ b/drivers/gpu/drm/drm_mm.c
-@@ -106,22 +106,19 @@
- static noinline void save_stack(struct drm_mm_node *node)
- {
- 	unsigned long entries[STACKDEPTH];
--	struct stack_trace trace = {
--		.entries = entries,
--		.max_entries = STACKDEPTH,
--		.skip = 1
--	};
-+	unsigned int n;
- 
--	save_stack_trace(&trace);
-+	n = stack_trace_save(entries, ARRAY_SIZE(entries), 1);
- 
- 	/* May be called under spinlock, so avoid sleeping */
--	node->stack = depot_save_stack(&trace, GFP_NOWAIT);
-+	node->stack = stack_depot_save(entries, n, GFP_NOWAIT);
- }
- 
- static void show_leaks(struct drm_mm *mm)
- {
- 	struct drm_mm_node *node;
--	unsigned long entries[STACKDEPTH];
-+	unsigned long *entries;
-+	unsigned int nr_entries;
- 	char *buf;
- 
- 	buf = kmalloc(BUFSZ, GFP_KERNEL);
-@@ -129,19 +126,14 @@ static void show_leaks(struct drm_mm *mm)
- 		return;
- 
- 	list_for_each_entry(node, drm_mm_nodes(mm), node_list) {
--		struct stack_trace trace = {
--			.entries = entries,
--			.max_entries = STACKDEPTH
--		};
--
- 		if (!node->stack) {
- 			DRM_ERROR("node [%08llx + %08llx]: unknown owner\n",
- 				  node->start, node->size);
- 			continue;
- 		}
- 
--		depot_fetch_stack(node->stack, &trace);
--		snprint_stack_trace(buf, BUFSZ, &trace, 0);
-+		nr_entries = stack_depot_fetch(node->stack, &entries);
-+		stack_trace_snprint(buf, BUFSZ, entries, nr_entries, 0);
- 		DRM_ERROR("node [%08llx + %08llx]: inserted at\n%s",
- 			  node->start, node->size, buf);
- 	}
-diff --git a/drivers/gpu/drm/i915/i915_vma.c b/drivers/gpu/drm/i915/i915_vma.c
-index b713bed20c38..41b5bcb803cb 100644
---- a/drivers/gpu/drm/i915/i915_vma.c
-+++ b/drivers/gpu/drm/i915/i915_vma.c
-@@ -36,11 +36,8 @@
- 
- static void vma_print_allocator(struct i915_vma *vma, const char *reason)
- {
--	unsigned long entries[12];
--	struct stack_trace trace = {
--		.entries = entries,
--		.max_entries = ARRAY_SIZE(entries),
--	};
-+	unsigned long *entries;
-+	unsigned int nr_entries;
- 	char buf[512];
- 
- 	if (!vma->node.stack) {
-@@ -49,8 +46,8 @@ static void vma_print_allocator(struct i915_vma *vma, const char *reason)
- 		return;
- 	}
- 
--	depot_fetch_stack(vma->node.stack, &trace);
--	snprint_stack_trace(buf, sizeof(buf), &trace, 0);
-+	nr_entries = stack_depot_fetch(vma->node.stack, &entries);
-+	stack_trace_snprint(buf, sizeof(buf), entries, nr_entries, 0);
- 	DRM_DEBUG_DRIVER("vma.node [%08llx + %08llx] %s: inserted at %s\n",
- 			 vma->node.start, vma->node.size, reason, buf);
- }
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-index 1f8acbb332c9..20c4434474e3 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -60,27 +60,20 @@
- static noinline depot_stack_handle_t __save_depot_stack(void)
- {
- 	unsigned long entries[STACKDEPTH];
--	struct stack_trace trace = {
--		.entries = entries,
--		.max_entries = ARRAY_SIZE(entries),
--		.skip = 1,
--	};
-+	unsigned int n;
- 
--	save_stack_trace(&trace);
--	return depot_save_stack(&trace, GFP_NOWAIT | __GFP_NOWARN);
-+	n = stack_trace_save(entries, ARRAY_SIZE(entries), 1);
-+	return stack_depot_save(entries, n, GFP_NOWAIT | __GFP_NOWARN);
- }
- 
- static void __print_depot_stack(depot_stack_handle_t stack,
- 				char *buf, int sz, int indent)
- {
--	unsigned long entries[STACKDEPTH];
--	struct stack_trace trace = {
--		.entries = entries,
--		.max_entries = ARRAY_SIZE(entries),
--	};
-+	unsigned long *entries;
-+	unsigned int nr_entries;
- 
--	depot_fetch_stack(stack, &trace);
--	snprint_stack_trace(buf, sz, &trace, indent);
-+	nr_entries = stack_depot_fetch(stack, &entries);
-+	stack_trace_snprint(buf, sz, entries, nr_entries, indent);
- }
- 
- static void init_intel_runtime_pm_wakeref(struct drm_i915_private *i915)
+RnJvbSBkZThiZmFlMDYwNmQ3NDg5MDhhNzBhNDM1ZmVlOWQ5Y2U1N2IxM2VhIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBEYXZpZCBBaGVybiA8ZHNhaGVybkBnbWFpbC5jb20+
+CkRhdGU6IE1vbiwgMjkgQXByIDIwMTkgMTE6Mzg6NDkgLTA3MDAKU3ViamVjdDogW1BBVENI
+XSBub3RpZmllcjogYWRkIHRyYWNlcG9pbnQgdG8gbm90aWZpZXJfY2FsbF9jaGFpbgoKU2ln
+bmVkLW9mZi1ieTogRGF2aWQgQWhlcm4gPGRzYWhlcm5AZ21haWwuY29tPgotLS0KIGluY2x1
+ZGUvdHJhY2UvZXZlbnRzL25vdGlmaWVyLmggfCA0OSArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKwoga2VybmVsL25vdGlmaWVyLmMgICAgICAgICAgICAgICB8
+ICAzICsrKwogMiBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgaW5jbHVkZS90cmFjZS9ldmVudHMvbm90aWZpZXIuaAoKZGlmZiAtLWdpdCBh
+L2luY2x1ZGUvdHJhY2UvZXZlbnRzL25vdGlmaWVyLmggYi9pbmNsdWRlL3RyYWNlL2V2ZW50
+cy9ub3RpZmllci5oCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4u
+N2M1MzFhMTEzNWNiCi0tLSAvZGV2L251bGwKKysrIGIvaW5jbHVkZS90cmFjZS9ldmVudHMv
+bm90aWZpZXIuaApAQCAtMCwwICsxLDQ5IEBACisvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
+cjogR1BMLTIuMCAqLworI3VuZGVmIFRSQUNFX1NZU1RFTQorI2RlZmluZSBUUkFDRV9TWVNU
+RU0gbm90aWZpZXIKKworI2lmICFkZWZpbmVkKF9UUkFDRV9OT1RJRklFUl9IKSB8fCBkZWZp
+bmVkKFRSQUNFX0hFQURFUl9NVUxUSV9SRUFEKQorI2RlZmluZSBfVFJBQ0VfTk9USUZJRVJf
+SAorCisjaW5jbHVkZSA8bGludXgvbm90aWZpZXIuaD4KKyNpbmNsdWRlIDxsaW51eC9rYWxs
+c3ltcy5oPgorI2luY2x1ZGUgPGxpbnV4L3RyYWNlcG9pbnQuaD4KKworVFJBQ0VfRVZFTlQo
+bm90aWZpZXJfY2FsbF9jaGFpbiwKKworCVRQX1BST1RPKHN0cnVjdCBub3RpZmllcl9ibG9j
+ayAqbmIsIHVuc2lnbmVkIGxvbmcgdmFsKSwKKworCVRQX0FSR1MobmIsIHZhbCksCisKKwlU
+UF9TVFJVQ1RfX2VudHJ5KAorCQlfX2ZpZWxkKAl1NjQsCXZhbAkpCisJCV9fZmllbGQoCXU2
+NCwJZmNuCSkKKwkJX19keW5hbWljX2FycmF5KGNoYXIsICBmY25zdHIsICAgS1NZTV9TWU1C
+T0xfTEVOKQorCSksCisKKwlUUF9mYXN0X2Fzc2lnbigKKwkJdm9pZCAqcCA9IG5iLT5ub3Rp
+Zmllcl9jYWxsOworCQljaGFyIHN5bVtLU1lNX1NZTUJPTF9MRU5dOworCisJCV9fZW50cnkt
+PnZhbCA9IHZhbDsKKwkJX19lbnRyeS0+ZmNuID0gKHU2NCkgcDsKKworCQlwID0gZGVyZWZl
+cmVuY2Vfc3ltYm9sX2Rlc2NyaXB0b3IocCk7CisjaWZkZWYgQ09ORklHX0tBTExTWU1TCisJ
+CXNwcmludF9zeW1ib2xfbm9fb2Zmc2V0KHN5bSwgX19lbnRyeS0+ZmNuKTsKKwkJLyogYXZv
+aWQgYSBib2d1cyB3YXJuaW5nOgorCQkgKiAidGhlIGFkZHJlc3Mgb2Ygc3ltIHdpbGwgYWx3
+YXlzIGV2YWx1YXRlIGFzIHRydWUiCisJCSAqIGJ5IHVzaW5nICZzeW1bMF0KKwkJICovCisJ
+CV9fYXNzaWduX3N0cihmY25zdHIsICZzeW1bMF0pOworI2Vsc2UKKwkJX19lbnRyeS0+ZmNu
+c3RyWzBdID0gJ1wwJzsKKyNlbmRpZgorCSksCisKKwlUUF9wcmludGsoInZhbCAlbGxkIGZj
+biAlbGx4IG5hbWUgJXMiLCBfX2VudHJ5LT52YWwsIF9fZW50cnktPmZjbiwgX19nZXRfc3Ry
+KGZjbnN0cikpCispOworI2VuZGlmIC8qIF9UUkFDRV9OT1RJRklFUl9IICovCisKKy8qIFRo
+aXMgcGFydCBtdXN0IGJlIG91dHNpZGUgcHJvdGVjdGlvbiAqLworI2luY2x1ZGUgPHRyYWNl
+L2RlZmluZV90cmFjZS5oPgpkaWZmIC0tZ2l0IGEva2VybmVsL25vdGlmaWVyLmMgYi9rZXJu
+ZWwvbm90aWZpZXIuYwppbmRleCA2MTk2YWY4YTgyMjMuLjliNjVhOWM1NmZkNyAxMDA2NDQK
+LS0tIGEva2VybmVsL25vdGlmaWVyLmMKKysrIGIva2VybmVsL25vdGlmaWVyLmMKQEAgLTUs
+NiArNSw4IEBACiAjaW5jbHVkZSA8bGludXgvcmN1cGRhdGUuaD4KICNpbmNsdWRlIDxsaW51
+eC92bWFsbG9jLmg+CiAjaW5jbHVkZSA8bGludXgvcmVib290Lmg+CisjZGVmaW5lIENSRUFU
+RV9UUkFDRV9QT0lOVFMKKyNpbmNsdWRlIDx0cmFjZS9ldmVudHMvbm90aWZpZXIuaD4KIAog
+LyoKICAqCU5vdGlmaWVyIGxpc3QgZm9yIGtlcm5lbCBjb2RlIHdoaWNoIHdhbnRzIHRvIGJl
+IGNhbGxlZApAQCAtOTAsNiArOTIsNyBAQCBzdGF0aWMgaW50IG5vdGlmaWVyX2NhbGxfY2hh
+aW4oc3RydWN0IG5vdGlmaWVyX2Jsb2NrICoqbmwsCiAJCQljb250aW51ZTsKIAkJfQogI2Vu
+ZGlmCisJCXRyYWNlX25vdGlmaWVyX2NhbGxfY2hhaW4obmIsIHZhbCk7CiAJCXJldCA9IG5i
+LT5ub3RpZmllcl9jYWxsKG5iLCB2YWwsIHYpOwogCiAJCWlmIChucl9jYWxscykKLS0gCjIu
+MTEuMAoK
+--------------A130DC68AA00417E350956C2--
