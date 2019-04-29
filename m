@@ -2,158 +2,87 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0113C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EA9C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6F920652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sVljXjmK"
+	by mail.kernel.org (Postfix) with ESMTP id B31C620652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556559663;
+	bh=Mry+LclJr+iSs3cH/ZV97Lp1oRnJf7w2KpRwi7JwmKI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NeP4Jy3qTkY41fyT8eof0h0IzDkeJBrG14vtUjisq/I8c/J7fOFmTaY7cQEHwTzm/
+	 pmq2S3Db8K2xfAW0SYTmrU+X7ry5ohR/VMC4Vtzn2QdjtVF8g9k3BXTULZCwUdUlfZ
+	 Av9SRpqJ7FZfWyMQvpqFCupSr78UdI7L2vFNTXog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbfD2Rkt (ORCPT
+        id S1728955AbfD2RlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:40:49 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46032 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728855AbfD2Rkt (ORCPT
+        Mon, 29 Apr 2019 13:41:01 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38902 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbfD2RlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:40:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id o5so5394256pls.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yqGrP/Pk5Od/q2uuVdzkrCCm4fxm4ySCvMrxHSCLMNo=;
-        b=sVljXjmKJtnEXliXKxkwebq5xKfTy86uAnBoTrm5UVWXLWu8WrQ3SrYgV9EGtIXjtL
-         W73E9/Psz+SllzCOMkxV5kZ8dJ0wUPbhyuXPzsmzQhWsmoPyJKcQulOLPk6AlKrKcOud
-         jqC3nxlZGeC2LQRiZTV2cyoFv3ql5WS/FVYxxL7z3icYl7Dro6nbsb8Mei8gr/DJ8E6I
-         UGfjSoYFgwb5fbJ1LSWwXVM0hQKgbJ9/XAUuP9V3/KY/FnXnayOgBnYSCteYMdg8eTB+
-         wRqHnpgR7sJ1bcgGz2JoX/aYnT/SrJxC9euNnSP5LQgG4cx+uEVE7OvHR2R1ZBdLkKfv
-         5G1A==
+        Mon, 29 Apr 2019 13:41:00 -0400
+Received: by mail-ot1-f68.google.com with SMTP id t20so9417567otl.5;
+        Mon, 29 Apr 2019 10:41:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yqGrP/Pk5Od/q2uuVdzkrCCm4fxm4ySCvMrxHSCLMNo=;
-        b=lK2XwBfugR/IYF9B9i+CRHtWrH8ozzPjqchRjjDUgZvbfvn44DNjA6YUaNyMZCUteo
-         TdJtem7HpWekD5pT/wVqZbiu/Ighk32O468BNLfIxnt3qgS98mmOmRGmgSgniycB0TcH
-         mwSjk3L2yX4UAARW8hSy2QxdkMXfEA+9/h+TM2Hok5sH/D8bYiEG6SXEch0MRY7ol4rK
-         r9VLIJJbruvYdsZ+HyJp1CS72G2Rl7moFsm6CFvuYlk/r/E6Qbe77saVsojs3XJc/TF0
-         Jds2aJq30sw89RSOabO5SMDEqfsx+epQ0jvyu8gvH2it4x2LyPFbZ5wiEwUZTiUTy0k0
-         o5eQ==
-X-Gm-Message-State: APjAAAXkidJ8pID2IdmTj46DlD3fA0prXa/9fHdeNJcIEmDTsvl/g+Fm
-        u/lcvLtB10stVHy99/r5w7hNXw==
-X-Google-Smtp-Source: APXvYqyZ9ch1mDN02UpHm9ZqpChoV/x4Wmqk7ltEjarIJPQP5WhnR/4J923deaX6hVmv7nBhjjxS2Q==
-X-Received: by 2002:a17:902:e00e:: with SMTP id ca14mr21797793plb.317.1556559648152;
-        Mon, 29 Apr 2019 10:40:48 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t5sm43838317pfh.141.2019.04.29.10.40.46
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7IAkFL1JXbZxNJHIArZ/p7tWmdMrEZfFKxFB5D31v3Y=;
+        b=VmQFGNP/nKKOhIUzJ6tcKCvl4vYB0joCjFX7IZetchwivtU3Y6Cx36a4LOOHERgQCi
+         ZyL746Mm8gmpwWJanVyKlG2DljbQpvnPTpiU+kc2tx2IY2hhaRS6N0JsrDais1q2osC/
+         6qmPa87EMRtsiW6j2cEi8bjvFjsA5NyHKeXd9j7UMHICCdZ+V3mOwx17AKbg8xfaCHDc
+         Yr34h70JcbsffAeGVXtOkWTAFqDyGNX19FpYqgTTnM2VEnEszVrQMHv/CfCHKimppxC8
+         0ID6jFw9BSzDc6wCGlRwkWoYdBicOF+bSQJwIq69m443vE1TszyrNfMwTX7MrXSFsnIX
+         aJ/A==
+X-Gm-Message-State: APjAAAUfchWPbMBiIiDdCvfH5MFTDiyLv3a7hqdOlBg8z1tFE1/4Xv5L
+        ANoYQSnKQwbqApxImdCmLA==
+X-Google-Smtp-Source: APXvYqw/imxgz09DG6zdb1MmzjQVdBUe8PLv9+NKHbFUlUVCLnjIkMVGwh0dmC1m3Zg49hHRfgn0uw==
+X-Received: by 2002:a9d:4909:: with SMTP id e9mr8198002otf.160.1556559659685;
+        Mon, 29 Apr 2019 10:40:59 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i22sm1689418otj.34.2019.04.29.10.40.58
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 10:40:47 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 11:40:45 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, mike.leach@linaro.org,
-        rjw@rjwysocki.net, robert.walker@arm.com
-Subject: Re: [PATCH v2 34/36] [RFC] coresight: Pass coresight_device for
- coresight_release_platform_data
-Message-ID: <20190429174045.GA18807@xps15>
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
- <1555344260-12375-35-git-send-email-suzuki.poulose@arm.com>
+        Mon, 29 Apr 2019 10:40:58 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 12:40:58 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: mfd: axp20x: Add fallback for axp805
+Message-ID: <20190429174058.GA11425@bogus>
+References: <20190409160550.1086-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1555344260-12375-35-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190409160550.1086-1-peron.clem@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:04:17PM +0100, Suzuki K Poulose wrote:
-> As we prepare to expose the links between the devices in
-> sysfs, pass the coresight_device instance to the
-> coresight_release_platform_data in order to free up the connections
-> when the device is removed.
+On Tue, Apr 09, 2019 at 06:05:50PM +0200, Clément Péron wrote:
+> axp805 is actually compatible and used with axp806 as fallback.
+> But it's actually undocumented and trig a warning with checkpatch.
 > 
-> No functional changes as such in this patch.
+> DT compatible string "x-powers,axp805" appears un-documented.
 > 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Add this compatible in the dt-bindings documentation.
+> 
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 > ---
->  drivers/hwtracing/coresight/coresight-platform.c | 2 +-
->  drivers/hwtracing/coresight/coresight-priv.h     | 3 ++-
->  drivers/hwtracing/coresight/coresight.c          | 7 ++++---
->  3 files changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 224f698..6559c49 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -734,7 +734,7 @@ coresight_get_platform_data(struct device *dev)
->  		return pdata;
->  
->  	/* Cleanup the connection information */
-> -	coresight_release_platform_data(pdata);
-> +	coresight_release_platform_data(NULL, pdata);
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(coresight_get_platform_data);
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index 61d7f9f..bf28ca9 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -200,6 +200,7 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
->  	return 0;
->  }
->  
-> -void coresight_release_platform_data(struct coresight_platform_data *pdata);
-> +void coresight_release_platform_data(struct coresight_device *csdev,
-> +				     struct coresight_platform_data *pdata);
->  
->  #endif
-> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-> index e3b9321..010bc86 100644
-> --- a/drivers/hwtracing/coresight/coresight.c
-> +++ b/drivers/hwtracing/coresight/coresight.c
-> @@ -1173,7 +1173,8 @@ postcore_initcall(coresight_init);
->   * coresight_release_platform_data: Release references to the devices connected
->   * to the output port of this device.
->   */
-> -void coresight_release_platform_data(struct coresight_platform_data *pdata)
-> +void coresight_release_platform_data(struct coresight_device *csdev,
-> +				     struct coresight_platform_data *pdata)
->  {
->  	int i;
->  
-> @@ -1275,7 +1276,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
->  	kfree(csdev);
->  err_out:
->  	/* Cleanup the connection information */
-> -	coresight_release_platform_data(desc->pdata);
-> +	coresight_release_platform_data(NULL, desc->pdata);
->  	return ERR_PTR(ret);
->  }
->  EXPORT_SYMBOL_GPL(coresight_register);
-> @@ -1285,7 +1286,7 @@ void coresight_unregister(struct coresight_device *csdev)
->  	etm_perf_del_symlink_sink(csdev);
->  	/* Remove references of that device in the topology */
->  	coresight_remove_conns(csdev);
-> -	coresight_release_platform_data(csdev->pdata);
-> +	coresight_release_platform_data(csdev, csdev->pdata);
->  	device_unregister(&csdev->dev);
->  }
->  EXPORT_SYMBOL_GPL(coresight_unregister);
+>  Documentation/devicetree/bindings/mfd/axp20x.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Applied, thanks.
 
-> -- 
-> 2.7.4
-> 
+Rob
