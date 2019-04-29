@@ -2,83 +2,88 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9326C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73812C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04FE2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556574304;
-	bh=mjHNPm5UzQBTfhnbdbEZUXnSMjVIkxkLtBLxdRwsrxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oAfqa5BwXrby353KHWvrKxLxvOv54SQ0F5NVXpoTlsmn9xCIIv8IG241ys0Lyf2sY
-	 06sMcHtlqLfWHGvXaN2t9DNdcACVkEOteafQ4W7afGjZFO0Wz7YDnRodeLXbW9Alxu
-	 zv4lhr7En01ErEGbBPjWqlxC2Hlucc/4/h5tGgws=
+	by mail.kernel.org (Postfix) with ESMTP id 3B92B2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:45:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="BTwgcF7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbfD2VpD (ORCPT
+        id S1729503AbfD2Vpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:45:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53168 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729341AbfD2VpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:45:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 95B8DABD7;
-        Mon, 29 Apr 2019 21:45:01 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 17:44:58 -0400
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH V2] mm: Allow userland to request that the kernel clear
- memory on release
-Message-ID: <20190429214458.GB3715@dhcp22.suse.cz>
-References: <CACdnJuup-y1xAO93wr+nr6ARacxJ9YXgaceQK9TLktE7shab1w@mail.gmail.com>
- <20190424211038.204001-1-matthewgarrett@google.com>
- <20190425121410.GC1144@dhcp22.suse.cz>
- <20190425123755.GX12751@dhcp22.suse.cz>
- <CACdnJuutwmBn_ASY1N1+ZK8g4MbpjTnUYbarR+CPhC5BAy0oZA@mail.gmail.com>
- <20190426052520.GB12337@dhcp22.suse.cz>
- <CACdnJutweLKsir_r9EgP9g=Eih-hbhq20N8zHzKawR8=awnENw@mail.gmail.com>
+        Mon, 29 Apr 2019 17:45:44 -0400
+Received: from mx.kolabnow.com ([95.128.36.41]:33808 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729354AbfD2Vpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 17:45:43 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTP id 25D884A3;
+        Mon, 29 Apr 2019 23:45:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-transfer-encoding:mime-version:message-id:date:date
+        :subject:subject:from:from:received:received:received; s=
+        dkim20160331; t=1556574340; x=1558388741; bh=FkmmNzOhZAiBzAGvga+
+        1Vd0vaNR7piDEbAc1VZkwiiU=; b=BTwgcF7DaVhW4uhAH/kU+jE1Tfat1Bsh5NU
+        hAP/AvbxRpJKWwppoQ5jHwhILZOLtYZN6jq0StiBx91Dt5fHeCSgppzbiLlRBHNf
+        37faZJOkTQgL6YR0+QKT91lVmtgYO93kiA7VgFKfLRwdB95wNFzjVo4a0n16dHIK
+        Zfa3ZTC28dRXJbU3vv3UKveIW1EzEqJb8XcUv3VdNKjqj9E2tqhUYyBGbhJQeVXl
+        hz3bFoDhCMV9PhIUaVZAd1wX/1Jax0NKaiTABsYCQPmxMCsppYTtWB0thWir7jBI
+        /0q9+Pz4Pl55xfvi8jwH+Sl2ikue6Uid1zGLMViXmWF7/A+/tdVwv6gn6Qt7Q48n
+        p4e2k95zd2msoT4JTJ+JLRyGz4M5ex7/DXqxsiQpdXaoGmCXx1NLTxLjOkACF7mA
+        4929iJCS0xmhaxDGbYEnrcwLs4e4joVNYtvc+Lch5Jd+wotqWjZaqyKmBnbK3/5g
+        fpwzHL4EHMGBLKI8txYQZalDYh8TitjrrjnXhv2XbvpOpG2bAR8a8c+a4SJ6LsTt
+        5FtVQSgxxmzLhSV2N6oBFwnNFrWE12B2sJUdS1k/dhwX1/hczSM3UhuHEmxtAX5v
+        8CAxlxkWvhDmhRomIts1CXbKqm9w5nEry3QMckTg3Nqiy+rAVP16+u2Ou6hXtYRr
+        UqVqDjdk=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out002.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id aKTMrz2PH84d; Mon, 29 Apr 2019 23:45:40 +0200 (CEST)
+Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTPS id D985C1F1;
+        Mon, 29 Apr 2019 23:45:39 +0200 (CEST)
+Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
+        by int-mx001.mykolab.com (Postfix) with ESMTPS id 8C2DB517;
+        Mon, 29 Apr 2019 23:45:39 +0200 (CEST)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] doc: fix typo in PGP guide
+Date:   Mon, 29 Apr 2019 23:45:14 +0200
+Message-Id: <20190429214514.25625-1-federico.vaga@vaga.pv.it>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACdnJutweLKsir_r9EgP9g=Eih-hbhq20N8zHzKawR8=awnENw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 26-04-19 11:08:44, Matthew Garrett wrote:
-> On Thu, Apr 25, 2019 at 10:25 PM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Thu 25-04-19 13:39:01, Matthew Garrett wrote:
-> > > Yes, given MADV_DONTDUMP doesn't imply mlock I thought it'd be more
-> > > consistent to keep those independent.
-> >
-> > Do we want to fail madvise call on VMAs that are not mlocked then? What
-> > if the munlock happens later after the madvise is called?
-> 
-> I'm not sure if it's strictly necessary. We already have various
-> combinations of features that only make sense when used together and
-> which can be undermined by later actions. I can see the appeal of
-> designing this in a way that makes it harder to misuse, but is that
-> worth additional implementation complexity?
+Fix typo in the GPG guide for maintainers
 
-If the complexity is not worth the usual usecases then this should be
-really documented and noted that without an mlock you are not getting
-the full semantic and you can leave memory behind on the swap partition.
+Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
+---
+ Documentation/process/maintainer-pgp-guide.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I cannot judge how much that matter but it certainly looks half feature
-to me but if nobody is going to use the madvise without mlock then it
-looks certainly much easier to implement.
+diff --git a/Documentation/process/maintainer-pgp-guide.rst b/Documentation/process/maintainer-pgp-guide.rst
+index aff9b1a4d77b..4bab7464ff8c 100644
+--- a/Documentation/process/maintainer-pgp-guide.rst
++++ b/Documentation/process/maintainer-pgp-guide.rst
+@@ -943,7 +943,7 @@ have on your keyring::
+ 
+ Next, open the `PGP pathfinder`_. In the "From" field, paste the key
+ fingerprint of Linus Torvalds from the output above. In the "To" field,
+-paste they key-id you found via ``gpg --search`` of the unknown key, and
++paste the key-id you found via ``gpg --search`` of the unknown key, and
+ check the results:
+ 
+ - `Finding paths to Linus`_
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
