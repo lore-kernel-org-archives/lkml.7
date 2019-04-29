@@ -2,127 +2,95 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9235C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A82C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989AC20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556539355;
-	bh=0fAd9AoGr69X9GfL20SKcwdKwfBh6tMYGRr0gGW/6yY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZiH1zL8l8PpzLN7UM4B7+zN5OJEDpE8fPnUWTk7gjs3cnXgsfR8M/yoDaTp1aQ7gH
-	 GAX9ccAKV/c5TAmp/Vz3BrDJ64HFWJuBWHTMBktgH0laGc7/vjSIvXiliKJiyfdu6I
-	 z4pEeICKYzfsFcAu6I8z17fZ7jNkEEApi8y/Z4u0=
+	by mail.kernel.org (Postfix) with ESMTP id 106FD20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfD2MCe (ORCPT
+        id S1728179AbfD2MCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbfD2MCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:02:34 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 29 Apr 2019 08:02:44 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:48030 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728024AbfD2MCj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:02:39 -0400
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD5A620656;
-        Mon, 29 Apr 2019 12:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556539353;
-        bh=0fAd9AoGr69X9GfL20SKcwdKwfBh6tMYGRr0gGW/6yY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T4ZKXyTNJ7Auyyuee/PNCCGDqOEsBdpwQ2YagiFtiJNUlofMrkNIFDVPBh6vGubfl
-         5R8fMqJKKLfihjnSFJDq0dmzDpxG/j/tmEn6bCVwxgie3jolXFSCXR8t4gttm3009g
-         7bAoG2A6YhWqRN84gBHqtKVGuTHBybNxlOGWf4iw=
-Date:   Mon, 29 Apr 2019 17:32:21 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] dmaengine: sprd: Fix the possible crash when getting
- engine status
-Message-ID: <20190429120221.GM3845@vkoul-mobl.Dlink>
-References: <cover.1555330115.git.baolin.wang@linaro.org>
- <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
- <20190429113555.GI3845@vkoul-mobl.Dlink>
- <CAMz4kuK0jurdNX3Z+zH5_ErR-64k2-Nuw_1T+X4OjbjURDSnUA@mail.gmail.com>
+        by mx1-us1.ppe-hosted.com (Proofpoint Essentials ESMTP Server) with ESMTPS id 68B641400A8;
+        Mon, 29 Apr 2019 12:02:37 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
+ (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 29 Apr
+ 2019 05:02:33 -0700
+Subject: Re: [PATCH] rds: ib: force endiannes annotation
+To:     Nicholas Mc Guire <der.herr@hofr.at>
+CC:     Nicholas Mc Guire <hofrat@osadl.org>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>,
+        <linux-kernel@vger.kernel.org>
+References: <1556518178-13786-1-git-send-email-hofrat@osadl.org>
+ <20443fd3-bd1e-9472-8ca3-e3014e59f249@solarflare.com>
+ <20190429111836.GA17830@osadl.at>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <2ffed5fc-a372-3f90-e655-bcbc740eed33@solarflare.com>
+Date:   Mon, 29 Apr 2019 13:02:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuK0jurdNX3Z+zH5_ErR-64k2-Nuw_1T+X4OjbjURDSnUA@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190429111836.GA17830@osadl.at>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24580.005
+X-TM-AS-Result: No-14.176100-4.000000-10
+X-TMASE-MatchedRID: HXSqh3WYKfsOwH4pD14DsPHkpkyUphL9+WzVGPiSY8jkVi/vHE4dwPM+
+        9Fw01I7GRQLzGM7KIBh9cJyW2BrvG9lnkI1u79lBnprizKKMwma1d0Fs4VikB0S/boWSGMtd9P1
+        gJOQHwkv5O2/3eJ45TlT7pLySGeP0n19mXmEdfVlfLa2Qr61pJCGi0ftsSkQygrAXgr/AjP3ZSx
+        a9R97yPI6kPNsstSO0xcKxQpPhJ/bdM4TtXgVTNLlwTkBCo+04i/ymJ2FVg5SbKItl61J/yZkw8
+        KdMzN86KrauXd3MZDWXf5sC39gVVMrUvx27s9YcSJo1rqxdGLyzw2JSXY5EclrsV/jyG+zxXwji
+        hSrlWBo=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--14.176100-4.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24580.005
+X-MDID: 1556539358-e9OzWke6H3iF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-04-19, 19:49, Baolin Wang wrote:
-> Hi Vinod,
-> 
-> On Mon, 29 Apr 2019 at 19:36, Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 15-04-19, 20:14, Baolin Wang wrote:
-> > > We will get a NULL virtual descriptor by vchan_find_desc() when the descriptor
-> > > has been submitted, that will crash the kernel when getting the engine status.
-> >
-> > No that is wrong, status is for descriptor and not engine!
-> 
-> Sure, will fix the commit message.
-> 
-> >
-> > > In this case, since the descriptor has been submitted, which means the pointer
-> > > 'schan->cur_desc' will point to the current descriptor, then we can use
-> > > 'schan->cur_desc' to get the engine status to avoid this issue.
-> >
-> > Nope, since the descriptor is completed, you return with residue as 0
-> > and DMA_COMPLETE status!
-> 
-> No, the descriptor is not completed now. If it is completed, we will
-> return 0 with DMA_COMPLETE status. But now the descriptor is on
-> progress, we should get the descriptor to return current residue.
-> Sorry for confusing description.
+On 29/04/2019 12:18, Nicholas Mc Guire wrote:
+> On Mon, Apr 29, 2019 at 12:00:06PM +0100, Edward Cree wrote:
+>> Again, a __force cast doesn't seem necessary here.  It looks like the
+>>  code is just using the wrong types; if all of src, dst and uncongested
+>>  were __le64 instead of uint64_t, and the last two lines replaced with
+>>  rds_cong_map_updated(map, le64_to_cpu(uncongested)); then the semantics
+>>  would be kept with neither sparse errors nor __force.
+>>
+>> __force is almost never necessary and mostly just masks other bugs or
+>>  endianness confusion in the surrounding code.  Instead of adding a
+>>  __force, either fix the code to be sparse-clean or leave the sparse
+>>  warning in place so that future developers know there's something not
+>>  right.
+>>
+> changing uncongested to __le64 is not an option here - it would only move
+> the sparse warnings to those other locatoins where the ports that 
+> became uncongested are being or'ed into uncongested.
+That's why I say to change *src and *dst too.  Sparse won't mind the
+ conversion from void * to __le64 * when they're assigned, and the only
+ operations we do on them...
+>                         uncongested |= ~(*src) & *dst;
+>                         *dst++ = *src++;
+... are some bitwise ops on the values (bitwise ops are legal in any
+ endianness) and incrementation of the pointers (which cares only about
+ the pointee size, not type).
 
-OKay will wait for updated description to understand the fix
-
-> 
-> >
-> > >
-> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > > ---
-> > >  drivers/dma/sprd-dma.c |    2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-> > > index 48431e2..e29342a 100644
-> > > --- a/drivers/dma/sprd-dma.c
-> > > +++ b/drivers/dma/sprd-dma.c
-> > > @@ -625,7 +625,7 @@ static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
-> > >               else
-> > >                       pos = 0;
-> > >       } else if (schan->cur_desc && schan->cur_desc->vd.tx.cookie == cookie) {
-> > > -             struct sprd_dma_desc *sdesc = to_sprd_dma_desc(vd);
-> > > +             struct sprd_dma_desc *sdesc = schan->cur_desc;
-> > >
-> > >               if (sdesc->dir == DMA_DEV_TO_MEM)
-> > >                       pos = sprd_dma_get_dst_addr(schan);
-> > > --
-> > > 1.7.9.5
-> >
-> > --
-> > ~Vinod
-> 
-> 
-> 
-> -- 
-> Baolin Wang
-> Best Regards
-
--- 
-~Vinod
+-Ed
