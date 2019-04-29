@@ -2,103 +2,92 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F6BC04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA0BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4EE21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8Wpy22p"
+	by mail.kernel.org (Postfix) with ESMTP id D30442087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556560829;
+	bh=8NLIZ5ZGvArvLmkr3jJFPUFouLu9HU5LWdevZlDEJIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EAMl+1lf84ZtETtdCdTrEcwgbduW0IcRueLsZXMfIkGoiUjsHeW+QKoRgjOrHECH4
+	 B6igapEVlOFOG91BSfhrNqktEvhWHPdrwOeJEfCK1Fxbo4VL0PgVzdKBkoWG4rVpw8
+	 GgfLYp8b/jevmC93jgcRCLp7ndqUoUc0XLgLHjHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfD2R7q (ORCPT
+        id S1729011AbfD2SA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:59:46 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45926 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728748AbfD2R7p (ORCPT
+        Mon, 29 Apr 2019 14:00:28 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36228 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbfD2SA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:59:45 -0400
-Received: by mail-qk1-f193.google.com with SMTP id d5so6471817qko.12;
-        Mon, 29 Apr 2019 10:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=yL+SmVseEfdaIJChh77smjXMJCyTOeRPG4sdYAGm78c=;
-        b=S8Wpy22pQ6+hHsvpX2spQhaJkQhcdRhV1lH5EphIHaicUTdZPYoN+iogQNM0dyiXFD
-         8oh0bD1NbBysGrV6tXX47TnTl0LQ/OQGgnNdWhWgVEt3W5rYcDR0+JeWI3aPxahnumrX
-         VLeYIY0L9YsEKF8XT28Igf9rH27Wcs/AtZyES9YYsu2NR28HCKJuogcp9Pz1CgMLDPL8
-         a3O+37wpF5W1NfRNwLn1Syjw39rnQ7K2bzoTcF+W5OJJxVdiLHVejUrL0LX6bBwz5rw7
-         6UAjZNwhMmK2E/h7CJre3B+89hXFtXGNhp21E6gTXQ4+Es9VBO0/vmFlDjmJfeLPUKyg
-         Drkw==
+        Mon, 29 Apr 2019 14:00:28 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b18so467041otq.3;
+        Mon, 29 Apr 2019 11:00:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=yL+SmVseEfdaIJChh77smjXMJCyTOeRPG4sdYAGm78c=;
-        b=PlEMOP987grOglqHkKUgX43bLN2u2fenOxPswVGA08YUvoz6xBRir5YQ3kCP5l5/Mt
-         0v59wPCdhFgqXtrkMd78MScY4/5SVyf/f9hEBkvcyo67SIxGbUwqyoyCrsNkUwDkjaE4
-         2fePv6CUlDJ9BTT0RTZeaXJ8iYA2vKqqMY8cMOvFVijVChH6rSgpOzNTgoQDD/PDiKtf
-         ks5VEYsbNVv/uTkJw3NXRunR1raWVwW8UuyX9GNUAuwz5tsfXiVcDw9YDOsft4VjwXHN
-         4VMjbNBBW/xs4gZdYvPq7vTL2p+hO+93srmxHxJi7c6w9NkEYYAn2mSOwOoosDxRvBoV
-         p1hA==
-X-Gm-Message-State: APjAAAWeG6mELZ2GSW9zZb+vfQNMX/TYui7khQyAK1AqQEWX97HnvkV0
-        VX2WvGErwL0P/uzv4xLxbJo=
-X-Google-Smtp-Source: APXvYqwqAQNE+Ut09opIpLJIGSCDS7bx5geJX+Lthjy6net0ioLipxgWRdOsP0mj9ccj7uDDu0D9ug==
-X-Received: by 2002:ae9:c20b:: with SMTP id j11mr45839310qkg.357.1556560784513;
-        Mon, 29 Apr 2019 10:59:44 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id y18sm7542950qkf.7.2019.04.29.10.59.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g0D+oba7J53ugRdqUqKhfZjp5c7iIeT/s8VTipHSSVY=;
+        b=JCtLCUlkFh2QKj/YgL1lOBwPOQEUuf0ix3MDbrdiJQhnda1LDYwlhFRVljDi1IRbX3
+         fAaQLEIYzIuOE+E5vZGsvokaxIwb58AVAtmdrFtKn1UVz5nzd0MaZI0pXAcqUQNUovtV
+         G2LVDyZZVqU0T49we9ZyvSQe1I3lN7MgzgT7bhuooiEMnheCfnSHhLpHildY02vtAmCI
+         KP0kzF71CVhret8bOqOVFmoxvXXhHkVrRCkoy5CZ/ESWoZWxPwUtPtUrU4Z5aPLDqQF+
+         Em3FitWDLGCHYtGZDArIZXbzMjrhyR1zNu4BlO5HztxRTBEj+fnGafwyYlexSNRbj3Xb
+         +Ghg==
+X-Gm-Message-State: APjAAAXOMHIHztj4EFAg0+mkycdq75YEdL0l07eImUZWOMkhCM/ocfv1
+        Ic9HtD/ArTpHV4WQMarGNA==
+X-Google-Smtp-Source: APXvYqw/Ak8dPY20CeIJj6QMYQ/AG9L0qLBnThEixW2CPNlkqEsFNS6fbkCbHa9vdEgs8+Z02lWBaw==
+X-Received: by 2002:a9d:7dd5:: with SMTP id k21mr9116726otn.201.1556560826845;
+        Mon, 29 Apr 2019 11:00:26 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i11sm13537301otl.27.2019.04.29.11.00.25
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 10:59:44 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 14:59:40 -0300
-From:   =?utf-8?B?Sm/Do28=?= Seckler <joaoseckler@gmail.com>
-To:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, jic23@kernel.org, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, gregkh@linuxfoundation.org
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH] staging: iio: adt7316: match parenthesis alignment
-Message-ID: <20190429175939.2jvt4qwrtbmpvhl6@smtp.gmail.com>
+        Mon, 29 Apr 2019 11:00:26 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 13:00:25 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+Message-ID: <20190429180025.GA15562@bogus>
+References: <20190410133833.28859-1-dmurphy@ti.com>
+ <20190410133833.28859-2-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190410133833.28859-2-dmurphy@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch solves the following checkpatch.pl message:
-CHECK: Alignment should match open parenthesis.
-This makes the file more compliant with the preferred coding style for
-the Linux kernel.
+On Wed, 10 Apr 2019 08:38:29 -0500, Dan Murphy wrote:
+> Add the LM36274 backlight driver with regulator support.
+> This is a multi-function device for backlight applications.
+> 
+> Backlight properties will be documented in it's a supplemental
+> bindings document.
+> 
+> Regulator support is documented in the regulator/lm363x-regulator.txt
+> 
+> http://www.ti.com/lit/ds/symlink/lm36274.pdf
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v2 - No changes - https://lore.kernel.org/patchwork/patch/1058776/
+> 
+>  .../devicetree/bindings/mfd/ti-lmu.txt        | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
 
-Signed-off-by: João Seckler <joaoseckler@gmail.com>
----
- drivers/staging/iio/addac/adt7316.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
-index b6a65ee8d558..37ce563cb0e1 100644
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -2154,7 +2154,7 @@ int adt7316_probe(struct device *dev, struct adt7316_bus *bus,
- 		chip->dac_bits = 8;
- 
- 	chip->ldac_pin = devm_gpiod_get_optional(dev, "adi,ldac",
--						GPIOD_OUT_LOW);
-+						 GPIOD_OUT_LOW);
- 	if (IS_ERR(chip->ldac_pin)) {
- 		ret = PTR_ERR(chip->ldac_pin);
- 		dev_err(dev, "Failed to request ldac GPIO: %d\n", ret);
--- 
-2.11.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
