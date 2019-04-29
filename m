@@ -2,117 +2,151 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD3CC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38028C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D837205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:45:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="fHaCcoEZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0C3582147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfD2GpG (ORCPT
+        id S1727404AbfD2GqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:45:06 -0400
-Received: from mta-p3.oit.umn.edu ([134.84.196.203]:47414 "EHLO
-        mta-p3.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfD2GpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:45:06 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mta-p3.oit.umn.edu (Postfix) with ESMTP id 48EE367E
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 06:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=umn.edu; h=
-        content-type:content-type:subject:subject:message-id:date:date
-        :from:from:in-reply-to:references:mime-version:received:received
-        :received; s=20160920; t=1556520304; x=1558334705; bh=HR/VsmL+Sl
-        Q9LEfLNg0cZiRdW29pIMsOScEdB/7Npfs=; b=fHaCcoEZcOn9WXjsUKLGQ6E6JI
-        F+D6woSg4zHjjqUYhRQyDVDzUSZYxRyHFdA96ELWnwxKB6C1maxT9Nr2ypWJaFK9
-        DHBMOEKnubKVxfA7+kVR5kRsymCYWV1b0RdcYarW4eiT5qdGhTjgu0ZuhWh0qrde
-        qBWqTQ63NUga4gx9JvRE6Oc1SijLQP926B2XPR60dGpdqmNF7icdx3Gnst3f7ODq
-        MMWc1gaSG96V2hF0heiUAX5L4meAaI4UOlEgik9JE9Mr3FPNul7jSKTGKVNeZeLZ
-        oaMz2qeMm1ZA2c52cw6k18oJdkgpSdMuboL9SSPH0iuZXNyz7pNg/9Pvue3Q==
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p3.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p3.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id b2ytbYYLEpa1 for <linux-kernel@vger.kernel.org>;
-        Mon, 29 Apr 2019 01:45:04 -0500 (CDT)
-Received: from mail-it1-f180.google.com (mail-it1-f180.google.com [209.85.166.180])
-        (using TLSv1 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wang6495)
-        by mta-p3.oit.umn.edu (Postfix) with ESMTPSA id 263B5603
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 01:45:04 -0500 (CDT)
-Received: by mail-it1-f180.google.com with SMTP id z17so9975498itc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 23:45:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAXdAuyuzsw6WdmgVths9qxMqdwvGT5aZzTvsWZzDbAoKG21kqbI
-        0UDJo4EDnpOBm+qTcfml94jShwb05h+8DmbnEYM=
-X-Google-Smtp-Source: APXvYqwmcBj42HoRDaYE7ExTxp+2Gctub0ZLZgUoKG3V35QOlgB829b/DrYE8s3uHW8sArdfI7YGEeZfc8W1tYIFh8s=
-X-Received: by 2002:a05:660c:148:: with SMTP id r8mr4672499itk.125.1556520303936;
- Sun, 28 Apr 2019 23:45:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <1556433754-3291-1-git-send-email-wang6495@umn.edu>
- <s5hd0l6mwbz.wl-tiwai@suse.de> <s5ha7g9l6ea.wl-tiwai@suse.de>
- <CAAa=b7f7MMJ=2PBxz8yYM6u2SX7T2-YnC37gbapc1f9HOPQdeA@mail.gmail.com> <s5h4l6hl3ca.wl-tiwai@suse.de>
-In-Reply-To: <s5h4l6hl3ca.wl-tiwai@suse.de>
-From:   Wenwen Wang <wang6495@umn.edu>
-Date:   Mon, 29 Apr 2019 01:44:28 -0500
-X-Gmail-Original-Message-ID: <CAAa=b7dHFLnXWEd+v5LOVuGDim5zP+w=qy_aFAgiiMrbVBmmxA@mail.gmail.com>
-Message-ID: <CAAa=b7dHFLnXWEd+v5LOVuGDim5zP+w=qy_aFAgiiMrbVBmmxA@mail.gmail.com>
-Subject: Re: [PATCH] ALSA: usx2y: fix a memory leak bug
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     "moderated list:SOUND" <alsa-devel@alsa-project.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wenwen Wang <wang6495@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Apr 2019 02:46:20 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:39639 "EHLO
+        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfD2GqU (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Mon, 29 Apr 2019 02:46:20 -0400
+Received: from ghe-pc.suse.asia (prva10-snat226-1.provo.novell.com [137.65.226.35])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Mon, 29 Apr 2019 00:46:14 -0600
+From:   Gang He <ghe@suse.com>
+To:     mark@fasheh.com, jlbec@evilplan.org, jiangqi903@gmail.com
+Cc:     Gang He <ghe@suse.com>, linux-kernel@vger.kernel.org,
+        ocfs2-devel@oss.oracle.com, akpm@linux-foundation.org
+Subject: [PATCH 1/2] ocfs2: add last unlock times in locking_state
+Date:   Mon, 29 Apr 2019 14:46:12 +0800
+Message-Id: <20190429064613.29365-1-ghe@suse.com>
+X-Mailer: git-send-email 2.12.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 1:42 AM Takashi Iwai <tiwai@suse.de> wrote:
->
-> On Mon, 29 Apr 2019 07:50:11 +0200,
-> Wenwen Wang wrote:
-> >
-> > On Mon, Apr 29, 2019 at 12:36 AM Takashi Iwai <tiwai@suse.de> wrote:
-> > >
-> > > On Sun, 28 Apr 2019 09:18:40 +0200,
-> > > Takashi Iwai wrote:
-> > > >
-> > > > On Sun, 28 Apr 2019 08:42:32 +0200,
-> > > > Wenwen Wang wrote:
-> > > > >
-> > > > > In usX2Y_In04_init(), a new urb is firstly created through usb_alloc_urb()
-> > > > > and saved to 'usX2Y->In04urb'. Then, a buffer is allocated through
-> > > > > kmalloc() and saved to 'usX2Y->In04Buf'. After the urb is initialized, a
-> > > > > sanity check is performed for the endpoint in the urb by invoking
-> > > > > usb_urb_ep_type_check(). If the check fails, the error code EINVAL will be
-> > > > > returned. In that case, however, the created urb and the allocated buffer
-> > > > > are not freed, leading to memory leaks.
-> > > > >
-> > > > > To fix the above issue, free the urb and the buffer if the check fails.
-> > > > >
-> > > > > Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-> > > >
-> > > > Applied now, thanks.
-> > >
-> > > ... and looking at the code again, this patch turned out to be wrong.
-> > > The in04 urb and transfer buffer are freed at card->private_free
-> > > callback (snd_usX2Y_card_private_free()) later, so this patch would
-> > > lead to double-free.
-> >
-> > Thanks for your comment! Does that mean we should remove
-> > usb_free_urb() in the if statement of allocating 'usX2Y->In04Buf',
-> > because it may also lead to double free?
->
-> Yes, that's another superfluous code.
+ocfs2 file system uses locking_state file under debugfs to dump
+each ocfs2 file system's dlm lock resources, but the dlm lock
+resources in memory are becoming more and more after the files
+were touched by the user. it will become a bit difficult to analyze
+these dlm lock resource records in locking_state file by the upper
+scripts, though some files are not active for now, which were
+accessed long time ago.
+Then, I'd like to add last pr/ex unlock times in locking_state file
+for each dlm lock resource record, the the upper scripts can use
+last unlock time to filter inactive dlm lock resource record.
 
-Thanks! I will rework the patch.
+Signed-off-by: Gang He <ghe@suse.com>
+---
+ fs/ocfs2/dlmglue.c | 21 +++++++++++++++++----
+ fs/ocfs2/ocfs2.h   |  1 +
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
-Wenwen
+diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+index af405586c5b1..dccf4136f8c1 100644
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -448,7 +448,7 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
+ 				    struct ocfs2_mask_waiter *mw, int ret)
+ {
+ 	u32 usec;
+-	ktime_t kt;
++	ktime_t last, kt;
+ 	struct ocfs2_lock_stats *stats;
+ 
+ 	if (level == LKM_PRMODE)
+@@ -458,7 +458,8 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
+ 	else
+ 		return;
+ 
+-	kt = ktime_sub(ktime_get(), mw->mw_lock_start);
++	last = ktime_get();
++	kt = ktime_sub(last, mw->mw_lock_start);
+ 	usec = ktime_to_us(kt);
+ 
+ 	stats->ls_gets++;
+@@ -474,6 +475,8 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
+ 
+ 	if (ret)
+ 		stats->ls_fail++;
++
++	stats->ls_last = ktime_to_timespec(last).tv_sec;
+ }
+ 
+ static inline void ocfs2_track_lock_refresh(struct ocfs2_lock_res *lockres)
+@@ -3093,8 +3096,10 @@ static void *ocfs2_dlm_seq_next(struct seq_file *m, void *v, loff_t *pos)
+  *	- Lock stats printed
+  * New in version 3
+  *	- Max time in lock stats is in usecs (instead of nsecs)
++ * New in version 4
++ *	- Add last pr/ex unlock times in secs
+  */
+-#define OCFS2_DLM_DEBUG_STR_VERSION 3
++#define OCFS2_DLM_DEBUG_STR_VERSION 4
+ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ {
+ 	int i;
+@@ -3145,6 +3150,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ # define lock_max_prmode(_l)		((_l)->l_lock_prmode.ls_max)
+ # define lock_max_exmode(_l)		((_l)->l_lock_exmode.ls_max)
+ # define lock_refresh(_l)		((_l)->l_lock_refresh)
++# define lock_last_prmode(_l)		((_l)->l_lock_prmode.ls_last)
++# define lock_last_exmode(_l)		((_l)->l_lock_exmode.ls_last)
+ #else
+ # define lock_num_prmode(_l)		(0)
+ # define lock_num_exmode(_l)		(0)
+@@ -3155,6 +3162,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ # define lock_max_prmode(_l)		(0)
+ # define lock_max_exmode(_l)		(0)
+ # define lock_refresh(_l)		(0)
++# define lock_last_prmode(_l)		(0)
++# define lock_last_exmode(_l)		(0)
+ #endif
+ 	/* The following seq_print was added in version 2 of this output */
+ 	seq_printf(m, "%u\t"
+@@ -3165,6 +3174,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ 		   "%llu\t"
+ 		   "%u\t"
+ 		   "%u\t"
++		   "%u\t"
++		   "%u\t"
+ 		   "%u\t",
+ 		   lock_num_prmode(lockres),
+ 		   lock_num_exmode(lockres),
+@@ -3174,7 +3185,9 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ 		   lock_total_exmode(lockres),
+ 		   lock_max_prmode(lockres),
+ 		   lock_max_exmode(lockres),
+-		   lock_refresh(lockres));
++		   lock_refresh(lockres),
++		   lock_last_prmode(lockres),
++		   lock_last_exmode(lockres));
+ 
+ 	/* End the line */
+ 	seq_printf(m, "\n");
+diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+index 1f029fbe8b8d..8efa022684f4 100644
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -164,6 +164,7 @@ struct ocfs2_lock_stats {
+ 
+ 	/* Storing max wait in usecs saves 24 bytes per inode */
+ 	u32		ls_max;		/* Max wait in USEC */
++	u32		ls_last;	/* Last unlock time in SEC */
+ };
+ #endif
+ 
+-- 
+2.21.0
+
