@@ -2,106 +2,80 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81BEC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A06C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BFB20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556529874;
-	bh=q3YiTWs50dMDTd8JeYCZknpgHRHn8ZwgqhXR1mTJh2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KmX2OWvfc0whoeP+ULxK5U/Ki+PmN0mZld2TKBtvSOS8s3RPXIU7J/QgCLI0wWXpr
-	 FCZCuAdWWBTJB8bx6r3bylHM2e3uKun4AAc/mMtBh9DNFD6JM5lX3mfbK4T2KjK77j
-	 sJCEAHRJ1HAa0IspZNURiHKFuy0C65bh4x7NCAeI=
+	by mail.kernel.org (Postfix) with ESMTP id 12A0020652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfD2JYd (ORCPT
+        id S1727724AbfD2JZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:24:33 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41614 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbfD2JYc (ORCPT
+        Mon, 29 Apr 2019 05:25:39 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54407 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbfD2JZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:24:32 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k8so8665765lja.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 02:24:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PEJdVdZWdwXAxOfDG1xY+PigwDXCpbRA1Hg7zPvHQ6o=;
-        b=GfK54Lv/zee/iL/t0fBaNmTn1PaER5zOFF3h0Rm87LybGU/LKBCEUkaTuNLGalSbvH
-         4mXPPxkhm9xleq3lbC+2H5hJgOdVjncpv3BzCzkSvC+omW2zCYZHcAW7J/TLj2EfU4S+
-         fxPe0Z10WvsI6TLlWoOKOQAWtpZ4f9qAqt7KPQL0pN/jhKBCviCCVkwB3S8+KneUhH4T
-         AjBOJKL1odaHVroPx7VPIXkm0c/J7TyhCoUrGRw1DHXKzGTZ1xxiob0zcRBvKVO+wFlZ
-         gxoFjNmM24u+MEclGj8xj0YxPiOmgP6zMIcwmBHFwPYU6i0ttMlGFYO4Fndlt5aUvK/i
-         haEQ==
-X-Gm-Message-State: APjAAAXKDl2ZA7+sYvx3gTaZLgz2GajB2Mmhzqdkob1zyELSIaTi+nwD
-        6qnbDymhg5peYzYuEydbQ5A=
-X-Google-Smtp-Source: APXvYqzsqbzql/ON6mGxvxLdcdKbXtmXtfv8yW22ez3OOAx0jNgFhKSpru3mC40b/etESjF56kkX1g==
-X-Received: by 2002:a2e:3815:: with SMTP id f21mr9029618lja.25.1556529870868;
-        Mon, 29 Apr 2019 02:24:30 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id m28sm7242040lfc.71.2019.04.29.02.24.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 02:24:29 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hL2WU-0002zz-Pi; Mon, 29 Apr 2019 11:24:30 +0200
-Date:   Mon, 29 Apr 2019 11:24:30 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
- by smp_mb__{before,after}_atomic()
-Message-ID: <20190429092430.GF26546@localhost>
-References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
- <20190419180017.GP4038@hirez.programming.kicks-ass.net>
- <20190419182620.GF14111@linux.ibm.com>
- <1555719429.t9n8gkf70y.astroid@bobo.none>
- <20190420085440.GK14111@linux.ibm.com>
- <20190423123209.GR4038@hirez.programming.kicks-ass.net>
- <20190423133010.GK3923@linux.ibm.com>
+        Mon, 29 Apr 2019 05:25:38 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 01CC33C00DD;
+        Mon, 29 Apr 2019 11:25:36 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id AywQ3HUwqqks; Mon, 29 Apr 2019 11:25:28 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 7A7AE3C003F;
+        Mon, 29 Apr 2019 11:25:28 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 29 Apr
+ 2019 11:25:28 +0200
+Date:   Mon, 29 Apr 2019 11:25:25 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Simon Horman <horms@verge.net.au>
+CC:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        <magnus.damm@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux-renesas-soc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <tfranzen@de.adit-jv.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Message-ID: <20190429092525.GA1808@vmlxhi-102.adit-jv.com>
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+ <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
+ <20190426095012.xzyzevvmom4fzdcd@verge.net.au>
+ <20190429081747.irznig7yrvztuc5x@verge.net.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190423133010.GK3923@linux.ibm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190429081747.irznig7yrvztuc5x@verge.net.au>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 06:30:10AM -0700, Paul E. McKenney wrote:
-> On Tue, Apr 23, 2019 at 02:32:09PM +0200, Peter Zijlstra wrote:
-> > On Sat, Apr 20, 2019 at 01:54:40AM -0700, Paul E. McKenney wrote:
+Hi Simon,
 
-> > > 	And lock acquisition??? acm_read_bulk_callback().
-> > 
-> > I think it goes with the set_bit() earlier, but what do I know.
+On Mon, Apr 29, 2019 at 10:17:48AM +0200, Simon Horman wrote:
+> Hi again,
 > 
-> Quite possibly!  In that case it should be smp_mb__after_atomic(),
-> and it would be nice if it immediately followed the set_bit().
+> I have been able to solicit a limited private review of this patch and
+> have gone ahead and applied it for inclusion in v5.2.
 
-I noticed this one last week as well. The set_bit() had been incorrectly
-moved and without noticing the smp_mb__before_atomic(). I've submitted a
-patch to restore it and to fix a related issue to due missing barriers:
+Thank you. In case of any concerns/reports/fixes applicable to this
+patch, we would appreciate if you CC ADIT people. We will then reply
+with best possible latency, since we are interested in having a working
+WiFi/BT on ULCB-KF.
 
-	https://lkml.kernel.org/r/20190425160540.10036-5-johan@kernel.org
-
-Johan
+-- 
+Best Regards,
+Eugeniu.
