@@ -2,128 +2,118 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DA6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D51C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251AE2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="D8ZGXuNP"
+	by mail.kernel.org (Postfix) with ESMTP id 2C5742087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfD2H62 (ORCPT
+        id S1727508AbfD2ID3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:58:28 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:53143 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfD2H61 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:58:27 -0400
-Received: by mail-it1-f195.google.com with SMTP id x132so14901105itf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UeOi90RYK8x7ozYD+9mGxr1il4jAoIstt7bREKCu3cA=;
-        b=D8ZGXuNPj9TpGPOtq1s2SfKPo8/hGGiu/RdCPTwWh9MfYk3OL8KyrOZNnRvCz92Rb2
-         d0PMJUqsi8lwo6mK4r6I+8T+rcP2qoGPi52PcZkxlJ3J4OwpJ9igf36ba1TNmUPvpj5b
-         QhnTTh0tqGm70lA32HYjSGl8FLFMHP2IhsoxU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UeOi90RYK8x7ozYD+9mGxr1il4jAoIstt7bREKCu3cA=;
-        b=rH3KOQ+CJg10Q7ZJoKGQmS3CJGBU0NEcTB9qrX2H1vbdsRlkHdS4YjnEdh8xu2K04B
-         roB2p7ZT/9bayZd9r0fU+jVpzzA5aGG9oo0gaprcCzXNQXOh+8EQpXVicgUVXoByvK/l
-         /S+qu0jwEWKS5+cot/Z3GFejv74xZuf6mRoOFZyS2D5nJwDS2TkJI9T7Pc8tWEPzKbAG
-         nO4ACIBPJLrvHN3x5GAghvzOVm6V1bZh6V2Ne46JX4vpgWKKEiYnzaZMxKhcvWwQzS+z
-         uCI3TkxEQQcgEo3EBL7zCoKBIVRs2bj1Bg+ffLB+Eup/LyydEOpsgUMJsJZHcPI0ubzk
-         s3sw==
-X-Gm-Message-State: APjAAAV8fKif4VaNQjo+aXv8FbC0Z7eB/f1O9mlgWI6ogd2Dqpb9fRXI
-        +UE0UHJrNwY0WkcFkg/kRQmt0uXBGEX8+19xMIZYWQ==
-X-Google-Smtp-Source: APXvYqzsp6G7y3NwOVHRY09+SdwkQewuFMAtJSUys7eWw4XEfjH4ln4GMV5tBZs2ifQs0xWG/14owrutG4AoiC3M114=
-X-Received: by 2002:a02:a394:: with SMTP id y20mr19482883jak.96.1556524706956;
- Mon, 29 Apr 2019 00:58:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190426053324.26443-1-kraxel@redhat.com> <CAKMK7uG+vMU0hqqiKAswu=LqpkcXtLPqbYLRWgoAPpsQQV4qzA@mail.gmail.com>
- <20190429075413.smcocftjd2viznhv@sirius.home.kraxel.org>
-In-Reply-To: <20190429075413.smcocftjd2viznhv@sirius.home.kraxel.org>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Mon, 29 Apr 2019 09:58:14 +0200
-Message-ID: <CAKMK7uFB8deXDMP9cT634p_dK5LsM37R1v_vGhAEY1ZLZ+WBVA@mail.gmail.com>
-Subject: Re: [Spice-devel] [PATCH] Revert "drm/qxl: drop prime import/export callbacks"
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        David Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Apr 2019 04:03:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59379 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726718AbfD2ID3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 04:03:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 01:03:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
+   d="scan'208";a="139699397"
+Received: from shbuild999.sh.intel.com ([10.239.146.112])
+  by orsmga006.jf.intel.com with ESMTP; 29 Apr 2019 01:03:26 -0700
+From:   Feng Tang <feng.tang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eric W Biederman <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ying Huang <ying.huang@intel.com>, linux-kernel@vger.kernel.org
+Cc:     Feng Tang <feng.tang@intel.com>
+Subject: [RFC PATCH 0/3] latencytop lock usage improvement 
+Date:   Mon, 29 Apr 2019 16:03:28 +0800
+Message-Id: <1556525011-28022-1-git-send-email-feng.tang@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 9:54 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> On Fri, Apr 26, 2019 at 04:21:37PM +0200, Daniel Vetter wrote:
-> > On Fri, Apr 26, 2019 at 7:33 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
-> > >
-> > > This reverts commit f4c34b1e2a37d5676180901fa6ff188bcb6371f8.
-> > >
-> > > Simliar to commit a0cecc23cfcb Revert "drm/virtio: drop prime
-> > > import/export callbacks".  We have to do the same with qxl,
-> > > for the same reasons (it breaks DRI3).
-> > >
-> > > Drop the WARN_ON_ONCE().
-> > >
-> > > Fixes: f4c34b1e2a37d5676180901fa6ff188bcb6371f8
-> > > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> >
-> > Maybe we need some helpers for virtual drivers which only allow
-> > self-reimport and nothing else at all?
->
-> The current gem prime helpers handle this reasonable well,
-> I don't see a need for that.
->
-> More useful would be some way to signal this self-reimport capability
-> to userspace somehow.  See DRM_PRIME_CAP_LOCAL patch.
+Hi All,
 
-Userspace is supposed to test whether import/export works for a
-specific combo, not blindly assume it does and then keel over. I think
-we need to fix that, not add more flags - there's lots of reasons why
-a given pair of devices can't share buffers (e.g. all the contiguous
-allocations stuff on socs).
+latencytop is a very nice tool for tracing system latency hotspots, and
+we heavily use it in our LKP test suites.
 
-> Right now I have the choice to set DRM_PRIME_CAP_{IMPORT,EXPORT}, in
-> which case some userspace assumes it can do cross-driver export/import
-> and trips over that not working.  Or I do not set
-> DRM_PRIME_CAP_{IMPORT,EXPORT}, which breaks DRI3 ...
+However, we found in some benchmark tests, there are very severe lock
+contentions which hits 70%+ of CPU cycles in perf profile, especially
+for benchmark involving massive process scheduling on platforms with 
+many CPUs, like running hackbench 
+  "hackbench -g 1408 --process --pipe -l 1875 -s 1024"
+on a 2 sockets Xeon E5-2699 machine (44 Cores/88 CPUs) with 64GB RAM.
 
-Yeah that's not an option.
--Daniel
+And due to that, we have to explicitly disable latencytop for those test
+cases.
 
-> > I think there's qxl, virgl,
->
-> export is implemented for virgl, and import should be possible too.
->
-> qxl/bochs is simliar to vmgfx, it could be done but dma-bufs would
-> basically be bounce buffers (need copy from/to vram) so probably not
-> worth the effort.
->
-> cheers,
->   Gerd
->
+By checking the code, we found latencytop use one global spinlock to
+cover the latency data updating for both global data and per-task ones.
 
+So initially we tried splitting single lock into one global lock and
+per-task lock for better lock granularity, but the lock contention is
+only reduced slightly (only 1% drop for perf profile). The reason is
+the contention is still severe, as the benchmarks cause massive
+scheduling on the 88 CPUs, and every schedule-in call will try to
+acquire the lock.
+
+Then we tried to reduce the operations inside the latency_lock's 
+protection (between the spin_lock_irqsave/raw_spin_unlock_irqrestore
+pair), and also there is only very small improvement, and lock contention
+keeps high.
+
+At last,  we tried adding one extra lazy mode which only update the global
+latency data when a task exit, while still updating the per-task data
+in real time. This reduces the lock contention from 70%+ to less than
+5% while boost that hackbench case's throughput by 276%. 
+
+Please help to review, thanks!
+
+Patch 1/3 adds the missing sysctl description for "latencytop" and I
+think it could be merged independently.
+
+Patch 2/3 splits latency_lock to global lock and per task lock.
+And actually, a more aggressive thought is the per-task lock may not be
+needed as the per-task data is only updated at the enqueueing time for
+a task, which implies no race condtion for it.
+
+Patch 3/3 implements the lazy mode and update the document.
+
+Thanks,
+Feng
+
+
+Feng Tang (3):
+  kernel/sysctl: add description for "latencytop"
+  latencytop: split latency_lock to global lock and per task lock
+  latencytop: add a lazy mode for updating global data
+
+ Documentation/sysctl/kernel.txt | 23 ++++++++++++++++++++
+ include/linux/latencytop.h      |  5 +++++
+ include/linux/sched.h           |  1 +
+ init/init_task.c                |  3 +++
+ kernel/exit.c                   |  2 ++
+ kernel/fork.c                   |  4 ++++
+ kernel/latencytop.c             | 47 +++++++++++++++++++++++++++++++++++------
+ 7 files changed, 78 insertions(+), 7 deletions(-)
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.7.4
+
