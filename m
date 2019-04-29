@@ -2,202 +2,185 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75189C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDEAC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302B2214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EF02075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KRJTgEDB"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="LM/r+sFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfD2Lfz (ORCPT
+        id S1727991AbfD2Lf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Apr 2019 07:35:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36666 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727839AbfD2Lfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Apr 2019 07:35:55 -0400
-Received: from mail-eopbgr140073.outbound.protection.outlook.com ([40.107.14.73]:34773
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727710AbfD2Lfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:35:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jV4/6Lujlp5jIxWhQum3Fei2QB+WFq541K+dMe5UHME=;
- b=KRJTgEDBYu7c6vKTdAUWDNle4aYUlZSwfUOcGpKS8OEUWYoEAd6e0SFD7ER2kk/zLFWsw2OvSylDeyH3X4bjw7cFXIFKmhx9fuTMB08MJpAYuX8jcVZpsCTqbqeeuJ5phmX+XmYoQepFpMbNamJ4gqivNxAfrKUzgKamD6nJHq0=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB4801.eurprd04.prod.outlook.com (20.177.41.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.15; Mon, 29 Apr 2019 11:35:49 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::8cda:4e52:8e87:8f0e]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::8cda:4e52:8e87:8f0e%2]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
- 11:35:49 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] clk: imx: add fractional-N pll support to pllv4
-Thread-Topic: [PATCH] clk: imx: add fractional-N pll support to pllv4
-Thread-Index: AQHU/jo/D2ZwDi5WREOeVbOKgmEXYaZS+19AgAAF+XA=
-Date:   Mon, 29 Apr 2019 11:35:49 +0000
-Message-ID: <AM0PR04MB42114EE6EC3AB19089202B4B80390@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1556507637-22847-1-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4211D3F29BCA3727E799005F80390@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4211D3F29BCA3727E799005F80390@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e79beced-3fa8-4795-89c5-08d6cc96d3e2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4801;
-x-ms-traffictypediagnostic: AM0PR04MB4801:
-x-microsoft-antispam-prvs: <AM0PR04MB4801275F50015D9EC602C0E780390@AM0PR04MB4801.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0022134A87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(366004)(39860400002)(199004)(189003)(99286004)(66946007)(14454004)(66476007)(76116006)(64756008)(66446008)(66556008)(76176011)(53546011)(102836004)(486006)(476003)(446003)(26005)(6506007)(186003)(71190400001)(71200400001)(11346002)(5660300002)(3846002)(73956011)(256004)(6116002)(86362001)(2201001)(55016002)(7696005)(2906002)(229853002)(478600001)(6436002)(53936002)(9686003)(74316002)(81156014)(7736002)(66066001)(2940100002)(305945005)(93156006)(6246003)(97736004)(2501003)(316002)(8936002)(33656002)(44832011)(52536014)(4326008)(81166006)(25786009)(110136005)(8676002)(68736007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4801;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LZKrC8ZK3UWipHhDTMzUJhP1l9rYzNqLu2wNTKO1FR1sKA518tSGmhGDKwGtcQOpRb//pudONUogbTOKlfNVFCLSfnIxCH+LCFDfJqj5qQgdYYI0oCvuTpJdzLRrxys5vOYFCyfOEUsKwVlm28pGsbc+7YzvH/oJpA6OZCjIAbBXDet05rX/hXOFRrnLkJ8W2W7ZPFbyQZ7YF+YQEkMV/G78qLPuO8B28DhklVavNPqTidhb8iy+ic/An6jGvi3wxswAFKEj6OusPZZ/sok6hJkSJu7ulllCd9HSJo2T5CQRN8T31W6JRda1/RRGtvlcz3001yOsw3yby4WXcljCeJ7ly40dy/fhL3jPh5tV7cQsuuXjIHIWPFcKn0ODUeXR2ztbi1ky+PiM4Zfd/i6glJ/QZP1cKyGUxaJcFiYsCCg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: by mail-pl1-f193.google.com with SMTP id w20so4332364plq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 04:35:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T7YB68AOn5NlO086Zr2n2AuIrgzE7qSEebzLEMwr/Mk=;
+        b=LM/r+sFGgsKryAGtFsIxtUtPJB5QXLuFNsh1YRwOYk5uDk+lxMN1NCHOv8ob44vOGz
+         9ZCONldnAs5RCTNY/q5k9VwJ6MVEd+cHqUGy4ko5K/PFUoYoZxto1xh2nxEsQAhrWn4c
+         xwZHwBAWE04iWHx7/zEnCk/kpB8EXURgX0s+gQDVI+6LRd/zZSH4ocEo4MfvI8djpUyU
+         xLClI36M6rGJS1uOp9UoiVgE55tc7/aV2H/3E7fScvQ1ATisHKkxHg6bvFYYmtjHUPGJ
+         3N4GkBHUyiB7i8V71BzEsWZ/SMLmonZn8i6Mp/yr/INoRlvOdL4mwYmv/I/nW/nlK1cM
+         oJaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T7YB68AOn5NlO086Zr2n2AuIrgzE7qSEebzLEMwr/Mk=;
+        b=jGtQgt62LAHKIwkRQ3DADwHBgWBs6HXOcjBT7YRC4W+BcswjBeHKqMuRzSqvuOeECt
+         qmO0V3Nkrbh2XciOulVAuHygxZtX+jgglyFnusAYzGDihDRCWiU7QMEyFkAXuiApVSbF
+         7mowe8OrSs3b4sAqsrMHThnL9Cm7veGWVdmAGbOM8zZoss9G4sk2ef+grxj0vxo+Sdr/
+         u33HdHHrxIfDD6WIc/X+VvHlvVsJ4JnUSVUqMQFmEMzi8sztC7zbDshRpYTkmIG1/kLC
+         7zD5qdVgwS6Z0Xoc00rYfWMm7hf35IchUm7SdkokFGHDSofHNQ9Zwpk3U90Q33Sgxou0
+         G5Hg==
+X-Gm-Message-State: APjAAAW6aLuecXhCXnZN9/jv41Q36ca2FxVgWUJHDOGs4RPejizZ0Kyh
+        EPw7/SOOneN0Rq//eCCgXZElpg==
+X-Google-Smtp-Source: APXvYqx/RNbkMzGYc6AGzgITmL7dguzLosorDprNLnCVtqozhQpm97Lq9l6aGYNBYNtma4+xfrZQBQ==
+X-Received: by 2002:a17:902:b197:: with SMTP id s23mr2596099plr.153.1556537753901;
+        Mon, 29 Apr 2019 04:35:53 -0700 (PDT)
+Received: from localhost.localdomain (118-171-142-181.dynamic-ip.hinet.net. [118.171.142.181])
+        by smtp.gmail.com with ESMTPSA id b13sm45058844pfd.12.2019.04.29.04.35.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 04:35:52 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Pawel Moll <pawel.moll@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH 1/2] regulator: vexpress: Get rid of struct vexpress_regulator
+Date:   Mon, 29 Apr 2019 19:35:41 +0800
+Message-Id: <20190429113542.476-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e79beced-3fa8-4795-89c5-08d6cc96d3e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 11:35:49.0632
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4801
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBaXNoZW5nIERvbmcNCj4gU2VudDogTW9uZGF5LCBBcHJpbCAyOSwgMjAxOSA3OjI4
-IFBNDQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0hdIGNsazogaW14OiBhZGQgZnJhY3Rpb25hbC1OIHBs
-bCBzdXBwb3J0IHRvIHBsbHY0DQo+ID4gVGhlIHBsbHY0IHN1cHBvcnRzIGZyYWN0aW9uYWwtTiBm
-dW5jdGlvbiwgdGhlIGZvcm11bGEgaXM6DQo+ID4NCj4gPiBQTEwgb3V0cHV0IGZyZXEgPSBpbnB1
-dCAqIChtdWx0ICsgbnVtL2Rlbm9tKSwNCj4gPg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBmcmFjdGlv
-bmFsLU4gZnVuY3Rpb24gc3VwcG9ydCwgaW5jbHVkaW5nIGNsb2NrIHJvdW5kDQo+ID4gcmF0ZSwg
-Y2FsY3VsYXRlIHJhdGUgYW5kIHNldCByYXRlLCB3aXRoIHRoaXMgcGF0Y2gsIHRoZSBjbG9jayBy
-YXRlIG9mDQo+ID4gQVBMTCBpbiBjbG9jayB0cmVlIGlzIG1vcmUgYWNjdXJhdGUgdGhhbiBiZWZv
-cmU6DQo+ID4NCg0KQlRXLCBvbmUgbW9yZSBxdWVzdGlvbjoNCkRvZXMgQjAgY2hpcCBzdXBwb3J0
-IGZyYWN0aW9uYWwgZm9yIFNQTEwgYXMgdGhpcyBwYXRjaCBhZmZlY3RzIGJvdGggQVBMTCBhbmQg
-U1BMTD8NCkkgZGlkIG5vdCBzZWUgTlVNJkRFTk9NIHJlZ2lzdGVyIGZvciBTUExMIGluIG15IGRv
-Yywgbm90IHN1cmUgaWYgaXQncyBsYXRlc3QgdmVyc2lvbi4NCg0KUmVnYXJkcw0KRG9uZyBBaXNo
-ZW5nDQoNCj4gPiBXaXRob3V0IGZyYWN0aW9uOg0KPiA+IGFwbGxfcHJlX3NlbCAgICAgICAgICAg
-ICAgICAgICAgICAxICAgICAgICAxICAgICAgICAxICAgIDI0MDAwMDAwDQo+ID4gMCAgICAgMCAg
-NTAwMDANCj4gPiAgICBhcGxsX3ByZV9kaXYgICAgICAgICAgICAgICAgICAgMSAgICAgICAgMSAg
-ICAgICAgMiAgICAyNDAwMDAwMA0KPiA+IDAgICAgIDAgIDUwMDAwDQo+ID4gICAgICAgYXBsbCAg
-ICAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgIDEgICAgICAgIDIgICA1MjgwMDAwMDANCj4g
-PiAwICAgICAwICA1MDAwMA0KPiA+ICAgICAgICAgIGFwbGxfcGZkMyAgICAgICAgICAgICAgICAw
-ICAgICAgICAwICAgICAgICAwICAgNzkyMDAwMDAwDQo+ID4gMCAgICAgMCAgNTAwMDANCj4gPiAg
-ICAgICAgICBhcGxsX3BmZDIgICAgICAgICAgICAgICAgMCAgICAgICAgMCAgICAgICAgMCAgIDMz
-OTQyODU3MQ0KPiA+IDAgICAgIDAgIDUwMDAwDQo+ID4gICAgICAgICAgYXBsbF9wZmQxICAgICAg
-ICAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAzNTIwMDAwMDANCj4gPiAwICAgICAwICA1
-MDAwMA0KPiA+ICAgICAgICAgICAgIHVzZGhjMCAgICAgICAgICAgICAgICAwICAgICAgICAwICAg
-ICAgICAwDQo+IDM1MjAwMDAwMA0KPiA+IDAgICAgIDAgIDUwMDAwDQo+ID4gICAgICAgICAgYXBs
-bF9wZmQwICAgICAgICAgICAgICAgIDEgICAgICAgIDEgICAgICAgIDEgICAzNTIwMDAwMDANCj4g
-PiAwICAgICAwICA1MDAwMA0KPiA+DQo+ID4gV2l0aCBmcmFjdGlvbjoNCj4gPiBhcGxsX3ByZV9z
-ZWwgICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgMSAgICAgICAgMSAgICAyNDAwMDAwMA0K
-PiA+IDAgICAgIDAgIDUwMDAwDQo+ID4gICAgYXBsbF9wcmVfZGl2ICAgICAgICAgICAgICAgICAg
-IDEgICAgICAgIDEgICAgICAgIDIgICAgMjQwMDAwMDANCj4gPiAwICAgICAwICA1MDAwMA0KPiA+
-ICAgICAgIGFwbGwgICAgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAxICAgICAgICAyICAg
-NTI5MjAwMDAwDQo+ID4gMCAgICAgMCAgNTAwMDANCj4gPiAgICAgICAgICBhcGxsX3BmZDMgICAg
-ICAgICAgICAgICAgMCAgICAgICAgMCAgICAgICAgMCAgIDc5MzgwMDAwMA0KPiA+IDAgICAgIDAg
-IDUwMDAwDQo+ID4gICAgICAgICAgYXBsbF9wZmQyICAgICAgICAgICAgICAgIDAgICAgICAgIDAg
-ICAgICAgIDAgICAzNDAyMDAwMDANCj4gPiAwICAgICAwICA1MDAwMA0KPiA+ICAgICAgICAgIGFw
-bGxfcGZkMSAgICAgICAgICAgICAgICAwICAgICAgICAwICAgICAgICAwICAgMzUyODAwMDAwDQo+
-ID4gMCAgICAgMCAgNTAwMDANCj4gPiAgICAgICAgICAgICB1c2RoYzAgICAgICAgICAgICAgICAg
-MCAgICAgICAgMCAgICAgICAgMA0KPiAzNTI4MDAwMDANCj4gPiAwICAgICAwICA1MDAwMA0KPiA+
-ICAgICAgICAgIGFwbGxfcGZkMCAgICAgICAgICAgICAgICAxICAgICAgICAxICAgICAgICAxICAg
-MzUyODAwMDAwDQo+ID4gMCAgICAgMCAgNTAwMDANCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFu
-c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2Ns
-ay9pbXgvY2xrLXBsbHY0LmMgfCA2OA0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKy0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNjAgaW5zZXJ0aW9ucygrKSwg
-OCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xr
-LXBsbHY0LmMgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLXBsbHY0LmMNCj4gPiBpbmRleCBkMzhiYzlm
-Li40Y2VkNWNhIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGstcGxsdjQuYw0K
-PiA+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGstcGxsdjQuYw0KPiA+IEBAIC02NCwxMyArNjQs
-MTggQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgY2xrX3BsbHY0X3JlY2FsY19yYXRlKHN0cnVjdA0K
-PiA+IGNsa19odyAqaHcsDQo+ID4gIAkJCQkJICAgdW5zaWduZWQgbG9uZyBwYXJlbnRfcmF0ZSkN
-Cj4gPiAgew0KPiA+ICAJc3RydWN0IGNsa19wbGx2NCAqcGxsID0gdG9fY2xrX3BsbHY0KGh3KTsN
-Cj4gPiAtCXUzMiBkaXY7DQo+ID4gKwl1MzIgbXVsdCA9IHJlYWRsX3JlbGF4ZWQocGxsLT5iYXNl
-ICsgUExMX0NGR19PRkZTRVQpOw0KPiA+ICsJdTMyIG1mbiA9IHJlYWRsX3JlbGF4ZWQocGxsLT5i
-YXNlICsgUExMX05VTV9PRkZTRVQpOw0KPiA+ICsJdTMyIG1mZCA9IHJlYWRsX3JlbGF4ZWQocGxs
-LT5iYXNlICsgUExMX0RFTk9NX09GRlNFVCk7DQo+IA0KPiBOaXRwaWNrOg0KPiBXZSB1c3VhbGx5
-IGRvbid0IHdyaXRlIGNvZGUgbGlrZSB0aGlzLg0KPiBIb3cgYWJvdXQgc2VwYXJhdGUgdGhlIGFz
-c2lnbm1lbnQgZnJvbSBkZWNsYXJhdGlvbj8NCj4gDQo+ID4gKwl1NjQgdGVtcDY0ID0gcGFyZW50
-X3JhdGU7DQo+ID4NCj4gPiAtCWRpdiA9IHJlYWRsX3JlbGF4ZWQocGxsLT5iYXNlICsgUExMX0NG
-R19PRkZTRVQpOw0KPiA+IC0JZGl2ICY9IEJNX1BMTF9NVUxUOw0KPiA+IC0JZGl2ID4+PSBCUF9Q
-TExfTVVMVDsNCj4gPiArCW11bHQgJj0gQk1fUExMX01VTFQ7DQo+ID4gKwltdWx0ID4+PSBCUF9Q
-TExfTVVMVDsNCj4gPg0KPiA+IC0JcmV0dXJuIHBhcmVudF9yYXRlICogZGl2Ow0KPiA+ICsJdGVt
-cDY0ICo9IG1mbjsNCj4gPiArCWRvX2Rpdih0ZW1wNjQsIG1mZCk7DQo+ID4gKw0KPiA+ICsJcmV0
-dXJuIChwYXJlbnRfcmF0ZSAqIG11bHQpICsgKHUzMil0ZW1wNjQ7DQo+ID4gIH0NCj4gPg0KPiA+
-ICBzdGF0aWMgbG9uZyBjbGtfcGxsdjRfcm91bmRfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywgdW5z
-aWduZWQgbG9uZw0KPiA+IHJhdGUsIEBADQo+ID4gLTc4LDE0ICs4Myw0NyBAQCBzdGF0aWMgbG9u
-ZyBjbGtfcGxsdjRfcm91bmRfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywNCj4gPiB1bnNpZ25lZCBs
-b25nIHJhdGUsICB7DQo+ID4gIAl1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlID0gKnByYXRlOw0K
-PiA+ICAJdW5zaWduZWQgbG9uZyByb3VuZF9yYXRlLCBpOw0KPiA+ICsJYm9vbCBmb3VuZCA9IGZh
-bHNlOw0KPiA+ICsJdTMyIG1mbiwgbWZkID0gMTAwMDAwMDsNCj4gPiArCXUzMiBtYXhfbWZkID0g
-MHgzRkZGRkZGRjsNCj4gDQo+IFBsZWFzZSBrZWVwIHNvcnQgZnJvbSBsb25nIHRvIHNob3J0Lg0K
-PiBBbmQgdGhlIG11bHRpIE1heF9tZmQgZGVmaW5pdGlvbnMgY291bGQgYmUgbW92ZSBvdXQgdGhl
-IGZ1bmN0aW9uIGFuZA0KPiBEZWZpbmVkIHVzZSBtYWNyby4NCj4gDQo+ID4gKwl1NjQgdGVtcDY0
-Ow0KPiA+DQo+ID4gIAlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShwbGx2NF9tdWx0X3RhYmxl
-KTsgaSsrKSB7DQo+ID4gIAkJcm91bmRfcmF0ZSA9IHBhcmVudF9yYXRlICogcGxsdjRfbXVsdF90
-YWJsZVtpXTsNCj4gPiAtCQlpZiAocmF0ZSA+PSByb3VuZF9yYXRlKQ0KPiA+IC0JCQlyZXR1cm4g
-cm91bmRfcmF0ZTsNCj4gPiArCQlpZiAocmF0ZSA+PSByb3VuZF9yYXRlKSB7DQo+ID4gKwkJCWZv
-dW5kID0gdHJ1ZTsNCj4gPiArCQkJYnJlYWs7DQo+ID4gKwkJfQ0KPiA+ICsJfQ0KPiA+ICsNCj4g
-PiArCWlmICghZm91bmQpIHsNCj4gPiArCQlwcl93YXJuKCIlczogdW5hYmxlIHRvIHJvdW5kIHJh
-dGUgJWx1LCBwYXJlbnQgcmF0ZSAlbHVcbiIsDQo+ID4gKwkJCWNsa19od19nZXRfbmFtZShodyks
-IHJhdGUsIHBhcmVudF9yYXRlKTsNCj4gPiArCQlyZXR1cm4gMDsNCj4gPiAgCX0NCj4gPg0KPiA+
-IC0JcmV0dXJuIHJvdW5kX3JhdGU7DQo+ID4gKwlpZiAocGFyZW50X3JhdGUgPD0gbWF4X21mZCkN
-Cj4gPiArCQltZmQgPSBwYXJlbnRfcmF0ZTsNCj4gPiArDQo+ID4gKwl0ZW1wNjQgPSAodTY0KShy
-YXRlIC0gcm91bmRfcmF0ZSk7DQo+ID4gKwl0ZW1wNjQgKj0gbWZkOw0KPiA+ICsJZG9fZGl2KHRl
-bXA2NCwgcGFyZW50X3JhdGUpOw0KPiA+ICsJbWZuID0gdGVtcDY0Ow0KPiA+ICsNCj4gPiArCS8q
-DQo+ID4gKwkgKiBOT1RFOiBUaGUgdmFsdWUgb2YgbnVtZXJhdG9yIG11c3QgYWx3YXlzIGJlIGNv
-bmZpZ3VyZWQgdG8gYmUNCj4gPiArCSAqIGxlc3MgdGhhbiB0aGUgdmFsdWUgb2YgdGhlIGRlbm9t
-aW5hdG9yLiBJZiB3ZSBjYW4ndCBnZXQgYSBwcm9wZXINCj4gPiArCSAqIHBhaXIgb2YgbWZuL21m
-ZCwgd2Ugc2ltcGx5IHJldHVybiB0aGUgcm91bmRfcmF0ZSB3aXRob3V0IHVzaW5nDQo+ID4gKwkg
-KiB0aGUgZnJhYyBwYXJ0Lg0KPiA+ICsJICovDQo+ID4gKwlpZiAobWZuID49IG1mZCkNCj4gPiAr
-CQlyZXR1cm4gcm91bmRfcmF0ZTsNCj4gPiArDQo+ID4gKwl0ZW1wNjQgPSAodTY0KXBhcmVudF9y
-YXRlOw0KPiA+ICsJdGVtcDY0ICo9IG1mbjsNCj4gPiArCWRvX2Rpdih0ZW1wNjQsIG1mZCk7DQo+
-ID4gKw0KPiA+ICsJcmV0dXJuIHJvdW5kX3JhdGUgKyAodTMyKXRlbXA2NDsNCj4gPiAgfQ0KPiA+
-DQo+ID4gIHN0YXRpYyBib29sIGNsa19wbGx2NF9pc192YWxpZF9tdWx0KHVuc2lnbmVkIGludCBt
-dWx0KSBAQCAtMTA2LDE3DQo+ID4gKzE0NCwzMSBAQCBzdGF0aWMgaW50IGNsa19wbGx2NF9zZXRf
-cmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywgdW5zaWduZWQgbG9uZw0KPiByYXRlLCAgew0KPiA+ICAJ
-c3RydWN0IGNsa19wbGx2NCAqcGxsID0gdG9fY2xrX3BsbHY0KGh3KTsNCj4gPiAgCXUzMiB2YWws
-IG11bHQ7DQo+ID4gKwl1MzIgbWZuLCBtZmQgPSAxMDAwMDAwOw0KPiA+ICsJdTMyIG1heF9tZmQg
-PSAweDNGRkZGRkZGOw0KPiANCj4gRGl0dG8NCj4gDQo+IE90aGVyd2lzZToNCj4gUmV2aWV3ZWQt
-Ynk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+IA0KPiBSZWdhcmRzDQo+
-IERvbmcgQWlzaGVuZw0KPiANCj4gPiArCXU2NCB0ZW1wNjQ7DQo+ID4NCj4gPiAgCW11bHQgPSBy
-YXRlIC8gcGFyZW50X3JhdGU7DQo+ID4NCj4gPiAgCWlmICghY2xrX3BsbHY0X2lzX3ZhbGlkX211
-bHQobXVsdCkpDQo+ID4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ID4NCj4gPiArCWlmIChwYXJlbnRf
-cmF0ZSA8PSBtYXhfbWZkKQ0KPiA+ICsJCW1mZCA9IHBhcmVudF9yYXRlOw0KPiA+ICsNCj4gPiAr
-CXRlbXA2NCA9ICh1NjQpKHJhdGUgLSBtdWx0ICogcGFyZW50X3JhdGUpOw0KPiA+ICsJdGVtcDY0
-ICo9IG1mZDsNCj4gPiArCWRvX2Rpdih0ZW1wNjQsIHBhcmVudF9yYXRlKTsNCj4gPiArCW1mbiA9
-IHRlbXA2NDsNCj4gPiArDQo+ID4gIAl2YWwgPSByZWFkbF9yZWxheGVkKHBsbC0+YmFzZSArIFBM
-TF9DRkdfT0ZGU0VUKTsNCj4gPiAgCXZhbCAmPSB+Qk1fUExMX01VTFQ7DQo+ID4gIAl2YWwgfD0g
-bXVsdCA8PCBCUF9QTExfTVVMVDsNCj4gPiAgCXdyaXRlbF9yZWxheGVkKHZhbCwgcGxsLT5iYXNl
-ICsgUExMX0NGR19PRkZTRVQpOw0KPiA+DQo+ID4gKwl3cml0ZWxfcmVsYXhlZChtZm4sIHBsbC0+
-YmFzZSArIFBMTF9OVU1fT0ZGU0VUKTsNCj4gPiArCXdyaXRlbF9yZWxheGVkKG1mZCwgcGxsLT5i
-YXNlICsgUExMX0RFTk9NX09GRlNFVCk7DQo+ID4gKw0KPiA+ICAJcmV0dXJuIDA7DQo+ID4gIH0N
-Cj4gPg0KPiA+IC0tDQo+ID4gMi43LjQNCg0K
+The *regdev and *regmap can be replaced by local variables in probe().
+Only desc of struct vexpress_regulator is really need, so just use
+struct regulator_desc directly and remove struct vexpress_regulator.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/vexpress-regulator.c | 53 +++++++++++---------------
+ 1 file changed, 22 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/regulator/vexpress-regulator.c b/drivers/regulator/vexpress-regulator.c
+index ca4230fe9e77..a15a1319436a 100644
+--- a/drivers/regulator/vexpress-regulator.c
++++ b/drivers/regulator/vexpress-regulator.c
+@@ -23,17 +23,10 @@
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/vexpress.h>
+ 
+-struct vexpress_regulator {
+-	struct regulator_desc desc;
+-	struct regulator_dev *regdev;
+-	struct regmap *regmap;
+-};
+-
+ static int vexpress_regulator_get_voltage(struct regulator_dev *regdev)
+ {
+-	struct vexpress_regulator *reg = rdev_get_drvdata(regdev);
+-	u32 uV;
+-	int err = regmap_read(reg->regmap, 0, &uV);
++	unsigned int uV;
++	int err = regmap_read(regdev->regmap, 0, &uV);
+ 
+ 	return err ? err : uV;
+ }
+@@ -41,9 +34,7 @@ static int vexpress_regulator_get_voltage(struct regulator_dev *regdev)
+ static int vexpress_regulator_set_voltage(struct regulator_dev *regdev,
+ 		int min_uV, int max_uV, unsigned *selector)
+ {
+-	struct vexpress_regulator *reg = rdev_get_drvdata(regdev);
+-
+-	return regmap_write(reg->regmap, 0, min_uV);
++	return regmap_write(regdev->regmap, 0, min_uV);
+ }
+ 
+ static const struct regulator_ops vexpress_regulator_ops_ro = {
+@@ -57,44 +48,44 @@ static const struct regulator_ops vexpress_regulator_ops = {
+ 
+ static int vexpress_regulator_probe(struct platform_device *pdev)
+ {
+-	struct vexpress_regulator *reg;
++	struct regulator_desc *desc;
+ 	struct regulator_init_data *init_data;
+ 	struct regulator_config config = { };
++	struct regulator_dev *rdev;
++	struct regmap *regmap;
+ 
+-	reg = devm_kzalloc(&pdev->dev, sizeof(*reg), GFP_KERNEL);
+-	if (!reg)
++	desc = devm_kzalloc(&pdev->dev, sizeof(*desc), GFP_KERNEL);
++	if (!desc)
+ 		return -ENOMEM;
+ 
+-	reg->regmap = devm_regmap_init_vexpress_config(&pdev->dev);
+-	if (IS_ERR(reg->regmap))
+-		return PTR_ERR(reg->regmap);
++	regmap = devm_regmap_init_vexpress_config(&pdev->dev);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
+ 
+-	reg->desc.name = dev_name(&pdev->dev);
+-	reg->desc.type = REGULATOR_VOLTAGE;
+-	reg->desc.owner = THIS_MODULE;
+-	reg->desc.continuous_voltage_range = true;
++	desc->name = dev_name(&pdev->dev);
++	desc->type = REGULATOR_VOLTAGE;
++	desc->owner = THIS_MODULE;
++	desc->continuous_voltage_range = true;
+ 
+ 	init_data = of_get_regulator_init_data(&pdev->dev, pdev->dev.of_node,
+-					       &reg->desc);
++					       desc);
+ 	if (!init_data)
+ 		return -EINVAL;
+ 
+ 	init_data->constraints.apply_uV = 0;
+ 	if (init_data->constraints.min_uV && init_data->constraints.max_uV)
+-		reg->desc.ops = &vexpress_regulator_ops;
++		desc->ops = &vexpress_regulator_ops;
+ 	else
+-		reg->desc.ops = &vexpress_regulator_ops_ro;
++		desc->ops = &vexpress_regulator_ops_ro;
+ 
++	config.regmap = regmap;
+ 	config.dev = &pdev->dev;
+ 	config.init_data = init_data;
+-	config.driver_data = reg;
+ 	config.of_node = pdev->dev.of_node;
+ 
+-	reg->regdev = devm_regulator_register(&pdev->dev, &reg->desc, &config);
+-	if (IS_ERR(reg->regdev))
+-		return PTR_ERR(reg->regdev);
+-
+-	platform_set_drvdata(pdev, reg);
++	rdev = devm_regulator_register(&pdev->dev, desc, &config);
++	if (IS_ERR(rdev))
++		return PTR_ERR(rdev);
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
+
