@@ -6,35 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08395C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DDDC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D072147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA037215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfD2RWa (ORCPT
+        id S1728959AbfD2RWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:22:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34434 "EHLO
+        Mon, 29 Apr 2019 13:22:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34450 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbfD2RW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:22:28 -0400
+        id S1728920AbfD2RWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 13:22:30 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9426780D;
-        Mon, 29 Apr 2019 10:22:27 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B4A8EBD;
+        Mon, 29 Apr 2019 10:22:29 -0700 (PDT)
 Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2E14B3F557;
-        Mon, 29 Apr 2019 10:22:26 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7079A3F557;
+        Mon, 29 Apr 2019 10:22:28 -0700 (PDT)
 From:   Robin Murphy <robin.murphy@arm.com>
 To:     linux-mm@kvack.org
 Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
         Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH v2 1/3] mm/memremap: Rename and consolidate SECTION_SIZE
-Date:   Mon, 29 Apr 2019 18:22:15 +0100
-Message-Id: <7c31ee50c533a67f88d21ba439851837a00d7d50.1556555457.git.robin.murphy@arm.com>
+Subject: [PATCH v2 2/3] mm: clean up is_device_*_page() definitions
+Date:   Mon, 29 Apr 2019 18:22:16 +0100
+Message-Id: <4d00e3aff0192dcfef244a348d8927f06ee3f394.1556555457.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.21.0.dirty
 In-Reply-To: <cover.1556555457.git.robin.murphy@arm.com>
 References: <cover.1556555457.git.robin.murphy@arm.com>
@@ -45,92 +43,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to activate ZONE_DEVICE for arm64 reveals that memremap's
-internal helpers for sparsemem sections conflict with and arm64's
-definitions for hugepages, which inherit the name of "sections" from
-earlier versions of the ARM architecture.
+Refactor is_device_{public,private}_page() with is_pci_p2pdma_page()
+to make them all consistent in depending on their respective config
+options even when CONFIG_DEV_PAGEMAP_OPS is enabled for other reasons.
+This allows a little more compile-time optimisation as well as the
+conceptual and cosmetic cleanup.
 
-Disambiguate memremap (and now HMM too) by propagating sparsemem's PA_
-prefix, to clarify that these values are in terms of addresses rather
-than PFNs (and because it's a heck of a lot easier than changing all the
-arch code). SECTION_MASK is unused, so it can just go.
-
-[anshuman: Consolidated mm/hmm.c instance and updated the commit message]
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+Suggested-by: Jerome Glisse <jglisse@redhat.com>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
 
-v2: Fix commit message typo, add review tags.
+v2: Add review tags.
 
- include/linux/mmzone.h |  1 +
- kernel/memremap.c      | 10 ++++------
- mm/hmm.c               |  2 --
- 3 files changed, 5 insertions(+), 8 deletions(-)
+ include/linux/mm.h | 43 +++++++++++++------------------------------
+ 1 file changed, 13 insertions(+), 30 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index fba7741533be..ed7dd27ee94a 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1081,6 +1081,7 @@ static inline unsigned long early_pfn_to_nid(unsigned long pfn)
-  * PFN_SECTION_SHIFT		pfn to/from section number
-  */
- #define PA_SECTION_SHIFT	(SECTION_SIZE_BITS)
-+#define PA_SECTION_SIZE		(1UL << PA_SECTION_SHIFT)
- #define PFN_SECTION_SHIFT	(SECTION_SIZE_BITS - PAGE_SHIFT)
- 
- #define NR_MEM_SECTIONS		(1UL << SECTIONS_SHIFT)
-diff --git a/kernel/memremap.c b/kernel/memremap.c
-index a856cb5ff192..dda1367b385d 100644
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -14,8 +14,6 @@
- #include <linux/hmm.h>
- 
- static DEFINE_XARRAY(pgmap_array);
--#define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
--#define SECTION_SIZE (1UL << PA_SECTION_SHIFT)
- 
- #if IS_ENABLED(CONFIG_DEVICE_PRIVATE)
- vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
-@@ -98,8 +96,8 @@ static void devm_memremap_pages_release(void *data)
- 		put_page(pfn_to_page(pfn));
- 
- 	/* pages are dead and unused, undo the arch mapping */
--	align_start = res->start & ~(SECTION_SIZE - 1);
--	align_size = ALIGN(res->start + resource_size(res), SECTION_SIZE)
-+	align_start = res->start & ~(PA_SECTION_SIZE - 1);
-+	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
- 		- align_start;
- 
- 	nid = page_to_nid(pfn_to_page(align_start >> PAGE_SHIFT));
-@@ -154,8 +152,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 	if (!pgmap->ref || !pgmap->kill)
- 		return ERR_PTR(-EINVAL);
- 
--	align_start = res->start & ~(SECTION_SIZE - 1);
--	align_size = ALIGN(res->start + resource_size(res), SECTION_SIZE)
-+	align_start = res->start & ~(PA_SECTION_SIZE - 1);
-+	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
- 		- align_start;
- 	align_end = align_start + align_size - 1;
- 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index fe1cd87e49ac..ef9e4e6c9f92 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -33,8 +33,6 @@
- #include <linux/mmu_notifier.h>
- #include <linux/memory_hotplug.h>
- 
--#define PA_SECTION_SIZE (1UL << PA_SECTION_SHIFT)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 76769749b5a5..d76dfb7ac617 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -910,32 +910,6 @@ static inline bool put_devmap_managed_page(struct page *page)
+ 	}
+ 	return false;
+ }
 -
- #if IS_ENABLED(CONFIG_HMM_MIRROR)
- static const struct mmu_notifier_ops hmm_mmu_notifier_ops;
+-static inline bool is_device_private_page(const struct page *page)
+-{
+-	return is_zone_device_page(page) &&
+-		page->pgmap->type == MEMORY_DEVICE_PRIVATE;
+-}
+-
+-static inline bool is_device_public_page(const struct page *page)
+-{
+-	return is_zone_device_page(page) &&
+-		page->pgmap->type == MEMORY_DEVICE_PUBLIC;
+-}
+-
+-#ifdef CONFIG_PCI_P2PDMA
+-static inline bool is_pci_p2pdma_page(const struct page *page)
+-{
+-	return is_zone_device_page(page) &&
+-		page->pgmap->type == MEMORY_DEVICE_PCI_P2PDMA;
+-}
+-#else /* CONFIG_PCI_P2PDMA */
+-static inline bool is_pci_p2pdma_page(const struct page *page)
+-{
+-	return false;
+-}
+-#endif /* CONFIG_PCI_P2PDMA */
+-
+ #else /* CONFIG_DEV_PAGEMAP_OPS */
+ static inline void dev_pagemap_get_ops(void)
+ {
+@@ -949,22 +923,31 @@ static inline bool put_devmap_managed_page(struct page *page)
+ {
+ 	return false;
+ }
++#endif /* CONFIG_DEV_PAGEMAP_OPS */
  
+ static inline bool is_device_private_page(const struct page *page)
+ {
+-	return false;
++	return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
++		IS_ENABLED(CONFIG_DEVICE_PRIVATE) &&
++		is_zone_device_page(page) &&
++		page->pgmap->type == MEMORY_DEVICE_PRIVATE;
+ }
+ 
+ static inline bool is_device_public_page(const struct page *page)
+ {
+-	return false;
++	return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
++		IS_ENABLED(CONFIG_DEVICE_PUBLIC) &&
++		is_zone_device_page(page) &&
++		page->pgmap->type == MEMORY_DEVICE_PUBLIC;
+ }
+ 
+ static inline bool is_pci_p2pdma_page(const struct page *page)
+ {
+-	return false;
++	return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
++		IS_ENABLED(CONFIG_PCI_P2PDMA) &&
++		is_zone_device_page(page) &&
++		page->pgmap->type == MEMORY_DEVICE_PCI_P2PDMA;
+ }
+-#endif /* CONFIG_DEV_PAGEMAP_OPS */
+ 
+ static inline void get_page(struct page *page)
+ {
 -- 
 2.21.0.dirty
 
