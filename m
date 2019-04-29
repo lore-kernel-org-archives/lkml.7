@@ -2,113 +2,102 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42228C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42E6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DDA2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A254F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BuTnIbE/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bjpos/jn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbfD2UJ5 (ORCPT
+        id S1729319AbfD2UKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:09:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34244 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2UJ5 (ORCPT
+        Mon, 29 Apr 2019 16:10:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36808 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2UKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:09:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id b67so707969wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MvdFa5U3+5xI+n7BnR9vncycYNJ5YsEVOp/2MMs/RVM=;
-        b=BuTnIbE/5X9q4mxEOiBag5fyPi2rnHanlZN0p7kPbZG9UotvYf93pZvWrfRxStaYVJ
-         /GdMDmTZmyhQG4Hy8S73PFiykd/3xLz5uxkOlR1T2d+ZYUv3bH1nIvRqSj9TghaMH8e9
-         h3E7U3EsYofgiT5ZkKI+1mBkQdhp4qVEItwbaVaZiJIbK8xau1AjSVBRICUOm6h7Aakn
-         Lw2n4C1QWRRUPfTk3aM/E0ArH7yQj5h/EqjaiZq3PblxIFSFj0c2riOZT4XPLwvzKElR
-         QNh/o96SuIgP8b1IUBnMZVOJ/BcIXhX8iULCLXLMOueeICaz+P66G7gaXAr4/wbq9wUL
-         XJEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MvdFa5U3+5xI+n7BnR9vncycYNJ5YsEVOp/2MMs/RVM=;
-        b=J34IBx2eU1QirYtrNAf6L3jMa8xmVkcl+qXmNrpelpzuCpevJ88S9spQj8HxtyFok8
-         dvBZw+mlbK2UGhBYrMD2IEqfygu57nvzVibSbfFcyYA7ocC3cOnDtqLcis0Qe8psmnfu
-         Ba0CETfxEeqxxnlWTsO4yGcq+52s+ih3fHpp39IIxLkVBJ7Uey8uie9IRb6exX3ylvan
-         HHzbuJZbpTJ6mhe/MnFyLerC40F4Vvj6+WZYlzUGqtmucZi3OoTX2/zPFyVNO6KlcMNf
-         e49nhOCecAfD9S3W1y/2DhamDO01rY2bHKBXW91pnsejsUVGndb9BFzkO5lYiKDvE8U9
-         xmcw==
-X-Gm-Message-State: APjAAAX3dmJv1HPwlPZGQLgWIw5XGIpIO315nkg7orxBDbrHS5j6MiE1
-        3XSWewFZ018QQdrkE0aWoWQVeBMqCup9D9YoxecH
-X-Google-Smtp-Source: APXvYqzinbFB8LtmNFQ+ucaSuOAAMRFBDlIxFr9bPj35ybI9+jbSy361WcbSMCVMAUkixylis7DlTkYjGroaxKsnD+Y=
-X-Received: by 2002:a7b:c25a:: with SMTP id b26mr496762wmj.123.1556568595400;
- Mon, 29 Apr 2019 13:09:55 -0700 (PDT)
+        Mon, 29 Apr 2019 16:10:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8bbZyLRBS7B6cXqeb9isQNcVt7Ubs7Me5nvL1c8Ic38=; b=Bjpos/jnVGsgKNA3/A6QH5Fqv
+        3jAKzcTPg0LS0aG86fuHqbtUIILUir1hz6rBxB7r7d76Spl89Z8Gcv+dWrFTZI8otdOJIsCuWdGla
+        IsGgipLBTNfUaQmfJpybjgj5KZPwYQMNLsrgt41VqbtxdI1uyxgXqxQP/r9t7HTkpv2YTFFQFtjFj
+        c2/0WcjJjGr9y26IbUvGg3xsoMGxctAbpUyTmBJ8sWn5pt9/i7RgwGrSJulwzheWOBCwI233+GC5V
+        1ZhCLQYcffZvx8ZmGnTglQNAETu+5+3vvAuU+/8uDKGmOPm7ZReqSqA9LrrZIJhi2Lo2GoGhgj1Ek
+        g78xqD4+w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLCb7-0007U6-Fw; Mon, 29 Apr 2019 20:09:57 +0000
+Date:   Mon, 29 Apr 2019 13:09:57 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Meelis Roos <mroos@linux.ee>,
+        Christopher Lameter <cl@linux.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+Subject: Re: DISCONTIGMEM is deprecated
+Message-ID: <20190429200957.GB27158@infradead.org>
+References: <20190419094335.GJ18914@techsingularity.net>
+ <20190419140521.GI7751@bombadil.infradead.org>
+ <0100016a461809ed-be5bd8fc-9925-424d-9624-4a325a7a8860-000000@email.amazonses.com>
+ <25cabb7c-9602-2e09-2fe0-cad3e54595fa@linux.ee>
+ <20190428081353.GB30901@infradead.org>
+ <3908561D78D1C84285E8C5FCA982C28F7E9140BA@ORSMSX104.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <s5hy33siofw.wl-tiwai@suse.de> <20190429195459.GU2583@lahna.fi.intel.com>
-In-Reply-To: <20190429195459.GU2583@lahna.fi.intel.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Mon, 29 Apr 2019 15:09:43 -0500
-Message-ID: <CAErSpo4awEXF3evh7=ZGi39y1dpMx9bdhXw8zt7s+1sDaH6nng@mail.gmail.com>
-Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and thunderbolt)
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lukas Wunner <lukas@wunner.de>, Jiri Slaby <jslaby@suse.cz>,
-        Michael Hirmke <opensuse@mike.franken.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7E9140BA@ORSMSX104.amr.corp.intel.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc linux-pci]
+On Mon, Apr 29, 2019 at 04:58:09PM +0000, Luck, Tony wrote:
+> > ia64 has a such a huge number of memory model choices.  Maybe we
+> > need to cut it down to a small set that actually work.
+> 
+> SGI systems had extremely discontiguous memory (they used some high
+> order physical address bits in the tens/hundreds of terabyte range for the
+> node number ... so there would be a few GBytes of actual memory then
+> a huge gap before the next node had a few more Gbytes).
+> 
+> I don't know of anyone still booting upstream on an SN2, so if we start doing
+> serious hack and slash the chances are high that SN2 will be broken (if it isn't
+> already).
 
-On Mon, Apr 29, 2019 at 2:55 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Mon, Apr 29, 2019 at 09:47:15PM +0200, Takashi Iwai wrote:
-> > Hi,
->
-> Hi,
->
-> > we've got a regression report wrt xhci_hcd and thunderbolt on a Dell
-> > machine.  5.0.7 is confirmed to work, so it must be a regression
-> > introduced by 5.0.8.
-> >
-> > The details are found in openSUSE Bugzilla entry:
-> >   https://bugzilla.opensuse.org/show_bug.cgi?id=1132943
-> >
-> > The probe of xhci_hcd on the dock fails like:
-> > [    6.269062] pcieport 0000:3a:00.0: enabling device (0006 -> 0007)
-> > [    6.270027] pcieport 0000:3b:03.0: enabling device (0006 -> 0007)
-> > [    6.270758] xhci_hcd 0000:3c:00.0: init 0000:3c:00.0 fail, -16
-> > [    6.270764] xhci_hcd: probe of 0000:3c:00.0 failed with error -16
-> > [    6.271002] xhci_hcd 0000:3d:00.0: init 0000:3d:00.0 fail, -16
-> >
-> > and later on, thunderbolt gives warnings:
-> > [   30.232676] thunderbolt 0000:05:00.0: unexpected hop count: 1023
-> > [   30.232957] ------------[ cut here ]------------
-> > [   30.232958] thunderbolt 0000:05:00.0: interrupt for TX ring 0 is already enabled
-> > [   30.232974] WARNING: CPU: 3 PID: 1009 at drivers/thunderbolt/nhi.c:107 ring_interrupt_active+0x1ea/0x230 [thunderbolt]
-> >
-> >
-> > I blindly suspected the commit 3943af9d01e9 and asked for a reverted
-> > kernel, but in vain.  And now it was confirmed that the problem is
-> > present with the latest 5.1-rc, too.
-> >
-> > I put some people who might have interest and the reporter (Michael)
-> > to Cc.  If anyone has an idea, feel free to join to the Bugzilla, or
-> > let me know if any help needed from the distro side.
->
-> Since it exists in 5.1-rcX also it would be good if someone
-> who see the problem (Michael?) could bisect it.
+When I wrote this, I thought of
+
+!NUMA:  flat mem
+NUMA:	sparsemem
+SN2:	discontig
+
+based on Meelis report.  But now that you mention it, I bet SN2 has
+already died slow death from bitrot.  It is so different in places, and
+it doesn't seem like anyone care - if people want room sized SGI
+machines the Origin is much more sexy (hello Thomas!) :)
+
+So maybe it it time to mark SN2 broken and see if anyone screams?
+
+Without SN2 the whole machvec mess could basically go away - the
+only real difference between the remaining machvecs is which iommu
+if any we set up.
