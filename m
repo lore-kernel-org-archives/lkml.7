@@ -2,83 +2,105 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF9FC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6103AC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4672054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9DB2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfD2NTk (ORCPT
+        id S1728247AbfD2NUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:19:40 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25681 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2NTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:19:39 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 06:19:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
-   d="scan'208";a="146675438"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2019 06:19:32 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hL6Bu-0008Ek-Oe; Mon, 29 Apr 2019 16:19:30 +0300
-Date:   Mon, 29 Apr 2019 16:19:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        andrew@aj.id.au, macro@linux-mips.org, vz@mleia.com,
-        slemieux.tyco@gmail.com, khilman@baylibre.com, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
-        davem@davemloft.net, jacmet@sunsite.dk, linux@prisktech.co.nz,
-        matthias.bgg@gmail.com, linux-mips@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH 37/41] drivers: tty: serial: 8250: simplify io resource
- size computation
-Message-ID: <20190429131930.GE9224@smile.fi.intel.com>
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-38-git-send-email-info@metux.net>
- <20190428152103.GP9224@smile.fi.intel.com>
- <431b36fe-3071-fcfd-b04e-b4b293e79a80@metux.net>
+        Mon, 29 Apr 2019 09:20:06 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:47717 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfD2NUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:20:05 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MJEAV-1h5Lf60mV9-00KgpJ; Mon, 29 Apr 2019 15:19:55 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Joseph Myers <joseph@codesourcery.com>, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Lukasz Majewski <lukma@denx.de>,
+        Stepan Golosunov <stepan@golosunov.pp.ru>
+Subject: [PATCH 1/2] y2038: make CONFIG_64BIT_TIME unconditional
+Date:   Mon, 29 Apr 2019 15:19:37 +0200
+Message-Id: <20190429131951.471701-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <431b36fe-3071-fcfd-b04e-b4b293e79a80@metux.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:nBLpCCNCMR99+fCmBXHOH58gVJdN2wfMwd8ZK1AgDntxkLTNmLD
+ WN0VU/yhDIZeW8y2iiRYPk8AWxzzNGHqB5BBQYH5gP/5YWSEBi6Bgdb4/ViAc+5I8dWtwGJ
+ QV/FYqC35NYTIrysuCP5DCyIvBIZWThb3BbOCsAAOfux8JuuiGyzkaeQPytbHDv4b5syXbH
+ FFUzrEaqWIQL92wHXq2rA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oxuC7Va9fRA=:S3nRGt+A7184wfoMyT3NBQ
+ BhsDGcjTPGdIswSIE7hqeAYfaTHFnYGS/KtgU9HX8DaNJPByzzObxXtmrd4lhOUQVuyNv6jRS
+ eSkgBZpe2IAzi8rsu6B8W8WNs8EPiwgGq3i4MqL6TT6Dnn5g2sHH1gse2W5HosSu6CWbTIBzc
+ jOQ4txfCcDwawnB+Sq9CVf0wY6r+4w3oU66FJvlkDQQCJvZTyUm0RuUwAGstElf72EmPdX0Qx
+ S9sAMLIST6Y41fwJAICbmSMxoBGC0HofXSCdXzuEAeC+gAXR+ZcwwM9DS6Z9Aw841jqwTLfWP
+ z26by8DM+JY8lIjgCDwPq6QZIdsvlTac9JKyodsfvTTD+d1Ogu/1SZefLTMon+rFL+nDYIfGJ
+ J1G46BThvKgLbnkBXAIqojzs5uSc3kxUIo+xeSHrZbnfVttLsNccvo5M8kn+1dos3oTMEZ5yS
+ T84mjBqJlaqG2oahAMb15Y34lhyZzQ8tLhcomn4RdwubM0pGAzliEAJhLVZ2IkLZuk/Crnqwf
+ ZiHCy1UVM0EjFD8SkxunGtLJh1ZxneWufGcrmk+z9XghD2OydZYCQtXhLtNdVRf6gjQinGYMZ
+ S147O8YhHLAgWCDnFNn0IujNGrSfEeytQv2M/3sr9YRVxYp1JABX849UVQjpL39/CQSW7AV0E
+ 7ClFiqwr5e412aK7KHBwvWNse0eeuG4JIYIqpc9pVl6qy1NKyEf9+lBbs7r2U3cBZM4pYt9n4
+ 1EcgO0sLBEYu2Ye/WLCPVQw+8ZGaRA6YEwBhtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 08:48:53AM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 28.04.19 17:21, Andy Shevchenko wrote:
+As Stepan Golosunov points out, we made a small mistake in the
+get_timespec64() function in the kernel. It was originally added under
+the assumption that CONFIG_64BIT_TIME would get enabled on all 32-bit
+and 64-bit architectures, but when I did the conversion, I only turned
+it on for 32-bit ones.
 
-> >> +#define SERIAL_RT2880_IOSIZE	0x100
-> > 
-> > And why this is in the header file and not in corresponding C one?
-> 
-> hmm, no particular reason, maybe just an old habit to put definitions
-> into .h files ;-)
-> 
-> I can move it to 8250_of.c if you like me to.
+The effect is that the get_timespec64() function never clears the upper
+half of the tv_nsec field for 32-bit tasks in compat mode. Clearing this
+is required for POSIX compliant behavior of functions that pass a
+'timespec' structure with a 64-bit tv_sec and a 32-bit tv_nsec, plus
+uninitialized padding.
 
-Please, do.
+The easiest fix for linux-5.1 is to just make the Kconfig symbol
+unconditional, as it was originally intended. As a follow-up,
+we should remove any #ifdef CONFIG_64BIT_TIME completely.
 
+Note: for native 32-bit mode, no change is needed, this works as
+designed and user space should never need to clear the upper 32
+bits of the tv_nsec field, in or out of the kernel.
+
+Fixes: 00bf25d693e7 ("y2038: use time32 syscall names on 32-bit")
+Link: https://lore.kernel.org/lkml/20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru/
+Cc: Lukasz Majewski <lukma@denx.de>
+Cc: Stepan Golosunov <stepan@golosunov.pp.ru>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+Please apply this one as a bugfix for 5.1
+---
+ arch/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 33687dddd86a..9092e0ffe4d3 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -764,7 +764,7 @@ config COMPAT_OLD_SIGACTION
+ 	bool
+ 
+ config 64BIT_TIME
+-	def_bool ARCH_HAS_64BIT_TIME
++	def_bool y
+ 	help
+ 	  This should be selected by all architectures that need to support
+ 	  new system calls with a 64-bit time_t. This is relevant on all 32-bit
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.0
 
