@@ -2,108 +2,96 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47B7C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3E3C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C3520675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E502C20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbfD2TH3 (ORCPT
+        id S1729149AbfD2TI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:07:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58960 "EHLO mail.kernel.org"
+        Mon, 29 Apr 2019 15:08:58 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16938 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbfD2TH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:07:29 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FFAD20673;
-        Mon, 29 Apr 2019 19:07:26 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 15:07:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-Message-ID: <20190429150724.6e501d27@gandalf.local.home>
-In-Reply-To: <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
-References: <20190427100639.15074-1-nstange@suse.de>
-        <20190427100639.15074-4-nstange@suse.de>
-        <20190427102657.GF2623@hirez.programming.kicks-ass.net>
-        <20190428133826.3e142cfd@oasis.local.home>
-        <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
-        <20190429145250.1a5da6ed@gandalf.local.home>
-        <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726725AbfD2TI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 15:08:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 12:08:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,410,1549958400"; 
+   d="scan'208";a="139872081"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga006.jf.intel.com with ESMTP; 29 Apr 2019 12:08:57 -0700
+Date:   Mon, 29 Apr 2019 12:08:57 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jethro Beekman <jethro@fortanix.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
+        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
+        "haitao.huang@intel.com" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kai.svahn@intel.com" <kai.svahn@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "kai.huang@intel.com" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>
+Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
+Message-ID: <20190429190857.GD31379@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
+ <20190422215831.GL1236@linux.intel.com>
+ <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com>
+ <20190424002653.GB14422@linux.intel.com>
+ <77cface6-dcc4-7e26-9910-ea9d13152531@fortanix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77cface6-dcc4-7e26-9910-ea9d13152531@fortanix.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 11:59:04 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> I really don't care. Just do what I suggested, and if you have numbers to
-> show problems, then maybe I'll care.
+On Wed, Apr 24, 2019 at 01:04:21AM +0000, Jethro Beekman wrote:
+> On 2019-04-23 17:26, Sean Christopherson wrote:
+> >On Tue, Apr 23, 2019 at 11:29:24PM +0000, Jethro Beekman wrote:
+> >>On 2019-04-22 14:58, Sean Christopherson wrote:
+> >>>Now that the core SGX code is approaching stability, I'd like to start
+> >>>sending RFCs for the EPC virtualization and KVM bits to hash out that side
+> >>>of things.  The ACPI crud is the last chunk of code that would require
+> >>>non-trivial changes to the core SGX code for the proposed virtualization
+> >>>implementation.  I'd strongly prefer to get it out of the way before
+> >>>sending the KVM RFCs.
+> >>
+> >>What kind of changes? Wouldn't KVM just be another consumer of the same API
+> >>used by the driver?
+> >
+> >Nope, userspace "only" needs to be able to mmap() arbitrary chunks of EPC.
 > 
+> I don't think this is sufficient. Don't you need enclave tracking in order
+> to support paging?
 
-Are you suggesting that I rewrite the code to do it one function at a
-time? This has always been batch mode. This is not something new. The
-function tracer has been around longer than the text poke code.
+The plan is to not support graceful EPC reclaim in the host on platforms
+without VMM oversubscription extensions, e.g. ENCLV, ERDINFO, etc..., due
+to the complexity and performance overhead.  Mostly the complexity.
 
-> Right now you're just making excuses for this. I described the solution
-> months ago, now I've written a patch, if that's not good enough then we can
-> just skip this all entirely.
-> 
-> Honestly, if you need to rewrite tens of thousands of calls, maybe you're
-> doing something wrong?
-> 
-
- # cd /sys/kernel/debug/tracing
- # cat available_filter_functions | wc -l
- 45856
- # cat enabled_functions | wc -l
- 0
- # echo function > current_tracer
- # cat enabled_functions | wc -l
- 45856
-
-There, I just enabled 45,856 function call sites in one shot!
-
-How else do you want to update them? Every function in the kernel has a
-nop, that turns into a call to the ftrace_handler, if I add another
-user of that code, it will change each one as well.
-
--- Steve
+And if reclaim were to be supported without the extensions, it would be
+done without exiting to userspace on every ENCLS instruction.
