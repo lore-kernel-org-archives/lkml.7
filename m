@@ -2,106 +2,105 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B76C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7829CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C39A2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB47F20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ej/ASn9k"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBvSV/Sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbfD2PTf (ORCPT
+        id S1728633AbfD2PUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:19:35 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:42724 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728249AbfD2PTf (ORCPT
+        Mon, 29 Apr 2019 11:20:02 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40332 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728302AbfD2PUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:19:35 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B1458C0081;
-        Mon, 29 Apr 2019 15:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556551176; bh=6ca6mfO960XBEcOh39ZiDJip0nWB/IKPMIyykJ70WEY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=ej/ASn9kUF6DpwOz0Kaanp+8KeLtu2R8lijifgir3NVbN079ob8qsK6blxowQ7DM1
-         jlTL16Trt+O2a0j9p1gAPt0/UPGwh6ysnVdhDsXVzjJ/2MDXQvuX5eO3bB85vuEpAR
-         pQZfpuNveagwTo277SN+Db2E/OBh2g8kpo6N4jZLGWB9VABNt6LMTU++awUyEcrDlY
-         w+mD1mrVhSOCKCv/q0xclu+HdiQGokZrQw8jEs4cQuBnDpAXzKB8kSHITx2s1tTpp7
-         fXqICT3VEPMb101AeXIQo6OmPO9tCvPC1c7IYG8JEQF1KsaYaZ+oS58ETuUpUsAnpy
-         sZmMoA24vKGpQ==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 7CED8A006A;
-        Mon, 29 Apr 2019 15:19:29 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 29 Apr 2019 08:19:28 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 29 Apr 2019 17:19:17 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        Biao Huang <biao.huang@mediatek.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
-        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
-        "Voon, Weifeng" <weifeng.voon@intel.com>
-Subject: RE: [PATCH 2/2] net-next: stmmac: add mdio clause 45 access from
- mac device for dwmac4
-Thread-Topic: [PATCH 2/2] net-next: stmmac: add mdio clause 45 access from
- mac device for dwmac4
-Thread-Index: AQHU/lXExFDw5bAlc0G9MPOfQZ0kMKZTHp8AgAAh5QA=
-Date:   Mon, 29 Apr 2019 15:19:16 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46E5B4@DE02WEMBXB.internal.synopsys.com>
-References: <1556519724-1576-1-git-send-email-biao.huang@mediatek.com>
- <1556519724-1576-3-git-send-email-biao.huang@mediatek.com>
- <AF233D1473C1364ABD51D28909A1B1B75C0C27ED@pgsmsx114.gar.corp.intel.com>
-In-Reply-To: <AF233D1473C1364ABD51D28909A1B1B75C0C27ED@pgsmsx114.gar.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Apr 2019 11:20:02 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e56so3190384ede.7;
+        Mon, 29 Apr 2019 08:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=dPnq76BudBLUCskM0DaeuuctlwoGzT39qQr2q1xJdTg=;
+        b=BBvSV/SrDNJ31+/UOkSM5bpG5QGX9iuVEAlHSpvrDOGj+4PW80QrSA2NQvvNYxzojp
+         Zd++WkJIJdsJI48+0P5HrqTBvNXDC1r245KbMoADl3uY5vH+mVrnUi6+8qjpF2ydE+tq
+         TwF1hj4480FhhbTHgn4M/QznEs6p0sHaHA9yrWx15VQqD4rerfkEYjhIuk1lUIvL8NJx
+         M8wE73xeYfkcTLVAM5oCB5RVNjauTgvl4PjUAhsoMUZ5oTPhnvZ5wvz6bSMifDGNwT/e
+         KSK9tYNcpfIF8GPBuVeJpf2B9oLlA2ItKshISp7tatkcaGkzhTIiD3dveMl7nJ6B+iIV
+         zmmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:references:date
+         :in-reply-to:message-id:user-agent:mime-version;
+        bh=dPnq76BudBLUCskM0DaeuuctlwoGzT39qQr2q1xJdTg=;
+        b=W9s1t/OgV8qqBHvXotuEhe3Mhiwgpg6UMb3tlgDwdL7vTbfT1IIsA8F/0zGK7S5a17
+         fS6q7av8lzSl6yU2Jxju9wOisr8eM5BTihFR86/+hE+d9V8Qnx27Sn1JRCPMYDaoi8M3
+         nNMoM5Xx8EMeLOghY2QX1ly1XTuS14trK8M7b+wsoPQ/bBuSjaJEcapV6EdYuv7O6Nyn
+         5wEw4hhAtE2c+rZYaSWkrvQHt49M1AO+Xr6n9LoIdzFSiu+zHkcHSaNp6zVnZm8o+aD/
+         4XRMEWtw8/+cmjbPqsP6m1o776u3kJQfOabTge5T7UwrLkwz4fwPidRXVz8e0QQ9c+vh
+         BFAg==
+X-Gm-Message-State: APjAAAUfR1FaZgE9tCuK2LQjYH9E/Js7R4wAnV4/ThnKNrmvofTXIN+8
+        lw3oL/YYSNUvlIzDIMUlvTM=
+X-Google-Smtp-Source: APXvYqwQbi0omP7jYdcby2odHruq4pxaQ7sP2Qij52VODZOog6lth6WIRzjEKd0jUTWzRbOuB+nVlQ==
+X-Received: by 2002:a17:906:2482:: with SMTP id e2mr12684688ejb.289.1556551199464;
+        Mon, 29 Apr 2019 08:19:59 -0700 (PDT)
+Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
+        by smtp.gmail.com with ESMTPSA id p18sm5851269ejm.4.2019.04.29.08.19.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 08:19:58 -0700 (PDT)
+Received: from peko by dell.be.48ers.dk with local (Exim 4.89)
+        (envelope-from <peter@korsgaard.com>)
+        id 1hL84T-0000dV-Kj; Mon, 29 Apr 2019 17:19:57 +0200
+From:   Peter Korsgaard <peter@korsgaard.com>
+To:     "Enrico Weigelt\, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        linux-ia64@vger.kernel.org, linux-serial@vger.kernel.org,
+        andrew@aj.id.au, gregkh@linuxfoundation.org, sudeep.holla@arm.com,
+        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
+        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
+        khilman@baylibre.com, macro@linux-mips.org,
+        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
+        linux-amlogic@lists.infradead.org,
+        andriy.shevchenko@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
+        davem@davemloft.net
+Subject: Re: [PATCH 13/41] drivers: tty: serial: uartlite: fill mapsize and use it
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+        <1556369542-13247-14-git-send-email-info@metux.net>
+Date:   Mon, 29 Apr 2019 17:19:57 +0200
+In-Reply-To: <1556369542-13247-14-git-send-email-info@metux.net> (Enrico
+        Weigelt's message of "Sat, 27 Apr 2019 14:51:54 +0200")
+Message-ID: <87muk8rg82.fsf@dell.be.48ers.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ong, Boon Leong <boon.leong.ong@intel.com>
-Date: Mon, Apr 29, 2019 at 16:15:42
+>>>>> "Enrico" == Enrico Weigelt, metux IT consult <info@metux.net> writes:
 
-> What is the preference of the driver maintainer here? =20
+ > Fill the struct uart_port->mapsize field and use it, insteaf of
 
-Your implementation doesn't need the mdelay() so I think we should follow=20
-your way once you also address the review comments from Andrew and me.
+s/insteaf/instead/
 
-Maybe you can coordinate with Biao and submit a C45 implementation that=20
-can be tested by both ?
+ > hardcoded values in many places. This makes the code layout a bit
+ > more consistent and easily allows using generic helpers for the
+ > io memory handling.
 
-Thanks,
-Jose Miguel Abreu
+ > Candidates for such helpers could be eg. the request+ioremap and
+ > iounmap+release combinations.
+
+ > Signed-off-by: Enrico Weigelt <info@metux.net>
+
+Acked-by: Peter Korsgaard <peter@korsgaard.com>
+
+-- 
+Bye, Peter Korsgaard
