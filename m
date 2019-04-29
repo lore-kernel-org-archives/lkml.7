@@ -7,62 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C544BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F35C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77AF62075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F022075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OrvYAuBa"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BIH4Dsnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfD2GiQ (ORCPT
+        id S1727454AbfD2Gif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:38:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38511 "EHLO
+        Mon, 29 Apr 2019 02:38:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56131 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfD2GiP (ORCPT
+        with ESMTP id S1726589AbfD2Gif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:38:15 -0400
+        Mon, 29 Apr 2019 02:38:35 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3T6bhbL783875
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3T6cNrK783955
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 28 Apr 2019 23:37:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3T6bhbL783875
+        Sun, 28 Apr 2019 23:38:23 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3T6cNrK783955
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556519864;
-        bh=c1pJt+pj9gad8oxIz3aOg/Rogv+OXtT4TtGgLss8fyg=;
+        s=2019041745; t=1556519904;
+        bh=ttPw3dg9hQ47u8vro+sKr1xSCBN2zpzosj4tjgr9WqQ=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=OrvYAuBa4oBZyD0ZWYq89fIE+6tE5QIzcVkU4o+3o/nrZUeVwXeCkYTNepvgaPV6s
-         oo88GIZp+rbt0UmLcJ4fe3mB7E1kbXI+TKbkjmtz2hY7xqwXeYuIA4vR2sxUgUcAD3
-         8V7aB7IBI1Nad+zXjHa779WuhpP3DMYCA+ZGllH00TIJ2af+JJN/YyYyJCVpgDGN7H
-         D+yk7FavBDkHI3q+0U/c6qZYH1qaHrJupEJGnc7L/3krPj3QIXgbzDdktbmKoh4Ydh
-         YpnnLWR0p0z4zo4f7VYLgZgx6UkzrcVBg+eO1wa5FsUVfIWrY3b9sK3h7vovjcRSOz
-         RMI3kjRiKpSQQ==
+        b=BIH4Dsnu0vc/8ODmHWeNzDbEWwWEXXzgwQUGu6XMQ8CU1lXtkGXolXWfA6LRp0DHj
+         eJJuKmEL41GT4ho1XXzr5sOBG22YXRGOpFV1zpFMYc9sx5z0FFr9CnTcdmngy0Y6+x
+         B9inO6fTCGmHQoLXdNMzCZkFcFKA2lhLR70WbWyFb6gdODuQAtGiVaZa0ukVjds8nX
+         el+PoPeXdHPS9bSK/biRd/RcofN0/K3ZnPOzhsf1Lm+5GlrFEDOdll/ZUE4lvFyi94
+         HsFyAWx6aSffvtqCVCaLi4X1HuYO+zQit993SxHHjde1TKJy87CbrrBGrahBDwQcOX
+         gXEp117L47ScA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3T6be7k783870;
-        Sun, 28 Apr 2019 23:37:40 -0700
-Date:   Sun, 28 Apr 2019 23:37:40 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3T6cNJX783951;
+        Sun, 28 Apr 2019 23:38:23 -0700
+Date:   Sun, 28 Apr 2019 23:38:23 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kairui Song <tipbot@zytor.com>
-Message-ID: <tip-d15d356887e770c5f2dcf963b52c7cb510c9e42d@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, peterz@infradead.org,
-        tglx@linutronix.de, acme@kernel.org, alexei.starovoitov@gmail.com,
-        jolsa@redhat.com, hpa@zytor.com, kasong@redhat.com,
-        dyoung@redhat.com, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com, bp@alien8.de, mingo@kernel.org,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org
-Reply-To: dyoung@redhat.com, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, jpoimboe@redhat.com, bp@alien8.de,
-          namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-          tglx@linutronix.de, torvalds@linux-foundation.org,
-          peterz@infradead.org, acme@kernel.org, jolsa@redhat.com,
-          hpa@zytor.com, alexei.starovoitov@gmail.com, kasong@redhat.com
-In-Reply-To: <20190422162652.15483-1-kasong@redhat.com>
-References: <20190422162652.15483-1-kasong@redhat.com>
+From:   tip-bot for Nicholas Piggin <tipbot@zytor.com>
+Message-ID: <tip-9b019acb72e4b5741d88e8936d6f200ed44b66b2@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, npiggin@gmail.com,
+        tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+        torvalds@linux-foundation.org, fweisbec@gmail.com,
+        peterz@infradead.org
+Reply-To: mingo@kernel.org, tglx@linutronix.de, npiggin@gmail.com,
+          linux-kernel@vger.kernel.org, peterz@infradead.org,
+          fweisbec@gmail.com, hpa@zytor.com, torvalds@linux-foundation.org
+In-Reply-To: <20190412042613.28930-1-npiggin@gmail.com>
+References: <20190412042613.28930-1-npiggin@gmail.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86: Make perf callchains work without
- CONFIG_FRAME_POINTER
-Git-Commit-ID: d15d356887e770c5f2dcf963b52c7cb510c9e42d
+Subject: [tip:sched/core] sched/nohz: Run NOHZ idle load balancer on
+ HK_FLAG_MISC CPUs
+Git-Commit-ID: 9b019acb72e4b5741d88e8936d6f200ed44b66b2
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -76,189 +71,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d15d356887e770c5f2dcf963b52c7cb510c9e42d
-Gitweb:     https://git.kernel.org/tip/d15d356887e770c5f2dcf963b52c7cb510c9e42d
-Author:     Kairui Song <kasong@redhat.com>
-AuthorDate: Tue, 23 Apr 2019 00:26:52 +0800
+Commit-ID:  9b019acb72e4b5741d88e8936d6f200ed44b66b2
+Gitweb:     https://git.kernel.org/tip/9b019acb72e4b5741d88e8936d6f200ed44b66b2
+Author:     Nicholas Piggin <npiggin@gmail.com>
+AuthorDate: Fri, 12 Apr 2019 14:26:13 +1000
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 29 Apr 2019 08:25:05 +0200
+CommitDate: Mon, 29 Apr 2019 08:27:03 +0200
 
-perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER
+sched/nohz: Run NOHZ idle load balancer on HK_FLAG_MISC CPUs
 
-Currently perf callchain doesn't work well with ORC unwinder
-when sampling from trace point. We'll get useless in kernel callchain
-like this:
+The NOHZ idle balancer runs on the lowest idle CPU. This can
+interfere with isolated CPUs, so confine it to HK_FLAG_MISC
+housekeeping CPUs.
 
-perf  6429 [000]    22.498450:             kmem:mm_page_alloc: page=0x176a17 pfn=1534487 order=0 migratetype=0 gfp_flags=GFP_KERNEL
-    ffffffffbe23e32e __alloc_pages_nodemask+0x22e (/lib/modules/5.1.0-rc3+/build/vmlinux)
-	7efdf7f7d3e8 __poll+0x18 (/usr/lib64/libc-2.28.so)
-	5651468729c1 [unknown] (/usr/bin/perf)
-	5651467ee82a main+0x69a (/usr/bin/perf)
-	7efdf7eaf413 __libc_start_main+0xf3 (/usr/lib64/libc-2.28.so)
-    5541f689495641d7 [unknown] ([unknown])
+HK_FLAG_SCHED is not used for this because it is not set anywhere
+at the moment. This could be folded into HK_FLAG_SCHED once that
+option is fixed.
 
-The root cause is that, for trace point events, it doesn't provide a
-real snapshot of the hardware registers. Instead perf tries to get
-required caller's registers and compose a fake register snapshot
-which suppose to contain enough information for start a unwinding.
-However without CONFIG_FRAME_POINTER, if failed to get caller's BP as the
-frame pointer, so current frame pointer is returned instead. We get
-a invalid register combination which confuse the unwinder, and end the
-stacktrace early.
+The problem was observed with increased jitter on an application
+running on CPU0, caused by NOHZ idle load balancing being run on
+CPU1 (an SMT sibling).
 
-So in such case just don't try dump BP, and let the unwinder start
-directly when the register is not a real snapshot. Use SP
-as the skip mark, unwinder will skip all the frames until it meet
-the frame of the trace point caller.
-
-Tested with frame pointer unwinder and ORC unwinder, this makes perf
-callchain get the full kernel space stacktrace again like this:
-
-perf  6503 [000]  1567.570191:             kmem:mm_page_alloc: page=0x16c904 pfn=1493252 order=0 migratetype=0 gfp_flags=GFP_KERNEL
-    ffffffffb523e2ae __alloc_pages_nodemask+0x22e (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb52383bd __get_free_pages+0xd (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb52fd28a __pollwait+0x8a (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb521426f perf_poll+0x2f (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb52fe3e2 do_sys_poll+0x252 (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb52ff027 __x64_sys_poll+0x37 (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb500418b do_syscall_64+0x5b (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb5a0008c entry_SYSCALL_64_after_hwframe+0x44 (/lib/modules/5.1.0-rc3+/build/vmlinux)
-	7f71e92d03e8 __poll+0x18 (/usr/lib64/libc-2.28.so)
-	55a22960d9c1 [unknown] (/usr/bin/perf)
-	55a22958982a main+0x69a (/usr/bin/perf)
-	7f71e9202413 __libc_start_main+0xf3 (/usr/lib64/libc-2.28.so)
-    5541f689495641d7 [unknown] ([unknown])
-
-Co-developed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190422162652.15483-1-kasong@redhat.com
+Link: https://lkml.kernel.org/r/20190412042613.28930-1-npiggin@gmail.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/core.c            | 21 +++++++++++++++++----
- arch/x86/include/asm/perf_event.h |  7 +------
- arch/x86/include/asm/stacktrace.h | 13 -------------
- include/linux/perf_event.h        | 14 ++++++++++----
- 4 files changed, 28 insertions(+), 27 deletions(-)
+ kernel/sched/fair.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index de1a924a4914..f315425d8468 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2382,6 +2382,15 @@ void arch_perf_update_userpage(struct perf_event *event,
- 	cyc2ns_read_end();
- }
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 13bafe350abf..7b0da7007da3 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9519,22 +9519,26 @@ static inline int on_null_domain(struct rq *rq)
+  * - When one of the busy CPUs notice that there may be an idle rebalancing
+  *   needed, they will kick the idle load balancer, which then does idle
+  *   load balancing for all the idle CPUs.
++ * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED not set
++ *   anywhere yet.
+  */
  
-+/*
-+ * Determine whether the regs were taken from an irq/exception handler rather
-+ * than from perf_arch_fetch_caller_regs().
-+ */
-+static bool perf_hw_regs(struct pt_regs *regs)
-+{
-+	return regs->flags & X86_EFLAGS_FIXED;
-+}
-+
- void
- perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+ static inline int find_new_ilb(void)
  {
-@@ -2393,11 +2402,15 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
- 	}
+-	int ilb = cpumask_first(nohz.idle_cpus_mask);
++	int ilb;
  
--	if (perf_callchain_store(entry, regs->ip))
--		return;
-+	if (perf_hw_regs(regs)) {
-+		if (perf_callchain_store(entry, regs->ip))
-+			return;
-+		unwind_start(&state, current, regs, NULL);
-+	} else {
-+		unwind_start(&state, current, NULL, (void *)regs->sp);
+-	if (ilb < nr_cpu_ids && idle_cpu(ilb))
+-		return ilb;
++	for_each_cpu_and(ilb, nohz.idle_cpus_mask,
++			      housekeeping_cpumask(HK_FLAG_MISC)) {
++		if (idle_cpu(ilb))
++			return ilb;
 +	}
  
--	for (unwind_start(&state, current, regs, NULL); !unwind_done(&state);
--	     unwind_next_frame(&state)) {
-+	for (; !unwind_done(&state); unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
- 		if (!addr || perf_callchain_store(entry, addr))
- 			return;
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 04768a3a5454..1392d5e6e8d6 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -308,14 +308,9 @@ extern unsigned long perf_misc_flags(struct pt_regs *regs);
-  */
- #define perf_arch_fetch_caller_regs(regs, __ip)		{	\
- 	(regs)->ip = (__ip);					\
--	(regs)->bp = caller_frame_pointer();			\
-+	(regs)->sp = (unsigned long)__builtin_frame_address(0);	\
- 	(regs)->cs = __KERNEL_CS;				\
- 	regs->flags = 0;					\
--	asm volatile(						\
--		_ASM_MOV "%%"_ASM_SP ", %0\n"			\
--		: "=m" ((regs)->sp)				\
--		:: "memory"					\
--	);							\
+ 	return nr_cpu_ids;
  }
  
- struct perf_guest_switch_msr {
-diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
-index f335aad404a4..beef7ad9e43a 100644
---- a/arch/x86/include/asm/stacktrace.h
-+++ b/arch/x86/include/asm/stacktrace.h
-@@ -98,19 +98,6 @@ struct stack_frame_ia32 {
-     u32 return_address;
- };
- 
--static inline unsigned long caller_frame_pointer(void)
--{
--	struct stack_frame *frame;
--
--	frame = __builtin_frame_address(0);
--
--#ifdef CONFIG_FRAME_POINTER
--	frame = frame->next_frame;
--#endif
--
--	return (unsigned long)frame;
--}
--
- void show_opcodes(struct pt_regs *regs, const char *loglvl);
- void show_ip(struct pt_regs *regs, const char *loglvl);
- #endif /* _ASM_X86_STACKTRACE_H */
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index f3864e1c5569..cf023db0e8a2 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1058,12 +1058,18 @@ static inline void perf_arch_fetch_caller_regs(struct pt_regs *regs, unsigned lo
- #endif
- 
  /*
-- * Take a snapshot of the regs. Skip ip and frame pointer to
-- * the nth caller. We only need a few of the regs:
-+ * When generating a perf sample in-line, instead of from an interrupt /
-+ * exception, we lack a pt_regs. This is typically used from software events
-+ * like: SW_CONTEXT_SWITCHES, SW_MIGRATIONS and the tie-in with tracepoints.
-+ *
-+ * We typically don't need a full set, but (for x86) do require:
-  * - ip for PERF_SAMPLE_IP
-  * - cs for user_mode() tests
-- * - bp for callchains
-- * - eflags, for future purposes, just in case
-+ * - sp for PERF_SAMPLE_CALLCHAIN
-+ * - eflags for MISC bits and CALLCHAIN (see: perf_hw_regs())
-+ *
-+ * NOTE: assumes @regs is otherwise already 0 filled; this is important for
-+ * things like PERF_SAMPLE_REGS_INTR.
+- * Kick a CPU to do the nohz balancing, if it is time for it. We pick the
+- * nohz_load_balancer CPU (if there is one) otherwise fallback to any idle
+- * CPU (if there is one).
++ * Kick a CPU to do the nohz balancing, if it is time for it. We pick any
++ * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
   */
- static inline void perf_fetch_caller_regs(struct pt_regs *regs)
+ static void kick_ilb(unsigned int flags)
  {
