@@ -2,73 +2,123 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C27C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B01DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D226320644
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E892063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CUKpkuCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfD2Ivi (ORCPT
+        id S1727785AbfD2Ivq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 04:51:38 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:9204 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727572AbfD2Ivi (ORCPT
+        Mon, 29 Apr 2019 04:51:46 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:53386 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727572AbfD2Ivq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:51:38 -0400
-X-IronPort-AV: E=Sophos;i="5.60,408,1549897200"; 
-   d="scan'208";a="14559589"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 29 Apr 2019 17:51:33 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C9A93401700E;
-        Mon, 29 Apr 2019 17:51:29 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
-Date:   Mon, 29 Apr 2019 09:51:24 +0100
-Message-Id: <1556527884-11640-1-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 29 Apr 2019 04:51:46 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AC019C0070;
+        Mon, 29 Apr 2019 08:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556527906; bh=wJX6bGWdlKPbsdOdJyT3D6DTbahJBisRdZKY2ByzFdM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=CUKpkuCNXsp8rWOQtRoufEAf+S/ZNN0U47pNC4m1eNnMW5BdVlhndu0OCffNhpOEI
+         bmYSrUfNC+FbiMhVcroDIDR3kHdfr1wOlVRXh0idCUJGSygZluE+0uZ4aE7Zur5UK4
+         6kloCVJ4ERdI8Txz8JSbduI2ii9LkIK1ZXXc/+nG49aj3kEP7UJefSbsaLVJhC+l8/
+         TrSBNVuClq1EZ29Vgp09F5GpSc78fg8CV+RzrlMgv9XCsemtct+/uEqftDEhSO/V/W
+         zoAxvGzidAsHkhDWg86FVcWGEUJSHfEwMJahxQNsuJcpNXpcImPP735Vtp+330/qi+
+         4vbBZOz5DGALA==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id EE4B8A0091;
+        Mon, 29 Apr 2019 08:51:41 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 29 Apr 2019 01:51:42 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
+ 29 Apr 2019 10:51:40 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Biao Huang <biao.huang@mediatek.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>
+Subject: RE: [PATCH 1/4] net: stmmac: update rx tail pointer register to fix
+ rx dma hang issue.
+Thread-Topic: [PATCH 1/4] net: stmmac: update rx tail pointer register to
+ fix rx dma hang issue.
+Thread-Index: AQHU/lMO5G2GtMH+wUeCSibnjv/EX6ZS1H8A
+Date:   Mon, 29 Apr 2019 08:51:39 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46DDF0@DE02WEMBXB.internal.synopsys.com>
+References: <1556518556-32464-1-git-send-email-biao.huang@mediatek.com>
+ <1556518556-32464-2-git-send-email-biao.huang@mediatek.com>
+In-Reply-To: <1556518556-32464-2-git-send-email-biao.huang@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document RZ/G2E (R8A774C0) SoC bindings.
+From: Biao Huang <biao.huang@mediatek.com>
+Date: Mon, Apr 29, 2019 at 07:15:53
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
- 1 file changed, 1 insertion(+)
+> Currently we will not update the receive descriptor tail pointer in
+> stmmac_rx_refill. Rx dma will think no available descriptors and stop
+> once received packets exceed DMA_RX_SIZE, so that the rx only test will f=
+ail.
+>=20
+> Update the receive tail pointer in stmmac_rx_refill to add more descripto=
+rs
+> to the rx channel, so packets can be received continually
+>=20
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/=
+net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 97c5e1a..818ad88 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -3336,6 +3336,9 @@ static inline void stmmac_rx_refill(struct stmmac_p=
+riv *priv, u32 queue)
+>  		entry =3D STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
+>  	}
+>  	rx_q->dirty_rx =3D entry;
+> +	stmmac_set_rx_tail_ptr(priv, priv->ioaddr,
+> +			       rx_q->dma_rx_phy + (entry * sizeof(struct dma_desc)),
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index fea8b15..97400e8 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -10,6 +10,7 @@ Required properties:
-     - "renesas,xhci-r8a7743" for r8a7743 SoC
-     - "renesas,xhci-r8a7744" for r8a7744 SoC
-     - "renesas,xhci-r8a774a1" for r8a774a1 SoC
-+    - "renesas,xhci-r8a774c0" for r8a774c0 SoC
-     - "renesas,xhci-r8a7790" for r8a7790 SoC
-     - "renesas,xhci-r8a7791" for r8a7791 SoC
-     - "renesas,xhci-r8a7793" for r8a7793 SoC
--- 
-2.7.4
+I think you can just use the "rx_q->rx_tail_addr" here. It'll always=20
+trigger a poll demand for the channel.
 
+Thanks,
+Jose Miguel Abreu
