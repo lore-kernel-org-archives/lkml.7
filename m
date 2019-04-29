@@ -6,137 +6,119 @@ X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AC5C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74336C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC8E2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E2F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556573940;
-	bh=GrP8cZOBRMBSsF8r0U8rosVWXZkA2KIhYapxx/V4Les=;
+	s=default; t=1556573978;
+	bh=Zj9xxx011OGk5FghX+GJ9PqQQX2m4l3ezBnglnFdH/U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=a+U5F7QT1XxlXWUD5hHbXLNhP17cB2UIe7XbKM6LsEUrnx3pulLHNBFfQ1Asxlwmx
-	 h6qFowfW+VW4zUeVgdjq6SPwCZ7AZufzW6Efg9lEsiQYJKYSJOwyEKWJzgm/5XkXDW
-	 CD/zTaPLtATEiaaaMGvO82j9edMVMEuSxrfSXgS4=
+	b=ANZcz4LQunKOVZ9DVKh3lDHDBPMvm3lgqmSEuQIkvwe5OxdJ3DYBk3LN66xFYx/mT
+	 d8W56pzOiXPgolKBiFhCzLttbpFwqJe5MBgHToNSzILCAS3fpqEWZHALhb/ex2/dIW
+	 yVzmPXyQ8SIWjYXA7xm7W3k52gEEa8Mcp/BNgYLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbfD2Vi7 (ORCPT
+        id S1729388AbfD2Vjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:38:59 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36058 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729336AbfD2Vi6 (ORCPT
+        Mon, 29 Apr 2019 17:39:36 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38750 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729252AbfD2Vjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:38:58 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y8so4395804ljd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:38:57 -0700 (PDT)
+        Mon, 29 Apr 2019 17:39:36 -0400
+Received: by mail-lj1-f193.google.com with SMTP id e18so4898146lja.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:39:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wSiV79NBIztMusWk2QP2VKKhKOlea+n31l0AFUl2Bg8=;
-        b=ZMLzPqHi9lETwhRL66Ic7OfH6fw2vR3J8CHiKq3pfDQQ78NgprQyY154J6Rqvkqc7s
-         C42c14gHHilvBkmQFjpiBuapTUcRjDejOz3oZMhlsRfav1CrKiKeXa5cwy+w5bWoRtOe
-         i2ztzqxJfLNJSPQmCXpPj6ttEC4mfbjCWUHRc=
+        bh=xn/5jS+m49YEHy9VewaGSeXNPslEqie8PTvJU6EXUNw=;
+        b=hxFbqa4ewa41rSYJkjywqzmK/JSCoGBv9pbM0qVpY7Jcn8QmH+hVBPBdi7+D/zJmdk
+         nmh191WRMCDQnlnOa+BZyyPstDYFCZkzpGRd0yKcaYhaQ9NmaL1Wd+MyXvvygdZSo+wh
+         4K4v5k4yhv7oc8csttKN+MRZCq2FU2n6mdTIY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wSiV79NBIztMusWk2QP2VKKhKOlea+n31l0AFUl2Bg8=;
-        b=X0nYMUj3QQc1Pdw8IAMjOFjLsPpbskkcvXQAgwrQBenQco4I8L/wCowTluxsDZr2/G
-         bhH8YZQrcCYVMConvkmDPLnYATX58z9KwEUdmfxFIrAnphfhQ+psA/2O3nkLoVh++8CI
-         Tc1MUfZBcvt/5s7eAznP6qzijta+erPVfKXbk5u9ZdPt9xSTIId/hxsLKyHlZv33BJgw
-         FxooVtbVa8qaW23XAAg3s57hqc4dlMziA517wFm3/0zQa1zuouKTZqVkDuGzpj2Na5v/
-         o9WVs9yKlOlw1a3jG6K9+qwNY9V/SGNjVodkIzmFBjRT+Dc4d9X/WUUx7ddotxJueZoc
-         eiGg==
-X-Gm-Message-State: APjAAAWsX/N6YksAh3qgMR+XsA78kGRKeK8lGnsqDIg8oh0hDxJkd1+L
-        xMki93Ovr4xdg4YMyH8lktKXgLQV0wU=
-X-Google-Smtp-Source: APXvYqw6b2XnbFrw7BSLw+7VXZOlHqu+jA7VzPOEZoyPR24nhbg5JQgvTuJSCUiY/OgMo07i8S7Fyw==
-X-Received: by 2002:a2e:4b19:: with SMTP id y25mr2448696lja.106.1556573936325;
-        Mon, 29 Apr 2019 14:38:56 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id v141sm7473859lfa.52.2019.04.29.14.38.53
+        bh=xn/5jS+m49YEHy9VewaGSeXNPslEqie8PTvJU6EXUNw=;
+        b=QpxnMYP4XDxxWgV0++z8R0nn9BpBQCGsR7g3FD6fhEqn42ckiuhRgW7EHE99dv6/et
+         9QjENIIJsv08Yv9a5PKe67pFFGafbDsZvWAT28dBGnvC+lnYaNOKje4VhkQQR8EmLTzr
+         +OtCvmkmJhqdf2ah/XuAviiLdfPrBlQwi9EKgnb51ciqy3DHY4C4U82lCvnOU9gLJVhH
+         qCcMltpXAH/LRSvKPq/qz+clGWvCtJhFuA9N7/uYxZmv49U/C51BWrlwD8azNP9eh1nO
+         QlQFNLqJ7GiTdJi6P6/BK3tEmptufppDN4XdB7CtC+Qr2SwvGTq8c/P/Sxp6MmHjvAlk
+         +xDA==
+X-Gm-Message-State: APjAAAUDKtGA77/VvWBz1mirguH6T5GJjd2gYc8fPapg5un9bmEu0ljT
+        xykN6JF/1jgpkQB7VcHzRjkB3EggK1c=
+X-Google-Smtp-Source: APXvYqz2+nE8gyiN2dh2WsShdX1xdJUq4UA5whZeCTwkCobtza0qV2ZA88FNovQw+jDjO8dtFf36JA==
+X-Received: by 2002:a2e:7605:: with SMTP id r5mr12689234ljc.161.1556573974394;
+        Mon, 29 Apr 2019 14:39:34 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id i64sm8165140lfe.18.2019.04.29.14.39.34
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 14:38:54 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id m18so6179475lje.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:38:53 -0700 (PDT)
-X-Received: by 2002:a2e:9ac8:: with SMTP id p8mr30631636ljj.79.1556573932539;
- Mon, 29 Apr 2019 14:38:52 -0700 (PDT)
+        Mon, 29 Apr 2019 14:39:34 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id w23so9043877lfc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:39:34 -0700 (PDT)
+X-Received: by 2002:ac2:43cf:: with SMTP id u15mr3927622lfl.67.1556573506825;
+ Mon, 29 Apr 2019 14:31:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
- <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
- <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <20190429145250.1a5da6ed@gandalf.local.home> <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
- <20190429150724.6e501d27@gandalf.local.home> <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
- <20190429163043.535f4272@gandalf.local.home>
-In-Reply-To: <20190429163043.535f4272@gandalf.local.home>
+References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+ <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
+ <20190420071406.GA22257@ip-172-31-15-78> <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
+ <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
+ <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com> <87zho8bl8x.fsf@oldenburg2.str.redhat.com>
+In-Reply-To: <87zho8bl8x.fsf@oldenburg2.str.redhat.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 14:38:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjGquN7-kQCoa+LHCuiVTjefkk38qwaysd4wLLtoSZhpg@mail.gmail.com>
-Message-ID: <CAHk-=wjGquN7-kQCoa+LHCuiVTjefkk38qwaysd4wLLtoSZhpg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+Date:   Mon, 29 Apr 2019 14:31:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiPv4QJBC0qX8xxnT5P2C7S5uDG0HKdvdSpcoXaHG91tQ@mail.gmail.com>
+Message-ID: <CAHk-=wiPv4QJBC0qX8xxnT5P2C7S5uDG0HKdvdSpcoXaHG91tQ@mail.gmail.com>
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Jann Horn <jannh@google.com>, Kevin Easton <kevin@guarana.org>,
         Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 1:30 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Apr 29, 2019 at 1:38 PM Florian Weimer <fweimer@redhat.com> wrote:
 >
-> The update from "call custom_trampoline" to "call iterator_trampoline"
-> is where we have an issue.
+> In Linux-as-the-ABI (as opposed to Linux-as-the-implementation), vfork
+> is sometimes implemented as fork, so applications cannot rely on the
+> vfork behavior regarding the stopped parent and the shared address
+> space.
 
-So it has never worked. Just tell people that they have two chocies:
+What broken library does that?
 
- - you do the careful rewriting, which takes more time
+Sure, we didn't have a proper vfork() long long long ago. But that
+predates both git and BK, so it's some time in the 90's. We've had a
+proper vfork() *forever*.
 
- - you do it by rewriting as nop and then back, which is what
-historically has been done, and that is fast and simple, because
-there's no need to be careful.
+> In fact, it would be nice to have a flag we can check in the posix_spawn
+> implementation, so that we can support vfork-as-fork without any run
+> time cost to native Linux.
 
-Really. I find your complaints completely incomprehensible. You've
-never rewritten call instructions atomically before, and now you
-complain about it being slightly more expensive to do it when I give
-you the code? Yes it damn well will be slightly more expensive. Deal
-with it.
-
-Btw, once again - I several months ago also gave a suggestion on how
-it could be done batch-mode by having lots of those small stubs and
-just generating them dynamically.
-
-You never wrote that code *EITHER*. It's been *months*.
-
-So now I've written the non-batch-mode code for you, and you just
-*complain* about it?
-
-I'm done with this discussion. I'm totally fed up.
+No. Just make a bug-report to whatever broken library you use. What's
+the point of having a library that can't even get vfork() right? Why
+would you want to have a flag to say "vfork is broken"?
 
                  Linus
