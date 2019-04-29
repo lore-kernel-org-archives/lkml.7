@@ -2,97 +2,201 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96111C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E9BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528BC216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556563415;
-	bh=TYbYR6xdiAT33fFeBDJqUP8mpRliL4fUyIr32o3R6Ao=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rRyf22E2JqunQqBwfItzbslu7KXDSlEXy9sR9ZMyfrdhmWfI8bYFBXIvEjUPyneaD
-	 T+Jr1h/XgrakYF6BLn+ObTSj3qMzteRMxpue2J+RyMxh1VdE7uoUD6SPiYOZx7EkSi
-	 KYUahgEQinBgmWnLQzJXZERhfWi9Rebg6sXHYnJY=
+	by mail.kernel.org (Postfix) with ESMTP id 0ED752087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y7UJ5d8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbfD2Sne (ORCPT
+        id S1729142AbfD2SoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:43:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729003AbfD2Snd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:43:33 -0400
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 104832182B
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 18:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556563413;
-        bh=TYbYR6xdiAT33fFeBDJqUP8mpRliL4fUyIr32o3R6Ao=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ild4RLQx9rtlOvTMTH/a2NOZwv2KhSkHHDSs0/ztbX9IjEWNeAvPTIQTDmmrTUpaP
-         P/Jlymb7EAxnHAX7dIW4dLamRL85KAqgyYJcADejzz0al8WIhPxUz7QWocmNVaz1IN
-         d+Gx835qgvYw2xFHS1KphzxoLeAN69ShA+e9NJA0=
-Received: by mail-wm1-f49.google.com with SMTP id y197so601104wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:43:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAWafbqGynmchb9oIYlAwPfic9MepRIUdq5ttSAUPO4oBgr481/p
-        kH3FYCDNRzuKfdASlrTeOxPUsQzsCxAmWGgKjHeQAg==
-X-Google-Smtp-Source: APXvYqwXpPlusyb3Pkf6NhTuJxrB50rMCwVMOgK5uUwclcgN2qAcz9570f515mL5RGC1hGTQHUSXomHSXsEL/JsKib8=
-X-Received: by 2002:a7b:c844:: with SMTP id c4mr331867wml.108.1556563411667;
- Mon, 29 Apr 2019 11:43:31 -0700 (PDT)
+        Mon, 29 Apr 2019 14:44:24 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36197 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728962AbfD2SoY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 14:44:24 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIh7Bn1029077
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 29 Apr 2019 11:43:07 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIh7Bn1029077
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556563388;
+        bh=5x7RgpC5xVV3Sp9l8OUMDoq1riFwDMHdbJZ9xKnZIkM=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Y7UJ5d8X6Fkigen72e/k9xfFLLnkzAxjgSYc3ltTDOwBGPDVAcsmOOtO5cMGvEwEb
+         38HnmXs+o6mSYC3/DS9e9CIaZ8ogJ7N1qKDJC6j0zeMRNbrxWvEYhvmKscvaqPMjjP
+         EjdpzIOFCoEPAfHwHuoPCYPERGR++78Qwsw7iJ/dLgBDnBqHnEPbvnbSZ0FbbQk9Nm
+         WqcD/lSMj5diVYztCRozprJ3UcQ2eTm8iF5a3iBMa6U84X/sy/BnzZarVaN0yQx5VA
+         6+00/EZsEFHmcfxWQSGfeAzVpSU+iO85wycZtfd8Wtis2fOxcKkhDq3eiXiYR4Bc2b
+         f86NVjtlhcFiw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIh6811029073;
+        Mon, 29 Apr 2019 11:43:06 -0700
+Date:   Mon, 29 Apr 2019 11:43:06 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-76b14436b4d98903fef723365170bedd6f28ab2c@git.kernel.org>
+Cc:     josef@toxicpanda.com, m.szyprowski@samsung.com,
+        tom.zanussi@linux.intel.com, jthumshirn@suse.de, luto@kernel.org,
+        mbenes@suse.cz, adobriyan@gmail.com, dsterba@suse.com,
+        maarten.lankhorst@linux.intel.com, dvyukov@google.com,
+        aryabinin@virtuozzo.com, rientjes@google.com,
+        rodrigo.vivi@intel.com, joonas.lahtinen@linux.intel.com,
+        mingo@kernel.org, daniel@ffwll.ch, robin.murphy@arm.com,
+        hpa@zytor.com, clm@fb.com, catalin.marinas@arm.com,
+        jani.nikula@linux.intel.com, glider@google.com,
+        akpm@linux-foundation.org, jpoimboe@redhat.com, agk@redhat.com,
+        rppt@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        penberg@kernel.org, tglx@linutronix.de, cl@linux.com,
+        akinobu.mita@gmail.com, peterz@infradead.org, rostedt@goodmis.org,
+        airlied@linux.ie, hch@lst.de, snitzer@redhat.com
+Reply-To: daniel@ffwll.ch, mingo@kernel.org,
+          joonas.lahtinen@linux.intel.com, robin.murphy@arm.com,
+          hpa@zytor.com, clm@fb.com, tom.zanussi@linux.intel.com,
+          m.szyprowski@samsung.com, josef@toxicpanda.com, mbenes@suse.cz,
+          adobriyan@gmail.com, dsterba@suse.com, luto@kernel.org,
+          jthumshirn@suse.de, rientjes@google.com, aryabinin@virtuozzo.com,
+          dvyukov@google.com, maarten.lankhorst@linux.intel.com,
+          rodrigo.vivi@intel.com, rppt@linux.vnet.ibm.com,
+          jpoimboe@redhat.com, agk@redhat.com, penberg@kernel.org,
+          linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+          peterz@infradead.org, akinobu.mita@gmail.com, cl@linux.com,
+          tglx@linutronix.de, snitzer@redhat.com, hch@lst.de,
+          airlied@linux.ie, catalin.marinas@arm.com,
+          akpm@linux-foundation.org, glider@google.com,
+          jani.nikula@linux.intel.com
+In-Reply-To: <20190425094802.803362058@linutronix.de>
+References: <20190425094802.803362058@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/stacktrace] lockdep: Remove save argument from
+ check_prev_add()
+Git-Commit-ID: 76b14436b4d98903fef723365170bedd6f28ab2c
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
- <1556228754-12996-3-git-send-email-rppt@linux.ibm.com> <20190426083144.GA126896@gmail.com>
- <20190426095802.GA35515@gmail.com> <CALCETrV3xZdaMn_MQ5V5nORJbcAeMmpc=gq1=M9cmC_=tKVL3A@mail.gmail.com>
- <20190427084752.GA99668@gmail.com> <20190427104615.GA55518@gmail.com> <alpine.LRH.2.21.1904300425200.20645@namei.org>
-In-Reply-To: <alpine.LRH.2.21.1904300425200.20645@namei.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 29 Apr 2019 11:43:20 -0700
-X-Gmail-Original-Message-ID: <CALCETrX0T0_Cn8UivmRwtRZ8N3joT_MfQom+TKLZ2aqxqm7dYA@mail.gmail.com>
-Message-ID: <CALCETrX0T0_Cn8UivmRwtRZ8N3joT_MfQom+TKLZ2aqxqm7dYA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call isolation
-To:     James Morris <jmorris@namei.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux-MM <linux-mm@kvack.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 11:27 AM James Morris <jmorris@namei.org> wrote:
->
-> On Sat, 27 Apr 2019, Ingo Molnar wrote:
->
-> >  - A C language runtime that is a subset of current C syntax and
-> >    semantics used in the kernel, and which doesn't allow access outside
-> >    of existing objects and thus creates a strictly enforced separation
-> >    between memory used for data, and memory used for code and control
-> >    flow.
->
-> Might be better to start with Rust.
->
+Commit-ID:  76b14436b4d98903fef723365170bedd6f28ab2c
+Gitweb:     https://git.kernel.org/tip/76b14436b4d98903fef723365170bedd6f28ab2c
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Thu, 25 Apr 2019 11:45:11 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 29 Apr 2019 12:37:53 +0200
 
-I think that Rust would be the clear winner as measured by how fun it sounds :)
+lockdep: Remove save argument from check_prev_add()
+
+There is only one caller which hands in save_trace as function pointer.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: linux-mm@kvack.org
+Cc: David Rientjes <rientjes@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: kasan-dev@googlegroups.com
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: iommu@lists.linux-foundation.org
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: David Sterba <dsterba@suse.com>
+Cc: Chris Mason <clm@fb.com>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: linux-btrfs@vger.kernel.org
+Cc: dm-devel@redhat.com
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: Alasdair Kergon <agk@redhat.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: linux-arch@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190425094802.803362058@linutronix.de
+
+---
+ kernel/locking/lockdep.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index d7615d299d08..3603893d5bbd 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -2158,8 +2158,7 @@ check_deadlock(struct task_struct *curr, struct held_lock *next,
+  */
+ static int
+ check_prev_add(struct task_struct *curr, struct held_lock *prev,
+-	       struct held_lock *next, int distance, struct stack_trace *trace,
+-	       int (*save)(struct stack_trace *trace))
++	       struct held_lock *next, int distance, struct stack_trace *trace)
+ {
+ 	struct lock_list *uninitialized_var(target_entry);
+ 	struct lock_list *entry;
+@@ -2199,11 +2198,11 @@ check_prev_add(struct task_struct *curr, struct held_lock *prev,
+ 	if (unlikely(!ret)) {
+ 		if (!trace->entries) {
+ 			/*
+-			 * If @save fails here, the printing might trigger
+-			 * a WARN but because of the !nr_entries it should
+-			 * not do bad things.
++			 * If save_trace fails here, the printing might
++			 * trigger a WARN but because of the !nr_entries it
++			 * should not do bad things.
+ 			 */
+-			save(trace);
++			save_trace(trace);
+ 		}
+ 		return print_circular_bug(&this, target_entry, next, prev);
+ 	}
+@@ -2253,7 +2252,7 @@ check_prev_add(struct task_struct *curr, struct held_lock *prev,
+ 		return print_bfs_bug(ret);
+ 
+ 
+-	if (!trace->entries && !save(trace))
++	if (!trace->entries && !save_trace(trace))
+ 		return 0;
+ 
+ 	/*
+@@ -2318,7 +2317,8 @@ check_prevs_add(struct task_struct *curr, struct held_lock *next)
+ 		 * added:
+ 		 */
+ 		if (hlock->read != 2 && hlock->check) {
+-			int ret = check_prev_add(curr, hlock, next, distance, &trace, save_trace);
++			int ret = check_prev_add(curr, hlock, next, distance,
++						 &trace);
+ 			if (!ret)
+ 				return 0;
+ 
