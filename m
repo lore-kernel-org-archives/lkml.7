@@ -2,398 +2,85 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82C6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAEBC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7569920675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556497514;
-	bh=R+URfKDMbDkxM9eFrbGcBhCTeJ471Z/J0/09tVAVI/k=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=rK8anO+uGklijCdJPvgUPlvKvDe28b8GwVOHB3qeleewmqtAvX3b7NnXFbC5kBQgS
-	 FfrADXh5H7pNeNucmU1LdbdZsvqfolKQk2NlKVpStC1CxYlTBpkvxXFdOAmGbRkxZH
-	 stH7lsH+rVDIavWe8KTBLFR0C1bmhuu1z8j1iZBk=
+	by mail.kernel.org (Postfix) with ESMTP id 8EDDF20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfD2AZN (ORCPT
+        id S1726893AbfD2A15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 20:25:13 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:38359 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfD2AZM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 20:25:12 -0400
-Received: by mail-lf1-f44.google.com with SMTP id v1so6588401lfg.5
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 17:25:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=WEpi63YWPCgBdoBUdGKfUYJo3DmByxb9kOQ9WjLfYTM=;
-        b=Z2k0ixH7m0LdDYhuVr9a0+N58FApNGFPpTpcweQZvBg7MuowZfOM2Q4K90ZHgJqGVl
-         HYyoSrtvEy1MFHATsCUBHdn5ABM9ih0CjS//bnzE2oaE36fCLJyTAYlzpY9IlQ4Mvsw3
-         rtg4VlGlyhvCTCO3JgGowtiWadiprJ13JsMVk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=WEpi63YWPCgBdoBUdGKfUYJo3DmByxb9kOQ9WjLfYTM=;
-        b=YGy1sTosfv8eVseYiJjv64ZbDEcgi6CmVITtVc6vYzlLht+DcECZPGfGWqwW4JW/hW
-         CwccAtAmQW35kSCvwhMD8dPQ0HIp1a10j4gA4teHDDAIqWzbQyV6YTXAMGMdG3QkqeMx
-         L5xYaT0NcoHKhJnUyBsYC9bn1SgMHUve9STYaDJ5UwPqnpFu8xcKwIoktwI0zIIK2L+0
-         +4RwWilWwgAkfuo1vMcc5CyCFBbCWBm5T7jQiFBD7yZEnPc/FAG2NIiyWy5FxyAbdX00
-         97v1yn+lOVHJBaWZDwXSIRxCRYHH25p4wrY+aK2Dg+bBeCz87Qu1n/jFz2Z28abol/OX
-         kXIQ==
-X-Gm-Message-State: APjAAAVdaLgAxj4W6XloHj/V4safHPbKG7mmyFsRnseiFRT5n+GbuvwG
-        MTW7WIyaZGyrGQhMZc+f/DSFntL8KW4=
-X-Google-Smtp-Source: APXvYqxvfdj3CLLrrsOifaHdMr8p9ZBRB0PaZfH3W87vIG47lF1tv/d0kXL4hpkLz0uwmKFgzpUdAg==
-X-Received: by 2002:ac2:4a89:: with SMTP id l9mr3437573lfp.60.1556497508712;
-        Sun, 28 Apr 2019 17:25:08 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id s3sm7058345lfc.25.2019.04.28.17.25.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 17:25:07 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id b12so6551788lji.4
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 17:25:07 -0700 (PDT)
-X-Received: by 2002:a2e:8090:: with SMTP id i16mr5638909ljg.135.1556497507476;
- Sun, 28 Apr 2019 17:25:07 -0700 (PDT)
+        Sun, 28 Apr 2019 20:27:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44566 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726223AbfD2A14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 20:27:56 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 524F081F0F;
+        Mon, 29 Apr 2019 00:27:56 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-22.rdu2.redhat.com [10.10.120.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D91764A3;
+        Mon, 29 Apr 2019 00:27:54 +0000 (UTC)
+Subject: Re: [PATCH-tip v7 00/20] locking/rwsem: Rwsem rearchitecture part 2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190428212557.13482-1-longman@redhat.com>
+ <CAHk-=whU83HbayBmOS-jbK7bQJUp87mvAYxhL=vz5wC_ARQCWA@mail.gmail.com>
+ <3f8fd44d-1962-e309-49b5-bb16fd662312@redhat.com>
+ <CAHk-=wg_facR6y3gnmtGwBSJYZdHm5rWSPpPhJG6XswW4+mO1Q@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <604c8751-5269-de29-0b7f-b3e93b6df4ca@redhat.com>
+Date:   Sun, 28 Apr 2019 20:27:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 28 Apr 2019 17:24:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whvWQbP20g77U4QRXQDS5w+kf=V-P2QjMkgA-OwJJjHtg@mail.gmail.com>
-Message-ID: <CAHk-=whvWQbP20g77U4QRXQDS5w+kf=V-P2QjMkgA-OwJJjHtg@mail.gmail.com>
-Subject: Linux 5.1-rc7
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHk-=wg_facR6y3gnmtGwBSJYZdHm5rWSPpPhJG6XswW4+mO1Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 29 Apr 2019 00:27:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If rc6 was bigger than I wished, it really does seem to have been just
-due to timing of pull requests. Because rc7 is tiny.
+On 4/28/19 8:10 PM, Linus Torvalds wrote:
+> On Sun, Apr 28, 2019 at 4:12 PM Waiman Long <longman@redhat.com> wrote:
+>> I implemented your suggestion in patch 1 as it will produce simpler and
+>> faster code. However, one of the changes in my patchset is to wake up
+>> all the readers in the wait list. This means I have to jump over the
+>> writers and wake up the readers behind them as well. See patch 11 for
+>> details. As a result, I have to revert back to use list_add_tail() and
+>> list_for_each_entry_safe() for the first pass. That is why the diff for
+>> the whole patchset is just the below change. It is done on purpose, not
+>> an omission.
+> Ahh, ok. In that case I suspect the clever code isn't even worth it,
+> since it very much depends on just splitting the list in a fixed
+> place.
+>
+>                    Linus
+
+Not really, this is a serious problem that have to be backported to
+earlier stable releases and downstream. The clever code is helpful in
+those cases.
+
+Cheers,
+Longman
 
-Just under half of the patch is various kinds of networking changes: a
-mix of core networking, network drivers and some netfilter selftests.
-
-The rest is mostly the usual architecture fixes, filesystems, and
-other drivers (mostly rdma and gpu). And misc random changes
-(Documentation, tracing, some mm fixlets).
-
-But it's all pretty tiny. Plus about 30% of the patches are marked for
-stable, so on the whole it really does feel like 5.1 is on target for
-a regular release next weekend.
-
-Knock wood.
-
-           Linus
-
----
-
-Achim Dahlhoff (1):
-      dmaengine: sh: rcar-dmac: Fix glitch in dmaengine_tx_status
-
-Alexander Potapenko (1):
-      netfilter: conntrack: initialize ct->timeout
-
-Alexey Kardashevskiy (2):
-      powerpc/mm_iommu: Fix potential deadlock
-      powerpc/mm_iommu: Allow pinning large regions
-
-Amit Cohen (1):
-      mlxsw: spectrum: Fix autoneg status in ethtool
-
-Andrei Vagin (1):
-      netfilter: fix nf_l4proto_log_invalid to log invalid packets
-
-Andrey Ryabinin (2):
-      mm/page_alloc.c: avoid potential NULL pointer dereference
-      mm/page_alloc.c: fix never set ALLOC_NOFRAGMENT flag
-
-Ard Biesheuvel (2):
-      arm64/module: ftrace: deal with place relative nature of PLTs
-      ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the ca=
-che
-
-Arnd Bergmann (2):
-      arch: add pidfd and io_uring syscalls everywhere
-      s390: ctcm: fix ctcm_new_device error return code
-
-Aurelien Jarno (1):
-      MIPS: scall64-o32: Fix indirect syscall number load
-
-Baolin Wang (1):
-      gpio: eic: sprd: Fix incorrect irq type setting for the sync EIC
-
-Bjorn Andersson (1):
-      arm64: mm: Ensure tail of unaligned initrd is reserved
-
-Borislav Petkov (1):
-      x86/boot: Disable RSDP parsing temporarily
-
-Christian K=C3=B6nig (1):
-      drm/ttm: fix re-init of global structures
-
-Colin Ian King (4):
-      nfp: abm: fix spelling mistake "offseting" -> "offsetting"
-      net: ipv6: addrlabel: fix spelling mistake "requewst" -> "request"
-      firestream: fix spelling mistake "tramsitted" -> "transmitted"
-      net: atheros: fix spelling mistake "underun" -> "underrun"
-
-Corentin Labbe (2):
-      dt-bindings: add an explanation for internal phy-mode
-      Documentation: decnet: remove reference to CONFIG_DECNET_ROUTE_FWMARK
-
-Dan Carpenter (1):
-      netfilter: nf_tables: prevent shift wrap in nft_chain_parse_hook()
-
-Dan Murphy (1):
-      MAINTAINERS: LEDs: Add designated reviewer for LED subsystem
-
-Daniel Gomez (2):
-      spi: Micrel eth switch: declare missing of table
-      spi: ST ST95HF NFC: declare missing of table
-
-Dave Airlie (2):
-      Revert "drm/i915/fbdev: Actually configure untiled displays"
-      Revert "drm/virtio: drop prime import/export callbacks"
-
-David Hildenbrand (1):
-      mm/memory_hotplug.c: drop memory device reference after
-find_memory_block()
-
-Dirk Behme (1):
-      dmaengine: sh: rcar-dmac: With cyclic DMA residue 0 is valid
-
-Erez Alfasi (1):
-      net/mlx5e: ethtool, Remove unsupported SFP EEPROM high pages query
-
-Eric Dumazet (3):
-      rxrpc: fix race condition in rxrpc_input_packet()
-      net/rose: fix unbound loop in rose_loopback_timer()
-      ipv4: add sanity checks in ipv4_link_failure()
-
-Florian Fainelli (1):
-      MAINTAINERS: BMIPS: Add internal Broadcom mailing list
-
-Florian Westphal (6):
-      selftests: netfilter: check icmp pkttoobig errors are set as related
-      netfilter: conntrack: don't set related state for different outer add=
-ress
-      netfilter: ctnetlink: don't use conntrack/expect object addresses as =
-id
-      netfilter: nat: fix icmp id randomization
-      netfilter: ebtables: CONFIG_COMPAT: drop a bogus WARN_ON
-      netfilter: never get/set skb->tstamp
-
-Frank Sorenson (1):
-      cifs: do not attempt cifs operation on smb2+ rename error
-
-Geert Uytterhoeven (1):
-      gpio: Fix gpiochip_add_data_with_key() error path
-
-Guy Levi (1):
-      IB/mlx5: Fix scatter to CQE in DCT QP creation
-
-Hangbin Liu (1):
-      team: fix possible recursive locking when add slaves
-
-Harry Pan (1):
-      perf/x86/intel: Update KBL Package C-state events to also
-include PC8/PC9/PC10 counters
-
-Herbert Xu (2):
-      crypto: xts - Fix atomic sleep when walking skcipher
-      crypto: lrw - Fix atomic sleep when walking skcipher
-
-Ido Schimmel (1):
-      mlxsw: pci: Reincrease PCI reset timeout
-
-Ilias Apalodimas (1):
-      net: socionext: replace napi_alloc_frag with the netdev variant on in=
-it
-
-Jacky Bai (1):
-      Input: snvs_pwrkey - make it depend on ARCH_MXC
-
-Jakub Kicinski (3):
-      net/tls: fix refcount adjustment in fallback
-      net/tls: avoid potential deadlock in tls_set_device_offload_rx()
-      net/tls: don't leak IV and record seq when offload fails
-
-Jann Horn (1):
-      tracing: Fix buffer_ref pipe ops
-
-Jason Gunthorpe (3):
-      RDMA/mlx5: Do not allow the user to write to the clock page
-      RDMA/mlx5: Use rdma_user_map_io for mapping BAR pages
-      RDMA/ucontext: Fix regression with disassociate
-
-Jeff Layton (5):
-      nfsd: wake waiters blocked on file_lock before deleting it
-      nfsd: wake blocked file lock waiters before sending callback
-      ceph: only use d_name directly when parent is locked
-      ceph: ensure d_name stability in ceph_dentry_hash()
-      ceph: handle the case where a dentry has been renamed on outstanding =
-req
-
-Jens Axboe (2):
-      io_uring: fail io_uring_register(2) on a dying io_uring instance
-      io_uring: remove 'state' argument from io_{read,write} path
-
-Jonas Karlman (2):
-      drm: bridge: dw-hdmi: Fix overflow workaround for Rockchip SoCs
-      drm/bridge: dw-hdmi: fix SCDC configuration for ddc-i2c-bus
-
-Jonathan Neusch=C3=A4fer (1):
-      drm/sched: Fix description of drm_sched_stop
-
-Josh Collier (1):
-      IB/rdmavt: Fix frwr memory registration
-
-Julian Anastasov (1):
-      ipvs: do not schedule icmp errors from tunnels
-
-J=C3=A9r=C3=B4me Glisse (2):
-      cifs: fix page reference leak with readv/writev
-      zram: pass down the bvec we need to read into in the work struct
-
-Lijun Ou (1):
-      RDMA/hns: Bugfix for mapping user db
-
-Linus Torvalds (2):
-      slip: make slhc_free() silently accept an error pointer
-      Linux 5.1-rc7
-
-Lucas Stach (3):
-      gpu: ipu-v3: dp: fix CSC handling
-      drm/imx: don't skip DP channel disable for background plane
-      Input: synaptics-rmi4 - write config register values to the right off=
-set
-
-Maarten Lankhorst (2):
-      drm/vc4: Fix memory leak during gpu reset.
-      drm/vc4: Fix compilation error reported by kbuild test bot
-
-Maxim Mikityanskiy (2):
-      net/mlx5e: Fix use-after-free after xdp_return_frame
-      net/mlx5e: Fix the max MTU check in case of XDP
-
-Mel Gorman (2):
-      mm: do not boost watermarks to avoid fragmentation for the
-DISCONTIG memory model
-      mm, page_alloc: always use a captured page regardless of compaction r=
-esult
-
-Miaohe Lin (1):
-      net: vrf: Fix operation not supported when set vrf mac
-
-Michael Ellerman (1):
-      powerpc/mm/radix: Make Radix require HUGETLB_PAGE
-
-Murphy Zhou (1):
-      nfsd/nfsd3_proc_readdir: fix buffer count and page pointers
-
-NeilBrown (1):
-      sunrpc: don't mark uninitialised items as VALID.
-
-Nikolay Borisov (1):
-      btrfs: Switch memory allocations in async csum calculation path
-to kvmalloc
-
-Pan Bian (1):
-      Input: synaptics-rmi4 - fix possible double free
-
-Paul Kocialkowski (4):
-      drm/sun4i: Add missing drm_atomic_helper_shutdown at driver unbind
-      drm/sun4i: Set device driver data at bind time for use in unbind
-      drm/sun4i: Fix component unbinding and component master deletion
-      drm/sun4i: Unbind components before releasing DRM and memory
-
-Peter Zijlstra (1):
-      trace: Fix preempt_enable_no_resched() abuse
-
-Petr Machata (1):
-      mlxsw: spectrum: Put MC TCs into DWRR mode
-
-Petr =C5=A0tetiar (2):
-      MIPS: perf: ath79: Fix perfcount IRQ assignment
-      of_net: Fix residues after of_get_nvmem_mac_address removal
-
-Po-Hsu Lin (2):
-      selftests/net: correct the return value for run_netsocktests
-      selftests/net: correct the return value for run_afpackettests
-
-Qian Cai (1):
-      x86/mm: Fix a crash with kmemleak_scan()
-
-Ronnie Sahlberg (1):
-      cifs: fix memory leak in SMB2_read
-
-Russell King (1):
-      ARM: fix function graph tracer and unwinder dependencies
-
-Shun-Chih Yu (1):
-      dmaengine: mediatek-cqdma: fix wrong register usage in mtk_cqdma_star=
-t
-
-Stefan B=C3=BChler (3):
-      io_uring: fix race condition reading SQ entries
-      io_uring: fix race condition when sq threads goes sleeping
-      io_uring: fix poll full SQ detection
-
-Stefan Wahren (1):
-      dmaengine: bcm2835: Avoid GFP_KERNEL in device_prep_slave_sg
-
-Su Bao Cheng (1):
-      stmmac: pci: Adjust IOT2000 matching
-
-Tao Ren (1):
-      net/ncsi: handle overflow when incrementing mac address
-
-Thomas Hellstrom (1):
-      drm/vmwgfx: Fix dma API layer violation
-
-Tigran Tadevosyan (1):
-      ARM: 8856/1: NOMMU: Fix CCR register faulty initialization when
-MPU is disabled
-
-Trond Myklebust (1):
-      nfsd: Don't release the callback slot unless it was actually held
-
-Uladzislau Rezki (Sony) (1):
-      lib/test_vmalloc.c: do not create cpumask_t variable on stack
-
-Ville Syrj=C3=A4l=C3=A4 (2):
-      drm/i915: Do not enable FEC without DSC
-      drm/i915: Restore correct bxt_ddi_phy_calc_lane_lat_optim_mask()
-calculation
-
-Vinod Koul (1):
-      net: stmmac: move stmmac_check_ether_addr() to driver probe
-
-Wenwen Wang (1):
-      tracing: Fix a memory leak by early error exit in trace_pid_write()
-
-Xie XiuQi (1):
-      sched/numa: Fix a possible divide-by-zero
-
-Yan, Zheng (1):
-      ceph: fix ci->i_head_snapc leak
-
-YueHaibing (3):
-      net: stmmac: Use bfsize1 in ndesc_init_rx_desc
-      lib/Kconfig.debug: fix build error without CONFIG_BLOCK
-      fs/proc/proc_sysctl.c: Fix a NULL pointer dereference
-
-ZhangXiaoxu (1):
-      ipv4: set the tcp_min_rtt_wlen range from 0 to one day
-
-Zhu Yanjun (1):
-      net: rds: exchange of 8K and 1M pool
