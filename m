@@ -2,81 +2,125 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A3DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45451C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E21020578
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1281220578
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556529586;
+	bh=4JA1/RGohiuk4FJzQnaqoktBCVS5kfO3jNjgEmxLKCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rzL7RfCyxnkelnKuLe5upyVV0BxCPdA20AbzghoI2AdUnm6JPzTbpw+ILdXfe+RB3
+	 mCCp295bcq15gnCILYbGeMXpk5jz6IAh5z82rADNNPczfodOLxj+nuWjFRAfEDN6Mw
+	 2KBXeoJw7RCaKxB/xjyHymzqbI1g3vleJRfCi1E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfD2JSD (ORCPT
+        id S1727621AbfD2JTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:18:03 -0400
-Received: from shell.v3.sk ([90.176.6.54]:59263 "EHLO shell.v3.sk"
+        Mon, 29 Apr 2019 05:19:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727884AbfD2JRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:17:09 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 8DFA01036A0;
-        Mon, 29 Apr 2019 11:17:04 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id nfkfA1vzJ1e3; Mon, 29 Apr 2019 11:16:45 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id A1853103695;
-        Mon, 29 Apr 2019 11:16:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id QUJh-FssglVF; Mon, 29 Apr 2019 11:16:39 +0200 (CEST)
-Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 6487810367B;
-        Mon, 29 Apr 2019 11:16:38 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
-        Libin Yang <lbyang@marvell.com>,
-        Albert Wang <twang13@marvell.com>,
-        jacopo mondi <jacopo@jmondi.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [PATCH v4 00/14] media: make Marvell camera work on DT-based OLPC XO-1.75
-Date:   Mon, 29 Apr 2019 11:16:22 +0200
-Message-Id: <20190429091632.2462285-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.21.0
+        id S1727072AbfD2JTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 05:19:44 -0400
+Received: from localhost (unknown [77.138.135.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E46A42075E;
+        Mon, 29 Apr 2019 09:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556529583;
+        bh=4JA1/RGohiuk4FJzQnaqoktBCVS5kfO3jNjgEmxLKCk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QgyjXhfv3nCQ3qChe0HSJVde/1D7i1HyOReupKm4hBHsWYj+SMpIRuAAjsUS7MEIc
+         Hvm33Q3girrsdHMjzZp019Wu9Amp/b3Jl9n4LDuMkuKFv6QoyLJW4sWcd7G3PcukxW
+         AFttdlG9C9h19u8/tVfB1DHsiwChXInXJakJ+jyA=
+Date:   Mon, 29 Apr 2019 12:19:38 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
+Message-ID: <20190429091938.GS6705@mtr-leonro.mtl.com>
+References: <20190428115207.GA11924@ziepe.ca>
+ <20190429060947.GB3665@osiris>
+ <20190429084030.GA4275@mellanox.com>
+ <20190429090040.GB21672@unicorn.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429090040.GB21672@unicorn.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 29, 2019 at 11:00:40AM +0200, Michal Kubecek wrote:
+> On Mon, Apr 29, 2019 at 08:40:37AM +0000, Jason Gunthorpe wrote:
+> > On Mon, Apr 29, 2019 at 08:09:47AM +0200, Heiko Carstens wrote:
+> > > On Sun, Apr 28, 2019 at 11:52:12AM +0000, Jason Gunthorpe wrote:
+> > > > Hi Linus,
+> > > >
+> > > > Third rc pull request
+> > > >
+> > > > Nothing particularly special here. There is a small merge conflict
+> > > > with Adrea's mm_still_valid patches which is resolved as below:
+> > > ...
+> > > > Jason Gunthorpe (3):
+> > > >       RDMA/mlx5: Do not allow the user to write to the clock page
+> > > >       RDMA/mlx5: Use rdma_user_map_io for mapping BAR pages
+> > > >       RDMA/ucontext: Fix regression with disassociate
+> > >
+> > > This doesn't compile. The patch below would fix it, but not sure if
+> > > this is what is intended:
+> > >
+> > > drivers/infiniband/core/uverbs_main.c: In function 'rdma_umap_fault':
+> > > drivers/infiniband/core/uverbs_main.c:898:28: error: 'struct vm_fault' has no member named 'vm_start'
+> > >    vmf->page = ZERO_PAGE(vmf->vm_start);
+> > >                             ^~
+> > > diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+> > > index 7843e89235c3..65fe89b3fa2d 100644
+> > > +++ b/drivers/infiniband/core/uverbs_main.c
+> > > @@ -895,7 +895,7 @@ static vm_fault_t rdma_umap_fault(struct vm_fault *vmf)
+> > >
+> > >  	/* Read only pages can just use the system zero page. */
+> > >  	if (!(vmf->vma->vm_flags & (VM_WRITE | VM_MAYWRITE))) {
+> > > -		vmf->page = ZERO_PAGE(vmf->vm_start);
+> > > +		vmf->page = ZERO_PAGE(vmf->vma->vm_start);
+> > >  		get_page(vmf->page);
+> > >  		return 0;
+> > >  	}
+> > >
+> >
+> > Thanks Heiko, this looks right to me.
+> >
+> > I'm surprised to be seeing this at this point, these patches should
+> > have been seen by 0 day for several days now, and they were in
+> > linux-next already too..
+>
+> Most architectures have versions of ZERO_PAGE() which ignore the
+> argument so that the code builds anyway. I'm not sure if 0-day also
+> tests s390x builds (which is where I ran into this).
 
-Hi,
+According to 0-build results for this patch, the answer is yes, it builds.
+s390                        default_defconfig
 
-this is the fourth spin of a patchset that modernizes the Marvell MMP2 CC=
-IC
-driver.
+And it compiles uverbs_main.c (CONFIG_INFINIBAND_USER_ACCESS)
+  kernel git:(rdma-next) grep INFIN arch/s390/configs/debug_defconfig
+CONFIG_INFINIBAND=m
+CONFIG_INFINIBAND_USER_ACCESS=m
+CONFIG_MLX4_INFINIBAND=m
+CONFIG_MLX5_INFINIBAND=m
 
-At the core of the rework is the move to asynchronous sensor discovery
-and clock management with the standard clock framework. There are also
-some straightforward fixes for the bitrotten parts.
+Thanks
 
-Compared the the previous version it addresses things pointed out in last
-review, in patches [01/10] and [10/10]. Details in the changelogs of
-the individual patches.
-
-Tested on OLPC XO-1 and OLPC XO-1.75 laptops.
-
-Thanks,
-Lubo
-
-
-
-
+>
+> Michal Kubecek
