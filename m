@@ -2,253 +2,183 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16619C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0339C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69CA206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998E5206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:18:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SXaiy2bz"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qpW1JBl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfD2DQ3 (ORCPT
+        id S1727265AbfD2DSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 23:16:29 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38156 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfD2DQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 23:16:28 -0400
-Received: from grover.flets-west.jp (softbank126125154137.bbtec.net [126.125.154.137]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x3T3FcVU011166;
-        Mon, 29 Apr 2019 12:15:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x3T3FcVU011166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556507738;
-        bh=16jxTJlqvgdtc0bmtHW26mp1fSFaCwPHhBiW8YOQYHQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SXaiy2bz37BrBxiz7TFTYS5t5vhN3JA7tjv4a+WVBigceHeCEde/RgD8N0DlyfmPk
-         h6I8LVmQ3OXIwlb6XDD+ATEi2JyfisChSuPQy6t0nZCvV7oeFEqmS2uBTjjd7XptMT
-         VeZ63rTEDBkhnBuOuySOrWaDylpR3t4qFmhaQAnbvB+B/+NV+GSj8rCuLYqsVWj9Nx
-         4HkAvSn6rzt0KW5dCDSdawv4KQ43G6/GciM0RAn3S/fo59ouoo3exwmD2QecV/i+RH
-         7TAaDsffT+QHhTqnnhEsyfzFlWwFrSBRfhO7gISnzGz2FJvPP/WMVto4Y0liaC7oUx
-         5AMZSkItixgaA==
-X-Nifty-SrcIP: [126.125.154.137]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Olaf Weber <olaf@sgi.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2] unicode: refactor the rule for regenerating utf8data.h
-Date:   Mon, 29 Apr 2019 12:15:31 +0900
-Message-Id: <1556507731-830-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 28 Apr 2019 23:18:51 -0400
+Received: from mail-eopbgr150089.outbound.protection.outlook.com ([40.107.15.89]:64738
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726819AbfD2DSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 23:18:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4iMLlDfwX5SjLqPHsRwarG/5BUrKn0CHzbRXGTwW7xw=;
+ b=qpW1JBl2GFTdY7PvHQ2t+X7EaeCh5JeW/QmA6nul8y8isigYk7P1oYe9VZ0AEMgfdN64NImZvHHeLpenY5vMnldq4ipbflf/5Ir5oDyDot19/gUQjdFrOwMYW6NlGv33+iUr1j2SpWcgTqTpSTukXBM+fCE+fStqHZFjCTCxqH0=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3724.eurprd04.prod.outlook.com (52.134.66.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Mon, 29 Apr 2019 03:18:43 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
+ 03:18:43 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] clk: imx: add fractional-N pll support to pllv4
+Thread-Topic: [PATCH] clk: imx: add fractional-N pll support to pllv4
+Thread-Index: AQHU/jo/D2ZwDi5WREOeVbOKgmEXYQ==
+Date:   Mon, 29 Apr 2019 03:18:43 +0000
+Message-ID: <1556507637-22847-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR03CA0059.apcprd03.prod.outlook.com
+ (2603:1096:202:17::29) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1621dcd0-9aa4-4613-ac6c-08d6cc5161f9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3724;
+x-ms-traffictypediagnostic: DB3PR0402MB3724:
+x-microsoft-antispam-prvs: <DB3PR0402MB3724A98114832849F315C314F5390@DB3PR0402MB3724.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0022134A87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(366004)(136003)(396003)(199004)(189003)(53936002)(25786009)(186003)(97736004)(8936002)(478600001)(110136005)(305945005)(7736002)(4326008)(26005)(73956011)(66946007)(3846002)(6116002)(66556008)(476003)(64756008)(66476007)(2616005)(2906002)(2201001)(486006)(66446008)(6506007)(102836004)(66066001)(386003)(6512007)(52116002)(6436002)(5660300002)(68736007)(86362001)(71200400001)(6486002)(71190400001)(36756003)(81156014)(8676002)(316002)(14454004)(2501003)(256004)(81166006)(99286004)(50226002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3724;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YDnUAWd0UZ2nqTuFYIMpg4zROUGw4Zo7/K/+YZI4ZNDnYAoob7OY6LYAurgSltu/69oSUCDD4BH4I4Xcz1QmsGsxJPVTjyZygDO7in5EBVvSt4bZyVS+Us0pSil3JZu7i8Zl86ow23/vqCwf9sq2leWix/WFvQaFHn8HteMR4DU3Lddl1VB/sYDc3e8eT6fXkC+lsTg3Fa8CiaNO+C6KSqGWiWibX5MmGS+mwYOchqmJuPvAku8uzqw06SgyPvSmnidwh5gDYhX03g2fUvY1IzxSkUuzbEKX2zefe9NcK3fvaECwBVYQ9XzR+3x9wHpM7X7aGPyztYY6uDzqLY+oM0JNIGHvO4p7YrhmV7IpD053wzOQ+SV7JoAh3UdL1TbNxQ70DuRCAbPdo8tp71BbiOBjh6fe1XkLcicL3/4qoMA=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1621dcd0-9aa4-4613-ac6c-08d6cc5161f9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 03:18:43.1046
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3724
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scripts/mkutf8data is used only when regenerating utf8data.h,
-which never happens in the normal kernel build. However, it is
-irrespectively built if CONFIG_UNICODE is enabled.
-
-Moreover, there is no good reason for it to reside in the scripts/
-directory since it is only used in fs/unicode/.
-
-Hence, move it from scripts/ to fs/unicode/.
-
-In some cases, we bypass build artifacts in the normal build. The
-conventional way to do so is to surround the code with ifdef REGENERATE_*.
-
-For example,
-
- - 7373f4f83c71 ("kbuild: add implicit rules for parser generation")
- - 6aaf49b495b4 ("crypto: arm,arm64 - Fix random regeneration of S_shipped")
-
-I rewrote the rule in a more kbuild'ish style.
-
-In the normal build, utf8data.h is just shipped from the check-in file.
-
-$ make
-  [ snip ]
-  SHIPPED fs/unicode/utf8data.h
-  CC      fs/unicode/utf8-norm.o
-  CC      fs/unicode/utf8-core.o
-  CC      fs/unicode/utf8-selftest.o
-  AR      fs/unicode/built-in.a
-
-If you want to generate utf8data.h based on UCD, put *.txt files into
-fs/unicode/, then pass REGENERATE_UTF8DATA=1 from the command line.
-The mkutf8data tool will be automatically compiled to generate the
-utf8data.h from the *.txt files.
-
-$ make REGENERATE_UTF8DATA=1
-  [ snip ]
-  HOSTCC  fs/unicode/mkutf8data
-  GEN     fs/unicode/utf8data.h
-  CC      fs/unicode/utf8-norm.o
-  CC      fs/unicode/utf8-core.o
-  CC      fs/unicode/utf8-selftest.o
-  AR      fs/unicode/built-in.a
-
-I renamed the check-in utf8data.h to utf8data.h_shipped so that this
-will work for the out-of-tree build.
-
-You can update it based on the latest UCD like this:
-
-$ make REGENERATE_UTF8DATA=1 fs/unicode/
-$ cp fs/unicode/utf8data.h fs/unicode/utf8data.h_shipped
-
-Also, I added entries to .gitignore and dontdiff.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2:
- - Make this work correctly with O= option
-
- Documentation/dontdiff                        |  2 ++
- fs/unicode/.gitignore                         |  2 ++
- fs/unicode/Makefile                           | 41 ++++++++++++++++++++-------
- fs/unicode/README.utf8data                    |  9 +++---
- {scripts => fs/unicode}/mkutf8data.c          |  0
- fs/unicode/{utf8data.h => utf8data.h_shipped} |  0
- scripts/Makefile                              |  1 -
- 7 files changed, 38 insertions(+), 17 deletions(-)
- create mode 100644 fs/unicode/.gitignore
- rename {scripts => fs/unicode}/mkutf8data.c (100%)
- rename fs/unicode/{utf8data.h => utf8data.h_shipped} (100%)
-
-diff --git a/Documentation/dontdiff b/Documentation/dontdiff
-index ef25a06..9369377 100644
---- a/Documentation/dontdiff
-+++ b/Documentation/dontdiff
-@@ -176,6 +176,7 @@ mkprep
- mkregtable
- mktables
- mktree
-+mkutf8data
- modpost
- modules.builtin
- modules.order
-@@ -254,6 +255,7 @@ vsyscall_32.lds
- wanxlfw.inc
- uImage
- unifdef
-+utf8data.h
- wakeup.bin
- wakeup.elf
- wakeup.lds
-diff --git a/fs/unicode/.gitignore b/fs/unicode/.gitignore
-new file mode 100644
-index 0000000..0381e22
---- /dev/null
-+++ b/fs/unicode/.gitignore
-@@ -0,0 +1,2 @@
-+mkutf8data
-+utf8data.h
-diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
-index 671d31f..d46e9ba 100644
---- a/fs/unicode/Makefile
-+++ b/fs/unicode/Makefile
-@@ -5,15 +5,34 @@ obj-$(CONFIG_UNICODE_NORMALIZATION_SELFTEST) += utf8-selftest.o
- 
- unicode-y := utf8-norm.o utf8-core.o
- 
--# This rule is not invoked during the kernel compilation.  It is used to
--# regenerate the utf8data.h header file.
--utf8data.h.new: *.txt $(objdir)/scripts/mkutf8data
--	$(objdir)/scripts/mkutf8data \
--		-a DerivedAge.txt \
--		-c DerivedCombiningClass.txt \
--		-p DerivedCoreProperties.txt \
--		-d UnicodeData.txt \
--		-f CaseFolding.txt \
--		-n NormalizationCorrections.txt \
--		-t NormalizationTest.txt \
-+$(obj)/utf8-norm.o: $(obj)/utf8data.h
-+
-+# In the normal build, the checked-in utf8data.h is just shipped.
-+#
-+# To generate utf8data.h from UCD, put *.txt files in this directory
-+# and pass REGENERATE_UTF8DATA=1 from the command line.
-+ifdef REGENERATE_UTF8DATA
-+
-+quiet_cmd_utf8data = GEN     $@
-+      cmd_utf8data = $< \
-+		-a $(srctree)/$(src)/DerivedAge.txt \
-+		-c $(srctree)/$(src)/DerivedCombiningClass.txt \
-+		-p $(srctree)/$(src)/DerivedCoreProperties.txt \
-+		-d $(srctree)/$(src)/UnicodeData.txt \
-+		-f $(srctree)/$(src)/CaseFolding.txt \
-+		-n $(srctree)/$(src)/NormalizationCorrections.txt \
-+		-t $(srctree)/$(src)/NormalizationTest.txt \
- 		-o $@
-+
-+$(obj)/utf8data.h: $(obj)/mkutf8data $(filter %.txt, $(cmd_utf8data)) FORCE
-+	$(call if_changed,utf8data)
-+
-+else
-+
-+$(obj)/utf8data.h: $(src)/utf8data.h_shipped FORCE
-+	$(call if_changed,shipped)
-+
-+endif
-+
-+targets += utf8data.h
-+hostprogs-y += mkutf8data
-diff --git a/fs/unicode/README.utf8data b/fs/unicode/README.utf8data
-index eeb7561..459eebf 100644
---- a/fs/unicode/README.utf8data
-+++ b/fs/unicode/README.utf8data
-@@ -41,15 +41,14 @@ released version of the UCD can be found here:
- 
-   http://www.unicode.org/Public/UCD/latest/
- 
--To build the utf8data.h file, from a kernel tree that has been built,
--cd to this directory (fs/unicode) and run this command:
-+Then, build under fs/unicode/ with REGENERATE_UTF8DATA=1:
- 
--	make C=../.. objdir=../.. utf8data.h.new
-+	make REGENERATE_UTF8DATA=1 fs/unicode/
- 
--After sanity checking the newly generated utf8data.h.new file (the
-+After sanity checking the newly generated utf8data.h file (the
- version generated from the 12.1.0 UCD should be 4,109 lines long, and
- have a total size of 324k) and/or comparing it with the older version
--of utf8data.h, rename it to utf8data.h.
-+of utf8data.h_shipped, rename it to utf8data.h_shipped.
- 
- If you are a kernel developer updating to a newer version of the
- Unicode Character Database, please update this README.utf8data file
-diff --git a/scripts/mkutf8data.c b/fs/unicode/mkutf8data.c
-similarity index 100%
-rename from scripts/mkutf8data.c
-rename to fs/unicode/mkutf8data.c
-diff --git a/fs/unicode/utf8data.h b/fs/unicode/utf8data.h_shipped
-similarity index 100%
-rename from fs/unicode/utf8data.h
-rename to fs/unicode/utf8data.h_shipped
-diff --git a/scripts/Makefile b/scripts/Makefile
-index b87e3e0..9d442ee 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -20,7 +20,6 @@ hostprogs-$(CONFIG_ASN1)	 += asn1_compiler
- hostprogs-$(CONFIG_MODULE_SIG)	 += sign-file
- hostprogs-$(CONFIG_SYSTEM_TRUSTED_KEYRING) += extract-cert
- hostprogs-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE) += insert-sys-cert
--hostprogs-$(CONFIG_UNICODE) += mkutf8data
- 
- HOSTCFLAGS_sortextable.o = -I$(srctree)/tools/include
- HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
--- 
-2.7.4
-
+VGhlIHBsbHY0IHN1cHBvcnRzIGZyYWN0aW9uYWwtTiBmdW5jdGlvbiwgdGhlIGZvcm11bGEgaXM6
+DQoNClBMTCBvdXRwdXQgZnJlcSA9IGlucHV0ICogKG11bHQgKyBudW0vZGVub20pLA0KDQpUaGlz
+IHBhdGNoIGFkZHMgZnJhY3Rpb25hbC1OIGZ1bmN0aW9uIHN1cHBvcnQsIGluY2x1ZGluZw0KY2xv
+Y2sgcm91bmQgcmF0ZSwgY2FsY3VsYXRlIHJhdGUgYW5kIHNldCByYXRlLCB3aXRoIHRoaXMNCnBh
+dGNoLCB0aGUgY2xvY2sgcmF0ZSBvZiBBUExMIGluIGNsb2NrIHRyZWUgaXMgbW9yZSBhY2N1cmF0
+ZQ0KdGhhbiBiZWZvcmU6DQoNCldpdGhvdXQgZnJhY3Rpb246DQphcGxsX3ByZV9zZWwgICAgICAg
+ICAgICAgICAgICAgICAgMSAgICAgICAgMSAgICAgICAgMSAgICAyNDAwMDAwMCAgICAgICAgICAw
+ICAgICAwICA1MDAwMA0KICAgYXBsbF9wcmVfZGl2ICAgICAgICAgICAgICAgICAgIDEgICAgICAg
+IDEgICAgICAgIDIgICAgMjQwMDAwMDAgICAgICAgICAgMCAgICAgMCAgNTAwMDANCiAgICAgIGFw
+bGwgICAgICAgICAgICAgICAgICAgICAgICAxICAgICAgICAxICAgICAgICAyICAgNTI4MDAwMDAw
+ICAgICAgICAgIDAgICAgIDAgIDUwMDAwDQogICAgICAgICBhcGxsX3BmZDMgICAgICAgICAgICAg
+ICAgMCAgICAgICAgMCAgICAgICAgMCAgIDc5MjAwMDAwMCAgICAgICAgICAwICAgICAwICA1MDAw
+MA0KICAgICAgICAgYXBsbF9wZmQyICAgICAgICAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAg
+ICAzMzk0Mjg1NzEgICAgICAgICAgMCAgICAgMCAgNTAwMDANCiAgICAgICAgIGFwbGxfcGZkMSAg
+ICAgICAgICAgICAgICAwICAgICAgICAwICAgICAgICAwICAgMzUyMDAwMDAwICAgICAgICAgIDAg
+ICAgIDAgIDUwMDAwDQogICAgICAgICAgICB1c2RoYzAgICAgICAgICAgICAgICAgMCAgICAgICAg
+MCAgICAgICAgMCAgIDM1MjAwMDAwMCAgICAgICAgICAwICAgICAwICA1MDAwMA0KICAgICAgICAg
+YXBsbF9wZmQwICAgICAgICAgICAgICAgIDEgICAgICAgIDEgICAgICAgIDEgICAzNTIwMDAwMDAg
+ICAgICAgICAgMCAgICAgMCAgNTAwMDANCg0KV2l0aCBmcmFjdGlvbjoNCmFwbGxfcHJlX3NlbCAg
+ICAgICAgICAgICAgICAgICAgICAxICAgICAgICAxICAgICAgICAxICAgIDI0MDAwMDAwICAgICAg
+ICAgIDAgICAgIDAgIDUwMDAwDQogICBhcGxsX3ByZV9kaXYgICAgICAgICAgICAgICAgICAgMSAg
+ICAgICAgMSAgICAgICAgMiAgICAyNDAwMDAwMCAgICAgICAgICAwICAgICAwICA1MDAwMA0KICAg
+ICAgYXBsbCAgICAgICAgICAgICAgICAgICAgICAgIDEgICAgICAgIDEgICAgICAgIDIgICA1Mjky
+MDAwMDAgICAgICAgICAgMCAgICAgMCAgNTAwMDANCiAgICAgICAgIGFwbGxfcGZkMyAgICAgICAg
+ICAgICAgICAwICAgICAgICAwICAgICAgICAwICAgNzkzODAwMDAwICAgICAgICAgIDAgICAgIDAg
+IDUwMDAwDQogICAgICAgICBhcGxsX3BmZDIgICAgICAgICAgICAgICAgMCAgICAgICAgMCAgICAg
+ICAgMCAgIDM0MDIwMDAwMCAgICAgICAgICAwICAgICAwICA1MDAwMA0KICAgICAgICAgYXBsbF9w
+ZmQxICAgICAgICAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAzNTI4MDAwMDAgICAgICAg
+ICAgMCAgICAgMCAgNTAwMDANCiAgICAgICAgICAgIHVzZGhjMCAgICAgICAgICAgICAgICAwICAg
+ICAgICAwICAgICAgICAwICAgMzUyODAwMDAwICAgICAgICAgIDAgICAgIDAgIDUwMDAwDQogICAg
+ICAgICBhcGxsX3BmZDAgICAgICAgICAgICAgICAgMSAgICAgICAgMSAgICAgICAgMSAgIDM1Mjgw
+MDAwMCAgICAgICAgICAwICAgICAwICA1MDAwMA0KDQpTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFu
+ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCi0tLQ0KIGRyaXZlcnMvY2xrL2lteC9jbGstcGxsdjQu
+YyB8IDY4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLQ0KIDEg
+ZmlsZSBjaGFuZ2VkLCA2MCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9jbGsvaW14L2Nsay1wbGx2NC5jIGIvZHJpdmVycy9jbGsvaW14L2Nsay1w
+bGx2NC5jDQppbmRleCBkMzhiYzlmLi40Y2VkNWNhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9jbGsv
+aW14L2Nsay1wbGx2NC5jDQorKysgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLXBsbHY0LmMNCkBAIC02
+NCwxMyArNjQsMTggQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgY2xrX3BsbHY0X3JlY2FsY19yYXRl
+KHN0cnVjdCBjbGtfaHcgKmh3LA0KIAkJCQkJICAgdW5zaWduZWQgbG9uZyBwYXJlbnRfcmF0ZSkN
+CiB7DQogCXN0cnVjdCBjbGtfcGxsdjQgKnBsbCA9IHRvX2Nsa19wbGx2NChodyk7DQotCXUzMiBk
+aXY7DQorCXUzMiBtdWx0ID0gcmVhZGxfcmVsYXhlZChwbGwtPmJhc2UgKyBQTExfQ0ZHX09GRlNF
+VCk7DQorCXUzMiBtZm4gPSByZWFkbF9yZWxheGVkKHBsbC0+YmFzZSArIFBMTF9OVU1fT0ZGU0VU
+KTsNCisJdTMyIG1mZCA9IHJlYWRsX3JlbGF4ZWQocGxsLT5iYXNlICsgUExMX0RFTk9NX09GRlNF
+VCk7DQorCXU2NCB0ZW1wNjQgPSBwYXJlbnRfcmF0ZTsNCiANCi0JZGl2ID0gcmVhZGxfcmVsYXhl
+ZChwbGwtPmJhc2UgKyBQTExfQ0ZHX09GRlNFVCk7DQotCWRpdiAmPSBCTV9QTExfTVVMVDsNCi0J
+ZGl2ID4+PSBCUF9QTExfTVVMVDsNCisJbXVsdCAmPSBCTV9QTExfTVVMVDsNCisJbXVsdCA+Pj0g
+QlBfUExMX01VTFQ7DQogDQotCXJldHVybiBwYXJlbnRfcmF0ZSAqIGRpdjsNCisJdGVtcDY0ICo9
+IG1mbjsNCisJZG9fZGl2KHRlbXA2NCwgbWZkKTsNCisNCisJcmV0dXJuIChwYXJlbnRfcmF0ZSAq
+IG11bHQpICsgKHUzMil0ZW1wNjQ7DQogfQ0KIA0KIHN0YXRpYyBsb25nIGNsa19wbGx2NF9yb3Vu
+ZF9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsDQpAQCAtNzgsMTQg
+KzgzLDQ3IEBAIHN0YXRpYyBsb25nIGNsa19wbGx2NF9yb3VuZF9yYXRlKHN0cnVjdCBjbGtfaHcg
+Kmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsDQogew0KIAl1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRl
+ID0gKnByYXRlOw0KIAl1bnNpZ25lZCBsb25nIHJvdW5kX3JhdGUsIGk7DQorCWJvb2wgZm91bmQg
+PSBmYWxzZTsNCisJdTMyIG1mbiwgbWZkID0gMTAwMDAwMDsNCisJdTMyIG1heF9tZmQgPSAweDNG
+RkZGRkZGOw0KKwl1NjQgdGVtcDY0Ow0KIA0KIAlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShw
+bGx2NF9tdWx0X3RhYmxlKTsgaSsrKSB7DQogCQlyb3VuZF9yYXRlID0gcGFyZW50X3JhdGUgKiBw
+bGx2NF9tdWx0X3RhYmxlW2ldOw0KLQkJaWYgKHJhdGUgPj0gcm91bmRfcmF0ZSkNCi0JCQlyZXR1
+cm4gcm91bmRfcmF0ZTsNCisJCWlmIChyYXRlID49IHJvdW5kX3JhdGUpIHsNCisJCQlmb3VuZCA9
+IHRydWU7DQorCQkJYnJlYWs7DQorCQl9DQorCX0NCisNCisJaWYgKCFmb3VuZCkgew0KKwkJcHJf
+d2FybigiJXM6IHVuYWJsZSB0byByb3VuZCByYXRlICVsdSwgcGFyZW50IHJhdGUgJWx1XG4iLA0K
+KwkJCWNsa19od19nZXRfbmFtZShodyksIHJhdGUsIHBhcmVudF9yYXRlKTsNCisJCXJldHVybiAw
+Ow0KIAl9DQogDQotCXJldHVybiByb3VuZF9yYXRlOw0KKwlpZiAocGFyZW50X3JhdGUgPD0gbWF4
+X21mZCkNCisJCW1mZCA9IHBhcmVudF9yYXRlOw0KKw0KKwl0ZW1wNjQgPSAodTY0KShyYXRlIC0g
+cm91bmRfcmF0ZSk7DQorCXRlbXA2NCAqPSBtZmQ7DQorCWRvX2Rpdih0ZW1wNjQsIHBhcmVudF9y
+YXRlKTsNCisJbWZuID0gdGVtcDY0Ow0KKw0KKwkvKg0KKwkgKiBOT1RFOiBUaGUgdmFsdWUgb2Yg
+bnVtZXJhdG9yIG11c3QgYWx3YXlzIGJlIGNvbmZpZ3VyZWQgdG8gYmUNCisJICogbGVzcyB0aGFu
+IHRoZSB2YWx1ZSBvZiB0aGUgZGVub21pbmF0b3IuIElmIHdlIGNhbid0IGdldCBhIHByb3Blcg0K
+KwkgKiBwYWlyIG9mIG1mbi9tZmQsIHdlIHNpbXBseSByZXR1cm4gdGhlIHJvdW5kX3JhdGUgd2l0
+aG91dCB1c2luZw0KKwkgKiB0aGUgZnJhYyBwYXJ0Lg0KKwkgKi8NCisJaWYgKG1mbiA+PSBtZmQp
+DQorCQlyZXR1cm4gcm91bmRfcmF0ZTsNCisNCisJdGVtcDY0ID0gKHU2NClwYXJlbnRfcmF0ZTsN
+CisJdGVtcDY0ICo9IG1mbjsNCisJZG9fZGl2KHRlbXA2NCwgbWZkKTsNCisNCisJcmV0dXJuIHJv
+dW5kX3JhdGUgKyAodTMyKXRlbXA2NDsNCiB9DQogDQogc3RhdGljIGJvb2wgY2xrX3BsbHY0X2lz
+X3ZhbGlkX211bHQodW5zaWduZWQgaW50IG11bHQpDQpAQCAtMTA2LDE3ICsxNDQsMzEgQEAgc3Rh
+dGljIGludCBjbGtfcGxsdjRfc2V0X3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxv
+bmcgcmF0ZSwNCiB7DQogCXN0cnVjdCBjbGtfcGxsdjQgKnBsbCA9IHRvX2Nsa19wbGx2NChodyk7
+DQogCXUzMiB2YWwsIG11bHQ7DQorCXUzMiBtZm4sIG1mZCA9IDEwMDAwMDA7DQorCXUzMiBtYXhf
+bWZkID0gMHgzRkZGRkZGRjsNCisJdTY0IHRlbXA2NDsNCiANCiAJbXVsdCA9IHJhdGUgLyBwYXJl
+bnRfcmF0ZTsNCiANCiAJaWYgKCFjbGtfcGxsdjRfaXNfdmFsaWRfbXVsdChtdWx0KSkNCiAJCXJl
+dHVybiAtRUlOVkFMOw0KIA0KKwlpZiAocGFyZW50X3JhdGUgPD0gbWF4X21mZCkNCisJCW1mZCA9
+IHBhcmVudF9yYXRlOw0KKw0KKwl0ZW1wNjQgPSAodTY0KShyYXRlIC0gbXVsdCAqIHBhcmVudF9y
+YXRlKTsNCisJdGVtcDY0ICo9IG1mZDsNCisJZG9fZGl2KHRlbXA2NCwgcGFyZW50X3JhdGUpOw0K
+KwltZm4gPSB0ZW1wNjQ7DQorDQogCXZhbCA9IHJlYWRsX3JlbGF4ZWQocGxsLT5iYXNlICsgUExM
+X0NGR19PRkZTRVQpOw0KIAl2YWwgJj0gfkJNX1BMTF9NVUxUOw0KIAl2YWwgfD0gbXVsdCA8PCBC
+UF9QTExfTVVMVDsNCiAJd3JpdGVsX3JlbGF4ZWQodmFsLCBwbGwtPmJhc2UgKyBQTExfQ0ZHX09G
+RlNFVCk7DQogDQorCXdyaXRlbF9yZWxheGVkKG1mbiwgcGxsLT5iYXNlICsgUExMX05VTV9PRkZT
+RVQpOw0KKwl3cml0ZWxfcmVsYXhlZChtZmQsIHBsbC0+YmFzZSArIFBMTF9ERU5PTV9PRkZTRVQp
+Ow0KKw0KIAlyZXR1cm4gMDsNCiB9DQogDQotLSANCjIuNy40DQoNCg==
