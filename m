@@ -2,39 +2,57 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3E6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD87C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ADA21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A502075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbfD2V0b (ORCPT
+        id S1729469AbfD2V0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47024 "EHLO mail.kernel.org"
+        Mon, 29 Apr 2019 17:26:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:16486 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfD2V0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:26:30 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE8752075E;
-        Mon, 29 Apr 2019 21:26:28 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 17:17:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@01.org
-Subject: Re: [function_graph] 02519fa3c4:
- BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:early_console_in_setup_code
-Message-ID: <20190429171700.4d48791c@gandalf.local.home>
-In-Reply-To: <20190429075629.GD29809@shao2-debian>
-References: <20190429075629.GD29809@shao2-debian>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1729283AbfD2V0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 17:26:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 14:26:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,411,1549958400"; 
+   d="scan'208";a="138523476"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 29 Apr 2019 14:26:35 -0700
+Date:   Mon, 29 Apr 2019 14:29:21 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 18/19] iommu/vt-d: Support flushing more translation
+ cache types
+Message-ID: <20190429142921.1d36f560@jacob-builder>
+In-Reply-To: <5ad35536-4993-13f1-5199-ddd99f7009e5@redhat.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1556062279-64135-19-git-send-email-jacob.jun.pan@linux.intel.com>
+        <5ad35536-4993-13f1-5199-ddd99f7009e5@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -43,80 +61,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 15:56:29 +0800
-kernel test robot <lkp@intel.com> wrote:
+On Sat, 27 Apr 2019 11:04:04 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
-> FYI, we noticed the following commit (built with gcc-7):
+> Hi Jacob,
 > 
-> commit: 02519fa3c43164aa8ee0ebbe1b464a568130a36f ("function_graph: Use a ftrace_graph_ret_stub() for return")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> On 4/24/19 1:31 AM, Jacob Pan wrote:
+> > When Shared Virtual Memory is exposed to a guest via vIOMMU,
+> > extended IOTLB invalidation may be passed down from outside IOMMU
+> > subsystems. This patch adds invalidation functions that can be used
+> > for additional translation cache types.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/dmar.c        | 48
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> > include/linux/intel-iommu.h | 21 ++++++++++++++++---- 2 files
+> > changed, 65 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> > index 9c49300..680894e 100644
+> > --- a/drivers/iommu/dmar.c
+> > +++ b/drivers/iommu/dmar.c
+> > @@ -1357,6 +1357,20 @@ void qi_flush_iotlb(struct intel_iommu
+> > *iommu, u16 did, u64 addr, qi_submit_sync(&desc, iommu);
+> >  }
+> >    
+> /* PASID-based IOTLB Invalidate */
+> > +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+> > u32 pasid,
+> > +		unsigned int size_order, u64 granu)
+> > +{
+> > +	struct qi_desc desc;
+> > +
+> > +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
+> > +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
+> > +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(0) |
+> > +		QI_EIOTLB_AM(size_order);  
+> I see IH it hardcoded to 0. Don't you envision to cascade the IH. On
+> ARM this was needed for perf sake.
+Right, we should cascade IH based on IOMMU_INV_ADDR_FLAGS_LEAF. Just
+curious how do you deduce the IH information on ARM? I guess you need
+to get the non-leaf page directory info?
+I will add an argument for IH.
+> > +	desc.qw2 = 0;
+> > +	desc.qw3 = 0;
+> > +	qi_submit_sync(&desc, iommu);
+> > +}
+> > +
+> >  void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16
+> > pfsid, u16 qdep, u64 addr, unsigned mask)
+> >  {
+> > @@ -1380,6 +1394,40 @@ void qi_flush_dev_iotlb(struct intel_iommu
+> > *iommu, u16 sid, u16 pfsid, qi_submit_sync(&desc, iommu);
+> >  }
+> >    
+> /* Pasid-based Device-TLB Invalidation */
+yes, better to explain piotlb :), same for iotlb.
+> > +void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16
+> > pfsid,
+> > +		u32 pasid,  u16 qdep, u64 addr, unsigned size, u64
+> > granu) +{
+> > +	struct qi_desc desc;
+> > +
+> > +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) |
+> > QI_DEV_EIOTLB_SID(sid) |
+> > +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
+> > +		QI_DEV_IOTLB_PFSID(pfsid);
+> > +	desc.qw1 |= QI_DEV_EIOTLB_GLOB(granu);
+should be desc.qw1 =
+> > +
+> > +	/* If S bit is 0, we only flush a single page. If S bit is
+> > set,
+> > +	 * The least significant zero bit indicates the size. VT-d
+> > spec
+> > +	 * 6.5.2.6
+> > +	 */
+> > +	if (!size)
+> > +		desc.qw0 = QI_DEV_EIOTLB_ADDR(addr) &
+> > ~QI_DEV_EIOTLB_SIZE;  
+> desc.q1 |= ?
+Right, I also missed previous qw1 assignment.
+> > +	else {
+> > +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT +
+> > size); +
+> > +		desc.qw1 = QI_DEV_EIOTLB_ADDR(addr & ~mask) |
+> > QI_DEV_EIOTLB_SIZE;  
+> desc.q1 |=
+right, thanks
+> > +	}
+> > +	qi_submit_sync(&desc, iommu);
+> > +}
+> > +  
+> /* PASID-cache invalidation */
+> > +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64
+> > granu, int pasid) +{
+> > +	struct qi_desc desc;
+> > +
+> > +	desc.qw0 = QI_PC_TYPE | QI_PC_DID(did) | QI_PC_GRAN(granu)
+> > | QI_PC_PASID(pasid);
+> > +	desc.qw1 = 0;
+> > +	desc.qw2 = 0;
+> > +	desc.qw3 = 0;
+> > +	qi_submit_sync(&desc, iommu);
+> > +}
+> >  /*
+> >   * Disable Queued Invalidation interface.
+> >   */
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index 5d67d0d4..38e5efb 100644
+> > --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -339,7 +339,7 @@ enum {
+> >  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >>
+> > (DMA_TLB_FLUSH_GRANU_OFFSET-4)) #define QI_IOTLB_ADDR(addr)
+> > (((u64)addr) & VTD_PAGE_MASK) #define
+> > QI_IOTLB_IH(ih)		(((u64)ih) << 6) -#define
+> > QI_IOTLB_AM(am)		(((u8)am)) +#define
+> > QI_IOTLB_AM(am)		(((u8)am) & 0x3f) 
+> >  #define QI_CC_FM(fm)		(((u64)fm) << 48)
+> >  #define QI_CC_SID(sid)		(((u64)sid) << 32)
+> > @@ -357,17 +357,22 @@ enum {
+> >  #define QI_PC_DID(did)		(((u64)did) << 16)
+> >  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
+> >  
+> > -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
+> > -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
+> > +/* PASID cache invalidation granu */
+> > +#define QI_PC_ALL_PASIDS	0
+> > +#define QI_PC_PASID_SEL		1
+> >  
+> >  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
+> >  #define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
+> >  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
+> > -#define QI_EIOTLB_AM(am)	(((u64)am))
+> > +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
+> >  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
+> >  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
+> >  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
+> >  
+> > +/* QI Dev-IOTLB inv granu */
+> > +#define QI_DEV_IOTLB_GRAN_ALL		1
+> > +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
+> > +
+> >  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+> >  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+> >  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+> > @@ -658,8 +663,16 @@ extern void qi_flush_context(struct
+> > intel_iommu *iommu, u16 did, u16 sid, u8 fm, u64 type);
+> >  extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64
+> > addr, unsigned int size_order, u64 type);
+> > +extern void qi_flush_piotlb(struct intel_iommu *iommu, u16 did,
+> > u64 addr,
+> > +			u32 pasid, unsigned int size_order, u64
+> > type); extern void qi_flush_dev_iotlb(struct intel_iommu *iommu,
+> > u16 sid, u16 pfsid, u16 qdep, u64 addr, unsigned mask);
+> > +
+> > +extern void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16
+> > sid, u16 pfsid,
+> > +			u32 pasid, u16 qdep, u64 addr, unsigned
+> > size, u64 granu); +
+> > +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16
+> > did, u64 granu, int pasid); +
+> >  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu
+> > *iommu); 
+> >  extern int dmar_ir_support(void);
+> >   
 > 
+> Thanks
+> 
+> Eric
 
-Thanks. Seems that ftrace_graph_return is expected to point at
-ftrace_stub when not in use, and this is critical when DYNAMIC_FTRACE
-is not enabled (and for various other architectures).
-
-I'll have to just remove this change for upstream (and rebase my
-for-next, which I usually try to avoid doing. But this shouldn't hurt).
-
--- Steve
-
-> in testcase: trinity
-> with following parameters:
-> 
-> 	runtime: 300s
-> 
-> test-description: Trinity is a linux system call fuzz tester.
-> test-url: http://codemonkey.org.uk/projects/trinity/
-> 
-> 
-> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> +-----------------------------------------------------------------------------------------------+------------+------------+
-> |                                                                                               | 52fde6e70c | 02519fa3c4 |
-> +-----------------------------------------------------------------------------------------------+------------+------------+
-> | boot_successes                                                                                | 4          | 0          |
-> | boot_failures                                                                                 | 0          | 4          |
-> | BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:early_console_in_setup_code | 0          | 4          |
-> +-----------------------------------------------------------------------------------------------+------------+------------+
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> 
-> early console in setup code
-> BUG: kernel reboot-without-warning in early-boot stage, last printk: early console in setup code
-> Linux version 5.1.0-rc3-00023-g02519fa #1
-> Command line: ip=::::vm-snb-quantal-ia32-804::dhcp root=/dev/ram0 user=lkp job=/lkp/jobs/scheduled/vm-snb-quantal-ia32-804/trinity-300s-quantal-core-i386-2019-04-26.cgz-02519fa3c43-20190429-62375-116iczn-1.yaml ARCH=x86_64 kconfig=x86_64-randconfig-s3-04261012 branch=linux-devel/devel-hourly-2019042607 commit=02519fa3c43164aa8ee0ebbe1b464a568130a36f BOOT_IMAGE=/pkg/linux/x86_64-randconfig-s3-04261012/gcc-7/02519fa3c43164aa8ee0ebbe1b464a568130a36f/vmlinuz-5.1.0-rc3-00023-g02519fa max_uptime=1500 RESULT_ROOT=/result/trinity/300s/vm-snb-quantal-ia32/quantal-core-i386-2019-04-26.cgz/x86_64-randconfig-s3-04261012/gcc-7/02519fa3c43164aa8ee0ebbe1b464a568130a36f/3 LKP_SERVER=inn debug apic=debug sysrq_always_enabled rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic load_ramdisk=2 prompt_ramdisk=0 drbd.minor_count=8 systemd.log_level=err ignore_loglevel console=tty0 earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=n
- ormal rw rcuperf.shutdown=0
-> 
-> Elapsed time: 30
-> 
-> 
-> 
-> To reproduce:
-> 
->         # build kernel
-> 	cd linux
-> 	cp config-5.1.0-rc3-00023-g02519fa .config
-> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
-> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
-> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
-> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
-> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
-> 
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> 
-> 
-> 
-> Thanks,
-> lkp
-> 
-
+[Jacob Pan]
