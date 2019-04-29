@@ -6,87 +6,102 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441CEC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81BEC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101C42075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BFB20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556529697;
-	bh=NgEVCvQYWgC5TeyYphEa2BoW8Z91YEisDfdNHslRIZc=;
+	s=default; t=1556529874;
+	bh=q3YiTWs50dMDTd8JeYCZknpgHRHn8ZwgqhXR1mTJh2M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fx/8wdgAAycdxpSKYWQfK64ZutIohN6kz84zyvdYlVUMDIpeim0dLt+S01plqQhNM
-	 l8338/3FsNkDZEE82OH0PXnFO1fbcasi2Vh2MAUJo9MzSYYOi73ulIXMQN4+GA0I6k
-	 l63EGYLg8ErxbhfKCE/oSQZ10Xla46Cj50ZK1YLU=
+	b=KmX2OWvfc0whoeP+ULxK5U/Ki+PmN0mZld2TKBtvSOS8s3RPXIU7J/QgCLI0wWXpr
+	 FCZCuAdWWBTJB8bx6r3bylHM2e3uKun4AAc/mMtBh9DNFD6JM5lX3mfbK4T2KjK77j
+	 sJCEAHRJ1HAa0IspZNURiHKFuy0C65bh4x7NCAeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfD2JVf (ORCPT
+        id S1727673AbfD2JYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727072AbfD2JVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:21:35 -0400
-Received: from localhost (unknown [77.138.135.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5586920578;
-        Mon, 29 Apr 2019 09:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556529695;
-        bh=NgEVCvQYWgC5TeyYphEa2BoW8Z91YEisDfdNHslRIZc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eQX9rvJLiREBhgvHGccQcxJrHxaH3ipTxUumn0o7y5ivyBpe1OKnYSZM6bLAg6pK0
-         7XzKLLsWf15rzZKuVAtAwyXq0iFDxfL0Gut3wX86y1ob5t4tfcw+mEfXllAQVkWVSL
-         5bE8DI+XM/jnsXz23yGXYsybgf9ncsvM5QYYpLWI=
-Date:   Mon, 29 Apr 2019 12:21:32 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Subject: Re: Build regressions/improvements in v5.1-rc7
-Message-ID: <20190429092132.GT6705@mtr-leonro.mtl.com>
-References: <20190429082645.9394-1-geert@linux-m68k.org>
- <CAMuHMdUuPPf8T2_WK2V_zW8kxb1ZfzvyKJck9D3MEHMRvYrmdA@mail.gmail.com>
+        Mon, 29 Apr 2019 05:24:33 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41614 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbfD2JYc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 05:24:32 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k8so8665765lja.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 02:24:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PEJdVdZWdwXAxOfDG1xY+PigwDXCpbRA1Hg7zPvHQ6o=;
+        b=GfK54Lv/zee/iL/t0fBaNmTn1PaER5zOFF3h0Rm87LybGU/LKBCEUkaTuNLGalSbvH
+         4mXPPxkhm9xleq3lbC+2H5hJgOdVjncpv3BzCzkSvC+omW2zCYZHcAW7J/TLj2EfU4S+
+         fxPe0Z10WvsI6TLlWoOKOQAWtpZ4f9qAqt7KPQL0pN/jhKBCviCCVkwB3S8+KneUhH4T
+         AjBOJKL1odaHVroPx7VPIXkm0c/J7TyhCoUrGRw1DHXKzGTZ1xxiob0zcRBvKVO+wFlZ
+         gxoFjNmM24u+MEclGj8xj0YxPiOmgP6zMIcwmBHFwPYU6i0ttMlGFYO4Fndlt5aUvK/i
+         haEQ==
+X-Gm-Message-State: APjAAAXKDl2ZA7+sYvx3gTaZLgz2GajB2Mmhzqdkob1zyELSIaTi+nwD
+        6qnbDymhg5peYzYuEydbQ5A=
+X-Google-Smtp-Source: APXvYqzsqbzql/ON6mGxvxLdcdKbXtmXtfv8yW22ez3OOAx0jNgFhKSpru3mC40b/etESjF56kkX1g==
+X-Received: by 2002:a2e:3815:: with SMTP id f21mr9029618lja.25.1556529870868;
+        Mon, 29 Apr 2019 02:24:30 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id m28sm7242040lfc.71.2019.04.29.02.24.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 02:24:29 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hL2WU-0002zz-Pi; Mon, 29 Apr 2019 11:24:30 +0200
+Date:   Mon, 29 Apr 2019 11:24:30 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
+ by smp_mb__{before,after}_atomic()
+Message-ID: <20190429092430.GF26546@localhost>
+References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
+ <20190419180017.GP4038@hirez.programming.kicks-ass.net>
+ <20190419182620.GF14111@linux.ibm.com>
+ <1555719429.t9n8gkf70y.astroid@bobo.none>
+ <20190420085440.GK14111@linux.ibm.com>
+ <20190423123209.GR4038@hirez.programming.kicks-ass.net>
+ <20190423133010.GK3923@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUuPPf8T2_WK2V_zW8kxb1ZfzvyKJck9D3MEHMRvYrmdA@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190423133010.GK3923@linux.ibm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:30:06AM +0200, Geert Uytterhoeven wrote:
-> On Mon, Apr 29, 2019 at 10:28 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > JFYI, when comparing v5.1-rc7[1] to v5.1-rc6[3], the summaries are:
-> >   - build errors: +1/-0
->
->   + /kisskb/src/drivers/infiniband/core/uverbs_main.c: error: 'struct
-> vm_fault' has no member named 'vm_start':  => 898:15, 898:28
->
-> mips-allmodconfig
-> mips-allmodconfig
-> s390-allmodconfig
-> s390-allyesconfig
->
-> > [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/37624b58542fb9f2d9a70e6ea006ef8a5f66c30b/ (all 236 configs)
-> > [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/085b7755808aa11f78ab9377257e1dad2e6fa4bb/ (all 236 configs)
+On Tue, Apr 23, 2019 at 06:30:10AM -0700, Paul E. McKenney wrote:
+> On Tue, Apr 23, 2019 at 02:32:09PM +0200, Peter Zijlstra wrote:
+> > On Sat, Apr 20, 2019 at 01:54:40AM -0700, Paul E. McKenney wrote:
 
-Thanks,
-https://patchwork.kernel.org/patch/10920895/#22610993
+> > > 	And lock acquisition??? acm_read_bulk_callback().
+> > 
+> > I think it goes with the set_bit() earlier, but what do I know.
+> 
+> Quite possibly!  In that case it should be smp_mb__after_atomic(),
+> and it would be nice if it immediately followed the set_bit().
 
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+I noticed this one last week as well. The set_bit() had been incorrectly
+moved and without noticing the smp_mb__before_atomic(). I've submitted a
+patch to restore it and to fix a related issue to due missing barriers:
+
+	https://lkml.kernel.org/r/20190425160540.10036-5-johan@kernel.org
+
+Johan
