@@ -2,103 +2,170 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82968C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA3DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 531AB2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556556334;
-	bh=jzvOjxszlTVQPl/QCb3vDfKQ5TcVwY5YDxGzMEzG1gM=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=IeSCIweEDt2PjaUo5UF3YrlIeQdIfa4qRZe7AsRZ6qLliZmKKirFlS6TQTVq9S95G
-	 c9jNqO0TWOJcbeYRrQoVT0AsQr77x9CKsym4sGZj6hAAqE0BWyLxTwut7icViXfQKI
-	 Ha3TkzAzlgl20aLuNMBJjVCTzsikqsqYmG6sO+TU=
+	by mail.kernel.org (Postfix) with ESMTP id A228E2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:45:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vG2Jaxvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfD2Qpd (ORCPT
+        id S1728859AbfD2Qpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:45:33 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41713 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbfD2Qpc (ORCPT
+        Mon, 29 Apr 2019 12:45:41 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33551 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728629AbfD2Qpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:45:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so5584863pfd.8;
-        Mon, 29 Apr 2019 09:45:32 -0700 (PDT)
+        Mon, 29 Apr 2019 12:45:40 -0400
+Received: by mail-yw1-f66.google.com with SMTP id q11so3954003ywb.0;
+        Mon, 29 Apr 2019 09:45:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JT+ML2dX2Vx8dyF6/A3Qn82bt73Gd/sl6N1Ui3j3HLI=;
-        b=hXodwy1aIvm5ESAQj/9CsoafzYXwu6ZkSxMhNTBCZG9FeRCS+T9lrCIWUNGxUhuIeX
-         QuxxMVX8gfHvWi8NN1m05PQonHBaQqUfw9aNdUyA+MmHJfwtXZ4dKFKHyj+HbR+7LivD
-         nP+l9JmJAY4Bb2vi4mSrCd9VXgChu7T3zGU5+3hL45gcOUwT1BEZYfqxjpSkTgF2QYi3
-         J1hqh6SxEmmXyYBiBUu20T/SogI7Grp+HvSyO61UrWhbhMQtPwQ3xhMgnMLWUocmYSp2
-         J8DM9cxKFXstk9JvzjrS2ODfMksQPgWCmIn9QvNQeiqU0wpsSILxYUOiMoMcKh8fc4Tj
-         Nz1Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=g1Yba+QgALlemKiNnIFJPcJGdSg5qg6+Ws/obYqZr2s=;
+        b=vG2JaxvrLJn69v0XTXrXGlmN7IJahwJEOOqEOu+kB3/39GuWdeiYXPiHPidkJII8At
+         7RoI+VAoMqr1UNqDPAzhaUIEMu74at7sr1iZ3DAUjdDa6hQ5yiocFV6yGmZWdcrRqc7u
+         +YWqYlKEua2bWFGRJBHOPzynYB0unnK+aSDzHsE7zgA/vxKIlJ/3ofJNX6I43nFto35L
+         OQfDM3zmImtw3raJOjTCZZ7cayzEOCpLyr3z2xopByyrjVJ9J9R8QH4SBrKvJQkgP+IC
+         O4nZP7P8TzzQLNDS08vMLbh+sIZEBE4HfgWr3bjtxHV7WCJFV2u/Mc6MrVPBrMc1sRFx
+         gl6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JT+ML2dX2Vx8dyF6/A3Qn82bt73Gd/sl6N1Ui3j3HLI=;
-        b=Vth1QiUAhA1mt7UrOspyMB/d5K9RuGsUzLVR855+h06pc9eLG8zt7kH62ktBRqaKFH
-         VzyenO+1I8J5mWqHOcL3SFYe8pZSdFyC+HNBuxBBcH3ya+itDMLg4uN1IW+G13Y13BQQ
-         C+pWDcpLhDZeaNgOlp3bqn/nztP3NQMEB3Kc1mUZVBems825zmrNgQo28cwL/9Jp4yo8
-         yVnJvRfjMVqiHpryp6KjN1uX6DyvPjIiLGbIT87cmAXFEpQpOxHCm4379ey+A2KZgQOp
-         QeP92IMUHLuVKbtPLXERY66C88+Ov/16q5XSXlWP0ZRZL+TnATLqSHqjqksHXQLYRWeF
-         gS/A==
-X-Gm-Message-State: APjAAAVEF3EFKy3XwzrTzCpM0+sRHHmQFD5yDueqWZrMaYoM3kVIMvS0
-        2C1OqBBcQJ70YOQnwTMQ1Io24F3d
-X-Google-Smtp-Source: APXvYqyQY7jrGrCLUpImEXnQs8adfZe3HvjIMZqonhLcCcNeNgvucZsNvfkxbFYxkbE6/fSIqGZcaQ==
-X-Received: by 2002:a63:564f:: with SMTP id g15mr6328290pgm.258.1556556331159;
-        Mon, 29 Apr 2019 09:45:31 -0700 (PDT)
-Received: from [10.70.64.58] ([131.107.174.58])
-        by smtp.gmail.com with ESMTPSA id e16sm21129942pgv.89.2019.04.29.09.45.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 09:45:30 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     mr.nuke.me@gmail.com, linux-pci@vger.kernel.org,
-        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
- <20190424175758.GC244134@google.com> <20190429085104.728aee75@x1.home>
-Message-ID: <76169da9-36cd-6754-41e7-47c8ef668648@kernel.org>
-Date:   Mon, 29 Apr 2019 09:45:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=g1Yba+QgALlemKiNnIFJPcJGdSg5qg6+Ws/obYqZr2s=;
+        b=CXjkWAO6v0P+9YFK2iJuNe3m+KwMZktaCbP6tcP4TDO1LbXg8UgChboUEoCeVbMFR+
+         8FrVAs9WByH0+X5RwGgG+Rau/Xv9b5zNuuuFJAvEFK7Cc44KuOubRuFsM6JMXLHw4+dA
+         hLdlZSeLu/RlNgkXb2FVHSJPd0dbDSh3rBBvNg8k5C7yjq9rhuCoVLpqzcXGJQkuVgRQ
+         4iAQoAA2pomPqyyNFVzoq4kseBehVUrUaMGYtAO+rWOvneTNCf/qGa0gmbaklt0NYRK3
+         nXsgnshUE35NSBcGe/XKpvEldwYVToBjNzbvsH3Wp1eoTKJDcG/UI+gXdSAmPVc6DCqk
+         CdJg==
+X-Gm-Message-State: APjAAAVj8Coiy+9x0n8YzwSiUlpCpVkmpC5R1Exx4hhVNOzdPw4+qiOj
+        SjM+8zMgAwJF9MMlTvlUreRpLr2SEFg7QkXXwv01/r8AAf8=
+X-Google-Smtp-Source: APXvYqzByaqDq/lpvzDC/2ukc1ZkxWus1THiiXBmzPw+9WYzGRKw4P0GFUHrZKBL20xJMVCBqIp0HNOj15fNiQoBZow=
+X-Received: by 2002:a81:b653:: with SMTP id h19mr41969960ywk.253.1556556339615;
+ Mon, 29 Apr 2019 09:45:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190429085104.728aee75@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190429060107.10245-1-zajec5@gmail.com> <20190429092027.6013677d@hermes.lan>
+In-Reply-To: <20190429092027.6013677d@hermes.lan>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Date:   Mon, 29 Apr 2019 18:45:28 +0200
+Message-ID: <CACna6rykbCkYjoTDP7wumBYVbHkQBCKBfZEq1-fWFrVTC==QNg@mail.gmail.com>
+Subject: Re: [PATCH] net-sysfs: expose IRQ number
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/2019 10:51 AM, Alex Williamson wrote:
-> So where do we go from here?  I agree that dmesg is not necessarily a
-> great choice for these sorts of events and if they went somewhere else,
-> maybe I wouldn't have the same concerns about them generating user
-> confusion or contributing to DoS vectors from userspace drivers.  As it
-> is though, we have known cases where benign events generate confusing
-> logging messages, which seems like a regression.  Drivers didn't ask
-> for a link_change handler, but nor did they ask that the link state to
-> their device be monitored so closely.  Maybe this not only needs some
-> sort of change to the logging mechanism, but also an opt-in by the
-> driver if they don't expect runtime link changes.  Thanks,
+On Mon, 29 Apr 2019 at 18:20, Stephen Hemminger
+<stephen@networkplumber.org> wrote:
+> On Mon, 29 Apr 2019 08:01:07 +0200
+> Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> wrote:
+>
+> > From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> >
+> > Knowing IRQ number makes e.g. reading /proc/interrupts much simpler.
+> > It's more reliable than guessing device name used by a driver when
+> > calling request_irq().
+> >
+> > Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> > ---
+> > I found a script parsing /proc/interrupts for a given interface name. I=
+t wasn't
+> > working for me as it assumed request_irq() was called with a device nam=
+e. It's
+> > not a case for all drivers.
+> >
+> > I also found some other people looking for a proper solution for that:
+> > https://unix.stackexchange.com/questions/275075/programmatically-determ=
+ine-the-irqs-associated-with-a-network-interface
+> > https://stackoverflow.com/questions/7516984/retrieving-irq-number-of-a-=
+nic
+> >
+> > Let me know if this solution makes sense. I can say it works for me ;)
+> > ---
+> >  Documentation/ABI/testing/sysfs-class-net |  7 +++++++
+> >  net/core/net-sysfs.c                      | 16 ++++++++++++++++
+> >  2 files changed, 23 insertions(+)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-class-net b/Documentation/=
+ABI/testing/sysfs-class-net
+> > index 664a8f6a634f..33440fe77ca7 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-net
+> > +++ b/Documentation/ABI/testing/sysfs-class-net
+> > @@ -301,3 +301,10 @@ Contact: netdev@vger.kernel.org
+> >  Description:
+> >               32-bit unsigned integer counting the number of times the =
+link has
+> >               been down
+> > +
+> > +What:                /sys/class/net/<iface>/irq
+> > +Date:                April 2019
+> > +KernelVersion:       5.2
+> > +Contact:     netdev@vger.kernel.org
+> > +Description:
+> > +             IRQ number used by device
+> > diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> > index e4fd68389d6f..a3eb7c3f1f37 100644
+> > --- a/net/core/net-sysfs.c
+> > +++ b/net/core/net-sysfs.c
+> > @@ -512,6 +512,21 @@ static ssize_t phys_switch_id_show(struct device *=
+dev,
+> >  }
+> >  static DEVICE_ATTR_RO(phys_switch_id);
+> >
+> > +static ssize_t irq_show(struct device *dev, struct device_attribute *a=
+ttr,
+> > +                     char *buf)
+> > +{
+> > +     const struct net_device *netdev =3D to_net_dev(dev);
+> > +     ssize_t ret;
+> > +
+> > +     if (!rtnl_trylock())
+> > +             return restart_syscall();
+> > +     ret =3D sprintf(buf, "%d\n", netdev->irq);
+> > +     rtnl_unlock();
+> > +
+> > +     return ret;
+> > +}
+> > +static DEVICE_ATTR_RO(irq);
+> > +
+> >  static struct attribute *net_class_attrs[] __ro_after_init =3D {
+> >       &dev_attr_netdev_group.attr,
+> >       &dev_attr_type.attr,
+> > @@ -542,6 +557,7 @@ static struct attribute *net_class_attrs[] __ro_aft=
+er_init =3D {
+> >       &dev_attr_proto_down.attr,
+> >       &dev_attr_carrier_up_count.attr,
+> >       &dev_attr_carrier_down_count.attr,
+> > +     &dev_attr_irq.attr,
+> >       NULL,
+> >  };
+> >  ATTRIBUTE_GROUPS(net_class);
+>
+> Can't you find this on the PCI side already?
+> $ ls /sys/class/net/eno1/device/msi_irqs/
+> 37  38  39  40  41
 
-Is there anyway to detect autonomous hardware management support and
-not report link state changes in that situation?
+I'm dealing with bgmac supported ethernet device on bcma bus (not
+PCI). I could make bcma bus provide IRQ numbers, but I thought
+something at net subsystem level will be more generic.
 
-I thought there were some capability bits for these.
+I'm going to review Willem's solution/idea for now.
+
+--=20
+Rafa=C5=82
