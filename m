@@ -2,36 +2,36 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B44C04AA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0295C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7064214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FAC206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfD2GQR (ORCPT
+        id S1727518AbfD2GQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:16:17 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:13858 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726979AbfD2GQO (ORCPT
+        Mon, 29 Apr 2019 02:16:21 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:61139 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727460AbfD2GQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:16:14 -0400
-X-UUID: 025449e1a9804c45865b2386e4ca08c3-20190429
-X-UUID: 025449e1a9804c45865b2386e4ca08c3-20190429
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        Mon, 29 Apr 2019 02:16:17 -0400
+X-UUID: 0137bd44709e48a0b763906698862109-20190429
+X-UUID: 0137bd44709e48a0b763906698862109-20190429
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
         (envelope-from <biao.huang@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1029930819; Mon, 29 Apr 2019 14:16:09 +0800
+        with ESMTP id 625703698; Mon, 29 Apr 2019 14:16:07 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 29 Apr 2019 14:16:08 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 29 Apr 2019 14:16:05 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 29 Apr 2019 14:16:07 +0800
+ Transport; Mon, 29 Apr 2019 14:16:04 +0800
 From:   Biao Huang <biao.huang@mediatek.com>
 To:     Jose Abreu <joabreu@synopsys.com>, <davem@davemloft.net>
 CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -44,41 +44,41 @@ CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
         <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>
-Subject: [PATCH 3/4] net: stmmac: write the modified value back to MTL_OPERATION_MODE
-Date:   Mon, 29 Apr 2019 14:15:55 +0800
-Message-ID: <1556518556-32464-4-git-send-email-biao.huang@mediatek.com>
+Subject: [PATCH 0/4] fix some bugs in stmmac
+Date:   Mon, 29 Apr 2019 14:15:52 +0800
+Message-ID: <1556518556-32464-1-git-send-email-biao.huang@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1556518556-32464-1-git-send-email-biao.huang@mediatek.com>
-References: <1556518556-32464-1-git-send-email-biao.huang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 29BA39CCF686AAB9215B307A05FAB453ECA786A1640899DC7C3C5E6100E51E9E2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value of MTL_OPERATION_MODE is modified, and should
-be write back to the register.
-
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 7e5d5db..b4bb562 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -192,6 +192,8 @@ static void dwmac4_prog_mtl_tx_algorithms(struct mac_device_info *hw,
- 	default:
- 		break;
- 	}
-+
-+	writel(value, ioaddr + MTL_OPERATION_MODE);
- }
- 
- static void dwmac4_set_mtl_tx_queue_weight(struct mac_device_info *hw,
--- 
+This series fix some bugs in stmmac driver.               
+3 patches are for common stmmac or dwmac4:                                      
+        1. update rx tail pointer to fix rx dma hang issue.                     
+        2. change condition for mdc clock to fix csr_clk can't be zero issue.   
+        3. write the modified value back to MTL_OPERATION_MODE.                 
+1 patche is for dwmac-mediatek:                                                 
+        1. modify csr_clk value to fix mdio read/write fail issue for dwmac-mediatek.
+                                                                                
+                                                                                
+Biao Huang (4):                                                                 
+  net: stmmac: update rx tail pointer register to fix rx dma hang               
+    issue.                                                                      
+  net: stmmac: fix csr_clk can't be zero issue                                  
+  net: stmmac: write the modified value back to MTL_OPERATION_MODE              
+  net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio                 
+    read/write fail                                                             
+                                                                                
+ .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    4 ++--                 
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |    2 ++                   
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |    5 ++++-                
+ 3 files changed, 8 insertions(+), 3 deletions(-)                               
+                                                                                
+--                                                                              
 1.7.9.5
 
