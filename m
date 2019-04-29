@@ -2,98 +2,78 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6879DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A560C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350842087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCGeOw1/"
+	by mail.kernel.org (Postfix) with ESMTP id 02C6F2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfD2Q64 (ORCPT
+        id S1728883AbfD2Q72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:58:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33438 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbfD2Q64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:58:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id z28so308264pfk.0;
-        Mon, 29 Apr 2019 09:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mSK82YTG8Gn1sEA2j7QMo/uWbASODJaKRuCPhSuz7Ws=;
-        b=bCGeOw1/jXqh9Dd3eBM48IWO8Brb1bqCy1y4jCkDx9R/BnyWtEUmC2MIX7JbYrzLmx
-         +aqWmV58/68nUKX7iPezXdRVFtMAHMzmIgQjtMxK+HVNjoK4rfhYvJPj0FdbYQ+lyO85
-         hvfzm0sHv78TweD4OFi5lm+HRMpFIg9YDVmxXrdHpql5fDZaXvJIOYLGWViqSloO6Bds
-         NUQSkhQD3PZP1Atta5Y/RYwgctXljzM4i6jpkTT5b7TEjkWYAKlTTN7IDI75/zKM7Xqp
-         l6RRyhUmtMuax5EW03R9DXz1YjoxjRDXAU8V+L8pmgsp+xkXBPQ9PsHArVEOBGr606nb
-         gW4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mSK82YTG8Gn1sEA2j7QMo/uWbASODJaKRuCPhSuz7Ws=;
-        b=cXZRHnN8gwZffp0PfTzAFqTcuhPHZRPnvQ26bEjFaSQLgdMI8ozYtXsVU9Ys0P0ub2
-         0RCDaqeBzR/rObDy//Zg7TDmhSNJECF+h/4Zpvf7EWWJ/QWSlN7QCEdsGqGp4N4TIV6Q
-         +3SbT1ZJI45bNTu6ys/5u3mHm4L3206U0PcKtrLT/Qqo8yTIwWb6B1EKtwUlPow30JQF
-         wJQeusEYrpSgTkgs1Tf9JuJA4K8psztMN2GO0vQ0N+AoPU0rtT9rbYnBRKtoQL+WmGKE
-         ODwKDrNbVUwpBPHa1hjhocbeIHYdiPK+COkVNQOgy3lQBDeiVg1FY8d9F0wndXjKS843
-         wGow==
-X-Gm-Message-State: APjAAAU2K/Xe1voz17eCsvvVAzkatFuIzU4M2ZAPBR5Z/UZ9aigEIs8e
-        ogGrtdSrOnAOT1DxG/YnAMskKVNwUzQLLkQGpGo=
-X-Google-Smtp-Source: APXvYqz+Z6yq8Rw0kP+RFYtzvvjPOq+FDmWYGa9ndRbPF9eI5lCF1laHMqA8bd95a1UuzSOXYj3VZvI63G8LSKuJ6oY=
-X-Received: by 2002:a63:6b82:: with SMTP id g124mr57479137pgc.246.1556557135343;
- Mon, 29 Apr 2019 09:58:55 -0700 (PDT)
+        Mon, 29 Apr 2019 12:59:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46278 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728695AbfD2Q72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:59:28 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 214813091784;
+        Mon, 29 Apr 2019 16:59:28 +0000 (UTC)
+Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4406B1001E63;
+        Mon, 29 Apr 2019 16:59:27 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 10:59:26 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Sinan Kaya <Okaya@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, mr.nuke.me@gmail.com,
+        linux-pci@vger.kernel.org, austin_bolen@dell.com,
+        alex_gagniuc@dellteam.com, keith.busch@intel.com,
+        Shyam_Iyer@Dell.com, lukas@wunner.de,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
+Message-ID: <20190429105926.209d17d3@x1.home>
+In-Reply-To: <76169da9-36cd-6754-41e7-47c8ef668648@kernel.org>
+References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
+        <20190424175758.GC244134@google.com>
+        <20190429085104.728aee75@x1.home>
+        <76169da9-36cd-6754-41e7-47c8ef668648@kernel.org>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
- <20190428030539.17776-1-yuehaibing@huawei.com> <20190429105422-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190429105422-mutt-send-email-mst@kernel.org>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 29 Apr 2019 09:58:43 -0700
-Message-ID: <CAM_iQpWvp2i6iOZtSPskqU_uXHL2zKfM_cS1rGTh_T0r3BwvnA@mail.gmail.com>
-Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Yue Haibing <yuehaibing@huawei.com>,
-        David Miller <davem@davemloft.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "Li,Rongqing" <lirongqing@baidu.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Chas Williams <3chas3@gmail.com>, wangli39@baidu.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 29 Apr 2019 16:59:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 7:55 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> The problem seems real enough, but an extra synchronize_net on tun_attach
-> might be a problem, slowing guest startup significantly.
-> Better ideas?
+On Mon, 29 Apr 2019 09:45:28 -0700
+Sinan Kaya <Okaya@kernel.org> wrote:
 
-Yes, I proposed the following patch in the other thread.
+> On 4/29/2019 10:51 AM, Alex Williamson wrote:
+> > So where do we go from here?  I agree that dmesg is not necessarily a
+> > great choice for these sorts of events and if they went somewhere else,
+> > maybe I wouldn't have the same concerns about them generating user
+> > confusion or contributing to DoS vectors from userspace drivers.  As it
+> > is though, we have known cases where benign events generate confusing
+> > logging messages, which seems like a regression.  Drivers didn't ask
+> > for a link_change handler, but nor did they ask that the link state to
+> > their device be monitored so closely.  Maybe this not only needs some
+> > sort of change to the logging mechanism, but also an opt-in by the
+> > driver if they don't expect runtime link changes.  Thanks,  
+> 
+> Is there anyway to detect autonomous hardware management support and
+> not report link state changes in that situation?
+> 
+> I thought there were some capability bits for these.
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index e9ca1c088d0b..31c3210288cb 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -3431,6 +3431,7 @@ static int tun_chr_open(struct inode *inode,
-struct file * file)
-        file->private_data = tfile;
-        INIT_LIST_HEAD(&tfile->next);
+Not that we can find, this doesn't trigger the separate autonomous
+bandwidth notification interrupt.  Thanks,
 
-+       sock_set_flag(&tfile->sk, SOCK_RCU_FREE);
-        sock_set_flag(&tfile->sk, SOCK_ZEROCOPY);
-
-        return 0;
+Alex
