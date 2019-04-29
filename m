@@ -6,84 +6,141 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DC2C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCA9C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC812075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6393B21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfD2IWX convert rfc822-to-8bit (ORCPT
+        id S1727568AbfD2IYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 04:22:23 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:36095 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbfD2IWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:22:22 -0400
-X-Originating-IP: 90.88.147.33
-Received: from xps13 (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 4BCAEFF81D;
-        Mon, 29 Apr 2019 08:22:17 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 10:22:16 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc:     kyungmin.park@samsung.com, bbrezillon@kernel.org, richard@nod.at,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 5/5] mtd: onenand/samsung: Set name field of mtd_info
- struct
-Message-ID: <20190429102216.3235c48c@xps13>
-In-Reply-To: <20190426164224.11327-6-pawel.mikolaj.chmiel@gmail.com>
-References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
-        <20190426164224.11327-6-pawel.mikolaj.chmiel@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 29 Apr 2019 04:24:42 -0400
+Received: from foss.arm.com ([217.140.101.70]:49774 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727480AbfD2IYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 04:24:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F05E880D;
+        Mon, 29 Apr 2019 01:24:40 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3FD93F71A;
+        Mon, 29 Apr 2019 01:24:39 -0700 (PDT)
+Subject: Re: [PATCH 2/7] irqchip/irq-imgpdc.c: Use
+ devm_platform_ioremap_resource()
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Mukesh Ojha <mojha@codeaurora.org>, tglx@linutronix.de,
+        jason@lakedaemon.net, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1554362413-3305-1-git-send-email-mojha@codeaurora.org>
+ <1554362413-3305-3-git-send-email-mojha@codeaurora.org>
+ <c576ec64-9f07-b867-73c3-53df83b11b04@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ mQINBE6Jf0UBEADLCxpix34Ch3kQKA9SNlVQroj9aHAEzzl0+V8jrvT9a9GkK+FjBOIQz4KE
+ g+3p+lqgJH4NfwPm9H5I5e3wa+Scz9wAqWLTT772Rqb6hf6kx0kKd0P2jGv79qXSmwru28vJ
+ t9NNsmIhEYwS5eTfCbsZZDCnR31J6qxozsDHpCGLHlYym/VbC199Uq/pN5gH+5JHZyhyZiNW
+ ozUCjMqC4eNW42nYVKZQfbj/k4W9xFfudFaFEhAf/Vb1r6F05eBP1uopuzNkAN7vqS8XcgQH
+ qXI357YC4ToCbmqLue4HK9+2mtf7MTdHZYGZ939OfTlOGuxFW+bhtPQzsHiW7eNe0ew0+LaL
+ 3wdNzT5abPBscqXWVGsZWCAzBmrZato+Pd2bSCDPLInZV0j+rjt7MWiSxEAEowue3IcZA++7
+ ifTDIscQdpeKT8hcL+9eHLgoSDH62SlubO/y8bB1hV8JjLW/jQpLnae0oz25h39ij4ijcp8N
+ t5slf5DNRi1NLz5+iaaLg4gaM3ywVK2VEKdBTg+JTg3dfrb3DH7ctTQquyKun9IVY8AsxMc6
+ lxl4HxrpLX7HgF10685GG5fFla7R1RUnW5svgQhz6YVU33yJjk5lIIrrxKI/wLlhn066mtu1
+ DoD9TEAjwOmpa6ofV6rHeBPehUwMZEsLqlKfLsl0PpsJwov8TQARAQABtCNNYXJjIFp5bmdp
+ ZXIgPG1hcmMuenluZ2llckBhcm0uY29tPokCOwQTAQIAJQIbAwYLCQgHAwIGFQgCCQoLBBYC
+ AwECHgECF4AFAk6NvYYCGQEACgkQI9DQutE9ekObww/+NcUATWXOcnoPflpYG43GZ0XjQLng
+ LQFjBZL+CJV5+1XMDfz4ATH37cR+8gMO1UwmWPv5tOMKLHhw6uLxGG4upPAm0qxjRA/SE3LC
+ 22kBjWiSMrkQgv5FDcwdhAcj8A+gKgcXBeyXsGBXLjo5UQOGvPTQXcqNXB9A3ZZN9vS6QUYN
+ TXFjnUnzCJd+PVI/4jORz9EUVw1q/+kZgmA8/GhfPH3xNetTGLyJCJcQ86acom2liLZZX4+1
+ 6Hda2x3hxpoQo7pTu+XA2YC4XyUstNDYIsE4F4NVHGi88a3N8yWE+Z7cBI2HjGvpfNxZnmKX
+ 6bws6RQ4LHDPhy0yzWFowJXGTqM/e79c1UeqOVxKGFF3VhJJu1nMlh+5hnW4glXOoy/WmDEM
+ UMbl9KbJUfo+GgIQGMp8mwgW0vK4HrSmevlDeMcrLdfbbFbcZLNeFFBn6KqxFZaTd+LpylIH
+ bOPN6fy1Dxf7UZscogYw5Pt0JscgpciuO3DAZo3eXz6ffj2NrWchnbj+SpPBiH4srfFmHY+Y
+ LBemIIOmSqIsjoSRjNEZeEObkshDVG5NncJzbAQY+V3Q3yo9og/8ZiaulVWDbcpKyUpzt7pv
+ cdnY3baDE8ate/cymFP5jGJK++QCeA6u6JzBp7HnKbngqWa6g8qDSjPXBPCLmmRWbc5j0lvA
+ 6ilrF8m5Ag0ETol/RQEQAM/2pdLYCWmf3rtIiP8Wj5NwyjSL6/UrChXtoX9wlY8a4h3EX6E3
+ 64snIJVMLbyr4bwdmPKULlny7T/R8dx/mCOWu/DztrVNQiXWOTKJnd/2iQblBT+W5W8ep/nS
+ w3qUIckKwKdplQtzSKeE+PJ+GMS+DoNDDkcrVjUnsoCEr0aK3cO6g5hLGu8IBbC1CJYSpple
+ VVb/sADnWF3SfUvJ/l4K8Uk4B4+X90KpA7U9MhvDTCy5mJGaTsFqDLpnqp/yqaT2P7kyMG2E
+ w+eqtVIqwwweZA0S+tuqput5xdNAcsj2PugVx9tlw/LJo39nh8NrMxAhv5aQ+JJ2I8UTiHLX
+ QvoC0Yc/jZX/JRB5r4x4IhK34Mv5TiH/gFfZbwxd287Y1jOaD9lhnke1SX5MXF7eCT3cgyB+
+ hgSu42w+2xYl3+rzIhQqxXhaP232t/b3ilJO00ZZ19d4KICGcakeiL6ZBtD8TrtkRiewI3v0
+ o8rUBWtjcDRgg3tWx/PcJvZnw1twbmRdaNvsvnlapD2Y9Js3woRLIjSAGOijwzFXSJyC2HU1
+ AAuR9uo4/QkeIrQVHIxP7TJZdJ9sGEWdeGPzzPlKLHwIX2HzfbdtPejPSXm5LJ026qdtJHgz
+ BAb3NygZG6BH6EC1NPDQ6O53EXorXS1tsSAgp5ZDSFEBklpRVT3E0NrDABEBAAGJAh8EGAEC
+ AAkFAk6Jf0UCGwwACgkQI9DQutE9ekMLBQ//U+Mt9DtFpzMCIHFPE9nNlsCm75j22lNiw6mX
+ mx3cUA3pl+uRGQr/zQC5inQNtjFUmwGkHqrAw+SmG5gsgnM4pSdYvraWaCWOZCQCx1lpaCOl
+ MotrNcwMJTJLQGc4BjJyOeSH59HQDitKfKMu/yjRhzT8CXhys6R0kYMrEN0tbe1cFOJkxSbV
+ 0GgRTDF4PKyLT+RncoKxQe8lGxuk5614aRpBQa0LPafkirwqkUtxsPnarkPUEfkBlnIhAR8L
+ kmneYLu0AvbWjfJCUH7qfpyS/FRrQCoBq9QIEcf2v1f0AIpA27f9KCEv5MZSHXGCdNcbjKw1
+ 39YxYZhmXaHFKDSZIC29YhQJeXWlfDEDq6nIhvurZy3mSh2OMQgaIoFexPCsBBOclH8QUtMk
+ a3jW/qYyrV+qUq9Wf3SKPrXf7B3xB332jFCETbyZQXqmowV+2b3rJFRWn5hK5B+xwvuxKyGq
+ qDOGjof2dKl2zBIxbFgOclV7wqCVkhxSJi/QaOj2zBqSNPXga5DWtX3ekRnJLa1+ijXxmdjz
+ hApihi08gwvP5G9fNGKQyRETePEtEAWt0b7dOqMzYBYGRVr7uS4uT6WP7fzOwAJC4lU7ZYWZ
+ yVshCa0IvTtp1085RtT3qhh9mobkcZ+7cQOY+Tx2RGXS9WeOh2jZjdoWUv6CevXNQyOUXMM=
+Organization: ARM Ltd
+Message-ID: <9650cf73-e592-c672-1951-10c137f1a3db@arm.com>
+Date:   Mon, 29 Apr 2019 09:24:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <c576ec64-9f07-b867-73c3-53df83b11b04@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paweł,
-
-Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com> wrote on Fri, 26 Apr 2019
-18:42:24 +0200:
-
-> From: Tomasz Figa <tomasz.figa@gmail.com>
+On 29/04/2019 09:13, Marc Zyngier wrote:
+> On 04/04/2019 08:20, Mukesh Ojha wrote:
+>> devm_platform_ioremap_resource() internally have platform_get_resource()
+>> and devm_ioremap_resource() in it. So instead of calling them separately
+>> use devm_platform_ioremap_resource() directly.
+>>
+>> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+>> ---
+>>  drivers/irqchip/irq-imgpdc.c | 10 +---------
+>>  1 file changed, 1 insertion(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-imgpdc.c b/drivers/irqchip/irq-imgpdc.c
+>> index d00489a..8904a5f 100644
+>> --- a/drivers/irqchip/irq-imgpdc.c
+>> +++ b/drivers/irqchip/irq-imgpdc.c
+>> @@ -307,13 +307,6 @@ static int pdc_intc_probe(struct platform_device *pdev)
+>>  	if (!node)
+>>  		return -ENOENT;
+>>  
+>> -	/* Get registers */
+>> -	res_regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -	if (res_regs == NULL) {
+>> -		dev_err(&pdev->dev, "cannot find registers resource\n");
+>> -		return -ENOENT;
+>> -	}
+>> -
+>>  	/* Allocate driver data */
+>>  	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>>  	if (!priv) {
+>> @@ -324,8 +317,7 @@ static int pdc_intc_probe(struct platform_device *pdev)
+>>  	platform_set_drvdata(pdev, priv);
+>>  
+>>  	/* Ioremap the registers */
+>> -	priv->pdc_base = devm_ioremap(&pdev->dev, res_regs->start,
+>> -				      resource_size(res_regs));
+>> +	priv->pdc_base = devm_platform_ioremap_resource(pdev, 0);
+>>  	if (!priv->pdc_base)
+>>  		return -EIO;
+>>  
+>>
 > 
-> This patch adds initialization of .name field of mtd_info struct to
-> avoid printing "(null)" in kernel log messages, such as:
+> What happens to the res_regs variable then?
 > 
-> [    1.942519] 1 ofpart partitions found on MTD device (null)
-> [    1.949708] Creating 1 MTD partitions on "(null)":
-> 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  drivers/mtd/nand/onenand/samsung.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mtd/nand/onenand/samsung.c b/drivers/mtd/nand/onenand/samsung.c
-> index 0f450604412f..1fda1f324cc6 100644
-> --- a/drivers/mtd/nand/onenand/samsung.c
-> +++ b/drivers/mtd/nand/onenand/samsung.c
-> @@ -886,6 +886,7 @@ static int s3c_onenand_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	this = (struct onenand_chip *) &mtd[1];
-> +	mtd->name = dev_name(&pdev->dev);
->  	mtd->priv = this;
->  	mtd->dev.of_node = np;
->  	mtd->dev.parent = &pdev->dev;
+> Also, and more importantly, devm_platform_ioremap_resource doesn't
+> return NULL on error, but an ERR_PTR. Yes, the bug was already there,
+> but since you're changing it, you might as well fix the thing.
 
+Actually, the current code is right, and you're actively breaking it. Boo.
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-
-Thanks,
-Miquèl
+	M.
+-- 
+Jazz is not dead. It just smells funny...
