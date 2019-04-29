@@ -2,76 +2,115 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBC3C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592BDC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF5B21743
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB0A2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="U8Ck1Tbj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfD2OGG (ORCPT
+        id S1728307AbfD2OHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:06:06 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:54100 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728343AbfD2OGF (ORCPT
+        Mon, 29 Apr 2019 10:07:46 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37811 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbfD2OHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:06:05 -0400
-Received: (qmail 1756 invoked by uid 2102); 29 Apr 2019 10:06:04 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 29 Apr 2019 10:06:04 -0400
-Date:   Mon, 29 Apr 2019 10:06:04 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     "Tangnianyao (ICT)" <tangnianyao@huawei.com>
-cc:     mathias.nyman@intel.com, <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Question about reset order for xhci controller and pci
-In-Reply-To: <160fa1ea-2e82-343b-d5d6-2b9adde70cf4@huawei.com>
-Message-ID: <Pine.LNX.4.44L0.1904291002290.1632-100000@iolanthe.rowland.org>
+        Mon, 29 Apr 2019 10:07:46 -0400
+Received: by mail-pf1-f194.google.com with SMTP id g3so5376438pfi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 07:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rVfhfQiy4k/gTXiRLKY8pcxpzGE19WyRfB5vYwX1+8s=;
+        b=U8Ck1TbjUSL7T33txtHKdEx40f64DhMg0b6UfCIYbhcaob+mwl64qmmKmtIR1GMjcm
+         7H+dUkOmjfr02GvlY8b2e206hBGgohLlXfx//2BNG/ZQ96Ie6DGt1oiwutrJHEib2TqM
+         TM5CMLULo1jBRYcURqfR7zbPDLtSuLhGqtdUs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rVfhfQiy4k/gTXiRLKY8pcxpzGE19WyRfB5vYwX1+8s=;
+        b=ZcTST8OXTWTAbAqLHWvVMJLG5jHmLRrLNqwX4yMZGv/QvLSLd3RrqRqwwnFiyRlE4j
+         MNDXL9+dSyiAVXQZ+goo5aZGevP97r7gQ/lBOXktwc4PKrz25So+lk8GeTBxZx5Ts2b2
+         O5VYwoBS+T1lrRSCglxBH1Fhy0F+aeGD7Y4jU1BBtD3CY//M5CPuPEjcQzM2J0+sgsEB
+         LYkVspEXwu2k6WnYPNmzLjUI5+idzkeE0tZiKLyLzhtLdNiSGU3I7lXxrPeJ+INWiQrf
+         uG6rvCzbvlHcgc+230VjAe8hVjfu9aJ6t3tf8cFQTVzoyy2lXyJyvok3ppfCF4R4ANFS
+         mckA==
+X-Gm-Message-State: APjAAAXIH6zArmFqf3puuI4IFCOGbFlVOWRKSqv0pnkdkowwmGhg4DIB
+        814fZ9nAcYPmQJ/HDN2nZkGCQA==
+X-Google-Smtp-Source: APXvYqzx1BE0CcVj4OJwmwL/GX1uNg3HWoq8XL9akQxqUrC4o0fWEAE4fgtWIdkNuX9GU1q+NUN06w==
+X-Received: by 2002:aa7:92c4:: with SMTP id k4mr32352058pfa.183.1556546865597;
+        Mon, 29 Apr 2019 07:07:45 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 128sm39979866pgb.47.2019.04.29.07.07.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 07:07:44 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 10:07:43 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
+        jannh@google.com, surenb@google.com, timmurray@google.com,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        torvalds@linux-foundation.org, kernel-team@android.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, viro@zeniv.linux.org.uk,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
+Message-ID: <20190429140743.GB173743@google.com>
+References: <20190425190010.46489-1-joel@joelfernandes.org>
+ <20190425222359.sqhboc4x4daznr6r@brauner.io>
+ <20190428162405.GA6757@redhat.com>
+ <20190429140245.GB233442@google.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429140245.GB233442@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019, Tangnianyao (ICT) wrote:
-
-> Using command "echo 1 > /sys/bus/pci/devices/0000:7a:02.0/reset"
-> on centos7.5 system to reset xhci.
-> 
-> On 2019/4/26 11:07, Tangnianyao (ICT) wrote:
-> > Hi,all
+On Mon, Apr 29, 2019 at 10:02:45AM -0400, Joel Fernandes wrote:
+> On Sun, Apr 28, 2019 at 06:24:06PM +0200, Oleg Nesterov wrote:
+[snip]
+> > > > +{
+> > > > +	struct pid *pid;
+> > > > +
+> > > > +	lockdep_assert_held(&tasklist_lock);
+> > > > +
+> > > > +	pid = get_task_pid(task, PIDTYPE_PID);
+> > > > +	wake_up_all(&pid->wait_pidfd);
+> > > > +	put_pid(pid);
 > > 
-> > I've meet a problem about reset xhci and it may be caused by the
-> > reset order of pci and xhci.
-> > Using xhci-pci, when users send reset command in os(centos or red-hat os),
-> > it would first reset PCI device by pci_reset_function. During this
-> > process, it would disable BME(Bus Master Enable) and set BME=0, and
-> > then enable it and set BME=1.
-> > And then it comes to xhci reset process. First, it would send an
-> > endpoint stop command in xhci_urb_dequeue. However, this stop ep command
-> > fails to finish. The reason is that BME is set to 0 in former process and
-> > xhci RUN/STOP changes to 0, and when BME is set to 1 again, RUN/STOP doesn't
-> > recover to 1.
-> > I've checked BME behavior in xhci spec, it shows that "If the BME bit is set to 0
-> > when xHC is running, the xHC may treat this as a Host Controller Error, asserting
-> > HCE(1) and immediately halt(R/S=0 and HCH=1). Recovery from this state will
-> > require an HCRST." It seems that the stop ep command failure is reasonable.
-> > Maybe I've missed something and please let me know.
+> > Why get/put?
+> 
+> Yes, pid_task() should do it. Will update it. Thanks!
 
-Your email subject says "Question about...".  What is the question?
+I spoke too soon. We need the task's pid of type PIDTYPE_PID. How else can we
+get it? This does an atomic_inc on the pid->count, so we need to put_pid()
+after we are done with it. Did I miss something?
 
-Also, given that your question concerns what happens when you write to
-/sys/bus/pci/..., perhaps you should consider mailing it to some PCI
-maintainers as well as to the USB maintainers.
+thanks,
 
-Perhaps the reset was not meant to be used the way you are doing it.  
-A more conservative approach would be to unbind xhci-hcd from the 
-device before doing the reset and then rebind it afterward.
+ - Joel
 
-Alan Stern
-
+ 
