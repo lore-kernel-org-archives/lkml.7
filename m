@@ -2,141 +2,60 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECCDC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201C6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C604D20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA2820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbfD2MiC (ORCPT
+        id S1728233AbfD2MiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:38:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7142 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728054AbfD2MiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:38:02 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4FF3A2625511BE6A939F;
-        Mon, 29 Apr 2019 20:37:59 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.188.190) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 29 Apr 2019 20:37:49 +0800
-From:   ChenGang <cg.chen@huawei.com>
-To:     <mark@fasheh.com>, <jlbec@evilplan.org>, <jiangqi903@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        <ocfs2-devel@oss.oracle.com>, <joseph.qi@linux.alibaba.com>,
-        ChenGang <cg.chen@huawei.com>
-Subject: Re: [PATCH] fs: ocfs: fix spelling mistake "hearbeating" -> "heartbeat"
-Date:   Mon, 29 Apr 2019 20:41:40 +0800
-Message-ID: <1556541700-35237-1-git-send-email-cg.chen@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Mon, 29 Apr 2019 08:38:16 -0400
+Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:60492 "EHLO
+        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728044AbfD2MiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:38:16 -0400
+Received: by mail.osadl.at (Postfix, from userid 1001)
+        id 861765C0C43; Mon, 29 Apr 2019 14:37:23 +0200 (CEST)
+Date:   Mon, 29 Apr 2019 14:37:23 +0200
+From:   Nicholas Mc Guire <der.herr@hofr.at>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Edward Cree <ecree@solarflare.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rds: ib: force endiannes annotation
+Message-ID: <20190429123723.GA18362@osadl.at>
+References: <1556518178-13786-1-git-send-email-hofrat@osadl.org>
+ <20443fd3-bd1e-9472-8ca3-e3014e59f249@solarflare.com>
+ <20190429111836.GA17830@osadl.at>
+ <20190429122132.GA32474@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.188.190]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429122132.GA32474@infradead.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joseph,
-Thanks for your advice, and I folded the four patches into one.
+On Mon, Apr 29, 2019 at 05:21:32AM -0700, Christoph Hellwig wrote:
+> On Mon, Apr 29, 2019 at 01:18:36PM +0200, Nicholas Mc Guire wrote:
+> > changing uncongested to __le64 is not an option here - it would only move
+> > the sparse warnings to those other locatoins where the ports that 
+> > became uncongested are being or'ed into uncongested.
+> 
+> Than fix that a well.  Either by throwing in a conversion, or
+> add {be,le}XX_{and,or} helpers.
 
-On 19/4/28 20:22, Joseph Qi wrote:
->Hi ChenGang,
->Could you please fold these four patches into one?
+ok - that is an option in that case - will try that route
 
->Thanks,
->Joseph
-
->On 19/4/27 20:22, ChenGang wrote:
->> There is a spelling mistake in o2hb_do_disk_heartbeat debug message.Fix it.
->> 
->> Signed-off-by: ChenGang <cg.chen@huawei.com>
->> ---
->>  fs/ocfs2/cluster/heartbeat.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/fs/ocfs2/cluster/heartbeat.c 
->> b/fs/ocfs2/cluster/heartbeat.c index f3c20b2..e4e7df1 100644
->> --- a/fs/ocfs2/cluster/heartbeat.c
->> +++ b/fs/ocfs2/cluster/heartbeat.c
->> @@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
->>  	if (atomic_read(&reg->hr_steady_iterations) != 0) {
->>  		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
->>  			printk(KERN_NOTICE "o2hb: Unable to stabilize "
->> -			       "heartbeart on region %s (%s)\n",
->> +			       "heartbeat on region %s (%s)\n",
->>  			       config_item_name(&reg->hr_item),
->>  			       reg->hr_dev_name);
->> 			atomic_set(&reg->hr_steady_iterations, 0);
->>
-
-
-Signed-off-by: ChenGang <cg.chen@huawei.com>
----
- fs/ocfs2/cluster/heartbeat.c | 2 +-
- fs/ocfs2/cluster/quorum.c    | 2 +-
- fs/ocfs2/cluster/tcp.c       | 2 +-
- fs/ocfs2/dlm/dlmmaster.c     | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/fs/ocfs2/cluster/heartbeat.c b/fs/ocfs2/cluster/heartbeat.c
-index f3c20b2..e4e7df1 100644
---- a/fs/ocfs2/cluster/heartbeat.c
-+++ b/fs/ocfs2/cluster/heartbeat.c
-@@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
- 	if (atomic_read(&reg->hr_steady_iterations) != 0) {
- 		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
- 			printk(KERN_NOTICE "o2hb: Unable to stabilize "
--			       "heartbeart on region %s (%s)\n",
-+			       "heartbeat on region %s (%s)\n",
- 			       config_item_name(&reg->hr_item),
- 			       reg->hr_dev_name);
- 			atomic_set(&reg->hr_steady_iterations, 0);
-diff --git a/fs/ocfs2/cluster/quorum.c b/fs/ocfs2/cluster/quorum.c
-index af2e747..792132f 100644
---- a/fs/ocfs2/cluster/quorum.c
-+++ b/fs/ocfs2/cluster/quorum.c
-@@ -89,7 +89,7 @@ static void o2quo_fence_self(void)
- 	};
- }
- 
--/* Indicate that a timeout occurred on a hearbeat region write. The
-+/* Indicate that a timeout occurred on a heartbeat region write. The
-  * other nodes in the cluster may consider us dead at that time so we
-  * want to "fence" ourselves so that we don't scribble on the disk
-  * after they think they've recovered us. This can't solve all
-diff --git a/fs/ocfs2/cluster/tcp.c b/fs/ocfs2/cluster/tcp.c
-index e9f236a..7a43c04 100644
---- a/fs/ocfs2/cluster/tcp.c
-+++ b/fs/ocfs2/cluster/tcp.c
-@@ -1776,7 +1776,7 @@ static void o2net_hb_node_up_cb(struct o2nm_node *node, int node_num,
- 		(msecs_to_jiffies(o2net_reconnect_delay()) + 1);
- 
- 	if (node_num != o2nm_this_node()) {
--		/* believe it or not, accept and node hearbeating testing
-+		/* believe it or not, accept and node heartbeating testing
- 		 * can succeed for this node before we got here.. so
- 		 * only use set_nn_state to clear the persistent error
- 		 * if that hasn't already happened */
-diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
-index 826f056..41b80d5 100644
---- a/fs/ocfs2/dlm/dlmmaster.c
-+++ b/fs/ocfs2/dlm/dlmmaster.c
-@@ -2176,7 +2176,7 @@ static void dlm_assert_master_worker(struct dlm_work_item *item, void *data)
-  * think that $RECOVERY is currently mastered by a dead node.  If so,
-  * we wait a short time to allow that node to get notified by its own
-  * heartbeat stack, then check again.  All $RECOVERY lock resources
-- * mastered by dead nodes are purged when the hearbeat callback is
-+ * mastered by dead nodes are purged when the heartbeat callback is
-  * fired, so we can know for sure that it is safe to continue once
-  * the node returns a live node or no node.  */
- static int dlm_pre_master_reco_lockres(struct dlm_ctxt *dlm,
--- 
-1.8.5.6
-
+thx!
+hofrat
