@@ -2,88 +2,98 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C63C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6879DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9682087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350842087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCGeOw1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbfD2Q6L convert rfc822-to-8bit (ORCPT
+        id S1728858AbfD2Q64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:58:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:10019 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbfD2Q6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:58:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 09:58:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,410,1549958400"; 
-   d="scan'208";a="169009686"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Apr 2019 09:58:10 -0700
-Received: from orsmsx104.amr.corp.intel.com ([169.254.4.183]) by
- ORSMSX109.amr.corp.intel.com ([169.254.11.52]) with mapi id 14.03.0415.000;
- Mon, 29 Apr 2019 09:58:09 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Christoph Hellwig <hch@infradead.org>, Meelis Roos <mroos@linux.ee>
-CC:     Christopher Lameter <cl@linux.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
-Subject: RE: DISCONTIGMEM is deprecated
-Thread-Topic: DISCONTIGMEM is deprecated
-Thread-Index: AQHU/ZpXmcVCt4ADQUqjpwA1uPgMxaZTXO4w
-Date:   Mon, 29 Apr 2019 16:58:09 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7E9140BA@ORSMSX104.amr.corp.intel.com>
-References: <20190419094335.GJ18914@techsingularity.net>
- <20190419140521.GI7751@bombadil.infradead.org>
- <0100016a461809ed-be5bd8fc-9925-424d-9624-4a325a7a8860-000000@email.amazonses.com>
- <25cabb7c-9602-2e09-2fe0-cad3e54595fa@linux.ee>
- <20190428081353.GB30901@infradead.org>
-In-Reply-To: <20190428081353.GB30901@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDZlMGYwOWMtYjMxNC00ZDg2LWI2OTMtNDI5NjUwZDU1NzllIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiR3gxdGpVSlhOVlhRSWZVOExpNUk0emx1dkVMZzdGZ3QrK21zNE95d2g0a0VGR0tvWTVQY1lRUDBuMjkwVWNEZiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 29 Apr 2019 12:58:56 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33438 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728681AbfD2Q64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:58:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z28so308264pfk.0;
+        Mon, 29 Apr 2019 09:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mSK82YTG8Gn1sEA2j7QMo/uWbASODJaKRuCPhSuz7Ws=;
+        b=bCGeOw1/jXqh9Dd3eBM48IWO8Brb1bqCy1y4jCkDx9R/BnyWtEUmC2MIX7JbYrzLmx
+         +aqWmV58/68nUKX7iPezXdRVFtMAHMzmIgQjtMxK+HVNjoK4rfhYvJPj0FdbYQ+lyO85
+         hvfzm0sHv78TweD4OFi5lm+HRMpFIg9YDVmxXrdHpql5fDZaXvJIOYLGWViqSloO6Bds
+         NUQSkhQD3PZP1Atta5Y/RYwgctXljzM4i6jpkTT5b7TEjkWYAKlTTN7IDI75/zKM7Xqp
+         l6RRyhUmtMuax5EW03R9DXz1YjoxjRDXAU8V+L8pmgsp+xkXBPQ9PsHArVEOBGr606nb
+         gW4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mSK82YTG8Gn1sEA2j7QMo/uWbASODJaKRuCPhSuz7Ws=;
+        b=cXZRHnN8gwZffp0PfTzAFqTcuhPHZRPnvQ26bEjFaSQLgdMI8ozYtXsVU9Ys0P0ub2
+         0RCDaqeBzR/rObDy//Zg7TDmhSNJECF+h/4Zpvf7EWWJ/QWSlN7QCEdsGqGp4N4TIV6Q
+         +3SbT1ZJI45bNTu6ys/5u3mHm4L3206U0PcKtrLT/Qqo8yTIwWb6B1EKtwUlPow30JQF
+         wJQeusEYrpSgTkgs1Tf9JuJA4K8psztMN2GO0vQ0N+AoPU0rtT9rbYnBRKtoQL+WmGKE
+         ODwKDrNbVUwpBPHa1hjhocbeIHYdiPK+COkVNQOgy3lQBDeiVg1FY8d9F0wndXjKS843
+         wGow==
+X-Gm-Message-State: APjAAAU2K/Xe1voz17eCsvvVAzkatFuIzU4M2ZAPBR5Z/UZ9aigEIs8e
+        ogGrtdSrOnAOT1DxG/YnAMskKVNwUzQLLkQGpGo=
+X-Google-Smtp-Source: APXvYqz+Z6yq8Rw0kP+RFYtzvvjPOq+FDmWYGa9ndRbPF9eI5lCF1laHMqA8bd95a1UuzSOXYj3VZvI63G8LSKuJ6oY=
+X-Received: by 2002:a63:6b82:: with SMTP id g124mr57479137pgc.246.1556557135343;
+ Mon, 29 Apr 2019 09:58:55 -0700 (PDT)
 MIME-Version: 1.0
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+ <20190428030539.17776-1-yuehaibing@huawei.com> <20190429105422-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190429105422-mutt-send-email-mst@kernel.org>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 29 Apr 2019 09:58:43 -0700
+Message-ID: <CAM_iQpWvp2i6iOZtSPskqU_uXHL2zKfM_cS1rGTh_T0r3BwvnA@mail.gmail.com>
+Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Yue Haibing <yuehaibing@huawei.com>,
+        David Miller <davem@davemloft.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "Li,Rongqing" <lirongqing@baidu.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Chas Williams <3chas3@gmail.com>, wangli39@baidu.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> ia64 has a such a huge number of memory model choices.  Maybe we
-> need to cut it down to a small set that actually work.
+On Mon, Apr 29, 2019 at 7:55 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> The problem seems real enough, but an extra synchronize_net on tun_attach
+> might be a problem, slowing guest startup significantly.
+> Better ideas?
 
-SGI systems had extremely discontiguous memory (they used some high
-order physical address bits in the tens/hundreds of terabyte range for the
-node number ... so there would be a few GBytes of actual memory then
-a huge gap before the next node had a few more Gbytes).
+Yes, I proposed the following patch in the other thread.
 
-I don't know of anyone still booting upstream on an SN2, so if we start doing
-serious hack and slash the chances are high that SN2 will be broken (if it isn't
-already).
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index e9ca1c088d0b..31c3210288cb 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -3431,6 +3431,7 @@ static int tun_chr_open(struct inode *inode,
+struct file * file)
+        file->private_data = tfile;
+        INIT_LIST_HEAD(&tfile->next);
 
--Tony
++       sock_set_flag(&tfile->sk, SOCK_RCU_FREE);
+        sock_set_flag(&tfile->sk, SOCK_ZEROCOPY);
+
+        return 0;
