@@ -6,38 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AC4C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADFCC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3D320843
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E7420843
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:16:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfD2CQW (ORCPT
+        id S1727251AbfD2CQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 22:16:22 -0400
+        Sun, 28 Apr 2019 22:16:12 -0400
 Received: from mga03.intel.com ([134.134.136.65]:46364 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbfD2CQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 22:16:16 -0400
+        id S1727185AbfD2CQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 22:16:05 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 19:16:16 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 19:16:04 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
-   d="scan'208";a="146537881"
+   d="scan'208";a="146537849"
 Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga003.jf.intel.com with ESMTP; 28 Apr 2019 19:16:14 -0700
+  by orsmga003.jf.intel.com with ESMTP; 28 Apr 2019 19:16:03 -0700
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Joerg Roedel <joro@8bytes.org>
 Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
         jamessewart@arista.com, tmurphy@arista.com, dima@arista.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 8/8] iommu/vt-d: Implement is_attach_deferred iommu ops entry
-Date:   Mon, 29 Apr 2019 10:09:25 +0800
-Message-Id: <20190429020925.18136-9-baolu.lu@linux.intel.com>
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/8] iommu/vt-d: Expose ISA direct mapping region via iommu_get_resv_regions
+Date:   Mon, 29 Apr 2019 10:09:20 +0800
+Message-Id: <20190429020925.18136-4-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190429020925.18136-1-baolu.lu@linux.intel.com>
 References: <20190429020925.18136-1-baolu.lu@linux.intel.com>
@@ -46,88 +45,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a domain is now attached to a device earlier, we should
-implement the is_attach_deferred call-back and use it to
-defer the domain attach from iommu driver init to device
-driver init when iommu is pre-enabled in kdump kernel.
+From: James Sewart <jamessewart@arista.com>
 
-Suggested-by: Tom Murphy <tmurphy@arista.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+To support mapping ISA region via iommu_group_create_direct_mappings,
+make sure its exposed by iommu_get_resv_regions. This allows
+deduplication of reserved region mappings.
+
+Signed-off-by: James Sewart <jamessewart@arista.com>
 ---
- drivers/iommu/intel-iommu.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/iommu/intel-iommu.c | 43 +++++++++++++++++++++++++++++--------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index dd6abd554804..7e24f025f7a9 100644
+index af025955f1bc..e9f31b062305 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -358,6 +358,8 @@ static void domain_context_clear(struct intel_iommu *iommu,
- 				 struct device *dev);
- static int domain_detach_iommu(struct dmar_domain *domain,
- 			       struct intel_iommu *iommu);
-+static int intel_iommu_attach_device(struct iommu_domain *domain,
-+				     struct device *dev);
+@@ -339,6 +339,8 @@ static LIST_HEAD(dmar_rmrr_units);
+ #define for_each_rmrr_units(rmrr) \
+ 	list_for_each_entry(rmrr, &dmar_rmrr_units, list)
  
- #ifdef CONFIG_INTEL_IOMMU_DEFAULT_ON
- int dmar_disabled = 0;
-@@ -387,6 +389,7 @@ int intel_iommu_gfx_mapped;
- EXPORT_SYMBOL_GPL(intel_iommu_gfx_mapped);
- 
- #define DUMMY_DEVICE_DOMAIN_INFO ((struct device_domain_info *)(-1))
-+#define DEFER_DEVICE_DOMAIN_INFO ((struct device_domain_info *)(-2))
- static DEFINE_SPINLOCK(device_domain_lock);
- static LIST_HEAD(device_domain_list);
- 
-@@ -2404,8 +2407,18 @@ static struct dmar_domain *find_domain(struct device *dev)
- {
- 	struct device_domain_info *info;
- 
-+	if (unlikely(dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO)) {
-+		struct iommu_domain *domain;
++static struct iommu_resv_region *isa_resv_region;
 +
-+		dev->archdata.iommu = NULL;
-+		domain = iommu_get_domain_for_dev(dev);
-+		if (domain)
-+			intel_iommu_attach_device(domain, dev);
-+	}
-+
- 	/* No lock here, assumes no domain exit in normal case */
- 	info = dev->archdata.iommu;
-+
- 	if (likely(info))
- 		return info->domain;
- 	return NULL;
-@@ -5154,6 +5167,9 @@ static int intel_iommu_add_device(struct device *dev)
+ /* bitmap for indexing intel_iommus */
+ static int g_num_of_iommus;
  
- 	iommu_device_link(&iommu->iommu, dev);
- 
-+	if (translation_pre_enabled(iommu))
-+		dev->archdata.iommu = DEFER_DEVICE_DOMAIN_INFO;
-+
- 	group = iommu_group_get_for_dev(dev);
- 
- 	if (IS_ERR(group))
-@@ -5440,6 +5456,12 @@ intel_iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
- 			dmar_domain->default_pasid : -EINVAL;
+@@ -2785,26 +2787,33 @@ static inline int iommu_prepare_rmrr_dev(struct dmar_rmrr_unit *rmrr,
+ 					  rmrr->end_address);
  }
  
-+static bool intel_iommu_is_attach_deferred(struct iommu_domain *domain,
-+					   struct device *dev)
++static inline struct iommu_resv_region *iommu_get_isa_resv_region(void)
 +{
-+	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
++	if (!isa_resv_region)
++		isa_resv_region = iommu_alloc_resv_region(0, 1UL << 24, 0,
++							  IOMMU_RESV_DIRECT);
++
++	return isa_resv_region;
 +}
 +
- const struct iommu_ops intel_iommu_ops = {
- 	.capable		= intel_iommu_capable,
- 	.domain_alloc		= intel_iommu_domain_alloc,
-@@ -5463,6 +5485,7 @@ const struct iommu_ops intel_iommu_ops = {
- 	.dev_enable_feat	= intel_iommu_dev_enable_feat,
- 	.dev_disable_feat	= intel_iommu_dev_disable_feat,
- 	.def_domain_type	= intel_iommu_def_domain_type,
-+	.is_attach_deferred	= intel_iommu_is_attach_deferred,
- 	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
- };
+ #ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
+-static inline void iommu_prepare_isa(void)
++static inline void iommu_prepare_isa(struct pci_dev *pdev)
+ {
+-	struct pci_dev *pdev;
+ 	int ret;
++	struct iommu_resv_region *reg = iommu_get_isa_resv_region();
  
+-	pdev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
+-	if (!pdev)
++	if (!reg)
+ 		return;
+ 
+ 	pr_info("Prepare 0-16MiB unity mapping for LPC\n");
+-	ret = iommu_prepare_identity_map(&pdev->dev, 0, 16*1024*1024 - 1);
++	ret = iommu_prepare_identity_map(&pdev->dev, reg->start,
++					 reg->start + reg->length - 1);
+ 
+ 	if (ret)
+ 		pr_err("Failed to create 0-16MiB identity map - floppy might not work\n");
+-
+-	pci_dev_put(pdev);
+ }
+ #else
+-static inline void iommu_prepare_isa(void)
++static inline void iommu_prepare_isa(struct pci_dev *pdev)
+ {
+ 	return;
+ }
+@@ -3293,6 +3302,7 @@ static int __init init_dmars(void)
+ 	struct dmar_rmrr_unit *rmrr;
+ 	bool copied_tables = false;
+ 	struct device *dev;
++	struct pci_dev *pdev;
+ 	struct intel_iommu *iommu;
+ 	int i, ret;
+ 
+@@ -3473,7 +3483,11 @@ static int __init init_dmars(void)
+ 		}
+ 	}
+ 
+-	iommu_prepare_isa();
++	pdev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
++	if (pdev) {
++		iommu_prepare_isa(pdev);
++		pci_dev_put(pdev);
++	}
+ 
+ domains_done:
+ 
+@@ -5498,6 +5512,17 @@ static void intel_iommu_get_resv_regions(struct device *device,
+ 	}
+ 	rcu_read_unlock();
+ 
++#ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
++	if (dev_is_pci(device)) {
++		struct pci_dev *pdev = to_pci_dev(device);
++
++		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
++			reg = iommu_get_isa_resv_region();
++			list_add_tail(&reg->list, head);
++		}
++	}
++#endif /* CONFIG_INTEL_IOMMU_FLOPPY_WA */
++
+ 	reg = iommu_alloc_resv_region(IOAPIC_RANGE_START,
+ 				      IOAPIC_RANGE_END - IOAPIC_RANGE_START + 1,
+ 				      0, IOMMU_RESV_MSI);
 -- 
 2.17.1
 
