@@ -2,96 +2,106 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A2FC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F806C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDFB920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5E620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:01:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ETWv8pqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfD2JAp (ORCPT
+        id S1727741AbfD2JBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:00:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47878 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727525AbfD2JAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:00:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6CA5AD3A;
-        Mon, 29 Apr 2019 09:00:40 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 83A30E0117; Mon, 29 Apr 2019 11:00:40 +0200 (CEST)
-Date:   Mon, 29 Apr 2019 11:00:40 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
-Message-ID: <20190429090040.GB21672@unicorn.suse.cz>
-References: <20190428115207.GA11924@ziepe.ca>
- <20190429060947.GB3665@osiris>
- <20190429084030.GA4275@mellanox.com>
+        Mon, 29 Apr 2019 05:01:02 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:50178 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727560AbfD2JBC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 05:01:02 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8D1C3C00B0;
+        Mon, 29 Apr 2019 09:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556528460; bh=f+Cu/athXgOTZCGbWOkD1x70otBzc7nrCuSU1nPo2XY=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=ETWv8pqP/VDfCRlvwlPl6QM4T+AXFjYWarpa2e2JcO6fVTn9lVI2T2l/L5OM7f11p
+         ha7P7e4QLjFqxjLUUSqvXbTeqXMc7M5jpW+91mVRhZgjvK74P4F0gOFai2p6XWYkzA
+         CW1JwjzrltvOXd5mlhRvKxbtciEqkBClo4TNeDYirq/qPzFVQ4OhZzXo9FvBOWBSbw
+         xZYMVLPuo0csKLsibII5U7qCLZEis4K4E1gWyb3cElcsReR7FQoCMOY0bFekXLK2sa
+         ESuTklDQp3FrxSv9LLeZFAoY1y6rOaEQ5n+SDhe9DP1lNvHU/GgvZ2VbKFY7hCzJQd
+         6832nLyvCB99Q==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id D0F87A0066;
+        Mon, 29 Apr 2019 09:00:55 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 29 Apr 2019 02:00:55 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
+ 29 Apr 2019 11:00:53 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Biao Huang <biao.huang@mediatek.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>
+Subject: RE: [PATCH 1/2] net-next: stmmac: add support for hash table size
+ 128/256 in dwmac4
+Thread-Topic: [PATCH 1/2] net-next: stmmac: add support for hash table size
+ 128/256 in dwmac4
+Thread-Index: AQHU/lXC7igBXFx5K0O3QkQ2RyP1CKZS1qXA
+Date:   Mon, 29 Apr 2019 09:00:53 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46DE20@DE02WEMBXB.internal.synopsys.com>
+References: <1556519724-1576-1-git-send-email-biao.huang@mediatek.com>
+ <1556519724-1576-2-git-send-email-biao.huang@mediatek.com>
+In-Reply-To: <1556519724-1576-2-git-send-email-biao.huang@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190429084030.GA4275@mellanox.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 08:40:37AM +0000, Jason Gunthorpe wrote:
-> On Mon, Apr 29, 2019 at 08:09:47AM +0200, Heiko Carstens wrote:
-> > On Sun, Apr 28, 2019 at 11:52:12AM +0000, Jason Gunthorpe wrote:
-> > > Hi Linus,
-> > > 
-> > > Third rc pull request
-> > > 
-> > > Nothing particularly special here. There is a small merge conflict
-> > > with Adrea's mm_still_valid patches which is resolved as below:
-> > ...
-> > > Jason Gunthorpe (3):
-> > >       RDMA/mlx5: Do not allow the user to write to the clock page
-> > >       RDMA/mlx5: Use rdma_user_map_io for mapping BAR pages
-> > >       RDMA/ucontext: Fix regression with disassociate
-> > 
-> > This doesn't compile. The patch below would fix it, but not sure if
-> > this is what is intended:
-> > 
-> > drivers/infiniband/core/uverbs_main.c: In function 'rdma_umap_fault':
-> > drivers/infiniband/core/uverbs_main.c:898:28: error: 'struct vm_fault' has no member named 'vm_start'
-> >    vmf->page = ZERO_PAGE(vmf->vm_start);
-> >                             ^~
-> > diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-> > index 7843e89235c3..65fe89b3fa2d 100644
-> > +++ b/drivers/infiniband/core/uverbs_main.c
-> > @@ -895,7 +895,7 @@ static vm_fault_t rdma_umap_fault(struct vm_fault *vmf)
-> >  
-> >  	/* Read only pages can just use the system zero page. */
-> >  	if (!(vmf->vma->vm_flags & (VM_WRITE | VM_MAYWRITE))) {
-> > -		vmf->page = ZERO_PAGE(vmf->vm_start);
-> > +		vmf->page = ZERO_PAGE(vmf->vma->vm_start);
-> >  		get_page(vmf->page);
-> >  		return 0;
-> >  	}
-> > 
-> 
-> Thanks Heiko, this looks right to me. 
-> 
-> I'm surprised to be seeing this at this point, these patches should
-> have been seen by 0 day for several days now, and they were in
-> linux-next already too..
+From: Biao Huang <biao.huang@mediatek.com>
+Date: Mon, Apr 29, 2019 at 07:35:23
 
-Most architectures have versions of ZERO_PAGE() which ignore the
-argument so that the code builds anyway. I'm not sure if 0-day also
-tests s390x builds (which is where I ran into this).
+> +#define GMAC_HASH_TAB(x)		(0x10 + x * 4)
 
-Michal Kubecek
+You need to guard x here with parenthesis.
+
+>  	void __iomem *ioaddr =3D (void __iomem *)dev->base_addr;
+> -	unsigned int value =3D 0;
+> +	unsigned int value;
+> +	int i;
+> +	int numhashregs =3D (hw->multicast_filter_bins >> 5);
+> +	int mcbitslog2 =3D hw->mcast_bits_log2;
+
+Reverse Christmas tree order here please.
+
+Thanks,
+Jose Miguel Abreu
