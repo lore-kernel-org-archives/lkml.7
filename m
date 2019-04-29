@@ -2,172 +2,103 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF08AC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A7CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3D72147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:43:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Ig2Rbc1n"
+	by mail.kernel.org (Postfix) with ESMTP id 7AAC720675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556534621;
+	bh=Gr/8cYEjmlkiLYTp7w1fB97Wafx7xj4Nc0Kei9fidbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KQHd/wfyYxuj/wlKGW8BYE84gjuihtxad3bM0dzb7SH1Md/NwgVQD3PZOPeAggLMi
+	 sYXjs7+z+V3iAWiicKunbzWNtuJ8mNP2ZbZ3kguxmVahRSSmu3nLhrYqVS37eJJGu2
+	 Mno9qF51NvxuzCY1pVMwQqdcfIJDF2M+eVzjfiZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbfD2Kne (ORCPT
+        id S1727925AbfD2Knk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:43:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9450 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727621AbfD2Kna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 06:43:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37492 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727868AbfD2Kna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Apr 2019 06:43:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44t1Tl4Lvfz9v0KL;
-        Mon, 29 Apr 2019 12:43:23 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Ig2Rbc1n; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id b1NeMtJOeUEO; Mon, 29 Apr 2019 12:43:23 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44t1Tl38S1z9v0KD;
-        Mon, 29 Apr 2019 12:43:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556534603; bh=C63GKYyK/0Xk9lQR99O2rox2IkW1vkYOwrDtaW8FTJk=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=Ig2Rbc1n5pD1zrN3+4eOvopBS/KgwuOlTRJL7gKLR6HDiXAkfGIyVI+zc428waZVp
-         cs8xAAZfhJFQZFjm1ScfNXXSupvwMqow/t1SZv9ySKnMaJ+c+1UKvWcKBkO9sBrmiW
-         HB5CNEX3ncV4/1SC+IPhPrhrHogWHpy9J/4AyD5g=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 46D978B8AF;
-        Mon, 29 Apr 2019 12:43:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xbeWFZUx1ywb; Mon, 29 Apr 2019 12:43:28 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 203278B7FB;
-        Mon, 29 Apr 2019 12:43:28 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 1651E66702; Mon, 29 Apr 2019 10:43:28 +0000 (UTC)
-Message-Id: <e1575ef6da39e7d7de0f8cac4640ff87df9d8f60.1556534520.git.christophe.leroy@c-s.fr>
-In-Reply-To: <23167861f6095456b4ba3b52c55a514201ca738f.1556534520.git.christophe.leroy@c-s.fr>
-References: <23167861f6095456b4ba3b52c55a514201ca738f.1556534520.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 3/3] powerpc/module64: Use symbolic instructions names.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 29 Apr 2019 10:43:28 +0000 (UTC)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 27A74AB9D;
+        Mon, 29 Apr 2019 10:43:29 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 12:43:26 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, mm <linux-mm@kvack.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+Subject: Re: memcg causes crashes in list_lru_add
+Message-ID: <20190429104326.GG21837@dhcp22.suse.cz>
+References: <f0cfcfa7-74d0-8738-1061-05d778155462@suse.cz>
+ <2cbfb8dc-31f0-7b95-8a93-954edb859cd8@suse.cz>
+ <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
+ <20190429104051.GF21837@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429104051.GF21837@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To increase readability/maintainability, replace hard coded
-instructions values by symbolic names.
+On Mon 29-04-19 12:40:51, Michal Hocko wrote:
+> On Mon 29-04-19 12:09:53, Jiri Slaby wrote:
+> > On 29. 04. 19, 11:25, Jiri Slaby wrote:> memcg_update_all_list_lrus
+> > should take care about resizing the array.
+> > 
+> > It should, but:
+> > [    0.058362] Number of physical nodes 2
+> > [    0.058366] Skipping disabled node 0
+> > 
+> > So this should be the real fix:
+> > --- linux-5.0-stable1.orig/mm/list_lru.c
+> > +++ linux-5.0-stable1/mm/list_lru.c
+> > @@ -37,11 +37,12 @@ static int lru_shrinker_id(struct list_l
+> > 
+> >  static inline bool list_lru_memcg_aware(struct list_lru *lru)
+> >  {
+> > -       /*
+> > -        * This needs node 0 to be always present, even
+> > -        * in the systems supporting sparse numa ids.
+> > -        */
+> > -       return !!lru->node[0].memcg_lrus;
+> > +       int i;
+> > +
+> > +       for_each_online_node(i)
+> > +               return !!lru->node[i].memcg_lrus;
+> > +
+> > +       return false;
+> >  }
+> > 
+> >  static inline struct list_lru_one *
+> > 
+> > 
+> > 
+> > 
+> > 
+> > Opinions?
+> 
+> Please report upstream. This code here is there for quite some time.
+> I do not really remember why we do have an assumption about node 0
+> and why it hasn't been problem until now.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/module_64.c | 54 ++++++++++++++++++++++++++++-------------
- 1 file changed, 37 insertions(+), 17 deletions(-)
+Humm, I blame jet-lag. I was convinced that this is an internal email.
+Sorry about the confusion.
 
-diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
-index c2e1b06253b8..87097eae600b 100644
---- a/arch/powerpc/kernel/module_64.c
-+++ b/arch/powerpc/kernel/module_64.c
-@@ -135,18 +135,28 @@ struct ppc64_stub_entry
-  * to the TOC ptr, r2) into the stub.
-  */
- 
-+	unsigned int i, num_stubs;
-+	/*
-+	 * addis   r11,r2, <high>
-+	 * addi    r11,r11, <low>
-+	 * std     r2,R2_STACK_OFFSET(r1)
-+	 * ld      r12,32(r11)
-+	 * ld      r2,40(r11)
-+	 * mtctr   r12
-+	 * bctr
-+	 */
- static u32 ppc64_stub_insns[] = {
--	0x3d620000,			/* addis   r11,r2, <high> */
--	0x396b0000,			/* addi    r11,r11, <low> */
-+	PPC_INST_ADDIS | __PPC_RT(R11) | __PPC_RA(R2),
-+	PPC_INST_ADDI | __PPC_RT(R11) | __PPC_RA(R11),
- 	/* Save current r2 value in magic place on the stack. */
--	0xf8410000|R2_STACK_OFFSET,	/* std     r2,R2_STACK_OFFSET(r1) */
--	0xe98b0020,			/* ld      r12,32(r11) */
-+	PPC_INST_STD | __PPC_RS(R2) | __PPC_RA(R1) | R2_STACK_OFFSET,
-+	PPC_INST_LD | __PPC_RT(R12) | __PPC_RA(R11) | 32,
- #ifdef PPC64_ELF_ABI_v1
- 	/* Set up new r2 from function descriptor */
--	0xe84b0028,			/* ld      r2,40(r11) */
-+	PPC_INST_LD | __PPC_RT(R2) | __PPC_RA(R11) | 40,
- #endif
--	0x7d8903a6,			/* mtctr   r12 */
--	0x4e800420			/* bctr */
-+	PPC_INST_MTCTR | __PPC_RS(R12),
-+	PPC_INST_BCTR,
- };
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
-@@ -704,18 +714,21 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		         *	ld r2, ...(r12)
- 			 *	add r2, r2, r12
- 			 */
--			if ((((uint32_t *)location)[0] & ~0xfffc)
--			    != 0xe84c0000)
-+			if ((((uint32_t *)location)[0] & ~0xfffc) !=
-+			    PPC_INST_LD | __PPC_RT(R2) | __PPC_RA(R12))
- 				break;
--			if (((uint32_t *)location)[1] != 0x7c426214)
-+			if (((uint32_t *)location)[1] !=
-+			    PPC_INST_ADD | __PPC_RT(R2) | __PPC_RA(R2) | __PPC_RB(R12))
- 				break;
- 			/*
- 			 * If found, replace it with:
- 			 *	addis r2, r12, (.TOC.-func)@ha
- 			 *	addi r2, r12, (.TOC.-func)@l
- 			 */
--			((uint32_t *)location)[0] = 0x3c4c0000 + PPC_HA(value);
--			((uint32_t *)location)[1] = 0x38420000 + PPC_LO(value);
-+			((uint32_t *)location)[0] = PPC_INST_ADDIS | __PPC_RT(R2) |
-+						    __PPC_RA(R12) | PPC_HA(value);
-+			((uint32_t *)location)[1] = PPC_INST_ADDI | __PPC_RT(R2) |
-+						    __PPC_RA(R12) | PPC_LO(value);
- 			break;
- 
- 		case R_PPC64_REL16_HA:
-@@ -769,12 +782,19 @@ static unsigned long create_ftrace_stub(const Elf64_Shdr *sechdrs,
- {
- 	struct ppc64_stub_entry *entry;
- 	unsigned int i, num_stubs;
-+		/*
-+		 * ld      r12,PACATOC(r13)
-+		 * addis   r12,r12,<high>
-+		 * addi    r12,r12,<low>
-+		 * mtctr   r12
-+		 * bctr
-+		 */
- 	static u32 stub_insns[] = {
--		0xe98d0000 | PACATOC, 	/* ld      r12,PACATOC(r13)	*/
--		0x3d8c0000,		/* addis   r12,r12,<high>	*/
--		0x398c0000, 		/* addi    r12,r12,<low>	*/
--		0x7d8903a6, 		/* mtctr   r12			*/
--		0x4e800420, 		/* bctr				*/
-+		PPC_INST_LD | __PPC_RT(R12) | __PPC_RA(R13) | PACATOC,
-+		PPC_INST_ADDIS | __PPC_RT(R12) | __PPC_RA(R12),
-+		PPC_INST_ADDI | __PPC_RT(R12) | __PPC_RA(R12),
-+		PPC_INST_MTCTR | __PPC_RS(R12),
-+		PPC_INST_BCTR,
- 	};
- 	long reladdr;
- 
+Anyway, time to revisit 145949a1387ba. CCed Raghavendra.
 -- 
-2.13.3
-
+Michal Hocko
+SUSE Labs
