@@ -2,148 +2,117 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0188BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D90C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43D720673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:18:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="BjQx+kaE"
+	by mail.kernel.org (Postfix) with ESMTP id A3F77216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556554724;
+	bh=y+8rKTlzq61ygqpRLwRIKyd+HPW/HceVYVOZlw5ZooE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pUjPL8PsNoPy0RFGm9L/6r4noL4GO+FQWH3o4Sz6EMeJ6XS9rPsymRbkILyv6xbC2
+	 bfZoLd2tzO2RDQBbmame9wLXIWB1ZjM6C5/Joodu6XwYMKHYQVru9SRDyvgzbo9YdW
+	 OszTtl+KhH3usgFFpXaAn4uUQA/yGQKbZPqmYigQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfD2QSg (ORCPT
+        id S1728924AbfD2QSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:18:36 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37192 "EHLO pegase1.c-s.fr"
+        Mon, 29 Apr 2019 12:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728542AbfD2QSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:18:36 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44t8wN2pCvz9vDbs;
-        Mon, 29 Apr 2019 18:18:28 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=BjQx+kaE; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id aXsRFK1QTZr9; Mon, 29 Apr 2019 18:18:28 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44t8wN1Rbrz9vDbr;
-        Mon, 29 Apr 2019 18:18:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556554708; bh=FmG0gTYs5oq5h81q7jEyc4Wov/smm6KptMn1bWZZ6UY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BjQx+kaEHgEJb9T/61rt3diCsJNYkiNHUhfzgr+mvjN4Pnywq5MbgYBcqpdIQz91l
-         MOoWYXEzdn4IgWuIaWT6IQgLGYQmiTbu4vZxYLhMqB1ljWxO3BTYx68HtfYfrLa2pJ
-         DnY47LpRSIwR+sTZMzdaApWHw4o+sdP3BfWcan1g=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 671608B8B4;
-        Mon, 29 Apr 2019 18:18:33 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id J9zNcQs8Cgt1; Mon, 29 Apr 2019 18:18:33 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 094208B8B3;
-        Mon, 29 Apr 2019 18:18:33 +0200 (CEST)
-Subject: Re: serial drivers polishing
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, linux-ia64@vger.kernel.org,
-        linux-serial@vger.kernel.org, andrew@aj.id.au,
-        gregkh@linuxfoundation.org, sudeep.holla@arm.com,
-        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
-        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
-        khilman@baylibre.com, macro@linux-mips.org,
-        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
-        linux-amlogic@lists.infradead.org,
-        andriy.shevchenko@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
-        davem@davemloft.net
-References: <1556369542-13247-1-git-send-email-info@metux.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <7471c418-4058-db7b-b2ed-af9a67fff201@c-s.fr>
-Date:   Mon, 29 Apr 2019 16:16:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1728542AbfD2QSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:18:43 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D83BF20673;
+        Mon, 29 Apr 2019 16:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556554722;
+        bh=y+8rKTlzq61ygqpRLwRIKyd+HPW/HceVYVOZlw5ZooE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cAszN/xU6nogM20gyC6HXrHhU4HZtFzFs8Xz0vUh77Fokj1XAWwp3bh6DryIw11R2
+         GfkPiX1NXpGSJRFIE3vm9LCIMdVrj/joj7rl/EAukRhXXAznX1W9Qc/OJnAMAWxlXb
+         DgCdG4gX1SWabm5LQSftTtV9D2WcIlTKq/+YNsE8=
+Received: by mail-qt1-f174.google.com with SMTP id d13so12583267qth.5;
+        Mon, 29 Apr 2019 09:18:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAX2iJkBEw4scXg++JG3NSN7iak4VEAR8sp0fFUsdaqqV78TDzwZ
+        5PXzrs5m9uHUR4zngZiUzNufCA7glDGU7MNmuA==
+X-Google-Smtp-Source: APXvYqyzqs09hNBiab7wqw3JOVfJ9CFkM2ZcAO05H+2Yc6TdhfKWUtxNLYtavldF7yNklJkdWImkkMHYR0Y3l+v22yw=
+X-Received: by 2002:aed:306c:: with SMTP id 99mr2856198qte.38.1556554721170;
+ Mon, 29 Apr 2019 09:18:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-3-tiny.windzz@gmail.com>
+ <20190426211540.GA890@bogus> <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
+In-Reply-To: <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 29 Apr 2019 11:18:29 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
+Message-ID: <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Apr 28, 2019 at 4:53 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+>
+> On Sat, Apr 27, 2019 at 5:15 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
+> > > Allwinner Process Voltage Scaling Tables defines the voltage and
+> > > frequency value based on the speedbin blown in the efuse combination.
+> > > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> > > provide the OPP framework with required information.
+> > > This is used to determine the voltage and frequency value for each
+> > > OPP of operating-points-v2 table when it is parsed by the OPP framework.
+> > >
+> > > The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
+> > > with following parameters:
+> > > - nvmem-cells (NVMEM area containig the speedbin information)
+> > > - opp-microvolt-<name>: voltage in micro Volts.
+> > >   At runtime, the platform can pick a <name> and matching
+> > >   opp-microvolt-<name> property.
+> > >                       HW:             <name>:
+> > >                       sun50iw-h6      speed0 speed1 speed2
+> >
+> > We already have at least one way to support speed bins with QC kryo
+> > binding. Why do we need a different way?
+>
+> For some SOCs, for some reason (making the CPU have approximate performance),
+> they use the same frequency but different voltage. In the case where
+> this speed bin
+> is not a lot and opp uses the same frequency, too many repeated opp
+> nodes are a bit
+> redundant and not intuitive enough.
+>
+> So, I think it's worth the new method.
 
-On 04/27/2019 12:51 PM, Enrico Weigelt, metux IT consult wrote:
-> Hello folks,
-> 
-> 
-> here's another attempt of polishing the serial drivers:
-> 
-> * lots of minor cleanups to make checkpatch happier
->    (eg. formatting, includes, inttypes, ...)
-> 
-> * use appropriate logging helpers instead of printk()
-> 
-> * consequent use of mapsize/mapbase fields:
->    the basic idea is, all drivers should fill mapbase/mapbase fields at
->    init time and later only use those fields, instead of hardcoded values
->    (later on, we can add generic helpers for the map/unmap stuff, etc)
-> 
-> * untwisting serial8250_port_size() at all:
->    move the iomem size probing to initialization time, move out some
->    platform specific magic to corresponding platform code, etc.
-> 
-> 
-> Unfortunately, I don't have the actual hardware to really test all
-> the code, so please let me know if there's something broken in here.
-> 
-> 
-> have fun,
-> 
-> --mtx
-> 
+Well, I don't.
 
+We can't have every SoC vendor doing their own thing just because they
+want to. If there are technical reasons why existing bindings don't
+work, then maybe we need to do something different. But I haven't
+heard any reasons.
 
-Got the following build  error while compiling for my powerpc board with 
-your full series applied. No time to investigate though.
-
-   CC      arch/powerpc/kernel/setup-common.o
-In file included from ./include/linux/serial_8250.h:14:0,
-                  from arch/powerpc/kernel/setup-common.c:33:
-./include/linux/serial_core.h: In function ‘uart_memres_set_res’:
-./include/linux/serial_core.h:446:18: error: ‘resource’ undeclared 
-(first use in this function)
-    port->iobase = resource->start;
-                   ^
-./include/linux/serial_core.h:446:18: note: each undeclared identifier 
-is reported only once for each function it appears in
-./include/linux/serial_core.h:450:2: error: ‘uart’ undeclared (first use 
-in this function)
-   uart->mapbase = res->start;
-   ^
-./include/linux/serial_core.h: In function ‘uart_memres_set_start_len’:
-./include/linux/serial_core.h:464:6: error: ‘struct uart_driver’ has no 
-member named ‘mapbase’
-   uart->mapbase = start;
-       ^
-./include/linux/serial_core.h:465:6: error: ‘struct uart_driver’ has no 
-member named ‘mapsize’
-   uart->mapsize = len;
-       ^
-./include/linux/serial_core.h:466:6: error: ‘struct uart_driver’ has no 
-member named ‘iotype’
-   uart->iotype  = UPIO_MEM;
-       ^
-make[3]: *** [arch/powerpc/kernel/setup-common.o] Error 1
-
-
-Christophe
+Rob
