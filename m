@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A775C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73211C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2452075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D88A21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="szG/bRcV"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y2+blOIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfD2Gku (ORCPT
+        id S1727478AbfD2Gld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:40:50 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56869 "EHLO
+        Mon, 29 Apr 2019 02:41:33 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51183 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbfD2Gku (ORCPT
+        with ESMTP id S1726712AbfD2Glc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:40:50 -0400
+        Mon, 29 Apr 2019 02:41:32 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3T6eXim784439
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3T6fGVF784582
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 28 Apr 2019 23:40:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3T6eXim784439
+        Sun, 28 Apr 2019 23:41:16 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3T6fGVF784582
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556520034;
-        bh=svZTN1DxhjXtRIAPclSOK0fyXxnGVGBjFM6gHiJZX3s=;
+        s=2019041745; t=1556520077;
+        bh=qcDvF/824BNWLAG3lmtXcJpnih50CQefhcIgfq+xZqQ=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=szG/bRcV67+AIEklX0dBunz5rNP/1QKaECGSVnefpRLJNaExrzuUc+js+y3BfgzH9
-         vFFyGzvav57IMLsbSRNZ/j9rjexY/dVf8vryqljk6HKh4NuwB94M/GzZHo6mrZyDFg
-         LLnqwDfjKcOPObKGFi9ORvpZ29l7JOIWXlxo/UhFPJHwdS3hfCcBvlO+Cv7jG6CHNS
-         cUT0s9HJCYMjWF5poNuaieXr52FmDbVxekB4/WCfmjAgzHssbTpdWIJEPtkZ2YA2F5
-         +1FPwBpbhyACf0jqEhYaVmL02o5yKm1P6qXtIds+GtEZI06RWr51gOLQB8rbl33sZm
-         CijZEa2LnfY/w==
+        b=Y2+blOIVzVD0af8CVM19FvoUjrk1nrXbef8KRAXXG9DSsaKYN7f5GQ0VaXWVADtgE
+         +xz1G2Zc7526vXS4cuI0aNBYesx7jyZexbEwwG21wyuOtqlGvs0esRlPXVtbflo9YU
+         XvSy8/pi3k0oZ3sEX4KzCbet2qCiyjM9mJHBLg/hIZOY6lCLxgBoBxnAeZHriRWZpl
+         PWc0TB5gXnQz3Ub7jatM8nXEbZMwlDohuVYs4VVqwDm/h8bsViW+2Ni30OTiCB2Wb6
+         kXOGURHs5ZJ+IGCLoGIXgRJRjm3XnQhjovKotxta1z0aStayPzl8D0XmGotm7pTKb2
+         504YrToZrJwcQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3T6eWX5784436;
-        Sun, 28 Apr 2019 23:40:32 -0700
-Date:   Sun, 28 Apr 2019 23:40:32 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3T6fFgn784577;
+        Sun, 28 Apr 2019 23:41:16 -0700
+Date:   Sun, 28 Apr 2019 23:41:16 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jakub Kicinski <tipbot@zytor.com>
-Message-ID: <tip-ad282a8117d5048398f506f20b092c14b3b3c43f@git.kernel.org>
-Cc:     akpm@linux-foundation.org, will.deacon@arm.com,
+Message-ID: <tip-b92e793bbe4a1c49dbf78d8d526561e7a7dd568a@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        paulmck@linux.vnet.ibm.com, simon.horman@netronome.com,
+        peterz@infradead.org, will.deacon@arm.com, hpa@zytor.com,
         jakub.kicinski@netronome.com, torvalds@linux-foundation.org,
-        paulmck@linux.vnet.ibm.com, hpa@zytor.com, mingo@kernel.org,
-        peterz@infradead.org, simon.horman@netronome.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-Reply-To: will.deacon@arm.com, torvalds@linux-foundation.org,
-          jakub.kicinski@netronome.com, akpm@linux-foundation.org,
-          hpa@zytor.com, paulmck@linux.vnet.ibm.com, peterz@infradead.org,
-          mingo@kernel.org, linux-kernel@vger.kernel.org,
-          tglx@linutronix.de, simon.horman@netronome.com
-In-Reply-To: <20190330000854.30142-2-jakub.kicinski@netronome.com>
-References: <20190330000854.30142-2-jakub.kicinski@netronome.com>
+        akpm@linux-foundation.org
+Reply-To: simon.horman@netronome.com, paulmck@linux.vnet.ibm.com,
+          linux-kernel@vger.kernel.org, peterz@infradead.org,
+          tglx@linutronix.de, mingo@kernel.org, akpm@linux-foundation.org,
+          torvalds@linux-foundation.org, will.deacon@arm.com,
+          jakub.kicinski@netronome.com, hpa@zytor.com
+In-Reply-To: <20190330000854.30142-3-jakub.kicinski@netronome.com>
+References: <20190330000854.30142-3-jakub.kicinski@netronome.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/static_key: Add support for deferred
- static branches
-Git-Commit-ID: ad282a8117d5048398f506f20b092c14b3b3c43f
+Subject: [tip:locking/core] locking/static_key: Factor out the fast path of
+ static_key_slow_dec()
+Git-Commit-ID: b92e793bbe4a1c49dbf78d8d526561e7a7dd568a
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,20 +74,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ad282a8117d5048398f506f20b092c14b3b3c43f
-Gitweb:     https://git.kernel.org/tip/ad282a8117d5048398f506f20b092c14b3b3c43f
+Commit-ID:  b92e793bbe4a1c49dbf78d8d526561e7a7dd568a
+Gitweb:     https://git.kernel.org/tip/b92e793bbe4a1c49dbf78d8d526561e7a7dd568a
 Author:     Jakub Kicinski <jakub.kicinski@netronome.com>
-AuthorDate: Fri, 29 Mar 2019 17:08:52 -0700
+AuthorDate: Fri, 29 Mar 2019 17:08:53 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 29 Apr 2019 08:29:20 +0200
+CommitDate: Mon, 29 Apr 2019 08:29:21 +0200
 
-locking/static_key: Add support for deferred static branches
+locking/static_key: Factor out the fast path of static_key_slow_dec()
 
-Add deferred static branches.  We can't unfortunately use the
-nice trick of encapsulating the entire structure in true/false
-variants, because the inside has to be either struct static_key_true
-or struct static_key_false.  Use defines to pass the appropriate
-members to the helpers separately.
+static_key_slow_dec() checks if the atomic enable count is larger
+than 1, and if so there decrements it before taking the jump_label_lock.
+Move this logic into a helper for reuse in rate limitted keys.
 
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -102,144 +100,54 @@ Cc: alexei.starovoitov@gmail.com
 Cc: ard.biesheuvel@linaro.org
 Cc: oss-drivers@netronome.com
 Cc: yamada.masahiro@socionext.com
-Link: https://lkml.kernel.org/r/20190330000854.30142-2-jakub.kicinski@netronome.com
+Link: https://lkml.kernel.org/r/20190330000854.30142-3-jakub.kicinski@netronome.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/jump_label_ratelimit.h | 64 ++++++++++++++++++++++++++++++++++--
- kernel/jump_label.c                  | 17 ++++++----
- 2 files changed, 71 insertions(+), 10 deletions(-)
+ kernel/jump_label.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/jump_label_ratelimit.h b/include/linux/jump_label_ratelimit.h
-index a49f2b45b3f0..42710d5949ba 100644
---- a/include/linux/jump_label_ratelimit.h
-+++ b/include/linux/jump_label_ratelimit.h
-@@ -12,21 +12,79 @@ struct static_key_deferred {
- 	struct delayed_work work;
- };
- 
--extern void static_key_slow_dec_deferred(struct static_key_deferred *key);
--extern void static_key_deferred_flush(struct static_key_deferred *key);
-+struct static_key_true_deferred {
-+	struct static_key_true key;
-+	unsigned long timeout;
-+	struct delayed_work work;
-+};
-+
-+struct static_key_false_deferred {
-+	struct static_key_false key;
-+	unsigned long timeout;
-+	struct delayed_work work;
-+};
-+
-+#define static_key_slow_dec_deferred(x)					\
-+	__static_key_slow_dec_deferred(&(x)->key, &(x)->work, (x)->timeout)
-+#define static_branch_slow_dec_deferred(x)				\
-+	__static_key_slow_dec_deferred(&(x)->key.key, &(x)->work, (x)->timeout)
-+
-+#define static_key_deferred_flush(x)					\
-+	__static_key_deferred_flush((x), &(x)->work)
-+
-+extern void
-+__static_key_slow_dec_deferred(struct static_key *key,
-+			       struct delayed_work *work,
-+			       unsigned long timeout);
-+extern void __static_key_deferred_flush(void *key, struct delayed_work *work);
- extern void
- jump_label_rate_limit(struct static_key_deferred *key, unsigned long rl);
- 
-+extern void jump_label_update_timeout(struct work_struct *work);
-+
-+#define DEFINE_STATIC_KEY_DEFERRED_TRUE(name, rl)			\
-+	struct static_key_true_deferred name = {			\
-+		.key =		{ STATIC_KEY_INIT_TRUE },		\
-+		.timeout =	(rl),					\
-+		.work =	__DELAYED_WORK_INITIALIZER((name).work,		\
-+						   jump_label_update_timeout, \
-+						   0),			\
-+	}
-+
-+#define DEFINE_STATIC_KEY_DEFERRED_FALSE(name, rl)			\
-+	struct static_key_false_deferred name = {			\
-+		.key =		{ STATIC_KEY_INIT_FALSE },		\
-+		.timeout =	(rl),					\
-+		.work =	__DELAYED_WORK_INITIALIZER((name).work,		\
-+						   jump_label_update_timeout, \
-+						   0),			\
-+	}
-+
-+#define static_branch_deferred_inc(x)	static_branch_inc(&(x)->key)
-+
- #else	/* !CONFIG_JUMP_LABEL */
- struct static_key_deferred {
- 	struct static_key  key;
- };
-+struct static_key_true_deferred {
-+	struct static_key_true key;
-+};
-+struct static_key_false_deferred {
-+	struct static_key_false key;
-+};
-+#define DEFINE_STATIC_KEY_DEFERRED_TRUE(name, rl)	\
-+	struct static_key_true_deferred name = { STATIC_KEY_TRUE_INIT }
-+#define DEFINE_STATIC_KEY_DEFERRED_FALSE(name, rl)	\
-+	struct static_key_false_deferred name = { STATIC_KEY_FALSE_INIT }
-+
-+#define static_branch_slow_dec_deferred(x)	static_branch_dec(&(x)->key)
-+
- static inline void static_key_slow_dec_deferred(struct static_key_deferred *key)
- {
- 	STATIC_KEY_CHECK_USE(key);
- 	static_key_slow_dec(&key->key);
- }
--static inline void static_key_deferred_flush(struct static_key_deferred *key)
-+static inline void static_key_deferred_flush(void *key)
- {
- 	STATIC_KEY_CHECK_USE(key);
- }
 diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index a799b1ac6b2f..73bbbaddbd9c 100644
+index 73bbbaddbd9c..02c3d11264dd 100644
 --- a/kernel/jump_label.c
 +++ b/kernel/jump_label.c
-@@ -244,12 +244,13 @@ static void __static_key_slow_dec(struct static_key *key,
- 	cpus_read_unlock();
+@@ -202,13 +202,13 @@ void static_key_disable(struct static_key *key)
  }
+ EXPORT_SYMBOL_GPL(static_key_disable);
  
--static void jump_label_update_timeout(struct work_struct *work)
-+void jump_label_update_timeout(struct work_struct *work)
+-static void __static_key_slow_dec_cpuslocked(struct static_key *key,
+-					   unsigned long rate_limit,
+-					   struct delayed_work *work)
++static bool static_key_slow_try_dec(struct static_key *key)
  {
- 	struct static_key_deferred *key =
- 		container_of(work, struct static_key_deferred, work.work);
- 	__static_key_slow_dec(&key->key, 0, NULL);
- }
-+EXPORT_SYMBOL_GPL(jump_label_update_timeout);
+ 	int val;
  
- void static_key_slow_dec(struct static_key *key)
- {
-@@ -264,19 +265,21 @@ void static_key_slow_dec_cpuslocked(struct static_key *key)
- 	__static_key_slow_dec_cpuslocked(key, 0, NULL);
- }
+-	lockdep_assert_cpus_held();
++	val = atomic_fetch_add_unless(&key->enabled, -1, 1);
++	if (val == 1)
++		return false;
  
--void static_key_slow_dec_deferred(struct static_key_deferred *key)
-+void __static_key_slow_dec_deferred(struct static_key *key,
-+				    struct delayed_work *work,
-+				    unsigned long timeout)
- {
- 	STATIC_KEY_CHECK_USE(key);
--	__static_key_slow_dec(&key->key, key->timeout, &key->work);
-+	__static_key_slow_dec(key, timeout, work);
- }
--EXPORT_SYMBOL_GPL(static_key_slow_dec_deferred);
-+EXPORT_SYMBOL_GPL(__static_key_slow_dec_deferred);
+ 	/*
+ 	 * The negative count check is valid even when a negative
+@@ -217,11 +217,18 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
+ 	 * returns is unbalanced, because all other static_key_slow_inc()
+ 	 * instances block while the update is in progress.
+ 	 */
+-	val = atomic_fetch_add_unless(&key->enabled, -1, 1);
+-	if (val != 1) {
+-		WARN(val < 0, "jump label: negative count!\n");
++	WARN(val < 0, "jump label: negative count!\n");
++	return true;
++}
++
++static void __static_key_slow_dec_cpuslocked(struct static_key *key,
++					   unsigned long rate_limit,
++					   struct delayed_work *work)
++{
++	lockdep_assert_cpus_held();
++
++	if (static_key_slow_try_dec(key))
+ 		return;
+-	}
  
--void static_key_deferred_flush(struct static_key_deferred *key)
-+void __static_key_deferred_flush(void *key, struct delayed_work *work)
- {
- 	STATIC_KEY_CHECK_USE(key);
--	flush_delayed_work(&key->work);
-+	flush_delayed_work(work);
- }
--EXPORT_SYMBOL_GPL(static_key_deferred_flush);
-+EXPORT_SYMBOL_GPL(__static_key_deferred_flush);
- 
- void jump_label_rate_limit(struct static_key_deferred *key,
- 		unsigned long rl)
+ 	jump_label_lock();
+ 	if (atomic_dec_and_test(&key->enabled)) {
