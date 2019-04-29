@@ -2,116 +2,96 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E709C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E62C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4027121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7166D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdBnsoM+"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="TeDqsy9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbfD2T2w (ORCPT
+        id S1729320AbfD2T3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:28:52 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38143 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2T2j (ORCPT
+        Mon, 29 Apr 2019 15:29:19 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39720 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2T3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:28:39 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f36so5548508plb.5;
-        Mon, 29 Apr 2019 12:28:38 -0700 (PDT)
+        Mon, 29 Apr 2019 15:29:18 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l18so5634426pgj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:29:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=deTq7zeUED64od4fxOGcfQd1MxzcfH878U7uEsrlFg4=;
-        b=WdBnsoM+xtup++LTNtJ78lv82AKUx20pvpS8dsymvIdduNB9EOBTazCYhvjgBc+imX
-         Ix/uW852adQWx4pBgr5eUXQG/5XDh6hyL8Nmfo+y79Qr4TiC52r8fpGh+qX8Q0OwXAnz
-         E5lxHA6bHRgWH3zSrbUKMjAvXpboT9nHm6cVzWuMGxVu737bg7/7GXzdjXBkypcv3XRm
-         SqAEhkN6qrupI4aiohwuppefngKm1ZI5XgWKclBwkgyfOFT5f60CS1+QAY6gTQkda5sH
-         K/z00HkooEyalU6tchEr+pKvXsAoQg3QTvUTD9dDKjsGmOecdRDLjZVARNEBjx+I59us
-         qO+A==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=z0SbUdCmljVej5WrouVvowNPCwLdyoY/7i4BqzA7D8w=;
+        b=TeDqsy9XMhyATE2qQx9WlzpgVVq0T7CVOONq967YT3CvH0mEmtolvjGE9kJgU/cgYU
+         775P7gEHPzjxaK64n/BHIPsCEJ8FXrjBqGL2pORt1p1ksc2ycBk/GwyBhFi2ZYhlpMnh
+         i4ZBzRRY0nCe7ZzT3UUi1Kv9ORMZDABigBBC0H0FscGeqNWREoXs9UC8ZR+bT0gwdOI2
+         x7STEigDlhJOH9LelrVMkVs3Eg+LPIB+J0vR8Kl2xU7xAwiRDUCiqjk0AIbkJTgdL2DK
+         ykW0Mu9p/0VL9Rjj28erwH0qI2qERVwEtc6GxwlpWeic9CAO/etUy8h532Td7nbDZ5GV
+         FLsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=deTq7zeUED64od4fxOGcfQd1MxzcfH878U7uEsrlFg4=;
-        b=ZStOJOiLLP+z+kYs5dDiXYxqWbWlNNIp/Dh0Eio2ZUtex5vdAFvh1obBTGIAcSVve7
-         fcXh38KLd++oPGhjdf0F2v+ls/ymHTKkIFfWpSlNuupzElvcP2s6eHnsGZFa6GyxGhHI
-         vS8XJiWaMjhWjnZ8vj6xEKHx7WdibRaLq1gC7QeqSmpH1GeM1AsY7k/TOeduF0QB1Hty
-         OVxoMEIlDrsZH+SJkDL5IMRPfjpfLb2Erxe7F56LMJK9MOr2fean1pJK9mWVGuqJO42Q
-         kFPKns0vJcNix1t9YSrkx2PzjWn3UVyH8+9LddyMxkT6XOSJVN2/mHbl31EMMxKYG5jz
-         N1/w==
-X-Gm-Message-State: APjAAAXVz/KV0a0e7Lp2jSeQWh9jakd1wRTf6BBHwn64eofHzn/jvSAW
-        NJ5POFw5rt3nzGtRC2nuzhQ=
-X-Google-Smtp-Source: APXvYqxYdjnX4BHvCUfEq0FpCkyjCfLjM2UIXjMD0XX5xx0xujmqEEDZLCrX3BQp3GFe+cgqfM1B6A==
-X-Received: by 2002:a17:902:26b:: with SMTP id 98mr34443210plc.30.1556566118261;
-        Mon, 29 Apr 2019 12:28:38 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g6sm10302945pgi.70.2019.04.29.12.28.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 12:28:37 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 3/5] watchdog: Make watchdog core configurable as module
-Date:   Mon, 29 Apr 2019 12:28:29 -0700
-Message-Id: <1556566111-31970-3-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556566111-31970-1-git-send-email-linux@roeck-us.net>
-References: <1556566111-31970-1-git-send-email-linux@roeck-us.net>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=z0SbUdCmljVej5WrouVvowNPCwLdyoY/7i4BqzA7D8w=;
+        b=H3tPGwLj0tVpmdANAi+xHQu635ApIdyxHsNB7wUhDSXczOvoa5WnL4kx/v/85ZHZfL
+         2r2eQUz6rX2Kztjvuj1ZBvezQ+PdezhmqZrchw3qAosysxvehpczz5lUeOZm/CukpQXx
+         HxDXMe55cvM7D3G2TlTgl+vPG4p5jH/9VJ7aislsSa0GycGI5msRD/8JmaBcV9jquFit
+         I5+zrJNGPXYimIT0Eg7h6/pk3IOMNe1a5dNBbpc+PcsG6WKi2FoUGxPdkH7Grgd0MPLX
+         G3b+u/IOrZG5wboJmgcRchULEu8nTOaOL8PW3a9Hsi1iB9J5CewkjoKBLBkqaNmBpVsg
+         wlRQ==
+X-Gm-Message-State: APjAAAXjJ69YA4cq7F6GAR+MhTaJCgHy2X/IYWSfKFoVca+el+U7dV0F
+        E7NcGArDrmoGoOjLJrdoc3SsRQ==
+X-Google-Smtp-Source: APXvYqyJ/3gFDTs4WKhkkP16+/x0+Z8V973+ij74rc3U2GEZqUSyAhQFGBn+SQVCvvPBz9VMRhFvxA==
+X-Received: by 2002:a62:864a:: with SMTP id x71mr3258049pfd.228.1556566158309;
+        Mon, 29 Apr 2019 12:29:18 -0700 (PDT)
+Received: from cakuba ([2607:fb90:cd6:ddfd:e8f2:447f:e2a6:2cf0])
+        by smtp.gmail.com with ESMTPSA id 15sm5496317pfy.88.2019.04.29.12.29.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 12:29:17 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 12:29:10 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] devlink: Change devlink health locking
+ mechanism
+Message-ID: <20190429122910.668028b1@cakuba>
+In-Reply-To: <1556530905-9908-1-git-send-email-moshe@mellanox.com>
+References: <1556530905-9908-1-git-send-email-moshe@mellanox.com>
+Organization: Netronome Systems, Ltd.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Under some circumstances it may be desirable to configure
-the watchdog core as module. Enable it.
+On Mon, 29 Apr 2019 12:41:45 +0300, Moshe Shemesh wrote:
+> The devlink health reporters create/destroy and user commands currently
+> use the devlink->lock as a locking mechanism. Different reporters have
+> different rules in the driver and are being created/destroyed during
+> different stages of driver load/unload/running. So during execution of a
+> reporter recover the flow can go through another reporter's destroy and
+> create. Such flow leads to deadlock trying to lock a mutex already
+> held.
+> 
+> With the new locking mechanism the different reporters share mutex lock
+> only to protect access to shared reporters list.
+> Added refcount per reporter, to protect the reporters from destroy while
+> being used.
+> 
+> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 
-As part of this change, mark pretimeout governors as depending
-on the watchdog core. This is necessary to prevent governors
-from being built into the kernel if the watchdog core is built
-as module.
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/watchdog/Kconfig | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index ac37a14439c7..c2d6934508ee 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -30,7 +30,7 @@ menuconfig WATCHDOG
- if WATCHDOG
- 
- config WATCHDOG_CORE
--	bool "WatchDog Timer Driver Core"
-+	tristate "WatchDog Timer Driver Core"
- 	---help---
- 	  Say Y here if you want to use the new watchdog timer driver core.
- 	  This driver provides a framework for all watchdog timer drivers
-@@ -75,6 +75,7 @@ if WATCHDOG_PRETIMEOUT_GOV
- 
- config WATCHDOG_PRETIMEOUT_GOV_NOOP
- 	tristate "Noop watchdog pretimeout governor"
-+	depends on WATCHDOG_CORE
- 	default WATCHDOG_CORE
- 	help
- 	  Noop watchdog pretimeout governor, only an informational
-@@ -82,6 +83,7 @@ config WATCHDOG_PRETIMEOUT_GOV_NOOP
- 
- config WATCHDOG_PRETIMEOUT_GOV_PANIC
- 	tristate "Panic watchdog pretimeout governor"
-+	depends on WATCHDOG_CORE
- 	default WATCHDOG_CORE
- 	help
- 	  Panic watchdog pretimeout governor, on watchdog pretimeout
--- 
-2.7.4
-
+Thanks!
