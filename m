@@ -2,91 +2,73 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65FBC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E5C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95141215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:05:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556575546;
-	bh=bVd+hDujPtprlnFUR4HKSNNSu6qgBFLqLRDYVi5Q9Mw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oW1eZfxPuAhP1bRlb15SZ/LS7gloQeUnsPZXPFyoZSxFHhY0Hw9iA+ppcFouScNma
-	 xXKajvTwU+bi1ev9BTQGJc+DI/WaJ2a04T7xN/q1oDeFxI+IxojZTSFf0j12epmOi/
-	 890fUZzZLDtm0M+B5zNV4w3uuaEAnRUOe4y4clMw=
+	by mail.kernel.org (Postfix) with ESMTP id ECBED215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="h5hYMGMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbfD2WFp (ORCPT
+        id S1729568AbfD2WGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:05:45 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45530 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729437AbfD2WFp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:05:45 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t189so6622846oih.12;
-        Mon, 29 Apr 2019 15:05:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NqqUvI8ozIYLQ4d/GuKEHP8sALx3PYdlLGZJSzshmEI=;
-        b=bUV1rczi22taJVws3Otr0g1aVfzPan9fh9yjWj1LUC8X95H4PeUTCjeTAJk7AstwQg
-         4hijvEXujAjnU7D9meuXJvks/PlQkF3cAgSTaqali2Hj0xtno9kkCnGJcmsQWb/ww7wl
-         2ieQu6ac5PhTipygTjKyhMycOqe0YsEErteyAiBSegaLsIujT/VAn0bYUaZHSWyWEho+
-         DHFlFMjzxgCsdc2EXr9n/+72E5pOrOonjZfw7o/q4QJfOdp6YsoaVYY8NH3fTKLbHqKo
-         z48lBLBFDdCuA8+SfO5FWILnEp3KglnDOMdKVg/YKwGH55LTffYIceGq2V2wciWri4vy
-         fqYA==
-X-Gm-Message-State: APjAAAX4pY4bILeEK5jaMN1Q7lNt5kA9xIKy8Ya7PequKXi+5eDLuFjt
-        TaHzPGSvv/KnaxAdGsQ5dw==
-X-Google-Smtp-Source: APXvYqyUgr9Px81sKHtSP+7CZcQbfQ7hAfxA751GonSFy+nyurN+Oj7Tr+NkXDAyDlFf3zO54kzuNg==
-X-Received: by 2002:aca:c4c3:: with SMTP id u186mr986160oif.82.1556575544019;
-        Mon, 29 Apr 2019 15:05:44 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j7sm13873345otr.50.2019.04.29.15.05.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 15:05:43 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 17:05:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: memory: Add binding for NVIDIA
- Tegra30 External Memory Controller
-Message-ID: <20190429220542.GA17924@bogus>
-References: <20190414202009.31268-1-digetx@gmail.com>
- <20190414202009.31268-3-digetx@gmail.com>
+        Mon, 29 Apr 2019 18:06:32 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49175 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729409AbfD2WGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:06:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=CDkCYbBrMqsa0J2dGF7qat95dbAVM0+F+tk4bLYplek=; b=h5hYMGMCjtscuGrEym+sefVT0T
+        oVIvFVAdxF1s1igVBA+j9FCpaxdJTEufYRyHMF2uuO8dRPWmcDK7J2dG3taU9DR1YVTIkEDJEXAMW
+        Hy7SVCDqm10poJH6BmQALi7nL4yC9fmqxbsYPZyu85n31QsSjmLyiTmGM0YQ2lqmNV+M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hLEPW-0007Io-Qb; Tue, 30 Apr 2019 00:06:06 +0200
+Date:   Tue, 30 Apr 2019 00:06:06 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/12] net: ll_temac: Fix support for 64-bit platforms
+Message-ID: <20190429220606.GL12333@lunn.ch>
+References: <20190426073231.4008-1-esben@geanix.com>
+ <20190429083422.4356-1-esben@geanix.com>
+ <20190429083422.4356-4-esben@geanix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190414202009.31268-3-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190429083422.4356-4-esben@geanix.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 11:20:07PM +0300, Dmitry Osipenko wrote:
-> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
-> The binding is based on the Tegra124 EMC binding since hardware is
-> similar, although there are couple significant differences.
-
-My comments on Tegra124 binding apply here.
-
+On Mon, Apr 29, 2019 at 10:34:13AM +0200, Esben Haabendal wrote:
+> The use of buffer descriptor APP4 field (32-bit) for storing skb pointer
+> obviously does not work on 64-bit platforms.
+> As APP3 is also unused, we can use that to store the other half of 64-bit
+> pointer values.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  .../memory-controllers/nvidia,tegra30-emc.txt | 257 ++++++++++++++++++
->  1 file changed, 257 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
+> Contrary to what is hinted at in commit message of commit 15bfe05c8d63
+> ("net: ethernet: xilinx: Mark XILINX_LL_TEMAC broken on 64-bit")
+> there are no other pointers stored in cdmac_bd.
+> 
+> Signed-off-by: Esben Haabendal <esben@geanix.com>
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
