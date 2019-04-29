@@ -2,171 +2,158 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7904C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B013C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D20206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="llZt1Kn0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="plN8q35K"
+	by mail.kernel.org (Postfix) with ESMTP id 4D521206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfECBk7 (ORCPT
+        id S1726541AbfECBo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 21:40:59 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:47551 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726128AbfECBk6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 21:40:58 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3DF8314AEE;
-        Thu,  2 May 2019 21:40:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 02 May 2019 21:40:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=lCcAU6v9USd6O6HdXYYD0bpWXJQ
-        yvhP17fafAT6vWFg=; b=llZt1Kn0pG8HKFKAI6d1NqzJGq24SlGJ65lr50ds3GR
-        WgNq3mzcnBhb+1U01cuVhrsB36RtrCjYzYzlX7mYl+yAFp3TMgp7E55ZgA0Gici2
-        lmYauM1iOH7b7fsT9Rugz8kpo8PF7eLiX0lY4T+m9v0S/Eg9zrHFd2DZU07DdFiB
-        +l+XCUC0R0YEtt1ErbcQgzvi297Erj6LTwiIn25E1GHHl/9w9DuGNFvMg3H8073t
-        bTGNeff/lFluc6nW2E8EC9P8o81Dg2cc8X+H0i0wfhGntVbYGXLi7hXsnyojqeLR
-        +07YxTj+79lNHTn3TEB/cJGazPNp8TozPUs8rc94riQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lCcAU6
-        v9USd6O6HdXYYD0bpWXJQyvhP17fafAT6vWFg=; b=plN8q35Kpda21thj9QoPxQ
-        IoA5NRiWaJ434/oOSFeEnCNie7ogazP8vDDGCpOJe0PMoVvn9D50dal7553V25+N
-        L3O8CO///B3dN1eb3LN/lKNHaicCuF06fnC29yZFJS7KUUyVT2hIkfT0NcEtzBqP
-        mdMW9j9tCLePN0+YLQjabo6/kMQY59o3DWP6lBArQIfyjIg25kSQasqMaJiy+QKW
-        sggG0c+o4mYihzHsYaaKfxmZmxP9HJboyYyjZuSApCItErJRUw0ZKfE/Y1G0S/X+
-        AnFQ//tJmwMt6oBkj0hNIW1BTrXt+jRjBbJ9GyXwU4WN8c66C1nQnnS0XVhi4p8g
-        ==
-X-ME-Sender: <xms:KJzLXGleEhRc00X81IsFGER0mVwlEqPHkioZSzBlkgG7poJSz-W8Zw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrjedtgdehtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvddurdeg
-    gedrvddtgedrvdefheenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehtohgsihhnrd
-    gttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:KJzLXGjW35US08xGSTMjk805EitBMvAmZ808H3vUzOwjK9nkMmhmcA>
-    <xmx:KJzLXElPVbYU7F6DB6KH4xPElHmOS_FsWnUb6vkirFPAOVjaUswaZw>
-    <xmx:KJzLXHFQPHpJbYw39B72-oCC0eIkTr6o3lH05dk_dIrRxErWArAaig>
-    <xmx:KZzLXL9DRBVouhsX65f-C_8ZbrxmEjlPYyX3RdJZeI3PHcuak3q1lg>
-Received: from localhost (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 34C87E4625;
-        Thu,  2 May 2019 21:40:54 -0400 (EDT)
-Date:   Fri, 3 May 2019 11:40:15 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
-Message-ID: <20190503014015.GC7416@eros.localdomain>
-References: <20190502023142.20139-1-tobin@kernel.org>
- <20190502023142.20139-4-tobin@kernel.org>
- <20190502073823.GQ26546@localhost>
- <20190502082539.GB18363@eros.localdomain>
- <20190502083922.GR26546@localhost>
+        Thu, 2 May 2019 21:44:57 -0400
+Received: from spam01.hygon.cn ([110.188.70.11]:59422 "EHLO spam1.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726220AbfECBo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 21:44:57 -0400
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam1.hygon.cn with ESMTP id x431i68L087561;
+        Fri, 3 May 2019 09:44:06 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-DB.hygon.cn with ESMTP id x431haaI096935;
+        Fri, 3 May 2019 09:43:36 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from localhost.localdomain (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Fri, 3 May 2019
+ 09:44:04 +0800
+From:   Pu Wen <puwen@hygon.cn>
+To:     <jdelvare@suse.com>, <wsa@the-dreams.de>
+CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Pu Wen <puwen@hygon.cn>
+Subject: [PATCH v2 RESEND] i2c-piix4: Add Hygon Dhyana SMBus support
+Date:   Tue, 30 Apr 2019 00:08:43 +0800
+Message-ID: <1556554123-5894-1-git-send-email-puwen@hygon.cn>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502083922.GR26546@localhost>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam1.hygon.cn x431i68L087561
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 10:39:22AM +0200, Johan Hovold wrote:
-> On Thu, May 02, 2019 at 06:25:39PM +1000, Tobin C. Harding wrote: > Adding Jon to CC
-> > 
-> > On Thu, May 02, 2019 at 09:38:23AM +0200, Johan Hovold wrote:
-> > > On Thu, May 02, 2019 at 12:31:40PM +1000, Tobin C. Harding wrote:
-> > > > kernel-doc comments have a prescribed format.  This includes parenthesis
-> > > > on the function name.  To be _particularly_ correct we should also
-> > > > capitalise the brief description and terminate it with a period.
-> > > 
-> > > Why do think capitalisation and full stop is required for the function
-> > > description?
-> > > 
-> > > Sure, the example in the current doc happen to use that, but I'm not
-> > > sure that's intended as a prescription.
-> > > 
-> > > The old kernel-doc nano-HOWTO specifically did not use this:
-> > > 
-> > > 	https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
-> > > 
-> > 
-> > Oh?  I was basing this on Documentation/doc-guide/kernel-doc.rst
-> > 
-> > 	Function documentation
-> > 	----------------------
-> > 
-> > 	The general format of a function and function-like macro kernel-doc comment is::
-> > 
-> > 	  /**
-> > 	   * function_name() - Brief description of function.
-> > 	   * @arg1: Describe the first argument.
-> > 	   * @arg2: Describe the second argument.
-> > 	   *        One can provide multiple line descriptions
-> > 	   *        for arguments.
-> > 
-> > I figured that was the canonical way to do kernel-doc function
-> > comments.  I have however refrained from capitalising and adding the
-> > period to argument strings to reduce code churn.  I figured if I'm
-> > touching the line to add parenthesis then I might as well make it
-> > perfect (if such a thing exists).
->
-> I think you may have read too much into that example. Many of the
-> current function and parameter descriptions aren't even full sentences,
-> so sentence case and full stop doesn't really make any sense.
->
-> Looks like we discussed this last fall as well:
+The Hygon Dhyana CPU has the SMBus device with PCI device ID 0x790b,
+which is the same as AMD CZ SMBus device. So add Hygon Dhyana support
+to the i2c-piix4 driver by using the code path of AMD.
 
-Ha, this was funny.  By 'we' at first I thought you meant 'we the kernel
-community' but you actually meant we as in 'me and you'.  Clearly you
-failed to convince me last time :)
+Signed-off-by: Pu Wen <puwen@hygon.cn>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+---
+v2 RESEND:
+  - Add 'Reviewed-by' tag from Jean Delvare.
 
-> 	https://lkml.kernel.org/r/20180912093116.GC1089@localhost
+v1->v2:
+  - Remove the revision number checking for Hygon SMBus device.
+  - Document the new supported chipset in drivers/i2c/busses/Kconfig
+    and Documentation/i2c/busses/i2c-piix4 as well as in the header
+	comment of i2c-piix4.c.
 
-I am totally aware this is close to code churn and any discussion is
-bikeshedding ... for me just because loads of places don't do this it
-still looks nicer to my eyes
+ Documentation/i2c/busses/i2c-piix4 |  2 ++
+ drivers/i2c/busses/Kconfig         |  1 +
+ drivers/i2c/busses/i2c-piix4.c     | 15 +++++++++++----
+ 3 files changed, 14 insertions(+), 4 deletions(-)
 
-/**
-* sfn() - Super awesome function.
+diff --git a/Documentation/i2c/busses/i2c-piix4 b/Documentation/i2c/busses/i2c-piix4
+index aa959fd..2703bc3 100644
+--- a/Documentation/i2c/busses/i2c-piix4
++++ b/Documentation/i2c/busses/i2c-piix4
+@@ -15,6 +15,8 @@ Supported adapters:
+     http://support.amd.com/us/Embedded_TechDocs/44413.pdf
+   * AMD Hudson-2, ML, CZ
+     Datasheet: Not publicly available
++  * Hygon CZ
++    Datasheet: Not publicly available
+   * Standard Microsystems (SMSC) SLC90E66 (Victory66) southbridge
+     Datasheet: Publicly available at the SMSC website http://www.smsc.com
+ 
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index f8979ab..50ec2e4 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -176,6 +176,7 @@ config I2C_PIIX4
+ 	    AMD Hudson-2
+ 	    AMD ML
+ 	    AMD CZ
++	    Hygon CZ
+ 	    Serverworks OSB4
+ 	    Serverworks CSB5
+ 	    Serverworks CSB6
+diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+index 90946a8..e9a0514 100644
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -19,6 +19,7 @@
+ 	Serverworks OSB4, CSB5, CSB6, HT-1000, HT-1100
+ 	ATI IXP200, IXP300, IXP400, SB600, SB700/SP5100, SB800
+ 	AMD Hudson-2, ML, CZ
++	Hygon CZ
+ 	SMSC Victory66
+ 
+    Note: we assume there can only be one device, with one or more
+@@ -289,7 +290,9 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
+ 	     PIIX4_dev->revision >= 0x41) ||
+ 	    (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD &&
+ 	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
+-	     PIIX4_dev->revision >= 0x49))
++	     PIIX4_dev->revision >= 0x49) ||
++	    (PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON &&
++	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS))
+ 		smb_en = 0x00;
+ 	else
+ 		smb_en = (aux) ? 0x28 : 0x2c;
+@@ -361,7 +364,8 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
+ 		 piix4_smba, i2ccfg >> 4);
+ 
+ 	/* Find which register is used for port selection */
+-	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
++	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
++	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
+ 		switch (PIIX4_dev->device) {
+ 		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
+ 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
+@@ -794,6 +798,7 @@ static const struct pci_device_id piix4_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_SBX00_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_HYGON, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
+ 		     PCI_DEVICE_ID_SERVERWORKS_OSB4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
+@@ -904,11 +909,13 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if ((dev->vendor == PCI_VENDOR_ID_ATI &&
+ 	     dev->device == PCI_DEVICE_ID_ATI_SBX00_SMBUS &&
+ 	     dev->revision >= 0x40) ||
+-	    dev->vendor == PCI_VENDOR_ID_AMD) {
++	    dev->vendor == PCI_VENDOR_ID_AMD ||
++	    dev->vendor == PCI_VENDOR_ID_HYGON) {
+ 		bool notify_imc = false;
+ 		is_sb800 = true;
+ 
+-		if (dev->vendor == PCI_VENDOR_ID_AMD &&
++		if ((dev->vendor == PCI_VENDOR_ID_AMD ||
++		     dev->vendor == PCI_VENDOR_ID_HYGON) &&
+ 		    dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
+ 			u8 imc;
+ 
+-- 
+2.7.4
 
-than
-
-/**
-*/ sfn() - super awesome function
-
-I most likely will keep doing these changes if I am touching the
-kernel-doc comments for other reasons and then drop the changes if the
-subsystem maintainer thinks its code churn.
-
-I defiantly won't do theses changes in GNSS, GREYBUS, or USB SERIAL.
-
-Oh, and I'm totally going to CC you know every time I flick one of these
-patches, prepare to get spammed :)
-
-Cheers,
-Tobin.
