@@ -2,232 +2,784 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C98C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E17EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7172075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03F22075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m/c9HKKl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oOYysvH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbfD2UBL (ORCPT
+        id S1729352AbfD2UBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:01:11 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33624 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2UBK (ORCPT
+        Mon, 29 Apr 2019 16:01:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38890 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729325AbfD2UBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:01:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s11so5499077otp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:01:10 -0700 (PDT)
+        Mon, 29 Apr 2019 16:01:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 10so5865405pfo.5;
+        Mon, 29 Apr 2019 13:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HMgcRk8g93CjrXbXJuvBDYtODDacIPx5LhgZDNjChP0=;
-        b=m/c9HKKlv2x9utzy9xHZDzLz/Bt2j/r6MVfcvuF490BAV4J7oX5QWdgghDE182jbSf
-         MdxK3IqRbNVu0vagDg5qIKniVsNq6r/ir5Aem+nKCMydbC2gx8mHJ/yaTzDLXIi6+q4C
-         Aek2HZI7aEDzhKVT2Iiz2s0qEO2yI9NiE6QMajFlWlIMxe2MMuYla+qmMipOhqMAAeJ7
-         UFSPVjQfCRIoGTr7pTh2pNZ26nCrXwgyz6Krbd4HJG/n89z+SdZXljIfRzU+SWgWsd6G
-         CnWHtDcRdMwxNWbjQfqM8uIf3FCcIq9GlY/cLFNHrL3f55oAqsq7ddWFrgXt9xhod0Im
-         NGSA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XeKU7OHUYrDgFy8FbwlnUIfJwbjdxAxNLLFFb6/ruvs=;
+        b=oOYysvH2tXYvCnbddWuQtyEFm8RutNMBhymfCvPLZ17mpgV5AWriH1OZxu9a9614bD
+         tg5yaGpSxISTzKVRXscyOYm6YNj3SSY7Wb4+9waDWRIdRsPC4IGFr+4VyV6nCGjhyt5A
+         VHSENuFASdFbLpKzZMBFbKNupqG/VtF6ZNB9d1C8ioAYo+vwx6A7olvusDl1mjKfBLS1
+         9uKC12NYRPAJh4/jx5QT0xds6c3vNSLXuKBrtViaDpGNOhgmUHAXek1QuNcYSB4yrMGf
+         Hp1h2EwIok1wwV3aGZsiEdZD15N2q4h0fbfFPPwOVH88m4YGrMO54KXZpyZLO3a4g6YO
+         BVfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HMgcRk8g93CjrXbXJuvBDYtODDacIPx5LhgZDNjChP0=;
-        b=dcT8Z/d63keelaSU6gB9g9Yw67SFPkntAS5q4yEihRVqqgCcwfQ3EcpBglYg/BGLs/
-         0RftWvhKtJdqDcYpXwCvmFnCj88d1qnySgD6/uHuIrJfELOEiLK8px3UXSmPQp1vw0dm
-         QJwJ3alHgjf04j6nuOmwwW8QGyEBIrMyDtirbI4MsTe0ALxCSF8smci9dGuoWdR3N51F
-         D1xjs2/7Q2FxyAnD3s0zTqhF9nepbbr/yDRUaBkYjCsO1F8uwyCEEsfZu1tqaThTW0i5
-         IFRS7D9x6hqCbH+Pbmndn1jKQhtX6el6NB9NEzxPjtlbJy1cTGQ0Y2VxTrhNf5QKAEMz
-         mY/Q==
-X-Gm-Message-State: APjAAAVS1NgBVkokbF5vFQzr2tOk+eAc77uIqu1v8H4B9Vp6wiSt11+G
-        6BoUFP1ZI8Ods3dnHMNHQKE6Qs4BQS7B2oFCr3pifw==
-X-Google-Smtp-Source: APXvYqwPSg1T0Xhy/ABHJtmyxddhfD0qhfJzLxE3mixUWHhO9Wssz1Ka1zPO5bi/zaNqPzGEIx4RoBtqOKwxUuFaaRY=
-X-Received: by 2002:a9d:6152:: with SMTP id c18mr2261461otk.230.1556567738730;
- Mon, 29 Apr 2019 12:55:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XeKU7OHUYrDgFy8FbwlnUIfJwbjdxAxNLLFFb6/ruvs=;
+        b=JtWwV3ZH7SRXHyhU9WNq+zTmZTVU8t+mKrCCH9ulQT1j6u7yQlDxEu4w/OEh4z78Hs
+         a8zoDMUa1bQpr2H25wuvhdxq+2lDrQ03rEvxP6Zx9DlLmfjVWtzhL7pY5xm8bWRifMwR
+         /E1PjI+QF+5M/9ZtL+rBp6mSwdswcFD2gDY6ldoRb+5q5n7yY4gG+PPW9RJdcjDR3Q7l
+         TqY95yM7ecgivafzNRY6dqaVf+Czi0WUchozNW2ROpOVWU6HNrtIPqniferQ4ffaUBjb
+         dE9hPiEwAS+Kos1KvKYCIApKYhkzqpWxA5iIdWpaKATPeegPIB3VexYk4+P5YS8ZHatN
+         L97Q==
+X-Gm-Message-State: APjAAAUAPkH1kKTaUkdgFhpzHTTYiUCafJIqZWqJbCCnGVDouwGamoGO
+        9Yyv9PzTC2BaUbMYcO2+mvjGA5ai7RM=
+X-Google-Smtp-Source: APXvYqz5rINzonlq6ZYjxoHa5PwLSlVV2khAOl8H0OhKogDi7duTaGlsQWC4w06Um9bLcAzdkqx/Lg==
+X-Received: by 2002:a65:41ca:: with SMTP id b10mr62359256pgq.256.1556567639829;
+        Mon, 29 Apr 2019 12:53:59 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id l2sm39841783pgl.2.2019.04.29.12.53.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 12:53:58 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/3] power: supply: Add driver for Microchip UCS1002
+Date:   Mon, 29 Apr 2019 12:53:48 -0700
+Message-Id: <20190429195349.20335-3-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190429195349.20335-1-andrew.smirnov@gmail.com>
+References: <20190429195349.20335-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
- <20190420071406.GA22257@ip-172-31-15-78> <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
-In-Reply-To: <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 29 Apr 2019 15:55:11 -0400
-Message-ID: <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
-To:     Kevin Easton <kevin@guarana.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian@brauner.io>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 3:30 PM Jann Horn <jannh@google.com> wrote:
-> On Sat, Apr 20, 2019 at 3:14 AM Kevin Easton <kevin@guarana.org> wrote:
-> > On Mon, Apr 15, 2019 at 01:29:23PM -0700, Andy Lutomirski wrote:
-> > > On Mon, Apr 15, 2019 at 12:59 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > > >
-> > > > On 2019-04-15, Enrico Weigelt, metux IT consult <lkml@metux.net> wrote:
-> > > > > > This patchset makes it possible to retrieve pid file descriptors at
-> > > > > > process creation time by introducing the new flag CLONE_PIDFD to the
-> > > > > > clone() system call as previously discussed.
-> > > > >
-> > > > > Sorry, for highjacking this thread, but I'm curious on what things to
-> > > > > consider when introducing new CLONE_* flags.
-> > > > >
-> > > > > The reason I'm asking is:
-> > > > >
-> > > > > I'm working on implementing plan9-like fs namespaces, where unprivileged
-> > > > > processes can change their own namespace at will. For that, certain
-> > > > > traditional unix'ish things have to be disabled, most notably suid.
-> > > > > As forbidding suid can be helpful in other scenarios, too, I thought
-> > > > > about making this its own feature. Doing that switch on clone() seems
-> > > > > a nice place for that, IMHO.
-> > > >
-> > > > Just spit-balling -- is no_new_privs not sufficient for this usecase?
-> > > > Not granting privileges such as setuid during execve(2) is the main
-> > > > point of that flag.
-> > > >
-> > >
-> > > I would personally *love* it if distros started setting no_new_privs
-> > > for basically all processes.  And pidfd actually gets us part of the
-> > > way toward a straightforward way to make sudo and su still work in a
-> > > no_new_privs world: su could call into a daemon that would spawn the
-> > > privileged task, and su would get a (read-only!) pidfd back and then
-> > > wait for the fd and exit.  I suppose that, done naively, this might
-> > > cause some odd effects with respect to tty handling, but I bet it's
-> > > solveable.  I suppose it would be nifty if there were a way for a
-> > > process, by mutual agreement, to reparent itself to an unrelated
-> > > process.
-> > >
-> > > Anyway, clone(2) is an enormous mess.  Surely the right solution here
-> > > is to have a whole new process creation API that takes a big,
-> > > extensible struct as an argument, and supports *at least* the full
-> > > abilities of posix_spawn() and ideally covers all the use cases for
-> > > fork() + do stuff + exec().  It would be nifty if this API also had a
-> > > way to say "add no_new_privs and therefore enable extra functionality
-> > > that doesn't work without no_new_privs".  This functionality would
-> > > include things like returning a future extra-privileged pidfd that
-> > > gives ptrace-like access.
-> > >
-> > > As basic examples, the improved process creation API should take a
-> > > list of dup2() operations to perform, fds to remove the O_CLOEXEC flag
-> > > from, fds to close (or, maybe even better, a list of fds to *not*
-> > > close), a list of rlimit changes to make, a list of signal changes to
-> > > make, the ability to set sid, pgrp, uid, gid (as in
-> > > setresuid/setresgid), the ability to do capset() operations, etc.  The
-> > > posix_spawn() API, for all that it's rather complicated, covers a
-> > > bunch of the basics pretty well.
-> >
-> > The idea of a system call that takes an infinitely-extendable laundry
-> > list of operations to perform in kernel space seems quite inelegant, if
-> > only for the error-reporting reason.
-> >
-> > Instead, I suggest that what you'd want is a way to create a new
-> > embryonic process that has no address space and isn't yet schedulable.
-> > You then just need other-process-directed variants of all the normal
-> > setup functions - so pr_openat(pidfd, dirfd, pathname, flags, mode),
-> > pr_sigaction(pidfd, signum, act, oldact), pr_dup2(pidfd, oldfd, newfd)
-> > etc.
-> >
-> > Then when it's all set up you pr_execve() to kick it off.
->
-> Is this really necessary? I agree that fork()+exec() is suboptimal,
-> but if you just want to avoid the cost of duplicating the address
-> space, you can AFAICS already do that in userspace with
-> clone(CLONE_VM|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID|SIGCHLD). Then
-> the parent can block on a futex until the child leaves the mm_struct
-> through execve() (or by exiting, in the case of an error), and the
-> child can temporarily have its stack at the bottom of the caller's
-> stack. You could build an API like this around it in userspace:
->
-> int clone_temporary(int (*fn)(void *arg), void *arg, pid_t *child_pid,
-> <clone flags and arguments, maybe in a struct>)
->
-> and then you'd use it like this to fork off a child process:
->
-> int spawn_shell_subprocess_(void *arg) {
->   char *cmdline = arg;
->   execl("/bin/sh", "sh", "-c", cmdline);
->   return -1;
-> }
-> pid_t spawn_shell_subprocess(char *cmdline) {
->   pid_t child_pid;
->   int res = clone_temporary(spawn_shell_subprocess_, cmdline,
-> &child_pid, [...]);
->   if (res == 0) return child_pid;
->   return res;
-> }
->
-> clone_temporary() could be implemented roughly as follows by the libc
-> (or other userspace code):
->
-> sigset_t sigset, sigset_old;
-> sigfillset(&sigset);
-> sigprocmask(SIG_SETMASK, &sigset, &sigset_old);
-> int child_pid;
-> int result = 0;
-> /* starting here, use inline assembly to ensure that no stack
-> allocations occur */
-> long child = syscall(__NR_clone,
-> CLONE_VM|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID|SIGCHLD, $RSP -
-> ABI_STACK_REDZONE_SIZE, NULL, &child_pid, 0);
-> if (child == -1) { result = -1; goto reset_sigmask; }
-> if (child == 0) {
->   result = fn(arg);
->   syscall(__NR_exit, 0);
-> }
-> futex(&child_pid, FUTEX_WAIT, child, NULL);
-> /* end of no-stack-allocations zone */
-> reset_sigmask:
-> sigprocmask(SIG_SETMASK, &sigset_old, NULL);
-> return result;
+Add driver for Microchip UCS1002 Programmable USB Port Power
+Controller with Charger Emulation. The driver exposed a power supply
+device to control/monitor various parameter of the device as well as a
+regulator to allow controlling VBUS line.
 
-... I guess that already has a name, and it's called vfork(). (Well,
-except that the Linux vfork() isn't a real vfork().)
+Signed-off-by: Enric Balletbo Serra <enric.balletbo@collabora.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+---
+ drivers/power/supply/Kconfig         |   9 +
+ drivers/power/supply/Makefile        |   1 +
+ drivers/power/supply/ucs1002_power.c | 646 +++++++++++++++++++++++++++
+ 3 files changed, 656 insertions(+)
+ create mode 100644 drivers/power/supply/ucs1002_power.c
 
-So I guess my question is: Why not vfork()?
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index e901b9879e7e..c614c8a196f3 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -660,4 +660,13 @@ config FUEL_GAUGE_SC27XX
+ 	 Say Y here to enable support for fuel gauge with SC27XX
+ 	 PMIC chips.
+ 
++config CHARGER_UCS1002
++        tristate "Microchip UCS1002 USB Port Power Controller"
++	depends on I2C
++	depends on OF
++	select REGMAP_I2C
++	help
++	  Say Y to enable support for Microchip UCS1002 Programmable
++	  USB Port Power Controller with Charger Emulation.
++
+ endif # POWER_SUPPLY
+diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+index b731c2a9b695..c56803a9e4fe 100644
+--- a/drivers/power/supply/Makefile
++++ b/drivers/power/supply/Makefile
+@@ -87,3 +87,4 @@ obj-$(CONFIG_AXP288_CHARGER)	+= axp288_charger.o
+ obj-$(CONFIG_CHARGER_CROS_USBPD)	+= cros_usbpd-charger.o
+ obj-$(CONFIG_CHARGER_SC2731)	+= sc2731_charger.o
+ obj-$(CONFIG_FUEL_GAUGE_SC27XX)	+= sc27xx_fuel_gauge.o
++obj-$(CONFIG_CHARGER_UCS1002)	+= ucs1002_power.o
+diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/ucs1002_power.c
+new file mode 100644
+index 000000000000..677f20a4d76f
+--- /dev/null
++++ b/drivers/power/supply/ucs1002_power.c
+@@ -0,0 +1,646 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Driver for UCS1002 Programmable USB Port Power Controller
++ *
++ * Copyright (C) 2019 Zodiac Inflight Innovations
++ */
++#include <linux/bits.h>
++#include <linux/freezer.h>
++#include <linux/gpio/consumer.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/kthread.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/power_supply.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++
++/* UCS1002 Registers */
++#define UCS1002_REG_CURRENT_MEASUREMENT	0x00
++
++/*
++ * The Total Accumulated Charge registers store the total accumulated
++ * charge delivered from the VS source to a portable device. The total
++ * value is calculated using four registers, from 01h to 04h. The bit
++ * weighting of the registers is given in mA/hrs.
++ */
++#define UCS1002_REG_TOTAL_ACC_CHARGE	0x01
++
++/* Other Status Register */
++#define UCS1002_REG_OTHER_STATUS	0x0f
++#  define F_ADET_PIN			BIT(4)
++#  define F_CHG_ACT			BIT(3)
++
++/* Interrupt Status */
++#define UCS1002_REG_INTERRUPT_STATUS	0x10
++#  define F_DISCHARGE_ERR		BIT(6)
++#  define F_RESET			BIT(5)
++#  define F_MIN_KEEP_OUT		BIT(4)
++#  define F_TSD				BIT(3)
++#  define F_OVER_VOLT			BIT(2)
++#  define F_BACK_VOLT			BIT(1)
++#  define F_OVER_ILIM			BIT(0)
++
++/* Pin Status Register */
++#define UCS1002_REG_PIN_STATUS		0x14
++#  define UCS1002_PWR_STATE_MASK	0x03
++#  define F_PWR_EN_PIN			BIT(6)
++#  define F_M2_PIN			BIT(5)
++#  define F_M1_PIN			BIT(4)
++#  define F_EM_EN_PIN			BIT(3)
++#  define F_SEL_PIN			BIT(2)
++#  define F_ACTIVE_MODE_MASK		GENMASK(5, 3)
++#  define F_ACTIVE_MODE_PASSTHROUGH	F_M2_PIN
++#  define F_ACTIVE_MODE_DEDICATED	F_EM_EN_PIN
++#  define F_ACTIVE_MODE_BC12_DCP	(F_M2_PIN | F_EM_EN_PIN)
++#  define F_ACTIVE_MODE_BC12_SDP	F_M1_PIN
++#  define F_ACTIVE_MODE_BC12_CDP	(F_M1_PIN | F_M2_PIN | F_EM_EN_PIN)
++
++/* General Configuration Register */
++#define UCS1002_REG_GENERAL_CFG		0x15
++#  define F_RATION_EN			BIT(3)
++
++/* Emulation Configuration Register */
++#define UCS1002_REG_EMU_CFG		0x16
++
++/* Switch Configuration Register */
++#define UCS1002_REG_SWITCH_CFG		0x17
++#  define F_PIN_IGNORE			BIT(7)
++#  define F_EM_EN_SET			BIT(5)
++#  define F_M2_SET			BIT(4)
++#  define F_M1_SET			BIT(3)
++#  define F_S0_SET			BIT(2)
++#  define F_PWR_EN_SET			BIT(1)
++#  define F_LATCH_SET			BIT(0)
++#  define V_SET_ACTIVE_MODE_MASK	GENMASK(5, 3)
++#  define V_SET_ACTIVE_MODE_PASSTHROUGH	F_M2_SET
++#  define V_SET_ACTIVE_MODE_DEDICATED	F_EM_EN_SET
++#  define V_SET_ACTIVE_MODE_BC12_DCP	(F_M2_SET | F_EM_EN_SET)
++#  define V_SET_ACTIVE_MODE_BC12_SDP	F_M1_SET
++#  define V_SET_ACTIVE_MODE_BC12_CDP	(F_M1_SET | F_M2_SET | F_EM_EN_SET)
++
++/* Current Limit Register */
++#define UCS1002_REG_ILIMIT		0x19
++#  define UCS1002_ILIM_SW_MASK		GENMASK(3, 0)
++
++/* Product ID */
++#define UCS1002_REG_PRODUCT_ID		0xfd
++#  define UCS1002_PRODUCT_ID		0x4e
++
++/* Manufacture name */
++#define UCS1002_MANUFACTURER		"SMSC"
++
++struct ucs1002_info {
++	struct power_supply *charger;
++	struct i2c_client *client;
++	struct regmap *regmap;
++	struct regulator_desc *regulator_descriptor;
++	bool present;
++};
++
++static enum power_supply_property ucs1002_props[] = {
++	POWER_SUPPLY_PROP_ONLINE,
++	POWER_SUPPLY_PROP_CHARGE_NOW,
++	POWER_SUPPLY_PROP_CURRENT_NOW,
++	POWER_SUPPLY_PROP_CURRENT_MAX,
++	POWER_SUPPLY_PROP_PRESENT, /* the presence of PED */
++	POWER_SUPPLY_PROP_MANUFACTURER,
++	POWER_SUPPLY_PROP_USB_TYPE,
++	POWER_SUPPLY_PROP_HEALTH,
++};
++
++static int ucs1002_get_online(struct ucs1002_info *info,
++			      union power_supply_propval *val)
++{
++	unsigned int reg;
++	int ret;
++
++	ret = regmap_read(info->regmap, UCS1002_REG_OTHER_STATUS, &reg);
++	if (ret)
++		return ret;
++
++	val->intval = !!(reg & F_CHG_ACT);
++
++	return 0;
++}
++
++static int ucs1002_get_charge(struct ucs1002_info *info,
++			      union power_supply_propval *val)
++{
++	/*
++	 * To fit within 32 bits some values are rounded (uA/h)
++	 *
++	 * For Total Accumulated Charge Middle Low Byte register, addr
++	 * 03h, byte 2
++	 *
++	 *   B0: 0.01084 mA/h rounded to 11 uA/h
++	 *   B1: 0.02169 mA/h rounded to 22 uA/h
++	 *   B2: 0.04340 mA/h rounded to 43 uA/h
++	 *   B3: 0.08676 mA/h rounded to 87 uA/h
++	 *   B4: 0.17350 mA/h rounded to 173 uÁ/h
++	 *
++	 * For Total Accumulated Charge Low Byte register, addr 04h,
++	 * byte 3
++	 *
++	 *   B6: 0.00271 mA/h rounded to 3 uA/h
++	 *   B7: 0.005422 mA/h rounded to 5 uA/h
++	 */
++	static const int bit_weights_uAh[BITS_PER_TYPE(u32)] = {
++		/*
++		 * Bit corresponding to low byte (offset 0x04)
++		 * B0 B1 B2 B3 B4 B5 B6 B7
++		 */
++		0, 0, 0, 0, 0, 0, 3, 5,
++		/*
++		 * Bit corresponding to middle low byte (offset 0x03)
++		 * B0 B1 B2 B3 B4 B5 B6 B7
++		 */
++		11, 22, 43, 87, 173, 347, 694, 1388,
++		/*
++		 * Bit corresponding to middle high byte (offset 0x02)
++		 * B0 B1 B2 B3 B4 B5 B6 B7
++		 */
++		2776, 5552, 11105, 22210, 44420, 88840, 177700, 355400,
++		/*
++		 * Bit corresponding to high byte (offset 0x01)
++		 * B0 B1 B2 B3 B4 B5 B6 B7
++		 */
++		710700, 1421000, 2843000, 5685000, 11371000, 22742000,
++		45484000, 90968000,
++	};
++	unsigned long total_acc_charger;
++	unsigned int reg;
++	int i, ret;
++
++	ret = regmap_bulk_read(info->regmap, UCS1002_REG_TOTAL_ACC_CHARGE,
++			       &reg, sizeof(u32));
++	if (ret)
++		return ret;
++
++	total_acc_charger = be32_to_cpu(reg); /* BE as per offsets above */
++	val->intval = 0;
++
++	for_each_set_bit(i, &total_acc_charger, ARRAY_SIZE(bit_weights_uAh))
++		val->intval += bit_weights_uAh[i];
++
++	return 0;
++}
++
++static int ucs1002_get_current(struct ucs1002_info *info,
++			       union power_supply_propval *val)
++{
++	/*
++	 * The Current Measurement register stores the measured
++	 * current value delivered to the portable device. The range
++	 * is from 9.76 mA to 2.5 A.
++	 */
++	static const int bit_weights_uA[BITS_PER_TYPE(u8)] = {
++		9760, 19500, 39000, 78100, 156200, 312300, 624600, 1249300,
++	};
++	unsigned long current_measurement;
++	unsigned int reg;
++	int i, ret;
++
++	ret = regmap_read(info->regmap, UCS1002_REG_CURRENT_MEASUREMENT, &reg);
++	if (ret)
++		return ret;
++
++	current_measurement = reg;
++	val->intval = 0;
++
++	for_each_set_bit(i, &current_measurement, ARRAY_SIZE(bit_weights_uA))
++		val->intval += bit_weights_uA[i];
++
++	return 0;
++}
++
++/*
++ * The Current Limit register stores the maximum current used by the
++ * port switch. The range is from 500mA to 2.5 A.
++ */
++static const u32 ucs1002_current_limit_uA[] = {
++	500000, 900000, 1000000, 1200000, 1500000, 1800000, 2000000, 2500000,
++};
++
++static int ucs1002_get_max_current(struct ucs1002_info *info,
++				   union power_supply_propval *val)
++{
++	unsigned int reg;
++	int ret;
++
++	ret = regmap_read(info->regmap, UCS1002_REG_ILIMIT, &reg);
++	if (ret)
++		return ret;
++
++	val->intval = ucs1002_current_limit_uA[reg & UCS1002_ILIM_SW_MASK];
++
++	return 0;
++}
++
++static int ucs1002_set_max_current(struct ucs1002_info *info, u32 val)
++{
++	unsigned int reg;
++	int ret, idx;
++
++	for (idx = 0; idx < ARRAY_SIZE(ucs1002_current_limit_uA); idx++) {
++		if (val == ucs1002_current_limit_uA[idx])
++			break;
++	}
++
++	if (idx == ARRAY_SIZE(ucs1002_current_limit_uA))
++		return -EINVAL;
++
++	ret = regmap_write(info->regmap, UCS1002_REG_ILIMIT, idx);
++	if (ret)
++		return ret;
++	/*
++	 * Any current limit setting exceeding the one set via ILIM
++	 * pin will be rejected, so we read out freshly changed limit
++	 * to make sure that it took effect.
++	 */
++	ret = regmap_read(info->regmap, UCS1002_REG_ILIMIT, &reg);
++	if (ret)
++		return ret;
++
++	if (reg != idx)
++		return -EINVAL;
++
++	return 0;
++}
++
++static enum power_supply_usb_type ucs1002_usb_types[] = {
++	POWER_SUPPLY_USB_TYPE_PD,
++	POWER_SUPPLY_USB_TYPE_SDP,
++	POWER_SUPPLY_USB_TYPE_DCP,
++	POWER_SUPPLY_USB_TYPE_CDP,
++	POWER_SUPPLY_USB_TYPE_UNKNOWN,
++};
++
++static int ucs1002_set_usb_type(struct ucs1002_info *info, int val)
++{
++	unsigned int mode;
++
++	if (val >= ARRAY_SIZE(ucs1002_usb_types))
++		return -EINVAL;
++
++	switch (ucs1002_usb_types[val]) {
++	case POWER_SUPPLY_USB_TYPE_PD:
++		mode = V_SET_ACTIVE_MODE_DEDICATED;
++		break;
++	case POWER_SUPPLY_USB_TYPE_SDP:
++		mode = V_SET_ACTIVE_MODE_BC12_SDP;
++		break;
++	case POWER_SUPPLY_USB_TYPE_DCP:
++		mode = V_SET_ACTIVE_MODE_BC12_DCP;
++		break;
++	case POWER_SUPPLY_USB_TYPE_CDP:
++		mode = V_SET_ACTIVE_MODE_BC12_CDP;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
++				  V_SET_ACTIVE_MODE_MASK, mode);
++}
++
++static int ucs1002_get_usb_type(struct ucs1002_info *info,
++				union power_supply_propval *val)
++{
++	enum power_supply_usb_type type;
++	unsigned int reg;
++	int ret;
++
++	ret = regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &reg);
++	if (ret)
++		return ret;
++
++	switch (reg & F_ACTIVE_MODE_MASK) {
++	default:
++		type = POWER_SUPPLY_USB_TYPE_UNKNOWN;
++		break;
++	case F_ACTIVE_MODE_DEDICATED:
++		type = POWER_SUPPLY_USB_TYPE_PD;
++		break;
++	case F_ACTIVE_MODE_BC12_SDP:
++		type = POWER_SUPPLY_USB_TYPE_SDP;
++		break;
++	case F_ACTIVE_MODE_BC12_DCP:
++		type = POWER_SUPPLY_USB_TYPE_DCP;
++		break;
++	case F_ACTIVE_MODE_BC12_CDP:
++		type = POWER_SUPPLY_USB_TYPE_CDP;
++		break;
++	};
++
++	val->intval = type;
++
++	return 0;
++}
++
++static int ucs1002_get_health(struct ucs1002_info *info,
++			      union power_supply_propval *val)
++{
++	unsigned int reg;
++	int ret, health;
++
++	ret = regmap_read(info->regmap, UCS1002_REG_INTERRUPT_STATUS, &reg);
++	if (ret)
++		return ret;
++
++	if (reg & F_TSD)
++		health = POWER_SUPPLY_HEALTH_OVERHEAT;
++	else if (reg & (F_OVER_VOLT | F_BACK_VOLT))
++		health = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
++	else if (reg & F_OVER_ILIM)
++		health = POWER_SUPPLY_HEALTH_OVERCURRENT;
++	else if (reg & (F_DISCHARGE_ERR | F_MIN_KEEP_OUT))
++		health = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
++	else
++		health = POWER_SUPPLY_HEALTH_GOOD;
++
++	val->intval = health;
++
++	return 0;
++}
++
++static int ucs1002_get_property(struct power_supply *psy,
++				enum power_supply_property psp,
++				union power_supply_propval *val)
++{
++	struct ucs1002_info *info = power_supply_get_drvdata(psy);
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_ONLINE:
++		return ucs1002_get_online(info, val);
++	case POWER_SUPPLY_PROP_CHARGE_NOW:
++		return ucs1002_get_charge(info, val);
++	case POWER_SUPPLY_PROP_CURRENT_NOW:
++		return ucs1002_get_current(info, val);
++	case POWER_SUPPLY_PROP_CURRENT_MAX:
++		return ucs1002_get_max_current(info, val);
++	case POWER_SUPPLY_PROP_USB_TYPE:
++		return ucs1002_get_usb_type(info, val);
++	case POWER_SUPPLY_PROP_HEALTH:
++		return ucs1002_get_health(info, val);
++	case POWER_SUPPLY_PROP_PRESENT:
++		val->intval = info->present;
++		return 0;
++	case POWER_SUPPLY_PROP_MANUFACTURER:
++		val->strval = UCS1002_MANUFACTURER;
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ucs1002_set_property(struct power_supply *psy,
++				enum power_supply_property psp,
++				const union power_supply_propval *val)
++{
++	struct ucs1002_info *info = power_supply_get_drvdata(psy);
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CURRENT_MAX:
++		return ucs1002_set_max_current(info, val->intval);
++	case POWER_SUPPLY_PROP_USB_TYPE:
++		return ucs1002_set_usb_type(info, val->intval);
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ucs1002_property_is_writeable(struct power_supply *psy,
++					 enum power_supply_property psp)
++{
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CURRENT_MAX:
++	case POWER_SUPPLY_PROP_USB_TYPE:
++		return true;
++	default:
++		return false;
++	}
++}
++
++static const struct power_supply_desc ucs1002_charger_desc = {
++	.name			= "ucs1002",
++	.type			= POWER_SUPPLY_TYPE_USB,
++	.usb_types		= ucs1002_usb_types,
++	.num_usb_types		= ARRAY_SIZE(ucs1002_usb_types),
++	.get_property		= ucs1002_get_property,
++	.set_property		= ucs1002_set_property,
++	.property_is_writeable	= ucs1002_property_is_writeable,
++	.properties		= ucs1002_props,
++	.num_properties		= ARRAY_SIZE(ucs1002_props),
++};
++
++static irqreturn_t ucs1002_charger_irq(int irq, void *data)
++{
++	int ret, regval;
++	bool present;
++	struct ucs1002_info *info = data;
++
++	present = info->present;
++
++	ret = regmap_read(info->regmap, UCS1002_REG_OTHER_STATUS, &regval);
++	if (ret)
++		return IRQ_HANDLED;
++
++	/* update attached status */
++	info->present = regval & F_ADET_PIN;
++
++	/* notify the change */
++	if (present != info->present)
++		power_supply_changed(info->charger);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t ucs1002_alert_irq(int irq, void *data)
++{
++	struct ucs1002_info *info = data;
++
++	power_supply_changed(info->charger);
++
++	return IRQ_HANDLED;
++}
++
++static const struct regulator_ops ucs1002_regulator_ops = {
++	.is_enabled	= regulator_is_enabled_regmap,
++	.enable		= regulator_enable_regmap,
++	.disable	= regulator_disable_regmap,
++};
++
++static const struct regulator_desc ucs1002_regulator_descriptor = {
++	.name		= "ucs1002-vbus",
++	.ops		= &ucs1002_regulator_ops,
++	.type		= REGULATOR_VOLTAGE,
++	.owner		= THIS_MODULE,
++	.enable_reg	= UCS1002_REG_SWITCH_CFG,
++	.enable_mask	= F_PWR_EN_SET,
++	.enable_val	= F_PWR_EN_SET,
++	.fixed_uV	= 5000000,
++	.n_voltages	= 1,
++};
++
++static int ucs1002_probe(struct i2c_client *client,
++			 const struct i2c_device_id *dev_id)
++{
++	struct device *dev = &client->dev;
++	struct power_supply_config charger_config = {};
++	const struct regmap_config regmap_config = {
++		.reg_bits = 8,
++		.val_bits = 8,
++	};
++	struct regulator_config regulator_config = {};
++	int irq_a_det, irq_alert, ret;
++	struct regulator_dev *rdev;
++	struct ucs1002_info *info;
++	unsigned int regval;
++
++	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	info->regmap = devm_regmap_init_i2c(client, &regmap_config);
++	ret = PTR_ERR_OR_ZERO(info->charger);
++	if (ret) {
++		dev_err(dev, "Regmap initialization failed: %d\n", ret);
++		return ret;
++	}
++
++	info->client = client;
++
++	irq_a_det = of_irq_get_byname(dev->of_node, "a_det");
++	irq_alert = of_irq_get_byname(dev->of_node, "alert");
++
++	charger_config.of_node = dev->of_node;
++	charger_config.drv_data = info;
++
++	ret = regmap_read(info->regmap, UCS1002_REG_PRODUCT_ID, &regval);
++	if (ret) {
++		dev_err(dev, "Failed to read product ID: %d\n", ret);
++		return ret;
++	}
++
++	if (regval != UCS1002_PRODUCT_ID) {
++		dev_err(dev,
++			"Product ID does not match (0x%02x != 0x%02x)\n",
++			regval, UCS1002_PRODUCT_ID);
++		return -ENODEV;
++	}
++
++	/* Enable charge rationing by default */
++	ret = regmap_update_bits(info->regmap, UCS1002_REG_GENERAL_CFG,
++				 F_RATION_EN, F_RATION_EN);
++	if (ret) {
++		dev_err(dev, "Failed to read general config: %d\n", ret);
++		return ret;
++	}
++
++	/*
++	 * Ignore the M1, M2, PWR_EN, and EM_EN pin states. Set active
++	 * mode selection to BC1.2 CDP.
++	 */
++	ret = regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
++				 V_SET_ACTIVE_MODE_MASK | F_PIN_IGNORE,
++				 V_SET_ACTIVE_MODE_BC12_CDP | F_PIN_IGNORE);
++	if (ret) {
++		dev_err(dev, "Failed to configure default mode: %d\n", ret);
++		return ret;
++	}
++	/*
++	 * Be safe and set initial current limit to 500mA
++	 */
++	ret = ucs1002_set_max_current(info, 500000);
++	if (ret) {
++		dev_err(dev, "Failed to set max current default: %d\n", ret);
++		return ret;
++	}
++
++	info->charger = devm_power_supply_register(dev, &ucs1002_charger_desc,
++						   &charger_config);
++	ret = PTR_ERR_OR_ZERO(info->charger);
++	if (ret) {
++		dev_err(dev, "Failed to register power supply: %d\n", ret);
++		return ret;
++	}
++
++	ret = regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval);
++	if (ret) {
++		dev_err(dev, "Failed to read pin status: %d\n", ret);
++		return ret;
++	}
++
++	info->regulator_descriptor =
++		devm_kmemdup(dev, &ucs1002_regulator_descriptor,
++			     sizeof(ucs1002_regulator_descriptor),
++			     GFP_KERNEL);
++	if (!info->regulator_descriptor)
++		return -ENOMEM;
++
++	info->regulator_descriptor->enable_is_inverted = !(regval & F_SEL_PIN);
++
++	regulator_config.dev = dev;
++	regulator_config.of_node = dev->of_node;
++	regulator_config.regmap = info->regmap;
++
++	rdev = devm_regulator_register(dev, info->regulator_descriptor,
++				       &regulator_config);
++	ret = PTR_ERR_OR_ZERO(info->charger);
++	if (ret) {
++		dev_err(dev, "Failed to register VBUS regulator: %d\n", ret);
++		return ret;
++	}
++
++	if (irq_a_det > 0) {
++		ret = devm_request_threaded_irq(dev, irq_a_det, NULL,
++						ucs1002_charger_irq,
++						IRQF_ONESHOT,
++						"ucs1002-a_det", info);
++		if (ret) {
++			dev_err(dev, "Failed to request A_DET threaded irq: %d\n",
++				ret);
++			return ret;
++		}
++	}
++
++	if (irq_alert > 0) {
++		ret = devm_request_threaded_irq(dev, irq_alert, NULL,
++						ucs1002_alert_irq,
++						IRQF_ONESHOT,
++						"ucs1002-alert", info);
++		if (ret) {
++			dev_err(dev, "Failed to request ALERT threaded irq: %d\n",
++				ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct of_device_id ucs1002_of_match[] = {
++	{ .compatible = "microchip,ucs1002", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, ucs1002_of_match);
++
++static struct i2c_driver ucs1002_driver = {
++	.driver = {
++		   .name = "ucs1002",
++		   .of_match_table = ucs1002_of_match,
++	},
++	.probe = ucs1002_probe,
++};
++module_i2c_driver(ucs1002_driver);
++
++MODULE_DESCRIPTION("Microchip UCS1002 Programmable USB Port Power Controller");
++MODULE_AUTHOR("Enric Balletbo Serra <enric.balletbo@collabora.com>");
++MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.20.1
 
-And if vfork() alone isn't flexible enough, alternatively: How about
-an API that forks a new child in the same address space, and then
-allows the parent to invoke arbitrary syscalls in the context of the
-child? You could also build that in userspace if you wanted, I think -
-just let the child run an assembly loop that reads registers from a
-unix seqpacket socket, invokes the syscall instruction, and writes the
-value of the result register back into the seqpacket socket. As long
-as you use CLONE_VM, you don't have to worry about moving the pointer
-targets of syscalls. The user-visible API could look like this:
-
-// flags added by the implementation: CLONE_VM|CLONE_CHILD_SETTID
-puppet_handle = fork_puppet(CLONE_NEWUSER|SIGCHLD);
-int uid_map_fd = puppet_syscall(SYS_open, "/proc/self/uid_map");
-char uid_map_buf[1000];
-puppet_syscall(SYS_write, uid_map_fd, uid_map_buf, strlen(uid_map_buf));
-puppet_syscall(SYS_close, uid_map_fd);
-// waits for the child to either exit or switch to new mm via
-CLONE_CHILD_CLEARTID
-puppet_finish_execve(path, argv, envv);
