@@ -2,160 +2,103 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A24AC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 04:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6219FC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 04:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305E82087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 04:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370E22087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 04:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="MT3mzMT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfD2Eyl (ORCPT
+        id S1727414AbfD2Eys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 00:54:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:28445 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727230AbfD2EyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 00:54:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 21:54:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
-   d="scan'208";a="146566310"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga003.jf.intel.com with ESMTP; 28 Apr 2019 21:54:09 -0700
-From:   ira.weiny@intel.com
-To:     lsf-pc@lists.linux-foundation.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
-        Jan Kara <jack@suse.cz>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, Ira Weiny <ira.weiny@intel.com>
-Subject: [RFC PATCH 08/10] mm/gup: fs: Send SIGBUS on truncate of active file
-Date:   Sun, 28 Apr 2019 21:53:57 -0700
-Message-Id: <20190429045359.8923-9-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190429045359.8923-1-ira.weiny@intel.com>
-References: <20190429045359.8923-1-ira.weiny@intel.com>
+        Mon, 29 Apr 2019 00:54:48 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46124 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727152AbfD2EyJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 00:54:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j11so4685609pff.13
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 21:54:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=CXY8NMI+MMoFwyd5a0U3G9swoqWap2mhzcLLts/Z+iE=;
+        b=MT3mzMT76800YDXvDZ5HeHvywukXbF/p5hE0jBqJpGYZZg1bhMX2UHmZ1HU1dvIheR
+         9V3fe+IwApl8EGbBqr2IZkMENTIoZrC2hLsTBul7PX4wqT1iG/MuEFlYgfUtMUoSToFc
+         7CbzrSVAtGB1V9nsEgm59WhrmtIFGM7bhpw1w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=CXY8NMI+MMoFwyd5a0U3G9swoqWap2mhzcLLts/Z+iE=;
+        b=OVdNM5TsesyrEvYE1iSIdOjfkKe3CaiewOXf6F8m/Jo8f6K5PAW+gprgx7p4/wt2tR
+         0QYij01ZTQxZOzCN8Uw/3Wq2QQkF3FdS2tcw1JddGZ1u0dqaJLEeHEwB/p2VVDYh92Mh
+         tQMsj8bQ4SNiNjiSJ1PVz8zxRzVuUQuH+4apTHV0jL5QTqiqweXQVnsLudSmnaxeIEPP
+         9DwTb+LdDiqP0Fqknzvex8xYwLq5aD8vtiMz0BaFzxCCHe6j3xY+KZXUH4DqmsBAlO2d
+         FLRpP0aP8dMAnPlisCdUaWwAPSfGeixMY59TgPkYb8VqDKnt/kdqKlh/H6HflMA+08AI
+         Xltw==
+X-Gm-Message-State: APjAAAX5kr74trHHT9LDGHcxrJJGJmG1GKe1at20VIfjjrwcJNX2tjeL
+        du4RAEz3RXZYi6WKRtfbY9l3zA==
+X-Google-Smtp-Source: APXvYqxOmKGuDu957cqrxEQ+1VImzuI7N1RjWAr+p16Qnie6ZNUhOIBHM3h6IhCgt1zC9o45e1De9A==
+X-Received: by 2002:a63:7d03:: with SMTP id y3mr55014550pgc.8.1556513648514;
+        Sun, 28 Apr 2019 21:54:08 -0700 (PDT)
+Received: from localhost (ppp121-45-207-92.bras1.cbr1.internode.on.net. [121.45.207.92])
+        by smtp.gmail.com with ESMTPSA id j67sm74431179pfc.72.2019.04.28.21.54.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 28 Apr 2019 21:54:07 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Matthew Garrett <mjg59@google.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, cmr <cmr@informatik.wtf>
+Subject: Re: [PATCH V32 01/27] Add the ability to lock down access to the running kernel image
+In-Reply-To: <87wojdy8ro.fsf@dja-thinkpad.axtens.net>
+References: <20190404003249.14356-1-matthewgarrett@google.com> <20190404003249.14356-2-matthewgarrett@google.com> <059c523e-926c-24ee-0935-198031712145@au1.ibm.com> <CACdnJus9AhAAYs-R94BH7HDuuQfXjgdhdqUR6Pvk9mxbuPx1=Q@mail.gmail.com> <87wojdy8ro.fsf@dja-thinkpad.axtens.net>
+Date:   Mon, 29 Apr 2019 14:54:03 +1000
+Message-ID: <87tvehxvh0.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Hi, 
 
-Now that the taking of LONGTERM leases is in place we can now facilitate
-sending a SIGBUS to process if a file truncate or hole punch is
-performed and they do not respond by releasing the lease.
+>>> I'm thinking about whether we should lock down the powerpc xmon debug
+>>> monitor - intuitively, I think the answer is yes if for no other reason
+>>> than Least Astonishment, when lockdown is enabled you probably don't
+>>> expect xmon to keep letting you access kernel memory.
+>>
+>> The original patchset contained a sysrq hotkey to allow physically
+>> present users to disable lockdown, so I'm not super concerned about
+>> this case - I could definitely be convinced otherwise, though.
 
-The standard file lease_break_time is used to time out the LONGTERM
-lease which is in place on the inode.
----
- fs/ext4/inode.c    |  4 ++++
- fs/locks.c         | 13 +++++++++++--
- fs/xfs/xfs_file.c  |  4 ++++
- include/linux/fs.h | 13 +++++++++++++
- 4 files changed, 32 insertions(+), 2 deletions(-)
+So Mimi contacted me offlist and very helpfully provided me with a much
+better and less confused justification for disabling xmon in lockdown:
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index b32a57bc5d5d..bee456c8c805 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4237,6 +4237,10 @@ int ext4_break_layouts(struct inode *inode)
- 	if (WARN_ON_ONCE(!rwsem_is_locked(&ei->i_mmap_sem)))
- 		return -EINVAL;
- 
-+	/* Break longterm leases */
-+	if (dax_mapping_is_dax(inode->i_mapping))
-+		break_longterm(inode);
-+
- 	do {
- 		page = dax_layout_busy_page(inode->i_mapping);
- 		if (!page)
-diff --git a/fs/locks.c b/fs/locks.c
-index 58c6d7a411b6..c77eee081d11 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1580,6 +1580,7 @@ static void time_out_leases(struct inode *inode, struct list_head *dispose)
- {
- 	struct file_lock_context *ctx = inode->i_flctx;
- 	struct file_lock *fl, *tmp;
-+	struct task_struct *tsk;
- 
- 	lockdep_assert_held(&ctx->flc_lock);
- 
-@@ -1587,8 +1588,16 @@ static void time_out_leases(struct inode *inode, struct list_head *dispose)
- 		trace_time_out_leases(inode, fl);
- 		if (past_time(fl->fl_downgrade_time))
- 			lease_modify(fl, F_RDLCK, dispose);
--		if (past_time(fl->fl_break_time))
--			lease_modify(fl, F_UNLCK, dispose);
-+		if (past_time(fl->fl_break_time)) {
-+			if (fl->fl_flags & FL_LONGTERM) {
-+				tsk = find_task_by_vpid(fl->fl_pid);
-+				fl->fl_break_time = 1 + jiffies + lease_break_time * HZ;
-+				lease_modify_longterm(fl, F_UNLCK, dispose);
-+				kill_pid(tsk->thread_pid, SIGBUS, 0);
-+			} else {
-+				lease_modify(fl, F_UNLCK, dispose);
-+			}
-+		}
- 	}
- }
- 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 1f2e2845eb76..ebd310f3ae65 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -739,6 +739,10 @@ xfs_break_dax_layouts(
- 
- 	ASSERT(xfs_isilocked(XFS_I(inode), XFS_MMAPLOCK_EXCL));
- 
-+	/* Break longterm leases */
-+	if (dax_mapping_is_dax(inode->i_mapping))
-+		break_longterm(inode);
-+
- 	page = dax_layout_busy_page(inode->i_mapping);
- 	if (!page)
- 		return 0;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index be2d08080aa5..0e8b21240a71 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2459,6 +2459,14 @@ static inline int break_layout(struct inode *inode, bool wait)
- 	return 0;
- }
- 
-+static inline int break_longterm(struct inode *inode)
-+{
-+	smp_mb();
-+	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease))
-+		return __break_lease(inode, O_WRONLY, FL_LONGTERM);
-+	return 0;
-+}
-+
- #else /* !CONFIG_FILE_LOCKING */
- static inline int break_lease(struct inode *inode, unsigned int mode)
- {
-@@ -2486,6 +2494,11 @@ static inline int break_layout(struct inode *inode, bool wait)
- 	return 0;
- }
- 
-+static inline int break_longterm(struct inode *inode, bool wait)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_FILE_LOCKING */
- 
- /* fs/open.c */
--- 
-2.20.1
+On x86, physical presence (== console access) is a trigger to
+disable/enable lockdown mode.
 
+In lockdown mode, you're not supposed to be able to modify memory. xmon
+allows you to modify memory, and therefore shouldn't be allowed in
+lockdown.
+
+So, if you can disable lockdown on the console that's probably OK, but
+it should be specifically disabling lockdown, not randomly editing
+memory with xmon.
+
+Regards,
+Daniel
