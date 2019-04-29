@@ -2,74 +2,125 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FC0C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D239C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792B92054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D16E2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfD2NTF (ORCPT
+        id S1728204AbfD2NTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:19:05 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40169 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2NTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:19:05 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 06:19:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
-   d="scan'208";a="139772786"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga006.jf.intel.com with ESMTP; 29 Apr 2019 06:19:02 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hL6BR-0008ET-05; Mon, 29 Apr 2019 16:19:01 +0300
-Date:   Mon, 29 Apr 2019 16:19:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J., Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v2] gpio: sch: Add interrupt support
-Message-ID: <20190429131900.GD9224@smile.fi.intel.com>
-References: <046793ee-ba51-6a1b-1aa5-14560d849df7@siemens.com>
+        Mon, 29 Apr 2019 09:19:20 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42039 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfD2NTT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:19:19 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hL6BZ-0008Nm-Kv; Mon, 29 Apr 2019 15:19:09 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hL6BX-0008Ne-87; Mon, 29 Apr 2019 15:19:07 +0200
+Date:   Mon, 29 Apr 2019 15:19:07 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 08/16] watchdog: imx_sc_wdt: drop warning after
+ calling watchdog_init_timeout
+Message-ID: <20190429131907.xpl6duf4cvtwbmud@pengutronix.de>
+References: <20190419181601.7412-1-wsa+renesas@sang-engineering.com>
+ <20190419181601.7412-9-wsa+renesas@sang-engineering.com>
+ <20190429101558.6vyiospb6oqsstt7@pengutronix.de>
+ <616a9d4e-7050-a6c2-727d-f62e08d3d98c@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <046793ee-ba51-6a1b-1aa5-14560d849df7@siemens.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <616a9d4e-7050-a6c2-727d-f62e08d3d98c@roeck-us.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 07:55:52AM +0200, Jan Kiszka wrote:
-> Validated on the Quark platform, this adds interrupt support on rising
-> and/or falling edges.
+Hello,
 
-Can we split it to two:
-- Add IRQ support on edge
-- Add ACPI handler (with explanation in the commit message why we do like this,
-  based on the thread from v1)
+On Mon, Apr 29, 2019 at 05:37:12AM -0700, Guenter Roeck wrote:
+> On 4/29/19 3:15 AM, Uwe Kleine-König wrote:
+> > On Fri, Apr 19, 2019 at 08:15:53PM +0200, Wolfram Sang wrote:
+> > > The core will print out details now.
+> > > 
+> > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > > ---
+> > >   drivers/watchdog/imx_sc_wdt.c | 5 +----
+> > >   1 file changed, 1 insertion(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
+> > > index 86c2722f2a09..6dc24ceb1b2c 100644
+> > > --- a/drivers/watchdog/imx_sc_wdt.c
+> > > +++ b/drivers/watchdog/imx_sc_wdt.c
+> > 
+> > This driver isn't in next, and I don't know where to look for it.
+> > 
+> 
+> Branch watchdog-next of
+> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
 
-?
+Thanks, found it now.
+ 
+> > > @@ -117,10 +117,7 @@ static int imx_sc_wdt_probe(struct platform_device *pdev)
+> > >   	imx_sc_wdd->parent = &pdev->dev;
+> > >   	imx_sc_wdd->timeout = DEFAULT_TIMEOUT;
+> > > -	ret = watchdog_init_timeout(imx_sc_wdd, 0, &pdev->dev);
+> > > -	if (ret)
+> > > -		dev_warn(&pdev->dev, "Failed to set timeout value, using default\n");
+> > > -
+> > > +	watchdog_init_timeout(imx_sc_wdd, 0, &pdev->dev);
+> > 
+> > One side effect is however that ret isn't set any more. So I wonder if a
+> > failure in watchdog_init_timeout() really makes the core print the
+> > details as expected.
+> > 
+> 
+> Sorry, I don't understand. The warning is printed in watchdog_init_timeout().
+> What does that have to do with setting ret here or not ?
 
+Ah, I thought the warning is done in the caller of the modified
+function. Maybe this means the commit log can be improved to for
+example:
+
+	The function watchdog_init_timeout() itself already emits a
+	more informative warning on failure. So drop the driver specific
+	one.
+
+Otherwise my concerns are eliminated.
+
+Thanks
+Uwe
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
