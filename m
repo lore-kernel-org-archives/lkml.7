@@ -2,97 +2,75 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8307FC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4E2C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AF920652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:45:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TqMoLK/D"
+	by mail.kernel.org (Postfix) with ESMTP id 5FA7A20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfD2NpA (ORCPT
+        id S1728220AbfD2Ntu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:45:00 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:36654 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725838AbfD2NpA (ORCPT
+        Mon, 29 Apr 2019 09:49:50 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:36692 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726321AbfD2Ntt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:45:00 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C3891C00C7;
-        Mon, 29 Apr 2019 13:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556545497; bh=KFEGEBvc2AV2G1HibQZsWwJ5igLQZzg0nEiClSfL5jw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=TqMoLK/Dm8I9AH4ZobnzVJoyE5b13wyfv3pwZEMumuCuuFMr1Zdr4+oicb9Q4y4Mi
-         D7yMGG4UstHCJAuuF+3W1QBuYe0x6jlnti/pyVKJN37Xy2/FqlUBZEmW9s2+waqYWU
-         LPl4sCAWoyIpsyJoN39JsCqtrGb2Qiv6uWPF1C+S+QXqJFyfjoLsjOFTLPyRNbpLPC
-         jG4V4r5a37GRJ3ZwjiNTOSoBUMsHijXBrBEQNR0HP9SdsRG0xS5OJUdQxRD4vyCgym
-         aErimVjsElxcowsxtjp6lm9kdSCw8TioGZqmaYIrsXtCQdDXjFL4+B+K7LxBs471xB
-         5LxTTNJYqv+bQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 3FFC0A0066;
-        Mon, 29 Apr 2019 13:44:58 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 29 Apr 2019 06:44:58 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 29 Apr 2019 15:44:57 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>
-CC:     "Voon, Weifeng" <weifeng.voon@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Subject: RE: [PATCH 0/7] net: stmmac: enable EHL SGMII
-Thread-Topic: [PATCH 0/7] net: stmmac: enable EHL SGMII
-Thread-Index: AQHU+n6UM7GU7OtY/UWKCWYebuRSxqZLMmUAgAEn3oCAAFapgIAAIdQAgAAMagCABaWxAIAAfmcAgAAqzmA=
-Date:   Mon, 29 Apr 2019 13:44:56 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46E367@DE02WEMBXB.internal.synopsys.com>
-References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
- <20190424134854.GP28405@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8146EF128@PGSMSX103.gar.corp.intel.com>
- <20190425123801.GD8117@lunn.ch>
- <AF233D1473C1364ABD51D28909A1B1B75C0B205D@pgsmsx114.gar.corp.intel.com>
- <20190425152332.GD23779@lunn.ch>
- <AF233D1473C1364ABD51D28909A1B1B75C0B8B35@pgsmsx114.gar.corp.intel.com>
- <20190429131016.GE10772@lunn.ch>
-In-Reply-To: <20190429131016.GE10772@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Apr 2019 09:49:49 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3TDds9B026085;
+        Mon, 29 Apr 2019 08:49:47 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail4.cirrus.com ([87.246.98.35])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2s4kgpam9m-1;
+        Mon, 29 Apr 2019 08:49:47 -0500
+Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
+        by mail4.cirrus.com (Postfix) with ESMTP id 46827611C8AC;
+        Mon, 29 Apr 2019 08:51:28 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 29 Apr
+ 2019 14:49:46 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 29 Apr 2019 14:49:46 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 4F63645;
+        Mon, 29 Apr 2019 14:49:46 +0100 (BST)
+Date:   Mon, 29 Apr 2019 14:49:46 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH] rtc: wm831x: use .set_time
+Message-ID: <20190429134946.GD81578@ediswmail.ad.cirrus.com>
+References: <20190407115444.20650-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190407115444.20650-1-alexandre.belloni@bootlin.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=599 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904290098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-Date: Mon, Apr 29, 2019 at 14:10:16
+On Sun, Apr 07, 2019 at 01:54:44PM +0200, Alexandre Belloni wrote:
+> Use .set_time instead of the deprecated .set_mmss.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
 
-> Yes, if all i can do is SGMII, hard coding SGMII is fine. But you
-> should probably check phy-mode and return an error if it has a value
-> other than SGMII,
-
-+1 because XPCS supports 1000Base-X but it seems this SoC doesn't.
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
 Thanks,
-Jose Miguel Abreu
+Charles
