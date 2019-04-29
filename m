@@ -2,135 +2,107 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4EAC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB8C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A302075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:12:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556575945;
-	bh=jRT4+7dbuZ3essP+qoyKVZdhFfyIkM0445dXX3KClBU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CmgZJNKV+TGDw6BaLGj6cAWoXt5cFoXqYksuDxG+ec+zZxl4W2tftnrupZVYPS1ZK
-	 oeX/8YPmHq3Qv/n9XUPhR6glJmXcQYBVpdHBMRXew7BwfQOXaZcYf7WF61OUJyirMq
-	 59NLVSg+/gbG3YVBVNBIJAYEc4ii2FTynd0Ehf4A=
+	by mail.kernel.org (Postfix) with ESMTP id BF4EA2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:13:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qwffatbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbfD2WMX (ORCPT
+        id S1729601AbfD2WNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:12:23 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38553 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbfD2WMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:12:21 -0400
-Received: by mail-lj1-f195.google.com with SMTP id e18so4962906lja.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 15:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cTkJ5qHxsD8SYnb8NRVfGGysKDzTffkMwFGKzHjAIes=;
-        b=P/hvsAFBYFuVdRyxHJQqYZPAHZlzO7DpELqDJ8wtqrIzcq7eThvNjt852fIlr3+1hp
-         vVyLfbe/O0jvxqP511QI0JfPRN9J+m8BMRz0pKGIgZRo0Qiu2YusRGP2+ndwrIJZA81T
-         qOBt9kqSGLrhz0pQMSTGYNPFKlQsei2x7M0lc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cTkJ5qHxsD8SYnb8NRVfGGysKDzTffkMwFGKzHjAIes=;
-        b=BzE8y/jmEyN9QWh2Y//j/BU/pJiCDIMvticXldbenBP7bQniBTzIPN7bDkgyKdocOO
-         1IobUywfQ2rNLO7gSkjeJsIvfGXSL7rXoG62wyyJFrR0Q9I5rCRrJbLeaWJsphQmjMah
-         bwek9H8lS8gzH0FAALfNnGYUgkVomq5OH9g7pqtS+4lVuPgyF6upNNlmj3ONZntMJS4e
-         D/GuPjOsMxomLsP+OewNyomoNsBTElHiO926F9DQF0njmDk3+nfI/Hyvh+Ftw/HtDlmI
-         SoRWg2Ns9jM/U5oF8kcsX4gpoROt/mQZz0R5TA19jeDTn7Jkw/ySMLjfgAe0xcUDEm2q
-         tpNQ==
-X-Gm-Message-State: APjAAAWN5vl1RX+ez0Q2uz7iN1x2FJTfNDiLFZUwVFIhPbNfjwjqxxi3
-        ykMlJiMHyizELtrUfOGbQyaQNWmgBz0=
-X-Google-Smtp-Source: APXvYqz7RVtkjPOIWYxL1rIcAXe1uxDPNdT8nmg9dpNzDu5Xc6a/fguh10XtFrsMgLaxrY4XY/vkOg==
-X-Received: by 2002:a2e:884a:: with SMTP id z10mr24408117ljj.21.1556575939386;
-        Mon, 29 Apr 2019 15:12:19 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id k10sm7162481ljh.86.2019.04.29.15.12.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 15:12:18 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id i68so9083061lfi.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 15:12:18 -0700 (PDT)
-X-Received: by 2002:a19:48c9:: with SMTP id v192mr32975252lfa.136.1556575607339;
- Mon, 29 Apr 2019 15:06:47 -0700 (PDT)
+        Mon, 29 Apr 2019 18:13:52 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58499 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729418AbfD2WNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:13:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44tJpN53Lzz9sB8;
+        Tue, 30 Apr 2019 08:13:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556576029;
+        bh=JohJsfj3PTYRmS+9/9zJbwJfmi37M2byawEZFQG5jl8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qwffatbEmBWPEs/zpyHBqXltw9cJNRgM5G1kUgtzMIxvW91zRrwBZKwF2Rl12fgEd
+         nu+yAg0BmycrcIZwE5RQwovT6rso6S27IZWskV+VDMXvSJHY1azOcgq++s91Kl8363
+         K+1rgtM9wuAKs/mQmLhcSUpyRLEOJEiWtpXDpT4vs+V4edFcrE1+uhYg5NsnF0Q7uQ
+         +zFwIimeSYyE2b3uV724DdZyFYdHpJIw8gJ6aB78On20df7RA/rEHdDvIQeLzCiI4a
+         YCj6eD9RgOECaulb7fTIHFiC+H9KxVtovqCWvftdh4ekeW5QroClBzfgPZVZMwrr8L
+         w+kYaNKtcdzXw==
+Date:   Tue, 30 Apr 2019 08:13:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: linux-next: manual merge of the rdma-fixes tree with Linus' tree
+Message-ID: <20190430081346.3196b60f@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
- <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
- <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
- <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
- <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com> <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
-In-Reply-To: <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 15:06:30 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjAQaowLHBrXs1M5K-Nr-eVQMt0K8oyCuWxKTvP9k=qqA@mail.gmail.com>
-Message-ID: <CAHk-=wjAQaowLHBrXs1M5K-Nr-eVQMt0K8oyCuWxKTvP9k=qqA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/aGqEJja6r4eSE9GIBbFg4sy"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 11:57 AM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > Otherwise you could never trust the whole sti shadow thing - and it very much is part of the architecture.
->
-> Is this documented somewhere?
+--Sig_/aGqEJja6r4eSE9GIBbFg4sy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Btw, if you really don't trust the sti shadow despite it going all the
-way back to the 8086, then you could instead make the irqoff code do
+Hi all,
 
-        push %gs:bp_call_return
-        push %gs:bp_call_target
-        sti
-        ret
+Today's linux-next merge of the rdma-fixes tree got a conflict in:
 
-which just keeps interrupts explicitly disabled over the whole use of
-the percpu data.
+  drivers/infiniband/core/uverbs_main.c
 
-The actual "ret" instruction doesn't matter, it's not going to change
-in this model (where the code isn't dynamically generated or changed).
-So I claim that it will still be protected by the sti shadow, but when
-written that way it doesn't actually matter, and you could reschedule
-immediately after the sti (getting an interrupt there might make the
-stack frame look odd, but it doesn't really affect anything else)
+between commit:
 
-                  Linus
+  6a5c5d26c4c6 ("rdma: fix build errors on s390 and MIPS due to bad ZERO_PA=
+GE use")
+
+from Linus' tree and commit:
+
+  d79a26b99f5f ("RDMA/uverbs: Fix compilation error on s390 and mips platfo=
+rms")
+
+from the rdma-fixes tree.
+
+I fixed it up (I just used the version from Linus' tree) and can carry the
+fix as necessary. This is now fixed as far as linux-next is concerned,
+but any non trivial conflicts should be mentioned to your upstream
+maintainer when your tree is submitted for merging.  You may also want
+to consider cooperating with the maintainer of the conflicting tree to
+minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/aGqEJja6r4eSE9GIBbFg4sy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzHdxoACgkQAVBC80lX
+0GwG3Af/a5q4L1kD5ptbcU8ulRUg1b6T7gFVsjTSYvloLMDOMxABY+duRjRaipTe
+FQl2rELZkLkt/7wXWv5NtRJgaBTLQ4Q+zV8liInIsypEOCjK5VWenuPzwxw3bJQ8
+WsqEObsNpBKTFJeqxSrgELc/mxHP4sn6Mt/c6silZ0FPodzCl4JSEFwWSm7HNzK/
+4SHP672W926uo4woPwUq1oRxmQnk0LHEMyPxJZ48wV/Z3U0F4vGYMfvQeJfYtCrW
+fPidonA254Mfg9TxwdOej3h9OZpu+yr7GRXJwfo1gvLn7ggtU4xQD83Cr41rclwf
+5FzB5nJ0z1DHrrwaJZfNk7eN4pGH8g==
+=oXyz
+-----END PGP SIGNATURE-----
+
+--Sig_/aGqEJja6r4eSE9GIBbFg4sy--
