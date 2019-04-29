@@ -2,93 +2,105 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4178C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BD6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9232147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FAF2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556541868;
-	bh=Ggyhg8DPvggSyL5RERc8iJGOFwasiEkW75GgxgRJbZA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mO9bpemoTRKEqb7nXthAtHQLknt+f0Tt3I30ZY+0yYwDqcaucMMQf8R63GTHitwfb
-	 dhdPDiXuQqsEZE3DUztFqd94aKTPPmgYzVVmCViMtWc/GYQcRXP/OPb3vw514X+61C
-	 1wVZVwWMsACaJKWgqf8DUHXM9Mi5Ir4SWjsfTjQI=
+	s=default; t=1556542112;
+	bh=QSu+NAd1MMfKxHlfItFxMun2D/kEyuEgIobDbv6k/Hc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZqRVmc+MNfBsYhpWizjPfLJrLpB43gFtzpog6SacVuQeP+rsW+UJPqmeAr6Z2JYjH
+	 7btdSsBUu7svl8L1Q1QqgJWF4MmciR3uGdWxHwlGVGAM0iB+zU1Tt9+atmTatQJypx
+	 GmcRRAObL4WTTOle+ovCtj9Whm7sBd4JSrCdJObI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfD2Mo1 (ORCPT
+        id S1728155AbfD2Msa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbfD2Mo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:44:27 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6860E21530;
-        Mon, 29 Apr 2019 12:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556541866;
-        bh=Ggyhg8DPvggSyL5RERc8iJGOFwasiEkW75GgxgRJbZA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zqdosaHHAAmr3mNLOGR3uVYumPkTSKqrRwSlxHGLG67URDPSBRiDfSNz6gPYX4/pv
-         Xzsq+C3fji5XfZp4lmD2nC2hSyOuQqPBDT7btnEptcEmYl6dt9r9UHtjYw/dANYJ3n
-         09kTdrRLbSyMHWQlDfgnqN6S26TcD3PuYlYMm858=
-Received: by mail-qt1-f178.google.com with SMTP id c35so11677638qtk.3;
-        Mon, 29 Apr 2019 05:44:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAXMTaNNA/q1UCy4j7Z8/1r51u46Znppt8X52dFL1JMAOhpyBh9N
-        7lW33geW9196vV/cHNjQg12dnn3StUqdH0IdXg==
-X-Google-Smtp-Source: APXvYqxiZhiB+jclpAyFocRSvqDl188dZe7YfLRzsfFn+DSKE81H4/Y7PEgye9SmTH9A+ZttmCPhfs4XwVPEsL/HCpc=
-X-Received: by 2002:a0c:9384:: with SMTP id f4mr5385619qvf.77.1556541865622;
- Mon, 29 Apr 2019 05:44:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190427182359.27254-1-masneyb@onstation.org>
-In-Reply-To: <20190427182359.27254-1-masneyb@onstation.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 29 Apr 2019 07:44:14 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Wzc8W11E0XYg5bKfGoYNxFu0U0-Rdk5PqXZf40W21ZA@mail.gmail.com>
-Message-ID: <CAL_Jsq+Wzc8W11E0XYg5bKfGoYNxFu0U0-Rdk5PqXZf40W21ZA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: iio: isl29018: convert bindings to YAML format
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
+        Mon, 29 Apr 2019 08:48:30 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41002 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727956AbfD2Ms3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:48:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v23so7984707oif.8;
+        Mon, 29 Apr 2019 05:48:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=og27ttBtjgJ9jOWpsX9tE4/VFPoPVEaauxxZKhLh4wA=;
+        b=YCcyb68g0HbnPS6KqhPv1iQoUsdN6C77xSAlm73E1yODNV+UBW35DilpWWx/EtAneh
+         5gwo3fBoFmNETpiNRIlClBH/uT4bc6F6xHRHV7HZtuf/5NOQYIfKsBE2jcJK/CRtG96s
+         UQ3oCC2vc7i/E5MtnQZtWqBVTObh0Gx7nSkPUAR/+3Em9wDKQajeQxDz3DREQqpoAhJi
+         OOWBGaBl0wViTT0/QCEvjPvxk76j5PvTVZAG8ulMWvDMpANPTe94SR5gb0RJfRQRxPo4
+         Lkmz4+O/p8TZqi1gQalN6RgteLdQDDidfxY4TdKtlpOuub4qOjStW0q+sVp3Lr4CIQqU
+         mSbQ==
+X-Gm-Message-State: APjAAAVBqtiFBJr639FjSHXcWf9emfwwvNPjk/upa8L2strbv4+1vjL4
+        t5/NowxT3ky8/Ixxpxt7aw==
+X-Google-Smtp-Source: APXvYqwKkbM8iUDWYjwi3FrVr9CbooaBbkgXDxXE3TLfLAeQGcrA39ywmAR8rFYO2DOBT72rVzWKCg==
+X-Received: by 2002:aca:be89:: with SMTP id o131mr15557106oif.138.1556542108407;
+        Mon, 29 Apr 2019 05:48:28 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c3sm7872781otr.57.2019.04.29.05.48.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 05:48:27 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 07:48:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Long Cheng <long.cheng@mediatek.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>,
-        Rhyland Klein <rklein@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, srv_heupstream@mediatek.com,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>,
+        Long Cheng <long.cheng@mediatek.com>
+Subject: Re: [PATCH 3/4] dt-bindings: dma: uart: rename binding
+Message-ID: <20190429124827.GA13816@bogus>
+References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
+ <1556336193-15198-4-git-send-email-long.cheng@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556336193-15198-4-git-send-email-long.cheng@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 1:25 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> Convert the isl29018 device tree bindings to the new YAML format.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+On Sat, 27 Apr 2019 11:36:32 +0800, Long Cheng wrote:
+> The filename matches mtk-uart-apdma.c.
+> So using "mtk-uart-apdma.txt" should be better.
+> And add some property.
+> 
+> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
 > ---
-> I'm willing to be listed as the maintainer since this is one of the
-> drivers that I moved out out of staging unless one of the original
-> authors wants to be listed instead.
->
-> I added the BSD-2-Clause to the new binding document. I wrote the
-> original document and the only commit since then was from Rob in
-> commit 791d3ef2e111 ("dt-bindings: remove 'interrupt-parent' from
-> bindings")
->
->  .../bindings/iio/light/isl29018.txt           | 27 ---------
->  .../bindings/iio/light/isl29018.yaml          | 56 +++++++++++++++++++
->  2 files changed, 56 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.yaml
+>  .../devicetree/bindings/dma/8250_mtk_dma.txt       |   33 ------------
+>  .../devicetree/bindings/dma/mtk-uart-apdma.txt     |   55 ++++++++++++++++++++
+>  2 files changed, 55 insertions(+), 33 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
