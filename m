@@ -2,66 +2,110 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AF6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4E2C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63818215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="LsXKsCKC"
+	by mail.kernel.org (Postfix) with ESMTP id 8EA612075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbfD2WHC (ORCPT
+        id S1729598AbfD2WHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:07:02 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49185 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729409AbfD2WHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:07:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ze3nddxPSZh0i3nBebZ753zCi/GZQ2MRnRMA+b5QuiY=; b=LsXKsCKCeM3RgGyVpgMD7RBIKb
-        qNldf8H8I8ub/GYapf2QG4wNs+R4P74JBSGcSM4g8jX9O2Vcw39EI2PRciAmgKWRY3F1tA0xyAl/G
-        nnjN4/FwalQc49F5aw+KF796N6ncOSQst9a2sUWGI3yy6qJ5jDc2KwCv26p37QeVJ5qE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hLEQH-0007Lf-BB; Tue, 30 Apr 2019 00:06:53 +0200
-Date:   Tue, 30 Apr 2019 00:06:53 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Esben Haabendal <esben@geanix.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/12] net: ll_temac: Allow use on x86 platforms
-Message-ID: <20190429220653.GM12333@lunn.ch>
-References: <20190426073231.4008-1-esben@geanix.com>
- <20190429083422.4356-1-esben@geanix.com>
- <20190429083422.4356-7-esben@geanix.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190429083422.4356-7-esben@geanix.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Mon, 29 Apr 2019 18:07:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56638 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729409AbfD2WHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:07:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C8731ADDC;
+        Mon, 29 Apr 2019 22:07:19 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 00:07:19 +0200
+Message-ID: <s5hsgu0ihyg.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Michael Hirmke <opensuse@mike.franken.de>, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, jslaby@suse.cz,
+        linux-kernel@vger.kernel.org, lukas@wunner.de, tiwai@suse.de,
+        Christian Kellner <ckellner@redhat.com>
+Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and thunderbolt)
+In-Reply-To: <20190429203630.GW2583@lahna.fi.intel.com>
+References: <20190429195459.GU2583@lahna.fi.intel.com>
+        <EkoOCx3N6GB@mike.franken.de>
+        <20190429201347.GV2583@lahna.fi.intel.com>
+        <20190429203630.GW2583@lahna.fi.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:34:16AM +0200, Esben Haabendal wrote:
-> With little-endian and 64-bit support in place, the ll_temac driver can
-> now be used on x86 and x86_64 platforms.
+On Mon, 29 Apr 2019 22:36:30 +0200,
+Mika Westerberg wrote:
 > 
-> And while at it, enable COMPILE_TEST also.
+> On Mon, Apr 29, 2019 at 11:13:47PM +0300, Mika Westerberg wrote:
+> > On Mon, Apr 29, 2019 at 10:03:00PM +0200, Michael Hirmke wrote:
+> > > Hi all,
+> > > 
+> > > >On Mon, Apr 29, 2019 at 09:47:15PM +0200, Takashi Iwai wrote:
+> > > >> Hi,
+> > > 
+> > > >Hi,
+> > > 
+> > > >> we've got a regression report wrt xhci_hcd and thunderbolt on a Dell
+> > > >> machine.  5.0.7 is confirmed to work, so it must be a regression
+> > > >> introduced by 5.0.8.
+> > > >>
+> > > >> The details are found in openSUSE Bugzilla entry:
+> > > >>   https://bugzilla.opensuse.org/show_bug.cgi?id=1132943
+> > > >>
+> > > [...]
+> > > >>
+> > > >> I blindly suspected the commit 3943af9d01e9 and asked for a reverted
+> > > >> kernel, but in vain.  And now it was confirmed that the problem is
+> > > >> present with the latest 5.1-rc, too.
+> > > >>
+> > > >> I put some people who might have interest and the reporter (Michael)
+> > > >> to Cc.  If anyone has an idea, feel free to join to the Bugzilla, or
+> > > >> let me know if any help needed from the distro side.
+> > > 
+> > > >Since it exists in 5.1-rcX also it would be good if someone
+> > > >who see the problem (Michael?) could bisect it.
+> > > 
+> > > I know the meaning of bisecting, but I'm not really a developer, so I am
+> > > probably not able to interpret the results.
+> > 
+> > No worries. 
+> > 
+> > I'm adding Christian who reported similar (same?) problem last week.
+> > Christian, this seems to exist in v5.1-rc6 at least. Can you try to
+> > bisect it on your side?
+> > 
+> > I also have XPS 9370 but not that particular dock. I will check tomorrow
+> > if I can reproduce it as well.
 > 
-> Signed-off-by: Esben Haabendal <esben@geanix.com>
+> There aren't too many changes between 5.0.7 and 5.0.8 that touch
+> PCI/ACPI. This is just a shot in the dark but could you try to revert:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.0.y&id=da6a87fb0ad43ae811519d2e0aa325c7f792b13a
+> 
+> and see if it makes any difference?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+OK, I'm building a test kernel package with the revert in OBS
+home:tiwai:bsc1133486 repo.  A new kernel will be
+kernel-default-5.0.10-*g8edeab8:
+  http://download.opensuse.org/repositories/home:/tiwai:/bsc1133486/standard/
 
-    Andrew
+Michael, once when the new kernel is ready, please give it a try.
+
+
+thanks,
+
+Takashi
