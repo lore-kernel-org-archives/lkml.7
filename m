@@ -2,241 +2,131 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F611C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D47AC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF3D206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF418206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfD2Dx2 (ORCPT
+        id S1727205AbfD2Dxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 23:53:28 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:42448 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726819AbfD2Dx1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 23:53:27 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TQTE8IF_1556510001;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TQTE8IF_1556510001)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 29 Apr 2019 11:53:22 +0800
-Date:   Mon, 29 Apr 2019 11:53:21 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190429035320.GB128241@aaronlu>
-References: <20190423180238.GG22260@pauld.bos.csb>
- <20190423184527.6230-1-vpillai@digitalocean.com>
+        Sun, 28 Apr 2019 23:53:46 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3003 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726819AbfD2Dxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 23:53:46 -0400
+Received: from DGGEML402-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 60D8B949FE01AB8477CA;
+        Mon, 29 Apr 2019 11:53:43 +0800 (CST)
+Received: from DGGEML532-MBS.china.huawei.com ([169.254.7.161]) by
+ DGGEML402-HUB.china.huawei.com ([fe80::fca6:7568:4ee3:c776%31]) with mapi id
+ 14.03.0439.000; Mon, 29 Apr 2019 11:53:33 +0800
+From:   "weiyongjun (A)" <weiyongjun1@huawei.com>
+To:     Jason Wang <jasowang@redhat.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+CC:     yuehaibing <yuehaibing@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "lirongqing@baidu.com" <lirongqing@baidu.com>,
+        nicolas dichtel <nicolas.dichtel@6wind.com>,
+        "3chas3@gmail.com" <3chas3@gmail.com>,
+        "wangli39@baidu.com" <wangli39@baidu.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Peter Xu <peterx@redhat.com>
+Subject: RE: [PATCH] tun: Fix use-after-free in tun_net_xmit
+Thread-Topic: [PATCH] tun: Fix use-after-free in tun_net_xmit
+Thread-Index: AQHU/W9g3sfuWPKNdEe3Jj6+nCJHZaZQYsSAgAARegCAAJO30P//pXyAgACp3ACAAIzUgIAAnq8w
+Date:   Mon, 29 Apr 2019 03:53:32 +0000
+Message-ID: <6AADFAC011213A4C87B956458587ADB4021F9A34@dggeml532-mbs.china.huawei.com>
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+ <20190428030539.17776-1-yuehaibing@huawei.com>
+ <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
+ <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com>
+ <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
+ <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com>
+ <CAM_iQpUfpruaFowbiTOY7aH4Ts-xcY4JACGLOT3CUjLqpg_zXw@mail.gmail.com>
+ <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
+In-Reply-To: <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.30.138]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423184527.6230-1-vpillai@digitalocean.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 06:45:27PM +0000, Vineeth Remanan Pillai wrote:
-> >> - Processes with different tags can still share the core
-> 
-> > I may have missed something... Could you explain this statement?
-> 
-> > This, to me, is the whole point of the patch series. If it's not
-> > doing this then ... what?
-> 
-> What I meant was, the patch needs some more work to be accurate.
-> There are some race conditions where the core violation can still
-> happen. In our testing, we saw around 1 to 5% of the time being
-> shared with incompatible processes. One example of this happening
-> is as follows(let cpu 0 and 1 be siblings):
-> - cpu 0 selects a process with a cookie
-> - cpu 1 selects a higher priority process without cookie
-> - Selection process restarts for cpu 0 and it might select a
->   process with cookie but with lesser priority.
-> - Since it is lesser priority, the logic in pick_next_task
->   doesn't compare again for the cookie(trusts pick_task) and
->   proceeds.
-> 
-> This is one of the scenarios that we saw from traces, but there
-> might be other race conditions as well. Fix seems a little
-> involved and We are working on that.
-
-This is what I have used to make sure no two unmatched tasks being
-scheduled on the same core: (on top of v1, I thinks it's easier to just
-show the diff instead of commenting on various places of the patches :-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index cb24a0141e57..0cdb1c6a00a4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -186,6 +186,10 @@ struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
- 	 */
- 	match = idle_sched_class.pick_task(rq);
- 
-+	/* TODO: untagged tasks are not in the core tree */
-+	if (!cookie)
-+		goto out;
-+
- 	while (node) {
- 		node_task = container_of(node, struct task_struct, core_node);
- 
-@@ -199,6 +203,7 @@ struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
- 		}
- 	}
- 
-+out:
- 	return match;
- }
- 
-@@ -3634,6 +3639,8 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
- }
- 
- // XXX fairness/fwd progress conditions
-+// when max is unset, return class_pick;
-+// when max is set, return cookie_pick unless class_pick has higher priority.
- static struct task_struct *
- pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *max)
- {
-@@ -3652,7 +3659,19 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
- 	}
- 
- 	class_pick = class->pick_task(rq);
--	if (!cookie)
-+	/*
-+	 * we can only return class_pick here when max is not set.
-+	 *
-+	 * when max is set and cookie is 0, we still have to check if
-+	 * class_pick's cookie matches with max, or we can end up picking
-+	 * an unmacthed task. e.g. max is untagged and class_pick here
-+	 * is tagged.
-+	 */
-+	if (!cookie && !max)
-+		return class_pick;
-+
-+	/* in case class_pick matches with max, no need to check priority */
-+	if (class_pick && cookie_match(class_pick, max))
- 		return class_pick;
- 
- 	cookie_pick = sched_core_find(rq, cookie);
-@@ -3663,8 +3682,11 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
- 	 * If class > max && class > cookie, it is the highest priority task on
- 	 * the core (so far) and it must be selected, otherwise we must go with
- 	 * the cookie pick in order to satisfy the constraint.
-+	 *
-+	 * class_pick and cookie_pick are on the same cpu so use cpu_prio_less()
-+	 * max and class_pick are on different cpus so use core_prio_less()
- 	 */
--	if (cpu_prio_less(cookie_pick, class_pick) && cpu_prio_less(max, class_pick))
-+	if (cpu_prio_less(cookie_pick, class_pick) && core_prio_less(max, class_pick))
- 		return class_pick;
- 
- 	return cookie_pick;
-@@ -3731,8 +3753,17 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 		rq_i->core_pick = NULL;
- 
--		if (i != cpu)
-+		if (i != cpu) {
- 			update_rq_clock(rq_i);
-+			/*
-+			 * we are going to pick tasks for both cpus, if our
-+			 * sibling is idle and we have core_cookie set, now
-+			 * is the time to clear/reset it so that we can do
-+			 * an unconstained pick.
-+			 */
-+			if (is_idle_task(rq_i->curr) && rq_i->core->core_cookie)
-+				rq_i->core->core_cookie = 0;
-+		}
- 	}
- 
- 	/*
-@@ -3794,20 +3825,42 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 			 *
- 			 * NOTE: this is a linear max-filter and is thus bounded
- 			 * in execution time.
-+			 *
-+			 * The fact that pick_task() returns p with a different
-+			 * cookie means p has higher priority and we need to
-+			 * replace max with p.
- 			 */
--			if (!max || core_prio_less(max, p)) {
-+			if (!max || !cookie_match(max, p)) {
- 				struct task_struct *old_max = max;
- 
- 				rq->core->core_cookie = p->core_cookie;
- 				max = p;
- 				trace_printk("max: %s/%d %lx\n", max->comm, max->pid, max->core_cookie);
- 
--				if (old_max && !cookie_match(old_max, p)) {
-+				if (old_max) {
- 					for_each_cpu(j, smt_mask) {
- 						if (j == i)
- 							continue;
- 
- 						cpu_rq(j)->core_pick = NULL;
-+
-+						/*
-+						 * if max is untagged, then core_cookie
-+						 * is zero and siblig can do a wrongly
-+						 * unconstained pick. avoid that by doing
-+						 * pick directly here. since there is no
-+						 * untagged tasks in core tree, just
-+						 * use idle for our sibling.
-+						 * TODO: sibling may pick an untagged task.
-+						 */
-+						if (max->core_cookie)
-+							cpu_rq(j)->core_pick = NULL;
-+						else {
-+							cpu_rq(j)->core_pick = idle_sched_class.pick_task(cpu_rq(j));
-+							occ = 1;
-+							goto out;
-+						}
-+
- 					}
- 					occ = 1;
- 					goto again;
-@@ -3817,6 +3870,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- next_class:;
- 	}
- 
-+out:
- 	rq->core->core_pick_seq = rq->core->core_task_seq;
- 
- 	/*
-@@ -3834,6 +3888,17 @@ next_class:;
- 
- 		rq_i->core_pick->core_occupation = occ;
- 
-+		/* make sure we didn't break L1TF */
-+		if (!is_idle_task(rq_i->core_pick) &&
-+		    rq_i->core_pick->core_cookie != rq_i->core->core_cookie) {
-+			trace_printk("cpu%d: cookie mismatch. %s/%d/0x%lx/0x%lx\n",
-+					rq_i->cpu, rq_i->core_pick->comm,
-+					rq_i->core_pick->pid,
-+					rq_i->core_pick->core_cookie,
-+					rq_i->core->core_cookie);
-+			WARN_ON_ONCE(1);
-+		}
-+
- 		if (i == cpu)
- 			continue;
- 
+PiA+IE9uIFN1biwgQXByIDI4LCAyMDE5IGF0IDEyOjUxIEFNIEphc29uIFdhbmcgPGphc293YW5n
+QHJlZGhhdC5jb20+DQo+IHdyb3RlOg0KPiA+Pj4gdHVuX25ldF94bWl0KCkgZG9lc24ndCBoYXZl
+IHRoZSBjaGFuY2UgdG8NCj4gPj4+IGFjY2VzcyB0aGUgY2hhbmdlIGJlY2F1c2UgaXQgaG9sZGlu
+ZyB0aGUgcmN1X3JlYWRfbG9jaygpLg0KPiA+Pg0KPiA+Pg0KPiA+PiBUaGUgcHJvYmxlbSBpcyB0
+aGUgZm9sbG93aW5nIGNvZGVzOg0KPiA+Pg0KPiA+Pg0KPiA+PiAgICAgICAgICAtLXR1bi0+bnVt
+cXVldWVzOw0KPiA+Pg0KPiA+PiAgICAgICAgICAuLi4NCj4gPj4NCj4gPj4gICAgICAgICAgc3lu
+Y2hyb25pemVfbmV0KCk7DQo+ID4+DQo+ID4+IFdlIG5lZWQgbWFrZSBzdXJlIHRoZSBkZWNyZW1l
+bnQgb2YgdHVuLT5udW1xdWV1ZXMgYmUgdmlzaWJsZSB0bw0KPiByZWFkZXJzDQo+ID4+IGFmdGVy
+IHN5bmNocm9uaXplX25ldCgpLiBBbmQgaW4gdHVuX25ldF94bWl0KCk6DQo+ID4NCj4gPiBJdCBk
+b2Vzbid0IG1hdHRlciBhdCBhbGwuIFJlYWRlcnMgYXJlIG9rYXkgdG8gcmVhZCBpdCBldmVuIHRo
+ZXkgc3RpbGwgdXNlIHRoZQ0KPiA+IHN0YWxlIHR1bi0+bnVtcXVldWVzLCBhcyBsb25nIGFzIHRo
+ZSB0ZmlsZSBpcyBub3QgZnJlZWQgcmVhZGVycyBjYW4gcmVhZA0KPiA+IHdoYXRldmVyIHRoZXkg
+d2FudC4uLg0KPiANCj4gVGhpcyBpcyBvbmx5IHRydWUgaWYgd2Ugc2V0IFNPQ0tfUkNVX0ZSRUUs
+IGlzbid0IGl0Pw0KPiANCj4gPg0KPiA+IFRoZSBkZWNyZW1lbnQgb2YgdHVuLT5udW1xdWV1ZXMg
+aXMganVzdCBob3cgd2UgdW5wdWJsaXNoIHRoZSBvbGQNCj4gPiB0ZmlsZSwgaXQgaXMgc3RpbGwg
+dmFsaWQgZm9yIHJlYWRlcnMgdG8gcmVhZCBpdCBfYWZ0ZXJfIHVucHVibGlzaCwgd2Ugb25seSBu
+ZWVkDQo+ID4gdG8gd29ycnkgYWJvdXQgZnJlZSwgbm90IGFib3V0IHVucHVibGlzaC4gVGhpcyBp
+cyB0aGUgd2hvbGUgc3Bpcml0IG9mIFJDVS4NCj4gPg0KPiANCj4gVGhlIHBvaW50IGlzIHdlIGRv
+bid0IGNvbnZlcnQgdHVuLT5udW1xdWV1ZXMgdG8gUkNVIGJ1dCB1c2UNCj4gc3luY2hyb25pemVf
+bmV0KCkuDQo+IA0KPiA+IFlvdSBuZWVkIHRvIHJldGhpbmsgYWJvdXQgbXkgU09DS19SQ1VfRlJF
+RSBwYXRjaC4NCj4gDQo+IFRoZSBjb2RlIGlzIHdyb3RlIGJlZm9yZSBTT0NLX1JDVV9GUkVFIGlz
+IGludHJvZHVjZWQgYW5kIGFzc3VtZSBubw0KPiBkZS1yZWZlcmVuY2UgZnJvbSBkZXZpY2UgYWZ0
+ZXIgc3luY2hyb25pemVfbmV0KCkuIEl0IGRvZXNuJ3QgaGFybSB0bw0KPiBmaWd1cmUgb3V0IHRo
+ZSByb290IGNhdXNlIHdoaWNoIG1heSBnaXZlIHVzIG1vcmUgY29uZmlkZW5jZSB0byB0aGUgZml4
+DQo+IChlLmcgbGlrZSBTT0NLX1JDVV9GUkVFKS4NCj4gDQo+IEkgZG9uJ3Qgb2JqZWN0IHRvIGZp
+eCB3aXRoIFNPQ0tfUkNVX0ZSRUUsIGJ1dCB0aGVuIHdlIHNob3VsZCByZW1vdmUNCj4gdGhlIHJl
+ZHVuZGFudCBzeW5jaHJvbml6ZV9uZXQoKS4gQnV0IEkgc3RpbGwgcHJlZmVyIHRvIHN5bmNocm9u
+aXplDQo+IGV2ZXJ5dGhpbmcgZXhwbGljaXRseSBsaWtlIChjb21wbGV0ZWx5IHVudGVzdGVkKToN
+Cj4gDQo+IEZyb20gZGY5MWY3N2QzNWE2YWE3OTQzYjZmMmE3ZDRiMzI5OTkwODk2YTBmZSBNb24g
+U2VwIDE3IDAwOjAwOjAwDQo+IDIwMDENCj4gRnJvbTogSmFzb24gV2FuZyA8amFzb3dhbmdAcmVk
+aGF0LmNvbT4NCj4gRGF0ZTogTW9uLCAyOSBBcHIgMjAxOSAxMDoyMTowNiArMDgwMA0KPiBTdWJq
+ZWN0OiBbUEFUQ0hdIHR1bnRhcDogc3luY2hyb25pemUgdGhyb3VnaCB0ZmlsZXMgaW5zdGVhZCBv
+ZiBudW1xdWV1ZXMNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEphc29uIFdhbmcgPGphc293YW5nQHJl
+ZGhhdC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9uZXQvdHVuLmMgfCAxMSArKysrKy0tLS0tLQ0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gDQo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC90dW4uYyBiL2RyaXZlcnMvbmV0L3R1bi5jDQo+IGlu
+ZGV4IDgwYmZmMWI0ZWMxNy4uMDM3MTVmNjA1ZmI1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25l
+dC90dW4uYw0KPiArKysgYi9kcml2ZXJzL25ldC90dW4uYw0KPiBAQCAtNjk4LDYgKzY5OCw3IEBA
+IHN0YXRpYyB2b2lkIF9fdHVuX2RldGFjaChzdHJ1Y3QgdHVuX2ZpbGUgKnRmaWxlLCBib29sDQo+
+IGNsZWFuKQ0KPiANCj4gIAkJcmN1X2Fzc2lnbl9wb2ludGVyKHR1bi0+dGZpbGVzW2luZGV4XSwN
+Cj4gIAkJCQkgICB0dW4tPnRmaWxlc1t0dW4tPm51bXF1ZXVlcyAtIDFdKTsNCj4gKwkJcmN1X2Fz
+c2lnbl9wb2ludGVyKHR1bi0+dGZpbGVzW3R1bi0+bnVtcXVldWVzXSwgTlVMTCk7DQoNClNob3Vs
+ZCBiZSAicmN1X2Fzc2lnbl9wb2ludGVyKHR1bi0+dGZpbGVzW3R1bi0+bnVtcXVldWVzIC0gMV0s
+IE5VTEwpOyINCg0KPiAgCQludGZpbGUgPSBydG5sX2RlcmVmZXJlbmNlKHR1bi0+dGZpbGVzW2lu
+ZGV4XSk7DQo+ICAJCW50ZmlsZS0+cXVldWVfaW5kZXggPSBpbmRleDsNCj4gDQo+IEBAIC0xMDgy
+LDcgKzEwODMsNyBAQCBzdGF0aWMgbmV0ZGV2X3R4X3QgdHVuX25ldF94bWl0KHN0cnVjdCBza19i
+dWZmDQo+ICpza2IsIHN0cnVjdCBuZXRfZGV2aWNlICpkZXYpDQo+ICAJdGZpbGUgPSByY3VfZGVy
+ZWZlcmVuY2UodHVuLT50ZmlsZXNbdHhxXSk7DQo+IA0KPiAgCS8qIERyb3AgcGFja2V0IGlmIGlu
+dGVyZmFjZSBpcyBub3QgYXR0YWNoZWQgKi8NCj4gLQlpZiAodHhxID49IHR1bi0+bnVtcXVldWVz
+KQ0KPiArCWlmICghdGZpbGUpDQo+ICAJCWdvdG8gZHJvcDsNCj4gDQo+ICAJaWYgKCFyY3VfZGVy
+ZWZlcmVuY2UodHVuLT5zdGVlcmluZ19wcm9nKSkNCj4gQEAgLTEzMDUsMTUgKzEzMDYsMTMgQEAg
+c3RhdGljIGludCB0dW5feGRwX3htaXQoc3RydWN0IG5ldF9kZXZpY2UgKmRldiwNCj4gaW50IG4s
+DQo+IA0KPiAgCXJjdV9yZWFkX2xvY2soKTsNCj4gDQo+IC0JbnVtcXVldWVzID0gUkVBRF9PTkNF
+KHR1bi0+bnVtcXVldWVzKTsNCj4gLQlpZiAoIW51bXF1ZXVlcykgew0KPiArCXRmaWxlID0gcmN1
+X2RlcmVmZXJlbmNlKHR1bi0+dGZpbGVzW3NtcF9wcm9jZXNzb3JfaWQoKSAlDQo+ICsJCQkJCSAg
+ICB0dW4tPm51bXF1ZXVlc10pOw0KPiArCWlmICghdGZpbGUpIHsNCj4gIAkJcmN1X3JlYWRfdW5s
+b2NrKCk7DQo+ICAJCXJldHVybiAtRU5YSU87IC8qIENhbGxlciB3aWxsIGZyZWUvcmV0dXJuIGFs
+bCBmcmFtZXMgKi8NCj4gIAl9DQo+IA0KPiAtCXRmaWxlID0gcmN1X2RlcmVmZXJlbmNlKHR1bi0+
+dGZpbGVzW3NtcF9wcm9jZXNzb3JfaWQoKSAlDQo+IC0JCQkJCSAgICBudW1xdWV1ZXNdKTsNCj4g
+LQ0KPiAgCXNwaW5fbG9jaygmdGZpbGUtPnR4X3JpbmcucHJvZHVjZXJfbG9jayk7DQo+ICAJZm9y
+IChpID0gMDsgaSA8IG47IGkrKykgew0KPiAgCQlzdHJ1Y3QgeGRwX2ZyYW1lICp4ZHAgPSBmcmFt
+ZXNbaV07DQo+IC0tDQo+IDIuMTkuMQ0K
