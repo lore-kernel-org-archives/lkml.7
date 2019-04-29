@@ -2,144 +2,134 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B31C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A378C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F742067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED019216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="YGTQ8yQF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YEVXM/ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbfD2Vrf (ORCPT
+        id S1729532AbfD2Vrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:47:35 -0400
-Received: from mx.kolabnow.com ([95.128.36.41]:33832 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729341AbfD2Vrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:47:35 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out002.mykolab.com (Postfix) with ESMTP id E9C7E4A3;
-        Mon, 29 Apr 2019 23:47:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-transfer-encoding:content-type:content-type:mime-version
-        :message-id:date:date:subject:subject:from:from:received
-        :received:received; s=dkim20160331; t=1556574451; x=1558388852;
-         bh=g929uR7j5Bljj/SBE5STwaZj4+jLJMam9hBjyMFxOyE=; b=YGTQ8yQFm8e9
-        4TrdLZqp1JH50iqSFWrKO3MCLnziDMD7C5FnLUc0efA+VhGJWW3CaTFiIkh68LLJ
-        azzqBl/CIqZbgu5HAOzJeaoeSYMRZw1pmFo/mfda29FycAeqE5nwVSeI2UsbRv/D
-        8j3rdBkK3MU/6t1FjFjTay/UwlskevI4xCeT7Tt/GZB++VyNNerPJ20QEDgCbq5Y
-        oiZ8gRA9WJbMX0px1CUtRPVJ6xcixNpNV5TN+tZrCTUKv+OalQLQi8athhyTjdDF
-        36DOV9j+NuHkJXijwAJ5tbb0sh5ha6MK2GX3XGAo6+rAXztTbGKL8lLbbpjzRdLf
-        EpLVhYrbojIu8oH9LwpeBmfM0SC5G+1A0mJx1Qp8BRyVDolAntVOuWiX1Lt/8IBT
-        PnhbsggEhGg5eUWC4yDOgSWsgJeDE7ERPIZLCBPaNn+MmDTqaiyEDBmuHUxBa4p3
-        3oNgqy17yXdtTPEiNjV+CEcXyct2cPVV/GzUIvMoaj7MMEutZozrPyhuJPA4bF6I
-        P/1Bh2NanE5TaRw3yWNOaNtwc22bdNEbqEVyDIWloIqqkVy8RWFNhi8e8BVfcWDo
-        pqeB8Jlx7SYnJxQ5XmM87zmGBhy8+z5636LvAe4HID6fhMm21YxYm45p+R9XtBgW
-        dW7UgWZqnMQ1M8UB9kGgZP3EJLAqVHA=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out002.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id u67NlFI4fDUg; Mon, 29 Apr 2019 23:47:31 +0200 (CEST)
-Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
-        by ext-mx-out002.mykolab.com (Postfix) with ESMTPS id A48BA126;
-        Mon, 29 Apr 2019 23:47:31 +0200 (CEST)
-Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
-        by int-mx003.mykolab.com (Postfix) with ESMTPS id 570282A0D;
-        Mon, 29 Apr 2019 23:47:31 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] doc:it_IT: translation alignment
-Date:   Mon, 29 Apr 2019 23:47:20 +0200
-Message-Id: <20190429214720.25725-1-federico.vaga@vaga.pv.it>
+        Mon, 29 Apr 2019 17:47:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39780 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729341AbfD2Vrv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 17:47:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l18so5797179pgj.6;
+        Mon, 29 Apr 2019 14:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MBUcc2CKF+g+0S5WLNXWMjpaMCDOiWiifFzLFrXOrh4=;
+        b=YEVXM/ke3RubBHfTN7y4oEVjSQScjcsOAWWKNiJKSLt1Y+lyo+ed77sTMUMuwmvhxL
+         rZbXVxe1GEpdK7BWoYZxR3qEoCM/8QTQKxgohAEKq87NUK2x3WmJ2mTBffSpHgNHpKUQ
+         76QPiwlbdq+sPLKXOc5NW980ONZaaN3FX9Is9z73QccXXLgRhlcFr6nQgOVBYGYQ6Bkn
+         PP5V3H7W6a822iVbYKaTuGUMLI4lGyrDq001E9iAgg6N/MGmdEhVWHq+Azl7UpV9glKs
+         4zvLmhiJ98fM3WFNS8lAs8SV8tCI5goyO/ncJSTB/z9oiCs6t9rXHMmBpBZi1Ud/XClT
+         RmEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MBUcc2CKF+g+0S5WLNXWMjpaMCDOiWiifFzLFrXOrh4=;
+        b=CxZmJ/C/+44z2vxwpaOzy+YfgskAEoRFP8e891usTFDapx3iV6guZoRApMVRMlOj7k
+         S6mpmYfwICjt32fx2/GANjtNYFOE1h8uW28jOQLu2Uwu3y85RI6y3vRClLUVys/O0kbh
+         xWnQu5bykF6NSlp2iWuGdo0WEftoDEPmg62Oo9tByHOGeE8QoSLuAKN/0FavlYK7ODre
+         lh7T++00Fo/bpE7bg8/BnS/4hxDrk1oWkXCdw4/kkrXbXVt4mayYz0YcQwfgWXMV5k1P
+         c1YWiDG6UyFBYAU/3l/Nrh1uR+gCeQoWZhkqX82VOUD/ppNxoIKG8QpzI2/yaq37KFVL
+         HpKg==
+X-Gm-Message-State: APjAAAVVdorPl9a3NMJ8wXeiDk1XaLoSH+iqcd1BmLMXbYERqlNf0dVR
+        j46SCREwMfw7SQf/u1eP5n8DiQZsReo=
+X-Google-Smtp-Source: APXvYqxg9x34IcLeO8szE54iKKYBk/jVn6ulPOkPrsun980rDATa8A+EslOQQq1X7Aw8ozgjL7CDTw==
+X-Received: by 2002:a62:1d83:: with SMTP id d125mr29237912pfd.74.1556574470266;
+        Mon, 29 Apr 2019 14:47:50 -0700 (PDT)
+Received: from prsriva-linux.corp.microsoft.com ([2001:4898:80e8:9:445d:9822:2ddb:fb8c])
+        by smtp.gmail.com with ESMTPSA id f66sm1941623pfg.55.2019.04.29.14.47.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 14:47:49 -0700 (PDT)
+From:   Prakhar Srivastava <prsriva02@gmail.com>
+X-Google-Original-From: Prakhar Srivastava
+To:     linux-integrity@vger.kernel.org,
+        linux-secuirty-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     zohar@linux.ibm.com, ebiederm@xmission.com, vgoyal@redhat.com,
+        nayna@linux.ibm.com, Prakhar Srivastava <prsriva02@gmail.com>
+Subject: [PATCH v3 0/4] Add a new ima_hook buffer_check to measure buffers critical for attestation
+Date:   Mon, 29 Apr 2019 14:47:39 -0700
+Message-Id: <20190429214743.4625-1-prsriva02@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aling Italian translation after the following changes in Documentation
+From: Prakhar Srivastava <prsriva02@gmail.com>
 
-bba757d8578f coding-style.rst: Generic alloc functions do not need OOM logging
-d8e8bcc3d8de docs: doc-guide: remove the extension from .rst files
+For Kexec scenario(kexec_file_load) cmdline args are passed to the
+next kerenel. These cmldine args used to load the next kernel can 
+have undesired/unwanted configs. To guard against any unwanted cmdline
+args being passed to the next kernel. The current kernel should measure
+the cmdline args to the next kernel, the same takes place in the EFI
+bootloader. Thus on kexec the boot_aggregate does not change.
 
-Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
----
- .../it_IT/core-api/memory-allocation.rst            | 13 +++++++++++++
- .../translations/it_IT/doc-guide/index.rst          |  6 +++---
- .../translations/it_IT/process/coding-style.rst     |  8 +++++++-
- 3 files changed, 23 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/translations/it_IT/core-api/memory-allocation.rst
+Currently the cmdline args are not measured, this changeset adds a new
+ima and LSM hook for buffer measure and calls into the same to measure
+the cmdline args passed to the next kernel.The cdmline args meassured
+can then be used as an attestation criteria.
 
-diff --git a/Documentation/translations/it_IT/core-api/memory-allocation.rst b/Documentation/translations/it_IT/core-api/memory-allocation.rst
-new file mode 100644
-index 000000000000..11d5148f8d6b
---- /dev/null
-+++ b/Documentation/translations/it_IT/core-api/memory-allocation.rst
-@@ -0,0 +1,13 @@
-+.. include:: ../disclaimer-ita.rst
-+
-+:Original: :ref:`Documentation/core-api/memory-allocation.rst <memory_allocation>`
-+
-+.. _it_memory_allocation:
+The ima logs need to injected into the next kernel, which will be followed
+up by other patchsets.
 
-+================================
-+Guida all'allocazione di memoria
-+================================
-+
-+.. warning::
-+
-+    TODO ancora da tradurre
-diff --git a/Documentation/translations/it_IT/doc-guide/index.rst b/Documentation/translations/it_IT/doc-guide/index.rst
-index 7a6562b547ee..9fffff626711 100644
---- a/Documentation/translations/it_IT/doc-guide/index.rst
-+++ b/Documentation/translations/it_IT/doc-guide/index.rst
-@@ -12,9 +12,9 @@ Come scrivere la documentazione del kernel
- .. toctree::
-    :maxdepth: 1
- 
--   sphinx.rst
--   kernel-doc.rst
--   parse-headers.rst
-+   sphinx
-+   kernel-doc
-+   parse-headers
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/translations/it_IT/process/coding-style.rst b/Documentation/translations/it_IT/process/coding-style.rst
-index 2fd0e7f79d55..5ef534c95e69 100644
---- a/Documentation/translations/it_IT/process/coding-style.rst
-+++ b/Documentation/translations/it_IT/process/coding-style.rst
-@@ -859,7 +859,8 @@ racchiusa in #ifdef, potete usare printk(KERN_DEBUG ...).
- 
- Il kernel fornisce i seguenti assegnatori ad uso generico:
- kmalloc(), kzalloc(), kmalloc_array(), kcalloc(), vmalloc(), e vzalloc().
--Per maggiori informazioni, consultate la documentazione dell'API.
-+Per maggiori informazioni, consultate la documentazione dell'API:
-+:ref:`Documentation/translations/it_IT/core-api/memory-allocation.rst <it_memory_allocation>`
- 
- Il modo preferito per passare la dimensione di una struttura è il seguente:
- 
-@@ -890,6 +891,11 @@ Il modo preferito per assegnare un vettore a zero è il seguente:
- Entrambe verificano la condizione di overflow per la dimensione
- d'assegnamento n * sizeof(...), se accade ritorneranno NULL.
- 
-+Questi allocatori generici producono uno *stack dump* in caso di fallimento
-+a meno che non venga esplicitamente specificato __GFP_NOWARN. Quindi, nella
-+maggior parte dei casi, è inutile stampare messaggi aggiuntivi quando uno di
-+questi allocatori ritornano un puntatore NULL.
-+
- 15) Il morbo inline
- -------------------
- 
+
+Changelog:
+v3: (rebase changes to next-general)
+  - Add policy checks for buffer[suggested by Mimi Zohar]
+  - use the IMA_XATTR to add buffer
+  - Add kexec_cmdline used for kexec file load
+  - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+
+v2:
+  - Add policy checks for buffer[suggested by Mimi Zohar]
+  - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+  - use the IMA_XATTR to add buffer instead of sig template
+
+v1:
+  -Add kconfigs to control the ima_buffer_check
+  -measure the cmdline args suffixed with the kernel file name
+  -add the buffer to the template sig field.
+Prakhar Srivastava (4):
+  added a new ima policy func buffer_check, and ima hook to measure the
+    buffer hash into ima
+  add the buffer to the xattr
+  add kexec_cmdline used to ima
+  added LSM hook to call ima_buffer_check
+
+ Documentation/ABI/testing/ima_policy      |   1 +
+ include/linux/ima.h                       |   5 +
+ include/linux/lsm_hooks.h                 |   3 +
+ include/linux/security.h                  |   3 +
+ kernel/kexec_core.c                       |  57 +++++++++++
+ kernel/kexec_file.c                       |  14 +++
+ kernel/kexec_internal.h                   |   4 +-
+ security/integrity/ima/ima.h              |   1 +
+ security/integrity/ima/ima_api.c          |   1 +
+ security/integrity/ima/ima_main.c         | 116 ++++++++++++++++++++++
+ security/integrity/ima/ima_policy.c       |   8 ++
+ security/integrity/ima/ima_template_lib.c |   3 +-
+ security/integrity/integrity.h            |   1 +
+ security/security.c                       |   6 ++
+ 14 files changed, 221 insertions(+), 2 deletions(-)
+
 -- 
-2.20.1
+2.19.1
 
