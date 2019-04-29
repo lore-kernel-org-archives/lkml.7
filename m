@@ -2,190 +2,141 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953BAC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A36C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55BB42064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DCB2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="QdMF9MQL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sAzxFF00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbfD2WcU (ORCPT
+        id S1729643AbfD2Wdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:32:20 -0400
-Received: from mail-eopbgr800098.outbound.protection.outlook.com ([40.107.80.98]:28011
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729481AbfD2WcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:32:19 -0400
+        Mon, 29 Apr 2019 18:33:40 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41057 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729481AbfD2Wdk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:33:40 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f6so5845501pgs.8;
+        Mon, 29 Apr 2019 15:33:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CPNvlj5Hlvzqi6Ag60lU8wHKADfqtp9Eo/QK7WOu6CQ=;
- b=QdMF9MQLx8827/UQyxPj0U9kXnGFACzKcPl3UBjz+ypQz6wpFut/Ow/i/IWRSb52LgDgm9AsRvPB7W+Ll3MLPTEayZPJa1J2qkZKJ7BfXidyifUF3XB24qQhdYFBvu0GSqZB6AHrH6/fUKZ0S0IZGLsjBfs3jeqXCnLqPUvUck4=
-Received: from BN6PR2201MB1266.namprd22.prod.outlook.com (10.174.80.14) by
- BN6PR2201MB1266.namprd22.prod.outlook.com (10.174.80.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Mon, 29 Apr 2019 22:31:37 +0000
-Received: from BN6PR2201MB1266.namprd22.prod.outlook.com
- ([fe80::2c9f:ff6c:cc5e:6af1]) by BN6PR2201MB1266.namprd22.prod.outlook.com
- ([fe80::2c9f:ff6c:cc5e:6af1%11]) with mapi id 15.20.1835.018; Mon, 29 Apr
- 2019 22:31:37 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-mips <linux-mips@linux-mips.org>
-Subject: Re: [RFC PATCH for 5.2 10/10] rseq/selftests: mips: use break
- instruction for RSEQ_SIG
-Thread-Topic: [RFC PATCH for 5.2 10/10] rseq/selftests: mips: use break
- instruction for RSEQ_SIG
-Thread-Index: AQHU+rH+AJnCxtNxUESFNInzrhwEUaZL3nOAgK8p+5b/WLjHAA==
-Date:   Mon, 29 Apr 2019 22:31:36 +0000
-Message-ID: <20190429223134.unab336v73qdhoz6@pburton-laptop>
-References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com>
- <20190424152502.14246-11-mathieu.desnoyers@efficios.com>
- <20190424220609.4kryfcgsv46iu3ds@pburton-laptop>
- <1183307732.352.1556202092390.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1183307732.352.1556202092390.JavaMail.zimbra@efficios.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0038.prod.exchangelabs.com (2603:10b6:a03:94::15)
- To BN6PR2201MB1266.namprd22.prod.outlook.com (2603:10b6:405:20::14)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 274267f9-149f-432f-fd02-08d6ccf27092
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN6PR2201MB1266;
-x-ms-traffictypediagnostic: BN6PR2201MB1266:
-x-microsoft-antispam-prvs: <BN6PR2201MB12662632C8DA14485484077EC1390@BN6PR2201MB1266.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0022134A87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(39840400004)(346002)(136003)(396003)(366004)(376002)(189003)(199004)(316002)(76176011)(2906002)(478600001)(6246003)(8676002)(8936002)(42882007)(44832011)(52116002)(25786009)(81166006)(11346002)(446003)(71190400001)(71200400001)(476003)(14454004)(6506007)(102836004)(81156014)(386003)(66476007)(68736007)(66946007)(64756008)(66446008)(73956011)(54906003)(58126008)(66556008)(99286004)(26005)(4326008)(186003)(93886005)(486006)(6916009)(97736004)(256004)(14444005)(6486002)(5660300002)(6436002)(305945005)(7416002)(1076003)(53936002)(7736002)(9686003)(6512007)(6116002)(33716001)(3846002)(229853002)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR2201MB1266;H:BN6PR2201MB1266.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: y/81ZrZPl+irbpIP5Lbu648V5PwXudLWuuACRjcKPzv2Ji7Q2ZPNI590+17CsHRPEo+0a2WeQukrFP1DQAnlMOD0CYxHZGPjxpR+VBwrf3t4IBs+KGKU40AsuzTepp0ca5WMymUA4i5ttRPOPL1x1KhQ5CzUe+luyThzUSKvDuxJJOyfl0ZV/JV6Sp54nbAYd8uVhAkzLiNVa70AxsWUX8PiNs9v4TY3zz3uNdW7b6EeuZ2gfQJDccpMIWtSjkPDP8ySijQxPyQ9rlPZjDSu/C69OWYD7JsQKgEMztblNK7s+ZtrXwSn+q4l/bsWTp1eG9/9N6TsndVMhaJzG8lJNq2iy+LKF1y+UITIQm8GLXiUT9wtH9+06s+dGUHDJVaSLpFHt6m023pq7qITNQ9rke+VfStIYRtoKXdcLgbMVws=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D91FD40890C17F459F7E560D4BCC26A6@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hL5lSSld0IWgxzNWY+bqrGKso5WccHGfqU5/pwos1Ts=;
+        b=sAzxFF00P47bPDHQeN4SDrTy3myFJgatoUS4PlumX1u/gcawnsFZRjiPNJxdGf+BPL
+         tA811xDyDIHr+uixedWIjFoqh/Nfl/aI3aIp9RLM1zrNF4cWZuEduJ6pyiIR2OYouS0Z
+         KVPc0IBWNZzUfjP4PAp3OuH5vGEPGWIAMy9WTlU+LLVuAzFQBPn9XYj79sJxMc/4E6xs
+         j31m7v/bY6g9fQLCUirgdolBreFo5oXqL2ocBLcXSLCmoDZY2YLP3X0Dv4xqdhQY+D+T
+         F9OY5k+zNbpycd9JCcBcyfUAA4tsPQT/5lzilccYpWFSS8PEjq3qmDabdtWtudoDF1yA
+         s4aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hL5lSSld0IWgxzNWY+bqrGKso5WccHGfqU5/pwos1Ts=;
+        b=J+yEtVuz46KzyR+uU87KmdwpcWly+skcCe8ApDHf2ePzJZkX1syTA59awBpXXVlRBB
+         KAH8twsLZ+hoteIzTRP3plyXqGHE+oC07PL1Hkj+xFwuD1qXUnOt4ARfc+GNTWPJu50H
+         bp1sh4SHRl4HlgpKX41gIs2FRp6AtHqk6E4iTHlwmOhVgbXqeu3r4isOGIpw9nHcUXz9
+         RkmhroFjjXCuAifoZJ2dH5ZwoYYdYtzns2NuO8NHPpx3bA8hH5EBUN5qHmO+7vRWsfjL
+         5WUGT2d6ZAbsVfZEOX0bsfSwDzxYpLMbapdcAVHBnx3DxHTSZlF8yD3yJz2yNGKR7q1d
+         UvIw==
+X-Gm-Message-State: APjAAAUYrpe0fXRHrP9Ln/0K0+vXTZgIp9xe+7/070r7LoOclquMRGVZ
+        IiCyG7e+n3iX5liH5kaUiOY=
+X-Google-Smtp-Source: APXvYqyr8866HGbkrmQwWIE2ZBU4+4HYiqTbjqjMLHtUz0q7+GMQWueEYFZvyprsEcTKlBuS17IAUg==
+X-Received: by 2002:a63:c702:: with SMTP id n2mr23366927pgg.255.1556577219738;
+        Mon, 29 Apr 2019 15:33:39 -0700 (PDT)
+Received: from pc ([219.91.196.46])
+        by smtp.gmail.com with ESMTPSA id d10sm10194424pgi.6.2019.04.29.15.33.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 15:33:38 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 04:03:32 +0530
+From:   Raag Jadav <raagjadav@gmail.com>
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     linux-i2c@vger.kernel.org, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: at91: handle TXRDY interrupt spam
+Message-ID: <20190429223332.GA3908@pc>
+References: <1556005008-6318-1-git-send-email-raagjadav@gmail.com>
+ <20190429090005.f6ydghzu5n5yruav@M43218.corp.atmel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 274267f9-149f-432f-fd02-08d6ccf27092
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 22:31:36.9643
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR2201MB1266
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429090005.f6ydghzu5n5yruav@M43218.corp.atmel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+On Mon, Apr 29, 2019 at 11:00:05AM +0200, Ludovic Desroches wrote:
+> Hello Raag,
+> 
+> On Tue, Apr 23, 2019 at 01:06:48PM +0530, Raag Jadav wrote:
+> > External E-Mail
+> > 
+> > 
+> > Performing i2c write operation while SDA or SCL line is held
+> > or grounded by slave device, we go into infinite at91_twi_write_next_byte
+> > loop with TXRDY interrupt spam.
+> 
+> Sorry but I am not sure to have the full picture, the controller is in
+> slave or master mode?
+> 
+> SVREAD is only used in slave mode. When SVREAD is set, it means that a read
+> access is performed and your issue concerns the write operation.
+> 
+> Regards
+> 
+> Ludovic
 
-On Thu, Apr 25, 2019 at 10:21:32AM -0400, Mathieu Desnoyers wrote:
-> I've tried to figure out if we could find a way to have RSEQ_SIG left und=
-efined
-> if it's not on the plain mips environment, but could not find anything th=
-at
-> would be #defined on plain mips, but #undefined on both micromips and nan=
-omips.
->=20
-> What I'd like to do is e.g.:
->=20
-> #if defined(__nanomips__)
-> # ifdef __MIPSEL__
-> #  define RSEQ_SIG	0x03500010
-> # else
-> #  define RSEQ_SIG	0x00100350
-> # endif
-> #elif defined(__mips_micromips)
-> # ifdef __MIPSEL__
-> #  define RSEQ_SIG	0xd4070000
-> # else
-> #  define RSEQ_SIG	0x0000d407
-> # endif
-> #elif defined(__mips__)
-> # define RSEQ_SIG	0x0350000d
-> #else
-> /* Leave RSEQ_SIG as is. */
-> #endif
->=20
-> The idea here is to not allow code targeting future MIPS ISA to compile
-> with the wrong signature.
->=20
-> The delta between compiling without/with -mmicromips on a gcc-8 compiler
-> is only:
->=20
-> > #define __mips_micromips 1
->=20
-> Some interesting delta when compiling for plain little-endian mips with
-> gcc-8 compared to the nanomips compiler is:
->=20
-> < #define __mips__ 1
-> < #define _mips 1
-> < #define MIPSEL 1
->=20
-> > #define __nanomips__ 1
->=20
-> < #define __mips_isa_rev 2
-> > #define __mips_isa_rev 6
->=20
-> So let's say we have a picomips introduced in the future, can we rely
-> on it not defining __mips__ like the nanomips compiler does ? If so,
-> my "#elif defined(__mips__)" approach would indeed leave RSEQ_SIG undefin=
-ed
-> as expected.
->=20
-> Thoughts ?
+Yes, even though the datasheet suggests that SVREAD is irrelevant in master mode,
+TXRDY and SVREAD are the only ones being set in status register upon reproducing the issue.
+Couldn't think of a better way to handle such strange behaviour.
+Any suggestions would be appreciated.
 
-That seems like a reasonable approach to me. I don't think it'll be
-guaranteed, but it'll give the best odds of the behavior you want.
+Cheers,
+Raag
 
-If I recall correctly the reason for not defining __mips__ in the
-nanoMIPS compiler was to force people to audit MIPS-specific code given
-the scale of the changes in nanoMIPS - there are some incompatibilities
-at the assembly level but more than that the ABI changes in multiple
-ways from register assignment & calling convention to kernel-user struct
-layouts & other things. If we were to build existing MIPS-specific code
-as-is then some of this could lead to brokenness that the tools wouldn't
-have a good way to detect & reject automatically, so making people audit
-the code & add in the __nanomips__ check is a sort of safety measure.
-
-So the likelihood of your code above picking up on any future ISA
-changes will probably depend upon how incompatible they are, which seems
-pretty sensible.
-
-Thanks,
-    Paul
+> 
+> > 
+> > Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+> > ---
+> >  drivers/i2c/busses/i2c-at91.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
+> > index 3f3e8b3..b2f5fdb 100644
+> > --- a/drivers/i2c/busses/i2c-at91.c
+> > +++ b/drivers/i2c/busses/i2c-at91.c
+> > @@ -72,6 +72,7 @@
+> >  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
+> >  #define	AT91_TWI_RXRDY		BIT(1)	/* Receive Holding Register Ready */
+> >  #define	AT91_TWI_TXRDY		BIT(2)	/* Transmit Holding Register Ready */
+> > +#define	AT91_TWI_SVREAD		BIT(3)	/* Slave Read */
+> >  #define	AT91_TWI_OVRE		BIT(6)	/* Overrun Error */
+> >  #define	AT91_TWI_UNRE		BIT(7)	/* Underrun Error */
+> >  #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
+> > @@ -571,7 +572,10 @@ static irqreturn_t atmel_twi_interrupt(int irq, void *dev_id)
+> >  		at91_disable_twi_interrupts(dev);
+> >  		complete(&dev->cmd_complete);
+> >  	} else if (irqstatus & AT91_TWI_TXRDY) {
+> > -		at91_twi_write_next_byte(dev);
+> > +		if ((status & AT91_TWI_SVREAD) && (dev->buf_len == 0))
+> > +			at91_twi_write(dev, AT91_TWI_IDR, AT91_TWI_TXRDY);
+> > +		else
+> > +			at91_twi_write_next_byte(dev);
+> >  	}
+> >  
+> >  	/* catch error flags */
+> > -- 
+> > 2.7.4
+> > 
+> > 
