@@ -2,81 +2,124 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82853C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FA3C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539232063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:18:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AblYnwhO"
+	by mail.kernel.org (Postfix) with ESMTP id 01EB42063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfD2PS2 (ORCPT
+        id S1728565AbfD2PTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:18:28 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:50892 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbfD2PS2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:18:28 -0400
-Received: from grover.flets-west.jp (softbank126125154137.bbtec.net [126.125.154.137]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x3TFI1nY005205;
-        Tue, 30 Apr 2019 00:18:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x3TFI1nY005205
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556551082;
-        bh=y7m/Zbtbgnjkpx7PoLSWgCOzAu/1IfpmrgyIWbMKpRs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AblYnwhOIGTIAu1NrJ21cegN9ywsGUPizB5VL8huzgU3lde/Qne9RpZG55SAkcXZG
-         9rQuWGlQo+ReikfpcKHfqsGKgh85/6ioSxoLZgvQKbSqRTLRH13pifk617gE8xQ0gv
-         nvBu09TqwpP0FYB0Og3zX+KS1j4ILtgQFZOfOPppePgKmILvEJo1SRHkii4uP+jJId
-         2Xiv2ipp3bhaqFsRn5h0Uhdntbpm8VPK98nhBhbMkqVqoEcafKAJDVN08O8oTKBW8j
-         xrNqoYpkJiPt0dNcyP6VJPfCmH/wAI3I9q/TXI1vUriJbDq3M0FkrWJEYLN6EtKCey
-         rBulr4PY2Valw==
-X-Nifty-SrcIP: [126.125.154.137]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] .gitignore: add / prefix/suffix to generated include directories
-Date:   Tue, 30 Apr 2019 00:17:53 +0900
-Message-Id: <1556551073-19433-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 29 Apr 2019 11:19:07 -0400
+Received: from foss.arm.com ([217.140.101.70]:60186 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728249AbfD2PTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:19:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4327D80D;
+        Mon, 29 Apr 2019 08:19:06 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CD753F5C1;
+        Mon, 29 Apr 2019 08:19:04 -0700 (PDT)
+Subject: Re: [PATCH v2 7/7] iommu/dma-iommu: Remove iommu_dma_map_msi_msg()
+To:     Julien Grall <julien.grall@arm.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     logang@deltatee.com, douliyangs@gmail.com,
+        miquel.raynal@bootlin.com, marc.zyngier@arm.com,
+        jason@lakedaemon.net, tglx@linutronix.de, joro@8bytes.org,
+        bigeasy@linutronix.de, linux-rt-users@vger.kernel.org
+References: <20190429144428.29254-1-julien.grall@arm.com>
+ <20190429144428.29254-8-julien.grall@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <74a6c2e6-126c-57f0-af5c-ab1130130eba@arm.com>
+Date:   Mon, 29 Apr 2019 16:19:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190429144428.29254-8-julien.grall@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clarify these directory paths are relative to the top of source tree.
+On 29/04/2019 15:44, Julien Grall wrote:
+> A recent change split iommu_dma_map_msi_msg() in two new functions. The
+> function was still implemented to avoid modifying all the callers at
+> once.
+> 
+> Now that all the callers have been reworked, iommu_dma_map_msi_msg() can
+> be removed.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Yay! The end of my horrible bodge :)
 
- .gitignore | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-diff --git a/.gitignore b/.gitignore
-index a20ac26..e7bb6c6 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -90,10 +90,10 @@ modules.builtin
- #
- # Generated include files
- #
--include/config
--include/generated
--include/ksym
--arch/*/include/generated
-+/include/config/
-+/include/generated/
-+/include/ksym/
-+/arch/*/include/generated/
- 
- # stgit generated dirs
- patches-*
--- 
-2.7.4
-
+> Signed-off-by: Julien Grall <julien.grall@arm.com>
+> 
+> ---
+>      Changes in v2:
+>          - Rework the commit message
+> ---
+>   drivers/iommu/dma-iommu.c | 20 --------------------
+>   include/linux/dma-iommu.h |  5 -----
+>   2 files changed, 25 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 2309f59cefa4..12f4464828a4 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -936,23 +936,3 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+>   	msg->address_lo &= cookie_msi_granule(domain->iova_cookie) - 1;
+>   	msg->address_lo += lower_32_bits(msi_page->iova);
+>   }
+> -
+> -void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
+> -{
+> -	struct msi_desc *desc = irq_get_msi_desc(irq);
+> -	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
+> -
+> -	if (WARN_ON(iommu_dma_prepare_msi(desc, msi_addr))) {
+> -		/*
+> -		 * We're called from a void callback, so the best we can do is
+> -		 * 'fail' by filling the message with obviously bogus values.
+> -		 * Since we got this far due to an IOMMU being present, it's
+> -		 * not like the existing address would have worked anyway...
+> -		 */
+> -		msg->address_hi = ~0U;
+> -		msg->address_lo = ~0U;
+> -		msg->data = ~0U;
+> -	} else {
+> -		iommu_dma_compose_msi_msg(desc, msg);
+> -	}
+> -}
+> diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
+> index 3fc48fbd6f63..ddd217c197df 100644
+> --- a/include/linux/dma-iommu.h
+> +++ b/include/linux/dma-iommu.h
+> @@ -82,7 +82,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr);
+>   void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+>   			       struct msi_msg *msg);
+>   
+> -void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
+>   void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
+>   
+>   #else
+> @@ -122,10 +121,6 @@ static inline void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+>   {
+>   }
+>   
+> -static inline void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
+> -{
+> -}
+> -
+>   static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
+>   {
+>   }
+> 
