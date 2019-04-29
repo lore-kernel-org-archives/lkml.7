@@ -2,250 +2,182 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CC9C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5121C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1718720652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:58:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WL+bY5sY"
+	by mail.kernel.org (Postfix) with ESMTP id 94D7C20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfD2N6q (ORCPT
+        id S1728283AbfD2N7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:58:46 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50608 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfD2N6p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:58:45 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TDrb8u102802;
-        Mon, 29 Apr 2019 13:58:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to : content-transfer-encoding; s=corp-2018-07-02;
- bh=Gz6Ua/3GGNeg8lKwlMiyBYsmhe7CjbMRZf+NRa3oHPc=;
- b=WL+bY5sYu/gGn/l6x75MADFcvmJJSz6tGkmh2VZdzUswC8w/Xzkix/rLp5iEk0Pd8539
- fdcSKRBwYctVhDpHy7lQ05WaZYvX5szXP6yClsUrz34H6c41slLPm+BpSnmwdbcwxe+o
- dgvtuknnSdJlNejxftoc8FF61XweKVZ5dJTZ4Ws8aWwpuiF6LONUXLuaqxTIERwxKpG2
- C7CYxahZNQTQPthIDy0x+x6LNycaFoe/SzunExfO6rVfSuJ+79u/qT4u1W4r62k1sgGX
- LRiAtpU8qKiEpr6NKcVbDtpYtR3c+bkBRq+mO3VqLZq3PkYuH7/27ApXRO7rXq1ied7B bg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2s4fqpxgb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 13:58:26 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TDuxMk150317;
-        Mon, 29 Apr 2019 13:58:26 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2s5u50dvk9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 13:58:26 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3TDwOfm002890;
-        Mon, 29 Apr 2019 13:58:25 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 29 Apr 2019 06:58:24 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 054AF6A010F; Mon, 29 Apr 2019 09:58:28 -0400 (EDT)
-Date:   Mon, 29 Apr 2019 09:58:28 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     "Raslan, KarimAllah" <karahmed@amazon.de>, pbonzini@redhat.com
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v6 00/14] KVM/X86: Introduce a new guest mapping interface
-Message-ID: <20190429135828.GA21193@char.us.oracle.com>
-References: <1548966284-28642-1-git-send-email-karahmed@amazon.de>
- <1552914624.8242.1.camel@amazon.de>
- <20190318142232.GC16697@char.us.oracle.com>
- <1552936587.8242.22.camel@amazon.de>
+        Mon, 29 Apr 2019 09:59:47 -0400
+Received: from foss.arm.com ([217.140.101.70]:57654 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbfD2N7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:59:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47E23A78;
+        Mon, 29 Apr 2019 06:59:46 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D67293F5C1;
+        Mon, 29 Apr 2019 06:59:44 -0700 (PDT)
+Subject: Re: [PATCH 14/26] iommu/dma: Refactor iommu_dma_free
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190422175942.18788-1-hch@lst.de>
+ <20190422175942.18788-15-hch@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <8321a363-f448-3e48-48f6-58d2b44a2900@arm.com>
+Date:   Mon, 29 Apr 2019 14:59:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <1552936587.8242.22.camel@amazon.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9241 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904290099
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9241 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904290099
+In-Reply-To: <20190422175942.18788-15-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 07:16:28PM +0000, Raslan, KarimAllah wrote:
-> On Mon, 2019-03-18 at 10:22 -0400, Konrad Rzeszutek Wilk wrote:
-> > On Mon, Mar 18, 2019 at 01:10:24PM +0000, Raslan, KarimAllah wrote:
-> > >=20
-> > > I guess this patch series missed the 5.1 merge window? :)
-> >=20
-> > Were there any outstanding fixes that had to be addressed?
->=20
-> Not as far as I can remember. This version addressed all requests raise=
-d in=A0
-> 'v5'.
+On 22/04/2019 18:59, Christoph Hellwig wrote:
+> From: Robin Murphy <robin.murphy@arm.com>
+> 
+> The freeing logic was made particularly horrible by part of it being
+> opaque to the arch wrapper, which led to a lot of convoluted repetition
+> to ensure each path did everything in the right order. Now that it's
+> all private, we can pick apart and consolidate the logically-distinct
+> steps of freeing the IOMMU mapping, the underlying pages, and the CPU
+> remap (if necessary) into something much more manageable.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> [various cosmetic changes to the code flow]
 
-Paolo,
+Hmm, I do still prefer my original flow with the dma_common_free_remap() 
+call right out of the way at the end rather than being a special case in 
+the middle of all the page-freeing (which is the kind of existing 
+complexity I was trying to eliminate). I guess you've done this to avoid 
+having "if (!dma_release_from_contiguous(...))..." twice like I ended up 
+with, which is fair enough I suppose - once we manage to solve the new 
+dma_{alloc,free}_contiguous() interface that may tip the balance so I 
+can always revisit this then.
 
-Are there any concerns in pulling this patchset in?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   drivers/iommu/dma-iommu.c | 75 ++++++++++++++++++---------------------
+>   1 file changed, 35 insertions(+), 40 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 4632b9d301a1..9658c4cc3cfe 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -916,6 +916,41 @@ static void iommu_dma_unmap_resource(struct device *dev, dma_addr_t handle,
+>   	__iommu_dma_unmap(dev, handle, size);
+>   }
+>   
+> +static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
+> +		dma_addr_t handle, unsigned long attrs)
+> +{
+> +	size_t alloc_size = PAGE_ALIGN(size);
+> +	int count = alloc_size >> PAGE_SHIFT;
+> +	struct page *page = NULL;
+> +
+> +	__iommu_dma_unmap(dev, handle, size);
+> +
+> +	/* Non-coherent atomic allocation? Easy */
+> +	if (dma_free_from_pool(cpu_addr, alloc_size))
+> +		return;
+> +
+> +	if (is_vmalloc_addr(cpu_addr)) {
+> +		/*
+> +		 * If it the address is remapped, then it's either non-coherent
 
-Thank you!
->=20
-> >=20
-> > >=20
-> > >=20
-> > > On Thu, 2019-01-31 at 21:24 +0100, KarimAllah Ahmed wrote:
-> > > >=20
-> > > > Guest memory can either be directly managed by the kernel (i.e. h=
-ave a "struct
-> > > > page") or they can simply live outside kernel control (i.e. do no=
-t have a
-> > > > "struct page"). KVM mostly support these two modes, except in a f=
-ew places
-> > > > where the code seems to assume that guest memory must have a "str=
-uct page".
-> > > >=20
-> > > > This patchset introduces a new mapping interface to map guest mem=
-ory into host
-> > > > kernel memory which also supports PFN-based memory (i.e. memory w=
-ithout 'struct
-> > > > page'). It also converts all offending code to this interface or =
-simply
-> > > > read/write directly from guest memory. Patch 2 is additionally fi=
-xing an
-> > > > incorrect page release and marking the page as dirty (i.e. as a s=
-ide-effect of
-> > > > using the helper function to write).
-> > > >=20
-> > > > As far as I can see all offending code is now fixed except the AP=
-IC-access page
-> > > > which I will handle in a seperate series along with dropping
-> > > > kvm_vcpu_gfn_to_page and kvm_vcpu_gpa_to_page from the internal K=
-VM API.
-> > > >=20
-> > > > The current implementation of the new API uses memremap to map me=
-mory that does
-> > > > not have a "struct page". This proves to be very slow for high fr=
-equency
-> > > > mappings. Since this does not affect the normal use-case where a =
-"struct page"
-> > > > is available, the performance of this API will be handled by a se=
-perate patch
-> > > > series.
-> > > >=20
-> > > > So the simple way to use memory outside kernel control is:
-> > > >=20
-> > > > 1- Pass 'mem=3D' in the kernel command-line to limit the amount o=
-f memory managed=20
-> > > >    by the kernel.
-> > > > 2- Map this physical memory you want to give to the guest with:
-> > > >    mmap("/dev/mem", physical_address_offset, ..)
-> > > > 3- Use the user-space virtual address as the "userspace_addr" fie=
-ld in
-> > > >    KVM_SET_USER_MEMORY_REGION ioctl.
-> > > >=20
-> > > > v5 -> v6:
-> > > > - Added one extra patch to ensure that support for this mem=3D ca=
-se is complete
-> > > >   for x86.
-> > > > - Added a helper function to check if the mapping is mapped or no=
-t.
-> > > > - Added more comments on the struct.
-> > > > - Setting ->page to NULL on unmap and to a poison ptr if unused d=
-uring map
-> > > > - Checking for map ptr before using it.
-> > > > - Change kvm_vcpu_unmap to also mark page dirty for LM. That requ=
-ires
-> > > >   passing the vCPU pointer again to this function.
-> > > >=20
-> > > > v4 -> v5:
-> > > > - Introduce a new parameter 'dirty' into kvm_vcpu_unmap
-> > > > - A horrible rebase due to nested.c :)
-> > > > - Dropped a couple of hyperv patches as the code was fixed alread=
-y as a
-> > > >   side-effect of another patch.
-> > > > - Added a new trivial cleanup patch.
-> > > >=20
-> > > > v3 -> v4:
-> > > > - Rebase
-> > > > - Add a new patch to also fix the newly introduced enlightned VMC=
-S.
-> > > >=20
-> > > > v2 -> v3:
-> > > > - Rebase
-> > > > - Add a new patch to also fix the newly introduced shadow VMCS.
-> > > >=20
-> > > > Filippo Sironi (1):
-> > > >   X86/KVM: Handle PFNs outside of kernel reach when touching GPTE=
-s
-> > > >=20
-> > > > KarimAllah Ahmed (13):
-> > > >   X86/nVMX: handle_vmon: Read 4 bytes from guest memory
-> > > >   X86/nVMX: Update the PML table without mapping and unmapping th=
-e page
-> > > >   KVM: Introduce a new guest mapping API
-> > > >   X86/nVMX: handle_vmptrld: Use kvm_vcpu_map when copying VMCS12 =
-from
-> > > >     guest memory
-> > > >   KVM/nVMX: Use kvm_vcpu_map when mapping the L1 MSR bitmap
-> > > >   KVM/nVMX: Use kvm_vcpu_map when mapping the virtual APIC page
-> > > >   KVM/nVMX: Use kvm_vcpu_map when mapping the posted interrupt
-> > > >     descriptor table
-> > > >   KVM/X86: Use kvm_vcpu_map in emulator_cmpxchg_emulated
-> > > >   KVM/nSVM: Use the new mapping API for mapping guest memory
-> > > >   KVM/nVMX: Use kvm_vcpu_map for accessing the shadow VMCS
-> > > >   KVM/nVMX: Use kvm_vcpu_map for accessing the enlightened VMCS
-> > > >   KVM/nVMX: Use page_address_valid in a few more locations
-> > > >   kvm, x86: Properly check whether a pfn is an MMIO or not
-> > > >=20
-> > > >  arch/x86/include/asm/e820/api.h |   1 +
-> > > >  arch/x86/kernel/e820.c          |  18 ++++-
-> > > >  arch/x86/kvm/mmu.c              |   5 +-
-> > > >  arch/x86/kvm/paging_tmpl.h      |  38 +++++++---
-> > > >  arch/x86/kvm/svm.c              |  97 ++++++++++++------------
-> > > >  arch/x86/kvm/vmx/nested.c       | 160 +++++++++++++++-----------=
---------------
-> > > >  arch/x86/kvm/vmx/vmx.c          |  19 ++---
-> > > >  arch/x86/kvm/vmx/vmx.h          |   9 ++-
-> > > >  arch/x86/kvm/x86.c              |  14 ++--
-> > > >  include/linux/kvm_host.h        |  28 +++++++
-> > > >  virt/kvm/kvm_main.c             |  64 ++++++++++++++++
-> > > >  11 files changed, 267 insertions(+), 186 deletions(-)
-> > > >=20
-> > >=20
-> > >=20
-> > >=20
-> > > Amazon Development Center Germany GmbH
-> > > Krausenstr. 38
-> > > 10117 Berlin
-> > > Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
-> > > Ust-ID: DE 289 237 879
-> > > Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
-> > >=20
->=20
->=20
->=20
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
-> Ust-ID: DE 289 237 879
-> Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
->=20
+s/If it/If/
+
+My "easy; more involved; most complex" narrative definitely doesn't 
+translate very well to a different order :)
+
+Otherwise,
+
+Reluctantly-Acked-by: Robin Murphy <robin.murphy@arm.com>
+
+> +		 * or highmem CMA, or an iommu_dma_alloc_remap() construction.
+> +		 */
+> +		struct page **pages = __iommu_dma_get_pages(cpu_addr);
+> +
+> +		if (pages)
+> +			__iommu_dma_free_pages(pages, count);
+> +		else
+> +			page = vmalloc_to_page(cpu_addr);
+> +
+> +		dma_common_free_remap(cpu_addr, alloc_size, VM_USERMAP);
+> +	} else {
+> +		/* Lowmem means a coherent atomic or CMA allocation */
+> +		page = virt_to_page(cpu_addr);
+> +	}
+> +
+> +	if (page && !dma_release_from_contiguous(dev, page, count))
+> +		__free_pages(page, get_order(alloc_size));
+> +}
+> +
+>   static void *iommu_dma_alloc(struct device *dev, size_t size,
+>   		dma_addr_t *handle, gfp_t gfp, unsigned long attrs)
+>   {
+> @@ -985,46 +1020,6 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
+>   	return addr;
+>   }
+>   
+> -static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
+> -		dma_addr_t handle, unsigned long attrs)
+> -{
+> -	size_t iosize = size;
+> -
+> -	size = PAGE_ALIGN(size);
+> -	/*
+> -	 * @cpu_addr will be one of 4 things depending on how it was allocated:
+> -	 * - A remapped array of pages for contiguous allocations.
+> -	 * - A remapped array of pages from iommu_dma_alloc_remap(), for all
+> -	 *   non-atomic allocations.
+> -	 * - A non-cacheable alias from the atomic pool, for atomic
+> -	 *   allocations by non-coherent devices.
+> -	 * - A normal lowmem address, for atomic allocations by
+> -	 *   coherent devices.
+> -	 * Hence how dodgy the below logic looks...
+> -	 */
+> -	if (dma_in_atomic_pool(cpu_addr, size)) {
+> -		__iommu_dma_unmap(dev, handle, iosize);
+> -		dma_free_from_pool(cpu_addr, size);
+> -	} else if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+> -		struct page *page = vmalloc_to_page(cpu_addr);
+> -
+> -		__iommu_dma_unmap(dev, handle, iosize);
+> -		dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT);
+> -		dma_common_free_remap(cpu_addr, size, VM_USERMAP);
+> -	} else if (is_vmalloc_addr(cpu_addr)){
+> -		struct page **pages = __iommu_dma_get_pages(cpu_addr);
+> -
+> -		if (WARN_ON(!pages))
+> -			return;
+> -		__iommu_dma_unmap(dev, handle, iosize);
+> -		__iommu_dma_free_pages(pages, size >> PAGE_SHIFT);
+> -		dma_common_free_remap(cpu_addr, size, VM_USERMAP);
+> -	} else {
+> -		__iommu_dma_unmap(dev, handle, iosize);
+> -		__free_pages(virt_to_page(cpu_addr), get_order(size));
+> -	}
+> -}
+> -
+>   static int __iommu_dma_mmap_pfn(struct vm_area_struct *vma,
+>   			      unsigned long pfn, size_t size)
+>   {
+> 
