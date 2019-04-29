@@ -6,83 +6,76 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65415C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA6EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3707720673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF3D20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556560132;
-	bh=W9V6CouoTRQEgUu60bewd9p9Zh9JwiwDRPhGYdBsLWw=;
+	s=default; t=1556560216;
+	bh=mFI5AYacw1Q6qyrXUN2Ehpqx6CfqN/shmO2DBD0NVZQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dmqrgJN08vvB1IK7c9bUS5bwxRWlZ7POCcgeSjdjMbyq4t7fUBhv0FqRCt+lnHEl2
-	 dVrBVISSCz48ScAkWlub0w+/CHH0Zgy9U9af1E5mz4QHj/Gv5b1aBhNpv5gaUYCeg5
-	 OjJRE+Oy3ll1rMDW7lHiSU/EYgRcZaOHFjYnu80I=
+	b=Su3pxuBGyosOrYDOLDvYwmGS7R91avlYsp6XsioKqjdoq2sNR/IKsKfhtfJW3K7d+
+	 jQEenBKLy7/in2uocXNKDQpiN75WqacH0FJ4P5oqG+WDdnS/APw5ZEvRRQU6anCWK5
+	 2BRyceHhdvOZQRQ48nYjsPuaihslt6sduu7xRhDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbfD2Rsv (ORCPT
+        id S1729003AbfD2RuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:48:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42386 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728748AbfD2Rsu (ORCPT
+        Mon, 29 Apr 2019 13:50:15 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37038 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbfD2RuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:48:50 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f23so9406613otl.9;
-        Mon, 29 Apr 2019 10:48:50 -0700 (PDT)
+        Mon, 29 Apr 2019 13:50:15 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r20so8305055otg.4;
+        Mon, 29 Apr 2019 10:50:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=96Pv4XmpD2oLDllhCoFarHwO67SqW17W7Bz6iMLIAPg=;
-        b=rro8PmO9SauQzfgaGbcdQ65eTnHnGoelwLQS/F6iqYmShMH0jKxolNpbaOm9FARLrk
-         V0bvxnjuv+sU2fUav9af8rlHcKuLXvC3itH/Iom6iIcad2wkRn/z/J01JplqzwKBZYmW
-         Z45eA9dx1jjtKxESU3hJluDB6/jJCTMKqoe4titHVpmm0R5ZxNc+LG5Y/MJgHuQ8WhT4
-         CrVuFAbYL5BucFOQJSsgJdogwBwucpZ32K4YdtwfUcHe7vlggWHBg0VHYWmzxbi9x/si
-         kkZsA47s4RXVBmz0o9UoA2fAH2VIRsY9z8C0O1dNWeQJCbd7hNL3P4YqPy6GlE2sxu4D
-         r0Tg==
-X-Gm-Message-State: APjAAAW77g9Kx5qS558M/bWTibrCFIveRE/0jOXRnXNhCAsaH/hZIkGI
-        dgOSEoBB+VL7+K0vbRIUsA==
-X-Google-Smtp-Source: APXvYqy5RZ6ixsBcrAfarmCt6sR4eTlJQvc1g+ILNKDBjbhglFflOHlsQy2h1OTxaR6NC5Gvde0Lhg==
-X-Received: by 2002:a9d:4a9c:: with SMTP id i28mr9855983otf.326.1556560130035;
-        Mon, 29 Apr 2019 10:48:50 -0700 (PDT)
+        bh=GP+/q3SjbJoSSjp2k2erddqMqGbf2+izieUaA6gaXfQ=;
+        b=c+z3GcJ5yNzmRVz1NWrlin9+SDadyStYIsiTLvgksxkdQZWqyk0wmANnOoCgWvpMdz
+         ZsIyQAuRWnlvHHfiINAo43AdZsmhND7Ox2AB7ex5N+5j0tD/fPB0aBYD5RSpeqp+prYb
+         369PQuNe4x63sxWluaRhFYusMQ29UOkNWG/ZeLvkEI/mLSPylO7T+CuB5bAE/aaA2TZB
+         207IeeWjj3JVBLFf2wqEHRqVTAvWpZy2vye3AOgfaTClLzRLYoEtBeUkzeOXrcLePgun
+         5KJRmNvhowjZ6Aym5YnUYY3Bb1U0xyrK7I7j8dO8PrADTRA3SUSCdz8AMk2Pl2DLDTN4
+         bCgg==
+X-Gm-Message-State: APjAAAXS6nMV9JbJqUhYhyl1KJilHzOF9/NGMpVPw67aVDpU/zgpBL8L
+        3ItTaQgSjreFoPxbbbHqpA==
+X-Google-Smtp-Source: APXvYqwYHRkEoyFICdeOxSu5L1aOWeH3YczEJDsM2TY8TnSAxpi+K+WzJgo1yEK67ZaYo8lCeuj15A==
+X-Received: by 2002:a9d:650e:: with SMTP id i14mr19253606otl.128.1556560214260;
+        Mon, 29 Apr 2019 10:50:14 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i17sm13852752otr.36.2019.04.29.10.48.49
+        by smtp.gmail.com with ESMTPSA id h37sm1920163oth.79.2019.04.29.10.50.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 10:48:49 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 12:48:48 -0500
+        Mon, 29 Apr 2019 10:50:13 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 12:50:12 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Otavio Salvador <otavio@ossystems.com.br>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Otavio Salvador <otavio@ossystems.com.br>,
-        devicetree@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add support for
- imx6ul-pico-nymph
-Message-ID: <20190429174848.GA27422@bogus>
-References: <20190410010013.17259-1-otavio@ossystems.com.br>
+To:     xiaojiangfeng <xiaojiangfeng@huawei.com>
+Cc:     frowand.list@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: del redundant type conversion
+Message-ID: <20190429175012.GA28972@bogus>
+References: <1554884981-20309-1-git-send-email-xiaojiangfeng@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190410010013.17259-1-otavio@ossystems.com.br>
+In-Reply-To: <1554884981-20309-1-git-send-email-xiaojiangfeng@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  9 Apr 2019 22:00:12 -0300, Otavio Salvador wrote:
-> From: Fabio Estevam <festevam@gmail.com>
+On Wed, Apr 10, 2019 at 04:29:41PM +0800, xiaojiangfeng wrote:
+> The type of variable l in early_init_dt_scan_chosen is
+> int, there is no need to convert to int.
 > 
-> Add support for TechNexion's imx6ul-pico-nymph board.
-> 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+> Signed-off-by: xiaojiangfeng <xiaojiangfeng@huawei.com>
 > ---
-> 
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+>  drivers/of/fdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied.
+
+Rob
