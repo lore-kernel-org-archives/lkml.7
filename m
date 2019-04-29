@@ -3,75 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFD2C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9274EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236CB206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3C4206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfD2GPe (ORCPT
+        id S1727458AbfD2GQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:15:34 -0400
-Received: from www.osadl.org ([62.245.132.105]:41153 "EHLO www.osadl.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfD2GPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:15:32 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3T6FCqA007063;
-        Mon, 29 Apr 2019 08:15:12 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH] rds: ib: force endiannes annotation
-Date:   Mon, 29 Apr 2019 08:09:38 +0200
-Message-Id: <1556518178-13786-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        Mon, 29 Apr 2019 02:16:13 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:13858 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726566AbfD2GQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 02:16:12 -0400
+X-UUID: e3f6f3fe8f2846218ffa58333dfa2f85-20190429
+X-UUID: e3f6f3fe8f2846218ffa58333dfa2f85-20190429
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1680094737; Mon, 29 Apr 2019 14:16:09 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 29 Apr 2019 14:16:07 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 29 Apr 2019 14:16:06 +0800
+From:   Biao Huang <biao.huang@mediatek.com>
+To:     Jose Abreu <joabreu@synopsys.com>, <davem@davemloft.net>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>
+Subject: [PATCH 2/4] net: stmmac: fix csr_clk can't be zero issue
+Date:   Mon, 29 Apr 2019 14:15:54 +0800
+Message-ID: <1556518556-32464-3-git-send-email-biao.huang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1556518556-32464-1-git-send-email-biao.huang@mediatek.com>
+References: <1556518556-32464-1-git-send-email-biao.huang@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 6EC60DAFCA4A070922698989D92C07849BD0C3902B4CB805DB4315D970FCF4642000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the endiannes is being handled correctly as indicated by the comment
-above the offending line - sparse was unhappy with the missing annotation
-as be64_to_cpu() expects a __be64 argument. To mitigate this annotation
-issue forced annotation is introduced. Note that this patch has no impact
-on the generated binary.
+The specific clk_csr value can be zero, and
+stmmac_clk is necessary for MDC clock which can be set dynamically.
+So, change the condition from plat->clk_csr to plat->stmmac_clk to
+fix clk_csr can't be zero issue.
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 ---
-
-Problem located by an experimental coccinelle script to locate
-patters that make sparse unhappy (false positives):
-net/rds/ib_recv.c:827:23: warning: cast to restricted __le64
-
-Patch was compile-tested with: x86_64_defconfig + RDS_RDMA=m
-
-Patch was verified not to change the binary by diffing the
-generated object code before and after applying the patch.
-
-Patch is against 5.1-rc6 (localversion-next is 20190426)
-
- net/rds/ib_recv.c | 2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/rds/ib_recv.c b/net/rds/ib_recv.c
-index 7055985..a070a2d 100644
---- a/net/rds/ib_recv.c
-+++ b/net/rds/ib_recv.c
-@@ -824,7 +824,7 @@ static void rds_ib_cong_recv(struct rds_connection *conn,
- 	}
- 
- 	/* the congestion map is in little endian order */
--	uncongested = le64_to_cpu(uncongested);
-+	uncongested = le64_to_cpu((__force __le64)uncongested);
- 
- 	rds_cong_map_updated(map, uncongested);
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 818ad88..9e89b94 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4376,7 +4376,7 @@ int stmmac_dvr_probe(struct device *device,
+ 	 * set the MDC clock dynamically according to the csr actual
+ 	 * clock input.
+ 	 */
+-	if (!priv->plat->clk_csr)
++	if (priv->plat->stmmac_clk)
+ 		stmmac_clk_csr_set(priv);
+ 	else
+ 		priv->clk_csr = priv->plat->clk_csr;
 -- 
-2.1.4
+1.7.9.5
 
