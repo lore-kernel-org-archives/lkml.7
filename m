@@ -2,128 +2,273 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B96C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA905C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8182067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A967F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:46:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tlXTQ4gu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbfD2Spu (ORCPT
+        id S1729188AbfD2Sqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:45:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:27294 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728962AbfD2Spu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:45:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 11:45:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,410,1549958400"; 
-   d="scan'208";a="153344993"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Apr 2019 11:45:49 -0700
-Received: from brettjgr-mobl1.ger.corp.intel.com (unknown [10.254.180.216])
-        by linux.intel.com (Postfix) with ESMTP id A1D445803C2;
-        Mon, 29 Apr 2019 11:45:47 -0700 (PDT)
-Subject: Re: [PATCH v2] ASoC: Intel: avoid Oops if DMA setup fails
-To:     Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, stable@vger.kernel.org
-References: <20190429182517.210909-1-zwisler@google.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <951de893-e6ff-5bd0-3483-4c1d93b30cfc@linux.intel.com>
-Date:   Mon, 29 Apr 2019 13:45:46 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Mon, 29 Apr 2019 14:46:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57241 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728964AbfD2Sqe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 14:46:34 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIj6rg1031054
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 29 Apr 2019 11:45:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIj6rg1031054
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556563508;
+        bh=v58FdPGlwTZThwGXK/xjS2qQtMcOvzihC/eurJ9F7b0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=tlXTQ4guqy6WNPM2bD44ME/PHcyCIU3KZaI3XI2//YPCAu7hGUJCAtyche+7rdnA5
+         s2fYClgiOL0UjX8dc4q+Jm+Mk953XN+BoWB2j9VV8K9z82jRooJTNrJPdrNeCnHW4p
+         inNw+KzViXyxmz/ds2aiLsMetO8mgpeqCNST+OyzsWmR4FBg4uj0ljJmAcl5/JLSh1
+         tkTCyvqXHwyl+525f/EAvEh8cOYzo5PKBTPzGr885FjmGZ9fe+B9xQJHDaugA/xxep
+         u4mLrraln9BlyKWbOfPdjnzK0dmtUuYpsA3cNQ1igTbWHwFgFuOxEzbgqm9peyBVzj
+         K3lRoJPkmCQ6g==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIj6VC1031047;
+        Mon, 29 Apr 2019 11:45:06 -0700
+Date:   Mon, 29 Apr 2019 11:45:06 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-2a820bf74918d61ea54f7c1001f4a6a2e457577c@git.kernel.org>
+Cc:     airlied@linux.ie, jpoimboe@redhat.com, jani.nikula@linux.intel.com,
+        mbenes@suse.cz, catalin.marinas@arm.com, mingo@kernel.org,
+        tom.zanussi@linux.intel.com, akpm@linux-foundation.org,
+        robin.murphy@arm.com, aryabinin@virtuozzo.com,
+        rppt@linux.vnet.ibm.com, hch@lst.de, rientjes@google.com,
+        m.szyprowski@samsung.com, glider@google.com, josef@toxicpanda.com,
+        dsterba@suse.com, cl@linux.com, snitzer@redhat.com, hpa@zytor.com,
+        akinobu.mita@gmail.com, rostedt@goodmis.org,
+        joonas.lahtinen@linux.intel.com, dvyukov@google.com,
+        rodrigo.vivi@intel.com, jthumshirn@suse.de,
+        maarten.lankhorst@linux.intel.com, linux-kernel@vger.kernel.org,
+        clm@fb.com, penberg@kernel.org, daniel@ffwll.ch, agk@redhat.com,
+        tglx@linutronix.de, luto@kernel.org, adobriyan@gmail.com
+Reply-To: hch@lst.de, rppt@linux.vnet.ibm.com, akpm@linux-foundation.org,
+          robin.murphy@arm.com, aryabinin@virtuozzo.com, dsterba@suse.com,
+          cl@linux.com, glider@google.com, josef@toxicpanda.com,
+          m.szyprowski@samsung.com, rientjes@google.com, airlied@linux.ie,
+          tom.zanussi@linux.intel.com, mingo@kernel.org,
+          catalin.marinas@arm.com, jani.nikula@linux.intel.com,
+          mbenes@suse.cz, jpoimboe@redhat.com, clm@fb.com,
+          linux-kernel@vger.kernel.org, rodrigo.vivi@intel.com,
+          jthumshirn@suse.de, maarten.lankhorst@linux.intel.com,
+          adobriyan@gmail.com, tglx@linutronix.de, luto@kernel.org,
+          agk@redhat.com, penberg@kernel.org, daniel@ffwll.ch,
+          akinobu.mita@gmail.com, rostedt@goodmis.org, hpa@zytor.com,
+          snitzer@redhat.com, dvyukov@google.com,
+          joonas.lahtinen@linux.intel.com
+In-Reply-To: <20190425094803.066064076@linutronix.de>
+References: <20190425094803.066064076@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/stacktrace] tracing: Use percpu stack trace buffer more
+ intelligently
+Git-Commit-ID: 2a820bf74918d61ea54f7c1001f4a6a2e457577c
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190429182517.210909-1-zwisler@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/19 1:25 PM, Ross Zwisler wrote:
-> Currently in sst_dsp_new() if we get an error return from sst_dma_new()
-> we just print an error message and then still complete the function
-> successfully.  This means that we are trying to run without sst->dma
-> properly set up, which will result in NULL pointer dereference when
-> sst->dma is later used.  This was happening for me in
-> sst_dsp_dma_get_channel():
-> 
->          struct sst_dma *dma = dsp->dma;
-> 	...
->          dma->ch = dma_request_channel(mask, dma_chan_filter, dsp);
-> 
-> This resulted in:
-> 
->     BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
->     IP: sst_dsp_dma_get_channel+0x4f/0x125 [snd_soc_sst_firmware]
-> 
-> Fix this by adding proper error handling for the case where we fail to
-> set up DMA.
-> 
-> This change only affects Haswell and Broadwell systems.  Baytrail
-> systems explicilty opt-out of DMA via sst->pdata->resindex_dma_base
-> being set to -1.
-> 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
-> Cc: stable@vger.kernel.org
+Commit-ID:  2a820bf74918d61ea54f7c1001f4a6a2e457577c
+Gitweb:     https://git.kernel.org/tip/2a820bf74918d61ea54f7c1001f4a6a2e457577c
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Thu, 25 Apr 2019 11:45:14 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 29 Apr 2019 12:37:55 +0200
 
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+tracing: Use percpu stack trace buffer more intelligently
 
-Thanks Ross!
+The per cpu stack trace buffer usage pattern is odd at best. The buffer has
+place for 512 stack trace entries on 64-bit and 1024 on 32-bit. When
+interrupts or exceptions nest after the per cpu buffer was acquired the
+stacktrace length is hardcoded to 8 entries. 512/1024 stack trace entries
+in kernel stacks are unrealistic so the buffer is a complete waste.
 
-FWIW we should start deprecating this driver now and transition to SOF. 
-I'll double-check how the upcoming 1.3 release works on my Pixel 
-2015/Samus device later this week.
+Split the buffer into 4 nest levels, which are 128/256 entries per
+level. This allows nesting contexts (interrupts, exceptions) to utilize the
+cpu buffer for stack retrieval and avoids the fixed length allocation along
+with the conditional execution pathes.
 
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: linux-mm@kvack.org
+Cc: David Rientjes <rientjes@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: kasan-dev@googlegroups.com
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: iommu@lists.linux-foundation.org
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: David Sterba <dsterba@suse.com>
+Cc: Chris Mason <clm@fb.com>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: linux-btrfs@vger.kernel.org
+Cc: dm-devel@redhat.com
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: Alasdair Kergon <agk@redhat.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: linux-arch@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190425094803.066064076@linutronix.de
 
-> ---
-> 
-> Changes in v2:
->   - Upgraded the sst_dma_new() failure message from dev_warn() to dev_err()
->     (Pierre-Louis).
->   - Noted in the changelog that this change only affects Haswell and
->     Broadwell (Pierre-Louis).
-> 
-> ---
->   sound/soc/intel/common/sst-firmware.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/intel/common/sst-firmware.c b/sound/soc/intel/common/sst-firmware.c
-> index 1e067504b6043..f830e59f93eaa 100644
-> --- a/sound/soc/intel/common/sst-firmware.c
-> +++ b/sound/soc/intel/common/sst-firmware.c
-> @@ -1251,11 +1251,15 @@ struct sst_dsp *sst_dsp_new(struct device *dev,
->   		goto irq_err;
->   
->   	err = sst_dma_new(sst);
-> -	if (err)
-> -		dev_warn(dev, "sst_dma_new failed %d\n", err);
-> +	if (err)  {
-> +		dev_err(dev, "sst_dma_new failed %d\n", err);
-> +		goto dma_err;
-> +	}
->   
->   	return sst;
->   
-> +dma_err:
-> +	free_irq(sst->irq, sst);
->   irq_err:
->   	if (sst->ops->free)
->   		sst->ops->free(sst);
-> 
+---
+ kernel/trace/trace.c | 73 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 37 insertions(+), 36 deletions(-)
 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 21153e64bf1c..4fc93004feab 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2749,12 +2749,21 @@ trace_function(struct trace_array *tr,
+ 
+ #ifdef CONFIG_STACKTRACE
+ 
+-#define FTRACE_STACK_MAX_ENTRIES (PAGE_SIZE / sizeof(unsigned long))
++/* Allow 4 levels of nesting: normal, softirq, irq, NMI */
++#define FTRACE_KSTACK_NESTING	4
++
++#define FTRACE_KSTACK_ENTRIES	(PAGE_SIZE / FTRACE_KSTACK_NESTING)
++
+ struct ftrace_stack {
+-	unsigned long		calls[FTRACE_STACK_MAX_ENTRIES];
++	unsigned long		calls[FTRACE_KSTACK_ENTRIES];
++};
++
++
++struct ftrace_stacks {
++	struct ftrace_stack	stacks[FTRACE_KSTACK_NESTING];
+ };
+ 
+-static DEFINE_PER_CPU(struct ftrace_stack, ftrace_stack);
++static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
+ static DEFINE_PER_CPU(int, ftrace_stack_reserve);
+ 
+ static void __ftrace_trace_stack(struct ring_buffer *buffer,
+@@ -2763,10 +2772,11 @@ static void __ftrace_trace_stack(struct ring_buffer *buffer,
+ {
+ 	struct trace_event_call *call = &event_kernel_stack;
+ 	struct ring_buffer_event *event;
++	struct ftrace_stack *fstack;
+ 	struct stack_entry *entry;
+ 	struct stack_trace trace;
+-	int use_stack;
+-	int size = FTRACE_STACK_ENTRIES;
++	int size = FTRACE_KSTACK_ENTRIES;
++	int stackidx;
+ 
+ 	trace.nr_entries	= 0;
+ 	trace.skip		= skip;
+@@ -2788,29 +2798,32 @@ static void __ftrace_trace_stack(struct ring_buffer *buffer,
+ 	 */
+ 	preempt_disable_notrace();
+ 
+-	use_stack = __this_cpu_inc_return(ftrace_stack_reserve);
++	stackidx = __this_cpu_inc_return(ftrace_stack_reserve) - 1;
++
++	/* This should never happen. If it does, yell once and skip */
++	if (WARN_ON_ONCE(stackidx > FTRACE_KSTACK_NESTING))
++		goto out;
++
+ 	/*
+-	 * We don't need any atomic variables, just a barrier.
+-	 * If an interrupt comes in, we don't care, because it would
+-	 * have exited and put the counter back to what we want.
+-	 * We just need a barrier to keep gcc from moving things
+-	 * around.
++	 * The above __this_cpu_inc_return() is 'atomic' cpu local. An
++	 * interrupt will either see the value pre increment or post
++	 * increment. If the interrupt happens pre increment it will have
++	 * restored the counter when it returns.  We just need a barrier to
++	 * keep gcc from moving things around.
+ 	 */
+ 	barrier();
+-	if (use_stack == 1) {
+-		trace.entries		= this_cpu_ptr(ftrace_stack.calls);
+-		trace.max_entries	= FTRACE_STACK_MAX_ENTRIES;
+ 
+-		if (regs)
+-			save_stack_trace_regs(regs, &trace);
+-		else
+-			save_stack_trace(&trace);
++	fstack = this_cpu_ptr(ftrace_stacks.stacks) + stackidx;
++	trace.entries		= fstack->calls;
++	trace.max_entries	= FTRACE_KSTACK_ENTRIES;
+ 
+-		if (trace.nr_entries > size)
+-			size = trace.nr_entries;
+-	} else
+-		/* From now on, use_stack is a boolean */
+-		use_stack = 0;
++	if (regs)
++		save_stack_trace_regs(regs, &trace);
++	else
++		save_stack_trace(&trace);
++
++	if (trace.nr_entries > size)
++		size = trace.nr_entries;
+ 
+ 	size *= sizeof(unsigned long);
+ 
+@@ -2820,19 +2833,7 @@ static void __ftrace_trace_stack(struct ring_buffer *buffer,
+ 		goto out;
+ 	entry = ring_buffer_event_data(event);
+ 
+-	memset(&entry->caller, 0, size);
+-
+-	if (use_stack)
+-		memcpy(&entry->caller, trace.entries,
+-		       trace.nr_entries * sizeof(unsigned long));
+-	else {
+-		trace.max_entries	= FTRACE_STACK_ENTRIES;
+-		trace.entries		= entry->caller;
+-		if (regs)
+-			save_stack_trace_regs(regs, &trace);
+-		else
+-			save_stack_trace(&trace);
+-	}
++	memcpy(&entry->caller, trace.entries, size);
+ 
+ 	entry->size = trace.nr_entries;
+ 
