@@ -2,182 +2,93 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C82EC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C0DC04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CC12087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4177820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rMN1ETWk"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="vrxxYzPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfD2Kgx (ORCPT
+        id S1727836AbfD2Kht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:36:53 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19999 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbfD2Kgw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:36:52 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cc6d3a50000>; Mon, 29 Apr 2019 03:36:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 29 Apr 2019 03:36:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 29 Apr 2019 03:36:50 -0700
-Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Apr
- 2019 10:36:50 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL112.nvidia.com
- (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Apr
- 2019 10:36:49 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 29 Apr 2019 10:36:49 +0000
-Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.158]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cc6d3c00002>; Mon, 29 Apr 2019 03:36:49 -0700
-From:   Jim Lin <jilin@nvidia.com>
-To:     <mathias.nyman@intel.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jim Lin <jilin@nvidia.com>
-Subject: [PATCH 1/1] usb: xhci: Add Clear_TT_Buffer
-Date:   Mon, 29 Apr 2019 18:36:44 +0800
-Message-ID: <1556534204-17826-1-git-send-email-jilin@nvidia.com>
-X-Mailer: git-send-email 2.1.4
+        Mon, 29 Apr 2019 06:37:49 -0400
+Received: from mail-eopbgr130089.outbound.protection.outlook.com ([40.107.13.89]:28341
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727621AbfD2Khs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 06:37:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n29GjD+lJxjPv4oNzL6Txq+WQX6U9smqgB4ZUfVUbbA=;
+ b=vrxxYzPi7D3gthPQFLi4ivTRWHAxNv3sksaj9uZk3BVydaxuI2YILo3kY4QIdE6Q8gnob/Q6lMUwo/Cu5mGzOFvRz8aetnqiU8M59bLb11nEpEYNt16s/PYp9iQPKlkdXfI2U2QdbdK+fH8MOH2yhU44Q1MueWVdSo2cWL/x2XQ=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB4066.eurprd04.prod.outlook.com (52.134.92.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.15; Mon, 29 Apr 2019 10:37:44 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::8cda:4e52:8e87:8f0e]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::8cda:4e52:8e87:8f0e%2]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
+ 10:37:44 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] rtc: snvs: Use __maybe_unused instead of #if
+ CONFIG_PM_SLEEP
+Thread-Topic: [PATCH] rtc: snvs: Use __maybe_unused instead of #if
+ CONFIG_PM_SLEEP
+Thread-Index: AQHU/lmEml9HNTGs9Ea7jhPERyCyyKZS8kxA
+Date:   Mon, 29 Apr 2019 10:37:44 +0000
+Message-ID: <AM0PR04MB42116B2223E1AA8AAE2CF00080390@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1556521071-8981-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1556521071-8981-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 688540d2-f1a6-44c4-4843-08d6cc8eb71b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4066;
+x-ms-traffictypediagnostic: AM0PR04MB4066:
+x-microsoft-antispam-prvs: <AM0PR04MB4066FED039618470CE28E7D280390@AM0PR04MB4066.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 0022134A87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(376002)(39860400002)(136003)(189003)(199004)(97736004)(9686003)(305945005)(52536014)(76116006)(66476007)(66556008)(64756008)(66446008)(73956011)(55016002)(66946007)(6436002)(25786009)(7696005)(86362001)(110136005)(2201001)(99286004)(6506007)(102836004)(76176011)(4326008)(6246003)(316002)(33656002)(6116002)(3846002)(7736002)(68736007)(81156014)(8676002)(8936002)(53936002)(74316002)(81166006)(558084003)(2501003)(478600001)(2906002)(229853002)(256004)(5660300002)(44832011)(486006)(446003)(11346002)(476003)(14454004)(71200400001)(71190400001)(66066001)(26005)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4066;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GwaDsfAVcLUVvZ3p6DvQ1fYXTeSF4YUkigCMsXTuKN9p1UQrsL1fpAEPaWRnXQirF2FoaWRBqVaLOVEbzmYh2pOO/QrzSiipqfaLgnotfqIkN/U0irOadkbhitT+NkfNnHZMDgj+GDEnBqzzFEHHUU1vJRpzgmGNTDhvrYxuRpdT6h0LMJ1BqOxtUIUYdGkL5O1Kdf4UpKsojVRTQ9m31fXTW/r9AYe/S8s4uEuTh4+dnskpI908e1LiOdTXCGjLJhp/7w3nsTTgw1MwnsuiOLfx1stO+Ehz10zbiPGORxNkuftyeeWUmIWtj8A1w5ekGbG37Ymlsjxhch2lmDI9w6/p4+jhYHbJJK0U9CkmCU1uWCRFV2GEtJWn8f8IBLezIdMU914KaGR8Pf7zyp3WsyqGfoc/mmSrAxz+N7cFjHM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556534181; bh=oG+UgkoI1H0HnoK6iSsX7MbtgMNDVfxYFAgBXvtrQ8Y=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=rMN1ETWkrhZUe1qSggTobFAUHM/22ojPtroEiOoUIPyZ5z+F00ig6MYW26PYzdG0b
-         gGjGB/1qPN92OsxM8ipfD3xbeLRdxnltKDUct0znqITiwaF82KJo1jZF66mL9HNUoM
-         DP9Gglu6NglqBxTm9iAarPXTAQO8xsDR2DGSY+B8JKZ4ONpRt6OGx3DLJKMiUq88HL
-         I7NMzUUsNOKJMeS6fedL10s5bUvz86IESlWXrx/LTPPC4crMOEgZTUW1RYtvS4yw1Q
-         E2eaxh/41RNDZLZY49upO38G9bsvOM77gsHEugAOT1j09OOUt/9wIr6Hr2gKS2AIF2
-         QCPHG5jBA4mIA==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 688540d2-f1a6-44c4-4843-08d6cc8eb71b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 10:37:44.7583
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-processing for full-/low-speed endpoints connected via a TT, the host
-software must use the Clear_TT_Buffer request to the TT to ensure
-that the buffer is not in the busy state".
-
-In our case, a full-speed speaker (ConferenceCam) is behind a high-
-speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-request we may continue to get STALL with the folllowing requests,
-like Set_Interface.
-
-Here we add Clear_TT_Buffer for the following Set_Interface requests
-to get ACK successfully.
-
-Signed-off-by: Jim Lin <jilin@nvidia.com>
----
- drivers/usb/host/xhci-ring.c | 28 ++++++++++++++++++++++++++++
- drivers/usb/host/xhci.c      |  7 +++++++
- drivers/usb/host/xhci.h      |  3 +++
- 3 files changed, 38 insertions(+)
-
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 9215a28dad40..02b1ebad81e7 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1786,6 +1786,33 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
- 	return NULL;
- }
- 
-+static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci,
-+	unsigned int slot_id, struct xhci_td *td)
-+{
-+	struct xhci_virt_device *dev;
-+	struct xhci_slot_ctx *slot_ctx;
-+	int saved_devnum;
-+
-+	/*
-+	 * As part of low/full-speed endpoint-halt processing
-+	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
-+	 */
-+	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
-+	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub) &&
-+	    !xhci->clearing_tt) {
-+		xhci->clearing_tt = 1;
-+		dev = xhci->devs[slot_id];
-+		slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
-+		/* Update devnum temporarily for usb_hub_clear_tt_buffer */
-+		saved_devnum = td->urb->dev->devnum;
-+		td->urb->dev->devnum = (int) le32_to_cpu(slot_ctx->dev_state) &
-+			DEV_ADDR_MASK;
-+		if (usb_hub_clear_tt_buffer(td->urb))
-+			xhci->clearing_tt = 0;
-+		td->urb->dev->devnum = saved_devnum;
-+	}
-+}
-+
- static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 		unsigned int slot_id, unsigned int ep_index,
- 		unsigned int stream_id, struct xhci_td *td,
-@@ -1804,6 +1831,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 	if (reset_type == EP_HARD_RESET) {
- 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
- 		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
-+		xhci_clear_hub_tt_buffer(xhci, slot_id, td);
- 	}
- 	xhci_ring_cmd_db(xhci);
- }
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 7fa58c99f126..cb8c1048d4d3 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -5132,6 +5132,12 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
- }
- EXPORT_SYMBOL_GPL(xhci_gen_setup);
- 
-+void xhci_clear_tt_buffer_complete(struct usb_hcd *hcd,
-+						struct usb_host_endpoint *ep)
-+{
-+	hcd_to_xhci(hcd)->clearing_tt = 0;
-+}
-+
- static const struct hc_driver xhci_hc_driver = {
- 	.description =		"xhci-hcd",
- 	.product_desc =		"xHCI Host Controller",
-@@ -5192,6 +5198,7 @@ static const struct hc_driver xhci_hc_driver = {
- 	.enable_usb3_lpm_timeout =	xhci_enable_usb3_lpm_timeout,
- 	.disable_usb3_lpm_timeout =	xhci_disable_usb3_lpm_timeout,
- 	.find_raw_port_number =	xhci_find_raw_port_number,
-+	.clear_tt_buffer_complete = xhci_clear_tt_buffer_complete,
- };
- 
- void xhci_init_driver(struct hc_driver *drv,
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 9334cdee382a..f786bb0992c4 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1864,6 +1864,7 @@ struct xhci_hcd {
- 	unsigned		hw_lpm_support:1;
- 	/* Broken Suspend flag for SNPS Suspend resume issue */
- 	unsigned		broken_suspend:1;
-+	unsigned		clearing_tt:1;
- 	/* cached usb2 extened protocol capabilites */
- 	u32                     *ext_caps;
- 	unsigned int            num_ext_caps;
-@@ -2052,6 +2053,8 @@ int xhci_alloc_tt_info(struct xhci_hcd *xhci,
- 		struct xhci_virt_device *virt_dev,
- 		struct usb_device *hdev,
- 		struct usb_tt *tt, gfp_t mem_flags);
-+void xhci_clear_tt_buffer_complete(struct usb_hcd *hcd,
-+		struct usb_host_endpoint *ep);
- 
- /* xHCI ring, segment, TRB, and TD functions */
- dma_addr_t xhci_trb_virt_to_dma(struct xhci_segment *seg, union xhci_trb *trb);
--- 
-2.1.4
-
+PiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiBNb25kYXksIEFwcmlsIDI5LCAyMDE5IDM6MDMg
+UE0NCj4gDQo+IFVzZSBfX21heWJlX3VudXNlZCBmb3IgcG93ZXIgbWFuYWdlbWVudCByZWxhdGVk
+IGZ1bmN0aW9ucyBpbnN0ZWFkIG9mICNpZg0KPiBDT05GSUdfUE1fU0xFRVAgdG8gc2ltcGx5IHRo
+ZSBjb2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54
+cC5jb20+DQoNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29t
+Pg0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg==
