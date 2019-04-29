@@ -2,91 +2,115 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEDBC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D86C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6F02084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E225620675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556547244;
+	bh=xf6NipygRwz8sNGT+uqf5PgnOsEKfKT1vm3IZ3bunjM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=m/ZhZKTSGh68dX3Jp+EnA/BUvsoyWB2F7tgQBUUHfVatZl7DodbArqUUbGboDAcgP
+	 qhS+lH97RhX0Wmyji2v2K8wq6nUBlJFqOpjK4sTzAUtQbWdZ8hUp6g3pHWSv3Tls/S
+	 sTkV35ctBEFTdjEDFxkSnunluL/WFjoyNCU+kvyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfD2OLv (ORCPT
+        id S1728311AbfD2OOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:11:51 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:45011 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbfD2OLu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:11:50 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N9d4t-1ggOYm2XMj-015Xti; Mon, 29 Apr 2019 16:11:21 +0200
-Subject: Re: [PATCH 01/41] drivers: tty: serial: dz: use dev_err() instead of
- printk()
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-2-git-send-email-info@metux.net>
- <20190427132959.GA11368@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <e10175d0-bc3b-a4ab-cb47-0b4761bfb629@metux.net>
-Date:   Mon, 29 Apr 2019 16:11:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 29 Apr 2019 10:14:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728196AbfD2OOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:14:02 -0400
+Received: from [192.168.0.101] (unknown [58.212.133.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75D6320652;
+        Mon, 29 Apr 2019 14:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556547241;
+        bh=xf6NipygRwz8sNGT+uqf5PgnOsEKfKT1vm3IZ3bunjM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dso4WA3f9LnwH+OyLKzx9gjPszb+OcJsevJ1VxlQW5cC4aDph7RORwuDlkB86eNA8
+         q/XDB8hJuEdwfD5rG8Fs5+ks4fTIp4o4MBiK1yNfIwPHETyf9GmAKyiUVj84nByrBk
+         2x5gEM1+/soBwQiUPiA+Nykh6NB86t3bieQfx24c=
+Subject: Re: [PATCH 1/2] f2fs: fix to avoid potential negative .f_bfree
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, drosen@google.com
+References: <20190426095754.85784-1-yuchao0@huawei.com>
+ <20190428134722.GC37346@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <f8b890b8-22a3-bead-7df5-6ab87deb56e9@kernel.org>
+Date:   Mon, 29 Apr 2019 22:13:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190427132959.GA11368@kroah.com>
+In-Reply-To: <20190428134722.GC37346@jaegeuk-macbookpro.roam.corp.google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:w68pyQn6kRKE7GRI8D4DIjXrIG1rM4JVO8YNhN1PjmA9qeJlTnd
- FRfk7wZg3723UrBQe25rwfOnwSzGszEb1MIoCQQLNzhyCTgLVqEInQLMVDSZ6SrfQMpGeUD
- sSICNMoMdNK6YaqchK3BXnaBaPE/dmfwd/DCv3Rgt3Peb9t9zVGwhF+PiwHnSknkczZ5jwA
- iaTSwPj+i6uzJ5jOg0EOg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GSBkrDSKESA=:2lO9/amCuq6fFF597Ih05m
- lHF5oKmclj72Zzkyd/7n7OIiwaRhSBo7oYOd2+ffp/NEUvN2Jn/raFhf0e6E8K+EU2aJRWYj6
- xPazKtRy6+71hDxb8N8/muna5/ompU5XUHAHWvNiNsi3xQSwdRdyVk8toFHaLpavPormaaAC5
- x6cZ0/wtOs54z6LsUIHciLayFiB+BmZ83+sLMyUYXe0KBI/zPixrZD+tu0VcsfcS7r7VYQj4/
- JjNFl9B8X8o/Sjh9uG6Y3vBTGv49VcPY/5tQwUnsC39CoM168B+bxUNpEQ5zA3Jhrk95A+B1n
- 6nETxBNJQ3EbF6WPXuX4E75BpNeVCeXQKfLnBOd3nrSBkj/uFH76O1vrWS4AgsfOTt4MHiI62
- WKvPVRgqATCb3N2+oJ8px9tLb4lTxX6XUOOyI503AcT66SDfLFH39tMUPPkDqizBhpx9VxXp2
- FfZsnVaVxHhAOPNsBpVjuzon/QzxCbElmVdBDB7ooHtQ3iaspczt+e5dMm0V3iq1okxyFRY5F
- F/WoUUpE4JmdzZv6STWYNcXwQiTMhpJKgYW0+6X2Vmh2qw16Aiuqtn+H6LLyYHl3ToJgVosT6
- IXgBwLjn12BZ5AjiiM6dfeDhbcZqWNCFedbIreNfGBORb11xOTrYSFbUOSyh0j1BEZIcGO+gz
- XzZByfB5wMLlxYXWanXG9Wg07pbtgY6qOVP/x1S66+XQvoODts6tl2AdS2HQ7qtZOiBu6Jcml
- CvF1VoxkjSF83yH+uX/lseAL7VLzTmM1k9ETeNvnTFIEjvXYr5L640CRVkc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.04.19 15:29, Greg KH wrote:
-> On Sat, Apr 27, 2019 at 02:51:42PM +0200, Enrico Weigelt, metux IT consult wrote:
->> Using dev_err() instead of printk() for more consistent output.
->> (prints device name, etc).
+On 2019-4-28 21:47, Jaegeuk Kim wrote:
+> On 04/26, Chao Yu wrote:
+>> When calculating .f_bfree value in f2fs_statfs(), sbi->unusable_block_count
+>> can be increased after the judgment condition, result in overflow of
+>> .f_bfree in later calculation. This patch fixes to use a temporary signed
+>> variable to save the calculation result of .f_bfree.
 >>
->> Signed-off-by: Enrico Weigelt <info@metux.net>
+>> 	if (unlikely(buf->f_bfree <= sbi->unusable_block_count))
+>>  		buf->f_bfree = 0;
+>>  	else
+>> 		buf->f_bfree -= sbi->unusable_block_count;
 > 
-> Your "From:" line does not match the signed-off-by line, so I can't take
-> any of these if I wanted to :(
+> Do we just need stat_lock for this?
 
-Grmpf. I've manually changed it, as you isisted in having my company
-name remove from it ....
+Like we access other stat value in statfs(), we just need the instantaneous
+value of .unusable_block_count, so we don't need additional stat_lock, right?
 
---mtx
+Thanks,
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> 
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/super.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index 2376bb01b5c4..fcc9793dbc2c 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -1216,6 +1216,7 @@ static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
+>>  	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
+>>  	block_t total_count, user_block_count, start_count;
+>>  	u64 avail_node_count;
+>> +	long long bfree;
+>>  
+>>  	total_count = le64_to_cpu(sbi->raw_super->block_count);
+>>  	user_block_count = sbi->user_block_count;
+>> @@ -1226,10 +1227,12 @@ static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
+>>  	buf->f_blocks = total_count - start_count;
+>>  	buf->f_bfree = user_block_count - valid_user_blocks(sbi) -
+>>  						sbi->current_reserved_blocks;
+>> -	if (unlikely(buf->f_bfree <= sbi->unusable_block_count))
+>> +
+>> +	bfree = buf->f_bfree - sbi->unusable_block_count;
+>> +	if (unlikely(bfree < 0))
+>>  		buf->f_bfree = 0;
+>>  	else
+>> -		buf->f_bfree -= sbi->unusable_block_count;
+>> +		buf->f_bfree = bfree;
+>>  
+>>  	if (buf->f_bfree > F2FS_OPTION(sbi).root_reserved_blocks)
+>>  		buf->f_bavail = buf->f_bfree -
+>> -- 
+>> 2.18.0.rc1
