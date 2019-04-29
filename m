@@ -2,165 +2,154 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B97C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF6BC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E45420675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3267206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfD2CRH (ORCPT
+        id S1727146AbfD2CXl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 22:17:07 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46408 "EHLO mga03.intel.com"
+        Sun, 28 Apr 2019 22:23:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38906 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbfD2CRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 22:17:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 19:17:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
-   d="scan'208";a="139632022"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by orsmga006.jf.intel.com with ESMTP; 28 Apr 2019 19:17:02 -0700
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-To:     Ingo Molnar <mingo@kernel.org>, Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190424140013.GA14594@sinkpad>
- <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
- <20190425095508.GA8387@gmail.com>
- <CAERHkrs0=xcx9UUZbZPYq4QbznUqHAuVbTnafSVpZFKwAEFyMA@mail.gmail.com>
- <20190427091716.GC99668@gmail.com>
- <CAERHkruEAVBsh6FphMKqgR2+HjsVVegxjnpOFRNfbrfZDNpc9w@mail.gmail.com>
- <20190427142137.GA72051@gmail.com>
- <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
- <20190428093304.GA7393@gmail.com>
- <CAERHkrvaSSR1wRECF1AcLOhpmCAH0ecvFEL5MOFjK05F0xSuzA@mail.gmail.com>
- <20190428121721.GA121434@gmail.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <db7c3e51-d013-b3d9-7bce-c247aa2e7144@linux.intel.com>
-Date:   Mon, 29 Apr 2019 10:17:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
+        id S1726824AbfD2CXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 22:23:41 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9ADE23083394;
+        Mon, 29 Apr 2019 02:23:40 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77A52608A7;
+        Mon, 29 Apr 2019 02:23:40 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id D235A4A460;
+        Mon, 29 Apr 2019 02:23:39 +0000 (UTC)
+Date:   Sun, 28 Apr 2019 22:23:39 -0400 (EDT)
+From:   Jason Wang <jasowang@redhat.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     "weiyongjun (A)" <weiyongjun1@huawei.com>,
+        yuehaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        edumazet@google.com, brouer@redhat.com, mst@redhat.com,
+        lirongqing@baidu.com, nicolas dichtel <nicolas.dichtel@6wind.com>,
+        3chas3@gmail.com, wangli39@baidu.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Peter Xu <peterx@redhat.com>
+Message-ID: <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAM_iQpUfpruaFowbiTOY7aH4Ts-xcY4JACGLOT3CUjLqpg_zXw@mail.gmail.com>
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com> <20190428030539.17776-1-yuehaibing@huawei.com> <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com> <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com> <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com> <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com> <CAM_iQpUfpruaFowbiTOY7aH4Ts-xcY4JACGLOT3CUjLqpg_zXw@mail.gmail.com>
+Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
 MIME-Version: 1.0
-In-Reply-To: <20190428121721.GA121434@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.68.5.20, 10.4.195.1]
+Thread-Topic: Fix use-after-free in tun_net_xmit
+Thread-Index: l1tCn2vUIB1NrW2sZ/gfYQ5U/Iy6Yg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 29 Apr 2019 02:23:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/28 20:17, Ingo Molnar wrote:
-> 
-> * Aubrey Li <aubrey.intel@gmail.com> wrote:
-> 
->> On Sun, Apr 28, 2019 at 5:33 PM Ingo Molnar <mingo@kernel.org> wrote:
->>> So because I'm a big fan of presenting data in a readable fashion, here
->>> are your results, tabulated:
->>
->> I thought I tried my best to make it readable, but this one looks much better,
->> thanks, ;-)
->>>
->>>  #
->>>  # Sysbench throughput comparison of 3 different kernels at different
->>>  # load levels, higher numbers are better:
->>>  #
->>>
->>>  .--------------------------------------|----------------------------------------------------------------.
->>>  |  NA/AVX     vanilla-SMT    [stddev%] |coresched-SMT   [stddev%]   +/-  |   no-SMT    [stddev%]   +/-  |
->>>  |--------------------------------------|----------------------------------------------------------------|
->>>  |   1/1             508.5    [  0.2% ] |        504.7   [  1.1% ]   0.8% |    509.0    [  0.2% ]   0.1% |
->>>  |   2/2            1000.2    [  1.4% ] |       1004.1   [  1.6% ]   0.4% |    997.6    [  1.2% ]   0.3% |
->>>  |   4/4            1912.1    [  1.0% ] |       1904.2   [  1.1% ]   0.4% |   1914.9    [  1.3% ]   0.1% |
->>>  |   8/8            3753.5    [  0.3% ] |       3748.2   [  0.3% ]   0.1% |   3751.3    [  0.4% ]   0.1% |
->>>  |  16/16           7139.3    [  2.4% ] |       7137.9   [  1.8% ]   0.0% |   7049.2    [  2.4% ]   1.3% |
->>>  |  32/32          10899.0    [  4.2% ] |      10780.3   [  4.4% ]  -1.1% |  10339.2    [  9.6% ]  -5.1% |
->>>  |  64/64          15086.1    [ 11.5% ] |      14262.0   [  8.2% ]  -5.5% |  11168.7    [ 22.2% ] -26.0% |
->>>  | 128/128         15371.9    [ 22.0% ] |      14675.8   [ 14.4% ]  -4.5% |  10963.9    [ 18.5% ] -28.7% |
->>>  | 256/256         15990.8    [ 22.0% ] |      12227.9   [ 10.3% ] -23.5% |  10469.9    [ 19.6% ] -34.5% |
->>>  '--------------------------------------|----------------------------------------------------------------'
->>>
->>> One major thing that sticks out is that if we compare the stddev numbers
->>> to the +/- comparisons then it's pretty clear that the benchmarks are
->>> very noisy: in all but the last row stddev is actually higher than the
->>> measured effect.
->>>
->>> So what does 'stddev' mean here, exactly? The stddev of multipe runs,
->>> i.e. measured run-to-run variance? Or is it some internal metric of the
->>> benchmark?
->>>
->>
->> The benchmark periodically reports intermediate statistics in one second,
->> the raw log looks like below:
->> [ 11s ] thds: 256 eps: 14346.72 lat (ms,95%): 44.17
->> [ 12s ] thds: 256 eps: 14328.45 lat (ms,95%): 44.17
->> [ 13s ] thds: 256 eps: 13773.06 lat (ms,95%): 43.39
->> [ 14s ] thds: 256 eps: 13752.31 lat (ms,95%): 43.39
->> [ 15s ] thds: 256 eps: 15362.79 lat (ms,95%): 43.39
->> [ 16s ] thds: 256 eps: 26580.65 lat (ms,95%): 35.59
->> [ 17s ] thds: 256 eps: 15011.78 lat (ms,95%): 36.89
->> [ 18s ] thds: 256 eps: 15025.78 lat (ms,95%): 39.65
->> [ 19s ] thds: 256 eps: 15350.87 lat (ms,95%): 39.65
->> [ 20s ] thds: 256 eps: 15491.70 lat (ms,95%): 36.89
->>
->> I have a python script to parse eps(events per second) and lat(latency)
->> out, and compute the average and stddev. (And I can draw a curve locally).
->>
->> It's noisy indeed when tasks number is greater than the CPU number.
->> It's probably caused by high frequent load balance and context switch.
-> 
-> Ok, so it's basically an internal workload noise metric, it doesn't 
-> represent the run-to-run noise.
-> 
-> So it's the real stddev of the workload - but we don't know whether the 
-> measured performance figure is exactly in the middle of the runtime 
-> probability distribution.
-> 
->> Do you have any suggestions? Or any other information I can provide?
-> 
-> Yeah, so we don't just want to know the "standard deviation" of the 
-> measured throughput values, but also the "standard error of the mean".
-> 
-> I suspect it's pretty low, below 1% for all rows?
 
-Hope my this mail box works for this...
+On 2019/4/29 上午1:59, Cong Wang wrote:
+> On Sun, Apr 28, 2019 at 12:51 AM Jason Wang <jasowang@redhat.com> wrote:
+>>> tun_net_xmit() doesn't have the chance to
+>>> access the change because it holding the rcu_read_lock().
+>>
+>>
+>> The problem is the following codes:
+>>
+>>
+>>          --tun->numqueues;
+>>
+>>          ...
+>>
+>>          synchronize_net();
+>>
+>> We need make sure the decrement of tun->numqueues be visible to readers
+>> after synchronize_net(). And in tun_net_xmit():
+>
+> It doesn't matter at all. Readers are okay to read it even they still use the
+> stale tun->numqueues, as long as the tfile is not freed readers can read
+> whatever they want...
 
-.-------------------------------------------------------------------------------------------------------------.
-|NA/AVX vanilla-SMT     [std% / sem%] | coresched-SMT   [std% / sem%]     +/- |  no-SMT [std% / sem%]    +/-  |
-|-------------------------------------------------------------------------------------------------------------|
-|  1/1        508.5     [ 0.2%/ 0.0%] |         504.7   [ 1.1%/ 0.1%]    -0.8%|   509.0 [ 0.2%/ 0.0%]    0.1% |
-|  2/2       1000.2     [ 1.4%/ 0.1%] |        1004.1   [ 1.6%/ 0.2%]     0.4%|   997.6 [ 1.2%/ 0.1%]   -0.3% |
-|  4/4       1912.1     [ 1.0%/ 0.1%] |        1904.2   [ 1.1%/ 0.1%]    -0.4%|  1914.9 [ 1.3%/ 0.1%]    0.1% |
-|  8/8       3753.5     [ 0.3%/ 0.0%] |        3748.2   [ 0.3%/ 0.0%]    -0.1%|  3751.3 [ 0.4%/ 0.0%]   -0.1% |
-| 16/16      7139.3     [ 2.4%/ 0.2%] |        7137.9   [ 1.8%/ 0.2%]    -0.0%|  7049.2 [ 2.4%/ 0.2%]   -1.3% |
-| 32/32     10899.0     [ 4.2%/ 0.4%] |       10780.3   [ 4.4%/ 0.4%]    -1.1%| 10339.2 [ 9.6%/ 0.9%]   -5.1% |
-| 64/64     15086.1     [11.5%/ 1.2%] |       14262.0   [ 8.2%/ 0.8%]    -5.5%| 11168.7 [22.2%/ 1.7%]  -26.0% |
-|128/128    15371.9     [22.0%/ 2.2%] |       14675.8   [14.4%/ 1.4%]    -4.5%| 10963.9 [18.5%/ 1.4%]  -28.7% |
-|256/256    15990.8     [22.0%/ 2.2%] |       12227.9   [10.3%/ 1.0%]   -23.5%| 10469.9 [19.6%/ 1.7%]  -34.5% |
-'-------------------------------------------------------------------------------------------------------------'
+This is only true if we set SOCK_RCU_FREE, isn't it?
 
-Thanks,
--Aubrey
+>
+> The decrement of tun->numqueues is just how we unpublish the old
+> tfile, it is still valid for readers to read it _after_ unpublish, we only need
+> to worry about free, not about unpublish. This is the whole spirit of RCU.
+>
+
+The point is we don't convert tun->numqueues to RCU but use
+synchronize_net().
+
+> You need to rethink about my SOCK_RCU_FREE patch.
+
+The code is wrote before SOCK_RCU_FREE is introduced and assume no
+de-reference from device after synchronize_net(). It doesn't harm to
+figure out the root cause which may give us more confidence to the fix
+(e.g like SOCK_RCU_FREE).
+
+I don't object to fix with SOCK_RCU_FREE, but then we should remove
+the redundant synchronize_net(). But I still prefer to synchronize
+everything explicitly like (completely untested):
+
+From df91f77d35a6aa7943b6f2a7d4b329990896a0fe Mon Sep 17 00:00:00 2001
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 29 Apr 2019 10:21:06 +0800
+Subject: [PATCH] tuntap: synchronize through tfiles instead of numqueues
+
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/net/tun.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index 80bff1b4ec17..03715f605fb5 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -698,6 +698,7 @@ static void __tun_detach(struct tun_file *tfile, bool clean)
+ 
+ 		rcu_assign_pointer(tun->tfiles[index],
+ 				   tun->tfiles[tun->numqueues - 1]);
++		rcu_assign_pointer(tun->tfiles[tun->numqueues], NULL);
+ 		ntfile = rtnl_dereference(tun->tfiles[index]);
+ 		ntfile->queue_index = index;
+ 
+@@ -1082,7 +1083,7 @@ static netdev_tx_t tun_net_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	tfile = rcu_dereference(tun->tfiles[txq]);
+ 
+ 	/* Drop packet if interface is not attached */
+-	if (txq >= tun->numqueues)
++	if (!tfile)
+ 		goto drop;
+ 
+ 	if (!rcu_dereference(tun->steering_prog))
+@@ -1305,15 +1306,13 @@ static int tun_xdp_xmit(struct net_device *dev, int n,
+ 
+ 	rcu_read_lock();
+ 
+-	numqueues = READ_ONCE(tun->numqueues);
+-	if (!numqueues) {
++	tfile = rcu_dereference(tun->tfiles[smp_processor_id() %
++					    tun->numqueues]);
++	if (!tfile) {
+ 		rcu_read_unlock();
+ 		return -ENXIO; /* Caller will free/return all frames */
+ 	}
+ 
+-	tfile = rcu_dereference(tun->tfiles[smp_processor_id() %
+-					    numqueues]);
+-
+ 	spin_lock(&tfile->tx_ring.producer_lock);
+ 	for (i = 0; i < n; i++) {
+ 		struct xdp_frame *xdp = frames[i];
+-- 
+2.19.1
