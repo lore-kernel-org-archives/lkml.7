@@ -2,144 +2,144 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAD3C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05855C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D9D215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:44:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHvJstQq"
+	by mail.kernel.org (Postfix) with ESMTP id C9CBC215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556567136;
+	bh=XNP9JhRBLDjwH68Rjkm8wfgNEzDWvyM+dh5kBbVVeCE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bheQGeMynSILqnVbh0lMuew4B4ncfNqI3aRJQHO6QRTHNTT0SJ9++AgfgJRHkeX+B
+	 UAua1YXeoQSdo55XKxtovGvLZyH567H1yGzhIcpkSBnrA+cYp7JQVn6nkTh4nCzBiX
+	 LV3L3YgYIPgCm8P2KmozYhtmmpQypO87hkrEYyg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfD2ToL (ORCPT
+        id S1729260AbfD2Tpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:44:11 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36063 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729054AbfD2ToL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:44:11 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w20so4950733plq.3;
-        Mon, 29 Apr 2019 12:44:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p5mxYOCzDmHqTOVVnNaJuODiMrhAeGsShY3hmafnUYA=;
-        b=QHvJstQqhGiOqrKZrS+A+UZeIxkbiwVuon/jyLvsokkJFE1dzEBMxeacDKICj3h32v
-         +TnOzGeqGojGIPmJSdqq9S1J7gMFlhc+hoKl3Bm9FZko9yt7s2oLTIZR6A9QjjWeUZcs
-         DekWAd8mLRjQC3Xeea7OE5ovNFPzfKlDVNOV4lMT3Vs/CmRVz0deLlDGEqXzyTZUtmVi
-         NmFOWVRZV4KI4cEdVwgOO21CZ5KmdsiUgQ7ZDZQgTrTg5kvGieEOfwFUqVH6zR06PD0N
-         4XsinHG54aGtX0ndUnxWmHfbhMadhGslZdj5GcilCdgZJlQQZ7hMKdmuUyIDPNs/1nZv
-         hFRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p5mxYOCzDmHqTOVVnNaJuODiMrhAeGsShY3hmafnUYA=;
-        b=W+5uS6asASRf1FbwRyCxR3qDXQH38NjSq/nZPGbKT6grRLZSnUqImy/BL/dC6DhrXR
-         UNyyXRPuV1CdDQXhBL4DE93Yx3TDVmkh+JnUU9B0iBS6PTkGeGVVkhtm4LjJHQ1zTkIu
-         ddbkV/cxr52Nf0TEuNwUkA/nbcukeHxWsauIEb//QstwBysO7pP94bjMTEZ8RupVyAaa
-         omZeyhawvbvq81dApZZL6vZEVxr7lMzuly+atVDWQzleFojjkOYlJMiAajHfE6n1X1/i
-         FrWtpjxn3qvmZ3CNBhe5IZtNOuP9LhNMSES0a66OI+OUJrS9wpYidMKxw7HRtmE/81i9
-         GIgg==
-X-Gm-Message-State: APjAAAVqODa0v7DFteQzm6LOeduSHl9/QQ2WhGz8zrH1qklQ0vi466Xj
-        IA08X9CH3dHxYmI/R+oMjCE=
-X-Google-Smtp-Source: APXvYqz0FAqHVwoeNc+ipuMaaN0Zcwmp5u+BDWRMxV0cQkQjInoE0gnGnSiVMAmLla4LZqK1tmlixA==
-X-Received: by 2002:a17:902:9a83:: with SMTP id w3mr65017395plp.241.1556567050534;
-        Mon, 29 Apr 2019 12:44:10 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id y2sm2180283pfy.123.2019.04.29.12.44.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 12:44:09 -0700 (PDT)
-Subject: Re: [PATCH 4/4] input: keyboard: gpio-keys-polled: skip oftree code
- when CONFIG_OF disabled
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-References: <1555444645-15156-1-git-send-email-info@metux.net>
- <1555444645-15156-5-git-send-email-info@metux.net>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <2a760b29-9f0b-ffa7-03dd-47ddb074563a@gmail.com>
-Date:   Mon, 29 Apr 2019 12:44:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 15:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729125AbfD2Tpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 15:45:35 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83AE6215EA;
+        Mon, 29 Apr 2019 19:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556567133;
+        bh=XNP9JhRBLDjwH68Rjkm8wfgNEzDWvyM+dh5kBbVVeCE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UJnQz/1kvaxE+5/WsnK1FuRH7YQ0KYyua7HXP+PpMNAN009j6mavOeM9j+O1K7YE4
+         FQJsZr7oByBnz0xkmnlx2NiAQDUoML2n2KwDw/gvvdt0UQ91SCVcqbTERlSuAExsQ/
+         Jf1TJwkAF+PhogiyUjJlBNqoSZJGScNP6M8UPgwU=
+Date:   Mon, 29 Apr 2019 14:45:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190429194532.GA119268@google.com>
+References: <20190316161243.29517-1-repk@triplefau.lt>
+ <20190425210439.GG11428@google.com>
+ <20190425222756.GR2754@voidbox.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <1555444645-15156-5-git-send-email-info@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425222756.GR2754@voidbox.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 12:57 PM, Enrico Weigelt, metux IT consult wrote:
-> we don't need to build in oftree probing stuff when oftree isn't
-> enabled at all.
+On Fri, Apr 26, 2019 at 12:27:57AM +0200, Remi Pommarel wrote:
+> On Thu, Apr 25, 2019 at 04:04:39PM -0500, Bjorn Helgaas wrote:
+> > On Sat, Mar 16, 2019 at 05:12:43PM +0100, Remi Pommarel wrote:
+
+> > It sounds like reading and/or writing some registers during a retrain
+> > causes some sort of EL1 error?  Is this a separate erratum?  Is there
+> > a list of the registers and operations (read/write) that are affected?
+> > The backtrace below suggests that it's actually a read of LNKCAP or
+> > LNKCTL (not LNKSTA) that caused the error.
 > 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  drivers/input/keyboard/gpio_keys_polled.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> IIUC, the backtrace below produces an EL1 error when doing a PIO
+> transfer while the link is still retraining. See my comment below for
+> more about that. But accessing any root complex's register seems fine.
+> > 
+> > It sounds like there are really two problems:
+> > 
+> >   1) Reading PCI_EXP_LNKSTA (or the Aardvark equivalent) doesn't give
+> >      valid data for PCI_EXP_LNKSTA_LT.
 > 
-> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-> index 3f773b2..fbccb89 100644
-> --- a/drivers/input/keyboard/gpio_keys_polled.c
-> +++ b/drivers/input/keyboard/gpio_keys_polled.c
-> @@ -147,6 +147,7 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
->  static struct gpio_keys_platform_data *
->  gpio_keys_polled_get_devtree_pdata(struct device *dev)
->  {
-> +#ifdef CONFIG_OF
->  	struct gpio_keys_platform_data *pdata;
->  	struct gpio_keys_button *button;
->  	struct fwnode_handle *child;
-> @@ -200,6 +201,9 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
->  	}
->  
->  	return pdata;
-> +#else /* CONFIG_OF */
-> +	return ERR_PTR(-ENOENT);
-> +#endif /* CONFIG_OF */
->  }
->  
->  static void gpio_keys_polled_set_abs_params(struct input_dev *input,
-> @@ -226,7 +230,7 @@ static void gpio_keys_polled_set_abs_params(struct input_dev *input,
->  	{ .compatible = "gpio-keys-polled", },
->  	{ },
->  };
-
-
-> -MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
-> +MODULE_DEVICE_TABLE_OF(gpio_keys_polled_of_match);
-
-Not needed, when you use of_match_ptr() -- see below.
-
->  
->  static struct gpio_desc *gpio_keys_polled_get_gpiod_fwnode(
->  	struct device *dev,
-> @@ -452,7 +456,9 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
->  	.probe	= gpio_keys_polled_probe,
->  	.driver	= {
->  		.name	= DRV_NAME,
-
-> +#ifdef CONFIG_OF
->  		.of_match_table = gpio_keys_polled_of_match,
-> +#endif /* CONFIG_OF */
-
-No need for the #ifdef, use of_match_ptr():
-
-  		.of_match_table = of_match_ptr(gpio_keys_polled_of_match),
-
-
->  	},
->  };
->  module_platform_driver(gpio_keys_polled_driver);
+> The 1) is correct.
 > 
+> >   2) Sometimes config reads cause EL1 errors.
+> 
+> Actually EL1 error happens when we try to access device's register with
+> a PIO transfer, which is when we try to use the link while it is being
+> retrained.
+> 
+> IMHO, 1) and 2) are linked. ASPM core tries to use the link too early
+> because it has read invalid data for PCI_EXP_LNKSTA_LT.
 
+From the software point of view, there is no such thing as "using the
+link too early".  The pattern of:
+
+  - Verify that link is up
+  - Access device on other end of link
+
+is always racy because the link can go down at any time due to hotplug
+or other issues.  In particular, the link can go down after we verify
+that the link is up, but before we access the device.
+
+Software must be able to deal with that gracefully.  I don't know
+whether that means catching and recovering from that EL1 error, or
+masking it, or what.  This is architecture-specific stuff that's
+outside the scope of PCIe itself.
+
+But a link going down should never directly cause a kernel panic.
+
+> > > This fixes boot hang or kernel panic with the following callstack due to
+> > > ASPM setup doing a link re-train and polling for PCI_EXP_LNKSTA_LT flag
+> > > to be cleared before using it.
+> > > 
+> > > -------------------- 8< -------------------
+> > > 	[    0.915389]  dump_backtrace+0x0/0x140
+> > > 	[    0.915391]  show_stack+0x14/0x20
+> > > 	[    0.915393]  dump_stack+0x90/0xb4
+> > > 	[    0.915394]  panic+0x134/0x2c0
+> > > 	[    0.915396]  nmi_panic+0x6c/0x70
+> > > 	[    0.915398]  arm64_serror_panic+0x74/0x80
+> > > 	[    0.915400]  is_valid_bugaddr+0x0/0x8
+> > > 	[    0.915402]  el1_error+0x7c/0xe4
+> > > 	[    0.915404]  advk_pcie_rd_conf+0x4c/0x250
+> > > 	[    0.915406]  pci_bus_read_config_word+0x7c/0xd0
+> > > 	[    0.915408]  pcie_capability_read_word+0x90/0xc8
+> > > 	[    0.915410]  pcie_get_aspm_reg+0x68/0x118
+> > > 	[    0.915412]  pcie_aspm_init_link_state+0x460/0xa98
+
+> > > +	case PCI_EXP_LNKCTL: {
+> > 
+> > Don't you mean PCI_EXP_LNKSTA here?
+> 
+> No, PCI_EXP_LNKSTA and PCI_EXP_LNKCTL are consecutive 16bit registers
+> but bridge emulation accesses those registers by 32bit chunk. So when
+> one wants to read PCI_EXP_LNKSTA register, pci bridge reads 32bit data
+> from PCI_EXP_LNKCTL and 16 bit shift the result to the right.
+> 
+> This is why I use (PCI_EXP_LNKSTA_LT << 16) below.
+
+Ah, that makes sense.  A comment along the lines of "u32 contains both
+PCI_EXP_LNKCTL and PCI_EXP_LNKSTA" would be a nice hint.
+
+Bjorn
