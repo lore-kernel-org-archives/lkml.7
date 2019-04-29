@@ -2,115 +2,95 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7E7C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2D0C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EE020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8640620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbfD2OpB (ORCPT
+        id S1728558AbfD2OpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:45:01 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59042 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbfD2Oox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:44:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36EAE80D;
-        Mon, 29 Apr 2019 07:44:53 -0700 (PDT)
-Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA67E3F5C1;
-        Mon, 29 Apr 2019 07:44:50 -0700 (PDT)
-From:   Julien Grall <julien.grall@arm.com>
-To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, marc.zyngier@arm.com,
-        jason@lakedaemon.net, tglx@linutronix.de, joro@8bytes.org,
-        robin.murphy@arm.com, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org, Julien Grall <julien.grall@arm.com>
-Subject: [PATCH v2 6/7] irqchip/gic-v3-mbi: Don't map the MSI page in mbi_compose_m{b, s}i_msg()
-Date:   Mon, 29 Apr 2019 15:44:27 +0100
-Message-Id: <20190429144428.29254-7-julien.grall@arm.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190429144428.29254-1-julien.grall@arm.com>
-References: <20190429144428.29254-1-julien.grall@arm.com>
+        Mon, 29 Apr 2019 10:45:19 -0400
+Received: from mga05.intel.com ([192.55.52.43]:1324 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728331AbfD2OpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:45:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 07:45:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
+   d="scan'208";a="154739482"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2019 07:45:17 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, tj@kernel.org, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 0/4] Optimize cgroup context switch
+Date:   Mon, 29 Apr 2019 07:44:01 -0700
+Message-Id: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The functions mbi_compose_m{b, s}i_msg may be called from non-preemptible
-context. However, on RT, iommu_dma_map_msi_msg() requires to be called
-from a preemptible context.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-A recent patch split iommu_dma_map_msi_msg in two new functions:
-one that should be called in preemptible context, the other does
-not have any requirement.
+On systems with very high context switch rates between cgroups,
+there are high overhead using cgroup perf.
 
-The GICv3 MSI driver is reworked to avoid executing preemptible code in
-non-preemptible context. This can be achieved by preparing the two MSI
-mappings when allocating the MSI interrupt.
+Current codes have two issues.
+- System-wide events are mistakenly switched in cgroup
+  context switch. It causes system-wide events miscounting,
+  and brings avoidable overhead.
+  Patch 1 fixes the issue.
+- The cgroup context switch sched_in is low efficient.
+  All cgroup events share the same per-cpu pinned/flexible groups.
+  The RB trees for pinned/flexible groups don't understand cgroup.
+  Current code has to traverse all events, and use event_filter_match()
+  to filter the events for specific cgroup.
+  Patch 2-4 adds a fast path for cgroup context switch sched_in by
+  training the RB tree to understand cgroup. The extra filtering
+  can be avoided.
 
-Signed-off-by: Julien Grall <julien.grall@arm.com>
 
----
-    Changes in v2:
-        - Rework the commit message to use imperative mood
----
- drivers/irqchip/irq-gic-v3-mbi.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Here is test with 6 cgroups running.
+Each cgroup has a specjbb benchmark running.
+The perf command is as below.
+   perf stat -e cycles,instructions -e cycles,instructions
+   -e cycles,instructions -e cycles,instructions 
+   -e cycles,instructions -e cycles,instructions
+   -G cgroup1,cgroup1,cgroup2,cgroup2,cgroup3,cgroup3
+   -G cgroup4,cgroup4,cgroup5,cgroup5,cgroup6,cgroup6
+   -a -e cycles,instructions -I 1000
 
-diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
-index fbfa7ff6deb1..d50f6cdf043c 100644
---- a/drivers/irqchip/irq-gic-v3-mbi.c
-+++ b/drivers/irqchip/irq-gic-v3-mbi.c
-@@ -84,6 +84,7 @@ static void mbi_free_msi(struct mbi_range *mbi, unsigned int hwirq,
- static int mbi_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 				   unsigned int nr_irqs, void *args)
- {
-+	msi_alloc_info_t *info = args;
- 	struct mbi_range *mbi = NULL;
- 	int hwirq, offset, i, err = 0;
- 
-@@ -104,6 +105,16 @@ static int mbi_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 
- 	hwirq = mbi->spi_start + offset;
- 
-+	err = iommu_dma_prepare_msi(info->desc,
-+				    mbi_phys_base + GICD_CLRSPI_NSR);
-+	if (err)
-+		return err;
-+
-+	err = iommu_dma_prepare_msi(info->desc,
-+				    mbi_phys_base + GICD_SETSPI_NSR);
-+	if (err)
-+		return err;
-+
- 	for (i = 0; i < nr_irqs; i++) {
- 		err = mbi_irq_gic_domain_alloc(domain, virq + i, hwirq + i);
- 		if (err)
-@@ -142,7 +153,7 @@ static void mbi_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	msg[0].address_lo = lower_32_bits(mbi_phys_base + GICD_SETSPI_NSR);
- 	msg[0].data = data->parent_data->hwirq;
- 
--	iommu_dma_map_msi_msg(data->irq, msg);
-+	iommu_dma_compose_msi_msg(irq_data_get_msi_desc(data), msg);
- }
- 
- #ifdef CONFIG_PCI_MSI
-@@ -202,7 +213,7 @@ static void mbi_compose_mbi_msg(struct irq_data *data, struct msi_msg *msg)
- 	msg[1].address_lo = lower_32_bits(mbi_phys_base + GICD_CLRSPI_NSR);
- 	msg[1].data = data->parent_data->hwirq;
- 
--	iommu_dma_map_msi_msg(data->irq, &msg[1]);
-+	iommu_dma_compose_msi_msg(irq_data_get_msi_desc(data), &msg[1]);
- }
- 
- /* Platform-MSI specific irqchip */
+The average RT (Response Time) reported from specjbb is
+used as key performance metrics. (The lower the better)
+
+                                        RT(us)              Overhead
+Baseline (no perf stat):                4286.9
+Use cgroup perf, no patches:            4483.6                4.6%
+Use cgroup perf, apply patch 1:         4369.2                1.9%
+Use cgroup perf, apple all patches:     4335.3                1.1%
+
+Kan Liang (4):
+  perf: Fix system-wide events miscounting during cgroup monitoring
+  perf: Add filter_match() as a parameter for pinned/flexible_sched_in()
+  perf cgroup: Add cgroup ID as a key of RB tree
+  perf cgroup: Add fast path for cgroup switch
+
+ include/linux/perf_event.h |   7 ++
+ kernel/events/core.c       | 171 +++++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 157 insertions(+), 21 deletions(-)
+
 -- 
-2.11.0
+2.7.4
 
