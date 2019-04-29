@@ -2,147 +2,326 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1F7C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED776C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA2420651
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="MHkjAOjJ"
+	by mail.kernel.org (Postfix) with ESMTP id B998E20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfD2WhV (ORCPT
+        id S1729620AbfD2WjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:37:21 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35504 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729650AbfD2WhT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:37:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j20so9309652lfh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 15:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l2dc72lRn+QYapuQ0yA9PTxioiCc/T7YC5XTZWj4UPk=;
-        b=MHkjAOjJ1zlE288eNCi6RUf76K4Ap+c0kFui0qtM+27x6jAsGsBRKcWFtVY3ouRBia
-         c0c4Ue2F9PtcCyie8kp3hAkzCNk86fly/TyN4EZWqMOulVg3ByZsGG8GXtKWTSoXilIP
-         iGWIzyEcqm86bWKghFP2A0OFPzW06Bdb3lfiwBhOY2tqFql2K6VcpgdG3ZnMimp8+OUO
-         /i3Y23FpPkTkX+pDZUXck5cPKuQysX9TQRJdl/QToK1phYA9+UETKkKe42ptZQOjlGMM
-         WiP1G+I2n6VnccugZpUI5De/dHzAv1+iaXiJI8dWVKoFuw0rDuDL6SH4KwOBOd3bcDYq
-         P9TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l2dc72lRn+QYapuQ0yA9PTxioiCc/T7YC5XTZWj4UPk=;
-        b=RW3EOFEXPwvdvgkrg9c9mlbrGyqtTtNbnkQhSKLvbk4bvEVNVXAg8Z6Nz+bF3/Xf2P
-         O7D5Fk7sIYMYs9mE+2L+NSAVVBxuASENtzI5FmJs91QvBumQqXLpusxibD9r0HfJHXNr
-         TrqtYC0xtwVwYOzHbtB5bejlxdK5Kkuyyj1xmwJKpsVyliAdlTVv54rNmArLSGy+pmtq
-         3Svo/FpffPme8p5kirZPjIqkrzLm5de7JBo1sYFgSHkJAxOZUi8Orbw7TFu0POYXE+mL
-         pkBZlKh38ygx1Sb6PQkbaIPCKxUh/U1wuruHrsOK2dH262vw71qnrTVQHniyAhnDuQYd
-         HStg==
-X-Gm-Message-State: APjAAAX2jYYQ0rL3LYyybi/ExIl4Zu6+EI/8ay2QvKQsvPB+80HKJYRV
-        Jn9LSQzyfWSihoOs3ci+0okraVk+5FCD/9E3JHTM
-X-Google-Smtp-Source: APXvYqyWufR/IKGaa7TNZVDs6IZzBW+yXtG00anJgANfJMC8ALjMgxbcJ9J8w83x7kZRKocksidJKfy0K6pdvI9LorM=
-X-Received: by 2002:a19:7702:: with SMTP id s2mr35331595lfc.102.1556577436849;
- Mon, 29 Apr 2019 15:37:16 -0700 (PDT)
+        Mon, 29 Apr 2019 18:39:02 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7514 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfD2WjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:39:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 15:39:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,411,1549958400"; 
+   d="scan'208";a="227875888"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 29 Apr 2019 15:39:01 -0700
+Date:   Mon, 29 Apr 2019 15:41:46 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 19/19] iommu/vt-d: Add svm/sva invalidate function
+Message-ID: <20190429154146.20e0c13c@jacob-builder>
+In-Reply-To: <26398960-f484-d5dd-eff5-c44810528194@redhat.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1556062279-64135-20-git-send-email-jacob.jun.pan@linux.intel.com>
+        <26398960-f484-d5dd-eff5-c44810528194@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190422210041.GA21711@archlinux-i9> <CAHC9VhTtz3OA3EchaZaAeg=DxoGoz_WFdj+Mi9nd9i+cmjmuJA@mail.gmail.com>
- <20190423132926.GK17719@sasha-vm> <CAHC9VhRcdY7G_ES2VqNVpkoU=CRJkJySb3m1sFdgKJwh3JQ2oA@mail.gmail.com>
- <20190429124002.GB31371@kroah.com> <CAHC9VhQxrtYJTOj=aOL4FY=myA4ZO-rcY7TdCeFbjVnCmgOxew@mail.gmail.com>
- <20190429140906.GA7412@kroah.com> <CAHC9VhRDoYd=vfz3Sm8NKpMW_QoX7t_VohumUxU5i6AjTwCRyQ@mail.gmail.com>
- <20190429145248.GA7111@kroah.com>
-In-Reply-To: <20190429145248.GA7111@kroah.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 29 Apr 2019 18:37:03 -0400
-Message-ID: <CAHC9VhQNdSLfZK6QD1WnCzhdpa9NyjzrDwMks7SKgtuc6+5JgA@mail.gmail.com>
-Subject: Re: scripts/selinux build error in 4.14 after glibc update
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nicolas Iooss <nicolas.iooss@m4x.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:52 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Mon, Apr 29, 2019 at 10:47:00AM -0400, Paul Moore wrote:
-> > On Mon, Apr 29, 2019 at 10:09 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > On Mon, Apr 29, 2019 at 10:02:29AM -0400, Paul Moore wrote:
-> > > > On Mon, Apr 29, 2019 at 8:40 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > > On Tue, Apr 23, 2019 at 09:43:09AM -0400, Paul Moore wrote:
-> > > > > > On Tue, Apr 23, 2019 at 9:29 AM Sasha Levin <sashal@kernel.org> wrote:
-> > > > > > > On Mon, Apr 22, 2019 at 09:59:47PM -0400, Paul Moore wrote:
-> > > > > > > >On Mon, Apr 22, 2019 at 5:00 PM Nathan Chancellor
-> > > > > > > ><natechancellor@gmail.com> wrote:
-> > > > > > > >> Hi all,
-> > > > > > > >>
-> > > > > > > >> After a glibc update to 2.29, my 4.14 builds started failing like so:
-> > > > > > > >
-> > > > > > > >...
-> > > > > > > >
-> > > > > > > >>   HOSTCC  scripts/selinux/genheaders/genheaders
-> > > > > > > >> In file included from scripts/selinux/genheaders/genheaders.c:19:
-> > > > > > > >> ./security/selinux/include/classmap.h:245:2: error: #error New address family defined, please update secclass_map.
-> > > > > > > >>  #error New address family defined, please update secclass_map.
-> > > > > > > >>   ^~~~~
-> > > > > > > >
-> > > > > > > >This is a known problem that has a fix in the selinux/next branch and
-> > > > > > > >will be going up to Linus during the next merge window.  The fix is
-> > > > > > > >quite small and should be relatively easy for you to backport to your
-> > > > > > > >kernel build if you are interested; the patch can be found at the
-> > > > > > > >archive link below:
-> > > > > > > >
-> > > > > > > >https://lore.kernel.org/selinux/20190225005528.28371-1-paulo@paulo.ac
-> > > > > > >
-> > > > > > > Why is it waiting for the next merge window? It fixes a build bug that
-> > > > > > > people hit.
-> > > > > >
-> > > > > > I place a reasonably high bar on patches that I send up to Linus
-> > > > > > outside of the merge window and I didn't feel this patch met that
-> > > > > > criteria.  Nathan is only the second person I've seen who has
-> > > > > > encountered this problem, the first being the original patch author.
-> > > > > > As far as I've seen, the problem is only seen by users building older
-> > > > > > kernels on very new userspaces (e.g. glibc v2.29 was released in
-> > > > > > February 2019, Linux v4.14 was released in 2017); this doesn't appear
-> > > > > > to be a large group of people and I didn't want to risk breaking the
-> > > > > > main kernel tree during the -rcX phase for such a small group.
-> > > > >
-> > > > > Ugh, this breaks my local builds, I would recommend getting it to Linus
-> > > > > sooner please.
-> > > >
-> > > > Well, we are at -rc7 right now and it looks like an -rc8 is unlikely
-> > > > so the question really comes down to can/do you want to wait a week?
-> > >
-> > > It's a regression in the 5.1-rc tree, that is hitting people now.  Why
-> > > do you want to have a 5.1-final that is known to be broken?
-> >
-> > I believe I answered that in my reply to Sasha.  Can you answer the
-> > question I asked of you above?
->
-> If you don't submit it this week, I guess I can wait as I have no other
-> choice.
->
-> But note, this did break my build systems, and my main development
-> system this weekend.  So yes, the number of people being affected might
-> be "small", but that "small" number includes the people responsible for
-> maintaining those stable kernels :(
->
-> Anyway, it's your call, just letting you know I'm really annoyed at the
-> moment by this...
+On Fri, 26 Apr 2019 19:23:03 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
-It's against my better judgement, but I'll send a PR up to Linus now.
+> Hi Jacob,
+> On 4/24/19 1:31 AM, Jacob Pan wrote:
+> > When Shared Virtual Address (SVA) is enabled for a guest OS via
+> > vIOMMU, we need to provide invalidation support at IOMMU API and
+> > driver level. This patch adds Intel VT-d specific function to
+> > implement iommu passdown invalidate API for shared virtual address.
+> > 
+> > The use case is for supporting caching structure invalidation
+> > of assigned SVM capable devices. Emulated IOMMU exposes queue
+> > invalidation capability and passes down all descriptors from the
+> > guest to the physical IOMMU.
+> > 
+> > The assumption is that guest to host device ID mapping should be
+> > resolved prior to calling IOMMU driver. Based on the device handle,
+> > host IOMMU driver can replace certain fields before submit to the
+> > invalidation queue.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> > ---
+> >  drivers/iommu/intel-iommu.c | 159
+> > ++++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 159
+> > insertions(+)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index 89989b5..54a3d22 100644
+> > --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -5338,6 +5338,164 @@ static void
+> > intel_iommu_aux_detach_device(struct iommu_domain *domain,
+> > aux_domain_remove_dev(to_dmar_domain(domain), dev); }
+> >  
+> > +/*
+> > + * 2D array for converting and sanitizing IOMMU generic TLB
+> > granularity to
+> > + * VT-d granularity. Invalidation is typically included in the
+> > unmap operation
+> > + * as a result of DMA or VFIO unmap. However, for assigned device
+> > where guest
+> > + * could own the first level page tables without being shadowed by
+> > QEMU. In
+> > + * this case there is no pass down unmap to the host IOMMU as a
+> > result of unmap
+> > + * in the guest. Only invalidations are trapped and passed down.
+> > + * In all cases, only first level TLB invalidation (request with
+> > PASID) can be
+> > + * passed down, therefore we do not include IOTLB granularity for
+> > request
+> > + * without PASID (second level).
+> > + *
+> > + * For an example, to find the VT-d granularity encoding for IOTLB
+> > + * type and page selective granularity within PASID:
+> > + * X: indexed by iommu cache type
+> > + * Y: indexed by enum iommu_inv_granularity
+> > + * [IOMMU_INV_TYPE_TLB][IOMMU_INV_GRANU_PAGE_PASID]
+> > + *
+> > + * Granu_map array indicates validity of the table. 1: valid, 0:
+> > invalid
+> > + *
+> > + */
+> > +const static int
+> > inv_type_granu_map[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU]
+> > = {  
+> The size is frozen for a given uapi version so I guess you can
+> hardcode the limits for a given version.
+I guess I could, I just felt more readable this way.
+> > +	/* PASID based IOTLB, support PASID selective and page
+> > selective */
+> > +	{0, 1, 1},
+> > +	/* PASID based dev TLBs, only support all PASIDs or single
+> > PASID */
+> > +	{1, 1, 0},
+> > +	/* PASID cache */
+> > +	{1, 1, 0}
+> > +};
+> > +
+> > +const static u64
+> > inv_type_granu_table[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU]
+> > = {
+> > +	/* PASID based IOTLB */
+> > +	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
+> > +	/* PASID based dev TLBs */
+> > +	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
+> > +	/* PASID cache */
+> > +	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
+> > +};  
+> Can't you use a single matrix instead, ie. inv_type_granu_table
+> 
+The reason i have an additional inv_type_granu_map[] matrix is that
+some of fields can be 0 but still valid. A single matrix would not be
+able to tell the difference between a valid 0 or invalid field.
+> > +
+> > +static inline int to_vtd_granularity(int type, int granu, u64
+> > *vtd_granu) +{
+> > +	if (type >= NR_IOMMU_CACHE_TYPE || granu >=
+> > NR_IOMMU_CACHE_INVAL_GRANU ||
+> > +		!inv_type_granu_map[type][granu])
+> > +		return -EINVAL;
+> > +
+> > +	*vtd_granu = inv_type_granu_table[type][granu];
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
+> > +{
+> > +	u64 nr_pages;  
+> direct initialization?
+will do, thanks
+> > +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9
+> > for 2MB, etc.
+> > +	 * IOMMU cache invalidate API passes granu_size in bytes,
+> > and number of
+> > +	 * granu size in contiguous memory.
+> > +	 */
+> > +
+> > +	nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
+> > +	return order_base_2(nr_pages);
+> > +}
+> > +
+> > +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
+> > +		struct device *dev, struct
+> > iommu_cache_invalidate_info *inv_info) +{
+> > +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+> > +	struct device_domain_info *info;
+> > +	struct intel_iommu *iommu;
+> > +	unsigned long flags;
+> > +	int cache_type;
+> > +	u8 bus, devfn;
+> > +	u16 did, sid;
+> > +	int ret = 0;
+> > +	u64 granu;
+> > +	u64 size;
+> > +
+> > +	if (!inv_info || !dmar_domain ||
+> > +		inv_info->version !=
+> > IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> > +		return -EINVAL;
+> > +
+> > +	if (!dev || !dev_is_pci(dev))
+> > +		return -ENODEV;
+> > +
+> > +	iommu = device_to_iommu(dev, &bus, &devfn);
+> > +	if (!iommu)
+> > +		return -ENODEV;
+> > +
+> > +	spin_lock(&iommu->lock);
+> > +	spin_lock_irqsave(&device_domain_lock, flags);  
+> mix of _irqsave and non _irqsave looks suspicious to me.
+It should be in reverse order. Any other concerns?
+> > +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus,
+> > devfn);
+> > +	if (!info) {
+> > +		ret = -EINVAL;
+> > +		goto out_unlock;
+> > +	}
+> > +	did = dmar_domain->iommu_did[iommu->seq_id];
+> > +	sid = PCI_DEVID(bus, devfn);
+> > +	size = to_vtd_size(inv_info->addr_info.granule_size,
+> > inv_info->addr_info.nb_granules); +
+> > +	for_each_set_bit(cache_type, (unsigned long
+> > *)&inv_info->cache, NR_IOMMU_CACHE_TYPE) { +
+> > +		ret = to_vtd_granularity(cache_type,
+> > inv_info->granularity, &granu);
+> > +		if (ret) {
+> > +			pr_err("Invalid range type %d, granu
+> > %d\n", cache_type,  
+> s/Invalid range type %d, granu %d/Invalid cache type/granu combination
+> (%d/%d)
+sounds good, indeed it is the combination that is invalid.
+> > +				inv_info->granularity);
+> > +			break;
+> > +		}
+> > +
+> > +		switch (BIT(cache_type)) {
+> > +		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> > +			if (size && (inv_info->addr_info.addr &
+> > ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> > +				pr_err("Address out of range,
+> > 0x%llx, size order %llu\n",
+> > +					inv_info->addr_info.addr,
+> > size);
+> > +				ret = -ERANGE;
+> > +				goto out_unlock;
+> > +			}
+> > +
+> > +			qi_flush_piotlb(iommu, did,
+> > mm_to_dma_pfn(inv_info->addr_info.addr),
+> > +					inv_info->addr_info.pasid,
+> > +					size, granu);
+> > +
+> > +			/*
+> > +			 * Always flush device IOTLB if ATS is
+> > enabled since guest
+> > +			 * vIOMMU exposes CM = 1, no device IOTLB
+> > flush will be passed
+> > +			 * down. REVISIT: cannot assume Linux guest
+> > +			 */
+> > +			if (info->ats_enabled) {
+> > +				qi_flush_dev_piotlb(iommu, sid,
+> > info->pfsid,
+> > +
+> > inv_info->addr_info.pasid, info->ats_qdep,
+> > +
+> > inv_info->addr_info.addr, size,
+> > +						granu);
+> > +			}
+> > +			break;
+> > +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+> > +			if (info->ats_enabled) {
+> > +				qi_flush_dev_piotlb(iommu, sid,
+> > info->pfsid,
+> > +
+> > inv_info->addr_info.pasid, info->ats_qdep,
+> > +
+> > inv_info->addr_info.addr, size,
+> > +						granu);
+> > +			} else
+> > +				pr_warn("Passdown device IOTLB
+> > flush w/o ATS!\n"); +
+> > +			break;
+> > +		case IOMMU_CACHE_INV_TYPE_PASID:
+> > +			qi_flush_pasid_cache(iommu, did, granu,
+> > inv_info->pasid); +
+> > +			break;
+> > +		default:
+> > +			dev_err(dev, "Unsupported IOMMU
+> > invalidation type %d\n",
+> > +				cache_type);
+> > +			ret = -EINVAL;
+> > +		}
+> > +	}
+> > +out_unlock:
+> > +	spin_unlock(&iommu->lock);
+> > +	spin_unlock_irqrestore(&device_domain_lock, flags);  
+> I would expect the opposite order
+yes, i reversed in the lock order such that irq is disabled.
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static int intel_iommu_map(struct iommu_domain *domain,
+> >  			   unsigned long iova, phys_addr_t hpa,
+> >  			   size_t size, int iommu_prot)
+> > @@ -5769,6 +5927,7 @@ const struct iommu_ops intel_iommu_ops = {
+> >  	.dev_disable_feat	= intel_iommu_dev_disable_feat,
+> >  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
+> >  #ifdef CONFIG_INTEL_IOMMU_SVM
+> > +	.cache_invalidate	= intel_iommu_sva_invalidate,
+> >  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+> >  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+> >  #endif
+> >   
+> Thanks
+> 
+> Eric
 
--- 
-paul moore
-www.paul-moore.com
+Thank you so much for your review. I will roll up the next version
+soon, hopefully this week.
+
+Jacob
