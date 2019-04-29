@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FD4C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968EEC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A146920673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6015D20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:30:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gY7mBdv9"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cFDn/eIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbfD2PaN (ORCPT
+        id S1728870AbfD2PaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:30:13 -0400
-Received: from mail.efficios.com ([167.114.142.138]:56952 "EHLO
+        Mon, 29 Apr 2019 11:30:25 -0400
+Received: from mail.efficios.com ([167.114.142.138]:56924 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728487AbfD2P3a (ORCPT
+        with ESMTP id S1728672AbfD2P31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:29:30 -0400
+        Mon, 29 Apr 2019 11:29:27 -0400
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 292111C1D35;
-        Mon, 29 Apr 2019 11:29:29 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id B80931C1CE7;
+        Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id 8AVwtYizlX-S; Mon, 29 Apr 2019 11:29:28 -0400 (EDT)
+        with ESMTP id 2gPY819J-axm; Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 689991C1D01;
-        Mon, 29 Apr 2019 11:29:27 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 689991C1D01
+        by mail.efficios.com (Postfix) with ESMTP id 511631C1CDC;
+        Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 511631C1CDC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556551767;
-        bh=WV0aLN7pvahQr5sToC9GKACvUzvM6D05m4T4cPR6y/0=;
+        s=default; t=1556551765;
+        bh=ywHZBM285Oi7ZNY1INp8Fr4OzMaiucwZoNO/gC6Rwc8=;
         h=From:To:Date:Message-Id;
-        b=gY7mBdv9f6s9a/ZyoMWVDFgWTDXXpMiFCKiVYEr8gmVxq0tmgojgxoWL67IGs7Zy+
-         4oLIR3pHi8fbyLBcz0op+m6na4uM15pdLr6GW1WD7nVcg8PfC8Qg6mhqUex4JaJCqH
-         RgAsbvPUuNKefhnJ50MZ+9K31XE9qtA7LC2wjWRTxvkvbNknsbt3CgGkcO3S4DcJEO
-         xMHaLGJ/7fWx2tqh8BkkfkAkPo0HwcuTvarup2pUQkRIO2TkxL0qNcpOjoRMt2VZ5O
-         hipJOecYHnjskj7ON5/5eZ572TyX5t9lU7lMkIamG0B3iOiygUuAc0s/FIaEcSyv/r
-         nigW6X6NdsjuQ==
+        b=cFDn/eIovgRc3tS5s+n5klc3EYh/x2iot7j09siSgkU1bHG39u1Q4b6f6HHS77dWC
+         fXm6aUrBmqBtwdmw7yu+FAayOxJnnck7EjyMnUd80O1fFSbSEdgcwvEPJ8iG147wqf
+         4OuL2NppXePrK87yRQ3zOIYGDFvV36kOBFD74LD8PBakVUk7pVg07zOR9bwl5nMjHI
+         cB/l2cBax4ajTRSGrNyQoGPl4GILFDvfOXil9fAYd8wZo7tczC/cbUK8b7tUNTesuN
+         hvsjLU8kb2nmkP/eEuvvv+mOMIcF5vrHhZgvUY+VTAujx4FMmvZ3r4fePFATvuleRb
+         vOIiKtLW630gQ==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 3PxAdUG1kt-c; Mon, 29 Apr 2019 11:29:27 -0400 (EDT)
+        with ESMTP id ZjrLtblpKBDb; Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
 Received: from thinkos.internal.efficios.com (192-222-157-41.qc.cable.ebox.net [192.222.157.41])
-        by mail.efficios.com (Postfix) with ESMTPSA id ADAD01C1CE5;
-        Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTPSA id 62D531C1CC5;
+        Mon, 29 Apr 2019 11:29:24 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Shuah Khan <shuah@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
@@ -72,11 +72,11 @@ Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Will Deacon <will.deacon@arm.com>,
         Michael Kerrisk <mtk.manpages@gmail.com>,
         Joel Fernandes <joelaf@google.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH for 5.2 07/12] rseq/selftests: s390: use trap4 for RSEQ_SIG
-Date:   Mon, 29 Apr 2019 11:27:58 -0400
-Message-Id: <20190429152803.7719-8-mathieu.desnoyers@efficios.com>
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH for 5.2 05/12] rseq/selftests: s390: use jg instruction for jumps outside of the asm
+Date:   Mon, 29 Apr 2019 11:27:56 -0400
+Message-Id: <20190429152803.7719-6-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
 References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
@@ -85,36 +85,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+The branch target range of the "j" instruction is 64K, which is not
+enough for the general case.
 
-Use trap4 as the guard instruction for the restartable sequence abort
-handler.
-
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Suggested-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Joel Fernandes <joelaf@google.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Catalin Marinas <catalin.marinas@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Shuah Khan <shuah@kernel.org>
+CC: Andi Kleen <andi@firstfloor.org>
+CC: linux-kselftest@vger.kernel.org
+CC: "H . Peter Anvin" <hpa@zytor.com>
+CC: Chris Lameter <cl@linux.com>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: Michael Kerrisk <mtk.manpages@gmail.com>
+CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Paul Turner <pjt@google.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Josh Triplett <josh@joshtriplett.org>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: linux-api@vger.kernel.org
+CC: Andy Lutomirski <luto@amacapital.net>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- tools/testing/selftests/rseq/rseq-s390.h | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/testing/selftests/rseq/rseq-s390.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/rseq/rseq-s390.h b/tools/testing/selftests/rseq/rseq-s390.h
-index 7c4f3a70b6c7..1d05c5187ae6 100644
+index fbb97815d71c..7c4f3a70b6c7 100644
 --- a/tools/testing/selftests/rseq/rseq-s390.h
 +++ b/tools/testing/selftests/rseq/rseq-s390.h
-@@ -1,6 +1,13 @@
- /* SPDX-License-Identifier: LGPL-2.1 OR MIT */
+@@ -117,14 +117,14 @@ do {									\
+ 		".long " __rseq_str(RSEQ_SIG) "\n\t"			\
+ 		__rseq_str(label) ":\n\t"				\
+ 		teardown						\
+-		"j %l[" __rseq_str(abort_label) "]\n\t"			\
++		"jg %l[" __rseq_str(abort_label) "]\n\t"		\
+ 		".popsection\n\t"
  
--#define RSEQ_SIG	0x53053053
-+/*
-+ * RSEQ_SIG uses the trap4 instruction. As Linux does not make use of the
-+ * access-register mode nor the linkage stack this instruction will always
-+ * cause a special-operation exception (the trap-enabled bit in the DUCT
-+ * is and will stay 0). The instruction pattern is
-+ *	b2 ff 0f ff	trap4   4095(%r0)
-+ */
-+#define RSEQ_SIG	0xB2FF0FFF
+ #define RSEQ_ASM_DEFINE_CMPFAIL(label, teardown, cmpfail_label)		\
+ 		".pushsection __rseq_failure, \"ax\"\n\t"		\
+ 		__rseq_str(label) ":\n\t"				\
+ 		teardown						\
+-		"j %l[" __rseq_str(cmpfail_label) "]\n\t"		\
++		"jg %l[" __rseq_str(cmpfail_label) "]\n\t"		\
+ 		".popsection\n\t"
  
- #define rseq_smp_mb()	__asm__ __volatile__ ("bcr 15,0" ::: "memory")
- #define rseq_smp_rmb()	rseq_smp_mb()
+ static inline __attribute__((always_inline))
 -- 
 2.11.0
 
