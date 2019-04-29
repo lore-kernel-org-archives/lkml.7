@@ -2,326 +2,158 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED776C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E499BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B998E20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99541215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RdBjZZoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbfD2WjC (ORCPT
+        id S1729647AbfD2Wki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:39:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:7514 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfD2WjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:39:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 15:39:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,411,1549958400"; 
-   d="scan'208";a="227875888"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 29 Apr 2019 15:39:01 -0700
-Date:   Mon, 29 Apr 2019 15:41:46 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 19/19] iommu/vt-d: Add svm/sva invalidate function
-Message-ID: <20190429154146.20e0c13c@jacob-builder>
-In-Reply-To: <26398960-f484-d5dd-eff5-c44810528194@redhat.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1556062279-64135-20-git-send-email-jacob.jun.pan@linux.intel.com>
-        <26398960-f484-d5dd-eff5-c44810528194@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 29 Apr 2019 18:40:38 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:17837 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfD2Wkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:40:37 -0400
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190429224035epoutp019ed72e4202f1a16fdab7c994b2faa80d~aExyrh6cd1116611166epoutp01K
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 22:40:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190429224035epoutp019ed72e4202f1a16fdab7c994b2faa80d~aExyrh6cd1116611166epoutp01K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556577635;
+        bh=efZDE7R8MR8F+5XY1yFe+Tw7lt5nUY6FngkwLfh921o=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=RdBjZZoRhfSMRVt4yK5AuamaNf2cHxpkSaLPIXFzF/rozP924iN/M/UKiQ360SjPZ
+         DC+eb5TGE+QXQXnYA+5ro2D640rm0MzWJ/tVdOeY1Lm7AJpJ+aOo9TlQmk6ufm+LzB
+         0ugyLYE2r7jqbVV7jKgcmihFH7vOkudFJiHbyBVo=
+Received: from epsmges2p3.samsung.com (unknown [182.195.40.181]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20190429224032epcas2p2cb3d89cbb8a3cdcd5ee1e109a18cbabe~aExwZYewN2600226002epcas2p2P;
+        Mon, 29 Apr 2019 22:40:32 +0000 (GMT)
+X-AuditID: b6c32a47-133ff7000000106e-98-5cc77d602ba2
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A5.BD.04206.06D77CC5; Tue, 30 Apr 2019 07:40:32 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: Re: [PATCH] nvmet: fix ptr_ret.cocci warnings
+Reply-To: minwoo.im@samsung.com
+From:   Minwoo Im <minwoo.im@samsung.com>
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Minwoo Im <minwoo.im@samsung.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <SN6PR04MB45271D793C898E527914578086390@SN6PR04MB4527.namprd04.prod.outlook.com>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190429224031epcms2p45b9198075ea9406da495a1b813400a0d@epcms2p4>
+Date:   Tue, 30 Apr 2019 07:40:31 +0900
+X-CMS-MailID: 20190429224031epcms2p45b9198075ea9406da495a1b813400a0d
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH++3O7WqursvqZFTrir3I3LU2b6EmJXkhLakwqJVd9IeT9mJ3
+        hgWioyK1KIWeS12EZWkPMktrULJekJa9oHxS0dPloheUYrXrndR/Hw7fc77ne34/klAfV0SR
+        +RYHtlt4E60Ik1+9NVcfu6XonkFb7QtlXd0+OXu24Y6MfXq9SsG6T79VsoNlY9l3ba0Ee8H3
+        WZ6i5K65epVcR98lOXe5tpjzdJYouP1N9Yj71jid29O6V5ap3GBKNGI+F9s12JJjzc235CXR
+        K9dmL8/W6bVMLLOYTaA1Ft6Mk+jU9MzYFfmmwDq0ZhtvKgiUMnlBoOOSE+3WAgfWGK2CI4nG
+        tlyTjWFsCwTeLBRY8hbkWM1LGK02XhdQbjEZ2w51ELYn4wvfDHlQCfKHl6NQEqhF8P78NaIc
+        hZFqqgXBx08eWTkiSRUVAcMtE0TNBGoJHDy2E4llNTUDfvZrpfJc8HvaQ0RWULOh5FC/XORI
+        qgj8DbeROJKg7iOobX0cInmp4Oiet3KJp0Jz3RUkcii1Cbp+f1dI9YnQ2TCgHOXPd91I4kjY
+        3feAkDgCXv7yjOwDFECfP1nCYmg6w4q2QO1C8OLT+WBrHDjffxmxVVEZ0OnZJxNZTsVA63Bn
+        UJMK5272jGiIQMTmgSpCnEkEMl68HieNj4bbXUHFOCi9NawcDdVS80YmcTR88XqDS06Buie+
+        YCgOnu16rZCO/BWBr7kbVSCN69+dXf8Zu/4Zn0BEPZqEbYI5DwvxtoX/P20jGvmY89Ja0NWH
+        6V5EkYgOV3H+uwZ1CL9N2G72IiAJOlLF3btjUKty+e07sN2abS8wYcGLdIH8lUTUxBxr4Jtb
+        HNmMLl6v1y7WsTp9PEtPVr2aWr1RTeXxDrwVYxu2j/bJyNCoEqT7fXxK1nNPr9PWv86w4hsu
+        xcNneth248xZDDqVkrqxa/7ZjDlLPZM3PHtXFXNpf/KNxnRne23FySF34s+e1Yb0mur13sJl
+        P8rqICGrw9nbkZK2JmYfM62wbcxg2MIPR0y62e3uB4+sA94/7uqsjLpVys1RM5zdr51Fj4mE
+        A4ezKmm5YOSZeYRd4P8CtzEFLK4DAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190429221427epcas3p2ff4fc6e3b8da00a34cf5766b6f2754f5
+References: <SN6PR04MB45271D793C898E527914578086390@SN6PR04MB4527.namprd04.prod.outlook.com>
+        <201904300131.gB7Qr2Ik%lkp@intel.com> <20190429175734.GA20932@lkp-kbuild08>
+        <CGME20190429221427epcas3p2ff4fc6e3b8da00a34cf5766b6f2754f5@epcms2p4>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 19:23:03 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
+Sure, I will.
 
-> Hi Jacob,
-> On 4/24/19 1:31 AM, Jacob Pan wrote:
-> > When Shared Virtual Address (SVA) is enabled for a guest OS via
-> > vIOMMU, we need to provide invalidation support at IOMMU API and
-> > driver level. This patch adds Intel VT-d specific function to
-> > implement iommu passdown invalidate API for shared virtual address.
-> > 
-> > The use case is for supporting caching structure invalidation
-> > of assigned SVM capable devices. Emulated IOMMU exposes queue
-> > invalidation capability and passes down all descriptors from the
-> > guest to the physical IOMMU.
-> > 
-> > The assumption is that guest to host device ID mapping should be
-> > resolved prior to calling IOMMU driver. Based on the device handle,
-> > host IOMMU driver can replace certain fields before submit to the
-> > invalidation queue.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+Thanks,
+
+> -----Original Message-----
+> From: Linux-nvme [mailto:linux-nvme-bounces@lists.infradead.org] On
+> Behalf Of Chaitanya Kulkarni
+> Sent: Tuesday, April 30, 2019 7:14 AM
+> To: Minwoo Im
+> Cc: linux-kernel@vger.kernel.org; Christoph Hellwig; linux-
+> nvme@lists.infradead.org; Sagi Grimberg
+> Subject: Re: [PATCH] nvmet: fix ptr_ret.cocci warnings
+> 
+> Hi Minwoo,
+> 
+> Can you please resend this patch with the suggested change ?
+> 
+> On 04/29/2019 10:58 AM, kbuild test robot wrote:
+> > From: kbuild test robot <lkp@intel.com>
+> >
+> > drivers/nvme/target/discovery.c:375:1-3: WARNING: PTR_ERR_OR_ZERO
+> can be used
+> >
+> >
+> >   Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+> >
+> > Generated by: scripts/coccinelle/api/ptr_ret.cocci
+> >
+> > Fixes: 6b7e631b927c ("nvmet: return a specified error it subsys_alloc fails")
+> > CC: Minwoo Im <minwoo.im.dev@gmail.com>
+> > Signed-off-by: kbuild test robot <lkp@intel.com>
 > > ---
-> >  drivers/iommu/intel-iommu.c | 159
-> > ++++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 159
-> > insertions(+)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 89989b5..54a3d22 100644
-> > --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -5338,6 +5338,164 @@ static void
-> > intel_iommu_aux_detach_device(struct iommu_domain *domain,
-> > aux_domain_remove_dev(to_dmar_domain(domain), dev); }
-> >  
-> > +/*
-> > + * 2D array for converting and sanitizing IOMMU generic TLB
-> > granularity to
-> > + * VT-d granularity. Invalidation is typically included in the
-> > unmap operation
-> > + * as a result of DMA or VFIO unmap. However, for assigned device
-> > where guest
-> > + * could own the first level page tables without being shadowed by
-> > QEMU. In
-> > + * this case there is no pass down unmap to the host IOMMU as a
-> > result of unmap
-> > + * in the guest. Only invalidations are trapped and passed down.
-> > + * In all cases, only first level TLB invalidation (request with
-> > PASID) can be
-> > + * passed down, therefore we do not include IOTLB granularity for
-> > request
-> > + * without PASID (second level).
-> > + *
-> > + * For an example, to find the VT-d granularity encoding for IOTLB
-> > + * type and page selective granularity within PASID:
-> > + * X: indexed by iommu cache type
-> > + * Y: indexed by enum iommu_inv_granularity
-> > + * [IOMMU_INV_TYPE_TLB][IOMMU_INV_GRANU_PAGE_PASID]
-> > + *
-> > + * Granu_map array indicates validity of the table. 1: valid, 0:
-> > invalid
-> > + *
-> > + */
-> > +const static int
-> > inv_type_granu_map[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU]
-> > = {  
-> The size is frozen for a given uapi version so I guess you can
-> hardcode the limits for a given version.
-I guess I could, I just felt more readable this way.
-> > +	/* PASID based IOTLB, support PASID selective and page
-> > selective */
-> > +	{0, 1, 1},
-> > +	/* PASID based dev TLBs, only support all PASIDs or single
-> > PASID */
-> > +	{1, 1, 0},
-> > +	/* PASID cache */
-> > +	{1, 1, 0}
-> > +};
-> > +
-> > +const static u64
-> > inv_type_granu_table[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU]
-> > = {
-> > +	/* PASID based IOTLB */
-> > +	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
-> > +	/* PASID based dev TLBs */
-> > +	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
-> > +	/* PASID cache */
-> > +	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
-> > +};  
-> Can't you use a single matrix instead, ie. inv_type_granu_table
+> >
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> master
+> > head:   3d17a1de96a233cf89bfbb5a77ebb1a05c420681
+> > commit: 6b7e631b927ca1266b2695307ab71ed7764af75e [9188/10649]
+> nvmet: return a specified error it subsys_alloc fails
+> >
+> >   discovery.c |    4 +---
+> >   1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > --- a/drivers/nvme/target/discovery.c
+> > +++ b/drivers/nvme/target/discovery.c
+> > @@ -372,9 +372,7 @@ int __init nvmet_init_discovery(void)
+> >   {
+> >   	nvmet_disc_subsys =
+> >   		nvmet_subsys_alloc(NVME_DISC_SUBSYS_NAME,
+> NVME_NQN_DISC);
+> > -	if (IS_ERR(nvmet_disc_subsys))
+> > -		return PTR_ERR(nvmet_disc_subsys);
+> > -	return 0;
+> > +	return PTR_ERR_OR_ZERO(nvmet_disc_subsys);
+> >   }
+> >
+> >   void nvmet_exit_discovery(void)
+> >
 > 
-The reason i have an additional inv_type_granu_map[] matrix is that
-some of fields can be 0 but still valid. A single matrix would not be
-able to tell the difference between a valid 0 or invalid field.
-> > +
-> > +static inline int to_vtd_granularity(int type, int granu, u64
-> > *vtd_granu) +{
-> > +	if (type >= NR_IOMMU_CACHE_TYPE || granu >=
-> > NR_IOMMU_CACHE_INVAL_GRANU ||
-> > +		!inv_type_granu_map[type][granu])
-> > +		return -EINVAL;
-> > +
-> > +	*vtd_granu = inv_type_granu_table[type][granu];
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
-> > +{
-> > +	u64 nr_pages;  
-> direct initialization?
-will do, thanks
-> > +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9
-> > for 2MB, etc.
-> > +	 * IOMMU cache invalidate API passes granu_size in bytes,
-> > and number of
-> > +	 * granu size in contiguous memory.
-> > +	 */
-> > +
-> > +	nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
-> > +	return order_base_2(nr_pages);
-> > +}
-> > +
-> > +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
-> > +		struct device *dev, struct
-> > iommu_cache_invalidate_info *inv_info) +{
-> > +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-> > +	struct device_domain_info *info;
-> > +	struct intel_iommu *iommu;
-> > +	unsigned long flags;
-> > +	int cache_type;
-> > +	u8 bus, devfn;
-> > +	u16 did, sid;
-> > +	int ret = 0;
-> > +	u64 granu;
-> > +	u64 size;
-> > +
-> > +	if (!inv_info || !dmar_domain ||
-> > +		inv_info->version !=
-> > IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
-> > +		return -EINVAL;
-> > +
-> > +	if (!dev || !dev_is_pci(dev))
-> > +		return -ENODEV;
-> > +
-> > +	iommu = device_to_iommu(dev, &bus, &devfn);
-> > +	if (!iommu)
-> > +		return -ENODEV;
-> > +
-> > +	spin_lock(&iommu->lock);
-> > +	spin_lock_irqsave(&device_domain_lock, flags);  
-> mix of _irqsave and non _irqsave looks suspicious to me.
-It should be in reverse order. Any other concerns?
-> > +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus,
-> > devfn);
-> > +	if (!info) {
-> > +		ret = -EINVAL;
-> > +		goto out_unlock;
-> > +	}
-> > +	did = dmar_domain->iommu_did[iommu->seq_id];
-> > +	sid = PCI_DEVID(bus, devfn);
-> > +	size = to_vtd_size(inv_info->addr_info.granule_size,
-> > inv_info->addr_info.nb_granules); +
-> > +	for_each_set_bit(cache_type, (unsigned long
-> > *)&inv_info->cache, NR_IOMMU_CACHE_TYPE) { +
-> > +		ret = to_vtd_granularity(cache_type,
-> > inv_info->granularity, &granu);
-> > +		if (ret) {
-> > +			pr_err("Invalid range type %d, granu
-> > %d\n", cache_type,  
-> s/Invalid range type %d, granu %d/Invalid cache type/granu combination
-> (%d/%d)
-sounds good, indeed it is the combination that is invalid.
-> > +				inv_info->granularity);
-> > +			break;
-> > +		}
-> > +
-> > +		switch (BIT(cache_type)) {
-> > +		case IOMMU_CACHE_INV_TYPE_IOTLB:
-> > +			if (size && (inv_info->addr_info.addr &
-> > ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
-> > +				pr_err("Address out of range,
-> > 0x%llx, size order %llu\n",
-> > +					inv_info->addr_info.addr,
-> > size);
-> > +				ret = -ERANGE;
-> > +				goto out_unlock;
-> > +			}
-> > +
-> > +			qi_flush_piotlb(iommu, did,
-> > mm_to_dma_pfn(inv_info->addr_info.addr),
-> > +					inv_info->addr_info.pasid,
-> > +					size, granu);
-> > +
-> > +			/*
-> > +			 * Always flush device IOTLB if ATS is
-> > enabled since guest
-> > +			 * vIOMMU exposes CM = 1, no device IOTLB
-> > flush will be passed
-> > +			 * down. REVISIT: cannot assume Linux guest
-> > +			 */
-> > +			if (info->ats_enabled) {
-> > +				qi_flush_dev_piotlb(iommu, sid,
-> > info->pfsid,
-> > +
-> > inv_info->addr_info.pasid, info->ats_qdep,
-> > +
-> > inv_info->addr_info.addr, size,
-> > +						granu);
-> > +			}
-> > +			break;
-> > +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
-> > +			if (info->ats_enabled) {
-> > +				qi_flush_dev_piotlb(iommu, sid,
-> > info->pfsid,
-> > +
-> > inv_info->addr_info.pasid, info->ats_qdep,
-> > +
-> > inv_info->addr_info.addr, size,
-> > +						granu);
-> > +			} else
-> > +				pr_warn("Passdown device IOTLB
-> > flush w/o ATS!\n"); +
-> > +			break;
-> > +		case IOMMU_CACHE_INV_TYPE_PASID:
-> > +			qi_flush_pasid_cache(iommu, did, granu,
-> > inv_info->pasid); +
-> > +			break;
-> > +		default:
-> > +			dev_err(dev, "Unsupported IOMMU
-> > invalidation type %d\n",
-> > +				cache_type);
-> > +			ret = -EINVAL;
-> > +		}
-> > +	}
-> > +out_unlock:
-> > +	spin_unlock(&iommu->lock);
-> > +	spin_unlock_irqrestore(&device_domain_lock, flags);  
-> I would expect the opposite order
-yes, i reversed in the lock order such that irq is disabled.
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  static int intel_iommu_map(struct iommu_domain *domain,
-> >  			   unsigned long iova, phys_addr_t hpa,
-> >  			   size_t size, int iommu_prot)
-> > @@ -5769,6 +5927,7 @@ const struct iommu_ops intel_iommu_ops = {
-> >  	.dev_disable_feat	= intel_iommu_dev_disable_feat,
-> >  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
-> >  #ifdef CONFIG_INTEL_IOMMU_SVM
-> > +	.cache_invalidate	= intel_iommu_sva_invalidate,
-> >  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
-> >  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
-> >  #endif
-> >   
-> Thanks
 > 
-> Eric
-
-Thank you so much for your review. I will roll up the next version
-soon, hopefully this week.
-
-Jacob
+> _______________________________________________
+> Linux-nvme mailing list
+> Linux-nvme@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-nvme
