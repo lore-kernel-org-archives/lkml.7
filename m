@@ -2,136 +2,194 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8AAC04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C37C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E7720675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76F220675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LNHMaVmc"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TyBhTrfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbfD2ROE (ORCPT
+        id S1728940AbfD2RO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:14:04 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:39041 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbfD2ROE (ORCPT
+        Mon, 29 Apr 2019 13:14:57 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:47870 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728769AbfD2RO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:14:04 -0400
-Received: by mail-pf1-f201.google.com with SMTP id a17so7598101pff.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=ZJZw+a1zAAS2yXCulVsapzFNzx2HgPG8quVXkMNIzRA=;
-        b=LNHMaVmcposMzXiBxo+LfVRrsXl/hzH7pjhT+t1iPGrPl3ttT6JqRtwLI+LmJZzfO3
-         6dooMjOh7leRjuHd+y/PjbfED8ng26vganF2W2sFFNwLnXk6AO6Gnk27hUJRFq6vMHnD
-         V/8GhLSaHioBm8HlcVfQcAoSlyZLZXgu6P3IdkSFLTkVAt1kTaAXh3IygzCUzwkRkMO2
-         ABs/JrSSCGKRasEP9mu0SQTJMLHuHvq8LSeIkgusJW0LAXLmHG7xmCeCdF9OyEsbz3k2
-         Ag2CxRX2t31eXoE9nTs+JsO7/i88GZiSYPqm/ZR7APmhOvzuNg5tIpU4XhI4eSSqDaiw
-         t5+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=ZJZw+a1zAAS2yXCulVsapzFNzx2HgPG8quVXkMNIzRA=;
-        b=bHAjoVIhzRM7z0Y1kZ4sgcMJ6LAlSW5C8AtJItVoJ2KwFB0LjwMgVJr+RNkiFzvbrA
-         yozGpb4Q1WqD3OaHSe/MfmDkHdCdMMsVwSHRy+GaLTK4RJF7BzDEVDVkerkp5WRxcgHY
-         FjJQgzdlxCT6q1UPX6R308LnHoOWKnkxoGDiNZUUrO48TAMwDy+pPBmTcFiH0HZ8O5yM
-         WtHACi/lR8duQ6GzJlwQsX3B7a4I5qUq46HRoaGy70H59VDlBaIuPER10+CobQPWQLV8
-         3lK1+0FUNhRbsbPRXM/w3uPm6AgSpqejLN80Mcvj/w2d05N0cM+yTe/W34H3Mbd8tUGO
-         XXZQ==
-X-Gm-Message-State: APjAAAXrdqZ6OvpSPAlmJSYozlXC65XSVh5snzWXOp1k88Lgy8BydIg7
-        eVpPZ5T+kbl5uDmuQ0WTTrKoI9lG64uxnA==
-X-Google-Smtp-Source: APXvYqzTjNvJrvL+jBUcp6W9VnuxIBNtyu3+LblRTc2xOWy1Rbb1xQgUwgBIVo88fNW8fifpkQ8drzhLbu6dhw==
-X-Received: by 2002:a65:5941:: with SMTP id g1mr60655155pgu.51.1556558043109;
- Mon, 29 Apr 2019 10:14:03 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 10:13:32 -0700
-In-Reply-To: <20190429171332.152992-1-shakeelb@google.com>
-Message-Id: <20190429171332.152992-2-shakeelb@google.com>
-Mime-Version: 1.0
-References: <20190429171332.152992-1-shakeelb@google.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH 2/2] memcg, fsnotify: no oom-kill for remote memcg charging
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Jan Kara <jack@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Apr 2019 13:14:56 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 11F41C00A0;
+        Mon, 29 Apr 2019 17:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556558097; bh=KiymCE0SEjFh+yxlLj/PIdQ6Vg47QwbSiN8/7YvmW/E=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=TyBhTrfrv5ATDBT+TOcsUvEPyeYxUckG4dUgJgQqNiWR2PukgVsWPvvkpx5VSAf/d
+         sTn8S0dg9ReMItRmlndG8IRnBts0IjpSmoEbLIbwIU/npUVv1o+4NRbTh++4cmYvG3
+         eD49na40rtQBgHRPQhWN5AI68MovdwOkec2221UO9lQuabK4df+7b69miLpnfdxXP1
+         6xlQOKtfkCIUx1xf/siKcvwxfll0KVPIIZOidvbf27srTs9Ru64fbJAKatBfJNO8px
+         ssLHT0CICERo05dWpirW9eIqoeoWl7xbKlQWzZ7mrmEuKP1PwBxDz1P7gnbFAjiDYO
+         prUwuqTB5ef+A==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 8338FA0072;
+        Mon, 29 Apr 2019 17:14:54 +0000 (UTC)
+Received: from us01wembx1.internal.synopsys.com ([169.254.1.223]) by
+ US01WXQAHTC1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
+ 29 Apr 2019 10:14:54 -0700
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+CC:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: perf tools build broken after v5.1-rc1
+Thread-Topic: perf tools build broken after v5.1-rc1
+Thread-Index: AQHU9whSYuAYlq2eD0OAivz0M0d5Nw==
+Date:   Mon, 29 Apr 2019 17:14:54 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
+References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
+ <20190422152027.GB11750@kernel.org> <20190425214800.GC21829@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.13.184.19]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit d46eb14b735b ("fs: fsnotify: account fsnotify metadata to
-kmemcg") added remote memcg charging for fanotify and inotify event
-objects. The aim was to charge the memory to the listener who is
-interested in the events but without triggering the OOM killer.
-Otherwise there would be security concerns for the listener. At the
-time, oom-kill trigger was not in the charging path. A parallel work
-added the oom-kill back to charging path i.e. commit 29ef680ae7c2
-("memcg, oom: move out_of_memory back to the charge path"). So to not
-trigger oom-killer in the remote memcg, explicitly add
-__GFP_RETRY_MAYFAIL to the fanotify and inotify event allocations.
-
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
----
- fs/notify/fanotify/fanotify.c        | 4 +++-
- fs/notify/inotify/inotify_fsnotify.c | 7 +++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-index 6b9c27548997..9aa5d325e6d8 100644
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -282,13 +282,15 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
- 					    __kernel_fsid_t *fsid)
- {
- 	struct fanotify_event *event = NULL;
--	gfp_t gfp = GFP_KERNEL_ACCOUNT;
-+	gfp_t gfp = GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL;
- 	struct inode *id = fanotify_fid_inode(inode, mask, data, data_type);
- 
- 	/*
- 	 * For queues with unlimited length lost events are not expected and
- 	 * can possibly have security implications. Avoid losing events when
- 	 * memory is short.
-+	 *
-+	 * Note: __GFP_NOFAIL takes precedence over __GFP_RETRY_MAYFAIL.
- 	 */
- 	if (group->max_events == UINT_MAX)
- 		gfp |= __GFP_NOFAIL;
-diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
-index ff30abd6a49b..17c08daa1ba7 100644
---- a/fs/notify/inotify/inotify_fsnotify.c
-+++ b/fs/notify/inotify/inotify_fsnotify.c
-@@ -99,9 +99,12 @@ int inotify_handle_event(struct fsnotify_group *group,
- 	i_mark = container_of(inode_mark, struct inotify_inode_mark,
- 			      fsn_mark);
- 
--	/* Whoever is interested in the event, pays for the allocation. */
-+	/*
-+	 * Whoever is interested in the event, pays for the allocation. However
-+	 * do not trigger the OOM killer in the target memcg.
-+	 */
- 	memalloc_use_memcg(group->memcg);
--	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT);
-+	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
- 	memalloc_unuse_memcg();
- 
- 	if (unlikely(!event)) {
--- 
-2.21.0.593.g511ec345e18-goog
-
+On 4/25/19 2:48 PM, Arnaldo Carvalho de Melo wrote:=0A=
+> Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:=0A=
+>> Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:=0A=
+>>> When building perf for ARC (v5.1-rc2) I get the following=0A=
+>>  =0A=
+>>> | In file included from bench/futex-hash.c:26:=0A=
+>>> | bench/futex.h: In function 'futex_wait':=0A=
+>>> | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this=
+ function);=0A=
+>>  =0A=
+>>> git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools head=
+ers uapi:=0A=
+>>> Sync copy of asm-generic/unistd.h with the kernel sources")=0A=
+>> Humm, I have to check why this:=0A=
+>>=0A=
+>> [perfbuilder@quaco ~]$ podman images | grep ARC=0A=
+>> docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uC=
+libc          4c259582a8e6   5 weeks ago      846 MB=0A=
+>> [perfbuilder@quaco ~]$=0A=
+>>=0A=
+>> isn't catching this... :-\=0A=
+>>=0A=
+>> FROM docker.io/fedora:24=0A=
+>> MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>=0A=
+>> ENV TOOLCHAIN=3Darc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_inst=
+all=0A=
+>> ENV CROSS=3Darc-linux-=0A=
+>> ENV SOURCEFILE=3D${TOOLCHAIN}.tar.gz=0A=
+>> RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findut=
+ils xz=0A=
+>> RUN wget https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github.c=
+om_foss-2Dfor-2Dsynopsys-2Ddwc-2Darc-2Dprocessors_toolchain_releases_downlo=
+ad_arc-2D2017.09-2Drc2_-24-257BSOURCEFILE-257D&d=3DDwIDaQ&c=3DDPL6_X_6JkXFx=
+7AXWqB0tg&r=3D7FgpX6o3vAhwMrMhLh-4ZJey5kjdNUwOL2CWsFwR4T8&m=3DHjtufCLozrW47=
+pS5C2YH3safLHQE7eEtmHFZsSWrz1M&s=3D29g4oKvGuYcLgheCUvZh3wojhhljivpLd8aj7Ur4=
+sKQ&e=3D=0A=
+>> <SNIP>=0A=
+>> COPY rx_and_build.sh /=0A=
+>> ENV EXTRA_MAKE_ARGS=3DNO_LIBBPF=3D1=0A=
+>> ENV ARCH=3Darc=0A=
+>> ENV CROSS_COMPILE=3D/${TOOLCHAIN}/bin/${CROSS}=0A=
+>> ENV EXTRA_CFLAGS=3D-matomic=0A=
+> So, now I have a libnuma crossbuilt in this container that allows me to=
+=0A=
+> build a ARC perf binary linked with zlib and numactl-devel, but only=0A=
+> after I applied the fix below.=0A=
+>=0A=
+> Can you please provide the feature detection header in the build? I.e.=0A=
+> what I have with my ARC cross build container right now, after applying=
+=0A=
+> the patch below is:=0A=
+>=0A=
+> [perfbuilder@60d5802468f6 perf]$ make $EXTRA_MAKE_ARGS ARCH=3D$ARCH CROSS=
+_COMPILE=3D$CROSS_COMPILE EXTRA_CFLAGS=3D"$EXTRA_CFLAGS" -C /git/perf/tools=
+/perf O=3D/tmp/build/perf=0A=
+> make: Entering directory '/git/perf/tools/perf'=0A=
+>   BUILD:   Doing 'make -j8' parallel build=0A=
+> sh: line 0: command: -c: invalid option=0A=
+> command: usage: command [-pVv] command [arg ...]=0A=
+>=0A=
+> Auto-detecting system features:=0A=
+> ...                         dwarf: [ OFF ]=0A=
+> ...            dwarf_getlocations: [ OFF ]=0A=
+> ...                         glibc: [ on  ]=0A=
+=0A=
+Not related to current issue, this run uses a uClibc toolchain and yet it i=
+s=0A=
+detecting glibc - doesn't seem right to me.=0A=
+=0A=
+> ...                          gtk2: [ OFF ]=0A=
+> ...                      libaudit: [ OFF ]=0A=
+> ...                        libbfd: [ OFF ]=0A=
+> ...                        libelf: [ OFF ]=0A=
+> ...                       libnuma: [ on  ]=0A=
+=0A=
+Wondering why that is - for me numa is off - even when using a glibc toolch=
+ain.=0A=
+=0A=
+> ...        numa_num_possible_cpus: [ on  ]=0A=
+> ...                       libperl: [ OFF ]=0A=
+> ...                     libpython: [ OFF ]=0A=
+> ...                      libslang: [ OFF ]=0A=
+> ...                     libcrypto: [ OFF ]=0A=
+> ...                     libunwind: [ OFF ]=0A=
+> ...            libdw-dwarf-unwind: [ OFF ]=0A=
+> ...                          zlib: [ OFF ]=0A=
+> ...                          lzma: [ OFF ]=0A=
+> ...                     get_cpuid: [ OFF ]=0A=
+> ...                           bpf: [ on  ]=0A=
+> ...                        libaio: [ OFF ]=0A=
+> ...        disassembler-four-args: [ OFF ]=0A=
+>=0A=
+>=0A=
+=0A=
+For my glibc toolchain, here's the feature detection output=0A=
+=0A=
+Auto-detecting system features:=0A=
+...                         dwarf: [ on  ]=0A=
+...            dwarf_getlocations: [ OFF ]=0A=
+...                         glibc: [ on  ]=0A=
+...                          gtk2: [ OFF ]=0A=
+...                      libaudit: [ OFF ]=0A=
+...                        libbfd: [ OFF ]=0A=
+...                        libelf: [ on  ]=0A=
+...                       libnuma: [ OFF ]=0A=
+...        numa_num_possible_cpus: [ OFF ]=0A=
+...                       libperl: [ OFF ]=0A=
+...                     libpython: [ OFF ]=0A=
+...                      libslang: [ OFF ]=0A=
+...                     libcrypto: [ OFF ]=0A=
+...                     libunwind: [ OFF ]=0A=
+...            libdw-dwarf-unwind: [ OFF ]=0A=
+...                          zlib: [ OFF ]=0A=
+...                          lzma: [ OFF ]=0A=
+...                     get_cpuid: [ OFF ]=0A=
+...                           bpf: [ on  ]=0A=
+...                        libaio: [ on  ]=0A=
+...        disassembler-four-args: [ OFF ]=0A=
+=0A=
+=0A=
