@@ -2,141 +2,84 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE041C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CCFC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6E521655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556576219;
-	bh=HlOncjZyhVJcx0hvKHc9ZsKnzB9z25OqY1HmJUS+Klw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zilShE1x0CCeuMf2IoEf1W6mX/71X5xRpPR1C77J72WOqtcrE0OoQ9aP23oagMMw7
-	 rgL5rN4uVpptdlloGrG8OtnZl9l2YmIxwCPB2I5blYeBinB2abCi+UF3PKlPCPFPsN
-	 XDY6OjF3FNNFWWbNH2VauZdMDAQ7yCSH+cFhd6fw=
+	by mail.kernel.org (Postfix) with ESMTP id 6ED7D2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MzscgyER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfD2WQ6 (ORCPT
+        id S1729607AbfD2WTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:16:58 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41986 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbfD2WQ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:16:58 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k9so6647688oig.9;
-        Mon, 29 Apr 2019 15:16:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LLSomgcidVOLTe6rCarJcZL8h/0AxpVsGlwcNcgeIZc=;
-        b=GplGoXfyHoTS1OA2KkHJwgAxUwRTMZ0mm76vDcIc9zn/55cpVVeSbDMN36ZcLEkduS
-         1BfSZ2pskPu+Kv1WST0Z39+e45U/48zoou2N3TtWMn/K5DFsFow+CDFAeHYJRbLsclmE
-         hxdiZNxuvuRPcYnbJ8tM9pxWeJ0lyfarrxlxVL/I+SvNadBZRRddsDcX9s4Hn/7hoe2I
-         zUSrzm1UdC5R6LbmD+P6sUlSrYaVOKI2bF3OVSmAasMHgJIivy6yK97EBguLbDBcE/JO
-         AWJntVCF0UrBITU0IahPkrSvpSF3l7fPv7C7tSHfdlBGiT13ubGVJ0oLnc0pSIDTstJC
-         8R7A==
-X-Gm-Message-State: APjAAAXB+yUJquQ5HmrWi0rWdNq1Eibf4lpdTEWUCUGwyrpU6laRmPif
-        2wO5/VrUcgMyxn43OMxl0w==
-X-Google-Smtp-Source: APXvYqwkOCIJLujhskobK/4m5vnwo3g+MH+dz03BglSEDJoU5hZlsyrMbfcO44Jj7KSt5Se3+VX4cA==
-X-Received: by 2002:a54:4f15:: with SMTP id e21mr980418oiy.122.1556576217427;
-        Mon, 29 Apr 2019 15:16:57 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 2sm13926206ots.22.2019.04.29.15.16.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 15:16:56 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 17:16:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     bjorn.andersson@linaro.org, vkoul@kernel.org, evgreen@chromium.org,
-        daidavid1@codeaurora.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: interconnect: Add Qualcomm QCS404 DT
- bindings
-Message-ID: <20190429221656.GA1843@bogus>
-References: <20190415104357.5305-1-georgi.djakov@linaro.org>
- <20190415104357.5305-2-georgi.djakov@linaro.org>
+        Mon, 29 Apr 2019 18:19:01 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49225 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728105AbfD2WTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:19:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=4k+j06HYbCfMuWfdD8ZClUNb1uKBylx/RNhaeXzQeg4=; b=MzscgyER8+i6YKJuG2RsWT6IL8
+        ngBlTmAMYclIOJUBHHPsHptm8kdjEuXAMAxLV4599Wp0tPfbSu8/ewMJHw6ySUKmcGyYBWvlqslMg
+        xBPrm59EbfqNQi22MXNZ9b8P65gTGiQdDj0G6UQWxyalOrZrmIiZ+Lw2zK5HYdEATw5M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hLEby-0007m3-IL; Tue, 30 Apr 2019 00:18:58 +0200
+Date:   Tue, 30 Apr 2019 00:18:58 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 net-next 05/12] ether: Add dedicated Ethertype for
+ pseudo-802.1Q DSA tagging
+Message-ID: <20190429221858.GR12333@lunn.ch>
+References: <20190429001706.7449-1-olteanv@gmail.com>
+ <20190429001706.7449-6-olteanv@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190415104357.5305-2-georgi.djakov@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190429001706.7449-6-olteanv@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 01:43:54PM +0300, Georgi Djakov wrote:
-> The Qualcomm QCS404 platform has several buses that could be controlled
-> and tuned according to the bandwidth demand.
+On Mon, Apr 29, 2019 at 03:16:59AM +0300, Vladimir Oltean wrote:
+> There are two possible utilizations so far:
 > 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
+> - Switch devices that don't support a native insertion/extraction header
+>   on the CPU port may still enjoy the benefits of port isolation with a
+>   custom VLAN tag.
 > 
-> v2:
-> - No changes.
+>   For this, they need to have a customizable TPID in hardware and a new
+>   Ethertype to distinguish between real 802.1Q traffic and the private
+>   tags used for port separation.
 > 
->  .../bindings/interconnect/qcom,qcs404.txt     | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> - Switches that don't support the deactivation of VLAN awareness, but
+>   still want to have a mode in which they accept all traffic, including
+>   frames that are tagged with a VLAN not configured on their ports, may
+>   use this as a fake to trick the hardware into thinking that the TPID
+>   for VLAN is something other than 0x8100.
 > 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> new file mode 100644
-> index 000000000000..9befcd14a5b5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> @@ -0,0 +1,45 @@
-> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
-> +-----------------------------------------------------------
-> +
-> +Required properties :
-> +- compatible : shall contain only one of the following:
-> +			"qcom,qcs404-bimc"
-> +			"qcom,qcs404-pcnoc"
-> +			"qcom,qcs404-snoc"
-> +- #interconnect-cells : should contain 1
-> +
-> +Optional properties :
-> +clocks : list of phandles and specifiers to all interconnect bus clocks
-> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
-> +
-> +Example:
-> +
-> +rpm-glink {
-> +	...
-> +	rpm_requests: glink-channel {
-> +		...
-> +		bimc: interconnect@0 {
+> What follows after the ETH_P_DSA_8021Q EtherType is a regular VLAN
+> header (TCI), however there is no other EtherType that can be used for
+> this purpose and doesn't already have a well-defined meaning.
+> ETH_P_8021AD, ETH_P_QINQ1, ETH_P_QINQ2 and ETH_P_QINQ3 expect that
+> another follow-up VLAN tag is present, which is not the case here.
+> 
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> Suggested-by: Andrew Lunn <andrew@lunn.ch>
 
-Unit-address needs a 'reg' property. dtc should give you a warning 
-(maybe W=1 is still needed).
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> +			compatible = "qcom,qcs404-bimc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-> +				<&rpmcc RPM_SMD_BIMC_A_CLK>;
-> +		};
-> +
-> +		pnoc: interconnect@1 {
-> +			compatible = "qcom,qcs404-pcnoc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
-> +				<&rpmcc RPM_SMD_PNOC_A_CLK>;
-> +		};
-> +
-> +		snoc: interconnect@2 {
-> +			compatible = "qcom,qcs404-snoc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-> +				<&rpmcc RPM_SMD_SNOC_A_CLK>;
-> +		};
-> +	};
-> +};
+    Andrew
