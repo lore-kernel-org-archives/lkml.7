@@ -2,103 +2,97 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A7CC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACC6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAC720675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556534621;
-	bh=Gr/8cYEjmlkiLYTp7w1fB97Wafx7xj4Nc0Kei9fidbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KQHd/wfyYxuj/wlKGW8BYE84gjuihtxad3bM0dzb7SH1Md/NwgVQD3PZOPeAggLMi
-	 sYXjs7+z+V3iAWiicKunbzWNtuJ8mNP2ZbZ3kguxmVahRSSmu3nLhrYqVS37eJJGu2
-	 Mno9qF51NvxuzCY1pVMwQqdcfIJDF2M+eVzjfiZ8=
+	by mail.kernel.org (Postfix) with ESMTP id E60EB2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfD2Knk (ORCPT
+        id S1727822AbfD2KpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:43:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37492 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727868AbfD2Kna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:43:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 27A74AB9D;
-        Mon, 29 Apr 2019 10:43:29 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 12:43:26 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, mm <linux-mm@kvack.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Subject: Re: memcg causes crashes in list_lru_add
-Message-ID: <20190429104326.GG21837@dhcp22.suse.cz>
-References: <f0cfcfa7-74d0-8738-1061-05d778155462@suse.cz>
- <2cbfb8dc-31f0-7b95-8a93-954edb859cd8@suse.cz>
- <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
- <20190429104051.GF21837@dhcp22.suse.cz>
+        Mon, 29 Apr 2019 06:45:07 -0400
+Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:60381 "EHLO
+        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727630AbfD2KpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 06:45:07 -0400
+Received: by mail.osadl.at (Postfix, from userid 1001)
+        id 040CF5C0B38; Mon, 29 Apr 2019 12:44:14 +0200 (CEST)
+Date:   Mon, 29 Apr 2019 12:44:14 +0200
+From:   Nicholas Mc Guire <der.herr@hofr.at>
+To:     Edward Cree <ecree@solarflare.com>
+Cc:     Nicholas Mc Guire <hofrat@osadl.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net_sched: force endianness annotation
+Message-ID: <20190429104414.GB17493@osadl.at>
+References: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
+ <07d36e94-aad4-a263-bf09-705ee1dd59ed@solarflare.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190429104051.GF21837@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <07d36e94-aad4-a263-bf09-705ee1dd59ed@solarflare.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-04-19 12:40:51, Michal Hocko wrote:
-> On Mon 29-04-19 12:09:53, Jiri Slaby wrote:
-> > On 29. 04. 19, 11:25, Jiri Slaby wrote:> memcg_update_all_list_lrus
-> > should take care about resizing the array.
-> > 
-> > It should, but:
-> > [    0.058362] Number of physical nodes 2
-> > [    0.058366] Skipping disabled node 0
-> > 
-> > So this should be the real fix:
-> > --- linux-5.0-stable1.orig/mm/list_lru.c
-> > +++ linux-5.0-stable1/mm/list_lru.c
-> > @@ -37,11 +37,12 @@ static int lru_shrinker_id(struct list_l
-> > 
-> >  static inline bool list_lru_memcg_aware(struct list_lru *lru)
-> >  {
-> > -       /*
-> > -        * This needs node 0 to be always present, even
-> > -        * in the systems supporting sparse numa ids.
-> > -        */
-> > -       return !!lru->node[0].memcg_lrus;
-> > +       int i;
-> > +
-> > +       for_each_online_node(i)
-> > +               return !!lru->node[i].memcg_lrus;
-> > +
-> > +       return false;
-> >  }
-> > 
-> >  static inline struct list_lru_one *
-> > 
-> > 
-> > 
-> > 
-> > 
-> > Opinions?
-> 
-> Please report upstream. This code here is there for quite some time.
-> I do not really remember why we do have an assumption about node 0
-> and why it hasn't been problem until now.
+On Mon, Apr 29, 2019 at 11:11:20AM +0100, Edward Cree wrote:
+> On 28/04/2019 06:54, Nicholas Mc Guire wrote:
+> > While the endiannes is being handled correctly sparse was unhappy with
+> > the missing annotation as be16_to_cpu()/be32_to_cpu() expects a __be16
+> > respectively __be32.
+> [...]
+> > diff --git a/net/sched/em_cmp.c b/net/sched/em_cmp.c
+> > index 1c8360a..3045ee1 100644
+> > --- a/net/sched/em_cmp.c
+> > +++ b/net/sched/em_cmp.c
+> > @@ -41,7 +41,7 @@ static int em_cmp_match(struct sk_buff *skb, struct tcf_ematch *em,
+> >  		val = get_unaligned_be16(ptr);
+> >  
+> >  		if (cmp_needs_transformation(cmp))
+> > -			val = be16_to_cpu(val);
+> > +			val = be16_to_cpu((__force __be16)val);
+> >  		break;
+> There should probably be a comment here to explain what's going on.  TBH
+>  it's probably a good general rule that any use of __force should have a
+>  comment explaining why it's needed.
+> AFAICT, get_unaligned_be16(ptr) is (barring alignment) equivalent to
+>  be16_to_cpu(*(__be16 *)ptr).  But then calling be16_to_cpu() again on
+>  val is bogus; it's already CPU endian.  There's a distinct lack of
+>  documentation around as to the intended semantics of TCF_EM_CMP_TRANS,
+>  but it would seem either (__force u16)cpu_to_be16(val); (which preserves
+>  the existing semantics, that trans is a no-op on BE) or swab16(val);
+>  would make more sense.
+>
+be16_to_cpu((__force __be16)val) should be a NOP on big-endian as well - 
+atleast that is how I understood it (usr/include/linux/byteorder/big_endian.h).
 
-Humm, I blame jet-lag. I was convinced that this is an internal email.
-Sorry about the confusion.
+The problem with using swab16 is that it is impating the binary significantly
+so I'm not sure if the change is really side-effect free - while the somewhat
+brute force solution is evaluatable simply by diffing.
+The swab16() solution seems cleaner than adding another layer of casting - 
+but I just am unsure if
+-                   val = be16_to_cpu(val);
++                   val = swab16(val);
+is actually equivalent. For the original patch this can be checked
 
-Anyway, time to revisit 145949a1387ba. CCed Raghavendra.
--- 
-Michal Hocko
-SUSE Labs
+-rw-r--r-- 1 hofrat hofrat 2984 Apr 28 01:49 /tmp/em_cmp_force.o
+-rw-r--r-- 1 hofrat hofrat 2984 Apr 28 01:49 /tmp/em_cmp_org.o
+-rw-r--r-- 1 hofrat hofrat 3392 Apr 29 06:25 /tmp/em_cmp_swab.o
+hofrat@debian:~/linux-next$ diff /tmp/em_cmp_force.o /tmp/em_cmp_org.o
+hofrat@debian:~/linux-next$
+
+which is why I prefered that solution. if swab16() is equivalent I' resend
+a V2
+
+thx!
+hofrat
