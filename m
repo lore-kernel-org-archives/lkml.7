@@ -2,111 +2,84 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3C6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 01:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC840C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B160420693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 01:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D9E20843
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:06:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p/LRXjus"
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="ZDh+JJdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfD2ByO (ORCPT
+        id S1727031AbfD2CGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 21:54:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56107 "EHLO ozlabs.org"
+        Sun, 28 Apr 2019 22:06:01 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46401 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbfD2ByO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 21:54:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44snl64JK2z9s55;
-        Mon, 29 Apr 2019 11:54:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556502851;
-        bh=KN9J/W1T49rNawww/E2wIO3cDvFrVEihi+tUSgg7w3E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=p/LRXjusuLEMvXEF+p48ei8s6Guxm10JgujSjp6jaM5wAHFXI73FoEGYfRreUWqzj
-         VA3RMA6vxYUmIl5izcsVesHOiYs0hYYazDTTZRojgHk/6LA+eeFejxcd/zpiP0FU/d
-         3fMFQ1LmfldrH9DKzsLdfnLIrR9oyWdtwzQjZk9LIH2gpT5FOhHlSBA0gRON5vq72a
-         VhYqZmbCvK58KqSvkzZxRNsPyCSQoGyLf8MLv76eC1K+bOA/fgOTL+R+4awBuEVkWX
-         1NcUnhjyWt6TYlEE+AtGGO8kSA9+WXrLgVJn2HiJomxQ7nzXyHgSc3fOu2DNcgjFE+
-         NP4UC9wstr8WA==
-Date:   Mon, 29 Apr 2019 11:54:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: linux-next: manual merge of the net-next tree with the
- wireless-drivers tree
-Message-ID: <20190429115338.5decb50b@canb.auug.org.au>
+        id S1726439AbfD2CGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 22:06:01 -0400
+Received: by ozlabs.org (Postfix, from userid 1003)
+        id 44sp0j4Vkwz9s7T; Mon, 29 Apr 2019 12:05:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1556503557; bh=C9jMjFQh8bIIcTLpSucBn3+IOPxRQfPJx62R3f27fHA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZDh+JJdWNbUnjZwYJ2OgXrlC5Te6OdRn22WeQuX4mEFi/3J71pfQo+39F6D6VmfIs
+         gN6aTHh8fhD28hDxoQTNfGh80vVwOayHLTgGy/WObYcwr29+LgPtSFjpNYGvpucq7e
+         RFvR2OWhFp0B7fWmnkVIVl5FSX1jogLJM1ivdGOqA7fkxhMHaDiTR0CdT1LUZLyBXU
+         kNwsUKwXM2eBaXfB8xSfPnOIqb8nOoKndLFvhgA8sb3l7oGWYMgduupXvs/dphOqD1
+         8Md0UWqf3a3EcS154gfVMUDHZtwTRPKEseYrZA6+ZANLVUVipPwrDyKTM5PLPIDLER
+         jBXEXZZQAZv0g==
+Date:   Mon, 29 Apr 2019 12:05:55 +1000
+From:   Paul Mackerras <paulus@ozlabs.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v8 05/20] KVM: PPC: Book3S HV: Remove pmd_is_leaf()
+Message-ID: <20190429020555.GB11154@blackberry>
+References: <20190403141627.11664-1-steven.price@arm.com>
+ <20190403141627.11664-6-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/ouD1/C1Rf=a4YufAYVULo5g"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403141627.11664-6-steven.price@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ouD1/C1Rf=a4YufAYVULo5g
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 03, 2019 at 03:16:12PM +0100, Steven Price wrote:
+> Since pmd_large() is now always available, pmd_is_leaf() is redundant.
+> Replace all uses with calls to pmd_large().
 
-Hi all,
+NAK.  I don't want to do this, because pmd_is_leaf() is purely about
+the guest page tables (the "partition-scoped" radix tree which
+specifies the guest physical to host physical translation), not about
+anything to do with the Linux process page tables.  The guest page
+tables have the same format as the Linux process page tables, but they
+are managed separately.
 
-Today's linux-next merge of the net-next tree got a conflict in:
+If it makes things clearer, I could rename it to "guest_pmd_is_leaf()"
+or something similar.
 
-  drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-
-between commits:
-
-  154d4899e411 ("iwlwifi: mvm: properly check debugfs dentry before using i=
-t")
-  d156e67d3f58 ("iwlwifi: mvm: fix merge damage in iwl_mvm_vif_dbgfs_regist=
-er()")
-
-from the wireless-drivers tree and commit:
-
-  c9af7528c331 ("iwlwifi: mvm: no need to check return value of debugfs_cre=
-ate functions")
-
-from the net-next tree.
-
-I fixed it up (the latter removed the code modified by the former, so I
-just did that) and can carry the fix as necessary. This is now fixed as
-far as linux-next is concerned, but any non trivial conflicts should be
-mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ouD1/C1Rf=a4YufAYVULo5g
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzGWToACgkQAVBC80lX
-0GyjqQf/WmQNjeOP1on2Gd80/wu5PBCMWR0vBySe2WZ8v1efY6dyhDSLHm1bLzu1
-3ZYqkjy9od5BqotAHadOWbwNwv2SsYpYvWKuwYP82Fh509SWEwapxFk/hlv7b6MO
-OXqPJxLVEQ9lBv9ErhkaEV50AkxApAkidiU5vZMbVLcA23dFjMGtpHOUEsEtR9Qc
-xdEK1VHH14ZZAdRt06D3XK0lJwuh/JoMNlZXwmG3syMBwoggULzvqHvdL4KzpOz4
-rDlbyPaOUXipocKkNaShf6EeKVPoOn7w0N8rsj2xGA1chlHQYNh53A1fg7adUIvp
-bWD+K14cDKZGv5rPnaP63DGE8HrNlg==
-=HV9G
------END PGP SIGNATURE-----
-
---Sig_/ouD1/C1Rf=a4YufAYVULo5g--
+Paul.
