@@ -5,157 +5,85 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB0C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B61C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19D52075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240742075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfD2QuM (ORCPT
+        id S1728862AbfD2QvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:50:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56406 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728681AbfD2QuL (ORCPT
+        Mon, 29 Apr 2019 12:51:03 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:52385 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728663AbfD2QvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:50:11 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3TGgKpv032742
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:50:10 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s63hnc06a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:50:10 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Mon, 29 Apr 2019 17:50:08 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 29 Apr 2019 17:50:05 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3TGo4rD38994060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 16:50:04 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27AF011C052;
-        Mon, 29 Apr 2019 16:50:04 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AAE7611C04A;
-        Mon, 29 Apr 2019 16:50:03 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.116])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Apr 2019 16:50:03 +0000 (GMT)
-Date:   Mon, 29 Apr 2019 18:50:02 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-In-Reply-To: <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
-        <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Mon, 29 Apr 2019 12:51:02 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MCsDe-1hTuvS0cZE-008vUo; Mon, 29 Apr 2019 18:50:26 +0200
+Subject: Re: serial drivers polishing
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, linux-ia64@vger.kernel.org,
+        linux-serial@vger.kernel.org, andrew@aj.id.au,
+        gregkh@linuxfoundation.org, sudeep.holla@arm.com,
+        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
+        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
+        khilman@baylibre.com, macro@linux-mips.org,
+        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
+        linux-amlogic@lists.infradead.org,
+        andriy.shevchenko@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
+        davem@davemloft.net
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <7471c418-4058-db7b-b2ed-af9a67fff201@c-s.fr>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <5a826a97-4098-7e1e-4f07-5a1a372e66b8@metux.net>
+Date:   Mon, 29 Apr 2019 18:50:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042916-4275-0000-0000-0000032F9E92
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042916-4276-0000-0000-0000383EF4DA
-Message-Id: <20190429185002.6041eecc.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=867 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904290114
+In-Reply-To: <7471c418-4058-db7b-b2ed-af9a67fff201@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:4Az+bKXfpphMCirSkhKFORck7bJVPT2vr0hUbYV1dZ3UTKG5BDU
+ TBxxFim3uD9wy42V2JkDIAjQaQq2ReWyoUc1DN0rdiVQkVig/vB99Cx7w1EEfOAYNzuwxhb
+ f4/BRWBebII5HZVGg0UvowwXDI1h5ABVpWiuWuh4eTYZtMAEQD4sc1EXMWP3gmaFheqF9bP
+ k5GRKc1Y11dojpA/k5Txg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dCFArW9i7V0=:h4nMfqswc3y5+ZupbaXaxc
+ tFoKtwMnvQVs0UwzjVcogEfzKBl3arCAwUg+Qu2VWAk2Ilq7u2sNI5O1aMJ6CAJkqNHu2uTPX
+ Y3yx3fYjWCtcDy9l6OLkwaa69ZvQvWGQCJp3Ou9S8dkvnJ6UmLCcPgM531kn8G+8Il5uw4Qq4
+ fSneffuJsYTee2KWv7CFrjm6vlXv5wrAldDuvE1Khsd6M+A8SZ+jCROvLUS+UdQlH5E+u2nm0
+ EvQpAmgUmrj0a5vj/qvnfze1O4+gwOONXa+ocsMc2OKjF5rvp3e+m6YVagAVH+9ogDyKxzBSF
+ B4Dr7HSCDnjQD6Mno9OfSajn4UzlVCI24/oGwljbOtIR9C4iKsIrWouZp+d/KBBemRUtjbLGl
+ JTv2aGZ8xzgbybG4zdtIBrxnTZ+pRhY7K6AjrqZupXlLsuu5g6xlz6e5BUJQC8D03+qT50g2G
+ Bt4JGNeR8100ay+aT7Cn/oKa4OtJqHS8if5wsK1bT10QXwQLOrjjacfC+a6NLdIw8N/1nfAw8
+ MiA+uGAceRZskTXQwiQ4Fk5YGHD1WsB3tYZQ00f4eBEpSHSbdIZA3h9rSuna888oPBs9mmvVl
+ dxWjwGYboM6MpHRT3CrdtGYHP+aeLUDykmNkW1ZrYfNAUuJV5vyfs1Nn/1C54xLYS3mUKyTHa
+ el3kZJNkFRqAGhafsnVMEKWsIZ0GCa6lEfp1Xq1UEieK+Q33XlNGAf6xe1G91Hlz/ziLEXu8L
+ nQiV+8UmVcbDgxrr/wHIsn9iAsSE0sxMoLbGDcyYyZ+/IRqAPRWFc7zzB4E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 15:01:27 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On 29.04.19 18:16, Christophe Leroy wrote:
 
-> +static struct ap_queue_status vfio_ap_setirq(struct vfio_ap_queue *q)
-> +{
-> +	struct ap_qirq_ctrl aqic_gisa = {};
-> +	struct ap_queue_status status = {};
-> +	struct kvm_s390_gisa *gisa;
-> +	struct kvm *kvm;
-> +	unsigned long h_nib, h_pfn;
-> +	int ret;
-> +
-> +	q->a_pfn = q->a_nib >> PAGE_SHIFT;
-> +	ret = vfio_pin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1,
-> +			     IOMMU_READ | IOMMU_WRITE, &h_pfn);
-> +	switch (ret) {
-> +	case 1:
-> +		break;
-> +	case -EINVAL:
-> +	case -E2BIG:
-> +		status.response_code = AP_RESPONSE_INVALID_ADDRESS;
-> +		/* Fallthrough */
-> +	default:
-> +		return status;
+Hi,
 
-Can we actually hit the default label? AFICT you would return an
-all-zero status, i.e. status.response_code == 0 'Normal completion'.
+> Got the following build  error while compiling for my powerpc board with
+> your full series applied. No time to investigate though.
 
-> +	}
-> +
-> +	kvm = q->matrix_mdev->kvm;
-> +	gisa = kvm->arch.gisa_int.origin;
-> +
-> +	h_nib = (h_pfn << PAGE_SHIFT) | (q->a_nib & ~PAGE_MASK);
-> +	aqic_gisa.gisc = q->a_isc;
-> +	aqic_gisa.isc = kvm_s390_gisc_register(kvm, q->a_isc);
-> +	aqic_gisa.ir = 1;
-> +	aqic_gisa.gisa = gisa->next_alert >> 4;
+thanks, fixed it. That was the unclean patch where i've forgotten to
+add 'rfc' into the title ... turned out that this one needs some
+more rework :o
 
-Why gisa->next_alert? Isn't this supposed to get set to gisa origin
-(without some bits on the left)?
+--mtx
 
-> +
-> +	status = ap_aqic(q->apqn, aqic_gisa, (void *)h_nib);
-> +	switch (status.response_code) {
-> +	case AP_RESPONSE_NORMAL:
-> +		/* See if we did clear older IRQ configuration */
-> +		if (q->p_pfn)
-> +			vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
-> +					 &q->p_pfn, 1);
-> +		if (q->p_isc != VFIO_AP_ISC_INVALID)
-> +			kvm_s390_gisc_unregister(kvm, q->p_isc);
-> +		q->p_pfn = q->a_pfn;
-> +		q->p_isc = q->a_isc;
-> +		break;
-> +	case AP_RESPONSE_OTHERWISE_CHANGED:
-> +		/* We could not modify IRQ setings: clear new configuration */
-> +		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1);
-> +		kvm_s390_gisc_unregister(kvm, q->a_isc);
-
-Hm, see below. Wouldn't you want to set a_isc to VFIO_AP_ISC_INVALID?
-
-> +		break;
-> +	default:	/* Fall Through */
-
-Is it 'break' or is it 'Fall Through'?
-
-> +		pr_warn("%s: apqn %04x: response: %02x\n", __func__, q->apqn,
-> +			status.response_code);
-> +		vfio_ap_free_irq_data(q);
-> +		break;
-> +	}
-> +
-> +	return status;
-> +}
-
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
