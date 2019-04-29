@@ -2,95 +2,100 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A82C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F191C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 106FD20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B81020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3b5Pqg12"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfD2MCo (ORCPT
+        id S1728168AbfD2MCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:02:44 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:48030 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728024AbfD2MCj (ORCPT
+        Mon, 29 Apr 2019 08:02:40 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57394 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbfD2MCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:02:39 -0400
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (Proofpoint Essentials ESMTP Server) with ESMTPS id 68B641400A8;
-        Mon, 29 Apr 2019 12:02:37 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
- (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 29 Apr
- 2019 05:02:33 -0700
-Subject: Re: [PATCH] rds: ib: force endiannes annotation
-To:     Nicholas Mc Guire <der.herr@hofr.at>
-CC:     Nicholas Mc Guire <hofrat@osadl.org>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>,
-        <linux-kernel@vger.kernel.org>
-References: <1556518178-13786-1-git-send-email-hofrat@osadl.org>
- <20443fd3-bd1e-9472-8ca3-e3014e59f249@solarflare.com>
- <20190429111836.GA17830@osadl.at>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <2ffed5fc-a372-3f90-e655-bcbc740eed33@solarflare.com>
-Date:   Mon, 29 Apr 2019 13:02:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 08:02:38 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TBxL6g196407;
+        Mon, 29 Apr 2019 12:02:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=AWC+vYweHhB5TtC3w+p9EfylxPjcOCdyfISPubqVHVE=;
+ b=3b5Pqg12ak73+L2xAMRA9o1vZcf7wnNEH6j3UooKT8txp9YelF1z6EcUJAz5ieOeKePY
+ ufTvfP+AlPqpu2gWWRkFe2EjJHv1xFArL9OxE9isX/oC5RG1qqxmWICKRRWRHFt1ABS8
+ Kt4vHJSEefdCSt+Nll7T3ut7ZQvFVEO3MevAFzYeT2I+/0jkHOVCjwx0TGjqfQRrTuYk
+ Xvi2V5EXslbFgaIKmC6GZgbnLJUaMGrIwoN/gDIYYg4/ddzky/5n4quufiMT5iThDn7V
+ 8ybwdlliH+ndx8ut4LMa4r0JdvkcisvHFg6LAkWF5BUfPt/d93funz2hiSa17H00F0rS aQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2s4fqpwte9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 12:02:30 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TC0dkY129818;
+        Mon, 29 Apr 2019 12:02:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2s4d49wdvt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 12:02:29 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3TC2S0f016842;
+        Mon, 29 Apr 2019 12:02:28 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Apr 2019 05:02:28 -0700
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     <QLogic-Storage-Upstream@cavium.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH -next] scsi: qedf: remove set but not used variables
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190423144138.20428-1-yuehaibing@huawei.com>
+Date:   Mon, 29 Apr 2019 08:02:26 -0400
+In-Reply-To: <20190423144138.20428-1-yuehaibing@huawei.com> (Yue Haibing's
+        message of "Tue, 23 Apr 2019 22:41:38 +0800")
+Message-ID: <yq1muk910kt.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190429111836.GA17830@osadl.at>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24580.005
-X-TM-AS-Result: No-14.176100-4.000000-10
-X-TMASE-MatchedRID: HXSqh3WYKfsOwH4pD14DsPHkpkyUphL9+WzVGPiSY8jkVi/vHE4dwPM+
-        9Fw01I7GRQLzGM7KIBh9cJyW2BrvG9lnkI1u79lBnprizKKMwma1d0Fs4VikB0S/boWSGMtd9P1
-        gJOQHwkv5O2/3eJ45TlT7pLySGeP0n19mXmEdfVlfLa2Qr61pJCGi0ftsSkQygrAXgr/AjP3ZSx
-        a9R97yPI6kPNsstSO0xcKxQpPhJ/bdM4TtXgVTNLlwTkBCo+04i/ymJ2FVg5SbKItl61J/yZkw8
-        KdMzN86KrauXd3MZDWXf5sC39gVVMrUvx27s9YcSJo1rqxdGLyzw2JSXY5EclrsV/jyG+zxXwji
-        hSrlWBo=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--14.176100-4.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24580.005
-X-MDID: 1556539358-e9OzWke6H3iF
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9241 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=842
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904290087
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9241 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=873 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904290088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 12:18, Nicholas Mc Guire wrote:
-> On Mon, Apr 29, 2019 at 12:00:06PM +0100, Edward Cree wrote:
->> Again, a __force cast doesn't seem necessary here.  It looks like the
->>  code is just using the wrong types; if all of src, dst and uncongested
->>  were __le64 instead of uint64_t, and the last two lines replaced with
->>  rds_cong_map_updated(map, le64_to_cpu(uncongested)); then the semantics
->>  would be kept with neither sparse errors nor __force.
->>
->> __force is almost never necessary and mostly just masks other bugs or
->>  endianness confusion in the surrounding code.  Instead of adding a
->>  __force, either fix the code to be sparse-clean or leave the sparse
->>  warning in place so that future developers know there's something not
->>  right.
->>
-> changing uncongested to __le64 is not an option here - it would only move
-> the sparse warnings to those other locatoins where the ports that 
-> became uncongested are being or'ed into uncongested.
-That's why I say to change *src and *dst too.  Sparse won't mind the
- conversion from void * to __le64 * when they're assigned, and the only
- operations we do on them...
->                         uncongested |= ~(*src) & *dst;
->                         *dst++ = *src++;
-... are some bitwise ops on the values (bitwise ops are legal in any
- endianness) and incrementation of the pointers (which cares only about
- the pointee size, not type).
 
--Ed
+Yue,
+
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> Fixes gcc '-Wunused-but-set-variable' warnings:
+>
+> drivers/scsi/qedf/qedf_els.c: In function 'qedf_process_els_compl':
+> drivers/scsi/qedf/qedf_els.c:149:20: warning: variable 'sc_cmd' set but not used [-Wunused-but-set-variable]
+> drivers/scsi/qedf/qedf_els.c:148:28: warning: variable 'task_ctx' set but not used [-Wunused-but-set-variable]
+> drivers/scsi/qedf/qedf_els.c: In function 'qedf_send_srr':
+> drivers/scsi/qedf/qedf_els.c:612:6: warning: variable 'sid' set but not used [-Wunused-but-set-variable]
+
+Applied to 5.2/scsi-queue, thanks.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
