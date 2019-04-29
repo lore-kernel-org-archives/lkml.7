@@ -2,89 +2,93 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DE2C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4178C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C60E2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9232147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556541868;
+	bh=Ggyhg8DPvggSyL5RERc8iJGOFwasiEkW75GgxgRJbZA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mO9bpemoTRKEqb7nXthAtHQLknt+f0Tt3I30ZY+0yYwDqcaucMMQf8R63GTHitwfb
+	 dhdPDiXuQqsEZE3DUztFqd94aKTPPmgYzVVmCViMtWc/GYQcRXP/OPb3vw514X+61C
+	 1wVZVwWMsACaJKWgqf8DUHXM9Mi5Ir4SWjsfTjQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbfD2Mnh (ORCPT
+        id S1728194AbfD2Mo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:43:37 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36125 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbfD2Mng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:43:36 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c35so11674690qtk.3;
-        Mon, 29 Apr 2019 05:43:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SqNvNUMJEdexVr3hF+SW8m4hwxFpjhomBgbdEJazb7w=;
-        b=BvZGNr4O7y84o/2ymulQEFnat16DDwybdWGkXfSF1TQYh+AbVJpsl94S3WH3YmwIWt
-         nZFtAXHZ1mCCYv2flh37L8WCW35RTcvCsBaljA/nl52Pc9qXPJjj1ovvLox/NmBcp8oX
-         Klu3UxOpv4C4amRHRCHQKNVxNOUxq90XItKdAywso7rf829v5cIiI2/LMoDn6TpLK4ha
-         CJpE6r9lRTQ6xFQL+sfreE/BmYM2j1GMzIAz+4XLdM0zH0mXDGONMTMT9UmdSZnhMU0m
-         O4gA34ESDCBQa6HkD+piOQTjnWpm6gsE/MZ6yGb5OUlgOp1r5qIv/XF60NQQiisjdosp
-         BMrw==
-X-Gm-Message-State: APjAAAUsXfyYdyWwsy91jSUw5HdZtUkTc5VZAm8TyIe5Ih00Z5MhuQvD
-        YbOTctobe8hZYCedRgXdoV5icK7qHfDPsI1o/Jc=
-X-Google-Smtp-Source: APXvYqxN+jezyo2Yt09ge37OQJJuo/uOJcb8r6doEQ7wqS9DeRlWthXGnE4ncJ5t7cuNHdEH8H49xZyEeaQ6MnvohQM=
-X-Received: by 2002:ac8:29cf:: with SMTP id 15mr8626476qtt.319.1556541815414;
- Mon, 29 Apr 2019 05:43:35 -0700 (PDT)
+        Mon, 29 Apr 2019 08:44:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbfD2Mo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:44:27 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6860E21530;
+        Mon, 29 Apr 2019 12:44:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556541866;
+        bh=Ggyhg8DPvggSyL5RERc8iJGOFwasiEkW75GgxgRJbZA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zqdosaHHAAmr3mNLOGR3uVYumPkTSKqrRwSlxHGLG67URDPSBRiDfSNz6gPYX4/pv
+         Xzsq+C3fji5XfZp4lmD2nC2hSyOuQqPBDT7btnEptcEmYl6dt9r9UHtjYw/dANYJ3n
+         09kTdrRLbSyMHWQlDfgnqN6S26TcD3PuYlYMm858=
+Received: by mail-qt1-f178.google.com with SMTP id c35so11677638qtk.3;
+        Mon, 29 Apr 2019 05:44:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAXMTaNNA/q1UCy4j7Z8/1r51u46Znppt8X52dFL1JMAOhpyBh9N
+        7lW33geW9196vV/cHNjQg12dnn3StUqdH0IdXg==
+X-Google-Smtp-Source: APXvYqxiZhiB+jclpAyFocRSvqDl188dZe7YfLRzsfFn+DSKE81H4/Y7PEgye9SmTH9A+ZttmCPhfs4XwVPEsL/HCpc=
+X-Received: by 2002:a0c:9384:: with SMTP id f4mr5385619qvf.77.1556541865622;
+ Mon, 29 Apr 2019 05:44:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190416202013.4034148-1-arnd@arndb.de> <20190416202839.248216-1-arnd@arndb.de>
- <s5hk1fthx9u.wl-tiwai@suse.de> <s5hv9yxjnp4.wl-tiwai@suse.de>
-In-Reply-To: <s5hv9yxjnp4.wl-tiwai@suse.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Apr 2019 14:43:18 +0200
-Message-ID: <CAK8P3a1CbQsyTBykXkZv-35M_zQx97aOubtZD2YuzyPV94+4=w@mail.gmail.com>
-Subject: Re: [PATCH v3 20/26] compat_ioctl: remove translation for sound ioctls
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-um@lists.infradead.org,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190427182359.27254-1-masneyb@onstation.org>
+In-Reply-To: <20190427182359.27254-1-masneyb@onstation.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 29 Apr 2019 07:44:14 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+Wzc8W11E0XYg5bKfGoYNxFu0U0-Rdk5PqXZf40W21ZA@mail.gmail.com>
+Message-ID: <CAL_Jsq+Wzc8W11E0XYg5bKfGoYNxFu0U0-Rdk5PqXZf40W21ZA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: iio: isl29018: convert bindings to YAML format
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>,
+        Rhyland Klein <rklein@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 9:05 AM Takashi Iwai <tiwai@suse.de> wrote:
+On Sat, Apr 27, 2019 at 1:25 PM Brian Masney <masneyb@onstation.org> wrote:
 >
-> On Wed, 17 Apr 2019 10:05:33 +0200, Takashi Iwai wrote:
-> >
-> > On Tue, 16 Apr 2019 22:28:05 +0200, Arnd Bergmann wrote:
-> > > The compat_ioctl list contains one comment about SNDCTL_DSP_MAPINBUF and
-> > > SNDCTL_DSP_MAPOUTBUF, which actually would need a translation handler
-> > > if implemented. However, the native implementation just returns -EINVAL,
-> > > so we don't care.
-> > >
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > This looks like a really nice cleanup.  Thanks!
-> >
-> > Reviewed-by: Takashi Iwai <tiwai@suse.de>
+> Convert the isl29018 device tree bindings to the new YAML format.
 >
-> Is this supposed to be taken via sound git tree, or would you apply
-> over yours?  I'm fine in either way.
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> I'm willing to be listed as the maintainer since this is one of the
+> drivers that I moved out out of staging unless one of the original
+> authors wants to be listed instead.
+>
+> I added the BSD-2-Clause to the new binding document. I wrote the
+> original document and the only commit since then was from Rob in
+> commit 791d3ef2e111 ("dt-bindings: remove 'interrupt-parent' from
+> bindings")
+>
+>  .../bindings/iio/light/isl29018.txt           | 27 ---------
+>  .../bindings/iio/light/isl29018.yaml          | 56 +++++++++++++++++++
+>  2 files changed, 56 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.yaml
 
-I was hoping that Al could pick up the entire series to avoid the merge
-conflicts, but then we had some more discussion about the earlier
-patches in the series and he did another version of those.
-
-Al, what is your current plan for the compat-ioctl removal series?
-Are you working on a combined series, or should I resend a
-subset of my patches to you?
-
-       Arnd
+Reviewed-by: Rob Herring <robh@kernel.org>
