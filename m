@@ -2,126 +2,232 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4673BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C98C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C37B2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7172075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vu6lQgcG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m/c9HKKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfD2UAU (ORCPT
+        id S1729324AbfD2UBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:00:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38337 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2UAT (ORCPT
+        Mon, 29 Apr 2019 16:01:11 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33624 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2UBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:00:19 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f36so5585994plb.5;
-        Mon, 29 Apr 2019 13:00:19 -0700 (PDT)
+        Mon, 29 Apr 2019 16:01:10 -0400
+Received: by mail-ot1-f68.google.com with SMTP id s11so5499077otp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2VW37A7CK8zNP+puxGj5PzGbX48/U7vlPhB5EcPFYbg=;
-        b=Vu6lQgcGV7NLvAdTLwPERdPkA1ElUQP6TOeZe9BkQiHmR+OtBqZ9IrXmFicNORmsZ7
-         UTyVfwcRnf9QBAeDUBFeJ9oSPwY3lbvQtZutaAzNOBl31e2RG2xEgzvRMaP5ynPKq83e
-         Nh/wWwlzi6Uz+vJ4Ip7OtACVOlhDpra0HCqcGDkdapNlu9J4zIAm9tSjzZ46hlAy8Ho6
-         jdBpk/6Q/N/6s7OeamdgkKDUbd6mdH+fwGEPfSTj172FQaabJebZnQ3ofufokK69yALK
-         4aL4fAx7Uw8UCjkZh+97hoPEfLjXs1EFUXk8YzrGvVuzR5Im4Hf/pOCCac7QfEilX6/h
-         ffjw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HMgcRk8g93CjrXbXJuvBDYtODDacIPx5LhgZDNjChP0=;
+        b=m/c9HKKlv2x9utzy9xHZDzLz/Bt2j/r6MVfcvuF490BAV4J7oX5QWdgghDE182jbSf
+         MdxK3IqRbNVu0vagDg5qIKniVsNq6r/ir5Aem+nKCMydbC2gx8mHJ/yaTzDLXIi6+q4C
+         Aek2HZI7aEDzhKVT2Iiz2s0qEO2yI9NiE6QMajFlWlIMxe2MMuYla+qmMipOhqMAAeJ7
+         UFSPVjQfCRIoGTr7pTh2pNZ26nCrXwgyz6Krbd4HJG/n89z+SdZXljIfRzU+SWgWsd6G
+         CnWHtDcRdMwxNWbjQfqM8uIf3FCcIq9GlY/cLFNHrL3f55oAqsq7ddWFrgXt9xhod0Im
+         NGSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2VW37A7CK8zNP+puxGj5PzGbX48/U7vlPhB5EcPFYbg=;
-        b=rKrGZLJ5xuVyDlTU0wIo1RC11GTOx8B45BwkZEnduEMpTlIYnS/OOv5F+ThppBRhSo
-         zyLo/Bcs1LxTnZTH8+HZpA513xXJEUlHafkzxKPyNB9nAx7WTiBz5ugK/DUtl6uJoYL6
-         ZkOfug3WqQ1lXTftzZV8EOrO9cSj42qyMhxgZCWa/E0+aSHCdfEfLhIoFL/vdBk9JThw
-         t8FZH6Rs21zOAnK7RI81UDM0jdzNDVanSz8sHgUQ/O8jj0L2rbcs7aMEhSFaETruZqM6
-         yc22MdULCxrdvvfnSTGgUK5QNQHBWjBZtwZXWW18DVNMZ4O8zZZGT9Ep1Vibx51qCzCh
-         6d+g==
-X-Gm-Message-State: APjAAAV8EntPk/V8mAbshponEqudD49l1Cd9sXQKiwc1xl+G1mD6lH1a
-        EguXYONQMOruOzi26x1WAJ3Y0VCP1z0=
-X-Google-Smtp-Source: APXvYqxX1NtYOvBAqjA+CmqfXlrWdx0r1XIT8njws5CvJ/z/aBa2pmMzVStRmggOt/c0x/W2syQajw==
-X-Received: by 2002:a17:902:8c89:: with SMTP id t9mr65874264plo.265.1556567637977;
-        Mon, 29 Apr 2019 12:53:57 -0700 (PDT)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id l2sm39841783pgl.2.2019.04.29.12.53.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 12:53:57 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/3] power: supply: core: Add POWER_SUPPLY_HEALTH_OVERCURRENT constant
-Date:   Mon, 29 Apr 2019 12:53:47 -0700
-Message-Id: <20190429195349.20335-2-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190429195349.20335-1-andrew.smirnov@gmail.com>
-References: <20190429195349.20335-1-andrew.smirnov@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HMgcRk8g93CjrXbXJuvBDYtODDacIPx5LhgZDNjChP0=;
+        b=dcT8Z/d63keelaSU6gB9g9Yw67SFPkntAS5q4yEihRVqqgCcwfQ3EcpBglYg/BGLs/
+         0RftWvhKtJdqDcYpXwCvmFnCj88d1qnySgD6/uHuIrJfELOEiLK8px3UXSmPQp1vw0dm
+         QJwJ3alHgjf04j6nuOmwwW8QGyEBIrMyDtirbI4MsTe0ALxCSF8smci9dGuoWdR3N51F
+         D1xjs2/7Q2FxyAnD3s0zTqhF9nepbbr/yDRUaBkYjCsO1F8uwyCEEsfZu1tqaThTW0i5
+         IFRS7D9x6hqCbH+Pbmndn1jKQhtX6el6NB9NEzxPjtlbJy1cTGQ0Y2VxTrhNf5QKAEMz
+         mY/Q==
+X-Gm-Message-State: APjAAAVS1NgBVkokbF5vFQzr2tOk+eAc77uIqu1v8H4B9Vp6wiSt11+G
+        6BoUFP1ZI8Ods3dnHMNHQKE6Qs4BQS7B2oFCr3pifw==
+X-Google-Smtp-Source: APXvYqwPSg1T0Xhy/ABHJtmyxddhfD0qhfJzLxE3mixUWHhO9Wssz1Ka1zPO5bi/zaNqPzGEIx4RoBtqOKwxUuFaaRY=
+X-Received: by 2002:a9d:6152:: with SMTP id c18mr2261461otk.230.1556567738730;
+ Mon, 29 Apr 2019 12:55:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+ <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
+ <20190420071406.GA22257@ip-172-31-15-78> <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
+In-Reply-To: <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 29 Apr 2019 15:55:11 -0400
+Message-ID: <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
+To:     Kevin Easton <kevin@guarana.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add POWER_SUPPLY_HEALTH_OVERCURRENT constant in order to allow
-singalling overcurrent condition via power supply health information.
+On Mon, Apr 29, 2019 at 3:30 PM Jann Horn <jannh@google.com> wrote:
+> On Sat, Apr 20, 2019 at 3:14 AM Kevin Easton <kevin@guarana.org> wrote:
+> > On Mon, Apr 15, 2019 at 01:29:23PM -0700, Andy Lutomirski wrote:
+> > > On Mon, Apr 15, 2019 at 12:59 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > > >
+> > > > On 2019-04-15, Enrico Weigelt, metux IT consult <lkml@metux.net> wrote:
+> > > > > > This patchset makes it possible to retrieve pid file descriptors at
+> > > > > > process creation time by introducing the new flag CLONE_PIDFD to the
+> > > > > > clone() system call as previously discussed.
+> > > > >
+> > > > > Sorry, for highjacking this thread, but I'm curious on what things to
+> > > > > consider when introducing new CLONE_* flags.
+> > > > >
+> > > > > The reason I'm asking is:
+> > > > >
+> > > > > I'm working on implementing plan9-like fs namespaces, where unprivileged
+> > > > > processes can change their own namespace at will. For that, certain
+> > > > > traditional unix'ish things have to be disabled, most notably suid.
+> > > > > As forbidding suid can be helpful in other scenarios, too, I thought
+> > > > > about making this its own feature. Doing that switch on clone() seems
+> > > > > a nice place for that, IMHO.
+> > > >
+> > > > Just spit-balling -- is no_new_privs not sufficient for this usecase?
+> > > > Not granting privileges such as setuid during execve(2) is the main
+> > > > point of that flag.
+> > > >
+> > >
+> > > I would personally *love* it if distros started setting no_new_privs
+> > > for basically all processes.  And pidfd actually gets us part of the
+> > > way toward a straightforward way to make sudo and su still work in a
+> > > no_new_privs world: su could call into a daemon that would spawn the
+> > > privileged task, and su would get a (read-only!) pidfd back and then
+> > > wait for the fd and exit.  I suppose that, done naively, this might
+> > > cause some odd effects with respect to tty handling, but I bet it's
+> > > solveable.  I suppose it would be nifty if there were a way for a
+> > > process, by mutual agreement, to reparent itself to an unrelated
+> > > process.
+> > >
+> > > Anyway, clone(2) is an enormous mess.  Surely the right solution here
+> > > is to have a whole new process creation API that takes a big,
+> > > extensible struct as an argument, and supports *at least* the full
+> > > abilities of posix_spawn() and ideally covers all the use cases for
+> > > fork() + do stuff + exec().  It would be nifty if this API also had a
+> > > way to say "add no_new_privs and therefore enable extra functionality
+> > > that doesn't work without no_new_privs".  This functionality would
+> > > include things like returning a future extra-privileged pidfd that
+> > > gives ptrace-like access.
+> > >
+> > > As basic examples, the improved process creation API should take a
+> > > list of dup2() operations to perform, fds to remove the O_CLOEXEC flag
+> > > from, fds to close (or, maybe even better, a list of fds to *not*
+> > > close), a list of rlimit changes to make, a list of signal changes to
+> > > make, the ability to set sid, pgrp, uid, gid (as in
+> > > setresuid/setresgid), the ability to do capset() operations, etc.  The
+> > > posix_spawn() API, for all that it's rather complicated, covers a
+> > > bunch of the basics pretty well.
+> >
+> > The idea of a system call that takes an infinitely-extendable laundry
+> > list of operations to perform in kernel space seems quite inelegant, if
+> > only for the error-reporting reason.
+> >
+> > Instead, I suggest that what you'd want is a way to create a new
+> > embryonic process that has no address space and isn't yet schedulable.
+> > You then just need other-process-directed variants of all the normal
+> > setup functions - so pr_openat(pidfd, dirfd, pathname, flags, mode),
+> > pr_sigaction(pidfd, signum, act, oldact), pr_dup2(pidfd, oldfd, newfd)
+> > etc.
+> >
+> > Then when it's all set up you pr_execve() to kick it off.
+>
+> Is this really necessary? I agree that fork()+exec() is suboptimal,
+> but if you just want to avoid the cost of duplicating the address
+> space, you can AFAICS already do that in userspace with
+> clone(CLONE_VM|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID|SIGCHLD). Then
+> the parent can block on a futex until the child leaves the mm_struct
+> through execve() (or by exiting, in the case of an error), and the
+> child can temporarily have its stack at the bottom of the caller's
+> stack. You could build an API like this around it in userspace:
+>
+> int clone_temporary(int (*fn)(void *arg), void *arg, pid_t *child_pid,
+> <clone flags and arguments, maybe in a struct>)
+>
+> and then you'd use it like this to fork off a child process:
+>
+> int spawn_shell_subprocess_(void *arg) {
+>   char *cmdline = arg;
+>   execl("/bin/sh", "sh", "-c", cmdline);
+>   return -1;
+> }
+> pid_t spawn_shell_subprocess(char *cmdline) {
+>   pid_t child_pid;
+>   int res = clone_temporary(spawn_shell_subprocess_, cmdline,
+> &child_pid, [...]);
+>   if (res == 0) return child_pid;
+>   return res;
+> }
+>
+> clone_temporary() could be implemented roughly as follows by the libc
+> (or other userspace code):
+>
+> sigset_t sigset, sigset_old;
+> sigfillset(&sigset);
+> sigprocmask(SIG_SETMASK, &sigset, &sigset_old);
+> int child_pid;
+> int result = 0;
+> /* starting here, use inline assembly to ensure that no stack
+> allocations occur */
+> long child = syscall(__NR_clone,
+> CLONE_VM|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID|SIGCHLD, $RSP -
+> ABI_STACK_REDZONE_SIZE, NULL, &child_pid, 0);
+> if (child == -1) { result = -1; goto reset_sigmask; }
+> if (child == 0) {
+>   result = fn(arg);
+>   syscall(__NR_exit, 0);
+> }
+> futex(&child_pid, FUTEX_WAIT, child, NULL);
+> /* end of no-stack-allocations zone */
+> reset_sigmask:
+> sigprocmask(SIG_SETMASK, &sigset_old, NULL);
+> return result;
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
----
- drivers/power/supply/power_supply_sysfs.c | 2 +-
- include/linux/power_supply.h              | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+... I guess that already has a name, and it's called vfork(). (Well,
+except that the Linux vfork() isn't a real vfork().)
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index 5358a80d854f..153f4a6ca57c 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -62,7 +62,7 @@ static const char * const power_supply_charge_type_text[] = {
- static const char * const power_supply_health_text[] = {
- 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
- 	"Unspecified failure", "Cold", "Watchdog timer expire",
--	"Safety timer expire"
-+	"Safety timer expire", "Over current"
- };
- 
- static const char * const power_supply_technology_text[] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 2f9c201a54d1..bdab14c7ca4d 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -57,6 +57,7 @@ enum {
- 	POWER_SUPPLY_HEALTH_COLD,
- 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
-+	POWER_SUPPLY_HEALTH_OVERCURRENT,
- };
- 
- enum {
--- 
-2.20.1
+So I guess my question is: Why not vfork()?
 
+And if vfork() alone isn't flexible enough, alternatively: How about
+an API that forks a new child in the same address space, and then
+allows the parent to invoke arbitrary syscalls in the context of the
+child? You could also build that in userspace if you wanted, I think -
+just let the child run an assembly loop that reads registers from a
+unix seqpacket socket, invokes the syscall instruction, and writes the
+value of the result register back into the seqpacket socket. As long
+as you use CLONE_VM, you don't have to worry about moving the pointer
+targets of syscalls. The user-visible API could look like this:
+
+// flags added by the implementation: CLONE_VM|CLONE_CHILD_SETTID
+puppet_handle = fork_puppet(CLONE_NEWUSER|SIGCHLD);
+int uid_map_fd = puppet_syscall(SYS_open, "/proc/self/uid_map");
+char uid_map_buf[1000];
+puppet_syscall(SYS_write, uid_map_fd, uid_map_buf, strlen(uid_map_buf));
+puppet_syscall(SYS_close, uid_map_fd);
+// waits for the child to either exit or switch to new mm via
+CLONE_CHILD_CLEARTID
+puppet_finish_execve(path, argv, envv);
