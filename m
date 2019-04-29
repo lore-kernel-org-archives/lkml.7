@@ -2,108 +2,78 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72ACC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91B0C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0592147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1522087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k6XXwcfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbfD2Lws (ORCPT
+        id S1728082AbfD2LxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:52:48 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:64466 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbfD2Lwr (ORCPT
+        Mon, 29 Apr 2019 07:53:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47756 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbfD2LxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:52:47 -0400
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x3TBqP0x072228;
-        Mon, 29 Apr 2019 20:52:25 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp);
- Mon, 29 Apr 2019 20:52:25 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp)
-Received: from ccsecurity.localdomain (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x3TBqLev072079
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 29 Apr 2019 20:52:25 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCH] kernel/hung_task.c: Replace trigger_all_cpu_backtrace() with task traversal.
-Date:   Mon, 29 Apr 2019 20:52:07 +0900
-Message-Id: <1556538727-11876-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 29 Apr 2019 07:53:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IENXPLnoXusqcRveMX69IYLx+6Bv7CG1f5ec/sjff1M=; b=k6XXwcfvJKs14QwpAHSnhoBW1
+        aGO/aRuD5TOGfyMDr8h4Gz3KEDQSvMqK5Ou5K7tbhNbbm3Fu8Gw8ReZKCvFO+T5GkW6pxcc8Xsvzq
+        oJDgGrUwFKgqhnnvQnYtZ6XYZWqLPriWNF2duXpV9kKGaTMIBgL4DGcT4g7ubCt3/36Mu9ARTJD3u
+        5TVaTYYoY2PYA/6sOnpqcX0hrs9x4dfGDO+HjAy96Qh24Oz5EDZ5P8F+qKoQtRM9TFqPzkhAMmA3Y
+        YVbE90qYMrBuE+IZGRIuO2J0scJaDnpWY7e52ma0NV7iSUpghZp906mXESIg118fB+0t6CMv4hwY4
+        pgnNHxB2g==;
+Received: from 65-114-90-19.dia.static.qwest.net ([65.114.90.19] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hL4qS-0008Fg-NM; Mon, 29 Apr 2019 11:53:16 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     mpe@ellerman.id.au
+Cc:     aneesh.kumar@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: remove the __kernel_io_end export
+Date:   Mon, 29 Apr 2019 06:52:41 -0500
+Message-Id: <20190429115241.12621-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since trigger_all_cpu_backtrace() uses NMI interface, printk() from other
-CPUs are called from interrupt context. Therefore, CONFIG_PRINTK_CALLER=y
-needlessly separates printk() from khungtaskd kernel thread running on
-current CPU and printk() from other threads running on other CPUs.
+This export was added in this merge window, but without any actual
+user, or justification for a modular user.
 
-Also, it is completely a garbage that trigger_all_cpu_backtrace() reports
-khungtaskd kernel thread running on current CPU, for the purpose of
-calling trigger_all_cpu_backtrace() from khungtaskd is to report running
-threads which might have caused other threads being blocked for so long.
-
-Therefore, report threads (except khungtaskd kernel thread itself) which
-are on the scheduler using task traversal approach. This allows syzbot to
-include backtrace of running threads into its report files.
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Fixes: a35a3c6f6065 ("powerpc/mm/hash64: Add a variable to track the end of IO mapping")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- kernel/hung_task.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/pgtable_64.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index f108a95..2fddd98 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -164,6 +164,23 @@ static bool rcu_lock_break(struct task_struct *g, struct task_struct *t)
- 	return can_cont;
- }
- 
-+static void print_all_running_threads(void)
-+{
-+#ifdef CONFIG_SMP
-+	struct task_struct *g;
-+	struct task_struct *t;
-+
-+	rcu_read_lock();
-+	for_each_process_thread(g, t) {
-+		if (!t->on_cpu || t == current)
-+			continue;
-+		pr_err("INFO: Currently running\n");
-+		sched_show_task(t);
-+	}
-+	rcu_read_unlock();
-+#endif
-+}
-+
- /*
-  * Check whether a TASK_UNINTERRUPTIBLE does not get woken up for
-  * a really long time (120 seconds). If that happens, print out
-@@ -201,7 +218,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
- 	if (hung_task_show_lock)
- 		debug_show_all_locks();
- 	if (hung_task_call_panic) {
--		trigger_all_cpu_backtrace();
-+		print_all_running_threads();
- 		panic("hung_task: blocked tasks");
- 	}
- }
+diff --git a/arch/powerpc/mm/pgtable_64.c b/arch/powerpc/mm/pgtable_64.c
+index 72f58c076e26..1fddc81cc682 100644
+--- a/arch/powerpc/mm/pgtable_64.c
++++ b/arch/powerpc/mm/pgtable_64.c
+@@ -96,7 +96,6 @@ unsigned long __vmalloc_end;
+ EXPORT_SYMBOL(__vmalloc_end);
+ unsigned long __kernel_io_start;
+ EXPORT_SYMBOL(__kernel_io_start);
+-unsigned long __kernel_io_end;
+ EXPORT_SYMBOL(__kernel_io_end);
+ struct page *vmemmap;
+ EXPORT_SYMBOL(vmemmap);
 -- 
-1.8.3.1
+2.20.1
 
