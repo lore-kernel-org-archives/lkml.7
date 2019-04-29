@@ -2,96 +2,122 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3E3C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7790C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E502C20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D8E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:10:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ve8XuKyG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfD2TI6 (ORCPT
+        id S1729164AbfD2TKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:08:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16938 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbfD2TI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:08:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 12:08:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,410,1549958400"; 
-   d="scan'208";a="139872081"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga006.jf.intel.com with ESMTP; 29 Apr 2019 12:08:57 -0700
-Date:   Mon, 29 Apr 2019 12:08:57 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jethro Beekman <jethro@fortanix.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
-        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
-        "haitao.huang@intel.com" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kai.svahn@intel.com" <kai.svahn@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "kai.huang@intel.com" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>
-Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
-Message-ID: <20190429190857.GD31379@linux.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
- <20190422215831.GL1236@linux.intel.com>
- <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com>
- <20190424002653.GB14422@linux.intel.com>
- <77cface6-dcc4-7e26-9910-ea9d13152531@fortanix.com>
+        Mon, 29 Apr 2019 15:10:40 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37780 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729054AbfD2TKk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 15:10:40 -0400
+Received: by mail-it1-f196.google.com with SMTP id r85so818268itc.2;
+        Mon, 29 Apr 2019 12:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KkDvipA08mC8IxvH8qSF4bz6Gcm5+BjwC5oiwie6/+k=;
+        b=Ve8XuKyGlDC7d2Jvv5JaFeEFVAN2jn4Wg3QY/h79fYFFc1Gn6E1SWgOE0LXGs3cKFE
+         6uJSMSnHFL3OsVIykxCMPR0dttZ74X/ELKhgOBL/ILoONnzQ5ThckDLH1amLcUVNx3d6
+         W/GUBBAdD1ZPt3D110gl+7UoYrQEFRHsuAOLEsF1Rf6WgvZ7q0UqANogslubKvkn9tbF
+         9WbTvIoSc5HK9pb826UynoX6IbBoyw0t5qU8973CIGOQalIHLmjjCufU5CwqO/ovGSmV
+         FjgjjcPs9sqpnYkXcILGgODVrWI8Aef3xVhVoTbkJY1uRom7QOEMy/Pnn+J/nw8hHS0V
+         P/Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KkDvipA08mC8IxvH8qSF4bz6Gcm5+BjwC5oiwie6/+k=;
+        b=RI4LI1MzZQtp2BVEm0mp0MN9NN/FUWuyBl736HfLvXHbvqEOFJn7CM+sJfLZLThHZ6
+         nSIDKGfmN9Rb7+VrkihIJQAkYiNBnkXmG52a8MimgIhEPwuyOlxu5Mo8wX1tIlCd+PbF
+         6g7kSESYpSsrpwWKA8+TeoDs0GXocJ4wCVuZasaMUQqOpH/YIdZ8BP5wpMA40pio3t1D
+         eQsKRgw6XrKKpeUe3XI5+20B0uBwsH4JyzVigPoDpcHKeBvlZstBUM0XvkPV4LshEXWE
+         w2TPODtMChCRYoGkS+YdbCnEYf9oA5W2r/AZ6IxsAnAh9ZcqcsHeuF3PHhf2Ju6nbPCN
+         BM4g==
+X-Gm-Message-State: APjAAAVsBwIG9aeQ+XQbW8RdO03s8L13w8iACZk6TGt2WCeyj0lwZAH2
+        8my/gW0CKqkaNsq/wD2XiVqiK8zGRwROvCmzDZM=
+X-Google-Smtp-Source: APXvYqxjcgCsVThGvzbspmleSENSy0vAB6gHVpHLHIM/eJvNC75iwpTXhF3s96hudw8y9HP19dvMhBdh2kK5aKvCYO4=
+X-Received: by 2002:a02:62ce:: with SMTP id d197mr43109134jac.91.1556565038867;
+ Mon, 29 Apr 2019 12:10:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77cface6-dcc4-7e26-9910-ea9d13152531@fortanix.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190429054741.7286-1-andrew.smirnov@gmail.com>
+ <20190429054741.7286-3-andrew.smirnov@gmail.com> <1556533656.2560.7.camel@pengutronix.de>
+In-Reply-To: <1556533656.2560.7.camel@pengutronix.de>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Mon, 29 Apr 2019 12:10:27 -0700
+Message-ID: <CAHQ1cqECkn3242zVb55ifmgEHdq0se91=PpS1zDL4wj2WdZmbw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] power: supply: Add driver for Microchip UCS1002
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 01:04:21AM +0000, Jethro Beekman wrote:
-> On 2019-04-23 17:26, Sean Christopherson wrote:
-> >On Tue, Apr 23, 2019 at 11:29:24PM +0000, Jethro Beekman wrote:
-> >>On 2019-04-22 14:58, Sean Christopherson wrote:
-> >>>Now that the core SGX code is approaching stability, I'd like to start
-> >>>sending RFCs for the EPC virtualization and KVM bits to hash out that side
-> >>>of things.  The ACPI crud is the last chunk of code that would require
-> >>>non-trivial changes to the core SGX code for the proposed virtualization
-> >>>implementation.  I'd strongly prefer to get it out of the way before
-> >>>sending the KVM RFCs.
-> >>
-> >>What kind of changes? Wouldn't KVM just be another consumer of the same API
-> >>used by the driver?
+On Mon, Apr 29, 2019 at 3:27 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> Hi Andrey,
+>
+> Am Sonntag, den 28.04.2019, 22:47 -0700 schrieb Andrey Smirnov:
+> > Add driver for Microchip UCS1002 Programmable USB Port Power
+> > Controller with Charger Emulation. The driver exposed a power supply
+> > device to control/monitor various parameter of the device as well as a
+> > regulator to allow controlling VBUS line.
 > >
-> >Nope, userspace "only" needs to be able to mmap() arbitrary chunks of EPC.
-> 
-> I don't think this is sufficient. Don't you need enclave tracking in order
-> to support paging?
+> > > Signed-off-by: Enric Balletbo Serra <enric.balletbo@collabora.com>
+> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > Cc: Chris Healy <cphealy@gmail.com>
+> > > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > Cc: Guenter Roeck <linux@roeck-us.net>
+> > > Cc: Sebastian Reichel <sre@kernel.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > ---
+> [...]
+> > +     /* Enable charge rationing by default */
+> > > +   ret = regmap_update_bits(info->regmap, UCS1002_REG_GENERAL_CFG,
+> > > +                            F_RATION_EN, F_RATION_EN);
+> > > +   if (ret) {
+> > > +           dev_err(dev, "Failed to read general config: %d\n", ret);
+> > > +           return ret;
+> > > +   }
+> > +
+> > > +   /*
+> > > +    * Ignore the M1, M2, PWR_EN, and EM_EN pin states. Set active
+> > > +    * mode selection to BC1.2 CDP.
+> > > +    */
+> > > +   ret = regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
+> > > +                            V_SET_ACTIVE_MODE_MASK,
+> > +                              V_SET_ACTIVE_MODE_BC12_CDP);
+>
+> This doesn't work as the F_PIN_IGNORE bit isn't set, so the the
+> external strap settings are applied. I had to apply the following diff
+> to make the driver behave as expected again:
+>
 
-The plan is to not support graceful EPC reclaim in the host on platforms
-without VMM oversubscription extensions, e.g. ENCLV, ERDINFO, etc..., due
-to the complexity and performance overhead.  Mostly the complexity.
+Ugh, I missed this since pins on my board are set properly. Thanks for
+catching that and sorry about the bug. Will fix in v3.
 
-And if reclaim were to be supported without the extensions, it would be
-done without exiting to userspace on every ENCLS instruction.
+Thanks,
+Andrey Smirnov
