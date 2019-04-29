@@ -2,101 +2,177 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6872FC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40ABC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321032075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949712075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="niwBPwvE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Yvz5MKIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfD2HhZ (ORCPT
+        id S1727463AbfD2Hkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:37:25 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42375 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfD2HhZ (ORCPT
+        Mon, 29 Apr 2019 03:40:53 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38838 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfD2Hkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:37:25 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x15so4664731pln.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:37:25 -0700 (PDT)
+        Mon, 29 Apr 2019 03:40:53 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w11so1519762edl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:40:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JVE5mmezCRxz6WW+z9H8b28By3jF0TFZuCkFOKjspBU=;
-        b=niwBPwvEkClbDRK9YJuSfR/YAnw/h5dMpYBXnWsjBRo9UdkYLnka/aYR5Q7xahnsIb
-         as+f30ARN/KtCMGevNIB0IFhdEVlRioN0ls7/DgVufSsEhcD3pPvCOkX+kR7wurJgDQ0
-         AfpgLTNON+AQhxtN2jqk62c+TBCuNXyFrjduyVWOcpFE9NWYjqpJ0QLhiOGOFgry51RF
-         xKXS/VhlJkxeMb+81VBqOogBaQZjisJZMKVJ2CTFOY464h+3H9sNR06XsK3URQxdDtgB
-         CzRm8dgt5mRLInnpfk2i29EgagbmkXCDUfrlSQFnhEhyouzfrwunzNGSvkchDUFV406W
-         kdGw==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cR/Ec4vlE+X0Q9Ok0IFawlzdAj+EmfR3ChCRLcZ/ulo=;
+        b=Yvz5MKIw4ZC5qQmsVZshla4AGaxfZIkBuWlgR8PFsij1idit2Hg9pf2BY9X4YfNeP3
+         0q/OaZHtVMvHVNJgHFZHNFVsd0ifJTRDRyvokNYW0ozxAb1Va4b1IMM0D/HUCYlZsuXw
+         R7XvyxOE825SE4PFlQvLU61RelsDsB9+qbxZg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JVE5mmezCRxz6WW+z9H8b28By3jF0TFZuCkFOKjspBU=;
-        b=VXKqiavqtnb/YCuFNs2pXlwKksT4JGBeRWMWGKh7a0t9AIa/uGwS1BwGO+S29kxT5a
-         GyYMu4d8Lp8mTHY6WZdth9eaAJ9JgypQQ2fBnPal0ALvHI5j5tlQnM88Qc9wnb/SsNPx
-         i2f30crvceYXQyR/D7nxTOd9f153McvcXzRh6YuV09hlStfOk3+UXBZmMvXsT3LaczS7
-         OqwgSZ0DnzwwXWpa8LQMb6ao+Hs/P7CRXx9Pf+V9tBOo3g3G69uSxYckSwavHvdO9763
-         UJpUsgIRd7WveHOgiW5UuIT+vqeDejcFYrtkqLnRDrf02u8xV0gxvt6EFCAg5ewkWw7j
-         wRMQ==
-X-Gm-Message-State: APjAAAWcZHwkYzBKu3AKDqPykQHBYZfFtftuUeZ3jQjCVR/DU2bRG4xe
-        +YmE9dAySYI0ZqPpgEXzJtwk66bjqtE=
-X-Google-Smtp-Source: APXvYqwZzhRLIoaP5LpqWQUbjpD0Ir8YyzDeEPPahuxhn3iNg6BmuHDKJjh9YnJwHCLE1BExK5KxAg==
-X-Received: by 2002:a17:902:8545:: with SMTP id d5mr24800187plo.198.1556523444886;
-        Mon, 29 Apr 2019 00:37:24 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:12a5:ab58:559f:ec82:1c85:ce7])
-        by smtp.gmail.com with ESMTPSA id t24sm43485198pfe.110.2019.04.29.00.37.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 00:37:24 -0700 (PDT)
-From:   Vatsala Narang <vatsalanarang@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     eric@anholt.net, stefan.wahren@i2se.com, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, julia.lawall@lip6.fr,
-        Vatsala Narang <vatsalanarang@gmail.com>
-Subject: [PATCH] staging: vc04_services: bcm2835-camera: Modify return statement.
-Date:   Mon, 29 Apr 2019 13:06:58 +0530
-Message-Id: <20190429073658.32009-1-vatsalanarang@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=cR/Ec4vlE+X0Q9Ok0IFawlzdAj+EmfR3ChCRLcZ/ulo=;
+        b=tBXCF+v6q675VTAV5RrDNRErS/a+R7AqVKBd0Df3yQQVrux6/q81ubMqBPIgCH+c79
+         F46GP2vg1NQZVt2r3IXpqaGbKwbhQRBibs0YohuGQvpBIeRZO+/5+yRMtIxBhAhtzFX8
+         PorqkpvFTM+GJhlXocRCRKFuuhWFpd9k++abPm0IifKJo+YBM2BuMq/l9lDFpz4bNOyz
+         KauDJJl23EKPHfVKqZUPB3ut91Yo+hXCzuA5vr+n76Ph3T2wYZUR35HA06JyBHHbzQm6
+         CA7r4f500/OUsylWNEttWgE5TIUGOY+JjEeHuqvMbqJR/cW6VYut8kudQcwjFOkxUzGg
+         1vgw==
+X-Gm-Message-State: APjAAAWJ4EGffLyaIZzpQfT4d5nYCAww1djoc/PyYmibNUZVqsZImhsl
+        TjYjeoSwJg02Uh27vP9n0VJntw==
+X-Google-Smtp-Source: APXvYqyamfeC0VDCz3uc3J7R7UkR4tbLJux/+a07AHsJfdjm2ugURBFwopOn5nLJ9FRLCID5f7b7Rw==
+X-Received: by 2002:aa7:dc44:: with SMTP id g4mr37840116edu.268.1556523650136;
+        Mon, 29 Apr 2019 00:40:50 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id u10sm8782904edj.22.2019.04.29.00.40.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 00:40:49 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 09:40:47 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Thomas Hellstrom <thomas@shipmail.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <spice-devel@lists.freedesktop.org>,
+        David Airlie <airlied@redhat.com>
+Subject: Re: [PATCH] Revert "drm/qxl: drop prime import/export callbacks"
+Message-ID: <20190429074047.GJ3271@phenom.ffwll.local>
+Mail-Followup-To: Thomas Hellstrom <thomas@shipmail.org>,
+        Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <spice-devel@lists.freedesktop.org>,
+        David Airlie <airlied@redhat.com>
+References: <20190426053324.26443-1-kraxel@redhat.com>
+ <CAKMK7uG+vMU0hqqiKAswu=LqpkcXtLPqbYLRWgoAPpsQQV4qzA@mail.gmail.com>
+ <8ae152fe-7811-4de3-e26f-350650a8f992@shipmail.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8ae152fe-7811-4de3-e26f-350650a8f992@shipmail.org>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify return statement and remove the respective assignment.
+On Fri, Apr 26, 2019 at 05:42:23PM +0200, Thomas Hellstrom wrote:
+> On 4/26/19 4:21 PM, Daniel Vetter wrote:
+> > On Fri, Apr 26, 2019 at 7:33 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> > > This reverts commit f4c34b1e2a37d5676180901fa6ff188bcb6371f8.
+> > > 
+> > > Simliar to commit a0cecc23cfcb Revert "drm/virtio: drop prime
+> > > import/export callbacks".  We have to do the same with qxl,
+> > > for the same reasons (it breaks DRI3).
+> > > 
+> > > Drop the WARN_ON_ONCE().
+> > > 
+> > > Fixes: f4c34b1e2a37d5676180901fa6ff188bcb6371f8
+> > > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> > Maybe we need some helpers for virtual drivers which only allow
+> > self-reimport and nothing else at all? I think there's qxl, virgl,
+> > vmwgfx and maybe also vbox one who could use this ... Just a quick
+> > idea.
+> > -Daniel
+> 
+> I think vmwgfx could, in theory, support the full range of operations,
+> at least for reasonably recent device versions. However, it wouldn't be
+> terribly efficient since the exported dma-buf sglist would basically be a
+> bounce-buffer.
 
-Issue found by coccinelle.
+Yeah not sure that makes sense to support really ...
+-Daniel
 
-Signed-off-by: Vatsala Narang <vatsalanarang@gmail.com>
----
- drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> /Thomas
+> 
+> 
+> > > ---
+> > >   drivers/gpu/drm/qxl/qxl_drv.c   |  4 ++++
+> > >   drivers/gpu/drm/qxl/qxl_prime.c | 12 ++++++++++++
+> > >   2 files changed, 16 insertions(+)
+> > > 
+> > > diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+> > > index 578d867a81d5..f33e349c4ec5 100644
+> > > --- a/drivers/gpu/drm/qxl/qxl_drv.c
+> > > +++ b/drivers/gpu/drm/qxl/qxl_drv.c
+> > > @@ -255,10 +255,14 @@ static struct drm_driver qxl_driver = {
+> > >   #if defined(CONFIG_DEBUG_FS)
+> > >          .debugfs_init = qxl_debugfs_init,
+> > >   #endif
+> > > +       .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+> > > +       .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+> > >          .gem_prime_export = drm_gem_prime_export,
+> > >          .gem_prime_import = drm_gem_prime_import,
+> > >          .gem_prime_pin = qxl_gem_prime_pin,
+> > >          .gem_prime_unpin = qxl_gem_prime_unpin,
+> > > +       .gem_prime_get_sg_table = qxl_gem_prime_get_sg_table,
+> > > +       .gem_prime_import_sg_table = qxl_gem_prime_import_sg_table,
+> > >          .gem_prime_vmap = qxl_gem_prime_vmap,
+> > >          .gem_prime_vunmap = qxl_gem_prime_vunmap,
+> > >          .gem_prime_mmap = qxl_gem_prime_mmap,
+> > > diff --git a/drivers/gpu/drm/qxl/qxl_prime.c b/drivers/gpu/drm/qxl/qxl_prime.c
+> > > index 8b448eca1cd9..114653b471c6 100644
+> > > --- a/drivers/gpu/drm/qxl/qxl_prime.c
+> > > +++ b/drivers/gpu/drm/qxl/qxl_prime.c
+> > > @@ -42,6 +42,18 @@ void qxl_gem_prime_unpin(struct drm_gem_object *obj)
+> > >          qxl_bo_unpin(bo);
+> > >   }
+> > > 
+> > > +struct sg_table *qxl_gem_prime_get_sg_table(struct drm_gem_object *obj)
+> > > +{
+> > > +       return ERR_PTR(-ENOSYS);
+> > > +}
+> > > +
+> > > +struct drm_gem_object *qxl_gem_prime_import_sg_table(
+> > > +       struct drm_device *dev, struct dma_buf_attachment *attach,
+> > > +       struct sg_table *table)
+> > > +{
+> > > +       return ERR_PTR(-ENOSYS);
+> > > +}
+> > > +
+> > >   void *qxl_gem_prime_vmap(struct drm_gem_object *obj)
+> > >   {
+> > >          struct qxl_bo *bo = gem_to_qxl_bo(obj);
+> > > --
+> > > 2.18.1
+> > > 
+> > 
+> 
 
-diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-index c9b6346111a5..cef6d5b758e8 100644
---- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-@@ -1507,10 +1507,9 @@ static int set_camera_parameters(struct vchiq_mmal_instance *instance,
- 		.use_stc_timestamp = MMAL_PARAM_TIMESTAMP_MODE_RAW_STC
- 	};
- 
--	ret = vchiq_mmal_port_parameter_set(instance, &camera->control,
-+	return vchiq_mmal_port_parameter_set(instance, &camera->control,
- 					    MMAL_PARAMETER_CAMERA_CONFIG,
- 					    &cam_config, sizeof(cam_config));
--	return ret;
- }
- 
- #define MAX_SUPPORTED_ENCODINGS 20
 -- 
-2.17.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
