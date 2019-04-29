@@ -2,156 +2,69 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36874C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEB2C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF4C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28C32075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:09:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dlg3wjst"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfD2MGV (ORCPT
+        id S1728048AbfD2MJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:06:21 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:48990 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbfD2MGI (ORCPT
+        Mon, 29 Apr 2019 08:09:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49524 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbfD2MJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:06:08 -0400
-Received: by mail-io1-f70.google.com with SMTP id v21so8590511iob.15
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 05:06:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rDeQFW7ur3bD5DVlx58zRUEpG0d8EGxbNzUv5hd9aJg=;
-        b=CsTiua5ZNyotMiC1Zo0U5hrhpURlHzUL0ycqOPx3MfRQx+mBPidYy5oDOO8lZOQH4b
-         LNkmm28ZBKy/LCdKLejzFL/OFZsm7yyMBrTpQDoz+RY/6VB+Irwezk+UNLy/qp1woalC
-         PJ3HwysW16WGbANUi9rDOqoH0n9WJijJYU0fUMwzz4JnIzBGr9lbR4szkH1t2qCS2cDw
-         j7oH37v4QcKkZgvkbjVMKdIbt111aESIlap6Cjc16AgRAvty08eEwKPkYuW9CwmZ5jtk
-         4khjbDD2TgbgkOitkrr/WPbSQg9FeCpkjzSrXFQArpwnEvZW6Gbyi0DN1Zj9aNhbkT7f
-         vSAg==
-X-Gm-Message-State: APjAAAWCVu3CZo4qc2oTSLvdRe8pDO4N8N+4wuf1PL2YwDc1HY+D7+0K
-        eM//iia+1l4FO1PJDnaKKGOt1KHtprNbuvONGInRq+kg7cfU
-X-Google-Smtp-Source: APXvYqxWAijp8HtMDdopw8UkXEtp9e/OiyQ3ux05IGIpuY2mfbZjMM+THEIzV7KtLPe6JzPQC/s7pJMB0OE8a8+OSiqakCebPZ6r
+        Mon, 29 Apr 2019 08:09:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=U63qJnTkPJ4enJm1vzK4P1yKEZuVJMuZeVxsRrwlieY=; b=Dlg3wjstvx1Jhum7z5qnmoqVW4
+        dBDHsR7o55Z1Pfj0K6PMmpJ5dji0lm6k7BaWEkTUxIj4AKG1KHNn1RIy22+hB1RJoladDCzyMfBdq
+        uBFxQN8gJje5SK9Q/Yj6n/hhTEB9vPsxdymYuD1827Tm5VoMhTw1g5xnC+X+/Ra8kBVD/WC4qBzp0
+        kzzp2fCPpsaZpK5ODQOVcX8FTSmlQl6+0Ojunp0MJ72OGI9Afmg2q70xPqyTxhWRzp1y84rxu2AtB
+        wCeImU7UxMEk/zmWZy0odLacU8/0ACMPkv58vAJ/RK61ky1Zy9Jblz1hvreT1z1QnkNIr89at1+41
+        gK8ZriLQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hL56G-0005h9-Li; Mon, 29 Apr 2019 12:09:36 +0000
+Date:   Mon, 29 Apr 2019 05:09:36 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net_sched: force endianness annotation
+Message-ID: <20190429120936.GA21405@infradead.org>
+References: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f008:: with SMTP id w8mr29131590ioc.251.1556539567488;
- Mon, 29 Apr 2019 05:06:07 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 05:06:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ffc8c80587aa1bb1@google.com>
-Subject: BUG: unable to handle kernel paging request in au0828_usb_disconnect
-From:   syzbot <syzbot+15e91d49c4c757c3d363@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, brad@nextdimension.cc,
-        hans.verkuil@cisco.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Apr 28, 2019 at 07:54:59AM +0200, Nicholas Mc Guire wrote:
+> While the endiannes is being handled correctly sparse was unhappy with
+> the missing annotation as be16_to_cpu()/be32_to_cpu() expects a __be16
+> respectively __be32. To mitigate this annotation issue forced annotation
+> is introduced. Note that this patch has no impact on the generated binary.
 
-syzbot found the following crash on:
-
-HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=106c9498a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
-dashboard link: https://syzkaller.appspot.com/bug?extid=15e91d49c4c757c3d363
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+15e91d49c4c757c3d363@syzkaller.appspotmail.com
-
-usb 5-1: selecting invalid altsetting 5
-au0828: Failure setting usb interface0 to as5
-au0828: au0828_usb_probe() au0828_analog_register failed to register on V4L2
-BUG: unable to handle kernel paging request at fffffffc4508a958
-#PF error: [normal kernel read fault]
-PGD 1167e067 P4D 1167e067 PUD 0
-Oops: 0000 [#1] SMP KASAN PTI
-CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.1.0-rc3-319004-g43151d6 #6
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:decode_cpu kernel/locking/osq_lock.c:34 [inline]
-RIP: 0010:osq_lock+0xfd/0x5a0 kernel/locking/osq_lock.c:111
-Code: 48 63 e8 48 b8 00 00 00 00 00 fc ff df 48 8d 3c ed 60 b0 39 91 48 89  
-f9 48 c1 e9 03 80 3c 01 00 0f 85 2c 04 00 00 48 8d 53 08 <4c> 03 2c ed 60  
-b0 39 91 48 b8 00 00 00 00 00 fc ff df 48 89 d6 48
-RSP: 0018:ffff8880a84f70e8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880ad12dfc0 RCX: 1fffffff88a1152b
-RDX: ffff8880ad12dfc8 RSI: 0000000000000004 RDI: fffffffc4508a958
-RBP: ffffffff9679df1f R08: 0000000000000000 R09: ffffed10122cb31e
-R10: ffffed10122cb31d R11: ffff8880916598eb R12: ffff8880ad12dfd0
-R13: 000000000002dfc0 R14: ffff8880a84db100 R15: ffff8880916598e8
-FS:  0000000000000000(0000) GS:ffff8880ad100000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffffc4508a958 CR3: 00000000824b6000 CR4: 00000000001406e0
-Call Trace:
-  mutex_optimistic_spin kernel/locking/mutex.c:630 [inline]
-  __mutex_lock_common kernel/locking/mutex.c:928 [inline]
-  __mutex_lock+0x27d/0x12b0 kernel/locking/mutex.c:1072
-  au0828_usb_disconnect+0xa3/0x130 drivers/media/usb/au0828/au0828-core.c:194
-  au0828_usb_probe.cold+0x121/0x7d8  
-drivers/media/usb/au0828/au0828-core.c:661
-  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2023
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
-CR2: fffffffc4508a958
----[ end trace e04421c5fdf22ecf ]---
-RIP: 0010:decode_cpu kernel/locking/osq_lock.c:34 [inline]
-RIP: 0010:osq_lock+0xfd/0x5a0 kernel/locking/osq_lock.c:111
-Code: 48 63 e8 48 b8 00 00 00 00 00 fc ff df 48 8d 3c ed 60 b0 39 91 48 89  
-f9 48 c1 e9 03 80 3c 01 00 0f 85 2c 04 00 00 48 8d 53 08 <4c> 03 2c ed 60  
-b0 39 91 48 b8 00 00 00 00 00 fc ff df 48 89 d6 48
-RSP: 0018:ffff8880a84f70e8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880ad12dfc0 RCX: 1fffffff88a1152b
-RDX: ffff8880ad12dfc8 RSI: 0000000000000004 RDI: fffffffc4508a958
-RBP: ffffffff9679df1f R08: 0000000000000000 R09: ffffed10122cb31e
-R10: ffffed10122cb31d R11: ffff8880916598eb R12: ffff8880ad12dfd0
-R13: 000000000002dfc0 R14: ffff8880a84db100 R15: ffff8880916598e8
-FS:  0000000000000000(0000) GS:ffff8880ad100000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffffc4508a958 CR3: 00000000824b6000 CR4: 00000000001406e0
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Every __force needs a comment explaining why it actually іs fine in
+this particular case.  Even more bonus points for finding a solution
+that does not require the __force.
