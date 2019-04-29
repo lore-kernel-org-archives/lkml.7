@@ -6,153 +6,159 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15509C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8C6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C950020652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37A22084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfD2NFu (ORCPT
+        id S1727492AbfD2NHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:05:50 -0400
-Received: from foss.arm.com ([217.140.101.70]:56304 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfD2NFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:05:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81232A78;
-        Mon, 29 Apr 2019 06:05:49 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15DF73F71A;
-        Mon, 29 Apr 2019 06:05:47 -0700 (PDT)
-Subject: Re: [PATCH 11/26] iommu/dma: Factor out remapped pages lookup
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190422175942.18788-1-hch@lst.de>
- <20190422175942.18788-12-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f8c04947-0ddb-17c5-8918-5859aabc220c@arm.com>
-Date:   Mon, 29 Apr 2019 14:05:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 09:07:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7707 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbfD2NHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:07:21 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E12E8D361BF05A01302D;
+        Mon, 29 Apr 2019 21:07:18 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Apr 2019
+ 21:07:08 +0800
+Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
+To:     Jason Wang <jasowang@redhat.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+ <20190428030539.17776-1-yuehaibing@huawei.com>
+ <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
+ <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com>
+ <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
+ <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com>
+ <CAM_iQpUfpruaFowbiTOY7aH4Ts-xcY4JACGLOT3CUjLqpg_zXw@mail.gmail.com>
+ <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
+CC:     "weiyongjun (A)" <weiyongjun1@huawei.com>, <davem@davemloft.net>,
+        <edumazet@google.com>, <brouer@redhat.com>, <mst@redhat.com>,
+        <lirongqing@baidu.com>,
+        nicolas dichtel <nicolas.dichtel@6wind.com>,
+        <3chas3@gmail.com>, <wangli39@baidu.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Peter Xu <peterx@redhat.com>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <27477e2a-ddfa-4e80-7f8c-18e4f5ff4990@huawei.com>
+Date:   Mon, 29 Apr 2019 21:07:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190422175942.18788-12-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/2019 18:59, Christoph Hellwig wrote:
-> From: Robin Murphy <robin.murphy@arm.com>
+On 2019/4/29 10:23, Jason Wang wrote:
 > 
-> Since we duplicate the find_vm_area() logic a few times in places where
-> we only care aboute the pages, factor out a helper to abstract it.
+> On 2019/4/29 上午1:59, Cong Wang wrote:
+>> On Sun, Apr 28, 2019 at 12:51 AM Jason Wang <jasowang@redhat.com> wrote:
+>>>> tun_net_xmit() doesn't have the chance to
+>>>> access the change because it holding the rcu_read_lock().
+>>>
+>>>
+>>> The problem is the following codes:
+>>>
+>>>
+>>>          --tun->numqueues;
+>>>
+>>>          ...
+>>>
+>>>          synchronize_net();
+>>>
+>>> We need make sure the decrement of tun->numqueues be visible to readers
+>>> after synchronize_net(). And in tun_net_xmit():
+>>
+>> It doesn't matter at all. Readers are okay to read it even they still use the
+>> stale tun->numqueues, as long as the tfile is not freed readers can read
+>> whatever they want...
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> [hch: don't warn when not finding a region, as we'll rely on that later]
-
-Yeah, I did think about that and the things which it might make a little 
-easier, but preserved it as-is for the sake of keeping my modifications 
-quick and simple. TBH I'm now feeling more inclined to drop the WARNs 
-entirely at this point, since it's not like there's ever been any 
-general guarantee that freeing the wrong thing shouldn't just crash, but 
-that's something we can easily come back to later if need be.
-
-Robin.
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> This is only true if we set SOCK_RCU_FREE, isn't it?
+> 
+>>
+>> The decrement of tun->numqueues is just how we unpublish the old
+>> tfile, it is still valid for readers to read it _after_ unpublish, we only need
+>> to worry about free, not about unpublish. This is the whole spirit of RCU.
+>>
+> 
+> The point is we don't convert tun->numqueues to RCU but use
+> synchronize_net().
+> 
+>> You need to rethink about my SOCK_RCU_FREE patch.
+> 
+> The code is wrote before SOCK_RCU_FREE is introduced and assume no
+> de-reference from device after synchronize_net(). It doesn't harm to
+> figure out the root cause which may give us more confidence to the fix
+> (e.g like SOCK_RCU_FREE).
+> 
+> I don't object to fix with SOCK_RCU_FREE, but then we should remove
+> the redundant synchronize_net(). But I still prefer to synchronize
+> everything explicitly like (completely untested):
+> 
+>>From df91f77d35a6aa7943b6f2a7d4b329990896a0fe Mon Sep 17 00:00:00 2001
+> From: Jason Wang <jasowang@redhat.com>
+> Date: Mon, 29 Apr 2019 10:21:06 +0800
+> Subject: [PATCH] tuntap: synchronize through tfiles instead of numqueues
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
 > ---
->   drivers/iommu/dma-iommu.c | 32 ++++++++++++++++++++------------
->   1 file changed, 20 insertions(+), 12 deletions(-)
+>  drivers/net/tun.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index b52c5d6be7b4..8e2d9733113e 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -525,6 +525,15 @@ static struct page **__iommu_dma_alloc_pages(struct device *dev,
->   	return pages;
->   }
->   
-> +static struct page **__iommu_dma_get_pages(void *cpu_addr)
-> +{
-> +	struct vm_struct *area = find_vm_area(cpu_addr);
-> +
-> +	if (!area || !area->pages)
-> +		return NULL;
-> +	return area->pages;
-> +}
-> +
->   /**
->    * iommu_dma_free - Free a buffer allocated by __iommu_dma_alloc()
->    * @dev: Device which owns this buffer
-> @@ -1023,11 +1032,11 @@ static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
->   		dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT);
->   		dma_common_free_remap(cpu_addr, size, VM_USERMAP);
->   	} else if (is_vmalloc_addr(cpu_addr)){
-> -		struct vm_struct *area = find_vm_area(cpu_addr);
-> +		struct page **pages = __iommu_dma_get_pages(cpu_addr);
->   
-> -		if (WARN_ON(!area || !area->pages))
-> +		if (WARN_ON(!pages))
->   			return;
-> -		__iommu_dma_free(dev, area->pages, iosize, &handle);
-> +		__iommu_dma_free(dev, pages, iosize, &handle);
->   		dma_common_free_remap(cpu_addr, size, VM_USERMAP);
->   	} else {
->   		__iommu_dma_unmap(dev, handle, iosize);
-> @@ -1049,7 +1058,7 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
->   {
->   	unsigned long nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
->   	unsigned long off = vma->vm_pgoff;
-> -	struct vm_struct *area;
-> +	struct page **pages;
->   	int ret;
->   
->   	vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
-> @@ -1074,11 +1083,10 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
->   		return __iommu_dma_mmap_pfn(vma, pfn, size);
->   	}
->   
-> -	area = find_vm_area(cpu_addr);
-> -	if (WARN_ON(!area || !area->pages))
-> +	pages = __iommu_dma_get_pages(cpu_addr);
-> +	if (WARN_ON_ONCE(!pages))
->   		return -ENXIO;
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index 80bff1b4ec17..03715f605fb5 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -698,6 +698,7 @@ static void __tun_detach(struct tun_file *tfile, bool clean)
+>  
+>  		rcu_assign_pointer(tun->tfiles[index],
+>  				   tun->tfiles[tun->numqueues - 1]);
+> +		rcu_assign_pointer(tun->tfiles[tun->numqueues], NULL);
+>  		ntfile = rtnl_dereference(tun->tfiles[index]);
+
+move here to avoid NULL pointer dereference,  it works for me
+
+		rcu_assign_pointer(tun->tfiles[tun->numqueues -1 ], NULL);
+
+>  		ntfile->queue_index = index;
+>  
+> @@ -1082,7 +1083,7 @@ static netdev_tx_t tun_net_xmit(struct sk_buff *skb, struct net_device *dev)
+>  	tfile = rcu_dereference(tun->tfiles[txq]);
+>  
+>  	/* Drop packet if interface is not attached */
+> -	if (txq >= tun->numqueues)
+> +	if (!tfile)
+>  		goto drop;
+>  
+>  	if (!rcu_dereference(tun->steering_prog))
+> @@ -1305,15 +1306,13 @@ static int tun_xdp_xmit(struct net_device *dev, int n,
+>  
+>  	rcu_read_lock();
+>  
+> -	numqueues = READ_ONCE(tun->numqueues);
+> -	if (!numqueues) {
+> +	tfile = rcu_dereference(tun->tfiles[smp_processor_id() %
+> +					    tun->numqueues]);
+> +	if (!tfile) {
+>  		rcu_read_unlock();
+>  		return -ENXIO; /* Caller will free/return all frames */
+>  	}
+>  
+> -	tfile = rcu_dereference(tun->tfiles[smp_processor_id() %
+> -					    numqueues]);
 > -
-> -	return __iommu_dma_mmap(area->pages, size, vma);
-> +	return __iommu_dma_mmap(pages, size, vma);
->   }
->   
->   static int __iommu_dma_get_sgtable_page(struct sg_table *sgt, struct page *page,
-> @@ -1096,7 +1104,7 @@ static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
->   		unsigned long attrs)
->   {
->   	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> -	struct vm_struct *area = find_vm_area(cpu_addr);
-> +	struct page **pages;
->   
->   	if (!is_vmalloc_addr(cpu_addr)) {
->   		struct page *page = virt_to_page(cpu_addr);
-> @@ -1112,10 +1120,10 @@ static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
->   		return __iommu_dma_get_sgtable_page(sgt, page, size);
->   	}
->   
-> -	if (WARN_ON(!area || !area->pages))
-> +	pages = __iommu_dma_get_pages(cpu_addr);
-> +	if (WARN_ON_ONCE(!pages))
->   		return -ENXIO;
-> -
-> -	return sg_alloc_table_from_pages(sgt, area->pages, count, 0, size,
-> +	return sg_alloc_table_from_pages(sgt, pages, count, 0, size,
->   					 GFP_KERNEL);
->   }
->   
+>  	spin_lock(&tfile->tx_ring.producer_lock);
+>  	for (i = 0; i < n; i++) {
+>  		struct xdp_frame *xdp = frames[i];
 > 
+
