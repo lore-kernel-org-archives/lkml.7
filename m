@@ -2,113 +2,123 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4E2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA70C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4362087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB37B2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yQrh7BIM"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Qx62XkIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfD2Hww (ORCPT
+        id S1727564AbfD2Hxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:52:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43904 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfD2Hwv (ORCPT
+        Mon, 29 Apr 2019 03:53:30 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33396 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfD2Hxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:52:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a12so14496519wrq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:52:50 -0700 (PDT)
+        Mon, 29 Apr 2019 03:53:30 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l1so5721365oib.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R/mDQvnk0IIQmAZwrlmB/+Qs1VqQjgXmR4mQ6Zr5vLM=;
-        b=yQrh7BIMJoH3/0jqWWCbu4c5tIODo9kRVw4r/nYa/1whLzbcUc1wNYNh1Tp2htcv15
-         N1OCNf+l5RfcKPlwwPFnMuFCNCFZEnBOZ/f49lmWKh+Q+SL4alibk2iIwd9mf1qnG8DH
-         /FdnrIWiZMalpBQA95V51+ih2cs2YrnTuEQwcMQZjDQjTfqTfmrZ7iNPdu5s0l672Nlz
-         r62AxhqskACBze3lX6TT5TsGeaO93NfHqDpLR7XSZvy6nyXr2TaWJROc5Y7+9Im6M4gU
-         kE7azJ1NPScSgDQqUiv2w2KNaq3DAOS4hl4chBYZY5rtytIKxkP7I/YbJL4mV2Yi2l6z
-         Nqhw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lTE8ZUe/zLng+ZlAw7wli/wZIDmLwzaqTDPEWlKoyEA=;
+        b=Qx62XkIJWMVhX1tTSZWgOrwz8HqepXlV4Z8D/gGYVWMMi3Fr7nKK6+vdKy+/pkZKQR
+         +V9oTnF1Ly8xgazFAj7rw9JQYl/fZrD2f9Tp86WViZB2TPAp3ng40jFlm9coh/XWAF0u
+         DrSvLYAd0KRFq7iMmeut7Hb5l52C2Zkg70OSuASvoSBQHh2TjoQeD2ieWNAHaLtf2HHu
+         ytdoE8LdVTQ6oRu/1CuQeHRRtoiI3gsBuf5wTuZGmtRVTCin7OvAvRvYBxdxCISdByDa
+         38oNq9pBe+IBCUUuNxTQ7S63ChjAVZ148iac6aVUHuBuz8kEkRvvajvtAGU5Fut5OmJ2
+         iLxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R/mDQvnk0IIQmAZwrlmB/+Qs1VqQjgXmR4mQ6Zr5vLM=;
-        b=LZSVp4pWNFkktPPm2ak1Ep1U8q8dMTEUCnPlwBapz7JuDqCo4lH6qxO7tdWi9nWJTh
-         u32OJXM2u1zDCnCygYlIO8y9DOGgVhjBWHR6Q7hHTaASvhW50IWGxoB0KQg1BywFOtIB
-         Vx2PyQCKvOLRNyDz6DoozYjxnIwjgTPxyKTxH+jX+g9UcMuYKtSr4ccMUuhzflTxa28a
-         mxpFf0C3t+bfN66sU0CPh4/IlRy+q8xBwVe1bflmNSsSSizKR4i5tkpwmtmAMkxkDE2C
-         QOxpS1dkfwQ3aPO2+DCBbGr5MInpjPDN3k4lr8DcIKjOlq/IyYHyni2hgjPyb//PdE2i
-         wy9g==
-X-Gm-Message-State: APjAAAXMbfwgI8+2okWgi+F95KxiefNRHH4ozrRD44HGoN7S08tSoinp
-        6fhfs3gAP3/47tbgnrTs9Uq2Fw==
-X-Google-Smtp-Source: APXvYqxK8h9fP1diY34GCvdYZ01wJZXC1DSL1FPL3mMAddWYdgRZE3NVRKvJYj+rs35MKDeUPkEHfA==
-X-Received: by 2002:adf:fd45:: with SMTP id h5mr7015881wrs.52.1556524369379;
-        Mon, 29 Apr 2019 00:52:49 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id x84sm40099073wmg.13.2019.04.29.00.52.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 29 Apr 2019 00:52:48 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/meson: Add zpos immutable property to planes
-Date:   Mon, 29 Apr 2019 09:52:47 +0200
-Message-Id: <20190429075247.7946-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lTE8ZUe/zLng+ZlAw7wli/wZIDmLwzaqTDPEWlKoyEA=;
+        b=Ps62lKCARRK7DdtLtGPZ8C3mTlprYn3o5UvIQH63hcutYiqKtwTl1VFmHbUiYiCSyY
+         NkT65ATjR8DIqZX8SzMHG74+2ujk3mHiA8boNuT1bbUrAwNU94j5fia5AjBkv9iY5mRf
+         CIMZnvdqHJwVUv+aGQHua21djfF2Nh5c3Zob6u/XMjuar3xFquKEBv24Y3bphwrZHkh+
+         dYE6fcl7b/qcP4d4HcDGFOvSafZ87JHkloHxrg0IzfrwD2CHzgTde3HUrNjEw3uR3AIV
+         Cz6hd+SoFqhszpeDg44F3addl3NXlOYZw2PzQgp4g++ItNbVlt6fUKfTjUtaeydSrnz5
+         piLw==
+X-Gm-Message-State: APjAAAUBrf55nyNL8VR1QU0K/PNoYx6rNsf1rqS4OmKzDf7g97AFTuYb
+        MKAuYfDHIGwzQ/HbNAhe3VBRplKJDgL/qlSsYoJxxw==
+X-Google-Smtp-Source: APXvYqyY1pL6kRZdPE6htYzE5BsCHj0A4NAoBg0naE/rczUfA/B7jwsFBoqxIDeKMTkoBUnW2oqw9qHLa5Is1D2s+uE=
+X-Received: by 2002:aca:f2c2:: with SMTP id q185mr9556506oih.147.1556524409451;
+ Mon, 29 Apr 2019 00:53:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190429054948.9185-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190429054948.9185-1-andrew.smirnov@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 29 Apr 2019 09:53:18 +0200
+Message-ID: <CAMpxmJVe2C1RSHq0xVDSdNEK0S06e2Q=tp5k5QJXdCTG2DzJbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: vf610: Use devm_platform_ioremap_resource()
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Chris Healy <cphealy@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add immutable zpos property to primary and overlay planes to specify
-the current fixed zpos position.
+pon., 29 kwi 2019 o 07:50 Andrey Smirnov <andrew.smirnov@gmail.com> napisa=
+=C5=82(a):
+>
+> Replace calls to platform_get_resource() and devm_ioremap_resource()
+> with newly added devm_platform_ioremap_resource() for brevity. No
+> functional change intended.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/gpio/gpio-vf610.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+> index 6f6558715b88..30aef41e3b7e 100644
+> --- a/drivers/gpio/gpio-vf610.c
+> +++ b/drivers/gpio/gpio-vf610.c
+> @@ -242,7 +242,6 @@ static int vf610_gpio_probe(struct platform_device *p=
+dev)
+>         struct device *dev =3D &pdev->dev;
+>         struct device_node *np =3D dev->of_node;
+>         struct vf610_gpio_port *port;
+> -       struct resource *iores;
+>         struct gpio_chip *gc;
+>         struct irq_chip *ic;
+>         int i;
+> @@ -253,13 +252,11 @@ static int vf610_gpio_probe(struct platform_device =
+*pdev)
+>                 return -ENOMEM;
+>
+>         port->sdata =3D of_device_get_match_data(dev);
+> -       iores =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       port->base =3D devm_ioremap_resource(dev, iores);
+> +       port->base =3D devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(port->base))
+>                 return PTR_ERR(port->base);
+>
+> -       iores =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -       port->gpio_base =3D devm_ioremap_resource(dev, iores);
+> +       port->gpio_base =3D devm_platform_ioremap_resource(pdev, 1);
+>         if (IS_ERR(port->gpio_base))
+>                 return PTR_ERR(port->gpio_base);
+>
+> --
+> 2.20.1
+>
 
-Fixes: f9a2348196d1 ("drm/meson: Support Overlay plane for video rendering")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/gpu/drm/meson/meson_overlay.c | 3 +++
- drivers/gpu/drm/meson/meson_plane.c   | 3 +++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
-index bdbf925ff3e8..dceb3df5e652 100644
---- a/drivers/gpu/drm/meson/meson_overlay.c
-+++ b/drivers/gpu/drm/meson/meson_overlay.c
-@@ -578,6 +578,9 @@ int meson_overlay_create(struct meson_drm *priv)
- 
- 	drm_plane_helper_add(plane, &meson_overlay_helper_funcs);
- 
-+	/* For now, VD Overlay plane is always on the back */
-+	drm_plane_create_zpos_immutable_property(plane, 0);
-+
- 	priv->overlay_plane = plane;
- 
- 	DRM_DEBUG_DRIVER("\n");
-diff --git a/drivers/gpu/drm/meson/meson_plane.c b/drivers/gpu/drm/meson/meson_plane.c
-index b8f6b08a89a6..2f7f4dfce45b 100644
---- a/drivers/gpu/drm/meson/meson_plane.c
-+++ b/drivers/gpu/drm/meson/meson_plane.c
-@@ -399,6 +399,9 @@ int meson_plane_create(struct meson_drm *priv)
- 
- 	drm_plane_helper_add(plane, &meson_plane_helper_funcs);
- 
-+	/* For now, OSD Primary plane is always on the front */
-+	drm_plane_create_zpos_immutable_property(plane, 1);
-+
- 	priv->primary_plane = plane;
- 
- 	return 0;
--- 
-2.21.0
-
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
