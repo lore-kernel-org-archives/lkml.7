@@ -2,73 +2,103 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0B6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82968C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572BA2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:44:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="cYoRvzBE"
+	by mail.kernel.org (Postfix) with ESMTP id 531AB2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556556334;
+	bh=jzvOjxszlTVQPl/QCb3vDfKQ5TcVwY5YDxGzMEzG1gM=;
+	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
+	b=IeSCIweEDt2PjaUo5UF3YrlIeQdIfa4qRZe7AsRZ6qLliZmKKirFlS6TQTVq9S95G
+	 c9jNqO0TWOJcbeYRrQoVT0AsQr77x9CKsym4sGZj6hAAqE0BWyLxTwut7icViXfQKI
+	 Ha3TkzAzlgl20aLuNMBJjVCTzsikqsqYmG6sO+TU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfD2Qon (ORCPT
+        id S1728828AbfD2Qpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:44:43 -0400
-Received: from mail.nic.cz ([217.31.204.67]:45632 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728629AbfD2Qom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:44:42 -0400
-Received: from localhost (unknown [172.20.6.125])
-        by mail.nic.cz (Postfix) with ESMTPS id 2F920632B0;
-        Mon, 29 Apr 2019 18:44:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1556556280; bh=KPqT55OC6AnnkshO0m7QOgkOsRziVHu4tEdrC34WjNg=;
-        h=Date:From:To;
-        b=cYoRvzBECmO98HTvZ6UYHzESlEw6QB4ej9NSnQ5rlJBo6vxNBey4RbX51r8jvbggk
-         PUqXBiNYjtLsrtZSPRq9rXkSHz68OZYiuNe8itraRjiqFbwNspud73iabIgIYnvRZT
-         hhgeNwWipXRS8Gz85BampV/y9IW5+6evbNuYxqiA=
-Date:   Mon, 29 Apr 2019 18:44:39 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Subject: Re: linux-next: Tree for Apr 29 (drivers/leds/leds-turris-omnia)
-Message-ID: <20190429184439.68049050@nic.cz>
-In-Reply-To: <20190429163753.GA16782@amd>
-References: <20190429190354.0d5e2e93@canb.auug.org.au>
-        <d3822785-0683-28df-ffa6-ab679aa27c73@infradead.org>
-        <20190429153200.GA11761@amd>
-        <20190429173842.06f02852@nic.cz>
-        <20190429163753.GA16782@amd>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 29 Apr 2019 12:45:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41713 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728629AbfD2Qpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:45:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 188so5584863pfd.8;
+        Mon, 29 Apr 2019 09:45:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JT+ML2dX2Vx8dyF6/A3Qn82bt73Gd/sl6N1Ui3j3HLI=;
+        b=hXodwy1aIvm5ESAQj/9CsoafzYXwu6ZkSxMhNTBCZG9FeRCS+T9lrCIWUNGxUhuIeX
+         QuxxMVX8gfHvWi8NN1m05PQonHBaQqUfw9aNdUyA+MmHJfwtXZ4dKFKHyj+HbR+7LivD
+         nP+l9JmJAY4Bb2vi4mSrCd9VXgChu7T3zGU5+3hL45gcOUwT1BEZYfqxjpSkTgF2QYi3
+         J1hqh6SxEmmXyYBiBUu20T/SogI7Grp+HvSyO61UrWhbhMQtPwQ3xhMgnMLWUocmYSp2
+         J8DM9cxKFXstk9JvzjrS2ODfMksQPgWCmIn9QvNQeiqU0wpsSILxYUOiMoMcKh8fc4Tj
+         Nz1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JT+ML2dX2Vx8dyF6/A3Qn82bt73Gd/sl6N1Ui3j3HLI=;
+        b=Vth1QiUAhA1mt7UrOspyMB/d5K9RuGsUzLVR855+h06pc9eLG8zt7kH62ktBRqaKFH
+         VzyenO+1I8J5mWqHOcL3SFYe8pZSdFyC+HNBuxBBcH3ya+itDMLg4uN1IW+G13Y13BQQ
+         C+pWDcpLhDZeaNgOlp3bqn/nztP3NQMEB3Kc1mUZVBems825zmrNgQo28cwL/9Jp4yo8
+         yVnJvRfjMVqiHpryp6KjN1uX6DyvPjIiLGbIT87cmAXFEpQpOxHCm4379ey+A2KZgQOp
+         QeP92IMUHLuVKbtPLXERY66C88+Ov/16q5XSXlWP0ZRZL+TnATLqSHqjqksHXQLYRWeF
+         gS/A==
+X-Gm-Message-State: APjAAAVEF3EFKy3XwzrTzCpM0+sRHHmQFD5yDueqWZrMaYoM3kVIMvS0
+        2C1OqBBcQJ70YOQnwTMQ1Io24F3d
+X-Google-Smtp-Source: APXvYqyQY7jrGrCLUpImEXnQs8adfZe3HvjIMZqonhLcCcNeNgvucZsNvfkxbFYxkbE6/fSIqGZcaQ==
+X-Received: by 2002:a63:564f:: with SMTP id g15mr6328290pgm.258.1556556331159;
+        Mon, 29 Apr 2019 09:45:31 -0700 (PDT)
+Received: from [10.70.64.58] ([131.107.174.58])
+        by smtp.gmail.com with ESMTPSA id e16sm21129942pgv.89.2019.04.29.09.45.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 09:45:30 -0700 (PDT)
+From:   Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     mr.nuke.me@gmail.com, linux-pci@vger.kernel.org,
+        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
+ <20190424175758.GC244134@google.com> <20190429085104.728aee75@x1.home>
+Message-ID: <76169da9-36cd-6754-41e7-47c8ef668648@kernel.org>
+Date:   Mon, 29 Apr 2019 09:45:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190429085104.728aee75@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.99.2 at mail
-X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 18:37:53 +0200
-Pavel Machek <pavel@ucw.cz> wrote:
+On 4/29/2019 10:51 AM, Alex Williamson wrote:
+> So where do we go from here?  I agree that dmesg is not necessarily a
+> great choice for these sorts of events and if they went somewhere else,
+> maybe I wouldn't have the same concerns about them generating user
+> confusion or contributing to DoS vectors from userspace drivers.  As it
+> is though, we have known cases where benign events generate confusing
+> logging messages, which seems like a regression.  Drivers didn't ask
+> for a link_change handler, but nor did they ask that the link state to
+> their device be monitored so closely.  Maybe this not only needs some
+> sort of change to the logging mechanism, but also an opt-in by the
+> driver if they don't expect runtime link changes.  Thanks,
 
-> On Mon 2019-04-29 17:38:42, Marek Behun wrote:
-> > I am sending patch only adding the I2C dep. Theoretically it is
-> > possible that someone uses the same I2C API in their microcontroller on
-> > another architecture.  
-> 
-> Theoretically. But we both now that probability of that is very low,
-> and that likely driver would need other updates, too... right?
-> 
-> 								Pavel
+Is there anyway to detect autonomous hardware management support and
+not report link state changes in that situation?
 
-What would be the benefit to add ARM dependency? So that distro
-compilations don't ship the turris_omnia driver unnecesarily?
+I thought there were some capability bits for these.
