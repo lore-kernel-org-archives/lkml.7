@@ -3,34 +3,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B959EC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA190C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912A220656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46EA20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbfD2Pae (ORCPT
+        id S1728889AbfD2Pay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:30:34 -0400
-Received: from foss.arm.com ([217.140.101.70]:60620 "EHLO foss.arm.com"
+        Mon, 29 Apr 2019 11:30:54 -0400
+Received: from foss.arm.com ([217.140.101.70]:60640 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfD2Pac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:30:32 -0400
+        id S1728761AbfD2Pay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:30:54 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0369680D;
-        Mon, 29 Apr 2019 08:30:32 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67D7980D;
+        Mon, 29 Apr 2019 08:30:53 -0700 (PDT)
 Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 315A83F5C1;
-        Mon, 29 Apr 2019 08:30:31 -0700 (PDT)
-Subject: Re: [PATCH] irqchip: Remove unneeded select IRQ_DOMAIN
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 507163F5C1;
+        Mon, 29 Apr 2019 08:30:52 -0700 (PDT)
+Subject: Re: [PATCH] irqchip/renesas-intc-irqpin: Remove devm_kzalloc() error
+ printing
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190429151203.21650-1-geert+renesas@glider.be>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190429151514.22150-1-geert+renesas@glider.be>
 From:   Marc Zyngier <marc.zyngier@arm.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
@@ -76,12 +77,12 @@ Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
  hApihi08gwvP5G9fNGKQyRETePEtEAWt0b7dOqMzYBYGRVr7uS4uT6WP7fzOwAJC4lU7ZYWZ
  yVshCa0IvTtp1085RtT3qhh9mobkcZ+7cQOY+Tx2RGXS9WeOh2jZjdoWUv6CevXNQyOUXMM=
 Organization: ARM Ltd
-Message-ID: <5444419a-8f7d-e42a-f321-0a5d12deec46@arm.com>
-Date:   Mon, 29 Apr 2019 16:30:29 +0100
+Message-ID: <a7af20e0-5bb5-24c2-c4b6-69885df2e214@arm.com>
+Date:   Mon, 29 Apr 2019 16:30:50 +0100
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190429151203.21650-1-geert+renesas@glider.be>
+In-Reply-To: <20190429151514.22150-1-geert+renesas@glider.be>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,9 +91,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 16:12, Geert Uytterhoeven wrote:
-> IRQ_DOMAIN_HIERARCHY selects IRQ_DOMAIN, hence there is no need for
-> drivers to select both.
+On 29/04/2019 16:15, Geert Uytterhoeven wrote:
+> There is no need to print a message if devm_kzalloc() fails, as the
+> memory allocation core already takes care of that.
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
