@@ -2,184 +2,89 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BCDC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0DAC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F61B2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9FE2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:12:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556543549;
+	bh=J2idFfiKv+JvN0+HiaPQqLJ6pzBDj5cmW8lzCb3bYgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kEvB0YTJYTTZ52Uoz4DLzIHsq4qoh+cCP8tG3Tizb8i7NU4EKC+jLsTy4g/09rumk
+	 8j9n2u+8XZQxj3wvWoJdqmPSq46NT/izw9Ax99xUby/b/cOnhibJRDmCNkS7saeYHs
+	 Q9iGXZKy6TSj6h0lG0psyB9XfmhWC5W+YaHl8tpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbfD2NLp (ORCPT
+        id S1728230AbfD2NM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:11:45 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56482 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2NLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:11:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D313EA78;
-        Mon, 29 Apr 2019 06:11:43 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E1063F71A;
-        Mon, 29 Apr 2019 06:11:41 -0700 (PDT)
-Subject: Re: [PATCH v7 11/14] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-To:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        tglx@linutronix.de, jason@lakedaemon.net
-Cc:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
-        linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>
-References: <20190420100950.7997-1-lokeshvutla@ti.com>
- <20190420100950.7997-12-lokeshvutla@ti.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <36b8bc62-fff2-c015-8140-cda625efdabc@arm.com>
-Date:   Mon, 29 Apr 2019 14:11:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 09:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbfD2NM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:12:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99818204EC;
+        Mon, 29 Apr 2019 13:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556543547;
+        bh=J2idFfiKv+JvN0+HiaPQqLJ6pzBDj5cmW8lzCb3bYgI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MzcdTgitQcDCbSwcxhk03M1tQV3J+moX/dmENcmLCtQYm92Fb1NTbcvBelaspwjS3
+         7EhZ/L64SyOs103Zx9B3noQSFfNQShEJSh1FnDlNFg0edwqYu8dCmQ7doTv9L+6hjk
+         bimbOVRgVvccb3YuJyAJqFREv+JGOgKACuX6nLjs=
+Date:   Mon, 29 Apr 2019 15:12:24 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, andrew@aj.id.au,
+        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
+        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
+        linux@prisktech.co.nz, matthias.bgg@gmail.com,
+        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH 01/41] drivers: tty: serial: dz: use dev_err() instead of
+ printk()
+Message-ID: <20190429131224.GA27385@kroah.com>
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-2-git-send-email-info@metux.net>
+ <20190427133117.GC11368@kroah.com>
+ <bae3f23b-8823-f089-c40e-024ba225555f@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20190420100950.7997-12-lokeshvutla@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bae3f23b-8823-f089-c40e-024ba225555f@metux.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/04/2019 11:09, Lokesh Vutla wrote:
-> Texas Instruments' K3 generation SoCs has an IP Interrupt Aggregator
-> which is an interrupt controller that does the following:
-> - Converts events to interrupts that can be understood by
->   an interrupt router.
-> - Allows for multiplexing of events to interrupts.
+On Mon, Apr 29, 2019 at 02:37:04PM +0200, Enrico Weigelt, metux IT consult wrote:
+> On 27.04.19 15:31, Greg KH wrote:
+> > On Sat, Apr 27, 2019 at 02:51:42PM +0200, Enrico Weigelt, metux IT consult wrote:
+> >> Using dev_err() instead of printk() for more consistent output.
+> >> (prints device name, etc).
+> >>
+> >> Signed-off-by: Enrico Weigelt <info@metux.net>
+> >> ---
+> >>  drivers/tty/serial/dz.c | 8 ++++----
+> > 
+> > Do you have this hardware to test any of these changes with?
 > 
-> Configuration of the interrupt aggregator registers can only be done by
-> a system co-processor and the driver needs to send a message to this
-> co processor over TISCI protocol. This patch adds support for Interrupt
-> Aggregator irqdomain.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
-> Changes since v6:
-> - Updated commit message.
-> - Arranged header files in alphabetical order
-> - Included vint_bit in struct ti_sci_inta_event_desc
-> - With the above change now the chip_data is event_desc instead of vint_desc
-> - No loops are used in atomic contexts.
-> - Fixed locking issue while freeing parent virq
-> - Fixed few other cosmetic changes.
-> 
->  MAINTAINERS                       |   1 +
->  drivers/irqchip/Kconfig           |  11 +
->  drivers/irqchip/Makefile          |   1 +
->  drivers/irqchip/irq-ti-sci-inta.c | 589 ++++++++++++++++++++++++++++++
->  4 files changed, 602 insertions(+)
->  create mode 100644 drivers/irqchip/irq-ti-sci-inta.c
-> 
+> Unfortunately not :(
 
-[...]
+Then I can take the "basic" types of patches for the driver (like this
+one), but not any others, sorry.
 
-> +/**
-> + * ti_sci_inta_alloc_irq() -  Allocate an irq within INTA domain
-> + * @domain:	irq_domain pointer corresponding to INTA
-> + * @hwirq:	hwirq of the input event
-> + *
-> + * Note: Allocation happens in the following manner:
-> + *	- Find a free bit available in any of the vints available in the list.
-> + *	- If not found, allocate a vint from the vint pool
-> + *	- Attach the free bit to input hwirq.
-> + * Return event_desc if all went ok else appropriate error value.
-> + */
-> +static struct ti_sci_inta_event_desc *ti_sci_inta_alloc_irq(struct irq_domain *domain,
-> +							    u32 hwirq)
-> +{
-> +	struct ti_sci_inta_irq_domain *inta = domain->host_data;
-> +	struct ti_sci_inta_vint_desc *vint_desc = NULL;
-> +	u16 free_bit;
-> +
-> +	mutex_lock(&inta->vint_mutex);
-> +	list_for_each_entry(vint_desc, &inta->vint_list, list) {
-> +		mutex_lock(&vint_desc->event_mutex);
-> +		free_bit = find_first_zero_bit(vint_desc->event_map,
-> +					       MAX_EVENTS_PER_VINT);
-> +		if (free_bit != MAX_EVENTS_PER_VINT) {
-> +			set_bit(free_bit, vint_desc->event_map);
-> +			mutex_unlock(&vint_desc->event_mutex);
-> +			mutex_unlock(&inta->vint_mutex);
-> +			goto alloc_event;
-> +		}
-> +		mutex_unlock(&vint_desc->event_mutex);
-> +	}
-> +	mutex_unlock(&inta->vint_mutex);
-> +
-> +	/* No free bits available. Allocate a new vint */
-> +	vint_desc = ti_sci_inta_alloc_parent_irq(domain);
-> +	if (IS_ERR(vint_desc))
-> +		return ERR_PTR(PTR_ERR(vint_desc));
-> +
-> +	mutex_lock(&vint_desc->event_mutex);
-> +	free_bit = find_first_zero_bit(vint_desc->event_map,
-> +				       MAX_EVENTS_PER_VINT);
-> +	set_bit(free_bit, vint_desc->event_map);
-> +	mutex_unlock(&vint_desc->event_mutex);
+thanks,
 
-This code is still quite racy: you can have two parallel allocations
-failing to get a free bit in any of the already allocated vint_desc, and
-then both allocating a new vint_desc. If there was only one left, one of
-the allocation will fail despite having at least 63 free interrupts.
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+greg k-h
