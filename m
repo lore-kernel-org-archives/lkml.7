@@ -2,169 +2,81 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FB3C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032BBC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D99A20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556555791;
-	bh=qQbtWgQhCca4rsTLpa6lcPV0wpNOsN4+0Bq5NvGiYVI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hziWhEBWc2cqzkwY/YL35RjG2qoTclhXHfDsQfP4V+h779EYXmzJNRc4OU1+V6o4K
-	 h4kzUYwPA3JR73W8KH9Q1lTAGieAiJuXxA+4oKG13fTNl+hZWuPBytE9JpQKMgOdyK
-	 /vueHhsi+9sUDLpp1FTd9h6IVPqOSsH5weD2PCIs=
+	by mail.kernel.org (Postfix) with ESMTP id D1C0B2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfD2Qga (ORCPT
+        id S1728753AbfD2Qh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbfD2Qg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:36:29 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEAC520675;
-        Mon, 29 Apr 2019 16:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556555788;
-        bh=qQbtWgQhCca4rsTLpa6lcPV0wpNOsN4+0Bq5NvGiYVI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0uGf7RAKBRgmpV6Z6NSoVx1AWvGHbHcuebfzbLoIKGWWgOyt7s+fbaaEguzbdjvpa
-         BkwWjWKRIm1tRB1JrBnfcAh4OJ4FhiYSQ8CdH/2WBqrSRvBIju/pJkpHFXn1IfTtM0
-         xxRL2O8RQ2Xqni94b9UBU7Qs6XLdjfzX5N6fVEDI=
-Received: by mail-qt1-f173.google.com with SMTP id e5so5745735qtq.2;
-        Mon, 29 Apr 2019 09:36:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAVijzm/Q/7+J0oD8AxnZ8yW1dZFvPai7FdmKOAwXvjbzC6UskjV
-        ePCJDJ/d2gqNDqgBuSi9R2HeVCYOOoqCsHCW3g==
-X-Google-Smtp-Source: APXvYqzytpGKYF9rBROJcz/H/vc8ECU6zYJZy968qe1qc1dVv+uFQ5fpDoHj0eBoxy7XdQA5cA7QTQ6/PuC7td1m3I4=
-X-Received: by 2002:aed:306c:: with SMTP id 99mr2928926qte.38.1556555788034;
- Mon, 29 Apr 2019 09:36:28 -0700 (PDT)
+        Mon, 29 Apr 2019 12:37:57 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48772 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728600AbfD2Qh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:37:57 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id DE1B1808E3; Mon, 29 Apr 2019 18:37:45 +0200 (CEST)
+Date:   Mon, 29 Apr 2019 18:37:53 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
+Subject: Re: linux-next: Tree for Apr 29 (drivers/leds/leds-turris-omnia)
+Message-ID: <20190429163753.GA16782@amd>
+References: <20190429190354.0d5e2e93@canb.auug.org.au>
+ <d3822785-0683-28df-ffa6-ab679aa27c73@infradead.org>
+ <20190429153200.GA11761@amd>
+ <20190429173842.06f02852@nic.cz>
 MIME-Version: 1.0
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87@eucas1p1.samsung.com>
- <1555683568-20882-5-git-send-email-l.luba@partner.samsung.com>
- <20190425195156.GA31128@bogus> <86715dda-c1b0-5354-17d2-419f8137cb91@partner.samsung.com>
-In-Reply-To: <86715dda-c1b0-5354-17d2-419f8137cb91@partner.samsung.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 29 Apr 2019 11:36:16 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJUNw_aDKjWf4TkJWQFhhLCrGYWbTtWpz5jkyeONRcpQw@mail.gmail.com>
-Message-ID: <CAL_JsqJUNw_aDKjWf4TkJWQFhhLCrGYWbTtWpz5jkyeONRcpQw@mail.gmail.com>
-Subject: Re: [PATCH v6 04/10] Documentation: dt: device tree bindings for
- LPDDR3 memories
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
+Content-Disposition: inline
+In-Reply-To: <20190429173842.06f02852@nic.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 7:05 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Hi Rob,
->
-> On 4/25/19 9:51 PM, Rob Herring wrote:
-> > On Fri, Apr 19, 2019 at 04:19:22PM +0200, Lukasz Luba wrote:
-> >> The device tree bindings for LPDDR3 SDRAM memories.
-> >>
-> >> For specifying the AC timing parameters of the memory device
-> >> the 'lpddr3' binding uses binding 'lpddr2-timings'.
-> >>
-> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> >> ---
-> >>   .../devicetree/bindings/lpddr3/lpddr3-timings.txt  | 57 +++++++++++++
-> >>   .../devicetree/bindings/lpddr3/lpddr3.txt          | 93 ++++++++++++++++++++++
-> >
-> > Please rename the lpddr2 directory to 'ddr' and add these to it.
-> OK, I will rename it in the nex patch set.
-> >
-> > Maybe whatever properties are common should be put in a common doc.
-> There are maybe a few common properties, but I would not dare to merge
-> lpddr2 and lpddr3 before consulting it with TI engineers who made
-> LPDDR2 support.
 
-Why not. You aren't changing anything. Just rearranging.
+--J/dobhs11T7y2rNN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Could we work on a common file after the patch set got merged?
+On Mon 2019-04-29 17:38:42, Marek Behun wrote:
+> I am sending patch only adding the I2C dep. Theoretically it is
+> possible that someone uses the same I2C API in their microcontroller on
+> another architecture.
 
-Yes, but please still move everything to a common directory.
+Theoretically. But we both now that probability of that is very low,
+and that likely driver would need other updates, too... right?
 
-> >
-> >>   2 files changed, 150 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/lpddr3/lpddr3.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt b/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
-> >> new file mode 100644
-> >> index 0000000..ebf3e00
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
-> >> @@ -0,0 +1,57 @@
-> >> +* AC timing parameters of LPDDR3 memories for a given speed-bin.
-> >> +* The structures are based on LPDDR2 and extended where needed.
-> >> +
-> >> +Required properties:
-> >> +- compatible : Should be "jedec,lpddr3-timings"
-> >> +- min-freq : minimum DDR clock frequency for the speed-bin. Type is <u32>
-> >> +- max-freq : maximum DDR clock frequency for the speed-bin. Type is <u32>
-> >> +
-> >> +Optional properties:
-> >> +
-> >> +The following properties represent AC timing parameters from the memory
-> >> +data-sheet of the device for a given speed-bin. All these properties are
-> >> +of type <u32> and the default unit is ps (pico seconds).
-> >> +- tRFC
-> >> +- tRRD
-> >> +- tRPab
-> >> +- tRPpb
-> >> +- tRCD
-> >> +- tRC
-> >> +- tRAS
-> >> +- tWTR
-> >> +- tWR
-> >> +- tRTP
-> >> +- tW2W-C2C
-> >> +- tR2R-C2C
-> >> +- tFAW
-> >> +- tXSR
-> >> +- tXP
-> >> +- tCKE
-> >> +- tCKESR
-> >> +- tMRD
-> >> +
-> >> +Example:
-> >> +
-> >> +timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@0 {
-> >
-> > Since the lpddr2 version was written, we've gotten stricter about
-> > allowing unit-address without reg property. Perhaps 'reg' should be the
-> > max-freq instead.
-> OK, so I will rename 'max-freq' to 'reg' and add a comment with:
-> '/* workaround: it shows max-freq */
-> Does it make sense?
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Sure.
+--J/dobhs11T7y2rNN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Rob
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzHKGEACgkQMOfwapXb+vJBnACeN70fWubChYlk70/V8Tb9hnNv
+8yAAn2xWQhTs6fpmAXSZ55//Tlc6mz7M
+=2KPW
+-----END PGP SIGNATURE-----
+
+--J/dobhs11T7y2rNN--
