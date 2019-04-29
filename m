@@ -6,414 +6,186 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A1EC004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CF8C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE1A20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0B220652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfD2N0u (ORCPT
+        id S1728180AbfD2N2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:26:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35816 "EHLO mx1.redhat.com"
+        Mon, 29 Apr 2019 09:28:45 -0400
+Received: from mga03.intel.com ([134.134.136.65]:52663 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbfD2N0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:26:50 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A1C7A7E44B;
-        Mon, 29 Apr 2019 13:26:49 +0000 (UTC)
-Received: from redhat.com (ovpn-123-191.rdu2.redhat.com [10.10.123.191])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 041715D6A9;
-        Mon, 29 Apr 2019 13:26:47 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 09:26:45 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM TOPIC] Direct block mapping through fs for device
-Message-ID: <20190429132643.GB3036@redhat.com>
-References: <20190426013814.GB3350@redhat.com>
- <20190426062816.GG1454@dread.disaster.area>
- <20190426152044.GB13360@redhat.com>
- <20190427012516.GH1454@dread.disaster.area>
+        id S1725838AbfD2N2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:28:45 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 06:28:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
+   d="scan'208";a="341805320"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Apr 2019 06:28:39 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hL6Kj-0008Iz-6u; Mon, 29 Apr 2019 16:28:37 +0300
+Date:   Mon, 29 Apr 2019 16:28:37 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        andrew@aj.id.au, macro@linux-mips.org, vz@mleia.com,
+        slemieux.tyco@gmail.com, khilman@baylibre.com, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
+        davem@davemloft.net, jacmet@sunsite.dk, linux@prisktech.co.nz,
+        matthias.bgg@gmail.com, linux-mips@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH 40/41] drivers: tty: serial: helper for setting mmio range
+Message-ID: <20190429132837.GF9224@smile.fi.intel.com>
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-41-git-send-email-info@metux.net>
+ <20190428153905.GR9224@smile.fi.intel.com>
+ <c75f4ca9-367c-25d5-2597-75f2dccf6e1c@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190427012516.GH1454@dread.disaster.area>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 29 Apr 2019 13:26:49 +0000 (UTC)
+In-Reply-To: <c75f4ca9-367c-25d5-2597-75f2dccf6e1c@metux.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 11:25:16AM +1000, Dave Chinner wrote:
-> On Fri, Apr 26, 2019 at 11:20:45AM -0400, Jerome Glisse wrote:
-> > On Fri, Apr 26, 2019 at 04:28:16PM +1000, Dave Chinner wrote:
-> > > On Thu, Apr 25, 2019 at 09:38:14PM -0400, Jerome Glisse wrote:
-> > > > I see that they are still empty spot in LSF/MM schedule so i would like to
-> > > > have a discussion on allowing direct block mapping of file for devices (nic,
-> > > > gpu, fpga, ...). This is mm, fs and block discussion, thought the mm side
-> > > > is pretty light ie only adding 2 callback to vm_operations_struct:
-> > > 
-> > > The filesystem already has infrastructure for the bits it needs to
-> > > provide. They are called file layout leases (how many times do I
-> > > have to keep telling people this!), and what you do with the lease
-> > > for the LBA range the filesystem maps for you is then something you
-> > > can negotiate with the underlying block device.
-> > > 
-> > > i.e. go look at how xfs_pnfs.c works to hand out block mappings to
-> > > remote pNFS clients so they can directly access the underlying
-> > > storage. Basically, anyone wanting to map blocks needs a file layout
-> > > lease and then to manage the filesystem state over that range via
-> > > these methods in the struct export_operations:
-> > > 
-> > >         int (*get_uuid)(struct super_block *sb, u8 *buf, u32 *len, u64 *offset);
-> > >         int (*map_blocks)(struct inode *inode, loff_t offset,
-> > >                           u64 len, struct iomap *iomap,
-> > >                           bool write, u32 *device_generation);
-> > >         int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
-> > >                              int nr_iomaps, struct iattr *iattr);
-> > > 
-> > > Basically, before you read/write data, you map the blocks. if you've
-> > > written data, then you need to commit the blocks (i.e. tell the fs
-> > > they've been written to).
-> > > 
-> > > The iomap will give you a contiguous LBA range and the block device
-> > > they belong to, and you can then use that to whatever smart DMA stuff
-> > > you need to do through the block device directly.
-> > > 
-> > > If the filesystem wants the space back (e.g. because truncate) then
-> > > the lease will be revoked. The client then must finish off it's
-> > > outstanding operations, commit them and release the lease. To access
-> > > the file range again, it must renew the lease and remap the file
-> > > through ->map_blocks....
+On Mon, Apr 29, 2019 at 12:12:35PM +0200, Enrico Weigelt, metux IT consult wrote:
+> On 28.04.19 17:39, Andy Shevchenko wrote:
+
+> seems I've forgot to add "RFC:" in the subject - I'm not entirely happy
+> w/ that patch myself, just want to hear your oppinions.
+> 
+> Moreover, the size argument seems wrong here.
+
+Something went wrong with quoting style in your reply.
+
+> hmm, I'm actually not sure yet, what the correct size really would be,
+> where the value actually comes from. Just assumed that it would be the
+> whole area that the BAR tells. But now I recognized that I'd need to
+> substract 'offset' here.
+
+It will be still wrong. The driver in question defines resource window based on
+several parameters. So, this should be supplied with a real understanding of
+all variety of hardware the certain driver serves for.
+
+> Rethinking it further, we'd probably could deduce the UPIO_* from the
+> struct resource, too.
+> 
+> >> +		uart_memres_set_start_len(>> +			&port,>> +			FRODO_BASE + FRODO_APCI_OFFSET(1), 0);> > Please,
+> avoid such splitting, first parameter is quite fit above line.
+> 
+> Ok. My intention was having both parameters starting at the same line,
+> but then the second line would get too long again. > ...and here, and
+> maybe in other places you split the assignments to the members> in two
+> part. Better to call your function before or after these blocks of>
+> assignments.
+> the reason what I've just replaced the exactly the assignments, trying
+> not to touch too much ;-)
+> I'll have a closer look on what can be moved w/o side effects.
+
+Just try to avoid
+
+	foo(
+		bar, ...
+
+-like splitting.
+
+> >> +static inline void uart_memres_set_res(struct uart_port *port,
 > > 
-> > Sorry i should have explain why lease do not work. Here are list of
-> > lease shortcoming AFAIK:
-> >     - only one process
+> > Perhaps better name can be found.
+> > Especially taking into account that it handles IO / MMIO here.
 > 
-> Sorry, what? The lease is taken by a application process that then
-> hands out the mapping to whatever parts of it - processes, threads,
-> remote clients, etc - need access. If your application doesn't
-> have an access co-ordination method, then you're already completely
-> screwed.
+> hmm, lacking creativity here ;-)
+> any suggestions ?
 
-Then i am completely screw :) The thing is that today mmap of a file
-does not mandate any kind of synchronization between process than
-mmap files and thus we have a lot of existing applications that are
-just happy with that programming model and i do not see any reasons
-to force something new on them.
+No immediate suggestions.
 
-Here i am only trying an optimization by possibly skipping the page
-cache intermediary if filesystem and blocks device allows it and can
-do it (depending on any number of runtime conditions).
+uart_set_io_resource()
+uart_clear_io_resource()
 
-So lease is inherently not compatible with mmap of file by multiple
-processes. I understand you want to push your access model but the
-reality is that we have existing applications that just do not fit
-that model and i do not see any reasons to ask them to change, it
-is never a successful approach.
+at least sounds more plausible to me.
 
-> 
-> >     - program ie userspace is responsible for doing the right thing
-> >       so heavy burden on userspace program
-> 
-> You're asking for direct access to storage owned by the filesystem.
-> The application *must* play by the filesystem rules. Stop trying to
-> hack around the fact that the filesystem controls access to the
-> block mapping.
-
-This is a filesystem opt-in feature if a given filesystem do not want
-to implement it then just do not implement it and it will use page
-cache. It is not mandatory i am not forcing anyone. The first reasons
-for those are not filesystem but mmap of device file. But as LSF/MM
-is up i thought it would be a good time to maybe propose that for file-
-system too. If you do not want that for your filesystem then just NAK
-any patch that add that to filesystem you care about.
-
-> 
-> >     - lease break time induce latency
-> 
-> Lease breaks should never happen in normal workloads, so this isn't
-> an issue. IF you have an application that requires exclusive access,
-> then ensure that the file can only be accessed by the application
-> and the lease should never be broken.
-> 
-> But if you are going to ask for filesystems to hand out block
-> mapping for thrid party access, the 3rd parties need to play by the
-> filesystem's access rules, and that means they /must/ break access
-> if the filesystem asks them to.
-
-The mmu notifier give you revocation at any _time_ without round
-trip to user space.
-
-> 
-> >     - lease may require privileges for the applications
-> 
-> If you can directly access the underlying block device (which
-> requires root/CAP_SYS_ADMIN) then the application has sufficient
-> privilege to get a file layout lease.
-
-Again here i am tageting mmap of file and thus do not necessarily
-need the same privileges as lease (AFAIK).
-
-> 
-> >     - work on file descriptor not virtual addresses
-> 
-> Sorry, what? You want direct access to the underlying storage device
-> for direct DMA, not access to the page cache. i.e. you need a
-> mapping for a range of a file (from offset X to Y) and you most
-> definitely do not need the file to be virtually mapped for that.
-> 
-> If you want to DMA from a userspace or peer device memory to storage
-> directly, then you definitely do not want the file to mapped into
-> the page cache, and so mmap() is most definitely the wrong interface
-> to be using to set up direct storage access to a file.
-
-I am starting from _existing_ application that do mmap and thus mmap
-is the base assumption it is my starting point. I am not trying to
-do some kind of new workload, i am trying to allow existing application
-to leverage new storage technology more efficiently without changing
-a single line in those application.
-
-I believe kernel should always try to improve existing application
-workload with no modification to the application whenever possible.
-
-> 
-> > While what i am trying to achieve is:
-> >     - support any number of process
-> 
-> file leases don't prevent that.
-
-I was under the impression that there could be only one lease at a
-time per file. Sorry if i was wrong.
-
-> 
-> >     - work on virtual addresses
-> 
-> like direct io, get_user_pages() works just fine for this.
-
-Here i am getting away of GUP to avoid the pinning issues related
-to GUP hence why there is no need in what i propose to pin anything.
-What i am trying to do is skip out the page cache copy if at all
-possible (depending on many factors) so that application can get
-better performance without modification.
-
-> >     - is an optimization ie falling back to page cache is _always_
-> >       acceptable
-> 
-> No, it isn't. Falling back to the page cache will break the layout
-> lease because the lock filesystem does IO that breaks existing
-> leases. You can't have both a layout lease and page cache access to
-> the same file.
-
-Yes and this is what i want to do, mmap access is from where i start
-so as a starting point it is what i would like to allow. If you do
-not want that for your filesystem fine.
-
-> 
-> >     - no changes to userspace program ie existing program can
-> >       benefit from this by just running on a kernel with the
-> >       feature on the system with hardware that support this.
-> 
-> That's a pipe dream. Existing direct access applications /don't work/ with
-> file-backed mmap() ranges. They will not work with DAX, either, so
-> please stop with the "work with unmodified existing applications"
-> already.
-
-I am talking about existing application that do mmap, i do not care
-about application that do direct access this is not what i am trying
-to address. I want to improve application that use mmap.
-
-> 
-> If you want peer to peer DMA to filesystem managed storage, then you
-> *must* use the filesystem to manage access to that storage.
-
-And the callback just do that, they give control to the filesystem, if
-the callback is not there then page cache is use, if it is there then
-the filesystem do not always have to succeed and it can fails and just
-fallbacks to page cache.
-
-> 
-> >     - allow multiple different devices to map the block (can be
-> >       read only if the fabric between devices is not cache coherent)
-> 
-> Nothing about a layout lease prevents that. What the application
-> does with the layout lease is it's own business.
-> 
-> >     - it is an optimization ie avoiding to waste main memory if file
-> >       is only accessed by device
-> 
-> Layout leases don't prevent this - they are explicitly for allowing
-> this sort of access to be made safely.
-> 
-> >     - there is _no pin_ and it can be revoke at _any_ time from within
-> >       the kernel ie there is no need to rely on application to do the
-> >       right thing
-> 
-> Revoke how, exactly? Are you really proposing sending SEGV to user
-> processes as the revoke mechanism?
-
-No, just mmu notifier, exactly what happens on write-back, truncate, ...
-you can walk all rmap of page and trigger mmu notifier for it or reverse
-walk file offset range and trigger mmu notifier for those.
-
-So there is no disruption to the application. After revocation it page
-fault again and the cycle start again either it end up in page cache
-or the same callback is call again.
-
-> 
-> >     - not only support filesystem but also vma that comes from device
-> >       file
-> 
-> What's a "device file" and how is that any difference from a normal
-> kernel file?
-
-Many device driver expose object (for instance all the GPU driver) through
-their device file and allow userspace to mmap the device file to access
-those object. At a given offset in the device file you will find a given
-object and this can be per application or global to all application.
-
-> 
-> > The motivation is coming from new storage technology (NVMe with CMB for
-> > instance) where block device can offer byte addressable access to block.
-> > It can be read only or read and write. When you couple this with gpu,
-> > fgpa, tpu that can crunch massive data set (in the tera bytes ranges)
-> > then avoiding going through main memory becomes an appealing prospect.
-> >
-> > If we can achieve that with no disruption to the application programming
-> > model the better it is. By allowing to mediate direct block access through
-> > vma we can achieve that.
-> 
-> I have a hammer that I can use to mediate direct block access, too.
-> 
-> That doesn't mean it's the right tool for the job. At it's most
-> fundamental level, the block mapping is between an inode, the file
-> offset and the LBA range in the block device that the storage device
-> presents to users. This is entirely /filesystem information/ and we
-> already have interfaces to manage and arbitrate safe direct storage
-> access for third parties.
-> 
-> Stop trying to re-invent the wheel and use the one we already have
-
-I have a starting point mmap and this is what i try to improve.
-.
-> 
-> > This is why i am believe something at the vma level is better suited to
-> > make such thing as easy and transparent as possible. Note that unlike
-> > GUP there is _no pinning_ so filesystem is always in total control and
-> > can revoke at _any_ time.
-> 
-> Revoke how, exactly? And how do applications pause and restart when
-> this undefined revoke mechanism is invoked? What happens to access
-> latency when this revoke occurs and why is this any different to
-> having a file layout lease revoked?
-
-Application do not pause in anyway, after invalidation it will page
-fault exactly as with truncate or write back. Then the callback is
-call again and the filesystem can say no this time and it will fall
-back to the page cache. There is no change to existing application
-it just works as it does now with no changes in behavior.
-
-> 
-> > Also because it is all kernel side we should
-> > achieve much better latency (flushing device page table is usualy faster
-> > then switching to userspace and having userspace calling back into the
-> > driver).
+> >> +				       struct resource *res)
+> >> +{
+> >> +	if (!res) {
 > > 
+> > It should return an error in such case.
+> 
+> It's not an error, but desired behaviour: NULL resource
+> clears the value.
+
+Oh, then why it's in this function, which is *setter* according to its name,
+at all?
+
+> 
+> >> +		port->mapsize = 0;
+> >> +		port->mapbase = 0;
+> >> +		port->iobase = 0;
+> >> +		return;
+> >> +	}
+> >> +
+> >> +	if (resource_type(res) == IORESOURCE_IO) {
+> >> +		port->iotype = UPIO_PORT;
+> >> +		port->iobase = resource->start;
+> >> +		return;
+> >> +	}
+> >> +
+> >> +	uart->mapbase = res->start;
+> >> +	uart->mapsize = resource_size(res);
 > > 
-> > > 
-> > > > So i would like to gather people feedback on general approach and few things
-> > > > like:
-> > > >     - Do block device need to be able to invalidate such mapping too ?
-> > > > 
-> > > >       It is easy for fs the to invalidate as it can walk file mappings
-> > > >       but block device do not know about file.
-> > > 
-> > > If you are needing the block device to invalidate filesystem level
-> > > information, then your model is all wrong.
+> >> +	uart->iotype  = UPIO_MEM;
 > > 
-> > It is _not_ a requirement. It is a feature and it does not need to be
-> > implemented right away the motivation comes from block device that can
-> > manage their PCIE BAR address space dynamicly and they might want to
-> > unmap some block to make room for other block. For this they would need
-> > to make sure that they can revoke access from device or CPU they might
-> > have mapped the block they want to evict.
+> > Only one type? Why type is even set here?
 > 
-> This has nothing to do with the /layout lease/. Layout leases are
-> for managing direct device access, not how the application interacts
-> with the hardware that it has been given a block mapping for.
-> 
-> Jerome, it seems to me like you're conflating hardware management
-> issues with block device access and LBA management. These are
-> completely separate things that the application has to manage - the
-> filesystem and the layout lease doesn't give a shit about whether
-> the application has exhausted the hardware PCIE BAR space.  i.e.
-> hardware kicking out a user address mapping does not invalidate the
-> layout lease in any way - it just requires the application to set up
-> that direct access map in the hardware again.  The file offset to
-> LBA mapping that the layout lease manages is entirely unaffected by
-> this sort of problem.
+> It's the default case. The special cases (eg. UPIO_MEM32) need to be
+> set explicitly, after that call.
 
-Ignore this point if it confuse you, it just something that can be
-ignore unless it becomes a problem.
+Which is weird.
 
-> 
-> > > >     - Maybe some share helpers for block devices that could track file
-> > > >       corresponding to peer mapping ?
-> > > 
-> > > If the application hasn't supplied the peer with the file it needs
-> > > to access, get a lease from and then map an LBA range out of, then
-> > > you are doing it all wrong.
+> Not really nice, but haven't found a better solution yet.
+
+Just simple not touching it?
+
+> I don't like
+> the idea of passing an UPIO_* parameter to the function, most callers
+> should not care, if they don't really need to.
+
+They do care. The driver on its own knows better than any generic code what
+type of hardware it serves to.
+
+> >> + */
 > > 
-> > I do not have the same programming model than one you have in mind, i
-> > want to allow existing application which mmap files and access that
-> > mapping through a device or CPU to directly access those blocks through
-> > the virtual address.
+> >> +static inline void uart_memres_set_start_len(struct uart_driver *uart,
+> >> +					     resource_size_t start,
+> >> +					     resource_size_t len)
+> > 
+> > The comment doesn't tell why this is needed when we have one for struct
+> > resource.
 > 
-> Which is the *wrong model*.
-> 
-> mmap() of a file-backed mapping does not provide a sane, workable
-> direct storage access management API. It's fundamentally flawed
-> because it does not provide any guarantee about the underlying
-> filesystem information (e.g. the block mapping) and as such, results
-> in a largely unworkable model that we need all sorts of complexity
-> to sorta make work.
-> 
-> Layout leases and the export ops provide the application with the
-> exact information they need to directly access the storage
-> underneath the filesystem in a safe manner. They do not, in any way,
-> control how the application then uses that information. If you
-> really want to use mmap() to access the storage, then you can mmap()
-> the ranges of the block device the ->map_blocks() method tells you
-> belong to that file. 
-> 
-> You can do whatever you want with those vmas and the filesystem
-> doesn't care - it's not involved in /any way whatsoever/ with the
-> data transfer into and out of the storage because ->map_blocks has
-> guaranteed that the storage is allocated. All the application needs
-> to do is call ->commit_blocks on each range of the mapping it writes
-> data into to tell the filesystem it now contains valid data.  It's
-> simple, straight forward, and hard to get wrong from both userspace
-> and the kernel filesystem side.\
-> 
-> Please stop trying to invent new and excitingly complex ways to do
-> direct block access because we ialready have infrastructure we know
-> works, we already support and is flexible enough to provide exactly
-> the sort of direct block device access mechainsms that you are
-> asking for.
+> Renamed it to uart_memres_set_mmio_range().
 
-I understand you do not like mmap but it has been around long enough
-that it is extensively use and we have to accept that. There is no
-changing all the applications that exist out there and that rely on
-mmap and this is for those applications that such optimization would
-help.
+See also above about naming patterns.
 
-Cheers,
-Jérôme
+> 
+> This helper is meant for drivers that don't work w/ struct resource,
+> or explicitly set their own len.
+
+Then why it's not mentioned in the description of the function?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
