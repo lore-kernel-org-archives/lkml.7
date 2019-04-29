@@ -2,116 +2,130 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F219C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAECC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A2C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E112075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556522264;
+	bh=60loMRXLLtm4dp1Y5T4hPjrTfuTqUxu/fQbhti34uZo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uG/cjaHmT0xH8EgNWXKq4VOYIzbr9RZcsvQbEqMSy4dLZ+G2aX8NndlpPpO4hrqZb
+	 5nvZDH5M/lN8tLfSw2AE7FQJMX1boN+9tX57YRn/0Oxgxu4HNHSkVVth2LAJx3+JO4
+	 0aNsQpzowO+Q0yk+PZF5XyNuwBwYLQLutJvO7baw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfD2HNN (ORCPT
+        id S1727409AbfD2HRn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:13:13 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:52017 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726846AbfD2HNM (ORCPT
+        Mon, 29 Apr 2019 03:17:43 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37183 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbfD2HRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:13:12 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TQUwxLd_1556521981;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TQUwxLd_1556521981)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 29 Apr 2019 15:13:08 +0800
-Date:   Mon, 29 Apr 2019 15:13:01 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 13/17] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20190429071259.GA15100@aaronlu>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <edd4c014e69b68b90160766c6049f2ed922793c7.1556025155.git.vpillai@digitalocean.com>
+        Mon, 29 Apr 2019 03:17:43 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k6so7517836oic.4;
+        Mon, 29 Apr 2019 00:17:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=U0ILNQQnANwDaULFq9BnSLE4JegKbYYRqIG6pRQ8vEk=;
+        b=AzPOYPlmRlFY1ZMZ6XdFpNqOKSufwIYjmGx6OGsZaW2CFkoWeQ6tQ3+x8AJxK/B3W+
+         ZbZAhrJa90LxJVakt7HwjulDgHy/2xw6As8QtZsW2n/WnB5hJqwdl0ykQm6y2X/C42ix
+         LOmm27gFtTdSz+yQxeiQwWEtDhffXj6EpLDK6K8V4T2mShRuJr8EQHCjInEEHawPOU+V
+         6llXpBVfNduP81z5Ct+rJ/0Sq6EfdbDspDf+b/7h7dGaaW1m9PodJQNAWvcJg+U/zOvZ
+         otiXCGk3DVoUrGE1a38sOpdzQCrQfyHOP2J8i9Kj2y6ZvgkXfFxxZjtirDpNm8a2vhCu
+         C3tw==
+X-Gm-Message-State: APjAAAW+sC75NcFvGrNR6Dnmegz+pmG7Kt6jSOnLArpu9xnCNvoWj+gG
+        yIQPSz+QhR7tAsqdEy4koU9PwEyhKqJnfdw+0bknmRLI
+X-Google-Smtp-Source: APXvYqwr1JzPOuSpeIEP+9sUUFOH+slhC9WrQ3DVJQkPqRABjuPtCwtvgu2tX7fhE9UKdsflW3QhNDNgQMdTGy0lX/Q=
+X-Received: by 2002:aca:4a8a:: with SMTP id x132mr7422695oia.68.1556522262049;
+ Mon, 29 Apr 2019 00:17:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <edd4c014e69b68b90160766c6049f2ed922793c7.1556025155.git.vpillai@digitalocean.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <5fdabbb9-0a62-4802-f1ca-f83584f935fa@molgen.mpg.de>
+In-Reply-To: <5fdabbb9-0a62-4802-f1ca-f83584f935fa@molgen.mpg.de>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 29 Apr 2019 09:17:26 +0200
+Message-ID: <CAJZ5v0gobp60Pn5cdh0CohGAXSBs-EvntNqKc_dj_UTnOiogkQ@mail.gmail.com>
+Subject: Re: Why is suspend with s2idle available on POWER8 systems?
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 04:18:18PM +0000, Vineeth Remanan Pillai wrote:
-> +// XXX fairness/fwd progress conditions
-> +static struct task_struct *
-> +pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *max)
-> +{
-> +	struct task_struct *class_pick, *cookie_pick;
-> +	unsigned long cookie = 0UL;
-> +
-> +	/*
-> +	 * We must not rely on rq->core->core_cookie here, because we fail to reset
-> +	 * rq->core->core_cookie on new picks, such that we can detect if we need
-> +	 * to do single vs multi rq task selection.
-> +	 */
-> +
-> +	if (max && max->core_cookie) {
-> +		WARN_ON_ONCE(rq->core->core_cookie != max->core_cookie);
-> +		cookie = max->core_cookie;
-> +	}
-> +
-> +	class_pick = class->pick_task(rq);
-> +	if (!cookie)
-> +		return class_pick;
-> +
-> +	cookie_pick = sched_core_find(rq, cookie);
-> +	if (!class_pick)
-> +		return cookie_pick;
-> +
-> +	/*
-> +	 * If class > max && class > cookie, it is the highest priority task on
-> +	 * the core (so far) and it must be selected, otherwise we must go with
-> +	 * the cookie pick in order to satisfy the constraint.
-> +	 */
-> +	if (cpu_prio_less(cookie_pick, class_pick) && core_prio_less(max, class_pick))
+On Sat, Apr 27, 2019 at 12:54 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>
+> Dear Linux folks,
+>
+>
+> Updating an IBM S822LC from Ubuntu 18.10 to 19.04 some user space stuff
+> seems to have changed, so that going into sleep/suspend is enabled.
+>
+> That raises two questions.
+>
+> 1.  Is suspend actually supported on a POWER8 processor?
 
-It apapears to me the cpu_prio_less(cookie_pick, class_pick) isn't
-needed.
+Suspend-to-idle is a special variant of system suspend that does not
+depend on any special platform support.  It works by suspending
+devices and letting all of the CPUs in the system go idle (hence the
+name).
 
-If cookie_pick is idle task, then cpu_prio_less(cookie_pick, class_pick)
-is always true;
-If cookie_pick is not idle task and has the same sched class as
-class_pick, then class_pick is the best candidate to run accoring to
-their sched class. In this case, cpu_prio_less(cookie_pick, class_pick)
-shouldn't return false or it feels like a bug;
-If cookie_pick is not idle task and has a different sched class as
-class_pick:
- - if cookie_pick's sched class has higher priority than class_pick's
-   sched class, then cookie_pick should have been selected in previous
-   sched class iteration; and since its cookie matches with max,
-   everything should have been finished already;
- - if cookie_pick's sched class has lower priority than class_pick's
-   sched class, then cpu_prio_less(cookie_pick, class_pick) will still
-   returns true.
+Also see https://www.kernel.org/doc/html/latest/admin-guide/pm/sleep-states.html#suspend-to-idle
 
-So looks like cpu_prio_less(cookie_pick, class_pick) should always
-return true and thus not needed.
+>
+> > Apr 27 10:18:13 power NetworkManager[7534]: <info>  [1556353093.7224] manager: sleep: sleep requested (sleeping: no  e
+> > Apr 27 10:18:13 power systemd[1]: Reached target Sleep.
+> > Apr 27 10:18:13 power systemd[1]: Starting Suspend...
+> > Apr 27 10:18:13 power systemd-sleep[82190]: Suspending system...
+> > Apr 27 10:18:13 power kernel: PM: suspend entry (s2idle)
+> > -- Reboot --
+>
+> > $ uname -m
+> > ppc64le
+> > $ more /proc/version
+> > Linux version 5.1.0-rc6+ (joey@power) (gcc version 8.3.0 (Ubuntu 8.3.0-6ubuntu1)) #1 SMP Sat Apr 27 10:01:48 CEST 2019
+> > $ more /sys/power/mem_sleep
+> > [s2idle]
+> > $ more /sys/power/state
+> > freeze mem
+> > $ grep _SUSPEND /boot/config-5.0.0-14-generic # also enabled in Ubuntu’s configuration
+> > CONFIG_ARCH_SUSPEND_POSSIBLE=y
+> > CONFIG_SUSPEND=y
+> > CONFIG_SUSPEND_FREEZER=y
+> > # CONFIG_SUSPEND_SKIP_SYNC is not set
+> > # CONFIG_PM_TEST_SUSPEND is not set
+>
+> Should the Kconfig symbol `SUSPEND` be selectable? If yes, should their
+> be some detection during runtime?
+>
+> 2.  If it is supported, what are the ways to getting it to resume? What
+> would the IPMI command be?
 
-> +		return class_pick;
-> +
-> +	return cookie_pick;
-> +}
+That would depend on the distribution.
+
+Generally, you need to set up at least one device to generate wakeup interrupts.
+
+The interface to do that are the /sys/devices/.../power/wakeup files,
+but that has to cause enble_irq_wake() to be called for the given IRQ,
+so some support in the underlying drivers need to be present for it to
+work.
+
+USB devices generally work as wakeup sources if the controllers reside
+on a PCI bus, for example.
+
+Thanks,
+Rafael
