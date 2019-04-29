@@ -7,257 +7,237 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C9EC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C61C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6618F2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BCD2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfwiCI/W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVv+Q1zx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfD2LyI (ORCPT
+        id S1728129AbfD2LyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:54:08 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51035 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbfD2LyH (ORCPT
+        Mon, 29 Apr 2019 07:54:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46072 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbfD2LyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:54:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p21so11877747wmc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 04:54:06 -0700 (PDT)
+        Mon, 29 Apr 2019 07:54:10 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s15so15549247wra.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 04:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0BIuwk58CaJsk9RrgR9sqqUo2JdknvUluNTd07CFIkQ=;
-        b=GfwiCI/Wm1y3BZLlgVOyL4IuBhWqOeZGovQWThy39oT670A1eyapWbfQHb2m+EfZJy
-         RexPxGSL2phcNfpkmej/gvo8Lz+FfzHjaJHMXz+effqkD9YdFvwr7U33At/0U3Zf0HiS
-         ORGzHb8Jx4xS+7sd5/CsnbMrT2xRqMzRfDIoM+tfaSgmDENSP3hxbbhzBNF+2Jl5dy9l
-         ExcT9VPDIQ98FvWlWsMRSco83o+oPnjSNvQrNItDwgVhfu0bXYMs32c0Q9QF6qJKqEBz
-         h1nWq4TcncSNCthe2M/TqS56h6nB5/WJliu0rUIFFs4JqNDaR8bEiVntZ+gTdPxrfNZ9
-         GuLg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=hTlAYkqUJVcd5qp1ARHHpavwgTPY9c+QQ/GLw3lnEQ0=;
+        b=BVv+Q1zxd9TtrRdH8FXoNo9vMB7XYlZ/cg9u0xcO0bzyCPVqNR6Cx0w17Uu/dtV1Et
+         P6EEM/pMKw7TZhZRb02j1xB3piOLKmVJ5YDv2JcetHwQ3or1Nq1jwhZmIR2dDVZUmnnH
+         Sb/FwT0jnY5xnf30a0yr+hajCFkQb4dF+uo91MOedhOdYrVV2khQuiWuWNAoG3MTyj2Y
+         K5SGvDYubE3WL33VMjgMGOQoCBkUzMzwi6w9sMOyDhq6Z3y10VsrQRJ7PYQ9zp7J0wcw
+         HeAsMJC4dfdFjTR39gRSXR2LpG0NilGbYCCnbuGQ3xMyLqU+agaVSOjFY0boKwA913k5
+         EWAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0BIuwk58CaJsk9RrgR9sqqUo2JdknvUluNTd07CFIkQ=;
-        b=XPynLjFVl1Fcze5NWR8PrQjw7wxrkOrFq+S08DxPLKVieYbl4q7gPZBMeSxKYqRZrr
-         2kHnLyl/g5CsxT8o2L8T/eH68WRvfg+6tvsg3A9//X/eKNUnND4HH7Merh/nyC9nOjnG
-         sy9bOnWQfYFFi4lCDmS3Q9X5AUvB+2ca1S7dzmYj/6Zf/XZ2utdTmqvGHgpr2zXAsHcu
-         V2tvjfaybw9tsuK60r5xoMe2mRB4LC8aK0GKPYvDaneZKcS+GklCigVyDDlsJKzy8kfF
-         vFqlUytLsuhlLWRKrAI+G3qZ5M/Y5p6xrqHHENAlOzN2CcDKOmD1cUc77rwaCeqvX+9I
-         Ukjw==
-X-Gm-Message-State: APjAAAWVz8nJOQlPAbdTEP1jmhJGgKnUHBD2qnsjKHzGTuJf1XGxxCW1
-        XQcKI8NfnxvY2b28jucxV+qTpnUd
-X-Google-Smtp-Source: APXvYqwgbM/mK0g4q7DjPlH/DnDaE+oQ+Y5CGY+jF6bIfe37BjLBQmtMslgS2DV/bGLXxe11oMlDRQ==
-X-Received: by 2002:a7b:c218:: with SMTP id x24mr4518743wmi.57.1556538844981;
-        Mon, 29 Apr 2019 04:54:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=hTlAYkqUJVcd5qp1ARHHpavwgTPY9c+QQ/GLw3lnEQ0=;
+        b=PchgR/z0UUP4ACfz7Ihn+SikjMMdUsr19KF371no6jz+V/QfgUYisVUNGnhLJLrbOq
+         H5SACtqalYohwsFXANrOBYaJ2pq/YCSU38bXrZQ+bRgFv0t7PtpRMJKwgdm4+zMBcLm0
+         utbuM7JurcHxxE9fdF8V8MXYCNLqCjxXFvAaew0DA08ZV7JwbeHd2RZlaUDKNUP/xIN5
+         1t7NoVlXOFoAX/xBIEyucj87eZQ45JoZfD+LNKbGA40aWl4HSRd7dOwzSZC3e/GH24CX
+         Bvfe6pmvM9OcyVrCRkMVCjSQ5tuYyyp0ji0IhBucs8XOmxa0XyrQUxAbM0ubI4Jb54z+
+         TAMQ==
+X-Gm-Message-State: APjAAAWrHfULRDmw76eQVkEynNtLKVoyaah+o5V7L0zn6h+VsXkAXLZj
+        62EYYsJBT1iB+A0wbS29Z6flMx2z
+X-Google-Smtp-Source: APXvYqzx85sX7KLrWYnWdyJyG1gXwZVsZu0Fqo0CxmTGLTglgmzdvC8KghFa6rY3b+r4JO/LoI/ykg==
+X-Received: by 2002:adf:f14e:: with SMTP id y14mr24250249wro.276.1556538848152;
+        Mon, 29 Apr 2019 04:54:08 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id h16sm9527141wrb.31.2019.04.29.04.54.03
+        by smtp.gmail.com with ESMTPSA id h16sm9527141wrb.31.2019.04.29.04.54.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 04:54:04 -0700 (PDT)
+        Mon, 29 Apr 2019 04:54:07 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 1/2] habanalabs: return old dram bar address upon change
-Date:   Mon, 29 Apr 2019 14:54:01 +0300
-Message-Id: <20190429115402.8156-1-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org, Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 2/2] habanalabs: Use single pool for CPU accessible host memory
+Date:   Mon, 29 Apr 2019 14:54:02 +0300
+Message-Id: <20190429115402.8156-2-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190429115402.8156-1-oded.gabbay@gmail.com>
+References: <20190429115402.8156-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the ASIC interface function that changes the DRAM bar
-window. The change is to return the old address that the DRAM bar pointed
-to instead of an error code.
+From: Tomer Tayar <ttayar@habana.ai>
 
-This simplifies the code that use this function (mainly in debugfs) to
-restore the bar to the old setting.
+The device's CPU accessible memory on host is managed in a dedicated
+pool, except for 2 regions - Primary Queue (PQ) and Event Queue (EQ) -
+which are allocated from generic DMA pools.
+Due to address length limitations of the CPU, the addresses of all these
+memory regions must have the same MSBs starting at bit 40.
+This patch modifies the allocation of the PQ and EQ to be also from the
+dedicated pool, to ensure compliance with the limitation.
 
-This is also needed for easier support in future ASICs.
-
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/goya/goya.c  | 60 +++++++++++++---------------
- drivers/misc/habanalabs/habanalabs.h |  5 ++-
- drivers/misc/habanalabs/pci.c        |  5 ++-
- 3 files changed, 35 insertions(+), 35 deletions(-)
+ drivers/misc/habanalabs/habanalabs.h       | 12 +++++++
+ drivers/misc/habanalabs/hw_queue.c         | 40 ++++++++++++++++------
+ drivers/misc/habanalabs/include/armcp_if.h |  8 -----
+ drivers/misc/habanalabs/irq.c              | 10 +++---
+ 4 files changed, 48 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 8ee3b00b0fab..04e4ed8a0be6 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -389,33 +389,26 @@ static int goya_pci_bars_map(struct hl_device *hdev)
- 	return 0;
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 65717e4055da..687651db614c 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -321,6 +321,18 @@ struct hl_cs_job;
+ #define HL_EQ_LENGTH			64
+ #define HL_EQ_SIZE_IN_BYTES		(HL_EQ_LENGTH * HL_EQ_ENTRY_SIZE)
+ 
++#define HL_CPU_PKT_SHIFT		5
++#define HL_CPU_PKT_SIZE			(1 << HL_CPU_PKT_SHIFT)
++#define HL_CPU_PKT_MASK			(~((1 << HL_CPU_PKT_SHIFT) - 1))
++#define HL_CPU_MAX_PKTS_IN_CB		32
++#define HL_CPU_CB_SIZE			(HL_CPU_PKT_SIZE * \
++					 HL_CPU_MAX_PKTS_IN_CB)
++#define HL_CPU_CB_QUEUE_SIZE		(HL_QUEUE_LENGTH * HL_CPU_CB_SIZE)
++
++/* KMD <-> ArmCP shared memory size (EQ + PQ + CPU CB queue) */
++#define HL_CPU_ACCESSIBLE_MEM_SIZE	(HL_EQ_SIZE_IN_BYTES + \
++					 HL_QUEUE_SIZE_IN_BYTES + \
++					 HL_CPU_CB_QUEUE_SIZE)
+ 
+ /**
+  * struct hl_hw_queue - describes a H/W transport queue.
+diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
+index ef3bb6951360..a1ee52cfd505 100644
+--- a/drivers/misc/habanalabs/hw_queue.c
++++ b/drivers/misc/habanalabs/hw_queue.c
+@@ -415,14 +415,20 @@ void hl_hw_queue_inc_ci_kernel(struct hl_device *hdev, u32 hw_queue_id)
  }
  
--/*
-- * goya_set_ddr_bar_base - set DDR bar to map specific device address
-- *
-- * @hdev: pointer to hl_device structure
-- * @addr: address in DDR. Must be aligned to DDR bar size
-- *
-- * This function configures the iATU so that the DDR bar will start at the
-- * specified addr.
-- *
-- */
--static int goya_set_ddr_bar_base(struct hl_device *hdev, u64 addr)
-+static u64 goya_set_ddr_bar_base(struct hl_device *hdev, u64 addr)
+ static int ext_and_cpu_hw_queue_init(struct hl_device *hdev,
+-					struct hl_hw_queue *q)
++				struct hl_hw_queue *q, bool is_cpu_queue)
  {
- 	struct goya_device *goya = hdev->asic_specific;
-+	u64 old_addr = addr;
+ 	void *p;
  	int rc;
  
- 	if ((goya) && (goya->ddr_bar_cur_addr == addr))
--		return 0;
-+		return old_addr;
+-	p = hdev->asic_funcs->dma_alloc_coherent(hdev,
+-				HL_QUEUE_SIZE_IN_BYTES,
+-				&q->bus_address, GFP_KERNEL | __GFP_ZERO);
++	if (is_cpu_queue)
++		p = hdev->asic_funcs->cpu_accessible_dma_pool_alloc(hdev,
++							HL_QUEUE_SIZE_IN_BYTES,
++							&q->bus_address);
++	else
++		p = hdev->asic_funcs->dma_alloc_coherent(hdev,
++						HL_QUEUE_SIZE_IN_BYTES,
++						&q->bus_address,
++						GFP_KERNEL | __GFP_ZERO);
+ 	if (!p)
+ 		return -ENOMEM;
  
- 	/* Inbound Region 1 - Bar 4 - Point to DDR */
- 	rc = hl_pci_set_dram_bar_base(hdev, 1, 4, addr);
- 	if (rc)
--		return rc;
-+		return U64_MAX;
+@@ -446,8 +452,15 @@ static int ext_and_cpu_hw_queue_init(struct hl_device *hdev,
+ 	return 0;
  
--	if (goya)
-+	if (goya) {
-+		old_addr = goya->ddr_bar_cur_addr;
- 		goya->ddr_bar_cur_addr = addr;
-+	}
+ free_queue:
+-	hdev->asic_funcs->dma_free_coherent(hdev, HL_QUEUE_SIZE_IN_BYTES,
+-			(void *) (uintptr_t) q->kernel_address, q->bus_address);
++	if (is_cpu_queue)
++		hdev->asic_funcs->cpu_accessible_dma_pool_free(hdev,
++					HL_QUEUE_SIZE_IN_BYTES,
++					(void *) (uintptr_t) q->kernel_address);
++	else
++		hdev->asic_funcs->dma_free_coherent(hdev,
++					HL_QUEUE_SIZE_IN_BYTES,
++					(void *) (uintptr_t) q->kernel_address,
++					q->bus_address);
  
--	return 0;
-+	return old_addr;
+ 	return rc;
+ }
+@@ -474,12 +487,12 @@ static int int_hw_queue_init(struct hl_device *hdev, struct hl_hw_queue *q)
+ 
+ static int cpu_hw_queue_init(struct hl_device *hdev, struct hl_hw_queue *q)
+ {
+-	return ext_and_cpu_hw_queue_init(hdev, q);
++	return ext_and_cpu_hw_queue_init(hdev, q, true);
+ }
+ 
+ static int ext_hw_queue_init(struct hl_device *hdev, struct hl_hw_queue *q)
+ {
+-	return ext_and_cpu_hw_queue_init(hdev, q);
++	return ext_and_cpu_hw_queue_init(hdev, q, false);
  }
  
  /*
-@@ -2215,11 +2208,10 @@ static int goya_init_cpu(struct hl_device *hdev, u32 cpu_timeout)
- 	 * Before pushing u-boot/linux to device, need to set the ddr bar to
- 	 * base address of dram
- 	 */
--	rc = goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE);
--	if (rc) {
-+	if (goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE) == U64_MAX) {
- 		dev_err(hdev->dev,
- 			"failed to map DDR bar to DRAM base address\n");
--		return rc;
-+		return -EIO;
- 	}
+@@ -569,8 +582,15 @@ static void hw_queue_fini(struct hl_device *hdev, struct hl_hw_queue *q)
  
- 	if (hdev->pldm) {
-@@ -2454,12 +2446,12 @@ static int goya_hw_init(struct hl_device *hdev)
- 	 * After CPU initialization is finished, change DDR bar mapping inside
- 	 * iATU to point to the start address of the MMU page tables
- 	 */
--	rc = goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
--		(MMU_PAGE_TABLES_ADDR & ~(prop->dram_pci_bar_size - 0x1ull)));
--	if (rc) {
-+	if (goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
-+			(MMU_PAGE_TABLES_ADDR &
-+			~(prop->dram_pci_bar_size - 0x1ull))) == U64_MAX) {
- 		dev_err(hdev->dev,
- 			"failed to map DDR bar to MMU page tables\n");
--		return rc;
-+		return -EIO;
- 	}
+ 	kfree(q->shadow_queue);
  
- 	rc = goya_mmu_init(hdev);
-@@ -3958,6 +3950,7 @@ void goya_restore_phase_topology(struct hl_device *hdev)
- static int goya_debugfs_read32(struct hl_device *hdev, u64 addr, u32 *val)
+-	hdev->asic_funcs->dma_free_coherent(hdev, HL_QUEUE_SIZE_IN_BYTES,
+-			(void *) (uintptr_t) q->kernel_address, q->bus_address);
++	if (q->queue_type == QUEUE_TYPE_CPU)
++		hdev->asic_funcs->cpu_accessible_dma_pool_free(hdev,
++					HL_QUEUE_SIZE_IN_BYTES,
++					(void *) (uintptr_t) q->kernel_address);
++	else
++		hdev->asic_funcs->dma_free_coherent(hdev,
++					HL_QUEUE_SIZE_IN_BYTES,
++					(void *) (uintptr_t) q->kernel_address,
++					q->bus_address);
+ }
+ 
+ int hl_hw_queues_create(struct hl_device *hdev)
+diff --git a/drivers/misc/habanalabs/include/armcp_if.h b/drivers/misc/habanalabs/include/armcp_if.h
+index c8f28cadc335..1f1e35e86d84 100644
+--- a/drivers/misc/habanalabs/include/armcp_if.h
++++ b/drivers/misc/habanalabs/include/armcp_if.h
+@@ -300,14 +300,6 @@ enum armcp_pwm_attributes {
+ 	armcp_pwm_enable
+ };
+ 
+-#define HL_CPU_PKT_SHIFT		5
+-#define HL_CPU_PKT_SIZE			(1 << HL_CPU_PKT_SHIFT)
+-#define HL_CPU_PKT_MASK			(~((1 << HL_CPU_PKT_SHIFT) - 1))
+-#define HL_CPU_MAX_PKTS_IN_CB		32
+-#define HL_CPU_CB_SIZE			(HL_CPU_PKT_SIZE * \
+-					 HL_CPU_MAX_PKTS_IN_CB)
+-#define HL_CPU_ACCESSIBLE_MEM_SIZE	(HL_QUEUE_LENGTH * HL_CPU_CB_SIZE)
+-
+ /* Event Queue Packets */
+ 
+ struct eq_generic_event {
+diff --git a/drivers/misc/habanalabs/irq.c b/drivers/misc/habanalabs/irq.c
+index e69a09c10e3f..86a8ad57f1ca 100644
+--- a/drivers/misc/habanalabs/irq.c
++++ b/drivers/misc/habanalabs/irq.c
+@@ -284,8 +284,9 @@ int hl_eq_init(struct hl_device *hdev, struct hl_eq *q)
+ 
+ 	BUILD_BUG_ON(HL_EQ_SIZE_IN_BYTES > HL_PAGE_SIZE);
+ 
+-	p = hdev->asic_funcs->dma_alloc_coherent(hdev, HL_EQ_SIZE_IN_BYTES,
+-				&q->bus_address, GFP_KERNEL | __GFP_ZERO);
++	p = hdev->asic_funcs->cpu_accessible_dma_pool_alloc(hdev,
++							HL_EQ_SIZE_IN_BYTES,
++							&q->bus_address);
+ 	if (!p)
+ 		return -ENOMEM;
+ 
+@@ -308,8 +309,9 @@ void hl_eq_fini(struct hl_device *hdev, struct hl_eq *q)
  {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
-+	u64 ddr_bar_addr;
- 	int rc = 0;
+ 	flush_workqueue(hdev->eq_wq);
  
- 	if ((addr >= CFG_BASE) && (addr < CFG_BASE + CFG_SIZE)) {
-@@ -3975,15 +3968,16 @@ static int goya_debugfs_read32(struct hl_device *hdev, u64 addr, u32 *val)
- 		u64 bar_base_addr = DRAM_PHYS_BASE +
- 				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
+-	hdev->asic_funcs->dma_free_coherent(hdev, HL_EQ_SIZE_IN_BYTES,
+-			(void *) (uintptr_t) q->kernel_address, q->bus_address);
++	hdev->asic_funcs->cpu_accessible_dma_pool_free(hdev,
++					HL_EQ_SIZE_IN_BYTES,
++					(void *) (uintptr_t) q->kernel_address);
+ }
  
--		rc = goya_set_ddr_bar_base(hdev, bar_base_addr);
--		if (!rc) {
-+		ddr_bar_addr = goya_set_ddr_bar_base(hdev, bar_base_addr);
-+		if (ddr_bar_addr != U64_MAX) {
- 			*val = readl(hdev->pcie_bar[DDR_BAR_ID] +
- 						(addr - bar_base_addr));
- 
--			rc = goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
--				(MMU_PAGE_TABLES_ADDR &
--					~(prop->dram_pci_bar_size - 0x1ull)));
-+			ddr_bar_addr = goya_set_ddr_bar_base(hdev,
-+							ddr_bar_addr);
- 		}
-+		if (ddr_bar_addr == U64_MAX)
-+			rc = -EIO;
- 	} else {
- 		rc = -EFAULT;
- 	}
-@@ -4008,6 +4002,7 @@ static int goya_debugfs_read32(struct hl_device *hdev, u64 addr, u32 *val)
- static int goya_debugfs_write32(struct hl_device *hdev, u64 addr, u32 val)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
-+	u64 ddr_bar_addr;
- 	int rc = 0;
- 
- 	if ((addr >= CFG_BASE) && (addr < CFG_BASE + CFG_SIZE)) {
-@@ -4025,15 +4020,16 @@ static int goya_debugfs_write32(struct hl_device *hdev, u64 addr, u32 val)
- 		u64 bar_base_addr = DRAM_PHYS_BASE +
- 				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
- 
--		rc = goya_set_ddr_bar_base(hdev, bar_base_addr);
--		if (!rc) {
-+		ddr_bar_addr = goya_set_ddr_bar_base(hdev, bar_base_addr);
-+		if (ddr_bar_addr != U64_MAX) {
- 			writel(val, hdev->pcie_bar[DDR_BAR_ID] +
- 						(addr - bar_base_addr));
- 
--			rc = goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
--				(MMU_PAGE_TABLES_ADDR &
--					~(prop->dram_pci_bar_size - 0x1ull)));
-+			ddr_bar_addr = goya_set_ddr_bar_base(hdev,
-+							ddr_bar_addr);
- 		}
-+		if (ddr_bar_addr == U64_MAX)
-+			rc = -EIO;
- 	} else {
- 		rc = -EFAULT;
- 	}
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index a624d1e1e1e5..65717e4055da 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -487,7 +487,8 @@ enum hl_pll_frequency {
-  * @send_cpu_message: send buffer to ArmCP.
-  * @get_hw_state: retrieve the H/W state
-  * @pci_bars_map: Map PCI BARs.
-- * @set_dram_bar_base: Set DRAM BAR to map specific device address.
-+ * @set_dram_bar_base: Set DRAM BAR to map specific device address. Returns
-+ *                     old address the bar pointed to or U64_MAX for failure
-  * @init_iatu: Initialize the iATU unit inside the PCI controller.
-  * @rreg: Read a register. Needed for simulator support.
-  * @wreg: Write a register. Needed for simulator support.
-@@ -564,7 +565,7 @@ struct hl_asic_funcs {
- 				u16 len, u32 timeout, long *result);
- 	enum hl_device_hw_state (*get_hw_state)(struct hl_device *hdev);
- 	int (*pci_bars_map)(struct hl_device *hdev);
--	int (*set_dram_bar_base)(struct hl_device *hdev, u64 addr);
-+	u64 (*set_dram_bar_base)(struct hl_device *hdev, u64 addr);
- 	int (*init_iatu)(struct hl_device *hdev);
- 	u32 (*rreg)(struct hl_device *hdev, u32 reg);
- 	void (*wreg)(struct hl_device *hdev, u32 reg, u32 val);
-diff --git a/drivers/misc/habanalabs/pci.c b/drivers/misc/habanalabs/pci.c
-index d472d02a8e6e..5278f086d65d 100644
---- a/drivers/misc/habanalabs/pci.c
-+++ b/drivers/misc/habanalabs/pci.c
-@@ -259,7 +259,10 @@ int hl_pci_init_iatu(struct hl_device *hdev, u64 sram_base_address,
- 	/* Point to DRAM */
- 	if (!hdev->asic_funcs->set_dram_bar_base)
- 		return -EINVAL;
--	rc |= hdev->asic_funcs->set_dram_bar_base(hdev, dram_base_address);
-+	if (hdev->asic_funcs->set_dram_bar_base(hdev, dram_base_address) ==
-+								U64_MAX)
-+		return -EIO;
-+
- 
- 	/* Outbound Region 0 - Point to Host */
- 	host_phys_end_addr = prop->host_phys_base_address + host_phys_size - 1;
+ void hl_eq_reset(struct hl_device *hdev, struct hl_eq *q)
 -- 
 2.17.1
 
