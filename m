@@ -2,100 +2,154 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E388C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA31C4321B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27FB20693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 02:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556505718;
-	bh=v5W8ScpvZ1h+jU+TL4WwGpo2qLxsX8PxBtUB94OTtOs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AgRznBtfOpCkJm49uTQKy6X81gVncFPZuZ/P2CwA81cJCjhuHI43Qm65NTTbgusBV
-	 iRzuPeZUauPdUiOjO9/g6TM/KVt0reDqyHY5AFHxHbSPH0Dlc0HLvRzFc+iiRpZuz6
-	 SwEA8WzLzFW2wdreyEJEQ4LfN3lCDOTy+ERakD+U=
+	by mail.kernel.org (Postfix) with ESMTP id 551B120675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:05:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sCS33Wo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfD2Cl5 (ORCPT
+        id S1727218AbfD2DFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 22:41:57 -0400
-Received: from mail-lj1-f169.google.com ([209.85.208.169]:41506 "EHLO
-        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfD2Cl5 (ORCPT
+        Sun, 28 Apr 2019 23:05:02 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43716 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfD2DFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 22:41:57 -0400
-Received: by mail-lj1-f169.google.com with SMTP id k8so7908132lja.8
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 19:41:56 -0700 (PDT)
+        Sun, 28 Apr 2019 23:05:01 -0400
+Received: by mail-io1-f68.google.com with SMTP id v9so7687410iol.10;
+        Sun, 28 Apr 2019 20:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Gq0Kmcl4mOgSlNzh50O36MLVAt4+kKSq62znrv8IbtE=;
-        b=a1KfzonGU5LsPeNbWXC0G1capE2w+AQaMH0R4JyD1w1G46NX6x3qAG543Z5HMMemB5
-         Y+3imuesz1kPxvPAYVayxT6+9qenwRKzQw/nOQJ2Q6yygR1F3gLlY2CPecRez/70rvTq
-         08Kzx4WpA/jSuAPPfpYcBoWFDyNskYuEBAFj0=
+        bh=dJMl90O95ELh7MccR/gotQ0iR4kxpXltz+n2rVMWVek=;
+        b=sCS33Wo854rOecdEepHQFeUD38yV4m0fx8fxGIDGiFttKs1dNNsEKXEkbVeyxlSjum
+         3xNFDFhJ2iF9Fh9LzN6/xoVy+YhiXgEoshszIQJUnps+YrJhuuw9lAxDcYmGEDff9HrD
+         TJ6Xu79Wqbtq1Tpi2wfMrvCOrwmCbJWN+8K8iOxPa9yGhqwXJHYJPfAWhw1jyiGBSsz3
+         6X4n0WUjEhAKyIGR/WesQJtN5xfG2amZp32CAU7q0+TYECzjxRQ/mdLi88A/Ti2/Vfqv
+         +JnR2yMzE207qkPhJUQQMzIyz+UetNgniIOCbX3kN+O9VLWgT/dAd33CFP0gKgTqhMkH
+         ZRgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Gq0Kmcl4mOgSlNzh50O36MLVAt4+kKSq62znrv8IbtE=;
-        b=N8rvUo7d59H6AvH0wrfk8sioBHVe1nWD/Xe6AlH5k/CLpfukcheXzHzjBWdDZCQ4Jf
-         5TV1MXlupwMdZ0PuQpNE4sX6IxX4LigpgVnz2fe9cT+w9Z9qQMgnS3TrbOrGxliS2wgS
-         ydNOT1vd6ce4gDzTp4RVAqqiMhIPFX27XlMkk2x1zGFSUDwd0K9J/R9S4lDeVCUnUzUo
-         5w3FwYM/2W+U3EBzFiA3iZiNbyikvq55ovVyPS8vOI/MihjM2pUJdiWl3bdXbWkzEpis
-         Yt/J2qWlcpWeIljRjSMl6V0EtuAQvS6z4jzxdlzeL23jeyeQNs37zHWh4RFNvJlBfvZf
-         g+ug==
-X-Gm-Message-State: APjAAAUpgaSfkd5xEXM6FDfpeogPjyV/jKuBfEKe5Bx8KHIzowQKtREU
-        XJcjHBbl+5RTaLFN3wPtGGP490mjbNU=
-X-Google-Smtp-Source: APXvYqw57a5QW/7HK+1N2apVg6PVrZx3ya15Sv03Bp9eEoXwi7xe8/AvEAzheglHtQoUOuDDWyO3vQ==
-X-Received: by 2002:a2e:9c89:: with SMTP id x9mr12941524lji.28.1556505714575;
-        Sun, 28 Apr 2019 19:41:54 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id r26sm4394803lfa.62.2019.04.28.19.41.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 19:41:53 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id j11so6768875lfm.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 19:41:53 -0700 (PDT)
-X-Received: by 2002:a19:f50e:: with SMTP id j14mr5131635lfb.11.1556505712950;
- Sun, 28 Apr 2019 19:41:52 -0700 (PDT)
+        bh=dJMl90O95ELh7MccR/gotQ0iR4kxpXltz+n2rVMWVek=;
+        b=sAdYSg1EjYElLG7jtebHV/HI/gPxCMWKQwE5rtAZtOaaqLAgRTdjT4fVyP2UZt5hRV
+         NaQN+xpy8zlRx4uWLu+EUWSKO4oloQvhgfxFtnCHQkSUwcWQ9sYPLBZugGQQgdWTT3+m
+         VkSbXvnIr4bdZVp/F4SmAzCs4UflMy9bNmbbBIErmGADh8vkiW6ONpRozBdjY96MVIno
+         QIZEF34VLWrMdJPW12ISl1Oi0QDdyqetmMhEDgVkN4ESuxc6y41W9IaAXIFH5u70DjRZ
+         xFP8VUJKto0WAwXYvpGxH6XGdNFeu1GivYfg/5AI+dGhYjw45hO9QGurn3xhXkUc8j3b
+         bCQw==
+X-Gm-Message-State: APjAAAX1go70D3LyyGiI9BUwQjrbJ5uYCjILrqcEUFFN2AteVQB9fbY6
+        RVjS09t3in3DPJ/hB4/0IrmYCaDAC0cB9XUy/A==
+X-Google-Smtp-Source: APXvYqzeszOwZP14RtOC6mV9rY3uOhFyM1yQpZi/QDojtM4wzbayqEf6L0iWYkrbUvWs9aPmzqXndCUfaebQxYOHnc8=
+X-Received: by 2002:a6b:7d08:: with SMTP id c8mr3138801ioq.259.1556507100502;
+ Sun, 28 Apr 2019 20:05:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190428212557.13482-1-longman@redhat.com> <CAHk-=whU83HbayBmOS-jbK7bQJUp87mvAYxhL=vz5wC_ARQCWA@mail.gmail.com>
- <3f8fd44d-1962-e309-49b5-bb16fd662312@redhat.com> <CAHk-=wg_facR6y3gnmtGwBSJYZdHm5rWSPpPhJG6XswW4+mO1Q@mail.gmail.com>
- <604c8751-5269-de29-0b7f-b3e93b6df4ca@redhat.com>
-In-Reply-To: <604c8751-5269-de29-0b7f-b3e93b6df4ca@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 28 Apr 2019 19:41:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi70jyU5_3y9XB9B7kJCR6QeNPgTaxnuPE7gm3i472e4A@mail.gmail.com>
-Message-ID: <CAHk-=wi70jyU5_3y9XB9B7kJCR6QeNPgTaxnuPE7gm3i472e4A@mail.gmail.com>
-Subject: Re: [PATCH-tip v7 00/20] locking/rwsem: Rwsem rearchitecture part 2
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+References: <1556087581-14513-1-git-send-email-kernelfans@gmail.com>
+ <10dc5468-6cd9-85c7-ba66-1dfa5aa922b7@suse.com> <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
+ <20190428083710.GA11981@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190428083710.GA11981@dhcp-128-65.nay.redhat.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Mon, 29 Apr 2019 11:04:49 +0800
+Message-ID: <CAFgQCTvQezGM7xgY2Q1RSUiQ7wLdxtUAeztrO3AqDfjx8f2kdg@mail.gmail.com>
+Subject: Re: [PATCHv2] kernel/crash: make parse_crashkernel()'s return value
+ more indicant
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Matthias Brugger <mbrugger@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org,
+        Julien Thierry <julien.thierry@arm.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org,
+        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-s390@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        David Hildenbrand <david@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
         Ingo Molnar <mingo@redhat.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Hogan <jhogan@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
         Will Deacon <will.deacon@arm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>,
+        Borislav Petkov <bp@alien8.de>, Stefan Agner <stefan@agner.ch>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, Tony Luck <tony.luck@intel.com>,
+        Baoquan He <bhe@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Greg Hackmann <ghackmann@android.com>,
+        kexec@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 5:28 PM Waiman Long <longman@redhat.com> wrote:
+On Sun, Apr 28, 2019 at 4:37 PM Dave Young <dyoung@redhat.com> wrote:
 >
-> Not really, this is a serious problem that have to be backported to
-> earlier stable releases and downstream. The clever code is helpful in
-> those cases.
+> On 04/25/19 at 04:20pm, Pingfan Liu wrote:
+> > On Wed, Apr 24, 2019 at 4:31 PM Matthias Brugger <mbrugger@suse.com> wrote:
+> > >
+> > >
+> > [...]
+> > > > @@ -139,6 +141,8 @@ static int __init parse_crashkernel_simple(char *cmdline,
+> > > >               pr_warn("crashkernel: unrecognized char: %c\n", *cur);
+> > > >               return -EINVAL;
+> > > >       }
+> > > > +     if (*crash_size == 0)
+> > > > +             return -EINVAL;
+> > >
+> > > This covers the case where I pass an argument like "crashkernel=0M" ?
+> > > Can't we fix that by using kstrtoull() in memparse and check if the return value
+> > > is < 0? In that case we could return without updating the retptr and we will be
+> > > fine.
+> > >
+> > It seems that kstrtoull() treats 0M as invalid parameter, while
+> > simple_strtoull() does not.
+> >
+> > If changed like your suggestion, then all the callers of memparse()
+> > will treats 0M as invalid parameter. This affects many components
+> > besides kexec.  Not sure this can be done or not.
+>
+> simple_strtoull is obsolete, move to kstrtoull is the right way.
+>
+> $ git grep memparse|wc
+>     158     950   10479
+>
+> Except some documentation/tools etc there are still a log of callers
+> which directly use the return value as the ull number without error
+> checking.
+>
+> So it would be good to mark memparse as obsolete as well in
+> lib/cmdline.c, and introduce a new function eg. kmemparse() to use
+> kstrtoull,  and return a real error code, and save the size in an
+> argument like &size.  Then update X86 crashkernel code to use it.
+>
+Thank for your good suggestion.
 
-Fair enough, I guess the code will live in the stable trees for a longish while.
-
-               Linus
+Regards,
+Pingfan
