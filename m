@@ -2,94 +2,129 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B2DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBDEC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D23320673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB232147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eE78Xoup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbfD2Lo1 (ORCPT
+        id S1727986AbfD2LtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:44:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48242 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727933AbfD2Lo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:44:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1AB76AD76;
-        Mon, 29 Apr 2019 11:44:25 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 13:44:23 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v4] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190429114423.yr7hbmfrfbravgsv@pathway.suse.cz>
-References: <1556199137-14163-1-git-send-email-feng.tang@intel.com>
- <20190426074934.seje2tn5p6fsuwaq@pathway.suse.cz>
- <20190426135316.GA505@tigerII.localdomain>
- <20190426141426.h7hpvhr3rqp7umbk@pathway.suse.cz>
- <20190426164302.GA26127@tigerII.localdomain>
- <20190426171640.GA7413@tigerII.localdomain>
+        Mon, 29 Apr 2019 07:49:17 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40913 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727868AbfD2LtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 07:49:17 -0400
+Received: by mail-ot1-f68.google.com with SMTP id w6so8298844otl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 04:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YYDvYsD7vm9de86thItX5OqkUb2XqGh4QsUmBR6DvzQ=;
+        b=eE78XoupObinxdP2tF2TRd372B+Ugnx1YhJQQ7sa3QK5Bri8moF6Ouu45b7sCRFDW2
+         X4ZSKXhGYeDuO8UsZUxi/5IDlSKD2H8AXspi6EHQAelo+d/+uHOn8OPwcJvQLcF0xm20
+         +ldumwxYB6h/2+D7h1iMukTpyubDZuhWwrjg8T+HrlLwYtfCizpmHiuD1vobez/DKYkp
+         Cn1A08OkAjt/Z8aVydIFWx13REL10X44PgohhXRcN5dhLptJcRelPTi9+szc+TG/Zle8
+         W5pY/BamAXqf/Y6WpFFqHRa7DAQ4qjzM6mXaAgh7FzmRQwysNLQfR3l7MqMhZQl+RvD2
+         5Y4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YYDvYsD7vm9de86thItX5OqkUb2XqGh4QsUmBR6DvzQ=;
+        b=pqb07VqGDqPC41Ri+xnNfNPsSvmeRoZ/Q8ytR5LtBiOSA7uMnrzxn8NItz8Fjei9Rl
+         Od6CtHWfzGOvJrWgLThgSmm2xUXYUC+FTZYTkTNfyjJR/HjjZezbHRi4vgS2Y3TSCP2K
+         mgdhRPFv22p1TumWJUDlrfitrtp5KHFyi/3ffW56UBzI7mJaVLos5mLJ/yiAtzKonV2l
+         Pk/+gPnc/R4I4HlJ2NnVmG0sMF+bAXjWYW3WS2E6T3t1JQHtwAbBiaQC3fgd+sde+YFd
+         QTQPrsNID6HEDX+DetA8EpuawEX3sEcZtqPUQckHPXzb5B5ICaJMcoYaolGTfE/lttUv
+         c4jg==
+X-Gm-Message-State: APjAAAUbojWp3/fbUsx6pVmRtp9lTszuuqOvXm9rxFdwItB2O0zLTXJf
+        RdAwu51Y370te/8QLGjzvQSO/8r3nS7EoRkgSQXGZA==
+X-Google-Smtp-Source: APXvYqztn5+6dKQKN9rJen87uREhHeHbRfuKnL7Aoc1dAALWLuQn5eqBCwEzUOfb8/eBbK9Pj5VM1EMVq/qgGU6y/OY=
+X-Received: by 2002:a9d:76c7:: with SMTP id p7mr18399492otl.191.1556538555961;
+ Mon, 29 Apr 2019 04:49:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426171640.GA7413@tigerII.localdomain>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <cover.1555330115.git.baolin.wang@linaro.org> <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
+ <20190429113555.GI3845@vkoul-mobl.Dlink>
+In-Reply-To: <20190429113555.GI3845@vkoul-mobl.Dlink>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Mon, 29 Apr 2019 19:49:04 +0800
+Message-ID: <CAMz4kuK0jurdNX3Z+zH5_ErR-64k2-Nuw_1T+X4OjbjURDSnUA@mail.gmail.com>
+Subject: Re: [PATCH 1/7] dmaengine: sprd: Fix the possible crash when getting
+ engine status
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2019-04-27 02:16:40, Sergey Senozhatsky wrote:
-> On (04/27/19 01:43), Sergey Senozhatsky wrote:
-> [..]
-> > > The console waiter logic is effective but it does not always
-> > > work. The current console owner must be calling the console
-> > > drivers.
-> > >
-> > > >   Hmm, we might have a bit of a problem here, maybe.
-> > >
-> > > Hmm, the printk() might wait forever when NMI stopped
-> > > the current console owner in the console driver code
-> > > or with the logbuf_lock taken.
-> > 
-> > I guess this is why we re-init logbuf lock from panic,
-> > however, we don't do anything with the console_owner.
+Hi Vinod,
 
-> > > The console waiter logic might get solved by clearing
-> > > the console_owner in console_flush_on_panic(). It can't
-> > > be much worse, we already ignore console_lock() there, ...
-> 
-> Hmm, or maybe we are fine... console_waiter logic should work
-> before we send out stop IPI/NMI from panic CPU. When we call
-> flush_on_panic() console_unlock() clears console_owner, so
-> panic_print_sys_info() should not deadlock on console_owner.
+On Mon, 29 Apr 2019 at 19:36, Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 15-04-19, 20:14, Baolin Wang wrote:
+> > We will get a NULL virtual descriptor by vchan_find_desc() when the descriptor
+> > has been submitted, that will crash the kernel when getting the engine status.
+>
+> No that is wrong, status is for descriptor and not engine!
 
-Good point!
+Sure, will fix the commit message.
 
-> It's probably only problematic if we kill a console_owner
-> CPU and then try to printk() (from smp_send_stop()) before
-> we do flush_on_panic()->console_unlock().
+>
+> > In this case, since the descriptor has been submitted, which means the pointer
+> > 'schan->cur_desc' will point to the current descriptor, then we can use
+> > 'schan->cur_desc' to get the engine status to avoid this issue.
+>
+> Nope, since the descriptor is completed, you return with residue as 0
+> and DMA_COMPLETE status!
 
-Yup. There are called several functions between smp_send_stop()
-and console_flush_on_panic().
+No, the descriptor is not completed now. If it is completed, we will
+return 0 with DMA_COMPLETE status. But now the descriptor is on
+progress, we should get the descriptor to return current residue.
+Sorry for confusing description.
 
-The question is if it is worth a code complication. We could
-never 100% guarantee that printk() would work in panic().
-I more and more understand what Peter Zijlstra means
-by the duct taping.
+>
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  drivers/dma/sprd-dma.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> > index 48431e2..e29342a 100644
+> > --- a/drivers/dma/sprd-dma.c
+> > +++ b/drivers/dma/sprd-dma.c
+> > @@ -625,7 +625,7 @@ static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
+> >               else
+> >                       pos = 0;
+> >       } else if (schan->cur_desc && schan->cur_desc->vd.tx.cookie == cookie) {
+> > -             struct sprd_dma_desc *sdesc = to_sprd_dma_desc(vd);
+> > +             struct sprd_dma_desc *sdesc = schan->cur_desc;
+> >
+> >               if (sdesc->dir == DMA_DEV_TO_MEM)
+> >                       pos = sprd_dma_get_dst_addr(schan);
+> > --
+> > 1.7.9.5
+>
+> --
+> ~Vinod
 
-Best Regards,
-Petr
+
+
+-- 
+Baolin Wang
+Best Regards
