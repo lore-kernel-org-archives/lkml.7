@@ -2,103 +2,152 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E88C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83522C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F95F206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556521232;
-	bh=vfjSvfpGNgLP8L2mLtJnKveVyNRoCGT1elcG9HkpdE0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aJvM5NBCAAkwHxtOnqR9zAP6As4Bij4yNbum3SGRD77kG2NSVy5pGCXr4TtoApFDq
-	 hqOYEcRJ2dBvbltXnEs6LzhJTSzY/Q0T520JzR8u6wbCFAlTRNTQzYE1IiUiR79xTK
-	 9JMirhcgFtfFnY4HgqqWYS8RWfPZPNhLQ4ncq6bE=
+	by mail.kernel.org (Postfix) with ESMTP id 5D50A2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfD2HAb (ORCPT
+        id S1727419AbfD2HBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:00:31 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34360 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfD2HAa (ORCPT
+        Mon, 29 Apr 2019 03:01:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34086 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726846AbfD2HBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:00:30 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v10so7502716oib.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:00:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Nnztq5EFzs0VFDOgJg6pP40Rk1vMCUk9oDKTDGzCvE=;
-        b=YvOS7X4B1pLGCNLCBkSj78w4W3pFFSU1OgPANQlXq/ztL4tVWui9K4tWj8epb0z5RU
-         ifrpDnxf8tbnHK0axdimxQBJXnEePXAAfsqMjLJTvxDdrQMs+XUzQPS4kUj6DIKFeej8
-         uz49obTaflW9yQB3nR2t0cyUdHTAzrt4Z3sTuY/6zxV4EKAR49M15EcftkX6cuabJVhy
-         1wo/6ys5Nr+JxQmQBNmSlhc34wAH45DI87mWwjYzQFgK8hqQfGPLFrYDF8nwlZIs9I0E
-         PHtFdjk7fSiEehRWFOFRs8JNnhM7iky5zHyWOFWeWVmDp9dndylXyollD0MCWGqpIqAp
-         wfHA==
-X-Gm-Message-State: APjAAAXNMN+GPhzC0FE2B00//oq/FtaRl51lsQb9REPMNpIBoSm99Oad
-        BYF/ZS10rDNmIN8NP0pzEXFhG42DcJVbOXjART28/A==
-X-Google-Smtp-Source: APXvYqyjQ6pWrycwMZfhWSdAKW168em7cZFmjv0dMc5BGLqVwcDjDYvgAp8MV9l+yTAdRJqeN78JHHpIM1uu0qGLf/8=
-X-Received: by 2002:aca:5304:: with SMTP id h4mr3863938oib.115.1556521229953;
- Mon, 29 Apr 2019 00:00:29 -0700 (PDT)
+        Mon, 29 Apr 2019 03:01:45 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3T6sXku035817
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 03:01:43 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s5shu5n6h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 03:01:43 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 29 Apr 2019 08:01:41 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 29 Apr 2019 08:01:38 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3T71bn944105944
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 07:01:37 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4CB8452057;
+        Mon, 29 Apr 2019 07:01:37 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.49])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id DF2325204E;
+        Mon, 29 Apr 2019 07:01:36 +0000 (GMT)
+Subject: Re: [PATCH] KVM: s390: vsie: Return correct values for Invalid CRYCB
+ format
+To:     Pierre Morel <pmorel@linux.ibm.com>, david@redhat.com
+Cc:     linux-kernel@vger.kernel.org, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+References: <1556269201-22918-1-git-send-email-pmorel@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Mon, 29 Apr 2019 09:01:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190427235652.3799-1-tobin@kernel.org>
-In-Reply-To: <20190427235652.3799-1-tobin@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 29 Apr 2019 09:00:14 +0200
-Message-ID: <CAJZ5v0hV773sBOgiz=kZifL05HYWYWwKWVE0Xn74EFytT7nGLg@mail.gmail.com>
-Subject: Re: [PATCH] kobject: Improve doc clarity kobject_init_and_add()
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1556269201-22918-1-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042907-0016-0000-0000-000002765F71
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042907-0017-0000-0000-000032D2E346
+Message-Id: <50d14c28-1042-7654-dd4e-cbc45d1a2b66@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904290052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 1:57 AM Tobin C. Harding <tobin@kernel.org> wrote:
->
-> Function kobject_init_and_add() is currently misused in a number of
-> places in the kernel.  On error return kobject_put() must be called but
-> is at times not.
->
-> Make the function documentation more explicit about calling
-> kobject_put() in the error path.
->
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
+On 26.04.19 11:00, Pierre Morel wrote:
+> Let's use the correct validity number.
+> 
+> Fixes: 55ded154b43 "KVM: s390: vsie: Allow CRYCB FORMAT-2"
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
 > ---
->  lib/kobject.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/lib/kobject.c b/lib/kobject.c
-> index aa89edcd2b63..58d1d7a64203 100644
-> --- a/lib/kobject.c
-> +++ b/lib/kobject.c
-> @@ -437,9 +437,12 @@ EXPORT_SYMBOL(kobject_add);
->   * @parent: pointer to the parent of this kobject.
->   * @fmt: the name of the kobject.
->   *
-> - * This function combines the call to kobject_init() and
-> - * kobject_add().  The same type of error handling after a call to
-> - * kobject_add() and kobject lifetime rules are the same here.
-> + * This function combines the call to kobject_init() and kobject_add().
-> + *
-> + * If this function returns an error, kobject_put() must be called to
-> + * properly clean up the memory associated with the object.  This is the
-> + * same type of error handling after a call to kobject_add() and kobject
-> + * lifetime rules are the same here.
->   */
->  int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,
->                          struct kobject *parent, const char *fmt, ...)
-> --
-> 2.21.0
->
+>  arch/s390/kvm/vsie.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
+> index ac411e9..076090f 100644
+> --- a/arch/s390/kvm/vsie.c
+> +++ b/arch/s390/kvm/vsie.c
+> @@ -344,7 +344,7 @@ static int shadow_crycb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+>  end:
+>  	switch (ret) {
+>  	case -EINVAL:
+> -		return set_validity_icpt(scb_s, 0x0020U);
+> +		return set_validity_icpt(scb_s, 0x0022U);
+>  	case -EFAULT:
+>  		return set_validity_icpt(scb_s, 0x0035U);
+>  	case -EACCES:
+> 
+
+Thanks applied. 
+
