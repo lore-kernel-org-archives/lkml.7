@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CAEC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C764C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD59E206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE012075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfD2Jg4 (ORCPT
+        id S1727868AbfD2Jg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:36:56 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:41470 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbfD2Jgn (ORCPT
+        Mon, 29 Apr 2019 05:36:58 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:36626 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727608AbfD2Jgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:36:43 -0400
+        Mon, 29 Apr 2019 05:36:42 -0400
 Received: from ramsan ([84.194.111.163])
-        by xavier.telenet-ops.be with bizsmtp
-        id 69cd2000G3XaVaC019cdVz; Mon, 29 Apr 2019 11:36:40 +0200
+        by laurent.telenet-ops.be with bizsmtp
+        id 69cd200063XaVaC019cdzc; Mon, 29 Apr 2019 11:36:40 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hL2iD-0000wf-3R; Mon, 29 Apr 2019 11:36:37 +0200
+        id 1hL2iD-0000wk-4u; Mon, 29 Apr 2019 11:36:37 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hL2iD-0002p2-2E; Mon, 29 Apr 2019 11:36:37 +0200
+        id 1hL2iD-0002p8-3i; Mon, 29 Apr 2019 11:36:37 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -42,9 +42,9 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/5] dt-bindings: interrupt-controller: Add Renesas RZ/A1 Interrupt Controller
-Date:   Mon, 29 Apr 2019 11:36:27 +0200
-Message-Id: <20190429093631.10799-2-geert+renesas@glider.be>
+Subject: [PATCH 3/5] soc: renesas: Enable RZ/A1 IRQC on RZ/A1H
+Date:   Mon, 29 Apr 2019 11:36:29 +0200
+Message-Id: <20190429093631.10799-4-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190429093631.10799-1-geert+renesas@glider.be>
 References: <20190429093631.10799-1-geert+renesas@glider.be>
@@ -53,47 +53,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+Auto-enable the RZ/A1 Interrupt Controller when configuring a kernel
+with support for RZ/A1H SoCs.
+
+This is similar to how interrupt controllers for other Renesas SoCs are
+enabled.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../renesas,rza1-irqc.txt                     | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+ drivers/soc/renesas/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-new file mode 100644
-index 0000000000000000..0914d3d216c3bdac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-@@ -0,0 +1,27 @@
-+DT bindings for the Renesas RZ/A1 Interrupt Controller
-+
-+The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
-+RZ/A1 SoCs:
-+  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
-+    interrupts,
-+  - NMI edge select.
-+
-+Required properties:
-+  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
-+		fallback.
-+		Examples with soctypes are:
-+		  - "renesas,r7s72100-irqc" (RZ/A1H)
-+  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
-+				 in interrupts.txt in this directory)
-+  - interrupt-controller: Marks the device as an interrupt controller
-+  - reg: Base address and length of the memory resource used by the interrupt
-+         controller
-+
-+Example:
-+
-+	irqc: interrupt-controller@fcfef800 {
-+		compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0xfcfef800 0x6>;
-+	};
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 68bfca6f20ddf8a7..1448b6dbcdb20bae 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -57,6 +57,7 @@ config ARCH_R7S72100
+ 	bool "RZ/A1H (R7S72100)"
+ 	select PM
+ 	select PM_GENERIC_DOMAINS
++	select RENESAS_RZA1_IRQC
+ 	select SYS_SUPPORTS_SH_MTU2
+ 	select RENESAS_OSTM
+ 
 -- 
 2.17.1
 
