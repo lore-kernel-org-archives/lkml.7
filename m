@@ -2,152 +2,119 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83522C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461C8C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D50A2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DB72053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:02:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EMTWwPAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfD2HBp (ORCPT
+        id S1727440AbfD2HCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:01:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34086 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726846AbfD2HBp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:01:45 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3T6sXku035817
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 03:01:43 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s5shu5n6h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 03:01:43 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 29 Apr 2019 08:01:41 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 29 Apr 2019 08:01:38 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3T71bn944105944
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 07:01:37 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4CB8452057;
-        Mon, 29 Apr 2019 07:01:37 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.49])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id DF2325204E;
-        Mon, 29 Apr 2019 07:01:36 +0000 (GMT)
-Subject: Re: [PATCH] KVM: s390: vsie: Return correct values for Invalid CRYCB
- format
-To:     Pierre Morel <pmorel@linux.ibm.com>, david@redhat.com
-Cc:     linux-kernel@vger.kernel.org, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-References: <1556269201-22918-1-git-send-email-pmorel@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- mQINBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABtDRDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKElCTSkgPGJvcm50cmFlZ2VyQGRlLmlibS5jb20+iQI4BBMBAgAiBQJO
- nDz4AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRARe7yAtaYcfOYVD/9sqc6ZdYKD
- bmDIvc2/1LL0g7OgiA8pHJlYN2WHvIhUoZUIqy8Sw2EFny/nlpPVWfG290JizNS2LZ0mCeGZ
- 80yt0EpQNR8tLVzLSSr0GgoY0lwsKhAnx3p3AOrA8WXsPL6prLAu3yJI5D0ym4MJ6KlYVIjU
- ppi4NLWz7ncA2nDwiIqk8PBGxsjdc/W767zOOv7117rwhaGHgrJ2tLxoGWj0uoH3ZVhITP1z
- gqHXYaehPEELDV36WrSKidTarfThCWW0T3y4bH/mjvqi4ji9emp1/pOWs5/fmd4HpKW+44tD
- Yt4rSJRSa8lsXnZaEPaeY3nkbWPcy3vX6qafIey5d8dc8Uyaan39WslnJFNEx8cCqJrC77kI
- vcnl65HaW3y48DezrMDH34t3FsNrSVv5fRQ0mbEed8hbn4jguFAjPt4az1xawSp0YvhzwATJ
- YmZWRMa3LPx/fAxoolq9cNa0UB3D3jmikWktm+Jnp6aPeQ2Db3C0cDyxcOQY/GASYHY3KNra
- z8iwS7vULyq1lVhOXg1EeSm+lXQ1Ciz3ub3AhzE4c0ASqRrIHloVHBmh4favY4DEFN19Xw1p
- 76vBu6QjlsJGjvROW3GRKpLGogQTLslbjCdIYyp3AJq2KkoKxqdeQYm0LZXjtAwtRDbDo71C
- FxS7i/qfvWJv8ie7bE9A6Wsjn7kCDQROnDz4ARAAmPI1e8xB0k23TsEg8O1sBCTXkV8HSEq7
- JlWz7SWyM8oFkJqYAB7E1GTXV5UZcr9iurCMKGSTrSu3ermLja4+k0w71pLxws859V+3z1jr
- nhB3dGzVZEUhCr3EuN0t8eHSLSMyrlPL5qJ11JelnuhToT6535cLOzeTlECc51bp5Xf6/XSx
- SMQaIU1nDM31R13o98oRPQnvSqOeljc25aflKnVkSfqWSrZmb4b0bcWUFFUKVPfQ5Z6JEcJg
- Hp7qPXHW7+tJTgmI1iM/BIkDwQ8qe3Wz8R6rfupde+T70NiId1M9w5rdo0JJsjKAPePKOSDo
- RX1kseJsTZH88wyJ30WuqEqH9zBxif0WtPQUTjz/YgFbmZ8OkB1i+lrBCVHPdcmvathknAxS
- bXL7j37VmYNyVoXez11zPYm+7LA2rvzP9WxR8bPhJvHLhKGk2kZESiNFzP/E4r4Wo24GT4eh
- YrDo7GBHN82V4O9JxWZtjpxBBl8bH9PvGWBmOXky7/bP6h96jFu9ZYzVgIkBP3UYW+Pb1a+b
- w4A83/5ImPwtBrN324bNUxPPqUWNW0ftiR5b81ms/rOcDC/k/VoN1B+IHkXrcBf742VOLID4
- YP+CB9GXrwuF5KyQ5zEPCAjlOqZoq1fX/xGSsumfM7d6/OR8lvUPmqHfAzW3s9n4lZOW5Jfx
- bbkAEQEAAYkCHwQYAQIACQUCTpw8+AIbDAAKCRARe7yAtaYcfPzbD/9WNGVf60oXezNzSVCL
- hfS36l/zy4iy9H9rUZFmmmlBufWOATjiGAXnn0rr/Jh6Zy9NHuvpe3tyNYZLjB9pHT6mRZX7
- Z1vDxeLgMjTv983TQ2hUSlhRSc6e6kGDJyG1WnGQaqymUllCmeC/p9q5m3IRxQrd0skfdN1V
- AMttRwvipmnMduy5SdNayY2YbhWLQ2wS3XHJ39a7D7SQz+gUQfXgE3pf3FlwbwZhRtVR3z5u
- aKjxqjybS3Ojimx4NkWjidwOaUVZTqEecBV+QCzi2oDr9+XtEs0m5YGI4v+Y/kHocNBP0myd
- pF3OoXvcWdTb5atk+OKcc8t4TviKy1WCNujC+yBSq3OM8gbmk6NwCwqhHQzXCibMlVF9hq5a
- FiJb8p4QKSVyLhM8EM3HtiFqFJSV7F+h+2W0kDyzBGyE0D8z3T+L3MOj3JJJkfCwbEbTpk4f
- n8zMboekuNruDw1OADRMPlhoWb+g6exBWx/YN4AY9LbE2KuaScONqph5/HvJDsUldcRN3a5V
- RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
- oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
- syiRa+UVlsKmx1hsEg==
-Date:   Mon, 29 Apr 2019 09:01:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556269201-22918-1-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 29 Apr 2019 03:02:38 -0400
+Received: from mail-eopbgr20060.outbound.protection.outlook.com ([40.107.2.60]:11482
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbfD2HCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:02:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EwpnJVk+iG5QHR1SlFHe5hn8cVeoTjEC4yT8OGrCtxc=;
+ b=EMTWwPAssiFscffDmI9e/fDVsN0ka+qONwreM4W+aQcwMiuRpN5G+Z2b4QQvQieiuPhTim1C5de4EuD+U2bNVaQUa/UAPGNTLujnD+RRt+RmSVztt/mL1WNEiUiMhE9d/ZGt1pDVC/fzCOaYVFQi2/Z2j05fkcQnbmj1NNfrILk=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3724.eurprd04.prod.outlook.com (52.134.66.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Mon, 29 Apr 2019 07:02:33 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
+ 07:02:33 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] rtc: snvs: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
+Thread-Topic: [PATCH] rtc: snvs: Use __maybe_unused instead of #if
+ CONFIG_PM_SLEEP
+Thread-Index: AQHU/lmEml9HNTGs9Ea7jhPERyCyyA==
+Date:   Mon, 29 Apr 2019 07:02:33 +0000
+Message-ID: <1556521071-8981-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042907-0016-0000-0000-000002765F71
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042907-0017-0000-0000-000032D2E346
-Message-Id: <50d14c28-1042-7654-dd4e-cbc45d1a2b66@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904290052
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0083.apcprd03.prod.outlook.com
+ (2603:1096:203:72::23) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c8587ecd-f884-4557-40f2-08d6cc70a73c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3724;
+x-ms-traffictypediagnostic: DB3PR0402MB3724:
+x-microsoft-antispam-prvs: <DB3PR0402MB37240747D16525118EE14631F5390@DB3PR0402MB3724.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0022134A87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(366004)(346002)(39860400002)(376002)(199004)(189003)(86362001)(71200400001)(6486002)(71190400001)(36756003)(6436002)(5660300002)(68736007)(256004)(14444005)(99286004)(52116002)(50226002)(81166006)(14454004)(316002)(8676002)(81156014)(2501003)(8936002)(305945005)(478600001)(110136005)(7736002)(26005)(4326008)(53936002)(186003)(25786009)(97736004)(66066001)(102836004)(386003)(6506007)(66446008)(6512007)(476003)(64756008)(2616005)(66476007)(66556008)(3846002)(66946007)(73956011)(6116002)(486006)(2201001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3724;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OB6tyzMfPPSSA6++ZZhXNtUIDlbisndGXOfe6msmqw4d1BgLbye8pc8QMyToeoqQVO8blZeOVy+JK1dLHFblpq6KOTW2VcTh+aiL3/KAOP3pNk5hHS6YMO27EiI1SgFio7DzA7mm8IrjttPMP6SWC6CxYT/eNs3ksChY45c73HNnXGk2RAkj2p6r3N4CuC7fzsd8GuazBeaWFNSFmdI2sPDcso9JH5ySuEucSZQyXXl80zkpL4LD9Tmfp/G0INfaaNE6KxZjKQUOLKcsuQtdURA53hhhp1eqtUQsLk1Y9fVuKc/g02N5/WxU/JCYoXlwkJqEkMME/ho6rHBtlObLE4X9RJkSTe5wXmQ0iF1JkqeBsk8RKGlHKsI+4iEfcQE6xkaltLlrDIukN1O+W6MpxuglQxO59sT0nAjtcNxlAWI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8587ecd-f884-4557-40f2-08d6cc70a73c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 07:02:33.6833
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3724
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.19 11:00, Pierre Morel wrote:
-> Let's use the correct validity number.
-> 
-> Fixes: 55ded154b43 "KVM: s390: vsie: Allow CRYCB FORMAT-2"
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  arch/s390/kvm/vsie.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-> index ac411e9..076090f 100644
-> --- a/arch/s390/kvm/vsie.c
-> +++ b/arch/s390/kvm/vsie.c
-> @@ -344,7 +344,7 @@ static int shadow_crycb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
->  end:
->  	switch (ret) {
->  	case -EINVAL:
-> -		return set_validity_icpt(scb_s, 0x0020U);
-> +		return set_validity_icpt(scb_s, 0x0022U);
->  	case -EFAULT:
->  		return set_validity_icpt(scb_s, 0x0035U);
->  	case -EACCES:
-> 
-
-Thanks applied. 
-
+VXNlIF9fbWF5YmVfdW51c2VkIGZvciBwb3dlciBtYW5hZ2VtZW50IHJlbGF0ZWQgZnVuY3Rpb25z
+DQppbnN0ZWFkIG9mICNpZiBDT05GSUdfUE1fU0xFRVAgdG8gc2ltcGx5IHRoZSBjb2RlLg0KDQpT
+aWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCi0tLQ0KIGRy
+aXZlcnMvcnRjL3J0Yy1zbnZzLmMgfCAxNiArKystLS0tLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5n
+ZWQsIDMgaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL3J0Yy9ydGMtc252cy5jIGIvZHJpdmVycy9ydGMvcnRjLXNudnMuYw0KaW5kZXggZTBlZGQ1
+OTQuLjJhMmI4ZGEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3J0Yy9ydGMtc252cy5jDQorKysgYi9k
+cml2ZXJzL3J0Yy9ydGMtc252cy5jDQpAQCAtMzYwLDkgKzM2MCw3IEBAIHN0YXRpYyBpbnQgc252
+c19ydGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJcmV0dXJuIHJldDsN
+CiB9DQogDQotI2lmZGVmIENPTkZJR19QTV9TTEVFUA0KLQ0KLXN0YXRpYyBpbnQgc252c19ydGNf
+c3VzcGVuZF9ub2lycShzdHJ1Y3QgZGV2aWNlICpkZXYpDQorc3RhdGljIGludCBfX21heWJlX3Vu
+dXNlZCBzbnZzX3J0Y19zdXNwZW5kX25vaXJxKHN0cnVjdCBkZXZpY2UgKmRldikNCiB7DQogCXN0
+cnVjdCBzbnZzX3J0Y19kYXRhICpkYXRhID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQogDQpAQCAt
+MzcyLDcgKzM3MCw3IEBAIHN0YXRpYyBpbnQgc252c19ydGNfc3VzcGVuZF9ub2lycShzdHJ1Y3Qg
+ZGV2aWNlICpkZXYpDQogCXJldHVybiAwOw0KIH0NCiANCi1zdGF0aWMgaW50IHNudnNfcnRjX3Jl
+c3VtZV9ub2lycShzdHJ1Y3QgZGV2aWNlICpkZXYpDQorc3RhdGljIGludCBfX21heWJlX3VudXNl
+ZCBzbnZzX3J0Y19yZXN1bWVfbm9pcnEoc3RydWN0IGRldmljZSAqZGV2KQ0KIHsNCiAJc3RydWN0
+IHNudnNfcnRjX2RhdGEgKmRhdGEgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCiANCkBAIC0zODcs
+MTQgKzM4NSw2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBzbnZzX3J0Y19wbV9v
+cHMgPSB7DQogCS5yZXN1bWVfbm9pcnEgPSBzbnZzX3J0Y19yZXN1bWVfbm9pcnEsDQogfTsNCiAN
+Ci0jZGVmaW5lIFNOVlNfUlRDX1BNX09QUwkoJnNudnNfcnRjX3BtX29wcykNCi0NCi0jZWxzZQ0K
+LQ0KLSNkZWZpbmUgU05WU19SVENfUE1fT1BTCU5VTEwNCi0NCi0jZW5kaWYNCi0NCiBzdGF0aWMg
+Y29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBzbnZzX2R0X2lkc1tdID0gew0KIAl7IC5jb21wYXRp
+YmxlID0gImZzbCxzZWMtdjQuMC1tb24tcnRjLWxwIiwgfSwNCiAJeyAvKiBzZW50aW5lbCAqLyB9
+DQpAQCAtNDA0LDcgKzM5NCw3IEBAIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHNudnNfZHRfaWRz
+KTsNCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBzbnZzX3J0Y19kcml2ZXIgPSB7DQog
+CS5kcml2ZXIgPSB7DQogCQkubmFtZQk9ICJzbnZzX3J0YyIsDQotCQkucG0JPSBTTlZTX1JUQ19Q
+TV9PUFMsDQorCQkucG0JPSAmc252c19ydGNfcG1fb3BzLA0KIAkJLm9mX21hdGNoX3RhYmxlID0g
+c252c19kdF9pZHMsDQogCX0sDQogCS5wcm9iZQkJPSBzbnZzX3J0Y19wcm9iZSwNCi0tIA0KMi43
+LjQNCg0K
