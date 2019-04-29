@@ -2,139 +2,122 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5434DC04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22718C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2372521655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5BEA20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:27:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J4S+dRaE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iqgadAQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfD2SZy (ORCPT
+        id S1729026AbfD2S1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:25:54 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:32962 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728940AbfD2SZx (ORCPT
+        Mon, 29 Apr 2019 14:27:15 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37202 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728903AbfD2S1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:25:53 -0400
-Received: by mail-it1-f193.google.com with SMTP id v8so634146itf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:25:53 -0700 (PDT)
+        Mon, 29 Apr 2019 14:27:14 -0400
+Received: by mail-it1-f196.google.com with SMTP id r85so581292itc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:27:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YaQCnzzh+3p/v5Fojy+snkCdhoa+2CZox1xOwkyLqvU=;
-        b=J4S+dRaERgYYJqnVpVLtPqQznX5dFlnBdW1GSin1hyFvVPaVFzBMJJghFLtjWDxjRT
-         v4iQjjYiEm5qqJHFhcTf+I2XtMweu48chGehJmqyEzO/Qd5UGSJCqE5O7ITg1jCUrp1O
-         sLkB+tB1sLss3OVRYXkzt7MWCq2RCJl+FymYM=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=in8AOYsLLb0alH5eTmWu841W4ZZMfC64SDKGQjp5SiU=;
+        b=iqgadAQryMDX1vOZnWi/PBAx1xjHby7EzSHgED1N4p+GkY8R0dK5FYGF9Mtxcwz8Lc
+         yVUwWwEGyfmKyQV+N5GAHeXHpDQioChFujdZ6wIWh1HkGyc53cpqryRC6ISAyl0NA8So
+         QELoDlLjayadUA6MkJyyH9El1VLiAPdBtSARVS56ymEgjgPo2ezoaII1NI76gMpqPSFI
+         WRCd7s37AlnPUj2oqwhSGi2OOPj30tRnLM0tZt1dszK6DofItElkHGh5EdVYB0zLxGYM
+         rZYd0KOwjxFs7abVCM/evPQjPvV5NxxiIcAk/Xjra6HEmOX+STrivYWGK9Pkf/s/VGbw
+         EgQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YaQCnzzh+3p/v5Fojy+snkCdhoa+2CZox1xOwkyLqvU=;
-        b=UBaTb6Uq4Jgq7MOIpa4yZcesviGgFhexEFy4Ff20IyBHngsi+BOFe0LyhrRsvYNDe7
-         H3hRvbrWxNtoY/4OSiO/q4S+RNnMXajoG3i1m5+Wv7HnMJLHQa0htLZC6uOYjuB8mElX
-         aIwBJkW4Is9Ox/p7hEwGgfV3kGf+PRAwgo6oTPLm9gg+nEBJl56kiaskfj8nOS6s+qY3
-         UpOMLMqQuBA7RU7LZanXxrqU1aJFW5M84O46GUVFweU8NhSTeVWFxmYc1UpqLdcEUL1Z
-         w3wLaTVbQv+3QnDoLBNAYDbuqbEDGMbtp1X9su935iDRSd4yT5pGQDyUC1WeyRKL3UVj
-         phzw==
-X-Gm-Message-State: APjAAAVxCDS40Vv69Jq8VwEAcOsh7ViTvRX5MyxFc+Y/J+77AvwER54z
-        VbbGevUvonb5k2akibOv3RZuAQ==
-X-Google-Smtp-Source: APXvYqwBCurYe1oxJjzdJiVGjz+EDb8ToH9Z6RTcJkNpjitcglw/xKq/Iljl45Uzy6HrBv+Pj9q+6w==
-X-Received: by 2002:a05:660c:24e:: with SMTP id t14mr371088itk.50.1556562352791;
-        Mon, 29 Apr 2019 11:25:52 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id y199sm12894585iof.88.2019.04.29.11.25.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 11:25:51 -0700 (PDT)
-From:   Ross Zwisler <zwisler@chromium.org>
-X-Google-Original-From: Ross Zwisler <zwisler@google.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, stable@vger.kernel.org
-Subject: [PATCH v2] ASoC: Intel: avoid Oops if DMA setup fails
-Date:   Mon, 29 Apr 2019 12:25:17 -0600
-Message-Id: <20190429182517.210909-1-zwisler@google.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-In-Reply-To: <0b030b85-00c8-2e35-3064-bb764aaff0f6@linux.intel.com>
-References: 
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=in8AOYsLLb0alH5eTmWu841W4ZZMfC64SDKGQjp5SiU=;
+        b=JZifocb2qijT5DbyYkldRWEjDZeQFdMLRtsuPwhaZmxnc6sZc2C3/MBCyrzYLMGdLi
+         IA7teEB1eX/kfX8M2sB9jneaML4tYzQlCp+4xCUiL1xY6/WkhBDUppdg3lO6XEslDCnP
+         Y6Pom+SHyCGZd3WU9G4JF5brxGEL2lwE528WQPRLxT8jA69TesZEfRoVOrQBoW2dlukG
+         TQ2KVQmMKWjo2wG4s4qA71fb0f/aNYN262upB8P8p9aRiqkgAn+pkqChfPe/389vl1yy
+         m2J+MM7u/6UXR4BHS2wwK0NxS99vgv5+LA8kXE3CKJc02jkq7uSaVLd/YEfelDjQzsMV
+         1Mfw==
+X-Gm-Message-State: APjAAAVTXlgS7d0osBT8eikSZf/IgGZlocdlakBzkbqFeltBy6oZsTGh
+        wMSdFVySIGxwt+nrvvLcwN+ExQ==
+X-Google-Smtp-Source: APXvYqzBTMvLrVgdwvL5SgJOJXwo2rN/WxRwOh8ws7n1g7EW4Qr7++TIo1nem58jJsWh5pIz2AWysg==
+X-Received: by 2002:a24:1c05:: with SMTP id c5mr313170itc.87.1556562433486;
+        Mon, 29 Apr 2019 11:27:13 -0700 (PDT)
+Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id v7sm8716012iop.8.2019.04.29.11.27.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 11:27:12 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 12:27:10 -0600
+From:   Ross Zwisler <zwisler@google.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ASoC: Intel: avoid Oops if DMA setup fails
+Message-ID: <20190429182710.GA209252@google.com>
+References: <20190426164740.211139-1-zwisler@google.com>
+ <20190426185246.AD8E5206A3@mail.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426185246.AD8E5206A3@mail.kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently in sst_dsp_new() if we get an error return from sst_dma_new()
-we just print an error message and then still complete the function
-successfully.  This means that we are trying to run without sst->dma
-properly set up, which will result in NULL pointer dereference when
-sst->dma is later used.  This was happening for me in
-sst_dsp_dma_get_channel():
+On Fri, Apr 26, 2019 at 06:52:45PM +0000, Sasha Levin wrote:
+> Hi,
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+> 
+> The bot has tested the following trees: v5.0.9, v4.19.36, v4.14.113, v4.9.170, v4.4.178, v3.18.138.
+> 
+> v5.0.9: Build OK!
+> v4.19.36: Build OK!
+> v4.14.113: Build OK!
+> v4.9.170: Build OK!
+> v4.4.178: Failed to apply! Possible dependencies:
+>     2bd5bd15a518 ("ASoC: Intel: add bytct-rt5651 machine driver")
+>     2dcffcee23a2 ("ASoC: Intel: Create independent acpi match module")
+>     595788e475d0 ("ASoC: Intel: tag byt-rt5640 machine driver as deprecated")
+>     95f098014815 ("ASoC: Intel: Move apci find machine routines")
+>     a395bdd6b24b ("ASoC: intel: Fix sst-dsp dependency on dw stuff")
+>     a92ea59b74e2 ("ASoC: Intel: sst: only select sst-firmware when DW DMAC is built-in")
+>     cfffcc66a89a ("ASoC: Intel: Load the atom DPCM driver only")
+> 
+> v3.18.138: Failed to apply! Possible dependencies:
+>     0d2135ecadb0 ("ASoC: Intel: Work around to fix HW D3 potential crash issue")
+>     13735d1cecec ("ASoC: intel - kconfig: remove SND_SOC_INTEL_SST prompt")
+>     161aa49ef1b9 ("ASoC: Intel: Add new dependency for Haswell machine")
+>     2106241a6803 ("ASoC: Intel: create common folder and move common files in")
+>     282a331fe25c ("ASoC: Intel: Add new dependency for Broadwell machine")
+>     2e4f75919e5a ("ASoC: Intel: Add PM support to HSW/BDW PCM driver")
+>     34084a436703 ("ASoC: intel: Remove superfluous backslash in Kconfig")
+>     544c55c810a5 ("ASoC: Intel: Delete an unnecessary check before the function call "sst_dma_free"")
+>     63ae1fe7739e ("ASoC: Intel: Add dependency on DesignWare DMA controller")
+>     7dd6bd8926f3 ("ASoC: intel: kconfig - Move DW_DMAC_CORE dependency to machines")
+>     85b88a8dd0c7 ("ASoC: Intel: Store the entry_point read from FW file")
+>     9449d39b990d ("ASoC: Intel: add function to load firmware image")
+>     a395bdd6b24b ("ASoC: intel: Fix sst-dsp dependency on dw stuff")
+>     a92ea59b74e2 ("ASoC: Intel: sst: only select sst-firmware when DW DMAC is built-in")
+>     aed3c7b77c85 ("ASoC: Intel: Add PM support to HSW/BDW IPC driver")
+>     d96c53a193dd ("ASoC: Intel: Add generic support for DSP wake, sleep and stall")
+>     e9600bc166d5 ("ASoC: Intel: Make ADSP memory block allocation more generic")
+> 
+> 
+> How should we proceed with this patch?
 
-        struct sst_dma *dma = dsp->dma;
-	...
-        dma->ch = dma_request_channel(mask, dma_chan_filter, dsp);
-
-This resulted in:
-
-   BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
-   IP: sst_dsp_dma_get_channel+0x4f/0x125 [snd_soc_sst_firmware]
-
-Fix this by adding proper error handling for the case where we fail to
-set up DMA.
-
-This change only affects Haswell and Broadwell systems.  Baytrail
-systems explicilty opt-out of DMA via sst->pdata->resindex_dma_base
-being set to -1.
-
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Cc: stable@vger.kernel.org
----
-
-Changes in v2:
- - Upgraded the sst_dma_new() failure message from dev_warn() to dev_err()
-   (Pierre-Louis).
- - Noted in the changelog that this change only affects Haswell and
-   Broadwell (Pierre-Louis).
-
----
- sound/soc/intel/common/sst-firmware.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/intel/common/sst-firmware.c b/sound/soc/intel/common/sst-firmware.c
-index 1e067504b6043..f830e59f93eaa 100644
---- a/sound/soc/intel/common/sst-firmware.c
-+++ b/sound/soc/intel/common/sst-firmware.c
-@@ -1251,11 +1251,15 @@ struct sst_dsp *sst_dsp_new(struct device *dev,
- 		goto irq_err;
- 
- 	err = sst_dma_new(sst);
--	if (err)
--		dev_warn(dev, "sst_dma_new failed %d\n", err);
-+	if (err)  {
-+		dev_err(dev, "sst_dma_new failed %d\n", err);
-+		goto dma_err;
-+	}
- 
- 	return sst;
- 
-+dma_err:
-+	free_irq(sst->irq, sst);
- irq_err:
- 	if (sst->ops->free)
- 		sst->ops->free(sst);
--- 
-2.21.0.593.g511ec345e18-goog
-
+After reviews I'll send backport patches for v4.4.X and v3.18.X as necessary.
