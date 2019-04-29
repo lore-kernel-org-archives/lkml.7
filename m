@@ -6,94 +6,87 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136C5C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CEFC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5801214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683322147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="FodnkuEm"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="a7CUGp7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfD2Gzs (ORCPT
+        id S1727506AbfD2Gzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:55:48 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46484 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfD2Gzs (ORCPT
+        Mon, 29 Apr 2019 02:55:52 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42985 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfD2Gzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:55:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id k18so6928407lfj.13
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 23:55:47 -0700 (PDT)
+        Mon, 29 Apr 2019 02:55:50 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w23so6948431lfc.9
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 23:55:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=X79SrIi9c84VIrWeeLGrqQgrBJdkT4fyXXb11dpl5ZI=;
-        b=FodnkuEmqqVuaM5mDPGWUCZOn1baCfEeqTxi+dIxUzLDrZXO/0mZGmUBicyEW2dam0
-         shxT1VNv2cNfeI7a9gkdE3unft2FW4c7F86WvbDabsMHDoUb3W94Q3XfHuIgshSTU6uD
-         cTCSIL50Kh7ocMBdk//GsoX7dWi2Iv3w8hZoKgl5DF/7HJqMzHcc3duWAV+RU25LhPHG
-         cVH3isgjjR+o0f1ZvO9oo/n/ac5xSx8zIJgynE49YLoc4SR2JLZzylh76xAHDMGCAs74
-         uurHec8CRsvdUTvr1jxGLIJknMQC1qiMVaiQYHA4lHUdmgptwIU69etDvrmsoyRI5LRm
-         TGxQ==
+        bh=Itypzg7jfUS2m0bdkut55783K6r9kms23kfOAhHmrZo=;
+        b=a7CUGp7Ijy2wOvMx0I5N5nxzJ1rM0JGv5zI8yDPixJ2yRC/S+JQKCtTYDi0dha/4Md
+         as9nawwRvUmWiMeQrW7UrYddXhDnnIOc6pdn2pmiAo/wF7Ow7aq8W5XhKb4LC83mE4HW
+         L4ANcUaBvL4NCB8sUlW+obsZFbcLbaFtn4BQKMkHOR3LhVtzXbCo/y1W+0yq4/3HXqPW
+         zhewyA+GlGTgGahc12zMiUrH4bKqYqYgUwxuEzQTQNG5ojYrvs8jjG7SWgJBHZXNXFs4
+         aOYBx0Lx4FbzwC9eZy2cFoP9p1HivffbZnGEU7YrJfgo9FKdowVCmfcbHf5YKx3iLImI
+         MSzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X79SrIi9c84VIrWeeLGrqQgrBJdkT4fyXXb11dpl5ZI=;
-        b=A2WgG+PiDw0UUCXeKzmjF8vCJMILUDqlmBbW86TcAtefdaaUpvpZ7KYib9jqplDojk
-         ntszk5sFRR7yNysgJHOqYrFYxhnFazjGYlxbFpVs8kb2l7l9Vfs0K8/uMnEgpfxAaLrY
-         FcBy8ApPLIuu9o4qVJ6jtTBVXcDQAp6WxV7XZJW6jjgSbvy5wy45/0yBOmOGnSE1ab4i
-         okEfltWdqolGlem2Y20ypCyomFC5OYslE7cjSSui6qqUzBHMiJ+cAQwLgPhxZbiNgfQ5
-         87xjU98fT0hPJso138XTYZyADaK700GCM8C67CJhXYBQcthH2vEXV1JVpKE0BDo/sONq
-         zg/w==
-X-Gm-Message-State: APjAAAULK1AUjNb5mYnRg5vCtAC4ohk0+PLcXTNhPwli2m4JcWPNowP2
-        vMXofn8V6IltbIu/sCs0IRMPfw==
-X-Google-Smtp-Source: APXvYqz2HI1dJLQ6NTVZVazrEaO9tcW9JY+dPMoexZcD6xY339/BeCzOPtYhoZrEh0iSOaLVtwy66g==
-X-Received: by 2002:ac2:51a1:: with SMTP id f1mr22068165lfk.129.1556520946405;
-        Sun, 28 Apr 2019 23:55:46 -0700 (PDT)
+        bh=Itypzg7jfUS2m0bdkut55783K6r9kms23kfOAhHmrZo=;
+        b=lqsQQJTArJIj8KsLaHn4M5Z79OAR+DFn3t7gerKnQEuQZQh+U1BpP/IzXJQ3Z8bti4
+         SutRebSfaEg1colHFzk0Ev8CrhxT3e2SCCuCwIO1+CokfofRXn4/kx1tUry4Y4KjmF0Z
+         BLsE/RwjvgA6zbbNVUBAGO3Ip+Kx4SR0nuX56xyiLzQVo6e74LnA9TAXbP3mXv1S0uQf
+         6qisuZpu2EAIlpGKO7EPeHs6w98G5PDRQDdjraXRojKxKf+JXMWVLhw8d8Jy4DNYopdR
+         MBboXY5V+13ocE/4u8dbsRSH07qVJGicYkEp4YTTKklAaU9jOY/WgJCehaZxgLxqySuc
+         ehZw==
+X-Gm-Message-State: APjAAAVQsbNZ6G1HsHRmU1uIdqNxzeMuwyG88Kfigdrfd/gY8EEGY6U4
+        hEfXfT+LaQjxwa6cdPXqD3G4sQ==
+X-Google-Smtp-Source: APXvYqxY0m8o16v8TB+xLLFKL0O+IXTwf7rKZmb7YFTmFHToB13IDZnCVmnoKSP218wBTNckGNO0MA==
+X-Received: by 2002:ac2:4a86:: with SMTP id l6mr30635614lfp.51.1556520948853;
+        Sun, 28 Apr 2019 23:55:48 -0700 (PDT)
 Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id d16sm7204946lfi.75.2019.04.28.23.55.45
+        by smtp.gmail.com with ESMTPSA id o12sm7042529lfl.66.2019.04.28.23.55.47
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 28 Apr 2019 23:55:45 -0700 (PDT)
-Date:   Sun, 28 Apr 2019 23:19:42 -0700
+        Sun, 28 Apr 2019 23:55:47 -0700 (PDT)
+Date:   Sun, 28 Apr 2019 23:21:01 -0700
 From:   Olof Johansson <olof@lixom.net>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        marc.w.gonzalez@free.fr, john.stultz@linaro.org,
-        liwei213@huawei.com
-Subject: Re: [PATCH] arm64: defconfig: Update UFSHCD for Hi3660 soc
-Message-ID: <20190429061942.2e3xy3ki7ua5woai@localhost>
-References: <20190416170221.13764-1-valentin.schneider@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     arm@kernel.org, Baruch Siach <baruch@tkos.co.il>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: debug-ll: add default address for digicolor
+Message-ID: <20190429062101.txcoy3vup4jhw6eq@localhost>
+References: <20190417151348.100050-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190416170221.13764-1-valentin.schneider@arm.com>
+In-Reply-To: <20190417151348.100050-1-arnd@arndb.de>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 06:02:21PM +0100, Valentin Schneider wrote:
-> Commit 7ee7ef24d02d ("scsi: arm64: defconfig: enable configs for Hisilicon ufs")
-> set 'CONFIG_SCSI_UFS_HISI=y', but the configs it depends
-> on
+On Wed, Apr 17, 2019 at 05:13:27PM +0200, Arnd Bergmann wrote:
+> The digicolor platform has three UARTs, but the Kconfig.debug
+> file explicitly lists port zero as the one to be used for the
+> console, while not providing any default values.
 > 
->   (CONFIG_SCSI_HFSHCD_PLATFORM && CONFIG_SCSI_UFSHCD)
+> This can get an automated randconfig build stuck in a loop
+> waiting for the user to input the number. As we already know
+> the physical address, this patch provides that number as
+> default, along with a reasonable default value for the virtual
+> address.
 > 
-> were left to being built as modules.
-> 
-> Commit 1f4fa50dd48f ("arm64: defconfig: Regenerate for v4.20") "fixed"
-> that by reverting to 'CONFIG_SCSI_UFS_HISI=m'.
-> 
-> Thing is, if the rootfs is stored in the on-board flash (which
-> is the "canonical" way of doing things), we either need these drivers
-> to be built-in, or we need to fiddle with an initramfs to access that
-> flash and eventually load the modules installed over there.
-> 
-> The former is the easiest, do that.
-> 
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Baruch Siach <baruch@tkos.co.il>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 Applied, thanks!
 
