@@ -2,111 +2,164 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABAEC04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69C4C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566022087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556547724;
-	bh=iQv7qdfNE2ZTy8sIWEeqO2sCGSXIkTfD+az4PXbR/KQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OvfPJLs6sdKY4+l4W7U6HqtDBVQIaDgObpQk+7aVxtDW7pKFznWa9c1CfUzs2Aqwr
-	 UJhaolAL7fSRwdnNFkVTBOY2+H4gR/c2Bq6ADIuUWUl3jQP/Zv0VthrZr7CBJV8Iae
-	 BtmkxypRhMJEL+LeVJO7/v8DZdNDcsmg+GMg9OmU=
+	by mail.kernel.org (Postfix) with ESMTP id 967C42087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:22:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nSUn3qna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfD2OWD (ORCPT
+        id S1728365AbfD2OWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:22:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728240AbfD2OWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:22:03 -0400
-Received: from linux-8ccs (ip5f5ade6f.dynamic.kabel-deutschland.de [95.90.222.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2E1B20673;
-        Mon, 29 Apr 2019 14:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556547722;
-        bh=iQv7qdfNE2ZTy8sIWEeqO2sCGSXIkTfD+az4PXbR/KQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tlVpTOyE8ff5uwR+X2Fo9yxipvxr6BB0tD7ZTU0xIYIAgeIL+iSusOHylbN/Ip0aW
-         8J9D/REnUqe5kGNK9WupgYLl+L2THYwe7sYigaRdw8UIqTEdEEkIEZus2n70MrsGoz
-         GhiSIrOIjTlivm54pxLKsEVOIUHW8frEYUntptoo=
-Date:   Mon, 29 Apr 2019 16:21:56 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>
-Subject: Re: [PATCH v3] moduleparam: Save information about built-in modules
- in separate file
-Message-ID: <20190429142156.GA31567@linux-8ccs>
-References: <20190429090854.GU9023@dhcp129-178.brq.redhat.com>
+        Mon, 29 Apr 2019 10:22:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34167 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbfD2OWV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:22:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c13so4261473pgt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 07:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q2RFfAyrf9RFoM43ktNZPcHmGWgFL8fnuov2nkBPWS8=;
+        b=nSUn3qnawAssSs6MaxKqsGt7m2rQuwz8iuV7UDRO4XwagTQcUwQLKJChDfpo2Y42Xk
+         dLm04wkPLwmDDcGlfi33gt+mgTjEgazJ0pWoNgMCBCgvVwv5SPNGO+R0wOTcgS/YyTDI
+         MMCTRBCf6Y5X7Op946XZIErDxOVRLAN1uJUSs6b8aMjiipEdz924r1uFPAVVEONFnBC1
+         eRjcEW3uL1UMy4VUvg8gNA4Pg7nsW7DCRDuZC0iLpBAnBGkKHCDzwyf3Uq04LayvwlmL
+         Hgpedt4edzE9KmfV/TNfyjqaPwOmLbR2KI1O6u2H+6Cx6SK8d3Pu0MrHeMD38gdpjP27
+         JeSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q2RFfAyrf9RFoM43ktNZPcHmGWgFL8fnuov2nkBPWS8=;
+        b=kLUVKoJrHTJwqsnlYhR0dLjjsHX0KnYHC2fqZDuy1JvKPx8gytQqM+hJ7L4qKwio0/
+         KmlOWtujW/Oq4CMYfJwbqglxuoNHK0EFUDVMJKJFgOW0Cq0Oq1TaLzrWZlf1TGPwvrjJ
+         GN0foJ9lXoV6p5HGav3DfIjIUg1TD9l1GjGtvvlW3VdsOVQCkC/3Dlps+7ImTVUtBDdh
+         Na50TUWVQDSjrhD/1IR6bxD/Ohv/BTzDeX8h7FWbDYYt7fSxxBEC8Wg4zVnzFm4MekgK
+         lh+QESMcQDjqnBPYbujBPj+nK1LMvx54UXIaArnwdi18to7jIHrQMiXzxdz2m+cvSVOq
+         HtGw==
+X-Gm-Message-State: APjAAAVw+ez25I7Zoo5OEjMyiB+NfM1MfCBgF3YZQWgjn9ul4mLk71Hp
+        +OtSCVsB3tUk8NHmYmP2uqajWYqOpmG4x/sKp24ktw==
+X-Google-Smtp-Source: APXvYqyjdyjRGlJ4AtmMgCZd/Nm8Zu8D+p70gtT5fOtGOIKXAcrI3uZOPLT4eOOdJOYGY3S3MZtVzM6xnMJJE/TXbvw=
+X-Received: by 2002:a62:51c5:: with SMTP id f188mr24041707pfb.239.1556547740003;
+ Mon, 29 Apr 2019 07:22:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190429090854.GU9023@dhcp129-178.brq.redhat.com>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1553093420.git.andreyknvl@google.com> <44ad2d0c55dbad449edac23ae46d151a04102a1d.1553093421.git.andreyknvl@google.com>
+ <20190322114357.GC13384@arrakis.emea.arm.com> <CAAeHK+xE-ywfpVHRhBJVGiqOe0+BYW9awUa10ZP4P6Ggc8nxMg@mail.gmail.com>
+ <20190328141934.38960af0@gandalf.local.home> <20190329103039.GA44339@arrakis.emea.arm.com>
+ <CAAeHK+xe-zWn8WpCxUxBB2tXL8oiLkshkPi1J3Ly87mACaA4-A@mail.gmail.com> <20190426141742.GB54863@arrakis.emea.arm.com>
+In-Reply-To: <20190426141742.GB54863@arrakis.emea.arm.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 29 Apr 2019 16:22:08 +0200
+Message-ID: <CAAeHK+xx_kB_U_ws8eUHOE8SkhGCcERNVcJoaMYbP9TGb+q2tg@mail.gmail.com>
+Subject: Re: [PATCH v13 04/20] mm, arm64: untag user pointers passed to memory syscalls
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Alexey Gladkov [29/04/19 11:08 +0200]:
->Problem:
+On Fri, Apr 26, 2019 at 4:17 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
->When a kernel module is compiled as a separate module, some important
->information about the kernel module is available via .modinfo section of
->the module.  In contrast, when the kernel module is compiled into the
->kernel, that information is not available.
+> On Tue, Apr 02, 2019 at 02:47:34PM +0200, Andrey Konovalov wrote:
+> > On Fri, Mar 29, 2019 at 11:30 AM Catalin Marinas
+> > <catalin.marinas@arm.com> wrote:
+> > > On Thu, Mar 28, 2019 at 02:19:34PM -0400, Steven Rostedt wrote:
+> > > > On Thu, 28 Mar 2019 19:10:07 +0100
+> > > > Andrey Konovalov <andreyknvl@google.com> wrote:
+> > > >
+> > > > > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > > > > > ---
+> > > > > > >  ipc/shm.c      | 2 ++
+> > > > > > >  mm/madvise.c   | 2 ++
+> > > > > > >  mm/mempolicy.c | 5 +++++
+> > > > > > >  mm/migrate.c   | 1 +
+> > > > > > >  mm/mincore.c   | 2 ++
+> > > > > > >  mm/mlock.c     | 5 +++++
+> > > > > > >  mm/mmap.c      | 7 +++++++
+> > > > > > >  mm/mprotect.c  | 1 +
+> > > > > > >  mm/mremap.c    | 2 ++
+> > > > > > >  mm/msync.c     | 2 ++
+> > > > > > >  10 files changed, 29 insertions(+)
+> > > > > >
+> > > > > > I wonder whether it's better to keep these as wrappers in the arm64
+> > > > > > code.
+> > > > >
+> > > > > I don't think I understand what you propose, could you elaborate?
+> > > >
+> > > > I believe Catalin is saying that instead of placing things like:
+> > > >
+> > > > @@ -1593,6 +1593,7 @@ SYSCALL_DEFINE3(shmat, int, shmid, char __user *, shmaddr, int, shmflg)
+> > > >       unsigned long ret;
+> > > >       long err;
+> > > >
+> > > > +     shmaddr = untagged_addr(shmaddr);
+> > > >
+> > > > To instead have the shmaddr set to the untagged_addr() before calling
+> > > > the system call, and passing the untagged addr to the system call, as
+> > > > that goes through the arm64 architecture specific code first.
+> > >
+> > > Indeed. For example, we already have a SYSCALL_DEFINE6(mmap, ...) in
+> > > arch/arm64/kernel/sys.c, just add the untagging there. We could do
+> > > something similar for the other syscalls. I don't mind doing this in the
+> > > generic code but if it's only needed for arm64, I'd rather keep the
+> > > generic changes to a minimum.
+> >
+> > Do I understand correctly, that I'll need to add ksys_ wrappers for
+> > each of the memory syscalls, and then redefine them in
+> > arch/arm64/kernel/sys.c with arm64_ prefix, like it is done for the
+> > personality syscall right now? This will require generic changes as
+> > well.
 >
->Information about built-in modules is necessary in the following cases:
->
->1. When it is necessary to find out what additional parameters can be
->passed to the kernel at boot time.
->
->2. When you need to know which module names and their aliases are in
->the kernel. This is very useful for creating an initrd image.
->
->Proposal:
->
->The proposed patch does not remove .modinfo section with module
->information from the vmlinux at the build time and saves it into a
->separate file after kernel linking. So, the kernel does not increase in
->size and no additional information remains in it. Information is stored
->in the same format as in the separate modules (null-terminated string
->array). Because the .modinfo section is already exported with a separate
->modules, we are not creating a new API.
->
->It can be easily read in the userspace:
->
->$ tr '\0' '\n' < kernel.builtin
+> Yes. My aim is to keep the number of untagged_addr() calls in the
+> generic code to a minimum (rather than just keeping the generic code
+> changes small).
 
-s/kernel.builtin/modules.builtin.modinfo/
+OK, will do in v14 (despite it still being unclear whether we should
+do untagging here or not).
 
-Otherwise, for module.h and moduleparam.h:
-
-Acked-by: Jessica Yu <jeyu@kernel.org>
-
-And it would be great if Lucas can confirm if the file format and name
-would be OK for kmod.
-
-Thanks!
-
-Jessica
-
+>
+> --
+> Catalin
