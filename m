@@ -2,104 +2,139 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D748DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0977C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC062087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7BC2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfD2K1p (ORCPT
+        id S1727857AbfD2K2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:27:45 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39041 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727621AbfD2K1p (ORCPT
+        Mon, 29 Apr 2019 06:28:16 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:60248 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727621AbfD2K2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:27:45 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hL3Va-0006sr-JI; Mon, 29 Apr 2019 12:27:38 +0200
-Message-ID: <1556533656.2560.7.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/3] power: supply: Add driver for Microchip UCS1002
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
-Cc:     Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 29 Apr 2019 12:27:36 +0200
-In-Reply-To: <20190429054741.7286-3-andrew.smirnov@gmail.com>
-References: <20190429054741.7286-1-andrew.smirnov@gmail.com>
-         <20190429054741.7286-3-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 29 Apr 2019 06:28:16 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 1A27A634C7B;
+        Mon, 29 Apr 2019 13:28:10 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hL3W5-0000Wy-MQ; Mon, 29 Apr 2019 13:28:09 +0300
+Date:   Mon, 29 Apr 2019 13:28:09 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
+        Libin Yang <lbyang@marvell.com>,
+        Albert Wang <twang13@marvell.com>,
+        jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v4 01/10] media: dt-bindings: marvell,mmp2-ccic: Add
+ Marvell MMP2 camera
+Message-ID: <20190429102809.qlwwgzgwzh4raz2q@valkosipuli.retiisi.org.uk>
+References: <20190429091632.2462285-1-lkundrak@v3.sk>
+ <20190429091632.2462285-2-lkundrak@v3.sk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429091632.2462285-2-lkundrak@v3.sk>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+Hi Lubomir,
 
-Am Sonntag, den 28.04.2019, 22:47 -0700 schrieb Andrey Smirnov:
-> Add driver for Microchip UCS1002 Programmable USB Port Power
-> Controller with Charger Emulation. The driver exposed a power supply
-> device to control/monitor various parameter of the device as well as a
-> regulator to allow controlling VBUS line.
+On Mon, Apr 29, 2019 at 11:16:23AM +0200, Lubomir Rintel wrote:
+> Add Marvell MMP2 camera host interface.
 > 
-> > Signed-off-by: Enric Balletbo Serra <enric.balletbo@collabora.com>
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
 > ---
-[...]
-> +	/* Enable charge rationing by default */
-> > +	ret = regmap_update_bits(info->regmap, UCS1002_REG_GENERAL_CFG,
-> > +				 F_RATION_EN, F_RATION_EN);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to read general config: %d\n", ret);
-> > +		return ret;
-> > +	}
+> Changes since v3:
+> - Dropped the video-interfaces.txt reference
+> - Clarify "clocks", "clock-names" and "clock-output-names" descriptions
+> - Refer to other documentation by full path
+> 
+> Changes since v2:
+> - Added #clock-cells, clock-names, port
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+>  
+> .../bindings/media/marvell,mmp2-ccic.txt      | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+> new file mode 100644
+> index 000000000000..cf7767268c52
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+> @@ -0,0 +1,38 @@
+> +Marvell MMP2 camera host interface
 > +
-> > +	/*
-> > +	 * Ignore the M1, M2, PWR_EN, and EM_EN pin states. Set active
-> > +	 * mode selection to BC1.2 CDP.
-> > +	 */
-> > +	ret = regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
-> > +				 V_SET_ACTIVE_MODE_MASK,
-> +				 V_SET_ACTIVE_MODE_BC12_CDP);
+> +Required properties:
+> + - compatible: Should be "marvell,mmp2-ccic".
+> + - reg: Register base and size.
+> + - interrupts: The interrupt number.
+> + - #clock-cells: Nust be 0.
 
-This doesn't work as the F_PIN_IGNORE bit isn't set, so the the
-external strap settings are applied. I had to apply the following diff
-to make the driver behave as expected again:
+"Must".
 
---- a/drivers/power/supply/ucs1002_power.c
-+++ b/drivers/power/supply/ucs1002_power.c
-@@ -548,8 +548,8 @@ static int ucs1002_probe(struct i2c_client *client,
-         * mode selection to BC1.2 CDP.
-         */
-        ret = regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
--                                V_SET_ACTIVE_MODE_MASK,
--                                V_SET_ACTIVE_MODE_BC12_CDP);
-+                                V_SET_ACTIVE_MODE_MASK | F_PIN_IGNORE,
-+                                V_SET_ACTIVE_MODE_BC12_CDP | F_PIN_IGNORE);
+> +
+> +Optional properties:
+> + - clocks: Reference to the input clock as specified by
+> +           Documentation/devicetree/bindings/clock/clock-bindings.txt.
+> + - clock-names: Names of the clocks used; "axi" for the AXI bus interface,
+> +                "func" for the peripheral clock and "phy" for the parallel
+> +                video bus interface.
+> + - clock-output-names: Optional clock source for sensors. Shall be "mclk".
+> +
+> +Required subnodes:
+> + - port: The parallel bus interface port with a single endpoint linked to
+> +         the sensor's endpoint as described in
+> +         Documentation/devicetree/bindings/media/video-interfaces.txt.
 
-Regards,
-Lucas
+Both parallel and Bt.656 are supported. So you'll need the bus-type
+property. Looking further the datasheet, you'll also need pclk-sample,
+hsync-active and vsync-active properties. I'd make them mandatory for the
+endpoint (the two latter are for parallel mode only).
+
+> +
+> +Example:
+> +
+> +	camera0: camera@d420a000 {
+> +		compatible = "marvell,mmp2-ccic";
+> +		reg = <0xd420a000 0x800>;
+> +		interrupts = <42>;
+> +		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
+> +		clock-names = "axi";
+> +		#clock-cells = <0>;
+> +		clock-output-names = "mclk";
+> +
+> +		port {
+> +			camera0_0: endpoint {
+> +				remote-endpoint = <&ov7670_0>;
+
+Please also add the above properties here.
+
+> +			};
+> +		};
+> +	};
+
+-- 
+Kind regards,
+
+Sakari Ailus
