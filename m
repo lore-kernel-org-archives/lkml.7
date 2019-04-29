@@ -2,69 +2,190 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEB2C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22494C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28C32075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC86820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:11:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dlg3wjst"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fe45meDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfD2MJl (ORCPT
+        id S1728057AbfD2MLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:09:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49524 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbfD2MJl (ORCPT
+        Mon, 29 Apr 2019 08:11:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34765 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbfD2MLk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:09:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=U63qJnTkPJ4enJm1vzK4P1yKEZuVJMuZeVxsRrwlieY=; b=Dlg3wjstvx1Jhum7z5qnmoqVW4
-        dBDHsR7o55Z1Pfj0K6PMmpJ5dji0lm6k7BaWEkTUxIj4AKG1KHNn1RIy22+hB1RJoladDCzyMfBdq
-        uBFxQN8gJje5SK9Q/Yj6n/hhTEB9vPsxdymYuD1827Tm5VoMhTw1g5xnC+X+/Ra8kBVD/WC4qBzp0
-        kzzp2fCPpsaZpK5ODQOVcX8FTSmlQl6+0Ojunp0MJ72OGI9Afmg2q70xPqyTxhWRzp1y84rxu2AtB
-        wCeImU7UxMEk/zmWZy0odLacU8/0ACMPkv58vAJ/RK61ky1Zy9Jblz1hvreT1z1QnkNIr89at1+41
-        gK8ZriLQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hL56G-0005h9-Li; Mon, 29 Apr 2019 12:09:36 +0000
-Date:   Mon, 29 Apr 2019 05:09:36 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nicholas Mc Guire <hofrat@osadl.org>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net_sched: force endianness annotation
-Message-ID: <20190429120936.GA21405@infradead.org>
-References: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
+        Mon, 29 Apr 2019 08:11:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n15so2301729ota.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 05:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ofP7tq1gg7jAEonEpyu80KP1hiIc7q/XbvypK5YmGvM=;
+        b=Fe45meDRPvHqqreHOcs9kzoqmPv0MbzhH32LvkjxYKjfeijNDzQb5YWfVyvA6tDpNB
+         RVgYApWhjqmNyQFWgb5O845vEX5+ap0y+gWk/UEay9mOWPnR0u6zHNvlO1T9fJkjiFuS
+         A9Voe2gg9A9il2P+JLohr/FtfFAETMqCtJRXRPoEDGNCTkAaERKm9Z8PzX6jAjPxYKLU
+         /lhZWK22AjlCEV3SsqmhoCXh1GZZmc+R23HgVdpl6liH6rl2PQQn/wnJFWMACHLWT2Ks
+         Oc5uX2lUl9oD29Pq4YqDVZrCm9TeKWUrP2WLJ1PTqDrqJvJKaF+FZE3JWzvhPYivd52N
+         bHtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ofP7tq1gg7jAEonEpyu80KP1hiIc7q/XbvypK5YmGvM=;
+        b=t2FiblVY1aku6nNvnjZzDJk0L1RguMlQxVsYlfxXi1Zm24E9h3z6q+xkQaMvJUP10Q
+         zjW+NX+zJrdQiCr7H5ppGsxo3Ac4Xe29k6nBHzuDJtgGz2RryRUcBHnCY08m96cvyYXN
+         AKhSn62FDL+0VOECt1AnWastqxeE0+jZ41UAoNg82wU16fAXNW6slRE+xdF5E52i3+xi
+         A1yuSSy3AzOctFZ1iFsdxMC+bMirjI9pLtkyMkOBpXGveCxz8SyaRcPX0XjeyuVZ4Un2
+         4vwzjI2Bt0Ol180ZeldPSJtaEz44Fnv6ebUcu0LHSmuMRIAzBD57U91RbxUqCPtWvxLY
+         rfQw==
+X-Gm-Message-State: APjAAAWK3CuJXDuY+zafEdXOGOUaskuLZ+YWlgg88flarkQo7ZIkdTzG
+        vPBPRsjFujuAUxyoSP8vmRKdHvDTImnKrBBXIqf+Mw==
+X-Google-Smtp-Source: APXvYqwUqePkcaYnW+26PBNkBwHIHt4YRj0lQa0cGh5pe1KoTnwjh5MPkgz6q0G63XHqG37Io2LNOjdle6n3Ke12hfk=
+X-Received: by 2002:a05:6830:b:: with SMTP id c11mr7523807otp.281.1556539899231;
+ Mon, 29 Apr 2019 05:11:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <cover.1555330115.git.baolin.wang@linaro.org> <07c070b4397296a4500d04abe16dfd8a71a2f211.1555330115.git.baolin.wang@linaro.org>
+ <20190429120108.GL3845@vkoul-mobl.Dlink>
+In-Reply-To: <20190429120108.GL3845@vkoul-mobl.Dlink>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Mon, 29 Apr 2019 20:11:27 +0800
+Message-ID: <CAMz4kuJB2+6HziyDep4ctfmjFYpmZ-v_vrFQsJ9tHvwYzSJeKA@mail.gmail.com>
+Subject: Re: [PATCH 7/7] dmaengine: sprd: Add interrupt support for 2-stage transfer
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 07:54:59AM +0200, Nicholas Mc Guire wrote:
-> While the endiannes is being handled correctly sparse was unhappy with
-> the missing annotation as be16_to_cpu()/be32_to_cpu() expects a __be16
-> respectively __be32. To mitigate this annotation issue forced annotation
-> is introduced. Note that this patch has no impact on the generated binary.
+On Mon, 29 Apr 2019 at 20:01, Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 15-04-19, 20:15, Baolin Wang wrote:
+> > For 2-stage transfer, some users like Audio still need transaction interrupt
+> > to notify when the 2-stage transfer is completed. Thus we should enable
+> > 2-stage transfer interrupt to support this feature.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  drivers/dma/sprd-dma.c |   22 +++++++++++++++++++++-
+> >  1 file changed, 21 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> > index cc9c24d..4c18f44 100644
+> > --- a/drivers/dma/sprd-dma.c
+> > +++ b/drivers/dma/sprd-dma.c
+> > @@ -62,6 +62,8 @@
+> >  /* SPRD_DMA_GLB_2STAGE_GRP register definition */
+> >  #define SPRD_DMA_GLB_2STAGE_EN               BIT(24)
+> >  #define SPRD_DMA_GLB_CHN_INT_MASK    GENMASK(23, 20)
+> > +#define SPRD_DMA_GLB_DEST_INT                BIT(22)
+> > +#define SPRD_DMA_GLB_SRC_INT         BIT(20)
+> >  #define SPRD_DMA_GLB_LIST_DONE_TRG   BIT(19)
+> >  #define SPRD_DMA_GLB_TRANS_DONE_TRG  BIT(18)
+> >  #define SPRD_DMA_GLB_BLOCK_DONE_TRG  BIT(17)
+> > @@ -135,6 +137,7 @@
+> >  /* define DMA channel mode & trigger mode mask */
+> >  #define SPRD_DMA_CHN_MODE_MASK               GENMASK(7, 0)
+> >  #define SPRD_DMA_TRG_MODE_MASK               GENMASK(7, 0)
+> > +#define SPRD_DMA_INT_TYPE_MASK               GENMASK(7, 0)
+> >
+> >  /* define the DMA transfer step type */
+> >  #define SPRD_DMA_NONE_STEP           0
+> > @@ -190,6 +193,7 @@ struct sprd_dma_chn {
+> >       u32                     dev_id;
+> >       enum sprd_dma_chn_mode  chn_mode;
+> >       enum sprd_dma_trg_mode  trg_mode;
+> > +     enum sprd_dma_int_type  int_type;
+> >       struct sprd_dma_desc    *cur_desc;
+> >  };
+> >
+> > @@ -429,6 +433,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+> >               val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+> >               val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+> >               val |= SPRD_DMA_GLB_2STAGE_EN;
+> > +             if (schan->int_type != SPRD_DMA_NO_INT)
+>
+> Who configure int_type?
 
-Every __force needs a comment explaining why it actually іs fine in
-this particular case.  Even more bonus points for finding a solution
-that does not require the __force.
+The int_type is configured through the flags of
+sprd_dma_prep_slave_sg() by users, see:
+https://elixir.bootlin.com/linux/v5.1-rc6/source/include/linux/dma/sprd-dma.h#L9
+
+>
+> > +                     val |= SPRD_DMA_GLB_SRC_INT;
+> > +
+> >               sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
+> >               break;
+> >
+> > @@ -436,6 +443,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+> >               val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+> >               val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+> >               val |= SPRD_DMA_GLB_2STAGE_EN;
+> > +             if (schan->int_type != SPRD_DMA_NO_INT)
+> > +                     val |= SPRD_DMA_GLB_SRC_INT;
+> > +
+> >               sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
+> >               break;
+> >
+> > @@ -443,6 +453,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+> >               val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+> >                       SPRD_DMA_GLB_DEST_CHN_MASK;
+> >               val |= SPRD_DMA_GLB_2STAGE_EN;
+> > +             if (schan->int_type != SPRD_DMA_NO_INT)
+> > +                     val |= SPRD_DMA_GLB_DEST_INT;
+> > +
+> >               sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
+> >               break;
+> >
+> > @@ -450,6 +463,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+> >               val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+> >                       SPRD_DMA_GLB_DEST_CHN_MASK;
+> >               val |= SPRD_DMA_GLB_2STAGE_EN;
+> > +             if (schan->int_type != SPRD_DMA_NO_INT)
+> > +                     val |= SPRD_DMA_GLB_DEST_INT;
+> > +
+> >               sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
+> >               break;
+> >
+> > @@ -911,11 +927,15 @@ static int sprd_dma_fill_linklist_desc(struct dma_chan *chan,
+> >               schan->linklist.virt_addr = 0;
+> >       }
+> >
+> > -     /* Set channel mode and trigger mode for 2-stage transfer */
+> > +     /*
+> > +      * Set channel mode, interrupt mode and trigger mode for 2-stage
+> > +      * transfer.
+> > +      */
+> >       schan->chn_mode =
+> >               (flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
+> >       schan->trg_mode =
+> >               (flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
+> > +     schan->int_type = flags & SPRD_DMA_INT_TYPE_MASK;
+> >
+> >       sdesc = kzalloc(sizeof(*sdesc), GFP_NOWAIT);
+> >       if (!sdesc)
+> > --
+> > 1.7.9.5
+>
+> --
+> ~Vinod
+
+
+
+-- 
+Baolin Wang
+Best Regards
