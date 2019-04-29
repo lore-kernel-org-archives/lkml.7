@@ -2,88 +2,106 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3011EC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5133AC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D632075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F3292064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfD2P70 (ORCPT
+        id S1728759AbfD2QAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:59:26 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:38585 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbfD2P70 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:59:26 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MauJJ-1gnRUd2VPH-00cTXC; Mon, 29 Apr 2019 17:59:00 +0200
-Subject: Re: [PATCH 37/41] drivers: tty: serial: 8250: simplify io resource
- size computation
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-38-git-send-email-info@metux.net>
- <ba6dd5fa-36f1-902d-1ab4-c99e6a5ea3c2@physik.fu-berlin.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <7cec8c1a-a0a1-e76c-5c1f-a93c591d38b1@metux.net>
-Date:   Mon, 29 Apr 2019 17:58:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <ba6dd5fa-36f1-902d-1ab4-c99e6a5ea3c2@physik.fu-berlin.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:CLf6r+MSAE0A4USN6XIxWhLYiiz7bFAjEZVPWrDPzur1ECJt0Dg
- WbYbQxU9nNzapCPvww6NjJvdrqK+oNAJiHa6aeJbsi2v+NNA3fVkvAbLsn9n9KHoQGVfEzu
- N+fU79yInZYR1o784E8xzkrBIVHBDIoXmbRCOVD9oIABn/6VuVCGtjTlkSJlu3jg09HB7dD
- Ufze2K3kEFv4OnGLo+gYw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c27b6UNW+M4=:Grv1CtdyDBcKDa6l5mVHjZ
- /D5eSBrMPo3nbal/qhD4JNTHZyIPmW+9PmXzwasR3bvmu01e4+e2/3REGNSHwZxpkqLIGKodv
- ngYXgywcAOndcT8KE1/CuZofSYrmrAtEKQg5qlBJvr+2yLpZxHva3ZCySbjq4tELVZUuPdKzR
- mEH6F8OQyT3xrEHoSc7e2QtCnWzxPxFbLx0iNnVNMfYEGoWKwVYyxWCWBQfwyRiy8Xls39WN3
- SDVgbyj7EImrGH9tgrtGkiwmjLoL4/Rb+O7KV8WFUCUwFDWfAapwIjNLi4DG1uD5qSVby6tg8
- xebSwSzH897s+7rcBH8fktM61frzzF2LtbCrjUQtxgWEGx8HmSycnqiNvsA8b9j7qHIY7PS2q
- P7j9mNJIltvQ9EZfT6EKeoPPPiKUb7Qxnq/lT1j6urv1655S1aqXVqGiR52p6pxci7e3STqFq
- WLToNwpFIBh0RZPtK0M9x1ljflXL2VYftmJO9JDAV7pDfMAtZq9tFP6PY8qaSELxX4LLivmvk
- PYlcrryV6+L1vAC2u/2tmg4poWrAgzzJi7UHbVCRwJPsx/voMQs4qhjp/yoCaND9PsJR2WD75
- Gi4sG/UZDQuUBmgY0L4oojNnw35PQrvO23nhJNHyzfGWEOdREVFSfAezaxcTHB6jH/olj6znw
- FQyJnUtrLFo04vaUyAW1Ja2Z09d8ocw78d4WnTdL4e95OakfRdw1InQcZq+Ldjbg1Gd6rRu7c
- KFOAwvaPDDf7d09bUPEBh9UlXxdk27dus0wWpVdGd3IBTsygMbjdJgUTyjA=
+        Mon, 29 Apr 2019 12:00:17 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32926 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728468AbfD2QAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:00:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDC2380D;
+        Mon, 29 Apr 2019 09:00:14 -0700 (PDT)
+Received: from e112298-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C8B283F5C1;
+        Mon, 29 Apr 2019 09:00:12 -0700 (PDT)
+From:   Julien Thierry <julien.thierry@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        marc.zyngier@arm.com, yuzenghui@huawei.com,
+        wanghaibin.wang@huawei.com, james.morse@arm.com,
+        will.deacon@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com,
+        liwei391@huawei.com, Julien Thierry <julien.thierry@arm.com>
+Subject: [PATCH v2 0/5] arm64: IRQ priority masking and Pseudo-NMI fixes
+Date:   Mon, 29 Apr 2019 17:00:02 +0100
+Message-Id: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.04.19 15:03, John Paul Adrian Glaubitz wrote:
-> On 4/27/19 2:52 PM, Enrico Weigelt, metux IT consult wrote:
->> Simpily io resource size computation by setting mapsize field.
->     ^^^^
-> Here's a typo
+Hi,
 
-thx. fixed.
+[Changing the title to make it reflex more the status of the series.]
 
---mtx
+Version one[1] of this series attempted to fix the issue reported by
+Zenghui[2] when using the function_graph tracer with IRQ priority
+masking.
 
+Since then, I realized that priority masking and the use of Pseudo-NMIs
+was more broken than I thought.
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+* Patch 1 is just some rework
+* Patch 2 replaces the previous irqflags tracing "simplification" with
+  a proper fix when tracing Pseudo-NMI
+* Patch 3 fixes the function_graph issue when using priority masking
+* Patch 4 introduces some debug to hopefully avoid breaking things in
+  the future
+* Patch 5 is a rebased version of the patch sent by Wei Li[3] fixing
+  an error that can happen during on some platform using the priority
+  masking feature
+
+Changes since V1 [1]:
+- Fix possible race condition between NMI and trace irqflags
+- Simplify the representation of PSR.I in the PMR value
+- Include Wei Li's fix
+- Rebase on v5.1-rc7
+
+[1] https://marc.info/?l=linux-arm-kernel&m=155542458004480&w=2
+[2] https://www.spinics.net/lists/arm-kernel/msg716956.html
+[3] https://www.spinics.net/lists/arm-kernel/msg722171.html
+
+Cheers,
+
+Julien
+
+-->
+
+Julien Thierry (4):
+  arm64: Do not enable IRQs for ct_user_exit
+  arm64: Fix interrupt tracing in the presence of NMIs
+  arm64: Fix incorrect irqflag restore for priority masking
+  arm64: irqflags: Introduce explicit debugging for IRQ priorities
+
+Wei Li (1):
+  arm64: fix kernel stack overflow in kdump capture kernel
+
+ arch/arm64/Kconfig                  | 11 +++++
+ arch/arm64/include/asm/arch_gicv3.h |  4 +-
+ arch/arm64/include/asm/assembler.h  |  9 ++++
+ arch/arm64/include/asm/daifflags.h  | 31 +++++++++++---
+ arch/arm64/include/asm/irqflags.h   | 83 +++++++++++++++++++------------------
+ arch/arm64/include/asm/kvm_host.h   |  4 +-
+ arch/arm64/include/asm/ptrace.h     | 10 ++++-
+ arch/arm64/kernel/entry.S           | 76 +++++++++++++++++++++++++--------
+ arch/arm64/kernel/irq.c             | 26 ++++++++++++
+ arch/arm64/kernel/process.c         |  2 +-
+ arch/arm64/kernel/smp.c             |  6 +--
+ arch/arm64/kvm/hyp/switch.c         |  2 +-
+ drivers/irqchip/irq-gic-v3.c        |  6 +++
+ kernel/irq/irqdesc.c                |  8 +++-
+ 14 files changed, 202 insertions(+), 76 deletions(-)
+
+--
+1.9.1
