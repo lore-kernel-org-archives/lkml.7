@@ -2,133 +2,89 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E2C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00556C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D1F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Q5o3w0VV"
+	by mail.kernel.org (Postfix) with ESMTP id C6EE320673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfD2Pf6 (ORCPT
+        id S1728738AbfD2PgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:35:58 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:39727 "EHLO pegase1.c-s.fr"
+        Mon, 29 Apr 2019 11:36:02 -0400
+Received: from monster.unsafe.ru ([5.9.28.80]:44264 "EHLO mail.unsafe.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbfD2Pf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:35:57 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44t7z96kGcz9vD31;
-        Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Q5o3w0VV; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id kbO7e4z3Oado; Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44t7z95Zr4z9vD30;
-        Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556552149; bh=XXe83/pZb9AFMZAVXoUoxnryoMR8eaO+qKHpnqnFOB8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Q5o3w0VVtDkuaQJ720CrXVg1D1EEff1tyfslomh/gdc4+yk1/Dkug0ZmjOpliak9E
-         SNq24Cb/75QU4Vbo8GkPeMa5ZqrlcCuuxHVxWzptG/UbSIeVfGgHzF9GoK962b/vuv
-         2GQOk16RVxWf7DSmpu538h1my8dNOApiD0oga2ow=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDA2C8B8B4;
-        Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id P3bLUxeO-Wfq; Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AEE718B8B3;
-        Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
-Subject: Re: [RESEND PATCH v3 09/11] powerpc/mm/radix: mark
- __radix__flush_tlb_range_psize() as __always_inline
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Cc:     linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mathieu Malaterre <malat@debian.org>
-References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
- <20190423034959.13525-10-yamada.masahiro@socionext.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <40b48947-b80e-7971-376d-52b594e26d17@c-s.fr>
-Date:   Mon, 29 Apr 2019 17:35:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728501AbfD2PgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:36:01 -0400
+Received: from dhcp129-178.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id CDA5EC61824;
+        Mon, 29 Apr 2019 15:35:57 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 17:35:55 +0200
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>
+Subject: Re: [PATCH v3] moduleparam: Save information about built-in modules
+ in separate file
+Message-ID: <20190429153555.GX9023@dhcp129-178.brq.redhat.com>
+References: <20190429090854.GU9023@dhcp129-178.brq.redhat.com>
+ <CAK7LNARpeSTr=VWudDRQ8sobcPQqtqzcLm7EqyvoKFYT84Hk6Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190423034959.13525-10-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARpeSTr=VWudDRQ8sobcPQqtqzcLm7EqyvoKFYT84Hk6Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 23/04/2019 à 05:49, Masahiro Yamada a écrit :
-> This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
-> place. We need to eliminate potential issues beforehand.
-
-How did you identify the functions requiring __always_inline as this one 
-? Just by 'test and see if it fails', or did you have some script or so ?
-
-Here the problem is that one of the parameters of the function are used 
-as "immediate" constraint for the inline assembly, therefore requiring 
-the function to always be inline.
-
-I guess this should be explained in the commit log and I'm wondering how 
-you ensure that you did identify all functions like this.
-
-Christophe
-
+On Tue, Apr 30, 2019 at 12:08:44AM +0900, Masahiro Yamada wrote:
+> >  modules.builtin
+> > +modules.builtin.modinfo
+> >
+> >  #
+> >  # Top-level generic files
 > 
-> If it is enabled for powerpc, the following error is reported:
 > 
-> arch/powerpc/mm/tlb-radix.c: In function '__radix__flush_tlb_range_psize':
-> arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't match constraints [-Werror]
->    asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
->    ^~~
-> arch/powerpc/mm/tlb-radix.c:104:2: error: impossible constraint in 'asm'
+> Let me repeat the same comments as in v2
+> (https://patchwork.kernel.org/patch/10888207/#22595563)
+> as you ignored them.
+
+I miss it. Sorry about that.
+
+> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> > index c8cf45362bd6..41ef7cb043c1 100755
+> > --- a/scripts/link-vmlinux.sh
+> > +++ b/scripts/link-vmlinux.sh
+> > @@ -226,6 +226,10 @@ modpost_link vmlinux.o
+> >  # modpost vmlinux.o to check for section mismatches
+> >  ${MAKE} -f "${srctree}/scripts/Makefile.modpost" vmlinux.o
+> >
+> > +info MODINFO modules.builtin.modinfo
+> > +"${OBJCOPY}" -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
+> > +chmod 444 modules.builtin.modinfo
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
 > 
-> Changes in v3: None
-> Changes in v2:
->    - split into a separate patch
-> 
->   arch/powerpc/mm/tlb-radix.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
-> index 6a23b9ebd2a1..a2b2848f0ae3 100644
-> --- a/arch/powerpc/mm/tlb-radix.c
-> +++ b/arch/powerpc/mm/tlb-radix.c
-> @@ -928,7 +928,7 @@ void radix__tlb_flush(struct mmu_gather *tlb)
->   	tlb->need_flush_all = 0;
->   }
->   
-> -static inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
-> +static __always_inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
->   				unsigned long start, unsigned long end,
->   				int psize, bool also_pwc)
->   {
-> 
+> Why is this 'chmod 444' necessary?
+
+I just wanted to show that this file will never change.
+I will remove this line.
+
+-- 
+Rgrds, legion
+
