@@ -2,482 +2,571 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD61AC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226D3C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B895215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B55215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:59:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mgqmlk1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbfD2V5X (ORCPT
+        id S1729542AbfD2V7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:57:23 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42678 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729542AbfD2V5U (ORCPT
+        Mon, 29 Apr 2019 17:59:22 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43280 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729401AbfD2V7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:57:20 -0400
-Received: from Internal Mail-Server by MTLPINE2 (envelope-from asmaa@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 30 Apr 2019 00:57:18 +0300
-Received: from farm-1.mtbu.labs.mlnx (farm-1.mtbu.labs.mlnx [10.15.2.31])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x3TLvGCd027610;
-        Mon, 29 Apr 2019 17:57:16 -0400
-Received: (from asmaa@localhost)
-        by farm-1.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x3TLvBl5010990;
-        Mon, 29 Apr 2019 17:57:11 -0400
-From:   Asmaa Mnebhi <Asmaa@mellanox.com>
-To:     minyard@acm.org, wsa@the-dreams.de, vadimp@mellanox.com,
-        michaelsh@mellanox.com
-Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH v3 1/1] Add support for IPMB driver
-Date:   Mon, 29 Apr 2019 17:57:00 -0400
-Message-Id: <a3c732c3b3a75e8d6e8f3c7de18615c71d222cb8.1556573807.git.Asmaa@mellanox.com>
-X-Mailer: git-send-email 2.1.2
-In-Reply-To: <cover.1556573807.git.Asmaa@mellanox.com>
-References: <cover.1556573807.git.Asmaa@mellanox.com>
-In-Reply-To: <cover.1556573807.git.Asmaa@mellanox.com>
-References: <cover.1556573807.git.Asmaa@mellanox.com>
+        Mon, 29 Apr 2019 17:59:22 -0400
+Received: by mail-io1-f68.google.com with SMTP id v9so10375787iol.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=indmq07XFWS4gXjaJZT+iAAcr9a+9V4LSWqr6LCFENs=;
+        b=Mgqmlk1qtdpemtyR8SiKe74oQes1kP9UrcFgu+l5KDcESXqvN3uaPaBvlrMsQRub5s
+         hvYjr0p9EdV6dg3qSo4djhR+x0EH3cYlgAjgnqtytlUbrxQ7XXnx2HCosUyBPJkJz+Qq
+         vcuEnK1GPMiB0f9kkZs/PRwPvpPoIBDYHBiXjyYKYMX/B2X3CI2i4jJxamQtrZTywBQ+
+         i67e1hEGNtLmv4nE8NywOsPt0p1D6xNISzGBny5dV7/5/GtOPvMYN88UVwcG7rBwLucv
+         WGFusyQc1ipj8gZa5CnYO5/nJmQ+JbcbDDQHtOw7p2A7jAPpgivazeaNmnO7BoHnZmKR
+         tZKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=indmq07XFWS4gXjaJZT+iAAcr9a+9V4LSWqr6LCFENs=;
+        b=T/BLJEkwD/5Dx1iyWD488lhU8JAGBNU7qehORg5YMp8fACIm3Q5jw14vEDprg870LL
+         ppvKkG/d09HUDayJKLqUiyF209pumnFu0zgXt609CCII+ZZMrnWWuLjXpp7cV4eug7ZS
+         07Lp3FIwfYwg2Pp7me1GQ1s8cOQvM7DqzIfkRZY/S0SBpLmBAtCZr6e/SHTwwSLO9h+K
+         J8cFrvxCfeyRN832jMe+08KQWl2/IgpAPCc9SdAzdLSJ0Rf+vf/JsX3CBQHouqIjEniZ
+         LJEPcCfecIH4kpAQmeXpdK1sSGUYLNt8eqWO77yQ0H0x3gWn/Zhcroghyw56RGyo3HEi
+         KELA==
+X-Gm-Message-State: APjAAAVJF1hEWoOvqBN7y/HLpDLnpqpO9Z3vgpNjeB/RHqUcukNct7Hw
+        mQ1A6pmUwpz4m+R32SU5st1a9CFbS96R7loc3VHbtQ==
+X-Google-Smtp-Source: APXvYqxG1GzcRB+vFWGBoNZIqNnICyueduhcBwZKb6PRheekulHycP3vvBlFYcIgl9rbtXqUXGmWqoU2Wg7d9cNvmhs=
+X-Received: by 2002:a5d:97cd:: with SMTP id k13mr808132ios.11.1556575160884;
+ Mon, 29 Apr 2019 14:59:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <1555768835-68555-1-git-send-email-shiwanglai@hisilicon.com> <20190421124606.GA12134@leoy-ThinkPad-X240s>
+In-Reply-To: <20190421124606.GA12134@leoy-ThinkPad-X240s>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 29 Apr 2019 15:59:09 -0600
+Message-ID: <CANLsYkwGyX0RJ0QVgpqXquT0exRDv3FfUHGBgo6LUUSj4K-Xhw@mail.gmail.com>
+Subject: Re: [PATCH v4] arm64: dts: hi3660: Add CoreSight support
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Wanglai Shi <shiwanglai@hisilicon.com>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        xuwei <xuwei5@hisilicon.com>, Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Suzhuangluan <suzhuangluan@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support receiving IPMB requests on a Satellite MC from the BMC.
-Once a response is ready, this driver will send back a response
-to the BMC via the IPMB channel.
+On Sun, 21 Apr 2019 at 06:46, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Sat, Apr 20, 2019 at 10:00:35PM +0800, Wanglai Shi wrote:
+> > This patch adds DT bindings for the CoreSight trace components
+> > on hi3660, which is used by 96boards Hikey960.
+> >
+> > Signed-off-by: Wanglai Shi <shiwanglai@hisilicon.com>
+>
+> Reviewed this patch and tested on my Hikey960 board, FWIW:
+>
+> Reviewed-and-tested-by: Leo Yan <leo.yan@linaro.org>
 
-Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
----
- drivers/char/ipmi/Kconfig        |   8 +
- drivers/char/ipmi/Makefile       |   1 +
- drivers/char/ipmi/ipmb_dev_int.c | 386 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 395 insertions(+)
- create mode 100644 drivers/char/ipmi/ipmb_dev_int.c
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
-index 94719fc..12fe8f2 100644
---- a/drivers/char/ipmi/Kconfig
-+++ b/drivers/char/ipmi/Kconfig
-@@ -74,6 +74,14 @@ config IPMI_SSIF
- 	 have a driver that must be accessed over an I2C bus instead of a
- 	 standard interface.  This module requires I2C support.
- 
-+config IPMB_DEVICE_INTERFACE
-+       tristate 'IPMB Interface handler'
-+       depends on I2C && I2C_SLAVE
-+       help
-+         Provides a driver for a device (Satellite MC) to
-+         receive requests and send responses back to the BMC via
-+         the IPMB interface. This module requires I2C support.
-+
- config IPMI_POWERNV
-        depends on PPC_POWERNV
-        tristate 'POWERNV (OPAL firmware) IPMI interface'
-diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
-index 3f06b20..0822adc 100644
---- a/drivers/char/ipmi/Makefile
-+++ b/drivers/char/ipmi/Makefile
-@@ -26,3 +26,4 @@ obj-$(CONFIG_IPMI_KCS_BMC) += kcs_bmc.o
- obj-$(CONFIG_ASPEED_BT_IPMI_BMC) += bt-bmc.o
- obj-$(CONFIG_ASPEED_KCS_IPMI_BMC) += kcs_bmc_aspeed.o
- obj-$(CONFIG_NPCM7XX_KCS_IPMI_BMC) += kcs_bmc_npcm7xx.o
-+obj-$(CONFIG_IPMB_DEVICE_INTERFACE) += ipmb_dev_int.o
-diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
-new file mode 100644
-index 0000000..63122c3
---- /dev/null
-+++ b/drivers/char/ipmi/ipmb_dev_int.c
-@@ -0,0 +1,386 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Mellanox IPMB driver to receive a request and send a response
-+ *
-+ * Copyright (C) 2018 Mellanox Techologies, Ltd.
-+ *
-+ * This was inspired by Brendan Higgins' ipmi-bmc-bt-i2c driver.
-+ */
-+
-+#define	pr_fmt(fmt) "ipmb_dev_int: " fmt
-+
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/wait.h>
-+
-+#define	MAX_MSG_LEN		128
-+#define	IPMB_REQUEST_LEN_MIN	7
-+#define	NETFN_RSP_BIT_MASK	0x4
-+#define	REQUEST_QUEUE_MAX_LEN	256
-+
-+#define	IPMB_MSG_LEN_IDX	0
-+#define	RQ_SA_8BIT_IDX		1
-+#define	NETFN_LUN_IDX		2
-+
-+#define	IPMB_MSG_PAYLOAD_LEN_MAX (MAX_MSG_LEN - IPMB_REQUEST_LEN_MIN - 1)
-+
-+struct ipmb_msg {
-+	u8 len;
-+	u8 rs_sa;
-+	u8 netfn_rs_lun;
-+	u8 checksum1;
-+	u8 rq_sa;
-+	u8 rq_seq_rq_lun;
-+	u8 cmd;
-+	u8 payload[IPMB_MSG_PAYLOAD_LEN_MAX];
-+	/* checksum2 is included in payload */
-+} __packed;
-+
-+static u32 ipmb_msg_len(struct ipmb_msg *ipmb_msg)
-+{
-+	return ipmb_msg->len + 1;
-+}
-+
-+struct ipmb_request_elem {
-+	struct list_head list;
-+	struct ipmb_msg request;
-+};
-+
-+struct ipmb_dev {
-+	struct i2c_client *client;
-+	struct miscdevice miscdev;
-+	struct ipmb_msg request;
-+	struct list_head request_queue;
-+	atomic_t request_queue_len;
-+	struct ipmb_msg response;
-+	size_t msg_idx;
-+	spinlock_t lock;
-+	wait_queue_head_t wait_queue;
-+	struct mutex file_mutex;
-+};
-+
-+static int receive_ipmb_request(struct ipmb_dev *ipmb_dev_p,
-+				bool non_blocking,
-+				struct ipmb_msg *ipmb_request)
-+{
-+	struct ipmb_request_elem *queue_elem;
-+	unsigned long flags;
-+	int res;
-+
-+	spin_lock_irqsave(&ipmb_dev_p->lock, flags);
-+
-+	while (!atomic_read(&ipmb_dev_p->request_queue_len)) {
-+		spin_unlock_irqrestore(&ipmb_dev_p->lock, flags);
-+		if (non_blocking)
-+			return -EAGAIN;
-+
-+		res = wait_event_interruptible(ipmb_dev_p->wait_queue,
-+				atomic_read(&ipmb_dev_p->request_queue_len));
-+		if (res)
-+			return res;
-+
-+		spin_lock_irqsave(&ipmb_dev_p->lock, flags);
-+	}
-+
-+	if (list_empty(&ipmb_dev_p->request_queue)) {
-+		pr_err("request_queue is empty\n");
-+		return -EIO;
-+	}
-+
-+	queue_elem = list_first_entry(&ipmb_dev_p->request_queue,
-+					struct ipmb_request_elem, list);
-+	memcpy(ipmb_request, &queue_elem->request, sizeof(*ipmb_request));
-+	list_del(&queue_elem->list);
-+	kfree(queue_elem);
-+	atomic_dec(&ipmb_dev_p->request_queue_len);
-+
-+	spin_unlock_irqrestore(&ipmb_dev_p->lock, flags);
-+
-+	return 0;
-+}
-+
-+static inline struct ipmb_dev *to_ipmb_dev(struct file *file)
-+{
-+	return container_of(file->private_data, struct ipmb_dev, miscdev);
-+}
-+
-+static ssize_t ipmb_read(struct file *file, char __user *buf, size_t count,
-+			loff_t *ppos)
-+{
-+	struct ipmb_dev *ipmb_dev_p = to_ipmb_dev(file);
-+	struct ipmb_msg msg;
-+	ssize_t ret;
-+
-+	memset(&msg, 0, sizeof(msg));
-+
-+	mutex_lock(&ipmb_dev_p->file_mutex);
-+	ret = receive_ipmb_request(ipmb_dev_p, file->f_flags & O_NONBLOCK,
-+				&msg);
-+	if (ret < 0)
-+		goto out;
-+	count = min_t(size_t, count, ipmb_msg_len(&msg));
-+	if (copy_to_user(buf, &msg, count)) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+
-+out:
-+	mutex_unlock(&ipmb_dev_p->file_mutex);
-+	return ret < 0 ? ret : count;
-+}
-+
-+static s32 i2c_smbus_write_block_data_local(struct i2c_client *client,
-+					u8 command, u8 length,
-+					u16 requester_i2c_addr,
-+					const char *msg)
-+{
-+	union i2c_smbus_data data;
-+	int ret;
-+
-+	if (length > I2C_SMBUS_BLOCK_MAX)
-+		length = I2C_SMBUS_BLOCK_MAX;
-+
-+	data.block[0] = length;
-+	memcpy(&data.block[1], msg, length);
-+
-+	ret = i2c_smbus_xfer(client->adapter, requester_i2c_addr,
-+				client->flags,
-+				I2C_SMBUS_WRITE, command,
-+				I2C_SMBUS_BLOCK_DATA, &data);
-+
-+	return ret;
-+}
-+
-+static ssize_t ipmb_write(struct file *file, const char __user *buf,
-+			size_t count, loff_t *ppos)
-+{
-+	struct ipmb_dev *ipmb_dev_p = to_ipmb_dev(file);
-+	u8 msg[MAX_MSG_LEN];
-+	ssize_t ret;
-+	u8 rq_sa, netf_rq_lun, msg_len;
-+
-+	if (count > sizeof(msg))
-+		return -EINVAL;
-+
-+	if (copy_from_user(&msg, buf, count) || count < msg[0])
-+		return -EFAULT;
-+
-+	rq_sa = (u16)(msg[RQ_SA_8BIT_IDX] >> 1);
-+	netf_rq_lun = msg[NETFN_LUN_IDX];
-+	/*
-+	 * subtract rq_sa and netf_rq_lun from the length of the msg passed to
-+	 * i2c_smbus_write_block_data_local
-+	 */
-+	msg_len = msg[IPMB_MSG_LEN_IDX] - 2;
-+
-+	mutex_lock(&ipmb_dev_p->file_mutex);
-+	ret = i2c_smbus_write_block_data_local(ipmb_dev_p->client,
-+					netf_rq_lun, msg_len, rq_sa, msg + 3);
-+	mutex_unlock(&ipmb_dev_p->file_mutex);
-+
-+	return ret ?: count;
-+}
-+
-+static unsigned int ipmb_poll(struct file *file, poll_table *wait)
-+{
-+	struct ipmb_dev *ipmb_dev_p = to_ipmb_dev(file);
-+	unsigned int mask = 0;
-+
-+	mutex_lock(&ipmb_dev_p->file_mutex);
-+	poll_wait(file, &ipmb_dev_p->wait_queue, wait);
-+
-+	if (atomic_read(&ipmb_dev_p->request_queue_len))
-+		mask |= POLLIN;
-+	mask |= POLLOUT;
-+	mutex_unlock(&ipmb_dev_p->file_mutex);
-+	return mask;
-+}
-+
-+static const struct file_operations ipmb_fops = {
-+	.owner	= THIS_MODULE,
-+	.read	= ipmb_read,
-+	.write	= ipmb_write,
-+	.poll	= ipmb_poll,
-+};
-+
-+/* Called with ipmb_dev->lock held. */
-+static void ipmb_handle_request(struct ipmb_dev *ipmb_dev_p)
-+{
-+	struct ipmb_request_elem *queue_elem;
-+
-+	if (atomic_read(&ipmb_dev_p->request_queue_len) >=
-+			REQUEST_QUEUE_MAX_LEN)
-+		return;
-+
-+	queue_elem = kmalloc(sizeof(*queue_elem), GFP_KERNEL);
-+	if (!queue_elem)
-+		return;
-+
-+	memcpy(&queue_elem->request, &ipmb_dev_p->request,
-+		sizeof(struct ipmb_msg));
-+	list_add(&queue_elem->list, &ipmb_dev_p->request_queue);
-+	atomic_inc(&ipmb_dev_p->request_queue_len);
-+	wake_up_all(&ipmb_dev_p->wait_queue);
-+}
-+
-+static u8 ipmb_verify_checksum1(struct ipmb_dev *ipmb_dev_p, u8 rs_sa)
-+{
-+	return (rs_sa + ipmb_dev_p->request.netfn_rs_lun +
-+		ipmb_dev_p->request.checksum1);
-+}
-+
-+static bool is_ipmb_request(struct ipmb_dev *ipmb_dev_p, u8 rs_sa)
-+{
-+	if (ipmb_dev_p->msg_idx >= IPMB_REQUEST_LEN_MIN) {
-+		if (ipmb_verify_checksum1(ipmb_dev_p, rs_sa))
-+			return false;
-+
-+		/*
-+		 * Check whether this is an IPMB request or
-+		 * response.
-+		 * The 6 MSB of netfn_rs_lun are dedicated to the netfn
-+		 * while the remaining bits are dedicated to the lun.
-+		 * If the LSB of the netfn is cleared, it is associated
-+		 * with an IPMB request.
-+		 * If the LSB of the netfn is set, it is associated with
-+		 * an IPMB response.
-+		 */
-+		if (!(ipmb_dev_p->request.netfn_rs_lun & NETFN_RSP_BIT_MASK))
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * The IPMB protocol only supports I2C Writes so there is no need
-+ * to support I2C_SLAVE_READ* events.
-+ * This i2c callback function only monitors IPMB request messages
-+ * and adds them in a queue, so that they can be handled by
-+ * receive_ipmb_request.
-+ */
-+static int ipmb_slave_cb(struct i2c_client *client,
-+			enum i2c_slave_event event, u8 *val)
-+{
-+	struct ipmb_dev *ipmb_dev_p = i2c_get_clientdata(client);
-+	u8 *buf = (u8 *)&ipmb_dev_p->request;
-+
-+	spin_lock(&ipmb_dev_p->lock);
-+	switch (event) {
-+	case I2C_SLAVE_WRITE_REQUESTED:
-+		memset(&ipmb_dev_p->request, 0, sizeof(ipmb_dev_p->request));
-+		ipmb_dev_p->msg_idx = 0;
-+
-+		/*
-+		 * At index 0, ipmb_msg stores the length of msg,
-+		 * skip it for now.
-+		 * The len will be populated once the whole
-+		 * buf is populated.
-+		 *
-+		 * The I2C bus driver's responsibility is to pass the
-+		 * data bytes to the backend driver; it does not
-+		 * forward the i2c slave address.
-+		 * Since the first byte in the IPMB message is the
-+		 * address of the responder, it is the responsibility
-+		 * of the IPMB driver to format the message properly.
-+		 * So this driver prepends the address of the responder
-+		 * to the received i2c data before the request message
-+		 * is handled in userland.
-+		 */
-+		buf[++ipmb_dev_p->msg_idx] = (u8)(client->addr << 1);
-+		break;
-+
-+	case I2C_SLAVE_WRITE_RECEIVED:
-+		if (ipmb_dev_p->msg_idx >= sizeof(struct ipmb_msg))
-+			break;
-+
-+		buf[++ipmb_dev_p->msg_idx] = *val;
-+		break;
-+
-+	case I2C_SLAVE_STOP:
-+		ipmb_dev_p->request.len = ipmb_dev_p->msg_idx;
-+
-+		if (is_ipmb_request(ipmb_dev_p, (u8)(client->addr << 1)))
-+			ipmb_handle_request(ipmb_dev_p);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+	spin_unlock(&ipmb_dev_p->lock);
-+
-+	return 0;
-+}
-+
-+static int ipmb_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct ipmb_dev *ipmb_dev_p;
-+	int ret;
-+
-+	ipmb_dev_p = devm_kzalloc(&client->dev, sizeof(*ipmb_dev_p),
-+					GFP_KERNEL);
-+	if (!ipmb_dev_p)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&ipmb_dev_p->lock);
-+	init_waitqueue_head(&ipmb_dev_p->wait_queue);
-+	atomic_set(&ipmb_dev_p->request_queue_len, 0);
-+	INIT_LIST_HEAD(&ipmb_dev_p->request_queue);
-+
-+	mutex_init(&ipmb_dev_p->file_mutex);
-+
-+	ipmb_dev_p->miscdev.minor = MISC_DYNAMIC_MINOR;
-+	ipmb_dev_p->miscdev.name = "ipmb-dev";
-+	ipmb_dev_p->miscdev.fops = &ipmb_fops;
-+	ipmb_dev_p->miscdev.parent = &client->dev;
-+	ret = misc_register(&ipmb_dev_p->miscdev);
-+	if (ret)
-+		return ret;
-+
-+	ipmb_dev_p->client = client;
-+	i2c_set_clientdata(client, ipmb_dev_p);
-+	ret = i2c_slave_register(client, ipmb_slave_cb);
-+	if (ret) {
-+		misc_deregister(&ipmb_dev_p->miscdev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ipmb_remove(struct i2c_client *client)
-+{
-+	struct ipmb_dev *ipmb_dev_p = i2c_get_clientdata(client);
-+
-+	i2c_slave_unregister(client);
-+	misc_deregister(&ipmb_dev_p->miscdev);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ipmb_id[] = {
-+	{"ipmb-dev", 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, ipmb_id);
-+
-+static struct i2c_driver ipmb_driver = {
-+	.driver = {
-+		.name = "ipmb-dev",
-+	},
-+	.probe = ipmb_probe,
-+	.remove = ipmb_remove,
-+	.id_table = ipmb_id,
-+};
-+module_i2c_driver(ipmb_driver);
-+
-+MODULE_AUTHOR("Mellanox Technologies");
-+MODULE_DESCRIPTION("Mellanox BlueField IPMB driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.2
-
+>
+> > ---
+> >  .../arm64/boot/dts/hisilicon/hi3660-coresight.dtsi | 456 +++++++++++++++++++++
+> >  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |   2 +
+> >  2 files changed, 458 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
+> > new file mode 100644
+> > index 0000000..d607f2f
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
+> > @@ -0,0 +1,456 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +/*
+> > + * dtsi for Hisilicon Hi3660 Coresight
+> > + *
+> > + * Copyright (C) 2016-2018 Hisilicon Ltd.
+> > + *
+> > + * Author: Wanglai Shi <shiwanglai@hisilicon.com>
+> > + *
+> > + */
+> > +/ {
+> > +     soc {
+> > +             /* A53 cluster internals */
+> > +             etm@ecc40000 {
+> > +                     compatible = "arm,coresight-etm4x", "arm,primecell";
+> > +                     reg = <0 0xecc40000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     cpu = <&cpu0>;
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     etm0_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster0_funnel_in0>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etm@ecd40000 {
+> > +                     compatible = "arm,coresight-etm4x", "arm,primecell";
+> > +                     reg = <0 0xecd40000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     cpu = <&cpu1>;
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     etm1_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster0_funnel_in1>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etm@ece40000 {
+> > +                     compatible = "arm,coresight-etm4x", "arm,primecell";
+> > +                     reg = <0 0xece40000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     cpu = <&cpu2>;
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     etm2_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster0_funnel_in2>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etm@ecf40000 {
+> > +                     compatible = "arm,coresight-etm4x", "arm,primecell";
+> > +                     reg = <0 0xecf40000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     cpu = <&cpu3>;
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     etm3_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster0_funnel_in3>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             funnel@ec801000 {
+> > +                     compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+> > +                     reg = <0 0xec801000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     cluster0_funnel_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster0_etf_in>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +
+> > +                     in-ports {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +
+> > +                             port@0 {
+> > +                                     reg = <0>;
+> > +                                     cluster0_funnel_in0: endpoint {
+> > +                                             remote-endpoint = <&etm0_out>;
+> > +                                     };
+> > +                             };
+> > +
+> > +                             port@1 {
+> > +                                     reg = <1>;
+> > +                                     cluster0_funnel_in1: endpoint {
+> > +                                             remote-endpoint = <&etm1_out>;
+> > +                                     };
+> > +                             };
+> > +
+> > +                             port@2 {
+> > +                                     reg = <2>;
+> > +                                     cluster0_funnel_in2: endpoint {
+> > +                                             remote-endpoint = <&etm2_out>;
+> > +                                     };
+> > +                             };
+> > +
+> > +                             port@3 {
+> > +                                     reg = <3>;
+> > +                                     cluster0_funnel_in3: endpoint {
+> > +                                             remote-endpoint = <&etm3_out>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etf@ec802000 {
+> > +                     compatible = "arm,coresight-tmc", "arm,primecell";
+> > +                     reg = <0 0xec802000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     in-ports {
+> > +                             port {
+> > +                                     cluster0_etf_in: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster0_funnel_out>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     cluster0_etf_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&combo_funnel_in0>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             /* A73 cluster internals */
+> > +             etm@ed440000 {
+> > +                     compatible = "arm,coresight-etm4x", "arm,primecell";
+> > +                     reg = <0 0xed440000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     cpu = <&cpu4>;
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     etm4_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster1_funnel_in0>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etm@ed540000 {
+> > +                     compatible = "arm,coresight-etm4x", "arm,primecell";
+> > +                     reg = <0 0xed540000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     cpu = <&cpu5>;
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     etm5_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster1_funnel_in1>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etm@ed640000 {
+> > +                     compatible = "arm,coresight-etm4x", "arm,primecell";
+> > +                     reg = <0 0xed640000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     cpu = <&cpu6>;
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     etm6_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster1_funnel_in2>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etm@ed740000 {
+> > +                     compatible = "arm,coresight-etm4x", "arm,primecell";
+> > +                     reg = <0 0xed740000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     cpu = <&cpu7>;
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     etm7_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster1_funnel_in3>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             funnel@ed001000 {
+> > +                     compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+> > +                     reg = <0 0xed001000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +                     out-ports {
+> > +                             port {
+> > +                                     cluster1_funnel_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster1_etf_in>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +
+> > +                     in-ports {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +
+> > +                             port@0 {
+> > +                                     reg = <0>;
+> > +                                     cluster1_funnel_in0: endpoint {
+> > +                                             remote-endpoint = <&etm4_out>;
+> > +                                     };
+> > +                             };
+> > +
+> > +                             port@1 {
+> > +                                     reg = <1>;
+> > +                                     cluster1_funnel_in1: endpoint {
+> > +                                             remote-endpoint = <&etm5_out>;
+> > +                                     };
+> > +                             };
+> > +
+> > +                             port@2 {
+> > +                                     reg = <2>;
+> > +                                     cluster1_funnel_in2: endpoint {
+> > +                                             remote-endpoint = <&etm6_out>;
+> > +                                     };
+> > +                             };
+> > +
+> > +                             port@3 {
+> > +                                     reg = <3>;
+> > +                                     cluster1_funnel_in3: endpoint {
+> > +                                             remote-endpoint = <&etm7_out>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etf@ed002000 {
+> > +                     compatible = "arm,coresight-tmc", "arm,primecell";
+> > +                     reg = <0 0xed002000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     in-ports {
+> > +                             port {
+> > +                                     cluster1_etf_in: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster1_funnel_out>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     cluster1_etf_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&combo_funnel_in1>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             /* An invisible combo funnel between clusters and top funnel */
+> > +             funnel {
+> > +                     compatible = "arm,coresight-static-funnel";
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     combo_funnel_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&top_funnel_in>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +
+> > +                     in-ports {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +
+> > +                             port@0 {
+> > +                                     reg = <0>;
+> > +                                     combo_funnel_in0: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster0_etf_out>;
+> > +                                     };
+> > +                             };
+> > +
+> > +                             port@1 {
+> > +                                     reg = <1>;
+> > +                                     combo_funnel_in1: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&cluster1_etf_out>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             /* Top internals */
+> > +             funnel@ec031000 {
+> > +                     compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+> > +                     reg = <0 0xec031000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     top_funnel_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&top_etf_in>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +
+> > +                     in-ports {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +
+> > +                             port@0 {
+> > +                                     reg = <0>;
+> > +                                     top_funnel_in: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&combo_funnel_out>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etf@ec036000 {
+> > +                     compatible = "arm,coresight-tmc", "arm,primecell";
+> > +                     reg = <0 0xec036000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     in-ports {
+> > +                             port {
+> > +                                     top_etf_in: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&top_funnel_out>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +
+> > +                     out-ports {
+> > +                             port {
+> > +                                     top_etf_out: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&replicator_in>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             replicator {
+> > +                     compatible = "arm,coresight-static-replicator";
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     in-ports {
+> > +                             port {
+> > +                                     replicator_in: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&top_etf_out>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +
+> > +                     out-ports {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +
+> > +                             port@0 {
+> > +                                     reg = <0>;
+> > +                                     replicator0_out0: endpoint {
+> > +                                             remote-endpoint = <&etr_in>;
+> > +                                     };
+> > +                             };
+> > +
+> > +                             port@1 {
+> > +                                     reg = <1>;
+> > +                                     replicator0_out1: endpoint {
+> > +                                             remote-endpoint = <&tpiu_in>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             etr@ec033000 {
+> > +                     compatible = "arm,coresight-tmc", "arm,primecell";
+> > +                     reg = <0 0xec033000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     in-ports {
+> > +                             port {
+> > +                                     etr_in: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&replicator0_out0>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             tpiu@ec032000 {
+> > +                     compatible = "arm,coresight-tpiu", "arm,primecell";
+> > +                     reg = <0 0xec032000 0 0x1000>;
+> > +                     clocks = <&crg_ctrl HI3660_PCLK>;
+> > +                     clock-names = "apb_pclk";
+> > +
+> > +                     in-ports {
+> > +                             port {
+> > +                                     tpiu_in: endpoint {
+> > +                                             remote-endpoint =
+> > +                                                     <&replicator0_out1>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> > index a4a3d08..8f2fede 100644
+> > --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> > +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> > @@ -1246,3 +1246,5 @@
+> >               };
+> >       };
+> >  };
+> > +
+> > +#include "hi3660-coresight.dtsi"
+> > --
+> > 2.7.4
+> >
