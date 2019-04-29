@@ -2,139 +2,110 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82B3C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DBCC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B247620673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFCB20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfD2Ky0 (ORCPT
+        id S1727918AbfD2K4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:54:26 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53336 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727693AbfD2Ky0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:54:26 -0400
+        Mon, 29 Apr 2019 06:56:02 -0400
+Received: from foss.arm.com ([217.140.101.70]:53370 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727775AbfD2K4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 06:56:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E52680D;
-        Mon, 29 Apr 2019 03:54:25 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 023AB3F5AF;
-        Mon, 29 Apr 2019 03:54:23 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 11:54:19 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     syzbot <syzbot+cd714a07c6de2bc34293@syzkaller.appspotmail.com>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: WARNING in io_uring_setup
-Message-ID: <20190429105418.GA2182@lakrids.cambridge.arm.com>
-References: <000000000000dfd87b0586652bf3@google.com>
- <778cd3c3-5b2c-4a87-64dc-5b8f5b0edc7a@kernel.dk>
- <CAKb3OG_adYHath5LfT66RDy9gsrxvPT7Q10ns6308F9MyEzp6A@mail.gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5756380D;
+        Mon, 29 Apr 2019 03:56:01 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 068C83F5AF;
+        Mon, 29 Apr 2019 03:55:58 -0700 (PDT)
+Subject: Re: [PATCH v3 01/10] iommu: Add helper to get minimal page size of
+ domain
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, alan.cox@intel.com,
+        kevin.tian@intel.com, mika.westerberg@linux.intel.com,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
+ <20190421011719.14909-2-baolu.lu@linux.intel.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <05eca601-0264-8141-ceeb-7ef7ad5d5650@arm.com>
+Date:   Mon, 29 Apr 2019 11:55:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKb3OG_adYHath5LfT66RDy9gsrxvPT7Q10ns6308F9MyEzp6A@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190421011719.14909-2-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+On 21/04/2019 02:17, Lu Baolu wrote:
+> This makes it possible for other modules to know the minimal
+> page size supported by a domain without the knowledge of the
+> structure details.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>   include/linux/iommu.h | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index a5007d035218..46679ef19b7e 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -377,6 +377,14 @@ static inline void iommu_tlb_sync(struct iommu_domain *domain)
+>   		domain->ops->iotlb_sync(domain);
+>   }
+>   
+> +static inline unsigned long domain_minimal_pgsize(struct iommu_domain *domain)
+> +{
+> +	if (domain && domain->pgsize_bitmap)
+> +		return 1 << __ffs(domain->pgsize_bitmap);
 
-On Sun, Apr 14, 2019 at 09:45:00AM -0600, Jens Axboe wrote:
-> On 4/13/19 9:25 AM, Jens Axboe wrote:
-> > On 4/13/19 2:26 AM, syzbot wrote:
-> >> WARNING: CPU: 1 PID: 7600 at include/linux/cpumask.h:121 cpu_max_bits_warn
-> >> include/linux/cpumask.h:121 [inline]
-> >> WARNING: CPU: 1 PID: 7600 at include/linux/cpumask.h:121 cpumask_check
-> >> include/linux/cpumask.h:128 [inline]
-> >> WARNING: CPU: 1 PID: 7600 at include/linux/cpumask.h:121 cpumask_test_cpu
-> >> include/linux/cpumask.h:344 [inline]
-> >> WARNING: CPU: 1 PID: 7600 at include/linux/cpumask.h:121
-> >> io_sq_offload_start fs/io_uring.c:2244 [inline]
-> >> WARNING: CPU: 1 PID: 7600 at include/linux/cpumask.h:121 io_uring_create
-> >> fs/io_uring.c:2851 [inline]
-> >> WARNING: CPU: 1 PID: 7600 at include/linux/cpumask.h:121
-> >> io_uring_setup+0x13b2/0x1990 fs/io_uring.c:2903
+Nit: this would probably be more efficient on most architectures as:
 
-As a heads-up, I'm seeing this on arm64 in v5.1-rc7; example splat below. I
-believe that commit:
+	if (domain)
+		return domain->pgsize_bitmap & -domain->pgsize_bitmap;
 
-  917257daa0fea7a0 ("io_uring: only test SQPOLL cpu after we've verified it")
 
-... was intended to fix this?
+I'd also suggest s/minimal/min/ in the name, just to stop it getting too 
+long. Otherwise, though, I like the idea, and there's at least one other 
+place (in iommu-dma) that can make use of it straight away.
 
-IIUC, the problem is that cpu_possible(cpu) can't accept a cpu index above
-nr_cpu_ids, since it is defined as:
+Robin.
 
-  cpumask_test_cpu((cpu), cpu_possible_mask)
-
-... and so we should first check whether cpu >= nr_cpu_ids.
-
-Arguably that could/should live directly in cpu_possible(), but I see that's
-open-coded in a few places:
-
-[mark@lakrids:~/src/linux]% git grep -w cpu_possible | grep nr_cpu_ids
-arch/x86/mm/numa.c:     if (cpu >= nr_cpu_ids || !cpu_possible(cpu)) {
-arch/x86/xen/smp_pv.c:          for (cpu = nr_cpu_ids - 1; !cpu_possible(cpu); cpu--)
-drivers/base/cpu.c:     if (cpu < nr_cpu_ids && cpu_possible(cpu))
-drivers/scsi/libfc/fc_exch.c:   if (cpu >= nr_cpu_ids || !cpu_possible(cpu)) {
-drivers/xen/cpu_hotplug.c:      if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
-
-Thanks,
-Mark.
-
-WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpu_max_bits_warn include/linux/cpumask.h:121 [inline]
-WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpumask_check include/linux/cpumask.h:128 [inline]
-WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpumask_test_cpu include/linux/cpumask.h:344 [inline]
-WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_sq_offload_start fs/io_uring.c:2244 [inline]
-WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_uring_create fs/io_uring.c:2864 [inline]
-WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_uring_setup+0x1108/0x15a0 fs/io_uring.c:2916
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 27601 Comm: syz-executor.0 Not tainted 5.1.0-rc7 #3
-Hardware name: linux,dummy-virt (DT)
-Call trace:
- dump_backtrace+0x0/0x2f0 include/linux/compiler.h:193
- show_stack+0x20/0x30 arch/arm64/kernel/traps.c:158
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x110/0x190 lib/dump_stack.c:113
- panic+0x384/0x68c kernel/panic.c:214
- __warn+0x2bc/0x2c0 kernel/panic.c:571
- report_bug+0x228/0x2d8 lib/bug.c:186
- bug_handler+0xa0/0x1a0 arch/arm64/kernel/traps.c:956
- call_break_hook arch/arm64/kernel/debug-monitors.c:301 [inline]
- brk_handler+0x1d4/0x388 arch/arm64/kernel/debug-monitors.c:316
- do_debug_exception+0x1a0/0x468 arch/arm64/mm/fault.c:831
- el1_dbg+0x18/0x8c
- cpu_max_bits_warn include/linux/cpumask.h:121 [inline]
- cpumask_check include/linux/cpumask.h:128 [inline]
- cpumask_test_cpu include/linux/cpumask.h:344 [inline]
- io_sq_offload_start fs/io_uring.c:2244 [inline]
- io_uring_create fs/io_uring.c:2864 [inline]
- io_uring_setup+0x1108/0x15a0 fs/io_uring.c:2916
- __do_sys_io_uring_setup fs/io_uring.c:2929 [inline]
- __se_sys_io_uring_setup fs/io_uring.c:2926 [inline]
- __arm64_sys_io_uring_setup+0x50/0x70 fs/io_uring.c:2926
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
- el0_svc_common.constprop.0+0x148/0x2e0 arch/arm64/kernel/syscall.c:83
- el0_svc_handler+0xdc/0x100 arch/arm64/kernel/syscall.c:129
- el0_svc+0x8/0xc arch/arm64/kernel/entry.S:948
-SMP: stopping secondary CPUs
-Dumping ftrace buffer:
-   (ftrace buffer empty)
-Kernel Offset: disabled
-CPU features: 0x002,23000438
-Memory Limit: none
-Rebooting in 1 seconds..
+> +
+> +	return 0;
+> +}
+> +
+>   /* PCI device grouping function */
+>   extern struct iommu_group *pci_device_group(struct device *dev);
+>   /* Generic device grouping function */
+> @@ -704,6 +712,11 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+>   	return NULL;
+>   }
+>   
+> +static inline unsigned long domain_minimal_pgsize(struct iommu_domain *domain)
+> +{
+> +	return 0;
+> +}
+> +
+>   #endif /* CONFIG_IOMMU_API */
+>   
+>   #ifdef CONFIG_IOMMU_DEBUGFS
+> 
