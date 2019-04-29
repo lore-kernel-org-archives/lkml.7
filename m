@@ -2,139 +2,188 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35601C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF54EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02CC20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:06:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MJEFYBpF"
+	by mail.kernel.org (Postfix) with ESMTP id 8BD8420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfD2MGE (ORCPT
+        id S1728217AbfD2MGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:06:04 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38902 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbfD2MGD (ORCPT
+        Mon, 29 Apr 2019 08:06:10 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:58347 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbfD2MGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:06:03 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190429120602euoutp02c3a27f21c67d9dd64ba5a9ef594524ab~Z8HwZWwUj0317803178euoutp02o
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:06:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190429120602euoutp02c3a27f21c67d9dd64ba5a9ef594524ab~Z8HwZWwUj0317803178euoutp02o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556539562;
-        bh=Wi9LwnwCAQ5U1Z6yKDclgwENDQ4apGGAxH2IOMX7n6c=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=MJEFYBpFUc+I40BTzI+W+4fBktttnjBpNy8XxlTfQRKtVhIc61Gs8wjyXYWuEDdsa
-         O3xJV1eUlA9Sl1+NpThOrgvWlkiZx5WpJCsnKbfR/8jVbjjDdk8yydlNefGEmbOMNE
-         vVsAPepFKODp/MRwtMb+RKJifoMkotDaOw2pYKr8=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190429120601eucas1p280b051a146dba355c9066cdfec6c4b94~Z8HvlO0em3036430364eucas1p27;
-        Mon, 29 Apr 2019 12:06:01 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 69.E2.04298.8A8E6CC5; Mon, 29
-        Apr 2019 13:06:00 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190429120600eucas1p25ac06a4e91280c63d0b4baf6f481c01b~Z8Huz4oUe2905229052eucas1p2v;
-        Mon, 29 Apr 2019 12:06:00 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190429120600eusmtrp1e296db905c3daaa1f5f4d8891b0f166d~Z8HuzICTx2909529095eusmtrp1K;
-        Mon, 29 Apr 2019 12:06:00 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-d5-5cc6e8a8d90c
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 63.EA.04146.8A8E6CC5; Mon, 29
-        Apr 2019 13:06:00 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190429120559eusmtip1c65bf3191c2b5e37b9421ebdf5f7eb47~Z8HuBK6dC1245012450eusmtip1k;
-        Mon, 29 Apr 2019 12:05:59 +0000 (GMT)
-Subject: Re: [PATCH v6 04/10] Documentation: dt: device tree bindings for
- LPDDR3 memories
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        cw00.choi@samsung.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
-        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
-        willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <68bf0a3f-6fb4-979d-bfdc-fdab930248f1@partner.samsung.com>
-Date:   Mon, 29 Apr 2019 14:05:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Mon, 29 Apr 2019 08:06:08 -0400
+Received: by mail-it1-f200.google.com with SMTP id p23so9269287itc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 05:06:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ix8Z2fJNevZWPbRskDnIfWSeRE9F40gNE1x92GS3NQU=;
+        b=AsBkFwiVWlbyJ3Byw8eHIdWdwkwMfS8H9WutdT+VxYEO2kEwNAp6n51ZNV717cmvm8
+         Ukjh3pgpEYXiHiGFG6WeMEM0CcxROkApp0ITtHtbK7nCtN0tIoUP5sO3tHkigg+wUy+u
+         ZtSGwHoweYACfIH5S+q2NQAuWdp4WKNeEU7zKSpWCCCF3KeTOPAQSUTQAp07c+sZwKmx
+         DgtaJNpFulgUk+YT+DZSkXsGzsttKziz3vvZm4bCCAaDVTCrRFCD4QQt8cKNjWN8X7Fu
+         EasHxihzT01WBqs3n1Y4Oo00SPWT0rVqFTzppwBD3zOMJdjelr6KvIbIRUePCCagoiAK
+         7Mtw==
+X-Gm-Message-State: APjAAAUhoP2/aS+A5gblEVDcJB9bl0x8l/Hm2uGbmQc4brX0E1/kgTfy
+        xrXTt/q+901Wh5L0F4atdKA2j0kIVUESt16Dr5VtU8rNrBa1
+X-Google-Smtp-Source: APXvYqx58A78aDt3/FKed31uAKsQdMgHqWMGUnCuKaYO/lx6Vm1J9Xq9jm8eLW1n94f6qwrb0UpGQyuxBXAAY+9ykdPNpyKkZ5tH
 MIME-Version: 1.0
-In-Reply-To: <20190425195338.GB31128@bogus>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzHfe95nnuejmvfrugzDN3WVCZsbF8/59faM//wD0tpOnqWH92V
-        eyo/Mjs/8rNfujlcmh8bbqd2p07qhizpKJwkEgm1sUi4UEJ6PGf67/V5f96fX9uHozSfmLHc
-        RkO6YDToUrRKFV1R1/9gqu1d3ZrpfU9mkcsnHAx52vuWIadrHzDk0ucORMz1xQpy74ie5He8
-        p4jX62TJ/T0fWNLkPqUkvtxaRE54byhIaW0bS57vtinJ4LVKltz6cIAh1Y+XkecDgeTbnTdo
-        YTD/7WshzReZGmm+ytrG8mX2Q0o+d+9HJZ/nsiO+vCGL95VNWMHFqeYlCSkbMwXjtAWJqg3Z
-        7iN0Wg+1re1mDzKhHOowCuAAz4Tqj4XMYaTiNNiGwNX32x/0IsjLc7Jy4ENgvnYM/SvpHCxD
-        cuIigvLmPoUcdCOoePWSlVzBOB668h4zEofgMBjYb/nbl8LXKfB1vh4q5zgljoZK+xbJo8Yx
-        YHGblRLTOBx+OC1/+4zGsdBe52RkTxDcPdlJS6UBeAoUNM+XZAqHQmvnaYXME+Fq9ylKGgW4
-        mIN9VS3+rZdCv+cZK3MwdHlcfh4PDeYcWmYRTLln/f6d0JFf7PfMhVueRkaaS+FIcLinyfIi
-        aK2zKSUZcCC0dAfJKwRCYcVxSpbVcHC/RnZHgCvnoULmMXCxxMIWIK112F3WYcdYhx1j/T/3
-        DKLtKFTIEPXJgjjDIGyNFnV6McOQHL0+VV+Ghv6w4bfnSyX6+mhdDcIc0o5ST+q6vUbD6DLF
-        7foaBBylDVHzniFJnaTbvkMwpq41ZqQIYg0ax9HaUHXWiFfxGpysSxc2C0KaYPyXVXABY02o
-        PDbWUfSlOapluvPc+eMWc8iPqp6gmMX2wVU36g9lzTYk74mYEpa+d2TFT29T4kuFbxQbHvnd
-        WPpsbnf2ZKiNyzl6tyThWLZLld9+we1N3DFnFzuwzfuw6Yo7fvWvk2mKhYH1L7KXRJhWOl73
-        V+9rTRgccDb0zsHpm2y58xmzY3mNlhY36GZEUUZR9wcr8XWQgwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfOzo7S4jQ1XxTMTkSgeGxettdSET/IIQwEIyMNG3qYknO6
-        s4kXCivL1DRTEp2afolkYvNGmpi3vF/xlpUolKLmlVhJZmhbK/Dbj+f///HwwENikiyhExmf
-        qOU0iYoEmrDFRw4GFjxq1vqjzheUiVFDqVGI5r6vClFV77gQ1X5bAqh4uFKARvNU6MnSBoYm
-        JupFaOzepghNt1UQyJTfC1DpRIcA1fUuiND83RoCHba3itC7zWwh6py5hOb3j6PdwS8gyI7d
-        /VGEs+WZkzj7Rr8gYhsNOQSbf3+bYAuaDYBtGslgTY0uYeR1xl+j1mk51zg1rw2gI6XIi5H6
-        IcbLx4+RestvXPDypT0D/WO5hPgUTuMZeJOJe9CWhyftYKkLXTsgEzzGcoENCSkfuHzYCHKB
-        LSmhXgC4XZuNW4OTsKijRWRlO/j7fS5hLW0AaPowDCyBHRUJ1wtmhBa2p07D/YclQksJo95i
-        0NhW+c/IFMD2oTlzQpIExcBWQ7JFEFMhsKStmLAwTp2Fv+pL/m5zoK7B0Z0a3No5AYfKlnGL
-        akO5w8LZAMsYo2TwedNnzMqO8NNylcDKp2DLVgVWCCT6I7b+iKI/ouiPKNUANwB7TserlCpe
-        yvAKFa9LVDIxalUjMH/A6/69plYw1RDeAygS0MfErut9URKhIoVPU/UASGK0vZgdMI/EsYq0
-        dE6jjtboEji+B/iab3uKOTnEqM3/lKiNlvpK5chPKveWe8sQ7Sh+RHVHSSilQsvd4rgkTvPf
-        E5A2TpngGW28UoWVxrhFhM4sVtcZQ2V1PcVTPnx4+djtpXNny/qGxpirLyM2D0zKMzNwTzWJ
-        VkxbzfGDd5zHXSbCguboSA9ZZ2rJz4/y4IAM51fR3TbpcmXW3GJX31rIyvSQLhjGiKeSLwey
-        RNOkW4777NfiCNlqetCs6eJG70i7oZvG+TiF1A3T8Io/4IREGhcDAAA=
-X-CMS-MailID: 20190429120600eucas1p25ac06a4e91280c63d0b4baf6f481c01b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87@eucas1p1.samsung.com>
-        <1555683568-20882-5-git-send-email-l.luba@partner.samsung.com>
-        <20190425195338.GB31128@bogus>
+X-Received: by 2002:a6b:410e:: with SMTP id n14mr35885266ioa.141.1556539566887;
+ Mon, 29 Apr 2019 05:06:06 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 05:06:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f69c3b0587aa1bc5@google.com>
+Subject: KASAN: slab-out-of-bounds Read in hex_string
+From:   syzbot <syzbot+a9fefd18c7b240f19c54@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=139ac37f200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
+dashboard link: https://syzkaller.appspot.com/bug?extid=a9fefd18c7b240f19c54
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f3b338a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a9fefd18c7b240f19c54@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in hex_string+0x418/0x4b0 lib/vsprintf.c:975
+Read of size 1 at addr ffff88821a41bd38 by task kworker/0:1/12
+
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc3-319004-g43151d6 #6
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  print_address_description+0x6c/0x236 mm/kasan/report.c:187
+  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
+  hex_string+0x418/0x4b0 lib/vsprintf.c:975
+  pointer+0x460/0x910 lib/vsprintf.c:1985
+  vsnprintf+0x5a0/0x16b0 lib/vsprintf.c:2400
+  pointer+0x60b/0x910 lib/vsprintf.c:2038
+  vsnprintf+0x5a0/0x16b0 lib/vsprintf.c:2400
+  vscnprintf+0x29/0x80 lib/vsprintf.c:2499
+  vprintk_store+0x45/0x4b0 kernel/printk/printk.c:1900
+  vprintk_emit+0x210/0x5a0 kernel/printk/printk.c:1957
+  dev_vprintk_emit+0x50e/0x553 drivers/base/core.c:3185
+  dev_printk_emit+0xbf/0xf6 drivers/base/core.c:3196
+  __dev_printk+0x1ed/0x215 drivers/base/core.c:3208
+  _dev_info+0xdc/0x10e drivers/base/core.c:3254
+  dlfb_parse_vendor_descriptor drivers/video/fbdev/udlfb.c:1532 [inline]
+  dlfb_usb_probe.cold+0xb96/0x1701 drivers/video/fbdev/udlfb.c:1615
+  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2023
+  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Allocated by task 12:
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:470
+  kmalloc include/linux/slab.h:552 [inline]
+  usb_get_configuration+0x313/0x32b0 drivers/usb/core/config.c:857
+  usb_enumerate_device drivers/usb/core/hub.c:2367 [inline]
+  usb_new_device+0x2fe/0x450 drivers/usb/core/hub.c:2503
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Freed by task 1464:
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
+  slab_free_hook mm/slub.c:1429 [inline]
+  slab_free_freelist_hook+0x5e/0x140 mm/slub.c:1456
+  slab_free mm/slub.c:3003 [inline]
+  kfree+0xce/0x290 mm/slub.c:3958
+  single_release+0x91/0xb0 fs/seq_file.c:597
+  __fput+0x2df/0x8c0 fs/file_table.c:278
+  task_work_run+0x149/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x243/0x270 arch/x86/entry/common.c:166
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x40c/0x4f0 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88821a41bd20
+  which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 24 bytes inside of
+  32-byte region [ffff88821a41bd20, ffff88821a41bd40)
+The buggy address belongs to the page:
+page:ffffea00086906c0 count:1 mapcount:0 mapping:ffff88812c3f5800 index:0x0
+flags: 0x57ff00000000200(slab)
+raw: 057ff00000000200 dead000000000100 dead000000000200 ffff88812c3f5800
+raw: 0000000000000000 0000000000550055 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88821a41bc00: 00 00 00 fc fc fc 00 00 00 00 fc fc 00 00 00 00
+  ffff88821a41bc80: fc fc 00 00 00 00 fc fc fb fb fb fb fc fc fb fb
+> ffff88821a41bd00: fb fb fc fc 00 00 00 fc fc fc fb fb fb fb fc fc
+                                         ^
+  ffff88821a41bd80: 00 00 00 fc fc fc 00 00 00 fc fc fc fb fb fb fb
+  ffff88821a41be00: fc fc fb fb fb fb fc fc fb fb fb fb fc fc 00 00
+==================================================================
 
 
-On 4/25/19 9:53 PM, Rob Herring wrote:
-> On Fri, Apr 19, 2019 at 04:19:22PM +0200, Lukasz Luba wrote:
->> The device tree bindings for LPDDR3 SDRAM memories.
-> 
-> Also, 'dt-bindings: ddr: ' for the subject. You've got a mixture of
-> subjects with no consistency.
-Right, I will change it.
-> 
->>
->> For specifying the AC timing parameters of the memory device
->> the 'lpddr3' binding uses binding 'lpddr2-timings'.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> 
-> 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
