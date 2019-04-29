@@ -2,321 +2,229 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AE6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881A6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C4520673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499B920673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:25:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lEtrtAYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfD2MXi convert rfc822-to-8bit (ORCPT
+        id S1728016AbfD2MZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:23:38 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:36761 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbfD2MXi (ORCPT
+        Mon, 29 Apr 2019 08:25:10 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36010 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbfD2MZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:23:38 -0400
-X-Originating-IP: 90.88.147.33
-Received: from xps13 (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 07C55FF810;
-        Mon, 29 Apr 2019 12:23:33 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 14:23:32 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Naga Sureshkumar Relli <nagasure@xilinx.com>
-Cc:     Helmut Grohne <helmut.grohne@intenta.de>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "richard@nod.at" <richard@nod.at>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "nagasureshkumarrelli@gmail.com" <nagasureshkumarrelli@gmail.com>
-Subject: Re: [LINUX PATCH v14] mtd: rawnand: pl353: Add basic driver for arm
- pl353 smc nand interface
-Message-ID: <20190429142332.27a2cba5@xps13>
-In-Reply-To: <DM6PR02MB4779EE37978EC0E6475C55D7AF390@DM6PR02MB4779.namprd02.prod.outlook.com>
-References: <1555326613-26739-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
-        <20190425112338.dipgmqqfuj45gx6s@laureti-dev>
-        <DM6PR02MB4779EE37978EC0E6475C55D7AF390@DM6PR02MB4779.namprd02.prod.outlook.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 29 Apr 2019 08:25:09 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u17so7839567lfi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 05:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pLitZGF5ife6QL5sDYHdKPMjB6Uz30fjPiq+Pr5oBcY=;
+        b=lEtrtAYuXtTAYltm10ZvTaqQSz336/Uhs+JACwIjBLWpGBIswNrXM1nBa+OGbWUnJ/
+         p6H129UmXuDAgTHYhE6GnpNQxIIc0HwIZikVnh/hWNJ+y8wsnakxHVGUlM1iz6KIcf7X
+         GK6nM5fLufd9e1tyNAAdJkfkBorm8AnzWn53otK7bTSiAWGZyfuMkwLOGvv/FKh8GpZm
+         weh8yJP1O/RMTeoliPTusqfYdIsEf8WqGnX4IjVYy05FG9OOck8UjT9uZyefdmQrbE0a
+         cHjdObH3sMCCIDLHG8xhxnGIWNAgE71BZQRWs+hJfc7blFG4jLQ8lSDYXxyGlCLhO3wi
+         0E2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pLitZGF5ife6QL5sDYHdKPMjB6Uz30fjPiq+Pr5oBcY=;
+        b=GgXc5KbKgHU+v6DY+zA9yqOhlbAb8KHGBI6JQyFsx0+YRCb4bYD0ZaKWRqkfE+8FuA
+         tqDnv6ip3E7dxDbgaFRWwXgsDfWV/R3ONPtuEx9RqDCSixPX8wtKWf30H8+X56VILIcD
+         Hu/CKyLsD2hra5rm0QuTV2lEsKEWT/9BkgVxu1zRfQ1ihB0sCUC8hcYLzcxyU1ex/nr0
+         E+jxlWTyEwfg2T8G2tqronRx0eppPRpp7tKfi68d35eMkJPd84MdCY0XItlB4yo33h7l
+         Z7FrQLnAF5Z8hkIMcpbMdLHJmp/20De9JMbmig+Q0Mb9VUooMHRhK2eTjzY9r6k09Ozz
+         dfxw==
+X-Gm-Message-State: APjAAAVhQiHmN9qhw3OHrVbqftDkxwAD1ozT6pzQfu5sPxnHzZEekm0L
+        PjLVn4K0G0UaYUVouwMOmeK+Q9wESuGqvygR5imITw==
+X-Google-Smtp-Source: APXvYqxmUHSojA+E+02ehwhUF+P7BoJlno5qtIQ0MosbtBG8PhP6HuaAdy36RlIC6cAGMcO/nv/zmBe0prdiuNeTL8U=
+X-Received: by 2002:a19:7005:: with SMTP id h5mr6999348lfc.143.1556540706265;
+ Mon, 29 Apr 2019 05:25:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190408214539.2705660-1-songliubraving@fb.com>
+ <20190410115907.GE19434@e105550-lin.cambridge.arm.com> <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
+ <CAKfTPtAFB3gSZYJN1BcjU_XoY=Pfu2xtea+2MEw7FkVc3mwTSA@mail.gmail.com>
+ <E97E73F4-CE8C-4CD7-B6B6-5F63A4E881B1@fb.com> <F0A127DD-F9B6-4FBE-B9AD-8E8B00A7D676@fb.com>
+In-Reply-To: <F0A127DD-F9B6-4FBE-B9AD-8E8B00A7D676@fb.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 29 Apr 2019 14:24:55 +0200
+Message-ID: <CAKfTPtA_ouYCes9LnYn0quAKm273mi3vP-++GTBtYcQn07xc6Q@mail.gmail.com>
+Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Kernel Team <Kernel-team@fb.com>,
+        viresh kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Naga,
+Hi Song,
 
-> > > +	u32 addrs;
-> > > +	u32 naddrs;
-> > > +	u32 addr5;
-> > > +	u32 addr6;  
-> > 
-> > Why are addr5 and addr6 u32? You only ever store u8 values in here. How about merging
-> > them into an u16 addr56? Doing so would make the access in pl353_nand_exec_op_cmd
-> > simpler and move a little complexity into pl353_nfc_parse_instructions.  
-> Will try this. But I don't see any complex logic involved using addr5 and addr6.
+On Sun, 28 Apr 2019 at 21:47, Song Liu <songliubraving@fb.com> wrote:
+>
+> Hi Morten and Vincent,
+>
+> > On Apr 22, 2019, at 6:22 PM, Song Liu <songliubraving@fb.com> wrote:
+> >
+> > Hi Vincent,
+> >
+> >> On Apr 17, 2019, at 5:56 AM, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+> >>
+> >> On Wed, 10 Apr 2019 at 21:43, Song Liu <songliubraving@fb.com> wrote:
+> >>>
+> >>> Hi Morten,
+> >>>
+> >>>> On Apr 10, 2019, at 4:59 AM, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
+> >>>>
+> >>
+> >>>>
+> >>>> The bit that isn't clear to me, is _why_ adding idle cycles helps your
+> >>>> workload. I'm not convinced that adding headroom gives any latency
+> >>>> improvements beyond watering down the impact of your side jobs. AFAIK,
+> >>>
+> >>> We think the latency improvements actually come from watering down the
+> >>> impact of side jobs. It is not just statistically improving average
+> >>> latency numbers, but also reduces resource contention caused by the side
+> >>> workload. I don't know whether it is from reducing contention of ALUs,
+> >>> memory bandwidth, CPU caches, or something else, but we saw reduced
+> >>> latencies when headroom is used.
+> >>>
+> >>>> the throttling mechanism effectively removes the throttled tasks from
+> >>>> the schedule according to a specific duty cycle. When the side job is
+> >>>> not throttled the main workload is experiencing the same latency issues
+> >>>> as before, but by dynamically tuning the side job throttling you can
+> >>>> achieve a better average latency. Am I missing something?
+> >>>>
+> >>>> Have you looked at your distribution of main job latency and tried to
+> >>>> compare with when throttling is active/not active?
+> >>>
+> >>> cfs_bandwidth adjusts allowed runtime for each task_group each period
+> >>> (configurable, 100ms by default). cpu.headroom logic applies gentle
+> >>> throttling, so that the side workload gets some runtime in every period.
+> >>> Therefore, if we look at time window equal to or bigger than 100ms, we
+> >>> don't really see "throttling active time" vs. "throttling inactive time".
+> >>>
+> >>>>
+> >>>> I'm wondering if the headroom solution is really the right solution for
+> >>>> your use-case or if what you are really after is something which is
+> >>>> lower priority than just setting the weight to 1. Something that
+> >>>
+> >>> The experiments show that, cpu.weight does proper work for priority: the
+> >>> main workload gets priority to use the CPU; while the side workload only
+> >>> fill the idle CPU. However, this is not sufficient, as the side workload
+> >>> creates big enough contention to impact the main workload.
+> >>>
+> >>>> (nearly) always gets pre-empted by your main job (SCHED_BATCH and
+> >>>> SCHED_IDLE might not be enough). If your main job consist
+> >>>> of lots of relatively short wake-ups things like the min_granularity
+> >>>> could have significant latency impact.
+> >>>
+> >>> cpu.headroom gives benefits in addition to optimizations in pre-empt
+> >>> side. By maintaining some idle time, fewer pre-empt actions are
+> >>> necessary, thus the main workload will get better latency.
+> >>
+> >> I agree with Morten's proposal, SCHED_IDLE should help your latency
+> >> problem because side job will be directly preempted unlike normal cfs
+> >> task even lowest priority.
+> >> In addition to min_granularity, sched_period also has an impact on the
+> >> time that a task has to wait before preempting the running task. Also,
+> >> some sched_feature like GENTLE_FAIR_SLEEPERS can also impact the
+> >> latency of a task.
+> >>
+> >> It would be nice to know if the latency problem comes from contention
+> >> on cache resources or if it's mainly because you main load waits
+> >> before running on a CPU
+> >>
+> >> Regards,
+> >> Vincent
+> >
+> > Thanks for these suggestions. Here are some more tests to show the impact
+> > of scheduler knobs and cpu.headroom.
+> >
+> > side-load | cpu.headroom | side/cpu.weight | min_gran | cpu-idle | main/latency
+> > --------------------------------------------------------------------------------
+> >  none    |      0       |     n/a         |    1 ms  |  45.20%  |   1.00
+> > ffmpeg   |      0       |      1          |   10 ms  |   3.38%  |   1.46
+> > ffmpeg   |      0       |   SCHED_IDLE    |    1 ms  |   5.69%  |   1.42
+> > ffmpeg   |    20%       |   SCHED_IDLE    |    1 ms  |  19.00%  |   1.13
+> > ffmpeg   |    30%       |   SCHED_IDLE    |    1 ms  |  27.60%  |   1.08
+> >
+> > In all these cases, the main workload is loaded with same level of
+> > traffic (request per second). Main workload latency numbers are normalized
+> > based on the baseline (first row).
+> >
+> > For the baseline, the main workload runs without any side workload, the
+> > system has about 45.20% idle CPU.
+> >
+> > The next two rows compare the impact of scheduling knobs cpu.weight and
+> > sched_min_granularity. With cpu.weight of 1 and min_granularity of 10ms,
+> > we see a latency of 1.46; with SCHED_IDLE and min_granularity of 1ms, we
+> > see a latency of 1.42. So SCHED_IDLE and min_granularity help protecting
+> > the main workload. However, it is not sufficient, as the latency overhead
+> > is high (>40%).
+> >
+> > The last two rows show the benefit of cpu.headroom. With 20% headroom,
+> > the latency is 1.13; while with 30% headroom, the latency is 1.08.
+> >
+> > We can also see a clear correlation between latency and global idle CPU:
+> > more idle CPU yields better lower latency.
+> >
+> > Over all, these results show that cpu.headroom provides effective
+> > mechanism to control the latency impact of side workloads. Other knobs
+> > could also help the latency, but they are not as effective and flexible
+> > as cpu.headroom.
+> >
+> > Does this analysis address your concern?
 
-This is a relic of a too quick copy from marvell_nand.c. Please match
-the structure with your controller memory layout instead.
+So, you results show that sched_idle class doesn't provide the
+intended behavior because it still delay the scheduling of sched_other
+tasks. In fact, the wakeup path of the scheduler doesn't make any
+difference between a cpu running a sched_other and a cpu running a
+sched_idle when looking for the idlest cpu and it can create some
+contentions between sched_other tasks whereas a cpu runs sched_idle
+task.
+Viresh (cced to this email) is working on improving such behavior at
+wake up and has sent an patch related to the subject:
+https://lkml.org/lkml/2019/4/25/251
+I'm curious if this would improve the results.
 
-> > > +	const struct nand_op_instr *data_instr; };
-> > > +
-> > > +/**
-> > > + * struct pl353_nand_controller - Defines the NAND flash controller driver
-> > > + *				  instance
-> > > + * @chip:		NAND chip information structure
-> > > + * @dev:		Parent device (used to print error messages)
-> > > + * @regs:		Virtual address of the NAND flash device
-> > > + * @buf_addr:		Virtual address of the NAND flash device for
-> > > + *			data read/writes
-> > > + * @addr_cycles:	Address cycles
-> > > + * @mclk:		Memory controller clock
-> > > + * @buswidth:		Bus width 8 or 16
-> > > + */
-> > > +struct pl353_nand_controller {
-> > > +	struct nand_controller controller;
-> > > +	struct nand_chip chip;
-> > > +	struct device *dev;
-> > > +	void __iomem *regs;
-> > > +	void __iomem *buf_addr;  
-> > 
-> > I find the use of buf_addr unfortunate. It is consumed by two functions
-> > pl353_nand_read_data_op and pl353_nand_write_data_op. All other functions update its
-> > value. Semantically, its value is regs + some flags. For the updaters that means a complex logic
-> > where they first have to subtract reg, then change flags and add reg again. To make matters
-> > worse, this computation involves __force casts between long and __iomem (which yielded
-> > complaints in earlier reviews).  I think it would simplify the code if you replaced buf_addr with
-> > something like addr_flags and then compute buf_addr as regs + addr_flags in those two
-> > consumers. What do you think?  
-> This definitely simplifies the driver logic, we have to do that.
-> I tried it previously, regarding __force and __iomem casting changes, but the driver functionality was broken
-> With this update.
-> Let me update it and check it again.
-> But just wanted to know, do you see issues with these __force and __iomem castings?
-> >   
-> > > +	u8 addr_cycles;
-> > > +	struct clk *mclk;  
-> > 
-> > All you need here is the memory clock frequency. Wouldn't it be easier to extract that
-> > frequency once during probe and store it here? That assumes a constant frequency, but if the
-> > frequency isn't constant, you have a race condition.  
-> That is what we are doing in the probe.
-> In the probe, we are getting mclk using of_clk_get() and then we are getting the actual frequency
-> Using clk_get_rate().
-> And this is constant frequency only(getting from dts)
+Regards,
+Vincent
 
-What Helmut proposes is, I think, saving the clock frequency to avoid
-requesting it everytime you want to use it (if this is done many times).
-
-[...]
-
-> > > +
-> > > +	oobregion->offset = (section * chip->ecc.bytes) + 2;
-> > > +	oobregion->length = 50;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct mtd_ooblayout_ops pl353_ecc_ooblayout64_ops = {
-> > > +	.ecc = pl353_ecc_ooblayout64_ecc,
-> > > +	.free = pl353_ecc_ooblayout64_free,
-> > > +};
-> > > +
-> > > +/* Generic flash bbt decriptors */
-> > > +static u8 bbt_pattern[] = { 'B', 'b', 't', '0' }; static u8
-> > > +mirror_pattern[] = { '1', 't', 'b', 'B' };
-> > > +
-> > > +static struct nand_bbt_descr bbt_main_descr = {
-> > > +	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE |  
-> > NAND_BBT_WRITE  
-> > > +		| NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP,
-> > > +	.offs = 4,
-> > > +	.len = 4,
-> > > +	.veroffs = 20,
-> > > +	.maxblocks = 4,
-> > > +	.pattern = bbt_pattern  
-> > 
-> > I have a general question concerning the nand framework here. The pattern member in struct
-> > nand_bbt_descr is not declared const.
-> > Therefore, bbt_pattern cannot be const here. As far as I looked, all accesses of pattern use it
-> > with memcmp or as source for memcpy. Also the diskonchip.c driver assigns a string constant
-> > here. This suggests, that pattern should be declared const or that diskonchip.c is doing it
-> > wrong.  
-> May be Miquel can comment on this.
-
-I did not check diskonchip.c's implementation but turning it into const
-seems reasonable to me. However in the scope of this driver, Naga, you
-can keep it as it is right now.
-
-> >   
-> > > +};
-> > > +
-> > > +static struct nand_bbt_descr bbt_mirror_descr = {
-> > > +	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE |  
-> > NAND_BBT_WRITE  
-> > > +		| NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP,
-> > > +	.offs = 4,
-> > > +	.len = 4,
-> > > +	.veroffs = 20,
-> > > +	.maxblocks = 4,
-> > > +	.pattern = mirror_pattern
-> > > +};
-> > > +
-> > > +static void pl353_nfc_force_byte_access(struct nand_chip *chip,
-> > > +					bool force_8bit)
-> > > +{
-> > > +	int ret;
-> > > +	struct pl353_nand_controller *xnfc =
-> > > +		container_of(chip, struct pl353_nand_controller, chip);
-> > > +
-> > > +	if (xnfc->buswidth == 8)  
-> > 
-> > This buswidth member is never assigned anywhere. Thus the value is always 0 and this
-> > comparison always fails.  
-> No, in the probe we should update this, by reading it from dts.
-> Unfortunately, the assignment was removed, during checkpatch clean up(its my editor issue).
-> I will update it. 
-
-This answer is scary, there are probably many other places where you
-deleted useful code then?
-
-
-
-[...]
-
-> > > +/* NAND framework ->exec_op() hooks and related helpers */
-static
-> > > +void pl353_nfc_parse_instructions(struct nand_chip *chip,
-> > > +					 const struct nand_subop *subop,
-> > > +					 struct pl353_nfc_op *nfc_op)
-> > > +{
-> > > +	const struct nand_op_instr *instr = NULL;
-> > > +	unsigned int op_id, offset, naddrs;
-> > > +	int i;
-> > > +	const u8 *addrs;
-> > > +
-> > > +	memset(nfc_op, 0, sizeof(struct pl353_nfc_op));
-> > > +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
-> > > +		instr = &subop->instrs[op_id];
-> > > +
-> > > +		switch (instr->type) {
-> > > +		case NAND_OP_CMD_INSTR:
-> > > +			if (op_id)
-> > > +				nfc_op->cmnds[1] = instr->ctx.cmd.opcode;
-> > > +			else
-> > > +				nfc_op->cmnds[0] = instr->ctx.cmd.opcode;
-> > > +			nfc_op->cle_ale_delay_ns = instr->delay_ns;
-> > > +			break;
-> > > +
-> > > +		case NAND_OP_ADDR_INSTR:
-> > > +			offset = nand_subop_get_addr_start_off(subop, op_id);
-> > > +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
-> > > +			addrs = &instr->ctx.addr.addrs[offset];
-> > > +			nfc_op->addrs = instr->ctx.addr.addrs[offset];
-> > > +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++) {
-> > > +				nfc_op->addrs |= instr->ctx.addr.addrs[i] <<  
-> > 
-> > I don't quite understand what this code does, but it looks strange to me. I compared it to other
-> > drivers. The code here is quite similar to marvell_nand.c. It seems like we are copying a
-> > varying number (0 to 6) of addresses from the buffer instr->ctx.addr.addrs. However their
-> > indices are special: 0, 1, 2, 3, offset + 4, offset + 5. This is non-consecutive and different from
-> > marvell_nand.c in this regard. Could it be that you really meant index offset+i here?  
-> I didn't get, what you are saying here.
-> It is about updating page and column addresses.
-> Are you asking me to remove nfc_op->addrs = instr->ctx.addr.addrs[offset]; before for loop?
-> 
-> >   
-> > > +						 (8 * i);
-> > > +			}
-> > > +
-> > > +			if (naddrs >= 5)
-> > > +				nfc_op->addr5 = addrs[4];
-> > > +			if (naddrs >= 6)
-> > > +				nfc_op->addr6 = addrs[5];
-
-Also, you probably don't need addr5 and addr6 here, they were needed in
-marvell_nand.c because addresses are stored in three different
-registers and are limited to 6 cycles, but this is probably not the
-case in your driver.
-
-> > > +			nfc_op->naddrs = nand_subop_get_num_addr_cyc(subop,
-> > > +								     op_id);
-> > > +			nfc_op->cle_ale_delay_ns = instr->delay_ns;
-> > > +			break;
-> > > +
-> > > +		case NAND_OP_DATA_IN_INSTR:
-> > > +			nfc_op->data_instr = instr;
-> > > +			nfc_op->data_instr_idx = op_id;
-> > > +			break;
-> > > +
-> > > +		case NAND_OP_DATA_OUT_INSTR:
-> > > +			nfc_op->data_instr = instr;
-> > > +			nfc_op->data_instr_idx = op_id;
-> > > +			break;
-> > > +
-> > > +		case NAND_OP_WAITRDY_INSTR:
-> > > +			nfc_op->rdy_timeout_ms = instr->ctx.waitrdy.timeout_ms;
-> > > +			nfc_op->rdy_delay_ns = instr->delay_ns;
-> > > +			break;
-> > > +		}
-> > > +	}
-> > > +}
-> > > +
-> > > +static void cond_delay(unsigned int ns) {
-> > > +	if (!ns)
-> > > +		return;
-> > > +
-> > > +	if (ns < 10000)
-> > > +		ndelay(ns);
-> > > +	else
-> > > +		udelay(DIV_ROUND_UP(ns, 1000));
-> > > +}  
-> > 
-
-[...]
-
-> > > +
-> > > +	writel_relaxed(cmd_phase_data, (void __iomem * __force)cmd_phase_addr);
-> > > +	if (!nfc_op.data_instr) {
-> > > +		if (nfc_op.rdy_timeout_ms) {
-> > > +			if (pl353_wait_for_dev_ready(chip))
-> > > +				return -ETIMEDOUT;
-> > > +		}
-> > > +
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	reading = (nfc_op.data_instr->type == NAND_OP_DATA_IN_INSTR);
-> > > +	if (!reading) {
-> > > +		len = nand_subop_get_data_len(subop, op_id);
-> > > +		pl353_nand_write_data_op(chip, instr->ctx.data.buf.out,
-> > > +					 len, instr->ctx.data.force_8bit);
-> > > +		if (nfc_op.rdy_timeout_ms) {
-> > > +			if (pl353_wait_for_dev_ready(chip))
-> > > +				return -ETIMEDOUT;
-> > > +		}
-> > > +
-> > > +		cond_delay(nfc_op.rdy_delay_ns);
-> > > +	}
-> > > +
-> > > +	if (reading) {  
-> > 
-> > You could use an else branch instead of inverting the condition here.
-> > When Miquel complained about this in v13, you said you'd change it, but you didn't.  
-> Sorry for that. I will change it.
-
-Yes please, be careful and not in a hurry when re-posting, it already
-takes quite some time to review the entire driver.
-
-Thanks,
-Miquèl
+> >
+> > Thanks,
+> > Song
+> >
+>
+> Could you please share your comments and suggestions on this work? Did
+> the results address your questions/concerns?
+>
+> Thanks again,
+> Song
+>
+> >>
+> >>>
+> >>> Thanks,
+> >>> Song
+> >>>
+> >>>>
+> >>>> Morten
+>
