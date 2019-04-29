@@ -2,204 +2,149 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23088C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C647CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C632063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBE82063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mLocYcDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbfD2IuC (ORCPT
+        id S1727694AbfD2Iud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 04:50:02 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:37291 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727539AbfD2IuB (ORCPT
+        Mon, 29 Apr 2019 04:50:33 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1183 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727517AbfD2Iuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:50:01 -0400
-Received: from [192.168.2.10] ([46.9.232.72])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id L1z0hJeq7b8gSL1z4h7FSb; Mon, 29 Apr 2019 10:49:58 +0200
-Subject: Re: [PATCH v4] media: docs-rst: Document m2m stateless video decoder
- interface
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Alexandre Courbot <acourbot@chromium.org>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Dafna Hirschfeld <dafna3@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190306080019.159676-1-acourbot@chromium.org>
- <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
- <da5aa9ab957923a72e30b169a3c242c4fe6260f1.camel@bootlin.com>
- <c07703459c7e48904bd7fd83be1e675c70eee83c.camel@ndufresne.ca>
- <d81d0112b99feba0a1899f3722077a4aeec9860c.camel@bootlin.com>
- <439b7f57aa3ba2b2ed5b043f961ef87cb83912af.camel@ndufresne.ca>
- <59e23c5ca5bfbadf9441ea06da2e9b9b5898c6d7.camel@bootlin.com>
- <0b495143bb260cf9f8927ee541e7f001842ac5c3.camel@ndufresne.ca>
- <CAPBb6MVG+3jQcw3AuhYDYCZ0YJ0aX=TmEuM5izh12GLw9V6B8Q@mail.gmail.com>
- <793af82c-6b37-6f69-648e-2cd2a2e87645@xs4all.nl>
- <f30f69af184cc80d5c56853b517943f45c90d9d9.camel@ndufresne.ca>
- <0a39c613-440d-c7a9-a078-b4688874f9e6@xs4all.nl>
- <16a3a61fe354dc545e99aef36aa58c7d4943de26.camel@bootlin.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b4d0000e-72d3-7a5e-dc20-ab44962af62d@xs4all.nl>
-Date:   Mon, 29 Apr 2019 10:49:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <16a3a61fe354dc545e99aef36aa58c7d4943de26.camel@bootlin.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 29 Apr 2019 04:50:32 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3T8fTMS007712;
+        Mon, 29 Apr 2019 10:49:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=i2CLqYU4GwrLxCYnOOSir1J49uaIFg3QwOiHNqW/DMI=;
+ b=mLocYcDosabWj+1ZZh/jun41Uyto0EFSNoSUHIPb23+2+As++SIBKc1XCDhALb+zqDa2
+ cSP9Zxa4+v5fc8mUkzRKGjdnDvPHpVnxPU/s7Hj14MIRVO9bYppDfLj3SLKjZMYQOzSl
+ YyaN9e2ThRYO7mVt/9QXKLbKvUY/006FNSdAIXnDZUWjUeyGACIgFUfyJ/GcxjKAWirl
+ M1TV7To33skxQtCTC5PF1Ftj0RTyQ6jISnjkjRm26PtDW51mHngz79hKp4I2V2mIenE4
+ RVQ/pazP9N7xWy8eAuw6v9m6ut6bbWAa5S8kU8lZKFxs096AINP87EeQ4+rznfyu08s6 Fg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2s4cutu1mb-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 29 Apr 2019 10:49:51 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 69BB946;
+        Mon, 29 Apr 2019 08:49:40 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag7node2.st.com [10.75.127.20])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30A82139B;
+        Mon, 29 Apr 2019 08:49:40 +0000 (GMT)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG7NODE2.st.com
+ (10.75.127.20) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 29 Apr
+ 2019 10:49:39 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Mon, 29 Apr 2019 10:49:39 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Loic PALLARDY" <loic.pallardy@st.com>,
+        "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [RESEND PATCH 1/7] devicetree: bindings: Document domains
+ controller bindings
+Thread-Topic: [RESEND PATCH 1/7] devicetree: bindings: Document domains
+ controller bindings
+Thread-Index: AQHU3XI+crMGE3C/8EqSA6+xEWAscaZS9IgA
+Date:   Mon, 29 Apr 2019 08:49:39 +0000
+Message-ID: <dbb7440f-f055-6ff3-d367-3435c3c34d89@st.com>
+References: <20190318100605.29120-1-benjamin.gaignard@st.com>
+ <20190318100605.29120-2-benjamin.gaignard@st.com>
+In-Reply-To: <20190318100605.29120-2-benjamin.gaignard@st.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfPOATKdVj2R0o6pb2wtLVw8P37ebLhkKKR3sXRAgwOEGGWmELqhKrpp7hq6ZrZnfMte91e8AU6bbBcQt+Gl2UKW1vEcIs9kKGMStdlE8YNGyT6mghWRv
- Ux6TfETM0MEnwH1qxAkuycPjU2V9jkyppIrSGETLQhU////y3HbYN0R0Mmgie+3NwcxlA/rDE9OqtZpRv7Z/bIw5e2geQtWJFHnFk6EaWRFBO8B93mh+s/fk
- lN4aABQtLhbtkMP2GrvO6ZsRoVYbnT9exPoI2bTNvDPwiR6AO46cpYOpQu3YUzQQSmznEHdbsdBkEmoQ6nitO+9PMuxANY+jKzRR/jf7T+RORP+bN+Fde+7q
- l6OrW0pAOJzZzDIKgcIuUxRyk28K2CVvtqPjAk8eASIVDFEyNB19309Ds2UVD6ZUoFkviWJ2qSpmXk4SP0Yc+EcU9eBYnA==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <06E79A3F4E1BA74194AF26EC2207345D@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/19 10:48 AM, Paul Kocialkowski wrote:
-> Hi,
-> 
-> On Mon, 2019-04-29 at 10:41 +0200, Hans Verkuil wrote:
->> On 4/27/19 2:06 PM, Nicolas Dufresne wrote:
->>> Le vendredi 26 avril 2019 à 16:18 +0200, Hans Verkuil a écrit :
->>>> On 4/16/19 9:22 AM, Alexandre Courbot wrote:
->>>>
->>>> <snip>
->>>>
->>>>> Thanks for this great discussion. Let me try to summarize the status
->>>>> of this thread + the IRC discussion and add my own thoughts:
->>>>>
->>>>> Proper support for multiple decoding units (e.g. H.264 slices) per
->>>>> frame should not be an afterthought ; compliance to encoded formats
->>>>> depend on it, and the benefit of lower latency is a significant
->>>>> consideration for vendors.
->>>>>
->>>>> m2m, which we use for all stateless codecs, has a strong assumption
->>>>> that one OUTPUT buffer consumed results in one CAPTURE buffer being
->>>>> produced. This assumption can however be overruled: at least the venus
->>>>> driver does it to implement the stateful specification.
->>>>>
->>>>> So we need a way to specify frame boundaries when submitting encoded
->>>>> content to the driver. One request should contain a single OUTPUT
->>>>> buffer, containing a single decoding unit, but we need a way to
->>>>> specify whether the driver should directly produce a CAPTURE buffer
->>>>> from this request, or keep using the same CAPTURE buffer with
->>>>> subsequent requests.
->>>>>
->>>>> I can think of 2 ways this can be expressed:
->>>>> 1) We keep the current m2m behavior as the default (a CAPTURE buffer
->>>>> is produced), and add a flag to ask the driver to change that behavior
->>>>> and hold on the CAPTURE buffer and reuse it with the next request(s) ;
->>>>> 2) We specify that no CAPTURE buffer is produced by default, unless a
->>>>> flag asking so is specified.
->>>>>
->>>>> The flag could be specified in one of two ways:
->>>>> a) As a new v4l2_buffer.flag for the OUTPUT buffer ;
->>>>> b) As a dedicated control, either format-specific or more common to all codecs.
->>>>>
->>>>> I tend to favor 2) and b) for this, for the reason that with H.264 at
->>>>> least, user-space does not know whether a slice is the last slice of a
->>>>> frame until it starts parsing the next one, and we don't know when we
->>>>> will receive it. If we use a control to ask that a CAPTURE buffer be
->>>>> produced, we can always submit another request with only that control
->>>>> set once it is clear that the frame is complete (and not delay
->>>>> decoding meanwhile). In practice I am not that familiar with
->>>>> latency-sensitive streaming ; maybe a smart streamer would just append
->>>>> an AUD NAL unit at the end of every frame and we can thus submit the
->>>>> flag it with the last slice without further delay?
->>>>>
->>>>> An extra constraint to enforce would be that each decoding unit
->>>>> belonging to the same frame must be submitted with the same timestamp,
->>>>> otherwise the request submission would fail. We really need a
->>>>> framework to enforce all this at a higher level than individual
->>>>> drivers, once we reach an agreement I will start working on this.
->>>>>
->>>>> Formats that do not support multiple decoding units per frame would
->>>>> reject any request that does not carry the end-of-frame information.
->>>>>
->>>>> Anything missing / any further comment?
->>>>>
->>>>
->>>> After reading through this thread and a further irc discussion I now
->>>> understand the problem. I think there are several ways this can be
->>>> solved, but I think this is the easiest:
->>>>
->>>> Introduce a new V4L2_BUF_FLAG_HOLD_CAPTURE_BUFFER flag.
->>>>
->>>> If set in the OUTPUT buffer, then don't mark the CAPTURE buffer as
->>>> done after processing the OUTPUT buffer.
->>>>
->>>> If an OUTPUT buffer was queued with a different timestamp than was
->>>> used for the currently held CAPTURE buffer, then mark that CAPTURE
->>>> buffer as done before starting processing this OUTPUT buffer.
->>>
->>> Just a curiosity, can you extend on how this would be handled. If there
->>> is a number of capture buffer, these should have "no-timestamp". So I
->>> suspect we need the condition to differentiate no-timestamp from
->>> previous timestamp. What I'm unclear is to what does it mean "no-
->>> timestamp". We already stated the timestamp 0 cannot be reserved as
->>> being an unset timestamp.
->>
->> For OUTPUT buffers there is no such thing as 'no timestamp'. They always
->> have a timestamp (which may be 0). The currently active CAPTURE buffer
->> also always has a timestamp as that was copied from the first OUTPUT buffer
->> for that CAPTURE buffer.
->>
->>>> In other words, for slicing you can just always set this flag and
->>>> group the slices by the OUTPUT timestamp. If you know that you
->>>> reached the last slice of a frame, then you can optionally clear the
->>>> flag to ensure the CAPTURE buffer is marked done without having to wait
->>>> for the first slice of the next frame to arrive.
->>>>
->>>> Potential disadvantage of this approach is that this relies on the
->>>> OUTPUT timestamp to be the same for all slices of the same frame.
->>>>
->>>> Which sounds reasonable to me.
->>>>
->>>> In addition add a V4L2_BUF_CAP_SUPPORTS_HOLD_CAPTURE_BUFFER
->>>> capability to signal support for this flag.
->>>>
->>>> I think this can be fairly easily implemented in v4l2-mem2mem.c.
->>>>
->>>> In addition, this approach is not specific to codecs, it can be
->>>> used elsewhere as well (composing multiple output buffers into one
->>>> capture buffer is one use-case that comes to mind).
->>>>
->>>> Comments? Other ideas?
->>>
->>> Sounds reasonable to me. I'll read through Paul's comment now and
->>> comment if needed.
->>
->> Paul's OK with it as well. The only thing I am not 100% happy with is
->> the name of the flag. It's a very low-level name: i.e. it does what it
->> says, but it doesn't say for what purpose.
->>
->> Does anyone have any better suggestions?
-> 
-> Good naming is always so hard to find... I don't have anything better
-> to suggest off the top of my head, but will definitely keep thinking
-> about it.
-> 
->> Also, who will implement this in v4l2-mem2mem? Paul, where you planning to do that?
-> 
-> Well, I no longer have time chunks allocated to the VPU topic at work,
-> so that means I'll have to do it on spare time and it may take me a
-> while to get there.
-> 
-> So if either one of you would like to pick it up to get it over with
-> faster, feel free to do that!
-
-OK, then I'll try to come up with something this week or next week.
-
-Regards,
-
-	Hans
+DQpPbiAzLzE4LzE5IDExOjA1IEFNLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToNCj4gRG9jdW1l
+bnQgY29tbW9ucyBkb21haW5zIGNvbnRyb2xsZXIgYmluZGluZ3MgZm9yIGNvbnRyb2xsZXINCj4g
+YW5kIGNsaWVudCBkZXZpY2VzLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFy
+ZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KDQpIaSBSb2IsDQoNCkluIHRoZSBmaXJzdCB2
+ZXJzaW9uIG9mIHRoaXMgc2VyaWVzIHlvdSBoYXZlIGFza2VkIG1lIHRvIHJld29yayB0aGUgDQpm
+cmFtZXdvcmsgZGVzY3JpcHRpb24uDQpEb2VzIHRoaXMgdjIgZmVlbCBiZXR0ZXIgZm9yIHlvdSA/
+DQoNCkJlbmphbWluDQoNCj4gLS0tDQo+ICAgLi4uL2JpbmRpbmdzL2J1cy9kb21haW5zL2RvbWFp
+bnNjdHJsLnR4dCAgICAgICAgICAgfCA1NSArKysrKysrKysrKysrKysrKysrKysrDQo+ICAgMSBm
+aWxlIGNoYW5nZWQsIDU1IGluc2VydGlvbnMoKykNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2J1cy9kb21haW5zL2RvbWFpbnNjdHJsLnR4
+dA0KPg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2J1
+cy9kb21haW5zL2RvbWFpbnNjdHJsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9idXMvZG9tYWlucy9kb21haW5zY3RybC50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQN
+Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5mODJlNWUxMWVhNjQNCj4gLS0tIC9kZXYvbnVsbA0KPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYnVzL2RvbWFpbnMvZG9tYWlu
+c2N0cmwudHh0DQo+IEBAIC0wLDAgKzEsNTUgQEANCj4gK0NvbW1vbiBEb21haW5zIENvbnRyb2xs
+ZXIgYmluZGluZ3MgcHJvcGVydGllcw0KPiArDQo+ICtCdXMgZG9tYWlucyBjb250cm9sbGVycyBh
+bGxvdyB0byBkaXZpZGVkIHN5c3RlbSBvbiBjaGlwIGludG8gbXVsdGlwbGUgZG9tYWlucw0KPiAr
+dGhhdCBjYW4gYmUgdXNlZCB0byBzZWxlY3QgYnkgd2hvIGhhcmR3YXJlIGJsb2NrcyBjb3VsZCBi
+ZSBhY2Nlc3NlZC4NCj4gK0EgZG9tYWluIGNvdWxkIGJlIGEgY2x1c3RlciBvZiBDUFVzIChvciBj
+b3Byb2Nlc3NvcnMpLCBhIHJhbmdlIG9mIGFkZHJlc3NlcyBvcg0KPiArYSBncm91cCBvZiBoYXJk
+d2FyZSBibG9ja3MuDQo+ICsNCj4gK1RoaXMgZGV2aWNlIHRyZWUgYmluZGluZ3MgY2FuIGJlIHVz
+ZWQgdG8gYmluZCBidXMgZG9tYWluIGNvbnN1bWVyIGRldmljZXMgd2l0aA0KPiArdGhlaXIgYnVz
+IGRvbWFpbnMgcHJvdmlkZWQgYnkgYnVzIGRvbWFpbnMgY29udHJvbGxlcnMuIEEgYnVzIGRvbWFp
+biBwcm92aWRlcg0KPiArY2FuIGJlIHJlcHJlc2VudGVkIGJ5IGFueSBub2RlIGluIHRoZSBkZXZp
+Y2UgdHJlZSBhbmQgY2FuIHByb3ZpZGUgb25lIG9yIG1vcmUNCj4gK2J1cyBkb21haW5zLiBBIGNv
+bnN1bWVyIG5vZGUgY2FuIHJlZmVyIHRvIHRoZSBwcm92aWRlciBieSBhIHBoYW5kbGUgYW5kIGEg
+c2V0DQo+ICtvZiBwaGFuZGxlIGFyZ3VtZW50cyBvZiBsZW5ndGggc3BlY2lmaWVkIGJ5IHRoZSAj
+ZG9tYWluY3RybC1jZWxscyBwcm9wZXJ0eSBpbg0KPiArdGhlIGJ1cyBkb21haW4gcHJvdmlkZXIg
+bm9kZS4NCj4gKw0KPiArPT1CdXMgZG9tYWluIHByb3ZpZGVyPT0NCj4gKw0KPiArUmVxdWlyZWQg
+cHJvcGVydGllczoNCj4gKy0gI2RvbWFpbmN0cmwtY2VsbHMJOiBOdW1iZXIgb2YgY2VsbHMgaW4g
+YSBidXMgZG9tYWluIHNwZWNpZmllcjsNCj4gKwkJCSAgQ2FuIGJlIGFueSB2YWx1ZSBhcyBzcGVj
+aWZpZWQgYnkgZGV2aWNlIHRyZWUgYmluZGluZw0KPiArCQkJICBkb2N1bWVudGF0aW9uIG9mIGEg
+cGFydGljdWxhciBwcm92aWRlci4NCj4gKw0KPiArPT1CdXMgZG9tYWluIGNvbnN1bWVyPT0NCj4g
+Kw0KPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKy0gZG9tYWluc2N0cmwtWAkJOiBBIGxpc3Qg
+b2YgYnVzIGRvbWFpbiBzcGVjaWZpZXJzLCBhcyBkZWZpbmVkIGJ5DQo+ICsJCQkgIGJpbmRpbmdz
+IG9mIHRoZSBidXMgZG9tYWluIGNvbnRyb2xsZXIgdGhhdCBpcyB0aGUNCj4gKwkJCSAgYnVzIGRv
+bWFpbiBwcm92aWRlci4NCj4gKw0KPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gKy0gZG9tYWlu
+c2N0cmwtbmFtZXMJOiBBIGxpc3Qgb2YgYnVzIGRvbWFpbiBuYW1lIHN0cmluZyBzb3J0ZWQgaW4g
+dGhlIHNhbWUNCj4gKwkJCSAgb3JkZXIgYXMgdGhlIGRvbWFpbnNjdHJsLVggcHJvcHJlcnRpZXMu
+IENvbnN1bWVyDQo+ICsJCQkgIGRyaXZlcnMgd2lsbCB1c2UgZG9tYWluc2N0cmwtbmFtZXMgdG8g
+bWF0Y2ggYnVzDQo+ICsJCQkgIGRvbWFpbnMgd2l0aCBidXMgZG9tYWlucyBzcGVjaWZpZXJzLg0K
+PiArCQkJICBOb3RlIHRoYXQgImRlZmF1bHQiIGFuZCAidW5iaW5kIiBhcmUgcmVzZXJ2ZWQgbmFt
+ZXMNCj4gKwkJCSAgdXNlZCBieSB0aGUgZnJhbWV3b3JrLg0KPiArDQo+ICtFeGFtcGxlIG9mIHVz
+YWdlIHdpdGg6DQo+ICstIGEgZG9tYWlucyBjb250cm9sbGVyIHdpdGggYSAyIHBhcmFtZXRlcnMg
+Y2VsbA0KPiArLSBhIGRvbWFpbnMgY29udHJvbGxlciB3aXRoIGEgMyBwYXJhbWV0ZXJzIGNlbGwN
+Cj4gKy0gYSBjbGllbnQgZGV2aWNlIG5vZGUgdXNpbmcgdGhlIGJvdGggY29udHJvbGxlcnMgYW5k
+IDIgY29uZmlndXJhdGlvbnMNCj4gKyAgbmFtZWQgImRlZmF1bHQiIGFuZCAidW5iaW5kIg0KPiAr
+DQo+ICtjdHJsMDogY3RybEAwIHsNCj4gKwkjZG9tYWluY3RybC1jZWxscyA9IDwyPjsNCj4gK307
+DQo+ICsNCj4gK2N0cmwxOiBjdHJsQDEgew0KPiArCSNkb21haW5jdHJsLWNlbGxzID0gPDM+Ow0K
+PiArfTsNCj4gKw0KPiArZm9vQDAgew0KPiArCWRvbWFpbnMtbmFtZXMgPSAiZGVmYXVsdCIsICJ1
+bmJpbmQiOw0KPiArCWRvbWFpbmN0cmwtMCA9IDwmY3RybDAgMSAyPiwgPCZjdHJsMSAzIDQgNT47
+DQo+ICsJZG9tYWluY3RybC0xID0gPCZjdHJsMCA2IDc+LCA8JmN0cmwxIDggOSAwPjsNCj4gK307
