@@ -2,114 +2,113 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF5BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42228C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22BC2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DDA2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:09:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BuTnIbE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbfD2UHG (ORCPT
+        id S1729283AbfD2UJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:07:06 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:55042 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729212AbfD2UHF (ORCPT
+        Mon, 29 Apr 2019 16:09:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34244 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2UJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:07:05 -0400
-Received: (qmail 8690 invoked by uid 2102); 29 Apr 2019 16:07:04 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 29 Apr 2019 16:07:04 -0400
-Date:   Mon, 29 Apr 2019 16:07:04 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+a9fefd18c7b240f19c54@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <rafael@kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in hex_string
-In-Reply-To: <000000000000f69c3b0587aa1bc5@google.com>
-Message-ID: <Pine.LNX.4.44L0.1904291604510.1632-100000@iolanthe.rowland.org>
+        Mon, 29 Apr 2019 16:09:57 -0400
+Received: by mail-wm1-f68.google.com with SMTP id b67so707969wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:09:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MvdFa5U3+5xI+n7BnR9vncycYNJ5YsEVOp/2MMs/RVM=;
+        b=BuTnIbE/5X9q4mxEOiBag5fyPi2rnHanlZN0p7kPbZG9UotvYf93pZvWrfRxStaYVJ
+         /GdMDmTZmyhQG4Hy8S73PFiykd/3xLz5uxkOlR1T2d+ZYUv3bH1nIvRqSj9TghaMH8e9
+         h3E7U3EsYofgiT5ZkKI+1mBkQdhp4qVEItwbaVaZiJIbK8xau1AjSVBRICUOm6h7Aakn
+         Lw2n4C1QWRRUPfTk3aM/E0ArH7yQj5h/EqjaiZq3PblxIFSFj0c2riOZT4XPLwvzKElR
+         QNh/o96SuIgP8b1IUBnMZVOJ/BcIXhX8iULCLXLMOueeICaz+P66G7gaXAr4/wbq9wUL
+         XJEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MvdFa5U3+5xI+n7BnR9vncycYNJ5YsEVOp/2MMs/RVM=;
+        b=J34IBx2eU1QirYtrNAf6L3jMa8xmVkcl+qXmNrpelpzuCpevJ88S9spQj8HxtyFok8
+         dvBZw+mlbK2UGhBYrMD2IEqfygu57nvzVibSbfFcyYA7ocC3cOnDtqLcis0Qe8psmnfu
+         Ba0CETfxEeqxxnlWTsO4yGcq+52s+ih3fHpp39IIxLkVBJ7Uey8uie9IRb6exX3ylvan
+         HHzbuJZbpTJ6mhe/MnFyLerC40F4Vvj6+WZYlzUGqtmucZi3OoTX2/zPFyVNO6KlcMNf
+         e49nhOCecAfD9S3W1y/2DhamDO01rY2bHKBXW91pnsejsUVGndb9BFzkO5lYiKDvE8U9
+         xmcw==
+X-Gm-Message-State: APjAAAX3dmJv1HPwlPZGQLgWIw5XGIpIO315nkg7orxBDbrHS5j6MiE1
+        3XSWewFZ018QQdrkE0aWoWQVeBMqCup9D9YoxecH
+X-Google-Smtp-Source: APXvYqzinbFB8LtmNFQ+ucaSuOAAMRFBDlIxFr9bPj35ybI9+jbSy361WcbSMCVMAUkixylis7DlTkYjGroaxKsnD+Y=
+X-Received: by 2002:a7b:c25a:: with SMTP id b26mr496762wmj.123.1556568595400;
+ Mon, 29 Apr 2019 13:09:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <s5hy33siofw.wl-tiwai@suse.de> <20190429195459.GU2583@lahna.fi.intel.com>
+In-Reply-To: <20190429195459.GU2583@lahna.fi.intel.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Mon, 29 Apr 2019 15:09:43 -0500
+Message-ID: <CAErSpo4awEXF3evh7=ZGi39y1dpMx9bdhXw8zt7s+1sDaH6nng@mail.gmail.com>
+Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and thunderbolt)
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lukas Wunner <lukas@wunner.de>, Jiri Slaby <jslaby@suse.cz>,
+        Michael Hirmke <opensuse@mike.franken.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019, syzbot wrote:
+[+cc linux-pci]
 
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=139ac37f200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a9fefd18c7b240f19c54
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f3b338a00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+a9fefd18c7b240f19c54@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in hex_string+0x418/0x4b0 lib/vsprintf.c:975
-> Read of size 1 at addr ffff88821a41bd38 by task kworker/0:1/12
-> 
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc3-319004-g43151d6 #6
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xe8/0x16e lib/dump_stack.c:113
->   print_address_description+0x6c/0x236 mm/kasan/report.c:187
->   kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
->   hex_string+0x418/0x4b0 lib/vsprintf.c:975
->   pointer+0x460/0x910 lib/vsprintf.c:1985
->   vsnprintf+0x5a0/0x16b0 lib/vsprintf.c:2400
->   pointer+0x60b/0x910 lib/vsprintf.c:2038
->   vsnprintf+0x5a0/0x16b0 lib/vsprintf.c:2400
->   vscnprintf+0x29/0x80 lib/vsprintf.c:2499
->   vprintk_store+0x45/0x4b0 kernel/printk/printk.c:1900
->   vprintk_emit+0x210/0x5a0 kernel/printk/printk.c:1957
->   dev_vprintk_emit+0x50e/0x553 drivers/base/core.c:3185
->   dev_printk_emit+0xbf/0xf6 drivers/base/core.c:3196
->   __dev_printk+0x1ed/0x215 drivers/base/core.c:3208
->   _dev_info+0xdc/0x10e drivers/base/core.c:3254
->   dlfb_parse_vendor_descriptor drivers/video/fbdev/udlfb.c:1532 [inline]
-
-Accessing beyond the end of the descriptor.
-
-#syz test: https://github.com/google/kasan.git usb-fuzzer
-
---- a/drivers/video/fbdev/udlfb.c
-+++ b/drivers/video/fbdev/udlfb.c
-@@ -1511,6 +1511,7 @@ static int dlfb_parse_vendor_descriptor(
- 	char *buf;
- 	char *desc_end;
- 	int total_len;
-+	int width;
- 
- 	buf = kzalloc(MAX_VENDOR_DESCRIPTOR_SIZE, GFP_KERNEL);
- 	if (!buf)
-@@ -1529,9 +1530,10 @@ static int dlfb_parse_vendor_descriptor(
- 	}
- 
- 	if (total_len > 5) {
-+		width = min(total_len, 11);
- 		dev_info(&intf->dev,
--			 "vendor descriptor length: %d data: %11ph\n",
--			 total_len, desc);
-+			 "vendor descriptor length: %d data: %*ph\n",
-+			 total_len, width, desc);
- 
- 		if ((desc[0] != total_len) || /* descriptor length */
- 		    (desc[1] != 0x5f) ||   /* vendor descriptor type */
-
-
+On Mon, Apr 29, 2019 at 2:55 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Mon, Apr 29, 2019 at 09:47:15PM +0200, Takashi Iwai wrote:
+> > Hi,
+>
+> Hi,
+>
+> > we've got a regression report wrt xhci_hcd and thunderbolt on a Dell
+> > machine.  5.0.7 is confirmed to work, so it must be a regression
+> > introduced by 5.0.8.
+> >
+> > The details are found in openSUSE Bugzilla entry:
+> >   https://bugzilla.opensuse.org/show_bug.cgi?id=1132943
+> >
+> > The probe of xhci_hcd on the dock fails like:
+> > [    6.269062] pcieport 0000:3a:00.0: enabling device (0006 -> 0007)
+> > [    6.270027] pcieport 0000:3b:03.0: enabling device (0006 -> 0007)
+> > [    6.270758] xhci_hcd 0000:3c:00.0: init 0000:3c:00.0 fail, -16
+> > [    6.270764] xhci_hcd: probe of 0000:3c:00.0 failed with error -16
+> > [    6.271002] xhci_hcd 0000:3d:00.0: init 0000:3d:00.0 fail, -16
+> >
+> > and later on, thunderbolt gives warnings:
+> > [   30.232676] thunderbolt 0000:05:00.0: unexpected hop count: 1023
+> > [   30.232957] ------------[ cut here ]------------
+> > [   30.232958] thunderbolt 0000:05:00.0: interrupt for TX ring 0 is already enabled
+> > [   30.232974] WARNING: CPU: 3 PID: 1009 at drivers/thunderbolt/nhi.c:107 ring_interrupt_active+0x1ea/0x230 [thunderbolt]
+> >
+> >
+> > I blindly suspected the commit 3943af9d01e9 and asked for a reverted
+> > kernel, but in vain.  And now it was confirmed that the problem is
+> > present with the latest 5.1-rc, too.
+> >
+> > I put some people who might have interest and the reporter (Michael)
+> > to Cc.  If anyone has an idea, feel free to join to the Bugzilla, or
+> > let me know if any help needed from the distro side.
+>
+> Since it exists in 5.1-rcX also it would be good if someone
+> who see the problem (Michael?) could bisect it.
