@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60443C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C06AC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30DE62087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89BC2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="bCja6Qsa"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="QBxjZ6/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfD2Hxp (ORCPT
+        id S1727590AbfD2HyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:53:45 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42340 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfD2Hxp (ORCPT
+        Mon, 29 Apr 2019 03:54:06 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34007 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfD2HyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:53:45 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p20so10867424qtc.9;
-        Mon, 29 Apr 2019 00:53:44 -0700 (PDT)
+        Mon, 29 Apr 2019 03:54:06 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j6so10935809qtq.1;
+        Mon, 29 Apr 2019 00:54:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5t3ha+L/fYSXvu7o0ySbyVykauyPN6EAUxnPIHb4CJ0=;
-        b=bCja6QsaoKBuddwyLN7Ymwyx1swIpERjorOwhUMNvQjppCPYWWn45unKFCXWw6v8NV
-         tLMMy49XYA18pN+j2THaZlgHJgmRrmkZtLeKXFb2yDOhxo0pzsV/rC6ZTN5nUPEmrvxw
-         H8Inbo6e5paggfmsXww73Z3oLs2/WZaWoI3H4=
+        bh=KWgCkKPfgLe0gODXDRVabcCo8RdveLj5EodL4BepQwo=;
+        b=QBxjZ6/oxpq6tExNEmdlt5qqmHZSVRrvHDTc+7z7QFME9MlAxao2y0Mf3fgL3QOvUn
+         3ojdnuE2FRclx7G+rgsgtX3VxxZKTU8/OUyHqQ7s87OLiGU3feI17TVpZJSZHtNF6M/Y
+         OPlvuHIJCVasxqLTvKkkAhRm+bN9gyfTk/0hk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5t3ha+L/fYSXvu7o0ySbyVykauyPN6EAUxnPIHb4CJ0=;
-        b=qQ+7vR21KfKmI0WBIDJLHVB8lA2pj6nng01elu+QWfcW6JkJg4oCbDvXdSmPzikSUZ
-         MdrLeQQGO35Kj6g+dUH6e+wGx1E/Fa58/VzwDM45gfr+i4hV7x8x0aluaowl2JYlgcyn
-         lweXqLjgyd6FAwBSom4Ke3zEmymM4sbeNYNLzd7Hmux5V+S38h2evnRc6WdIZlqNnFCB
-         KY8yzSWdIwO//OGpJM+b5CCKWvUb4xK6U/PiwZpoIkfOfO5zJl77sKxp4q9aElJ7ypM7
-         415yrMScDFG4PJg9ivxNXsvyUxLdTUG47PfU1lypSfMH0KmlhHDpC+OWR5rDXsNRR2Q0
-         pE3g==
-X-Gm-Message-State: APjAAAXZ6I/n/8ffJP9IHks2wJLNyBOeDrzdyL2AHewpLW5ZbBKUCPbU
-        Aoo0OjGDXoy2Pik52ZSiJBPUZNgjSBkMgajFqUs=
-X-Google-Smtp-Source: APXvYqx48H9AYPZuMFrqfPObYS55llABgvbLwiFiYW98pm7xlm9uxMeurzruoh/LKxJaOVfxTRXM1+nMdxblh/TRCwg=
-X-Received: by 2002:ac8:169b:: with SMTP id r27mr33552179qtj.235.1556524424431;
- Mon, 29 Apr 2019 00:53:44 -0700 (PDT)
+        bh=KWgCkKPfgLe0gODXDRVabcCo8RdveLj5EodL4BepQwo=;
+        b=Jf+jmkLp4pqTDnsTfuwx18ayUZtZZpjtC52hyTFCcAHe19et5UEY3ewyuNXRuZO1+E
+         kQvqlkcVTERvCm6cmInOpVyHysaqwHhH4IY4JsdFZ4fxJz6Sm1/a/7ZlG9LeoUKSDcrD
+         3sL4dReBPjPfwIyhQivcqO4jLhG6orDQ81fEYcf5cPjltrb6kYYASazdK2ghdktCr8o5
+         2JHF5DpAO4v0yYvCMHXaD6NWqaz9hJoL8roGLfbtcdfuihRLm7ZibADaV3D1G30W/3RW
+         59WwKbkZt+M7OrxwUPDJ4G66ZzomFnR+5qlFY5GUf4Iko1DtL+hsVXPtoX6f76eHNqbn
+         5Q/A==
+X-Gm-Message-State: APjAAAVZSLkj/ifAXQGMH+FwHDiZRTK4Ov8UJbewt1c8RVljd1ZFJLYS
+        ceeuFMx14yb6MT6mzou19OhYbke1ZHUS5EHPZ0E=
+X-Google-Smtp-Source: APXvYqzuweVqEIbGAUxpYzmfY5Jlihfnu2PP5Rq/2cEC87hGr9WIb/S7SiEJVR+p6CHs6sv5l0jiC6+WCcgT8ud376E=
+X-Received: by 2002:ac8:2565:: with SMTP id 34mr49117430qtn.37.1556524445302;
+ Mon, 29 Apr 2019 00:54:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190425194903.144569-1-venture@google.com>
-In-Reply-To: <20190425194903.144569-1-venture@google.com>
+References: <20190425194853.140617-1-venture@google.com>
+In-Reply-To: <20190425194853.140617-1-venture@google.com>
 From:   Joel Stanley <joel@jms.id.au>
-Date:   Mon, 29 Apr 2019 07:53:31 +0000
-Message-ID: <CACPK8XeDS0RfF1SSTuFbSoO9a7N6qDZShovj5yF56Pc9PA6nDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: quanta-q71: Enable p2a node
+Date:   Mon, 29 Apr 2019 07:53:53 +0000
+Message-ID: <CACPK8XchRsfJkB_p07g6LOyakaq8XH9yM3ve9annfNTTkGY4rg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: aspeed: Add aspeed-p2a-ctrl node
 To:     Patrick Venture <venture@google.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -70,10 +70,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019 at 19:49, Patrick Venture <venture@google.com> wrote:
+On Thu, 25 Apr 2019 at 19:48, Patrick Venture <venture@google.com> wrote:
 >
-> Enable the aspeed-p2a-ctrl node and configure with memory-region to
-> enable mmap access.
+> Add a node for the aspeed-p2a-ctrl module.  This node, when enabled will
+> disable the PCI-to-AHB bridge and then allow control of this bridge via
+> ioctls, and access via mmap.
 >
 > Signed-off-by: Patrick Venture <venture@google.com>
 
