@@ -2,156 +2,100 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD58C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3CBC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E09215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:36:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSUobK+D"
+	by mail.kernel.org (Postfix) with ESMTP id 9D281215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbfD2UgF (ORCPT
+        id S1729419AbfD2Ugf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:36:05 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37540 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729212AbfD2UgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:36:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so5722592pgc.4;
-        Mon, 29 Apr 2019 13:36:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aQaqg8n11LTvm5vgZKeyx2tFWtUvX340MWVQ2ZQAFyA=;
-        b=dSUobK+DXRH2sVOu2iXMR7VH8/2LlmUWaaSBlNYC/HoBob4bkwOICX7x0L5u8OcVGs
-         arARjMKqkDrnYnhAIGvrjfBvrPpdyld6LvAI4VQjZ90R0Xrye0Ya1OKK6Z9exyLMJba4
-         TYDOxRi77m6PVr6DGpaBkcCK+tAha+SdZgojzP02XWfZUDoFX057IT1yxXA/XEhFI9Zs
-         7GKGFh/FghRXDKxeFFuj3kFX51qWBds2B2pWqPzHfQ8RgERAfVhvPINDnyD9b6GtUw2m
-         ttw/SwL26MQIhDo7ppOiUJ78wuDkGVVIYkIW4J/kbOTXe/FRIVC/tFoUeZb1dQQNnPRx
-         m2mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aQaqg8n11LTvm5vgZKeyx2tFWtUvX340MWVQ2ZQAFyA=;
-        b=T/tENgSC5XaVxKsVTVPVJsOXhswZCQ5xnUuG7/mtj3g97+58/ENJeuwzg0J9SS4ZJ8
-         b3H/wK5DCgHdHCOXP1Tb5K80EHt2kI771gVD4EEUuojbnhax7cGepv2nNJdHmomB+J94
-         YRx17+Pxxn9WAGrGTwgl8PLOjaZeEcZU/mURVueGrQGIfku/Qv9EnMFyqlSPF4eZpbXC
-         ykW68dtKbIhef0zkcIdgUdxTJ5s8qMtj6a/WfWnagMnfnPAzLEVNQUnQkhw8TOt+9Yb8
-         kEPksLzypROfvSkQQhYSrS5jvJtaR3N1ojCviuLRn7xkqi8YE+UkaX1WdL54g62WDzgp
-         ELBg==
-X-Gm-Message-State: APjAAAUwLJzIDdJKSy9dmUs3BX5D48RWGN4ZI4wQDd8Hzqyp1/YGra5n
-        6EYtCRT9FrBuPY5FuRglO0k=
-X-Google-Smtp-Source: APXvYqyLz79xpU6eXxb4s9kzibnGWdrYGDGhHrxCft7BF2L8e4wizIhUij9qgmEpkioHa+USqjfHiA==
-X-Received: by 2002:a63:6b08:: with SMTP id g8mr61481224pgc.211.1556570163738;
-        Mon, 29 Apr 2019 13:36:03 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e186sm4104197pfa.150.2019.04.29.13.36.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 13:36:02 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 13:36:01 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-pm@vger.kernel.org,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] power: supply: Add driver for Microchip UCS1002
-Message-ID: <20190429203601.GA22613@roeck-us.net>
-References: <20190429195349.20335-1-andrew.smirnov@gmail.com>
- <20190429195349.20335-3-andrew.smirnov@gmail.com>
+        Mon, 29 Apr 2019 16:36:35 -0400
+Received: from mga02.intel.com ([134.134.136.20]:31871 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729212AbfD2Ugf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 16:36:35 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 13:36:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,411,1549958400"; 
+   d="scan'208";a="169068219"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 29 Apr 2019 13:36:31 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 29 Apr 2019 23:36:30 +0300
+Date:   Mon, 29 Apr 2019 23:36:30 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Michael Hirmke <opensuse@mike.franken.de>
+Cc:     bhelgaas@google.com, gregkh@linuxfoundation.org, jslaby@suse.cz,
+        linux-kernel@vger.kernel.org, lukas@wunner.de, tiwai@suse.de,
+        Christian Kellner <ckellner@redhat.com>
+Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and
+ thunderbolt)
+Message-ID: <20190429203630.GW2583@lahna.fi.intel.com>
+References: <20190429195459.GU2583@lahna.fi.intel.com>
+ <EkoOCx3N6GB@mike.franken.de>
+ <20190429201347.GV2583@lahna.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429195349.20335-3-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190429201347.GV2583@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 12:53:48PM -0700, Andrey Smirnov wrote:
-> Add driver for Microchip UCS1002 Programmable USB Port Power
-> Controller with Charger Emulation. The driver exposed a power supply
-> device to control/monitor various parameter of the device as well as a
-> regulator to allow controlling VBUS line.
+On Mon, Apr 29, 2019 at 11:13:47PM +0300, Mika Westerberg wrote:
+> On Mon, Apr 29, 2019 at 10:03:00PM +0200, Michael Hirmke wrote:
+> > Hi all,
+> > 
+> > >On Mon, Apr 29, 2019 at 09:47:15PM +0200, Takashi Iwai wrote:
+> > >> Hi,
+> > 
+> > >Hi,
+> > 
+> > >> we've got a regression report wrt xhci_hcd and thunderbolt on a Dell
+> > >> machine.  5.0.7 is confirmed to work, so it must be a regression
+> > >> introduced by 5.0.8.
+> > >>
+> > >> The details are found in openSUSE Bugzilla entry:
+> > >>   https://bugzilla.opensuse.org/show_bug.cgi?id=1132943
+> > >>
+> > [...]
+> > >>
+> > >> I blindly suspected the commit 3943af9d01e9 and asked for a reverted
+> > >> kernel, but in vain.  And now it was confirmed that the problem is
+> > >> present with the latest 5.1-rc, too.
+> > >>
+> > >> I put some people who might have interest and the reporter (Michael)
+> > >> to Cc.  If anyone has an idea, feel free to join to the Bugzilla, or
+> > >> let me know if any help needed from the distro side.
+> > 
+> > >Since it exists in 5.1-rcX also it would be good if someone
+> > >who see the problem (Michael?) could bisect it.
+> > 
+> > I know the meaning of bisecting, but I'm not really a developer, so I am
+> > probably not able to interpret the results.
 > 
-> Signed-off-by: Enric Balletbo Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> ---
->  drivers/power/supply/Kconfig         |   9 +
->  drivers/power/supply/Makefile        |   1 +
->  drivers/power/supply/ucs1002_power.c | 646 +++++++++++++++++++++++++++
->  3 files changed, 656 insertions(+)
->  create mode 100644 drivers/power/supply/ucs1002_power.c
+> No worries. 
 > 
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index e901b9879e7e..c614c8a196f3 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -660,4 +660,13 @@ config FUEL_GAUGE_SC27XX
->  	 Say Y here to enable support for fuel gauge with SC27XX
->  	 PMIC chips.
->  
-> +config CHARGER_UCS1002
-> +        tristate "Microchip UCS1002 USB Port Power Controller"
-> +	depends on I2C
-> +	depends on OF
-> +	select REGMAP_I2C
-> +	help
-> +	  Say Y to enable support for Microchip UCS1002 Programmable
-> +	  USB Port Power Controller with Charger Emulation.
-> +
->  endif # POWER_SUPPLY
-> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> index b731c2a9b695..c56803a9e4fe 100644
-> --- a/drivers/power/supply/Makefile
-> +++ b/drivers/power/supply/Makefile
-> @@ -87,3 +87,4 @@ obj-$(CONFIG_AXP288_CHARGER)	+= axp288_charger.o
->  obj-$(CONFIG_CHARGER_CROS_USBPD)	+= cros_usbpd-charger.o
->  obj-$(CONFIG_CHARGER_SC2731)	+= sc2731_charger.o
->  obj-$(CONFIG_FUEL_GAUGE_SC27XX)	+= sc27xx_fuel_gauge.o
-> +obj-$(CONFIG_CHARGER_UCS1002)	+= ucs1002_power.o
-> diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/ucs1002_power.c
-> new file mode 100644
-> index 000000000000..677f20a4d76f
-> --- /dev/null
-> +++ b/drivers/power/supply/ucs1002_power.c
-> @@ -0,0 +1,646 @@
-...
-> +
-> +static enum power_supply_usb_type ucs1002_usb_types[] = {
-> +	POWER_SUPPLY_USB_TYPE_PD,
-> +	POWER_SUPPLY_USB_TYPE_SDP,
-> +	POWER_SUPPLY_USB_TYPE_DCP,
-> +	POWER_SUPPLY_USB_TYPE_CDP,
-> +	POWER_SUPPLY_USB_TYPE_UNKNOWN,
-> +};
-> +
-> +static int ucs1002_set_usb_type(struct ucs1002_info *info, int val)
-> +{
-> +	unsigned int mode;
-> +
-> +	if (val >= ARRAY_SIZE(ucs1002_usb_types))
-> +		return -EINVAL;
-> +
-I hate to bring it up that late, but I don't see a check
-against val being negative anywhere in the calling code.
+> I'm adding Christian who reported similar (same?) problem last week.
+> Christian, this seems to exist in v5.1-rc6 at least. Can you try to
+> bisect it on your side?
+> 
+> I also have XPS 9370 but not that particular dock. I will check tomorrow
+> if I can reproduce it as well.
 
-Guenter
+There aren't too many changes between 5.0.7 and 5.0.8 that touch
+PCI/ACPI. This is just a shot in the dark but could you try to revert:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.0.y&id=da6a87fb0ad43ae811519d2e0aa325c7f792b13a
+
+and see if it makes any difference?
