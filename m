@@ -2,65 +2,85 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D89C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404C8C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3677E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A73C2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfD2NNX (ORCPT
+        id S1728150AbfD2NNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52562 "EHLO mail.kernel.org"
+        Mon, 29 Apr 2019 09:13:47 -0400
+Received: from mga07.intel.com ([134.134.136.100]:61113 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2NNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:13:22 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C5C204EC;
-        Mon, 29 Apr 2019 13:13:21 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 09:13:20 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Yue Haibing <yuehaibing@huawei.com>, sergey.senozhatsky@gmail.com,
-        andriy.shevchenko@linux.intel.com, geert+renesas@glider.be,
-        me@tobin.cc, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH -next] lib/vsprintf: Make function pointer_string static
-Message-ID: <20190429091320.019e726b@gandalf.local.home>
-In-Reply-To: <20190429110801.awvdxawpee3sxujs@pathway.suse.cz>
-References: <20190426164630.22104-1-yuehaibing@huawei.com>
-        <20190426130204.23a5a05c@gandalf.local.home>
-        <20190429110801.awvdxawpee3sxujs@pathway.suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725838AbfD2NNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:13:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 06:13:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
+   d="scan'208";a="165912751"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Apr 2019 06:13:44 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hL66J-0008BA-M6; Mon, 29 Apr 2019 16:13:43 +0300
+Date:   Mon, 29 Apr 2019 16:13:43 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        hotwater438@tutanota.com, hdegoede@redhat.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: intel: Clear interrupt status in unmask callback
+Message-ID: <20190429131343.GC9224@smile.fi.intel.com>
+References: <20190422044539.16085-1-kai.heng.feng@canonical.com>
+ <20190426214758.GC9224@smile.fi.intel.com>
+ <6BCF9C55-E365-4638-8030-99EBA348F8D4@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6BCF9C55-E365-4638-8030-99EBA348F8D4@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 13:08:01 +0200
-Petr Mladek <pmladek@suse.com> wrote:
+On Mon, Apr 29, 2019 at 05:16:16PM +0800, Kai-Heng Feng wrote:
+> at 05:47, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Apr 22, 2019 at 12:45:39PM +0800, Kai-Heng Feng wrote:
+> > > Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
+> > > added because clearing interrupt status bit is required to avoid
+> > > unexpected behavior.
+> > > 
+> > > Turns out the unmask callback also needs the fix, which can solve weird
+> > > IRQ triggering issues on I2C touchpad ELAN1200.
 
-> > Looks like commit "vsprintf: Do not check address of well-known
-> > strings" removed the: "static noinline_for_stack"
-> > 
-> > Does pointer_string() need that still?  
+> > Is it possible scenario when IRQ enable is called, but not masking
+> > callbacks?
+> > For _AEI or GPE?
 > 
-> Heh, it was removed by mistake and well hidden in the diff.
-> 
-> I have pushed Yue's fix into printk.git, branch
-> for-5.2-vsprintf-hardening
-> 
-> Thanks for the patch.
+> I am unfamiliar with both of them, what are the callbacks to be used for
+> _AEI and GPE case?
+> Seems like both gpiolib and irqchip call irq_unmask() when irq_enable() is
+> absent.
 
-But doesn't it still need the "noinline_for_stack", that doesn't look
-like it changed.
+Yes, that's correct, thank you for double checking.
 
--- Steve
+ * @irq_enable:         enable the interrupt (defaults to chip->unmask if NULL)
+
+
+Wait for v2 with mentioned earlier changes and gathered tags.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
