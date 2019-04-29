@@ -2,149 +2,224 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE54C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969D9C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1229215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:29:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556562568;
-	bh=YhLvJQMwP9dTUJ6EKowj9rAtpZqsG1brQtu+b1PS7JY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Mu4yDSjUfDv31yp2EEw2xrgtBjh7lltRL8T5XpGAYc/yknAkF0+7vWCiK0vzlCjeZ
-	 330k8wzhUK4TlaNsy85xBs9Kh6VqclYwfwv7FEmL3Z8s0mzrTraVMu+sIJPq7gPPbF
-	 kiUcsLiJwdd6abcT2koZ/GWeo1kni0G9+4iDqOgs=
+	by mail.kernel.org (Postfix) with ESMTP id 5A49C215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C72veEyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbfD2S30 (ORCPT
+        id S1729101AbfD2S3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:29:26 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35221 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728962AbfD2S30 (ORCPT
+        Mon, 29 Apr 2019 14:29:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36805 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728962AbfD2S3v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:29:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z26so10335649ljj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:29:24 -0700 (PDT)
+        Mon, 29 Apr 2019 14:29:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o4so5539748wra.3;
+        Mon, 29 Apr 2019 11:29:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=liktUAQ84meAwYxARrOaB57hFmqHknre6y7TLap/pyw=;
-        b=TlX1vlaNRutHcVL0zAHMii8+n9hCbC2fIKsPMUSq4g7TknK8mmi/6eY9keIz02Ws6a
-         0sxXLjiXKqUe5nVD8Hq9h6XVk1mWLMo7lAqkO0QgXrp0M7JguoB/2YMziFqvFKujU3CI
-         Oo2bSTLegqzhOQTgHMmIMbR2g7S9IuZHsXaQU=
+        bh=BFZmWgLdy4ykcNe/TIuE4Y6yUre/3XY2vSeqK8r6OmY=;
+        b=C72veEyoMpx+St4h0M0XyY/oHvtg3/QKE7xADm0qC7WtPJ1GOYmG6f5+jtDIQZFHTh
+         B0MMyqO/CLpT13RWG9qjH4pstogDv5rfFHpX/fc6SNI4KMDzbu3pjD0ytWp0Kv34tfiV
+         yErfC9z4Mtmpv8vfeZDgPK3a74It8J3zGFBLoJ+aVe+MMn0VwzKvogm3Wwc5VZ7jNwz5
+         mLC2EzGhQ78dbteiRSu7BtdHL5Abpsp962YvAsv9vFczxz23jXOjnKzLE6XmaccVtrAf
+         MJzZU2mzqpRrjr/fvKNCuvj6+n30lvXvCVJXatigwe8T+I/KJFEj4G9HyCD5bPp15iwj
+         zuAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=liktUAQ84meAwYxARrOaB57hFmqHknre6y7TLap/pyw=;
-        b=BKQkHtlkRw/m6jtICj4m9ajZl3TSKIhkm1sEFoMCuE1g0P+3t7+qJMPW9+Qpy/hpzm
-         DLl5z20xYrH+gNX56GwCwC4KPPmZzktzARRPltdTha1Mp0A8Fe/hX6tq4ebXjTCzoVZc
-         nCLPTcw1x1xmPNdsXHb6OUKqH+Nd7W308cRezm0dY9lHWsc28jIXO8415qkvXkqnCDb/
-         s+12GgxuAF3u/2O9LkHsgr9oKd9b1pr64T2/Pir4Vx+KLfrWyXF7z0XqtJV1Rpd2COsi
-         N/rid6QKkHNNvcdcrG1v6ReWNkLa5vGRfHdeNspGjP0tVDud1/s7trFK0LAUZ+0VDRhW
-         hPGw==
-X-Gm-Message-State: APjAAAV1AGpJYoYrrtAasfJz+R1HEVpnp/Q3DY7figdxZ2q1GDq8pPMx
-        x/V6qaZfcboud7w0iEstA/jYHbKVfdE=
-X-Google-Smtp-Source: APXvYqwBLABNWG6bCbfi6iWIT6ywCZdwik8iQN4+FgMnTod0yTZOpIOZzaTVc+DP9N9JtL+iDoizwQ==
-X-Received: by 2002:a2e:8693:: with SMTP id l19mr32985699lji.47.1556562563537;
-        Mon, 29 Apr 2019 11:29:23 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id h6sm7368659lfp.1.2019.04.29.11.29.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 11:29:23 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id m18so5688225lje.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:29:23 -0700 (PDT)
-X-Received: by 2002:a2e:9ac8:: with SMTP id p8mr30224042ljj.79.1556562187132;
- Mon, 29 Apr 2019 11:23:07 -0700 (PDT)
+        bh=BFZmWgLdy4ykcNe/TIuE4Y6yUre/3XY2vSeqK8r6OmY=;
+        b=YPwj4Cqna5wrFF8sDISg3kxeG2Ov8z68pZ951rzyS6nGM5H8KwwHEjx9Hgj5kaJY0t
+         qwAHTeBpdbXGzMp3HiT6yKbAAnfEXV1oMGLbIgR2Lb1/jp070ZT5+/Y/V+r1YowBxv8y
+         9LeYVqhUY0ZIUQ9oukJJGe9wnbku1rX7+3EHUveI5iO/FasEvxL0EVvz/gZATuYeBY8/
+         Iv73aIo3rhHvh+zkQTz5iKKN8lV+AtVlcbGzebz6fjrPuV2VqZoUrLp3MRA1NRRr0mBY
+         WvRzopHchxCFBD4roI8j8PCKWtXaTJmQppx2oEciWzR/rGdfZfQTbO+mscUgEaJgr8q2
+         uRZw==
+X-Gm-Message-State: APjAAAVCeMyvuYdcu7tLRAjs0JitjCsWuCblHTon9BRkDkZ/Km0ckF+T
+        nNkGChfyDUcbsLrLP3QrifpQ/GSWbgUba9c1WjAmPxseaGc=
+X-Google-Smtp-Source: APXvYqxvFR2auxcmCUH1Vm273Y/vIr6fBoELXmpxpTYxXcxpaFZEpqxSViNim2HjoPBUi+Lwvx3Z+0sWkGhb6aGz5tk=
+X-Received: by 2002:adf:cc8a:: with SMTP id p10mr257791wrj.34.1556562589013;
+ Mon, 29 Apr 2019 11:29:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
- <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
- <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
-In-Reply-To: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 11:22:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
-Message-ID: <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+References: <20190426212112.5624-1-fancer.lancer@gmail.com>
+ <20190426212112.5624-2-fancer.lancer@gmail.com> <20190426214631.GV4041@lunn.ch>
+ <20190426233511.qnkgz75ag7axt5lp@mobilestation> <f27df721-47aa-a708-aaee-69be53def814@gmail.com>
+In-Reply-To: <f27df721-47aa-a708-aaee-69be53def814@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 29 Apr 2019 21:29:37 +0300
+Message-ID: <CA+h21hpTRCrD=FxDr=ihDPr+Pdhu6hXT3xcKs47-NZZZ3D9zyg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] net: phy: realtek: Change TX-delay setting for
+ RGMII modes only
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 11:06 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Mon, 29 Apr 2019 at 20:39, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 4/26/19 4:35 PM, Serge Semin wrote:
+> > On Fri, Apr 26, 2019 at 11:46:31PM +0200, Andrew Lunn wrote:
+> >> On Sat, Apr 27, 2019 at 12:21:12AM +0300, Serge Semin wrote:
+> >>> It's prone to problems if delay is cleared out for other than RGMII
+> >>> modes. So lets set/clear the TX-delay in the config register only
+> >>> if actually RGMII-like interface mode is requested.
+> >>>
+> >>> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> >>>
+> >>> ---
+> >>>  drivers/net/phy/realtek.c | 16 ++++++++++++----
+> >>>  1 file changed, 12 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+> >>> index ab567a1923ad..a18cb01158f9 100644
+> >>> --- a/drivers/net/phy/realtek.c
+> >>> +++ b/drivers/net/phy/realtek.c
+> >>> @@ -163,16 +163,24 @@ static int rtl8211c_config_init(struct phy_device *phydev)
+> >>>  static int rtl8211f_config_init(struct phy_device *phydev)
+> >>>  {
+> >>>     int ret;
+> >>> -   u16 val = 0;
+> >>> +   u16 val;
+> >>>
+> >>>     ret = genphy_config_init(phydev);
+> >>>     if (ret < 0)
+> >>>             return ret;
+> >>>
+> >>> -   /* enable TX-delay for rgmii-id and rgmii-txid, otherwise disable it */
+> >>> -   if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+> >>> -       phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
+> >>> +   /* enable TX-delay for rgmii-id/rgmii-txid, and disable it for rgmii */
+> >>> +   switch (phydev->interface) {
+> >>> +   case PHY_INTERFACE_MODE_RGMII:
+> >>> +           val = 0;
+> >>> +           break;
+> >>> +   case PHY_INTERFACE_MODE_RGMII_ID:
+> >>> +   case PHY_INTERFACE_MODE_RGMII_TXID:
+> >>>             val = RTL8211F_TX_DELAY;
+> >>> +           break;
+> >>> +   default: /* the rest of the modes imply leaving delay as is. */
+> >>> +           return 0;
+> >>> +   }
+> >>
+> >> So there is no control of the RX delay?
+> >>
+> >
+> > As you can see it hasn't been there even before this change. So I suppose
+> > either the hardware just doesn't support it (although the openly available
+> > datasheet states that there is an RXD pin) or the original driver developer
+> > decided to set TX-delay only.
+> >
+> > Just to make sure you understand. I am not working for realtek and don't
+> > posses any inside info regarding these PHYs. I was working on a project,
+> > which happened to utilize a rtl8211e PHY. We needed to find a way to
+> > programmatically change the delays setting. So I searched the Internet
+> > and found the U-boot rtl8211f driver and freebsd-folks discussion. This
+> > info has been used to write the config_init method for Linux version of the
+> > PHY' driver. That's it.
+> >
+> >> That means PHY_INTERFACE_MODE_RGMII_ID and
+> >> PHY_INTERFACE_MODE_RGMII_RXID are not supported, and you should return
+> >> -EINVAL.
+> >>
+> >
+> > Apparently the current config_init method doesn't support RXID setting.
+> > The patch introduced current function code was submitted by
+> > Martin Blumenstingl in 2016:
+> > https://patchwork.kernel.org/patch/9447581/
+> > and was reviewed by Florian. So we'd better ask him why it was ok to mark
+> > the RGMII_ID as supported while only TX-delay could be set.
+> > I also failed to find anything regarding programmatic rtl8211f delays setting
+> > in the Internet. So at this point we can set TX-delay only for f-model of the PHY.
+> >
+> > Anyway lets clarify the situation before to proceed further. You are suggesting
+> > to return an error in case if either RGMII_ID or RGMII_RXID interface mode is
+> > requested to be enabled for the PHY. It's fair seeing the driver can't fully
+> > support either of them.
+>
+> That is how I read Andrew's suggestion and it is reasonable. WRT to the
+> original changes from Martin, he is probably the one you would want to
+> add to this conversation in case there are any RX delay control knobs
+> available, I certainly don't have the datasheet, and Martin's change
+> looks and looked reasonable, seemingly independent of the direction of
+> this very conversation we are having.
+>
+> But what about the rest of the modes like GMII, MII
+> > and others?
+>
+> The delays should be largely irrelevant for GMII and MII, since a) the
+> PCB is required to have matching length traces, and b) these are not
+> double data rate interfaces
+>
+> > Shouldn't we also return an error instead of leaving a default
+> > delay value?
+>
+> That seems a bit harsh, those could have been configured by firmware,
+> whatever before Linux comes up and be correct and valid. We don't know
+> of a way to configure it, but that does not mean it does not exist and
+> some software is doing it already.
+>
+> >
+> > The same question can be actually asked regarding the config_init method of
+> > rtl8211e PHY, which BTW you already tagged as Reviewed-by.
+> >
+> >> This is where we get into interesting backwards compatibility
+> >> issues. Are there any broken DT blobs with rgmii-id or rgmii-rxid,
+> >> which will break with such a change?
+> >>
+> >
+> > Not that I am aware of and which simple grep rtl8211 could find. Do you
+> > know about one?
+> >
+> > -Sergey
+> >
+> >>      Andrew
 >
 >
-> It does *not* emulate the "call" in the BP handler itself, instead if
-> replace the %ip (the same way all the other BP handlers replace the
-> %ip) with a code sequence that just does
->
->         push %gs:bp_call_return
->         jmp *%gs:bp_call_target
->
-> after having filled in those per-cpu things.
+> --
+> Florian
 
-Note that if you read the patch, you'll see that my explanation
-glossed over the "what if an interrupt happens" part. Which is handled
-by having two handlers, one for "interrupts were already disabled" and
-one for "interrupts were enabled, so I disabled them before entering
-the handler".
+There seems to be some confusion here.
+The "normal" RTL8211F has RXDLY and TXDLY configurable only via pin
+strapping (pull-up/pull-down), not via MDIO.
+The "1588-capable" RTL8211FS has RXDLY configurable via pin strapping
+(different pin than the regular 8211F) and TXDLY via page 0xd08,
+register 17, bit 8.
+I think setting the Tx delay via MDIO for the normal RTL8211F is snake oil.
+Disclaimer: I don't work for Realtek either, so I have no insight on
+why it is like that.
+From Linux' point of view, there are two aspects:
+* Erroring out now will likely just break something that was working
+(since it was relying on hardware strapping and the DT phy-mode
+property was more or less informative).
+* Arguably what is wrong here is the semantics of the phy-mode
+bindings for RGMII. It gets said a lot that DT means "hardware
+description", not "hardware configuration". So having said that, the
+correct interpretation of phy-mode = "rgmii-id" is that the operating
+system is informed that RGMII delays were handled in both directions
+(either the PHY was strapped, or PCB traces were lengthened). But the
+current meaning of "rgmii-id" in practice is an imperative "PHY
+driver, please apply delays in both directions" (or MAC driver, if
+it's fixed-link).
 
-The second handler does the same push/jmp sequence, but has a "sti"
-before the jmp. Because of the one-instruction sti shadow, interrupts
-won't actually be enabled until after the jmp instruction has
-completed, and thus the "push/jmp" is atomic wrt regular interrupts.
-
-It's not safe wrt NMI, of course, but since NMI won't be rescheduling,
-and since any SMP IPI won't be punching through that sequence anyway,
-it's still atomic wrt _another_ text_poke() attempt coming in and
-re-using the bp_call_return/tyarget slots.
-
-So yeah, it's not "one-liner" trivial, but it's not like it's
-complicated either, and it actually matches the existing "call this
-code to emulate the replaced instruction". So I'd much rather have a
-couple of tens of lines of code here that still acts pretty much
-exactly like all the other rewriting does, rather than play subtle
-games with the entry stack frame.
-
-Finally: there might be other situations where you want to have this
-kind of "pseudo-atomic" replacement sequence, so I think while it's a
-hack specific to emulating a "call" instruction, I don't think it is
-conceptually limited to just that case.
-
-                 Linus
+Thanks,
+-Vladimir
