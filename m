@@ -2,179 +2,87 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6612AC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E27C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7C821530
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556560227;
-	bh=yxChAYiU/YL3D5H4BnSnqXUynWtFGwWprVZ0YhYmTGk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZiUyOobOmvtmHDW33XNJy5OzjQkCtn0T4TKqMT5ITDYhWy5fd/hY/zm4XuEVipa3V
-	 olVP0zamJ2FJjeofvhb5vkAlCRiW5EaGbTQWXwXAYNGLXszhQEncLWlfPjtJj8+h0r
-	 kEZKaWaSGI6ZiG5CyVk2w238Rg3ovnNDle/ZYCqI=
+	by mail.kernel.org (Postfix) with ESMTP id E162B2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfD2Ru0 (ORCPT
+        id S1728952AbfD2Rv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbfD2RuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:50:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D5E32087B;
-        Mon, 29 Apr 2019 17:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556560224;
-        bh=yxChAYiU/YL3D5H4BnSnqXUynWtFGwWprVZ0YhYmTGk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oywe6CyITKsV6cgAiskNlTfC8QbsQ0ol7Rb6n81m6wATNA5YKA4uMkouLC9c1ItHG
-         9jySRzfKSKhvCZj2aqLPpMuVy+fJWHcPxD1wtIAGHlc3HmrwtZ96k3EZbpffBAJOsT
-         o7Ctm3ss4HaqHhH7QUIrNaAz7PVlurJFUb98dRFc=
-Date:   Mon, 29 Apr 2019 19:50:22 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        davem@davemloft.net, alexander.deucher@amd.com,
-        tsoni@codeaurora.org, psodagud@codeaurora.org,
-        jshriram@codeaurora.org, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] driver core: platform: Fix the usage of platform device
- name(pdev->name)
-Message-ID: <20190429175022.GB21757@kroah.com>
-References: <1555978589-4998-1-git-send-email-vnkgutta@codeaurora.org>
- <CAJKOXPeCPWPdE1d3EYr4bD1hLMRDXohaz-7yrmk_R-V6ZD6rhQ@mail.gmail.com>
+        Mon, 29 Apr 2019 13:51:59 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:60255 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728877AbfD2Rv6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 13:51:58 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MKbXu-1h4jWO3fyu-00Kxe6; Mon, 29 Apr 2019 19:51:44 +0200
+Subject: Re: linux-next: Tree for Apr 29 (drivers/leds/leds-turris-omnia)
+To:     Pavel Machek <pavel@ucw.cz>, Marek Behun <marek.behun@nic.cz>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
+References: <20190429190354.0d5e2e93@canb.auug.org.au>
+ <d3822785-0683-28df-ffa6-ab679aa27c73@infradead.org>
+ <20190429153200.GA11761@amd> <20190429173842.06f02852@nic.cz>
+ <20190429163753.GA16782@amd> <20190429184439.68049050@nic.cz>
+ <20190429165319.GB16782@amd>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <c045db7f-2147-1a58-8d65-8b52fddd932c@metux.net>
+Date:   Mon, 29 Apr 2019 19:51:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPeCPWPdE1d3EYr4bD1hLMRDXohaz-7yrmk_R-V6ZD6rhQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190429165319.GB16782@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:g+r0ZhlbwROpeWoU6iGoaXxinnfCyiPF0qlNNExijXz02hsryGK
+ faUPZl9mJ+r6hiIt6z8DuwE/pIFjHKplJD5LSyOqL8BoCeklQg39uimKMjXhzXWE9ye39Lm
+ +akXtpFesXmnuTj2GCWRNtJMemhEpgY4F/P5rAWlm0/eL0PMxzDSbs0riKjA7fUaIblipQi
+ KTEhWu0u3XXILISzelPmg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W5zUZ1YphWI=:xM28DrNPgTERo4NJdBAdHC
+ loEfzVq5Oq2/x2KjsZGFjd2fDDluxaQ0abqE1u1vPfonJYleXxTqcME3pYB4/ZG8e/H6a8mpV
+ ut6nxYUKXiI4rFsc0PtnIbYIYpZn6gG765/fhiWcwYdgDYGZaSjwBmb05kwt62jeegOS5hqK1
+ kq2W1vWM/py5cFuCpta9fq03g5Bmej8MEWIPvTh1XbHkAWMm1nlM0/4Mlvr5jOnLU9hX7HVRB
+ i39Gj0IBgIozkAGMu39Um5axvwSP5AaiNOl7Wrv2/H7lYX5nLklJylgn0XHYhQNnEP5c8S1AW
+ uWx95IWwbjPzUnOaol6XWMOZBCfvtk/+zn+R9PXSX15GTm6tgneNetwT33kjmdsECF1/xsz+e
+ V4bhv6BQRxBZmtIJAm9l7IoJ+ZithAHLQ1ISz+Be+OQ16fAslX+NPKQ5GIwbPh8O6Bpj4YtqJ
+ pAysGb8JysKrFC//Hf82eHUmjcWN4BNhwNG4VZA3Wqh3qJ5UeIaB+wMFdPMUbD9pbfDBYWHVl
+ d+OYVJH4E/g6LOAHhMAcrw26bzJY5ToIAzYfAdM9J0qv23lrADTh/QXZA8NypZtZXOKno3bkP
+ WFG/6UH+TmVATU2u2agyeMJ7/uE6NIPu4mkVe6qnNQaaRtPQYE3SqxryT94Yq2ZrLX0UP/s2I
+ I8lIb6tn74qTiWHWmg+pp/tnLfjMebFPEk7Fr4zAR9qHfDpxaWUUHLOXBMk0rr7DkDxNLvtAF
+ dzEudi+TUdMQhitpI5bI6R0t5TYSSCBRURYiIF16kl2CwE3cYcNkO/hhJlkyFWqjVcsdoEiPV
+ uM0XfQkTnrSycl1L1mrdOhX+DZCoAgfN4VImGfqwh8BVLw2ULF+i8rEXvIZCP51wyAWSjDc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 05:07:56PM +0200, Krzysztof Kozlowski wrote:
-> On Tue, 23 Apr 2019 at 05:36, Venkata Narendra Kumar Gutta
-> <vnkgutta@codeaurora.org> wrote:
-> >
-> > Platform core is using pdev->name as the platform device name to do
-> > the binding of the devices with the drivers. But, when the platform
-> > driver overrides the platform device name with dev_set_name(),
-> > the pdev->name is pointing to a location which is freed and becomes
+On 29.04.19 18:53, Pavel Machek wrote:
+>>> Theoretically. But we both now that probability of that is very low,
+>>> and that likely driver would need other updates, too... right?
+>>
+>> What would be the benefit to add ARM dependency? So that distro
+>> compilations don't ship the turris_omnia driver unnecesarily?
 > 
-> If pdev->name is invalid then it should be removed/fixed. Why leaving
-> it pointing to wrong place and changing the users to something else?
-> This looks like either duct-tape for real problem.
-> 
-> > an invalid parameter to do the binding match.
-> >
-> > use-after-free instance:
-> >
-> > [   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
-> > [   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
-> > [   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
-> >                         G S      W  O      4.19.30+ #3
-> > [   33.346835] Hardware name: MTP (DT)
-> > [   33.350419] Call trace:
-> > [   33.352941]  dump_backtrace+0x0/0x3b8
-> > [   33.356713]  show_stack+0x24/0x30
-> > [   33.360119]  dump_stack+0x160/0x1d8
-> > [   33.363709]  print_address_description+0x84/0x2e0
-> > [   33.368549]  kasan_report+0x26c/0x2d0
-> > [   33.372322]  __asan_report_load1_noabort+0x2c/0x38
-> > [   33.377248]  strcmp+0x8c/0xb0
-> > [   33.380306]  platform_match+0x70/0x1f8
-> > [   33.384168]  __driver_attach+0x78/0x3a0
-> > [   33.388111]  bus_for_each_dev+0x13c/0x1b8
-> > [   33.392237]  driver_attach+0x4c/0x58
-> > [   33.395910]  bus_add_driver+0x350/0x560
-> > [   33.399854]  driver_register+0x23c/0x328
-> > [   33.403886]  __platform_driver_register+0xd0/0xe0
-> >
-> > So, use dev_name(&pdev->dev), which fetches the platform device name from
-> > the kobject(dev->kobj->name) of the device instead of the pdev->name.
-> >
-> > Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> > ---
-> >  drivers/base/platform.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index dab0a5a..0e23aa2 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -888,7 +888,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
-> >         if (len != -ENODEV)
-> >                 return len;
-> >
-> > -       len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
-> > +       len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
-> >
-> >         return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
-> >  }
-> > @@ -964,7 +964,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
-> >                 return rc;
-> >
-> >         add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
-> > -                       pdev->name);
-> > +                       dev_name(&pdev->dev));
-> 
-> This is wrong fix and it causes ARM Vexpress board fail to boot under
-> QEMU (but probably in real world as well). The problem is in not
-> mached drivers. For example the pdev->name is "vexpress-syscfg" and
-> dev_name(&pdev->dev) is "vexpress-syscfg.6.auto". The effect - none of
-> AMBA devices are registered, including missing MMC device (mmci.c,
-> arm,pl180).
-> 
-> One can see the error of missing root device:
-> [   13.458982] VFS: Cannot open root device "mmcblk0" or
-> unknown-block(0,0): error -6
-> 
-> ... also before there is a warning like:
-> [    0.285029] ------------[ cut here ]------------
-> [    0.285507] WARNING: CPU: 0 PID: 1 at
-> /home/krzk/dev/yocto-proceq/build/workspace/sources/linux-mainline-next/drivers/bus/vexpress-config.c:183
-> vexpress_config_init+0x90/0xe0
-> [    0.285936] Modules linked in:
-> [    0.286251] CPU: 0 PID: 1 Comm: swapper Tainted: G        W
-> 5.1.0-rc6-next-20190429-g0593ae1f5df5 #27
-> [    0.286507] Hardware name: ARM-Versatile Express
-> [    0.286977] [<8010e05c>] (unwind_backtrace) from [<8010b76c>]
-> (show_stack+0x10/0x14)
-> [    0.287219] [<8010b76c>] (show_stack) from [<8011ac64>] (__warn+0xf8/0x110)
-> [    0.287400] [<8011ac64>] (__warn) from [<8011ad94>]
-> (warn_slowpath_null+0x40/0x48)
-> [    0.287579] [<8011ad94>] (warn_slowpath_null) from [<809151bc>]
-> (vexpress_config_init+0x90/0xe0)
-> [    0.287811] [<809151bc>] (vexpress_config_init) from [<80102710>]
-> (do_one_initcall+0x54/0x1b4)
-> [    0.288014] [<80102710>] (do_one_initcall) from [<80900e84>]
-> (kernel_init_freeable+0x12c/0x1c8)
-> [    0.288214] [<80900e84>] (kernel_init_freeable) from [<80634048>]
-> (kernel_init+0x8/0x110)
-> [    0.288388] [<80634048>] (kernel_init) from [<801010e8>]
-> (ret_from_fork+0x14/0x2c)
-> [    0.288597] Exception stack(0x86835fb0 to 0x86835ff8)
-> [    0.288882] 5fa0:                                     00000000
-> 00000000 00000000 00000000
-> [    0.289193] 5fc0: 00000000 00000000 00000000 00000000 00000000
-> 00000000 00000000 00000000
-> [    0.289479] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [    0.289776] ---[ end trace 3f0995a2bae83983 ]---
+> That, and so that people are not asked "do you want to enable omnia
+> LEDs?" when they update their kernel on i386.
 
-Ick, that's not good, I've now reverted this patch from my tree, thanks
-for letting me know.
+Is that controller only built-in into some SoCs, or also available
+as a separate chip ?
 
-greg k-h
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
