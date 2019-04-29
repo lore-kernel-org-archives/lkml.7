@@ -2,97 +2,104 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F55C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5960CC04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9066215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556537769;
-	bh=xrb4idnEqTxEw7YKrCpZyBX26GxTnwHkDH99g213PQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MPl5fCmMH7bFhDOphHBQhEYcc7h4eA+FbyhxyGtXxk2mV0gbSB4WMVlGieI8z/P3S
-	 0X5qQOwP/fEWVLG2A2ysA0KoXgillqGkYAvzptw1F/L8+n3g8HyllMmRQBUmIafXtn
-	 HEH+XmD6C77CiR4xfvQdRFZhy2iw8ADWKdJ0XCAg=
+	by mail.kernel.org (Postfix) with ESMTP id 27BBB2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o7iRymlM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbfD2LgI (ORCPT
+        id S1728055AbfD2Lgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbfD2LgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:36:07 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B69482075E;
-        Mon, 29 Apr 2019 11:36:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556537766;
-        bh=xrb4idnEqTxEw7YKrCpZyBX26GxTnwHkDH99g213PQY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VEW+K+47fN2uG7Z1EKCt2g8fTb1RQbfUPM6mxN3KWl5FiTdqryFkRGMrfXCZje2El
-         EeJIuGirmR+BnFAi+o/wbYHW29KWlDOoHDWrqRXlEFFUwVN8kKX/1JWTGcAJMeT3Y5
-         bvzr+DdI92iexlvpfVvTrkptqj5Xg8GNxGNLIudI=
-Date:   Mon, 29 Apr 2019 17:05:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     dan.j.williams@intel.com, eric.long@unisoc.com,
-        orsonzhai@gmail.com, zhang.lyra@gmail.com, broonie@kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] dmaengine: sprd: Fix the possible crash when getting
- engine status
-Message-ID: <20190429113555.GI3845@vkoul-mobl.Dlink>
-References: <cover.1555330115.git.baolin.wang@linaro.org>
- <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
+        Mon, 29 Apr 2019 07:36:40 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:53242 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727895AbfD2Lgj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 07:36:39 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TBTGpW161561;
+        Mon, 29 Apr 2019 11:36:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=VnsYAI9ZN9zVJAIgiBsb84bbY9EWS3zR+ILQZL/U3uA=;
+ b=o7iRymlMtfbbOGsumicBT986h1iCmQts5STzmDGB2qRLj+90ubE3RPKHzE8xxb4TI0H5
+ iUdv6vQ2VPc6TVI1x3/GXeCFCv6lKEq8RhiKLkS709XD0+9Ff7rG1YaDGZ99P/p3qjiP
+ yawzvuSJEK6C+x74iRf8rh8Lvhc6C3zwrfcwKKBI8o0+q3pY0Dc/I5yb1F4Jgbc7Et+K
+ MXtcZLwcVo9+FcL/1fSpK9mJ+wZYD6rpWb4yzYjWNR91k8yM8ncTqopJmm+iEdxLpXQt
+ y4MSxhQqmeJNwM0HaXg2uzKSSxjthHCA1xWwcoZ9TH5aOtAKmf1ZxDZNbx9D63Pa1IJx tQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2s4ckd604c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 11:36:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TBYrbu115467;
+        Mon, 29 Apr 2019 11:36:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2s4ew0m9m9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 11:36:22 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3TBaI0I011719;
+        Mon, 29 Apr 2019 11:36:20 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Apr 2019 04:36:17 -0700
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        lsf@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, lsf-pc@lists.linux-foundation.org
+Subject: Re: [Lsf] [LSF/MM] Preliminary agenda ? Anyone ... anyone ? Bueller ?
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190425200012.GA6391@redhat.com>
+        <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
+        <503ba1f9-ad78-561a-9614-1dcb139439a6@suse.cz>
+        <yq1v9yx2inc.fsf@oracle.com>
+        <1556537518.3119.6.camel@HansenPartnership.com>
+Date:   Mon, 29 Apr 2019 07:36:15 -0400
+In-Reply-To: <1556537518.3119.6.camel@HansenPartnership.com> (James
+        Bottomley's message of "Mon, 29 Apr 2019 07:31:58 -0400")
+Message-ID: <yq1zho911sg.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9241 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=681
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904290084
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9241 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=704 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904290084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-04-19, 20:14, Baolin Wang wrote:
-> We will get a NULL virtual descriptor by vchan_find_desc() when the descriptor
-> has been submitted, that will crash the kernel when getting the engine status.
 
-No that is wrong, status is for descriptor and not engine!
+James,
 
-> In this case, since the descriptor has been submitted, which means the pointer
-> 'schan->cur_desc' will point to the current descriptor, then we can use
-> 'schan->cur_desc' to get the engine status to avoid this issue.
+> Next year, simply expand the blurb to "sponsors, partners and
+> attendees" to make it more clear ... or better yet separate them so
+> people can opt out of partner spam and still be on the attendee list.
 
-Nope, since the descriptor is completed, you return with residue as 0
-and DMA_COMPLETE status!
-
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  drivers/dma/sprd-dma.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-> index 48431e2..e29342a 100644
-> --- a/drivers/dma/sprd-dma.c
-> +++ b/drivers/dma/sprd-dma.c
-> @@ -625,7 +625,7 @@ static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
->  		else
->  			pos = 0;
->  	} else if (schan->cur_desc && schan->cur_desc->vd.tx.cookie == cookie) {
-> -		struct sprd_dma_desc *sdesc = to_sprd_dma_desc(vd);
-> +		struct sprd_dma_desc *sdesc = schan->cur_desc;
->  
->  		if (sdesc->dir == DMA_DEV_TO_MEM)
->  			pos = sprd_dma_get_dst_addr(schan);
-> -- 
-> 1.7.9.5
+We already made a note that we need an "opt-in to be on the attendee
+list" as part of the registration process next year. That's how other
+conferences go about it...
 
 -- 
-~Vinod
+Martin K. Petersen	Oracle Linux Engineering
