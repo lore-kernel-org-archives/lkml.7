@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542EDC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FB8C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 175D920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 993AA20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="qdsdefdt"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="st1gJWzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfD2P3d (ORCPT
+        id S1728759AbfD2P3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:29:33 -0400
-Received: from mail.efficios.com ([167.114.142.138]:56952 "EHLO
+        Mon, 29 Apr 2019 11:29:36 -0400
+Received: from mail.efficios.com ([167.114.142.138]:57176 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728674AbfD2P31 (ORCPT
+        with ESMTP id S1728674AbfD2P3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:29:27 -0400
+        Mon, 29 Apr 2019 11:29:33 -0400
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id D89A31C1CEA;
-        Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id D4FB11C1D72;
+        Mon, 29 Apr 2019 11:29:32 -0400 (EDT)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id Dih3OQRmIuKp; Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
+        with ESMTP id Cc5FUPImg6Ue; Mon, 29 Apr 2019 11:29:32 -0400 (EDT)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 159A21C1CCD;
-        Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 159A21C1CCD
+        by mail.efficios.com (Postfix) with ESMTP id A7D411C1D44;
+        Mon, 29 Apr 2019 11:29:29 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A7D411C1D44
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556551765;
-        bh=7bREYjl8Np1pAd/Fde//VKkoNKJfwTpSdwiHFLstO2Y=;
+        s=default; t=1556551769;
+        bh=3OJVvuE91UydmNNlW0wPtWvnsQUMUL+fIt4xHI3hrjs=;
         h=From:To:Date:Message-Id;
-        b=qdsdefdtcms3xo87H8y+IjvGDUQjo00yZbwHg2fFWlmSiOpPiYd7Yr+Fbw671on4T
-         YIF7yjLKHsj8Oj2FQG1xQ9E0mw5S7mw0KjVzgOcRQWyVwrau+KOVERiaRz3dFDtK3e
-         LeGmu9rldeFUl7zSmAQjy1MjlSezw2pK7qQdYeYT+W7znWKBUNYVAamU9ekt8BlO1P
-         9bv9v4Sq/Dhe2x8Vkk6NK3vsZX+19xwF79l728i4Ak4wEhVVKeoYVOucrJioaf4Zv6
-         ek3yglNSjYNoKMDeuOhOPBSJonAdf9al4rB9u1Mw4RTP3YTcHeFJaTgvYW/rK2tyqA
-         XYsJr9ypbkHUg==
+        b=st1gJWzchsZUV401Ru3hpBA6BgoKDDlhoio3glMB5OS0BxbE7aibNvd4I8/X04VNJ
+         /QuHUylKMkRX6q53b/fDI8H3GFUxh2rp7cB3AqAYDicNKqEBRi/+a41F6C5M0wIcDK
+         upYfouBA+mwPkX8smn+gYNi5CjFqeRBLlFoYzlwUAzitidAqFGVgP5C0NFz4B1IozQ
+         6NmrMD+9ufYx1d2TIDmP7C/0a9Mrxt1cPpEtc1h8NyGSx3QMwnOFcw9YNY/5ujkprc
+         OGkOqcS3Q3/bLyrXd+QY19UjwfVlioMEEJs8bkm1MO2u1kJXnKkAtbCJZz8CEQ6h0B
+         DghiIDcglSeiQ==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id A3PNBTsTlWyu; Mon, 29 Apr 2019 11:29:25 -0400 (EDT)
+        with ESMTP id cTFCtR1OaPtT; Mon, 29 Apr 2019 11:29:29 -0400 (EDT)
 Received: from thinkos.internal.efficios.com (192-222-157-41.qc.cable.ebox.net [192.222.157.41])
-        by mail.efficios.com (Postfix) with ESMTPSA id C10091C1C9E;
-        Mon, 29 Apr 2019 11:29:23 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTPSA id DE3B91C1D09;
+        Mon, 29 Apr 2019 11:29:27 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Shuah Khan <shuah@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
@@ -73,13 +73,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Michael Kerrisk <mtk.manpages@gmail.com>,
         Joel Fernandes <joelaf@google.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Carlos O'Donell <carlos@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Subject: [PATCH for 5.2 04/12] rseq/selftests: Use __rseq_handled symbol to coexist with glibc
-Date:   Mon, 29 Apr 2019 11:27:55 -0400
-Message-Id: <20190429152803.7719-5-mathieu.desnoyers@efficios.com>
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
+Subject: [PATCH for 5.2 11/12] rseq/selftests: mips: use break instruction for RSEQ_SIG
+Date:   Mon, 29 Apr 2019 11:28:02 -0400
+Message-Id: <20190429152803.7719-12-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
 References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
@@ -88,155 +87,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to integrate rseq into user-space applications, expose a
-__rseq_handled symbol so many rseq users can be linked into the same
-application (e.g. librseq and glibc).
+Use break as guard instruction for the restartable sequence abort
+handler.
 
-The __rseq_refcount TLS variable is static to the librseq library. It
-ensures that rseq syscall registration/unregistration happens only for
-the most early/late caller to rseq_{,un}register_current_thread for each
-thread, thus ensuring that rseq is registered across the lifetime of all
-rseq users for a given thread.
+Previously, the chosen signature was simply data, based on the
+assumption that it could always sit in a literal pool. However,
+some compilation environments favor disabling literal pool. Therefore,
+ensure the signature is a valid uncommon trap instruction.
 
+Suggested-by: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-CC: Shuah Khan <shuah@kernel.org>
-CC: Carlos O'Donell <carlos@redhat.com>
-CC: Florian Weimer <fweimer@redhat.com>
-CC: Joseph Myers <joseph@codesourcery.com>
-CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ben Maurer <bmaurer@fb.com>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-CC: Boqun Feng <boqun.feng@gmail.com>
-CC: Will Deacon <will.deacon@arm.com>
-CC: Dave Watson <davejwatson@fb.com>
-CC: Paul Turner <pjt@google.com>
-CC: linux-api@vger.kernel.org
+CC: Paul Burton <paul.burton@mips.com>
+CC: James Hogan <jhogan@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 ---
- tools/testing/selftests/rseq/rseq.c | 55 +++++++++++++++++++++++++++++++------
- tools/testing/selftests/rseq/rseq.h |  1 +
- 2 files changed, 48 insertions(+), 8 deletions(-)
+ tools/testing/selftests/rseq/rseq-mips.h | 34 +++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/rseq/rseq.c b/tools/testing/selftests/rseq/rseq.c
-index 4847e97ed049..7159eb777fd3 100644
---- a/tools/testing/selftests/rseq/rseq.c
-+++ b/tools/testing/selftests/rseq/rseq.c
-@@ -25,18 +25,27 @@
- #include <syscall.h>
- #include <assert.h>
- #include <signal.h>
-+#include <limits.h>
+diff --git a/tools/testing/selftests/rseq/rseq-mips.h b/tools/testing/selftests/rseq/rseq-mips.h
+index fe3eabcdcbe5..e989e7c14b09 100644
+--- a/tools/testing/selftests/rseq/rseq-mips.h
++++ b/tools/testing/selftests/rseq/rseq-mips.h
+@@ -7,7 +7,39 @@
+  * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+  */
  
- #include "rseq.h"
- 
- #define ARRAY_SIZE(arr)	(sizeof(arr) / sizeof((arr)[0]))
- 
--__attribute__((tls_model("initial-exec"))) __thread
--volatile struct rseq __rseq_abi = {
-+__thread volatile struct rseq __rseq_abi = {
- 	.cpu_id = RSEQ_CPU_ID_UNINITIALIZED,
- };
- 
--static __attribute__((tls_model("initial-exec"))) __thread
--volatile int refcount;
+-#define RSEQ_SIG	0x53053053
 +/*
-+ * Shared with other libraries. This library may take rseq ownership if it is
-+ * still 0 when executing the library constructor. Set to 1 by library
-+ * constructor when handling rseq. Set to 0 in destructor if handling rseq.
++ * RSEQ_SIG uses the break instruction. The instruction pattern is:
++ *
++ * On MIPS:
++ *	0350000d        break     0x350
++ *
++ * On nanoMIPS:
++ *      00100350        break     0x350
++ *
++ * On microMIPS:
++ *      0000d407        break     0x350
++ *
++ * For nanoMIPS32 and microMIPS, the instruction stream is encoded as 16-bit
++ * halfwords, so the signature halfwords need to be swapped accordingly for
++ * little-endian.
 + */
-+int __rseq_handled;
-+
-+/* Whether this library have ownership of rseq registration. */
-+static int rseq_ownership;
-+
-+static __thread volatile uint32_t __rseq_refcount;
++#if defined(__nanomips__)
++# ifdef __MIPSEL__
++#  define RSEQ_SIG	0x03500010
++# else
++#  define RSEQ_SIG	0x00100350
++# endif
++#elif defined(__mips_micromips)
++# ifdef __MIPSEL__
++#  define RSEQ_SIG	0xd4070000
++# else
++#  define RSEQ_SIG	0x0000d407
++# endif
++#elif defined(__mips__)
++# define RSEQ_SIG	0x0350000d
++#else
++/* Unknown MIPS architecture. */
++#endif
  
- static void signal_off_save(sigset_t *oldset)
- {
-@@ -69,8 +78,14 @@ int rseq_register_current_thread(void)
- 	int rc, ret = 0;
- 	sigset_t oldset;
- 
-+	if (!rseq_ownership)
-+		return 0;
- 	signal_off_save(&oldset);
--	if (refcount++)
-+	if (__rseq_refcount == UINT_MAX) {
-+		ret = -1;
-+		goto end;
-+	}
-+	if (__rseq_refcount++)
- 		goto end;
- 	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq), 0, RSEQ_SIG);
- 	if (!rc) {
-@@ -78,9 +93,9 @@ int rseq_register_current_thread(void)
- 		goto end;
- 	}
- 	if (errno != EBUSY)
--		__rseq_abi.cpu_id = -2;
-+		__rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
- 	ret = -1;
--	refcount--;
-+	__rseq_refcount--;
- end:
- 	signal_restore(oldset);
- 	return ret;
-@@ -91,13 +106,20 @@ int rseq_unregister_current_thread(void)
- 	int rc, ret = 0;
- 	sigset_t oldset;
- 
-+	if (!rseq_ownership)
-+		return 0;
- 	signal_off_save(&oldset);
--	if (--refcount)
-+	if (!__rseq_refcount) {
-+		ret = -1;
-+		goto end;
-+	}
-+	if (--__rseq_refcount)
- 		goto end;
- 	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq),
- 		      RSEQ_FLAG_UNREGISTER, RSEQ_SIG);
- 	if (!rc)
- 		goto end;
-+	__rseq_refcount = 1;
- 	ret = -1;
- end:
- 	signal_restore(oldset);
-@@ -115,3 +137,20 @@ int32_t rseq_fallback_current_cpu(void)
- 	}
- 	return cpu;
- }
-+
-+void __attribute__((constructor)) rseq_init(void)
-+{
-+	/* Check whether rseq is handled by another library. */
-+	if (__rseq_handled)
-+		return;
-+	__rseq_handled = 1;
-+	rseq_ownership = 1;
-+}
-+
-+void __attribute__((destructor)) rseq_fini(void)
-+{
-+	if (!rseq_ownership)
-+		return;
-+	__rseq_handled = 0;
-+	rseq_ownership = 0;
-+}
-diff --git a/tools/testing/selftests/rseq/rseq.h b/tools/testing/selftests/rseq/rseq.h
-index c72eb70f9b52..26348e2c44f3 100644
---- a/tools/testing/selftests/rseq/rseq.h
-+++ b/tools/testing/selftests/rseq/rseq.h
-@@ -45,6 +45,7 @@
- #endif
- 
- extern __thread volatile struct rseq __rseq_abi;
-+extern int __rseq_handled;
- 
- #define rseq_likely(x)		__builtin_expect(!!(x), 1)
- #define rseq_unlikely(x)	__builtin_expect(!!(x), 0)
+ #define rseq_smp_mb()	__asm__ __volatile__ ("sync" ::: "memory")
+ #define rseq_smp_rmb()	rseq_smp_mb()
 -- 
 2.11.0
 
