@@ -2,154 +2,91 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6A5C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65FBC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94DF121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Vt7gPh05"
+	by mail.kernel.org (Postfix) with ESMTP id 95141215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556575546;
+	bh=bVd+hDujPtprlnFUR4HKSNNSu6qgBFLqLRDYVi5Q9Mw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oW1eZfxPuAhP1bRlb15SZ/LS7gloQeUnsPZXPFyoZSxFHhY0Hw9iA+ppcFouScNma
+	 xXKajvTwU+bi1ev9BTQGJc+DI/WaJ2a04T7xN/q1oDeFxI+IxojZTSFf0j12epmOi/
+	 890fUZzZLDtm0M+B5zNV4w3uuaEAnRUOe4y4clMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbfD2WCz (ORCPT
+        id S1729534AbfD2WFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:02:55 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:16894 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbfD2WCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:02:55 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cc774960000>; Tue, 30 Apr 2019 06:03:02 +0800
-Received: from HKMAIL102.nvidia.com ([10.18.16.11])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 29 Apr 2019 15:02:50 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Mon, 29 Apr 2019 15:02:50 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL102.nvidia.com
- (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Apr
- 2019 22:02:49 +0000
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (104.47.40.58) by
- HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 29 Apr 2019 22:02:49 +0000
-Received: from BYAPR12MB3398.namprd12.prod.outlook.com (20.178.196.24) by
- BYAPR12MB3542.namprd12.prod.outlook.com (20.179.94.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Mon, 29 Apr 2019 22:02:46 +0000
-Received: from BYAPR12MB3398.namprd12.prod.outlook.com
- ([fe80::a426:a072:b48b:530c]) by BYAPR12MB3398.namprd12.prod.outlook.com
- ([fe80::a426:a072:b48b:530c%5]) with mapi id 15.20.1835.016; Mon, 29 Apr 2019
- 22:02:46 +0000
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Mon, 29 Apr 2019 18:05:45 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45530 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729437AbfD2WFp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:05:45 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t189so6622846oih.12;
+        Mon, 29 Apr 2019 15:05:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NqqUvI8ozIYLQ4d/GuKEHP8sALx3PYdlLGZJSzshmEI=;
+        b=bUV1rczi22taJVws3Otr0g1aVfzPan9fh9yjWj1LUC8X95H4PeUTCjeTAJk7AstwQg
+         4hijvEXujAjnU7D9meuXJvks/PlQkF3cAgSTaqali2Hj0xtno9kkCnGJcmsQWb/ww7wl
+         2ieQu6ac5PhTipygTjKyhMycOqe0YsEErteyAiBSegaLsIujT/VAn0bYUaZHSWyWEho+
+         DHFlFMjzxgCsdc2EXr9n/+72E5pOrOonjZfw7o/q4QJfOdp6YsoaVYY8NH3fTKLbHqKo
+         z48lBLBFDdCuA8+SfO5FWILnEp3KglnDOMdKVg/YKwGH55LTffYIceGq2V2wciWri4vy
+         fqYA==
+X-Gm-Message-State: APjAAAX4pY4bILeEK5jaMN1Q7lNt5kA9xIKy8Ya7PequKXi+5eDLuFjt
+        TaHzPGSvv/KnaxAdGsQ5dw==
+X-Google-Smtp-Source: APXvYqyUgr9Px81sKHtSP+7CZcQbfQ7hAfxA751GonSFy+nyurN+Oj7Tr+NkXDAyDlFf3zO54kzuNg==
+X-Received: by 2002:aca:c4c3:: with SMTP id u186mr986160oif.82.1556575544019;
+        Mon, 29 Apr 2019 15:05:44 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j7sm13873345otr.50.2019.04.29.15.05.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 15:05:43 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 17:05:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Krishna Yarlagadda" <kyarlagadda@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH V3 5/9] spi: export spi core function spi_set_cs
-Thread-Topic: [PATCH V3 5/9] spi: export spi core function spi_set_cs
-Thread-Index: AQHU89KFcGFem7n2hUyXzOJxTF1ajaZDnpyAgBAjKRA=
-Date:   Mon, 29 Apr 2019 22:02:46 +0000
-Message-ID: <BYAPR12MB3398D133D1C71355BC530754C2390@BYAPR12MB3398.namprd12.prod.outlook.com>
-References: <1555363834-32155-1-git-send-email-skomatineni@nvidia.com>
- <1555363834-32155-6-git-send-email-skomatineni@nvidia.com>
- <20190419151823.GS2803@sirena.org.uk>
-In-Reply-To: <20190419151823.GS2803@sirena.org.uk>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=skomatineni@nvidia.com; 
-x-originating-ip: [216.228.112.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 49f9f5d5-042f-4d19-89c2-08d6ccee69c7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR12MB3542;
-x-ms-traffictypediagnostic: BYAPR12MB3542:
-x-microsoft-antispam-prvs: <BYAPR12MB3542901594B6E9E3B1BD0604C2390@BYAPR12MB3542.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0022134A87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(39850400004)(366004)(376002)(346002)(189003)(199004)(8676002)(81156014)(256004)(8936002)(81166006)(446003)(486006)(476003)(97736004)(33656002)(11346002)(478600001)(14454004)(71190400001)(5660300002)(71200400001)(66066001)(52536014)(4326008)(99286004)(316002)(68736007)(305945005)(102836004)(74316002)(7736002)(86362001)(186003)(6916009)(25786009)(54906003)(3846002)(64756008)(73956011)(6116002)(55016002)(2906002)(53936002)(6436002)(66446008)(6506007)(76176011)(6246003)(7696005)(229853002)(26005)(76116006)(66476007)(66946007)(66556008)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB3542;H:BYAPR12MB3398.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nvidia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rcZ/uG7uSEaY2FGCqvhZ7GlepjAa+wi+9N5qAVcarydMdjVMv3gZGG0BnKqGK1TEzvVcH9/F4jfzRPBRXpNZZmYkT6p6X9uAVAdEJmYNjKBuD1nm9wZi7g95QWhpfHIj6g37Em5L0Vc+FLQWkrXngA6Pt2VPoOhDDdv8krRNh++EgZjc1OqxvbzaroXIu/++ZFUze4zsb1SMgHcx5YyxZNY+ur7sVjaYW9jyfoiMkJAUnjllEif1K/f40PO5ynOuD3nsabpk2zBZA18e+y7Bb+v9c4jYcRnPkGlX1JpEi/vlsiFWFtrMW9jCqq0LNW6jGjer1HfXSRwNfIxtVtpld3yuOKdnZTng5J9Y+WykoB0mV2IPOaLE9OHBgp3mcfeqX+9sKlTdoB20/DVJZWthXv/niBnsAJr6jPFUY31KAbQ=
+        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: memory: Add binding for NVIDIA
+ Tegra30 External Memory Controller
+Message-ID: <20190429220542.GA17924@bogus>
+References: <20190414202009.31268-1-digetx@gmail.com>
+ <20190414202009.31268-3-digetx@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49f9f5d5-042f-4d19-89c2-08d6ccee69c7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 22:02:46.6309
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3542
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556575382; bh=5yKZKf0errhNL3mQy5FDPk9vvc7PMqpXX3TIYiMpOPE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:
-         Message-ID:References:In-Reply-To:Accept-Language:X-MS-Has-Attach:
-         X-MS-TNEF-Correlator:authentication-results:x-originating-ip:
-         x-ms-publictraffictype:x-ms-office365-filtering-correlation-id:
-         x-microsoft-antispam:x-ms-traffictypediagnostic:
-         x-microsoft-antispam-prvs:x-ms-oob-tlc-oobclassifiers:
-         x-forefront-prvs:x-forefront-antispam-report:received-spf:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
-         MIME-Version:X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=Vt7gPh05mJ9yLbOAxTMaNWD6IehPsu83L6qYDntcQNJwoyLxVzP23G0FgqWvN0mj4
-         b0zDhT0KYjaPq40ytVYaEhkKRPsKVZ1fmhIH2U41GzFtd/ymAgghZ07xs+Fp1/2LMf
-         f0J0t3nch7QGeZ+fXXK2ayWFU/+KEuEf9kfe1oGphloQP4BZOh1GgFGI84fuP+JH/8
-         2NoIOauYiQ2c1nWGgETN63pqX4R5Ylqe8uu4WdpDLAiyv36WcYKAGb+5RLaMmrE26/
-         L2KxeoeHgUfCxgNK/rVcR0eYtoTizDnXaJqeDtl+iXrGcWAWK77Xt334BypNmEQxfr
-         D4HwaCRNbApnQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190414202009.31268-3-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Mon, Apr 15, 2019 at 02:30:30PM -0700, Sowjanya Komatineni wrote:
-> > This patch exports spi_set_cs of the spi core to allow SPI masters to=20
-> > use when gpio based chip select is needed.
->
-> This isn't really what I meant when I said it'd be good to use the core G=
-PIO code - this function doesn't do a huge amount really and the usage of i=
-t in your subsequent patch for the > driver isn't exactly joined up with th=
-e little it does (which is mainly swapping in the GPIO chip select instead =
-of the hardware chip select) isn't used in your driver usage of this as far=
- as I can see.  The bulk of the chip select handling code in the core is ac=
-tually in transfer_one_message() which your driver doesn't use as it's got =
-it's own implementation of that; I've not looked in enough detail to figure=
- out if it could use it.
->
->
->
-In SPI Tegra driver, we wanted to have GPIO based CS control when cs-gpios =
-is specified in parallel to HW/SW CS. Having parallel GPIO based CS is to m=
-imic some of the timing stuff that's needed for some spi devices by not act=
-ually using HW CS on platform but only for SPI HW design logic inside the c=
-hip.
+On Sun, Apr 14, 2019 at 11:20:07PM +0300, Dmitry Osipenko wrote:
+> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
+> The binding is based on the Tegra124 EMC binding since hardware is
+> similar, although there are couple significant differences.
 
-Tegra spi driver don't use set_cs callback so looking into spi_set_cs from =
-spi core implementation when cs-gpios property is used it exactly the same =
-that is needed for GPIO control CS. So used this in V3.=20
+My comments on Tegra124 binding apply here.
 
-Can you please provide more details on what you are suggesting?
-Do you prefer not to use SPI core spi_set_cs and gpio_set_values APIs and i=
-nstead implement in tegra SPI driver using GPIO descriptors ?
-
-Thanks
-Sowjanya
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  .../memory-controllers/nvidia,tegra30-emc.txt | 257 ++++++++++++++++++
+>  1 file changed, 257 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
