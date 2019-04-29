@@ -2,114 +2,99 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C6FC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8503BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7102087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FC12087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="KCepw7VG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfD2I1y (ORCPT
+        id S1727699AbfD2I2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 04:27:54 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:45690 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfD2I1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:27:52 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 745D62001A3;
-        Mon, 29 Apr 2019 10:27:50 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 73F2920024C;
-        Mon, 29 Apr 2019 10:27:41 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 833DE4030F;
-        Mon, 29 Apr 2019 16:27:30 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
-        pombredanne@nexb.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH 2/2] PCI: layerscape: EP and RC drivers are compiled separately
-Date:   Mon, 29 Apr 2019 16:19:57 +0800
-Message-Id: <20190429081957.47945-2-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190429081957.47945-1-xiaowei.bao@nxp.com>
-References: <20190429081957.47945-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 29 Apr 2019 04:28:03 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34512 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727670AbfD2I2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 04:28:02 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j6so11011211qtq.1;
+        Mon, 29 Apr 2019 01:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pIjwi9Pdwq2tpQOmRVLR8AJ+RfItycNgwKBPS/FfFwQ=;
+        b=KCepw7VGzHhTmEryB3hPHprLKpgV2QymJ2RW0SjTSFDdpK0ktwAMBDSJ1ITy+XDh60
+         DoPTY09BntxLpOu+kCo5BVMGZNy/qjM3Zj6aUXL1PUv1mNwY/Viwx9hmyBnY3bpuaeNI
+         XKNVhhBOR2MP/AIpyjpQxeKiRYyJ8JIVSDDJA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pIjwi9Pdwq2tpQOmRVLR8AJ+RfItycNgwKBPS/FfFwQ=;
+        b=fIgnEwo3TbJB87+l7paOWYyVRYYH0s+MLJxDvMWUOtbXnPOudnEdjc+5bBIDbl3813
+         UsySk2ntAnGyB0Bdd/WEcDXRidKZNn25ynOHJuc5YgV3aK7Vjx7YQyhvAL7B+9rbv2yX
+         7Nzj1yCCGxKQrEQC3Cc+d/5/FsIFlYGw2X/qmYaJiUD9l3CVqelaEx30l6nwcGmo5XYP
+         wOTbNSBrsUD1IxtBWQHMBinXrtLfIwhtgSvNplnY8NjL8mk1fsBYwWTaJkO0yMRZKrF3
+         1BLxva6Frk/0yxxLBKLT6Vsc64p3V2N//q5i3qpbRCjsgPK2VJUQRC2BQqkhXavNONCz
+         wyEg==
+X-Gm-Message-State: APjAAAUmcegzrRW3XHJyqDgnibbHFAGU4MAyBFScw0Jq3wVIBPyuoyNu
+        3pHf2B33Rx/yMatcZJYxNbO8btojC1d6tXAFhtA=
+X-Google-Smtp-Source: APXvYqyIzM18/pZaeSSVKfrsxmgXogVAee5aa7XHdKeT4Kr5aRXtgQ89YiVr3LiG7FMcDqt23jMOQnz29AtcwPe8azo=
+X-Received: by 2002:a0c:ac83:: with SMTP id m3mr47431723qvc.85.1556526481157;
+ Mon, 29 Apr 2019 01:28:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190416162150.150154-1-venture@google.com>
+In-Reply-To: <20190416162150.150154-1-venture@google.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 29 Apr 2019 08:27:49 +0000
+Message-ID: <CACPK8XeTOhcdKPsKgsBJXAYeMDeHRLOSLRF5XO0oT-5XUhghMQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] update aspeed-bmc-opp-zaius device-tree
+To:     Patrick Venture <venture@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compile the EP and RC drivers separately with different configuration
-options, this looks clearer.
+On Tue, 16 Apr 2019 at 16:22, Patrick Venture <venture@google.com> wrote:
+>
+> Hi,
+>
+> This series contains three updates to the Zaius ASPEED device-tree to
+> add voltrage regulators, and update addresses and aliases.  The Infineon
+> and Intersil drivers are staged on hwmon-next, and the trivial device
+> dt-bindings changed are up for review.
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
- drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
- drivers/pci/controller/dwc/Makefile |    3 ++-
- 2 files changed, 20 insertions(+), 3 deletions(-)
+Applied to the aspeed SoC tree, thanks Patrick.
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 9061823..84f8906 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
- 	 implement the driver.
- 
- config PCI_LAYERSCAPE
--	bool "Freescale Layerscape PCIe controller"
-+	bool "Freescale Layerscape PCIe controller - Host mode"
- 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Host mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
-+
-+config PCI_LAYERSCAPE_EP
-+	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-+	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	help
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Endpoint mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
- 
- config PCI_HISI
- 	depends on OF && (ARM64 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index b085dfd..824fde7 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
- obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
--obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-+obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-+obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
--- 
-1.7.1
+Cheers,
 
+Joel
+
+>
+> Maxim Sloyko (1):
+>   ARM: dts: aspeed: zaius: add Infineon and Intersil regulators
+>
+> Robert Lippert (2):
+>   ARM: dts: aspeed: zaius: update 12V brick I2C address
+>   ARM: dts: aspeed: zaius: fixed I2C bus numbers for pcie slots
+>
+>  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 121 +++++++++++++++++++--
+>  1 file changed, 113 insertions(+), 8 deletions(-)
+>
+> --
+> 2.21.0.392.gf8f6787159e-goog
+>
