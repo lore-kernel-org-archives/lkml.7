@@ -2,116 +2,119 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF483C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97E7C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF112075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:49:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="UujbU0fa"
+	by mail.kernel.org (Postfix) with ESMTP id B202A2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfD2HtF (ORCPT
+        id S1727533AbfD2Htl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:49:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43189 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfD2HtF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:49:05 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g4so10842863qtq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0qeY97UX3qPR9mVn0ASslox/fHOez69lznk44IZQyJw=;
-        b=UujbU0faikIxS++cH5j5UD1NhEIoggeoWj8ogOT52YaPJGsXef74ROHkAS6lFTVKul
-         /CEwbKNYgZQIGON7B3EkfWKkF/i9yfWGNwYOKPG0Rtmy9DX3ol87CFrpTIoOfMexKfOZ
-         JZ5iQdbtbOe66KvS8wQGKrJ1Hzz7G/Pl6OdNA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0qeY97UX3qPR9mVn0ASslox/fHOez69lznk44IZQyJw=;
-        b=d0/ZmD5TMz7JFNKlp+3Hj8pP9UCj6xjYrNj87WrAPgI89lGE6hvy8MqvWCkoa4bFYq
-         kQZ51GmdpvYys0ArY8JENW9ljHDNJovgwd2jVwEcQxybdYARt28UthaWB4yohg6krEVN
-         jgMyEQWGNBEteAUAIVjugYnnkMgQrDmEGNPYfz3QxLMCt5VjC5U5Xcyaw8+9cxNQ3jCf
-         7DHz6t+GDfzsqHy4mUooKt2efsBjG6E11q3W44PV0zL4QQ71EgEEo8LlBlVb59ssF5Sq
-         e2HmCUWGaBwY+uBfD0igDtNw8MdPtLyfF2JiSs4kPTbowpumoly1YYrRHVIqj8Zv0GHK
-         9cIA==
-X-Gm-Message-State: APjAAAX1w2wjJRNERFWxyP9HdAjgh7LJ/9Pw92rUZaCaatDPiCFuxSYO
-        dSDKb2L/MAcEnGIGscoddkgqZ27TVHz7xoqvSCI=
-X-Google-Smtp-Source: APXvYqzsVaFHI1mpvrMv9BhEk+TvbyuiHJPC8oNa5muwf3tjYXiBtUjwDtoUocY+KZOatuMT5qEd4Xcwx7ENT9rnVds=
-X-Received: by 2002:a0c:948e:: with SMTP id j14mr17683473qvj.245.1556524143870;
- Mon, 29 Apr 2019 00:49:03 -0700 (PDT)
+        Mon, 29 Apr 2019 03:49:41 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24807 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726718AbfD2Htl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:49:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 00:49:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
+   d="scan'208";a="341727417"
+Received: from irsmsx103.ger.corp.intel.com ([163.33.3.157])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Apr 2019 00:49:37 -0700
+Received: from irsmsx102.ger.corp.intel.com ([169.254.2.21]) by
+ IRSMSX103.ger.corp.intel.com ([169.254.3.30]) with mapi id 14.03.0415.000;
+ Mon, 29 Apr 2019 08:49:36 +0100
+From:   "Reshetova, Elena" <elena.reshetova@intel.com>
+To:     Theodore Ts'o <tytso@mit.edu>
+CC:     Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        David Laight <David.Laight@ACULAB.COM>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon
+ syscall
+Thread-Index: AQHU81HQwzT9MH4dM0y/JZXnSwiYT6Y8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCABF9DMA==
+Date:   Mon, 29 Apr 2019 07:49:36 +0000
+Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C66AA0@IRSMSX102.ger.corp.intel.com>
+References: <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
+ <20190416120822.GV11158@hirez.programming.kicks-ass.net>
+ <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
+ <20190416154348.GB3004@mit.edu>
+ <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
+ <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
+ <20190417151555.GG4686@mit.edu>
+ <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
+ <20190426140102.GA4922@mit.edu>
+In-Reply-To: <20190426140102.GA4922@mit.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjk1M2FlY2UtNGNjNi00NGE3LTkyOGMtYWI0NjUxYWVmZmY1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicXh0RVBVY2VhQittUTM2UUNyblVEa1JtT2lFa0NaMzRmRExPMnRDOU05N0Fpc0NIVGEzTGkzQzVTSUpNRzlaYyJ9
+x-originating-ip: [163.33.239.180]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190423142629.120717-1-venture@google.com> <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
- <CAO=notz9QVoqKLrhJ3kx9FHja5+Mh68f36O36+1ewLG+SanmOA@mail.gmail.com> <20190425172549.GA12376@kroah.com>
-In-Reply-To: <20190425172549.GA12376@kroah.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Mon, 29 Apr 2019 07:48:52 +0000
-Message-ID: <CACPK8XemgKvM38wDSUJsXXeK51dwmeUoKWn+e3ZNHd9v5VBZHA@mail.gmail.com>
-Subject: Re: [PATCH v2] soc: add aspeed folder and misc drivers
-To:     Greg KH <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Patrick Venture <venture@google.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>,
-        soc@kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019 at 17:25, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Apr 23, 2019 at 08:28:14AM -0700, Patrick Venture wrote:
-> > On Tue, Apr 23, 2019 at 8:22 AM Patrick Venture <venture@google.com> wrote:
-> > >
-> > > On Tue, Apr 23, 2019 at 7:26 AM Patrick Venture <venture@google.com> wrote:
-> > > >
-> > > > Create a SoC folder for the ASPEED parts and place the misc drivers
-> > > > currently present into this folder.  These drivers are not generic part
-> > > > drivers, but rather only apply to the ASPEED SoCs.
-> > > >
-> > > > Signed-off-by: Patrick Venture <venture@google.com>
-> > >
-> > > Accidentally lost the Acked-by when re-sending this patchset as I
-> > > didn't see it on v1 before re-sending v2 to the larger audience.
+
+> On Fri, Apr 26, 2019 at 11:33:09AM +0000, Reshetova, Elena wrote:
+> > Adding Eric and Herbert to continue discussion for the chacha part.
+> > So, as a short summary I am trying to find out a fast (fast enough to be used per
+> syscall
+> > invocation) source of random bits with good enough security properties.
+> > I started to look into chacha kernel implementation and while it seems that it is
+> designed to
+> > work with any number of rounds, it does not expose less than 12 rounds primitive.
+> > I guess this is done for security sake, since 12 is probably the lowest bound we
+> want people
+> > to use for the purpose of encryption/decryption, but if we are to build an efficient
+> RNG,
+> > chacha8 probably is a good tradeoff between security and speed.
 > >
-> > Since there was a change between v1 and v2, Arnd, I'd appreciate you
-> > Ack this version of the patchset since it changes when the soc/aspeed
-> > Makefile is followed.
->
-> I have no objection for moving stuff out of drivers/misc/ so the SOC
-> maintainers are free to take this.
+> > What are people's opinions/perceptions on this? Has it been considered before to
+> create a
+> > kernel RNG based on chacha?
+> 
+> Well, sure.  The get_random_bytes() kernel interface and the
+> getrandom(2) system call uses a CRNG based on chacha20.  See
+> extract_crng() and crng_reseed() in drivers/char/random.c.
 
-I was on the fence about this. The downside of moving drivers out of
-drivers/misc is it allows SoCs to hide little drivers away from
-scrutiny, when in fact they could be sharing a common userspace API
-with other BMCs.  (Keep an eye out for the coming Nuvoton "bios post
-code" driver which is very similar to
-drivers/misc/aspeed-lpc-snoop.c).
+Oh, indeed, I missed this link fully when was trying to trace chacha
+usages in kernel. I am not familiar with crypto kernel API and looks like
+my source code cross referencing failed here miserably. 
 
-However, in the effort to move away from BMC that are full of shell
-scripts that bash on /dev/mem, we are going to see a collection of
-small, very SoC specific, drivers and it doesn't make sense to clutter
-up drivers/misc.
+Only question left is how fast/slow is this... 
 
-Acked-by: Joel Stanley <joel@jms.id.au>
-
-The p2a driver has been merged by Greg. We should move that one over
-too. Arnd, can you advise Patrick on how to proceed? We could have him
-spin a v3 that includes the p2a driver, but it would depend on Greg's
-char-misc-next branch.
-
-Cheers,
-
-Joel
+Best Regards,
+Elena.
