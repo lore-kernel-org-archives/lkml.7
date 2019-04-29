@@ -2,279 +2,147 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AF7C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A39C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633292075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEFD82075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDW3XiWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfD2F4O (ORCPT
+        id S1727380AbfD2GBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 01:56:14 -0400
-Received: from goliath.siemens.de ([192.35.17.28]:40483 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfD2F4N (ORCPT
+        Mon, 29 Apr 2019 02:01:21 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45977 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbfD2GBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 01:56:13 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id x3T5trAc026079
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 07:55:53 +0200
-Received: from [139.22.43.249] ([139.22.43.249])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x3T5tqka012116;
-        Mon, 29 Apr 2019 07:55:52 +0200
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J., Wysocki" <rafael.j.wysocki@intel.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH v2] gpio: sch: Add interrupt support
-Message-ID: <046793ee-ba51-6a1b-1aa5-14560d849df7@siemens.com>
-Date:   Mon, 29 Apr 2019 07:55:52 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        Mon, 29 Apr 2019 02:01:20 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t11so6848776lfl.12;
+        Sun, 28 Apr 2019 23:01:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UC42DcLXAcE+LVtPIk7UgcztXVrIO708I+O1jic9JgM=;
+        b=dDW3XiWgt4NK6FQcYSxmKx8WCraOlZhI5Hgu9cP0lV2vV7b0rIqgghfRuqMGKjkG0z
+         gS+Ef1NaGI15YSpI6wgcsOnhWb4PJ9txy8V8IkWhevO0izfWWU5CmnOosuMk2xWns536
+         nHgGIAFh6W5QeX/R2elWsP++rF8uRumO/kihhsZHyK2Aa5HUKnY5JGyPGMkwo3bNqtcn
+         FXW+8kb24b5D6yTlyMsA+ea1hFSf+v7VJwYomc7RRwCwBaiBq4I1WFmfoLkcipKCdCks
+         zy6UVhBGvLbG8a8ySNtZN/0f4a/nXaDAWzZeMEbZp1Klg7EYy7S3U4UGnXz6L9JvHv+Q
+         Pb4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UC42DcLXAcE+LVtPIk7UgcztXVrIO708I+O1jic9JgM=;
+        b=T459qRzTmNZ1U+9nJQQD4hn86jZlmVqg1FWBmDiekLhH6xa5ADUpk1EcHcjwGifxJ5
+         RVnTMQ3+Ra7b+J+4sHXem14n+bJJkKtoqCdCpTBtiiB3G+yiGVvKQlbRlQdll/4nuCwf
+         F1Sv62pnt/Lqw4+rA3GMVK7Mi/mf3pnhyEqG56aQuNa+mSB23oeup1MM6K9ryWpbdahe
+         Y0dfWCFTWWvbKc2Dd6nv22+UBznTNHt6VnOLsfxkUteN2ngU+QCC10hGSL+UcJY42Uuy
+         3WNV83Ig2ndms1ci69MbZQRZOFV8odQsZc1orx6LoiFiLAiyN8mIJ29kV5RXBg2ZnbWg
+         S9nQ==
+X-Gm-Message-State: APjAAAVwzKGEmIFY9uvN8Tu9u9EYLUK0pfvwagy5P5+1PkcspXQ9Y2hF
+        6C9fzdLZdD9BZvrXIbtS59s=
+X-Google-Smtp-Source: APXvYqzE6DM+lM6WV3M7l5Wvzxp1UPxhvXPyDnX49kh9UkLUyRY04nx0O0NK2JsQnsER0oDxn+8SEw==
+X-Received: by 2002:a19:f001:: with SMTP id p1mr33272665lfc.27.1556517678598;
+        Sun, 28 Apr 2019 23:01:18 -0700 (PDT)
+Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.gmail.com with ESMTPSA id t8sm514783lfl.73.2019.04.28.23.01.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Apr 2019 23:01:18 -0700 (PDT)
+From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH] net-sysfs: expose IRQ number
+Date:   Mon, 29 Apr 2019 08:01:07 +0200
+Message-Id: <20190429060107.10245-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Validated on the Quark platform, this adds interrupt support on rising
-and/or falling edges.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Knowing IRQ number makes e.g. reading /proc/interrupts much simpler.
+It's more reliable than guessing device name used by a driver when
+calling request_irq().
+
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 ---
+I found a script parsing /proc/interrupts for a given interface name. It wasn't
+working for me as it assumed request_irq() was called with a device name. It's
+not a case for all drivers.
 
-Changes in v2:
- - consistently use spinlock irqsave
+I also found some other people looking for a proper solution for that:
+https://unix.stackexchange.com/questions/275075/programmatically-determine-the-irqs-associated-with-a-network-interface
+https://stackoverflow.com/questions/7516984/retrieving-irq-number-of-a-nic
 
- drivers/gpio/gpio-sch.c | 144 +++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 137 insertions(+), 7 deletions(-)
+Let me know if this solution makes sense. I can say it works for me ;)
+---
+ Documentation/ABI/testing/sysfs-class-net |  7 +++++++
+ net/core/net-sysfs.c                      | 16 ++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-index fb143f28c386..75c95da145d8 100644
---- a/drivers/gpio/gpio-sch.c
-+++ b/drivers/gpio/gpio-sch.c
-@@ -18,12 +18,17 @@
- #define GEN	0x00
- #define GIO	0x04
- #define GLV	0x08
-+#define GTPE	0x0c
-+#define GTNE	0x10
-+#define GGPE	0x14
-+#define GTS	0x1c
+diff --git a/Documentation/ABI/testing/sysfs-class-net b/Documentation/ABI/testing/sysfs-class-net
+index 664a8f6a634f..33440fe77ca7 100644
+--- a/Documentation/ABI/testing/sysfs-class-net
++++ b/Documentation/ABI/testing/sysfs-class-net
+@@ -301,3 +301,10 @@ Contact:	netdev@vger.kernel.org
+ Description:
+ 		32-bit unsigned integer counting the number of times the link has
+ 		been down
++
++What:		/sys/class/net/<iface>/irq
++Date:		April 2019
++KernelVersion:	5.2
++Contact:	netdev@vger.kernel.org
++Description:
++		IRQ number used by device
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index e4fd68389d6f..a3eb7c3f1f37 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -512,6 +512,21 @@ static ssize_t phys_switch_id_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(phys_switch_id);
  
- struct sch_gpio {
- 	struct gpio_chip chip;
- 	spinlock_t lock;
- 	unsigned short iobase;
- 	unsigned short resume_base;
-+	int irq_base;
++static ssize_t irq_show(struct device *dev, struct device_attribute *attr,
++			char *buf)
++{
++	const struct net_device *netdev = to_net_dev(dev);
++	ssize_t ret;
++
++	if (!rtnl_trylock())
++		return restart_syscall();
++	ret = sprintf(buf, "%d\n", netdev->irq);
++	rtnl_unlock();
++
++	return ret;
++}
++static DEVICE_ATTR_RO(irq);
++
+ static struct attribute *net_class_attrs[] __ro_after_init = {
+ 	&dev_attr_netdev_group.attr,
+ 	&dev_attr_type.attr,
+@@ -542,6 +557,7 @@ static struct attribute *net_class_attrs[] __ro_after_init = {
+ 	&dev_attr_proto_down.attr,
+ 	&dev_attr_carrier_up_count.attr,
+ 	&dev_attr_carrier_down_count.attr,
++	&dev_attr_irq.attr,
+ 	NULL,
  };
- 
- static unsigned sch_gpio_offset(struct sch_gpio *sch, unsigned gpio,
-@@ -79,10 +84,11 @@ static void sch_gpio_reg_set(struct sch_gpio *sch, unsigned gpio, unsigned reg,
- static int sch_gpio_direction_in(struct gpio_chip *gc, unsigned gpio_num)
- {
- 	struct sch_gpio *sch = gpiochip_get_data(gc);
-+	unsigned long flags;
- 
--	spin_lock(&sch->lock);
-+	spin_lock_irqsave(&sch->lock, flags);
- 	sch_gpio_reg_set(sch, gpio_num, GIO, 1);
--	spin_unlock(&sch->lock);
-+	spin_unlock_irqrestore(&sch->lock, flags);
- 	return 0;
- }
- 
-@@ -95,20 +101,22 @@ static int sch_gpio_get(struct gpio_chip *gc, unsigned gpio_num)
- static void sch_gpio_set(struct gpio_chip *gc, unsigned gpio_num, int val)
- {
- 	struct sch_gpio *sch = gpiochip_get_data(gc);
-+	unsigned long flags;
- 
--	spin_lock(&sch->lock);
-+	spin_lock_irqsave(&sch->lock, flags);
- 	sch_gpio_reg_set(sch, gpio_num, GLV, val);
--	spin_unlock(&sch->lock);
-+	spin_unlock_irqrestore(&sch->lock, flags);
- }
- 
- static int sch_gpio_direction_out(struct gpio_chip *gc, unsigned gpio_num,
- 				  int val)
- {
- 	struct sch_gpio *sch = gpiochip_get_data(gc);
-+	unsigned long flags;
- 
--	spin_lock(&sch->lock);
-+	spin_lock_irqsave(&sch->lock, flags);
- 	sch_gpio_reg_set(sch, gpio_num, GIO, 0);
--	spin_unlock(&sch->lock);
-+	spin_unlock_irqrestore(&sch->lock, flags);
- 
- 	/*
- 	 * according to the datasheet, writing to the level register has no
-@@ -130,6 +138,12 @@ static int sch_gpio_get_direction(struct gpio_chip *gc, unsigned gpio_num)
- 	return sch_gpio_reg_get(sch, gpio_num, GIO);
- }
- 
-+static int sch_gpio_to_irq(struct gpio_chip *gpio, unsigned int offset)
-+{
-+	struct sch_gpio *sch = gpiochip_get_data(gpio);
-+	return sch->irq_base + offset;
-+}
-+
- static const struct gpio_chip sch_gpio_chip = {
- 	.label			= "sch_gpio",
- 	.owner			= THIS_MODULE,
-@@ -138,12 +152,96 @@ static const struct gpio_chip sch_gpio_chip = {
- 	.direction_output	= sch_gpio_direction_out,
- 	.set			= sch_gpio_set,
- 	.get_direction		= sch_gpio_get_direction,
-+	.to_irq			= sch_gpio_to_irq,
- };
- 
-+static u32 sch_sci_handler(void *context)
-+{
-+	struct sch_gpio *sch = context;
-+	unsigned long core_status, resume_status;
-+	unsigned int resume_gpios, offset;
-+
-+	core_status = inl(sch->iobase + GTS);
-+	resume_status = inl(sch->iobase + GTS + 0x20);
-+
-+	if (core_status == 0 && resume_status == 0)
-+		return ACPI_INTERRUPT_NOT_HANDLED;
-+
-+	for_each_set_bit(offset, &core_status, sch->resume_base)
-+		generic_handle_irq(sch->irq_base + offset);
-+
-+	resume_gpios = sch->chip.ngpio - sch->resume_base;
-+	for_each_set_bit(offset, &resume_status, resume_gpios)
-+		generic_handle_irq(sch->irq_base + sch->resume_base + offset);
-+
-+	outl(core_status, sch->iobase + GTS);
-+	outl(resume_status, sch->iobase + GTS + 0x20);
-+
-+	return ACPI_INTERRUPT_HANDLED;
-+}
-+
-+static int sch_irq_type(struct irq_data *d, unsigned int type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct sch_gpio *sch = gc->private;
-+	unsigned int gpio_num = d->irq - sch->irq_base;
-+	unsigned long flags;
-+	int rising = 0;
-+	int falling = 0;
-+
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		rising = 1;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		falling = 1;
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		rising = 1;
-+		falling = 1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&sch->lock, flags);
-+	sch_gpio_reg_set(sch, gpio_num, GTPE, rising);
-+	sch_gpio_reg_set(sch, gpio_num, GTNE, falling);
-+	spin_unlock_irqrestore(&sch->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void sch_irq_set_enable(struct irq_data *d, int val)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct sch_gpio *sch = gc->private;
-+	unsigned int gpio_num = d->irq - sch->irq_base;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&sch->lock, flags);
-+	sch_gpio_reg_set(sch, gpio_num, GGPE, val);
-+	spin_unlock_irqrestore(&sch->lock, flags);
-+}
-+
-+static void sch_irq_mask(struct irq_data *d)
-+{
-+	sch_irq_set_enable(d, 0);
-+}
-+
-+static void sch_irq_unmask(struct irq_data *d)
-+{
-+	sch_irq_set_enable(d, 1);
-+}
-+
- static int sch_gpio_probe(struct platform_device *pdev)
- {
-+	struct irq_chip_generic *gc;
-+	struct irq_chip_type *ct;
- 	struct sch_gpio *sch;
- 	struct resource *res;
-+	acpi_status status;
-+	int irq_base, ret;
- 
- 	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
- 	if (!sch)
-@@ -203,7 +301,39 @@ static int sch_gpio_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, sch);
- 
--	return devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
-+	ret = devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
-+	if (ret)
-+		return ret;
-+
-+	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, sch->chip.ngpio,
-+					NUMA_NO_NODE);
-+	if (irq_base < 0)
-+		return irq_base;
-+	sch->irq_base = irq_base;
-+
-+	gc = devm_irq_alloc_generic_chip(&pdev->dev, "sch_gpio", 1, irq_base,
-+					 NULL, handle_simple_irq);
-+	if (!gc)
-+		return -ENOMEM;
-+
-+	gc->private = sch;
-+	ct = gc->chip_types;
-+
-+	ct->chip.irq_mask = sch_irq_mask;
-+	ct->chip.irq_unmask = sch_irq_unmask;
-+	ct->chip.irq_set_type = sch_irq_type;
-+
-+	ret = devm_irq_setup_generic_chip(&pdev->dev, gc,
-+					  IRQ_MSK(sch->chip.ngpio),
-+					  0, IRQ_NOREQUEST | IRQ_NOPROBE, 0);
-+	if (ret)
-+		return ret;
-+
-+	status = acpi_install_sci_handler(sch_sci_handler, sch);
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
-+
-+	return 0;
- }
- 
- static struct platform_driver sch_gpio_driver = {
+ ATTRIBUTE_GROUPS(net_class);
 -- 
-2.16.4
+2.21.0
+
