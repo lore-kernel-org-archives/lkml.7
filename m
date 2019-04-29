@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D890BC004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E709C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6DE821670
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4027121655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPu/PKPF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdBnsoM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbfD2T2n (ORCPT
+        id S1729306AbfD2T2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:28:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45666 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729188AbfD2T2m (ORCPT
+        Mon, 29 Apr 2019 15:28:52 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38143 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2T2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:28:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id e24so5807151pfi.12;
-        Mon, 29 Apr 2019 12:28:41 -0700 (PDT)
+        Mon, 29 Apr 2019 15:28:39 -0400
+Received: by mail-pl1-f195.google.com with SMTP id f36so5548508plb.5;
+        Mon, 29 Apr 2019 12:28:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=o/V5fcdJjHEEGhSr+L86I9P3xGJAwwcDCT1sez3UiKw=;
-        b=nPu/PKPFoX/38S1YWGpLVmvQoEwJC1O4gPJeWphYcE7+DFCKUfTYc/NBkutehamSYl
-         mRwpDB4MoyGKDNREQURyD+bx/dibN/Yex6UmJlp6Gtbyki2fWshJq6kM6nyB47K8FJ7X
-         fcda8RDnbnLVMI7EPUCMGljbyU4jXfLSGObTDIS9QpRlEQwL2FXckAGnnbseXnsEBCJD
-         oCxGeU12npDMpfgMJP6nWzusABFo9Mlmm5ec284I/94dgkq34/VoXU7nSP/1iTId3RM+
-         KFoIgsa3W0QMBLdLveyrRADeuOe/YdrYPP7s0QH5O+GqhjsvFWwUVHlVwndTG7Sa5g1U
-         bpig==
+        bh=deTq7zeUED64od4fxOGcfQd1MxzcfH878U7uEsrlFg4=;
+        b=WdBnsoM+xtup++LTNtJ78lv82AKUx20pvpS8dsymvIdduNB9EOBTazCYhvjgBc+imX
+         Ix/uW852adQWx4pBgr5eUXQG/5XDh6hyL8Nmfo+y79Qr4TiC52r8fpGh+qX8Q0OwXAnz
+         E5lxHA6bHRgWH3zSrbUKMjAvXpboT9nHm6cVzWuMGxVu737bg7/7GXzdjXBkypcv3XRm
+         SqAEhkN6qrupI4aiohwuppefngKm1ZI5XgWKclBwkgyfOFT5f60CS1+QAY6gTQkda5sH
+         K/z00HkooEyalU6tchEr+pKvXsAoQg3QTvUTD9dDKjsGmOecdRDLjZVARNEBjx+I59us
+         qO+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=o/V5fcdJjHEEGhSr+L86I9P3xGJAwwcDCT1sez3UiKw=;
-        b=UVkB40GNaxOusMQvUBx+gN7nJjZeMrXd3v1ao+i1Xer6BldZ8402tb676BfzpTizkE
-         yJAXAQ42ge5cTxJMz9DUXCearI2QLDBOI+Kj08Cxz+bkI8NyW1dsJT7rI1egdnx00Oea
-         rV3u92+aOAeEX4AFoE/Z2RwBy7JmZyNvLC8bv7vFkRI5j3q+ut9UoFuhy8yHs1sedPIU
-         L1yxkF4ikhgaxNpLGRPm81WnGu1I29R+nv6KwLG3OF/3FnLvvESJJDsBC7VeMWtQ0QLd
-         UVcY1HEhPJVy23fUpD1OV2Q4YPZXoS3VkPWzmZjLICKCuCgZn0ZoEFZw3RdExH3g6eSk
-         jIEQ==
-X-Gm-Message-State: APjAAAWcbZlszINMbpidn+prsG4dDu9w9Yoq67FBroPh+05gm3BiZcsI
-        7+0UXCKiELhykpoc+I9dxmM=
-X-Google-Smtp-Source: APXvYqyDtDtNh2iUnupV7AxXjhggYBZjnzLIl3wltJ3lU9zLmxLNJ2BNEW2EYpwoyIgQzhPW3oIBrA==
-X-Received: by 2002:a65:5687:: with SMTP id v7mr19072678pgs.299.1556566121015;
-        Mon, 29 Apr 2019 12:28:41 -0700 (PDT)
+        bh=deTq7zeUED64od4fxOGcfQd1MxzcfH878U7uEsrlFg4=;
+        b=ZStOJOiLLP+z+kYs5dDiXYxqWbWlNNIp/Dh0Eio2ZUtex5vdAFvh1obBTGIAcSVve7
+         fcXh38KLd++oPGhjdf0F2v+ls/ymHTKkIFfWpSlNuupzElvcP2s6eHnsGZFa6GyxGhHI
+         vS8XJiWaMjhWjnZ8vj6xEKHx7WdibRaLq1gC7QeqSmpH1GeM1AsY7k/TOeduF0QB1Hty
+         OVxoMEIlDrsZH+SJkDL5IMRPfjpfLb2Erxe7F56LMJK9MOr2fean1pJK9mWVGuqJO42Q
+         kFPKns0vJcNix1t9YSrkx2PzjWn3UVyH8+9LddyMxkT6XOSJVN2/mHbl31EMMxKYG5jz
+         N1/w==
+X-Gm-Message-State: APjAAAXVz/KV0a0e7Lp2jSeQWh9jakd1wRTf6BBHwn64eofHzn/jvSAW
+        NJ5POFw5rt3nzGtRC2nuzhQ=
+X-Google-Smtp-Source: APXvYqxYdjnX4BHvCUfEq0FpCkyjCfLjM2UIXjMD0XX5xx0xujmqEEDZLCrX3BQp3GFe+cgqfM1B6A==
+X-Received: by 2002:a17:902:26b:: with SMTP id 98mr34443210plc.30.1556566118261;
+        Mon, 29 Apr 2019 12:28:38 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j20sm48495489pfn.84.2019.04.29.12.28.40
+        by smtp.gmail.com with ESMTPSA id g6sm10302945pgi.70.2019.04.29.12.28.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 12:28:40 -0700 (PDT)
+        Mon, 29 Apr 2019 12:28:37 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
         linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5/5] watchdog: Improve Kconfig entry ordering and dependencies
-Date:   Mon, 29 Apr 2019 12:28:31 -0700
-Message-Id: <1556566111-31970-5-git-send-email-linux@roeck-us.net>
+Subject: [PATCH 3/5] watchdog: Make watchdog core configurable as module
+Date:   Mon, 29 Apr 2019 12:28:29 -0700
+Message-Id: <1556566111-31970-3-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556566111-31970-1-git-send-email-linux@roeck-us.net>
 References: <1556566111-31970-1-git-send-email-linux@roeck-us.net>
@@ -70,66 +70,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HPWDT_NMI_DECODING depends on HP_WATCHDOG and should be next to it.
-This helps menuconfig identify HPWDT_NMI_DECODING as depending on
-HP_WATCHDOG.
+Under some circumstances it may be desirable to configure
+the watchdog core as module. Enable it.
 
-BCM_KONA_WDT_DEBUG depends on BCM_KONA_WDT which depends on COMPILE_TEST.
-Enabling BCM_KONA_WDT_DEBUG without BCM_KONA_WDT does not make sense,
-so drop the COMPILE_TEST dependency from it. This also improves
-menuconfig, which now properly associates BCM_KONA_WDT_DEBUG with
-BCM_KONA_WDT.
+As part of this change, mark pretimeout governors as depending
+on the watchdog core. This is necessary to prevent governors
+from being built into the kernel if the watchdog core is built
+as module.
 
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/Kconfig | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/watchdog/Kconfig | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index e5b30c4947d7..f457992487ea 100644
+index ac37a14439c7..c2d6934508ee 100644
 --- a/drivers/watchdog/Kconfig
 +++ b/drivers/watchdog/Kconfig
-@@ -1261,6 +1261,15 @@ config HP_WATCHDOG
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called hpwdt.
+@@ -30,7 +30,7 @@ menuconfig WATCHDOG
+ if WATCHDOG
  
-+config HPWDT_NMI_DECODING
-+	bool "NMI support for the HP ProLiant iLO2+ Hardware Watchdog Timer"
-+	depends on HP_WATCHDOG
-+	default y
-+	help
-+	  Enables the NMI handler for the watchdog pretimeout NMI and the iLO
-+	  "Generate NMI to System" virtual button.  When an NMI is claimed
-+	  by the driver, panic is called.
-+
- config KEMPLD_WDT
- 	tristate "Kontron COM Watchdog Timer"
- 	depends on MFD_KEMPLD
-@@ -1272,15 +1281,6 @@ config KEMPLD_WDT
- 	  This driver can also be built as a module. If so, the module will be
- 	  called kempld_wdt.
+ config WATCHDOG_CORE
+-	bool "WatchDog Timer Driver Core"
++	tristate "WatchDog Timer Driver Core"
+ 	---help---
+ 	  Say Y here if you want to use the new watchdog timer driver core.
+ 	  This driver provides a framework for all watchdog timer drivers
+@@ -75,6 +75,7 @@ if WATCHDOG_PRETIMEOUT_GOV
  
--config HPWDT_NMI_DECODING
--	bool "NMI support for the HP ProLiant iLO2+ Hardware Watchdog Timer"
--	depends on HP_WATCHDOG
--	default y
--	help
--	  Enables the NMI handler for the watchdog pretimeout NMI and the iLO
--	  "Generate NMI to System" virtual button.  When an NMI is claimed
--	  by the driver, panic is called.
--
- config SC1200_WDT
- 	tristate "National Semiconductor PC87307/PC97307 (ala SC1200) Watchdog"
- 	depends on X86
-@@ -1729,7 +1729,7 @@ config BCM_KONA_WDT
- 
- config BCM_KONA_WDT_DEBUG
- 	bool "DEBUGFS support for BCM Kona Watchdog"
--	depends on BCM_KONA_WDT || COMPILE_TEST
-+	depends on BCM_KONA_WDT
+ config WATCHDOG_PRETIMEOUT_GOV_NOOP
+ 	tristate "Noop watchdog pretimeout governor"
++	depends on WATCHDOG_CORE
+ 	default WATCHDOG_CORE
  	help
- 	  If enabled, adds /sys/kernel/debug/bcm_kona_wdt/info which provides
- 	  access to the driver's internal data structures as well as watchdog
+ 	  Noop watchdog pretimeout governor, only an informational
+@@ -82,6 +83,7 @@ config WATCHDOG_PRETIMEOUT_GOV_NOOP
+ 
+ config WATCHDOG_PRETIMEOUT_GOV_PANIC
+ 	tristate "Panic watchdog pretimeout governor"
++	depends on WATCHDOG_CORE
+ 	default WATCHDOG_CORE
+ 	help
+ 	  Panic watchdog pretimeout governor, on watchdog pretimeout
 -- 
 2.7.4
 
