@@ -2,112 +2,99 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4EEC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A3EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F045E20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8CB2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UJxTcsu3"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="YZxI/MTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbfD2NXi (ORCPT
+        id S1728155AbfD2NZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:23:38 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:48548 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2NXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:23:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=G9+UVkmUelZPc/fq6yyI9wbOx04gDxUNqmqWJk98Nkg=; b=UJxTcsu3QVfNUjU0YZtQzi6U3y
-        wqS5EGC5LSO/GkxW9xCydVDvbZ1fs37BBldYsyRB4/OLeWLrobP38ZeMf/gS1JrYsru+wKb40eq3m
-        ceOmhYYufSpplKctvC8LKsMTHYMWy3AnrSfh9BAbBMXdDsP07MKex5LVfvQ4FhluvDmg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hL6Fj-00010z-OB; Mon, 29 Apr 2019 15:23:27 +0200
-Date:   Mon, 29 Apr 2019 15:23:27 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     biao huang <biao.huang@mediatek.com>
-Cc:     Jose Abreu <joabreu@synopsys.com>, davem@davemloft.net,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, yt.shen@mediatek.com,
-        jianguo.zhang@mediatek.com
-Subject: Re: [PATCH 5/6] net: stmmac: add mdio clause 45 access from mac
- device for dwmac4
-Message-ID: <20190429132327.GF10772@lunn.ch>
-References: <1556433009-25759-1-git-send-email-biao.huang@mediatek.com>
- <1556433009-25759-6-git-send-email-biao.huang@mediatek.com>
- <20190428163705.GH23059@lunn.ch>
- <1556517925.24897.17.camel@mhfsdcap03>
+        Mon, 29 Apr 2019 09:25:21 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40888 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfD2NZU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:25:20 -0400
+Received: by mail-yw1-f66.google.com with SMTP id t79so3670126ywc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 06:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X9kf4JBFK1L9TXDCESs4VpTZ5WWFhznjkD+qwDCtBds=;
+        b=YZxI/MTZu84kNPX0vmCPOIN20QsbPLkyEf9fmXM5keufwa34Lt2PwN490Ve/9oChXZ
+         x1EimBr+XLhsPTAoPk7kT0bFs6cc8LmBvt/RaVfRuB4yBBggLxcELmGnDBGYmdbvAZ5n
+         rNq/9Z1ft28qGjNWuQqbmh37yN1sfhUFvx4rcRiGrQYovoYu3fGAn+OgA8oEsph9NwEo
+         eCWO/9dAFLy7+2WYWz5pgPMN0kTeoOOgnlbQWHokcwBNJ8JnwGEnE81XMB1jZbCbBp0+
+         WKHDfVdmqjjstrOg0MMerxmA0BshTyayjr9RdKnKMp5v9Un6lNBDtYIXNtQMZeGbIZsC
+         sSQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X9kf4JBFK1L9TXDCESs4VpTZ5WWFhznjkD+qwDCtBds=;
+        b=UhIDYfCpCGMbPhjurehLeQb7Arq6uzC9mLp/YUcdYNQkSsd0PPj0D956ESfpWt7Zzv
+         Q8U4i9EHAvfs6NJBePW/NRHA2wnghBvyxoVj0LNvKkxu1hZDQVkWgXSbGlf/pFBaDtL1
+         2VoLRw0Ri+agLPD5uknGjpI8vkYjXqPaKsYHWPufq+VbbtbQCe63asdlmhggzWBirHlU
+         zf/EctTlu/sIzO1Mo7ERrymvFq0FvB/uFAjos4pZLhU1oOmdUkTRqirYsvVrXtgB5ZNM
+         4wZzpYQwd5Ca937ViX+rlth6WWaXRkT+3ecM/Zrjtzb9pK11W1ZGt2E3CLmiYbR5LrA4
+         geoQ==
+X-Gm-Message-State: APjAAAW3cdtCb33FMAlMDGXMm+6IvV1M/7lWHKd60p7RFajvP1LLW+ku
+        rd1VvogFCpjievxmjWqpi33ojUzsaBOamA==
+X-Google-Smtp-Source: APXvYqyWT1Mdaz0GcnscCgwARQJx56yalbQKUAn8CvaggUEMppCjXwGgdfIj1rLJKV8jahJGn5CFoQ==
+X-Received: by 2002:a0d:c445:: with SMTP id g66mr48824753ywd.61.1556544319865;
+        Mon, 29 Apr 2019 06:25:19 -0700 (PDT)
+Received: from kshutemo-mobl1.localdomain (adsl-173-228-226-134.prtc.net. [173.228.226.134])
+        by smtp.gmail.com with ESMTPSA id t85sm2630104ywc.92.2019.04.29.06.25.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 06:25:19 -0700 (PDT)
+Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
+        id A22AD30008B; Mon, 29 Apr 2019 16:25:18 +0300 (+03)
+Date:   Mon, 29 Apr 2019 16:25:18 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: v5.1-rc7 fails to build on s390x (Re: Linux 5.1-rc7)
+Message-ID: <20190429132518.75nlcixs3zgerv6c@kshutemo-mobl1>
+References: <CAHk-=whvWQbP20g77U4QRXQDS5w+kf=V-P2QjMkgA-OwJJjHtg@mail.gmail.com>
+ <20190429052136.GA21672@unicorn.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556517925.24897.17.camel@mhfsdcap03>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190429052136.GA21672@unicorn.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Hi Biao
-> > 
-> > readl_poll_timeout() returns an error code. It is better to return
-> > that, than make up some other error code. Yes, i know the C22 read
-> > returns EBUSY, but we don't need to copy that behaviour into C45.
-> > 
-> OK, will return error code here.
-> > > +
-> > > +	value = 0;
-> > > +	value |= (prtad << priv->hw->mii.cl45_reg_shift)
-> > > +			& priv->hw->mii.cl45_reg_mask;
-> > > +	writel(value, priv->ioaddr + mii_data);
-> > > +
-> > > +	/* delay 2ms to avoid error value of get_phy_c45_devs_in_pkg */
-> > > +	mdelay(2);
-> > 
-> > Please could you explain this a bit more?
-> when of_mdiobus_register is invoked,
-> the C22 PHY addr information will be obtained in device tree(reg = xx,
-> no need through mdiobus),
-> but C45 PHY addr should be got through mdiobus->read according to
-> current flow.
->     of_mdiobus_register -->
->     of_mdiobus_register_phy -->
->     get_phy_device -->
->     get_phy_id -->
->     get_phy_c45_ids -->
->     get_phy_c45_devs_in_pkg
+On Mon, Apr 29, 2019 at 07:21:36AM +0200, Michal Kubecek wrote:
+> v5.1-rc7 fails to build on s390x due to
 > 
-> In my platform, mdio bus read will return 0xffff or 0x0000 for C45 in
-> of_mdiobus_register callstack, and that's not the expected value. 
-> So that the mdiobus register fails.
+> 		vmf->page = ZERO_PAGE(vmf->vm_start);
 > 
-> We took some time to find that only after adding 2ms delay here,
-> the read action will be stable and return the expected value.
+> from commit 67f269b37f9b ("RDMA/ucontext: Fix regression with
+> disassociate"). This is not a problem on x86_64 where ZERO_PAGE()
+> doesn't use its argument but s390 version does.
 > 
-> did you try C45 support in your platform? I can't tell whether it's a
-> common or specified issue.
+> I suppose the line should rather read
+> 
+> 		vmf->page = ZERO_PAGE(vmf->vma->vm_start);
+> 
+> but I'm just guessing.
 
-It sounds like you need to put a logic analyser on the bus and see if
-it performs a C22 transaction, or an invalid transaction, without the
-2ms pause.
+I belive it has to be
 
-This sounds like a 'silicon' bug. There should not be a need to pause
-here. And the comment should talk about this silicon bug, not
-get_phy_c45_devs_in_pkg(). It will fail for all accesses, not just
-those for get_phy_c45_devs_in_pkg().
+		vmf->page = ZERO_PAGE(vmf->address);
 
-	Andrew
+-- 
+ Kirill A. Shutemov
