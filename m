@@ -2,94 +2,165 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1046EC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDF5C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4A62053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6AC2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556539284;
+	bh=DbIFoJQ0NjskWCgR2+Q/6spBpIIZcCw2op2ve10iRqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eHFVfJu628UFmJv/Rw8IADkUc0Opi20ia3XI48UasRhJuWq1kl+U4guQxqkwnzxVN
+	 7Q6sL5hYcrOitWN/67d+lGZ4U8luCwaRydbE8mtzlcVuh7NhRyzmQ68sFAV9axEliQ
+	 MSbVoW1AAnzdrT++ym+kw1YOWQoa0mDsXryEG2vE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbfD2MAn (ORCPT
+        id S1728123AbfD2MBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:00:43 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:58553 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727913AbfD2MAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:00:43 -0400
-Received: from [192.168.2.10] ([46.9.232.72])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id L4xZhM1IOb8gSL4xch8Xvv; Mon, 29 Apr 2019 14:00:41 +0200
-Subject: Re: [PATCH v11 0/7] [media] Add analog mode support for Medion
- MD95700
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc:     Michael Krufky <mkrufky@linuxtv.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Walls <awalls@md.metrocast.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org
-References: <cover.1556365459.git.mail@maciej.szmigiero.name>
- <9a0d5e31-120b-c0fa-7782-c330a06c23b3@xs4all.nl>
- <370e45ab-5534-4e65-5631-5d7a2babcb19@maciej.szmigiero.name>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <bc2ee280-8916-ad2c-0408-358d7c661366@xs4all.nl>
-Date:   Mon, 29 Apr 2019 14:00:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 29 Apr 2019 08:01:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727913AbfD2MBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:01:22 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAE3B2053B;
+        Mon, 29 Apr 2019 12:01:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556539281;
+        bh=DbIFoJQ0NjskWCgR2+Q/6spBpIIZcCw2op2ve10iRqo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MhIcf0lP7BFFL2RENHkggZTMclJN4Ls4fuywMSRn+E/0bpfOjpVTfATR6qSV9F0bQ
+         ZlDaY5C2MNIC2N/yrdUKmyxKEm3mfxgp6p75OYWAZJncJdhfaVdZWnP8ppLx7dTinq
+         5TUM5Knxz4BNRMHMEXYHWb7D7MlbT+5w99XNoDgo=
+Date:   Mon, 29 Apr 2019 17:31:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     dan.j.williams@intel.com, eric.long@unisoc.com,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com, broonie@kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] dmaengine: sprd: Add interrupt support for 2-stage
+ transfer
+Message-ID: <20190429120108.GL3845@vkoul-mobl.Dlink>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
+ <07c070b4397296a4500d04abe16dfd8a71a2f211.1555330115.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <370e45ab-5534-4e65-5631-5d7a2babcb19@maciej.szmigiero.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOS1PtGx4+3MIgh1c3okRiC4p4wn8LiIp4ABM1QF0th54+9laJ9U7Yv7WRTf7V22a70/piRKc/1tPhiSODUr4vQhM9QCzL37wc8tcRfzoC8zC3/8/Zsr
- Wjx4ZpJ7HwKpTOelSM59g2xuqWEo4fXdEm5NV3Pm3TmgmwaBCIn1rjfghU+Sr5TsV06UEbJWrfoWRf6KxvtlJaeSnm4Uve6XIb1Ed1gCIHyR5hqyiZk3efQD
- Q750aac7qaVfeouKuGRzeWPUESEvoQIaAJRTHGttFSiFTSX4TNI4dJUqrieNDbHmXTLTHdvhXO1A3DrmObMAPBZfi+wKfTsZ2XYZ8tSwQtpJGAqv3taw2GV4
- HKqLm+zT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <07c070b4397296a4500d04abe16dfd8a71a2f211.1555330115.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/19 1:42 PM, Maciej S. Szmigiero wrote:
-> Hi Hans,
+On 15-04-19, 20:15, Baolin Wang wrote:
+> For 2-stage transfer, some users like Audio still need transaction interrupt
+> to notify when the 2-stage transfer is completed. Thus we should enable
+> 2-stage transfer interrupt to support this feature.
 > 
-> On 29.04.2019 10:17, Hans Verkuil wrote:
->> Hi Maciej,
->>
->> I reviewed v11 and I had only two comments in two sources. Can you fix that
->> and post a v12?
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  drivers/dma/sprd-dma.c |   22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
 > 
-> Thanks for looking at this quickly, will do.
-> 
->> Mike, once v12 is posted, can you try and test it on your hardware?
->>
->> The goal is to get this merged for 5.3.
->>
->> Maciej, just FYI: I won't merge the last patch. It's OK to post it, that
->> way it is archived if anyone is ever interested in this in the future, but
->> it's not something that we want to merge. It adds a new public API to enable
->> this, and that's not something we'd like to do unless there is a really
->> good reason. And adding a debug feature for old hardware isn't enough of a
->> reason. Sorry.
-> 
-> :(
-> 
-> I was hoping that maybe something like CONFIG_VIDEO_ADV_DEBUG will do the
-> trick.
-> 
-> I'm afraid that if this is out-of-tree it will quickly bitrot since people
-> will submit patches to "optimize" the in-kernel code unknowingly breaking
-> compatibility with this patch.
-> 
-> But I respect your decision here.
+> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> index cc9c24d..4c18f44 100644
+> --- a/drivers/dma/sprd-dma.c
+> +++ b/drivers/dma/sprd-dma.c
+> @@ -62,6 +62,8 @@
+>  /* SPRD_DMA_GLB_2STAGE_GRP register definition */
+>  #define SPRD_DMA_GLB_2STAGE_EN		BIT(24)
+>  #define SPRD_DMA_GLB_CHN_INT_MASK	GENMASK(23, 20)
+> +#define SPRD_DMA_GLB_DEST_INT		BIT(22)
+> +#define SPRD_DMA_GLB_SRC_INT		BIT(20)
+>  #define SPRD_DMA_GLB_LIST_DONE_TRG	BIT(19)
+>  #define SPRD_DMA_GLB_TRANS_DONE_TRG	BIT(18)
+>  #define SPRD_DMA_GLB_BLOCK_DONE_TRG	BIT(17)
+> @@ -135,6 +137,7 @@
+>  /* define DMA channel mode & trigger mode mask */
+>  #define SPRD_DMA_CHN_MODE_MASK		GENMASK(7, 0)
+>  #define SPRD_DMA_TRG_MODE_MASK		GENMASK(7, 0)
+> +#define SPRD_DMA_INT_TYPE_MASK		GENMASK(7, 0)
+>  
+>  /* define the DMA transfer step type */
+>  #define SPRD_DMA_NONE_STEP		0
+> @@ -190,6 +193,7 @@ struct sprd_dma_chn {
+>  	u32			dev_id;
+>  	enum sprd_dma_chn_mode	chn_mode;
+>  	enum sprd_dma_trg_mode	trg_mode;
+> +	enum sprd_dma_int_type	int_type;
+>  	struct sprd_dma_desc	*cur_desc;
+>  };
+>  
+> @@ -429,6 +433,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+>  		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+>  		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+>  		val |= SPRD_DMA_GLB_2STAGE_EN;
+> +		if (schan->int_type != SPRD_DMA_NO_INT)
 
-If analog TV was still a hot new topic, then this would be interesting to add.
-But the reality is that we see very little activity in that area. In fact, I'm
-impressed by your perseverance with this patch series since you have been
-working on this since 2017!
+Who configure int_type?
 
-Regards,
+> +			val |= SPRD_DMA_GLB_SRC_INT;
+> +
+>  		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
+>  		break;
+>  
+> @@ -436,6 +443,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+>  		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+>  		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+>  		val |= SPRD_DMA_GLB_2STAGE_EN;
+> +		if (schan->int_type != SPRD_DMA_NO_INT)
+> +			val |= SPRD_DMA_GLB_SRC_INT;
+> +
+>  		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
+>  		break;
+>  
+> @@ -443,6 +453,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+>  		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+>  			SPRD_DMA_GLB_DEST_CHN_MASK;
+>  		val |= SPRD_DMA_GLB_2STAGE_EN;
+> +		if (schan->int_type != SPRD_DMA_NO_INT)
+> +			val |= SPRD_DMA_GLB_DEST_INT;
+> +
+>  		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
+>  		break;
+>  
+> @@ -450,6 +463,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+>  		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+>  			SPRD_DMA_GLB_DEST_CHN_MASK;
+>  		val |= SPRD_DMA_GLB_2STAGE_EN;
+> +		if (schan->int_type != SPRD_DMA_NO_INT)
+> +			val |= SPRD_DMA_GLB_DEST_INT;
+> +
+>  		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
+>  		break;
+>  
+> @@ -911,11 +927,15 @@ static int sprd_dma_fill_linklist_desc(struct dma_chan *chan,
+>  		schan->linklist.virt_addr = 0;
+>  	}
+>  
+> -	/* Set channel mode and trigger mode for 2-stage transfer */
+> +	/*
+> +	 * Set channel mode, interrupt mode and trigger mode for 2-stage
+> +	 * transfer.
+> +	 */
+>  	schan->chn_mode =
+>  		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
+>  	schan->trg_mode =
+>  		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
+> +	schan->int_type = flags & SPRD_DMA_INT_TYPE_MASK;
+>  
+>  	sdesc = kzalloc(sizeof(*sdesc), GFP_NOWAIT);
+>  	if (!sdesc)
+> -- 
+> 1.7.9.5
 
-	Hans
+-- 
+~Vinod
