@@ -2,150 +2,262 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F089C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C9EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 502132147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6618F2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:54:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfwiCI/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfD2Lx2 (ORCPT
+        id S1728117AbfD2LyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:53:28 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:40343 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727710AbfD2Lx2 (ORCPT
+        Mon, 29 Apr 2019 07:54:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51035 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbfD2LyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:53:28 -0400
-Received: from [192.168.2.10] ([46.9.232.72])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id L4qYhLvtcb8gSL4qbh8V2m; Mon, 29 Apr 2019 13:53:26 +0200
-Subject: Re: [PATCH v11 2/7] cx25840: g_std operation really implements
- querystd operation
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc:     Michael Krufky <mkrufky@linuxtv.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Walls <awalls@md.metrocast.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org
-References: <cover.1556365459.git.mail@maciej.szmigiero.name>
- <9490ba236364690f582815c125b3e5208a4778a2.1556365459.git.mail@maciej.szmigiero.name>
- <7ae66245-e524-cecd-70dd-be33fe6589d9@xs4all.nl>
- <2b34d7d0-18b7-d403-4186-6a851c1520eb@maciej.szmigiero.name>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <fb019af2-fe5c-881d-4f15-81136d3c170d@xs4all.nl>
-Date:   Mon, 29 Apr 2019 13:53:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <2b34d7d0-18b7-d403-4186-6a851c1520eb@maciej.szmigiero.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKwA3S2IxZgjZWfqmKEPeqVdJDrLTFoc8t3n+0oGDJdUfvG37o7dh+28wPdouV7Qpllfaw4miwNPEkRAuGzksRzonSsqzJXDtCAI450oT8nVm4jesbfm
- jpckwjfiOsQyBabpqpstAzSKDhirsuRe/KwcAMavbQSc3eSO9L0PQ0rsZDqpfM/1c6bheKHDo2PNSdU0T5pQAVAFyJROymusiQAD0cTqb4H1ehJ3LrAU5iQU
- J5e6KCfD0/xnBHruBv9kX/dFQY+lxMDjagZP9elxWAMk5ffspayKB5FUb9ZAi6FaUBC2hGO5I6l0A8tZZu/okPxkiu9AArmxRV5gibFvc53Cj9YOSEDhjFzi
- brMnlWhp
+        Mon, 29 Apr 2019 07:54:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p21so11877747wmc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 04:54:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0BIuwk58CaJsk9RrgR9sqqUo2JdknvUluNTd07CFIkQ=;
+        b=GfwiCI/Wm1y3BZLlgVOyL4IuBhWqOeZGovQWThy39oT670A1eyapWbfQHb2m+EfZJy
+         RexPxGSL2phcNfpkmej/gvo8Lz+FfzHjaJHMXz+effqkD9YdFvwr7U33At/0U3Zf0HiS
+         ORGzHb8Jx4xS+7sd5/CsnbMrT2xRqMzRfDIoM+tfaSgmDENSP3hxbbhzBNF+2Jl5dy9l
+         ExcT9VPDIQ98FvWlWsMRSco83o+oPnjSNvQrNItDwgVhfu0bXYMs32c0Q9QF6qJKqEBz
+         h1nWq4TcncSNCthe2M/TqS56h6nB5/WJliu0rUIFFs4JqNDaR8bEiVntZ+gTdPxrfNZ9
+         GuLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0BIuwk58CaJsk9RrgR9sqqUo2JdknvUluNTd07CFIkQ=;
+        b=XPynLjFVl1Fcze5NWR8PrQjw7wxrkOrFq+S08DxPLKVieYbl4q7gPZBMeSxKYqRZrr
+         2kHnLyl/g5CsxT8o2L8T/eH68WRvfg+6tvsg3A9//X/eKNUnND4HH7Merh/nyC9nOjnG
+         sy9bOnWQfYFFi4lCDmS3Q9X5AUvB+2ca1S7dzmYj/6Zf/XZ2utdTmqvGHgpr2zXAsHcu
+         V2tvjfaybw9tsuK60r5xoMe2mRB4LC8aK0GKPYvDaneZKcS+GklCigVyDDlsJKzy8kfF
+         vFqlUytLsuhlLWRKrAI+G3qZ5M/Y5p6xrqHHENAlOzN2CcDKOmD1cUc77rwaCeqvX+9I
+         Ukjw==
+X-Gm-Message-State: APjAAAWVz8nJOQlPAbdTEP1jmhJGgKnUHBD2qnsjKHzGTuJf1XGxxCW1
+        XQcKI8NfnxvY2b28jucxV+qTpnUd
+X-Google-Smtp-Source: APXvYqwgbM/mK0g4q7DjPlH/DnDaE+oQ+Y5CGY+jF6bIfe37BjLBQmtMslgS2DV/bGLXxe11oMlDRQ==
+X-Received: by 2002:a7b:c218:: with SMTP id x24mr4518743wmi.57.1556538844981;
+        Mon, 29 Apr 2019 04:54:04 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id h16sm9527141wrb.31.2019.04.29.04.54.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 04:54:04 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 1/2] habanalabs: return old dram bar address upon change
+Date:   Mon, 29 Apr 2019 14:54:01 +0300
+Message-Id: <20190429115402.8156-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/19 1:41 PM, Maciej S. Szmigiero wrote:
-> On 29.04.2019 10:05, Hans Verkuil wrote:
->> On 4/27/19 4:50 PM, Maciej S. Szmigiero wrote:
->>> cx25840 driver g_std operation queries the currently detected video signal,
->>> however this is what querystd operation should do, so let's rename the
->>> handler.
->>>
->>> None of the existing cx25840 driver users ever called the g_std operation,
->>> one of them calls querystd on each of its subdevs but then the result is
->>> only used to implement VIDIOC_QUERYSTD (as it should).
->>>
->>> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
->>> ---
->>>  drivers/media/i2c/cx25840/cx25840-core.c | 9 +++++----
->>>  1 file changed, 5 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/media/i2c/cx25840/cx25840-core.c b/drivers/media/i2c/cx25840/cx25840-core.c
->>> index 0bf30222cf93..2bcaf239b0d2 100644
->>> --- a/drivers/media/i2c/cx25840/cx25840-core.c
->>> +++ b/drivers/media/i2c/cx25840/cx25840-core.c
->>> @@ -1772,7 +1772,7 @@ static int cx25840_s_stream(struct v4l2_subdev *sd, int enable)
->>>  }
->>>  
->>>  /* Query the current detected video format */
->>> -static int cx25840_g_std(struct v4l2_subdev *sd, v4l2_std_id *std)
->>> +static int cx25840_querystd(struct v4l2_subdev *sd, v4l2_std_id *std)
->>>  {
->>>  	struct i2c_client *client = v4l2_get_subdevdata(sd);
->>>  
->>> @@ -1800,8 +1800,9 @@ static int cx25840_g_std(struct v4l2_subdev *sd, v4l2_std_id *std)
->>>  	u32 fmt = (cx25840_read4(client, 0x40c) >> 8) & 0xf;
->>>  	*std = stds[ fmt ];
->>>  
->>> -	v4l_dbg(1, cx25840_debug, client, "g_std fmt = %x, v4l2_std_id = 0x%x\n",
->>> -		fmt, (unsigned int)stds[ fmt ]);
->>> +	v4l_dbg(1, cx25840_debug, client,
->>> +		"querystd fmt = %x, v4l2_std_id = 0x%x\n",
->>> +		fmt, (unsigned int)stds[fmt]);
->>>  
->>>  	return 0;
->>>  }
->>> @@ -5081,7 +5082,7 @@ static const struct v4l2_subdev_audio_ops cx25840_audio_ops = {
->>>  
->>>  static const struct v4l2_subdev_video_ops cx25840_video_ops = {
->>>  	.s_std = cx25840_s_std,
->>> -	.g_std = cx25840_g_std,
->>> +	.querystd = cx25840_querystd,
->>>  	.s_routing = cx25840_s_video_routing,
->>>  	.s_stream = cx25840_s_stream,
->>>  	.g_input_status = cx25840_g_input_status,
->>>
->>
->> Hmm, you are right, g_std really implements querystd. I wondered why this wasn't
->> noticed before, and it appears that no bridge driver ever calls the g_std op of the
->> cx25840 driver. It's all handled inside the bridge driver itself.
->>
->> Can you add a new cx25840_g_std() op here that just returns state->std?
->>
->> That would make much more sense.
->>
->> You also need to use g_std in patch 6/7 (see my comments there)
-> 
-> Will do, but a small comment here:
-> Currently, when somebody passes a set of multiple standards to s_std,
-> let's say V4L2_STD_ALL the chip isn't configured for "every standard
-> possible".
-> 
-> It is set for a specific, single standard from this set of standards.
-> There is a "if" tree at the begging of set_v4lstd() that implements,
-> effectively, a list of priorities when selecting a single standard
-> from a set of multiple.
-> 
-> That's why I think the incoming standard should be selected upfront
-> according to this priority list in s_std handler and only this
-> effective value should be set in state->std so g_std actually
-> returns what the device is set for.
+This patch changes the ASIC interface function that changes the DRAM bar
+window. The change is to return the old address that the DRAM bar pointed
+to instead of an error code.
 
-It's not what happens in other i2c drivers (I looked at saa7115 and adv7180),
-so let's just keep it as-is. I want to keep changes in the cx25840 behavior
-to a minimum.
+This simplifies the code that use this function (mainly in debugfs) to
+restore the bar to the old setting.
 
-Regards,
+This is also needed for easier support in future ASICs.
 
-	Hans
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/goya/goya.c  | 60 +++++++++++++---------------
+ drivers/misc/habanalabs/habanalabs.h |  5 ++-
+ drivers/misc/habanalabs/pci.c        |  5 ++-
+ 3 files changed, 35 insertions(+), 35 deletions(-)
 
-> 
->> Regards,
->>
->> 	Hans
->>
-> 
-> Thanks,
-> Maciej
-> 
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 8ee3b00b0fab..04e4ed8a0be6 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -389,33 +389,26 @@ static int goya_pci_bars_map(struct hl_device *hdev)
+ 	return 0;
+ }
+ 
+-/*
+- * goya_set_ddr_bar_base - set DDR bar to map specific device address
+- *
+- * @hdev: pointer to hl_device structure
+- * @addr: address in DDR. Must be aligned to DDR bar size
+- *
+- * This function configures the iATU so that the DDR bar will start at the
+- * specified addr.
+- *
+- */
+-static int goya_set_ddr_bar_base(struct hl_device *hdev, u64 addr)
++static u64 goya_set_ddr_bar_base(struct hl_device *hdev, u64 addr)
+ {
+ 	struct goya_device *goya = hdev->asic_specific;
++	u64 old_addr = addr;
+ 	int rc;
+ 
+ 	if ((goya) && (goya->ddr_bar_cur_addr == addr))
+-		return 0;
++		return old_addr;
+ 
+ 	/* Inbound Region 1 - Bar 4 - Point to DDR */
+ 	rc = hl_pci_set_dram_bar_base(hdev, 1, 4, addr);
+ 	if (rc)
+-		return rc;
++		return U64_MAX;
+ 
+-	if (goya)
++	if (goya) {
++		old_addr = goya->ddr_bar_cur_addr;
+ 		goya->ddr_bar_cur_addr = addr;
++	}
+ 
+-	return 0;
++	return old_addr;
+ }
+ 
+ /*
+@@ -2215,11 +2208,10 @@ static int goya_init_cpu(struct hl_device *hdev, u32 cpu_timeout)
+ 	 * Before pushing u-boot/linux to device, need to set the ddr bar to
+ 	 * base address of dram
+ 	 */
+-	rc = goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE);
+-	if (rc) {
++	if (goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE) == U64_MAX) {
+ 		dev_err(hdev->dev,
+ 			"failed to map DDR bar to DRAM base address\n");
+-		return rc;
++		return -EIO;
+ 	}
+ 
+ 	if (hdev->pldm) {
+@@ -2454,12 +2446,12 @@ static int goya_hw_init(struct hl_device *hdev)
+ 	 * After CPU initialization is finished, change DDR bar mapping inside
+ 	 * iATU to point to the start address of the MMU page tables
+ 	 */
+-	rc = goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
+-		(MMU_PAGE_TABLES_ADDR & ~(prop->dram_pci_bar_size - 0x1ull)));
+-	if (rc) {
++	if (goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
++			(MMU_PAGE_TABLES_ADDR &
++			~(prop->dram_pci_bar_size - 0x1ull))) == U64_MAX) {
+ 		dev_err(hdev->dev,
+ 			"failed to map DDR bar to MMU page tables\n");
+-		return rc;
++		return -EIO;
+ 	}
+ 
+ 	rc = goya_mmu_init(hdev);
+@@ -3958,6 +3950,7 @@ void goya_restore_phase_topology(struct hl_device *hdev)
+ static int goya_debugfs_read32(struct hl_device *hdev, u64 addr, u32 *val)
+ {
+ 	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	u64 ddr_bar_addr;
+ 	int rc = 0;
+ 
+ 	if ((addr >= CFG_BASE) && (addr < CFG_BASE + CFG_SIZE)) {
+@@ -3975,15 +3968,16 @@ static int goya_debugfs_read32(struct hl_device *hdev, u64 addr, u32 *val)
+ 		u64 bar_base_addr = DRAM_PHYS_BASE +
+ 				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
+ 
+-		rc = goya_set_ddr_bar_base(hdev, bar_base_addr);
+-		if (!rc) {
++		ddr_bar_addr = goya_set_ddr_bar_base(hdev, bar_base_addr);
++		if (ddr_bar_addr != U64_MAX) {
+ 			*val = readl(hdev->pcie_bar[DDR_BAR_ID] +
+ 						(addr - bar_base_addr));
+ 
+-			rc = goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
+-				(MMU_PAGE_TABLES_ADDR &
+-					~(prop->dram_pci_bar_size - 0x1ull)));
++			ddr_bar_addr = goya_set_ddr_bar_base(hdev,
++							ddr_bar_addr);
+ 		}
++		if (ddr_bar_addr == U64_MAX)
++			rc = -EIO;
+ 	} else {
+ 		rc = -EFAULT;
+ 	}
+@@ -4008,6 +4002,7 @@ static int goya_debugfs_read32(struct hl_device *hdev, u64 addr, u32 *val)
+ static int goya_debugfs_write32(struct hl_device *hdev, u64 addr, u32 val)
+ {
+ 	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	u64 ddr_bar_addr;
+ 	int rc = 0;
+ 
+ 	if ((addr >= CFG_BASE) && (addr < CFG_BASE + CFG_SIZE)) {
+@@ -4025,15 +4020,16 @@ static int goya_debugfs_write32(struct hl_device *hdev, u64 addr, u32 val)
+ 		u64 bar_base_addr = DRAM_PHYS_BASE +
+ 				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
+ 
+-		rc = goya_set_ddr_bar_base(hdev, bar_base_addr);
+-		if (!rc) {
++		ddr_bar_addr = goya_set_ddr_bar_base(hdev, bar_base_addr);
++		if (ddr_bar_addr != U64_MAX) {
+ 			writel(val, hdev->pcie_bar[DDR_BAR_ID] +
+ 						(addr - bar_base_addr));
+ 
+-			rc = goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
+-				(MMU_PAGE_TABLES_ADDR &
+-					~(prop->dram_pci_bar_size - 0x1ull)));
++			ddr_bar_addr = goya_set_ddr_bar_base(hdev,
++							ddr_bar_addr);
+ 		}
++		if (ddr_bar_addr == U64_MAX)
++			rc = -EIO;
+ 	} else {
+ 		rc = -EFAULT;
+ 	}
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index a624d1e1e1e5..65717e4055da 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -487,7 +487,8 @@ enum hl_pll_frequency {
+  * @send_cpu_message: send buffer to ArmCP.
+  * @get_hw_state: retrieve the H/W state
+  * @pci_bars_map: Map PCI BARs.
+- * @set_dram_bar_base: Set DRAM BAR to map specific device address.
++ * @set_dram_bar_base: Set DRAM BAR to map specific device address. Returns
++ *                     old address the bar pointed to or U64_MAX for failure
+  * @init_iatu: Initialize the iATU unit inside the PCI controller.
+  * @rreg: Read a register. Needed for simulator support.
+  * @wreg: Write a register. Needed for simulator support.
+@@ -564,7 +565,7 @@ struct hl_asic_funcs {
+ 				u16 len, u32 timeout, long *result);
+ 	enum hl_device_hw_state (*get_hw_state)(struct hl_device *hdev);
+ 	int (*pci_bars_map)(struct hl_device *hdev);
+-	int (*set_dram_bar_base)(struct hl_device *hdev, u64 addr);
++	u64 (*set_dram_bar_base)(struct hl_device *hdev, u64 addr);
+ 	int (*init_iatu)(struct hl_device *hdev);
+ 	u32 (*rreg)(struct hl_device *hdev, u32 reg);
+ 	void (*wreg)(struct hl_device *hdev, u32 reg, u32 val);
+diff --git a/drivers/misc/habanalabs/pci.c b/drivers/misc/habanalabs/pci.c
+index d472d02a8e6e..5278f086d65d 100644
+--- a/drivers/misc/habanalabs/pci.c
++++ b/drivers/misc/habanalabs/pci.c
+@@ -259,7 +259,10 @@ int hl_pci_init_iatu(struct hl_device *hdev, u64 sram_base_address,
+ 	/* Point to DRAM */
+ 	if (!hdev->asic_funcs->set_dram_bar_base)
+ 		return -EINVAL;
+-	rc |= hdev->asic_funcs->set_dram_bar_base(hdev, dram_base_address);
++	if (hdev->asic_funcs->set_dram_bar_base(hdev, dram_base_address) ==
++								U64_MAX)
++		return -EIO;
++
+ 
+ 	/* Outbound Region 0 - Point to Host */
+ 	host_phys_end_addr = prop->host_phys_base_address + host_phys_size - 1;
+-- 
+2.17.1
 
