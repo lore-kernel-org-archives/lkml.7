@@ -2,160 +2,93 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981E5C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA03C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BC620673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:20:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="iSPjnQYQ"
+	by mail.kernel.org (Postfix) with ESMTP id 759522087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfD2QUb (ORCPT
+        id S1728770AbfD2QVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:20:31 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44423 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728518AbfD2QUa (ORCPT
+        Mon, 29 Apr 2019 12:21:08 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:51893 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728518AbfD2QVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:20:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z16so5376485pgv.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 09:20:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iuoLsJiPnw/JXgOxrXpRVQgpAhR00WHi9L2khmPRaTU=;
-        b=iSPjnQYQaqRrj0IHGTf3wsrwbk+JHEPAnXZITG0ikQDFPK8m3yc1CaalbhvyWR29bk
-         7s8DH8X3ZDDWG/U3DkDT2ILEuyvYtDJbtVoEcQehKE+SO7r4a7BVvPYm93YjJXf44gAt
-         mmtBl9dwWu5XnlfvLh2TZ6HbgAuf7JsrwV9UPy/H4vHnSdMACAHADCOrUGgIQhj2fuG1
-         OnyL+pWRN6HKmyp0DO5QVVNopshYK8xfvD4WgvzMYPNxCXy5P5M/NEhXraBMf2zB2UZH
-         TB9+8Z87rIw+oorbIcLiXJHaJwyPgykxBTLQMWunRVfyEO0pP+vzOkiBAupgCdfc8yye
-         Gr0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iuoLsJiPnw/JXgOxrXpRVQgpAhR00WHi9L2khmPRaTU=;
-        b=HBdaqCuhFhQkA1NyIG8sVt5ejHsNIBb/GWZkASkmWznA3X4NYHojL/K4erNaUmsmNf
-         kUXTB2YXiUTsYX0HFFcndmkIPrIeB7GX8VV4ScLpJRcNPhNUhF9ySrqhuLijlSu92bCy
-         BMbxewSp1LuZr3r/rVzxOzYWRWoyRcwSL99b+ijZkaj4lT4HOpoReNv2RmDuSAHGxWa0
-         JgJ1DJHbc1mJh+YDur7fr5lAX2L1/8gVRPtwP5ugU86nT9guETKbY0eGI2YAvnTUULNG
-         oS3h+9h1evG8puG1U9WFQHi2xSRSkr2u3QETnsC9/ym5x7NapCkStcLgAIWQvz/hvRqe
-         15bA==
-X-Gm-Message-State: APjAAAWZHJGvUoh34iTem1H4Mh/QsHBOiUs8x/jxmt2f+M3K+0AdFuh0
-        hTH+RjawooM/6KH7sy5jbHzT7g==
-X-Google-Smtp-Source: APXvYqy3R91vdFUP7MKOE9lK74Z9U5vcLN6dC1ce1iC0TEnZ1uYEIe4JQCIqgHZKe27Fn8Hxbq0p3A==
-X-Received: by 2002:a62:5707:: with SMTP id l7mr65700691pfb.205.1556554829368;
-        Mon, 29 Apr 2019 09:20:29 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id s187sm38235391pgb.13.2019.04.29.09.20.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 09:20:29 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 09:20:27 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH] net-sysfs: expose IRQ number
-Message-ID: <20190429092027.6013677d@hermes.lan>
-In-Reply-To: <20190429060107.10245-1-zajec5@gmail.com>
-References: <20190429060107.10245-1-zajec5@gmail.com>
+        Mon, 29 Apr 2019 12:21:08 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mwwm5-1gaMFo1KN1-00yOxX; Mon, 29 Apr 2019 18:20:39 +0200
+Subject: Re: [PATCH 22/41] drivers: tty: serial: cpm_uart: fix logging calls
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, linux-ia64@vger.kernel.org,
+        linux-serial@vger.kernel.org, andrew@aj.id.au,
+        gregkh@linuxfoundation.org, sudeep.holla@arm.com,
+        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
+        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
+        khilman@baylibre.com, macro@linux-mips.org,
+        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
+        linux-amlogic@lists.infradead.org,
+        andriy.shevchenko@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
+        davem@davemloft.net
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-23-git-send-email-info@metux.net>
+ <a00ba23b-e73e-c964-a6d0-347cb605b8c8@c-s.fr>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <fc01df37-3e7e-0c71-745d-63fbd83c1079@metux.net>
+Date:   Mon, 29 Apr 2019 18:20:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a00ba23b-e73e-c964-a6d0-347cb605b8c8@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:tyjLH/89kE1DHJTcj7yQUi5/jAAZ5RWHEAZ1BEYsF/kWEbRkhEH
+ ZeaoyF1df0iBCTPcuY9nMjeSr96B+reEDpUpVACuMx58hYfg0Ovl49rQYub23PLjPK+yUID
+ slNmJJYsTtoV+aOWQj1HRbA5ynpZ744EoI0A3tjgNZt1lZntfjDIcPBJU9Pfhs6+X+GK7WP
+ t2o2PeOOqkzRGtr61EECg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VjVnj6n6CTk=:oLoFfSXyDvVj4bcXT6Ih/4
+ kL0M02IkYcM23hQBqWuWitHhRHbYjCdwo7yZCm+3pBB5no8X/Ztr8zkGyrVRrPMSlNYX0gK3B
+ zLkvJlnWomR5UquIKZ13gZBV4/wjOl1kSv+4LiRfmqDVFOKnXIw+UAnjDoRPwbvqi2dxuhVHa
+ IXOpQP00pNeser50seIPI/ovlbFbXJMBOVj1rt+0+0uSk0wstKhVVSaWsva/3NcMpYr44iwKN
+ pL8XlLZaS2QOBl/ynF7SoVxFIvZnEMQhJorItjLuphNxXCvtzj8rhqLrrkkajgQ/0pjUy4Tiq
+ 3WJvabYmjDHm85gs3l1RGTIP/leL/aifhMaOXM4Qx1sHVTJJxlMw1it7I31wrFqe0C0T5Tnk3
+ +5c0iqDZF6VBw0XsN+FMTdvwwN5so9je+rNUHID3sD5Yvm8xjw93Uo6bviA4/IiHvX0mEdSAj
+ xKxitSG92ozPUuigbzb+oogChLmFoFbXi6s3ER6JiRSVDa9POQO26X1cecixkOz2/SyaNrtd5
+ wi3bBiZX/zwK/cEVJZg0BMo3ilxjtajTeiY2OsNJmCcBp61mptn8TueHekBXTEmqhyvIWEcks
+ Pwcb//riDg9W1mzMTxm5SPvVgmRR3xYRVRFYmTDZ46n62kPQaVUbket7jbv2AqHlWLKiCqkR4
+ n4RNCb4xflN9afHD65/ruEWM68k3MVK9H9CPTVyg90priPsyjBaWTOwBYdw4mnSSnWx3W9pFV
+ HxWHJkWswPIQsZuk5ib+4UBHe5duPTXhYEDd7bKV8coJopag7yNzn+KUAT2H9z/JPgKcId2QY
+ fg2wigxSa7xJUSvPOamObTx2eMiO5lok3NOq7YtNTSlPbcGNlc13ID61c5JH/6t6NJ6lPjs
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 08:01:07 +0200
-Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> wrote:
+On 29.04.19 17:59, Christophe Leroy wrote:
 
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->=20
-> Knowing IRQ number makes e.g. reading /proc/interrupts much simpler.
-> It's more reliable than guessing device name used by a driver when
-> calling request_irq().
->=20
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
-> ---
-> I found a script parsing /proc/interrupts for a given interface name. It =
-wasn't
-> working for me as it assumed request_irq() was called with a device name.=
- It's
-> not a case for all drivers.
->=20
-> I also found some other people looking for a proper solution for that:
-> https://unix.stackexchange.com/questions/275075/programmatically-determin=
-e-the-irqs-associated-with-a-network-interface
-> https://stackoverflow.com/questions/7516984/retrieving-irq-number-of-a-nic
->=20
-> Let me know if this solution makes sense. I can say it works for me ;)
-> ---
->  Documentation/ABI/testing/sysfs-class-net |  7 +++++++
->  net/core/net-sysfs.c                      | 16 ++++++++++++++++
->  2 files changed, 23 insertions(+)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-net b/Documentation/AB=
-I/testing/sysfs-class-net
-> index 664a8f6a634f..33440fe77ca7 100644
-> --- a/Documentation/ABI/testing/sysfs-class-net
-> +++ b/Documentation/ABI/testing/sysfs-class-net
-> @@ -301,3 +301,10 @@ Contact:	netdev@vger.kernel.org
->  Description:
->  		32-bit unsigned integer counting the number of times the link has
->  		been down
-> +
-> +What:		/sys/class/net/<iface>/irq
-> +Date:		April 2019
-> +KernelVersion:	5.2
-> +Contact:	netdev@vger.kernel.org
-> +Description:
-> +		IRQ number used by device
-> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-> index e4fd68389d6f..a3eb7c3f1f37 100644
-> --- a/net/core/net-sysfs.c
-> +++ b/net/core/net-sysfs.c
-> @@ -512,6 +512,21 @@ static ssize_t phys_switch_id_show(struct device *de=
-v,
->  }
->  static DEVICE_ATTR_RO(phys_switch_id);
-> =20
-> +static ssize_t irq_show(struct device *dev, struct device_attribute *att=
-r,
-> +			char *buf)
-> +{
-> +	const struct net_device *netdev =3D to_net_dev(dev);
-> +	ssize_t ret;
-> +
-> +	if (!rtnl_trylock())
-> +		return restart_syscall();
-> +	ret =3D sprintf(buf, "%d\n", netdev->irq);
-> +	rtnl_unlock();
-> +
-> +	return ret;
-> +}
-> +static DEVICE_ATTR_RO(irq);
-> +
->  static struct attribute *net_class_attrs[] __ro_after_init =3D {
->  	&dev_attr_netdev_group.attr,
->  	&dev_attr_type.attr,
-> @@ -542,6 +557,7 @@ static struct attribute *net_class_attrs[] __ro_after=
-_init =3D {
->  	&dev_attr_proto_down.attr,
->  	&dev_attr_carrier_up_count.attr,
->  	&dev_attr_carrier_down_count.attr,
-> +	&dev_attr_irq.attr,
->  	NULL,
->  };
->  ATTRIBUTE_GROUPS(net_class);
+> If we want to do something useful, wouldn't it make more sense to
+> introduce the use of dev_err() in order to identify the faulting device
+> in the message ?
 
-Can't you find this on the PCI side already?
-$ ls /sys/class/net/eno1/device/msi_irqs/
-37  38  39  40  41
+Well, I could get the struct device* pointer via pinfo.port->dev,
+but I wasn't entirely sure that it's always defined before these
+functions could be called.
 
+Shall I change it to dev_*() ?
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
