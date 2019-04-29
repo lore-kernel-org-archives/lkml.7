@@ -2,74 +2,169 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287B0C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B388C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36B1206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228A82147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfD2IQu convert rfc822-to-8bit (ORCPT
+        id S1727630AbfD2IRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 04:16:50 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:56799 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727477AbfD2IQu (ORCPT
+        Mon, 29 Apr 2019 04:17:53 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:32876 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbfD2IRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:16:50 -0400
-X-Originating-IP: 90.88.147.33
-Received: from xps13 (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id BED4CFF81A;
-        Mon, 29 Apr 2019 08:16:45 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 10:16:44 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc:     kyungmin.park@samsung.com, bbrezillon@kernel.org, richard@nod.at,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/5] mtd: onenand/samsung: Unify resource order for
- controller variants
-Message-ID: <20190429101644.7c46c05d@xps13>
-In-Reply-To: <20190426164224.11327-2-pawel.mikolaj.chmiel@gmail.com>
-References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
-        <20190426164224.11327-2-pawel.mikolaj.chmiel@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 29 Apr 2019 04:17:53 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 2276925B783;
+        Mon, 29 Apr 2019 18:17:50 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 1D1BC940376; Mon, 29 Apr 2019 10:17:48 +0200 (CEST)
+Date:   Mon, 29 Apr 2019 10:17:48 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tfranzen@de.adit-jv.com,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Message-ID: <20190429081747.irznig7yrvztuc5x@verge.net.au>
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+ <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
+ <20190426095012.xzyzevvmom4fzdcd@verge.net.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426095012.xzyzevvmom4fzdcd@verge.net.au>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paweł,
+Hi again,
 
-Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com> wrote on Fri, 26 Apr 2019
-18:42:20 +0200:
+I have been able to solicit a limited private review of this patch and
+have gone ahead and applied it for inclusion in v5.2.
 
-> From: Tomasz Figa <tomasz.figa@gmail.com>
+On Fri, Apr 26, 2019 at 11:50:12AM +0200, Simon Horman wrote:
+> Hi,
 > 
-> Before this patch, the order of memory resources requested by the driver
-> was controller base as first and OneNAND chip base as second for
-> S3C64xx/S5PC100 variant and the opposite for S5PC110/S5PV210 variant.
+> from my point of view what is required is a review.
+> I will try to find someone to do so.
+> I apologise for not doing so earlier.
 > 
-> To make this more consistent, this patch swaps the order of resources
-> for the latter and updates platform code accordingly. As a nice side
-> effect there is a slight reduction in line count of probe function.
+> On Thu, Apr 25, 2019 at 01:12:45PM +0200, Eugeniu Rosca wrote:
+> > Hi Simon,
+> > 
+> > Do we have any chance getting this upstream? If so, would you kindly
+> > list the acceptance criteria we have to conform to?
+> > 
+> > Many thanks.
+> > 
+> > On Thu, Apr 11, 2019 at 02:41:03PM +0200, Spyridon Papageorgiou wrote:
+> > > This patch adds description of TI WL1837 and links interfaces
+> > > to communicate with the IC, namely the SDIO interface to WLAN.
+> > > 
+> > > Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+> > > ---
+> > >  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 49 ++++++++++++++++++++++++++++++++
+> > >  1 file changed, 49 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> > > index 7a09576..27851a7 100644
+> > > --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> > > +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> > > @@ -38,6 +38,18 @@
+> > >  		regulator-min-microvolt = <5000000>;
+> > >  		regulator-max-microvolt = <5000000>;
+> > >  	};
+> > > +
+> > > +	wlan_en: regulator-wlan_en {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "wlan-en-regulator";
+> > > +
+> > > +		regulator-min-microvolt = <3300000>;
+> > > +		regulator-max-microvolt = <3300000>;
+> > > +
+> > > +		gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
+> > > +		startup-delay-us = <70000>;
+> > > +		enable-active-high;
+> > > +	};
+> > >  };
+> > >  
+> > >  &can0 {
+> > > @@ -88,6 +100,13 @@
+> > >  			line-name = "Audio_Out_OFF";
+> > >  		};
+> > >  
+> > > +		sd-wifi-mux {
+> > > +			gpio-hog;
+> > > +			gpios = <5 GPIO_ACTIVE_HIGH>;
+> > > +			output-low;	/* Connect WL1837 */
+> > > +			line-name = "SD WiFi mux";
+> > > +		};
+> > > +
+> > >  		hub_pwen {
+> > >  			gpio-hog;
+> > >  			gpios = <6 GPIO_ACTIVE_HIGH>;
+> > > @@ -254,6 +273,12 @@
+> > >  		function = "scif1";
+> > >  	};
+> > >  
+> > > +	sdhi3_pins: sdhi3 {
+> > > +		groups = "sdhi3_data4", "sdhi3_ctrl";
+> > > +		function = "sdhi3";
+> > > +		power-source = <3300>;
+> > > +	};
+> > > +
+> > >  	usb0_pins: usb0 {
+> > >  		groups = "usb0";
+> > >  		function = "usb0";
+> > > @@ -273,6 +298,30 @@
+> > >  	status = "okay";
+> > >  };
+> > >  
+> > > +&sdhi3 {
+> > > +	pinctrl-0 = <&sdhi3_pins>;
+> > > +	pinctrl-names = "default";
+> > > +
+> > > +	vmmc-supply = <&wlan_en>;
+> > > +	vqmmc-supply = <&wlan_en>;
+> > > +	bus-width = <4>;
+> > > +	no-1-8-v;
+> > > +	non-removable;
+> > > +	cap-power-off-card;
+> > > +	keep-power-in-suspend;
+> > > +	max-frequency = <26000000>;
+> > > +	status = "okay";
+> > > +
+> > > +	#address-cells = <1>;
+> > > +	#size-cells = <0>;
+> > > +	wlcore: wlcore@2 {
+> > > +		compatible = "ti,wl1837";
+> > > +		reg = <2>;
+> > > +		interrupt-parent = <&gpio1>;
+> > > +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> > > +	};
+> > > +};
+> > > +
+> > >  &usb2_phy0 {
+> > >  	pinctrl-0 = <&usb0_pins>;
+> > >  	pinctrl-names = "default";
+> > > -- 
+> > > 2.7.4
+> > > 
+> > 
+> > -- 
+> > Best regards,
+> > Eugeniu.
+> > 
 > 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-
-Thanks for the patch but it looks like you also are renaming fields in
-the main onenand structure. Maybe it is worth doing it in a preliminary
-patch.
-
-Thanks,
-Miquèl
