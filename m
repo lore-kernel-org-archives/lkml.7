@@ -2,178 +2,218 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99325C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AFCC04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67214205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556550492;
-	bh=2O7a/FpMiU1c/6hzHnNT+0grVkRA/hQ4O75li6epWLg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SN6omKvYrfko9/E33GPEO2f7EcYJlV7sBGdEGlLYzGEEYafMI9b9DN54oY6cyxtWg
-	 A+HTDHuEwv/tb3KUY6n8K9oy8uASwfV+O6hxel+lA4oqEKNBWaR4KsOskO6IIPC5QN
-	 dCqicbca9kBvYwmCYV/LcPS9gjf2bxIrdvk3jk5M=
+	by mail.kernel.org (Postfix) with ESMTP id 06DA220673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:09:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BErTn8Ec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfD2PIL (ORCPT
+        id S1728517AbfD2PJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbfD2PIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:08:11 -0400
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61DCF21655;
-        Mon, 29 Apr 2019 15:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556550489;
-        bh=2O7a/FpMiU1c/6hzHnNT+0grVkRA/hQ4O75li6epWLg=;
+        Mon, 29 Apr 2019 11:09:33 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:57877 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbfD2PJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:09:33 -0400
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x3TF9KC8006419;
+        Tue, 30 Apr 2019 00:09:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x3TF9KC8006419
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556550561;
+        bh=MW1aGUukyb5H+fRSy4kTMiPDEchWe4IFhiW9Utfmjp8=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m515t2tHsByqUjakosPVoHrNpbKKNESPrHhZQzONvHsk0tv+8cm5X9fXtkzHy7SL2
-         gDhYbBHldODZpM8RHBpbYYQHhhs4sEG/LWPtn5Hh3dOhXpCmJ4L/EW/rIvcdbV6JGd
-         tNzT5rSwCn0muXeDvPuSlmlU2xsCahJU/dDFLfsQ=
-Received: by mail-lf1-f42.google.com with SMTP id u17so8302531lfi.3;
-        Mon, 29 Apr 2019 08:08:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAW5NijGP6LdIpWcmqyB6PcC/M8BCtZFXt6CN1eeDJns8TdBeQ0Y
-        cwE9vLfcxERbolv7LIf3QDvSZoHFy3HB2ulLZ1w=
-X-Google-Smtp-Source: APXvYqxQuqe+XFe7OwPOP/a2wP2QUVcpVat2AFjvQdMhDPgFFbkc57yVprUFaihJxe44JN7kb7aX8D7yMhHudvvM5DY=
-X-Received: by 2002:a19:6d1b:: with SMTP id i27mr35259594lfc.156.1556550487522;
- Mon, 29 Apr 2019 08:08:07 -0700 (PDT)
+        b=BErTn8EcfVgazUjgbaVzOqESVQn3n51PzT0778Socc5TcBBrGZCGGohxkDq1MgW94
+         Iwks6bwmTwbSefpQCRrYtxUGmPNmLDWmawEgSuOCXQIu2NqSNjfNOXwB3qPLuovE5r
+         HTyQlkNgtqOkgTdgc81A3LEEyeOFBe/Hq+/dNZYFp48oXh9cPOdc2viG3hTo9XpT+Q
+         Q7O76I7aO1I5eifl23gZDP/9SKNBGwhp0a80C7kLTc1tYJjHbPWkgF7IE085JWGfk1
+         cqpTAEzKnCD3l0ZK9uWFCNtwYFjPopBJRcxdjFtRIDVfXpytay+74JV1UMqWzcKdZl
+         9MFy48RqhW29g==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id h4so3600107uaj.9;
+        Mon, 29 Apr 2019 08:09:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAUUyfzvK6dJ5qZQNqmenek2T77Nr7Ki/2UJqoqi2753KDptmy3W
+        tfGlZW3hnhF9LybE5wRFM157C8pVO4pClv1HLzQ=
+X-Google-Smtp-Source: APXvYqxkwcGqg1dUxJR5uNJzQww6ku12Zq9V2fnR5+weRvJDt+V0L3rkBfD0KFczMq29mFbSW64iIFLza3fW+6g0ZaI=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr6928895ual.95.1556550560107;
+ Mon, 29 Apr 2019 08:09:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1555978589-4998-1-git-send-email-vnkgutta@codeaurora.org>
-In-Reply-To: <1555978589-4998-1-git-send-email-vnkgutta@codeaurora.org>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 29 Apr 2019 17:07:56 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPeCPWPdE1d3EYr4bD1hLMRDXohaz-7yrmk_R-V6ZD6rhQ@mail.gmail.com>
-Message-ID: <CAJKOXPeCPWPdE1d3EYr4bD1hLMRDXohaz-7yrmk_R-V6ZD6rhQ@mail.gmail.com>
-Subject: Re: [PATCH] driver core: platform: Fix the usage of platform device name(pdev->name)
-To:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, davem@davemloft.net,
-        alexander.deucher@amd.com, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, jshriram@codeaurora.org,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190429090854.GU9023@dhcp129-178.brq.redhat.com>
+In-Reply-To: <20190429090854.GU9023@dhcp129-178.brq.redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 30 Apr 2019 00:08:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARpeSTr=VWudDRQ8sobcPQqtqzcLm7EqyvoKFYT84Hk6Q@mail.gmail.com>
+Message-ID: <CAK7LNARpeSTr=VWudDRQ8sobcPQqtqzcLm7EqyvoKFYT84Hk6Q@mail.gmail.com>
+Subject: Re: [PATCH v3] moduleparam: Save information about built-in modules
+ in separate file
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 at 05:36, Venkata Narendra Kumar Gutta
-<vnkgutta@codeaurora.org> wrote:
+On Mon, Apr 29, 2019 at 6:09 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
 >
-> Platform core is using pdev->name as the platform device name to do
-> the binding of the devices with the drivers. But, when the platform
-> driver overrides the platform device name with dev_set_name(),
-> the pdev->name is pointing to a location which is freed and becomes
-
-If pdev->name is invalid then it should be removed/fixed. Why leaving
-it pointing to wrong place and changing the users to something else?
-This looks like either duct-tape for real problem.
-
-> an invalid parameter to do the binding match.
+> Problem:
 >
-> use-after-free instance:
+> When a kernel module is compiled as a separate module, some important
+> information about the kernel module is available via .modinfo section of
+> the module.  In contrast, when the kernel module is compiled into the
+> kernel, that information is not available.
 >
-> [   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
-> [   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
-> [   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
->                         G S      W  O      4.19.30+ #3
-> [   33.346835] Hardware name: MTP (DT)
-> [   33.350419] Call trace:
-> [   33.352941]  dump_backtrace+0x0/0x3b8
-> [   33.356713]  show_stack+0x24/0x30
-> [   33.360119]  dump_stack+0x160/0x1d8
-> [   33.363709]  print_address_description+0x84/0x2e0
-> [   33.368549]  kasan_report+0x26c/0x2d0
-> [   33.372322]  __asan_report_load1_noabort+0x2c/0x38
-> [   33.377248]  strcmp+0x8c/0xb0
-> [   33.380306]  platform_match+0x70/0x1f8
-> [   33.384168]  __driver_attach+0x78/0x3a0
-> [   33.388111]  bus_for_each_dev+0x13c/0x1b8
-> [   33.392237]  driver_attach+0x4c/0x58
-> [   33.395910]  bus_add_driver+0x350/0x560
-> [   33.399854]  driver_register+0x23c/0x328
-> [   33.403886]  __platform_driver_register+0xd0/0xe0
+> Information about built-in modules is necessary in the following cases:
 >
-> So, use dev_name(&pdev->dev), which fetches the platform device name from
-> the kobject(dev->kobj->name) of the device instead of the pdev->name.
+> 1. When it is necessary to find out what additional parameters can be
+> passed to the kernel at boot time.
 >
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> 2. When you need to know which module names and their aliases are in
+> the kernel. This is very useful for creating an initrd image.
+>
+> Proposal:
+>
+> The proposed patch does not remove .modinfo section with module
+> information from the vmlinux at the build time and saves it into a
+> separate file after kernel linking. So, the kernel does not increase in
+> size and no additional information remains in it. Information is stored
+> in the same format as in the separate modules (null-terminated string
+> array). Because the .modinfo section is already exported with a separate
+> modules, we are not creating a new API.
+>
+> It can be easily read in the userspace:
+>
+> $ tr '\0' '\n' < kernel.builtin
+> ext4.softdep=pre: crc32c
+> ext4.license=GPL
+> ext4.description=Fourth Extended Filesystem
+> ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
+> ext4.alias=fs-ext4
+> ext4.alias=ext3
+> ext4.alias=fs-ext3
+> ext4.alias=ext2
+> ext4.alias=fs-ext2
+> md_mod.alias=block-major-9-*
+> md_mod.alias=md
+> md_mod.description=MD RAID framework
+> md_mod.license=GPL
+> md_mod.parmtype=create_on_open:bool
+> md_mod.parmtype=start_dirty_degraded:int
+> ...
+>
+> v2:
+>  * Extract modinfo from vmlinux.o as suggested by Masahiro Yamada;
+>  * Rename output file to kernel.builtin;
+>  * Add MODULE_VERSION to modinfo that is saved to the kernel.builtin;
+>  * Fix build warnings on powerpc.
+>
+> v3:
+>  * Rename output file to modules.builtin.modinfo as suggested by Masahiro Yamada;
+>  * Update Documentation/dontdiff, Documentation/kbuild/kbuild.txt.
+>
+> Co-Developed-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
+> Signed-off-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
+> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
 > ---
->  drivers/base/platform.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index dab0a5a..0e23aa2 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -888,7 +888,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
->         if (len != -ENODEV)
->                 return len;
+>  .gitignore                        |  1 +
+>  Documentation/dontdiff            |  1 +
+>  Documentation/kbuild/kbuild.txt   |  5 +++++
+>  Makefile                          |  2 ++
+>  include/asm-generic/vmlinux.lds.h |  1 +
+>  include/linux/module.h            |  1 +
+>  include/linux/moduleparam.h       | 12 +++++-------
+>  scripts/link-vmlinux.sh           |  4 ++++
+>  8 files changed, 20 insertions(+), 7 deletions(-)
 >
-> -       len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
-> +       len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
+> diff --git a/.gitignore b/.gitignore
+> index a20ac26aa2f5..8ef2c87703b3 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -45,6 +45,7 @@
+>  *.xz
+>  Module.symvers
+>  modules.builtin
+> +modules.builtin.modinfo
 >
->         return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
->  }
-> @@ -964,7 +964,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
->                 return rc;
+>  #
+>  # Top-level generic files
+
+
+Let me repeat the same comments as in v2
+(https://patchwork.kernel.org/patch/10888207/#22595563)
+as you ignored them.
+
+
+
+This file is generated only in the top of the tree.
+
+Please add '/' prefix and move it to
+the "# Top-level generic files" section.
+
+
+
+#
+# Top-level generic files
+#
+/tags
+/TAGS
+/linux
+/vmlinux
+/vmlinux.32
+/vmlinux-gdb.py
+/vmlinuz
+/System.map
+/Module.markers
+/modules.builtin.modinfo
+
+
+
+
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index c8cf45362bd6..41ef7cb043c1 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -226,6 +226,10 @@ modpost_link vmlinux.o
+>  # modpost vmlinux.o to check for section mismatches
+>  ${MAKE} -f "${srctree}/scripts/Makefile.modpost" vmlinux.o
 >
->         add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
-> -                       pdev->name);
-> +                       dev_name(&pdev->dev));
+> +info MODINFO modules.builtin.modinfo
+> +"${OBJCOPY}" -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
+> +chmod 444 modules.builtin.modinfo
 
-This is wrong fix and it causes ARM Vexpress board fail to boot under
-QEMU (but probably in real world as well). The problem is in not
-mached drivers. For example the pdev->name is "vexpress-syscfg" and
-dev_name(&pdev->dev) is "vexpress-syscfg.6.auto". The effect - none of
-AMBA devices are registered, including missing MMC device (mmci.c,
-arm,pl180).
 
-One can see the error of missing root device:
-[   13.458982] VFS: Cannot open root device "mmcblk0" or
-unknown-block(0,0): error -6
+Why is this 'chmod 444' necessary?
 
-... also before there is a warning like:
-[    0.285029] ------------[ cut here ]------------
-[    0.285507] WARNING: CPU: 0 PID: 1 at
-/home/krzk/dev/yocto-proceq/build/workspace/sources/linux-mainline-next/drivers/bus/vexpress-config.c:183
-vexpress_config_init+0x90/0xe0
-[    0.285936] Modules linked in:
-[    0.286251] CPU: 0 PID: 1 Comm: swapper Tainted: G        W
-5.1.0-rc6-next-20190429-g0593ae1f5df5 #27
-[    0.286507] Hardware name: ARM-Versatile Express
-[    0.286977] [<8010e05c>] (unwind_backtrace) from [<8010b76c>]
-(show_stack+0x10/0x14)
-[    0.287219] [<8010b76c>] (show_stack) from [<8011ac64>] (__warn+0xf8/0x110)
-[    0.287400] [<8011ac64>] (__warn) from [<8011ad94>]
-(warn_slowpath_null+0x40/0x48)
-[    0.287579] [<8011ad94>] (warn_slowpath_null) from [<809151bc>]
-(vexpress_config_init+0x90/0xe0)
-[    0.287811] [<809151bc>] (vexpress_config_init) from [<80102710>]
-(do_one_initcall+0x54/0x1b4)
-[    0.288014] [<80102710>] (do_one_initcall) from [<80900e84>]
-(kernel_init_freeable+0x12c/0x1c8)
-[    0.288214] [<80900e84>] (kernel_init_freeable) from [<80634048>]
-(kernel_init+0x8/0x110)
-[    0.288388] [<80634048>] (kernel_init) from [<801010e8>]
-(ret_from_fork+0x14/0x2c)
-[    0.288597] Exception stack(0x86835fb0 to 0x86835ff8)
-[    0.288882] 5fa0:                                     00000000
-00000000 00000000 00000000
-[    0.289193] 5fc0: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[    0.289479] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.289776] ---[ end trace 3f0995a2bae83983 ]---
 
-Best regards,
-Krzysztof
+
+> +
+>  kallsymso=""
+>  kallsyms_vmlinux=""
+>  if [ -n "${CONFIG_KALLSYMS}" ]; then
+
+
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
