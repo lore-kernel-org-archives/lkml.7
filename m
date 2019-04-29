@@ -2,203 +2,171 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,TRACKER_ID autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65948C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40442C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3735C20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E93220651
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfD2PEt (ORCPT
+        id S1728509AbfD2PFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:04:49 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59820 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbfD2PEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:04:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D99E680D;
-        Mon, 29 Apr 2019 08:04:47 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 503A83F5C1;
-        Mon, 29 Apr 2019 08:04:46 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 16:04:43 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     kan.liang@linux.intel.com
-Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, eranian@google.com, tj@kernel.org,
-        ak@linux.intel.com
-Subject: Re: [PATCH 1/4] perf: Fix system-wide events miscounting during
- cgroup monitoring
-Message-ID: <20190429150443.GB2182@lakrids.cambridge.arm.com>
-References: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
- <1556549045-71814-2-git-send-email-kan.liang@linux.intel.com>
+        Mon, 29 Apr 2019 11:05:54 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.46]:25602 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728401AbfD2PFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:05:54 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id A87035E9ABF
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:05:52 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id L7qqhjRdk2qH7L7qqh2uMb; Mon, 29 Apr 2019 10:05:52 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.54.97] (port=48496 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hL7qq-0018kt-7e; Mon, 29 Apr 2019 10:05:52 -0500
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20190429143957.GA6725@embeddedor>
+ <1daec8c8929e4d18b2059ab1dfbfdf4a@AcuMS.aculab.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] usbip: vhci_hcd: Mark expected switch fall-through
+Message-ID: <287c8504-eafa-ebbb-aa39-babb86fdeb94@embeddedor.com>
+Date:   Mon, 29 Apr 2019 10:05:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556549045-71814-2-git-send-email-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <1daec8c8929e4d18b2059ab1dfbfdf4a@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.54.97
+X-Source-L: No
+X-Exim-ID: 1hL7qq-0018kt-7e
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.54.97]:48496
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 07:44:02AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+
+
+On 4/29/19 9:44 AM, David Laight wrote:
+> From: Gustavo A. R. Silva
+>> Sent: 29 April 2019 15:40
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
+> ...
+>> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+>> index 667d9c0ec905..000ab7225717 100644
+>> --- a/drivers/usb/usbip/vhci_hcd.c
+>> +++ b/drivers/usb/usbip/vhci_hcd.c
+>> @@ -508,6 +508,7 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+>>  		case USB_PORT_FEAT_U1_TIMEOUT:
+>>  			usbip_dbg_vhci_rh(
+>>  				" SetPortFeature: USB_PORT_FEAT_U1_TIMEOUT\n");
+>> +			/* Fall through */
+>>  		case USB_PORT_FEAT_U2_TIMEOUT:
+>>  			usbip_dbg_vhci_rh(
+>>  				" SetPortFeature: USB_PORT_FEAT_U2_TIMEOUT\n");
 > 
-> When counting system-wide events and cgroup events simultaneously, the
-> value of system-wide events are miscounting. For example,
+> That doesn't look right, both debug messages seem to get printed.
 > 
->     perf stat -e cycles,instructions -e cycles,instructions -G
-> cgroup1,cgroup1,cgroup2,cgroup2 -a -e cycles,instructions -I 1000
-> 
->      1.096265502     12,375,398,872      cycles              cgroup1
->      1.096265502      8,396,184,503      instructions        cgroup1
->  #    0.10  insn per cycle
->      1.096265502    109,609,027,112      cycles              cgroup2
->      1.096265502     11,533,690,148      instructions        cgroup2
->  #    0.14  insn per cycle
->      1.096265502    121,672,937,058      cycles
->      1.096265502     19,331,496,727      instructions               #
-> 0.24  insn per cycle
-> 
-> The events are identical events for system-wide and cgroup. The
-> value of system-wide events is less than the sum of cgroup events,
-> which is wrong.
-> 
-> Both system-wide and cgroup are per-cpu. They share the same cpuctx
-> groups, cpuctx->flexible_groups/pinned_groups.
-> In context switch, cgroup switch tries to schedule all the events in
-> the cpuctx groups. The unmatched cgroup events can be filtered by its
-> event->cgrp. However, system-wide events, which event->cgrp is NULL, are
-> unconditionally switched, which causes miscounting.
 
-Why exactly does that cause mis-counting?
+At first sight, I thought the same way, then I took a look into
+commit:
 
-Are the system-wide events not switched back in? Or filtered
-erroneously?
+1c9de5bf428612458427943b724bea51abde520a
 
-> Introduce cgrp_switch in cpuctx to indicate the cgroup context switch.
-> If it's system-wide event in context switch, don't try to switch it.
-> 
-> Fixes: e5d1367f17ba ("perf: Add cgroup support")
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  include/linux/perf_event.h |  1 +
->  kernel/events/core.c       | 30 ++++++++++++++++++++++++++++--
->  2 files changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index e47ef76..039e2f2 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -795,6 +795,7 @@ struct perf_cpu_context {
->  #ifdef CONFIG_CGROUP_PERF
->  	struct perf_cgroup		*cgrp;
->  	struct list_head		cgrp_cpuctx_entry;
-> +	unsigned int			cgrp_switch		:1;
->  #endif
->  
->  	struct list_head		sched_cb_entry;
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index dc7dead..388dd42 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -809,6 +809,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
->  
->  		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->  		perf_pmu_disable(cpuctx->ctx.pmu);
-> +		cpuctx->cgrp_switch = true;
->  
->  		if (mode & PERF_CGROUP_SWOUT) {
->  			cpu_ctx_sched_out(cpuctx, EVENT_ALL);
-> @@ -832,6 +833,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
->  							     &cpuctx->ctx);
->  			cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
->  		}
-> +		cpuctx->cgrp_switch = false;
->  		perf_pmu_enable(cpuctx->ctx.pmu);
->  		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->  	}
-> @@ -2944,13 +2946,25 @@ static void ctx_sched_out(struct perf_event_context *ctx,
->  
->  	perf_pmu_disable(ctx->pmu);
->  	if (is_active & EVENT_PINNED) {
-> -		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
-> +		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list) {
-> +#ifdef CONFIG_CGROUP_PERF
-> +			/* Don't sched system-wide event when cgroup context switch */
-> +			if (cpuctx->cgrp_switch && !event->cgrp)
-> +				continue;
-> +#endif
+and noticed that the original developer properly added fall-through
+comments in other places in the same switch() code, that gave me the
+impression he knew what he was doing; then I noticed the following
+error message in case USB_PORT_FEAT_U2_TIMEOUT:
 
-This pattern is duplicated several times, and should probably be a
-helper like:
+	if (hcd->speed != HCD_USB3) {
+		pr_err("USB_PORT_FEAT_U1/2_TIMEOUT req not "
+		       "supported for USB 2.0 roothub\n");
+		goto error;
+	}
 
-static bool skip_cgroup_switch(struct perf_cpu_context *cpuctx,
-			       struct perf_event *event);
-{
-	return IS_ENABLED(CONFIG_CGROUP_PERF) &&
-	       cpuctx->cgrp_switch &&
-	       !event->cgrp;
-}
+this error message is what makes me think the fall-through is
+intentional; otherwise I think it would look like this instead:
 
-... allowing the above to be an unconditional:
+	if (hcd->speed != HCD_USB3) {
+		pr_err("USB_PORT_FEAT_U2_TIMEOUT req not "
+		       "supported for USB 2.0 roothub\n");
+		goto error;
+	}
 
-	if (skip_cgroup_switch(cpuctx, event))
-		continue;
-
-... and likewise for the other cases.
-
-Thanks,
-Mark.
-
->  			group_sched_out(event, cpuctx, ctx);
-> +		}
->  	}
->  
->  	if (is_active & EVENT_FLEXIBLE) {
-> -		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list)
-> +		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list) {
-> +#ifdef CONFIG_CGROUP_PERF
-> +			/* Don't sched system-wide event when cgroup context switch */
-> +			if (cpuctx->cgrp_switch && !event->cgrp)
-> +				continue;
-> +#endif
->  			group_sched_out(event, cpuctx, ctx);
-> +		}
->  	}
->  	perf_pmu_enable(ctx->pmu);
->  }
-> @@ -3280,6 +3294,12 @@ static int pinned_sched_in(struct perf_event *event, void *data)
->  	if (event->state <= PERF_EVENT_STATE_OFF)
->  		return 0;
->  
-> +#ifdef CONFIG_CGROUP_PERF
-> +	/* Don't sched system-wide event when cgroup context switch */
-> +	if (sid->cpuctx->cgrp_switch && !event->cgrp)
-> +		return 0;
-> +#endif
-> +
->  	if (!event_filter_match(event))
->  		return 0;
->  
-> @@ -3305,6 +3325,12 @@ static int flexible_sched_in(struct perf_event *event, void *data)
->  	if (event->state <= PERF_EVENT_STATE_OFF)
->  		return 0;
->  
-> +#ifdef CONFIG_CGROUP_PERF
-> +	/* Don't sched system-wide event when cgroup context switch */
-> +	if (sid->cpuctx->cgrp_switch && !event->cgrp)
-> +		return 0;
-> +#endif
-> +
->  	if (!event_filter_match(event))
->  		return 0;
->  
-> -- 
-> 2.7.4
-> 
+Thanks
+--
+Gustavo
