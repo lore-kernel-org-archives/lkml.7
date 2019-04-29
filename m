@@ -2,117 +2,221 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D262C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B684C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5E4205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A3420673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EsykfS/V"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="N80JkWTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbfD2McM (ORCPT
+        id S1728168AbfD2MdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:32:12 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:56062 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbfD2McL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:32:11 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TCJCh9004325;
-        Mon, 29 Apr 2019 12:31:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=YpLMQQrkPzj0xaZUB7vT4ZsT4KZR9loVYJdQY42icWA=;
- b=EsykfS/VRtTiG1PT3w2/JyYHxbzIQTpln/YmGWDk5ntThTU/geQoO1SD48MdHk8A9HdN
- 5ZqsJGUnFMkz433YFcPCCfQX6H4uort4e6vlGrXXjfXEJAbfujEIjOHsoOHgaOGZIO1+
- oNpocLsQU22CiZ6YZ22v0+Ap5RBRe2Dm76oIKo5G5XfZXkTHKZemHTlCkhnWrxKF8DMF
- /g9d7kJ6btUGWhaZLVj9pPmohy8kv4KqhNCHhyHv+ivZFa8k6jkTNZsxZs8f58Ms+S3I
- HwNc9+O6bQqciEPTHjRhGwuReiGIP99fN3yeUzrhIZbsEcY3VgEBnuZFT5qzPnhD2Scd 6g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2s4ckd67xx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 12:31:58 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TCVXMN182219;
-        Mon, 29 Apr 2019 12:31:57 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2s4yy8xm6m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 12:31:57 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3TCVtt1008055;
-        Mon, 29 Apr 2019 12:31:55 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 29 Apr 2019 05:31:55 -0700
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lsf@lists.linux-foundation.org,
-        linux-mm@kvack.org, Jerome Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, lsf-pc@lists.linux-foundation.org,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [Lsf] [LSF/MM] Preliminary agenda ? Anyone ... anyone ? Bueller ?
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190425200012.GA6391@redhat.com>
-        <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
-        <503ba1f9-ad78-561a-9614-1dcb139439a6@suse.cz>
-        <yq1v9yx2inc.fsf@oracle.com>
-        <1556537518.3119.6.camel@HansenPartnership.com>
-        <yq1zho911sg.fsf@oracle.com>
-        <1556540228.3119.10.camel@HansenPartnership.com>
-Date:   Mon, 29 Apr 2019 08:31:52 -0400
-In-Reply-To: <1556540228.3119.10.camel@HansenPartnership.com> (James
-        Bottomley's message of "Mon, 29 Apr 2019 08:17:08 -0400")
-Message-ID: <yq11s1l0z7r.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 29 Apr 2019 08:33:11 -0400
+Received: from mail-eopbgr70051.outbound.protection.outlook.com ([40.107.7.51]:12514
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727956AbfD2MdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:33:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3mwciFaGHZkXmEc4ttuvaVTUKcIT5pzYMfk5wWbAlOA=;
+ b=N80JkWThZ1yVzB8XSuyD8e4WVNrU4Kf5RzlFTfios3jLwE4t4sExyj5nY2dGcBRXtOqzvPaRhQFcajS6E3DTM/czDux/thPsVFfr0jk2/RC9JGE9sDekh2nbsJ+rDwYe6c8Ihg6jKxmA0jwk5k7PKG1J4AEdsCwL97ygzjodj+Q=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3738.eurprd04.prod.outlook.com (52.134.70.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.15; Mon, 29 Apr 2019 12:33:04 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
+ 12:33:04 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] clk: imx: add fractional-N pll support to pllv4
+Thread-Topic: [PATCH] clk: imx: add fractional-N pll support to pllv4
+Thread-Index: AQHU/jo/D2ZwDi5WREOeVbOKgmEXYaZS+19AgAAF+XCAABEhEA==
+Date:   Mon, 29 Apr 2019 12:33:04 +0000
+Message-ID: <DB3PR0402MB3916926286A5F4AE1B0E82A3F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1556507637-22847-1-git-send-email-Anson.Huang@nxp.com>
+ <AM0PR04MB4211D3F29BCA3727E799005F80390@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <AM0PR04MB42114EE6EC3AB19089202B4B80390@AM0PR04MB4211.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB42114EE6EC3AB19089202B4B80390@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4e0337cc-a20b-48f1-5250-08d6cc9ed37f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3738;
+x-ms-traffictypediagnostic: DB3PR0402MB3738:
+x-microsoft-antispam-prvs: <DB3PR0402MB3738BC6F247E7191F7DC8E65F5390@DB3PR0402MB3738.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 0022134A87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(366004)(376002)(13464003)(189003)(199004)(110136005)(99286004)(316002)(53936002)(6246003)(9686003)(25786009)(55016002)(33656002)(229853002)(5660300002)(4326008)(76176011)(7696005)(8936002)(97736004)(6436002)(52536014)(446003)(476003)(11346002)(14454004)(26005)(66066001)(71190400001)(6506007)(102836004)(2906002)(486006)(76116006)(53546011)(71200400001)(3846002)(68736007)(186003)(305945005)(2201001)(256004)(2501003)(478600001)(73956011)(86362001)(66946007)(66556008)(64756008)(66446008)(66476007)(74316002)(44832011)(8676002)(7736002)(6116002)(81156014)(81166006)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3738;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: A7/0Fi3O+zXkN3kIKQUl9+TyyZ5mJ3a6g1As7BFMPnJW5+b5bTSx+EtCak9x/DoUBtbeAxRc/GGSUpsqXu3W/5IE+6jDxe6jv4c1yGjvju8vDW2C6eoeHNeSpl6pWDbnlyt++sfY/OOgoN8vdupD3uP5jbZLKComRDIefeZj8FSTXV8YilZctJVI7LhGpAFWEgXRM7L66RMAdL9fQxGy45xJd89xVzqAe43YZPcZadOmMgQiESZVyQ2TQXhTz8/kfmTYXuq/5OzxKbqvW5XvxWEKifzc3wm8FtSOC79fqQd95FrXIYqlclgcwvJuAMOCaIIv2C4f3ks7MkPnLU2O5v8y+jrVV0lDvMcFlwEu7t2OQt+C8dKsmjBdMAJztJQwVs2v8PLALfD86Hy9iwXxGlk+2xQMmHgsmxlXi98UBN4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9241 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904290089
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9241 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904290089
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e0337cc-a20b-48f1-5250-08d6cc9ed37f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 12:33:04.3018
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3738
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-James,
-
-> But for this year, I'd just assume the "event partners" checkbox
-> covers publication of attendee data to attendees, because if you
-> assume the opposite, since you've asked no additional permission of
-> your speakers either, that would make publishing the agenda a GDPR
-> violation.
-
-Speakers have proposed a topic by posting a message to a public mailing
-list. Whereas not all attendees have indicated their desire to attend in
-a public forum.
-
-I don't think there's a problem publishing the list of people that sent
-an ATTEND. My concern is the ones that didn't. And if the attendee list
-is not comprehensive, I am not sure how helpful it is.
-
-From a more practical perspective, I also don't have access to whether
-people clicked the "event partners" box or not during registration.
-Although I can reach out to LF and see whether I can get access to that
-information.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+SGksIEFpc2hlbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBaXNo
+ZW5nIERvbmcNCj4gU2VudDogTW9uZGF5LCBBcHJpbCAyOSwgMjAxOSA3OjM2IFBNDQo+IFRvOiBB
+bnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IG10dXJxdWV0dGVAYmF5bGlicmUuY29t
+Ow0KPiBzYm95ZEBrZXJuZWwub3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1
+dHJvbml4LmRlOw0KPiBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsg
+bGludXgtY2xrQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1p
+bXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSRTogW1BBVENIXSBjbGs6IGlteDog
+YWRkIGZyYWN0aW9uYWwtTiBwbGwgc3VwcG9ydCB0byBwbGx2NA0KPiANCj4gPiBGcm9tOiBBaXNo
+ZW5nIERvbmcNCj4gPiBTZW50OiBNb25kYXksIEFwcmlsIDI5LCAyMDE5IDc6MjggUE0NCj4gPiBT
+dWJqZWN0OiBSRTogW1BBVENIXSBjbGs6IGlteDogYWRkIGZyYWN0aW9uYWwtTiBwbGwgc3VwcG9y
+dCB0byBwbGx2NA0KPiA+ID4gVGhlIHBsbHY0IHN1cHBvcnRzIGZyYWN0aW9uYWwtTiBmdW5jdGlv
+biwgdGhlIGZvcm11bGEgaXM6DQo+ID4gPg0KPiA+ID4gUExMIG91dHB1dCBmcmVxID0gaW5wdXQg
+KiAobXVsdCArIG51bS9kZW5vbSksDQo+ID4gPg0KPiA+ID4gVGhpcyBwYXRjaCBhZGRzIGZyYWN0
+aW9uYWwtTiBmdW5jdGlvbiBzdXBwb3J0LCBpbmNsdWRpbmcgY2xvY2sgcm91bmQNCj4gPiA+IHJh
+dGUsIGNhbGN1bGF0ZSByYXRlIGFuZCBzZXQgcmF0ZSwgd2l0aCB0aGlzIHBhdGNoLCB0aGUgY2xv
+Y2sgcmF0ZQ0KPiA+ID4gb2YgQVBMTCBpbiBjbG9jayB0cmVlIGlzIG1vcmUgYWNjdXJhdGUgdGhh
+biBiZWZvcmU6DQo+ID4gPg0KPiANCj4gQlRXLCBvbmUgbW9yZSBxdWVzdGlvbjoNCj4gRG9lcyBC
+MCBjaGlwIHN1cHBvcnQgZnJhY3Rpb25hbCBmb3IgU1BMTCBhcyB0aGlzIHBhdGNoIGFmZmVjdHMg
+Ym90aCBBUExMIGFuZA0KPiBTUExMPw0KPiBJIGRpZCBub3Qgc2VlIE5VTSZERU5PTSByZWdpc3Rl
+ciBmb3IgU1BMTCBpbiBteSBkb2MsIG5vdCBzdXJlIGlmIGl0J3MgbGF0ZXN0DQo+IHZlcnNpb24u
+DQoNClRoZXJlIGFyZSBOVU0mREVOT00gZm9yIGJvdGggU1BMTCBhbmQgQVBMTCBpbiByZWZlcmVu
+Y2UgbWFudWFsLCBteSBSTSBpcw0KVjIoMi4wKSwgcHVibGlzaGVkIG9uIDEyLzIwMTcuDQoNCkFu
+c29uLg0KDQo+IA0KPiBSZWdhcmRzDQo+IERvbmcgQWlzaGVuZw0KPiANCj4gPiA+IFdpdGhvdXQg
+ZnJhY3Rpb246DQo+ID4gPiBhcGxsX3ByZV9zZWwgICAgICAgICAgICAgICAgICAgICAgMSAgICAg
+ICAgMSAgICAgICAgMSAgICAyNDAwMDAwMA0KPiA+ID4gMCAgICAgMCAgNTAwMDANCj4gPiA+ICAg
+IGFwbGxfcHJlX2RpdiAgICAgICAgICAgICAgICAgICAxICAgICAgICAxICAgICAgICAyICAgIDI0
+MDAwMDAwDQo+ID4gPiAwICAgICAwICA1MDAwMA0KPiA+ID4gICAgICAgYXBsbCAgICAgICAgICAg
+ICAgICAgICAgICAgIDEgICAgICAgIDEgICAgICAgIDIgICA1MjgwMDAwMDANCj4gPiA+IDAgICAg
+IDAgIDUwMDAwDQo+ID4gPiAgICAgICAgICBhcGxsX3BmZDMgICAgICAgICAgICAgICAgMCAgICAg
+ICAgMCAgICAgICAgMCAgIDc5MjAwMDAwMA0KPiA+ID4gMCAgICAgMCAgNTAwMDANCj4gPiA+ICAg
+ICAgICAgIGFwbGxfcGZkMiAgICAgICAgICAgICAgICAwICAgICAgICAwICAgICAgICAwICAgMzM5
+NDI4NTcxDQo+ID4gPiAwICAgICAwICA1MDAwMA0KPiA+ID4gICAgICAgICAgYXBsbF9wZmQxICAg
+ICAgICAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAzNTIwMDAwMDANCj4gPiA+IDAgICAg
+IDAgIDUwMDAwDQo+ID4gPiAgICAgICAgICAgICB1c2RoYzAgICAgICAgICAgICAgICAgMCAgICAg
+ICAgMCAgICAgICAgMA0KPiA+IDM1MjAwMDAwMA0KPiA+ID4gMCAgICAgMCAgNTAwMDANCj4gPiA+
+ICAgICAgICAgIGFwbGxfcGZkMCAgICAgICAgICAgICAgICAxICAgICAgICAxICAgICAgICAxICAg
+MzUyMDAwMDAwDQo+ID4gPiAwICAgICAwICA1MDAwMA0KPiA+ID4NCj4gPiA+IFdpdGggZnJhY3Rp
+b246DQo+ID4gPiBhcGxsX3ByZV9zZWwgICAgICAgICAgICAgICAgICAgICAgMSAgICAgICAgMSAg
+ICAgICAgMSAgICAyNDAwMDAwMA0KPiA+ID4gMCAgICAgMCAgNTAwMDANCj4gPiA+ICAgIGFwbGxf
+cHJlX2RpdiAgICAgICAgICAgICAgICAgICAxICAgICAgICAxICAgICAgICAyICAgIDI0MDAwMDAw
+DQo+ID4gPiAwICAgICAwICA1MDAwMA0KPiA+ID4gICAgICAgYXBsbCAgICAgICAgICAgICAgICAg
+ICAgICAgIDEgICAgICAgIDEgICAgICAgIDIgICA1MjkyMDAwMDANCj4gPiA+IDAgICAgIDAgIDUw
+MDAwDQo+ID4gPiAgICAgICAgICBhcGxsX3BmZDMgICAgICAgICAgICAgICAgMCAgICAgICAgMCAg
+ICAgICAgMCAgIDc5MzgwMDAwMA0KPiA+ID4gMCAgICAgMCAgNTAwMDANCj4gPiA+ICAgICAgICAg
+IGFwbGxfcGZkMiAgICAgICAgICAgICAgICAwICAgICAgICAwICAgICAgICAwICAgMzQwMjAwMDAw
+DQo+ID4gPiAwICAgICAwICA1MDAwMA0KPiA+ID4gICAgICAgICAgYXBsbF9wZmQxICAgICAgICAg
+ICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAzNTI4MDAwMDANCj4gPiA+IDAgICAgIDAgIDUw
+MDAwDQo+ID4gPiAgICAgICAgICAgICB1c2RoYzAgICAgICAgICAgICAgICAgMCAgICAgICAgMCAg
+ICAgICAgMA0KPiA+IDM1MjgwMDAwMA0KPiA+ID4gMCAgICAgMCAgNTAwMDANCj4gPiA+ICAgICAg
+ICAgIGFwbGxfcGZkMCAgICAgICAgICAgICAgICAxICAgICAgICAxICAgICAgICAxICAgMzUyODAw
+MDAwDQo+ID4gPiAwICAgICAwICA1MDAwMA0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFu
+c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgZHJpdmVy
+cy9jbGsvaW14L2Nsay1wbGx2NC5jIHwgNjgNCj4gPiA+ICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKy0tLS0tLQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2MCBpbnNlcnRp
+b25zKCspLCA4IGRlbGV0aW9ucygtKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2Nsay9pbXgvY2xrLXBsbHY0LmMNCj4gPiA+IGIvZHJpdmVycy9jbGsvaW14L2Nsay1wbGx2NC5j
+IGluZGV4IGQzOGJjOWYuLjRjZWQ1Y2EgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL2Nsay9p
+bXgvY2xrLXBsbHY0LmMNCj4gPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGstcGxsdjQuYw0K
+PiA+ID4gQEAgLTY0LDEzICs2NCwxOCBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZw0KPiA+ID4gY2xr
+X3BsbHY0X3JlY2FsY19yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LA0KPiA+ID4gIAkJCQkJICAgdW5z
+aWduZWQgbG9uZyBwYXJlbnRfcmF0ZSkNCj4gPiA+ICB7DQo+ID4gPiAgCXN0cnVjdCBjbGtfcGxs
+djQgKnBsbCA9IHRvX2Nsa19wbGx2NChodyk7DQo+ID4gPiAtCXUzMiBkaXY7DQo+ID4gPiArCXUz
+MiBtdWx0ID0gcmVhZGxfcmVsYXhlZChwbGwtPmJhc2UgKyBQTExfQ0ZHX09GRlNFVCk7DQo+ID4g
+PiArCXUzMiBtZm4gPSByZWFkbF9yZWxheGVkKHBsbC0+YmFzZSArIFBMTF9OVU1fT0ZGU0VUKTsN
+Cj4gPiA+ICsJdTMyIG1mZCA9IHJlYWRsX3JlbGF4ZWQocGxsLT5iYXNlICsgUExMX0RFTk9NX09G
+RlNFVCk7DQo+ID4NCj4gPiBOaXRwaWNrOg0KPiA+IFdlIHVzdWFsbHkgZG9uJ3Qgd3JpdGUgY29k
+ZSBsaWtlIHRoaXMuDQo+ID4gSG93IGFib3V0IHNlcGFyYXRlIHRoZSBhc3NpZ25tZW50IGZyb20g
+ZGVjbGFyYXRpb24/DQo+ID4NCj4gPiA+ICsJdTY0IHRlbXA2NCA9IHBhcmVudF9yYXRlOw0KPiA+
+ID4NCj4gPiA+IC0JZGl2ID0gcmVhZGxfcmVsYXhlZChwbGwtPmJhc2UgKyBQTExfQ0ZHX09GRlNF
+VCk7DQo+ID4gPiAtCWRpdiAmPSBCTV9QTExfTVVMVDsNCj4gPiA+IC0JZGl2ID4+PSBCUF9QTExf
+TVVMVDsNCj4gPiA+ICsJbXVsdCAmPSBCTV9QTExfTVVMVDsNCj4gPiA+ICsJbXVsdCA+Pj0gQlBf
+UExMX01VTFQ7DQo+ID4gPg0KPiA+ID4gLQlyZXR1cm4gcGFyZW50X3JhdGUgKiBkaXY7DQo+ID4g
+PiArCXRlbXA2NCAqPSBtZm47DQo+ID4gPiArCWRvX2Rpdih0ZW1wNjQsIG1mZCk7DQo+ID4gPiAr
+DQo+ID4gPiArCXJldHVybiAocGFyZW50X3JhdGUgKiBtdWx0KSArICh1MzIpdGVtcDY0Ow0KPiA+
+ID4gIH0NCj4gPiA+DQo+ID4gPiAgc3RhdGljIGxvbmcgY2xrX3BsbHY0X3JvdW5kX3JhdGUoc3Ry
+dWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxvbmcNCj4gPiA+IHJhdGUsIEBADQo+ID4gPiAtNzgs
+MTQgKzgzLDQ3IEBAIHN0YXRpYyBsb25nIGNsa19wbGx2NF9yb3VuZF9yYXRlKHN0cnVjdCBjbGtf
+aHcgKmh3LA0KPiA+ID4gdW5zaWduZWQgbG9uZyByYXRlLCAgew0KPiA+ID4gIAl1bnNpZ25lZCBs
+b25nIHBhcmVudF9yYXRlID0gKnByYXRlOw0KPiA+ID4gIAl1bnNpZ25lZCBsb25nIHJvdW5kX3Jh
+dGUsIGk7DQo+ID4gPiArCWJvb2wgZm91bmQgPSBmYWxzZTsNCj4gPiA+ICsJdTMyIG1mbiwgbWZk
+ID0gMTAwMDAwMDsNCj4gPiA+ICsJdTMyIG1heF9tZmQgPSAweDNGRkZGRkZGOw0KPiA+DQo+ID4g
+UGxlYXNlIGtlZXAgc29ydCBmcm9tIGxvbmcgdG8gc2hvcnQuDQo+ID4gQW5kIHRoZSBtdWx0aSBN
+YXhfbWZkIGRlZmluaXRpb25zIGNvdWxkIGJlIG1vdmUgb3V0IHRoZSBmdW5jdGlvbiBhbmQNCj4g
+PiBEZWZpbmVkIHVzZSBtYWNyby4NCj4gPg0KPiA+ID4gKwl1NjQgdGVtcDY0Ow0KPiA+ID4NCj4g
+PiA+ICAJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUocGxsdjRfbXVsdF90YWJsZSk7IGkrKykg
+ew0KPiA+ID4gIAkJcm91bmRfcmF0ZSA9IHBhcmVudF9yYXRlICogcGxsdjRfbXVsdF90YWJsZVtp
+XTsNCj4gPiA+IC0JCWlmIChyYXRlID49IHJvdW5kX3JhdGUpDQo+ID4gPiAtCQkJcmV0dXJuIHJv
+dW5kX3JhdGU7DQo+ID4gPiArCQlpZiAocmF0ZSA+PSByb3VuZF9yYXRlKSB7DQo+ID4gPiArCQkJ
+Zm91bmQgPSB0cnVlOw0KPiA+ID4gKwkJCWJyZWFrOw0KPiA+ID4gKwkJfQ0KPiA+ID4gKwl9DQo+
+ID4gPiArDQo+ID4gPiArCWlmICghZm91bmQpIHsNCj4gPiA+ICsJCXByX3dhcm4oIiVzOiB1bmFi
+bGUgdG8gcm91bmQgcmF0ZSAlbHUsIHBhcmVudCByYXRlICVsdVxuIiwNCj4gPiA+ICsJCQljbGtf
+aHdfZ2V0X25hbWUoaHcpLCByYXRlLCBwYXJlbnRfcmF0ZSk7DQo+ID4gPiArCQlyZXR1cm4gMDsN
+Cj4gPiA+ICAJfQ0KPiA+ID4NCj4gPiA+IC0JcmV0dXJuIHJvdW5kX3JhdGU7DQo+ID4gPiArCWlm
+IChwYXJlbnRfcmF0ZSA8PSBtYXhfbWZkKQ0KPiA+ID4gKwkJbWZkID0gcGFyZW50X3JhdGU7DQo+
+ID4gPiArDQo+ID4gPiArCXRlbXA2NCA9ICh1NjQpKHJhdGUgLSByb3VuZF9yYXRlKTsNCj4gPiA+
+ICsJdGVtcDY0ICo9IG1mZDsNCj4gPiA+ICsJZG9fZGl2KHRlbXA2NCwgcGFyZW50X3JhdGUpOw0K
+PiA+ID4gKwltZm4gPSB0ZW1wNjQ7DQo+ID4gPiArDQo+ID4gPiArCS8qDQo+ID4gPiArCSAqIE5P
+VEU6IFRoZSB2YWx1ZSBvZiBudW1lcmF0b3IgbXVzdCBhbHdheXMgYmUgY29uZmlndXJlZCB0byBi
+ZQ0KPiA+ID4gKwkgKiBsZXNzIHRoYW4gdGhlIHZhbHVlIG9mIHRoZSBkZW5vbWluYXRvci4gSWYg
+d2UgY2FuJ3QgZ2V0IGEgcHJvcGVyDQo+ID4gPiArCSAqIHBhaXIgb2YgbWZuL21mZCwgd2Ugc2lt
+cGx5IHJldHVybiB0aGUgcm91bmRfcmF0ZSB3aXRob3V0IHVzaW5nDQo+ID4gPiArCSAqIHRoZSBm
+cmFjIHBhcnQuDQo+ID4gPiArCSAqLw0KPiA+ID4gKwlpZiAobWZuID49IG1mZCkNCj4gPiA+ICsJ
+CXJldHVybiByb3VuZF9yYXRlOw0KPiA+ID4gKw0KPiA+ID4gKwl0ZW1wNjQgPSAodTY0KXBhcmVu
+dF9yYXRlOw0KPiA+ID4gKwl0ZW1wNjQgKj0gbWZuOw0KPiA+ID4gKwlkb19kaXYodGVtcDY0LCBt
+ZmQpOw0KPiA+ID4gKw0KPiA+ID4gKwlyZXR1cm4gcm91bmRfcmF0ZSArICh1MzIpdGVtcDY0Ow0K
+PiA+ID4gIH0NCj4gPiA+DQo+ID4gPiAgc3RhdGljIGJvb2wgY2xrX3BsbHY0X2lzX3ZhbGlkX211
+bHQodW5zaWduZWQgaW50IG11bHQpIEBAIC0xMDYsMTcNCj4gPiA+ICsxNDQsMzEgQEAgc3RhdGlj
+IGludCBjbGtfcGxsdjRfc2V0X3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkDQo+ID4g
+PiArbG9uZw0KPiA+IHJhdGUsICB7DQo+ID4gPiAgCXN0cnVjdCBjbGtfcGxsdjQgKnBsbCA9IHRv
+X2Nsa19wbGx2NChodyk7DQo+ID4gPiAgCXUzMiB2YWwsIG11bHQ7DQo+ID4gPiArCXUzMiBtZm4s
+IG1mZCA9IDEwMDAwMDA7DQo+ID4gPiArCXUzMiBtYXhfbWZkID0gMHgzRkZGRkZGRjsNCj4gPg0K
+PiA+IERpdHRvDQo+ID4NCj4gPiBPdGhlcndpc2U6DQo+ID4gUmV2aWV3ZWQtYnk6IERvbmcgQWlz
+aGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+ID4NCj4gPiBSZWdhcmRzDQo+ID4gRG9uZyBB
+aXNoZW5nDQo+ID4NCj4gPiA+ICsJdTY0IHRlbXA2NDsNCj4gPiA+DQo+ID4gPiAgCW11bHQgPSBy
+YXRlIC8gcGFyZW50X3JhdGU7DQo+ID4gPg0KPiA+ID4gIAlpZiAoIWNsa19wbGx2NF9pc192YWxp
+ZF9tdWx0KG11bHQpKQ0KPiA+ID4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gPg0KPiA+ID4gKwlp
+ZiAocGFyZW50X3JhdGUgPD0gbWF4X21mZCkNCj4gPiA+ICsJCW1mZCA9IHBhcmVudF9yYXRlOw0K
+PiA+ID4gKw0KPiA+ID4gKwl0ZW1wNjQgPSAodTY0KShyYXRlIC0gbXVsdCAqIHBhcmVudF9yYXRl
+KTsNCj4gPiA+ICsJdGVtcDY0ICo9IG1mZDsNCj4gPiA+ICsJZG9fZGl2KHRlbXA2NCwgcGFyZW50
+X3JhdGUpOw0KPiA+ID4gKwltZm4gPSB0ZW1wNjQ7DQo+ID4gPiArDQo+ID4gPiAgCXZhbCA9IHJl
+YWRsX3JlbGF4ZWQocGxsLT5iYXNlICsgUExMX0NGR19PRkZTRVQpOw0KPiA+ID4gIAl2YWwgJj0g
+fkJNX1BMTF9NVUxUOw0KPiA+ID4gIAl2YWwgfD0gbXVsdCA8PCBCUF9QTExfTVVMVDsNCj4gPiA+
+ICAJd3JpdGVsX3JlbGF4ZWQodmFsLCBwbGwtPmJhc2UgKyBQTExfQ0ZHX09GRlNFVCk7DQo+ID4g
+Pg0KPiA+ID4gKwl3cml0ZWxfcmVsYXhlZChtZm4sIHBsbC0+YmFzZSArIFBMTF9OVU1fT0ZGU0VU
+KTsNCj4gPiA+ICsJd3JpdGVsX3JlbGF4ZWQobWZkLCBwbGwtPmJhc2UgKyBQTExfREVOT01fT0ZG
+U0VUKTsNCj4gPiA+ICsNCj4gPiA+ICAJcmV0dXJuIDA7DQo+ID4gPiAgfQ0KPiA+ID4NCj4gPiA+
+IC0tDQo+ID4gPiAyLjcuNA0KDQo=
