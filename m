@@ -2,174 +2,189 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA74C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB54C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0049C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA99920673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfD2Op2 (ORCPT
+        id S1728588AbfD2OpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:45:28 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1324 "EHLO mga05.intel.com"
+        Mon, 29 Apr 2019 10:45:23 -0400
+Received: from foss.arm.com ([217.140.101.70]:59094 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbfD2OpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:45:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 07:45:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
-   d="scan'208";a="154739507"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2019 07:45:24 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, tj@kernel.org, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 4/4] perf cgroup: Add fast path for cgroup switch
-Date:   Mon, 29 Apr 2019 07:44:05 -0700
-Message-Id: <1556549045-71814-5-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
-References: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
+        id S1728331AbfD2OpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:45:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7829780D;
+        Mon, 29 Apr 2019 07:45:20 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EADA83F5C1;
+        Mon, 29 Apr 2019 07:45:17 -0700 (PDT)
+Subject: Re: [PATCH 20/26] iommu/dma: Refactor iommu_dma_alloc, part 2
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190422175942.18788-1-hch@lst.de>
+ <20190422175942.18788-21-hch@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9412baed-0d13-dab7-0bdc-90cfdf8e92f0@arm.com>
+Date:   Mon, 29 Apr 2019 15:45:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190422175942.18788-21-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On 22/04/2019 18:59, Christoph Hellwig wrote:
+> From: Robin Murphy <robin.murphy@arm.com>
 
-Generic visit_groups_merge() is used in cgroup context switch to sched
-in cgroup events, which has high overhead especially in frequent context
-switch with several events and cgroups involved. Because it feeds all
-events on a given CPU to pinned/flexible_sched_in() regardless the
-cgroup.
+Honestly I don't think anything left of my patch here...
 
-Add a fast path to only feed the specific cgroup events to
-pinned/flexible_sched_in() in cgroup context switch.
+> Apart from the iommu_dma_alloc_remap() case which remains sufficiently
+> different that it's better off being self-contained, the rest of the
+> logic can now be consolidated into a single flow which separates the
+> logcially-distinct steps of allocating pages, getting the CPU address,
+> and finally getting the IOMMU address.
 
-Don't need event_filter_match() to filter cgroup and CPU in fast path.
-Only pmu_filter_match() is enough.
+...and it certainly doesn't do that any more.
 
-Don't need to specially handle system-wide event anymore.
+It's clear that we have fundamentally different ways of reading code, so 
+I don't think it's productive to keep arguing personal preference - I 
+still find the end result here a fair bit more tolerable than before, so 
+if you update the commit message to reflect the actual change (at which 
+point there's really nothing left of my authorship) I can live with it.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- kernel/events/core.c | 66 ++++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 48 insertions(+), 18 deletions(-)
+Robin.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5ecc048..16bb705 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3310,6 +3310,47 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
- 	ctx_sched_out(&cpuctx->ctx, cpuctx, event_type);
- }
- 
-+struct sched_in_data {
-+	struct perf_event_context *ctx;
-+	struct perf_cpu_context *cpuctx;
-+	int can_add_hw;
-+};
-+
-+#ifdef CONFIG_CGROUP_PERF
-+
-+static int cgroup_visit_groups_merge(struct perf_event_groups *groups, int cpu,
-+				     int (*func)(struct perf_event *, void *, int (*)(struct perf_event *)),
-+				     void *data)
-+{
-+	struct sched_in_data *sid = data;
-+	struct cgroup_subsys_state *css;
-+	struct perf_cgroup *cgrp;
-+	struct perf_event *evt;
-+	u64 cgrp_id;
-+
-+	for (css = &sid->cpuctx->cgrp->css; css; css = css->parent) {
-+		/* root cgroup doesn't have events */
-+		if (css->id == 1)
-+			return 0;
-+
-+		cgrp = container_of(css, struct perf_cgroup, css);
-+		cgrp_id = *this_cpu_ptr(cgrp->cgrp_id);
-+		/* Only visit groups when the cgroup has events */
-+		if (cgrp_id) {
-+			evt = perf_event_groups_first_cgroup(groups, cpu, cgrp_id);
-+			while (evt) {
-+				if (func(evt, (void *)sid, pmu_filter_match))
-+					break;
-+				evt = perf_event_groups_next_cgroup(evt);
-+			}
-+			return 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
- static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
- 			      int (*func)(struct perf_event *, void *, int (*)(struct perf_event *)),
- 			      void *data)
-@@ -3317,6 +3358,13 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
- 	struct perf_event **evt, *evt1, *evt2;
- 	int ret;
- 
-+#ifdef CONFIG_CGROUP_PERF
-+	struct sched_in_data *sid = data;
-+
-+	/* fast path for cgroup switch */
-+	if (sid->cpuctx->cgrp_switch)
-+		return cgroup_visit_groups_merge(groups, cpu, func, data);
-+#endif
- 	evt1 = perf_event_groups_first(groups, -1);
- 	evt2 = perf_event_groups_first(groups, cpu);
- 
-@@ -3342,12 +3390,6 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
- 	return 0;
- }
- 
--struct sched_in_data {
--	struct perf_event_context *ctx;
--	struct perf_cpu_context *cpuctx;
--	int can_add_hw;
--};
--
- static int pinned_sched_in(struct perf_event *event, void *data,
- 			   int (*filter_match)(struct perf_event *))
- {
-@@ -3356,12 +3398,6 @@ static int pinned_sched_in(struct perf_event *event, void *data,
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
- 
--#ifdef CONFIG_CGROUP_PERF
--	/* Don't sched system-wide event when cgroup context switch */
--	if (sid->cpuctx->cgrp_switch && !event->cgrp)
--		return 0;
--#endif
--
- 	if (!filter_match(event))
- 		return 0;
- 
-@@ -3388,12 +3424,6 @@ static int flexible_sched_in(struct perf_event *event, void *data,
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
- 
--#ifdef CONFIG_CGROUP_PERF
--	/* Don't sched system-wide event when cgroup context switch */
--	if (sid->cpuctx->cgrp_switch && !event->cgrp)
--		return 0;
--#endif
--
- 	if (!filter_match(event))
- 		return 0;
- 
--- 
-2.7.4
-
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> [hch: split the page allocation into a new helper to simplify the flow]
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   drivers/iommu/dma-iommu.c | 65 +++++++++++++++++++++------------------
+>   1 file changed, 35 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 9b269f0792f3..acdfe866cb29 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -955,35 +955,14 @@ static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
+>   	__iommu_dma_free(dev, size, cpu_addr);
+>   }
+>   
+> -static void *iommu_dma_alloc(struct device *dev, size_t size,
+> -		dma_addr_t *handle, gfp_t gfp, unsigned long attrs)
+> +static void *iommu_dma_alloc_pages(struct device *dev, size_t size,
+> +		struct page **pagep, gfp_t gfp, unsigned long attrs)
+>   {
+>   	bool coherent = dev_is_dma_coherent(dev);
+> -	int ioprot = dma_info_to_prot(DMA_BIDIRECTIONAL, coherent, attrs);
+>   	size_t alloc_size = PAGE_ALIGN(size);
+>   	struct page *page = NULL;
+>   	void *cpu_addr;
+>   
+> -	gfp |= __GFP_ZERO;
+> -
+> -	if (gfpflags_allow_blocking(gfp) &&
+> -	    !(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
+> -		return iommu_dma_alloc_remap(dev, size, handle, gfp, attrs);
+> -
+> -	if (!gfpflags_allow_blocking(gfp) && !coherent) {
+> -		cpu_addr = dma_alloc_from_pool(alloc_size, &page, gfp);
+> -		if (!cpu_addr)
+> -			return NULL;
+> -
+> -		*handle = __iommu_dma_map(dev, page_to_phys(page), size,
+> -					  ioprot);
+> -		if (*handle == DMA_MAPPING_ERROR) {
+> -			dma_free_from_pool(cpu_addr, alloc_size);
+> -			return NULL;
+> -		}
+> -		return cpu_addr;
+> -	}
+> -
+>   	if (gfpflags_allow_blocking(gfp))
+>   		page = dma_alloc_from_contiguous(dev, alloc_size >> PAGE_SHIFT,
+>   						 get_order(alloc_size),
+> @@ -993,33 +972,59 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
+>   	if (!page)
+>   		return NULL;
+>   
+> -	*handle = __iommu_dma_map(dev, page_to_phys(page), size, ioprot);
+> -	if (*handle == DMA_MAPPING_ERROR)
+> -		goto out_free_pages;
+> -
+>   	if (!coherent || PageHighMem(page)) {
+>   		pgprot_t prot = arch_dma_mmap_pgprot(dev, PAGE_KERNEL, attrs);
+>   
+>   		cpu_addr = dma_common_contiguous_remap(page, alloc_size,
+>   				VM_USERMAP, prot, __builtin_return_address(0));
+>   		if (!cpu_addr)
+> -			goto out_unmap;
+> +			goto out_free_pages;
+>   
+>   		if (!coherent)
+>   			arch_dma_prep_coherent(page, size);
+>   	} else {
+>   		cpu_addr = page_address(page);
+>   	}
+> +
+> +	*pagep = page;
+>   	memset(cpu_addr, 0, alloc_size);
+>   	return cpu_addr;
+> -out_unmap:
+> -	__iommu_dma_unmap(dev, *handle, size);
+>   out_free_pages:
+>   	if (!dma_release_from_contiguous(dev, page, alloc_size >> PAGE_SHIFT))
+>   		__free_pages(page, get_order(alloc_size));
+>   	return NULL;
+>   }
+>   
+> +static void *iommu_dma_alloc(struct device *dev, size_t size,
+> +		dma_addr_t *handle, gfp_t gfp, unsigned long attrs)
+> +{
+> +	bool coherent = dev_is_dma_coherent(dev);
+> +	int ioprot = dma_info_to_prot(DMA_BIDIRECTIONAL, coherent, attrs);
+> +	struct page *page = NULL;
+> +	void *cpu_addr;
+> +
+> +	gfp |= __GFP_ZERO;
+> +
+> +	if (gfpflags_allow_blocking(gfp) &&
+> +	    !(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
+> +		return iommu_dma_alloc_remap(dev, size, handle, gfp, attrs);
+> +
+> +	if (!gfpflags_allow_blocking(gfp) && !coherent)
+> +		cpu_addr = dma_alloc_from_pool(PAGE_ALIGN(size), &page, gfp);
+> +	else
+> +		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
+> +	if (!cpu_addr)
+> +		return NULL;
+> +
+> +	*handle = __iommu_dma_map(dev, page_to_phys(page), size, ioprot);
+> +	if (*handle == DMA_MAPPING_ERROR) {
+> +		__iommu_dma_free(dev, size, cpu_addr);
+> +		return NULL;
+> +	}
+> +
+> +	return cpu_addr;
+> +}
+> +
+>   static int __iommu_dma_mmap_pfn(struct vm_area_struct *vma,
+>   			      unsigned long pfn, size_t size)
+>   {
+> 
