@@ -2,106 +2,109 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F14C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7064C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EBF21530
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ns9DV7vl"
+	by mail.kernel.org (Postfix) with ESMTP id B90372084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbfD2NaR (ORCPT
+        id S1728321AbfD2NbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:30:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55250 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfD2N3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:29:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id b10so759215wmj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 06:29:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jguxe++uQg1Tg16qsCOT2xdBZ2LoE15AQChE753+pog=;
-        b=ns9DV7vl1GqOrO/l7Pw/dLmy4NgN3/x795IBIKZ+BKXrvNhko8jL+GoCk33SLpy7nF
-         GphkEdLsA1stWrdCKWx20VUWt0I8WUBc+s7fvJgfBs1SeB61JEkA1oxNmTRIluXP87g5
-         xJtw8WLKxGjC2bFqvsAiFkZtMyKHE4MJdov2el5ZY2sbLNkl/K52f9Xitk383AEiq/Ht
-         ZIIYkFr4XvTxV8WamLucfoPYlelow6AmwOej3EUaHz4AebYx52vKuwUdQyv+BoZTmUjB
-         ndUGecFTHr8UYRamWk0vJP6sQLfC4pLm9TnIcemJ8aIKRqoZU3wZhZaghTXBIXLZc0sk
-         BaSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jguxe++uQg1Tg16qsCOT2xdBZ2LoE15AQChE753+pog=;
-        b=SWUAvLmJ1fwkwKz323uKIPJDnw906flAiERE+rRVeXoiThJ3ykeRkS9eCO67lad+M4
-         rwRjHQ9hUu24im5Qj7XWmKlTpA1mt4Gp0e55d36c0bLOPCTyLNHsMAgq8ULMnVUygT0b
-         +cfE/AS6PU/qhXQiJ1zZ+VDTPiBgz57Lun/DksDDuSEV7shz+aA5iwyDGIiNIhu/t90f
-         un0VT1RTHaq2bENTyTimq5X1WcVmTg15dHM2QXJz0SMICBy+5Umv+SuLnbwe8ZoLushw
-         0cIjOmp5aYqI82PMbS+Z6TZ6LkMlRdVWPK/GVUFWdzKHMbmB14xS8DPrSXTNdsPyRTOR
-         0KQg==
-X-Gm-Message-State: APjAAAVbduYZ8J6h4kbNQSFmYI6KdytoILkjYO2Vl6kXl/dYlPziGR21
-        YwTCalJp1VQnsqxCiRxsLELyGQ==
-X-Google-Smtp-Source: APXvYqznEB34S8Y0R3lfnUYKt0vBonlD/vhA5qe5px4C4oql/IzQD3R62u57tqApFNuPCVB1fZfEEQ==
-X-Received: by 2002:a7b:ce84:: with SMTP id q4mr18135443wmj.41.1556544590406;
-        Mon, 29 Apr 2019 06:29:50 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id s17sm2857593wra.94.2019.04.29.06.29.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 06:29:49 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
-Subject: [PATCH 2/6] ASoC: hdmi-codec: unlock the device on startup errors
-Date:   Mon, 29 Apr 2019 15:29:39 +0200
-Message-Id: <20190429132943.16269-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190429132943.16269-1-jbrunet@baylibre.com>
-References: <20190429132943.16269-1-jbrunet@baylibre.com>
+        Mon, 29 Apr 2019 09:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbfD2NbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:31:21 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 004C520652;
+        Mon, 29 Apr 2019 13:31:18 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 09:31:17 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     tip-bot for Peter Zijlstra <tipbot@zytor.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, guro@fb.com,
+        peterz@infradead.org, hpa@zytor.com, dave@stgolabs.net,
+        tim.c.chen@linux.intel.com, rostedt@goodmis.org, ast@kernel.org,
+        torvalds@linux-foundation.org, longman@redhat.com,
+        will.deacon@arm.com, huang.ying.caritas@gmail.com,
+        daniel@iogearbox.net, tglx@linutronix.de,
+        linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:sched/core] trace: Fix preempt_enable_no_resched() abuse
+Message-ID: <20190429093117.23760399@gandalf.local.home>
+In-Reply-To: <tip-e8bd5814989b994cf1b0cb179e1c777e40c0f02c@git.kernel.org>
+References: <20190423200318.GY14281@hirez.programming.kicks-ass.net>
+        <tip-e8bd5814989b994cf1b0cb179e1c777e40c0f02c@git.kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the hdmi codec startup fails, it should clear the current_substream
-pointer to free the device. This is properly done for the audio_startup()
-callback but for snd_pcm_hw_constraint_eld().
+On Sun, 28 Apr 2019 23:39:03 -0700
+tip-bot for Peter Zijlstra <tipbot@zytor.com> wrote:
 
-Make sure the pointer cleared if an error is reported.
+> Commit-ID:  e8bd5814989b994cf1b0cb179e1c777e40c0f02c
+> Gitweb:     https://git.kernel.org/tip/e8bd5814989b994cf1b0cb179e1c777e40c0f02c
+> Author:     Peter Zijlstra <peterz@infradead.org>
+> AuthorDate: Tue, 23 Apr 2019 22:03:18 +0200
+> Committer:  Ingo Molnar <mingo@kernel.org>
+> CommitDate: Mon, 29 Apr 2019 08:27:09 +0200
+> 
+> trace: Fix preempt_enable_no_resched() abuse
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/codecs/hdmi-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Hi Ingo,
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index 9dca24732069..4bd598253c62 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -437,8 +437,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret)
-+			if (ret) {
-+				mutex_lock(&hcp->current_stream_lock);
-+				hcp->current_stream = NULL;
-+				mutex_unlock(&hcp->current_stream_lock);
- 				return ret;
-+			}
- 		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
--- 
-2.20.1
+I already sent this fix to Linus, and it's been pulled in to his tree.
+
+Commit: d6097c9e4454adf1f8f2c9547c2fa6060d55d952
+
+-- Steve
+
+> 
+> Unless there is a call into schedule() in the immediate
+> (deterministic) future, one must not use preempt_enable_no_resched().
+> It can cause a preemption to go missing and thereby cause arbitrary
+> delays, breaking the PREEMPT=y invariant.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Tim Chen <tim.c.chen@linux.intel.com>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: huang ying <huang.ying.caritas@gmail.com>
+> Fixes: 2c2d7329d8af ("tracing/ftrace: use preempt_enable_no_resched_notrace in ring_buffer_time_stamp()")
+> Link: https://lkml.kernel.org/r/20190423200318.GY14281@hirez.programming.kicks-ass.net
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  kernel/trace/ring_buffer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 41b6f96e5366..4ee8d8aa3d0f 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -762,7 +762,7 @@ u64 ring_buffer_time_stamp(struct ring_buffer *buffer, int cpu)
+>  
+>  	preempt_disable_notrace();
+>  	time = rb_time_stamp(buffer);
+> -	preempt_enable_no_resched_notrace();
+> +	preempt_enable_notrace();
+>  
+>  	return time;
+>  }
 
