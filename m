@@ -2,141 +2,153 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D692C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A760EC04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3492067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C1A2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="mkOtiQnY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwcT4Qvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbfD2T1P (ORCPT
+        id S1729248AbfD2T2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:27:15 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41793 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2T1O (ORCPT
+        Mon, 29 Apr 2019 15:28:36 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42115 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2T2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:27:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id r10so10013735ioc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:27:13 -0700 (PDT)
+        Mon, 29 Apr 2019 15:28:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w25so5807490pfi.9;
+        Mon, 29 Apr 2019 12:28:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yM+qItkSV7cyOzrR0XusuAc8CsANFg6gCkRKBVgtPLc=;
-        b=mkOtiQnY+tvJCO67zt0OTJfLIOW19SiBik3Jn1sSE0wipaqZ4CuUeTsZTMJ8OfKmOW
-         TnmafCROZ1COEoBVSrZCsHNaJ7QZXwp5eB8BBM/hfmstC0gRXW6S8gsAkVtyY/kOIquE
-         Z7k2wQEx4eQzDuFCenwXp4/9+Rl+u+8YBV1uuk1Xh4XfsYnjPNngdzNjJhUWkDzZQI/M
-         uLziucGwmZhjK81QF8kp9SbfjaUM3w+UTTDKt+bcsT0E5mLLnraryYmsqs0slNft/vGM
-         F7nVVva4kjQdHT48m4TjAgelo2XBZRYTjLjzqxT1XaqfN3vq1sCvSHzZfPft1sbJ0fGS
-         cfqQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=H3PC/K/0ZqnTv3eSdr7uwHLRMhRxA2po4zeZwBa0UC4=;
+        b=TwcT4QvqRGp1uG/FKCJtxf3DZL4NQG3jTbez+WjIbEICTnsZJmQYLihck1du341mg2
+         vQTcbUkK7dV/ZEEwctyNaD1+TtAiJcKTBXcwZ9rLEV5QphcRn2mzCkiZe6AKH4dcraDb
+         slMQVVcbd3U6arhgfA+D1uNRmFp6HHXEAvMxUneBjs4OPgcaHZ1P+lb3bV1sryGH/aHT
+         OabBR26UgAPBD7R1EOtYuATG1kr0q0OgEVNBAc5/q6nYwhEuh5j8aYMIK7wXZMctKS4b
+         bNThq0SCCQcqLNvjiu6eUXEwPWRXwkhqt38vsp4eW3/5jvZS9+E4yM+EQ58GbA4Thw5O
+         cgSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yM+qItkSV7cyOzrR0XusuAc8CsANFg6gCkRKBVgtPLc=;
-        b=sUfb76/pwSG9ueUywv2CYCM1dWUOVMXYG7earlVJYvJWNqxhyJUaqLqTfIcEj3bzT9
-         DE7wZV3Cq5bfzEuNbHYJxfqn3kLbjroi0jlfjQs9bFUsF3XfhvwDapEpR6kSse6mT9p4
-         jjfIlHpnyhKApn80iVawW0E3dcQuCD8mdxLNvfazxcshDV01ewbiFK76Cxw5r/6Lp89h
-         qTeoYn/aEH4xBv8qO3wgRHdkn4ZNynbf0QNkZs4MDiVUkpTaAzqehr67F76+2Haya4mf
-         AuVwqfJJ+s1m/SucjLkuaZCVgEEOp8byQAtmVj3+GfUu9GYWLT9BUD5/FBjLPRp1vvna
-         ul2Q==
-X-Gm-Message-State: APjAAAWqRMMM+yPXLuapzJsnqveNPugth7Q0BseA2RcLmYWuU3xSk9Z6
-        qNlyJaZAXO/IszhBB14cGIqI0BvOC5pfVlh25j6AbA==
-X-Google-Smtp-Source: APXvYqxnpM22Us/BjZc44Va9fpbRb6KCGDpMRCGC9vemv4K7V0RFwjfmFcku2NXR+S4Uf3aARtyunnitr8/59FB8k+M=
-X-Received: by 2002:a5e:9307:: with SMTP id k7mr12222114iom.155.1556566033384;
- Mon, 29 Apr 2019 12:27:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190423142629.120717-1-venture@google.com> <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
- <CAO=notz9QVoqKLrhJ3kx9FHja5+Mh68f36O36+1ewLG+SanmOA@mail.gmail.com>
- <20190425172549.GA12376@kroah.com> <20190429165137.mwj4ehhwerunbef4@localhost>
- <CAO=notwewAeeLz=LsOcSj=DakLGW0KjeDHALP5Nv2ckgkRqnFA@mail.gmail.com>
-In-Reply-To: <CAO=notwewAeeLz=LsOcSj=DakLGW0KjeDHALP5Nv2ckgkRqnFA@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 29 Apr 2019 12:27:02 -0700
-Message-ID: <CAOesGMipoKED=XLg+VtEVG0Os_MUzsPgOfBFJ+qoJs_fNmP+3g@mail.gmail.com>
-Subject: Re: [PATCH v2] soc: add aspeed folder and misc drivers
-To:     Patrick Venture <venture@google.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>,
-        soc@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=H3PC/K/0ZqnTv3eSdr7uwHLRMhRxA2po4zeZwBa0UC4=;
+        b=KH99hO2rPPHzOqgXpFlos7XAwrwyuqEKzEx3m8UJL5Bg40hgMgp+89AuF7WwDGWKJn
+         ONl8bHAZRV/Pj5Lp+Az+52YYzwtiOT00w7DTKYhKKydzKlDR8vX3jkxN7QQ++ktnnGrk
+         mMx8S5eglXYQ+ut/R5IZ1k6OMe6XhE5BKD7utdke6t4OCdao+id7tGHgHH95VgnFnWfQ
+         h+ALuWB+IT2bq5zIrM6TovPDQwT4EJKzgJ/wOVIO+ERI6Ykq46vZYzLG9XhHj9Wg2dI4
+         kdp9D05yjQrIRtQC3wRsTViA0CPkoTVh7iIebIjk1SlCQs0XnHivIj4gnuxMVzlqnDPa
+         bQqQ==
+X-Gm-Message-State: APjAAAXieRjDZjCgcn9XXYW/J/lAwsrWIFbuKdBrhGpz+Cf4ssYzyJPO
+        zFUVlxa5TGYMjz59qz9L52s=
+X-Google-Smtp-Source: APXvYqwFy0ULEpsCLz4AaUm4VSDQbG86sGUaLA0oHgtneY4zjk8RmxpDxMHYCUCsO5tK1sVozPbuMg==
+X-Received: by 2002:aa7:918b:: with SMTP id x11mr31520922pfa.181.1556566115361;
+        Mon, 29 Apr 2019 12:28:35 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y3sm10598535pfe.9.2019.04.29.12.28.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 12:28:34 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 1/5] watchdog: Use depends instead of select for pretimeout governors
+Date:   Mon, 29 Apr 2019 12:28:27 -0700
+Message-Id: <1556566111-31970-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:12 AM Patrick Venture <venture@google.com> wrote:
->
-> On Mon, Apr 29, 2019 at 10:08 AM Olof Johansson <olof@lixom.net> wrote:
-> >
-> > On Thu, Apr 25, 2019 at 07:25:49PM +0200, Greg KH wrote:
-> > > On Tue, Apr 23, 2019 at 08:28:14AM -0700, Patrick Venture wrote:
-> > > > On Tue, Apr 23, 2019 at 8:22 AM Patrick Venture <venture@google.com> wrote:
-> > > > >
-> > > > > On Tue, Apr 23, 2019 at 7:26 AM Patrick Venture <venture@google.com> wrote:
-> > > > > >
-> > > > > > Create a SoC folder for the ASPEED parts and place the misc drivers
-> > > > > > currently present into this folder.  These drivers are not generic part
-> > > > > > drivers, but rather only apply to the ASPEED SoCs.
-> > > > > >
-> > > > > > Signed-off-by: Patrick Venture <venture@google.com>
-> > > > >
-> > > > > Accidentally lost the Acked-by when re-sending this patchset as I
-> > > > > didn't see it on v1 before re-sending v2 to the larger audience.
-> > > >
-> > > > Since there was a change between v1 and v2, Arnd, I'd appreciate you
-> > > > Ack this version of the patchset since it changes when the soc/aspeed
-> > > > Makefile is followed.
-> > >
-> > > I have no objection for moving stuff out of drivers/misc/ so the SOC
-> > > maintainers are free to take this.
-> > >
-> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > I'm totally confused. This is the second "PATCH v2" of this patch that I came
-> > across, I already applied the first.
->
-> I think the issue here was that I added to the CC list another email
-> and so you may see the v2  without that mailing list, and a v2 with it
-> --
->
-> Does this require a v3?  I honestly didn't think so, but this was the
-> first time I had to add more people without needing other changes.
+Watchdog pretimeout governors were enabled from the default governor
+selection using "select". As a result, the default governor was always
+built into the kernel, even if no watchdog driver was loaded. By using
+"depends on" instead of "select", we are in better control, and the
+governors can all be built as modules. At the same time, set the default
+configuration option for pretimeout governors to match WATCHDOG_CORE
+(meaning all pretimeout governors are by default enabled if pretimeout
+support is enabled).
 
-Well, v2 doesn't build. I'll fix it up locally by adding an 'endmenu'
-to drivers/soc/aspeed/Kconfig. But... brings up questions how this was
-tested before submitting?
+The practical impact of this change is minimal. Previously, selecting
+a default governor automatically enabled that governor. Now, a default
+governor can only be selected if that governor has been enabled.
+Consequently, the order of governor selection is now reversed: The
+governor selection is now first, followed by default governor selection.
 
-scripts/kconfig/conf  --allnoconfig Kconfig
-drivers/soc/Kconfig:24: 'menu' in different file than 'menu'
-drivers/soc/aspeed/Kconfig:1: location of the 'menu'
-drivers/Kconfig:233: 'menu' in different file than 'menu'
-drivers/soc/aspeed/Kconfig:1: location of the 'menu'
-<none>:34: syntax error
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/watchdog/Kconfig | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
-> >
-> > Patrick: Follow up with incremental patch in case there's any difference.
-> > Meanwhile, please keep in mind that you're adding a lot of work for people when
-> > you respin patches without following up on the previous version. Thanks!
->
-> w.r.t this patch series.  I found an issue with v1, and released a v2
-> with the detail of what changed.  I thought that was the correct
-> approach.  I apologize for creating extra work, that's something
-> nobody needs.
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 16c30e6aa1ee..accbf75032ef 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -2062,6 +2062,20 @@ config WATCHDOG_PRETIMEOUT_GOV
+ 
+ if WATCHDOG_PRETIMEOUT_GOV
+ 
++config WATCHDOG_PRETIMEOUT_GOV_NOOP
++	tristate "Noop watchdog pretimeout governor"
++	default WATCHDOG_CORE
++	help
++	  Noop watchdog pretimeout governor, only an informational
++	  message is added to kernel log buffer.
++
++config WATCHDOG_PRETIMEOUT_GOV_PANIC
++	tristate "Panic watchdog pretimeout governor"
++	default WATCHDOG_CORE
++	help
++	  Panic watchdog pretimeout governor, on watchdog pretimeout
++	  event put the kernel into panic.
++
+ choice
+ 	prompt "Default Watchdog Pretimeout Governor"
+ 	default WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
+@@ -2072,7 +2086,7 @@ choice
+ 
+ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
+ 	bool "noop"
+-	select WATCHDOG_PRETIMEOUT_GOV_NOOP
++	depends on WATCHDOG_PRETIMEOUT_GOV_NOOP
+ 	help
+ 	  Use noop watchdog pretimeout governor by default. If noop
+ 	  governor is selected by a user, write a short message to
+@@ -2080,7 +2094,7 @@ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
+ 
+ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
+ 	bool "panic"
+-	select WATCHDOG_PRETIMEOUT_GOV_PANIC
++	depends on WATCHDOG_PRETIMEOUT_GOV_PANIC
+ 	help
+ 	  Use panic watchdog pretimeout governor by default, if
+ 	  a watchdog pretimeout event happens, consider that
+@@ -2088,18 +2102,6 @@ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
+ 
+ endchoice
+ 
+-config WATCHDOG_PRETIMEOUT_GOV_NOOP
+-	tristate "Noop watchdog pretimeout governor"
+-	help
+-	  Noop watchdog pretimeout governor, only an informational
+-	  message is added to kernel log buffer.
+-
+-config WATCHDOG_PRETIMEOUT_GOV_PANIC
+-	tristate "Panic watchdog pretimeout governor"
+-	help
+-	  Panic watchdog pretimeout governor, on watchdog pretimeout
+-	  event put the kernel into panic.
+-
+ endif # WATCHDOG_PRETIMEOUT_GOV
+ 
+ endif # WATCHDOG
+-- 
+2.7.4
 
-It's ok to submit newer versions, but it's convenient when they get
-threaded also in non-gmail mail readers (by using in-reply-to).
-
-
--Olof
