@@ -2,91 +2,132 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32E2C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C81C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACBC2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC541215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbfD2Vt7 (ORCPT
+        id S1729507AbfD2V5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:49:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53844 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729368AbfD2Vt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:49:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6C907ABD7;
-        Mon, 29 Apr 2019 21:49:57 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 124071E3BEC; Mon, 29 Apr 2019 23:49:56 +0200 (CEST)
-Date:   Mon, 29 Apr 2019 23:49:56 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Chengguang Xu <cgxu519@gmx.com>
-Cc:     jack@suse.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] quota: set init_needed flag only when successfully
- getting dquot
-Message-ID: <20190429214956.GA6740@quack2.suse.cz>
-References: <20190428053921.5984-1-cgxu519@gmx.com>
+        Mon, 29 Apr 2019 17:57:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37138 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729354AbfD2V5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 17:57:09 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EE21EA7DD;
+        Mon, 29 Apr 2019 21:57:08 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FA595D704;
+        Mon, 29 Apr 2019 21:57:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix net namespace cleanup
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 29 Apr 2019 22:57:05 +0100
+Message-ID: <155657502537.15384.8971743326043723056.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190428053921.5984-1-cgxu519@gmx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 29 Apr 2019 21:57:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 28-04-19 13:39:21, Chengguang Xu wrote:
-> Set init_needed flag only when successfully getting dquot,
-> so that we can skip unnecessary subsequent operation.
-> 
-> Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
+In rxrpc_destroy_all_calls(), there are two phases: (1) make sure the
+->calls list is empty, emitting error messages if not, and (2) wait for the
+RCU cleanup to happen on outstanding calls (ie. ->nr_calls becomes 0).
 
-Thanks for the patch but I don't think it's really useful. It will be very
-rare that we race with quotaoff of dqget() fails due to error. So the
-additional overhead of iterating over dquots doesn't really matter in that
-case.
+To avoid taking the call_lock, the function prechecks ->calls and if empty,
+it returns to avoid taking the lock - this is wrong, however: it still
+needs to go and do the second phase and wait for ->nr_calls to become 0.
 
-								Honza
+Without this, the rxrpc_net struct may get deallocated before we get to the
+RCU cleanup for the last calls.  This can lead to:
 
-> ---
->  fs/quota/dquot.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> index fc20e06c56ba..8d4ce2a2b5c8 100644
-> --- a/fs/quota/dquot.c
-> +++ b/fs/quota/dquot.c
-> @@ -1449,8 +1449,6 @@ static int __dquot_initialize(struct inode *inode, int type)
->  		if (!sb_has_quota_active(sb, cnt))
->  			continue;
-> 
-> -		init_needed = 1;
-> -
->  		switch (cnt) {
->  		case USRQUOTA:
->  			qid = make_kqid_uid(inode->i_uid);
-> @@ -1475,6 +1473,9 @@ static int __dquot_initialize(struct inode *inode, int type)
->  			dquot = NULL;
->  		}
->  		got[cnt] = dquot;
-> +
-> +		if (got[cnt])
-> +			init_needed = 1;
->  	}
-> 
->  	/* All required i_dquot has been initialized */
-> --
-> 2.20.1
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+  Slab corruption (Not tainted): kmalloc-16k start=ffff88802b178000, len=16384
+  050: 6b 6b 6b 6b 6b 6b 6b 6b 61 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkakkkkkkk
+
+Note the "61" at offset 0x58.  This corresponds to the ->nr_calls member of
+struct rxrpc_net (which is >9k in size, and thus allocated out of the 16k
+slab).
+
+
+Fix this by flipping the condition on the if-statement, putting the locked
+section inside the if-body and dropping the return from there.  The
+function will then always go on to wait for the RCU cleanup on outstanding
+calls.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ net/rxrpc/call_object.c |   32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
+index 8aa2937b069f..fe96881a334d 100644
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -604,30 +604,30 @@ void rxrpc_destroy_all_calls(struct rxrpc_net *rxnet)
+ 
+ 	_enter("");
+ 
+-	if (list_empty(&rxnet->calls))
+-		return;
++	if (!list_empty(&rxnet->calls)) {
++		write_lock(&rxnet->call_lock);
+ 
+-	write_lock(&rxnet->call_lock);
++		while (!list_empty(&rxnet->calls)) {
++			call = list_entry(rxnet->calls.next,
++					  struct rxrpc_call, link);
++			_debug("Zapping call %p", call);
+ 
+-	while (!list_empty(&rxnet->calls)) {
+-		call = list_entry(rxnet->calls.next, struct rxrpc_call, link);
+-		_debug("Zapping call %p", call);
++			rxrpc_see_call(call);
++			list_del_init(&call->link);
+ 
+-		rxrpc_see_call(call);
+-		list_del_init(&call->link);
++			pr_err("Call %p still in use (%d,%s,%lx,%lx)!\n",
++			       call, atomic_read(&call->usage),
++			       rxrpc_call_states[call->state],
++			       call->flags, call->events);
+ 
+-		pr_err("Call %p still in use (%d,%s,%lx,%lx)!\n",
+-		       call, atomic_read(&call->usage),
+-		       rxrpc_call_states[call->state],
+-		       call->flags, call->events);
++			write_unlock(&rxnet->call_lock);
++			cond_resched();
++			write_lock(&rxnet->call_lock);
++		}
+ 
+ 		write_unlock(&rxnet->call_lock);
+-		cond_resched();
+-		write_lock(&rxnet->call_lock);
+ 	}
+ 
+-	write_unlock(&rxnet->call_lock);
+-
+ 	atomic_dec(&rxnet->nr_calls);
+ 	wait_var_event(&rxnet->nr_calls, !atomic_read(&rxnet->nr_calls));
+ }
+
