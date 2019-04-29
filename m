@@ -2,116 +2,149 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB2DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E23C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3922067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF562067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556576810;
-	bh=fs8ewXO0lOylrmt93bJhnvooC8h3iiHjcc0G3wymq1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pePHod7zroZN4zxFq6zpYcqQtSFUheQ57Kk7D9b+3/pYUFvawEjG+a7lKwKqb58MX
-	 0jrmh0fp4cdBlJOzMoIoOW1riyvtJWxk3AaZZ2NdudHDHc48YQrcljIxdyobpT5bYT
-	 t8K93zlSSfq+m05R/SlGgnwoemjNNdjNCYbSnT3k=
+	s=default; t=1556577037;
+	bh=tzpQmf1nc0glofIUMLUbHjOLVGa8e1BFtJ73oG32PBQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FUVzqC3TsUWZ9kAakRqri77wVifISFkiMd7UTCMXxOeChDkj73N9yTbcPwIFoWzV4
+	 x4gilpqyCL+rvc78KTd/duakcs1ZHCkiceoTCOzyAFaIlrxLBjG7FgtqdUSLwCf/kw
+	 vluuv95KX+uQKvorpsuKRtQ9M6GB+MFc/KIzQoWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfD2W0t (ORCPT
+        id S1729585AbfD2Wag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:26:49 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34796 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729453AbfD2W0s (ORCPT
+        Mon, 29 Apr 2019 18:30:36 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45070 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729481AbfD2Wag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:26:48 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n15so4109461ota.1;
-        Mon, 29 Apr 2019 15:26:48 -0700 (PDT)
+        Mon, 29 Apr 2019 18:30:36 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m18so6281156lje.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 15:30:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zppnOAypDVs0+r50a/pgPPi939wuWm5h1LCIlM9HNjM=;
+        b=QGBVwSJZ+kKUqIc42rXPpG7fGPox/UQOJvcW9dOTrKQfMY8buV4dJTLpAAWokmELmK
+         1QZP7Kjs19NM9LlDsb1C2eVy/w/POK2OPqqQq5iTLBCRv0p0etTN59O7wWkp7HYo9QnX
+         W/o3H6va7lHP1PpJd24/V6e9rjLzYhqt6DdjA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oRenui5Af25LDBg0th7gwZb/BUZtc0JZI0y66saQTqM=;
-        b=cdtYlixFfz6J9BgtQGBuXZoDzzh1CyHGUkw5yuMN/+ZNzwbLSCjO3atYHJhzPu1YZS
-         aJedC01nHbLmzlFc/2T7yGyCgsj48LLFi5+21J2sUU5BdkEIJtSXAnjkenBy1iUsBGoz
-         cAjKYfewbBaNf41j990n1+e9BR5mezn6SwlmG6mLggef72/cAeShUMtS2Iaq68Mr3+bC
-         9UsQo81M4k0aeLlLPAjd76YnYbuvk9DTvcHuqGKJiqMh7yNwMXA0laNOWGFhAgvXsQA/
-         8TJonX4V3ve4lblLBmo+F2ssTmOqjEai4h8GTQehm1eLhxxPifM8WU5BysHbjEulIfNV
-         9Dvw==
-X-Gm-Message-State: APjAAAURspMKLIOo1/m1WxHDkZj1Aya0hzmXUianXJ8k43ImTVlCtiPQ
-        DstyzEUFVXDrUHtMbuOqwJMeRsQ=
-X-Google-Smtp-Source: APXvYqwld5ffy3XYYJumXMPmkKQz5Gc5XST2UIO1EEhtfK4zl1hJZzjNCevWVUbeRLAFuTl7ew5iqw==
-X-Received: by 2002:a9d:6397:: with SMTP id w23mr274180otk.332.1556576807861;
-        Mon, 29 Apr 2019 15:26:47 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j82sm14504482oih.31.2019.04.29.15.26.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 15:26:46 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 17:26:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com
-Subject: Re: [v2 1/3] dt-bindings: display: mediatek: update dsi supported
- chips
-Message-ID: <20190429222646.GA20752@bogus>
-References: <20190416054217.75387-1-jitao.shi@mediatek.com>
- <20190416054217.75387-2-jitao.shi@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zppnOAypDVs0+r50a/pgPPi939wuWm5h1LCIlM9HNjM=;
+        b=Tk9TrDR1P0dmpdjMl7/qdaDJDXZGSGiKI+bRU1xMrhsXxCJFW6W5FwzsmYjVppvpDx
+         HDrohGGjVUg1Y1xR6oUhOitg79i6yDRSX0uNW5jrO6uu+bO7XS0WoMo02vIrVx+Oo+Y5
+         l6zljZLTqnFQcqNvHcMR/yXrHleMHVTQeSOxSbfPeD84arpPf7cKkB6kdhmyncy0d8dr
+         7r3UUyH0VEkOq6IfEulL5norg1FeJt9Llgz/D9agfh/Hr1AEyuA8WOV0VczMTsT+i5um
+         cBKeBosJZMF+7nleRtP6X5jLi9iSO5sNQsjz+Qyk8nSoJCI5Ze12Tm0FyXguSElQwx27
+         CE6g==
+X-Gm-Message-State: APjAAAVKxEizCHVHLx8R/WBNZ1Hg4QmpFgmWGwTWUDSiGZX9re8DE6zp
+        h/BA0CL/9CtgQLSsDCyO+wHvSpIqUmI=
+X-Google-Smtp-Source: APXvYqxDbU1Ud1UgNBs2YwhTuKEv+MPIzbk8jgXDqtlA9yO9Tbs5Ux+ors3HubnQlMi5bR0u0OYWmg==
+X-Received: by 2002:a2e:1311:: with SMTP id 17mr33453109ljt.75.1556577033160;
+        Mon, 29 Apr 2019 15:30:33 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id o17sm1676763lji.23.2019.04.29.15.30.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 15:30:32 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id w23so9128779lfc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 15:30:32 -0700 (PDT)
+X-Received: by 2002:a19:48c9:: with SMTP id v192mr33003752lfa.136.1556576545296;
+ Mon, 29 Apr 2019 15:22:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416054217.75387-2-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190427100639.15074-4-nstange@suse.de> <20190427102657.GF2623@hirez.programming.kicks-ass.net>
+ <20190428133826.3e142cfd@oasis.local.home> <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
+ <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+ <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+ <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
+ <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
+ <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com> <20190429220814.GF31379@linux.intel.com>
+In-Reply-To: <20190429220814.GF31379@linux.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 29 Apr 2019 15:22:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whpq2=f2LdB-nc52Rd=iZkUH-N-r8OTqEfo+4UaJc7piA@mail.gmail.com>
+Message-ID: <CAHk-=whpq2=f2LdB-nc52Rd=iZkUH-N-r8OTqEfo+4UaJc7piA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andrew Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 01:42:15PM +0800, Jitao Shi wrote:
-> Update device tree binding documentation for the dsi for
-> Mediatek MT8183 SoCs.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt       | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> index fadf327c7cdf..bd68195458b9 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> @@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PHY.
->  
->  Required properties:
->  - compatible: "mediatek,<chip>-mipi-tx"
-> -  the supported chips are mt2701 and mt8173.
-> +  the supported chips are mt2701 , mt8173 and mt8183.
+On Mon, Apr 29, 2019 at 3:08 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> FWIW, Lakemont (Quark) doesn't block NMI/SMI in the STI shadow, but I'm
+> not sure that counters the "horrible errata" statement ;-).  SMI+RSM saves
+> and restores STI blocking in that case, but AFAICT NMI has no such
+> protection and will effectively break the shadow on its IRET.
 
-drop the space                     ^
+Ugh. I can't say I care deeply about Quark (ie never seemed to go
+anywhere), but it's odd. I thought it was based on a Pentium core (or
+i486+?). Are you saying those didn't do it either?
 
-With that,
+I have this dim memory about talking about this with some (AMD?)
+engineer, and having an alternative approach for the sti shadow wrt
+NMI - basically not checking interrupts in the instruction you return
+to with 'iret'. I don't think it was even conditional on the "iret
+from NMI", I think it was basically any iret also did the sti shadow
+thing.
 
-Acked-by: Rob Herring <robh@kernel.org>
+But I can find no actual paper to back that up, so this may be me just
+making sh*t up.
+
+> KVM is generally ok with respect to STI blocking, but ancient versions
+> didn't migrate STI blocking and there's currently a hole where
+> single-stepping a guest (from host userspace) could drop STI_BLOCKING
+> if a different VM-Exit occurs between the single-step #DB VM-Exit and the
+> instruction in the shadow.  Though "don't do that" may be a reasonable
+> answer in that case.
+
+I thought the sti shadow blocked the single-step exception too? I know
+"mov->ss" does block debug interrupts too.
+
+Or are you saying that it's some "single step by emulation" that just
+miss setting the STI_BLOCKING flag?
+
+                   Linus
