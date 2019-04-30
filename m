@@ -2,101 +2,102 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A542C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA423C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631782147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:03:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XqwSqFIM"
+	by mail.kernel.org (Postfix) with ESMTP id 7F2AA2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbfD3CDy (ORCPT
+        id S1729881AbfD3CGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 22:03:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41483 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729890AbfD3CDx (ORCPT
+        Mon, 29 Apr 2019 22:06:00 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:18028 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbfD3CGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 22:03:53 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f6so6067771pgs.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 19:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=B3NugZ9TINdI1OI3FrmhQJTknBH3QXdWgtcaMz1fRrE=;
-        b=XqwSqFIMy+BpZ4efc1taHt162C2WW2p4uw8J3gjvFeVMRGG0jSzSMC5xmLrNbcacwb
-         kSZK6xHoUI8DOw1Rn0IJi7pOnOguOGYDs8nJd3/pYhhpJJwIX6AAhvP7U4ZCk5HucW0r
-         wEtLypFJNVjRAy0V9h8rcEzU+AlOskOxc5qdwH4IyW+8UGKIB9ngyPx+R4jnN5B8bab9
-         XlN+auwr8kV1zdzjaoNJyFMm3Xx9Q+BC1M2cEeEGlsJvt8oBRNxj3ngpNGKtqvXP2k/E
-         geSlyyKH2M3Bblfe4P/DuWJYKIY4xHFOGq6pauv+9acGM3EgEuE6IMCqxFKdOvSxs2pL
-         Y4Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=B3NugZ9TINdI1OI3FrmhQJTknBH3QXdWgtcaMz1fRrE=;
-        b=mJFzf1cl8JRZGyYe8UAskm76+3CAN9sPW0NM8R2BX8mZ6i8T0nU6uPji2i8Uo3dD7o
-         /A4BGpXIg86PLO192iQDg484p5xwnEPqr2y7vrGAhV7GfGcpEUPv/tE7ehJfodijFKTj
-         qfbaczGARweOjNRQk4qXk2a5KQqb+w2UxN148suPVmuG3M8hAQcdghrEXxodghvSfdG5
-         n8gYIgwZaJ+X6CY116MYkAYOKuLhF5bGAGstiPDhpKTNHvo5Au7jhTeFD6fnAtnm0Jkd
-         cL5HcoWSNM059/10/YQBPp2DYZXIeZGXgjkbdFNoXmvVA2jYPucWJMBMpGVviM40/JQh
-         Yj3A==
-X-Gm-Message-State: APjAAAWg348CGjjrqZOv4T2Xp6Z7jOFTDH/hmh7C0aXtpeLgFek4fhGh
-        Z2drw5c344VmPUy9arMQabs=
-X-Google-Smtp-Source: APXvYqyq/ePAJdQfrFoIyaNhBIEKmUwzsYwFbKt20m93i9o3xKFFhfZk/XcMS+4PRI8PvCEezew/dA==
-X-Received: by 2002:a65:4247:: with SMTP id d7mr18565472pgq.114.1556589421204;
-        Mon, 29 Apr 2019 18:57:01 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id a12sm36918995pgq.21.2019.04.29.18.56.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 18:57:00 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     hch@lst.de, robin.murphy@arm.com, m.szyprowski@samsung.com
-Cc:     vdumpa@nvidia.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
-        will.deacon@arm.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        joro@8bytes.org, dwmw2@infradead.org, tony@atomide.com,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Subject: [RFC/RFT PATCH 0/2] Optimize dma_*_from_contiguous calls
-Date:   Mon, 29 Apr 2019 18:55:19 -0700
-Message-Id: <20190430015521.27734-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 29 Apr 2019 22:06:00 -0400
+Received-SPF: SoftFail (esa5.microchip.iphmx.com: domain of
+  wesley.sheng@microchip.com is inclined to not designate
+  208.19.99.222 as permitted sender) identity=mailfrom;
+  client-ip=208.19.99.222; receiver=esa5.microchip.iphmx.com;
+  envelope-from="wesley.sheng@microchip.com";
+  x-sender="wesley.sheng@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@smtp.microsemi.com) identity=helo;
+  client-ip=208.19.99.222; receiver=esa5.microchip.iphmx.com;
+  envelope-from="wesley.sheng@microchip.com";
+  x-sender="postmaster@smtp.microsemi.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=wesley.sheng@microchip.com; spf=None smtp.helo=postmaster@smtp.microsemi.com; dmarc=fail (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,412,1549954800"; 
+   d="scan'208";a="29360171"
+Received: from unknown (HELO smtp.microsemi.com) ([208.19.99.222])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Apr 2019 19:05:55 -0700
+Received: from AUSMBX3.microsemi.net (10.201.34.33) by AUSMBX2.microsemi.net
+ (10.201.34.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 29 Apr
+ 2019 21:05:53 -0500
+Received: from server1.microsemi.net (10.188.119.166) by ausmbx3.microsemi.net
+ (10.201.34.33) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 29 Apr 2019 21:05:51 -0500
+From:   Wesley Sheng <wesley.sheng@microchip.com>
+To:     <jdmason@kudzu.us>, <dave.jiang@intel.com>, <allenbh@gmail.com>,
+        <linux-ntb@googlegroups.com>, <linux-kernel@vger.kernel.org>
+CC:     <wesleyshenggit@sina.com>, <logang@deltatee.com>,
+        Wesley Sheng <wesley.sheng@microchip.com>
+Subject: [PATCH] NTB: correct ntb_dev_ops and ntb_dev comment typos
+Date:   Tue, 30 Apr 2019 18:04:29 +0800
+Message-ID: <1556618669-2434-1-git-send-email-wesley.sheng@microchip.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series of patches try to optimize dma_*_from_contiguous calls:
-PATCH-1 does some abstraction and cleanup.
-PATCH-2 saves single pages and reduce fragmentations from CMA area.
+The comment for ntb_dev_ops and ntb_dev incorrectly referred to
+ntb_ctx_ops and ntb_device.
 
-Both two patches may impact the source of pages (CMA or normal)
-depending on the use cases, so are being tagged with "RFC/RFT".
+Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ include/linux/ntb.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Please check their commit messages for detail.
-
-Nicolin Chen (2):
-  dma-contiguous: Simplify dma_*_from_contiguous() function calls
-  dma-contiguous: Use fallback alloc_pages for single pages
-
- arch/arm/mm/dma-mapping.c      | 14 +++-----
- arch/arm64/mm/dma-mapping.c    | 11 +++---
- arch/xtensa/kernel/pci-dma.c   | 19 +++-------
- drivers/iommu/amd_iommu.c      | 20 +++--------
- drivers/iommu/intel-iommu.c    | 20 ++---------
- include/linux/dma-contiguous.h | 15 +++-----
- kernel/dma/contiguous.c        | 64 ++++++++++++++++++++++------------
- kernel/dma/direct.c            | 24 +++----------
- kernel/dma/remap.c             | 11 ++----
- 9 files changed, 73 insertions(+), 125 deletions(-)
-
+diff --git a/include/linux/ntb.h b/include/linux/ntb.h
+index 56a92e3..604abc8 100644
+--- a/include/linux/ntb.h
++++ b/include/linux/ntb.h
+@@ -205,7 +205,7 @@ static inline int ntb_ctx_ops_is_valid(const struct ntb_ctx_ops *ops)
+ }
+ 
+ /**
+- * struct ntb_ctx_ops - ntb device operations
++ * struct ntb_dev_ops - ntb device operations
+  * @port_number:	See ntb_port_number().
+  * @peer_port_count:	See ntb_peer_port_count().
+  * @peer_port_number:	See ntb_peer_port_number().
+@@ -404,7 +404,7 @@ struct ntb_client {
+ #define drv_ntb_client(__drv) container_of((__drv), struct ntb_client, drv)
+ 
+ /**
+- * struct ntb_device - ntb device
++ * struct ntb_dev - ntb device
+  * @dev:		Linux device object.
+  * @pdev:		PCI device entry of the ntb.
+  * @topo:		Detected topology of the ntb.
 -- 
-2.17.1
+2.7.4
 
