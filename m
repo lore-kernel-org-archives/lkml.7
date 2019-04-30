@@ -2,87 +2,126 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F9BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A323FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2982147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA7F2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfD3PY1 (ORCPT
+        id S1726405AbfD3PYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:24:27 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49088 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfD3PY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:24:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B7A9374;
-        Tue, 30 Apr 2019 08:24:26 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 738263F719;
-        Tue, 30 Apr 2019 08:24:24 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 16:24:21 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>, robin.murphy@arm.com,
-        vdumpa@nvidia.com, linux@armlinux.org.uk, will.deacon@arm.com,
-        joro@8bytes.org, m.szyprowski@samsung.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, tony@atomide.com
-Subject: Re: [PATCH v2 RFC/RFT 1/5] ARM: dma-mapping: Add fallback normal
- page allocations
-Message-ID: <20190430152421.GE29799@arrakis.emea.arm.com>
-References: <20190326230131.16275-1-nicoleotsuka@gmail.com>
- <20190326230131.16275-2-nicoleotsuka@gmail.com>
- <20190424150638.GA22191@lst.de>
- <20190424183310.GA6168@Asurada-Nvidia.nvidia.com>
- <20190424192652.GA29032@lst.de>
+        Tue, 30 Apr 2019 11:24:42 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46488 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfD3PYl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:24:41 -0400
+Received: by mail-vs1-f66.google.com with SMTP id e2so8196689vsc.13;
+        Tue, 30 Apr 2019 08:24:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5I9tfm+JIBFFB8aDQ2MxHwPfmhhGeh3oomuM5oIr34I=;
+        b=ZAWs/PxlHTcu9suecwUZjq+B5d9fnwcJ5gjnrRzHdP5peas/ALl9Orw4qxZVtklua5
+         SMeB75tQ06XXQZPLykwR8ZYTWwCXrodefxSkQmEnaFQ9P03MieyUrbkxyrFfcpUt4Jgt
+         BtBcv8yBtJf/jOQq7ZSRMOKFoSzhz2BOz3+3yqMn80no/s63WKBfc4LIzujUQDF7pxwo
+         5CdqmGAUFgCE5wfBndxH85wD3i1dM3b7D7qxcWQOO0L2+94H+vVU2D0L6dEytz4LgCYJ
+         5IiZ6626ipf6TGokMlRzynbVh6929A5Jyy16dRCznvZFgV4FRdG/KspEiPgS9K5AmwsQ
+         Pl/Q==
+X-Gm-Message-State: APjAAAXyhxSuT5xXilmfoMhh4SD9D9lGEmXQNhpxukwK4a1GT5h1CH5q
+        oUX+DjnZAj1Z0ayaelkxMFTzja00rvi/rHU15Xg=
+X-Google-Smtp-Source: APXvYqynhodOJpShgomuH87Sw5GBud3Lt4ozNjjqtSzAK0Rnc1klzbsHCXQRpH2AXuuUC8IooA+LrKTbULAXJfNRAgk=
+X-Received: by 2002:a05:6102:113:: with SMTP id z19mr5685253vsq.166.1556637880271;
+ Tue, 30 Apr 2019 08:24:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424192652.GA29032@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 30 Apr 2019 17:24:28 +0200
+Message-ID: <CAMuHMdW9h8u81NkvSH8jSoCK5g=dFzSGJzmknmc9x-dNkqOycg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(catching up on email)
+Hi Rob,
 
-On Wed, Apr 24, 2019 at 09:26:52PM +0200, Christoph Hellwig wrote:
-> On Wed, Apr 24, 2019 at 11:33:11AM -0700, Nicolin Chen wrote:
-> > I feel it's similar to my previous set, which did most of these
-> > internally except the renaming part. But Catalin had a concern
-> > that some platforms might have limits on CMA range [1]. Will it
-> > be still okay to do the fallback internally?
-> > 
-> > [1: https://www.spinics.net/lists/arm-kernel/msg714295.html ]
-> 
-> Catalins statement is correct, but I don't see how it applies to
-> your patch.  Your patch just ensures that the fallback we have
-> in most callers is uniformly applied everywhere.  The non-iommu
-> callers will still need to select a specific zone and/or retry
-> just the page allocator with other flags if the CMA (or fallback)
-> page doesn't match what they need.  dma-direct does this correctly
-> and I think the arm32 allocator does as well, although it is a bit
-> hard to follow sometimes.
+On Tue, Apr 30, 2019 at 5:03 PM Rob Herring <robh+dt@kernel.org> wrote:
+> On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> >
+> > Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > v2:
+> >   - Add "renesas,gic-spi-base",
+> >   - Document RZ/A2M.
 
-My reading of the arm32 __dma_alloc() is that if the conditions are
-right for the CMA allocator (allows blocking) and there is a default CMA
-area or a per-device one, the call ends up in cma_alloc() without any
-fallback if such allocation fails. Whether this is on purpose, I'm not
-entirely sure. There are a couple of arm32 SoCs which call
-dma_declare_contiguous() or dma_contiguous_reserve_area() and a few DT
-files describing a specific CMA range (e.g. arch/arm/boot/dts/sun5i.dtsi
-with a comment that address must be kept in the lower 256MB).
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > @@ -0,0 +1,30 @@
+> > +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> > +
+> > +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> > +RZ/A1 and RZ/A2 SoCs:
+> > +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> > +    interrupts,
+> > +  - NMI edge select.
+> > +
+> > +Required properties:
+> > +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> > +               fallback.
+> > +               Examples with soctypes are:
+> > +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> > +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> > +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> > +                                in interrupts.txt in this directory)
+> > +  - interrupt-controller: Marks the device as an interrupt controller
+> > +  - reg: Base address and length of the memory resource used by the interrupt
+> > +         controller
+> > +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+>
+> Why isn't this just an 'interrupts' property? Plus, without
 
-If ZONE_DMA is set up correctly so that cma_alloc() is (or can be made)
-interchangeable with alloc_pages(GFP_DMA) from a device DMA capability
-perspective , I think it should be fine to have such fallback.
+Because Marc told me this is what everyone uses...
+
+> 'interrupts' walking the hierarchy is broken.
+
+What is "interrupts walking"? Can you please elaborate?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Catalin
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
