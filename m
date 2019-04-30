@@ -2,155 +2,166 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543A3C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6C6C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224402075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:42:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2QQ038n"
+	by mail.kernel.org (Postfix) with ESMTP id 157BF2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:43:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556599405;
+	bh=TeMBNG0STInOJKrZ7lzD0xdsHkPLuiCXL+1dTT2VabQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f8219o+2q2eDwY5jarmeThQximNj8VT6B8d6gNMvzTJRLRJl0PMSa7LyR6R1cLS8u
+	 eUPDGy6+CTZRXbvCtJyEuG3TQeCCC96RlYLe99MTp0eY6DUPTCY2wPVgUEdhB+K6eI
+	 GVLwQefytZ9Ljy5myBVZHYejTvi3XFkaEctarNKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfD3Emu (ORCPT
+        id S1726112AbfD3Em6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 00:42:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37626 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfD3Emt (ORCPT
+        Tue, 30 Apr 2019 00:42:58 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35818 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfD3Em5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 00:42:49 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g3so6448554pfi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 21:42:49 -0700 (PDT)
+        Tue, 30 Apr 2019 00:42:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y197so2221607wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 21:42:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=XFladZcZaPZX3qydS53BZ4NhIvorW1o6i79f0yhX41c=;
-        b=C2QQ038nRMeeh8liMY8vI3wnQ2mwGKvYVms4huqg7UAxAtABpfBMV6l1FL+hDRkO6I
-         u2jr8RW8JL6VTLwGCLs8kUqbZHL6c7UtKdyc4Pu/4lpPavVQEy8d7XZuh/pMPiN12IGW
-         UiCirF3FlwOaJsYJmP2x7nDfYywx/YOerO5iBHk0rzpj2llst/u4JE9VXXQf3b/1Uo2w
-         wCj1uyZ7TTIXLVUGdNIZ/7zSJiRi0ETva8nrzIZJxolFFg0mffO2aMhTIhhspBagzbmu
-         XmqnUgL3mgdnnIVdBPhKw4Cu4czy6uNwU23N5QntMVnr5fgjQ1Hv//wQ8AOG2HhdprsE
-         KEJA==
+        bh=95ElxBUisDLl2oakdawK7d9Lg88o3di7LnAFmSTN78w=;
+        b=CZYl3/rfLAl3eQocHA15kNDAUIaDHv2KmhrIyXoJQkmnhRb89gkeK4OIuYkomLWkwq
+         0HNalC+vrsnriyz4jhwEISRrXM7tJioKZsd0U0Ug0gajAYPE9d5AGli/7cYweDl9qprE
+         T1KgaGM44SX63uCwSlmjTibq34gaPzEJtTyPmmrLQCiI5WvKgKZ+0BX0N05Ul+SiIh6s
+         y80miI+Lih1uMZHGexwFpTdPTLGhmUfaCiasG4NtwGolO+XhbOIczip16AHIBg+VEJ+1
+         L50ycz6AnEJ5wWnaiLyUB7JyxIeiS0N+V1Ye6YLqL2lrof/VdCQFgy5rM3wVDNxQdPtm
+         RC7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XFladZcZaPZX3qydS53BZ4NhIvorW1o6i79f0yhX41c=;
-        b=LmEzBMNtkcwPObw3goYLwqvLvEXlV3XupTiMPntldiACvk0OSZy1RXNtTByVz646ef
-         +93Q9HQ47c0w55cowy5GR722DU6vtPq5oTs36dFLIz7biC6AcgpylaFgWN7M3lJssPoh
-         6JcQXAk385Z5XqLpAN8jNzQUMCYbcFg9Tbv2vkRqXKT2GjuucmvM+TNTztMWYIrAXR4D
-         5xFloDyj8hxABr4f7jQPq3ZsQzJnl+jkppyVhVIvBlU7LRyKtWPsu7WMEBSI7AVRQ87A
-         HxiY1JCWJg8rgC13Av+n6NPPSd2PYNvh69JgD7E5w+4c7UAURmOpbvv/frLmbXPT5SKk
-         gJpw==
-X-Gm-Message-State: APjAAAXeifkhdZmOaT2gBMyP9KaCXL9VQDHx/REK3DGopBQwGCo5crXv
-        hf/pfyPKMZRsbNEhaOmLFjTsVg==
-X-Google-Smtp-Source: APXvYqygvKowI2kLyaUya2a23iV207l9gYzdYkTC41i4qd+O8xsEnQL3jMCSsZ0U/rtNySeVwEg96g==
-X-Received: by 2002:a63:b507:: with SMTP id y7mr31166599pge.237.1556599368986;
-        Mon, 29 Apr 2019 21:42:48 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id t13sm70049624pgo.14.2019.04.29.21.42.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 21:42:47 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 10:12:45 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Frank Lee <tiny.windzz@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document
- allwinner,cpu-operating-points-v2
-Message-ID: <20190430044245.s4viduudej6q2eq6@vireshk-i7>
-References: <20190410174139.20012-1-tiny.windzz@gmail.com>
- <20190410174139.20012-3-tiny.windzz@gmail.com>
- <20190426211540.GA890@bogus>
- <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
- <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=95ElxBUisDLl2oakdawK7d9Lg88o3di7LnAFmSTN78w=;
+        b=qD3wpbu2gybrmkxVEyjHwrwHqOXNoqXX6nmTJQwn1gX+QcGrpZNIuIIqbkY++h8TFp
+         jgNP9Q1T3nrVT2H50vdsiQoZS+WPzWo2oFi+boCqK0hhAfpsJu3Hic6q1eOh5rSK+GjP
+         56C+1C0lsuxr6DFj1dX6LX95T6enPIaNfRiBQko2Z5jkErYzCiLxQMKJDL3+kNSxBQKL
+         LQ6UUBUH15ujnmZs7m9o3MnHJ5bDvPr51WDwu1gWj2M/aQ1NJOMYP9q7zah8iWBIiNb7
+         iGdX3UFJxYYzhOQsYvSe77uWvUB94eix3QYDnztsR/EDBfS37UKg3EQwSDALjjTbByM4
+         /Hmw==
+X-Gm-Message-State: APjAAAU6P3Jc51VENUq7Arl0/AtZ13QG9AqGc1ianx8YFEPegAHr3ARZ
+        J8EXQszO8fBLptH7B1xfs+Y=
+X-Google-Smtp-Source: APXvYqwgwPb/NKpsdM7IVkp0jhMPnhiWVz1mq8A+QvUa3XoGsrDEo4WK1olGWOlfhobt2785YebZyQ==
+X-Received: by 2002:a1c:f910:: with SMTP id x16mr1556018wmh.114.1556599375049;
+        Mon, 29 Apr 2019 21:42:55 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id c6sm1091548wmb.21.2019.04.29.21.42.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 21:42:53 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 06:42:50 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190430044250.GC73609@gmail.com>
+References: <20190427142137.GA72051@gmail.com>
+ <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
+ <20190428093304.GA7393@gmail.com>
+ <CAERHkrvaSSR1wRECF1AcLOhpmCAH0ecvFEL5MOFjK05F0xSuzA@mail.gmail.com>
+ <20190428121721.GA121434@gmail.com>
+ <db7c3e51-d013-b3d9-7bce-c247aa2e7144@linux.intel.com>
+ <20190429061422.GA20939@gmail.com>
+ <24bca399-5370-c4b5-725f-979db06bfc29@linux.intel.com>
+ <20190429160058.GA82935@gmail.com>
+ <CAERHkrvhggb8nkGOx1GHUftGhh5b0qLvq4HvuHJreNrRC1RXow@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
-User-Agent: NeoMutt/20180716-1615-c6e4b7
+In-Reply-To: <CAERHkrvhggb8nkGOx1GHUftGhh5b0qLvq4HvuHJreNrRC1RXow@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-04-19, 11:18, Rob Herring wrote:
-> On Sun, Apr 28, 2019 at 4:53 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+
+* Aubrey Li <aubrey.intel@gmail.com> wrote:
+
+> On Tue, Apr 30, 2019 at 12:01 AM Ingo Molnar <mingo@kernel.org> wrote:
+> > * Li, Aubrey <aubrey.li@linux.intel.com> wrote:
 > >
-> > On Sat, Apr 27, 2019 at 5:15 AM Rob Herring <robh@kernel.org> wrote:
+> > > > I.e. showing the approximate CPU thread-load figure column would be
+> > > > very useful too, where '50%' shows half-loaded, '100%' fully-loaded,
+> > > > '200%' over-saturated, etc. - for each row?
 > > >
-> > > On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
-> > > > Allwinner Process Voltage Scaling Tables defines the voltage and
-> > > > frequency value based on the speedbin blown in the efuse combination.
-> > > > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> > > > provide the OPP framework with required information.
-> > > > This is used to determine the voltage and frequency value for each
-> > > > OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> > > >
-> > > > The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
-> > > > with following parameters:
-> > > > - nvmem-cells (NVMEM area containig the speedbin information)
-> > > > - opp-microvolt-<name>: voltage in micro Volts.
-> > > >   At runtime, the platform can pick a <name> and matching
-> > > >   opp-microvolt-<name> property.
-> > > >                       HW:             <name>:
-> > > >                       sun50iw-h6      speed0 speed1 speed2
-> > >
-> > > We already have at least one way to support speed bins with QC kryo
-> > > binding. Why do we need a different way?
+> > > See below, hope this helps.
+> > > .--------------------------------------------------------------------------------------------------------------------------------------.
+> > > |NA/AVX vanilla-SMT     [std% / sem%]     cpu% |coresched-SMT   [std% / sem%]     +/-     cpu% |  no-SMT [std% / sem%]   +/-      cpu% |
+> > > |--------------------------------------------------------------------------------------------------------------------------------------|
+> > > |  1/1        508.5     [ 0.2%/ 0.0%]     2.1% |        504.7   [ 1.1%/ 0.1%]    -0.8%    2.1% |   509.0 [ 0.2%/ 0.0%]   0.1%     4.3% |
+> > > |  2/2       1000.2     [ 1.4%/ 0.1%]     4.1% |       1004.1   [ 1.6%/ 0.2%]     0.4%    4.1% |   997.6 [ 1.2%/ 0.1%]  -0.3%     8.1% |
+> > > |  4/4       1912.1     [ 1.0%/ 0.1%]     7.9% |       1904.2   [ 1.1%/ 0.1%]    -0.4%    7.9% |  1914.9 [ 1.3%/ 0.1%]   0.1%    15.1% |
+> > > |  8/8       3753.5     [ 0.3%/ 0.0%]    14.9% |       3748.2   [ 0.3%/ 0.0%]    -0.1%   14.9% |  3751.3 [ 0.4%/ 0.0%]  -0.1%    30.5% |
+> > > | 16/16      7139.3     [ 2.4%/ 0.2%]    30.3% |       7137.9   [ 1.8%/ 0.2%]    -0.0%   30.3% |  7049.2 [ 2.4%/ 0.2%]  -1.3%    60.4% |
+> > > | 32/32     10899.0     [ 4.2%/ 0.4%]    60.3% |      10780.3   [ 4.4%/ 0.4%]    -1.1%   55.9% | 10339.2 [ 9.6%/ 0.9%]  -5.1%    97.7% |
+> > > | 64/64     15086.1     [11.5%/ 1.2%]    97.7% |      14262.0   [ 8.2%/ 0.8%]    -5.5%   82.0% | 11168.7 [22.2%/ 1.7%] -26.0%   100.0% |
+> > > |128/128    15371.9     [22.0%/ 2.2%]   100.0% |      14675.8   [14.4%/ 1.4%]    -4.5%   82.8% | 10963.9 [18.5%/ 1.4%] -28.7%   100.0% |
+> > > |256/256    15990.8     [22.0%/ 2.2%]   100.0% |      12227.9   [10.3%/ 1.0%]   -23.5%   73.2% | 10469.9 [19.6%/ 1.7%] -34.5%   100.0% |
+> > > '--------------------------------------------------------------------------------------------------------------------------------------'
 > >
-> > For some SOCs, for some reason (making the CPU have approximate performance),
-> > they use the same frequency but different voltage. In the case where
-> > this speed bin
-> > is not a lot and opp uses the same frequency, too many repeated opp
-> > nodes are a bit
-> > redundant and not intuitive enough.
+> > Very nice, thank you!
 > >
-> > So, I think it's worth the new method.
+> > What's interesting is how in the over-saturated case (the last three
+> > rows: 128, 256 and 512 total threads) coresched-SMT leaves 20-30% CPU
+> > performance on the floor according to the load figures.
 > 
-> Well, I don't.
+> Yeah, I found the next focus.
 > 
-> We can't have every SoC vendor doing their own thing just because they
-> want to. If there are technical reasons why existing bindings don't
-> work, then maybe we need to do something different. But I haven't
-> heard any reasons.
+> > Is this true idle time (which shows up as 'id' during 'top'), or some 
+> > load average artifact?
+> 
+> vmstat periodically reported intermediate CPU utilization in one 
+> second, it was running simultaneously when the benchmarks run. The cpu% 
+> is computed by the average of (100-idle) series.
 
-Well there is a good reason for attempting the new bindings and I wasn't sure if
-updating the earlier bindings or adding another one for platform is correct. As
-we aren't really adding new bindings, but just documentation around it.
+Ok - so 'vmstat' uses /proc/stat, which uses cpustat[CPUTIME_IDLE] (or 
+its NOHZ work-alike), so this should be true idle time - to the extent 
+the HZ process clock's sampling is accurate.
 
-So there are two ways OPP core support this thing:
+So I guess the answer to my question is "yes". ;-)
 
-- opp-supported-hw: This is a better fit if we have a smaller group of
-  frequencies to select from a bigger group, so we disable non-required OPPs
-  completely. This is what Qcom did as they wanted to select different
-  frequencies all together.
+BTW., for robustness sake you might want to add iowait to idle time (it's 
+the 'wa' field of vmstat) - it shouldn't matter for this particular 
+benchmark which doesn't do much IO, but it might for others.
 
-- opp-microvolt-<name>: This is a better fit if the frequencies remain same and
-  only few of the properties like voltage/current have a different value. So we
-  don't disable any OPPs but just select the right voltage/current for those
-  frequencies. This avoids unnecessary duplication of the OPPs in DT and that's
-  what allwinner guys want.
+Both CPUTIME_IDLE and CPUTIME_IOWAIT are idle states when a CPU is not 
+utilized.
 
-The kryo nvmem bindings currently supports opp-supported-hw, maybe we can add
-mention support for second one in the same file and rename it well.
+[ Side note: we should really implement precise idle time accounting when 
+  CONFIG_IRQ_TIME_ACCOUNTING=y is enabled. We pay all the costs of the 
+  timestamps, but AFAICS we don't propagate that into the idle cputime
+  metrics. ]
 
--- 
-viresh
+Thanks,
+
+	Ingo
