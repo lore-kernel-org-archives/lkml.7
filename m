@@ -2,182 +2,106 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEAAC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D70C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB93A21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KvjhZPSZ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Lb3wHWzO"
+	by mail.kernel.org (Postfix) with ESMTP id 34AC221707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556637013;
+	bh=zBYVD89Ga502t2W3oixEvvE+fgpD1hl8GQQvPTyVRkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CecGRWrcGXdiK2xnMHRa6kD/b/q+llCAH0YHy5DCvqtZRmbRFHi5r64QC0bgv/7k2
+	 f1MK2q0+KAFB3Gql5aGF57qElenytoM/dBaUq2WKOsUQtE8BPe1sVWIx8DXQhPORa5
+	 Eb9vGbFRxmifJfQ9CRw6IIKqPtM/0UmmpMB2+KYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfD3PKI (ORCPT
+        id S1726404AbfD3PKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 30 Apr 2019 11:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfD3PKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Apr 2019 11:10:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44574 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfD3PKG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:10:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4FCDE60769; Tue, 30 Apr 2019 15:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556637005;
-        bh=5i02ENM+LkQVWsU6F8eKfdNUZEvPEdwgC5KJQwd7jeA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KvjhZPSZb44AXN3NafmGh2zrbp92qbxSyoEI4HteG4Q7MPUuPzkIOHg1geltGTe/y
-         ixhC4K4q8BWFFNR6seO+RgJt2oRfsr+OSusiJ9/CBrAIcFvTD+9TptwO7xtTWKZajB
-         JR9eV2SLpr/LRd7T36CnpbxXcXpl8M4jveckdD7I=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60A9D607DF;
-        Tue, 30 Apr 2019 15:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556637004;
-        bh=5i02ENM+LkQVWsU6F8eKfdNUZEvPEdwgC5KJQwd7jeA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Lb3wHWzO1WBuryn0cS0jdGu4wVtrb8wkpIVnBQuPgjttXYjofxMFj59BdvRXfj04Z
-         OmacREf4ssl99DXIgrN7xvrM8oXX1+wWHSU7oCSgCGKFQ8dz3H8G4ISFTuI3dwjia/
-         gO31G1q/uhyWQtExoRPQtYnfA2V5g1ZzC3oF5Kfw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60A9D607DF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: pull-request: wireless-drivers 2019-04-30
-Date:   Tue, 30 Apr 2019 18:10:01 +0300
-Message-ID: <8736lzpm0m.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB4B20835;
+        Tue, 30 Apr 2019 15:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556637008;
+        bh=zBYVD89Ga502t2W3oixEvvE+fgpD1hl8GQQvPTyVRkk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zUDdEa0JtLy8WrOxbx7BBxtDmXrNIiFICLg7H2xTTiXms64PfZ/Fh2KB2DlmrgE15
+         PoBF/xyJoecS5srDBmHfzTeR3mF1gUPR1qAZopw9g30sRcF7VkpokPRdXvjhnkOHwl
+         lFO5RSMStrU0KCVjf8jTztwFQ6lS5ridnVz7vHYk=
+Date:   Tue, 30 Apr 2019 17:10:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] livepatch: Fix kobject memleak
+Message-ID: <20190430151005.GA20916@kroah.com>
+References: <20190430001534.26246-1-tobin@kernel.org>
+ <20190430001534.26246-2-tobin@kernel.org>
+ <20190430145613.7tokgyqjsuxlyh2g@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430145613.7tokgyqjsuxlyh2g@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Tue, Apr 30, 2019 at 04:56:13PM +0200, Petr Mladek wrote:
+> On Tue 2019-04-30 10:15:33, Tobin C. Harding wrote:
+> > Currently error return from kobject_init_and_add() is not followed by a
+> > call to kobject_put().  This means there is a memory leak.
+> 
+> I see, the ref count is always initialized to 1 via:
+> 
+>   + kobject_init_and_add()
+>     + kobject_init()
+>       + kobject_init_internal()
+> 	+ kref_init()
+> 
+> 
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> >  kernel/livepatch/core.c | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> > index eb0ee10a1981..98a7bec41faa 100644
+> > --- a/kernel/livepatch/core.c
+> > +++ b/kernel/livepatch/core.c
+> > @@ -727,7 +727,9 @@ static int klp_init_func(struct klp_object *obj, struct klp_func *func)
+> >  	ret = kobject_init_and_add(&func->kobj, &klp_ktype_func,
+> >  				   &obj->kobj, "%s,%lu", func->old_name,
+> >  				   func->old_sympos ? func->old_sympos : 1);
+> > -	if (!ret)
+> > +	if (ret)
+> > +		kobject_put(&func->kobj);
+> > +	else
+> >  		func->kobj_added = true;
+> 
+> We could actually get rid of the custom kobj_added. Intead, we could
+> check for kobj->state_initialized in the various klp_free* functions.
 
-here's one more pull request to net tree for 5.1, more info below.
+Why do you need to care about this at all anyway?  The kobject can
+handle it's own lifetime just fine (that's what it is there for), why do
+you need to also track it?
 
-Also note that this pull conflicts with net-next. And I want to emphasie
-that it's really net-next, so when you pull this to net tree it should
-go without conflicts. Stephen reported the conflict here:
+thanks,
 
-https://lkml.kernel.org/r/20190429115338.5decb50b@canb.auug.org.au
-
-In iwlwifi oddly commit 154d4899e411 adds the IS_ERR_OR_NULL() in
-wireless-drivers but commit c9af7528c331 removes the whole check in
-wireless-drivers-next. The fix is easy, just drop the whole check for
-mvmvif->dbgfs_dir in iwlwifi/mvm/debugfs-vif.c, it's unneeded anyway.
-
-As usual, please let me know if you have any problems.
-
-Kalle
-
-The following changes since commit 614c70f35cd77a9af8e2ca841dcdb121cec3068f:
-
-  bnx2x: fix spelling mistake "dicline" -> "decline" (2019-04-15 17:23:09 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-04-30
-
-for you to fetch changes up to 7a0f8ad5ff6323dd8badfeb01d338db146569976:
-
-  Merge ath-current from git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git (2019-04-29 19:33:33 +0300)
-
-----------------------------------------------------------------
-wireless-drivers fixes for 5.1
-
-Third set of fixes for 5.1.
-
-iwlwifi
-
-* fix an oops when creating debugfs entries
-
-* fix bug when trying to capture debugging info while in rfkill
-
-* prevent potential uninitialized memory dumps into debugging logs
-
-* fix some initialization parameters for AX210 devices
-
-* fix an oops with non-MSIX devices
-
-* fix an oops when we receive a packet with bogus lengths
-
-* fix a bug that prevented 5350 devices from working
-
-* fix a small merge damage from the previous series
-
-mwifiex
-
-* fig regression with resume on SDIO
-
-ath10k
-
-* fix locking problem with crashdump
-
-* fix warnings during suspend and resume
-
-----------------------------------------------------------------
-Brian Norris (1):
-      ath10k: perform crash dump collection in workqueue
-
-Douglas Anderson (1):
-      mwifiex: Make resume actually do something useful again on SDIO cards
-
-Emmanuel Grumbach (1):
-      iwlwifi: fix driver operation for 5350
-
-Greg Kroah-Hartman (1):
-      iwlwifi: mvm: properly check debugfs dentry before using it
-
-Johannes Berg (1):
-      iwlwifi: mvm: don't attempt debug collection in rfkill
-
-Kalle Valo (3):
-      Merge tag 'iwlwifi-for-kalle-2019-04-19' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
-      Merge tag 'iwlwifi-for-kalle-2019-04-28' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
-      Merge ath-current from git://git.kernel.org/.../kvalo/ath.git
-
-Luca Coelho (2):
-      iwlwifi: mvm: check for length correctness in iwl_mvm_create_skb()
-      iwlwifi: mvm: fix merge damage in iwl_mvm_vif_dbgfs_register()
-
-Rafael J. Wysocki (1):
-      ath10k: Drop WARN_ON()s that always trigger during system resume
-
-Shahar S Matityahu (2):
-      iwlwifi: don't panic in error path on non-msix systems
-      iwlwifi: dbg_ini: check debug TLV type explicitly
-
-Shaul Triebitz (1):
-      iwlwifi: cfg: use family 22560 based_params for AX210 family
-
- drivers/net/wireless/ath/ath10k/ce.c               |  2 +-
- drivers/net/wireless/ath/ath10k/core.c             |  1 +
- drivers/net/wireless/ath/ath10k/core.h             |  3 +++
- drivers/net/wireless/ath/ath10k/coredump.c         |  6 ++---
- drivers/net/wireless/ath/ath10k/mac.c              |  4 ++--
- drivers/net/wireless/ath/ath10k/pci.c              | 24 +++++++++++++++----
- drivers/net/wireless/ath/ath10k/pci.h              |  2 ++
- drivers/net/wireless/intel/iwlwifi/cfg/22000.c     |  2 +-
- drivers/net/wireless/intel/iwlwifi/cfg/5000.c      |  3 ++-
- drivers/net/wireless/intel/iwlwifi/fw/file.h       | 15 +++++++-----
- drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c   |  3 ++-
- .../net/wireless/intel/iwlwifi/mvm/debugfs-vif.c   |  3 +--
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c        |  4 +++-
- drivers/net/wireless/intel/iwlwifi/mvm/ops.c       |  2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c      | 28 ++++++++++++++++++----
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c    | 19 ++++++++++-----
- drivers/net/wireless/marvell/mwifiex/sdio.c        |  2 +-
- 17 files changed, 88 insertions(+), 35 deletions(-)
+greg k-h
