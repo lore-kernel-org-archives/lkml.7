@@ -7,56 +7,50 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042EBC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDE9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB93A20449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D155621707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624824;
-	bh=jT6k2AMOLNDuggff30WlVymrh4A9K6C9ycBCTZHxF0o=;
+	s=default; t=1556624828;
+	bh=FDTVPW8SHiwC8dpz6dmpjUaciFW8vnK86bEFkFWc3bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pn13THP0XsssTgrnQa5FZOMQAXphHWbc3Z6Bk+0tlmfX5wfGDniSKIfR2NHaz9eYH
-	 9pzfAocVvTUu9XcY72wjyvj+9Y4RZ2geXxFbH/EtMeBvx+NosOmyYLy/rUHJpeqgaJ
-	 3jzUGLe7BeYhAUwh7+u4zhxxK4+LQlm3I4cdT6w8=
+	b=nrR41zNDqBmeK+GQiO4KcREYsdACJWNMcFcqzG9tagQSvFXFuTyR9TsCkFZm4tB+p
+	 3okIWNYP+ljdH6UM+t6O7qRpmi7ygVQhBpHrtN1Ohm0RDwOm9KW2lhcmcvXFE6Z8+l
+	 qH8KAz76jNRNbkoS5SWR3C4zi7OYf4pcEzyccZJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbfD3LrD (ORCPT
+        id S1730286AbfD3LrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60034 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbfD3Lqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:52 -0400
+        id S1729896AbfD3Lq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF05217D8;
-        Tue, 30 Apr 2019 11:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CA152173E;
+        Tue, 30 Apr 2019 11:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624810;
-        bh=jT6k2AMOLNDuggff30WlVymrh4A9K6C9ycBCTZHxF0o=;
+        s=default; t=1556624815;
+        bh=FDTVPW8SHiwC8dpz6dmpjUaciFW8vnK86bEFkFWc3bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7e0MawShUrnYo6hXG4M7Dv9e2mXaBv2csAOJsdmw15tiXQSd3kSJI8T0JJkpxpJt
-         ncyW+FPNyzZu4taPuoDwzk1upa9Y/zxn8PY7NVjN1oQmRNGyYMjSq2ThT0CULmjx/I
-         plEj5Xte6woic6JRZLxEWECwaCv6H7/eKTzo2Ga0=
+        b=NpsWuZ8eSnNFZhoOuaCqmqCx7eFRdvsZ8KVyKztn0dXJ172DjjSi6JPIRXMsDV37S
+         DHGtcWuxLpygCSGGohpZTNhCQF+CFVZjxWyNOAivovDtIyLAxLD1ERqJIu1ECj29M8
+         VW3MIj7tPPoN9NYW8dSt+v5nSsL4YIM1rEfHUoR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 4.19 080/100] x86, retpolines: Raise limit for generating indirect calls from switch-case
-Date:   Tue, 30 Apr 2019 13:38:49 +0200
-Message-Id: <20190430113612.525707189@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ross Zwisler <ross.zwisler@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 082/100] mm: Fix warning in insert_pfn()
+Date:   Tue, 30 Apr 2019 13:38:51 +0200
+Message-Id: <20190430113612.628743517@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -69,172 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Jan Kara <jack@suse.cz>
 
-commit ce02ef06fcf7a399a6276adb83f37373d10cbbe1 upstream.
+commit f2c57d91b0d96aa13ccff4e3b178038f17b00658 upstream.
 
->From networking side, there are numerous attempts to get rid of indirect
-calls in fast-path wherever feasible in order to avoid the cost of
-retpolines, for example, just to name a few:
+In DAX mode a write pagefault can race with write(2) in the following
+way:
 
-  * 283c16a2dfd3 ("indirect call wrappers: helpers to speed-up indirect calls of builtin")
-  * aaa5d90b395a ("net: use indirect call wrappers at GRO network layer")
-  * 028e0a476684 ("net: use indirect call wrappers at GRO transport layer")
-  * 356da6d0cde3 ("dma-mapping: bypass indirect calls for dma-direct")
-  * 09772d92cd5a ("bpf: avoid retpoline for lookup/update/delete calls on maps")
-  * 10870dd89e95 ("netfilter: nf_tables: add direct calls for all builtin expressions")
-  [...]
+CPU0                            CPU1
+                                write fault for mapped zero page (hole)
+dax_iomap_rw()
+  iomap_apply()
+    xfs_file_iomap_begin()
+      - allocates blocks
+    dax_iomap_actor()
+      invalidate_inode_pages2_range()
+        - invalidates radix tree entries in given range
+                                dax_iomap_pte_fault()
+                                  grab_mapping_entry()
+                                    - no entry found, creates empty
+                                  ...
+                                  xfs_file_iomap_begin()
+                                    - finds already allocated block
+                                  ...
+                                  vmf_insert_mixed_mkwrite()
+                                    - WARNs and does nothing because there
+                                      is still zero page mapped in PTE
+        unmap_mapping_pages()
 
-Recent work on XDP from Björn and Magnus additionally found that manually
-transforming the XDP return code switch statement with more than 5 cases
-into if-else combination would result in a considerable speedup in XDP
-layer due to avoidance of indirect calls in CONFIG_RETPOLINE enabled
-builds. On i40e driver with XDP prog attached, a 20-26% speedup has been
-observed [0]. Aside from XDP, there are many other places later in the
-networking stack's critical path with similar switch-case
-processing. Rather than fixing every XDP-enabled driver and locations in
-stack by hand, it would be good to instead raise the limit where gcc would
-emit expensive indirect calls from the switch under retpolines and stick
-with the default as-is in case of !retpoline configured kernels. This would
-also have the advantage that for archs where this is not necessary, we let
-compiler select the underlying target optimization for these constructs and
-avoid potential slow-downs by if-else hand-rewrite.
+This race results in WARN_ON from insert_pfn() and is occasionally
+triggered by fstest generic/344. Note that the race is otherwise
+harmless as before write(2) on CPU0 is finished, we will invalidate page
+tables properly and thus user of mmap will see modified data from
+write(2) from that point on. So just restrict the warning only to the
+case when the PFN in PTE is not zero page.
 
-In case of gcc, this setting is controlled by case-values-threshold which
-has an architecture global default that selects 4 or 5 (latter if target
-does not have a case insn that compares the bounds) where some arch back
-ends like arm64 or s390 override it with their own target hooks, for
-example, in gcc commit db7a90aa0de5 ("S/390: Disable prediction of indirect
-branches") the threshold pretty much disables jump tables by limit of 20
-under retpoline builds.  Comparing gcc's and clang's default code
-generation on x86-64 under O2 level with retpoline build results in the
-following outcome for 5 switch cases:
-
-* gcc with -mindirect-branch=thunk-inline -mindirect-branch-register:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400be0 <+0>:     cmp    $0x4,%edi
-   0x0000000000400be3 <+3>:     ja     0x400c35 <dispatch+85>
-   0x0000000000400be5 <+5>:     lea    0x915f8(%rip),%rdx        # 0x4921e4
-   0x0000000000400bec <+12>:    mov    %edi,%edi
-   0x0000000000400bee <+14>:    movslq (%rdx,%rdi,4),%rax
-   0x0000000000400bf2 <+18>:    add    %rdx,%rax
-   0x0000000000400bf5 <+21>:    callq  0x400c01 <dispatch+33>
-   0x0000000000400bfa <+26>:    pause
-   0x0000000000400bfc <+28>:    lfence
-   0x0000000000400bff <+31>:    jmp    0x400bfa <dispatch+26>
-   0x0000000000400c01 <+33>:    mov    %rax,(%rsp)
-   0x0000000000400c05 <+37>:    retq
-   0x0000000000400c06 <+38>:    nopw   %cs:0x0(%rax,%rax,1)
-   0x0000000000400c10 <+48>:    jmpq   0x400c90 <fn_3>
-   0x0000000000400c15 <+53>:    nopl   (%rax)
-   0x0000000000400c18 <+56>:    jmpq   0x400c70 <fn_2>
-   0x0000000000400c1d <+61>:    nopl   (%rax)
-   0x0000000000400c20 <+64>:    jmpq   0x400c50 <fn_1>
-   0x0000000000400c25 <+69>:    nopl   (%rax)
-   0x0000000000400c28 <+72>:    jmpq   0x400c40 <fn_0>
-   0x0000000000400c2d <+77>:    nopl   (%rax)
-   0x0000000000400c30 <+80>:    jmpq   0x400cb0 <fn_4>
-   0x0000000000400c35 <+85>:    push   %rax
-   0x0000000000400c36 <+86>:    callq  0x40dd80 <abort>
-  End of assembler dump.
-
-* clang with -mretpoline emitting search tree:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400b30 <+0>:     cmp    $0x1,%edi
-   0x0000000000400b33 <+3>:     jle    0x400b44 <dispatch+20>
-   0x0000000000400b35 <+5>:     cmp    $0x2,%edi
-   0x0000000000400b38 <+8>:     je     0x400b4d <dispatch+29>
-   0x0000000000400b3a <+10>:    cmp    $0x3,%edi
-   0x0000000000400b3d <+13>:    jne    0x400b52 <dispatch+34>
-   0x0000000000400b3f <+15>:    jmpq   0x400c50 <fn_3>
-   0x0000000000400b44 <+20>:    test   %edi,%edi
-   0x0000000000400b46 <+22>:    jne    0x400b5c <dispatch+44>
-   0x0000000000400b48 <+24>:    jmpq   0x400c20 <fn_0>
-   0x0000000000400b4d <+29>:    jmpq   0x400c40 <fn_2>
-   0x0000000000400b52 <+34>:    cmp    $0x4,%edi
-   0x0000000000400b55 <+37>:    jne    0x400b66 <dispatch+54>
-   0x0000000000400b57 <+39>:    jmpq   0x400c60 <fn_4>
-   0x0000000000400b5c <+44>:    cmp    $0x1,%edi
-   0x0000000000400b5f <+47>:    jne    0x400b66 <dispatch+54>
-   0x0000000000400b61 <+49>:    jmpq   0x400c30 <fn_1>
-   0x0000000000400b66 <+54>:    push   %rax
-   0x0000000000400b67 <+55>:    callq  0x40dd20 <abort>
-  End of assembler dump.
-
-  For sake of comparison, clang without -mretpoline:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400b30 <+0>:	cmp    $0x4,%edi
-   0x0000000000400b33 <+3>:	ja     0x400b57 <dispatch+39>
-   0x0000000000400b35 <+5>:	mov    %edi,%eax
-   0x0000000000400b37 <+7>:	jmpq   *0x492148(,%rax,8)
-   0x0000000000400b3e <+14>:	jmpq   0x400bf0 <fn_0>
-   0x0000000000400b43 <+19>:	jmpq   0x400c30 <fn_4>
-   0x0000000000400b48 <+24>:	jmpq   0x400c10 <fn_2>
-   0x0000000000400b4d <+29>:	jmpq   0x400c20 <fn_3>
-   0x0000000000400b52 <+34>:	jmpq   0x400c00 <fn_1>
-   0x0000000000400b57 <+39>:	push   %rax
-   0x0000000000400b58 <+40>:	callq  0x40dcf0 <abort>
-  End of assembler dump.
-
-Raising the cases to a high number (e.g. 100) will still result in similar
-code generation pattern with clang and gcc as above, in other words clang
-generally turns off jump table emission by having an extra expansion pass
-under retpoline build to turn indirectbr instructions from their IR into
-switch instructions as a built-in -mno-jump-table lowering of a switch (in
-this case, even if IR input already contained an indirect branch).
-
-For gcc, adding --param=case-values-threshold=20 as in similar fashion as
-s390 in order to raise the limit for x86 retpoline enabled builds results
-in a small vmlinux size increase of only 0.13% (before=18,027,528
-after=18,051,192). For clang this option is ignored due to i) not being
-needed as mentioned and ii) not having above cmdline
-parameter. Non-retpoline-enabled builds with gcc continue to use the
-default case-values-threshold setting, so nothing changes here.
-
-[0] https://lore.kernel.org/netdev/20190129095754.9390-1-bjorn.topel@gmail.com/
-    and "The Path to DPDK Speeds for AF_XDP", LPC 2018, networking track:
-  - http://vger.kernel.org/lpc_net2018_talks/lpc18_pres_af_xdp_perf-v3.pdf
-  - http://vger.kernel.org/lpc_net2018_talks/lpc18_paper_af_xdp_perf-v2.pdf
-
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: netdev@vger.kernel.org
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Link: https://lkml.kernel.org/r/20190221221941.29358-1-daniel@iogearbox.net
+Link: http://lkml.kernel.org/r/20180824154542.26872-1-jack@suse.cz
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ross Zwisler <ross.zwisler@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/Makefile |    5 +++++
- 1 file changed, 5 insertions(+)
+ mm/memory.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -224,6 +224,11 @@ KBUILD_CFLAGS += -fno-asynchronous-unwin
- # Avoid indirect branches in kernel to deal with Spectre
- ifdef CONFIG_RETPOLINE
-   KBUILD_CFLAGS += $(RETPOLINE_CFLAGS)
-+  # Additionally, avoid generating expensive indirect jumps which
-+  # are subject to retpolines for small number of switch cases.
-+  # clang turns off jump table generation by default when under
-+  # retpoline builds, however, gcc does not for x86.
-+  KBUILD_CFLAGS += $(call cc-option,--param=case-values-threshold=20)
- endif
- 
- archscripts: scripts_basic
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1787,10 +1787,15 @@ static int insert_pfn(struct vm_area_str
+ 			 * in may not match the PFN we have mapped if the
+ 			 * mapped PFN is a writeable COW page.  In the mkwrite
+ 			 * case we are creating a writable PTE for a shared
+-			 * mapping and we expect the PFNs to match.
++			 * mapping and we expect the PFNs to match. If they
++			 * don't match, we are likely racing with block
++			 * allocation and mapping invalidation so just skip the
++			 * update.
+ 			 */
+-			if (WARN_ON_ONCE(pte_pfn(*pte) != pfn_t_to_pfn(pfn)))
++			if (pte_pfn(*pte) != pfn_t_to_pfn(pfn)) {
++				WARN_ON_ONCE(!is_zero_pfn(pte_pfn(*pte)));
+ 				goto out_unlock;
++			}
+ 			entry = *pte;
+ 			goto out_mkwrite;
+ 		} else
 
 
