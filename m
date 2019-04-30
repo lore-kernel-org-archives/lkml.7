@@ -2,159 +2,43 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CBAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F98C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACB3205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5896B205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfD3NOx (ORCPT
+        id S1727357AbfD3NR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:14:53 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:51561 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbfD3NOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:14:49 -0400
-X-Originating-IP: 90.88.149.145
-Received: from mc-bl-xps13.lan (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 94D311BF209;
-        Tue, 30 Apr 2019 13:14:45 +0000 (UTC)
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     davem@davemloft.net
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
-        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
-        mw@semihalf.com, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH net-next 4/4] net: mvpp2: cls: Allow dropping packets with classification offload
-Date:   Tue, 30 Apr 2019 15:14:29 +0200
-Message-Id: <20190430131429.19361-5-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190430131429.19361-1-maxime.chevallier@bootlin.com>
-References: <20190430131429.19361-1-maxime.chevallier@bootlin.com>
+        Tue, 30 Apr 2019 09:17:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:46380 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726166AbfD3NRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:17:25 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 1FDCE67358; Tue, 30 Apr 2019 15:17:09 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 15:17:08 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Guenter Roeck <linux@roeck-us.net>, sparclinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: fix SG list handling in the sparc32 iommu driver
+Message-ID: <20190430131708.GA23346@lst.de>
+References: <20190416182347.18441-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416182347.18441-1-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces support for the "Drop" action in classification
-offload. This corresponds to the "-1" action with ethtool -N.
+Hi Dave,
 
-This is achieved using the color marking actions available in the C2
-engine, which associate a color to a packet. These colors can be either
-Green, Yellow or Red, Red meaning that the packet should be dropped.
-
-Green and Yellow colors are interpreted by the Policer, which isn't
-supported yet.
-
-This method of dropping using the Classifier is different than the
-already existing early-drop features, such as VLAN filtering and MAC
-UC/MC filtering, which are performed during the Parsing step, and
-therefore take precedence over classification actions.
-
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  1 +
- .../net/ethernet/marvell/mvpp2/mvpp2_cls.c    | 29 +++++++++++++------
- .../net/ethernet/marvell/mvpp2/mvpp2_cls.h    | 11 +++++++
- 3 files changed, 32 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-index 9d2222ab60ae..6171270a016c 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-@@ -136,6 +136,7 @@
- #define     MVPP22_CLS_C2_ACT_FWD(act)		(((act) & 0x7) << 13)
- #define     MVPP22_CLS_C2_ACT_QHIGH(act)	(((act) & 0x3) << 11)
- #define     MVPP22_CLS_C2_ACT_QLOW(act)		(((act) & 0x3) << 9)
-+#define     MVPP22_CLS_C2_ACT_COLOR(act)	((act) & 0x7)
- #define MVPP22_CLS_C2_ATTR0			0x1b64
- #define     MVPP22_CLS_C2_ATTR0_QHIGH(qh)	(((qh) & 0x1f) << 24)
- #define     MVPP22_CLS_C2_ATTR0_QHIGH_MASK	0x1f
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-index f4dd59c00d80..4989fb13244f 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -1057,17 +1057,28 @@ static int mvpp2_port_c2_tcam_rule_add(struct mvpp2_port *port,
- 	c2.tcam[4] |= MVPP22_CLS_C2_TCAM_EN(MVPP22_CLS_C2_LU_TYPE(MVPP2_CLS_LU_TYPE_MASK));
- 	c2.tcam[4] |= MVPP22_CLS_C2_LU_TYPE(rule->loc);
- 
--	/* Mark packet as "forwarded to software", needed for RSS */
--	c2.act |= MVPP22_CLS_C2_ACT_FWD(MVPP22_C2_FWD_SW_LOCK);
-+	if (act->id == FLOW_ACTION_DROP) {
-+		c2.act = MVPP22_CLS_C2_ACT_COLOR(MVPP22_C2_COL_RED_LOCK);
-+	} else {
-+		/* We want to keep the default color derived from the Header
-+		 * Parser drop entries, for VLAN and MAC filtering. This will
-+		 * assign a default color of Green or Red, and we want matches
-+		 * with a non-drop action to keep that color.
-+		 */
-+		c2.act = MVPP22_CLS_C2_ACT_COLOR(MVPP22_C2_COL_NO_UPD_LOCK);
- 
--	c2.act |= MVPP22_CLS_C2_ACT_QHIGH(MVPP22_C2_UPD_LOCK) |
--		   MVPP22_CLS_C2_ACT_QLOW(MVPP22_C2_UPD_LOCK);
-+		/* Mark packet as "forwarded to software", needed for RSS */
-+		c2.act |= MVPP22_CLS_C2_ACT_FWD(MVPP22_C2_FWD_SW_LOCK);
- 
--	qh = ((act->queue.index + port->first_rxq) >> 3) & MVPP22_CLS_C2_ATTR0_QHIGH_MASK;
--	ql = (act->queue.index + port->first_rxq) & MVPP22_CLS_C2_ATTR0_QLOW_MASK;
-+		c2.act |= MVPP22_CLS_C2_ACT_QHIGH(MVPP22_C2_UPD_LOCK) |
-+			   MVPP22_CLS_C2_ACT_QLOW(MVPP22_C2_UPD_LOCK);
- 
--	c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
--		      MVPP22_CLS_C2_ATTR0_QLOW(ql);
-+		qh = ((act->queue.index + port->first_rxq) >> 3) & MVPP22_CLS_C2_ATTR0_QHIGH_MASK;
-+		ql = (act->queue.index + port->first_rxq) & MVPP22_CLS_C2_ATTR0_QLOW_MASK;
-+
-+		c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
-+			      MVPP22_CLS_C2_ATTR0_QLOW(ql);
-+	}
- 
- 	c2.valid = true;
- 
-@@ -1183,7 +1194,7 @@ static int mvpp2_cls_rfs_parse_rule(struct mvpp2_rfs_rule *rule)
- 	struct flow_action_entry *act;
- 
- 	act = &flow->action.entries[0];
--	if (act->id != FLOW_ACTION_QUEUE)
-+	if (act->id != FLOW_ACTION_QUEUE && act->id != FLOW_ACTION_DROP)
- 		return -EOPNOTSUPP;
- 
- 	/* For now, only use the C2 engine which has a HEK size limited to 64
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
-index 431563a13524..56b617375a65 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
-@@ -92,6 +92,17 @@ enum mvpp22_cls_c2_fwd_action {
- 	MVPP22_C2_FWD_HW_LOW_LAT_LOCK,
- };
- 
-+enum mvpp22_cls_c2_color_action {
-+	MVPP22_C2_COL_NO_UPD = 0,
-+	MVPP22_C2_COL_NO_UPD_LOCK,
-+	MVPP22_C2_COL_GREEN,
-+	MVPP22_C2_COL_GREEN_LOCK,
-+	MVPP22_C2_COL_YELLOW,
-+	MVPP22_C2_COL_YELLOW_LOCK,
-+	MVPP22_C2_COL_RED,		/* Drop */
-+	MVPP22_C2_COL_RED_LOCK,		/* Drop */
-+};
-+
- #define MVPP2_CLS_C2_TCAM_WORDS			5
- #define MVPP2_CLS_C2_ATTR_WORDS			5
- 
--- 
-2.20.1
-
+can you pick this series up?
