@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024FDC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9F6C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E9B21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F84821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625096;
-	bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
+	s=default; t=1556625100;
+	bh=QMKhlt3BS7uu0HAFlCN4qcRiUtHGvuEBPQthGHlGW0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUrX5xu4gsgMlJm0yQXCLl9qzFHFf1S9hTUMMO4RFvOL9tqDOKwUfygN5kFoaovzE
-	 K0kDI4SYRcL/iqk7qxcq/Rw+6MYH0ljDA/aJ9Wui9eiHROGn0gx5Fz0RRztTfg9/YI
-	 qUbrYeMDBI4yzS4qAl2KqvjdsrPxxVJggxHdIATI=
+	b=eyefnEeBPw+Y8dGlSmccO2d1w6O4v+m36JyH3XrhvRNd+j8Hw7FvtFpDuXkXL+gPc
+	 v5+KvzEzWBNa6einRYo99CvM6ZKTU4XnwXHywMWfuvEN0ovAeoY0UXef6Mq1okvfFV
+	 Aj8szW5GpCZlCO1bVibpq3y/Ert2Xm9yijvRdEos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfD3Lvf (ORCPT
+        id S1731427AbfD3Lvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39332 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:51:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730995AbfD3Lvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:31 -0400
+        id S1730995AbfD3Lvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:51:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B94342054F;
-        Tue, 30 Apr 2019 11:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02F222054F;
+        Tue, 30 Apr 2019 11:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625090;
-        bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
+        s=default; t=1556625095;
+        bh=QMKhlt3BS7uu0HAFlCN4qcRiUtHGvuEBPQthGHlGW0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JfII/KYtYX0UkgdEsZd5Wx4oWGE7QF6nbC3inm4ZH3RdR2HQVsP5C8tSbF5RBIzT7
-         1TriJjRYCMzIEV63EbiZfiqVkU2s2WVADdT8ZkvwuohKZmwmGZCG8bo0vghzUGP6ci
-         5QULi4saBCP2z3gaSZeV08CM1615vNab03ahLhR0=
+        b=rDjVcFvhxFPTwLc/tr6/aLKmxCDwV2xAes1ooWP0qShVWVIZHSG48wai8Q/rftFjG
+         V13G6rmijzspsPGTMHJ8pxCvy9sXEugsA/QL4qULCjmnnRl5CXwJLRxGwqWYRvGSOC
+         Z2U3zBBqHN9lFJDFoUYbTk9ZTcmXO9JWxO5kmsMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com,
-        Ben Hutchings <ben@decadent.org.uk>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 51/89] slip: make slhc_free() silently accept an error pointer
-Date:   Tue, 30 Apr 2019 13:38:42 +0200
-Message-Id: <20190430113612.083040126@linuxfoundation.org>
+        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        syzbot+55de1eb4975dec156d8f@syzkaller.appspotmail.com
+Subject: [PATCH 5.0 53/89] binder: fix handling of misaligned binder object
+Date:   Tue, 30 Apr 2019 13:38:44 +0200
+Message-Id: <20190430113612.171167211@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -62,48 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Todd Kjos <tkjos@android.com>
 
-commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e upstream.
+commit 26528be6720bb40bc8844e97ee73a37e530e9c5e upstream.
 
-This way, slhc_free() accepts what slhc_init() returns, whether that is
-an error or not.
+Fixes crash found by syzbot:
+kernel BUG at drivers/android/binder_alloc.c:LINE! (2)
 
-In particular, the pattern in sl_alloc_bufs() is
-
-        slcomp = slhc_init(16, 16);
-        ...
-        slhc_free(slcomp);
-
-for the error handling path, and rather than complicate that code, just
-make it ok to always free what was returned by the init function.
-
-That's what the code used to do before commit 4ab42d78e37a ("ppp, slip:
-Validate VJ compression slot parameters completely") when slhc_init()
-just returned NULL for the error case, with no actual indication of the
-details of the error.
-
-Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
-Fixes: 4ab42d78e37a ("ppp, slip: Validate VJ compression slot parameters completely")
-Acked-by: Ben Hutchings <ben@decadent.org.uk>
-Cc: David Miller <davem@davemloft.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-and-tested-by: syzbot+55de1eb4975dec156d8f@syzkaller.appspotmail.com
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: stable <stable@vger.kernel.org> # 5.0, 4.19, 4.14
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/slip/slhc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/android/binder_alloc.c |   18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
---- a/drivers/net/slip/slhc.c
-+++ b/drivers/net/slip/slhc.c
-@@ -153,7 +153,7 @@ out_fail:
- void
- slhc_free(struct slcompress *comp)
- {
--	if ( comp == NULLSLCOMPR )
-+	if ( IS_ERR_OR_NULL(comp) )
- 		return;
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -959,14 +959,13 @@ enum lru_status binder_alloc_free_page(s
  
- 	if ( comp->tstate != NULLSLSTATE )
+ 	index = page - alloc->pages;
+ 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
++
++	mm = alloc->vma_vm_mm;
++	if (!mmget_not_zero(mm))
++		goto err_mmget;
++	if (!down_write_trylock(&mm->mmap_sem))
++		goto err_down_write_mmap_sem_failed;
+ 	vma = binder_alloc_get_vma(alloc);
+-	if (vma) {
+-		if (!mmget_not_zero(alloc->vma_vm_mm))
+-			goto err_mmget;
+-		mm = alloc->vma_vm_mm;
+-		if (!down_write_trylock(&mm->mmap_sem))
+-			goto err_down_write_mmap_sem_failed;
+-	}
+ 
+ 	list_lru_isolate(lru, item);
+ 	spin_unlock(lock);
+@@ -979,10 +978,9 @@ enum lru_status binder_alloc_free_page(s
+ 			       PAGE_SIZE);
+ 
+ 		trace_binder_unmap_user_end(alloc, index);
+-
+-		up_write(&mm->mmap_sem);
+-		mmput(mm);
+ 	}
++	up_write(&mm->mmap_sem);
++	mmput(mm);
+ 
+ 	trace_binder_unmap_kernel_start(alloc, index);
+ 
 
 
