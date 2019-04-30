@@ -2,102 +2,90 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C3FC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBDEC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9C120675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFB320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfD3L14 (ORCPT
+        id S1727925AbfD3L2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:27:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59158 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727570AbfD3L1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:27:55 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 892A83002619;
-        Tue, 30 Apr 2019 11:27:54 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 577D775274;
-        Tue, 30 Apr 2019 11:27:52 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 30 Apr 2019 13:27:52 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 13:27:49 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] rcu/sync: simplify the state machine
-Message-ID: <20190430112749.GA23020@redhat.com>
-References: <20190425164054.GA21309@redhat.com>
- <20190425165055.GC21412@redhat.com>
- <20190427210230.GE3923@linux.ibm.com>
- <20190428222652.GA30908@linux.ibm.com>
- <20190429160603.GC17715@redhat.com>
- <20190429204041.GU3923@linux.ibm.com>
+        Tue, 30 Apr 2019 07:28:06 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:7899 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726202AbfD3L2F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:28:05 -0400
+X-UUID: e03d9aa27c904b4fbb8476405ca204f3-20190430
+X-UUID: e03d9aa27c904b4fbb8476405ca204f3-20190430
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1463058352; Tue, 30 Apr 2019 19:27:59 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 30 Apr 2019 19:27:58 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 30 Apr 2019 19:27:58 +0800
+Message-ID: <1556623678.4496.1.camel@mtkswgap22>
+Subject: Re: [PATCH v2] mt76: mt7615: add TX/RX antenna pattern capabilities
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>
+CC:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Tue, 30 Apr 2019 19:27:58 +0800
+In-Reply-To: <c3f6e202-8c2f-a103-a104-e0d1cde8147b@nbd.name>
+References: <4f7160cb9f52335ce15fccac087fec25e7650884.1556255852.git.ryder.lee@mediatek.com>
+         <c3f6e202-8c2f-a103-a104-e0d1cde8147b@nbd.name>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190429204041.GU3923@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 30 Apr 2019 11:27:55 +0000 (UTC)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/29, Paul E. McKenney wrote:
->
-> On Mon, Apr 29, 2019 at 06:06:04PM +0200, Oleg Nesterov wrote:
-> >
-> > Well, at least WRITE_ONCE()'s look certainly unneeded to me, gp_state
-> > is protected by rss_lock.
-> >
-> > WARN_ON_ONCE(gp_state) can read gp_state lockless, but even in this case
-> > I do not understand what READ_ONCE() tries to prevent...
-> >
-> > Nevermind, this won't hurt and as I already said I don't understand the
-> > _ONCE() magic anyway ;)
->
-> If I understand correctly, rcu_sync_is_idle() can be inline and returns
-> ->gp_state.
+On Tue, 2019-04-30 at 11:24 +0200, Felix Fietkau wrote:
+> On 2019-04-26 07:23, Ryder Lee wrote:
+> > Announce antenna pattern cap to adapt PHY and baseband settings.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> > Changes since v2:
+> > - Add a prefix mt76 in the title.
+> > ---
+> >  drivers/net/wireless/mediatek/mt76/mt7615/init.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> > index 3ab3ff553ef2..122f7a565540 100644
+> > --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> > +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> > @@ -190,6 +190,8 @@ int mt7615_register_device(struct mt7615_dev *dev)
+> >  			IEEE80211_VHT_CAP_SHORT_GI_160 |
+> >  			IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_11454 |
+> >  			IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK |
+> > +			IEEE80211_VHT_CAP_RX_ANTENNA_PATTERN |
+> > +			IEEE80211_VHT_CAP_TX_ANTENNA_PATTERN |
+> If I read the standard correctly, these flags indicate that the rx/tx
+> antenna pattern does NOT change during association.
+> Doesn't that mean that we should set it in mac80211.c instead, so that
+> it also applies to MT76x2?
+> 
+Right. I will add these flags in common code.
 
-Ah, sorry! I didn't mean rcu_sync_is_idle(). To be honeest, I didn't even
-notice this change, but it looks obviously fine to me, with or without this
-patch.
+Ryder
 
-And yes,
-
-> Without the READ_ONCE(), the compiler might fuse reads from
-> consecutive calls to rcu_sync_is_idle() or (under register pressure)
-> re-read from it, getting inconsistent results.  For example, this:
->
-> 	tmp = rcu_sync_is_idle(rsp);
-> 	do_something(tmp);
-> 	do_something_else(tmp);
->
-> Might become this:
->
-> 	do_something(rcu_sync_is_idle(rsp));
-> 	do_something_else(rcu_sync_is_idle(rsp));
-
-
-this is very clear. Even for me ;)
-
-Thanks,
-
-Oleg.
 
