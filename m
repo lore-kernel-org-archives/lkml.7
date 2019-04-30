@@ -2,88 +2,200 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFFCC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B36C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8002020835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB942075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556625911;
+	bh=mYsck2O6L0TSOMoZIJFa6DPyUbyUdCI1J/Nh2xvFWXg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2duaDimOQjz4KYQ65yKAc3aaghrdcJJxTkdy/FpjFKmc8mbpMw6EM2SKilyNWWsRM
+	 SnhhxsPtVE32IrZ0bOFW7MIY3tWDKSwqVm+JbgfuKtA1MEuUf0L2eE7649oHqZo5W3
+	 0iveTidfi0Ollcto/MmI4lTvgisIwb6sCOYXMiyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfD3MFE (ORCPT
+        id S1729302AbfD3Lm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:05:04 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45888 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbfD3MFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:05:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82D9680D;
-        Tue, 30 Apr 2019 05:05:00 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB4A83F5C1;
-        Tue, 30 Apr 2019 05:04:56 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] iommu/dma-iommu: Use the dev->coherent_dma_mask
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Tom Murphy <tmurphy@arista.com>, iommu@lists.linux-foundation.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will.deacon@arm.com>,
-        David Brown <david.brown@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        murphyt7@tcd.ie, David Woodhouse <dwmw2@infradead.org>
-References: <20190430002952.18909-1-tmurphy@arista.com>
- <20190430002952.18909-4-tmurphy@arista.com>
- <20190430111222.GA3191@infradead.org>
- <da835ce2-f73e-3035-e1d7-d3028cc1a838@arm.com>
- <20190430113253.GA23210@infradead.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <96ebb6fc-a889-fa94-09ba-65d505b85724@arm.com>
-Date:   Tue, 30 Apr 2019 13:04:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 07:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbfD3LmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:42:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE0E420449;
+        Tue, 30 Apr 2019 11:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556624541;
+        bh=mYsck2O6L0TSOMoZIJFa6DPyUbyUdCI1J/Nh2xvFWXg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R8mK4nkSzPlzdLsDoW+2N7g08NxZz+QL20QYpj8yOz5WApBxc3HlRUOa7Pa4x52hH
+         pzbEtbMl3Vze++QF+vZj9RZugB/ojZMMulAGRnzhA88YBb+GzozEB/6xXhTz8O9OzW
+         yHb9d05atGGTMxx19mRNHz/COap1ttQuSgHNLwIM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jann Horn <jannh@google.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 04/53] tracing: Fix buffer_ref pipe ops
+Date:   Tue, 30 Apr 2019 13:38:11 +0200
+Message-Id: <20190430113550.386761433@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
+References: <20190430113549.400132183@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190430113253.GA23210@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2019 12:32, Christoph Hellwig wrote:
-> On Tue, Apr 30, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
->>> Hmm, I don't think we need the DMA mask for the MSI mapping, this
->>> should probably always use a 64-bit mask.
->>
->> If that were true then we wouldn't need DMA masks for regular mappings
->> either. If we have to map the MSI doorbell at all, then we certainly have to
->> place it at an IOVA that the relevant device is actually capable of
->> addressing.
-> 
-> Well, as shown by the patch below we don't even look at the DMA mask
-> for the MSI page - we just allocate from bottom to top.
+From: Jann Horn <jannh@google.com>
 
-In the trivial cookie for unmanaged domains, yes, but in that case the 
-responsibility is on VFIO to provide a suitable (i.e. sub-32-bit) 
-address range for that cookie in the first place. In the managed case, 
-allocation uses the streaming mask via iommu_dma_get_msi_page() calling 
-__iommu_dma_map(). Admittedly the mask can then get overlooked when 
-reusing an existing mapping, which strictly could pose a problem if you 
-have multiple devices with incompatible masks in the same group (and 
-such that the PCI stuff doesn't already mitigate it), but that's such an 
-obscure corner case that I'm reticent to introduce the complication to 
-handle it until it's actually proven necessary.
+commit b987222654f84f7b4ca95b3a55eca784cb30235b upstream.
 
-Robin.
+This fixes multiple issues in buffer_pipe_buf_ops:
+
+ - The ->steal() handler must not return zero unless the pipe buffer has
+   the only reference to the page. But generic_pipe_buf_steal() assumes
+   that every reference to the pipe is tracked by the page's refcount,
+   which isn't true for these buffers - buffer_pipe_buf_get(), which
+   duplicates a buffer, doesn't touch the page's refcount.
+   Fix it by using generic_pipe_buf_nosteal(), which refuses every
+   attempted theft. It should be easy to actually support ->steal, but the
+   only current users of pipe_buf_steal() are the virtio console and FUSE,
+   and they also only use it as an optimization. So it's probably not worth
+   the effort.
+ - The ->get() and ->release() handlers can be invoked concurrently on pipe
+   buffers backed by the same struct buffer_ref. Make them safe against
+   concurrency by using refcount_t.
+ - The pointers stored in ->private were only zeroed out when the last
+   reference to the buffer_ref was dropped. As far as I know, this
+   shouldn't be necessary anyway, but if we do it, let's always do it.
+
+Link: http://lkml.kernel.org/r/20190404215925.253531-1-jannh@google.com
+
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: stable@vger.kernel.org
+Fixes: 73a757e63114d ("ring-buffer: Return reader page back into existing ring buffer")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/splice.c               |    4 ++--
+ include/linux/pipe_fs_i.h |    1 +
+ kernel/trace/trace.c      |   28 ++++++++++++++--------------
+ 3 files changed, 17 insertions(+), 16 deletions(-)
+
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -332,8 +332,8 @@ const struct pipe_buf_operations default
+ 	.get = generic_pipe_buf_get,
+ };
+ 
+-static int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
+-				    struct pipe_buffer *buf)
++int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
++			     struct pipe_buffer *buf)
+ {
+ 	return 1;
+ }
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -182,6 +182,7 @@ void free_pipe_info(struct pipe_inode_in
+ void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
++int generic_pipe_buf_nosteal(struct pipe_inode_info *, struct pipe_buffer *);
+ void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
+ void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
+ 
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6719,19 +6719,23 @@ struct buffer_ref {
+ 	struct ring_buffer	*buffer;
+ 	void			*page;
+ 	int			cpu;
+-	int			ref;
++	refcount_t		refcount;
+ };
+ 
++static void buffer_ref_release(struct buffer_ref *ref)
++{
++	if (!refcount_dec_and_test(&ref->refcount))
++		return;
++	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
++	kfree(ref);
++}
++
+ static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
+ 				    struct pipe_buffer *buf)
+ {
+ 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 
+-	if (--ref->ref)
+-		return;
+-
+-	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
+-	kfree(ref);
++	buffer_ref_release(ref);
+ 	buf->private = 0;
+ }
+ 
+@@ -6740,7 +6744,7 @@ static void buffer_pipe_buf_get(struct p
+ {
+ 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 
+-	ref->ref++;
++	refcount_inc(&ref->refcount);
+ }
+ 
+ /* Pipe buffer operations for a buffer. */
+@@ -6748,7 +6752,7 @@ static const struct pipe_buf_operations
+ 	.can_merge		= 0,
+ 	.confirm		= generic_pipe_buf_confirm,
+ 	.release		= buffer_pipe_buf_release,
+-	.steal			= generic_pipe_buf_steal,
++	.steal			= generic_pipe_buf_nosteal,
+ 	.get			= buffer_pipe_buf_get,
+ };
+ 
+@@ -6761,11 +6765,7 @@ static void buffer_spd_release(struct sp
+ 	struct buffer_ref *ref =
+ 		(struct buffer_ref *)spd->partial[i].private;
+ 
+-	if (--ref->ref)
+-		return;
+-
+-	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
+-	kfree(ref);
++	buffer_ref_release(ref);
+ 	spd->partial[i].private = 0;
+ }
+ 
+@@ -6820,7 +6820,7 @@ tracing_buffers_splice_read(struct file
+ 			break;
+ 		}
+ 
+-		ref->ref = 1;
++		refcount_set(&ref->refcount, 1);
+ 		ref->buffer = iter->trace_buffer->buffer;
+ 		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
+ 		if (IS_ERR(ref->page)) {
+
+
