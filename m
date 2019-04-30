@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF2AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F59C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6AD2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F7121734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625105;
-	bh=IHeIEEDvmtHD80dmJEzDhiS1z4BpgEo5YUhqc93a+AY=;
+	s=default; t=1556625108;
+	bh=hbj4Hxas9SpGGmTaop8aSYshdRBvhpHxjJXEVUtkxbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lt54OSI+YMfHKud+0LKFhe3p/iDs1OFW4mRFMSFPCOw4aUBOh/jvEHe4YeexFPcTW
-	 c4kyNvEQMINQ0ddqBD3vVwXPR48djVqoBkhetKLD4D2PCe7V/AAQfljTvoyh4nBL3O
-	 mAX8Gdcp4OqZE/4GSLn9PFzQzaHylPO2yC3qtphg=
+	b=JhpaJzJEbpN4RXzbbNrf6ePE9GLHU+hQdEoLqiApvYNCCSNwDYtuZj/X/N514WC/o
+	 XxqWPuGCDlLAlwRwdvTMm8jLvetIAib0uAgUPnM1qDFL9iu+qgQ3BwsNx06S+oqC9X
+	 1414kTXXZpTlz73KwWmo9Hea9ncWZ1NtIWYeJ/gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731446AbfD3Lvo (ORCPT
+        id S1731453AbfD3Lvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:51:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731431AbfD3Lvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:41 -0400
+        id S1731024AbfD3Lvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:51:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20D182054F;
-        Tue, 30 Apr 2019 11:51:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C43EF2054F;
+        Tue, 30 Apr 2019 11:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625100;
-        bh=IHeIEEDvmtHD80dmJEzDhiS1z4BpgEo5YUhqc93a+AY=;
+        s=default; t=1556625103;
+        bh=hbj4Hxas9SpGGmTaop8aSYshdRBvhpHxjJXEVUtkxbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SFDTNw2gaOBgOu3AcCwfnkl553ohoysiTe/60pJHlRLRVmaCXm/g6CVZBe9qwksct
-         af6kFANoLoN6hr3sQzb/EozVa1vBBfpOSQ+4WAKWlAckbt/YJ7r+kWr8gKSpQOMFsd
-         qDziOycDm9tJrSmL1KfniXjeai6a62n4sQwe44JQ=
+        b=LD8evLyXqwWcEpLNEepnR5D9x6aRy24JNrKVadGznlSpYdANmM98TaF8IERqxOLmS
+         aDjYx/ZrjKJtt3QXACHtAq5kc9ufLSf6UyFcm8r1XlGvp6tvoMabENymqt5N5QqjZS
+         eOfA9CTx903BZ/OW8+a4Q6EMtFBnbRDzJuF/tOaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+8f91bd563bbff230d0ee@syzkaller.appspotmail.com,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.0 55/89] mac80211_hwsim: calculate if_combination.max_interfaces
-Date:   Tue, 30 Apr 2019 13:38:46 +0200
-Message-Id: <20190430113612.254757196@linuxfoundation.org>
+        syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.0 56/89] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
+Date:   Tue, 30 Apr 2019 13:38:47 +0200
+Message-Id: <20190430113612.304331882@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,61 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 45fcef8b727b6f171bc5443e8153181a367d7a15 upstream.
+commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 upstream.
 
-If we just set this to 2048, and have multiple limits you
-can select from, the total number might run over and cause
-a warning in cfg80211. This doesn't make sense, so we just
-calculate the total max_interfaces now.
+syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
+is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
+(which is embedded into user-visible "struct nfs_mount_data" structure)
+despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
+bytes of AF_INET6 address to rpc_sockaddr2uaddr().
 
-Reported-by: syzbot+8f91bd563bbff230d0ee@syzkaller.appspotmail.com
-Fixes: 99e3a44bac37 ("mac80211_hwsim: allow setting iftype support")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Since "struct nfs_mount_data" structure is user-visible, we can't change
+"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
+assuming that everybody is using AF_INET family when passing address via
+"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
+
+[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
+
+Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mac80211_hwsim.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ fs/nfs/super.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -2642,7 +2642,7 @@ static int mac80211_hwsim_new_radio(stru
- 	enum nl80211_band band;
- 	const struct ieee80211_ops *ops = &mac80211_hwsim_ops;
- 	struct net *net;
--	int idx;
-+	int idx, i;
- 	int n_limits = 0;
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2041,7 +2041,8 @@ static int nfs23_validate_mount_data(voi
+ 		memcpy(sap, &data->addr, sizeof(data->addr));
+ 		args->nfs_server.addrlen = sizeof(data->addr);
+ 		args->nfs_server.port = ntohs(data->addr.sin_port);
+-		if (!nfs_verify_server_address(sap))
++		if (sap->sa_family != AF_INET ||
++		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
  
- 	if (WARN_ON(param->channels > 1 && !param->use_chanctx))
-@@ -2766,12 +2766,23 @@ static int mac80211_hwsim_new_radio(stru
- 		goto failed_hw;
- 	}
- 
-+	data->if_combination.max_interfaces = 0;
-+	for (i = 0; i < n_limits; i++)
-+		data->if_combination.max_interfaces +=
-+			data->if_limits[i].max;
-+
- 	data->if_combination.n_limits = n_limits;
--	data->if_combination.max_interfaces = 2048;
- 	data->if_combination.limits = data->if_limits;
- 
--	hw->wiphy->iface_combinations = &data->if_combination;
--	hw->wiphy->n_iface_combinations = 1;
-+	/*
-+	 * If we actually were asked to support combinations,
-+	 * advertise them - if there's only a single thing like
-+	 * only IBSS then don't advertise it as combinations.
-+	 */
-+	if (data->if_combination.max_interfaces > 1) {
-+		hw->wiphy->iface_combinations = &data->if_combination;
-+		hw->wiphy->n_iface_combinations = 1;
-+	}
- 
- 	if (param->ciphers) {
- 		memcpy(data->ciphers, param->ciphers,
+ 		if (!(data->flags & NFS_MOUNT_TCP))
 
 
