@@ -2,123 +2,153 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A9DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6418BC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A1721707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="gccH8dea";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PneItX3I"
+	by mail.kernel.org (Postfix) with ESMTP id 3E78321734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbfD3PfV (ORCPT
+        id S1726358AbfD3Pf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:35:21 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:50283 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726014AbfD3PfU (ORCPT
+        Tue, 30 Apr 2019 11:35:27 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52863 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfD3PfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:35:20 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 95C746CF;
-        Tue, 30 Apr 2019 11:35:19 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Tue, 30 Apr 2019 11:35:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=lUhLByuCWkwkjJrzNCYlklmu1AZ
-        KvcruJii4RaKrLXk=; b=gccH8deaYaHtej3yNluzRWg7QUJlI659Biii8gdM+Sg
-        f0eGGW2Rd5kzG4+YbDYY8ftNUijxzDlnf5apvL5v/E/87Cne/RJjdxMxkEwfmS4p
-        eKncdIuxVsb7H9z7OU7rwYC+fDXywrM2eY5XsZT3IDj9SRocmzSLnj0k1r1HWux4
-        EqBiwJxrInPuCPh9+nJs1VNUaq7mUJwR5OXsXm6LSDdkt896isJaOSfZmiaBRcxV
-        hxujSTiwmxPO8lr/E7xZDY4C+WM2GiqColwtO8fhlLF3a31za8P3mFrKOyg3ukc+
-        XXRhRR1yNhj/Ycs2e2cfjO5687Get0hwFlve7z/PIZA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lUhLBy
-        uCWkwkjJrzNCYlklmu1AZKvcruJii4RaKrLXk=; b=PneItX3IUUZH8xHqv/p6XL
-        /ZPwYaqTGLgjrurBGpXc6j1xKRuheMqhdxqjNBLexHOTL5iPjU8vs+olxyozC8he
-        MWGK7viX2tOvg3HU07J5CEk4/G9u5gFv/tnYtz2uE+xtaVrXNZ5VfggD7+PxnFVU
-        ICWVvaCOOytD7ZHIgTzFECJTVjoWRT0deiug79dKsNn9COCQ6KUkc+fvtMgnFG6Z
-        fiBi64e4cFQ1ShDk4ZYt5H2mqqz5ddcdWaRNyy0VbO23mMr7ertFkVM7T/2Y1/Mw
-        lKq5zPoDSuEZnDfrSj53/lPUe3qF0SOoB3DwrU+mWrg78W1dJ0NrMQRmID2X++tw
-        ==
-X-ME-Sender: <xms:NmvIXI3eZ_jgXO2SVWsx285A9RC2sae2TKX1Tohku_JjYtcMRvV0dA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieehgdefudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrd
-    gtohhmpdgrphhpshhpohhtrdgtohhmnecukfhppeekfedrkeeirdekledruddtjeenucfr
-    rghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsth
-    gvrhfuihiivgeptd
-X-ME-Proxy: <xmx:NmvIXEpsL08XzciNi3FXWkmc77WCF640MdIYZnD7PLLE-8II4HMjUg>
-    <xmx:NmvIXHN-f8q_tsDEGX8YJ0xglms4P-0WPngqzpoqSwZNs7VPHkU-wQ>
-    <xmx:NmvIXNphjoOPVKK94FfDy93jwJmv2NaM3FJsltqK7aAwRCPRAeIG3A>
-    <xmx:N2vIXDvdxndjdJfCHRN-OXvXkmIgfXgbX-92dVYM2xMhCykIH0R9mA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3A6B1103CF;
-        Tue, 30 Apr 2019 11:35:18 -0400 (EDT)
-Date:   Tue, 30 Apr 2019 17:35:16 +0200
-From:   Greg KH <greg@kroah.com>
-To:     syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING: Detected a wedged cx25840 chip; the device will not
- work.
-Message-ID: <20190430153516.GA23459@kroah.com>
-References: <00000000000048aa750587c052ef@google.com>
+        Tue, 30 Apr 2019 11:35:21 -0400
+Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x3UFYnii000575;
+        Wed, 1 May 2019 00:34:49 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
+ Wed, 01 May 2019 00:34:49 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x3UFYiwL000555
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 1 May 2019 00:34:49 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: INFO: task hung in __get_super
+To:     Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>,
+        axboe@kernel.dk, dvyukov@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <001a113ed5540f411c0568cc8418@google.com>
+ <0000000000002cd22305879b22c4@google.com>
+ <20190428185109.GD23075@ZenIV.linux.org.uk>
+ <20190430025501.GB6740@quack2.suse.cz>
+ <20190430031144.GG23075@ZenIV.linux.org.uk>
+ <20190430130739.GA11224@quack2.suse.cz>
+ <20190430131820.GK23075@ZenIV.linux.org.uk>
+ <20190430150753.GA14000@quack2.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <aa220178-58d8-ffb7-399b-1d04e92e916f@i-love.sakura.ne.jp>
+Date:   Wed, 1 May 2019 00:34:44 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000048aa750587c052ef@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190430150753.GA14000@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 07:36:07AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12df67c3200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> dashboard link: https://syzkaller.appspot.com/bug?extid=170a86bf206dd2c6217e
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108a28f3200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145d8a2d200000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
-> 
-> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> pvrusb2: Hardware description: Gotview USB 2.0 DVD 2
-> pvrusb2: Invalid write control endpoint
-> usb 1-1: USB disconnect, device number 2
-> pvrusb2: Invalid write control endpoint
-> pvrusb2: WARNING: Detected a wedged cx25840 chip; the device will not work.
-> pvrusb2: WARNING: Try power cycling the pvrusb2 device.
-> pvrusb2: WARNING: Disabling further access to the device to prevent other
-> foul-ups.
-> pvrusb2: Device being rendered inoperable
-> cx25840 0-0044: Unable to detect h/w, assuming cx23887
-> cx25840 0-0044: cx23887 A/V decoder found @ 0x88 (pvrusb2_a)
-> pvrusb2: Attached sub-driver cx25840
-> pvrusb2: Attempted to execute control transfer when device not ok
-> pvrusb2: Attempted to execute control transfer when device not ok
+On 2019/05/01 0:07, Jan Kara wrote:
+> Ah, right. I've missed that in your patch. So your patch should be really
+> fixing the problem. Will you post it officially? Thanks!
 
-As the driver said, power cycle your device, it crashed :)
+I still cannot understand what the problem is.
+According to console output,
 
-Seriously, I think your script detection failed here, sorry.
+----------
+INFO: task syz-executor274:8097 blocked for more than 143 seconds. 
+INFO: task blkid:8099 blocked for more than 143 seconds. 
 
-greg k-h
+1 lock held by syz-executor274/8083:
+2 locks held by syz-executor274/8097:
+ #0: 000000007a5ed526 (&bdev->bd_mutex){+.+.}, at: blkdev_reread_part+0x1f/0x40 block/ioctl.c:192
+ #1: 0000000067606e21 (&type->s_umount_key#39){.+.+}, at: __get_super.part.0+0x203/0x2e0 fs/super.c:788
+1 lock held by blkid/8099:
+ #0: 000000007a5ed526 (&bdev->bd_mutex){+.+.}, at: blkdev_put+0x34/0x560 fs/block_dev.c:1866 
+----------
+
+8099 was blocked for too long waiting for 000000007a5ed526 held by 8097.
+8097 was blocked for too long waiting for 0000000067606e21 held by somebody.
+Since there is nobody else holding 0000000067606e21,
+I guessed that the "somebody" which is holding 0000000067606e21 is 8083.
+
+----------
+[ 1107.337625][    C1] CPU: 1 PID: 8083 Comm: syz-executor274 Not tainted 5.1.0-rc6+ #89
+[ 1107.337631][    C1] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+[ 1107.337636][    C1] RIP: 0010:debug_lockdep_rcu_enabled.part.0+0xb/0x60
+[ 1107.337648][    C1] Code: 5b 5d c3 e8 67 71 e5 ff 0f 1f 80 00 00 00 00 55 48 89 e5 e8 37 ff ff ff 5d c3 0f 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 55 <48> 89 e5 53 65 48 8b 1c 25 00 ee 01 00 48 8d bb 7c 08 00 00 48 89
+[ 1107.337652][    C1] RSP: 0018:ffff8880a85274c8 EFLAGS: 00000202
+[ 1107.337661][    C1] RAX: dffffc0000000000 RBX: ffff8880a85275d8 RCX: 1ffffffff12bcd63
+[ 1107.337666][    C1] RDX: 0000000000000000 RSI: ffffffff870d8f3c RDI: ffff8880a85275e0
+[ 1107.337672][    C1] RBP: ffff8880a85274d8 R08: ffff888081e68540 R09: ffffed1015d25bc8
+[ 1107.337677][    C1] R10: ffffed1015d25bc7 R11: ffff8880ae92de3b R12: 0000000000000000
+[ 1107.337683][    C1] R13: ffff8880a694d640 R14: ffff88809541b942 R15: 0000000000000006
+[ 1107.337689][    C1] FS:  0000000000e0b880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+[ 1107.337693][    C1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1107.337699][    C1] CR2: ffffffffff600400 CR3: 0000000092d6f000 CR4: 00000000001406e0
+[ 1107.337704][    C1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1107.337710][    C1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1107.337713][    C1] Call Trace:
+[ 1107.337717][    C1]  ? debug_lockdep_rcu_enabled+0x71/0xa0
+[ 1107.337721][    C1]  xas_descend+0xbf/0x370
+[ 1107.337724][    C1]  xas_load+0xef/0x150
+[ 1107.337728][    C1]  find_get_entry+0x13d/0x880
+[ 1107.337733][    C1]  ? find_get_entries_tag+0xc10/0xc10
+[ 1107.337736][    C1]  ? mark_held_locks+0xa4/0xf0
+[ 1107.337741][    C1]  ? pagecache_get_page+0x1a8/0x740
+[ 1107.337745][    C1]  pagecache_get_page+0x4c/0x740
+[ 1107.337749][    C1]  __getblk_gfp+0x27e/0x970
+[ 1107.337752][    C1]  __bread_gfp+0x2f/0x300
+[ 1107.337756][    C1]  udf_tread+0xf1/0x140
+[ 1107.337760][    C1]  udf_read_tagged+0x50/0x530
+[ 1107.337764][    C1]  udf_check_anchor_block+0x1ef/0x680
+[ 1107.337768][    C1]  ? blkpg_ioctl+0xa90/0xa90
+[ 1107.337772][    C1]  ? udf_process_sequence+0x35d0/0x35d0
+[ 1107.337776][    C1]  ? submit_bio+0xba/0x480
+[ 1107.337780][    C1]  udf_scan_anchors+0x3f4/0x680
+[ 1107.337784][    C1]  ? udf_check_anchor_block+0x680/0x680
+[ 1107.337789][    C1]  ? __sanitizer_cov_trace_const_cmp8+0x18/0x20
+[ 1107.337793][    C1]  ? udf_get_last_session+0x120/0x120
+[ 1107.337797][    C1]  udf_load_vrs+0x67f/0xc80
+[ 1107.337801][    C1]  ? udf_scan_anchors+0x680/0x680
+[ 1107.337805][    C1]  ? udf_bread+0x260/0x260
+[ 1107.337809][    C1]  ? lockdep_init_map+0x1be/0x6d0
+[ 1107.337813][    C1]  udf_fill_super+0x7d8/0x16d1
+[ 1107.337817][    C1]  ? udf_load_vrs+0xc80/0xc80
+[ 1107.337820][    C1]  ? vsprintf+0x40/0x40
+[ 1107.337824][    C1]  ? set_blocksize+0x2bf/0x340
+[ 1107.337829][    C1]  ? __sanitizer_cov_trace_const_cmp4+0x16/0x20
+[ 1107.337833][    C1]  mount_bdev+0x307/0x3c0
+[ 1107.337837][    C1]  ? udf_load_vrs+0xc80/0xc80
+[ 1107.337840][    C1]  udf_mount+0x35/0x40
+[ 1107.337844][    C1]  ? udf_get_pblock_meta25+0x3a0/0x3a0
+[ 1107.337848][    C1]  legacy_get_tree+0xf2/0x200
+[ 1107.337853][    C1]  ? __sanitizer_cov_trace_const_cmp4+0x16/0x20
+[ 1107.337857][    C1]  vfs_get_tree+0x123/0x450
+[ 1107.337860][    C1]  do_mount+0x1436/0x2c40
+[ 1107.337864][    C1]  ? copy_mount_string+0x40/0x40
+[ 1107.337868][    C1]  ? _copy_from_user+0xdd/0x150
+[ 1107.337873][    C1]  ? __sanitizer_cov_trace_const_cmp8+0x18/0x20
+[ 1107.337877][    C1]  ? copy_mount_options+0x280/0x3a0
+[ 1107.337881][    C1]  ksys_mount+0xdb/0x150
+[ 1107.337885][    C1]  __x64_sys_mount+0xbe/0x150
+[ 1107.337889][    C1]  do_syscall_64+0x103/0x610
+[ 1107.337893][    C1]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+----------
+
+8083 is doing mount(2) but is not holding 00000000bde6230e (loop_ctl_mutex).
+I guessed that something went wrong with 8083 inside __getblk_gfp().
+How can loop_ctl_mutex be relevant to this problem?
