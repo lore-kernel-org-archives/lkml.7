@@ -2,89 +2,175 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA3BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670DAC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC9E21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556644748;
-	bh=Ak9XM+VjWlZMz6Xy1SwbxWJmWxB8F4HluG3X0ePJnYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ozt0yoIAYDPGJaQD73DLfBB7pWljf0dwaf20gsEEOG7JdmHOYtfVre0z2hy2OBqC1
-	 UVa/xGeuVZ+AUmqe7zR7Nj83RoM0dfGyaQ1PTUIm993HUIUegxGpUu47CoDIPpQzC0
-	 iwL9ey61x05+W3brXUCed4dYs+30u2Xi54vgXv/k=
+	by mail.kernel.org (Postfix) with ESMTP id 2789D20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UDLJlhBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfD3RTH (ORCPT
+        id S1726729AbfD3RTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:19:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43708 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 13:19:11 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9589 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3RTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:19:06 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EEF320651;
-        Tue, 30 Apr 2019 17:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556644746;
-        bh=Ak9XM+VjWlZMz6Xy1SwbxWJmWxB8F4HluG3X0ePJnYA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZxZx9D2Lv1r5COFomGHS9i012OKoXiF2uZkaqgsaPoW3iM7g+piKuSSJJkJGuDgoz
-         fUZMRrKxDlAO8HmtU/OQqfSuagdNNvLW1ehGjCwxxgRgXfm2QVvKL1iL1D/agM7WgI
-         2lwJbWsP5bS4YljgCgmccCO9z7rgh5qzTqXTgoEc=
-Date:   Tue, 30 Apr 2019 22:48:56 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: stm32-dma: fix residue calculation in
- stm32-dma
-Message-ID: <20190430171856.GW3845@vkoul-mobl.Dlink>
-References: <1553689316-6231-1-git-send-email-arnaud.pouliquen@st.com>
- <20190426121751.GC28103@vkoul-mobl>
- <6894b54e-651f-1caf-d363-79d1ef0eee14@st.com>
- <20190429051310.GC3845@vkoul-mobl.Dlink>
- <26fa7710-76cb-e202-a367-c2e2408b6808@st.com>
- <20190430082255.GP3845@vkoul-mobl.Dlink>
- <f7f28d56-a3e4-38a3-8580-b241fe0dcb49@st.com>
+        id S1725942AbfD3RTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:19:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44tpCv00Zkz9v1kM;
+        Tue, 30 Apr 2019 19:19:07 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=UDLJlhBF; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id rKe8bcM0kqZZ; Tue, 30 Apr 2019 19:19:06 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44tpCt5h8rz9v1kF;
+        Tue, 30 Apr 2019 19:19:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556644746; bh=8M9gBHLm9qLvpKuZX/2ssSbHZfFKU8w8o0K+AXL3j6o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UDLJlhBFtSat+7juCpwpai6J+FXOCEyq4VXAoPPRThPSgZT484ylZa/AuqFsDhQQt
+         xovxPbswSQzR14ffx8wMPLNOtUo3+ADODFGJqkRt3KwbLYSEjkr/WuOQwkyhL/eypA
+         ot7Rx5E4eT0Go6ISIxv7Sdc/0wzZ7J1sQWjS8QBQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E11F8B8F3;
+        Tue, 30 Apr 2019 19:19:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ROkgZ5J4l8t6; Tue, 30 Apr 2019 19:19:08 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D37A18B8DF;
+        Tue, 30 Apr 2019 19:19:07 +0200 (CEST)
+Subject: Re: [PATCH 4/5] soc/fsl/qe: qe.c: support fsl,qe-snums property
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     Valentin Longchamp <valentin.longchamp@keymile.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+ <20190430133615.25721-5-rasmus.villemoes@prevas.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <4c1c4fe8-9412-2543-e9bc-83b7e5d7c202@c-s.fr>
+Date:   Tue, 30 Apr 2019 19:19:07 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7f28d56-a3e4-38a3-8580-b241fe0dcb49@st.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190430133615.25721-5-rasmus.villemoes@prevas.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-04-19, 16:58, Arnaud Pouliquen wrote:
 
-> >> Hope that will help to clarify.
-> > 
-> > Yes that helps, maybe we should add these bits in code and changelog..
-> > :)I will update the comments and commit message in a V2 in this way
-> > 
-> > And how does this impact non cyclic case where N descriptors maybe
-> > issued. The driver seems to support non cyclic too...
+
+Le 30/04/2019 à 15:36, Rasmus Villemoes a écrit :
+> The current code assumes that the set of snum _values_ to populate the
+> snums[] array with is a function of the _number_ of snums
+> alone. However, reading table 4-30, and its footnotes, of the QUICC
+> Engine Block Reference Manual shows that that is a bit too naive.
 > 
-> Correct it supports SG as well, but double buffer mode is not used in
-> such case. Hw is programmed under IT for every descriptors : no
-> automatic register reloaded as in cyclic mode. We won't end up in the
-> situation depicted below.
+> As an alternative, this introduces a new binding fsl,qe-snums, which
+> automatically encodes both the number of snums and the actual values to
+> use. Conveniently, of_property_read_variable_u8_array does exactly
+> what we need.
+> 
+> For example, for the MPC8309, one would specify the property as
+> 
+>                 fsl,qe-snums = /bits/ 8 <
+>                         0x88 0x89 0x98 0x99 0xa8 0xa9 0xb8 0xb9
+>                         0xc8 0xc9 0xd8 0xd9 0xe8 0xe9>;
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> ---
+>   .../devicetree/bindings/soc/fsl/cpm_qe/qe.txt      |  8 +++++++-
+>   drivers/soc/fsl/qe/qe.c                            | 14 +++++++++++++-
+>   2 files changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt
+> index d7afaff5faff..05f5f485562a 100644
+> --- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt
+> +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt
+> @@ -18,7 +18,8 @@ Required properties:
+>   - reg : offset and length of the device registers.
+>   - bus-frequency : the clock frequency for QUICC Engine.
+>   - fsl,qe-num-riscs: define how many RISC engines the QE has.
+> -- fsl,qe-num-snums: define how many serial number(SNUM) the QE can use for the
+> +- fsl,qe-snums: This property has to be specified as '/bits/ 8' value,
+> +  defining the array of serial number (SNUM) values for the virtual
+>     threads.
+>   
+>   Optional properties:
+> @@ -34,6 +35,11 @@ Recommended properties
+>   - brg-frequency : the internal clock source frequency for baud-rate
+>     generators in Hz.
+>   
+> +Deprecated properties
+> +- fsl,qe-num-snums: define how many serial number(SNUM) the QE can use
+> +  for the threads. Use fsl,qe-snums instead to not only specify the
+> +  number of snums, but also their values.
+> +
+>   Example:
+>        qe@e0100000 {
+>   	#address-cells = <1>;
+> diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+> index aff9d1373529..af3c2b2b268f 100644
+> --- a/drivers/soc/fsl/qe/qe.c
+> +++ b/drivers/soc/fsl/qe/qe.c
+> @@ -283,7 +283,6 @@ EXPORT_SYMBOL(qe_clock_source);
+>    */
+>   static void qe_snums_init(void)
+>   {
+> -	int i;
 
-Okay sounds good then. Can you add a bit more of this in the code (this
-was very helpful) not as a fix but documentation so that people (or you
-down the line) will remember why this was done like this
+Why do you move this one ?
 
-Thanks
+>   	static const u8 snum_init_76[] = {
+>   		0x04, 0x05, 0x0C, 0x0D, 0x14, 0x15, 0x1C, 0x1D,
+>   		0x24, 0x25, 0x2C, 0x2D, 0x34, 0x35, 0x88, 0x89,
+> @@ -304,9 +303,22 @@ static void qe_snums_init(void)
+>   		0x28, 0x29, 0x38, 0x39, 0x48, 0x49, 0x58, 0x59,
+>   		0x68, 0x69, 0x78, 0x79, 0x80, 0x81,
+>   	};
+> +	struct device_node *qe;
+>   	const u8 *snum_init;
+> +	int i;
+>   
+>   	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
+> +	qe = qe_get_device_node();
+> +	if (qe) {
+> +		i = of_property_read_variable_u8_array(qe, "fsl,qe-snums",
+> +						       snums, 1, QE_NUM_OF_SNUM);
+> +		of_node_put(qe);
+> +		if (i > 0) {
+> +			qe_num_of_snum = i;
+> +			return;
 
--- 
-~Vinod
+In that case you skip the rest of the init ? Can you explain ?
+
+Christophe
+
+> +		}
+> +	}
+> +
+>   	qe_num_of_snum = qe_get_num_of_snums();
+>   
+>   	if (qe_num_of_snum == 76)
+> 
