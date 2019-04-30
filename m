@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B361C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EF1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3073521743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA87021707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624491;
-	bh=tDtf1ayVQB1wdPNmWP3THJFSqVpGQG0qs/cVWF9K6Oo=;
+	s=default; t=1556624498;
+	bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pXZT4V6P2S8sSQEdfcRa2RA9zq/EJpAK6O+DVPFWhUS815nlg97CPYcK6wOakUCCi
-	 7CdB4EFykhnY7OwPXVjOw2KbFnH08+NkspyRDZiq14M2SCBUNY5DKI27YxhaArOAkK
-	 g2Ob//cBRETcI9mRPSMuiLSo2v0+a028Up4/2oxA=
+	b=J8FKSA08l6uNC7N0NDO5wLDOHzd65cugIu97LsT5yClp32ZCH2oZwOzckUj3h3a6V
+	 05PjN6WOHeUxeYFrISJK+6OO3LX5sYs984OQLS8m0ys8g5cW+T52KQZMN6FN/NUlsm
+	 KXaJnRj9tgGLzjRTVrufzd7j3if0gx8epY38Zj3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfD3Lla (ORCPT
+        id S1728965AbfD3Llh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49010 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:41:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728862AbfD3LlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:25 -0400
+        id S1728925AbfD3Llf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71FEC21707;
-        Tue, 30 Apr 2019 11:41:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E563D21670;
+        Tue, 30 Apr 2019 11:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624484;
-        bh=tDtf1ayVQB1wdPNmWP3THJFSqVpGQG0qs/cVWF9K6Oo=;
+        s=default; t=1556624494;
+        bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=luF75vtCKJJ2ae1v8L8fDOEmCGOb6/rMhDTeqktcKs1+weiN60+5G52FjRM8y8x3F
-         9Ane9ekZSZB7NGoxb3Dnp8/HCypuVocVeeocKFTASlyMZk6Ck9lwuXYFX8tTUKIVJV
-         jzK6/ytiWgeCl/ZQ6cJC+87CDWSWYDaeW3mt8wlE=
+        b=gzfATd7Sm6bI/sKyGQwoQ3UjOyG2KU8sbV5PnO9XJ5B6J1BqJ4JbilYsy1ev65xRk
+         xPGNVE5/dBvkHGgQY92lrLCUzpHE6bTwgenF0Rsq72Ob4iseLkYYz9ejx6zyY27klO
+         5TQQhwSCewDyJlx//nkOtTLzf0HHF6T8Sx8YmP64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben England <bengland@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 4.14 11/53] ceph: only use d_name directly when parent is locked
-Date:   Tue, 30 Apr 2019 13:38:18 +0200
-Message-Id: <20190430113552.377906541@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
+        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
+Subject: [PATCH 4.14 15/53] sunrpc: dont mark uninitialised items as VALID.
+Date:   Tue, 30 Apr 2019 13:38:22 +0200
+Message-Id: <20190430113553.091347032@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -59,165 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: NeilBrown <neilb@suse.com>
 
-commit 1bcb344086f3ecf8d6705f6d708441baa823beb3 upstream.
+commit d58431eacb226222430940134d97bfd72f292fcd upstream.
 
-Ben reported tripping the BUG_ON in create_request_message during some
-performance testing. Analysis of the vmcore showed that the length of
-the r_dentry->d_name string changed after we allocated the buffer, but
-before we encoded it.
+A recent commit added a call to cache_fresh_locked()
+when an expired item was found.
+The call sets the CACHE_VALID flag, so it is important
+that the item actually is valid.
+There are two ways it could be valid:
+1/ If ->update has been called to fill in relevant content
+2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
 
-build_dentry_path returns pointers to d_name in the common case of
-non-snapped dentries, but this optimization isn't safe unless the parent
-directory is locked. When it isn't, have the code make a copy of the
-d_name while holding the d_lock.
+An expired item that is waiting for an update will be neither.
+Setting CACHE_VALID will mean that a subsequent call to cache_put()
+will be likely to dereference uninitialised pointers.
 
-Cc: stable@vger.kernel.org
-Reported-by: Ben England <bengland@redhat.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+So we must make sure the item is valid, and we already have code to do
+that in try_to_negate_entry().  This takes the hash lock and so cannot
+be used directly, so take out the two lines that we need and use them.
+
+Now cache_fresh_locked() is certain to be called only on
+a valid item.
+
+Cc: stable@kernel.org # 2.6.35
+Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/mds_client.c |   61 +++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 50 insertions(+), 11 deletions(-)
+ net/sunrpc/cache.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -1863,10 +1863,39 @@ retry:
- 	return path;
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -54,6 +54,7 @@ static void cache_init(struct cache_head
+ 	h->last_refresh = now;
  }
  
-+/* Duplicate the dentry->d_name.name safely */
-+static int clone_dentry_name(struct dentry *dentry, const char **ppath,
-+			     int *ppathlen)
-+{
-+	u32 len;
-+	char *name;
-+
-+retry:
-+	len = READ_ONCE(dentry->d_name.len);
-+	name = kmalloc(len + 1, GFP_NOFS);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	spin_lock(&dentry->d_lock);
-+	if (dentry->d_name.len != len) {
-+		spin_unlock(&dentry->d_lock);
-+		kfree(name);
-+		goto retry;
-+	}
-+	memcpy(name, dentry->d_name.name, len);
-+	spin_unlock(&dentry->d_lock);
-+
-+	name[len] = '\0';
-+	*ppath = name;
-+	*ppathlen = len;
-+	return 0;
-+}
-+
- static int build_dentry_path(struct dentry *dentry, struct inode *dir,
- 			     const char **ppath, int *ppathlen, u64 *pino,
--			     int *pfreepath)
-+			     bool *pfreepath, bool parent_locked)
- {
-+	int ret;
- 	char *path;
- 
- 	rcu_read_lock();
-@@ -1875,8 +1904,15 @@ static int build_dentry_path(struct dent
- 	if (dir && ceph_snap(dir) == CEPH_NOSNAP) {
- 		*pino = ceph_ino(dir);
- 		rcu_read_unlock();
--		*ppath = dentry->d_name.name;
--		*ppathlen = dentry->d_name.len;
-+		if (parent_locked) {
-+			*ppath = dentry->d_name.name;
-+			*ppathlen = dentry->d_name.len;
-+		} else {
-+			ret = clone_dentry_name(dentry, ppath, ppathlen);
-+			if (ret)
-+				return ret;
-+			*pfreepath = true;
-+		}
- 		return 0;
- 	}
- 	rcu_read_unlock();
-@@ -1884,13 +1920,13 @@ static int build_dentry_path(struct dent
- 	if (IS_ERR(path))
- 		return PTR_ERR(path);
- 	*ppath = path;
--	*pfreepath = 1;
-+	*pfreepath = true;
- 	return 0;
- }
- 
- static int build_inode_path(struct inode *inode,
- 			    const char **ppath, int *ppathlen, u64 *pino,
--			    int *pfreepath)
-+			    bool *pfreepath)
- {
- 	struct dentry *dentry;
- 	char *path;
-@@ -1906,7 +1942,7 @@ static int build_inode_path(struct inode
- 	if (IS_ERR(path))
- 		return PTR_ERR(path);
- 	*ppath = path;
--	*pfreepath = 1;
-+	*pfreepath = true;
- 	return 0;
- }
- 
-@@ -1917,7 +1953,7 @@ static int build_inode_path(struct inode
- static int set_request_path_attr(struct inode *rinode, struct dentry *rdentry,
- 				  struct inode *rdiri, const char *rpath,
- 				  u64 rino, const char **ppath, int *pathlen,
--				  u64 *ino, int *freepath)
-+				  u64 *ino, bool *freepath, bool parent_locked)
- {
- 	int r = 0;
- 
-@@ -1927,7 +1963,7 @@ static int set_request_path_attr(struct
- 		     ceph_snap(rinode));
- 	} else if (rdentry) {
- 		r = build_dentry_path(rdentry, rdiri, ppath, pathlen, ino,
--					freepath);
-+					freepath, parent_locked);
- 		dout(" dentry %p %llx/%.*s\n", rdentry, *ino, *pathlen,
- 		     *ppath);
- 	} else if (rpath || rino) {
-@@ -1953,7 +1989,7 @@ static struct ceph_msg *create_request_m
- 	const char *path2 = NULL;
- 	u64 ino1 = 0, ino2 = 0;
- 	int pathlen1 = 0, pathlen2 = 0;
--	int freepath1 = 0, freepath2 = 0;
-+	bool freepath1 = false, freepath2 = false;
- 	int len;
- 	u16 releases;
- 	void *p, *end;
-@@ -1961,16 +1997,19 @@ static struct ceph_msg *create_request_m
- 
- 	ret = set_request_path_attr(req->r_inode, req->r_dentry,
- 			      req->r_parent, req->r_path1, req->r_ino1.ino,
--			      &path1, &pathlen1, &ino1, &freepath1);
-+			      &path1, &pathlen1, &ino1, &freepath1,
-+			      test_bit(CEPH_MDS_R_PARENT_LOCKED,
-+					&req->r_req_flags));
- 	if (ret < 0) {
- 		msg = ERR_PTR(ret);
- 		goto out;
- 	}
- 
-+	/* If r_old_dentry is set, then assume that its parent is locked */
- 	ret = set_request_path_attr(NULL, req->r_old_dentry,
- 			      req->r_old_dentry_dir,
- 			      req->r_path2, req->r_ino2.ino,
--			      &path2, &pathlen2, &ino2, &freepath2);
-+			      &path2, &pathlen2, &ino2, &freepath2, true);
- 	if (ret < 0) {
- 		msg = ERR_PTR(ret);
- 		goto out_free1;
++static inline int cache_is_valid(struct cache_head *h);
+ static void cache_fresh_locked(struct cache_head *head, time_t expiry,
+ 				struct cache_detail *detail);
+ static void cache_fresh_unlocked(struct cache_head *head,
+@@ -100,6 +101,8 @@ struct cache_head *sunrpc_cache_lookup(s
+ 			if (cache_is_expired(detail, tmp)) {
+ 				hlist_del_init(&tmp->cache_list);
+ 				detail->entries --;
++				if (cache_is_valid(tmp) == -EAGAIN)
++					set_bit(CACHE_NEGATIVE, &tmp->flags);
+ 				cache_fresh_locked(tmp, 0, detail);
+ 				freeme = tmp;
+ 				break;
 
 
