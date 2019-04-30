@@ -2,52 +2,52 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4289C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0684FC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB772075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03572075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625460;
-	bh=qmySqOgGAWXl1qA4wBmbdzy9gaa7gjJVIfqEMiXeztg=;
+	s=default; t=1556625464;
+	bh=bMIyDFSNMZbDV9mwlps5UzDDiVznRcO1GZN9HpcM6iQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dqDh4Fh/zXyyNMuWh8H8rkmlnyfarju0qX4uOCUyMC5eLRPTui3tovmr2Lirx7xgm
-	 sXDXGxDUGWE7UXrYdUTbBbyuTRiBa24a9ucVpwAnTlPEH9HmCanywXnOW9ZO8TjU2o
-	 w9Rqmea9kE9nxZzAbZHj2O+cSzxN6I7VeirXdWCM=
+	b=qUIygypn02llOgOhSjq0ri8jUCO9bTrEMtoTzxnVe3WeV1DhvG2/hP2E5Um2rwmTa
+	 UxHUFlHSiKzu2T/K+kDj7w3M9raJPISTf25qvEtP39YG4Yedws4OxIFFxlYJJyxqJH
+	 TagMFOh+bLsJdIkbYz0ql5Wuvm5seOg/BMh89yw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfD3L5j (ORCPT
+        id S1730758AbfD3Lru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33600 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730759AbfD3Lrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:51 -0400
+        id S1730718AbfD3Lro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA65D2054F;
-        Tue, 30 Apr 2019 11:47:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D07521670;
+        Tue, 30 Apr 2019 11:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624870;
-        bh=qmySqOgGAWXl1qA4wBmbdzy9gaa7gjJVIfqEMiXeztg=;
+        s=default; t=1556624862;
+        bh=bMIyDFSNMZbDV9mwlps5UzDDiVznRcO1GZN9HpcM6iQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C4drx8EEJuAR6mxNPTVCDGci/OyicRBUF+10QRcnBHX8dJAPCEPeYh6uwhQzdjnMs
-         vhnyTkGzWf5YpWXAlqRomt7EQvt769eceWczvTBHpYZcBWm9X0tmk021XC+gFNfi4Y
-         M6DvMrtxra8AiNWo4+VmVrj1jyO4L8dx6vzJGkUQ=
+        b=bf/LjWKnF8kLd2gCk4zrEsWXQ2ArHlyJBAMU98LZBIf65k3FXxD9+xcM0qSYYisvt
+         TPcNCaOnNidsE0HzeytONApyM8c/9eJp+f4En6bPxydaSlCb0equa25ScRzqPnrqek
+         JH4u9uMEJMyKTWiCL+sNNHsD+GLhhN1a2ai2DKaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Su Bao Cheng <baocheng.su@siemens.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 092/100] stmmac: pci: Adjust IOT2000 matching
-Date:   Tue, 30 Apr 2019 13:39:01 +0200
-Message-Id: <20190430113613.159496689@linuxfoundation.org>
+Subject: [PATCH 4.19 089/100] net/rose: fix unbound loop in rose_loopback_timer()
+Date:   Tue, 30 Apr 2019 13:38:58 +0200
+Message-Id: <20190430113613.012350529@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,52 +60,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Su Bao Cheng <baocheng.su@siemens.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e0c1d14a1a3211dccf0540a6703ffbd5d2a75bdb ]
+[ Upstream commit 0453c682459583910d611a96de928f4442205493 ]
 
-Since there are more IOT2040 variants with identical hardware but
-different asset tags, the asset tag matching should be adjusted to
-support them.
+This patch adds a limit on the number of skbs that fuzzers can queue
+into loopback_queue. 1000 packets for rose loopback seems more than enough.
 
-For the board name "SIMATIC IOT2000", currently there are 2 types of
-hardware, IOT2020 and IOT2040. The IOT2020 is identified by its unique
-asset tag. Match on it first. If we then match on the board name only,
-we will catch all IOT2040 variants. In the future there will be no other
-devices with the "SIMATIC IOT2000" DMI board name but different
-hardware.
+Then, since we now have multiple cpus in most linux hosts,
+we also need to limit the number of skbs rose_loopback_timer()
+can dequeue at each round.
 
-Signed-off-by: Su Bao Cheng <baocheng.su@siemens.com>
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+rose_loopback_queue() can be drop-monitor friendly, calling
+consume_skb() or kfree_skb() appropriately.
+
+Finally, use mod_timer() instead of del_timer() + add_timer()
+
+syzbot report was :
+
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu:    0-...!: (10499 ticks this GP) idle=536/1/0x4000000000000002 softirq=103291/103291 fqs=34
+rcu:     (t=10500 jiffies g=140321 q=323)
+rcu: rcu_preempt kthread starved for 10426 jiffies! g140321 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=1
+rcu: RCU grace-period kthread stack dump:
+rcu_preempt     I29168    10      2 0x80000000
+Call Trace:
+ context_switch kernel/sched/core.c:2877 [inline]
+ __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
+ schedule+0x92/0x180 kernel/sched/core.c:3562
+ schedule_timeout+0x4db/0xfd0 kernel/time/timer.c:1803
+ rcu_gp_fqs_loop kernel/rcu/tree.c:1971 [inline]
+ rcu_gp_kthread+0x962/0x17b0 kernel/rcu/tree.c:2128
+ kthread+0x357/0x430 kernel/kthread.c:253
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+NMI backtrace for cpu 0
+CPU: 0 PID: 7632 Comm: kworker/0:4 Not tainted 5.1.0-rc5+ #172
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events iterate_cleanup_work
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+ arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+ trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+ rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree.c:1223
+ print_cpu_stall kernel/rcu/tree.c:1360 [inline]
+ check_cpu_stall kernel/rcu/tree.c:1434 [inline]
+ rcu_pending kernel/rcu/tree.c:3103 [inline]
+ rcu_sched_clock_irq.cold+0x500/0xa4a kernel/rcu/tree.c:2544
+ update_process_times+0x32/0x80 kernel/time/timer.c:1635
+ tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:161
+ tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1271
+ __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+ __hrtimer_run_queues+0x33e/0xde0 kernel/time/hrtimer.c:1451
+ hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1035 [inline]
+ smp_apic_timer_interrupt+0x120/0x570 arch/x86/kernel/apic/apic.c:1060
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
+RIP: 0010:__sanitizer_cov_trace_pc+0x0/0x50 kernel/kcov.c:95
+Code: 89 25 b4 6e ec 08 41 bc f4 ff ff ff e8 cd 5d ea ff 48 c7 05 9e 6e ec 08 00 00 00 00 e9 a4 e9 ff ff 90 90 90 90 90 90 90 90 90 <55> 48 89 e5 48 8b 75 08 65 48 8b 04 25 00 ee 01 00 65 8b 15 c8 60
+RSP: 0018:ffff8880ae807ce0 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
+RAX: ffff88806fd40640 RBX: dffffc0000000000 RCX: ffffffff863fbc56
+RDX: 0000000000000100 RSI: ffffffff863fbc1d RDI: ffff88808cf94228
+RBP: ffff8880ae807d10 R08: ffff88806fd40640 R09: ffffed1015d00f8b
+R10: ffffed1015d00f8a R11: 0000000000000003 R12: ffff88808cf941c0
+R13: 00000000fffff034 R14: ffff8882166cd840 R15: 0000000000000000
+ rose_loopback_timer+0x30d/0x3f0 net/rose/rose_loopback.c:91
+ call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
+ expire_timers kernel/time/timer.c:1362 [inline]
+ __run_timers kernel/time/timer.c:1681 [inline]
+ __run_timers kernel/time/timer.c:1649 [inline]
+ run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
+ __do_softirq+0x266/0x95a kernel/softirq.c:293
+ do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1027
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/rose/rose_loopback.c |   27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -159,6 +159,12 @@ static const struct dmi_system_id quark_
- 		},
- 		.driver_data = (void *)&galileo_stmmac_dmi_data,
- 	},
-+	/*
-+	 * There are 2 types of SIMATIC IOT2000: IOT20202 and IOT2040.
-+	 * The asset tag "6ES7647-0AA00-0YA2" is only for IOT2020 which
-+	 * has only one pci network device while other asset tags are
-+	 * for IOT2040 which has two.
-+	 */
- 	{
- 		.matches = {
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
-@@ -170,8 +176,6 @@ static const struct dmi_system_id quark_
- 	{
- 		.matches = {
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
--			DMI_EXACT_MATCH(DMI_BOARD_ASSET_TAG,
--					"6ES7647-0AA00-1YA2"),
- 		},
- 		.driver_data = (void *)&iot2040_stmmac_dmi_data,
- 	},
+--- a/net/rose/rose_loopback.c
++++ b/net/rose/rose_loopback.c
+@@ -16,6 +16,7 @@
+ #include <linux/init.h>
+ 
+ static struct sk_buff_head loopback_queue;
++#define ROSE_LOOPBACK_LIMIT 1000
+ static struct timer_list loopback_timer;
+ 
+ static void rose_set_loopback_timer(void);
+@@ -35,29 +36,27 @@ static int rose_loopback_running(void)
+ 
+ int rose_loopback_queue(struct sk_buff *skb, struct rose_neigh *neigh)
+ {
+-	struct sk_buff *skbn;
++	struct sk_buff *skbn = NULL;
+ 
+-	skbn = skb_clone(skb, GFP_ATOMIC);
++	if (skb_queue_len(&loopback_queue) < ROSE_LOOPBACK_LIMIT)
++		skbn = skb_clone(skb, GFP_ATOMIC);
+ 
+-	kfree_skb(skb);
+-
+-	if (skbn != NULL) {
++	if (skbn) {
++		consume_skb(skb);
+ 		skb_queue_tail(&loopback_queue, skbn);
+ 
+ 		if (!rose_loopback_running())
+ 			rose_set_loopback_timer();
++	} else {
++		kfree_skb(skb);
+ 	}
+ 
+ 	return 1;
+ }
+ 
+-
+ static void rose_set_loopback_timer(void)
+ {
+-	del_timer(&loopback_timer);
+-
+-	loopback_timer.expires  = jiffies + 10;
+-	add_timer(&loopback_timer);
++	mod_timer(&loopback_timer, jiffies + 10);
+ }
+ 
+ static void rose_loopback_timer(struct timer_list *unused)
+@@ -68,8 +67,12 @@ static void rose_loopback_timer(struct t
+ 	struct sock *sk;
+ 	unsigned short frametype;
+ 	unsigned int lci_i, lci_o;
++	int count;
+ 
+-	while ((skb = skb_dequeue(&loopback_queue)) != NULL) {
++	for (count = 0; count < ROSE_LOOPBACK_LIMIT; count++) {
++		skb = skb_dequeue(&loopback_queue);
++		if (!skb)
++			return;
+ 		if (skb->len < ROSE_MIN_LEN) {
+ 			kfree_skb(skb);
+ 			continue;
+@@ -106,6 +109,8 @@ static void rose_loopback_timer(struct t
+ 			kfree_skb(skb);
+ 		}
+ 	}
++	if (!skb_queue_empty(&loopback_queue))
++		mod_timer(&loopback_timer, jiffies + 1);
+ }
+ 
+ void __exit rose_loopback_clear(void)
 
 
