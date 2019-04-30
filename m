@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A8EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C37CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785AB2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B27720835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625845;
-	bh=zahjVONL+SoIgGXoI24dcfsL/kyaVCK7bCylvHnBa4A=;
+	s=default; t=1556625849;
+	bh=4+zyDSwdpa4cX6pZkHP3f8wx9+V065dfKkPmkd2vNzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q2b5vcJpdjj3jKl+BNwFLa7JLxJP9oyEd4CGK/XDkvLPGPP2o+kP4dQ5Dv4nhWHdO
-	 7awMLq7nP4yRJyCDb0SvzzqxiENkp8kf4Ds5dllPqbNRDTamGpSutXLn/eXvGU8H/t
-	 5CH49xEUh5qy2d3CVhlMKcFyvzifhvPLOWRQ20nA=
+	b=JXSXknmR2DduI7egMMScv+SgVSzLWFL/osef4QI0gpH6LMbh7ccItw1q9sYAEXUOe
+	 tWhCF4GfBKMN87afoBYOmRtocPxXmLsxT0YlhUbS1QW7KTTp00HVWryCOQ5ETik4q1
+	 RSLXvl5/AKcSYrceNdqL0iIHeE5FS1LPk/RS/nDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbfD3LnJ (ORCPT
+        id S1728047AbfD3MEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:43:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52760 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728487AbfD3LnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:43:01 -0400
+        id S1729755AbfD3LnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:43:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB1BB20449;
-        Tue, 30 Apr 2019 11:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A8312173E;
+        Tue, 30 Apr 2019 11:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624580;
-        bh=zahjVONL+SoIgGXoI24dcfsL/kyaVCK7bCylvHnBa4A=;
+        s=default; t=1556624588;
+        bh=4+zyDSwdpa4cX6pZkHP3f8wx9+V065dfKkPmkd2vNzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fp8AoPfaoHUvlINzpuDJLwejRo5GsnyiA9c4fD73Mq16XqQksXGmFe1TRC7uZ7Vtd
-         QWQdHUKJ9anHyta2DB+d4xSnbNaqiUV3pzIX8OLLmuN6TpmEvGNHofW6S1yzYn4suh
-         4tHs2FCoV2525XPMbk65laJlp2DhAnDDTlPS5Tlc=
+        b=iNY1OUMpRG0k1FbuRnC6jDtFKCMZ2mpPfv8ocxV+mS+kHa8Umj+m2EV44PJzOS8PZ
+         oPA8Z87xCdbepvrl5wLU2+Q2PRawKwGE+5ZFimjH0h9sc3mJGUaCLUcbkBcsNvAtVJ
+         tLlDhRwgEoMwFFDBm77J4WB8ASrxVoA39rOmL9bE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaofei Shen <xiaofeis@codeaurora.org>,
-        Sneh Shah <snehshah@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 48/53] net: stmmac: move stmmac_check_ether_addr() to driver probe
-Date:   Tue, 30 Apr 2019 13:38:55 +0200
-Message-Id: <20190430113559.116747710@linuxfoundation.org>
+        stable@vger.kernel.org, luca abeni <luca.abeni@santannapisa.it>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 33/53] sched/deadline: Correctly handle active 0-lag timers
+Date:   Tue, 30 Apr 2019 13:38:40 +0200
+Message-Id: <20190430113557.087736333@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -61,46 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+From: luca abeni <luca.abeni@santannapisa.it>
 
-[ Upstream commit b561af36b1841088552464cdc3f6371d92f17710 ]
+commit 1b02cd6a2d7f3e2a6a5262887d2cb2912083e42f upstream.
 
-stmmac_check_ether_addr() checks the MAC address and assigns one in
-driver open(). In many cases when we create slave netdevice, the dev
-addr is inherited from master but the master dev addr maybe NULL at
-that time, so move this call to driver probe so that address is
-always valid.
+syzbot reported the following warning:
 
-Signed-off-by: Xiaofei Shen <xiaofeis@codeaurora.org>
-Tested-by: Xiaofei Shen <xiaofeis@codeaurora.org>
-Signed-off-by: Sneh Shah <snehshah@codeaurora.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+   [ ] WARNING: CPU: 4 PID: 17089 at kernel/sched/deadline.c:255 task_non_contending+0xae0/0x1950
+
+line 255 of deadline.c is:
+
+	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+
+in task_non_contending().
+
+Unfortunately, in some cases (for example, a deadline task
+continuosly blocking and waking immediately) it can happen that
+a task blocks (and task_non_contending() is called) while the
+0-lag timer is still active.
+
+In this case, the safest thing to do is to immediately decrease
+the running bandwidth of the task, without trying to re-arm the 0-lag timer.
+
+Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: chengjian (D) <cj.chengjian@huawei.com>
+Link: https://lkml.kernel.org/r/20190325131530.34706-1-luca.abeni@santannapisa.it
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2582,8 +2582,6 @@ static int stmmac_open(struct net_device
- 	struct stmmac_priv *priv = netdev_priv(dev);
- 	int ret;
+---
+ kernel/sched/deadline.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -217,7 +217,6 @@ static void task_non_contending(struct t
+ 	if (dl_se->dl_runtime == 0)
+ 		return;
  
--	stmmac_check_ether_addr(priv);
--
- 	if (priv->hw->pcs != STMMAC_PCS_RGMII &&
- 	    priv->hw->pcs != STMMAC_PCS_TBI &&
- 	    priv->hw->pcs != STMMAC_PCS_RTBI) {
-@@ -4213,6 +4211,8 @@ int stmmac_dvr_probe(struct device *devi
- 	if (ret)
- 		goto error_hw_init;
+-	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+ 	WARN_ON(dl_se->dl_non_contending);
  
-+	stmmac_check_ether_addr(priv);
-+
- 	/* Configure real RX and TX queues */
- 	netif_set_real_num_rx_queues(ndev, priv->plat->rx_queues_to_use);
- 	netif_set_real_num_tx_queues(ndev, priv->plat->tx_queues_to_use);
+ 	zerolag_time = dl_se->deadline -
+@@ -234,7 +233,7 @@ static void task_non_contending(struct t
+ 	 * If the "0-lag time" already passed, decrease the active
+ 	 * utilization now, instead of starting a timer
+ 	 */
+-	if (zerolag_time < 0) {
++	if ((zerolag_time < 0) || hrtimer_active(&dl_se->inactive_timer)) {
+ 		if (dl_task(p))
+ 			sub_running_bw(dl_se->dl_bw, dl_rq);
+ 		if (!dl_task(p) || p->state == TASK_DEAD) {
 
 
