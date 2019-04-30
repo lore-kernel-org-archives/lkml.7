@@ -2,112 +2,106 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64279C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC6FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D0621670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sW33nvnr"
+	by mail.kernel.org (Postfix) with ESMTP id 9C0A621707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556625576;
+	bh=TjLZqtyb6luG6jJUsMYn1zemKgi8FYvKfA9jey+XKrs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ikAZSBRTfnE2uH6zhMN+Et6c/e51lPR9FB0fUgaPxnZZW7jw7lSJ/GzLazdaUi4ee
+	 g2vRawqBNBsuhp+hdZq8NXx/3WgkjmXj5CzaTo7PMEIxfWHSc5+MabSsj0r8lTbiyY
+	 OtvKL/SRwoqOxQx+TQSEsDkzt5gUzkf5HgjQwJtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbfD3Lq1 (ORCPT
+        id S1727565AbfD3L7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:27 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56384 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbfD3LqV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:21 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UBk69L053322;
-        Tue, 30 Apr 2019 06:46:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556624766;
-        bh=MS/ebHHo25Z4rkEAJDu2R8iPbpujs41yXsTmY3TMBOA=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=sW33nvnrlbzw36Q4MkQmmsvf19y3+NPrU9FVMx7iRGTb7/LachkvqCEcAo6iDGxIJ
-         eU/E+o03rJW0lfKBTB4mvRocn4rxI0/7II7IB7gBxZggatIKDbbOrVIhKICm+Ic9Vn
-         B3rNp2bCx7SHRHlIPBlkx0ANi9AA68n3tI0SytWQ=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UBk60j120491
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 06:46:06 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 06:46:06 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 06:46:06 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UBk6BU042431;
-        Tue, 30 Apr 2019 06:46:06 -0500
-Date:   Tue, 30 Apr 2019 06:45:12 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-CC:     Marc Zyngier <marc.zyngier@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
-        <linus.walleij@linaro.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v8 00/14] Add support for TISCI Interrupt controller
- drivers
-Message-ID: <20190430114512.pde3uuh5e3qwve3m@kahuna>
-References: <20190430101230.21794-1-lokeshvutla@ti.com>
+        Tue, 30 Apr 2019 07:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728087AbfD3Lq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B6121744;
+        Tue, 30 Apr 2019 11:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556624787;
+        bh=TjLZqtyb6luG6jJUsMYn1zemKgi8FYvKfA9jey+XKrs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CyC28JYw1Fj9F+WnRFyEz6SS4vzNj+AhaKCrOABzuLHISegO/066Eu+qV8SunicRG
+         vj4MOWZ+QKH9ybO6VFJTw42WIzLtJvx+K+ZojBzpHpBuxUQvfEtRby7qwmWDP32E7y
+         hOwPq6KSjPH9fmgCyf5BjQf8Sw3Y5So1NbySJplg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 072/100] aio: abstract out io_event filler helper
+Date:   Tue, 30 Apr 2019 13:38:41 +0200
+Message-Id: <20190430113612.146110455@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
+References: <20190430113608.616903219@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15:42-20190430, Lokesh Vutla wrote:
-[...]
-> Changes since v7:
-> - Rebased on top of latest master.
-> - Each patch has respective changes mentioned.
-> 
-> Grygorii Strashko (1):
->   firmware: ti_sci: Add support to get TISCI handle using of_phandle
-> 
-> Lokesh Vutla (12):
->   firmware: ti_sci: Add support for RM core ops
->   firmware: ti_sci: Add support for IRQ management
->   firmware: ti_sci: Add helper apis to manage resources
->   genirq: Introduce irq_chip_{request,release}_resource_parent() apis
->   gpio: thunderx: Use the default parent apis for
->     {request,release}_resources
->   dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
->   irqchip: ti-sci-intr: Add support for Interrupt Router driver
->   dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
->   irqchip: ti-sci-inta: Add support for Interrupt Aggregator driver
->   soc: ti: Add MSI domain bus support for Interrupt Aggregator
->   irqchip: ti-sci-inta: Add msi domain support
->   arm64: arch_k3: Enable interrupt controller drivers
-> 
-> Peter Ujfalusi (1):
->   firmware: ti_sci: Add RM mapping table for am654
-> 
+From: Jens Axboe <axboe@kernel.dk>
 
-For patches 1..5 (Firmware patches):
+commit 875736bb3f3ded168469f6a14df7a938416a99d5 upstream.
 
-Acked-by: Nishanth Menon <nm@ti.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--- 
-Regards,
-Nishanth Menon
+---
+ fs/aio.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -1059,6 +1059,15 @@ static inline void iocb_put(struct aio_k
+ 	}
+ }
+ 
++static void aio_fill_event(struct io_event *ev, struct aio_kiocb *iocb,
++			   long res, long res2)
++{
++	ev->obj = (u64)(unsigned long)iocb->ki_user_iocb;
++	ev->data = iocb->ki_user_data;
++	ev->res = res;
++	ev->res2 = res2;
++}
++
+ /* aio_complete
+  *	Called when the io request on the given iocb is complete.
+  */
+@@ -1086,10 +1095,7 @@ static void aio_complete(struct aio_kioc
+ 	ev_page = kmap_atomic(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
+ 	event = ev_page + pos % AIO_EVENTS_PER_PAGE;
+ 
+-	event->obj = (u64)(unsigned long)iocb->ki_user_iocb;
+-	event->data = iocb->ki_user_data;
+-	event->res = res;
+-	event->res2 = res2;
++	aio_fill_event(event, iocb, res, res2);
+ 
+ 	kunmap_atomic(ev_page);
+ 	flush_dcache_page(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
+
+
