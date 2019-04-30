@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC720C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA32C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AD521707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1F02075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625615;
-	bh=sSz3YWg6ZqSDJ7IxTSRpTLrK3Rw0qZCXM/y7vDBgX5w=;
+	s=default; t=1556625629;
+	bh=svM+Y2HiuFAb1M0zwD6TQiM/t3vsxtuu5mCdUUihXhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gvGZuS17xZc7y8gJeMGyJ8yyQypLg1y6YvHbcbL3pshOEDO3HMjR1JxqrhOU9+iU/
-	 IEIm9as0fBUECps4f5rCIvSh3//eSfiqu1q3BxUU/BxaDt/TK9Zd4Nk7qFuh0AS9EF
-	 DQL6SR7yKiZYX5IrJZB+LjD6OPfGomnX/dGR1HI8=
+	b=Cgp64yaHU4BXA0zf16Bnrh7hwSEhvxeUKP1UIIadJmYWbPrMckCVBNDZAht4X/f97
+	 TGlkP+EB7I+SwK8aZ9KWj0ej9T9pMzkdH9Yc23kciBe2C0GEEQqta8w/f65/4dO1Tt
+	 MenMkBBtTupWAgELtDFhyr3+vMn4UOwh2YxHeeIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfD3LqE (ORCPT
+        id S1728634AbfD3MA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58572 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730073AbfD3Lp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:59 -0400
+        id S1730445AbfD3Lpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0312E21670;
-        Tue, 30 Apr 2019 11:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06BA021744;
+        Tue, 30 Apr 2019 11:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624758;
-        bh=sSz3YWg6ZqSDJ7IxTSRpTLrK3Rw0qZCXM/y7vDBgX5w=;
+        s=default; t=1556624750;
+        bh=svM+Y2HiuFAb1M0zwD6TQiM/t3vsxtuu5mCdUUihXhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0rvRv2nZXmrFKwtn4lGlPrnTcRFYd01ZC5jMjP4fnFx1LHCftTjKQcIeFG/LahKK
-         Jfyu/MbM9zW2Gx0NCo4yTySiRkLUVf9Ih18moxwtUcWfMp46Whydvljad5OF41VSeI
-         LqLRXDuTGQ9NbdIYCqT3TyaSQeEmacsk48nKhHCI=
+        b=EX2tAyUgfWgsaLUwnbqDjsoyeWpcu9III+ym2boFFGfZEJmbupnXL1eOu1v33IKzv
+         Of+AlihQZekNMrf1OGm+xNl5dklSAEwf6uRs/q202I0ACkw7rkMKSSQmkk0Pw4yUFv
+         5mxVEPX+h5ZuCExhWOhLEDNxj7+Netg6mvEAiTFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+de00a87b8644a582ae79@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 062/100] tipc: check link name with right length in tipc_nl_compat_link_set
-Date:   Tue, 30 Apr 2019 13:38:31 +0200
-Message-Id: <20190430113611.775567884@linuxfoundation.org>
+        syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 059/100] netfilter: ebtables: CONFIG_COMPAT: drop a bogus WARN_ON
+Date:   Tue, 30 Apr 2019 13:38:28 +0200
+Message-Id: <20190430113611.679543788@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,41 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 8c63bf9ab4be8b83bd8c34aacfd2f1d2c8901c8a upstream.
+commit 7caa56f006e9d712b44f27b32520c66420d5cbc6 upstream.
 
-A similar issue as fixed by Patch "tipc: check bearer name with right
-length in tipc_nl_compat_bearer_enable" was also found by syzbot in
-tipc_nl_compat_link_set().
+It means userspace gave us a ruleset where there is some other
+data after the ebtables target but before the beginning of the next rule.
 
-The length to check with should be 'TLV_GET_DATA_LEN(msg->req) -
-offsetof(struct tipc_link_config, name)'.
-
-Reported-by: syzbot+de00a87b8644a582ae79@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
+Reported-by: syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/tipc/netlink_compat.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/bridge/netfilter/ebtables.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -777,7 +777,12 @@ static int tipc_nl_compat_link_set(struc
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2032,7 +2032,8 @@ static int ebt_size_mwt(struct compat_eb
+ 		if (match_kern)
+ 			match_kern->match_size = ret;
  
- 	lc = (struct tipc_link_config *)TLV_DATA(msg->req);
+-		if (WARN_ON(type == EBT_COMPAT_TARGET && size_left))
++		/* rule should have no remaining data after target */
++		if (type == EBT_COMPAT_TARGET && size_left)
+ 			return -EINVAL;
  
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	len -= offsetof(struct tipc_link_config, name);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(lc->name, len))
- 		return -EINVAL;
- 
+ 		match32 = (struct compat_ebt_entry_mwt *) buf;
 
 
