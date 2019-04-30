@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3572C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FABDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5FA20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FFA20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfD3JcW (ORCPT
+        id S1727059AbfD3Jch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:32:22 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:37217 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfD3JcS (ORCPT
+        Tue, 30 Apr 2019 05:32:37 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:49867 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfD3JcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:32:18 -0400
-X-Originating-IP: 109.213.14.175
+        Tue, 30 Apr 2019 05:32:20 -0400
 Received: from localhost (alyon-652-1-31-175.w109-213.abo.wanadoo.fr [109.213.14.175])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 0B7C26001A;
-        Tue, 30 Apr 2019 09:32:15 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 5D53B200003;
+        Tue, 30 Apr 2019 09:32:17 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     Baruch Siach <baruch@tkos.co.il>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/4] rtc: digicolor: set range
-Date:   Tue, 30 Apr 2019 11:32:10 +0200
-Message-Id: <20190430093212.28425-2-alexandre.belloni@bootlin.com>
+Subject: [PATCH 3/4] rtc: digicolor: use .set_time
+Date:   Tue, 30 Apr 2019 11:32:11 +0200
+Message-Id: <20190430093212.28425-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190430093212.28425-1-alexandre.belloni@bootlin.com>
 References: <20190430093212.28425-1-alexandre.belloni@bootlin.com>
@@ -43,26 +42,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the range of REFERENCE + TIME is actually 33 bits, the counter
-itself (TIME) is a 32-bits seconds counter.
+Use .set_time instead of the deprecated .set_mmss.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-digicolor.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/rtc/rtc-digicolor.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/rtc/rtc-digicolor.c b/drivers/rtc/rtc-digicolor.c
-index 5bb14c56bc9a..e6e16aaac254 100644
+index e6e16aaac254..ed2fc1adafd5 100644
 --- a/drivers/rtc/rtc-digicolor.c
 +++ b/drivers/rtc/rtc-digicolor.c
-@@ -206,6 +206,7 @@ static int __init dc_rtc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, rtc);
- 
- 	rtc->rtc_dev->ops = &dc_rtc_ops;
-+	rtc->rtc_dev->range_max = U32_MAX;
- 
- 	return rtc_register_device(rtc->rtc_dev);
+@@ -106,11 +106,11 @@ static int dc_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 	return 0;
  }
+ 
+-static int dc_rtc_set_mmss(struct device *dev, unsigned long secs)
++static int dc_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ {
+ 	struct dc_rtc *rtc = dev_get_drvdata(dev);
+ 
+-	return dc_rtc_write(rtc, secs);
++	return dc_rtc_write(rtc, rtc_tm_to_time64(tm));
+ }
+ 
+ static int dc_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+@@ -161,7 +161,7 @@ static int dc_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+ 
+ static const struct rtc_class_ops dc_rtc_ops = {
+ 	.read_time		= dc_rtc_read_time,
+-	.set_mmss		= dc_rtc_set_mmss,
++	.set_time		= dc_rtc_set_time,
+ 	.read_alarm		= dc_rtc_read_alarm,
+ 	.set_alarm		= dc_rtc_set_alarm,
+ 	.alarm_irq_enable	= dc_rtc_alarm_irq_enable,
 -- 
 2.20.1
 
