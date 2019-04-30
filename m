@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82633C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E173C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5079A205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A2B205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfD3MNR (ORCPT
+        id S1727900AbfD3MNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:13:17 -0400
-Received: from andre.telenet-ops.be ([195.130.132.53]:55054 "EHLO
+        Tue, 30 Apr 2019 08:13:23 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:55080 "EHLO
         andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727574AbfD3MNH (ORCPT
+        with ESMTP id S1727557AbfD3MNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:13:07 -0400
+        Tue, 30 Apr 2019 08:13:06 -0400
 Received: from ramsan ([84.194.111.163])
         by andre.telenet-ops.be with bizsmtp
-        id 6cCz200093XaVaC01cCzqa; Tue, 30 Apr 2019 14:13:03 +0200
+        id 6cCz2000C3XaVaC01cCzqb; Tue, 30 Apr 2019 14:13:03 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hLRd5-00086a-QJ; Tue, 30 Apr 2019 14:12:59 +0200
+        id 1hLRd5-00086i-UY; Tue, 30 Apr 2019 14:12:59 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hLRd5-0000zF-NS; Tue, 30 Apr 2019 14:12:59 +0200
+        id 1hLRd5-0000zM-QZ; Tue, 30 Apr 2019 14:12:59 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -42,9 +42,9 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/5] soc: renesas: Enable RZ/A1 IRQC on RZ/A1H and RZ/A2M
-Date:   Tue, 30 Apr 2019 14:12:52 +0200
-Message-Id: <20190430121254.3737-4-geert+renesas@glider.be>
+Subject: [PATCH v3 5/5] ARM: dts: rskrza1: Add input switches
+Date:   Tue, 30 Apr 2019 14:12:54 +0200
+Message-Id: <20190430121254.3737-6-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190430121254.3737-1-geert+renesas@glider.be>
 References: <20190430121254.3737-1-geert+renesas@glider.be>
@@ -53,46 +53,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Auto-enable support for the RZ/A1 Interrupt Controller when configuring
-a kernel which supports RZ/A1H or RZ/A2M SoCs.
-Keep selects sorted while at it.
+Add support for input switches SW1-3 on the Renesas RZ/A1 RSK+RZA1
+development board.
 
-This is similar to how interrupt controllers for other Renesas SoCs are
-enabled.
+Note that this uses the IRQ interrupts, as the RZ/A1 GPIO controller
+does not include interrupt support.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
-v2:
-  - Add Reviewed-by,
-  - Add RZ/A2M,
-  - Sort RZ/A1H selects.
----
- drivers/soc/renesas/Kconfig | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+v3:
+  - No changes,
 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 68bfca6f20ddf8a7..2bbf49e5d441808b 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -57,14 +57,16 @@ config ARCH_R7S72100
- 	bool "RZ/A1H (R7S72100)"
- 	select PM
- 	select PM_GENERIC_DOMAINS
--	select SYS_SUPPORTS_SH_MTU2
- 	select RENESAS_OSTM
-+	select RENESAS_RZA1_IRQC
-+	select SYS_SUPPORTS_SH_MTU2
+v2:
+  - Use rza1-irqc instead of gic.
+---
+ arch/arm/boot/dts/r7s72100-rskrza1.dts | 38 ++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+index ff24301dc1be54de..99acfe4fe11aaed9 100644
+--- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
++++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+@@ -8,6 +8,7 @@
+ /dts-v1/;
+ #include "r7s72100.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
  
- config ARCH_R7S9210
- 	bool "RZ/A2 (R7S9210)"
- 	select PM
- 	select PM_GENERIC_DOMAINS
- 	select RENESAS_OSTM
-+	select RENESAS_RZA1_IRQC
+ / {
+@@ -28,6 +29,37 @@
+ 		reg = <0x08000000 0x02000000>;
+ 	};
  
- config ARCH_R8A73A4
- 	bool "R-Mobile APE6 (R8A73A40)"
++	keyboard {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&keyboard_pins>;
++
++		key-1 {
++			interrupt-parent = <&irqc>;
++			interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_1>;
++			label = "SW1";
++			wakeup-source;
++		};
++
++		key-2 {
++			interrupt-parent = <&irqc>;
++			interrupts = <2 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_2>;
++			label = "SW2";
++			wakeup-source;
++		};
++
++		key-3 {
++			interrupt-parent = <&irqc>;
++			interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_3>;
++			label = "SW3";
++			wakeup-source;
++		};
++	};
++
+ 	lbsc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -101,6 +133,12 @@
+ 			 <RZA1_PINMUX(1, 7, 1)>;	/* RIIC3SDA */
+ 	};
+ 
++	keyboard_pins: keyboard {
++		pinmux = <RZA1_PINMUX(1, 9, 3)>,	/* IRQ3 */
++			 <RZA1_PINMUX(1, 8, 3)>,	/* IRQ2 */
++			 <RZA1_PINMUX(1, 11, 3)>;	/* IRQ5 */
++	};
++
+ 	/* Serial Console */
+ 	scif2_pins: serial2 {
+ 		pinmux = <RZA1_PINMUX(3, 0, 6)>,	/* TxD2 */
 -- 
 2.17.1
 
