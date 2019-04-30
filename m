@@ -2,142 +2,112 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FC4C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33054C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC3B20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F000120854
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="oefuz6On"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="mLmEiLrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfD3WZr (ORCPT
+        id S1727447AbfD3W0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:25:47 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43810 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfD3WZr (ORCPT
+        Tue, 30 Apr 2019 18:26:22 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35521 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfD3W0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:25:47 -0400
-Received: by mail-ot1-f67.google.com with SMTP id u15so13414871otq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 15:25:46 -0700 (PDT)
+        Tue, 30 Apr 2019 18:26:21 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y197so5432436wmd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 15:26:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZmBG3hM4lGU6ZmXmSmggSOXpEizpcpagPEE7Vhmbuvs=;
-        b=oefuz6OnRRxk8/mLQrXe07mu7tqQkeBedTZ2WiHugxjObG+KoJLqG9xkKKJgGuLx9A
-         IjhB+nR8q5tGG1e1wd5ogRlqNAKvr9Nn59vrrHCM5YFM3X8OWThLAEKBsWXqgtdBFaPS
-         9BAYNcoJ21xdnceaUmFwkit60XJJ3YioEEVPzoj9Rezrl8xQxH/h0Mz9YHFtQ3gsq3Ik
-         K3g2NGXpRRGgHmEG7WCgvpAUfJXsrnmwbZKYCMYa3Hy32Qb8SK9oQSwxahwvbPfmNSMN
-         H7cUOj+g9C/p+ikMDEA336PQDwJoX8USUwgrgjF6Zocmuee8a8CpqbXFAf8y3F9eA84v
-         o9Jw==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=VXYwZpX1d+wknY0tSOqvdnHG027bEu0WR2/eqUIGUnc=;
+        b=mLmEiLrOszkjvWQmhv5Y63FqOFF5a7VybPmAa8ZnM6eUIVod5BYlQyeE4QfvwlR5NJ
+         wzvoF48WoPU7qIGUp01G+0HFz7snAUq8DOLqBcsar19IkvH+GojvzrkGAA03Zo56VW0v
+         PeXpaWaR2OSno0xfwaUj5pMMB3XCU71uDvHHSMpmBa9qe/7x9v61mz2f6QYnNyXTHfa8
+         c0F2jYdO9/w4Ccn1Xo+2esy1tp/85RInpkJVxvbd7whmyAaW0bpWRi3NLtypypYE7XV+
+         T5bifWMRFfSAcA5JiAAkZXpKubwl0FT/6bD/aCwkv3rl2xoG2VDjoEz9em+uC0JZZiJ5
+         /n0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZmBG3hM4lGU6ZmXmSmggSOXpEizpcpagPEE7Vhmbuvs=;
-        b=uECFwg23yAxQ0Ikngf6FqxLd+1ta8h5Lao8vvP0HgIZpHxVyR6H3lP8tIfDFkYdtE3
-         OoTe8ObJ/+OY4irJAY6zSPuwQ3dCsniffxvrqO+02VxXyzWqPhLOdgXjFiJN1u6qIR2k
-         QVuGjVoEmbMKjcaM4cExB0EOqj+tVhBW2TOa7uz0Yx3E7Farjth0b1Zk4w7DcCp9xxjS
-         0+beyiJ84lr/ifhj3+/QRl0yEyWqEf0FxXW519blsS3T4bN68/5jCjAf9d2xHtAnipsw
-         iSXzlmbF5DQUSfqcvTuNI7fPCY6JugTomgKdgaZuwhLf05t6KIw0Q57c8oRgKXGL87K8
-         qlCQ==
-X-Gm-Message-State: APjAAAVEJGYKwLRMUIZH2kcRBi+y3o62oGnlzGNKMCcpvDDvM4Suae2v
-        bwPbg2zSOPd8rT1HcQU54bVURg==
-X-Google-Smtp-Source: APXvYqz1gCRDHfb1sDmOtyctdeSQ9SceBv6EjONrVNfjJC0L/rdUvcgkuDj3iKUf2l3hH9D78aWeQQ==
-X-Received: by 2002:a9d:5d0b:: with SMTP id b11mr4169059oti.80.1556663146354;
-        Tue, 30 Apr 2019 15:25:46 -0700 (PDT)
-Received: from Fredericks-MacBook-Pro.local ([2600:1700:18a0:11d0:99ba:d92:93c8:8fb9])
-        by smtp.gmail.com with ESMTPSA id h8sm15482635oti.64.2019.04.30.15.25.44
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=VXYwZpX1d+wknY0tSOqvdnHG027bEu0WR2/eqUIGUnc=;
+        b=A1JauNnwq+nwuOIeg0K4JFBfwK1WqkKu/Xiqkx+vujRQbKhLRDfd4oc6a+XxEUdmC5
+         dIX0lpmsxZgdfdKDVynqMJBzbnPdF/4F3P83byJZdAck1XXB3MqHU2iF8V86C3Cfriog
+         MVoM4SDA9OKqbHLT+j3weBfOJVHZvuTb8L7+CqopUK2p5hHig3MlWisOHyUy/r6kZM9V
+         8J2mZGJQzjGj3CYrAj54YnhgiKLeziMNRHMHjeKgpZG85W1DxRvV6rwua/oINHja3aGu
+         4uNkTcRtXrG/2SUt3sgUFGzFKnxFxWykCEcD9yfKimgbCn+3/nX7KurI2od6TJWoEJ+3
+         Pq9A==
+X-Gm-Message-State: APjAAAW6f5aYOx5dEyR/U1IpOuFY5Gsossw+5WdiLr612SucYs3LKf8a
+        dvRBhT00/1LEJx6cDTEoqHyxRw==
+X-Google-Smtp-Source: APXvYqymoEF3vOsE3u+wAezZJxUo2QTFYbZ5Uz20HoxFagG5+NUSGvI2+6lB9uATQsmHDxyQRKuODw==
+X-Received: by 2002:a7b:c04b:: with SMTP id u11mr3686065wmc.95.1556663180349;
+        Tue, 30 Apr 2019 15:26:20 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id t24sm15073738wra.58.2019.04.30.15.26.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 15:25:45 -0700 (PDT)
-Subject: Re: [PATCH 1/4] PCI: Replace dev_*() printk wrappers with pci_*()
- printk wrappers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, lukas@wunner.de,
-        andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
-        mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com
-References: <20190427191304.32502-1-fred@fredlawl.com>
- <20190427191304.32502-2-fred@fredlawl.com>
- <20190429000258.GK14616@google.com> <20190429005222.GO14616@google.com>
-From:   Frederick Lawler <fred@fredlawl.com>
-Message-ID: <d68b1e74-dc52-28dc-0e14-de17594f39ca@fredlawl.com>
-Date:   Tue, 30 Apr 2019 17:26:25 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 PostboxApp/6.1.14
+        Tue, 30 Apr 2019 15:26:19 -0700 (PDT)
+Message-ID: <5cc8cb8b.1c69fb81.1f94.04ed@mx.google.com>
+Date:   Tue, 30 Apr 2019 15:26:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190429005222.GO14616@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.9.171-42-ga707069e56d0
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-4.9.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
+References: <20190430113524.451237916@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/41] 4.9.172-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn,
+stable-rc/linux-4.9.y boot: 99 boots: 0 failed, 96 passed with 3 offline (v=
+4.9.171-42-ga707069e56d0)
 
-Bjorn Helgaas wrote on 4/28/19 7:52 PM:
-> On Sun, Apr 28, 2019 at 07:02:58PM -0500, Bjorn Helgaas wrote:
->> On Sat, Apr 27, 2019 at 02:13:01PM -0500, fred@fredlawl.com wrote:
->>> From: Frederick Lawler <fred@fredlawl.com>
->>>
->>> Replace remaining instances of dev_*() printk wrappers with pci_*()
->>> printk wrappers. No functional change intended.
->>>
->>> Signed-off-by: Frederick Lawler <fred@fredlawl.com>
->>> ---
->>>   drivers/pci/pcie/aer.c        | 13 ++++++-------
->>>   drivers/pci/pcie/aer_inject.c |  4 ++--
->>>   drivers/pci/pcie/dpc.c        | 27 ++++++++++++---------------
->>>   3 files changed, 20 insertions(+), 24 deletions(-)
-> 
->>>   	aer_enable_rootport(rpc);
->>> -	dev_info(device, "AER enabled with IRQ %d\n", dev->irq);
->>> +	pci_info(pdev, "AER enabled with IRQ %d\n", dev->irq);
->>
->> And this, and many others below.  *This* patch should only convert
->>
->>    - pci_printk(KERN_DEBUG, pdev, ...)
->>    + pci_info(pdev, ...)
->>
->> and
->>
->>    - dev_printk(KERN_DEBUG, pcie_dev, ...)
->>    + dev_info(pcie_dev, ...)
-> 
-> Just to clarify, I do *want* both changes, just in separate patches.
-> So we'd have
-> 
->    1) Convert KERN_DEBUG uses to pci_info() for pci_dev usage and to
->       dev_info() for pcie_device usage.  I think pciehp is probably an
->       exception to this; this patch shouldn't touch ctrl_dbg().
-> 
->    2) Convert "dev_info(pcie_device)" to "pci_info(pci_dev)".  It might
->       be worth doing this in separate patches for each service.  If we
->       decide they're simple enough to combine, that's trivial for me to
->       do.  It's a little more hassle to split things up afterwards.
-> 
->       In pciehp, if you do this in the ctrl_*() definitions, it will
->       make the patch much smaller.
-> 
->    3) In pciehp, ctrl_dbg() could probably be changed to use pci_dbg()
->       so we'd use the standard kernel dynamic debug stuff instead of
->       having the pciehp-specific module parameter.
-> 
-> Thanks a lot for working on all this.  I think it will make the user
-> experience significantly simpler.
-> 
-> Bjorn
-> 
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.171-42-ga707069e56d0/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.171-42-ga707069e56d0/
 
-Will do, thanks!
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.171-42-ga707069e56d0
+Git Commit: a707069e56d0b0365daa528a05c6388b41cfe4fa
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 52 unique boards, 22 SoC families, 15 builds out of 197
 
-Frederick Lawler
+Offline Platforms:
 
+arm:
+
+    multi_v7_defconfig:
+        gcc-7
+            stih410-b2120: 1 offline lab
+            tegra20-iris-512: 1 offline lab
+
+    tegra_defconfig:
+        gcc-7
+            tegra20-iris-512: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
