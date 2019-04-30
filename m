@@ -2,124 +2,117 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4158BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A60C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D242147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9FD2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ov+Pp32o"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ms8jpUI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfD3F5S (ORCPT
+        id S1726165AbfD3GBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 01:57:18 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37482 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfD3F5R (ORCPT
+        Tue, 30 Apr 2019 02:01:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42313 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfD3GBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 01:57:17 -0400
-Received: by mail-io1-f68.google.com with SMTP id a23so11166124iot.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 22:57:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=hWKX2lq33x/bqH4d/le0jFr8W3N+Bkvqbw8w1QPkiFM=;
-        b=Ov+Pp32oKqWJj+v2leV694xGyb6S9up7lYYPQ7oPHjhx3oukgMTTT/m041MXK0SWuF
-         8jCINE18h1zeq+ydDj0F62gr20ryYRJ85Dm5sTjO6KyiirqCrKrdtYGIjQhM59z6EAhL
-         Wr1VtvCw1+jJAlFWtUgxPPCN51CN8gFH4tVTW/7mLD+fI1slgsPknuRb+Wb1gri/ycRv
-         cnrc/bLP3jqEHaGqNnt3532193nrUmQbCJHp2CDs8DGxqFZBZpzu8r6BBCIyizEuq2sG
-         B7P8TtttCHzh03mza9oh3/iZgqbqAEOa3zMUkHLnGB1p7+BxfihpKzCW4KeiWYkWqwO4
-         HT/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=hWKX2lq33x/bqH4d/le0jFr8W3N+Bkvqbw8w1QPkiFM=;
-        b=gVy9alA+GLge4ovMIAbFRR1Wyo5/ulk2giXeMmvgd7hBskyOAtdLQwyheT1XNpYZen
-         p7odoWcaEUQ0btzWJPvqVB2HDMu1mk8qLR+4x8pm+CCfnS/d+M7YqmjIcYxSVDNwQXnS
-         sCk20gGkHK7ilOg3hSy9vQeCJTsdpXnNCuavwBzpx5+70wRJ15hWMxDe9GO5dVbp4P8j
-         VdgrihH/NusoxZR+gxIYwn94wJuiD+FddhS48gkx+fdmo6XK3C0j6lO4VjtoB/iofRTj
-         n1sYn4AePuiMveHFI9ctb1ANakHKE1B+Ng68VDKS61NZCCeYsshpYufdNjFPxGvxpKH3
-         GBLQ==
-X-Gm-Message-State: APjAAAUJCJXVtAHo5UeYjHNYK5oNwaLeAA4S9pp28XtXaYtwb3zaUg4s
-        Gwt83Wt+LsGyauvQBvGQfnRl4A==
-X-Google-Smtp-Source: APXvYqzAC8eAlzqjeLLMoD/UHDZ5ijbGvpg1RDOoBrDKbcOzIOLLnUjbc9ho0YTyKwMXMw2TI+tDcg==
-X-Received: by 2002:a5e:d702:: with SMTP id v2mr3816669iom.236.1556603836719;
-        Mon, 29 Apr 2019 22:57:16 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id a124sm926073itc.18.2019.04.29.22.57.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 22:57:16 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 22:57:15 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Stephen Boyd <sboyd@kernel.org>
-cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul@pwsan.com>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Megan Wachs <megan@sifive.com>
-Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
-In-Reply-To: <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com>
-Message-ID: <alpine.DEB.2.21.9999.1904292252120.7063@viisi.sifive.com>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com> <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
- <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 30 Apr 2019 02:01:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3U619291246069
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 29 Apr 2019 23:01:09 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3U619291246069
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556604070;
+        bh=UiBnw9h+elpv8WbkvKPR3PV6tRWXBHupSv15r3HFhos=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=ms8jpUI9+4rjkqhZPzQg7Bl1hvgZvMHoVgOY5F1ZR47/6HI/oZEWRN/eqzifTlmFr
+         TfOJe/l94HJQB1a1wxdCH3DOYdVIrT6JtL8gkq2BwKNn7VJxJ5l7R4YEC2zon2fhp/
+         7Wu74Q1s91V3Hl0kHxDZumnFZi+wfxvOTnOYApE3VdieHcPsrhMMqtLyEBEfVpKQsd
+         OERubylvjkdqYW4G1o1NkLZkJ1AaGwHFkczcBCub7nje14JQLGKjRkzKnU48zbH1q2
+         WiLKuLvCH+qV+qf2sGCyPuFUCK2Y+6UkyA1gyewTWF312zPltY2Qt62ilgl4vwOX5n
+         egLXkDwEwSrUA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3U6195r1246066;
+        Mon, 29 Apr 2019 23:01:09 -0700
+Date:   Mon, 29 Apr 2019 23:01:09 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   "tip-bot for Tobin C. Harding" <tipbot@zytor.com>
+Message-ID: <tip-9a4f26cc98d81b67ecc23b890c28e2df324e29f3@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tobin@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, mingo@kernel.org,
+        torvalds@linux-foundation.org, rafael.j.wysocki@intel.com
+Reply-To: peterz@infradead.org, vincent.guittot@linaro.org,
+          viresh.kumar@linaro.org, rafael.j.wysocki@intel.com,
+          torvalds@linux-foundation.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, tobin@kernel.org, hpa@zytor.com,
+          tglx@linutronix.de, gregkh@linuxfoundation.org
+In-Reply-To: <20190430001144.24890-1-tobin@kernel.org>
+References: <20190430001144.24890-1-tobin@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/urgent] sched/cpufreq: Fix kobject memleak
+Git-Commit-ID: 9a4f26cc98d81b67ecc23b890c28e2df324e29f3
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019, Stephen Boyd wrote:
+Commit-ID:  9a4f26cc98d81b67ecc23b890c28e2df324e29f3
+Gitweb:     https://git.kernel.org/tip/9a4f26cc98d81b67ecc23b890c28e2df324e29f3
+Author:     Tobin C. Harding <tobin@kernel.org>
+AuthorDate: Tue, 30 Apr 2019 10:11:44 +1000
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 30 Apr 2019 07:57:23 +0200
 
-> Quoting Paul Walmsley (2019-04-29 12:42:07)
-> > On Fri, 26 Apr 2019, Paul Walmsley wrote:
-> > > On Fri, 26 Apr 2019, Stephen Boyd wrote:
-> > > 
-> > > > Quoting Paul Walmsley (2019-04-11 01:27:32)
-> > > > > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) IP
-> > > > > block, as implemented in TSMC CLN28HPC.
-> > > > 
-> > > > I haven't deeply reviewed at all, but I already get two problems when
-> > > > compile testing these patches. I can fix them up if nothing else needs
-> > > > fixing.
-> > > > 
-> > > > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn: should 'target_rate << divq' be a 64 bit type?
-> > > > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in void function
-> > > 
-> > > Hmm, that's odd.  I will definitely take a look and repost.
-> > 
-> > I'm not able to reproduce these problems.  The configs tried here were:
-> > 
-> > - 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built with 
-> >   crosstool-NG 1.24.0)
-> > 
-> > - 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with 
-> >   crosstool-NG 1.24.0)
-> > 
-> > - 32-bit i386 defconfig w/ PRCI driver enabled (gcc 
-> >   5.4.0-6ubuntu1~16.04.11)
-> > 
-> > Could you post the toolchain and kernel config you're using?
-> > 
-> 
-> I'm running sparse and smatch too.
+sched/cpufreq: Fix kobject memleak
 
-OK.  I was able to reproduce the __wrpll_calc_divq() warning.  It's been 
-resolved in the upcoming revision.  
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-But I don't see the second error with either sparse or smatch.  (This is 
-with sparse at commit 2b96cd804dc7 and smatch at commit f0092daff69d.)
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
 
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tobin C. Harding <tobin@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/cpufreq_schedutil.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-- Paul
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 5c41ea367422..3638d2377e3c 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -771,6 +771,7 @@ out:
+ 	return 0;
+ 
+ fail:
++	kobject_put(&tunables->attr_set.kobj);
+ 	policy->governor_data = NULL;
+ 	sugov_tunables_free(tunables);
+ 
