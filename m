@@ -2,185 +2,175 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490ECC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9629AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219A12075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5575C2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:46:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FQqf6KGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfD3Epw (ORCPT
+        id S1726191AbfD3Eqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 00:45:52 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:36810 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfD3Epw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 00:45:52 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 384E41A00B5;
-        Tue, 30 Apr 2019 06:45:49 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6648D1A0013;
-        Tue, 30 Apr 2019 06:45:40 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 09031402D9;
-        Tue, 30 Apr 2019 12:45:29 +0800 (SGT)
-From:   Chuanhua Han <chuanhua.han@nxp.com>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, leoyang.li@nxp.com,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        festevam@gmail.com, linux-imx@nxp.com,
-        wsa+renesas@sang-engineering.com, u.kleine-koenig@pengutronix.de,
-        eha@deif.com, linux@rempel-privat.de, l.stach@pengutronix.de,
-        peda@axentia.se, sumit.batra@nxp.com,
-        Chuanhua Han <chuanhua.han@nxp.com>
-Subject: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
-Date:   Tue, 30 Apr 2019 12:47:18 +0800
-Message-Id: <20190430044719.30720-1-chuanhua.han@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 30 Apr 2019 00:46:47 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:15345 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfD3Eqq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 00:46:46 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190430044644epoutp049815cf3a30ec2c3199dcd4f9eb220905~aJxe_lbnF1366913669epoutp04D
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:46:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190430044644epoutp049815cf3a30ec2c3199dcd4f9eb220905~aJxe_lbnF1366913669epoutp04D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556599604;
+        bh=ZtagW9yAH9OzdK8EJmx5SCUG7Tt++IsWQC6DpkvoB6U=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=FQqf6KGkt2nArjFdUi3KM6ndZWR76qidxdOOeLgYrqbes9mi69Lx8WcFdNZbJmSd1
+         QkT0hcxum4gCFXiP1CFyka0yR/qRx6mZjA41A5wAK96sGqFAjb3CT44ldv+hUwzhCU
+         CIGsVV6C6k/dCioPDaVAeNMo1IsDEl5yYmSnL3kY=
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190430044641epcas1p32db065de45b7d0691ad6402cdbf571c6~aJxcaG2Pl0489604896epcas1p3m;
+        Tue, 30 Apr 2019 04:46:41 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        ED.2B.04143.133D7CC5; Tue, 30 Apr 2019 13:46:41 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190430044641epcas1p16b04ecf625625ca1ddd964392da9e638~aJxcEtC0Q2784827848epcas1p1F;
+        Tue, 30 Apr 2019 04:46:41 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190430044641epsmtrp25ceed12c165bfb841fd961ae0f03bddb~aJxcDstXZ0304003040epsmtrp2v;
+        Tue, 30 Apr 2019 04:46:41 +0000 (GMT)
+X-AuditID: b6c32a37-f31ff7000000102f-ba-5cc7d331d120
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F5.10.03692.033D7CC5; Tue, 30 Apr 2019 13:46:40 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190430044640epsmtip234df2bd9f50e0d88ae8b1ef8ed40946a~aJxbyTflC2453724537epsmtip2k;
+        Tue, 30 Apr 2019 04:46:40 +0000 (GMT)
+Subject: Re: [PATCH v6 01/10] clk: samsung: add needed IDs for DMC clocks in
+ Exynos5420
+To:     Lukasz Luba <l.luba@partner.samsung.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9eb04a57-3e80-b0ba-334a-927493deb969@samsung.com>
+Date:   Tue, 30 Apr 2019 13:47:55 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1555683568-20882-2-git-send-email-l.luba@partner.samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNJsWRmVeSWpSXmKPExsWy7bCmga7h5eMxBlfuCVlsnLGe1WL+kXOs
+        Fqs/Pma0mHxqLpPFme5ci/7Hr5ktzp/fwG5xtukNu8WtBhmLy7vmsFl87j3CaDHj/D4mi7VH
+        7rJb3G5cwWZx+E07q8X+K14Wt3/zWXw78YjRQcjj29dJLB6zGy6yeOycdZfdY9OqTjaP3uZ3
+        bB4H3+1h8ujbsorRY/Ppao/Pm+QCOKOybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0t
+        LcyVFPISc1NtlVx8AnTdMnOAnlFSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFFgW
+        6BUn5haX5qXrJefnWhkaGBiZAhUmZGcs77jBWjCbp2Ly526mBsY+ri5GTg4JAROJhU9vsHQx
+        cnEICexglFiz7z0rhPOJUWJhVxszhPONUeLU8SWsMC33N96FqtrLKDHz6yoo5z2jRPPEh2wg
+        VcICkRIrX09hAkmICCxnlNg39S4jiMMssJpJ4s/XtWCz2AS0JPa/uAHWwS+gKHH1x2OgIg4O
+        XgE7iW27DUDCLAKqEud37WECsUUFIiTuH9sA1sorIChxcuYTFpByTgFviYtzZUHCzALiEree
+        zGeCsOUlmrfOZoa4+hG7xP97ZRC2i0T/nQ6ob4QlXh3fwg5hS0l8freXDcKullh58ggbyMkS
+        Ah2MElv2X4BqMJbYv3QyE8heZgFNifW79CF28Um8+9rDChKWEOCV6GgTgqhWlrj84C4ThC0p
+        sbi9E2q8h8T1Y09ZJzAqzkLyzCwkH8xC8sEshGULGFlWMYqlFhTnpqcWGxYYI8f2JkZwQtcy
+        38G44ZzPIUYBDkYlHl6Pd8dihFgTy4orcw8xSnAwK4nwehw/GiPEm5JYWZValB9fVJqTWnyI
+        0RQY1hOZpUST84HZJq8k3tDUyNjY2MLE0MzU0FBJnHe9g3OMkEB6YklqdmpqQWoRTB8TB6dU
+        A6MKp46WfhN/YuSGA/Nmamxyf/Pm7tNV/02v3lx8Mq36oGhAs2PMeR3jBn23Tc1bEhN+HZP3
+        md6jKnTe74/P8if6X94y2wsrJ8jl1b8MehK/zW+L1YdYh6SwC3Y31rDOWs5R2KL56ORBlmOS
+        XqaW0ed3dcc0Xu7yKFPTln2ZtmfD1HjhHSLTHiqxFGckGmoxFxUnAgDBz3ur/gMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsWy7bCSvK7B5eMxBvemWVpsnLGe1WL+kXOs
+        Fqs/Pma0mHxqLpPFme5ci/7Hr5ktzp/fwG5xtukNu8WtBhmLy7vmsFl87j3CaDHj/D4mi7VH
+        7rJb3G5cwWZx+E07q8X+K14Wt3/zWXw78YjRQcjj29dJLB6zGy6yeOycdZfdY9OqTjaP3uZ3
+        bB4H3+1h8ujbsorRY/Ppao/Pm+QCOKO4bFJSczLLUov07RK4MpZ33GAtmM1TMflzN1MDYx9X
+        FyMnh4SAicT9jXdZuxi5OIQEdjNK9P47ygiRkJSYdvEocxcjB5AtLHH4cDFEzVtGia+/97KA
+        1AgLREqsfD2FCSQhIrCcUWLu36UsIA6zwGomiUkft7BBtNxnlHj5oY8NpIVNQEti/4sbYDa/
+        gKLE1R+PGUFW8ArYSWzbbQASZhFQlTi/aw8TiC0qECFx5v0KsG28AoISJ2c+YQEp5xTwlrg4
+        VxYkzCygLvFn3iVmCFtc4taT+UwQtrxE89bZzBMYhWch6Z6FpGUWkpZZSFoWMLKsYpRMLSjO
+        Tc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjm0tzR2Ml5fEH2IU4GBU4uH1eHcsRog1say4MvcQ
+        owQHs5IIr8fxozFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeZ/mHYsUEkhPLEnNTk0tSC2CyTJx
+        cEo1MJqGHJW8kOpybf6rn8XRM50X5yn/+ZByz6VD4my61BORqiNHvQ1PHGhPDVp2V7oq5Ojh
+        hrWXNP8suNustmxZ40fz84on+L8wx4lJqLGu2/IkdeKEtqrbVeeS925kilsr2dix3+Kl5oVz
+        +4s+v9psH7TJb4lk9cMjO34Upr467DT90T7D+raMUw+UWIozEg21mIuKEwH+1W086QIAAA==
+X-CMS-MailID: 20190430044641epcas1p16b04ecf625625ca1ddd964392da9e638
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190419141940eucas1p295a1130863cf2e69476ca0ba11a8a102
+References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419141940eucas1p295a1130863cf2e69476ca0ba11a8a102@eucas1p2.samsung.com>
+        <1555683568-20882-2-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current kernel driver does not consider I2C_IPGCLK_SEL (424 bit
-of RCW) in deciding  i2c_clk_rate in function i2c_imx_set_clk()
-{ 0 Platform clock/4, 1 Platform clock/2}.
+Hi,
 
-When using ls1046a SoC, this populates incorrect value in IBFD register
-if I2C_IPGCLK_SEL = 0, which generates half of the desired Clock.
+On 19. 4. 19. 오후 11:19, Lukasz Luba wrote:
+> Define new IDs for clocks used by Dynamic Memory Controller in
+> Exynos5422 SoC.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+> index 355f469..abb1842 100644
+> --- a/include/dt-bindings/clock/exynos5420.h
+> +++ b/include/dt-bindings/clock/exynos5420.h
+> @@ -60,6 +60,7 @@
+>  #define CLK_MAU_EPLL		159
+>  #define CLK_SCLK_HSIC_12M	160
+>  #define CLK_SCLK_MPHY_IXTAL24	161
+> +#define CLK_SCLK_BPLL		162
+>  
+>  /* gate clocks */
+>  #define CLK_UART0		257
+> @@ -195,6 +196,18 @@
+>  #define CLK_ACLK432_CAM		518
+>  #define CLK_ACLK_FL1550_CAM	519
+>  #define CLK_ACLK550_CAM		520
+> +#define CLK_CLKM_PHY0		521
+> +#define CLK_CLKM_PHY1		522
+> +#define CLK_ACLK_PPMU_DREX0_0	523
+> +#define CLK_ACLK_PPMU_DREX0_1	524
+> +#define CLK_ACLK_PPMU_DREX1_0	525
+> +#define CLK_ACLK_PPMU_DREX1_1	526
+> +#define CLK_PCLK_PPMU_DREX0_0	527
+> +#define CLK_PCLK_PPMU_DREX0_1	528
+> +#define CLK_PCLK_PPMU_DREX1_0	529
+> +#define CLK_PCLK_PPMU_DREX1_1	530
+> +#define CLK_CDREX_PAUSE		531
+> +#define CLK_CDREX_TIMING_SET	532
 
-Therefore, if ls1046a SoC is used, we need to set the i2c clock
-according to the corresponding RCW.
+I cannot find the usage code of both CLK_CDREX_PAUSE
+and CLK_CDREX_TIMING_SET in these patchset. 
 
-Signed-off-by: Sumit Batra <sumit.batra@nxp.com>
-Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
----
- drivers/i2c/busses/i2c-imx.c | 64 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+Please remove them.
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 422f1a445b55..7186cf3c7d24 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -45,6 +45,8 @@
- #include <linux/pm_runtime.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-+#include <linux/fsl/guts.h>
-+#include <linux/sys_soc.h>
- 
- /* This will be the driver name the kernel reports */
- #define DRIVER_NAME "imx-i2c"
-@@ -109,6 +111,21 @@
- 
- #define I2C_PM_TIMEOUT		10 /* ms */
- 
-+/* 14-1 Since array index starts from 0 */
-+#define RCW_I2C_IPGCLK_WORD (14 - 1)
-+/*
-+ * Set mask for RCW 424th bit, reading from DCFG_CCSR RCW Status Registers
-+ * Since this register in RM depicted as big endian,
-+ * so consider 31st bit as LSB for creating the mask.
-+ */
-+#define RCW_I2C_IPGCLK_MASK    0x800000
-+int i2c_ipgclk_sel = 1;
-+
-+static const struct soc_device_attribute ls1046a_soc[] = {
-+	       {.family = "QorIQ LS1046A"},
-+	       { /* sentinel */ }
-+};
-+
- /*
-  * sorted list of clock divider, register value pairs
-  * taken from table 26-5, p.26-9, Freescale i.MX
-@@ -304,6 +321,11 @@ static const struct platform_device_id imx_i2c_devtype[] = {
- };
- MODULE_DEVICE_TABLE(platform, imx_i2c_devtype);
- 
-+static const struct of_device_id guts_device_ids[] = {
-+	{ .compatible = "fsl,qoriq-device-config", },
-+	{}
-+};
-+
- static const struct of_device_id i2c_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx1-i2c", .data = &imx1_i2c_hwdata, },
- 	{ .compatible = "fsl,imx21-i2c", .data = &imx21_i2c_hwdata, },
-@@ -533,6 +555,9 @@ static void i2c_imx_set_clk(struct imx_i2c_struct *i2c_imx,
- 	unsigned int div;
- 	int i;
- 
-+	if (!i2c_ipgclk_sel)
-+		i2c_clk_rate = i2c_clk_rate / 2;
-+
- 	/* Divider value calculation */
- 	if (i2c_imx->cur_clk == i2c_clk_rate)
- 		return;
-@@ -551,6 +576,10 @@ static void i2c_imx_set_clk(struct imx_i2c_struct *i2c_imx,
- 	/* Store divider value */
- 	i2c_imx->ifdr = i2c_clk_div[i].val;
- 
-+	pr_alert("[%s] CLK Rate=%u Bitrate =%u Div =%u Value =%d\n",
-+		 __func__, i2c_clk_rate, i2c_imx->bitrate,
-+		 div, i2c_clk_div[i].val);
-+
- 	/*
- 	 * There dummy delay is calculated.
- 	 * It should be about one I2C clock period long.
-@@ -1116,6 +1145,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	int irq, ret;
- 	dma_addr_t phy_addr;
- 	u32 mul_value;
-+	struct device_node *guts_node;
-+	static struct ccsr_guts __iomem *guts_regs;
-+	u32 rcw_reg;
- 
- 	dev_dbg(&pdev->dev, "<%s>\n", __func__);
- 
-@@ -1135,6 +1167,38 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	if (!i2c_imx)
- 		return -ENOMEM;
- 
-+	if (soc_device_match(ls1046a_soc)) {
-+		/*
-+		 * Make device node for GUTS/DCFG (global utilities block)
-+		 * to read RCW.
-+		 */
-+		guts_node = of_find_matching_node(NULL, guts_device_ids);
-+		if (!guts_node) {
-+			dev_err(&pdev->dev, "Could not find GUTS node\n");
-+			return -ENODEV;
-+		}
-+		/*
-+		 * Memory (IO)  MAP the DCFG registers(for RCW) to
-+		 * be used in kernel virtual address space.
-+		 */
-+		guts_regs = of_iomap(guts_node, 0);
-+		of_node_put(guts_node);
-+		if (!guts_regs) {
-+			dev_err(&pdev->dev, "IOREMAP of GUTS node failed\n");
-+			return -ENOMEM;
-+		}
-+		/* Read rcw bit 424 (starting from 0) */
-+		rcw_reg = ioread32be(&guts_regs->rcwsr[RCW_I2C_IPGCLK_WORD]);
-+		pr_alert("RCW REG[%d]=0x%x\n", RCW_I2C_IPGCLK_WORD, rcw_reg);
-+		if (rcw_reg & RCW_I2C_IPGCLK_MASK) {
-+			pr_alert("Div by 2 Case Detected in RCW\n");
-+			i2c_ipgclk_sel = 1;
-+		} else {
-+			pr_alert("Div by 4 Case Detected in RCW\n");
-+			i2c_ipgclk_sel = 0;
-+		}
-+	}
-+
- 	if (of_id) {
- 		i2c_imx->hwdata = of_id->data;
- 		ret = of_property_read_u32(pdev->dev.of_node,
+(snip)
+
 -- 
-2.17.1
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
