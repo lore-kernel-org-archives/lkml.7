@@ -2,109 +2,143 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E7C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F6EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6EA20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6F120652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C4rmJC+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfD3Phy (ORCPT
+        id S1726405AbfD3PiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:37:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53415 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfD3Phx (ORCPT
+        Tue, 30 Apr 2019 11:38:14 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36444 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfD3PiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:37:53 -0400
-Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=lindsey)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1hLUp6-00087j-33; Tue, 30 Apr 2019 15:37:36 +0000
-Date:   Tue, 30 Apr 2019 10:37:31 -0500
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Wang Hai <wanghai26@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] net-sysfs: Fix error path for kobject_init_and_add()
-Message-ID: <20190430153730.GC13709@lindsey>
-References: <20190430002817.10785-1-tobin@kernel.org>
- <20190430002817.10785-4-tobin@kernel.org>
+        Tue, 30 Apr 2019 11:38:13 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v80so2649507pfa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 08:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wPaz7sqrWKUrAtzAW5vMHcrXvc4YTXq+0idwbiux/gM=;
+        b=C4rmJC+XSY4dbiYlCJ9sE0hN+VEOgE8eclZCOX5S/it0Lxv0FKZ+0ZwUHzFvGPITPM
+         ALgP1FKitRss2z9qwuanmIaLFveIosysjk1wk/Rfo0ZJ0+M95gHnLyKTsnvwSB7/kpDO
+         U+FU8nkAPAPjjNHAgyiNmlx2uYi9lG/daXEFI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wPaz7sqrWKUrAtzAW5vMHcrXvc4YTXq+0idwbiux/gM=;
+        b=OHuC9YDciPssVzvgWr5JbdoBB8A2vxQbpZ2PivdMVvn5g11gd30Nkt4g9SpiJbKGV0
+         GVk7H62Dy0/yx5cbpkpEOSO7R/vgXjvYnevu4Eup4wtQwQVbeysR2a+WBUDLeIgDud+L
+         OFzyaACHE4qw3sRKsyzF+L/NYpaBL+IXuBWeM+imInzaCJ35kNSic5WMGML7hEb2SzsN
+         hcbK02UwwReoJZ/v4Yww4Q30XRbdMH8zcA9FTbHWneHOFnGoXGreQXr9FxxvGafgtuNz
+         y9PoBsVAh2aHgx/y/+aXKC2V5yyE0lVvZp+YsGR+SwCprCcts4pPvJ9pFjdbvzEBU9+B
+         2gnw==
+X-Gm-Message-State: APjAAAU9Jb6wddF1+TbrejwRQjzWSeQocEhq2O1JBPi7ORRnoQU+W0ev
+        3K56Su7lvWgXl6rze1PNdnxAClKt+Oiwzw==
+X-Google-Smtp-Source: APXvYqzo8CUIafc4ViWksQdqXju1j8i5Z4JiKxGkUqzM/8ztPOvg4GMF59dfYlIKdYxG321+3bvr0w==
+X-Received: by 2002:a62:27c2:: with SMTP id n185mr23839241pfn.51.1556638693191;
+        Tue, 30 Apr 2019 08:38:13 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id z16sm4572022pfa.42.2019.04.30.08.38.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 08:38:12 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 08:38:11 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: Re: [PATCH v8] Bluetooth: btqca: inject command complete event
+ during fw download
+Message-ID: <20190430153811.GK112750@google.com>
+References: <20190430001024.209688-1-mka@chromium.org>
+ <201904301409.dhHyM2xm%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190430002817.10785-4-tobin@kernel.org>
+In-Reply-To: <201904301409.dhHyM2xm%lkp@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-30 10:28:17, Tobin C. Harding wrote:
-> Currently error return from kobject_init_and_add() is not followed by a
-> call to kobject_put().  This means there is a memory leak.
+On Tue, Apr 30, 2019 at 02:27:33PM +0800, kbuild test robot wrote:
+> Hi Matthias,
 > 
-> Add call to kobject_put() in error path of kobject_init_and_add().
+> Thank you for the patch! Yet something to improve:
 > 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> ---
->  net/core/net-sysfs.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> [auto build test ERROR on bluetooth-next/master]
+> [also build test ERROR on next-20190429]
+> [cannot apply to v5.1-rc7]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 > 
-> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-> index 8f8b7b6c2945..9d4e3f47b789 100644
-> --- a/net/core/net-sysfs.c
-> +++ b/net/core/net-sysfs.c
-> @@ -925,8 +925,10 @@ static int rx_queue_add_kobject(struct net_device *dev, int index)
->  	kobj->kset = dev->queues_kset;
->  	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
->  				     "rx-%u", index);
-> -	if (error)
-> +	if (error) {
-> +		kobject_put(kobj);
->  		return error;
-> +	}
-
-The commit message of the second patch in this series states, "The
-correct cleanup function if a call to kobject_init_and_add() has
-returned _successfully_ is kobject_del()." Doesn't that mean that
-kobject_del() needs to be called instead of kobject_put() when
-sysfs_create_group() fails a little lower in this function?
-
->  
->  	dev_hold(queue->dev);
->  
-> @@ -1462,8 +1464,10 @@ static int netdev_queue_add_kobject(struct net_device *dev, int index)
->  	kobj->kset = dev->queues_kset;
->  	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
->  				     "tx-%u", index);
-> -	if (error)
-> +	if (error) {
-> +		kobject_put(kobj);
->  		return error;
-> +	}
->  
->  	dev_hold(queue->dev);
-
-I think the same s/kobject_put/kobject_del/ substitution may be needed
-in this function when sysfs_create_group() fails.
-
-Tyler
-
->  
-> -- 
-> 2.21.0
+> url:    https://github.com/0day-ci/linux/commits/Matthias-Kaehlcke/Bluetooth-btqca-inject-command-complete-event-during-fw-download/20190430-125407
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git master
+> config: xtensa-allyesconfig (attached as .config)
+> compiler: xtensa-linux-gcc (GCC) 8.1.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=8.1.0 make.cross ARCH=xtensa 
 > 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/bluetooth/btqca.c: In function 'qca_inject_cmd_complete_event':
+> >> drivers/bluetooth/btqca.c:286:18: error: 'QCA_HCI_CC_SUCCESS' undeclared (first use in this function); did you mean 'QCA_HCI_CC_OPCODE'?
+>      skb_put_u8(skb, QCA_HCI_CC_SUCCESS);
+>                      ^~~~~~~~~~~~~~~~~~
+>                      QCA_HCI_CC_OPCODE
+>    drivers/bluetooth/btqca.c:286:18: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> vim +286 drivers/bluetooth/btqca.c
+> 
+>    267	
+>    268	static int qca_inject_cmd_complete_event(struct hci_dev *hdev)
+>    269	{
+>    270		struct hci_event_hdr *hdr;
+>    271		struct hci_ev_cmd_complete *evt;
+>    272		struct sk_buff *skb;
+>    273	
+>    274		skb = bt_skb_alloc(sizeof(*hdr) + sizeof(*evt) + 1, GFP_KERNEL);
+>    275		if (!skb)
+>    276			return -ENOMEM;
+>    277	
+>    278		hdr = skb_put(skb, sizeof(*hdr));
+>    279		hdr->evt = HCI_EV_CMD_COMPLETE;
+>    280		hdr->plen = sizeof(*evt) + 1;
+>    281	
+>    282		evt = skb_put(skb, sizeof(*evt));
+>    283		evt->ncmd = 1;
+>    284		evt->opcode = HCI_OP_NOP;
+>    285	
+>  > 286		skb_put_u8(skb, QCA_HCI_CC_SUCCESS);
+
+Oh, I changed it in my tree, but somehow missed to include this file
+in the commit ...
+
+I'll fix it in the next version. Since I expect the change to remain
+controversial I'll wait a bit for other comments before sending out
+v9.
+
+Thanks
+
+Matthias
