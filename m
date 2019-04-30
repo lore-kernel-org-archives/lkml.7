@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3457EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52B1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA5421670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE7221670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625025;
-	bh=A8JBLSC1ofHW3Q7bGp97qpoxftwAKyrj4FTUS/yfBaI=;
+	s=default; t=1556625031;
+	bh=4aT7aPmrz8QpmHBVDf3yOHh3OlMJCOzD8zKtFRyBRZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lkJYrsWQIqltEGGz6/HXdI/PU27PTjfG8gidd7C6EljfpYW0kESPswVBMtrUV8M/q
-	 CPtouWb8OsZmJo2yVyr7X8u+B30KDD+sP+9MPr4+PcoXCwM1vFgAbaARXHIr+juI1B
-	 txQY0ENddIDevwJg05Gh/tc48mYla9/mDEqM81lU=
+	b=vmpGgctJwybvNZZm4ZFbKCuA8PHeRypu5eAeHL/PDSU0pQcwHTd3b43bk+C82y9Ac
+	 daDHnTD9/Bs4PStDMHMVNIxEZXD1hmLc0I3lXNoOFbeTNhdpZ1egd3AhBiKFyktMA5
+	 NBdfwJAMJBm3hJEDmo6U72f7aGHAobuMIslxaA4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbfD3LuX (ORCPT
+        id S1731205AbfD3Lua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:50:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731161AbfD3LuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:50:20 -0400
+        id S1730248AbfD3Lu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 773992054F;
-        Tue, 30 Apr 2019 11:50:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C03842054F;
+        Tue, 30 Apr 2019 11:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625020;
-        bh=A8JBLSC1ofHW3Q7bGp97qpoxftwAKyrj4FTUS/yfBaI=;
+        s=default; t=1556625025;
+        bh=4aT7aPmrz8QpmHBVDf3yOHh3OlMJCOzD8zKtFRyBRZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=evSNSkJDBKFGNdxwBUFEFezdRT8ZVYbl3WsgWqTEhD6R0VYW//NX0soirXPbLl4Y9
-         Zp6JobLG9YwbBZr01giXOKRfP+tQ/UPwTaEtdNsHkzG8jwHJYlYnJwfYwoCb5wUsv9
-         B5yI9Ww3tojnEGMAsbmjifOMm/nzjrmKfyRKgmg8=
+        b=c7wy/AqVEoat6jzPzKTxBn57gwomCvPICjlja4wj87cvjCBg3i6WHNqe/D91lrnv8
+         RwN64S+p+4eQubwLQ0+xK5OiRq/FSgNmXM7L4ABqW3i2k+CdIug7U3OTZj2cGxlmeb
+         s+skjSbMd/nom9a8FL4JNp2Mtvi/xKRh8zXknUsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        David Howells <dhowells@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 61/89] net: netrom: Fix error cleanup path of nr_proto_init
-Date:   Tue, 30 Apr 2019 13:38:52 +0200
-Message-Id: <20190430113612.553999280@linuxfoundation.org>
+Subject: [PATCH 5.0 63/89] rxrpc: fix race condition in rxrpc_input_packet()
+Date:   Tue, 30 Apr 2019 13:38:54 +0200
+Message-Id: <20190430113612.659509990@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,250 +61,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit d3706566ae3d92677b932dd156157fd6c72534b1 upstream.
+commit 032be5f19a94de51093851757089133dcc1e92aa upstream.
 
-Syzkaller report this:
+After commit 5271953cad31 ("rxrpc: Use the UDP encap_rcv hook"),
+rxrpc_input_packet() is directly called from lockless UDP receive
+path, under rcu_read_lock() protection.
 
-BUG: unable to handle kernel paging request at fffffbfff830524b
-PGD 237fe8067 P4D 237fe8067 PUD 237e64067 PMD 1c9716067 PTE 0
-Oops: 0000 [#1] SMP KASAN PTI
-CPU: 1 PID: 4465 Comm: syz-executor.0 Not tainted 5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:__list_add_valid+0x21/0xe0 lib/list_debug.c:23
-Code: 8b 0c 24 e9 17 fd ff ff 90 55 48 89 fd 48 8d 7a 08 53 48 89 d3 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 48 83 ec 08 <80> 3c 02 00 0f 85 8b 00 00 00 48 8b 53 08 48 39 f2 75 35 48 89 f2
-RSP: 0018:ffff8881ea2278d0 EFLAGS: 00010282
-RAX: dffffc0000000000 RBX: ffffffffc1829250 RCX: 1ffff1103d444ef4
-RDX: 1ffffffff830524b RSI: ffffffff85659300 RDI: ffffffffc1829258
-RBP: ffffffffc1879250 R08: fffffbfff0acb269 R09: fffffbfff0acb269
-R10: ffff8881ea2278f0 R11: fffffbfff0acb268 R12: ffffffffc1829250
-R13: dffffc0000000000 R14: 0000000000000008 R15: ffffffffc187c830
-FS:  00007fe0361df700(0000) GS:ffff8881f7300000(0000) knlGS:0000000000000000
+It must therefore use RCU rules :
+
+- udp_sk->sk_user_data can be cleared at any point in this function.
+  rcu_dereference_sk_user_data() is what we need here.
+
+- Also, since sk_user_data might have been set in rxrpc_open_socket()
+  we must observe a proper RCU grace period before kfree(local) in
+  rxrpc_lookup_local()
+
+v4: @local can be NULL in xrpc_lookup_local() as reported by kbuild test robot <lkp@intel.com>
+        and Julia Lawall <julia.lawall@lip6.fr>, thanks !
+
+v3,v2 : addressed David Howells feedback, thanks !
+
+syzbot reported :
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 19236 Comm: syz-executor703 Not tainted 5.1.0-rc6 #79
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__lock_acquire+0xbef/0x3fb0 kernel/locking/lockdep.c:3573
+Code: 00 0f 85 a5 1f 00 00 48 81 c4 10 01 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <80> 3c 02 00 0f 85 4a 21 00 00 49 81 7d 00 20 54 9c 89 0f 84 cf f4
+RSP: 0018:ffff88809d7aef58 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000026 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff88809d7af090 R08: 0000000000000001 R09: 0000000000000001
+R10: ffffed1015d05bc7 R11: ffff888089428600 R12: 0000000000000000
+R13: 0000000000000130 R14: 0000000000000001 R15: 0000000000000001
+FS:  00007f059044d700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff830524b CR3: 00000001eb39a001 CR4: 00000000007606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
+CR2: 00000000004b6040 CR3: 00000000955ca000 CR4: 00000000001406f0
 Call Trace:
- __list_add include/linux/list.h:60 [inline]
- list_add include/linux/list.h:79 [inline]
- proto_register+0x444/0x8f0 net/core/sock.c:3375
- nr_proto_init+0x73/0x4b3 [netrom]
- ? 0xffffffffc1628000
- ? 0xffffffffc1628000
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:152
+ skb_queue_tail+0x26/0x150 net/core/skbuff.c:2972
+ rxrpc_reject_packet net/rxrpc/input.c:1126 [inline]
+ rxrpc_input_packet+0x4a0/0x5536 net/rxrpc/input.c:1414
+ udp_queue_rcv_one_skb+0xaf2/0x1780 net/ipv4/udp.c:2011
+ udp_queue_rcv_skb+0x128/0x730 net/ipv4/udp.c:2085
+ udp_unicast_rcv_skb.isra.0+0xb9/0x360 net/ipv4/udp.c:2245
+ __udp4_lib_rcv+0x701/0x2ca0 net/ipv4/udp.c:2301
+ udp_rcv+0x22/0x30 net/ipv4/udp.c:2482
+ ip_protocol_deliver_rcu+0x60/0x8f0 net/ipv4/ip_input.c:208
+ ip_local_deliver_finish+0x23b/0x390 net/ipv4/ip_input.c:234
+ NF_HOOK include/linux/netfilter.h:289 [inline]
+ NF_HOOK include/linux/netfilter.h:283 [inline]
+ ip_local_deliver+0x1e9/0x520 net/ipv4/ip_input.c:255
+ dst_input include/net/dst.h:450 [inline]
+ ip_rcv_finish+0x1e1/0x300 net/ipv4/ip_input.c:413
+ NF_HOOK include/linux/netfilter.h:289 [inline]
+ NF_HOOK include/linux/netfilter.h:283 [inline]
+ ip_rcv+0xe8/0x3f0 net/ipv4/ip_input.c:523
+ __netif_receive_skb_one_core+0x115/0x1a0 net/core/dev.c:4987
+ __netif_receive_skb+0x2c/0x1c0 net/core/dev.c:5099
+ netif_receive_skb_internal+0x117/0x660 net/core/dev.c:5202
+ napi_frags_finish net/core/dev.c:5769 [inline]
+ napi_gro_frags+0xade/0xd10 net/core/dev.c:5843
+ tun_get_user+0x2f24/0x3fb0 drivers/net/tun.c:1981
+ tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2027
+ call_write_iter include/linux/fs.h:1866 [inline]
+ do_iter_readv_writev+0x5e1/0x8e0 fs/read_write.c:681
+ do_iter_write fs/read_write.c:957 [inline]
+ do_iter_write+0x184/0x610 fs/read_write.c:938
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1002
+ do_writev+0x15e/0x370 fs/read_write.c:1037
+ __do_sys_writev fs/read_write.c:1110 [inline]
+ __se_sys_writev fs/read_write.c:1107 [inline]
+ __x64_sys_writev+0x75/0xb0 fs/read_write.c:1107
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe0361dec58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
-RBP: 00007fe0361dec70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fe0361df6bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-Modules linked in: netrom(+) ax25 fcrypt pcbc af_alg arizona_ldo1 v4l2_common videodev media v4l2_dv_timings hdlc ide_cd_mod snd_soc_sigmadsp_regmap snd_soc_sigmadsp intel_spi_platform intel_spi mtd spi_nor snd_usbmidi_lib usbcore lcd ti_ads7950 hi6421_regulator snd_soc_kbl_rt5663_max98927 snd_soc_hdac_hdmi snd_hda_ext_core snd_hda_core snd_soc_rt5663 snd_soc_core snd_pcm_dmaengine snd_compress snd_soc_rl6231 mac80211 rtc_rc5t583 spi_slave_time leds_pwm hid_gt683r hid industrialio_triggered_buffer kfifo_buf industrialio ir_kbd_i2c rc_core led_class_flash dwc_xlgmac snd_ymfpci gameport snd_mpu401_uart snd_rawmidi snd_ac97_codec snd_pcm ac97_bus snd_opl3_lib snd_timer snd_seq_device snd_hwdep snd soundcore iptable_security iptable_raw iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan
- bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun joydev mousedev ppdev tpm kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel ide_pci_generic piix aesni_intel aes_x86_64 crypto_simd cryptd glue_helper ide_core psmouse input_leds i2c_piix4 serio_raw intel_agp intel_gtt ata_generic agpgart pata_acpi parport_pc rtc_cmos parport floppy sch_fq_codel ip_tables x_tables sha1_ssse3 sha1_generic ipv6 [last unloaded: rxrpc]
-Dumping ftrace buffer:
-   (ftrace buffer empty)
-CR2: fffffbfff830524b
----[ end trace 039ab24b305c4b19 ]---
 
-If nr_proto_init failed, it may forget to call proto_unregister,
-tiggering this issue.This patch rearrange code of nr_proto_init
-to avoid such issues.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: 5271953cad31 ("rxrpc: Use the UDP encap_rcv hook")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: David Howells <dhowells@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/netrom.h           |    2 -
- net/netrom/af_netrom.c         |   76 +++++++++++++++++++++++++++++------------
- net/netrom/nr_loopback.c       |    2 -
- net/netrom/nr_route.c          |    2 -
- net/netrom/sysctl_net_netrom.c |    5 ++
- 5 files changed, 61 insertions(+), 26 deletions(-)
+ net/rxrpc/input.c        |   12 ++++++++----
+ net/rxrpc/local_object.c |    3 ++-
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
---- a/include/net/netrom.h
-+++ b/include/net/netrom.h
-@@ -266,7 +266,7 @@ void nr_stop_idletimer(struct sock *);
- int nr_t1timer_running(struct sock *);
- 
- /* sysctl_net_netrom.c */
--void nr_register_sysctl(void);
-+int nr_register_sysctl(void);
- void nr_unregister_sysctl(void);
- 
- #endif
---- a/net/netrom/af_netrom.c
-+++ b/net/netrom/af_netrom.c
-@@ -1392,18 +1392,22 @@ static int __init nr_proto_init(void)
- 	int i;
- 	int rc = proto_register(&nr_proto, 0);
- 
--	if (rc != 0)
--		goto out;
-+	if (rc)
-+		return rc;
- 
- 	if (nr_ndevs > 0x7fffffff/sizeof(struct net_device *)) {
--		printk(KERN_ERR "NET/ROM: nr_proto_init - nr_ndevs parameter to large\n");
--		return -1;
-+		pr_err("NET/ROM: %s - nr_ndevs parameter too large\n",
-+		       __func__);
-+		rc = -EINVAL;
-+		goto unregister_proto;
- 	}
- 
- 	dev_nr = kcalloc(nr_ndevs, sizeof(struct net_device *), GFP_KERNEL);
--	if (dev_nr == NULL) {
--		printk(KERN_ERR "NET/ROM: nr_proto_init - unable to allocate device array\n");
--		return -1;
-+	if (!dev_nr) {
-+		pr_err("NET/ROM: %s - unable to allocate device array\n",
-+		       __func__);
-+		rc = -ENOMEM;
-+		goto unregister_proto;
- 	}
- 
- 	for (i = 0; i < nr_ndevs; i++) {
-@@ -1413,13 +1417,13 @@ static int __init nr_proto_init(void)
- 		sprintf(name, "nr%d", i);
- 		dev = alloc_netdev(0, name, NET_NAME_UNKNOWN, nr_setup);
- 		if (!dev) {
--			printk(KERN_ERR "NET/ROM: nr_proto_init - unable to allocate device structure\n");
-+			rc = -ENOMEM;
- 			goto fail;
- 		}
- 
- 		dev->base_addr = i;
--		if (register_netdev(dev)) {
--			printk(KERN_ERR "NET/ROM: nr_proto_init - unable to register network device\n");
-+		rc = register_netdev(dev);
-+		if (rc) {
- 			free_netdev(dev);
- 			goto fail;
- 		}
-@@ -1427,36 +1431,64 @@ static int __init nr_proto_init(void)
- 		dev_nr[i] = dev;
- 	}
- 
--	if (sock_register(&nr_family_ops)) {
--		printk(KERN_ERR "NET/ROM: nr_proto_init - unable to register socket family\n");
-+	rc = sock_register(&nr_family_ops);
-+	if (rc)
- 		goto fail;
--	}
- 
--	register_netdevice_notifier(&nr_dev_notifier);
-+	rc = register_netdevice_notifier(&nr_dev_notifier);
-+	if (rc)
-+		goto out_sock;
- 
- 	ax25_register_pid(&nr_pid);
- 	ax25_linkfail_register(&nr_linkfail_notifier);
- 
- #ifdef CONFIG_SYSCTL
--	nr_register_sysctl();
-+	rc = nr_register_sysctl();
-+	if (rc)
-+		goto out_sysctl;
- #endif
- 
- 	nr_loopback_init();
- 
--	proc_create_seq("nr", 0444, init_net.proc_net, &nr_info_seqops);
--	proc_create_seq("nr_neigh", 0444, init_net.proc_net, &nr_neigh_seqops);
--	proc_create_seq("nr_nodes", 0444, init_net.proc_net, &nr_node_seqops);
--out:
--	return rc;
-+	rc = -ENOMEM;
-+	if (!proc_create_seq("nr", 0444, init_net.proc_net, &nr_info_seqops))
-+		goto proc_remove1;
-+	if (!proc_create_seq("nr_neigh", 0444, init_net.proc_net,
-+			     &nr_neigh_seqops))
-+		goto proc_remove2;
-+	if (!proc_create_seq("nr_nodes", 0444, init_net.proc_net,
-+			     &nr_node_seqops))
-+		goto proc_remove3;
-+
-+	return 0;
-+
-+proc_remove3:
-+	remove_proc_entry("nr_neigh", init_net.proc_net);
-+proc_remove2:
-+	remove_proc_entry("nr", init_net.proc_net);
-+proc_remove1:
-+
-+	nr_loopback_clear();
-+	nr_rt_free();
-+
-+#ifdef CONFIG_SYSCTL
-+	nr_unregister_sysctl();
-+out_sysctl:
-+#endif
-+	ax25_linkfail_release(&nr_linkfail_notifier);
-+	ax25_protocol_release(AX25_P_NETROM);
-+	unregister_netdevice_notifier(&nr_dev_notifier);
-+out_sock:
-+	sock_unregister(PF_NETROM);
- fail:
- 	while (--i >= 0) {
- 		unregister_netdev(dev_nr[i]);
- 		free_netdev(dev_nr[i]);
- 	}
- 	kfree(dev_nr);
-+unregister_proto:
- 	proto_unregister(&nr_proto);
--	rc = -1;
--	goto out;
-+	return rc;
- }
- 
- module_init(nr_proto_init);
---- a/net/netrom/nr_loopback.c
-+++ b/net/netrom/nr_loopback.c
-@@ -70,7 +70,7 @@ static void nr_loopback_timer(struct tim
- 	}
- }
- 
--void __exit nr_loopback_clear(void)
-+void nr_loopback_clear(void)
- {
- 	del_timer_sync(&loopback_timer);
- 	skb_queue_purge(&loopback_queue);
---- a/net/netrom/nr_route.c
-+++ b/net/netrom/nr_route.c
-@@ -953,7 +953,7 @@ const struct seq_operations nr_neigh_seq
- /*
-  *	Free all memory associated with the nodes and routes lists.
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -1155,19 +1155,19 @@ int rxrpc_extract_header(struct rxrpc_sk
+  * handle data received on the local endpoint
+  * - may be called in interrupt context
+  *
+- * The socket is locked by the caller and this prevents the socket from being
+- * shut down and the local endpoint from going away, thus sk_user_data will not
+- * be cleared until this function returns.
++ * [!] Note that as this is called from the encap_rcv hook, the socket is not
++ * held locked by the caller and nothing prevents sk_user_data on the UDP from
++ * being cleared in the middle of processing this function.
+  *
+  * Called with the RCU read lock held from the IP layer via UDP.
   */
--void __exit nr_rt_free(void)
-+void nr_rt_free(void)
+ int rxrpc_input_packet(struct sock *udp_sk, struct sk_buff *skb)
  {
- 	struct nr_neigh *s = NULL;
- 	struct nr_node  *t = NULL;
---- a/net/netrom/sysctl_net_netrom.c
-+++ b/net/netrom/sysctl_net_netrom.c
-@@ -146,9 +146,12 @@ static struct ctl_table nr_table[] = {
- 	{ }
- };
++	struct rxrpc_local *local = rcu_dereference_sk_user_data(udp_sk);
+ 	struct rxrpc_connection *conn;
+ 	struct rxrpc_channel *chan;
+ 	struct rxrpc_call *call = NULL;
+ 	struct rxrpc_skb_priv *sp;
+-	struct rxrpc_local *local = udp_sk->sk_user_data;
+ 	struct rxrpc_peer *peer = NULL;
+ 	struct rxrpc_sock *rx = NULL;
+ 	unsigned int channel;
+@@ -1175,6 +1175,10 @@ int rxrpc_input_packet(struct sock *udp_
  
--void __init nr_register_sysctl(void)
-+int __init nr_register_sysctl(void)
- {
- 	nr_table_header = register_net_sysctl(&init_net, "net/netrom", nr_table);
-+	if (!nr_table_header)
-+		return -ENOMEM;
-+	return 0;
- }
+ 	_enter("%p", udp_sk);
  
- void nr_unregister_sysctl(void)
++	if (unlikely(!local)) {
++		kfree_skb(skb);
++		return 0;
++	}
+ 	if (skb->tstamp == 0)
+ 		skb->tstamp = ktime_get_real();
+ 
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -304,7 +304,8 @@ nomem:
+ 	ret = -ENOMEM;
+ sock_error:
+ 	mutex_unlock(&rxnet->local_mutex);
+-	kfree(local);
++	if (local)
++		call_rcu(&local->rcu, rxrpc_local_rcu);
+ 	_leave(" = %d", ret);
+ 	return ERR_PTR(ret);
+ 
 
 
