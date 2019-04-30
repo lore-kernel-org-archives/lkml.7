@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF25C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9107FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832FB21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF0D20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625162;
-	bh=A4XMC9p/3HF6St1IjCxVuL4dvn3duw+BucvGvAO14To=;
+	s=default; t=1556625174;
+	bh=OdYzluc1D8RkQFvapLx5SNZPZ7XFPmP5OcuUtZr9ZEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EFkN0c67FjgqDhil82RIwVlLmkgExBHIMDyuUislDmkFCEO5cDRcxz09YjSA1ZwPS
-	 vJHYOVVdAsv3oPyRC40Lii79EwEuzaBn3kbtY1EQuKYGsdi5WONlOpqC3k3u07Mnhw
-	 GcEbzE14rDMSF+rNZWMOuO0rLgUwEECgzWnUv73I=
+	b=Bz9NanGV452beMQXFHFz1RNfjdatHO/97E7amJoIiLXk/n3cxVImbTQbcGL1sXmaf
+	 AcEJfa27gJSQXr3SUe6GAT9mQLsiqFG/YWoECMzSzmYGHPSO9g2P4Baudt0sDxvmcm
+	 skCttbsyf0mpznKjlPVDVM+Cdv6o1luPUyd2aL9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbfD3Lva (ORCPT
+        id S1730969AbfD3Lwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39182 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:52:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731389AbfD3LvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:25 -0400
+        id S1731361AbfD3LvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:51:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821382054F;
-        Tue, 30 Apr 2019 11:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 504362054F;
+        Tue, 30 Apr 2019 11:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625085;
-        bh=A4XMC9p/3HF6St1IjCxVuL4dvn3duw+BucvGvAO14To=;
+        s=default; t=1556625079;
+        bh=OdYzluc1D8RkQFvapLx5SNZPZ7XFPmP5OcuUtZr9ZEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m20tBmGciFAYxVVd4KXbm2Ug+sKiBTpS0F4+M0Sk+0xf59RtFsuPQwRcyhEAjgmmP
-         /gfXBaaAPXW+NeSK03cF7q5M6anJltxaasVVIXaAfbqPE3L1ZO+fixiA6aF9kH0mJY
-         WWi2jxTxZjDEZUifzwLhAfXjLcHCUUrgDHrJV2Jw=
+        b=pOk/Yf7l7iPUV3L2N3K6NAL+H1o4F3Kl/dT7Lb/5vfQCeJSu+Qxq8vbCB4yrFe2JU
+         VQ06Ti1Pvjmnc8ZTdTQu2otQ1/Z7Tlofmb2ZEP3vrbm1YanHWmb0l9rP705ie3KtjQ
+         Es4Nj8bM6tAeJXnM2VcmkkSSsvSERvEsuyiETiR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 84/89] mlxsw: pci: Reincrease PCI reset timeout
-Date:   Tue, 30 Apr 2019 13:39:15 +0200
-Message-Id: <20190430113613.736927302@linuxfoundation.org>
+Subject: [PATCH 5.0 82/89] net: socionext: replace napi_alloc_frag with the netdev variant on init
+Date:   Tue, 30 Apr 2019 13:39:13 +0200
+Message-Id: <20190430113613.629688800@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,41 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
-[ Upstream commit 1ab3030193d25878b3b1409060e1e0a879800c95 ]
+[ Upstream commit ffbf9870dcf1342592a1a26f4cf70bda39046134 ]
 
-During driver initialization the driver sends a reset to the device and
-waits for the firmware to signal that it is ready to continue.
+The netdev variant is usable on any context since it disables interrupts.
+The napi variant of the call should only be used within softirq context.
+Replace napi_alloc_frag on driver init with the correct netdev_alloc_frag
+call
 
-Commit d2f372ba0914 ("mlxsw: pci: Increase PCI SW reset timeout")
-increased the timeout to 13 seconds due to longer PHY calibration in
-Spectrum-2 compared to Spectrum-1.
+Changes since v1:
+- Adjusted commit message
 
-Recently it became apparent that this timeout is too short and therefore
-this patch increases it again to a safer limit that will be reduced in
-the future.
-
-Fixes: c3ab435466d5 ("mlxsw: spectrum: Extend to support Spectrum-2 ASIC")
-Fixes: d2f372ba0914 ("mlxsw: pci: Increase PCI SW reset timeout")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Acked-by: Jassi Brar <jaswinder.singh@linaro.org>
+Fixes: 4acb20b46214 ("net: socionext: different approach on DMA")
+Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/pci_hw.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/socionext/netsec.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
-@@ -27,7 +27,7 @@
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -673,7 +673,8 @@ static void netsec_process_tx(struct net
+ }
  
- #define MLXSW_PCI_SW_RESET			0xF0010
- #define MLXSW_PCI_SW_RESET_RST_BIT		BIT(0)
--#define MLXSW_PCI_SW_RESET_TIMEOUT_MSECS	13000
-+#define MLXSW_PCI_SW_RESET_TIMEOUT_MSECS	20000
- #define MLXSW_PCI_SW_RESET_WAIT_MSECS		100
- #define MLXSW_PCI_FW_READY			0xA1844
- #define MLXSW_PCI_FW_READY_MASK			0xFFFF
+ static void *netsec_alloc_rx_data(struct netsec_priv *priv,
+-				  dma_addr_t *dma_handle, u16 *desc_len)
++				  dma_addr_t *dma_handle, u16 *desc_len,
++				  bool napi)
+ {
+ 	size_t total_len = SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+ 	size_t payload_len = NETSEC_RX_BUF_SZ;
+@@ -682,7 +683,7 @@ static void *netsec_alloc_rx_data(struct
+ 
+ 	total_len += SKB_DATA_ALIGN(payload_len + NETSEC_SKB_PAD);
+ 
+-	buf = napi_alloc_frag(total_len);
++	buf = napi ? napi_alloc_frag(total_len) : netdev_alloc_frag(total_len);
+ 	if (!buf)
+ 		return NULL;
+ 
+@@ -765,7 +766,8 @@ static int netsec_process_rx(struct nets
+ 		/* allocate a fresh buffer and map it to the hardware.
+ 		 * This will eventually replace the old buffer in the hardware
+ 		 */
+-		buf_addr = netsec_alloc_rx_data(priv, &dma_handle, &desc_len);
++		buf_addr = netsec_alloc_rx_data(priv, &dma_handle, &desc_len,
++						true);
+ 		if (unlikely(!buf_addr))
+ 			break;
+ 
+@@ -1069,7 +1071,8 @@ static int netsec_setup_rx_dring(struct
+ 		void *buf;
+ 		u16 len;
+ 
+-		buf = netsec_alloc_rx_data(priv, &dma_handle, &len);
++		buf = netsec_alloc_rx_data(priv, &dma_handle, &len,
++					   false);
+ 		if (!buf) {
+ 			netsec_uninit_pkt_dring(priv, NETSEC_RING_RX);
+ 			goto err_out;
 
 
