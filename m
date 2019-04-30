@@ -2,127 +2,157 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982EEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAC2C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610ED2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4D32075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="edLPykXc"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZV5D5lv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbfD3GUR (ORCPT
+        id S1726373AbfD3GU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:20:17 -0400
-Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:12590
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726285AbfD3GUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:20:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x23vJnRDmjtQJCyno+k0trfgn/Q6gh1JDJ4ny5d17aM=;
- b=edLPykXcfStuQqO0UZ+eSpczesYa24YsOxpYracsS5US7/fFIm2LDEnhtwOXWiNX0Osbep5hfMdQdWp5uz3akvVx4BYU2kdLg1L/sCqntNlxXg4O6NEfDY3KhaWOUnUvetGszO6TX4lqXfHJp9AUuypk2CLFIj3y+7li7JhY2SA=
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com (20.177.120.80) by
- DB7PR08MB3130.eurprd08.prod.outlook.com (52.134.110.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 06:19:40 +0000
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::90f3:99ab:9445:1187]) by DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::90f3:99ab:9445:1187%3]) with mapi id 15.20.1856.008; Tue, 30 Apr 2019
- 06:19:40 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Tue, 30 Apr 2019 02:20:29 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:55028 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfD3GU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 02:20:28 -0400
+Received: by mail-it1-f193.google.com with SMTP id a190so2874019ite.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 23:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=AV9ZTDDQcqZfQOAe4qT7E6y4JoSwEYhZS+A0aSnML+s=;
+        b=ZV5D5lv7eg1gyd5O6CJUMoMHBVvq2u/J+sCgxVwj6ybz2prZuez6tDOWXyJvseqqkr
+         rk8o/IZDvwanTWSyqZJzkmRHFdO3SxjxNOYlC03qHde8Dytq4GaJWkoTiBd3mNxxLjVC
+         fbhU25q+UCIxArF7Ul6wjlFrFJLHoiXWpSO6WLmP3JY3I+L7HVx4Vf++usyiXWWqKSdX
+         kzSQUxn1Mln3B+Hh4t9Dtxzk35DOM/lJzAKzkAtqgdJTrgfuVv6CvbiJQYlGv/kTKYCz
+         cSedb2oBBkwXyqS1e3uop4Kx0YnI0HnjikQUbMXUB92QCMiOG6ugiB3w88DjZZ7nvcOZ
+         UuTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=AV9ZTDDQcqZfQOAe4qT7E6y4JoSwEYhZS+A0aSnML+s=;
+        b=p6sKo+/P/R8iZrtce2E2UUdd/ba9kudj5eoAwkLfqbZHioyiwHzYxNLi4+bmTuXxVT
+         5o41cmfOwt7yijSZZpcwM0EeOa2+TcohlKi2qTpq3GewjmWCciaAsg48wiGUUz4c9iSm
+         rNy/HzGi5WvAriWrPz0jxCcQ3k63Eb9SIwA/YFYoeYJVac7Gxg/kBIdsyOfEC/Yf2VJR
+         vw1rjXVBvM+oCkDV1ziwie1lJc/H4kQmguDEuoO6wgXS170r6Tiko39pU8j5NIE7YeT6
+         0fpCrbMgFfgc23sJffRp95TDImdgc+qrFhBy89KLvbA2H5QTQiqb1RM4mtd1TYwxjvSA
+         giGQ==
+X-Gm-Message-State: APjAAAW6fWdT5+n/4LzCVt/opyARyAMMTXxHSVq0oHFd7bYVC4Fd4rJP
+        nsyIXevNqw6wz6ryBztyAl3arw==
+X-Google-Smtp-Source: APXvYqzH1CSf//UWvt+BdmDERbKBSmcenZ2fnx2isCJPie+haSmfsZdhwXMx57NQC5bbn4rBB4DslQ==
+X-Received: by 2002:a24:d003:: with SMTP id m3mr2198104itg.132.1556605227707;
+        Mon, 29 Apr 2019 23:20:27 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id e4sm7828414iof.62.2019.04.29.23.20.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 23:20:26 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 23:20:26 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [PATCH v1 2/2] dt/bindings: drm/komeda: Adds SMMU support for D71
- devicetree
-Thread-Topic: [PATCH v1 2/2] dt/bindings: drm/komeda: Adds SMMU support for
- D71 devicetree
-Thread-Index: AQHU/xyuIsyUhsTpy0q582Dqt45LtA==
-Date:   Tue, 30 Apr 2019 06:19:34 +0000
-Message-ID: <1556605118-22700-3-git-send-email-lowry.li@arm.com>
-References: <1556605118-22700-1-git-send-email-lowry.li@arm.com>
-In-Reply-To: <1556605118-22700-1-git-send-email-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2P15301CA0024.APCP153.PROD.OUTLOOK.COM
- (2603:1096:202:1::34) To DB7PR08MB3530.eurprd08.prod.outlook.com
- (2603:10a6:10:49::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 329dee61-49a1-40ee-50d4-08d6cd33d04b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB7PR08MB3130;
-x-ms-traffictypediagnostic: DB7PR08MB3130:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <DB7PR08MB313068058B9DBF91BA92FBCE9F3A0@DB7PR08MB3130.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(376002)(136003)(396003)(366004)(189003)(199004)(6436002)(36756003)(110136005)(386003)(97736004)(8676002)(81156014)(81166006)(14454004)(26005)(3846002)(478600001)(5660300002)(8936002)(54906003)(2501003)(55236004)(102836004)(6486002)(25786009)(6506007)(6116002)(76176011)(4326008)(256004)(316002)(68736007)(305945005)(66066001)(7736002)(86362001)(72206003)(2201001)(486006)(2616005)(2906002)(6512007)(73956011)(6666004)(66946007)(446003)(53936002)(11346002)(476003)(6636002)(50226002)(66446008)(66476007)(52116002)(71200400001)(71190400001)(186003)(64756008)(99286004)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3130;H:DB7PR08MB3530.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XIvDxC4Hqa+QMCtoCRzMjZhcVmVQQzCPYUdzKdU1oe1j7C9+rNGNUdVF+1bixS//ax1Ks8C6+x4lq3HAI1jGwPS421hbyTSlvmMojZzGk8Ps9JhUsitBWkGYPkTzYDWdECiHSy/ovL/eYQF3kNvjfYUzUydEodmeOVqP/Ot44OGwI+9Il+IZgbS2wXMI1t97kHlbVlV9k3zeYEjWAb9Z70ZIGsd8nFNBtpt7D0BPWmk+Jd3IXI3dEM2TA+9SKnohLgDRyD7g6uvSYZGrkzUh+qvhzql5O85nxbAT4SHoIm8CO/ZSdHqh9tjDh5z5NHYnrDWYy6c/CRD1JonItxZPz6kP3jftPRrXzWJ0WtoXu8eyi/hgwH9RH5gJlOZ8uCf5AmKNIJ8YbGoXDYrS7M7tm2n2No3bxj7/uV+9do3BO5c=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Paul Walmsley <paul@pwsan.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Wesley W . Terpstra" <wesley@sifive.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Megan Wachs <megan@sifive.com>
+Subject: Re: [PATCH v3 3/3] clk: sifive: add a driver for the SiFive FU540
+ PRCI IP block
+In-Reply-To: <256b9312-4740-e7b1-84ac-c0cc1ff4bc77@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1904292258000.7063@viisi.sifive.com>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com> <20190411082733.3736-4-paul.walmsley@sifive.com> <256b9312-4740-e7b1-84ac-c0cc1ff4bc77@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 329dee61-49a1-40ee-50d4-08d6cd33d04b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 06:19:34.5660
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3130
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VXBkYXRlcyB0aGUgZGV2aWNlLXRyZWUgZG9jIGFib3V0IGhvdyB0byBlbmFibGUgU01NVSBieSBk
-ZXZpY2V0cmVlLg0KDQpTaWduZWQtb2ZmLWJ5OiBMb3dyeSBMaSAoQXJtIFRlY2hub2xvZ3kgQ2hp
-bmEpIDxsb3dyeS5saUBhcm0uY29tPg0KLS0tDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYXJtLGtvbWVkYS50eHQgfCA3ICsrKysrKysNCiAxIGZpbGUgY2hhbmdl
-ZCwgNyBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sa29tZWRhLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxrb21lZGEudHh0DQppbmRleCAwMmIyMjY1Li5iMTJj
-MDQ1IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYXJtLGtvbWVkYS50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2FybSxrb21lZGEudHh0DQpAQCAtMTEsNiArMTEsMTAgQEAgUmVxdWlyZWQgcHJv
-cGVydGllczoNCiAgICAgICAtICJwY2xrIjogZm9yIHRoZSBBUEIgaW50ZXJmYWNlIGNsb2NrDQog
-LSAjYWRkcmVzcy1jZWxsczogTXVzdCBiZSAxDQogLSAjc2l6ZS1jZWxsczogTXVzdCBiZSAwDQor
-LSBpb21tdXM6IGNvbmZpZ3VyZSB0aGUgc3RyZWFtIGlkIHRvIElPTU1VLCBNdXN0IGJlIGNvbmZp
-Z3VyZWQgaWYgd2FudCB0bw0KKyAgICBlbmFibGUgaW9tbXUgaW4gZGlzcGxheS4gZm9yIGhvdyB0
-byBjb25maWd1cmUgdGhpcyBub2RlIHBsZWFzZSByZWZlcmVuY2UNCisgICAgICAgIGRldmljZXRy
-ZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUtdjMudHh0LA0KKyAgICAgICAgZGV2aWNldHJlZS9i
-aW5kaW5ncy9pb21tdS9pb21tdS50eHQNCiANCiBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBzdWIt
-bm9kZTogcGlwZWxpbmVAbnENCiBFYWNoIGRldmljZSBjb250YWlucyBvbmUgb3IgdHdvIHBpcGVs
-aW5lIHN1Yi1ub2RlcyAoYXQgbGVhc3Qgb25lKSwgZWFjaA0KQEAgLTQ0LDYgKzQ4LDkgQEAgRXhh
-bXBsZToNCiAJCWludGVycnVwdHMgPSA8MCAxNjggND47DQogCQljbG9ja3MgPSA8JmRwdV9tY2xr
-PiwgPCZkcHVfYWNsaz47DQogCQljbG9jay1uYW1lcyA9ICJtY2xrIiwgInBjbGsiOw0KKwkJaW9t
-bXVzID0gPCZzbW11IDA+LCA8JnNtbXUgMT4sIDwmc21tdSAyPiwgPCZzbW11IDM+LA0KKwkJCTwm
-c21tdSA0PiwgPCZzbW11IDU+LCA8JnNtbXUgNj4sIDwmc21tdSA3PiwNCisJCQk8JnNtbXUgOD4s
-IDwmc21tdSA5PjsNCiANCiAJCWRwMF9waXBlMDogcGlwZWxpbmVAMCB7DQogCQkJY2xvY2tzID0g
-PCZmcGdhb3NjMj4sIDwmZHB1X2FjbGs+Ow0KLS0gDQoxLjkuMQ0KDQo=
+Hi Atish,
+
+On Sat, 27 Apr 2019, Atish Patra wrote:
+
+> On 4/11/19 1:28 AM, Paul Walmsley wrote:
+> > Add driver code for the SiFive FU540 PRCI IP block.  This IP block
+> > handles reset and clock control for the SiFive FU540 device and
+> > implements SoC-level clock tree controls and dividers.
+
+[...]
+
+> > +static const struct of_device_id sifive_fu540_prci_of_match[] = {
+> > +	{ .compatible = "sifive,fu540-c000-prci", },
+> 
+> All the existing unleashed devices have prci clock compatible string as
+> "sifive,aloeprci0" or "sifive,ux00prci0". Should it be added to maintain
+> backward compatibility?
+
+As you note, just adding the old (unreviewed) compatible string isn't 
+enough.
+
+> Even after adding the compatible string (just for my testing purpose), I get
+> this while booting.
+> 
+> [    0.104571] sifive-fu540-prci 10000000.prci: expected only two parent
+> clocks, found 1
+> [    0.112460] sifive-fu540-prci 10000000.prci: could not register clocks: -22
+> [    0.119499] sifive-fu540-prci: probe of 10000000.prci failed with error -22
+> 
+> Looking at the DT entries, your DT patch has
+> 
+> +		prci: clock-controller@10000000 {
+> +			compatible = "sifive,fu540-c000-prci";
+> +			reg = <0x0 0x10000000 0x0 0x1000>;
+> +			clocks = <&hfclk>, <&rtcclk>;
+> +			#clock-cells = <1>;
+> +		};
+> 
+> 
+> while current DT from FSBL
+> (https://github.com/sifive/freedom-u540-c000-bootloader/blob/master/fsbl/ux00_fsbl.dts)
+> 
+> prci: prci@10000000 {
+> 			compatible = "sifive,aloeprci0", "sifive,ux00prci0";
+> 			reg = <0x0 0x10000000 0x0 0x1000>;
+> 			reg-names = "control";
+> 			clocks = <&refclk>;
+> 			#clock-cells = <1>;
+> 		};
+> 
+> This seems to be the cause of error. It looks like this patch needs a complete
+> different DT (your DT patch) than FSBL provides.
+
+That's right.  That old data was completely out of tree and unreviewed.  
+It's part of the reason why we're going through the process of posting DT 
+data to the kernel and devicetree lists and getting that data reviewed:
+
+https://lore.kernel.org/linux-riscv/20190411084242.4999-1-paul.walmsley@sifive.com/
+
+> This means everybody must upgrade the FSBL to use your DT patch in their
+> boards once this driver is merged. Is this okay?
+
+People can continue to use the out-of-tree DT data if they want.  They'll 
+just have to continue to patch their kernels to add out-of-tree drivers, 
+as they do now.
+
+Otherwise, if people want to use the upstream PRCI driver in the upstream 
+kernel, then it's necessary to use DT data that aligns with what's in the 
+upstream binding documentation.
+
+
+- Paul
