@@ -2,247 +2,155 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD951C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543A3C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D2320449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224402075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:42:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2QQ038n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbfD3Elt (ORCPT
+        id S1726065AbfD3Emu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 00:41:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56688 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbfD3Els (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 00:41:48 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9092B308338E;
-        Tue, 30 Apr 2019 04:41:47 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AB2D63F9E;
-        Tue, 30 Apr 2019 04:41:20 +0000 (UTC)
-Subject: Re: [PATCH v2 18/19] iommu/vt-d: Support flushing more translation
- cache types
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-19-git-send-email-jacob.jun.pan@linux.intel.com>
- <5ad35536-4993-13f1-5199-ddd99f7009e5@redhat.com>
- <20190429142921.1d36f560@jacob-builder>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <4c54cbe9-b639-d560-4546-0ad84a622e89@redhat.com>
-Date:   Tue, 30 Apr 2019 06:41:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 30 Apr 2019 00:42:50 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37626 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfD3Emt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 00:42:49 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g3so6448554pfi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 21:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XFladZcZaPZX3qydS53BZ4NhIvorW1o6i79f0yhX41c=;
+        b=C2QQ038nRMeeh8liMY8vI3wnQ2mwGKvYVms4huqg7UAxAtABpfBMV6l1FL+hDRkO6I
+         u2jr8RW8JL6VTLwGCLs8kUqbZHL6c7UtKdyc4Pu/4lpPavVQEy8d7XZuh/pMPiN12IGW
+         UiCirF3FlwOaJsYJmP2x7nDfYywx/YOerO5iBHk0rzpj2llst/u4JE9VXXQf3b/1Uo2w
+         wCj1uyZ7TTIXLVUGdNIZ/7zSJiRi0ETva8nrzIZJxolFFg0mffO2aMhTIhhspBagzbmu
+         XmqnUgL3mgdnnIVdBPhKw4Cu4czy6uNwU23N5QntMVnr5fgjQ1Hv//wQ8AOG2HhdprsE
+         KEJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XFladZcZaPZX3qydS53BZ4NhIvorW1o6i79f0yhX41c=;
+        b=LmEzBMNtkcwPObw3goYLwqvLvEXlV3XupTiMPntldiACvk0OSZy1RXNtTByVz646ef
+         +93Q9HQ47c0w55cowy5GR722DU6vtPq5oTs36dFLIz7biC6AcgpylaFgWN7M3lJssPoh
+         6JcQXAk385Z5XqLpAN8jNzQUMCYbcFg9Tbv2vkRqXKT2GjuucmvM+TNTztMWYIrAXR4D
+         5xFloDyj8hxABr4f7jQPq3ZsQzJnl+jkppyVhVIvBlU7LRyKtWPsu7WMEBSI7AVRQ87A
+         HxiY1JCWJg8rgC13Av+n6NPPSd2PYNvh69JgD7E5w+4c7UAURmOpbvv/frLmbXPT5SKk
+         gJpw==
+X-Gm-Message-State: APjAAAXeifkhdZmOaT2gBMyP9KaCXL9VQDHx/REK3DGopBQwGCo5crXv
+        hf/pfyPKMZRsbNEhaOmLFjTsVg==
+X-Google-Smtp-Source: APXvYqygvKowI2kLyaUya2a23iV207l9gYzdYkTC41i4qd+O8xsEnQL3jMCSsZ0U/rtNySeVwEg96g==
+X-Received: by 2002:a63:b507:: with SMTP id y7mr31166599pge.237.1556599368986;
+        Mon, 29 Apr 2019 21:42:48 -0700 (PDT)
+Received: from localhost ([122.166.139.136])
+        by smtp.gmail.com with ESMTPSA id t13sm70049624pgo.14.2019.04.29.21.42.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 21:42:47 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 10:12:45 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Frank Lee <tiny.windzz@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document
+ allwinner,cpu-operating-points-v2
+Message-ID: <20190430044245.s4viduudej6q2eq6@vireshk-i7>
+References: <20190410174139.20012-1-tiny.windzz@gmail.com>
+ <20190410174139.20012-3-tiny.windzz@gmail.com>
+ <20190426211540.GA890@bogus>
+ <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
+ <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190429142921.1d36f560@jacob-builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 30 Apr 2019 04:41:48 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
+User-Agent: NeoMutt/20180716-1615-c6e4b7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-
-On 4/29/19 11:29 PM, Jacob Pan wrote:
-> On Sat, 27 Apr 2019 11:04:04 +0200
-> Auger Eric <eric.auger@redhat.com> wrote:
+On 29-04-19, 11:18, Rob Herring wrote:
+> On Sun, Apr 28, 2019 at 4:53 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+> >
+> > On Sat, Apr 27, 2019 at 5:15 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
+> > > > Allwinner Process Voltage Scaling Tables defines the voltage and
+> > > > frequency value based on the speedbin blown in the efuse combination.
+> > > > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> > > > provide the OPP framework with required information.
+> > > > This is used to determine the voltage and frequency value for each
+> > > > OPP of operating-points-v2 table when it is parsed by the OPP framework.
+> > > >
+> > > > The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
+> > > > with following parameters:
+> > > > - nvmem-cells (NVMEM area containig the speedbin information)
+> > > > - opp-microvolt-<name>: voltage in micro Volts.
+> > > >   At runtime, the platform can pick a <name> and matching
+> > > >   opp-microvolt-<name> property.
+> > > >                       HW:             <name>:
+> > > >                       sun50iw-h6      speed0 speed1 speed2
+> > >
+> > > We already have at least one way to support speed bins with QC kryo
+> > > binding. Why do we need a different way?
+> >
+> > For some SOCs, for some reason (making the CPU have approximate performance),
+> > they use the same frequency but different voltage. In the case where
+> > this speed bin
+> > is not a lot and opp uses the same frequency, too many repeated opp
+> > nodes are a bit
+> > redundant and not intuitive enough.
+> >
+> > So, I think it's worth the new method.
 > 
->> Hi Jacob,
->>
->> On 4/24/19 1:31 AM, Jacob Pan wrote:
->>> When Shared Virtual Memory is exposed to a guest via vIOMMU,
->>> extended IOTLB invalidation may be passed down from outside IOMMU
->>> subsystems. This patch adds invalidation functions that can be used
->>> for additional translation cache types.
->>>
->>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> ---
->>>  drivers/iommu/dmar.c        | 48
->>> +++++++++++++++++++++++++++++++++++++++++++++
->>> include/linux/intel-iommu.h | 21 ++++++++++++++++---- 2 files
->>> changed, 65 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
->>> index 9c49300..680894e 100644
->>> --- a/drivers/iommu/dmar.c
->>> +++ b/drivers/iommu/dmar.c
->>> @@ -1357,6 +1357,20 @@ void qi_flush_iotlb(struct intel_iommu
->>> *iommu, u16 did, u64 addr, qi_submit_sync(&desc, iommu);
->>>  }
->>>    
->> /* PASID-based IOTLB Invalidate */
->>> +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr,
->>> u32 pasid,
->>> +		unsigned int size_order, u64 granu)
->>> +{
->>> +	struct qi_desc desc;
->>> +
->>> +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
->>> +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
->>> +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(0) |
->>> +		QI_EIOTLB_AM(size_order);  
->> I see IH it hardcoded to 0. Don't you envision to cascade the IH. On
->> ARM this was needed for perf sake.
-> Right, we should cascade IH based on IOMMU_INV_ADDR_FLAGS_LEAF. Just
-> curious how do you deduce the IH information on ARM? I guess you need
-> to get the non-leaf page directory info?
-> I will add an argument for IH.
-On ARM we have the "Leaf" field in the stage1 TLB invalidation command.
-"When Leaf==1, only cached entries for the last level of translation
-table walk are required to be invalidated".
-
-Thanks
-
-Eric
->>> +	desc.qw2 = 0;
->>> +	desc.qw3 = 0;
->>> +	qi_submit_sync(&desc, iommu);
->>> +}
->>> +
->>>  void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16
->>> pfsid, u16 qdep, u64 addr, unsigned mask)
->>>  {
->>> @@ -1380,6 +1394,40 @@ void qi_flush_dev_iotlb(struct intel_iommu
->>> *iommu, u16 sid, u16 pfsid, qi_submit_sync(&desc, iommu);
->>>  }
->>>    
->> /* Pasid-based Device-TLB Invalidation */
-> yes, better to explain piotlb :), same for iotlb.
->>> +void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16
->>> pfsid,
->>> +		u32 pasid,  u16 qdep, u64 addr, unsigned size, u64
->>> granu) +{
->>> +	struct qi_desc desc;
->>> +
->>> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) |
->>> QI_DEV_EIOTLB_SID(sid) |
->>> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
->>> +		QI_DEV_IOTLB_PFSID(pfsid);
->>> +	desc.qw1 |= QI_DEV_EIOTLB_GLOB(granu);
-> should be desc.qw1 =
->>> +
->>> +	/* If S bit is 0, we only flush a single page. If S bit is
->>> set,
->>> +	 * The least significant zero bit indicates the size. VT-d
->>> spec
->>> +	 * 6.5.2.6
->>> +	 */
->>> +	if (!size)
->>> +		desc.qw0 = QI_DEV_EIOTLB_ADDR(addr) &
->>> ~QI_DEV_EIOTLB_SIZE;  
->> desc.q1 |= ?
-> Right, I also missed previous qw1 assignment.
->>> +	else {
->>> +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT +
->>> size); +
->>> +		desc.qw1 = QI_DEV_EIOTLB_ADDR(addr & ~mask) |
->>> QI_DEV_EIOTLB_SIZE;  
->> desc.q1 |=
-> right, thanks
->>> +	}
->>> +	qi_submit_sync(&desc, iommu);
->>> +}
->>> +  
->> /* PASID-cache invalidation */
->>> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64
->>> granu, int pasid) +{
->>> +	struct qi_desc desc;
->>> +
->>> +	desc.qw0 = QI_PC_TYPE | QI_PC_DID(did) | QI_PC_GRAN(granu)
->>> | QI_PC_PASID(pasid);
->>> +	desc.qw1 = 0;
->>> +	desc.qw2 = 0;
->>> +	desc.qw3 = 0;
->>> +	qi_submit_sync(&desc, iommu);
->>> +}
->>>  /*
->>>   * Disable Queued Invalidation interface.
->>>   */
->>> diff --git a/include/linux/intel-iommu.h
->>> b/include/linux/intel-iommu.h index 5d67d0d4..38e5efb 100644
->>> --- a/include/linux/intel-iommu.h
->>> +++ b/include/linux/intel-iommu.h
->>> @@ -339,7 +339,7 @@ enum {
->>>  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >>
->>> (DMA_TLB_FLUSH_GRANU_OFFSET-4)) #define QI_IOTLB_ADDR(addr)
->>> (((u64)addr) & VTD_PAGE_MASK) #define
->>> QI_IOTLB_IH(ih)		(((u64)ih) << 6) -#define
->>> QI_IOTLB_AM(am)		(((u8)am)) +#define
->>> QI_IOTLB_AM(am)		(((u8)am) & 0x3f) 
->>>  #define QI_CC_FM(fm)		(((u64)fm) << 48)
->>>  #define QI_CC_SID(sid)		(((u64)sid) << 32)
->>> @@ -357,17 +357,22 @@ enum {
->>>  #define QI_PC_DID(did)		(((u64)did) << 16)
->>>  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
->>>  
->>> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
->>> -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
->>> +/* PASID cache invalidation granu */
->>> +#define QI_PC_ALL_PASIDS	0
->>> +#define QI_PC_PASID_SEL		1
->>>  
->>>  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
->>>  #define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
->>>  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
->>> -#define QI_EIOTLB_AM(am)	(((u64)am))
->>> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
->>>  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
->>>  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
->>>  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
->>>  
->>> +/* QI Dev-IOTLB inv granu */
->>> +#define QI_DEV_IOTLB_GRAN_ALL		1
->>> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
->>> +
->>>  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
->>>  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
->>>  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
->>> @@ -658,8 +663,16 @@ extern void qi_flush_context(struct
->>> intel_iommu *iommu, u16 did, u16 sid, u8 fm, u64 type);
->>>  extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64
->>> addr, unsigned int size_order, u64 type);
->>> +extern void qi_flush_piotlb(struct intel_iommu *iommu, u16 did,
->>> u64 addr,
->>> +			u32 pasid, unsigned int size_order, u64
->>> type); extern void qi_flush_dev_iotlb(struct intel_iommu *iommu,
->>> u16 sid, u16 pfsid, u16 qdep, u64 addr, unsigned mask);
->>> +
->>> +extern void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16
->>> sid, u16 pfsid,
->>> +			u32 pasid, u16 qdep, u64 addr, unsigned
->>> size, u64 granu); +
->>> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16
->>> did, u64 granu, int pasid); +
->>>  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu
->>> *iommu); 
->>>  extern int dmar_ir_support(void);
->>>   
->>
->> Thanks
->>
->> Eric
+> Well, I don't.
 > 
-> [Jacob Pan]
-> 
+> We can't have every SoC vendor doing their own thing just because they
+> want to. If there are technical reasons why existing bindings don't
+> work, then maybe we need to do something different. But I haven't
+> heard any reasons.
+
+Well there is a good reason for attempting the new bindings and I wasn't sure if
+updating the earlier bindings or adding another one for platform is correct. As
+we aren't really adding new bindings, but just documentation around it.
+
+So there are two ways OPP core support this thing:
+
+- opp-supported-hw: This is a better fit if we have a smaller group of
+  frequencies to select from a bigger group, so we disable non-required OPPs
+  completely. This is what Qcom did as they wanted to select different
+  frequencies all together.
+
+- opp-microvolt-<name>: This is a better fit if the frequencies remain same and
+  only few of the properties like voltage/current have a different value. So we
+  don't disable any OPPs but just select the right voltage/current for those
+  frequencies. This avoids unnecessary duplication of the OPPs in DT and that's
+  what allwinner guys want.
+
+The kryo nvmem bindings currently supports opp-supported-hw, maybe we can add
+mention support for second one in the same file and rename it well.
+
+-- 
+viresh
