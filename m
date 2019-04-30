@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7788BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C106C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464BA2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5643920449
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624977;
-	bh=9wjh8KhDFWxat4RFS8FnsuU4lCY2MRrx7waCkkCQFj8=;
+	s=default; t=1556624983;
+	bh=jW8B9fYnNhCMmM+VOfJleRK+4+pNzZlDG3cyYS2Wj5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2bZZWN5u1vuTH1jJFF8ksv0BEmDIM5GDD0MKgSBEyMvMFDt+mbflez2bYe3f7YD4C
-	 A7wVI+1Nftiq/5Bamfrf6pzylPVo9jTL48r2YQw0GAIiNK12nOwf7y41VOKngtNXbW
-	 A8iAyHH5ZWwU9htVQAv+WjT432kNCAUfDLzwMMuc=
+	b=EHmPIcVVGYNGmzvIPLeMvEhGbX3/rKXQgL5D7CHVu39q20VdC3nelAwSh7OpFuErY
+	 l0le4uk/DaCKoxEgPGIhGBWoqw4S2BseaSSG7xRLova5jU1vokmGjSjI0mRI0qlurl
+	 nqoYItJEOX3TBxQrDnA4gHkXfJDOq47jbSrN3lwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbfD3Ltf (ORCPT
+        id S1731038AbfD3Ltl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36080 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730709AbfD3Ltb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:31 -0400
+        id S1730709AbfD3Ltg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F84921734;
-        Tue, 30 Apr 2019 11:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2CE22054F;
+        Tue, 30 Apr 2019 11:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624970;
-        bh=9wjh8KhDFWxat4RFS8FnsuU4lCY2MRrx7waCkkCQFj8=;
+        s=default; t=1556624976;
+        bh=jW8B9fYnNhCMmM+VOfJleRK+4+pNzZlDG3cyYS2Wj5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ApLgYCaUFnLhuRsBl3zlGbpDChZLk2FFww1ChjRkBjFJiTy9tmiMtEWJ1dm/nfFfz
-         fJ3gFYYRChYK/PSRCKOF9jmbv9eJJcSeItrh+ygEUNqsfon+EUoiz1jGfA9HKFZtpp
-         OPh/8J9OqgV3Ap6Qh3loMKEw1/WD08CAwDQLUHLg=
+        b=fpaVVSB/vhPM91pvmlGG+17r/n8Oy9lpjVtjwzy1FktvCFGmX4tF683oWyzO47i78
+         RhIiAr41cp3m/xw+X+E7SWWY1DACgAT1ArhfOt8R2EsMSuf2snpPjNut6XPAhkUlo/
+         Ngym9AbmQx5fND5PUvNyYxgA7YYyRb8/35d/hnv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5.0 40/89] ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the cache
-Date:   Tue, 30 Apr 2019 13:38:31 +0200
-Message-Id: <20190430113611.689521185@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Subject: [PATCH 5.0 42/89] drm/vc4: Fix memory leak during gpu reset.
+Date:   Tue, 30 Apr 2019 13:38:33 +0200
+Message-Id: <20190430113611.755099705@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,60 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 
-commit e17b1af96b2afc38e684aa2f1033387e2ed10029 upstream.
+commit d08106796a78a4273e39e1bbdf538dc4334b2635 upstream.
 
-The EFI stub is entered with the caches and MMU enabled by the
-firmware, and once the stub is ready to hand over to the decompressor,
-we clean and disable the caches.
+__drm_atomic_helper_crtc_destroy_state does not free memory, it only
+cleans it up. Fix this by calling the functions own destroy function.
 
-The cache clean routines use CP15 barrier instructions, which can be
-disabled via SCTLR. Normally, when using the provided cache handling
-routines to enable the caches and MMU, this bit is enabled as well.
-However, but since we entered the stub with the caches already enabled,
-this routine is not executed before we call the cache clean routines,
-resulting in undefined instruction exceptions if the firmware never
-enabled this bit.
-
-So set the bit explicitly in the EFI entry code, but do so in a way that
-guarantees that the resulting code can still run on v6 cores as well
-(which are guaranteed to have CP15 barriers enabled)
-
-Cc: <stable@vger.kernel.org> # v4.9+
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 6d6e50039187 ("drm/vc4: Allocate the right amount of space for boot-time CRTC state.")
+Cc: Eric Anholt <eric@anholt.net>
+Cc: <stable@vger.kernel.org> # v4.6+
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190301125627.7285-2-maarten.lankhorst@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/compressed/head.S |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/compressed/head.S
-+++ b/arch/arm/boot/compressed/head.S
-@@ -1438,7 +1438,21 @@ ENTRY(efi_stub_entry)
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -999,7 +999,7 @@ static void
+ vc4_crtc_reset(struct drm_crtc *crtc)
+ {
+ 	if (crtc->state)
+-		__drm_atomic_helper_crtc_destroy_state(crtc->state);
++		vc4_crtc_destroy_state(crtc->state);
  
- 		@ Preserve return value of efi_entry() in r4
- 		mov	r4, r0
--		bl	cache_clean_flush
-+
-+		@ our cache maintenance code relies on CP15 barrier instructions
-+		@ but since we arrived here with the MMU and caches configured
-+		@ by UEFI, we must check that the CP15BEN bit is set in SCTLR.
-+		@ Note that this bit is RAO/WI on v6 and earlier, so the ISB in
-+		@ the enable path will be executed on v7+ only.
-+		mrc	p15, 0, r1, c1, c0, 0	@ read SCTLR
-+		tst	r1, #(1 << 5)		@ CP15BEN bit set?
-+		bne	0f
-+		orr	r1, r1, #(1 << 5)	@ CP15 barrier instructions
-+		mcr	p15, 0, r1, c1, c0, 0	@ write SCTLR
-+ ARM(		.inst	0xf57ff06f		@ v7+ isb	)
-+ THUMB(		isb						)
-+
-+0:		bl	cache_clean_flush
- 		bl	cache_off
- 
- 		@ Set parameters for booting zImage according to boot protocol
+ 	crtc->state = kzalloc(sizeof(struct vc4_crtc_state), GFP_KERNEL);
+ 	if (crtc->state)
 
 
