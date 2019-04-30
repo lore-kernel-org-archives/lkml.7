@@ -2,103 +2,129 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524C3C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B157FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EDE216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D3521655
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfD3ApG (ORCPT
+        id S1729728AbfD3Aql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 20:45:06 -0400
-Received: from mga02.intel.com ([134.134.136.20]:53516 "EHLO mga02.intel.com"
+        Mon, 29 Apr 2019 20:46:41 -0400
+Received: from mga06.intel.com ([134.134.136.31]:44888 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729238AbfD3ApG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 20:45:06 -0400
-X-Amp-Result: UNSCANNABLE
+        id S1729238AbfD3Aqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 20:46:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 17:45:05 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 17:46:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,411,1549958400"; 
-   d="scan'208";a="146939893"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Apr 2019 17:45:04 -0700
-Date:   Mon, 29 Apr 2019 17:45:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
+   d="scan'208";a="295632067"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga004.jf.intel.com with ESMTP; 29 Apr 2019 17:46:37 -0700
+Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-Message-ID: <20190430004504.GH31379@linux.intel.com>
-References: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
- <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
- <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
- <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
- <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
- <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com>
- <20190429220814.GF31379@linux.intel.com>
- <CAHk-=whpq2=f2LdB-nc52Rd=iZkUH-N-r8OTqEfo+4UaJc7piA@mail.gmail.com>
- <20190430000846.GG31379@linux.intel.com>
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/10] iommu: Add helper to get minimal page size of
+ domain
+To:     Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
+ <20190421011719.14909-2-baolu.lu@linux.intel.com>
+ <05eca601-0264-8141-ceeb-7ef7ad5d5650@arm.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <48ac694e-4551-40e2-f914-6942da810489@linux.intel.com>
+Date:   Tue, 30 Apr 2019 08:40:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430000846.GG31379@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <05eca601-0264-8141-ceeb-7ef7ad5d5650@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 05:08:46PM -0700, Sean Christopherson wrote:
-> On Mon, Apr 29, 2019 at 03:22:09PM -0700, Linus Torvalds wrote:
-> > On Mon, Apr 29, 2019 at 3:08 PM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> > >
-> > > FWIW, Lakemont (Quark) doesn't block NMI/SMI in the STI shadow, but I'm
-> > > not sure that counters the "horrible errata" statement ;-).  SMI+RSM saves
-> > > and restores STI blocking in that case, but AFAICT NMI has no such
-> > > protection and will effectively break the shadow on its IRET.
-> > 
-> > Ugh. I can't say I care deeply about Quark (ie never seemed to go
-> > anywhere), but it's odd. I thought it was based on a Pentium core (or
-> > i486+?). Are you saying those didn't do it either?
-> 
-> It's 486 based, but either way I suspect the answer is "yes".  IIRC,
-> Knights Corner, a.k.a. Larrabee, also had funkiness around SMM and that
-> was based on P54C, though I'm struggling to recall exactly what the
-> Larrabee weirdness was.
+Hi Robin,
 
-Aha!  Found an ancient comment that explicitly states P5 does not block
-NMI/SMI in the STI shadow, while P6 does block NMI/SMI.
+On 4/29/19 6:55 PM, Robin Murphy wrote:
+> On 21/04/2019 02:17, Lu Baolu wrote:
+>> This makes it possible for other modules to know the minimal
+>> page size supported by a domain without the knowledge of the
+>> structure details.
+>>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   include/linux/iommu.h | 13 +++++++++++++
+>>   1 file changed, 13 insertions(+)
+>>
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index a5007d035218..46679ef19b7e 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -377,6 +377,14 @@ static inline void iommu_tlb_sync(struct 
+>> iommu_domain *domain)
+>>           domain->ops->iotlb_sync(domain);
+>>   }
+>> +static inline unsigned long domain_minimal_pgsize(struct iommu_domain 
+>> *domain)
+>> +{
+>> +    if (domain && domain->pgsize_bitmap)
+>> +        return 1 << __ffs(domain->pgsize_bitmap);
+> 
+> Nit: this would probably be more efficient on most architectures as:
+> 
+>      if (domain)
+>          return domain->pgsize_bitmap & -domain->pgsize_bitmap;
+> 
+
+It looks reasonable to me.
+
+> 
+> I'd also suggest s/minimal/min/ in the name, just to stop it getting too 
+> long. Otherwise, though, I like the idea, and there's at least one other 
+> place (in iommu-dma) that can make use of it straight away.
+
+Okay, I will change the name to domain_min_pgsize().
+
+> 
+> Robin.
+> 
+
+Best regards,
+Lu Baolu
+
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   /* PCI device grouping function */
+>>   extern struct iommu_group *pci_device_group(struct device *dev);
+>>   /* Generic device grouping function */
+>> @@ -704,6 +712,11 @@ const struct iommu_ops 
+>> *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+>>       return NULL;
+>>   }
+>> +static inline unsigned long domain_minimal_pgsize(struct iommu_domain 
+>> *domain)
+>> +{
+>> +    return 0;
+>> +}
+>> +
+>>   #endif /* CONFIG_IOMMU_API */
+>>   #ifdef CONFIG_IOMMU_DEBUGFS
+>>
+> 
