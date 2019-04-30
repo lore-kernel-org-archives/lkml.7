@@ -2,121 +2,292 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2972FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11D1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED10821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899DB20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:07:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="dA77n0o4"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="HRw7WojW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfD3TGW (ORCPT
+        id S1727176AbfD3TH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:06:22 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36418 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfD3TGV (ORCPT
+        Tue, 30 Apr 2019 15:07:58 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:47066 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfD3TH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:06:21 -0400
-Received: by mail-wm1-f68.google.com with SMTP id h18so4981876wml.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:06:20 -0700 (PDT)
+        Tue, 30 Apr 2019 15:07:58 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d1so13218012edd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:07:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=KOC8am+a2nOdN4WYbe81JkusFOlmT/wzWfYRV8sMIdI=;
-        b=dA77n0o4NI7x0ELsgdO84aeigRfoPwJWFy/n3ps5vN073G36EzZ2IeYl+A6sMoFipO
-         Fsc+S9P8Gs+L0lV4r8pwSINtqa7v7nRJd8L8/YBKWhLyZT88ibGqymtZK8E9llzoBLJ6
-         uX8M1FLKLse1nkwI1Jb6XiA+5mic+TR1b23auVFTo7YIRAukm8+GuLo8y1PkaTHFcZVS
-         jHJ2dEhmBNHp+a2F/4n+IdPlVeq1Qd4QnUeaETle04u+pufWKrV2qV4v5+QNLmmkhBlN
-         i/m9RQXk+oC6MnApOb3SwbJo5/d5Z4tP53j7sYoT02prd+VpF9Uo04jsh7b10DqtvLvF
-         J+oA==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=24AjdVeorZwTFjcHq4izaVEveVUnIHNKgUQspSKXzvI=;
+        b=HRw7WojWySMAv4b8YL4a2LOaFT9fYBpKx09Bebq1ppJnm0xY9XE2+fvoFmxFyLBgvs
+         cXSHmuyuCo1DZ1DSSgtKhJwb2Q0oHBHL6n5r7g/viMBsT5Ng3qU6CMH6HM5awf844U5J
+         VnpuwRI9NyLJ3XPIvuYY5j2H7WDDrlHypMZEanmISO7U9yeqMqkRKlI1+pEEEKL+0rMT
+         4myjp6ARtxZ8stXu85b+pDGo2//UBg32SB/qdvPGooFW1RoaBhMwU1Sc5tDnrObEgc/C
+         1bAHlqDViUiO0KIVHZHi1idryUSF0YDQI7GJs2wxolSlDcRX4h2ghqqxFKj7lTJbEuup
+         CCaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=KOC8am+a2nOdN4WYbe81JkusFOlmT/wzWfYRV8sMIdI=;
-        b=JsdGiBoCCq6Ae1kbk43yubKdyEPNB2Evd9Zbo46EOgLMMVtU1O3/id0xOWBw/8+jRK
-         w+R7qlUY38wzZQ6hJkxWuK4bcnV5s+tW+vCUxWNebBLj4N00WQfyW6znqTlyxcXGPY8T
-         MfJ1SS2le/mGT2NDYTLawMA3x7fIL5fgVli3n307Awt3w6D2aI/n8fY5E2qgAz6c3CNx
-         gyiZ+A+dDF2oen0L/ciuYX/ITEVUWqAC1X8LRug1mD5VIMKt/T55Y5cummbI481SpOLg
-         Pb7FVNGnTJy75uK9XPL7Y54FSDSs+vTjJYCgtE+k7BW5JFESdUq7DgMyBBYhU7UfN79+
-         vsgg==
-X-Gm-Message-State: APjAAAX1d6Te+Yx3UOm+hucM2WZbuzWNu2f9tgB00ITOwBZbsD8iSMGx
-        xe9NXhL2RuORGOVROt2QZLQp3A==
-X-Google-Smtp-Source: APXvYqwia6Lw063G9SsVeUFKAAF2IsKPay8Vla9rRHmKjKeNMQ18PPPNQRAxPSeU0Ws+QemR94OAPg==
-X-Received: by 2002:a1c:a753:: with SMTP id q80mr4207784wme.120.1556651179630;
-        Tue, 30 Apr 2019 12:06:19 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id b11sm6088605wmh.29.2019.04.30.12.06.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 12:06:19 -0700 (PDT)
-Message-ID: <5cc89cab.1c69fb81.4a233.21d9@mx.google.com>
-Date:   Tue, 30 Apr 2019 12:06:19 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=24AjdVeorZwTFjcHq4izaVEveVUnIHNKgUQspSKXzvI=;
+        b=lygxWQYe2YCoHFwk4x5YBDYSy/vzBFC6GKSX0dg79gl2KjvIX9qMa2JIe5MNgf2Fbx
+         SU1hBuD3mrp9jhWP6cJ8yqYk4zE8/JGr+JNbWyf6HAAWktp13s+DWk34lrZyrosVRqNm
+         YeYCUgcsC0cNRI2P232PP0h45CWkUxv93CODl3+FKxt15RDxJLRTGr8KMIOosOoZCzAd
+         NK8yJeTcCWnTzNMOEyYJHiH+h7/y8Qd3QoDYd4ZGRC5DQKahz7BMxO+RSEWPjmG0DKtB
+         xllkm0BDUSdL00f0+QP9/7zcmaWeGV+S6pEelmVWSanGP9Jyale3EW+h3xbms4YJXgg2
+         MTMw==
+X-Gm-Message-State: APjAAAUryzjUZn1Chu3BlhZ+otkITn6KyeF/EF+2kZYXMnxtqRGBdWxX
+        eBNSahXQJmlw4ziYZArzBTu2xA==
+X-Google-Smtp-Source: APXvYqzXZ50xr285y4ircRfLpCQLCoyu7pRVhllBkfGMDPkxzy45F/LNQfiCBNuBHZ3qU7yK6jaV6g==
+X-Received: by 2002:a50:ba13:: with SMTP id g19mr4363528edc.236.1556651275646;
+        Tue, 30 Apr 2019 12:07:55 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id p12sm4953528ejr.18.2019.04.30.12.07.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Apr 2019 12:07:54 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 21:07:53 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>, kernel-team@android.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        KJ Tsanaktsidis <ktsanaktsidis@zendesk.com>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH v2 1/2] Add polling support to pidfd
+Message-ID: <20190430190752.vwtq4kky6wdprm2d@brauner.io>
+References: <20190430162154.61314-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.14.114-54-gdb44a158d937
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
-References: <20190430113549.400132183@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/53] 4.14.115-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190430162154.61314-1-joel@joelfernandes.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 117 boots: 2 failed, 114 passed with 1 untried=
-/unknown (v4.14.114-54-gdb44a158d937)
+On Tue, Apr 30, 2019 at 12:21:53PM -0400, Joel Fernandes (Google) wrote:
+> Android low memory killer (LMK) needs to know when a process dies once
+> it is sent the kill signal. It does so by checking for the existence of
+> /proc/pid which is both racy and slow. For example, if a PID is reused
+> between when LMK sends a kill signal and checks for existence of the
+> PID, since the wrong PID is now possibly checked for existence.
+> 
+> This patch adds polling support to pidfd. Using the polling support, LMK
+> will be able to get notified when a process exists in race-free and fast
+> way, and allows the LMK to do other things (such as by polling on other
+> fds) while awaiting the process being killed to die.
+> 
+> For notification to polling processes, we follow the same existing
+> mechanism in the kernel used when the parent of the task group is to be
+> notified of a child's death (do_notify_parent).  This is precisely when
+> the tasks waiting on a poll of pidfd are also awakened in this patch.
+> 
+> We have decided to include the waitqueue in struct pid for the following
+> reasons:
+> 1. The wait queue has to survive for the lifetime of the poll. Including
+> it in task_struct would not be option in this case because the task can
+> be reaped and destroyed before the poll returns.
+> 
+> 2. By including the struct pid for the waitqueue means that during
+> de_thread(), the new thread group leader automatically gets the new
+> waitqueue/pid even though its task_struct is different.
+> 
+> Appropriate test cases are added in the second patch to provide coverage
+> of all the cases the patch is handling.
+> 
+> Andy had a similar patch [1] in the past which was a good reference
+> however this patch tries to handle different situations properly related
+> to thread group existence, and how/where it notifies. And also solves
+> other bugs (waitqueue lifetime).  Daniel had a similar patch [2]
+> recently which this patch supercedes.
+> 
+> [1] https://lore.kernel.org/patchwork/patch/345098/
+> [2] https://lore.kernel.org/lkml/20181029175322.189042-1-dancol@google.com/
+> 
+> Cc: Andy Lutomirski <luto@amacapital.net>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Daniel Colascione <dancol@google.com>
+> Cc: Christian Brauner <christian@brauner.io>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Tim Murray <timmurray@google.com>
+> Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: kernel-team@android.com
+> (Oleg improved the code by showing how to avoid tasklist_lock)
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> Co-developed-by: Daniel Colascione <dancol@google.com>
+> Signed-off-by: Daniel Colascione <dancol@google.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.114-54-gdb44a158d937/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.114-54-gdb44a158d937/
+This looks good to me. Once Oleg has given his Ack/Review I'm going to
+move this into pidfd for-next and as mentioned before schedule it for
+5.3 after CLONE_PIDFD has been merged.
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.114-54-gdb44a158d937
-Git Commit: db44a158d937ed88d91fa55f1df54c11490a5b57
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 66 unique boards, 24 SoC families, 14 builds out of 201
+Reviewed-by: Christian Brauner <christian@brauner.io>
 
-Boot Regressions Detected:
-
-arm:
-
-    multi_v7_defconfig:
-        gcc-7:
-          stih410-b2120:
-              lab-baylibre-seattle: new failure (last pass: v4.14.114-44-g8=
-da3ae647284)
-
-Boot Failures Detected:
-
-arm:
-    multi_v7_defconfig:
-        gcc-7:
-            stih410-b2120: 1 failed lab
-
-arm64:
-    defconfig:
-        gcc-7:
-            rk3399-firefly: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
+> 
+> ---
+> 
+> v1 -> v2:
+> * Restructure poll code to avoid tasklist_lock (Oleg)
+> * use task_pid instead of get_pid_task in notify_pidfd (Oleg)
+> * Added comments to code, commit message nits (Christian)
+> * Test case nits/improvements (Christian)
+> 
+> RFC -> v1:
+> * Based on CLONE_PIDFD patches: https://lwn.net/Articles/786244/
+> * Updated selftests.
+> * Renamed poll wake function to do_notify_pidfd.
+> * Removed depending on EXIT flags
+> * Removed POLLERR flag since semantics are controversial and
+>   we don't have usecases for it right now (later we can add if there's
+>   a need for it).
+> 
+>  include/linux/pid.h |  3 +++
+>  kernel/fork.c       | 29 +++++++++++++++++++++++++++++
+>  kernel/pid.c        |  2 ++
+>  kernel/signal.c     | 11 +++++++++++
+>  4 files changed, 45 insertions(+)
+> 
+> diff --git a/include/linux/pid.h b/include/linux/pid.h
+> index 3c8ef5a199ca..1484db6ca8d1 100644
+> --- a/include/linux/pid.h
+> +++ b/include/linux/pid.h
+> @@ -3,6 +3,7 @@
+>  #define _LINUX_PID_H
+>  
+>  #include <linux/rculist.h>
+> +#include <linux/wait.h>
+>  
+>  enum pid_type
+>  {
+> @@ -60,6 +61,8 @@ struct pid
+>  	unsigned int level;
+>  	/* lists of tasks that use this pid */
+>  	struct hlist_head tasks[PIDTYPE_MAX];
+> +	/* wait queue for pidfd notifications */
+> +	wait_queue_head_t wait_pidfd;
+>  	struct rcu_head rcu;
+>  	struct upid numbers[1];
+>  };
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 5525837ed80e..721f8c9d2921 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1685,8 +1685,37 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+>  }
+>  #endif
+>  
+> +/*
+> + * Poll support for process exit notification.
+> + */
+> +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
+> +{
+> +	struct task_struct *task;
+> +	struct pid *pid = file->private_data;
+> +	int poll_flags = 0;
+> +
+> +	poll_wait(file, &pid->wait_pidfd, pts);
+> +
+> +	rcu_read_lock();
+> +	task = pid_task(pid, PIDTYPE_PID);
+> +	WARN_ON_ONCE(task && !thread_group_leader(task));
+> +
+> +	/*
+> +	 * Inform pollers only when the whole thread group exits, if thread
+> +	 * group leader exits before all other threads in the group, then
+> +	 * poll(2) should block, similar to the wait(2) family.
+> +	 */
+> +	if (!task || (task->exit_state && thread_group_empty(task)))
+> +		poll_flags = POLLIN | POLLRDNORM;
+> +	rcu_read_unlock();
+> +
+> +	return poll_flags;
+> +}
+> +
+> +
+>  const struct file_operations pidfd_fops = {
+>  	.release = pidfd_release,
+> +	.poll = pidfd_poll,
+>  #ifdef CONFIG_PROC_FS
+>  	.show_fdinfo = pidfd_show_fdinfo,
+>  #endif
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 20881598bdfa..5c90c239242f 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -214,6 +214,8 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+>  	for (type = 0; type < PIDTYPE_MAX; ++type)
+>  		INIT_HLIST_HEAD(&pid->tasks[type]);
+>  
+> +	init_waitqueue_head(&pid->wait_pidfd);
+> +
+>  	upid = pid->numbers + ns->level;
+>  	spin_lock_irq(&pidmap_lock);
+>  	if (!(ns->pid_allocated & PIDNS_ADDING))
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 1581140f2d99..a17fff073c3d 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1800,6 +1800,14 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
+>  	return ret;
+>  }
+>  
+> +static void do_notify_pidfd(struct task_struct *task)
+> +{
+> +	struct pid *pid;
+> +
+> +	pid = task_pid(task);
+> +	wake_up_all(&pid->wait_pidfd);
+> +}
+> +
+>  /*
+>   * Let a parent know about the death of a child.
+>   * For a stopped/continued status change, use do_notify_parent_cldstop instead.
+> @@ -1823,6 +1831,9 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+>  	BUG_ON(!tsk->ptrace &&
+>  	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
+>  
+> +	/* Wake up all pidfd waiters */
+> +	do_notify_pidfd(tsk);
+> +
+>  	if (sig != SIGCHLD) {
+>  		/*
+>  		 * This is only possible if parent == real_parent.
+> -- 
+> 2.21.0.593.g511ec345e18-goog
