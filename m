@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C848C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356FAC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB3B21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F5121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624850;
-	bh=NnNwuXMGstoVFnibA35YozLZouGKFOpk4TP0ME+z8Ek=;
+	s=default; t=1556624855;
+	bh=ogZCoyPEq2DI32la1nEfKiDDL7SEcnddohJuCQbgvz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8bWbj9F3GpIbOOV60IjJgd0LZUMqyvY+vOkoOZ211hbrGmVYbxEILz0IW+MnNY9G
-	 6HvfrINseUN9+ctiUUNMIjMNd1qtJSQEbN+AeaRxB9M7h5rjKdhdzAh5Wpcn35Zv4o
-	 QGGJg86tNVX51ahlrGEtmNLq1pMaUIpfaNX6+kCI=
+	b=vFfYw9hiKD+Aptss0QlBdilbNF6oOCkFeBr8t3itHgqkRbOgYjjPZs/FAFimTFFLA
+	 /ZRXkXmUIgzyuW9Edy7ZrujazOVw1u1mCTCNNBgzRsW2FAoxZZ0rrUVVGgYUCL3VDN
+	 BowLmEKl877THNrpFOsiXypSsneV2eLnh/A91v1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730715AbfD3Lr3 (ORCPT
+        id S1730723AbfD3Lrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32790 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:47:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730698AbfD3LrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:25 -0400
+        id S1730698AbfD3Lra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4EF4217D6;
-        Tue, 30 Apr 2019 11:47:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB4522054F;
+        Tue, 30 Apr 2019 11:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624844;
-        bh=NnNwuXMGstoVFnibA35YozLZouGKFOpk4TP0ME+z8Ek=;
+        s=default; t=1556624849;
+        bh=ogZCoyPEq2DI32la1nEfKiDDL7SEcnddohJuCQbgvz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WYPjz7oJdfkd6MUtL/x4x/RgmW+Z0GP8GUCNUiCAaxkW6fdt2rCNQ47cQf3EqEq5G
-         1ckL/OHoDi/cGlIdtMIyOdfCCGaScYt8jDb9T2BJciiYizBpFSO8aAfNuVnNcIYKzP
-         L6vjPMOQIMdwDiufczgSSwNAlWK2FFxB+EbxUTAo=
+        b=Yxb3jdAkr20PqJBVxi/XS/I4ZYo9lmPHO/TD+e+mz8rh0G+SuKq3NAA09mnsLNPX/
+         iiYORrjncNONoYuoo1DY8/v6WTrVmhi+AdjpbvqrRqg/g0H8uIaaPhUXozMd/J9VqD
+         VWTlF7198V7doRSVwtK8/QbqyWTlyKbEf5Gqd3H4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 087/100] net/mlx5e: ethtool, Remove unsupported SFP EEPROM high pages query
-Date:   Tue, 30 Apr 2019 13:38:56 +0200
-Message-Id: <20190430113612.903395620@linuxfoundation.org>
+Subject: [PATCH 4.19 097/100] net/mlx5e: Fix the max MTU check in case of XDP
+Date:   Tue, 30 Apr 2019 13:39:06 +0200
+Message-Id: <20190430113613.412993524@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -58,49 +58,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erez Alfasi <ereza@mellanox.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit ace329f4ab3ba434be2adf618073c752d083b524 ]
+[ Upstream commit d460c2718906252a2a69bc6f89b537071f792e6e ]
 
-Querying EEPROM high pages data for SFP module is currently
-not supported by our driver and yet queried, resulting in
-invalid FW queries.
+MLX5E_XDP_MAX_MTU was calculated incorrectly. It didn't account for
+NET_IP_ALIGN and MLX5E_HW2SW_MTU, and it also misused MLX5_SKB_FRAG_SZ.
+This commit fixes the calculations and adds a brief explanation for the
+formula used.
 
-Set the EEPROM ethtool data length to 256 for SFP module will
-limit the reading for page 0 only and prevent invalid FW queries.
-
-Fixes: bb64143eee8c ("net/mlx5e: Add ethtool support for dump module EEPROM")
-Signed-off-by: Erez Alfasi <ereza@mellanox.com>
+Fixes: a26a5bdf3ee2d ("net/mlx5e: Restrict the combination of large MTU and XDP")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/port.c       |    4 ----
- 2 files changed, 1 insertion(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c  |   20 ++++++++++++++++++++
+ drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h  |    3 +--
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    5 +++--
+ 3 files changed, 24 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1317,7 +1317,7 @@ static int mlx5e_get_module_info(struct
- 		break;
- 	case MLX5_MODULE_ID_SFP:
- 		modinfo->type       = ETH_MODULE_SFF_8472;
--		modinfo->eeprom_len = ETH_MODULE_SFF_8472_LEN;
-+		modinfo->eeprom_len = MLX5_EEPROM_PAGE_LENGTH;
- 		break;
- 	default:
- 		netdev_err(priv->netdev, "%s: cable type not recognized:0x%x\n",
---- a/drivers/net/ethernet/mellanox/mlx5/core/port.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/port.c
-@@ -404,10 +404,6 @@ int mlx5_query_module_eeprom(struct mlx5
- 		size -= offset + size - MLX5_EEPROM_PAGE_LENGTH;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+@@ -33,6 +33,26 @@
+ #include <linux/bpf_trace.h>
+ #include "en/xdp.h"
  
- 	i2c_addr = MLX5_I2C_ADDR_LOW;
--	if (offset >= MLX5_EEPROM_PAGE_LENGTH) {
--		i2c_addr = MLX5_I2C_ADDR_HIGH;
--		offset -= MLX5_EEPROM_PAGE_LENGTH;
--	}
++int mlx5e_xdp_max_mtu(struct mlx5e_params *params)
++{
++	int hr = NET_IP_ALIGN + XDP_PACKET_HEADROOM;
++
++	/* Let S := SKB_DATA_ALIGN(sizeof(struct skb_shared_info)).
++	 * The condition checked in mlx5e_rx_is_linear_skb is:
++	 *   SKB_DATA_ALIGN(sw_mtu + hard_mtu + hr) + S <= PAGE_SIZE         (1)
++	 *   (Note that hw_mtu == sw_mtu + hard_mtu.)
++	 * What is returned from this function is:
++	 *   max_mtu = PAGE_SIZE - S - hr - hard_mtu                         (2)
++	 * After assigning sw_mtu := max_mtu, the left side of (1) turns to
++	 * SKB_DATA_ALIGN(PAGE_SIZE - S) + S, which is equal to PAGE_SIZE,
++	 * because both PAGE_SIZE and S are already aligned. Any number greater
++	 * than max_mtu would make the left side of (1) greater than PAGE_SIZE,
++	 * so max_mtu is the maximum MTU allowed.
++	 */
++
++	return MLX5E_HW2SW_MTU(params, SKB_MAX_HEAD(hr));
++}
++
+ static inline bool
+ mlx5e_xmit_xdp_buff(struct mlx5e_xdpsq *sq, struct mlx5e_dma_info *di,
+ 		    struct xdp_buff *xdp)
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
+@@ -34,12 +34,11 @@
  
- 	MLX5_SET(mcia_reg, in, l, 0);
- 	MLX5_SET(mcia_reg, in, module, module_num);
+ #include "en.h"
+ 
+-#define MLX5E_XDP_MAX_MTU ((int)(PAGE_SIZE - \
+-				 MLX5_SKB_FRAG_SZ(XDP_PACKET_HEADROOM)))
+ #define MLX5E_XDP_MIN_INLINE (ETH_HLEN + VLAN_HLEN)
+ #define MLX5E_XDP_TX_DS_COUNT \
+ 	((sizeof(struct mlx5e_tx_wqe) / MLX5_SEND_WQE_DS) + 1 /* SG DS */)
+ 
++int mlx5e_xdp_max_mtu(struct mlx5e_params *params);
+ bool mlx5e_xdp_handle(struct mlx5e_rq *rq, struct mlx5e_dma_info *di,
+ 		      void *va, u16 *rx_headroom, u32 *len);
+ bool mlx5e_poll_xdpsq_cq(struct mlx5e_cq *cq);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3761,7 +3761,7 @@ int mlx5e_change_mtu(struct net_device *
+ 	if (params->xdp_prog &&
+ 	    !mlx5e_rx_is_linear_skb(priv->mdev, &new_channels.params)) {
+ 		netdev_err(netdev, "MTU(%d) > %d is not allowed while XDP enabled\n",
+-			   new_mtu, MLX5E_XDP_MAX_MTU);
++			   new_mtu, mlx5e_xdp_max_mtu(params));
+ 		err = -EINVAL;
+ 		goto out;
+ 	}
+@@ -4227,7 +4227,8 @@ static int mlx5e_xdp_allowed(struct mlx5
+ 
+ 	if (!mlx5e_rx_is_linear_skb(priv->mdev, &new_channels.params)) {
+ 		netdev_warn(netdev, "XDP is not allowed with MTU(%d) > %d\n",
+-			    new_channels.params.sw_mtu, MLX5E_XDP_MAX_MTU);
++			    new_channels.params.sw_mtu,
++			    mlx5e_xdp_max_mtu(&new_channels.params));
+ 		return -EINVAL;
+ 	}
+ 
 
 
