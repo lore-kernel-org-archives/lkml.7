@@ -2,119 +2,169 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AEEC43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6428C04AA6
 	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE322080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE86321670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbfD3Me6 (ORCPT
+        id S1727994AbfD3Me7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:34:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45086 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfD3Me4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:34:56 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B2F173087921;
-        Tue, 30 Apr 2019 12:34:55 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AC46600C2;
-        Tue, 30 Apr 2019 12:34:52 +0000 (UTC)
-Subject: Re: [PATCH v2 4/7] irqchip/gic-v3-its: Don't map the MSI page in
- its_irq_compose_msi_msg()
-To:     Julien Grall <julien.grall@arm.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     jason@lakedaemon.net, douliyangs@gmail.com, marc.zyngier@arm.com,
-        robin.murphy@arm.com, miquel.raynal@bootlin.com,
-        tglx@linutronix.de, logang@deltatee.com, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org
-References: <20190429144428.29254-1-julien.grall@arm.com>
- <20190429144428.29254-5-julien.grall@arm.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <17855fd3-7f7b-a962-e2bd-c9a0c2dbf765@redhat.com>
-Date:   Tue, 30 Apr 2019 14:34:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190429144428.29254-5-julien.grall@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 30 Apr 2019 12:34:55 +0000 (UTC)
+        Tue, 30 Apr 2019 08:34:59 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46310 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727945AbfD3Me7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 08:34:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 953F080D;
+        Tue, 30 Apr 2019 05:34:58 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4BDD63F5AF;
+        Tue, 30 Apr 2019 05:34:57 -0700 (PDT)
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     axboe@kernel.dk, linux-kernel@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] io_uring: fix SQPOLL cpu validation
+Date:   Tue, 30 Apr 2019 13:34:51 +0100
+Message-Id: <20190430123451.44227-1-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Julien,
+In io_sq_offload_start(), we call cpu_possible() on an unbounded cpu
+value from userspace. On v5.1-rc7 on arm64 with
+CONFIG_DEBUG_PER_CPU_MAPS, this results in a splat:
 
-On 4/29/19 4:44 PM, Julien Grall wrote:
-> its_irq_compose_msi_msg() may be called from non-preemptible context.
-> However, on RT, iommu_dma_map_msi_msg requires to be called from a
-> preemptible context.
-> 
-> A recent change split iommu_dma_map_msi_msg() in two new functions:
-> one that should be called in preemptible context, the other does
-> not have any requirement.
-> 
-> The GICv3 ITS driver is reworked to avoid executing preemptible code in
-> non-preemptible context. This can be achieved by preparing the MSI
-> maping when allocating the MSI interrupt.
-mapping
-> 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> 
-> ---
->     Changes in v2:
->         - Rework the commit message to use imperative mood
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 7577755bdcf4..12ddbcfe1b1e 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -1179,7 +1179,7 @@ static void its_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
->  	msg->address_hi		= upper_32_bits(addr);
->  	msg->data		= its_get_event_id(d);
->  
-> -	iommu_dma_map_msi_msg(d->irq, msg);
-> +	iommu_dma_compose_msi_msg(irq_data_get_msi_desc(d), msg);
->  }
->  
->  static int its_irq_set_irqchip_state(struct irq_data *d,
-> @@ -2566,6 +2566,7 @@ static int its_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  {
->  	msi_alloc_info_t *info = args;
->  	struct its_device *its_dev = info->scratchpad[0].ptr;
-> +	struct its_node *its = its_dev->its;
->  	irq_hw_number_t hwirq;
->  	int err;
->  	int i;
-> @@ -2574,6 +2575,8 @@ static int its_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  	if (err)
->  		return err;
->  
-> +	err = iommu_dma_prepare_msi(info->desc, its->get_msi_base(its_dev));
-Test err as in gicv2m driver?
-> +
->  	for (i = 0; i < nr_irqs; i++) {
->  		err = its_irq_gic_domain_alloc(domain, virq + i, hwirq + i);
->  		if (err)
-> 
-Besides
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+  WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpu_max_bits_warn include/linux/cpumask.h:121 [inline]
 
-Thanks
+There was an attempt to fix this in commit:
 
-Eric
+  917257daa0fea7a0 ("io_uring: only test SQPOLL cpu after we've verified it")
+
+... by adding a check after the cpu value had been limited to NR_CPU_IDS
+using array_index_nospec(). However, this left an unbound check at the
+start of the function, for which the warning still fires.
+
+Let's fix this correctly by checking that the cpu value is bound by
+nr_cpu_ids before passing it to cpu_possible(). Note that only
+nr_cpu_ids of a cpumask are guaranteed to exist at runtime, and
+nr_cpu_ids can be significantly smaller than NR_CPUs. For example, an
+arm64 defconfig has NR_CPUS=256, while my test VM has 4 vCPUs.
+
+Following the intent from the commit message for 917257daa0fea7a0, the
+check is moved under the SQ_AFF branch, which is the only branch where
+the cpu values is consumed. The check is performed before bounding the
+value with array_index_nospec() so that we don't silently accept bogus
+cpu values from userspace, where array_index_nospec() would force these
+values to 0.
+
+I suspect we can remove the array_index_nospec() call entirely, but I've
+conservatively left that in place, updated to use nr_cpu_ids to match
+the prior check.
+
+Tested on arm64 with the Syzkaller reproducer:
+
+  https://syzkaller.appspot.com/bug?extid=cd714a07c6de2bc34293
+  https://syzkaller.appspot.com/x/repro.syz?x=15d8b397200000
+
+Full splat from before this patch:
+
+WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpu_max_bits_warn include/linux/cpumask.h:121 [inline]
+WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpumask_check include/linux/cpumask.h:128 [inline]
+WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpumask_test_cpu include/linux/cpumask.h:344 [inline]
+WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_sq_offload_start fs/io_uring.c:2244 [inline]
+WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_uring_create fs/io_uring.c:2864 [inline]
+WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_uring_setup+0x1108/0x15a0 fs/io_uring.c:2916
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 27601 Comm: syz-executor.0 Not tainted 5.1.0-rc7 #3
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+ dump_backtrace+0x0/0x2f0 include/linux/compiler.h:193
+ show_stack+0x20/0x30 arch/arm64/kernel/traps.c:158
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x110/0x190 lib/dump_stack.c:113
+ panic+0x384/0x68c kernel/panic.c:214
+ __warn+0x2bc/0x2c0 kernel/panic.c:571
+ report_bug+0x228/0x2d8 lib/bug.c:186
+ bug_handler+0xa0/0x1a0 arch/arm64/kernel/traps.c:956
+ call_break_hook arch/arm64/kernel/debug-monitors.c:301 [inline]
+ brk_handler+0x1d4/0x388 arch/arm64/kernel/debug-monitors.c:316
+ do_debug_exception+0x1a0/0x468 arch/arm64/mm/fault.c:831
+ el1_dbg+0x18/0x8c
+ cpu_max_bits_warn include/linux/cpumask.h:121 [inline]
+ cpumask_check include/linux/cpumask.h:128 [inline]
+ cpumask_test_cpu include/linux/cpumask.h:344 [inline]
+ io_sq_offload_start fs/io_uring.c:2244 [inline]
+ io_uring_create fs/io_uring.c:2864 [inline]
+ io_uring_setup+0x1108/0x15a0 fs/io_uring.c:2916
+ __do_sys_io_uring_setup fs/io_uring.c:2929 [inline]
+ __se_sys_io_uring_setup fs/io_uring.c:2926 [inline]
+ __arm64_sys_io_uring_setup+0x50/0x70 fs/io_uring.c:2926
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
+ el0_svc_common.constprop.0+0x148/0x2e0 arch/arm64/kernel/syscall.c:83
+ el0_svc_handler+0xdc/0x100 arch/arm64/kernel/syscall.c:129
+ el0_svc+0x8/0xc arch/arm64/kernel/entry.S:948
+SMP: stopping secondary CPUs
+Dumping ftrace buffer:
+   (ftrace buffer empty)
+Kernel Offset: disabled
+CPU features: 0x002,23000438
+Memory Limit: none
+Rebooting in 1 seconds..
+
+Fixes: 917257daa0fea7a0 ("io_uring: only test SQPOLL cpu after we've verified it")
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-block@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/io_uring.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 0e9fb2cb1984..48fa6e86bfd6 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2240,10 +2240,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ 	mmgrab(current->mm);
+ 	ctx->sqo_mm = current->mm;
+ 
+-	ret = -EINVAL;
+-	if (!cpu_possible(p->sq_thread_cpu))
+-		goto err;
+-
+ 	if (ctx->flags & IORING_SETUP_SQPOLL) {
+ 		ret = -EPERM;
+ 		if (!capable(CAP_SYS_ADMIN))
+@@ -2254,13 +2250,14 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ 			ctx->sq_thread_idle = HZ;
+ 
+ 		if (p->flags & IORING_SETUP_SQ_AFF) {
+-			int cpu;
++			int cpu = p->sq_thread_cpu;
+ 
+-			cpu = array_index_nospec(p->sq_thread_cpu, NR_CPUS);
+ 			ret = -EINVAL;
+-			if (!cpu_possible(p->sq_thread_cpu))
++			if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
+ 				goto err;
+ 
++			cpu = array_index_nospec(cpu, nr_cpu_ids);
++
+ 			ctx->sqo_thread = kthread_create_on_cpu(io_sq_thread,
+ 							ctx, cpu,
+ 							"io_uring-sq");
+-- 
+2.11.0
 
