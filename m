@@ -2,91 +2,135 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07352C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BB8C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C304A21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:27:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ecObLWPT"
+	by mail.kernel.org (Postfix) with ESMTP id A855621670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556591485;
+	bh=qlUNAnzEhUbBYVne9QX7u6GsM/R46ts9rAkRjXjagJg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wJ/vFbA5udWzWzeGi86kwgcBsVMUs0bikvkuO/zuiByXUatqDIfBxmC378dAd34QY
+	 h1WC3QzgvDfPSRU+V+C/JpfWumtWK/7983SCuJc9D/DTcr6EuK66QsHWNbt7kXB2/I
+	 O2A2UnwxiaNBvlwlWGr7EbkzsPCrT5mIINA4pPRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbfD3C13 (ORCPT
+        id S1729930AbfD3CbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 22:27:29 -0400
-Received: from mout.gmx.net ([212.227.15.18]:58017 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729803AbfD3C13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 22:27:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1556591240;
-        bh=gXFsgHzPD6J7UQ9KSqF9iz7GNYGix/DEVgHu32cVH5g=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ecObLWPThGzTkZT2MRHMPOnQP171R05kW8fSRKMrzTbi/ZyW+mX9CJDmnQMJuGFRX
-         xj0A5BzfmiMVgPjjvSPvNXjC3IjsLI+647jxkYauqsQ4uEB+GyDRBj25mOII40mn+2
-         OLhToYtIKurmDZjCF931t+7JXDGE3H9GFavPY1RU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.189.147] ([218.18.229.179]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MZkpR-1hEzex1hFn-00WmUJ; Tue, 30
- Apr 2019 04:27:20 +0200
-Subject: Re: [PATCH] quota: set init_needed flag only when successfully
- getting dquot
-To:     Jan Kara <jack@suse.cz>
-Cc:     jack@suse.com, linux-kernel@vger.kernel.org
-References: <20190428053921.5984-1-cgxu519@gmx.com>
- <20190429214956.GA6740@quack2.suse.cz>
-From:   cgxu519 <cgxu519@gmx.com>
-Message-ID: <5d005f7a-0e5b-57a5-44d4-83b12fdfa9e9@gmx.com>
-Date:   Tue, 30 Apr 2019 10:27:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 22:31:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33879 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729877AbfD3CbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 22:31:23 -0400
+Received: by mail-lj1-f195.google.com with SMTP id s7so8551758ljh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 19:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7bXLV+X1SboPUgfWfwBzkogeRLHq9rIZ+BOOT2J1Fvk=;
+        b=NCQTeCycXmEyoLD3XSPWnZUF+hXdPskjwYAWiIQuU1WhztQQ6dqXbSCj4NSwXP8DWN
+         ZjcvtRAgsvdgAc/3KSLAFxaK4kcCHoNxoycA6JsPI8ky1/xJP5BClUWpKZT4TRT9XT4m
+         1DJsH/YCVSV0nucpo2++hoaf5DTQ5zm7Bsf9A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7bXLV+X1SboPUgfWfwBzkogeRLHq9rIZ+BOOT2J1Fvk=;
+        b=k68LUu2ps+mut+Sbxn4R3VfIyUi+WJslW5Tytb5i2Z5H/Ry/gMbM/8JP6ZGltCTym8
+         wOWmCFhEi9kzEj6vqsSRPbTlFQE+lVRwLydO1JZWhE9SWZ1AKIUUS7qdpg1oBII4Nzqr
+         5PW8SlsWONZgVp2cWUa5hPRZamEhSP5Nc7sWsHcPqc+lK0TcWr27L2y+6MI3WlGApyC1
+         BwjnHCTGigDMtM46VgfUpFlLbB2uSKrAaRpr6kre3vZEFf8wSNyglQd3Kbf0cFf9Uzfp
+         MjjJ1QxWQpfxy2V0BNLtIbRF+PjQfmPdWBtUNY041i9i3hACVSE4SEwpU+oVBXZA4VNe
+         VGYw==
+X-Gm-Message-State: APjAAAWte75G7W9X12HCHhNdWaM5mwNVd4ukFklN6i+rr3dOS/O5sMYq
+        q8qNvIJ4pkVa2UcnSI11rxj8LfhFeXM=
+X-Google-Smtp-Source: APXvYqzX4LIrn9Lmm39zgQZZIL72HkotBiUDOa5hEvDGjKyEEmCYpJ8w2Jtdomo+3DCkQ4WilN3WnA==
+X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr35261295lje.22.1556591481343;
+        Mon, 29 Apr 2019 19:31:21 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id j6sm8591285ljc.0.2019.04.29.19.31.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 19:31:20 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id h126so9587379lfh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 19:31:20 -0700 (PDT)
+X-Received: by 2002:a19:ca02:: with SMTP id a2mr33690036lfg.88.1556591178970;
+ Mon, 29 Apr 2019 19:26:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190429214956.GA6740@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:zWtgcCT0QM3/aVAXP0ltgTAFWSo7O9XnzuXZJPCBCtcv0h0lCNQ
- qCjiccIdXUSij1gwbSf97s5xhBaTG5JjKBKdoyqpa/IUgcsAA7IRaxYdzHcq4BlZZ0IuOXD
- mWQpEo9pPFlgbv/iM/l7bCzONE9q2lKBwK9RIwzQdCOHsfWT/AYk9FixfJW3dSHc6ShsriC
- 4ptWZn6Qb3rDX12cxg4BQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LOiZKh1A8Us=:DVKf3QwjlBgSquh2ha0Lt0
- t7KuyZORXRIuYtVnDKB5ab/hpBF5MVH7pUcqgxrCLumelwTLUlgxfEMjiXseNzQairj4glrU1
- PnYGHJtLf2Ix7O/L3EPDYahNk8OEDTyOEs1m2Wilui/jWrb6Cwqp6YhwDKQJ9Sk//+cX8Mp6V
- LaDuUNNx8+pXfRMs9lIxQIzPS44y3J6za2RYQtPCgXqOA3L8Tcc3cGCCBs6BP6Dtj2cr2D4Zl
- TFD5EdMQf8YHXDrhMC2OZyFU6hfYovB95WE5aSduiXx5hl5eseSk3ayhASNAeehnHtC/GkpNi
- DJbnVOWP9Kn9YZYPgyhNT4z0ynf5HALtPuJUxWAmIBzqCXZOyovnaO0zxcHPpQREMGZSw6r3y
- Bk0/PwBwUXphsWREseIyRr3q55bVCr4xfiKc7Vi2V7ebS0ScXb03Iu3A5lxWxWUFAH/3MmeVd
- +sQNcTwIzt8PLpsCBjZ7EGL3BsWB5ZHtR0TBinkR3lnStKlYr2GC0ZGTVO8Qm8ScAjIV/KRZk
- nU5eVyDBjRX6rZwqilLZaQXkKQYVi7nV7KP9egVZbXIcK0s/u7WWK0m8FIs7+57svk77x2JcZ
- k0p4BdR2XYrcYiUjtrCkJxPvKK30xEym/7Sc/EH9fYCkEqlWREUttGmf4aWIrEYkYAHHVsafr
- F59cPbMplUW7cQgS3NadEh7H+popF9wKkqwbTaX5M5VbLRD+LnBAIXbJowJ2ZtLB86rRk+H1v
- S3Qdnw8iIZHqGtrLZdW25ezUDZ2UL7zpye1hrhjb6lWkIksTHQxj4conD98pUtI2ReMZkA0Yy
- jrKUW1XnfzXwArebCakN7skKeV3J6CfK4znnDcupmd72VgtKU2wnITGnImG2jiVXARw7yXdT9
- mfz7CkrS3/FxQ78HPTv+69gVCO983YgbWywB4NJssSPNoFoJnNg358Pf9ib2L7utxQ3K808JH
- Pxx7MnztQeQ==
+References: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
+ <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+ <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+ <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
+ <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
+ <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com>
+ <20190429220814.GF31379@linux.intel.com> <CAHk-=whpq2=f2LdB-nc52Rd=iZkUH-N-r8OTqEfo+4UaJc7piA@mail.gmail.com>
+ <20190430000846.GG31379@linux.intel.com> <20190430004504.GH31379@linux.intel.com>
+In-Reply-To: <20190430004504.GH31379@linux.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 29 Apr 2019 19:26:02 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjXHfVkrO6ftk9FGtAbpCsaEBa+tGrC8qjV6RUJHu+pCg@mail.gmail.com>
+Message-ID: <CAHk-=wjXHfVkrO6ftk9FGtAbpCsaEBa+tGrC8qjV6RUJHu+pCg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andrew Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 5:49 AM, Jan Kara wrote:
-> On Sun 28-04-19 13:39:21, Chengguang Xu wrote:
->> Set init_needed flag only when successfully getting dquot,
->> so that we can skip unnecessary subsequent operation.
->>
->> Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-> Thanks for the patch but I don't think it's really useful. It will be very
-> rare that we race with quotaoff of dqget() fails due to error. So the
-> additional overhead of iterating over dquots doesn't really matter in that
-> case.
+On Mon, Apr 29, 2019 at 5:45 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Mon, Apr 29, 2019 at 05:08:46PM -0700, Sean Christopherson wrote:
+> >
+> > It's 486 based, but either way I suspect the answer is "yes".  IIRC,
+> > Knights Corner, a.k.a. Larrabee, also had funkiness around SMM and that
+> > was based on P54C, though I'm struggling to recall exactly what the
+> > Larrabee weirdness was.
+>
+> Aha!  Found an ancient comment that explicitly states P5 does not block
+> NMI/SMI in the STI shadow, while P6 does block NMI/SMI.
 
-Hi Jan,
+Ok, so the STI shadow really wouldn't be reliable on those machines. Scary.
 
-Thanks for the comment, I got it.
+Of course, the good news is that hopefully nobody has them any more,
+and if they do, they presumably don't use fancy NMI profiling etc, so
+any actual NMI's are probably relegated purely to largely rare and
+effectively fatal errors anyway (ie memory parity errors).
 
-Chengguang.
-
+                     Linus
