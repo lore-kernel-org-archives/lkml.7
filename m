@@ -2,51 +2,53 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E097EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB6DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCFC2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492DC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625403;
-	bh=ZjSnPPE3GJxDV7BkqDZlz1xwMuO9b69kcF0NnUB0768=;
+	s=default; t=1556625422;
+	bh=anrotz1C9fOH+b6UZBvHZyzMJdl96x+yIRuz/JNQ6TU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QBoX4k4Dj/BQBoTnfBdASl39hwq4lKDW6/X3dNXbAT/v+w3mUFxEefiWPF2hUs+s9
-	 D0ZVsJU/RJjXtB1bUBZZ1HnHRfeduzdeMiwkD+dvDI45nsu2M7tjApMWrabFl9vm/H
-	 8bFTqVM9KEIzxXy8JK1h1h1foaa5Mxg+TcHDovOQ=
+	b=OWgIF8DqdaMUaK93Mnch6lb6e3Bx+7Z+e1BIyWZWVjljO+FFLUowMpYdywM8OCpBR
+	 /zRGXzCC6pHfe75A6lJ2h7XsfhBocwdfrO4eUwIaUvck85d24jVQhwIPWxuEIU0HAe
+	 9ww3auTMmver1ZQNFm88o0uL0bo5RUOHXM0ZReas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfD3L4m (ORCPT
+        id S1727354AbfD3L5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:56:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34788 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:57:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730875AbfD3Lsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:36 -0400
+        id S1730271AbfD3LsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FFC520449;
-        Tue, 30 Apr 2019 11:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 421FD2054F;
+        Tue, 30 Apr 2019 11:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624915;
-        bh=ZjSnPPE3GJxDV7BkqDZlz1xwMuO9b69kcF0NnUB0768=;
+        s=default; t=1556624899;
+        bh=anrotz1C9fOH+b6UZBvHZyzMJdl96x+yIRuz/JNQ6TU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aG2XUpM6BO/3Txynx4zXmYTbE0uvEiEDlXpaThnyxPiZ5IL3NIFd8IGyJWF7sCD9v
-         KXQSUSM5Oyfh0Vaj/htIwsDvUcH7tsL3B9wW8hVmzP/vzrITlgTUa23kRKzHT9Fz+T
-         fOZohROoE3KYCy3SmTjlxM1Xm6d5npzyzjyrYcn4=
+        b=vPbam7QuxwFykPRYxG0+7QOjXvEFCzddESUmS44WaB4mTRvZ4jVdcn83YFzhv+spU
+         N++aC7lIvW4yESW+j4aIl9B6sHChiZ1ax3zYNNaeDm/qJF9e+KSrSnuZ64ETx3Hvum
+         4XN4Sc4GtJnuVLHNWFOeVyTddiYCYOxvr2QRKIvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.0 21/89] arm64: mm: Ensure tail of unaligned initrd is reserved
-Date:   Tue, 30 Apr 2019 13:38:12 +0200
-Message-Id: <20190430113611.059391513@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitrii Tcvetkov <demfloro@demfloro.ru>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 07/89] block, bfq: fix use after free in bfq_bfqq_expire
+Date:   Tue, 30 Apr 2019 13:37:58 +0200
+Message-Id: <20190430113610.117110202@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,40 +61,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+[ Upstream commit eed47d19d9362bdd958e4ab56af480b9dbf6b2b6 ]
 
-commit d4d18e3ec6091843f607e8929a56723e28f393a6 upstream.
+The function bfq_bfqq_expire() invokes the function
+__bfq_bfqq_expire(), and the latter may free the in-service bfq-queue.
+If this happens, then no other instruction of bfq_bfqq_expire() must
+be executed, or a use-after-free will occur.
 
-In the event that the start address of the initrd is not aligned, but
-has an aligned size, the base + size will not cover the entire initrd
-image and there is a chance that the kernel will corrupt the tail of the
-image.
+Basing on the assumption that __bfq_bfqq_expire() invokes
+bfq_put_queue() on the in-service bfq-queue exactly once, the queue is
+assumed to be freed if its refcounter is equal to one right before
+invoking __bfq_bfqq_expire().
 
-By aligning the end of the initrd to a page boundary and then
-subtracting the adjusted start address the memblock reservation will
-cover all pages that contains the initrd.
+But, since commit 9dee8b3b057e ("block, bfq: fix queue removal from
+weights tree") this assumption is false. __bfq_bfqq_expire() may also
+invoke bfq_weights_tree_remove() and, since commit 9dee8b3b057e
+("block, bfq: fix queue removal from weights tree"), also
+the latter function may invoke bfq_put_queue(). So __bfq_bfqq_expire()
+may invoke bfq_put_queue() twice, and this is the actual case where
+the in-service queue may happen to be freed.
 
-Fixes: c756c592e442 ("arm64: Utilize phys_initrd_start/phys_initrd_size")
-Cc: stable@vger.kernel.org
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To address this issue, this commit moves the check on the refcounter
+of the queue right around the last bfq_put_queue() that may be invoked
+on the queue.
 
+Fixes: 9dee8b3b057e ("block, bfq: fix queue removal from weights tree")
+Reported-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bfq-iosched.c | 15 +++++++--------
+ block/bfq-iosched.h |  2 +-
+ block/bfq-wf2q.c    | 17 +++++++++++++++--
+ 3 files changed, 23 insertions(+), 11 deletions(-)
 
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -406,7 +406,7 @@ void __init arm64_memblock_init(void)
- 		 * Otherwise, this is a no-op
- 		 */
- 		u64 base = phys_initrd_start & PAGE_MASK;
--		u64 size = PAGE_ALIGN(phys_initrd_size);
-+		u64 size = PAGE_ALIGN(phys_initrd_start + phys_initrd_size) - base;
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index e5ed28629271..72510c470001 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2804,7 +2804,7 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
+ 	bfq_remove_request(q, rq);
+ }
  
- 		/*
- 		 * We can only add back the initrd memory if we don't end up
+-static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
++static bool __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ {
+ 	/*
+ 	 * If this bfqq is shared between multiple processes, check
+@@ -2837,9 +2837,11 @@ static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ 	/*
+ 	 * All in-service entities must have been properly deactivated
+ 	 * or requeued before executing the next function, which
+-	 * resets all in-service entites as no more in service.
++	 * resets all in-service entities as no more in service. This
++	 * may cause bfqq to be freed. If this happens, the next
++	 * function returns true.
+ 	 */
+-	__bfq_bfqd_reset_in_service(bfqd);
++	return __bfq_bfqd_reset_in_service(bfqd);
+ }
+ 
+ /**
+@@ -3244,7 +3246,6 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
+ 	bool slow;
+ 	unsigned long delta = 0;
+ 	struct bfq_entity *entity = &bfqq->entity;
+-	int ref;
+ 
+ 	/*
+ 	 * Check whether the process is slow (see bfq_bfqq_is_slow).
+@@ -3313,10 +3314,8 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
+ 	 * reason.
+ 	 */
+ 	__bfq_bfqq_recalc_budget(bfqd, bfqq, reason);
+-	ref = bfqq->ref;
+-	__bfq_bfqq_expire(bfqd, bfqq);
+-
+-	if (ref == 1) /* bfqq is gone, no more actions on it */
++	if (__bfq_bfqq_expire(bfqd, bfqq))
++		/* bfqq is gone, no more actions on it */
+ 		return;
+ 
+ 	bfqq->injected_service = 0;
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 746bd570b85a..ca98c98a8179 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -993,7 +993,7 @@ bool __bfq_deactivate_entity(struct bfq_entity *entity,
+ 			     bool ins_into_idle_tree);
+ bool next_queue_may_preempt(struct bfq_data *bfqd);
+ struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd);
+-void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
++bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
+ void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 			 bool ins_into_idle_tree, bool expiration);
+ void bfq_activate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq);
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 4aab1a8191f0..8077bf71d2ac 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -1599,7 +1599,8 @@ struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd)
+ 	return bfqq;
+ }
+ 
+-void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
++/* returns true if the in-service queue gets freed */
++bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
+ {
+ 	struct bfq_queue *in_serv_bfqq = bfqd->in_service_queue;
+ 	struct bfq_entity *in_serv_entity = &in_serv_bfqq->entity;
+@@ -1623,8 +1624,20 @@ void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
+ 	 * service tree either, then release the service reference to
+ 	 * the queue it represents (taken with bfq_get_entity).
+ 	 */
+-	if (!in_serv_entity->on_st)
++	if (!in_serv_entity->on_st) {
++		/*
++		 * If no process is referencing in_serv_bfqq any
++		 * longer, then the service reference may be the only
++		 * reference to the queue. If this is the case, then
++		 * bfqq gets freed here.
++		 */
++		int ref = in_serv_bfqq->ref;
+ 		bfq_put_queue(in_serv_bfqq);
++		if (ref == 1)
++			return true;
++	}
++
++	return false;
+ }
+ 
+ void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+-- 
+2.19.1
+
 
 
