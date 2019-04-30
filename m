@@ -2,212 +2,174 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2F1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847ADC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EAF20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AEF220835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:10:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xbNda5Qh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfD3HKA (ORCPT
+        id S1726326AbfD3HKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:10:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52858 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfD3HKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:10:00 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0E89681DF4;
-        Tue, 30 Apr 2019 07:09:59 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E30C51001DD2;
-        Tue, 30 Apr 2019 07:09:52 +0000 (UTC)
-Subject: Re: [PATCH v7 00/23] SMMUv3 Nested Stage Setup
-To:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com, robin.murphy@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <d9967a8c-cd3b-6994-c5ef-c4341aaaf0fd@redhat.com>
-Date:   Tue, 30 Apr 2019 09:09:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 30 Apr 2019 03:10:42 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36515 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfD3HKl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:10:41 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y8so5343255ljd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 00:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=AAEBm4fikJXyLjzi5P80VcRJzOXO5JftWtkBOWC0wf4=;
+        b=xbNda5QhdsE64EoTj7fwTiiTy59GBAPQg9LWuiSoeK8GEuTBOVH3Ctm86QAfZYfucn
+         2H/oXbSEYnk1jK9K2ejWKA9lJolJ2AKg6idKVabhAKpIWY5U1NgUd3zX4hfK6TFPTD8V
+         ItUDPbGj2RugOm6rtDSJE4NcN7SR5TIBQHNMRLJpLYvWGM6zuv4lPuYIM5HE5XHlptkq
+         AB1bZLEqllw4YHWe8VQUBQ1MNzxX1eX/fEVZn/LTdzRllQKMFxxvTzRTxpFLo81FbHaO
+         O5QvlEk0cJ/Bw9V13af3elPWMM4F/QTjtch8i5QfqvHFkN31PS5KZmnupuxUWEUd7v/8
+         /qoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=AAEBm4fikJXyLjzi5P80VcRJzOXO5JftWtkBOWC0wf4=;
+        b=XAKvc6fldSyCdAcAfdEJqCnBRVnRazJnCf+HrvoTH4lamN5lYK/dA3QOptk4bVoRpJ
+         Le88T3AI+QZ4XOuGo3q8D8DaPcdfco8MdJPKzDJyJ+9+Nth6uLHhsf9sFkBiPTmDC9eS
+         v/FMaukrVqgZk1xK5Am9yxWba9/eJeevORRo+RZlIkOYEInT2w7dhCvy7k8xV3AgStOs
+         VTX/T+89KmQVzh+UfywYofpA7IsNQUlKqdXgBB2KF9SXaKDp+6azLdwtaupVbdHb8Gdm
+         PmaCIVlyOxrzUNQN3Wionb545IF/RTAr2GsOw3VDZPj8kgEI2aR9qfC3alTVxmmcyg2P
+         zhVw==
+X-Gm-Message-State: APjAAAWUHXcCDg7yEUyO0Yq9bUDXJHbE4fgnfwEYD7JNXsTlt9RJmmmS
+        OuYFanA22n0sNa+qDyJn/A8H1Y8/eKwA9NLhT8PA6fh4wQA=
+X-Google-Smtp-Source: APXvYqwD3wrNL/z/0s6FMtN5R3Gbbl7h0X701DfEvS1eeYIShEtsDOYkE6MerrSlNaoHthg0MwGK5NV7Rpeo9ZSIpCQ=
+X-Received: by 2002:a2e:9dcb:: with SMTP id x11mr754253ljj.123.1556608237401;
+ Tue, 30 Apr 2019 00:10:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190408121911.24103-1-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 30 Apr 2019 07:09:59 +0000 (UTC)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 30 Apr 2019 12:40:26 +0530
+Message-ID: <CA+G9fYuZhS+QfgM0HrNm4B8Yb+0kwScxaURJDYXKPY-ML_L0cQ@mail.gmail.com>
+Subject: vidioc_g_edid: BUG: Unable to handle kernel NULL pointer dereference
+ at virtual address 00000716
+To:     open list <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     samitolvanen@google.com, paul.kocialkowski@bootlin.com,
+        ezequiel@collabora.com, treding@nvidia.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        sakari.ailus@linux.intel.com,
+        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
+        lkft-triage@lists.linaro.org, hverkuil-cisco@xs4all.nl
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+v4l2-compliance test running on linux stable 4.9 reported kernel bug.
+The crash is pointing to kernel module "vivid.ko" which was loaded by
+test case. (  modprobe vivid.ko)
 
-On 4/8/19 2:18 PM, Eric Auger wrote:
-> This series allows a virtualizer to program the nested stage mode.
-> This is useful when both the host and the guest are exposed with
-> an SMMUv3 and a PCI device is assigned to the guest using VFIO.
-> 
-> In this mode, the physical IOMMU must be programmed to translate
-> the two stages: the one set up by the guest (IOVA -> GPA) and the
-> one set up by the host VFIO driver as part of the assignment process
-> (GPA -> HPA).
-> 
-> On Intel, this is traditionnaly achieved by combining the 2 stages
-> into a single physical stage. However this relies on the capability
-> to trap on each guest translation structure update. This is possible
-> by using the VTD Caching Mode. Unfortunately the ARM SMMUv3 does
-> not offer a similar mechanism.
-> 
-> However, the ARM SMMUv3 architecture supports 2 physical stages! Those
-> were devised exactly with that use case in mind. Assuming the HW
-> implements both stages (optional), the guest now can use stage 1
-> while the host uses stage 2.
-> 
-> This assumes the virtualizer has means to propagate guest settings
-> to the host SMMUv3 driver. This series brings this VFIO/IOMMU
-> infrastructure.  Those services are:
-> - bind the guest stage 1 configuration to the stream table entry
-> - propagate guest TLB invalidations
-> - bind MSI IOVAs
-> - propagate faults collected at physical level up to the virtualizer
-> 
-> This series largely reuses the user API and infrastructure originally
-> devised for SVA/SVM and patches submitted by Jacob, Yi Liu, Tianyu in
-> [1-2] and Jean-Philippe [3-4].
+Test passes on 4.4, 4.14, 4.19 and 5.0.
+steps to reproduce:
 
-I am going to respin on top of latest Jean-Philippe's 5.2 changes in
-arm-smmu-v3.c. Do you have some comments on changes done since your last
-review? Does it go towards the good direction from the iommu API pov and
-smmuv3 implementation?
+       # boot 4.9 kernel on x86_64 / Juno / hikey /  device
+       #  install v4l-utils package
+       # modprobe vivid.ko no_error_inj=1
+       # v4l2-compliance -v -d /dev/video0
+       # you will get BUG: Unable to handle kernel NULL pointer dereference
 
-Thanks
+arm64 juno-r2 test output log,
+----------------------------------------
+INFO: Running v4l2-compliance device test...
+[   48.574093] vivid-000: =================  START STATUS  =================
+[   48.580866] vivid-000: Test Pattern: 75% Colorbar
+...
+[   48.730569] tpg RGB range: 0/2
+[   48.733592] vivid-000: ==================  END STATUS  ==================
+[   48.753649] BUG: Unable to handle kernel NULL pointer dereference
+at virtual address 00000716
+[   48.761689] pgd = ffff80094d113000
+[   48.765097] [00000716] *pgd=00000009f4300003,
+*pud=00000009f513c003, *pmd=0000000000000000
+[   48.773666] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[   48.779186] Modules linked in: vivid videobuf2_vmalloc
+videobuf2_memops v4l2_tpg videobuf2_v4l2 videobuf2_core fuse
+[   48.789574] CPU: 5 PID: 2278 Comm: v4l2-compliance Not tainted 4.9.169-rc1 #1
+[   48.796637] Hardware name: ARM Juno development board (r2) (DT)
+[   48.802496] task: ffff8009741e5800 task.stack: ffff80096ec9c000
+[   48.808405] PC is at vidioc_g_edid+0xb8/0x150 [vivid]
+[   48.813445] LR is at vidioc_g_edid+0xb4/0x150 [vivid]
+[   48.818444] pc : [<ffff000000bffc80>] lr : [<ffff000000bffc7c>]
+pstate: 40000145
+[   48.825764] sp : ffff80096ec9fbc0
+[   48.829043] x29: ffff80096ec9fbc0 x28: 0000000000000000
+[   48.834311] x27: ffff800972fd0590 x26: 0000000000000028
+[   48.839580] x25: 0000000000000000 x24: ffff000009289eb0
+[   48.844849] x23: ffff80096ec9fd10 x22: ffff80096ec9fd10
+[   48.850118] x21: 0000000000000000 x20: ffff800972fd0000
+[   48.855387] x19: ffff80096ec9fd10 x18: 0000ffffc63f1d4f
+[   48.860656] x17: 0000ffffb0186910 x16: ffff0000082c9840
+[   48.865924] x15: 000000000000000a x14: 2700000000000000
+[   48.871193] x13: 0000001c0000321c x12: c000358040201cd0
+[   48.876461] x11: 5180001d1a1a0000 x10: 321cc00035203040
+[   48.881730] x9 : 1f3870a080361a1e x8 : 0000321cc0003520
+[   48.886998] x7 : 30803e70f0a000d0 x6 : ffff800972dbdc00
+[   48.892267] x5 : ffff800972ca0000 x4 : 0000000000000000
+[   48.897534] x3 : 0000000000000002 x2 : ffffffffffffffc0
+[   48.902803] x1 : ffff00000ba83100 x0 : ffff800972dbdb00
+[   48.908069]
+[   48.909543] Process v4l2-compliance (pid: 2278, stack limit =
+0xffff80096ec9c020)
+[   48.916951] Stack: (0xffff80096ec9fbc0 to 0xffff80096eca0000)
+[   48.922642] fbc0: ffff80096ec9fbf0 ffff000008900194
+00000000c0285628 ffff80097537aa80
+...
+...
+...
+[   49.272633] [<ffff000000bffc80>] vidioc_g_edid+0xb8/0x150 [vivid]
+[   49.278672] [<ffff000008900194>] __video_do_ioctl+0x204/0x2f8
+[   49.284362] [<ffff0000088ff990>] video_usercopy+0x230/0x7e0
+[   49.289879] [<ffff0000088fff7c>] video_ioctl2+0x3c/0x50
+[   49.295052] [<ffff0000088fa394>] v4l2_ioctl+0x8c/0x128
+[   49.300143] [<ffff0000082c9060>] do_vfs_ioctl+0xb0/0x890
+[   49.305404] [<ffff0000082c98cc>] SyS_ioctl+0x8c/0xa8
+[   49.310321] [<ffff0000080841dc>] __sys_trace_return+0x0/0x4
+[   49.315841] Code: 53196042 f9401260 95e37502 f9401260 (794e2ea2)
+[   49.321877] ---[ end trace 2f24332f5b488208 ]---
 
-Eric
-> 
-> Best Regards
-> 
-> Eric
-> 
-> This series can be found at:
-> https://github.com/eauger/linux/tree/v5.1-rc3-2stage-v7
-> 
-> References:
-> [1] [PATCH v5 00/23] IOMMU and VT-d driver support for Shared Virtual
->     Address (SVA)
->     https://lwn.net/Articles/754331/
-> [2] [RFC PATCH 0/8] Shared Virtual Memory virtualization for VT-d
->     (VFIO part)
->     https://lists.linuxfoundation.org/pipermail/iommu/2017-April/021475.html
-> [3] [v2,00/40] Shared Virtual Addressing for the IOMMU
->     https://patchwork.ozlabs.org/cover/912129/
-> [4] [PATCH v3 00/10] Shared Virtual Addressing for the IOMMU
->     https://patchwork.kernel.org/cover/10608299/
-> 
-> History:
-> v6 -> v7:
-> - removed device handle from bind/unbind_guest_msi
-> - added "iommu/smmuv3: Nested mode single MSI doorbell per domain
->   enforcement"
-> - added few uapi comments as suggested by Jean, Jacop and Alex
-> 
-> v5 -> v6:
-> - Fix compilation issue when CONFIG_IOMMU_API is unset
-> 
-> v4 -> v5:
-> - fix bug reported by Vincent: fault handler unregistration now happens in
->   vfio_pci_release
-> - IOMMU_FAULT_PERM_* moved outside of struct definition + small
->   uapi changes suggested by Kean-Philippe (except fetch_addr)
-> - iommu: introduce device fault report API: removed the PRI part.
-> - see individual logs for more details
-> - reset the ste abort flag on detach
-> 
-> v3 -> v4:
-> - took into account Alex, jean-Philippe and Robin's comments on v3
-> - rework of the smmuv3 driver integration
-> - add tear down ops for msi binding and PASID table binding
-> - fix S1 fault propagation
-> - put fault reporting patches at the beginning of the series following
->   Jean-Philippe's request
-> - update of the cache invalidate and fault API uapis
-> - VFIO fault reporting rework with 2 separate regions and one mmappable
->   segment for the fault queue
-> - moved to PATCH
-> 
-> v2 -> v3:
-> - When registering the S1 MSI binding we now store the device handle. This
->   addresses Robin's comment about discimination of devices beonging to
->   different S1 groups and using different physical MSI doorbells.
-> - Change the fault reporting API: use VFIO_PCI_DMA_FAULT_IRQ_INDEX to
->   set the eventfd and expose the faults through an mmappable fault region
-> 
-> v1 -> v2:
-> - Added the fault reporting capability
-> - asid properly passed on invalidation (fix assignment of multiple
->   devices)
-> - see individual change logs for more info
-> 
-> 
-> Eric Auger (14):
->   iommu: Introduce bind/unbind_guest_msi
->   vfio: VFIO_IOMMU_BIND/UNBIND_MSI
->   iommu/smmuv3: Get prepared for nested stage support
->   iommu/smmuv3: Implement attach/detach_pasid_table
->   iommu/smmuv3: Implement cache_invalidate
->   dma-iommu: Implement NESTED_MSI cookie
->   iommu/smmuv3: Nested mode single MSI doorbell per domain enforcement
->   iommu/smmuv3: Implement bind/unbind_guest_msi
->   iommu/smmuv3: Report non recoverable faults
->   vfio-pci: Add a new VFIO_REGION_TYPE_NESTED region type
->   vfio-pci: Register an iommu fault handler
->   vfio_pci: Allow to mmap the fault queue
->   vfio-pci: Add VFIO_PCI_DMA_FAULT_IRQ_INDEX
->   vfio: Document nested stage control
-> 
-> Jacob Pan (4):
->   driver core: add per device iommu param
->   iommu: introduce device fault data
->   iommu: introduce device fault report API
->   iommu: Introduce attach/detach_pasid_table API
-> 
-> Jean-Philippe Brucker (2):
->   iommu/arm-smmu-v3: Link domains and devices
->   iommu/arm-smmu-v3: Maintain a SID->device structure
-> 
-> Liu, Yi L (3):
->   iommu: Introduce cache_invalidate API
->   vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE
->   vfio: VFIO_IOMMU_CACHE_INVALIDATE
-> 
->  Documentation/vfio.txt              |  83 ++++
->  drivers/iommu/arm-smmu-v3.c         | 631 ++++++++++++++++++++++++++--
->  drivers/iommu/dma-iommu.c           | 129 +++++-
->  drivers/iommu/iommu.c               | 205 ++++++++-
->  drivers/vfio/pci/vfio_pci.c         | 214 ++++++++++
->  drivers/vfio/pci/vfio_pci_intrs.c   |  19 +
->  drivers/vfio/pci/vfio_pci_private.h |  18 +
->  drivers/vfio/pci/vfio_pci_rdwr.c    |  73 ++++
->  drivers/vfio/vfio_iommu_type1.c     | 172 ++++++++
->  include/linux/device.h              |   3 +
->  include/linux/dma-iommu.h           |  17 +
->  include/linux/iommu.h               | 135 ++++++
->  include/uapi/linux/iommu.h          | 240 +++++++++++
->  include/uapi/linux/vfio.h           | 107 +++++
->  14 files changed, 2013 insertions(+), 33 deletions(-)
->  create mode 100644 include/uapi/linux/iommu.h
-> 
+
+Full test log,
+https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.168-78-g6ecae2ce7b5a/testrun/680319/log
+
+Linux kernel version,
+Linux version 4.9.169-rc1 (oe-user@oe-host) (gcc version 7.3.0 (GCC) )
+#1 SMP Tue Apr 16 18:34:31 UTC 2019
+
+Code snippet:
+long video_ioctl2(struct file *file,
+      unsigned int cmd, unsigned long arg)
+{
+return video_usercopy(file, cmd, arg, __video_do_ioctl);
+}
+EXPORT_SYMBOL(video_ioctl2);
+
+
+Test logs from each device,
+Juno-r2: arm64
+https://lkft.validation.linaro.org/scheduler/job/680319#L1389
+
+X86_64:
+https://lkft.validation.linaro.org/scheduler/job/680361#L1143
+
+Hikey: arm64
+https://lkft.validation.linaro.org/scheduler/job/680287#L1564
+
+BeagleBoard-x15: arm32
+https://lkft.validation.linaro.org/scheduler/job/680377#L1540
+
+Best regards
+Naresh Kamboju
