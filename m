@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D4EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FB9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC83821670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3224521670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624942;
-	bh=dvAnglenaAPPEDdrNg0L+1ChK2siq9KNAMIzym/7tvo=;
+	s=default; t=1556624949;
+	bh=pshKlxxplvR1pLAnd9ve0f3N039W3du/cqrQvApkfX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gvxo/kBt97+Zqjj0WSXv0Ussd+jHYerb58G18RKpNFFZ2sYYD58muCr3iKDLDdfRO
-	 NWejMJeW7wd/l5d96WlQDwvnC6bxun2Q3XNUln0g+nbfRXhZw+qN10eGIT476scHaB
-	 0EAyfPFpklQ7TxL1P13GxJd5biC0ux/ElS+ku26k=
+	b=rBhgVVKxnyl4j/1SZicvc8TmfFrGoYXXR7xDtF1JJHmWPi1jAqbesR3tg4yNuOYp7
+	 DGbDdGz8OgKaIe1gwEEHCpLcSyGEkE/ZZFqsSHPP0UFEURvUbN4hLV414q+mX+iIU5
+	 8WgX0/R3x3fjciC8L1ANLvME1Gmk6yvjzdO4mvEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730427AbfD3LtB (ORCPT
+        id S1730953AbfD3LtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35222 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730216AbfD3Lsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:54 -0400
+        id S1730934AbfD3LtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9683A20449;
-        Tue, 30 Apr 2019 11:48:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE31D20449;
+        Tue, 30 Apr 2019 11:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624934;
-        bh=dvAnglenaAPPEDdrNg0L+1ChK2siq9KNAMIzym/7tvo=;
+        s=default; t=1556624944;
+        bh=pshKlxxplvR1pLAnd9ve0f3N039W3du/cqrQvApkfX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cjmt9FTkaymuKw/cF4wfVQ4YLFebqQquqij+6EqCeNP15Q32GEUZesiV/sHxeFBEN
-         GtL1Ofq24PgL7ImbmVqEZOg+q//JQ63pJLGb7nNogYCwfrJO6pvomzs/wDsQ5hBNzq
-         9WNjYim6lujACTP/1iA4FBzlg3sYghl4rEbyT0Do=
+        b=T2PTzaOEDoHO9Iv9Ufa+moWLRGaICiFtZxhsJGcBYYTwVXYcsGRedO04sEaV2i365
+         sQn6J9LRnnIvPK6YWjsBmoQHXLmNgPmeRb0pO+fJZGug34kzM3lh+RfWeRlGkruUxt
+         4+sZrfFCYrNJlxABm5gS8Pq8kPAgCTbdQidx6UIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 5.0 28/89] ceph: ensure d_name stability in ceph_dentry_hash()
-Date:   Tue, 30 Apr 2019 13:38:19 +0200
-Message-Id: <20190430113611.284744685@linuxfoundation.org>
+        stable@vger.kernel.org, Slawomir Pryczek <slawek1211@gmail.com>,
+        Neil Brown <neilb@suse.com>, Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 5.0 31/89] nfsd: wake waiters blocked on file_lock before deleting it
+Date:   Tue, 30 Apr 2019 13:38:22 +0200
+Message-Id: <20190430113611.383864519@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -61,42 +62,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jeff Layton <jlayton@kernel.org>
 
-commit 76a495d666e5043ffc315695f8241f5e94a98849 upstream.
+commit 6aaafc43a4ecc5bc8a3f6a2811d5eddc996a97f3 upstream.
 
-Take the d_lock here to ensure that d_name doesn't change.
+After a blocked nfsd file_lock request is deleted, knfsd will send a
+callback to the client and then free the request. Commit 16306a61d3b7
+("fs/locks: always delete_block after waiting.") changed it such that
+locks_delete_block is always called on a request after it is awoken,
+but that patch missed fixing up blocked nfsd request handling.
 
+Call locks_delete_block on the block to wake up any locks still blocked
+on the nfsd lock request before freeing it. Some of its callers already
+do this however, so just remove those calls.
+
+URL: https://bugzilla.kernel.org/show_bug.cgi?id=203363
+Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
+Reported-by: Slawomir Pryczek <slawek1211@gmail.com>
+Cc: Neil Brown <neilb@suse.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/dir.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/ceph/dir.c
-+++ b/fs/ceph/dir.c
-@@ -1470,6 +1470,7 @@ void ceph_dentry_lru_del(struct dentry *
- unsigned ceph_dentry_hash(struct inode *dir, struct dentry *dn)
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -265,6 +265,7 @@ find_or_allocate_block(struct nfs4_locko
+ static void
+ free_blocked_lock(struct nfsd4_blocked_lock *nbl)
  {
- 	struct ceph_inode_info *dci = ceph_inode(dir);
-+	unsigned hash;
- 
- 	switch (dci->i_dir_layout.dl_dir_hash) {
- 	case 0:	/* for backward compat */
-@@ -1477,8 +1478,11 @@ unsigned ceph_dentry_hash(struct inode *
- 		return dn->d_name.hash;
- 
- 	default:
--		return ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
-+		spin_lock(&dn->d_lock);
-+		hash = ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
- 				     dn->d_name.name, dn->d_name.len);
-+		spin_unlock(&dn->d_lock);
-+		return hash;
++	locks_delete_block(&nbl->nbl_lock);
+ 	locks_release_private(&nbl->nbl_lock);
+ 	kfree(nbl);
+ }
+@@ -293,7 +294,6 @@ remove_blocked_locks(struct nfs4_lockown
+ 		nbl = list_first_entry(&reaplist, struct nfsd4_blocked_lock,
+ 					nbl_lru);
+ 		list_del_init(&nbl->nbl_lru);
+-		locks_delete_block(&nbl->nbl_lock);
+ 		free_blocked_lock(nbl);
  	}
  }
- 
+@@ -4863,7 +4863,6 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 		nbl = list_first_entry(&reaplist,
+ 					struct nfsd4_blocked_lock, nbl_lru);
+ 		list_del_init(&nbl->nbl_lru);
+-		locks_delete_block(&nbl->nbl_lock);
+ 		free_blocked_lock(nbl);
+ 	}
+ out:
 
 
