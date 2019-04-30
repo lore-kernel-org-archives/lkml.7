@@ -2,145 +2,261 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E098C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE2DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBBF320835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069F22147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfD3RiT (ORCPT
+        id S1726514AbfD3Rll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:38:19 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.94]:41555 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726733AbfD3RiT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:38:19 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id CFFB426038
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:38:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id LWhthCkFe2qH7LWhthVzdS; Tue, 30 Apr 2019 12:38:17 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.203] (port=59632 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hLWht-003A8s-DK; Tue, 30 Apr 2019 12:38:17 -0500
-Subject: Re: [PATCH] usbip: vhci_hcd: Mark expected switch fall-through
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-References: <20190429143957.GA6725@embeddedor>
- <1daec8c8929e4d18b2059ab1dfbfdf4a@AcuMS.aculab.com>
- <287c8504-eafa-ebbb-aa39-babb86fdeb94@embeddedor.com>
- <20190430154444.GA4224@kroah.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <c8dbf905-d51d-40c9-04e2-f4b94cd629fa@embeddedor.com>
-Date:   Tue, 30 Apr 2019 12:38:16 -0500
+        Tue, 30 Apr 2019 13:41:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45582 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbfD3Rlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:41:40 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D9A223086238;
+        Tue, 30 Apr 2019 17:41:39 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 921696D0B4;
+        Tue, 30 Apr 2019 17:41:34 +0000 (UTC)
+Subject: Re: [PATCH v2 18/19] iommu/vt-d: Support flushing more translation
+ cache types
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-19-git-send-email-jacob.jun.pan@linux.intel.com>
+ <5ad35536-4993-13f1-5199-ddd99f7009e5@redhat.com>
+ <20190429142921.1d36f560@jacob-builder>
+ <4c54cbe9-b639-d560-4546-0ad84a622e89@redhat.com>
+ <20190430101523.000e57a0@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <4f92210c-81ba-58b1-6843-f70460885eba@redhat.com>
+Date:   Tue, 30 Apr 2019 19:41:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190430154444.GA4224@kroah.com>
+In-Reply-To: <20190430101523.000e57a0@jacob-builder>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.203
-X-Source-L: No
-X-Exim-ID: 1hLWht-003A8s-DK
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:59632
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 30 Apr 2019 17:41:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
-
-On 4/30/19 10:44 AM, Greg Kroah-Hartman wrote:
-
+On 4/30/19 7:15 PM, Jacob Pan wrote:
+> On Tue, 30 Apr 2019 06:41:13 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
+> 
+>> Hi Jacob,
 >>
->> this error message is what makes me think the fall-through is
->> intentional; otherwise I think it would look like this instead:
+>> On 4/29/19 11:29 PM, Jacob Pan wrote:
+>>> On Sat, 27 Apr 2019 11:04:04 +0200
+>>> Auger Eric <eric.auger@redhat.com> wrote:
+>>>   
+>>>> Hi Jacob,
+>>>>
+>>>> On 4/24/19 1:31 AM, Jacob Pan wrote:  
+>>>>> When Shared Virtual Memory is exposed to a guest via vIOMMU,
+>>>>> extended IOTLB invalidation may be passed down from outside IOMMU
+>>>>> subsystems. This patch adds invalidation functions that can be
+>>>>> used for additional translation cache types.
+>>>>>
+>>>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>>>> ---
+>>>>>  drivers/iommu/dmar.c        | 48
+>>>>> +++++++++++++++++++++++++++++++++++++++++++++
+>>>>> include/linux/intel-iommu.h | 21 ++++++++++++++++---- 2 files
+>>>>> changed, 65 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+>>>>> index 9c49300..680894e 100644
+>>>>> --- a/drivers/iommu/dmar.c
+>>>>> +++ b/drivers/iommu/dmar.c
+>>>>> @@ -1357,6 +1357,20 @@ void qi_flush_iotlb(struct intel_iommu
+>>>>> *iommu, u16 did, u64 addr, qi_submit_sync(&desc, iommu);
+>>>>>  }
+>>>>>      
+>>>> /* PASID-based IOTLB Invalidate */  
+>>>>> +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64
+>>>>> addr, u32 pasid,
+>>>>> +		unsigned int size_order, u64 granu)
+>>>>> +{
+>>>>> +	struct qi_desc desc;
+>>>>> +
+>>>>> +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
+>>>>> +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
+>>>>> +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(0) |
+>>>>> +		QI_EIOTLB_AM(size_order);    
+>>>> I see IH it hardcoded to 0. Don't you envision to cascade the IH.
+>>>> On ARM this was needed for perf sake.  
+>>> Right, we should cascade IH based on IOMMU_INV_ADDR_FLAGS_LEAF. Just
+>>> curious how do you deduce the IH information on ARM? I guess you
+>>> need to get the non-leaf page directory info?
+>>> I will add an argument for IH.  
+>> On ARM we have the "Leaf" field in the stage1 TLB invalidation
+>> command. "When Leaf==1, only cached entries for the last level of
+>> translation table walk are required to be invalidated".
 >>
->> 	if (hcd->speed != HCD_USB3) {
->> 		pr_err("USB_PORT_FEAT_U2_TIMEOUT req not "
->> 		       "supported for USB 2.0 roothub\n");
->> 		goto error;
->> 	}
-> 
-> I think you are right, that's horrid, but correct :(
-> 
+> Thanks for explaining, I guess I didn't ask the right question. I was
+> wondering how SMMU driver determines when to set the Leaf bit. I guess
+> it is this function? It is not apparent to me whether the sharing of
+> non-leaf TLBs are considered.
+> io_pgtable_tlb_add_flush(iop, iova, blk_size, blk_size, true);
 
-Yep. :/
+the leaf value is passed as arg to
+tlb_sync cb = arm_smmu_tlb_inv_range_nosync so the actual decision is
+made in io-pgtable-arm.c, see io_pgtable_tlb_sync call sites.
 
-> Will go queue this up, thanks.
+Thanks
+
+Eric
 > 
-
-Thanks, Greg.
---
-Gustavo
+>> Thanks
+>>
+>> Eric
+>>  [...]  
+>>>> /* Pasid-based Device-TLB Invalidation */  
+>>  [...]  
+>>>>> +void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16
+>>>>> pfsid,
+>>>>> +		u32 pasid,  u16 qdep, u64 addr, unsigned size,
+>>>>> u64 granu) +{
+>>>>> +	struct qi_desc desc;
+>>>>> +
+>>>>> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) |
+>>>>> QI_DEV_EIOTLB_SID(sid) |
+>>>>> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
+>>>>> +		QI_DEV_IOTLB_PFSID(pfsid);
+>>>>> +	desc.qw1 |= QI_DEV_EIOTLB_GLOB(granu);  
+>>> should be desc.qw1 =  
+>>>>> +
+>>>>> +	/* If S bit is 0, we only flush a single page. If S bit
+>>>>> is set,
+>>>>> +	 * The least significant zero bit indicates the size.
+>>>>> VT-d spec
+>>>>> +	 * 6.5.2.6
+>>>>> +	 */
+>>>>> +	if (!size)
+>>>>> +		desc.qw0 = QI_DEV_EIOTLB_ADDR(addr) &
+>>>>> ~QI_DEV_EIOTLB_SIZE;    
+>>>> desc.q1 |= ?  
+>>> Right, I also missed previous qw1 assignment.  
+>>>>> +	else {
+>>>>> +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT +
+>>>>> size); +
+>>>>> +		desc.qw1 = QI_DEV_EIOTLB_ADDR(addr & ~mask) |
+>>>>> QI_DEV_EIOTLB_SIZE;    
+>>>> desc.q1 |=  
+>>> right, thanks  
+>>>>> +	}
+>>>>> +	qi_submit_sync(&desc, iommu);
+>>>>> +}
+>>>>> +    
+>>>> /* PASID-cache invalidation */  
+>>>>> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64
+>>>>> granu, int pasid) +{
+>>>>> +	struct qi_desc desc;
+>>>>> +
+>>>>> +	desc.qw0 = QI_PC_TYPE | QI_PC_DID(did) |
+>>>>> QI_PC_GRAN(granu) | QI_PC_PASID(pasid);
+>>>>> +	desc.qw1 = 0;
+>>>>> +	desc.qw2 = 0;
+>>>>> +	desc.qw3 = 0;
+>>>>> +	qi_submit_sync(&desc, iommu);
+>>>>> +}
+>>>>>  /*
+>>>>>   * Disable Queued Invalidation interface.
+>>>>>   */
+>>>>> diff --git a/include/linux/intel-iommu.h
+>>>>> b/include/linux/intel-iommu.h index 5d67d0d4..38e5efb 100644
+>>>>> --- a/include/linux/intel-iommu.h
+>>>>> +++ b/include/linux/intel-iommu.h
+>>>>> @@ -339,7 +339,7 @@ enum {
+>>>>>  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >>
+>>>>> (DMA_TLB_FLUSH_GRANU_OFFSET-4)) #define QI_IOTLB_ADDR(addr)
+>>>>> (((u64)addr) & VTD_PAGE_MASK) #define
+>>>>> QI_IOTLB_IH(ih)		(((u64)ih) << 6) -#define
+>>>>> QI_IOTLB_AM(am)		(((u8)am)) +#define
+>>>>> QI_IOTLB_AM(am)		(((u8)am) & 0x3f) 
+>>>>>  #define QI_CC_FM(fm)		(((u64)fm) << 48)
+>>>>>  #define QI_CC_SID(sid)		(((u64)sid) << 32)
+>>>>> @@ -357,17 +357,22 @@ enum {
+>>>>>  #define QI_PC_DID(did)		(((u64)did) << 16)
+>>>>>  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
+>>>>>  
+>>>>> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
+>>>>> -#define QI_PC_PASID_SEL		(QI_PC_TYPE |
+>>>>> QI_PC_GRAN(1)) +/* PASID cache invalidation granu */
+>>>>> +#define QI_PC_ALL_PASIDS	0
+>>>>> +#define QI_PC_PASID_SEL		1
+>>>>>  
+>>>>>  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
+>>>>>  #define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
+>>>>>  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
+>>>>> -#define QI_EIOTLB_AM(am)	(((u64)am))
+>>>>> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
+>>>>>  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
+>>>>>  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
+>>>>>  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
+>>>>>  
+>>>>> +/* QI Dev-IOTLB inv granu */
+>>>>> +#define QI_DEV_IOTLB_GRAN_ALL		1
+>>>>> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
+>>>>> +
+>>>>>  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+>>>>>  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+>>>>>  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+>>>>> @@ -658,8 +663,16 @@ extern void qi_flush_context(struct
+>>>>> intel_iommu *iommu, u16 did, u16 sid, u8 fm, u64 type);
+>>>>>  extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did,
+>>>>> u64 addr, unsigned int size_order, u64 type);
+>>>>> +extern void qi_flush_piotlb(struct intel_iommu *iommu, u16 did,
+>>>>> u64 addr,
+>>>>> +			u32 pasid, unsigned int size_order, u64
+>>>>> type); extern void qi_flush_dev_iotlb(struct intel_iommu *iommu,
+>>>>> u16 sid, u16 pfsid, u16 qdep, u64 addr, unsigned mask);
+>>>>> +
+>>>>> +extern void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16
+>>>>> sid, u16 pfsid,
+>>>>> +			u32 pasid, u16 qdep, u64 addr, unsigned
+>>>>> size, u64 granu); +
+>>>>> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16
+>>>>> did, u64 granu, int pasid); +
+>>>>>  extern int qi_submit_sync(struct qi_desc *desc, struct
+>>>>> intel_iommu *iommu); 
+>>>>>  extern int dmar_ir_support(void);
+>>>>>     
+>>>>
+>>>> Thanks
+>>>>
+>>>> Eric  
+>>>
+>>> [Jacob Pan]
+>>>   
+> 
+> [Jacob Pan]
+> 
