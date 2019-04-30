@@ -2,314 +2,231 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E836C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F8AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E3D2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B614221707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nlTPMczJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKbCWZaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbfD3BSS (ORCPT
+        id S1729840AbfD3BSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:18:18 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:59284 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729626AbfD3BSS (ORCPT
+        Mon, 29 Apr 2019 21:18:23 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33800 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729626AbfD3BSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:18:18 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190430011814epoutp03dcb36946ed520bb5e23dfc624e323b67~aG7cZwOVv2878228782epoutp03M
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 01:18:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190430011814epoutp03dcb36946ed520bb5e23dfc624e323b67~aG7cZwOVv2878228782epoutp03M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556587094;
-        bh=NPBlrw34zA5Stxqp7skzZMXwwH08veJqTkLQTvwPKPg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=nlTPMczJI0odyq9GG07pWhCUln2DE62JiF24kHnQvIPSQlOu3YkbPPqedgTfr6lOL
-         9eSsdq8DdhKvTWk9BQEqvYXAImGoMaZ3mYKILGHMtJSFoJfcOPYQkR2F376FDX861R
-         K0PkZl0XfILPLQmQjsyvAypPMgLZcTYm/9vjZ7Ng=
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.152]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190430011810epcas1p1de2c13e7057a314e636c4c3f01d799cc~aG7ZMhxRt0289402894epcas1p1w;
-        Tue, 30 Apr 2019 01:18:10 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C6.B5.04257.F42A7CC5; Tue, 30 Apr 2019 10:18:07 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190430011807epcas1p29125c6981a977d31c88ea89ff60ef91c~aG7VqmYpP1537515375epcas1p2v;
-        Tue, 30 Apr 2019 01:18:07 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190430011807epsmtrp2d805f20a5cff019b8fc1242ae19bbd70~aG7Vpy0Tz2743227432epsmtrp2_;
-        Tue, 30 Apr 2019 01:18:07 +0000 (GMT)
-X-AuditID: b6c32a38-5cbff700000010a1-95-5cc7a24ff53b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8A.63.03662.F42A7CC5; Tue, 30 Apr 2019 10:18:07 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190430011807epsmtip11e63d43f1b4d597e59dd2acff0eb45f6~aG7Vgr6v50868808688epsmtip1X;
-        Tue, 30 Apr 2019 01:18:07 +0000 (GMT)
-Subject: Re: [PATCH v3 12/16] PM / devfreq: tegra: Reconfigure hardware on
- governor's restart
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <2bcf8ece-c744-bf18-0b7b-177cbb09c174@samsung.com>
-Date:   Tue, 30 Apr 2019 10:19:22 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Mon, 29 Apr 2019 21:18:22 -0400
+Received: by mail-yw1-f66.google.com with SMTP id u14so4734576ywe.1;
+        Mon, 29 Apr 2019 18:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+WIm5hmSN2OmSuQJOts8t0F9/3FnmKAv+vIoX+0L1nY=;
+        b=vKbCWZaqDdiUDwCF2w/QZx7zr85DmDYqwSMT5r3GhSK2RTouX2BnfZoaQpoJ9XOQEs
+         8ryw7GxbpwfscspO206/iC6c/d3kFXnEE9F1hRdu8xJc/3R0cKIURcvEg6ifiotKAH33
+         wLcQu8FZwq2lkeiPS0F4e+VBM/AqyiCChIKWEvTcVo4ngvNxD8AgJ/n7mqKsDC6BbFKV
+         VMvpeZQpFSYGwCi4cpL7aoTiMEYyke8ZfFjxRSsZ2xLzN5+R80Z1dbwm6T9uFWq0YKJJ
+         8wGk6CxlOuPZRxJRA/LAXRDwtpRiTNs/mYlDcxzdbsGRaIe0rR6R+suv5Kgc0NcpwSpE
+         vI6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+WIm5hmSN2OmSuQJOts8t0F9/3FnmKAv+vIoX+0L1nY=;
+        b=CWMVxGhx0ohTif25nt9kejP1JMFpPsELVW1XbmiPPhrcl89irz6ur2omqlE2WDqKdF
+         7Jnopz9pXYZJxL6ACPeRavqtdhKWl0C8NT5v3olPSN2FW4wIuRMxbelHVEW0PiV0d56h
+         7bRrVRaaQO91GdNhOW5jf7xD8/Gu6AY329qxuTMncQsTMOzuhx0FJp7wrxrU36CLVhaO
+         17AZfsHBRuWGCkkwhor8TMGkoB9Kc+5yl1Ds7zGVovwnihANzJ0qQFdrr4otMd8aszCy
+         FRj7m+sTGLxsmA0D7CcNduPTFGbef/S4mee5fj6KqcKE8RvsDpJ2uckxiNUiVYkOqnSt
+         2a7w==
+X-Gm-Message-State: APjAAAXRP5XfLiZUfAAFEDXxBU2XmYENE448PLE9Z07C3fzbQ94hl8nk
+        NhTadWED3EGv3ud31UZrt0DiLA+Q
+X-Google-Smtp-Source: APXvYqyUk1/sS5cJIMAOwt8HA/QHDr6iPh3ipJYdAuwTQ/ezBphEz65aik1SJWQnNoGlN5hCqrSpSg==
+X-Received: by 2002:a81:9845:: with SMTP id p66mr19305979ywg.497.1556587101308;
+        Mon, 29 Apr 2019 18:18:21 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
+        by smtp.gmail.com with ESMTPSA id i206sm16087163ywi.99.2019.04.29.18.18.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 18:18:19 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F32DF4111F; Mon, 29 Apr 2019 21:18:18 -0400 (EDT)
+Date:   Mon, 29 Apr 2019 21:18:18 -0400
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: perf tools build broken after v5.1-rc1
+Message-ID: <20190430011818.GE7857@kernel.org>
+References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
+ <20190422152027.GB11750@kernel.org>
+ <20190425214800.GC21829@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
 MIME-Version: 1.0
-In-Reply-To: <20190417222925.5815-13-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTQRTHM92ji7E6VtQniYprMIABupTiSoBoRK3RKNEvSprUDWwKoVe6
-        rVE08QAVGsQrHlS03lEsnqhYISgeFY1X8cCj8UCJMaYeqNFEjW1XI9/+8+b3jv/MYwj1MTqB
-        KbM6RYdVMLP0APLs5RRN2tx9AYPGdzSFP/qpB/FVnn0kf2v1eyXf5W+g+b71VxBf88VD809X
-        Hab5H/7dJF/XFKQnx+lbQgeQ/rwnpNSvrwzT+rrmRqTvOzW6kCoqzy0VhRLRkShai20lZVZT
-        HjtrvnGqUZet4dK4SfxENtEqWMQ8tmB2Ydr0MnNkIDZxsWB2RUKFgiSxGfm5DpvLKSaW2iRn
-        HivaS8z2SfZ0SbBILqspvdhmyeE0mkxdBFxUXtp72qe0n85csvvmRnIlqk1xozgGcBb4Dm2m
-        3GgAo8YtCHp7V/09fEZwfc15Mkqp8TcEGx6M+5fx6vENUobaEPzq9lIy9AFB6x3BjRhmKDZC
-        VePwKBOPfyP47N8RYwi8EL5eOkhENY1Tof1tNx3Vg/FYePC9B0W1CufDs4aeWJzESXDJeyvG
-        D8ML4Pm1E5TMDIHO+tex4eJwNvgvnKTl+iPgyWuvQtZjoPLMTiI6BOBKJQS7jpCygwK4+/sh
-        Ieuh8C7QrJR1AvSF22hZL4MjnVdoObkaQXP7XUq+0EL7wS2KqEsCp8Bxf4bcbBCEv9ZS0TBg
-        FVSvVcv0OOh6EVLIeiTsX1fzt7weLr6sUWxEYz397Hj6WfD0s+D532wPIhvRcNEuWUyixNmz
-        +n/2KRTb1VS+BbXent2BMIPYgSp9+JpBTQmLpaWWDgQMwcar9IGrBrWqRFhaITpsRofLLEod
-        SBd57U1EwrBiW2TzrU4jp8vUarV8Fpet4zh2hOr45KkGNTYJTrFcFO2i41+egolLWInGlx/r
-        nrm1on5nVWiad3xGpX9OXVvr/SK/O3l0cmGgsTPeO2PWfvQ9/UNF0d5Oj9bEfdROmZC07E3y
-        Npfp7W1fzubeRXXpP0epLmyvNne5Z2xZXfYm915Qte1cRdO3XcHwCiqnNrVJc0bIp1yGG8vj
-        r15MelTw7nm9oTojMC/oU4ZYUioVuFTCIQl/AMSov73BAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnK7/ouMxBnv+cVis/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
-        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBlPNu8hr1gs1HFvNMTWBoYezS7GDk5JARMJB7d
-        PMXSxcjFISSwm1GiqX0nC0RCUmLaxaPMXYwcQLawxOHDxRA1bxkl2nfuZgeJCwvES7SsEgOJ
-        iwg0MUl8ftjCBNLLLBAp0f+omxXEFhLYwiix/5QliM0moCWx/8UNNhCbX0BR4uqPx4wgNq+A
-        ncSdOY/B4iwCqhIH559lBrFFBSIkzrxfwQJRIyhxcuYTMJtTwExi1+6NbBC71CX+zLvEDGGL
-        S9x6Mh/qBnmJ5q2zmScwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhglJdarlecmFtc
-        mpeul5yfu4kRHGFaWjsYT5yIP8QowMGoxMPr8e5YjBBrYllxZe4hRgkOZiURXo/jR2OEeFMS
-        K6tSi/Lji0pzUosPMUpzsCiJ88rnH4sUEkhPLEnNTk0tSC2CyTJxcEo1ME55OlXpw/IK9jvZ
-        90p/LnyQ/iJJdMvlmJl9QZ4zl+TIladJ7nqz9tIGCdVLVYx7ji9p2OpZqeWxL/GG2NMdB3dq
-        ve+YlyC/7YavwckT19bmhOwp7pRbfvvsjgtsr6ozZ1Q0nTPN+fFSRPahQv2BNRd8ri5/NjlA
-        6U3KzZ698VUrD/sLXki5sk9aiaU4I9FQi7moOBEAogh7D6wCAAA=
-X-CMS-MailID: 20190430011807epcas1p29125c6981a977d31c88ea89ff60ef91c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190417224236epcas1p15d8c9b1b75ce29ac06d1ecbae46a572b
-References: <20190417222925.5815-1-digetx@gmail.com>
-        <CGME20190417224236epcas1p15d8c9b1b75ce29ac06d1ecbae46a572b@epcas1p1.samsung.com>
-        <20190417222925.5815-13-digetx@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 19. 4. 18. 오전 7:29, Dmitry Osipenko wrote:
-> Move hardware configuration to governor's start/resume methods.
-> This allows to re-initialize hardware counters and reconfigure
-> cleanly if governor was stopped/paused. That is needed because we
-> are not aware of all hardware changes that happened while governor
-> was stopped and the paused state may get out of sync with reality,
-> hence it's better to start with a clean slate after the pause. In
-> a result there is no memory bandwidth starvation after resume from
-> suspend-to-ram that results in display controller underflowing that
-> happens on resume because of improper decision made by devfreq about
-> the required memory frequency. This change also cleans up code a tad
-> by moving hardware-configuration code into a single location.
+Em Mon, Apr 29, 2019 at 05:14:54PM +0000, Vineet Gupta escreveu:
+> On 4/25/19 2:48 PM, Arnaldo Carvalho de Melo wrote:
+> > Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escreveu:
+> >> Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:
+> >>> When building perf for ARC (v5.1-rc2) I get the following
+> >>  
+> >>> | In file included from bench/futex-hash.c:26:
+> >>> | bench/futex.h: In function 'futex_wait':
+> >>> | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this function);
+> >>  
+> >>> git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools headers uapi:
+> >>> Sync copy of asm-generic/unistd.h with the kernel sources")
+> >> Humm, I have to check why this:
+> >>
+> >> [perfbuilder@quaco ~]$ podman images | grep ARC
+> >> docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uClibc          4c259582a8e6   5 weeks ago      846 MB
+> >> [perfbuilder@quaco ~]$
+> >>
+> >> isn't catching this... :-\
+> >>
+> >> FROM docker.io/fedora:24
+> >> MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>
+> >> ENV TOOLCHAIN=arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install
+> >> ENV CROSS=arc-linux-
+> >> ENV SOURCEFILE=${TOOLCHAIN}.tar.gz
+> >> RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findutils xz
+> >> RUN wget https://urldefense.proofpoint.com/v2/url?u=https-3A__github.com_foss-2Dfor-2Dsynopsys-2Ddwc-2Darc-2Dprocessors_toolchain_releases_download_arc-2D2017.09-2Drc2_-24-257BSOURCEFILE-257D&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=7FgpX6o3vAhwMrMhLh-4ZJey5kjdNUwOL2CWsFwR4T8&m=HjtufCLozrW47pS5C2YH3safLHQE7eEtmHFZsSWrz1M&s=29g4oKvGuYcLgheCUvZh3wojhhljivpLd8aj7Ur4sKQ&e=
+> >> <SNIP>
+> >> COPY rx_and_build.sh /
+> >> ENV EXTRA_MAKE_ARGS=NO_LIBBPF=1
+> >> ENV ARCH=arc
+> >> ENV CROSS_COMPILE=/${TOOLCHAIN}/bin/${CROSS}
+> >> ENV EXTRA_CFLAGS=-matomic
+> > So, now I have a libnuma crossbuilt in this container that allows me to
+> > build a ARC perf binary linked with zlib and numactl-devel, but only
+> > after I applied the fix below.
+> >
+> > Can you please provide the feature detection header in the build? I.e.
+> > what I have with my ARC cross build container right now, after applying
+> > the patch below is:
+> >
+> > [perfbuilder@60d5802468f6 perf]$ make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" -C /git/perf/tools/perf O=/tmp/build/perf
+> > make: Entering directory '/git/perf/tools/perf'
+> >   BUILD:   Doing 'make -j8' parallel build
+> > sh: line 0: command: -c: invalid option
+> > command: usage: command [-pVv] command [arg ...]
+> >
+> > Auto-detecting system features:
+> > ...                         dwarf: [ OFF ]
+> > ...            dwarf_getlocations: [ OFF ]
+> > ...                         glibc: [ on  ]
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra-devfreq.c | 98 ++++++++++++++-------------------
->  1 file changed, 40 insertions(+), 58 deletions(-)
+> Not related to current issue, this run uses a uClibc toolchain and yet it is
+> detecting glibc - doesn't seem right to me.
+
+Ok, I'll improve that, I think it just tries to detect a libc, yeah,
+see:
+
+[acme@quaco linux]$ cat tools/build/feature/test-glibc.c
+// SPDX-License-Identifier: GPL-2.0
+#include <stdlib.h>
+
+#if !defined(__UCLIBC__)
+#include <gnu/libc-version.h>
+#else
+#define XSTR(s) STR(s)
+#define STR(s) #s
+#endif
+
+int main(void)
+{
+#if !defined(__UCLIBC__)
+	const char *version = gnu_get_libc_version();
+#else
+	const char *version = XSTR(__GLIBC__) "." XSTR(__GLIBC_MINOR__);
+#endif
+
+	return (long)version;
+}
+[acme@quaco linux]$
+
+[perfbuilder@59ca4b424ded /]$ grep __GLIBC__ /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/*.h
+/arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:   The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
+/arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:#define	__GLIBC__	2
+/arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
+[perfbuilder@59ca4b424ded /]$
+
+Isn't that part of uClibc?
+ 
+> > ...                          gtk2: [ OFF ]
+> > ...                      libaudit: [ OFF ]
+> > ...                        libbfd: [ OFF ]
+> > ...                        libelf: [ OFF ]
+> > ...                       libnuma: [ on  ]
 > 
-> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-> index 62f35e818122..e9ab49394d35 100644
-> --- a/drivers/devfreq/tegra-devfreq.c
-> +++ b/drivers/devfreq/tegra-devfreq.c
-> @@ -392,55 +392,6 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
->  	return NOTIFY_OK;
->  }
->  
-> -static void tegra_actmon_enable_interrupts(struct tegra_devfreq *tegra)
-> -{
-> -	struct tegra_devfreq_device *dev;
-> -	u32 val;
-> -	unsigned int i;
-> -
-> -	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
-> -		dev = &tegra->devices[i];
-> -
-> -		val = device_readl(dev, ACTMON_DEV_CTRL);
-> -		val |= ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
-> -		val |= ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
-> -		val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> -		val |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
-> -
-> -		device_writel(dev, val, ACTMON_DEV_CTRL);
-> -	}
-> -
-> -	actmon_write_barrier(tegra);
-> -}
-> -
-> -static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
-> -{
-> -	struct tegra_devfreq_device *dev;
-> -	u32 val;
-> -	unsigned int i;
-> -
-> -	disable_irq(tegra->irq);
-> -
-> -	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
-> -		dev = &tegra->devices[i];
-> -
-> -		val = device_readl(dev, ACTMON_DEV_CTRL);
-> -		val &= ~ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
-> -		val &= ~ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
-> -		val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> -		val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
-> -
-> -		device_writel(dev, val, ACTMON_DEV_CTRL);
-> -
-> -		device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
-> -			      ACTMON_DEV_INTR_STATUS);
-> -	}
-> -
-> -	actmon_write_barrier(tegra);
-> -
-> -	enable_irq(tegra->irq);
-> -}
-> -
->  static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
->  					  struct tegra_devfreq_device *dev)
->  {
-> @@ -464,11 +415,47 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
->  		<< ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_NUM_SHIFT;
->  	val |= (ACTMON_ABOVE_WMARK_WINDOW - 1)
->  		<< ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT;
-> +	val |= ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
-> +	val |= ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
-> +	val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> +	val |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->  	val |= ACTMON_DEV_CTRL_ENB;
->  
->  	device_writel(dev, val, ACTMON_DEV_CTRL);
-> +}
-> +
-> +static void tegra_actmon_start(struct tegra_devfreq *tegra)
-> +{
-> +	unsigned int i;
-> +
-> +	disable_irq(tegra->irq);
-> +
-> +	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
-> +		      ACTMON_GLB_PERIOD_CTRL);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
-> +		tegra_actmon_configure_device(tegra, &tegra->devices[i]);
-
-nitpick.
-I agree this patch.
-
-In order to make it more simple, I think that you can remove
-tegra_actmon_configure() function and then just do some opertion
-under the for loop in the tegra_actmon_start() to keep
-similar style with tegra_actmon_stop(). But there is perfect solution.
-If you agree, edit it on next patch. If you think that it is not necessary,
-just keep this code.
-
-> +
-> +	actmon_write_barrier(tegra);
-> +
-> +	enable_irq(tegra->irq);
-> +}
-> +
-> +static void tegra_actmon_stop(struct tegra_devfreq *tegra)
-> +{
-> +	unsigned int i;
-> +
-> +	disable_irq(tegra->irq);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
-> +		device_writel(&tegra->devices[i], 0x00000000, ACTMON_DEV_CTRL);
-> +		device_writel(&tegra->devices[i], ACTMON_INTR_STATUS_CLEAR,
-> +			      ACTMON_DEV_INTR_STATUS);
-> +	}
->  
->  	actmon_write_barrier(tegra);
-> +
-> +	enable_irq(tegra->irq);
->  }
->  
->  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
-> @@ -580,22 +567,22 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->  	switch (event) {
->  	case DEVFREQ_GOV_START:
->  		devfreq_monitor_start(devfreq);
-> -		tegra_actmon_enable_interrupts(tegra);
-> +		tegra_actmon_start(tegra);
->  		break;
->  
->  	case DEVFREQ_GOV_STOP:
-> -		tegra_actmon_disable_interrupts(tegra);
-> +		tegra_actmon_stop(tegra);
->  		devfreq_monitor_stop(devfreq);
->  		break;
->  
->  	case DEVFREQ_GOV_SUSPEND:
-> -		tegra_actmon_disable_interrupts(tegra);
-> +		tegra_actmon_stop(tegra);
->  		devfreq_monitor_suspend(devfreq);
->  		break;
->  
->  	case DEVFREQ_GOV_RESUME:
->  		devfreq_monitor_resume(devfreq);
-> -		tegra_actmon_enable_interrupts(tegra);
-> +		tegra_actmon_start(tegra);
->  		break;
->  	}
->  
-> @@ -664,15 +651,10 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  	tegra->max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX) / KHZ;
->  	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
->  
-> -	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
-> -		      ACTMON_GLB_PERIOD_CTRL);
-> -
->  	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
->  		dev = tegra->devices + i;
->  		dev->config = actmon_device_configs + i;
->  		dev->regs = tegra->regs + dev->config->offset;
-> -
-> -		tegra_actmon_configure_device(tegra, dev);
->  	}
->  
->  	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
+> Wondering why that is - for me numa is off - even when using a glibc toolchain.
 > 
-
-I agree to always initialize the device when START or RESUME
-and also to reset the device when STOP or SUSPEND.
-
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> > ...        numa_num_possible_cpus: [ on  ]
+> > ...                       libperl: [ OFF ]
+> > ...                     libpython: [ OFF ]
+> > ...                      libslang: [ OFF ]
+> > ...                     libcrypto: [ OFF ]
+> > ...                     libunwind: [ OFF ]
+> > ...            libdw-dwarf-unwind: [ OFF ]
+> > ...                          zlib: [ OFF ]
+> > ...                          lzma: [ OFF ]
+> > ...                     get_cpuid: [ OFF ]
+> > ...                           bpf: [ on  ]
+> > ...                        libaio: [ OFF ]
+> > ...        disassembler-four-args: [ OFF ]
+> >
+> >
+> 
+> For my glibc toolchain, here's the feature detection output
+> 
+> Auto-detecting system features:
+> ...                         dwarf: [ on  ]
+> ...            dwarf_getlocations: [ OFF ]
+> ...                         glibc: [ on  ]
+> ...                          gtk2: [ OFF ]
+> ...                      libaudit: [ OFF ]
+> ...                        libbfd: [ OFF ]
+> ...                        libelf: [ on  ]
+> ...                       libnuma: [ OFF ]
+> ...        numa_num_possible_cpus: [ OFF ]
+> ...                       libperl: [ OFF ]
+> ...                     libpython: [ OFF ]
+> ...                      libslang: [ OFF ]
+> ...                     libcrypto: [ OFF ]
+> ...                     libunwind: [ OFF ]
+> ...            libdw-dwarf-unwind: [ OFF ]
+> ...                          zlib: [ OFF ]
+> ...                          lzma: [ OFF ]
+> ...                     get_cpuid: [ OFF ]
+> ...                           bpf: [ on  ]
+> ...                        libaio: [ on  ]
+> ...        disassembler-four-args: [ OFF ]
+> 
+> 
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+
+- Arnaldo
