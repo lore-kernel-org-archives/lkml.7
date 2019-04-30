@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83147C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120C5C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503CF21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA3F21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624401;
-	bh=/qjWqKHu3ZXP6yVjNlOP85MfxlesW2a+Jy4lSu2u2kA=;
+	s=default; t=1556624402;
+	bh=BGCmlwYMCpIXEBQT512BGxoQdmcpKOp854/s8DI+67I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UH9XZFU3oH8Oy/uevnbXFVjk39mJNK6v0rWbaJC7+2XT6A2qpuPZ/1QgK5Dq2FSpT
-	 tiV3tJO4CQoiYvHF5KQQuhUPO80hMgtKghbB7mtnfACQolmTYb+i8YT2lfKWEQtzj0
-	 qDlnk/He+cuXGu2CFlrAj4fx/Vf0RjeEqCZvuhU4=
+	b=wT2VPd+ASSryI1+j9kyUdvWwo+gGXTrD0jpmpUd1Ozxc+ODmYTuUhbEcyVDu38jvt
+	 jPM+KvK0sh9Uow0p7207rM7WEE/aoyHAXJMe3oyTKGm6sKWOh8FpUKNbAH/pBu/Pkt
+	 T+3oXpX/wzxpNjqYQqr0NBsQ1vygK3FBjU9oY3Jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfD3LkA (ORCPT
+        id S1728230AbfD3LkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:40:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45732 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727380AbfD3Lj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:39:58 -0400
+        id S1728119AbfD3Lj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:39:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A03721734;
-        Tue, 30 Apr 2019 11:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C101F21670;
+        Tue, 30 Apr 2019 11:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624397;
-        bh=/qjWqKHu3ZXP6yVjNlOP85MfxlesW2a+Jy4lSu2u2kA=;
+        s=default; t=1556624395;
+        bh=BGCmlwYMCpIXEBQT512BGxoQdmcpKOp854/s8DI+67I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I7QtcR5RQwD085q6W2ZNHVdj7jzP9csMtNFuVAYVnF2mBzWlc0/82rkC9BBifzfzX
-         zUO0OJVc3tW2OeN7B/r9YzHnTnYws66x8CoINLjkGc8CbJSVm50XfxLnbifWBx8FPn
-         GMP9sGHY9dLBSxRcXpPJuRhHaT0VQG6hdLyDmnnM=
+        b=p9GVUie3SZG3mxk0944lu/R+EkP+tzwap1aRqmdtvTPZGHkWVG7whvFvOftjwacuO
+         MXDJW4SSb5dx95GS3zIE91ihpSUw0wAGaBWMGsmmqK1D48GYjBjrwMb6ZsD6R1ou+O
+         9ZwntjYrGnl7EOIgd+84843KgHNdaSLhx7BWlJmk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.9 02/41] cifs: do not attempt cifs operation on smb2+ rename error
-Date:   Tue, 30 Apr 2019 13:38:13 +0200
-Message-Id: <20190430113524.880372121@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexandru Herghelegiu <aherghelegiu@bitdefender.com>,
+        =?UTF-8?q?Adalbert=20Laz=C4=83r?= <alazar@bitdefender.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 19/41] vsock/virtio: fix kernel panic from virtio_transport_reset_no_sock
+Date:   Tue, 30 Apr 2019 13:38:30 +0200
+Message-Id: <20190430113529.840731483@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -60,38 +63,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: Adalbert Lazăr <alazar@bitdefender.com>
 
-commit 652727bbe1b17993636346716ae5867627793647 upstream.
+commit 4c404ce23358d5d8fbdeb7a6021a9b33d3c3c167 upstream.
 
-A path-based rename returning EBUSY will incorrectly try opening
-the file with a cifs (NT Create AndX) operation on an smb2+ mount,
-which causes the server to force a session close.
+Previous to commit 22b5c0b63f32 ("vsock/virtio: fix kernel panic
+after device hot-unplug"), vsock_core_init() was called from
+virtio_vsock_probe(). Now, virtio_transport_reset_no_sock() can be called
+before vsock_core_init() has the chance to run.
 
-If the mount is smb2+, skip the fallback.
+[Wed Feb 27 14:17:09 2019] BUG: unable to handle kernel NULL pointer dereference at 0000000000000110
+[Wed Feb 27 14:17:09 2019] #PF error: [normal kernel read fault]
+[Wed Feb 27 14:17:09 2019] PGD 0 P4D 0
+[Wed Feb 27 14:17:09 2019] Oops: 0000 [#1] SMP PTI
+[Wed Feb 27 14:17:09 2019] CPU: 3 PID: 59 Comm: kworker/3:1 Not tainted 5.0.0-rc7-390-generic-hvi #390
+[Wed Feb 27 14:17:09 2019] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+[Wed Feb 27 14:17:09 2019] Workqueue: virtio_vsock virtio_transport_rx_work [vmw_vsock_virtio_transport]
+[Wed Feb 27 14:17:09 2019] RIP: 0010:virtio_transport_reset_no_sock+0x8c/0xc0 [vmw_vsock_virtio_transport_common]
+[Wed Feb 27 14:17:09 2019] Code: 35 8b 4f 14 48 8b 57 08 31 f6 44 8b 4f 10 44 8b 07 48 8d 7d c8 e8 84 f8 ff ff 48 85 c0 48 89 c3 74 2a e8 f7 31 03 00 48 89 df <48> 8b 80 10 01 00 00 e8 68 fb 69 ed 48 8b 75 f0 65 48 33 34 25 28
+[Wed Feb 27 14:17:09 2019] RSP: 0018:ffffb42701ab7d40 EFLAGS: 00010282
+[Wed Feb 27 14:17:09 2019] RAX: 0000000000000000 RBX: ffff9d79637ee080 RCX: 0000000000000003
+[Wed Feb 27 14:17:09 2019] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffff9d79637ee080
+[Wed Feb 27 14:17:09 2019] RBP: ffffb42701ab7d78 R08: ffff9d796fae70e0 R09: ffff9d796f403500
+[Wed Feb 27 14:17:09 2019] R10: ffffb42701ab7d90 R11: 0000000000000000 R12: ffff9d7969d09240
+[Wed Feb 27 14:17:09 2019] R13: ffff9d79624e6840 R14: ffff9d7969d09318 R15: ffff9d796d48ff80
+[Wed Feb 27 14:17:09 2019] FS:  0000000000000000(0000) GS:ffff9d796fac0000(0000) knlGS:0000000000000000
+[Wed Feb 27 14:17:09 2019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[Wed Feb 27 14:17:09 2019] CR2: 0000000000000110 CR3: 0000000427f22000 CR4: 00000000000006e0
+[Wed Feb 27 14:17:09 2019] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[Wed Feb 27 14:17:09 2019] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[Wed Feb 27 14:17:09 2019] Call Trace:
+[Wed Feb 27 14:17:09 2019]  virtio_transport_recv_pkt+0x63/0x820 [vmw_vsock_virtio_transport_common]
+[Wed Feb 27 14:17:09 2019]  ? kfree+0x17e/0x190
+[Wed Feb 27 14:17:09 2019]  ? detach_buf_split+0x145/0x160
+[Wed Feb 27 14:17:09 2019]  ? __switch_to_asm+0x40/0x70
+[Wed Feb 27 14:17:09 2019]  virtio_transport_rx_work+0xa0/0x106 [vmw_vsock_virtio_transport]
+[Wed Feb 27 14:17:09 2019] NET: Registered protocol family 40
+[Wed Feb 27 14:17:09 2019]  process_one_work+0x167/0x410
+[Wed Feb 27 14:17:09 2019]  worker_thread+0x4d/0x460
+[Wed Feb 27 14:17:09 2019]  kthread+0x105/0x140
+[Wed Feb 27 14:17:09 2019]  ? rescuer_thread+0x360/0x360
+[Wed Feb 27 14:17:09 2019]  ? kthread_destroy_worker+0x50/0x50
+[Wed Feb 27 14:17:09 2019]  ret_from_fork+0x35/0x40
+[Wed Feb 27 14:17:09 2019] Modules linked in: vmw_vsock_virtio_transport vmw_vsock_virtio_transport_common input_leds vsock serio_raw i2c_piix4 mac_hid qemu_fw_cfg autofs4 cirrus ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops virtio_net psmouse drm net_failover pata_acpi virtio_blk failover floppy
 
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug")
+Reported-by: Alexandru Herghelegiu <aherghelegiu@bitdefender.com>
+Signed-off-by: Adalbert Lazăr <alazar@bitdefender.com>
+Co-developed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/vmw_vsock/virtio_transport_common.c |   22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1722,6 +1722,10 @@ cifs_do_rename(const unsigned int xid, s
- 	if (rc == 0 || rc != -EBUSY)
- 		goto do_rename_exit;
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -601,6 +601,8 @@ static int virtio_transport_reset(struct
+  */
+ static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+ {
++	const struct virtio_transport *t;
++	struct virtio_vsock_pkt *reply;
+ 	struct virtio_vsock_pkt_info info = {
+ 		.op = VIRTIO_VSOCK_OP_RST,
+ 		.type = le16_to_cpu(pkt->hdr.type),
+@@ -611,15 +613,21 @@ static int virtio_transport_reset_no_soc
+ 	if (le16_to_cpu(pkt->hdr.op) == VIRTIO_VSOCK_OP_RST)
+ 		return 0;
  
-+	/* Don't fall back to using SMB on SMB 2+ mount */
-+	if (server->vals->protocol_id != 0)
-+		goto do_rename_exit;
+-	pkt = virtio_transport_alloc_pkt(&info, 0,
+-					 le64_to_cpu(pkt->hdr.dst_cid),
+-					 le32_to_cpu(pkt->hdr.dst_port),
+-					 le64_to_cpu(pkt->hdr.src_cid),
+-					 le32_to_cpu(pkt->hdr.src_port));
+-	if (!pkt)
++	reply = virtio_transport_alloc_pkt(&info, 0,
++					   le64_to_cpu(pkt->hdr.dst_cid),
++					   le32_to_cpu(pkt->hdr.dst_port),
++					   le64_to_cpu(pkt->hdr.src_cid),
++					   le32_to_cpu(pkt->hdr.src_port));
++	if (!reply)
+ 		return -ENOMEM;
+ 
+-	return virtio_transport_get_ops()->send_pkt(pkt);
++	t = virtio_transport_get_ops();
++	if (!t) {
++		virtio_transport_free_pkt(reply);
++		return -ENOTCONN;
++	}
 +
- 	/* open-file renames don't work across directories */
- 	if (to_dentry->d_parent != from_dentry->d_parent)
- 		goto do_rename_exit;
++	return t->send_pkt(reply);
+ }
+ 
+ static void virtio_transport_wait_close(struct sock *sk, long timeout)
 
 
