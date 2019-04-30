@@ -2,123 +2,107 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEA5C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E8BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B790B205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312512075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbHTatfr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxutZQVn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfD3NUb (ORCPT
+        id S1726819AbfD3NYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:20:31 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38297 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfD3NUb (ORCPT
+        Tue, 30 Apr 2019 09:24:08 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34804 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfD3NYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:20:31 -0400
-Received: by mail-lj1-f195.google.com with SMTP id e18so6861279lja.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:20:29 -0700 (PDT)
+        Tue, 30 Apr 2019 09:24:07 -0400
+Received: by mail-lf1-f68.google.com with SMTP id 3so226279lfr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:24:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GxUTvEwj+NBZpurZ2Ig0gOAGnCDy3ToJRSMidXZgrwA=;
-        b=nbHTatfrSBU52QO6/XAOdHj9n3sbWKACiGEOroIP1njriZJp1154c0zcMmUOEddftb
-         RHJG5EOjKR045xHsmGwBRk25Zpt4plyqn/QjXipfndHY4PBSZlr5wG+o+/JwaTTPxM2T
-         MhoVB9YsVgacvd6KF90nDt0wxErlKPxttItAjzHqChSUXtBUcL7DiCOtUiI8jtGV7l9u
-         /GRXc024g7onhK63Wn5BuFgcj1Jpq59TJA3MVz5rJv+nnUP5E3LhdOkx2Z1fDCT5B/Ez
-         8uTClrIbXDUjeJm3JKcRdmGlroD9T1vDJT8AYsYZwtLLO5K78rkzLewM9joqBiOrcpzh
-         wTjg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=qnpMUYkMmL9pa1NwW2JEoP1ItjcZEv+YmAjkVOUYqyQ=;
+        b=PxutZQVnmGiTrO83tBry4NYVOaB4lJN09Oxip41bc355LYSr1LYeo1lMf41kY1dbPT
+         Az2YTmBmBe5x538dT+JRe1+JYJCz1FoZpsDQi9caft0FfB24tBWxwTJv5idXE3tCj309
+         ndFGbbBo2539UPe3H3O748UbjUEB5fXovu/9xWmEfhXYjNsDa8MGUA7FNgzTEwcV2NYx
+         BzUCxvrUpvXfcEOn53rFrUqaBy+pwlNLr7oHR8TPl+xrEZ1Otp/fmWcn5hIPL8+9gurK
+         qq05lb0/OOuJZi6nG1tjGqZ27/O0Si7Z+rZrnHkVNiZ1eEaLz2uJksbogv7Sccdikqvu
+         +sog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GxUTvEwj+NBZpurZ2Ig0gOAGnCDy3ToJRSMidXZgrwA=;
-        b=Rz1IqRf7fU3HgBPP0aFWqz+Zc5mDRqmYp78uJ8XWzm86vbLOdNpxd5QUfNvyu3Q75J
-         WeEp+n6W6KbetxZp7fK7gNb9VLlnQ0yR2V6zzCmIySIt/8fmKr0fzQnErGIcQgi+zdNy
-         lpTkZECob3aKjWdXkp6SS8ax6u8xxK8WVQ0iL/iauV8O7tRgNKtn3IabimKi60Jx0dlz
-         FPCu1u9/sv26TqZGfMX2u2jyeM7F1gwLqp1rDBY57BWpVk+tGE5y2YxJGdwcuPFtrLKA
-         AmP3T7wRIIy2IGs5mpvkFVxM9vhGQCH/5IMMGmK8ohHco6NXMPcJpGcuftHl42docEkv
-         81VA==
-X-Gm-Message-State: APjAAAW2orGX5LMZX9HpcBw+CDyBevCLy1Smxi6kVmQ0XAtpugFptcBo
-        tXFHhww0mlICTOdv/+gpQWCJFROsDjRrP8bNXrlMLg==
-X-Google-Smtp-Source: APXvYqz6/C5cOSAi+LjOLFLkuA/ISsQ8fKMilHFI35qQ0Q11aqKw0onTyfbnQdSYNfhdSjCiVudD/DPj+qhrxqtjTUA=
-X-Received: by 2002:a2e:3a0f:: with SMTP id h15mr35417830lja.194.1556630428902;
- Tue, 30 Apr 2019 06:20:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qnpMUYkMmL9pa1NwW2JEoP1ItjcZEv+YmAjkVOUYqyQ=;
+        b=pzJiAuxAkNC9GyWmiTtIN8PV0HNmLU+C3W6ASp0HOGb3AKLyGzM/ELNOq6nbTe7Pjl
+         3RMYhZJcbnNeYo0YEL2pXg3pbUiDsT6K0RZtLB/BmF67YLUK945bQj0SgD1YxT2lxKrH
+         YV73lBQgZ8XWdIA24YQFO5185EOgN5epwKQMlpd64x5AoEvQYLpPUHhSM3NCYbmgySC0
+         91RRBUUIaRBOJ+HkbHkjCKrKsD7kGPtUn0tQVpL5MBGKh+8Opbkxw/spApihWFJu9ME9
+         4IDGVdGYioNJ/BaBAxhuueYcYHPRnQ7p8ujpE8wXpJfaikP+kTFwRQLkYB2E5s6133JT
+         jbkg==
+X-Gm-Message-State: APjAAAVjlkk0vcZiUbS3mmDJQrd5+aMZBw1aG1mfvf/2I130TvYWoexB
+        fy7azHJj5GgByNcKk5zy1TQ=
+X-Google-Smtp-Source: APXvYqxY66JUV3S/EHKt8chK3vxOG3tpmuDiZ0EEFbAfPD2vCxwBJVAqoqvpolQPE+tgSK7CerPsJg==
+X-Received: by 2002:a19:5507:: with SMTP id n7mr15109749lfe.140.1556630645642;
+        Tue, 30 Apr 2019 06:24:05 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id s24sm7499626ljs.30.2019.04.30.06.24.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 06:24:04 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 7333A46019C; Tue, 30 Apr 2019 16:24:03 +0300 (MSK)
+Date:   Tue, 30 Apr 2019 16:24:03 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, brgl@bgdev.pl,
+        arunks@codeaurora.org, geert+renesas@glider.be, mhocko@kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        ldufour@linux.ibm.com, rppt@linux.ibm.com, mguzik@redhat.com,
+        mkoutny@suse.cz, vbabka@suse.cz, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm: get_cmdline use arg_lock instead of mmap_sem
+Message-ID: <20190430132403.GG2673@uranus.lan>
+References: <20190418182321.GJ3040@uranus.lan>
+ <20190430081844.22597-1-mkoutny@suse.com>
+ <20190430081844.22597-2-mkoutny@suse.com>
+ <4c79fb09-c310-4426-68f7-8b268100359a@virtuozzo.com>
+ <20190430093808.GD2673@uranus.lan>
+ <1a7265fa-610b-1f2a-e55f-b3a307a39bf2@virtuozzo.com>
+ <20190430104517.GF2673@uranus.lan>
+ <20190430105609.GA23779@blackbody.suse.cz>
 MIME-Version: 1.0
-References: <CA+G9fYuZhS+QfgM0HrNm4B8Yb+0kwScxaURJDYXKPY-ML_L0cQ@mail.gmail.com>
- <35ebc45a-5894-e2ab-3a97-2ce3f7efda44@xs4all.nl>
-In-Reply-To: <35ebc45a-5894-e2ab-3a97-2ce3f7efda44@xs4all.nl>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 30 Apr 2019 18:50:17 +0530
-Message-ID: <CA+G9fYuTpeu1MdLVe3ZNp3Bvx0c79mXwh2qun5MWseEweRO=FQ@mail.gmail.com>
-Subject: Re: vidioc_g_edid: BUG: Unable to handle kernel NULL pointer
- dereference at virtual address 00000716
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        paul.kocialkowski@bootlin.com, ezequiel@collabora.com,
-        treding@nvidia.com, niklas.soderlund+renesas@ragnatech.se,
-        sakari.ailus@linux.intel.com,
-        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190430105609.GA23779@blackbody.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
-
-On Tue, 30 Apr 2019 at 12:58, Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+On Tue, Apr 30, 2019 at 12:56:10PM +0200, Michal Koutný wrote:
+> On Tue, Apr 30, 2019 at 01:45:17PM +0300, Cyrill Gorcunov <gorcunov@gmail.com> wrote:
+> > It setups these parameters unconditionally. I need to revisit
+> > this moment. Technically (if only I'm not missing something
+> > obvious) we might have a race here with prctl setting up new
+> > params, but this should be harmless since most of them (except
+> > stack setup) are purely informative data.
 >
-> On 4/30/19 9:10 AM, Naresh Kamboju wrote:
-> > v4l2-compliance test running on linux stable 4.9 reported kernel bug.
-> > The crash is pointing to kernel module "vivid.ko" which was loaded by
-> > test case. (  modprobe vivid.ko)
-> >
-> >
->
-> It's a CEC related bug, this vivid patch should fix it. It's a backport of
-> commit ed356f110403 ("media: vivid: check if the cec_adapter is valid"). This
-> commit was only backported to 4.12 and up since it didn't apply to older kernels.
+> FTR, when I reviewed that usage, I noticed it was missing the
+> synchronization. My understanding was that the mm_struct isn't yet
+> shared at this moment. I can see some of the operations take place after
+> flush_old_exec (where current->mm = mm_struct), so potentially it is
+> shared since then. OTOH, I guess there aren't concurrent parties that
+> could access the field at this stage of exec.
 
-I have tested this patch on x86_64 and confirms this works.
-v4l2-compliance test runs to complete successfully.
-
-
->
-> Feel free to post this patch (after testing!) to the stable mailinglist for
-> inclusion into 4.9.
-
-I will post this patch on stable mailing list.
-
->
-> Regards,
->
->         Hans
->
-> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> ---
-> --- a/drivers/media/platform/vivid/vivid-vid-common.c   2019-04-30 09:23:37.296797292 +0200
-> +++ b/drivers/media/platform/vivid/vivid-vid-common.c   2019-04-30 09:24:09.581261759 +0200
-> @@ -841,6 +841,7 @@
->         if (edid->start_block + edid->blocks > dev->edid_blocks)
->                 edid->blocks = dev->edid_blocks - edid->start_block;
->         memcpy(edid->edid, dev->edid, edid->blocks * 128);
-> -       cec_set_edid_phys_addr(edid->edid, edid->blocks * 128, adap->phys_addr);
-> +       if (adap)
-> +               cec_set_edid_phys_addr(edid->edid, edid->blocks * 128, adap->phys_addr);
->         return 0;
->  }
-
-
-Best regards
-Naresh Kamboju
+Just revisited this code -- we're either executing prctl, either execve.
+Since both operates with current task we're safe.
