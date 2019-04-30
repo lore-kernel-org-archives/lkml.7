@@ -2,91 +2,84 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85CEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A54C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9D92080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA1182080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfD3MaS (ORCPT
+        id S1727842AbfD3MbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:30:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32978 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726105AbfD3MaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:30:18 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UCMQAk043552
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 08:30:16 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6maqe799-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 08:30:16 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Tue, 30 Apr 2019 13:30:15 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 13:30:11 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UCUAk751314936
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 12:30:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52C8FAE055;
-        Tue, 30 Apr 2019 12:30:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5CC16AE053;
-        Tue, 30 Apr 2019 12:30:08 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.85.97.254])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 30 Apr 2019 12:30:08 +0000 (GMT)
-Date:   Tue, 30 Apr 2019 18:00:05 +0530
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] livepatch: Use static buffer for debugging
- messages under rq lock
-References: <20190430091049.30413-1-pmladek@suse.com>
- <20190430091049.30413-3-pmladek@suse.com>
+        Tue, 30 Apr 2019 08:31:08 -0400
+Received: from mail.us.es ([193.147.175.20]:49734 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbfD3MbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 08:31:07 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id AE7E811FF80
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 14:31:05 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 99CDEDA713
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 14:31:05 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 990F5DA712; Tue, 30 Apr 2019 14:31:05 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 8D924DA707;
+        Tue, 30 Apr 2019 14:31:03 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Tue, 30 Apr 2019 14:31:03 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (129.166.216.87.static.jazztel.es [87.216.166.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 546204265A31;
+        Tue, 30 Apr 2019 14:31:03 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 14:31:02 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfilter: nat: avoid unused-variable warning
+Message-ID: <20190430123102.xia5kwlkqsvinqvi@salvia>
+References: <20190325135336.2107801-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430091049.30413-3-pmladek@suse.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-TM-AS-GCONF: 00
-x-cbid: 19043012-0012-0000-0000-00000316DAF1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043012-0013-0000-0000-0000214F43D1
-Message-Id: <20190430123005.GB18595@JAVRIS.in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=768 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300081
+In-Reply-To: <20190325135336.2107801-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:10:49AM +0200, Petr Mladek wrote:
-> klp_try_switch_task() is called under klp_mutex. The buffer for
-> debugging messages might be static.
+On Mon, Mar 25, 2019 at 02:53:05PM +0100, Arnd Bergmann wrote:
+> masq_refcnt6 was added at the start of the file, but it is
+> only used in the option IPv6 section of the file, causing
+> a harmless compiler warning if IPv6 is disabled:
 > 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> net/netfilter/nf_nat_masquerade.c:15:21: error: 'masq_refcnt6' defined but not used [-Werror=unused-variable]
+>  static unsigned int masq_refcnt6 __read_mostly;
+> 
+> Move the variable next to the user to avoid that warning.
+> 
+> Fixes: 46f7487e161b ("netfilter: nat: don't register device notifier twice")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ----
+> This is an older patch stack, for some reason I seem to have never
+> sent it, and I can't find any indication of anyone else sending
+> a similar fix, so sending this out now.
+> 
+> If it's already fixed upstream, please ignore.
 
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-
+Yes, Florian fixed this in nf-next.
