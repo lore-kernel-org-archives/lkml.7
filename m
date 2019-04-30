@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAC9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC005C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCC020449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7E620449
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624987;
-	bh=7GntyMXcWt4UU0gvioaIi9lga+nZyYFukfanMAnLfzk=;
+	s=default; t=1556624992;
+	bh=JA1cVPFQA7jeyfiTzE+eEd+tw3Y5fVwIqMIbkAFPUu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=owQELdNkwB2l/HoqefijZazGjBmZN+F0oSl37oB8OybpLd88LmEtGNgQjAfTQY8Rr
-	 9xAKSckd6WhV+R2VxIN0cETmGFlGxeHEAhMN3uG5FFwYf9pPiPRL19Rng8aqRw8yd5
-	 d7K4jWU9+/dBQq9MlUazFMZ1PC0aSk07Yt34kfjw=
+	b=oultOCWkbw02QRge3TSD4kRzCzTHMLVqwVghoCSEO2/iePWOQE/DyyQscIbOn6T8X
+	 JEnXvID72N2kk4HKwPH0wExtOCX3spf8Qbvcr3Y2OPS/7NXelNwzh9pB7oH1ugk+3z
+	 OV1HKLO0KySovloFZ5bAyAbG/o6HHeZAd2W90pHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731047AbfD3Ltq (ORCPT
+        id S1731077AbfD3Ltv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36310 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731039AbfD3Ltm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:42 -0400
+        id S1731059AbfD3Ltt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D989C20449;
-        Tue, 30 Apr 2019 11:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972D020449;
+        Tue, 30 Apr 2019 11:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624981;
-        bh=7GntyMXcWt4UU0gvioaIi9lga+nZyYFukfanMAnLfzk=;
+        s=default; t=1556624989;
+        bh=JA1cVPFQA7jeyfiTzE+eEd+tw3Y5fVwIqMIbkAFPUu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kC47u7pG+/KX/WAdJv4eb7B1UnmWKBuY2lazb4AhCUrdBUGl/NDwAMZ/A134F1e7U
-         CF6iax2fuGRdfPz2Rf+1XmMFa8EzfevPR2MvYHShufh7g/LaY3OJP1jncvN072f11u
-         cKg+Sq79Gyrfy93wAJhV7yuPfZTNiqC3eB3deXFc=
+        b=ggar+msAAGljK0YRtHuCxuwjdZ9HA2itIZ1TPDuPxEkYEypOCcDvzMYa1Bb+u+XCg
+         5WRjDvZQtKrzPPLhIeKblsxfBl+Mi5O/4Hnfbhw3tlrB4n19u9DsW5qPEXvy+4SwDj
+         mSc8pnl7XXThrnF/dVnA5sdhAc1bzfHFkGS6wayE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 5.0 44/89] Revert "drm/i915/fbdev: Actually configure untiled displays"
-Date:   Tue, 30 Apr 2019 13:38:35 +0200
-Message-Id: <20190430113611.821040876@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: [PATCH 5.0 14/89] crypto: lrw - Fix atomic sleep when walking skcipher
+Date:   Tue, 30 Apr 2019 13:38:05 +0200
+Message-Id: <20190430113610.371633316@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -58,72 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 9fa246256e09dc30820524401cdbeeaadee94025 upstream.
+commit b257b48cd5830c5b1d0c347eb281f9c28056f881 upstream.
 
-This reverts commit d179b88deb3bf6fed4991a31fd6f0f2cad21fab5.
+When we perform a walk in the completion function, we need to ensure
+that it is atomic.
 
-This commit is documented to break userspace X.org modesetting driver in certain configurations.
-
-The X.org modesetting userspace driver is broken. No fixes are available yet. In order for this patch to be applied it either needs a config option or a workaround developed.
-
-This has been reported a few times, saying it's a userspace problem is clearly against the regression rules.
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109806
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Cc: <stable@vger.kernel.org> # v3.19+
+Fixes: ac3c8f36c31d ("crypto: lrw - Do not use auxiliary buffer")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/intel_fbdev.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ crypto/lrw.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/intel_fbdev.c
-+++ b/drivers/gpu/drm/i915/intel_fbdev.c
-@@ -336,8 +336,8 @@ static bool intel_fb_initial_config(stru
- 				    bool *enabled, int width, int height)
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -212,8 +212,12 @@ static void crypt_done(struct crypto_asy
  {
- 	struct drm_i915_private *dev_priv = to_i915(fb_helper->dev);
-+	unsigned long conn_configured, conn_seq, mask;
- 	unsigned int count = min(fb_helper->connector_count, BITS_PER_LONG);
--	unsigned long conn_configured, conn_seq;
- 	int i, j;
- 	bool *save_enabled;
- 	bool fallback = true, ret = true;
-@@ -355,9 +355,10 @@ static bool intel_fb_initial_config(stru
- 		drm_modeset_backoff(&ctx);
+ 	struct skcipher_request *req = areq->data;
  
- 	memcpy(save_enabled, enabled, count);
--	conn_seq = GENMASK(count - 1, 0);
-+	mask = GENMASK(count - 1, 0);
- 	conn_configured = 0;
- retry:
-+	conn_seq = conn_configured;
- 	for (i = 0; i < count; i++) {
- 		struct drm_fb_helper_connector *fb_conn;
- 		struct drm_connector *connector;
-@@ -370,8 +371,7 @@ retry:
- 		if (conn_configured & BIT(i))
- 			continue;
+-	if (!err)
++	if (!err) {
++		struct rctx *rctx = skcipher_request_ctx(req);
++
++		rctx->subreq.base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
+ 		err = xor_tweak_post(req);
++	}
  
--		/* First pass, only consider tiled connectors */
--		if (conn_seq == GENMASK(count - 1, 0) && !connector->has_tile)
-+		if (conn_seq == 0 && !connector->has_tile)
- 			continue;
- 
- 		if (connector->status == connector_status_connected)
-@@ -475,10 +475,8 @@ retry:
- 		conn_configured |= BIT(i);
- 	}
- 
--	if (conn_configured != conn_seq) { /* repeat until no more are found */
--		conn_seq = conn_configured;
-+	if ((conn_configured & mask) != mask && conn_configured != conn_seq)
- 		goto retry;
--	}
- 
- 	/*
- 	 * If the BIOS didn't enable everything it could, fall back to have the
+ 	skcipher_request_complete(req, err);
+ }
 
 
