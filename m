@@ -2,146 +2,84 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CB8C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F0AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9732075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625521;
-	bh=DJARlssSH/G2NCg4Dq/mjOYkyrUjMC4BBDHXZ6aG8fQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QSJu+UMDQSzGCj7FEZuRInsmQmaMqUDlJhHWnLD7D5cgje35YyqQ1d7YctJzhjEFv
-	 TXXmmBfo8Mbv2qN/mwQdooiUSgyaDSwkc+uDlAmI4esvw69+xNd3gjYNAnZh+kWjLL
-	 xoCId6nJ+3lsaCO0iLIhjXd4vyu1BMOVgq1t5V6c=
+	by mail.kernel.org (Postfix) with ESMTP id D64C72075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfD3L6k (ORCPT
+        id S1726894AbfD3L6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730041AbfD3LrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8890B20449;
-        Tue, 30 Apr 2019 11:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624826;
-        bh=DJARlssSH/G2NCg4Dq/mjOYkyrUjMC4BBDHXZ6aG8fQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J9HIBSpAz0aG6VHieMvqAmRVb9v7M81kMCDuHpycp7OrsBTP4EK1H2p8tDGyNnW4T
-         YO5H1lliynZqsfpAUvwBWsJYVlvSpcV3auePYZd9Lir4TqTX2C0kJoE8zaok5nAOCn
-         MLc61x1HvvwB3PxnnRGvwfqIsUlISwu1Bxaz65Ys=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 085/100] ipv4: set the tcp_min_rtt_wlen range from 0 to one day
-Date:   Tue, 30 Apr 2019 13:38:54 +0200
-Message-Id: <20190430113612.793097581@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
-References: <20190430113608.616903219@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 30 Apr 2019 07:58:47 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:35847 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730650AbfD3LrE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:04 -0400
+X-Originating-IP: 109.213.14.175
+Received: from localhost (alyon-652-1-31-175.w109-213.abo.wanadoo.fr [109.213.14.175])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 1D5E31C000C;
+        Tue, 30 Apr 2019 11:47:02 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 13:47:02 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] rtc: digicolor: set range
+Message-ID: <20190430114702.GD11339@piout.net>
+References: <20190430093212.28425-1-alexandre.belloni@bootlin.com>
+ <20190430093212.28425-2-alexandre.belloni@bootlin.com>
+ <877ebbu3lz.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877ebbu3lz.fsf@tarshish>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+On 30/04/2019 14:36:24+0300, Baruch Siach wrote:
+> Hi Alexandre,
+> 
+> On Tue, Apr 30 2019, Alexandre Belloni wrote:
+> 
+> > While the range of REFERENCE + TIME is actually 33 bits, the counter
+> > itself (TIME) is a 32-bits seconds counter.
+> >
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > ---
+> >  drivers/rtc/rtc-digicolor.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/rtc/rtc-digicolor.c b/drivers/rtc/rtc-digicolor.c
+> > index 5bb14c56bc9a..e6e16aaac254 100644
+> > --- a/drivers/rtc/rtc-digicolor.c
+> > +++ b/drivers/rtc/rtc-digicolor.c
+> > @@ -206,6 +206,7 @@ static int __init dc_rtc_probe(struct platform_device *pdev)
+> >  	platform_set_drvdata(pdev, rtc);
+> >  
+> >  	rtc->rtc_dev->ops = &dc_rtc_ops;
+> > +	rtc->rtc_dev->range_max = U32_MAX;
+> 
+> Where can I find documentation on the meaning and usage of the range_max
+> value? I could not find anything in the kernel source.
+> 
 
-[ Upstream commit 19fad20d15a6494f47f85d869f00b11343ee5c78 ]
+It should be set to the maximum UNIX timestamp the RTC can be set to
+while keeping range_min to range_max contiguous.
 
-There is a UBSAN report as below:
-UBSAN: Undefined behaviour in net/ipv4/tcp_input.c:2877:56
-signed integer overflow:
-2147483647 * 1000 cannot be represented in type 'int'
-CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.1.0-rc4-00058-g582549e #1
-Call Trace:
- <IRQ>
- dump_stack+0x8c/0xba
- ubsan_epilogue+0x11/0x60
- handle_overflow+0x12d/0x170
- ? ttwu_do_wakeup+0x21/0x320
- __ubsan_handle_mul_overflow+0x12/0x20
- tcp_ack_update_rtt+0x76c/0x780
- tcp_clean_rtx_queue+0x499/0x14d0
- tcp_ack+0x69e/0x1240
- ? __wake_up_sync_key+0x2c/0x50
- ? update_group_capacity+0x50/0x680
- tcp_rcv_established+0x4e2/0xe10
- tcp_v4_do_rcv+0x22b/0x420
- tcp_v4_rcv+0xfe8/0x1190
- ip_protocol_deliver_rcu+0x36/0x180
- ip_local_deliver+0x15b/0x1a0
- ip_rcv+0xac/0xd0
- __netif_receive_skb_one_core+0x7f/0xb0
- __netif_receive_skb+0x33/0xc0
- netif_receive_skb_internal+0x84/0x1c0
- napi_gro_receive+0x2a0/0x300
- receive_buf+0x3d4/0x2350
- ? detach_buf_split+0x159/0x390
- virtnet_poll+0x198/0x840
- ? reweight_entity+0x243/0x4b0
- net_rx_action+0x25c/0x770
- __do_softirq+0x19b/0x66d
- irq_exit+0x1eb/0x230
- do_IRQ+0x7a/0x150
- common_interrupt+0xf/0xf
- </IRQ>
+In the digicolor case, you could go up to 8589934590 (Wed Mar 16
+12:56:30 UTC 2242) but the driver only writes DC_RTC_REFERENCE and I'm
+not sure it can also update DC_RTC_TIME safely.
 
-It can be reproduced by:
-  echo 2147483647 > /proc/sys/net/ipv4/tcp_min_rtt_wlen
-
-Fixes: f672258391b42 ("tcp: track min RTT using windowed min-filter")
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/networking/ip-sysctl.txt |    1 +
- net/ipv4/sysctl_net_ipv4.c             |    5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
---- a/Documentation/networking/ip-sysctl.txt
-+++ b/Documentation/networking/ip-sysctl.txt
-@@ -410,6 +410,7 @@ tcp_min_rtt_wlen - INTEGER
- 	minimum RTT when it is moved to a longer path (e.g., due to traffic
- 	engineering). A longer window makes the filter more resistant to RTT
- 	inflations such as transient congestion. The unit is seconds.
-+	Possible values: 0 - 86400 (1 day)
- 	Default: 300
- 
- tcp_moderate_rcvbuf - BOOLEAN
---- a/net/ipv4/sysctl_net_ipv4.c
-+++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -49,6 +49,7 @@ static int ip_ping_group_range_min[] = {
- static int ip_ping_group_range_max[] = { GID_T_MAX, GID_T_MAX };
- static int comp_sack_nr_max = 255;
- static u32 u32_max_div_HZ = UINT_MAX / HZ;
-+static int one_day_secs = 24 * 3600;
- 
- /* obsolete */
- static int sysctl_tcp_low_latency __read_mostly;
-@@ -1140,7 +1141,9 @@ static struct ctl_table ipv4_net_table[]
- 		.data		= &init_net.ipv4.sysctl_tcp_min_rtt_wlen,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= &zero,
-+		.extra2		= &one_day_secs
- 	},
- 	{
- 		.procname	= "tcp_autocorking",
-
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
