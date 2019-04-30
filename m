@@ -2,138 +2,119 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DA7C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A583C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA94C20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC04120854
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nel2FF2x"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WPBSwm2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfD3SME (ORCPT
+        id S1726812AbfD3SOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 14:12:04 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40867 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfD3SMC (ORCPT
+        Tue, 30 Apr 2019 14:14:37 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:33866 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfD3SOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:12:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u17so3491977pfn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:12:02 -0700 (PDT)
+        Tue, 30 Apr 2019 14:14:35 -0400
+Received: by mail-yw1-f65.google.com with SMTP id u14so6622480ywe.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:14:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=keqoE4yrofLz8kYqjDMsHSkr0S8YueMxYzrRDWUbwAc=;
-        b=nel2FF2xXr6lovHX+5X+lMHSYLpbHBP2n/K5tXZUUpLin3UbJtXhYnNgYyPfij7qIo
-         BJ9uWdtOXq8wi0NQ5nwUPx5CUIAgXpAZ4y1XR0C4aL3LUHVdCK93F5EKXPgPuwdX9S+J
-         I7ytgmMcPPyO5VBUGx7rbCK6J6BAkOaZAB/6yyHN0JCf9WAo0OAXirXbebwl+gyLWRWN
-         j1Oxn1GaRKyXPS6ydD6j7sll8hiPZguc3LLILFJdntPk7IXRoOO9quyvCj7VeR8iJc85
-         7M+M5c/lDdbpj0FJD7y5B1NoIt5SOLsBi3SHAkV7ueuw6eRKjyjuiHU3hMiQf+uOkgAA
-         Kv6w==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bse4S0Z7lUf/SmcUVMhmxnkZgM+H7sFlIuWL16fY2hs=;
+        b=WPBSwm2V0oeuI+bplyqdGWE4RLVzulE0noF0etJZsE7TZccsrAjKH1+fPUa8IBFj1/
+         3RZeVujhrkl2FmoxDwgroiXOjcRApCnE+Uuqqt7EOlLxPbIkJOWvOF8rWeR6XIPlKW9g
+         eckn6b7lehgVJ0wG5jRpqcZ8GWsxzBmROvb8E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=keqoE4yrofLz8kYqjDMsHSkr0S8YueMxYzrRDWUbwAc=;
-        b=ub5S7mR+1GCE2M/LEMW7R672eRDup4xD2CAxiAolKJafivgkoJ8DN3sjYGSCkJk+m9
-         wyRkRXZcXv6ZJk55gAT81RSNzvJwryVN4ETXc84666nojBrZ/12UD0TzAWdq/4HsYcMJ
-         Th1dsrYZwMKptfRzt0oB+NBH/AeEuWwwRfywI6yW0h/CxBZyUoJl4fSWP4uODhW6ZXqY
-         MelVixt8k4W2SonqrthzpDfc11Kb9iQObwc3ZP0q6ZQkJSvnCy00VMMGGXen0DALGS0M
-         PfMpdZmioLrSzBRukdQy03p4ed60ZinOwv0ZzczZPxlN2Xo96ggEP9tX16yoCWH2Q9qt
-         ZlWw==
-X-Gm-Message-State: APjAAAVpfxlCWCwzIs2kr2cTMGQ9AOs25EIcXHqqUrItcC6DyRBt20dd
-        HL5j+B77l0M8F1c9NJUxWeyhXox4q61cHA==
-X-Google-Smtp-Source: APXvYqxJznYkLaG36rMsocKbpuE5EXZvpj3VByEQMt0piXbUrjmJroHQ3MSuCS/BLz8CGIk3QrdYPA==
-X-Received: by 2002:a63:7504:: with SMTP id q4mr37268203pgc.443.1556647921914;
-        Tue, 30 Apr 2019 11:12:01 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id b144sm13157642pfb.68.2019.04.30.11.12.00
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bse4S0Z7lUf/SmcUVMhmxnkZgM+H7sFlIuWL16fY2hs=;
+        b=FEo7Q7RyAdTBMXMAmp2GeinjjAe9iokJfStrB/wSmjULz/Xji+Vo2t3TCZuCWyeNZn
+         fOQlc2ZDoLTVIJr4o+Km7r0KMAZbCm8DMufMGV7svLN4jcAnElBf8XqBaorvH/LLF+AN
+         7vUGL712XUzaX+DZmCqfNPa08fs9Ut1SPXWDKJimdfTzgYZ2xKxyDuZmQ2hgS0c78ZM8
+         elQHylhkOAWyIagr/wiCu2oBw2GToz0z3MU33lo3u8Dd19DnKpRT3BvV0vKbWp8ymUBJ
+         +ThLxj8cyB+H5Gwtaj7tXU70X32m1wlSy2QYdD0mfMl7ZAWxy2JDQA2ZdU7GpdDtL3w2
+         gtww==
+X-Gm-Message-State: APjAAAVXYUF5LPX/vPSYku78G6kTVWr4cU4cBIfG9RGc2P0+11gZ265V
+        pQjT95pRkpQ/8iMdR0oHf060PurZ3LE=
+X-Google-Smtp-Source: APXvYqy5Y6qNysychzSqFM+aYK+Y7gPSjjTwazT+mxW6TKCDtFyzELTZGe/fSoGz0Tzm8BQaaUrTWA==
+X-Received: by 2002:a25:e757:: with SMTP id e84mr54721906ybh.259.1556648074623;
+        Tue, 30 Apr 2019 11:14:34 -0700 (PDT)
+Received: from mail-yw1-f54.google.com (mail-yw1-f54.google.com. [209.85.161.54])
+        by smtp.gmail.com with ESMTPSA id a67sm20126953ywh.36.2019.04.30.11.14.33
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 11:12:00 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: avoid page allocation warnings
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
-References: <20190430132405.8268-1-mark.rutland@arm.com>
- <20190430141810.GF13796@bombadil.infradead.org>
- <20190430145938.GA8314@lakrids.cambridge.arm.com>
- <a1af3017-6572-e828-dc8a-a5c8458e6b5a@kernel.dk>
- <20190430170302.GD8314@lakrids.cambridge.arm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0bd395a0-e0d3-16a5-e29f-557e97782a48@kernel.dk>
-Date:   Tue, 30 Apr 2019 12:11:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 11:14:33 -0700 (PDT)
+Received: by mail-yw1-f54.google.com with SMTP id q11so6627901ywb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:14:33 -0700 (PDT)
+X-Received: by 2002:a81:2e08:: with SMTP id u8mr52020872ywu.55.1556648072989;
+ Tue, 30 Apr 2019 11:14:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190430170302.GD8314@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190430180111.10688-1-mcroce@redhat.com>
+In-Reply-To: <20190430180111.10688-1-mcroce@redhat.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Tue, 30 Apr 2019 11:14:20 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJG1D6YvTaSY3hpB8_APmwe=rGn8FkyAfCGuQZ3O2j1Yg@mail.gmail.com>
+Message-ID: <CAGXu5jJG1D6YvTaSY3hpB8_APmwe=rGn8FkyAfCGuQZ3O2j1Yg@mail.gmail.com>
+Subject: Re: [PATCH v5] proc/sysctl: add shared variables for range check
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 11:03 AM, Mark Rutland wrote:
-> On Tue, Apr 30, 2019 at 10:21:03AM -0600, Jens Axboe wrote:
->> On 4/30/19 8:59 AM, Mark Rutland wrote:
->>> On Tue, Apr 30, 2019 at 07:18:10AM -0700, Matthew Wilcox wrote:
->>>> On Tue, Apr 30, 2019 at 02:24:05PM +0100, Mark Rutland wrote:
->>>>> In io_sqe_buffer_register() we allocate a number of arrays based on the
->>>>> iov_len from the user-provided iov. While we limit iov_len to SZ_1G,
->>>>> we can still attempt to allocate arrays exceeding MAX_ORDER.
->>>>>
->>>>> On a 64-bit system with 4KiB pages, for an iov where iov_base = 0x10 and
->>>>> iov_len = SZ_1G, we'll calculate that nr_pages = 262145. When we try to
->>>>> allocate a corresponding array of (16-byte) bio_vecs, requiring 4194320
->>>>> bytes, which is greater than 4MiB. This results in SLUB warning that
->>>>> we're trying to allocate greater than MAX_ORDER, and failing the
->>>>> allocation.
->>>>>
->>>>> Avoid this by passing __GFP_NOWARN when allocating arrays for the
->>>>> user-provided iov_len. We'll gracefully handle the failed allocation,
->>>>> returning -ENOMEM to userspace.
->>>>>
->>>>> We should probably consider lowering the limit below SZ_1G, or reworking
->>>>> the array allocations.
->>>>
->>>> I'd suggest that kvmalloc is probably our friend here ... we don't really
->>>> want to return -ENOMEM to userspace for this case, I don't think.
->>>
->>> Sure. I'll go verify that the uring code doesn't assume this memory is
->>> physically contiguous.
->>>
->>> I also guess we should be passing GFP_KERNEL_ACCOUNT rateh than a plain
->>> GFP_KERNEL.
->>
->> kvmalloc() is fine, the io_uring code doesn't care about the layout of
->> the memory, it just uses it as an index.
-> 
-> I've just had a go at that, but when using kvmalloc() with or without
-> GFP_KERNEL_ACCOUNT I hit OOM and my system hangs within a few seconds with the
-> syzkaller prog below:
-> 
-> ----
-> Syzkaller reproducer:
-> # {Threaded:false Collide:false Repeat:false RepeatTimes:0 Procs:1 Sandbox: Fault:false FaultCall:-1 FaultNth:0 EnableTun:false EnableNetDev:false EnableNetReset:false EnableCgroups:false EnableBinfmtMisc:false EnableCloseFds:false UseTmpDir:false HandleSegv:false Repro:false Trace:false}
-> r0 = io_uring_setup(0x378, &(0x7f00000000c0))
-> sendmsg$SEG6_CMD_SET_TUNSRC(0xffffffffffffffff, &(0x7f0000000240)={&(0x7f0000000000)={0x10, 0x0, 0x0, 0x40000000}, 0xc, 0x0, 0x1, 0x0, 0x0, 0x10}, 0x800)
-> io_uring_register$IORING_REGISTER_BUFFERS(r0, 0x0, &(0x7f0000000000), 0x1)
-> ----
-> 
-> ... I'm a bit worried that opens up a trivial DoS.
-> 
-> Thoughts?
+On Tue, Apr 30, 2019 at 11:01 AM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> In the sysctl code the proc_dointvec_minmax() function is often used to
+> validate the user supplied value between an allowed range. This function
+> uses the extra1 and extra2 members from struct ctl_table as minimum and
+> maximum allowed value.
+>
+> On sysctl handler declaration, in every source file there are some readonly
+> variables containing just an integer which address is assigned to the
+> extra1 and extra2 members, so the sysctl range is enforced.
+>
+> The special values 0, 1 and INT_MAX are very often used as range boundary,
+> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
+> different source files:
+>
+>     $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
+>     248
+>
+> Add a const int array containing the most commonly used values,
+> some macros to refer more easily to the correct array member,
+> and use them instead of creating a local one for every object file.
+>
+> This is the bloat-o-meter output comparing the old and new binary
+> compiled with the default Fedora config:
+>
+>     # scripts/bloat-o-meter -d vmlinux.o.old vmlinux.o
+>     add/remove: 2/2 grow/shrink: 0/2 up/down: 24/-188 (-164)
+>     Data                                         old     new   delta
+>     sysctl_vals                                    -      12     +12
+>     __kstrtab_sysctl_vals                          -      12     +12
+>     max                                           14      10      -4
+>     int_max                                       16       -     -16
+>     one                                           68       -     -68
+>     zero                                         128      28    -100
+>     Total: Before=20583249, After=20583085, chg -0.00%
+>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-Can you post the patch you used?
+Acked-by: Kees Cook <keescook@chromium.org>
 
 -- 
-Jens Axboe
-
+Kees Cook
