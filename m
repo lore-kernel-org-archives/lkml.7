@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6F8C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245CDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D194E217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9286217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624425;
-	bh=1v3inFiLJzSCitqpL2LAc8O+IpCjNakfSNz/Xoc3Gdo=;
+	s=default; t=1556624429;
+	bh=4YNEle52cTFYFMakywJ/kyOyo6RryCQ23XaVO9+Ywyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fN213OfvDnkbkVfZsKiTgekwhftDIZQ6LojmBaa1gOrO6pbsFeHA5whJCi9h/4FmC
-	 TSxDnFDcs9l8rn6+qaiMQ0ARLs3LJ/imYrFFejUQ+JnqEsJ0Oz9VkY6Ad9VkV8dvBz
-	 x9wiRFkfU7AEiIVLhGA11qyNGiH58wP1/mos/R6s=
+	b=iDDaeSJEW7o7sRqM/HtfLoHTN8c3kyVzkM2DtX/L2Kb5K9uwJ9YWT1mYgFvj+Tz4F
+	 gz1Lb08qkCNgfKhYAd+uI9S9OSbblWSLPBi7PGfQlWzoFIRPlEJBewAfl+92ZeIaLZ
+	 O3OOsaIACTb3QF9/WQ1g+ubswT/YFgRLLWGaGlck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbfD3LkY (ORCPT
+        id S1728453AbfD3Lk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728408AbfD3LkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:40:21 -0400
+        id S1728427AbfD3LkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:40:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B061B2177B;
-        Tue, 30 Apr 2019 11:40:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49F1C2177B;
+        Tue, 30 Apr 2019 11:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624421;
-        bh=1v3inFiLJzSCitqpL2LAc8O+IpCjNakfSNz/Xoc3Gdo=;
+        s=default; t=1556624423;
+        bh=4YNEle52cTFYFMakywJ/kyOyo6RryCQ23XaVO9+Ywyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ct2IG2aBPHUM+FgmSMZSnbSmAj6skz3yseulXh2fA4yeBEJyKhaVbDGCMHReuv7Dd
-         R4Rgnr7KLLYTJu14Wp2niXY3sUluHLScSEQHjEPl27ru3bo28XP2bP3Kh6FKqoovYG
-         sazh+ySQeLt5UdKb2egbaF2Pblv9i6fQWJoCFCTg=
+        b=dOSaBeRj38/OUnK2gSTx3te0BA8O5Iwx0sJ586zCAvh0yEHBFgpcfYmJctkPuiV5i
+         zWgsdw2x8uhqujNFO43MZKVMSUAdMTv5uClw0Uj936cO3CnYwtghv2I1a7HB6yXyj8
+         aKPIRwo8GyqxI/4hyY6GarhLxN1Q5nq03YjsbWj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 4.9 08/41] ceph: ensure d_name stability in ceph_dentry_hash()
-Date:   Tue, 30 Apr 2019 13:38:19 +0200
-Message-Id: <20190430113526.560682600@linuxfoundation.org>
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH 4.9 09/41] ceph: fix ci->i_head_snapc leak
+Date:   Tue, 30 Apr 2019 13:38:20 +0200
+Message-Id: <20190430113526.755952166@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -59,44 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Yan, Zheng <zyan@redhat.com>
 
-commit 76a495d666e5043ffc315695f8241f5e94a98849 upstream.
+commit 37659182bff1eeaaeadcfc8f853c6d2b6dbc3f47 upstream.
 
-Take the d_lock here to ensure that d_name doesn't change.
+We missed two places that i_wrbuffer_ref_head, i_wr_ref, i_dirty_caps
+and i_flushing_caps may change. When they are all zeros, we should free
+i_head_snapc.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Link: https://tracker.ceph.com/issues/38224
+Reported-and-tested-by: Luis Henriques <lhenriques@suse.com>
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/dir.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/ceph/mds_client.c |    9 +++++++++
+ fs/ceph/snap.c       |    7 ++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
---- a/fs/ceph/dir.c
-+++ b/fs/ceph/dir.c
-@@ -1471,6 +1471,7 @@ void ceph_dentry_lru_del(struct dentry *
- unsigned ceph_dentry_hash(struct inode *dir, struct dentry *dn)
- {
- 	struct ceph_inode_info *dci = ceph_inode(dir);
-+	unsigned hash;
- 
- 	switch (dci->i_dir_layout.dl_dir_hash) {
- 	case 0:	/* for backward compat */
-@@ -1478,8 +1479,11 @@ unsigned ceph_dentry_hash(struct inode *
- 		return dn->d_name.hash;
- 
- 	default:
--		return ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
-+		spin_lock(&dn->d_lock);
-+		hash = ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
- 				     dn->d_name.name, dn->d_name.len);
-+		spin_unlock(&dn->d_lock);
-+		return hash;
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -1187,6 +1187,15 @@ static int remove_session_caps_cb(struct
+ 			list_add(&ci->i_prealloc_cap_flush->i_list, &to_remove);
+ 			ci->i_prealloc_cap_flush = NULL;
+ 		}
++
++               if (drop &&
++                  ci->i_wrbuffer_ref_head == 0 &&
++                  ci->i_wr_ref == 0 &&
++                  ci->i_dirty_caps == 0 &&
++                  ci->i_flushing_caps == 0) {
++                      ceph_put_snap_context(ci->i_head_snapc);
++                      ci->i_head_snapc = NULL;
++               }
  	}
- }
+ 	spin_unlock(&ci->i_ceph_lock);
+ 	while (!list_empty(&to_remove)) {
+--- a/fs/ceph/snap.c
++++ b/fs/ceph/snap.c
+@@ -563,7 +563,12 @@ void ceph_queue_cap_snap(struct ceph_ino
+ 	old_snapc = NULL;
  
+ update_snapc:
+-	if (ci->i_head_snapc) {
++       if (ci->i_wrbuffer_ref_head == 0 &&
++           ci->i_wr_ref == 0 &&
++           ci->i_dirty_caps == 0 &&
++           ci->i_flushing_caps == 0) {
++               ci->i_head_snapc = NULL;
++       } else {
+ 		ci->i_head_snapc = ceph_get_snap_context(new_snapc);
+ 		dout(" new snapc is %p\n", new_snapc);
+ 	}
 
 
