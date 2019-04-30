@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E9C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098D8C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8D721670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C946C21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624435;
-	bh=sspXV42TCOAkUcSZ2kigqA1X5pjGlPYYt7R5u7gn3eg=;
+	s=default; t=1556624437;
+	bh=n6bEtCH5PYROpFtTrZGNY0HS5nQHHMu9jBCBwtahPa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AG/GZoWEduXqyHYQWPtyvazeL7zJHMNPcn589Fnonbd4vl/8Rp51wgkZcUuR6VNiG
-	 1NwtRlEy/ZYko7eOR4jY1rhrBcLO4YlMfLKveZ96Uc7Hhgi2aSiW7PA6nOuAyK83re
-	 JMo5coLCfbrXikaE/VqWnAedH3ihtg6MCtM+ozIw=
+	b=MajxihdNzqRnlIxp907M8Av1bng4w9GDrtfaA/Gvia/YJr5bq03EFU1qJ0ue3esH/
+	 t71uobUmSo3aMGUiJ7BKgKxGbgNhXeAkODKYf0VwqTnb/KvGNg/T/TIYYWI8RDlxTN
+	 C1yt05YEk54e77QqhJQgPrnWOBnCLbQgXFyojReE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfD3Lke (ORCPT
+        id S1728520AbfD3Lkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46876 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:40:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728427AbfD3Lk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:40:29 -0400
+        id S1728479AbfD3Lkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:40:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61ED821707;
-        Tue, 30 Apr 2019 11:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0890321707;
+        Tue, 30 Apr 2019 11:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624428;
-        bh=sspXV42TCOAkUcSZ2kigqA1X5pjGlPYYt7R5u7gn3eg=;
+        s=default; t=1556624431;
+        bh=n6bEtCH5PYROpFtTrZGNY0HS5nQHHMu9jBCBwtahPa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hn5gRL32EkGyPv6kvFOIp18mmmxobPbT+WA2tefKZcWiHoRFdhCaCxuObrywglW+k
-         3nxOjUfxXrEY21O3c312AJBwVX6vnbs+tMY0WDznAlakMbPiMH1pjsoIOIZ4VOzIkY
-         93S81hHDeT4Fdlm3VnhwYiAWcL+V/JbzZcmNSREA=
+        b=i+h2mPgad/s6umELcBchmKQ2lt7C6VoQBQUM1Y6FFdim70QPY7U6B2uMK/uKzVD0e
+         CjO5tWk8WIYcsIzax+mWj2pCxVlhhfMfW8SDkWzkOlhs5QHSA7icsgzRTf1I3e5kqq
+         DsrnE8chJ/RCelRrdb93yuGGSiAXD4VObXAbIy08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.9 24/41] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
-Date:   Tue, 30 Apr 2019 13:38:35 +0200
-Message-Id: <20190430113530.731893661@linuxfoundation.org>
+        stable@vger.kernel.org, Zhu Yanjun <yanjun.zhu@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 33/41] net: rds: exchange of 8K and 1M pool
+Date:   Tue, 30 Apr 2019 13:38:44 +0200
+Message-Id: <20190430113532.335973595@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -61,43 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Zhu Yanjun <yanjun.zhu@oracle.com>
 
-commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 upstream.
+[ Upstream commit 4b9fc7146249a6e0e3175d0acc033fdcd2bfcb17 ]
 
-syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
-is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
-(which is embedded into user-visible "struct nfs_mount_data" structure)
-despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
-bytes of AF_INET6 address to rpc_sockaddr2uaddr().
+Before the commit 490ea5967b0d ("RDS: IB: move FMR code to its own file"),
+when the dirty_count is greater than 9/10 of max_items of 8K pool,
+1M pool is used, Vice versa. After the commit 490ea5967b0d ("RDS: IB: move
+FMR code to its own file"), the above is removed. When we make the
+following tests.
 
-Since "struct nfs_mount_data" structure is user-visible, we can't change
-"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
-assuming that everybody is using AF_INET family when passing address via
-"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
+Server:
+  rds-stress -r 1.1.1.16 -D 1M
 
-[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
+Client:
+  rds-stress -r 1.1.1.14 -s 1.1.1.16 -D 1M
 
-Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+The following will appear.
+"
+connecting to 1.1.1.16:4000
+negotiated options, tasks will start in 2 seconds
+Starting up..header from 1.1.1.166:4001 to id 4001 bogus
+..
+tsks  tx/s  rx/s tx+rx K/s  mbi K/s  mbo K/s tx us/c  rtt us
+cpu %
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+...
+"
+So this exchange between 8K and 1M pool is added back.
+
+Fixes: commit 490ea5967b0d ("RDS: IB: move FMR code to its own file")
+Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/nfs/super.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/rds/ib_fmr.c  |   11 +++++++++++
+ net/rds/ib_rdma.c |    3 ---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2047,7 +2047,8 @@ static int nfs23_validate_mount_data(voi
- 		memcpy(sap, &data->addr, sizeof(data->addr));
- 		args->nfs_server.addrlen = sizeof(data->addr);
- 		args->nfs_server.port = ntohs(data->addr.sin_port);
--		if (!nfs_verify_server_address(sap))
-+		if (sap->sa_family != AF_INET ||
-+		    !nfs_verify_server_address(sap))
- 			goto out_no_address;
+--- a/net/rds/ib_fmr.c
++++ b/net/rds/ib_fmr.c
+@@ -44,6 +44,17 @@ struct rds_ib_mr *rds_ib_alloc_fmr(struc
+ 	else
+ 		pool = rds_ibdev->mr_1m_pool;
  
- 		if (!(data->flags & NFS_MOUNT_TCP))
++	if (atomic_read(&pool->dirty_count) >= pool->max_items / 10)
++		queue_delayed_work(rds_ib_mr_wq, &pool->flush_worker, 10);
++
++	/* Switch pools if one of the pool is reaching upper limit */
++	if (atomic_read(&pool->dirty_count) >=  pool->max_items * 9 / 10) {
++		if (pool->pool_type == RDS_IB_MR_8K_POOL)
++			pool = rds_ibdev->mr_1m_pool;
++		else
++			pool = rds_ibdev->mr_8k_pool;
++	}
++
+ 	ibmr = rds_ib_try_reuse_ibmr(pool);
+ 	if (ibmr)
+ 		return ibmr;
+--- a/net/rds/ib_rdma.c
++++ b/net/rds/ib_rdma.c
+@@ -442,9 +442,6 @@ struct rds_ib_mr *rds_ib_try_reuse_ibmr(
+ 	struct rds_ib_mr *ibmr = NULL;
+ 	int iter = 0;
+ 
+-	if (atomic_read(&pool->dirty_count) >= pool->max_items_soft / 10)
+-		queue_delayed_work(rds_ib_mr_wq, &pool->flush_worker, 10);
+-
+ 	while (1) {
+ 		ibmr = rds_ib_reuse_mr(pool);
+ 		if (ibmr)
 
 
