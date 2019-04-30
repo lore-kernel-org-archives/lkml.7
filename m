@@ -2,363 +2,305 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5666C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F47C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2FC2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:15:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rte8mMyP"
+	by mail.kernel.org (Postfix) with ESMTP id 6A8832080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfD3HPD (ORCPT
+        id S1726369AbfD3HQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:15:03 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35200 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfD3HPC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:15:02 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so6321156plp.2;
-        Tue, 30 Apr 2019 00:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RsHBTisSuQ7+0nqw471B/2w56soH4fHyxAYYtLk4NVc=;
-        b=Rte8mMyPPB1QKQ5iXUnRCwIKood1FeAkyzaer8LJKG2J2EJkdmGkc8oNET0cNu6QjK
-         0CQq3Gxn+Q/OD2FSJlz+BJh7oKVipZ1STI3WS39chsM+yhKU1zR1h6DRFumcuKflk0YD
-         JpKxkIpxHUe3/gGfE9ZIU5zOBfG3GQCXRU+I8RyAi06MH6jztHjWqTIu6kPjJjWaXsco
-         dD9liXoeRkHOa9leYYCbinRWA5qjgqUHw3KdrBoa6HLHk+HtejYl4trskfDgE4Db1he+
-         WDUyTZPXcmOiM51r5pm8LxcopSPfMkpq8yRNrjRq/XBAX2/91XDEyZWw8hpboYmcmfgC
-         doXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RsHBTisSuQ7+0nqw471B/2w56soH4fHyxAYYtLk4NVc=;
-        b=P69ttEz0MdZkNTLO8CHjEdBmidVedYLo3uGwpxqXnSmbvkkZliI7q5mFIZA+SrqAAG
-         Mb5m64ESsOECaHuTIkjGfhd/crA13NQoEMVcMNLoa9LKjZ/6Gj4Zi+Or1Sd0nYlQvsIc
-         sS6kfKNuQAVRmaqmc2UC3w9WXDN5IFrCwcONYGm886pquIkkCBrYkSLLcqIMxR4+Vs8e
-         Z1iqfubonqaN5F20Zon2IMh0kjC0kRz/FhH24ch6POY9Zhy1I5foFlzqrk23CLBbSFX7
-         hvnsuJXGYtCTroR4XKHsXypEfkVF4OHjdhK6NeSZteHggyP5bpVka05tl3FdFCxqxEgp
-         X4rg==
-X-Gm-Message-State: APjAAAU35HboxNynK6JvrQIImQ1BZtEPetNPR6q0NzWSyeK51hpM7hCu
-        05cB/IJjkEm9L/BctSG4Uno=
-X-Google-Smtp-Source: APXvYqwKuLXac/TZUzLFky20KYr8k+Av/WaFPLa7cMgq0NOaxnGWSHEo+tqrqzkUHFr5f2MopRPhSg==
-X-Received: by 2002:a17:902:8490:: with SMTP id c16mr14442896plo.240.1556608500936;
-        Tue, 30 Apr 2019 00:15:00 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h187sm60188287pfc.52.2019.04.30.00.14.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 00:14:59 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 00:14:57 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 30 Apr 2019 03:16:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7711 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725769AbfD3HQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:16:13 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C21A5762FFF8842A5C5D;
+        Tue, 30 Apr 2019 15:16:10 +0800 (CST)
+Received: from [127.0.0.1] (10.142.63.192) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Apr 2019
+ 15:15:59 +0800
+CC:     "Liuyu (R)" <liuyu712@hisilicon.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
+        <kongfei@hisilicon.com>, <wanghu17@hisilicon.com>,
+        <butao@hisilicon.com>, <chenyao11@huawei.com>,
+        <fangshengzhou@hisilicon.com>, <lipengcheng8@huawei.com>,
+        <songxiaowei@hisilicon.com>, <xuyiping@hisilicon.com>,
+        <xuyoujun4@huawei.com>, <yudongbin@hisilicon.com>,
+        <zangleigang@hisilicon.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
-        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Rob Herring <robh@kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] Input: add a driver for GPIO controllable
- vibrators
-Message-ID: <20190430071457.GA148015@dtor-ws>
-References: <20190426194747.22256-1-luca@z3ntu.xyz>
- <20190426194747.22256-2-luca@z3ntu.xyz>
+        <linux-arm-kernel@lists.infradead.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        =?UTF-8?B?c2h1ZmFuX2xlZSjmnY7mm7jluIYp?= <shufan_lee@richtek.com>
+Subject: Re: [PATCH v6 13/13] dts: hi3660: Add support for usb on Hikey960
+To:     Rob Herring <robh@kernel.org>
+References: <20190420064019.57522-1-chenyu56@huawei.com>
+ <20190420064019.57522-14-chenyu56@huawei.com> <20190425220016.GC32028@bogus>
+From:   Chen Yu <chenyu56@huawei.com>
+Message-ID: <6b5c219c-3941-5add-5e91-5efbd9b9d85c@huawei.com>
+Date:   Tue, 30 Apr 2019 15:15:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426194747.22256-2-luca@z3ntu.xyz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190425220016.GC32028@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.142.63.192]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 09:47:46PM +0200, Luca Weiss wrote:
-> Provide a simple driver for GPIO controllable vibrators.
-> It will be used by the Fairphone 2.
-> 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Hi Rob,
 
-Applied, thank you.
-
-> ---
->  drivers/input/misc/Kconfig      |  12 ++
->  drivers/input/misc/Makefile     |   1 +
->  drivers/input/misc/gpio-vibra.c | 209 ++++++++++++++++++++++++++++++++
->  3 files changed, 222 insertions(+)
->  create mode 100644 drivers/input/misc/gpio-vibra.c
+On 2019/4/26 6:00, Rob Herring wrote:
+> On Sat, Apr 20, 2019 at 02:40:19PM +0800, Yu Chen wrote:
+>> This patch adds support for usb on Hikey960.
+>>
+>> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>> Cc: Wei Xu <xuwei5@hisilicon.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: John Stultz <john.stultz@linaro.org>
+>> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>> ---
+>> v2:
+>> * Remove device_type property.
+>> * Add property "usb-role-switch".
+>> v3:
+>> * Make node "usb_phy" a subnode of usb3_otg_bc register.
+>> * Remove property "typec-vbus-enable-val" of hisi_hikey_usb.
+>> v4:
+>> * Remove property "hisilicon,usb3-otg-bc-syscon" of usb-phy.
+>> ---
+>> ---
+>>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 53 ++++++++++++++++
+>>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 73 +++++++++++++++++++++++
+>>  2 files changed, 126 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>> index e035cf195b19..d4e11c56b250 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>> @@ -13,6 +13,7 @@
+>>  #include <dt-bindings/gpio/gpio.h>
+>>  #include <dt-bindings/input/input.h>
+>>  #include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/usb/pd.h>
+>>  
+>>  / {
+>>  	model = "HiKey960";
+>> @@ -196,6 +197,26 @@
+>>  			method = "smc";
+>>  		};
+>>  	};
+>> +
+>> +	hisi_hikey_usb: hisi_hikey_usb {
+>> +		compatible = "hisilicon,hikey960_usb";
+>> +		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_HIGH>;
+>> +		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
+>> +		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&usbhub5734_pmx_func>;
+>> +
+>> +		port {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			hikey_usb_ep: endpoint@0 {
+>> +				reg = <0>;
+>> +				remote-endpoint = <&dwc3_role_switch_notify>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>>  };
+>>  
+>>  /*
+>> @@ -526,6 +547,38 @@
+>>  &i2c1 {
+>>  	status = "okay";
+>>  
+>> +	rt1711h: rt1711h@4e {
+>> +		compatible = "richtek,rt1711h";
 > 
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index e15ed1bb8558..6dfe9e2fe5b1 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -290,6 +290,18 @@ config INPUT_GPIO_DECODER
->  	 To compile this driver as a module, choose M here: the module
->  	 will be called gpio_decoder.
->  
-> +config INPUT_GPIO_VIBRA
-> +	tristate "GPIO vibrator support"
-> +	depends on GPIOLIB || COMPILE_TEST
-> +	select INPUT_FF_MEMLESS
-> +	help
-> +	  Say Y here to get support for GPIO based vibrator devices.
-> +
-> +	  If unsure, say N.
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called gpio-vibra.
-> +
->  config INPUT_IXP4XX_BEEPER
->  	tristate "IXP4XX Beeper support"
->  	depends on ARCH_IXP4XX
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index b936c5b1d4ac..f38ebbdb05e2 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
->  obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
->  obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
->  obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
-> +obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
->  obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
->  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
->  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
-> diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
-> new file mode 100644
-> index 000000000000..b76c81015de9
-> --- /dev/null
-> +++ b/drivers/input/misc/gpio-vibra.c
-> @@ -0,0 +1,209 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + *  GPIO vibrator driver
-> + *
-> + *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
-> + *
-> + *  Based on PWM vibrator driver:
-> + *  Copyright (C) 2017 Collabora Ltd.
-> + *
-> + *  Based on previous work from:
-> + *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> + *
-> + *  Based on PWM beeper driver:
-> + *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
-> + */
-> +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/input.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
-> +
-> +struct gpio_vibrator {
-> +	struct input_dev *input;
-> +	struct gpio_desc *gpio;
-> +	struct regulator *vcc;
-> +
-> +	struct work_struct play_work;
-> +	bool running;
-> +	bool vcc_on;
-> +};
-> +
-> +static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
-> +{
-> +	struct device *pdev = vibrator->input->dev.parent;
-> +	int err;
-> +
-> +	if (!vibrator->vcc_on) {
-> +		err = regulator_enable(vibrator->vcc);
-> +		if (err) {
-> +			dev_err(pdev, "failed to enable regulator: %d\n", err);
-> +			return err;
-> +		}
-> +		vibrator->vcc_on = true;
-> +	}
-> +
-> +	gpiod_set_value_cansleep(vibrator->gpio, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
-> +{
-> +	gpiod_set_value_cansleep(vibrator->gpio, 0);
-> +
-> +	if (vibrator->vcc_on) {
-> +		regulator_disable(vibrator->vcc);
-> +		vibrator->vcc_on = false;
-> +	}
-> +}
-> +
-> +static void gpio_vibrator_play_work(struct work_struct *work)
-> +{
-> +	struct gpio_vibrator *vibrator =
-> +		container_of(work, struct gpio_vibrator, play_work);
-> +
-> +	if (vibrator->running)
-> +		gpio_vibrator_start(vibrator);
-> +	else
-> +		gpio_vibrator_stop(vibrator);
-> +}
-> +
-> +static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
-> +				     struct ff_effect *effect)
-> +{
-> +	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
-> +
-> +	int level = effect->u.rumble.strong_magnitude;
-> +
-> +	if (!level)
-> +		level = effect->u.rumble.weak_magnitude;
-> +
-> +	if (level)
-> +		vibrator->running = true;
-> +	else
-> +		vibrator->running = false;
-> +
-> +	schedule_work(&vibrator->play_work);
-> +
-> +	return 0;
-> +}
-> +
-> +static void gpio_vibrator_close(struct input_dev *input)
-> +{
-> +	struct gpio_vibrator *vibrator = input_get_drvdata(input);
-> +
-> +	cancel_work_sync(&vibrator->play_work);
-> +	gpio_vibrator_stop(vibrator);
-> +	vibrator->running = false;
-> +}
-> +
-> +static int gpio_vibrator_probe(struct platform_device *pdev)
-> +{
-> +	struct gpio_vibrator *vibrator;
-> +	int err;
-> +
-> +	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
-> +	if (!vibrator)
-> +		return -ENOMEM;
-> +
-> +	vibrator->input = devm_input_allocate_device(&pdev->dev);
-> +	if (!vibrator->input)
-> +		return -ENOMEM;
-> +
-> +	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> +	err = PTR_ERR_OR_ZERO(vibrator->vcc);
-> +	if (err) {
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to request regulator: %d\n",
-> +				err);
-> +		return err;
-> +	}
-> +
-> +	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-> +	err = PTR_ERR_OR_ZERO(vibrator->gpio);
-> +	if (err) {
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to request main gpio: %d\n",
-> +				err);
-> +		return err;
-> +	}
-> +
-> +	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
-> +
-> +	vibrator->input->name = "gpio-vibrator";
-> +	vibrator->input->id.bustype = BUS_HOST;
-> +	vibrator->input->close = gpio_vibrator_close;
-> +
-> +	input_set_drvdata(vibrator->input, vibrator);
-> +	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-> +
-> +	err = input_ff_create_memless(vibrator->input, NULL,
-> +				      gpio_vibrator_play_effect);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Couldn't create FF dev: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = input_register_device(vibrator->input);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Couldn't register input dev: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
-> +{
-> +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
-> +
-> +	cancel_work_sync(&vibrator->play_work);
-> +	if (vibrator->running)
-> +		gpio_vibrator_stop(vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused gpio_vibrator_resume(struct device *dev)
-> +{
-> +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
-> +
-> +	if (vibrator->running)
-> +		gpio_vibrator_start(vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
-> +			 gpio_vibrator_suspend, gpio_vibrator_resume);
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id gpio_vibra_dt_match_table[] = {
-> +	{ .compatible = "gpio-vibrator" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
-> +#endif
-> +
-> +static struct platform_driver gpio_vibrator_driver = {
-> +	.probe	= gpio_vibrator_probe,
-> +	.driver	= {
-> +		.name	= "gpio-vibrator",
-> +		.pm	= &gpio_vibrator_pm_ops,
-> +		.of_match_table = of_match_ptr(gpio_vibra_dt_match_table),
-> +	},
-> +};
-> +module_platform_driver(gpio_vibrator_driver);
-> +
-> +MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
-> +MODULE_DESCRIPTION("GPIO vibrator driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:gpio-vibrator");
-> -- 
-> 2.21.0
+> The binding doc for this should state it should have a 'connector' node.
+> 
+Hi shufan,
+Is the 'connector' node an essential node of rt1711h?
+Currently it is missing in Documentation/devicetree/bindings/usb/richtek,rt1711h.txt.
+Do you think the 'connector' node should add as this patch in the binding doc?
+
+>> +		reg = <0x4e>;
+>> +		status = "ok";
+> 
+> Can drop this, it is the default.
+> 
+OK.
+
+>> +		interrupt-parent = <&gpio27>;
+>> +		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&usb_cfg_func>;
+>> +
+>> +		usb_con: connector {
+>> +			compatible = "usb-c-connector";
+>> +			label = "USB-C";
+>> +			data-role = "dual";
+>> +			power-role = "dual";
+>> +			try-power-role = "sink";
+>> +			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
+>> +			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
+>> +				PDO_VAR(5000, 5000, 1000)>;
+>> +			op-sink-microwatt = <10000000>;
+>> +		};
+>> +
+>> +		port {
+> 
+> The connector node should have a 'ports' child with 'port@0' being the 
+> HS connection.
+> 
+This port and endpoint of the port are used for role_switch matching by
+fwnode_graph_devcon_match. I'm not too sure the 'ports' under connector is used in
+rt1711h driver？
+Hi shufan_lee,
+    Can you confirm this?
+
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			rt1711h_ep: endpoint@0 {
+>> +				reg = <0>;
+>> +				remote-endpoint = <&dwc3_role_switch>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>>  	adv7533: adv7533@39 {
+>>  		status = "ok";
+>>  		compatible = "adi,adv7533";
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> index 2f19e0e5b7cf..173467505ada 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> @@ -355,6 +355,12 @@
+>>  			#clock-cells = <1>;
+>>  		};
+>>  
+>> +		pmctrl: pmctrl@fff31000 {
+>> +			compatible = "hisilicon,hi3660-pmctrl", "syscon";
+>> +			reg = <0x0 0xfff31000 0x0 0x1000>;
+>> +			#clock-cells = <1>;
+>> +		};
+>> +
+>>  		pmuctrl: crg_ctrl@fff34000 {
+>>  			compatible = "hisilicon,hi3660-pmuctrl", "syscon";
+>>  			reg = <0x0 0xfff34000 0x0 0x1000>;
+>> @@ -1134,5 +1140,72 @@
+>>  				};
+>>  			};
+>>  		};
+>> +
+>> +		usb3_otg_bc: usb3_otg_bc@ff200000 {
+>> +			compatible = "syscon", "simple-mfd";
+>> +			reg = <0x0 0xff200000 0x0 0x1000>;
+>> +
+>> +			usb_phy: usb-phy {
+>> +				compatible = "hisilicon,hi3660-usb-phy";
+>> +				#phy-cells = <0>;
+>> +				hisilicon,pericrg-syscon = <&crg_ctrl>;
+>> +				hisilicon,pctrl-syscon = <&pctrl>;
+>> +				hisilicon,eye-diagram-param = <0x22466e4>;
+>> +			};
+>> +		};
+>> +
+>> +		usb3: hisi_dwc3 {
+>> +			compatible = "hisilicon,hi3660-dwc3";
+>> +			#address-cells = <2>;
+>> +			#size-cells = <2>;
+>> +			ranges;
+> 
+> If there are not any wrapper registers, then get rid of the hisi_dwc3 
+> node. For just clocks and resets we just put everything in one node.
+> 
+I will try to fix this.
+>> +
+>> +			clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+>> +				 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>> +			clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+>> +
+>> +			assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>> +			assigned-clock-rates = <229000000>;
+>> +			resets = <&crg_rst 0x90 8>,
+>> +				 <&crg_rst 0x90 7>,
+>> +				 <&crg_rst 0x90 6>,
+>> +				 <&crg_rst 0x90 5>;
+>> +
+>> +			dwc3: dwc3@ff100000 {
+>> +				compatible = "snps,dwc3";
+>> +				reg = <0x0 0xff100000 0x0 0x100000>;
+>> +				interrupts = <0 159 4>, <0 161 4>;
+>> +				phys = <&usb_phy>;
+>> +				phy-names = "usb3-phy";
+>> +				dr_mode = "otg";
+>> +				maximum-speed = "super-speed";
+>> +				phy_type = "utmi";
+>> +				snps,dis-del-phy-power-chg-quirk;
+> 
+>> +				snps,lfps_filter_quirk;
+>> +				snps,dis_u2_susphy_quirk;
+>> +				snps,dis_u3_susphy_quirk;
+>> +				snps,tx_de_emphasis_quirk;
+>> +				snps,tx_de_emphasis = <1>;
+>> +				snps,dis_enblslpm_quirk;
+> 
+> Pretty sure these aren't documented because we don't use '_' in property 
+> names.
+> 
+Do you mean property as "snps,dis_enblslpm_quirk"? These properties are
+documented in Documentation/devicetree/bindings/usb/dwc3.txt.
+
+>> +				snps,gctl-reset-quirk;
+>> +				usb-role-switch;
+>> +				role-switch-default-host;
+>> +
+>> +				port {
+>> +					#address-cells = <1>;
+>> +					#size-cells = <0>;
+>> +
+>> +					dwc3_role_switch: endpoint@0 {
+>> +						reg = <0>;
+>> +						remote-endpoint = <&rt1711h_ep>;
+>> +					};
+>> +
+>> +					dwc3_role_switch_notify: endpoint@1 {
+>> +						reg = <1>;
+>> +						remote-endpoint = <&hikey_usb_ep>;
+>> +					};
+>> +				};
+>> +			};
+>> +		};
+>>  	};
+>>  };
+>> -- 
+>> 2.15.0-rc2
+>>
+> 
+> .
 > 
 
--- 
-Dmitry
+Thanks
+- Yu Chen
+
