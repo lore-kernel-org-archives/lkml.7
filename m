@@ -2,88 +2,101 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F53AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731F020854
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDED20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfD3XJm (ORCPT
+        id S1727179AbfD3XMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 19:09:42 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:33607 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfD3XJl (ORCPT
+        Tue, 30 Apr 2019 19:12:18 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34884 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfD3XMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 19:09:41 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6CC8C300002A0;
-        Wed,  1 May 2019 01:09:39 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 21B39C2785; Wed,  1 May 2019 01:09:39 +0200 (CEST)
-Date:   Wed, 1 May 2019 01:09:39 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Alex G <mr.nuke.me@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20190430230939.5bn5ktirkbrx3vhy@wunner.de>
-References: <20190429185611.121751-1-helgaas@kernel.org>
- <20190429185611.121751-2-helgaas@kernel.org>
- <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
- <20190430161151.GB145057@google.com>
- <20190430180508.GB25654@localhost.localdomain>
+        Tue, 30 Apr 2019 19:12:18 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w197so12717625oia.2;
+        Tue, 30 Apr 2019 16:12:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Kaz0HzSce5UNE/bdT7lOJbyMWjOGQSNQhXNQdmqdS0=;
+        b=cQ5IywG2uJhiQCfZqVl1eYsmJJItNOjy9Dqoz5hB5W1qlOwglUCYXp7ZEiV+fxg6Qi
+         3qN7Q5GPv1zFuhuBrA58BvPCak6tr1qsYO9S9aL2qz3ooU/z4N4zwvRP3kgrnRbn0L2A
+         0thuzqHRY6ewMzet2ivXajl1UrrF43Oo4T/C4RnIRsVcnSnXXtybJr0dFavzeVWzGL9m
+         W+mejUJSIZ4PC8fio4ShzdrBw4SPVxDFJ/yJl7sUvQv0ZYaDHqOtcCGjJXcKuzFpa4To
+         xZOdgdhk5mx3OSFsAFIcSb4j8/p1oAJpvqRWAqXWD/vDrAirGsuF4eD1W+XUc8NU7qZF
+         rpvQ==
+X-Gm-Message-State: APjAAAVzssXweaZvLvy5skCpRK9/UEOG7wVlQk0/4Zd+u0MOr0PrCSYI
+        r9C15YpjU16tBxVbjkdeM1qic0QTAzk=
+X-Google-Smtp-Source: APXvYqzmU7J8Jyis0/HpmPawqrY+cd6LELrQPuOHWXXTQ7fuZCaHzNCH9tMw56lzVdYSKIKHoo0hEA==
+X-Received: by 2002:aca:f4cf:: with SMTP id s198mr4598529oih.153.1556665937217;
+        Tue, 30 Apr 2019 16:12:17 -0700 (PDT)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id p8sm17018925oib.9.2019.04.30.16.12.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 16:12:16 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id y64so7167440oia.7;
+        Tue, 30 Apr 2019 16:12:16 -0700 (PDT)
+X-Received: by 2002:aca:4e83:: with SMTP id c125mr4539473oib.13.1556665936485;
+ Tue, 30 Apr 2019 16:12:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430180508.GB25654@localhost.localdomain>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190430051723.31345-1-yinbo.zhu@nxp.com>
+In-Reply-To: <20190430051723.31345-1-yinbo.zhu@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 30 Apr 2019 18:12:05 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQ4RYhe5n_ZA_xrhG8VARsvV3cwVgnuinedb2VHKkDzbQ@mail.gmail.com>
+Message-ID: <CADRPPNQ4RYhe5n_ZA_xrhG8VARsvV3cwVgnuinedb2VHKkDzbQ@mail.gmail.com>
+Subject: Re: [PATCH v1] mmc: dt: add DT bindings for ls1028a eSDHC host controller
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:05:09PM -0600, Keith Busch wrote:
-> On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
-> > > I'm not convinced a revert is the best call.
-> > 
-> > I have very limited options at this stage of the release, but I'd be
-> > glad to hear suggestions.  My concern is that if we release v5.1
-> > as-is, we'll spend a lot of energy on those false positives.
-> 
-> May be too late now if the revert is queued up, but I think this feature
-> should have been a default 'false' Kconfig bool rather than always on.
+On Tue, Apr 30, 2019 at 12:16 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
+>
+> From: Yinbo Zhu <yinbo.zhu@nxp.com>
 
-Good idea, this would seem to be a less harsh solution than a revert.
+The patch title better to be "dt-bindings: mmc: ..."
+>
+> Add "fsl,ls1028a-esdhc" bindings for ls1028a eSDHC host controller
+>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> ---
+>  .../devicetree/bindings/mmc/fsl-esdhc.txt          |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> index 99c5cf8..a7250b9 100644
+> --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> @@ -21,6 +21,7 @@ Required properties:
+>         "fsl,ls1043a-esdhc"
+>         "fsl,ls1046a-esdhc"
+>         "fsl,ls2080a-esdhc"
+> +       "fsl,ls1028a-esdhc"
 
-Enabling the feature by default for everyone was probably overly confident.
-I recall I did bring up in a review comment that all other port services
-have a Kconfig option.  Alex replied that he's not using one because
-on device enumeration, downtraining is checked unconditionally as well.
+Better to be alphabetical order.
 
-Bandwidth notification might be a feature that's not used by many operating
-systems.  Such features don't get much real world exposure or aren't even
-validated by manufacturers.  Inevitably, unpleasant side effects occur
-once Linux supports them.
-
-However if we keep the code and default to "N" in Kconfig, at least people
-get a chance to test and validate the functionality and hopefully this
-will lead to either better hardware or better driver support in the future.
-
-Thanks,
-
-Lukas
+>    - clock-frequency : specifies eSDHC base clock frequency.
+>
+>  Optional properties:
+> --
+> 1.7.1
+>
