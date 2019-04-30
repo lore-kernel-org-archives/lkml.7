@@ -2,128 +2,107 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DE6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F191C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EDC2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D32C2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g579Lo9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfD3FP1 (ORCPT
+        id S1726183AbfD3FPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 01:15:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45302 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725799AbfD3FP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 01:15:27 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3U5BwLb127539
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 01:15:26 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6e5b3u71-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 01:15:26 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
-        Tue, 30 Apr 2019 06:15:23 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 06:15:20 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3U5FJdV45940900
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 05:15:20 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1064A4067;
-        Tue, 30 Apr 2019 05:15:19 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85C77A406B;
-        Tue, 30 Apr 2019 05:15:19 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Apr 2019 05:15:19 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C04A3A01D2;
-        Tue, 30 Apr 2019 15:15:17 +1000 (AEST)
-Subject: Re: [PATCH V32 01/27] Add the ability to lock down access to the
- running kernel image
-To:     Daniel Axtens <dja@axtens.net>, Matthew Garrett <mjg59@google.com>
-Cc:     James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, cmr <cmr@informatik.wtf>
-References: <20190404003249.14356-1-matthewgarrett@google.com>
- <20190404003249.14356-2-matthewgarrett@google.com>
- <059c523e-926c-24ee-0935-198031712145@au1.ibm.com>
- <CACdnJus9AhAAYs-R94BH7HDuuQfXjgdhdqUR6Pvk9mxbuPx1=Q@mail.gmail.com>
- <87wojdy8ro.fsf@dja-thinkpad.axtens.net>
- <87tvehxvh0.fsf@dja-thinkpad.axtens.net>
-From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Date:   Tue, 30 Apr 2019 15:15:17 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 01:15:52 -0400
+Received: from mail-eopbgr10042.outbound.protection.outlook.com ([40.107.1.42]:13026
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725446AbfD3FPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 01:15:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ta9fMO0dk7pewKBA7DrSOk86lqYpvZH1CHv061S4JgA=;
+ b=g579Lo9pG1iL7GGAFjvOAkb7Luw5EyRNl5KAXLPnGSZymKMiGvme8g6VQtQjomM+KrirzuESDxeuIKigGdAODVyaqP418MH4n4IrB/qKEeRPEYXJZmzb48kvZPMr7TluLHGw67JYGAaVyud7X9ZRnaz/Nb+IU4Ix5IUxDQV7mhw=
+Received: from VI1PR04MB4158.eurprd04.prod.outlook.com (52.133.15.33) by
+ VI1PR04MB6205.eurprd04.prod.outlook.com (20.179.24.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.15; Tue, 30 Apr 2019 05:15:47 +0000
+Received: from VI1PR04MB4158.eurprd04.prod.outlook.com
+ ([fe80::8015:ec84:d721:b566]) by VI1PR04MB4158.eurprd04.prod.outlook.com
+ ([fe80::8015:ec84:d721:b566%5]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
+ 05:15:47 +0000
+From:   Yinbo Zhu <yinbo.zhu@nxp.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     Yinbo Zhu <yinbo.zhu@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>,
+        "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>
+Subject: [PATCH v1] mmc: dt: add DT bindings for ls1028a eSDHC host controller
+Thread-Topic: [PATCH v1] mmc: dt: add DT bindings for ls1028a eSDHC host
+ controller
+Thread-Index: AQHU/xPEWmF2aWlBZkm+gILQArYb6Q==
+Date:   Tue, 30 Apr 2019 05:15:47 +0000
+Message-ID: <20190430051723.31345-1-yinbo.zhu@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR04CA0011.apcprd04.prod.outlook.com
+ (2603:1096:203:36::23) To VI1PR04MB4158.eurprd04.prod.outlook.com
+ (2603:10a6:803:46::33)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yinbo.zhu@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5d7e4c34-82e3-4de3-d40c-08d6cd2ae718
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6205;
+x-ms-traffictypediagnostic: VI1PR04MB6205:
+x-microsoft-antispam-prvs: <VI1PR04MB62053D5DE39D885430AA3559E93A0@VI1PR04MB6205.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1079;
+x-forefront-prvs: 00235A1EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(346002)(136003)(396003)(199004)(189003)(66446008)(6506007)(99286004)(66476007)(64756008)(66556008)(2906002)(386003)(66946007)(52116002)(6636002)(102836004)(6486002)(97736004)(66066001)(1076003)(25786009)(14454004)(6436002)(73956011)(54906003)(53936002)(50226002)(5660300002)(7736002)(4744005)(44832011)(316002)(305945005)(4326008)(478600001)(256004)(36756003)(71200400001)(86362001)(8936002)(26005)(2201001)(8676002)(186003)(81166006)(6116002)(81156014)(110136005)(486006)(476003)(2616005)(68736007)(71190400001)(2501003)(6512007)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6205;H:VI1PR04MB4158.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: EMuLPZOLhFw13wtFI7bebAlURuTnqSSTrg9h7zfzJBYioLK9bcy//FyH2O0AwWBgBRt4Fvprcqzy0y8yGz8z3LqLMYAHieMaQFenFa30tbuZS7bcoTA1KGfB7piqYaG9OgzOGb2FPx0ibMsvU+YldbLmi0sn2DsOv0Edp8yzEt5hXgUmmTxfjPcONl2BMeZdAZ7cFGBGP5+NoCl3BLUiAgEVhYUts4W3gGnnMIkcbbS9sGzNrxm5TRydvf3ou7J0T5LXbseNpDYhuWEhN8b89WDpGjgT9BtapPp+vo25wD8S9W1CoPkG8qxNzek6xHrqtr8pGv/sYX2eM0VQaIQ9FjrPFXznAbwLwRo6R3fbaSSGMmw8a31BHZK5+UQVrywtmiEAuK7JprieBo7Z58efn3Hj2ThiNDrfhm7GV+opBuU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <87tvehxvh0.fsf@dja-thinkpad.axtens.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19043005-0016-0000-0000-00000276B77E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043005-0017-0000-0000-000032D3404F
-Message-Id: <b56f7fbe-f87a-0af7-f447-4bfee712ce16@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=831 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300034
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d7e4c34-82e3-4de3-d40c-08d6cd2ae718
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 05:15:47.5382
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6205
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/4/19 2:54 pm, Daniel Axtens wrote:
-> Hi,
-> 
->>>> I'm thinking about whether we should lock down the powerpc xmon debug
->>>> monitor - intuitively, I think the answer is yes if for no other reason
->>>> than Least Astonishment, when lockdown is enabled you probably don't
->>>> expect xmon to keep letting you access kernel memory.
->>>
->>> The original patchset contained a sysrq hotkey to allow physically
->>> present users to disable lockdown, so I'm not super concerned about
->>> this case - I could definitely be convinced otherwise, though.
-> 
-> So Mimi contacted me offlist and very helpfully provided me with a much
-> better and less confused justification for disabling xmon in lockdown:
-> 
-> On x86, physical presence (== console access) is a trigger to
-> disable/enable lockdown mode.
-> 
-> In lockdown mode, you're not supposed to be able to modify memory. xmon
-> allows you to modify memory, and therefore shouldn't be allowed in
-> lockdown.
-> 
-> So, if you can disable lockdown on the console that's probably OK, but
-> it should be specifically disabling lockdown, not randomly editing
-> memory with xmon.
-
-That makes sense.
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-andrew.donnellan@au1.ibm.com  IBM Australia Limited
-
+RnJvbTogWWluYm8gWmh1IDx5aW5iby56aHVAbnhwLmNvbT4NCg0KQWRkICJmc2wsbHMxMDI4YS1l
+c2RoYyIgYmluZGluZ3MgZm9yIGxzMTAyOGEgZVNESEMgaG9zdCBjb250cm9sbGVyDQoNClNpZ25l
+ZC1vZmYtYnk6IFlpbmJvIFpodSA8eWluYm8uemh1QG54cC5jb20+DQotLS0NCiAuLi4vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tbWMvZnNsLWVzZGhjLnR4dCAgICAgICAgICB8ICAgIDEgKw0KIDEgZmls
+ZXMgY2hhbmdlZCwgMSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9mc2wtZXNkaGMudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9mc2wtZXNkaGMudHh0DQppbmRl
+eCA5OWM1Y2Y4Li5hNzI1MGI5IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21tYy9mc2wtZXNkaGMudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbW1jL2ZzbC1lc2RoYy50eHQNCkBAIC0yMSw2ICsyMSw3IEBAIFJlcXVpcmVk
+IHByb3BlcnRpZXM6DQogCSJmc2wsbHMxMDQzYS1lc2RoYyINCiAJImZzbCxsczEwNDZhLWVzZGhj
+Ig0KIAkiZnNsLGxzMjA4MGEtZXNkaGMiDQorCSJmc2wsbHMxMDI4YS1lc2RoYyINCiAgIC0gY2xv
+Y2stZnJlcXVlbmN5IDogc3BlY2lmaWVzIGVTREhDIGJhc2UgY2xvY2sgZnJlcXVlbmN5Lg0KIA0K
+IE9wdGlvbmFsIHByb3BlcnRpZXM6DQotLSANCjEuNy4xDQoNCg==
