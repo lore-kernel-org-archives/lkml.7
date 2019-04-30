@@ -2,79 +2,62 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00053C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26B3C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00A521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556619086;
-	bh=o1wMCDHFwGgVwrps+DSjmA5A0wEtpqb0cJ+nZ5axszI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DdV1jbf6UWSQzgF5qU5Mwy8Fna/JfpLfdL1iroPHugOhIod+lZptO4z9AB8uJMK9m
-	 yp+AStt6C/VJmWWxOkqysWRQQ1lQA5P4lMH6YhFnpYH/PhE3M4bdeDOnMfr31TZnkP
-	 x6jgDuCT3IauWfM36pfjmVRhVnwWJwk24o9Nz1jE=
+	by mail.kernel.org (Postfix) with ESMTP id A38B521707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="YADHNTpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfD3KLZ (ORCPT
+        id S1727217AbfD3KL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:11:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49236 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726539AbfD3KLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:11:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B4ED0AF56;
-        Tue, 30 Apr 2019 10:11:23 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 06:11:20 -0400
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jerome Glisse <jglisse@redhat.com>,
-        lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        Tue, 30 Apr 2019 06:11:56 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50937 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbfD3KL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 06:11:56 -0400
+Received: by ozlabs.org (Postfix, from userid 1003)
+        id 44tckx63cWz9sBr; Tue, 30 Apr 2019 20:11:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1556619113; bh=/3cVNERTeFNHsUu9N/NoL+9iM4miE3OQ/3mWOShCetQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YADHNTpgxSe0EKuGzE4A8KBo387NkTzsK47lXBVfvDMfrxrylvn1IrLnm+Ic3Hsht
+         66jPJh0khrpXf8dcgZDLjItpY1WuMYUr3eJBZLlf0JZeaRqJTffklbU4yccaqyLoFY
+         WXlPUtcNffp2rnPfd0VSRjzpyocOj3HxoOCsAHwIc3woDjwTdq25lco5x/s+nCZIHa
+         gDkxC0BKknl85ITtZs3JL6Nch17VFz/OwqW9rHhK2RqKMO5FpesErdsk1AVyrfwq37
+         XUOSCSm0N59pkDi2jjKXhKLR9nqHKglGp95cnJH3kTIwA26uZwNlsquKmg77jnsxRE
+         tJQKc4QtRhscg==
+Date:   Tue, 30 Apr 2019 20:03:23 +1000
+From:   Paul Mackerras <paulus@ozlabs.org>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     benh@kernel.crashing.org, mpe@ellerman.id.au,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: Re: Scheduling conflicts
-Message-ID: <20190430101120.GD3715@dhcp22.suse.cz>
-References: <20190425200012.GA6391@redhat.com>
- <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
- <20190429235440.GA13796@bombadil.infradead.org>
+Subject: Re: [PATCH] KVM: PPC: Book3S HV: smb->smp comment fixup
+Message-ID: <20190430100323.GF32205@blackberry>
+References: <20190425195339.12609-1-palmer@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429235440.GA13796@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190425195339.12609-1-palmer@sifive.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-04-19 16:54:41, Matthew Wilcox wrote:
-> On Thu, Apr 25, 2019 at 02:03:34PM -0600, Jens Axboe wrote:
-> > On 4/25/19 2:00 PM, Jerome Glisse wrote:
-> > > Did i miss preliminary agenda somewhere ? In previous year i think
-> > > there use to be one by now :)
-> > 
-> > You should have received an email from LF this morning with a subject
-> > of:
-> > 
-> > LSFMM 2019: 8 Things to Know Before You Arrive!
-> > 
-> > which also includes a link to the schedule. Here it is:
-> > 
-> > https://docs.google.com/spreadsheets/d/1Z1pDL-XeUT1ZwMWrBL8T8q3vtSqZpLPgF3Bzu_jejfk
+On Thu, Apr 25, 2019 at 12:53:39PM -0700, Palmer Dabbelt wrote:
+> I made the same typo when trying to grep for uses of smp_wmb and figured
+> I might as well fix it.
 > 
-> The schedule continues to evolve ... I would very much like to have
-> Christoph Hellwig in the room for the Eliminating Tail Pages discussion,
-> but he's now scheduled to speak in a session at the same time (16:00
-> Tuesday).  I assume there'll be time for agenda-bashing at 9am tomorrow?
+> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 
-I have swapped slots at 16:00 and 16:30 so there shouldn't be any
-conflict now. Let me know if that doesn't fit.
+Thanks, patch applied to my kvm-ppc-next tree.
 
--- 
-Michal Hocko
-SUSE Labs
+Paul.
