@@ -2,133 +2,177 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B7FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A61C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789F82087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B591205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDkJwLgM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G6GfZ5ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfD3Trw (ORCPT
+        id S1726415AbfD3TwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:47:52 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37863 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfD3Trv (ORCPT
+        Tue, 30 Apr 2019 15:52:13 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37670 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfD3TwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:47:51 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e6so7327888pgc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:47:51 -0700 (PDT)
+        Tue, 30 Apr 2019 15:52:12 -0400
+Received: by mail-io1-f66.google.com with SMTP id a23so13330361iot.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:52:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=86GCSVrH9zo4gh156Oo5t8O2oP844A9QOA6J/OXOUxA=;
-        b=RDkJwLgMXXBm7lJVQVTDnpEtriShEMPyVioxbhNW+zutYavuTMg0jbA7KIZU4ozWRa
-         8IKC2EuvJi2rhxPjTUZf1t+gqmpJmc0a2yR3dcSEgC3NkAxERDqQkgahjcwvC4xbE/s/
-         fkqW1OL++MlrDw6zQJ/HjWBnDv+IepQfzMfnf4gVq8buMVXCo0K6M29JIcQnC7woKwCD
-         JlWH0/et3lm4jQE3SZXbnI2Oo5K+IbpTg3UuIYzsNpp7j2R16SRawvjYXnsLMOP+lM27
-         rM0z3Ay7JsxNp4jcVY93LELKhAPfTqirUOfIR5/m9hA83EmsvwL4OoWKuXyfmjOIJ6oM
-         SaxA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=egv8gBhUCwez9IoA3piXkzNWat3a9Q7nOx3S/lPZw9k=;
+        b=G6GfZ5iaW0m25ZRTXr7m8HEFSOOargOq9Nora6opbxcB3fSBbwP2/s0zVy4fWD0gMO
+         HtRmTDtnV0WxOcN40ARSbDDUFGvwrbUnaq0OYVvO/FjTl93aFXa7t9Ww5dniTcGbJKcp
+         DGZ0CNe071uEHHBnsLnFdwHRHRiViAEFvK71EJ6BgRszii2X+GRxOmseslX/a/39oW6/
+         PpeO4S1y3sJ/VJSrl4kjWfIv5FUtWoibeTAcwj5etuqwuT0RFjEsLNRf1qYOW/CGXJkj
+         iqCVgz6HqiIeQoDlITrBqYCpuSSZkgzy6SP/3xZv1Ws995KafrjSzwUXbWE3iM7Tecp/
+         KLAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=86GCSVrH9zo4gh156Oo5t8O2oP844A9QOA6J/OXOUxA=;
-        b=a7xjgfeS+3mvov3fKaIumINPaVkGtoFhYQlTpf6heBgwyF2ub0UF6ObvMM2afgUhKR
-         ztU4IPE7X86htxqRHBaa5JGpgtDTSh6qoPUctPZtHcxXs61UMgeo4oXPlHbExT8379U1
-         4N1gzLB7ZfITSG/pEAybn5PQngRdZgDZ4smvIAVKGxVZQ03pdzXefLw/VODWvViK0cM+
-         U/cGFZkZwqgRMqbfzAHB6da5ETwjTce9IHQ36M1kWHlLphltb74mTetOtr55JNylhsZo
-         yqriK8/N6cRxx5W63BjyMZkJPwbB8PSOpPEmBTQ2CvnM4zIUOAf8oMbLINph8GWpwXbe
-         6U+g==
-X-Gm-Message-State: APjAAAWYyEYqmf/jKQ5p1dR+pVBvkjztO0pbee50Vyrz8S3qfEfmFq4G
-        TEZ5N+gED1+ZZH4+4QsQvS4=
-X-Google-Smtp-Source: APXvYqzFBvVULwHUiGXsDPHzgJbD3J/zaoDiLOXodZvC2mcsihPg9PVzKdT/PfoC4gUpNKvmhCjzaA==
-X-Received: by 2002:a63:3fc1:: with SMTP id m184mr34699554pga.222.1556653670976;
-        Tue, 30 Apr 2019 12:47:50 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id g24sm5419285pfi.126.2019.04.30.12.47.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 12:47:50 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 12:46:13 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>
-Cc:     m.szyprowski@samsung.com, vdumpa@nvidia.com, linux@armlinux.org.uk,
-        catalin.marinas@arm.com, will.deacon@arm.com, chris@zankel.net,
-        jcmvbkbc@gmail.com, joro@8bytes.org, dwmw2@infradead.org,
-        tony@atomide.com, akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Subject: Re: [RFC/RFT PATCH 1/2] dma-contiguous: Simplify
- dma_*_from_contiguous() function calls
-Message-ID: <20190430194612.GA31543@Asurada-Nvidia.nvidia.com>
-References: <20190430015521.27734-1-nicoleotsuka@gmail.com>
- <20190430015521.27734-2-nicoleotsuka@gmail.com>
- <20190430105640.GA20021@lst.de>
- <0e3e6d8b-de44-d23e-a039-8d11b578ec5c@arm.com>
- <20190430151833.GB25447@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=egv8gBhUCwez9IoA3piXkzNWat3a9Q7nOx3S/lPZw9k=;
+        b=o//7icSD1ERn5ez+KN8reMsTCsm0KUK5wo0yuyaKRzUzm4LUVpstIpIsTMX0tpvamI
+         e8KvE6DQznk1BhzDZwinHKwpbVuzgr+M35kbqew5HgSyJHRSLOyE+NF+EiP80QejMQo2
+         YCZMK3Q+RaO/YyKTlCd0iPfbT+Oa5UctghKVC4SXupJLtd0LxlF/J5rEPi3nXkYeHcUj
+         81+yFAgDTJ9pzaJNrWmvs7oYaqS6CaBmvP7gSgYPJ8YJ78EjkmrY+mGMadghqlyC9y2i
+         Lr+Hzqtld/hkXtD6sPt0kow0W44KQsy9ZfdNQQVCmAvyaG3/aI5NeLBrAuNGMkXsg6af
+         o3ZA==
+X-Gm-Message-State: APjAAAWEftxwTUKhsh653Om/qhgLeiTdlUO0Aq9N6Jx82/vf0Ji+dBpM
+        kOgp1gcAtgKBbiDrhLgIZvaI+n/1OeyKOFzjvO2hkw==
+X-Google-Smtp-Source: APXvYqzwAanjZhErVbdo87uRmbq/G1eL/r6RULqQVipWeb+YzGjVdfotP+ESNQwX0xw90S+npHq/PO9QlCkqpYiwA6c=
+X-Received: by 2002:a6b:e20e:: with SMTP id z14mr1259647ioc.169.1556653930964;
+ Tue, 30 Apr 2019 12:52:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430151833.GB25447@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190227202658.197113-1-matthewgarrett@google.com>
+ <20190227202658.197113-3-matthewgarrett@google.com> <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
+In-Reply-To: <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Tue, 30 Apr 2019 12:51:59 -0700
+Message-ID: <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com>
+Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
+To:     Bartosz Szczepanek <bsz@semihalf.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Content-Type: multipart/mixed; boundary="00000000000098970e0587c4bc96"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 05:18:33PM +0200, Christoph Hellwig wrote:
-> On Tue, Apr 30, 2019 at 01:37:54PM +0100, Robin Murphy wrote:
-> > On 30/04/2019 11:56, Christoph Hellwig wrote:
-> >> So while I really, really like this cleanup it turns out it isn't
-> >> actually safe for arm :(  arm remaps the CMA allocation in place
-> >> instead of using a new mapping, which can be done because they don't
-> >> share PMDs with the kernel.
-> >>
-> >> So we'll probably need a __dma_alloc_from_contiguous version with
-> >> an additional bool fallback argument - everyone but arms uses
-> >> dma_alloc_from_contiguous as in your patch, just arm will get the
-> >> non-fallback one.
-> >
-> > Or we even just implement dma_{alloc,free}_contiguous() as a wrapper around 
-> > the existing APIs so that users can be thoroughly checked and converted 
-> > one-by-one.
-> 
-> Yeah.  Actually given all the contention I wonder if the easiest solution
-> for now is to just open code the cma_alloc/cma_free calls in dma-direct
-> and dma-iommu, with the hopes that everyone is going to migrate to those
-> implementations in the mid-term anyway and dma_alloc_from_contiguous /
-> dma_release_from_contiguous just go away..
+--00000000000098970e0587c4bc96
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks for the comments.
+On Tue, Apr 30, 2019 at 6:07 AM Bartosz Szczepanek <bsz@semihalf.com> wrote:
+>
+> I may be a little late with this comment, but I've just tested these
+> patches on aarch64 platform (from the top of jjs/master) and got
+> kernel panic ("Unable to handle kernel read", full log at the end of
+> mail). I think there's problem with below call to
+> tpm2_calc_event_log_size(), where physical address of efi.tpm_log is
+> passed as (void *) and never remapped:
 
-Listing all the solutions as a summary:
-A) Add "bool fallback" to dma_{alloc,free}_contiguous, and let
-   ARM use fallback=false.
-B) Continue replacing "_from" with dma_{alloc,free}_contiguous
-   but let callers like ARM use cma_alloc/free() directly.
-C) Have both new dma_{alloc,free}_contiguous and "_from" funcs.
-   Implement the new one to dma-direct only as an initial step
-   and change others one-by-one in the future.
+Yes, it looks like this is just broken. Can you try with the attached patch?
 
-Combining the comments at alloc_pages_node(), I guess that the
-Solution C would be a better (cleaner) one?
+--00000000000098970e0587c4bc96
+Content-Type: text/x-patch; charset="US-ASCII"; name="fix_log.diff"
+Content-Disposition: attachment; filename="fix_log.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jv47jttc0>
+X-Attachment-Id: f_jv47jttc0
 
-List of to-change callers for Solution C:
- kernel/dma/direct.c
-
-List of to-exclude-for-now callers for Solution C:
- arch/arm64/mm/dma-mapping.c
- drivers/iommu/amd_iommu.c
- drivers/iommu/intel-iommu.c
- arch/arm/mm/dma-mapping.c
- arch/xtensa/kernel/pci-dma.c
- kernel/dma/remap.c
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL3RwbS5jIGIvZHJpdmVycy9maXJtd2Fy
+ZS9lZmkvdHBtLmMKaW5kZXggZmU0ODE1MGYwNmQxLi45NzExYmQzNGY4YWUgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvZmlybXdhcmUvZWZpL3RwbS5jCisrKyBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL3Rw
+bS5jCkBAIC0yOCw2ICsyOCw3IEBAIHN0YXRpYyBpbnQgdHBtMl9jYWxjX2V2ZW50X2xvZ19zaXpl
+KHZvaWQgKmRhdGEsIGludCBjb3VudCwgdm9pZCAqc2l6ZV9pbmZvKQogCQlpZiAoZXZlbnRfc2l6
+ZSA9PSAwKQogCQkJcmV0dXJuIC0xOwogCQlzaXplICs9IGV2ZW50X3NpemU7CisJCWNvdW50LS07
+CiAJfQogCiAJcmV0dXJuIHNpemU7CkBAIC00MSw2ICs0Miw3IEBAIGludCBfX2luaXQgZWZpX3Rw
+bV9ldmVudGxvZ19pbml0KHZvaWQpCiAJc3RydWN0IGxpbnV4X2VmaV90cG1fZXZlbnRsb2cgKmxv
+Z190Ymw7CiAJc3RydWN0IGVmaV90Y2cyX2ZpbmFsX2V2ZW50c190YWJsZSAqZmluYWxfdGJsOwog
+CXVuc2lnbmVkIGludCB0Ymxfc2l6ZTsKKwlpbnQgcmV0ID0gMDsKIAogCWlmIChlZmkudHBtX2xv
+ZyA9PSBFRklfSU5WQUxJRF9UQUJMRV9BRERSKSB7CiAJCS8qCkBAIC02MCwxMCArNjIsOSBAQCBp
+bnQgX19pbml0IGVmaV90cG1fZXZlbnRsb2dfaW5pdCh2b2lkKQogCiAJdGJsX3NpemUgPSBzaXpl
+b2YoKmxvZ190YmwpICsgbG9nX3RibC0+c2l6ZTsKIAltZW1ibG9ja19yZXNlcnZlKGVmaS50cG1f
+bG9nLCB0Ymxfc2l6ZSk7Ci0JZWFybHlfbWVtdW5tYXAobG9nX3RibCwgc2l6ZW9mKCpsb2dfdGJs
+KSk7CiAKIAlpZiAoZWZpLnRwbV9maW5hbF9sb2cgPT0gRUZJX0lOVkFMSURfVEFCTEVfQUREUikK
+LQkJcmV0dXJuIDA7CisJCWdvdG8gb3V0OwogCiAJZmluYWxfdGJsID0gZWFybHlfbWVtcmVtYXAo
+ZWZpLnRwbV9maW5hbF9sb2csIHNpemVvZigqZmluYWxfdGJsKSk7CiAKQEAgLTcxLDE3ICs3Miwy
+MCBAQCBpbnQgX19pbml0IGVmaV90cG1fZXZlbnRsb2dfaW5pdCh2b2lkKQogCQlwcl9lcnIoIkZh
+aWxlZCB0byBtYXAgVFBNIEZpbmFsIEV2ZW50IExvZyB0YWJsZSBAIDB4JWx4XG4iLAogCQkgICAg
+ICAgZWZpLnRwbV9maW5hbF9sb2cpOwogCQllZmkudHBtX2ZpbmFsX2xvZyA9IEVGSV9JTlZBTElE
+X1RBQkxFX0FERFI7Ci0JCXJldHVybiAtRU5PTUVNOworCQlyZXQgPSAtRU5PTUVNOworCQlnb3Rv
+IG91dDsKIAl9CiAKIAl0Ymxfc2l6ZSA9IHRwbTJfY2FsY19ldmVudF9sb2dfc2l6ZShmaW5hbF90
+YmwtPmV2ZW50cywKIAkJCQkJICAgIGZpbmFsX3RibC0+bnJfZXZlbnRzLAotCQkJCQkgICAgKHZv
+aWQgKillZmkudHBtX2xvZyk7CisJCQkJCSAgICBsb2dfdGJsLT5sb2cpOwogCW1lbWJsb2NrX3Jl
+c2VydmUoKHVuc2lnbmVkIGxvbmcpZmluYWxfdGJsLAogCQkJIHRibF9zaXplICsgc2l6ZW9mKCpm
+aW5hbF90YmwpKTsKIAllYXJseV9tZW11bm1hcChmaW5hbF90YmwsIHNpemVvZigqZmluYWxfdGJs
+KSk7CiAJZWZpX3RwbV9maW5hbF9sb2dfc2l6ZSA9IHRibF9zaXplOwogCi0JcmV0dXJuIDA7Citv
+dXQ6CisJZWFybHlfbWVtdW5tYXAobG9nX3RibCwgc2l6ZW9mKCpsb2dfdGJsKSk7CisJcmV0dXJu
+IHJldDsKIH0KIApkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC90cG1fZXZlbnRsb2cuaCBiL2lu
+Y2x1ZGUvbGludXgvdHBtX2V2ZW50bG9nLmgKaW5kZXggMGNhMjdiYzA1M2FmLi45Y2ZiYjE0ZjU0
+ZTYgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvdHBtX2V2ZW50bG9nLmgKKysrIGIvaW5jbHVk
+ZS9saW51eC90cG1fZXZlbnRsb2cuaApAQCAtMTYxLDcgKzE2MSw2IEBAIHN0YXRpYyBpbmxpbmUg
+aW50IF9fY2FsY190cG0yX2V2ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2
+ZW50LAogewogCXN0cnVjdCB0Y2dfZWZpX3NwZWNpZF9ldmVudF9oZWFkICplZmlzcGVjaWQ7CiAJ
+c3RydWN0IHRjZ19ldmVudF9maWVsZCAqZXZlbnRfZmllbGQ7Ci0Jdm9pZCAqbWFwcGluZyA9IE5V
+TEw7CiAJaW50IG1hcHBpbmdfc2l6ZTsKIAl2b2lkICptYXJrZXI7CiAJdm9pZCAqbWFya2VyX3N0
+YXJ0OwpAQCAtMTc5LDkgKzE3OCw5IEBAIHN0YXRpYyBpbmxpbmUgaW50IF9fY2FsY190cG0yX2V2
+ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2ZW50LAogCS8qIE1hcCB0aGUg
+ZXZlbnQgaGVhZGVyICovCiAJaWYgKGRvX21hcHBpbmcpIHsKIAkJbWFwcGluZ19zaXplID0gbWFy
+a2VyIC0gbWFya2VyX3N0YXJ0OwotCQltYXBwaW5nID0gVFBNX01FTVJFTUFQKCh1bnNpZ25lZCBs
+b25nKW1hcmtlcl9zdGFydCwKLQkJCQkgICAgICAgbWFwcGluZ19zaXplKTsKLQkJaWYgKCFtYXBw
+aW5nKSB7CisJCWV2ZW50ID0gVFBNX01FTVJFTUFQKCh1bnNpZ25lZCBsb25nKW1hcmtlcl9zdGFy
+dCwKKwkJCQkgICAgIG1hcHBpbmdfc2l6ZSk7CisJCWlmICghZXZlbnQpIHsKIAkJCXNpemUgPSAw
+OwogCQkJZ290byBvdXQ7CiAJCX0KQEAgLTIwMCwxMSArMTk5LDExIEBAIHN0YXRpYyBpbmxpbmUg
+aW50IF9fY2FsY190cG0yX2V2ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2
+ZW50LAogCiAJCS8qIE1hcCB0aGUgZGlnZXN0J3MgYWxnb3JpdGhtIGlkZW50aWZpZXIgKi8KIAkJ
+aWYgKGRvX21hcHBpbmcpIHsKLQkJCVRQTV9NRU1VTk1BUChtYXBwaW5nLCBtYXBwaW5nX3NpemUp
+OworCQkJVFBNX01FTVVOTUFQKGV2ZW50LCBtYXBwaW5nX3NpemUpOwogCQkJbWFwcGluZ19zaXpl
+ID0gbWFya2VyIC0gbWFya2VyX3N0YXJ0ICsgaGFsZ19zaXplOwotCQkJbWFwcGluZyA9IFRQTV9N
+RU1SRU1BUCgodW5zaWduZWQgbG9uZyltYXJrZXJfc3RhcnQsCi0JCQkJCSAgICAgICBtYXBwaW5n
+X3NpemUpOwotCQkJaWYgKCFtYXBwaW5nKSB7CisJCQlldmVudCA9IFRQTV9NRU1SRU1BUCgodW5z
+aWduZWQgbG9uZyltYXJrZXJfc3RhcnQsCisJCQkJCSAgICAgbWFwcGluZ19zaXplKTsKKwkJCWlm
+ICghZXZlbnQpIHsKIAkJCQlzaXplID0gMDsKIAkJCQlnb3RvIG91dDsKIAkJCX0KQEAgLTIyMCwx
+MSArMjE5LDExIEBAIHN0YXRpYyBpbmxpbmUgaW50IF9fY2FsY190cG0yX2V2ZW50X3NpemUoc3Ry
+dWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2ZW50LAogCiAJCQkJLyogTWFwIHRoZSBkaWdlc3Qg
+Y29udGVudCBpdHNlbGYgKi8KIAkJCQlpZiAoZG9fbWFwcGluZykgewotCQkJCQlUUE1fTUVNVU5N
+QVAobWFwcGluZywgbWFwcGluZ19zaXplKTsKKwkJCQkJVFBNX01FTVVOTUFQKGV2ZW50LCBtYXBw
+aW5nX3NpemUpOwogCQkJCQltYXBwaW5nX3NpemUgPSBtYXJrZXIgLSBtYXJrZXJfc3RhcnQ7Ci0J
+CQkJCW1hcHBpbmcgPSBUUE1fTUVNUkVNQVAoKHVuc2lnbmVkIGxvbmcpbWFya2VyX3N0YXJ0LAot
+CQkJCQkJCSAgICAgICBtYXBwaW5nX3NpemUpOwotCQkJCQlpZiAoIW1hcHBpbmcpIHsKKwkJCQkJ
+ZXZlbnQgPSBUUE1fTUVNUkVNQVAoKHVuc2lnbmVkIGxvbmcpbWFya2VyX3N0YXJ0LAorCQkJCQkJ
+CSAgICAgbWFwcGluZ19zaXplKTsKKwkJCQkJaWYgKCFldmVudCkgewogCQkJCQkJc2l6ZSA9IDA7
+CiAJCQkJCQlnb3RvIG91dDsKIAkJCQkJfQpAQCAtMjQ2LDExICsyNDUsMTEgQEAgc3RhdGljIGlu
+bGluZSBpbnQgX19jYWxjX3RwbTJfZXZlbnRfc2l6ZShzdHJ1Y3QgdGNnX3Bjcl9ldmVudDJfaGVh
+ZCAqZXZlbnQsCiAJICogd2UgZG9uJ3QgbmVlZCB0byBtYXAgaXQKIAkgKi8KIAlpZiAoZG9fbWFw
+cGluZykgewotCQlUUE1fTUVNVU5NQVAobWFya2VyX3N0YXJ0LCBtYXBwaW5nX3NpemUpOworCQlU
+UE1fTUVNVU5NQVAoZXZlbnQsIG1hcHBpbmdfc2l6ZSk7CiAJCW1hcHBpbmdfc2l6ZSArPSBzaXpl
+b2YoZXZlbnRfZmllbGQtPmV2ZW50X3NpemUpOwotCQltYXBwaW5nID0gVFBNX01FTVJFTUFQKCh1
+bnNpZ25lZCBsb25nKW1hcmtlcl9zdGFydCwKKwkJZXZlbnQgPSBUUE1fTUVNUkVNQVAoKHVuc2ln
+bmVkIGxvbmcpbWFya2VyX3N0YXJ0LAogCQkJCSAgICAgICBtYXBwaW5nX3NpemUpOwotCQlpZiAo
+IW1hcHBpbmcpIHsKKwkJaWYgKCFldmVudCkgewogCQkJc2l6ZSA9IDA7CiAJCQlnb3RvIG91dDsK
+IAkJfQpAQCAtMjYwLDExICsyNTksOSBAQCBzdGF0aWMgaW5saW5lIGludCBfX2NhbGNfdHBtMl9l
+dmVudF9zaXplKHN0cnVjdCB0Y2dfcGNyX2V2ZW50Ml9oZWFkICpldmVudCwKIAkJKyBldmVudF9m
+aWVsZC0+ZXZlbnRfc2l6ZTsKIAlzaXplID0gbWFya2VyIC0gbWFya2VyX3N0YXJ0OwogCi0JaWYg
+KChldmVudC0+ZXZlbnRfdHlwZSA9PSAwKSAmJiAoZXZlbnRfZmllbGQtPmV2ZW50X3NpemUgPT0g
+MCkpCi0JCXNpemUgPSAwOwogb3V0OgogCWlmIChkb19tYXBwaW5nKQotCQlUUE1fTUVNVU5NQVAo
+bWFwcGluZywgbWFwcGluZ19zaXplKTsKKwkJVFBNX01FTVVOTUFQKGV2ZW50LCBtYXBwaW5nX3Np
+emUpOwogCXJldHVybiBzaXplOwogfQogCg==
+--00000000000098970e0587c4bc96--
