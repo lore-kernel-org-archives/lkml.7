@@ -2,52 +2,52 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C571C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80423C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28C4421734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C54121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:14:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fo3hbaZk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zc0ECn46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfD3KOA (ORCPT
+        id S1727561AbfD3KOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:14:00 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36946 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfD3KN6 (ORCPT
+        Tue, 30 Apr 2019 06:14:25 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33174 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfD3KOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:13:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UADb0M044378;
-        Tue, 30 Apr 2019 05:13:37 -0500
+        Tue, 30 Apr 2019 06:14:24 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UAE0AJ038140;
+        Tue, 30 Apr 2019 05:14:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556619217;
-        bh=aTzbaXCkitoyyObVP7/290TFOKbW9FPc/rnqgRyc600=;
+        s=ti-com-17Q1; t=1556619240;
+        bh=aZ3yM1iPSi5smeVjBkNnfqq9uyYhXfstHLTXEldOJB8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Fo3hbaZklQ3SvglTk45UBDsFWjKtxj09CmQGaGpRFV84SCc1gO/gmQA59MN28iT8Q
-         nkG7vp1OVgOkcfOYJm9KnmRkBdYo4FUqst/LS7EG4HsaBj5TC9J00o2Ec0xJqaWqgp
-         NlxhWfVqFOgmpqYIPT+Aed/J/jwsoxqR4KzoqMRs=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UADbWm124840
+        b=Zc0ECn46kc4E4ZvHNYVUuyrkkhSWdALL7BcZa53yTQn/MMLzFbrWZmhypaLHX4p3+
+         Cz2pf2bKcMdR6r2uuzmJSIAQ6N0llZwAHFkeCuk4VvNPviSzCQN3eGzcD0VKY6ev6S
+         3GCK/u5XH2PQdtuyy2X9xpU/XVh9pwFvtFJ5FT6s=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UAE0Ye107442
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 05:13:37 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 30 Apr 2019 05:14:00 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 05:13:37 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 05:14:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 05:13:37 -0500
+ Frontend Transport; Tue, 30 Apr 2019 05:14:00 -0500
 Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0Y9085082;
-        Tue, 30 Apr 2019 05:13:33 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0YE085082;
+        Tue, 30 Apr 2019 05:13:56 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <marc.zyngier@arm.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
@@ -59,11 +59,10 @@ CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
         <linus.walleij@linaro.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Lokesh Vutla <lokeshvutla@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-Subject: [PATCH v8 07/14] gpio: thunderx: Use the default parent apis for {request,release}_resources
-Date:   Tue, 30 Apr 2019 15:42:23 +0530
-Message-ID: <20190430101230.21794-8-lokeshvutla@ti.com>
+        Device Tree Mailing List <devicetree@vger.kernel.org>
+Subject: [PATCH v8 12/14] soc: ti: Add MSI domain bus support for Interrupt Aggregator
+Date:   Tue, 30 Apr 2019 15:42:28 +0530
+Message-ID: <20190430101230.21794-13-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
 References: <20190430101230.21794-1-lokeshvutla@ti.com>
@@ -76,64 +75,304 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thunderx_gpio_irq_{request,release}_resources apis are trying to
-{request,release} resources on parent interrupt. There are default
-apis doing the same. Use the default parent apis instead of writing
-the same code snippet.
+With the system coprocessor managing the range allocation of the
+inputs to Interrupt Aggregator, it is difficult to represent
+the device IRQs from DT.
 
-Cc: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+The suggestion is to use MSI in such cases where devices wants
+to allocate and group interrupts dynamically.
+
+Create a MSI domain bus layer that allocates and frees MSIs for
+a device.
+
+APIs that are implemented:
+- ti_sci_inta_msi_create_irq_domain() that creates a MSI domain
+- ti_sci_inta_msi_domain_alloc_irqs() that creates MSIs for the
+  specified device and resource.
+- ti_sci_inta_msi_domain_free_irqs() frees the irqs attached to the device.
+- ti_sci_inta_msi_get_virq() for getting the virq attached to a specific event.
+
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
 Changes since v7:
 - None
 
- drivers/gpio/gpio-thunderx.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ MAINTAINERS                            |   2 +
+ drivers/soc/ti/Kconfig                 |   6 +
+ drivers/soc/ti/Makefile                |   1 +
+ drivers/soc/ti/ti_sci_inta_msi.c       | 146 +++++++++++++++++++++++++
+ include/linux/irqdomain.h              |   1 +
+ include/linux/msi.h                    |  10 ++
+ include/linux/soc/ti/ti_sci_inta_msi.h |  23 ++++
+ 7 files changed, 189 insertions(+)
+ create mode 100644 drivers/soc/ti/ti_sci_inta_msi.c
+ create mode 100644 include/linux/soc/ti/ti_sci_inta_msi.h
 
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index 1306722faa5a..715371b5102a 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -363,22 +363,16 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
- {
- 	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
- 	struct thunderx_gpio *txgpio = txline->txgpio;
--	struct irq_data *parent_data = data->parent_data;
- 	int r;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fff8e1589f07..469e3eb4a958 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15354,6 +15354,8 @@ F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+ F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
+ F:	drivers/irqchip/irq-ti-sci-intr.c
+ F:	drivers/irqchip/irq-ti-sci-inta.c
++F:	include/linux/soc/ti/ti_sci_inta_msi.h
++F:	drivers/soc/ti/ti_sci_inta_msi.c
  
- 	r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
- 	if (r)
- 		return r;
+ Texas Instruments ASoC drivers
+ M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
+diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
+index be4570baad96..82f110fe4953 100644
+--- a/drivers/soc/ti/Kconfig
++++ b/drivers/soc/ti/Kconfig
+@@ -73,4 +73,10 @@ config TI_SCI_PM_DOMAINS
+ 	  called ti_sci_pm_domains. Note this is needed early in boot before
+ 	  rootfs may be available.
  
--	if (parent_data && parent_data->chip->irq_request_resources) {
--		r = parent_data->chip->irq_request_resources(parent_data);
--		if (r)
--			goto error;
--	}
-+	r = irq_chip_request_resources_parent(data);
-+	if (r)
-+		gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
++config TI_SCI_INTA_MSI_DOMAIN
++	bool
++	select GENERIC_MSI_IRQ_DOMAIN
++	help
++	  Driver to enable Interrupt Aggregator specific MSI Domain.
++
+ endif # SOC_TI
+diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
+index a22edc0b258a..b3868d392d4f 100644
+--- a/drivers/soc/ti/Makefile
++++ b/drivers/soc/ti/Makefile
+@@ -8,3 +8,4 @@ obj-$(CONFIG_KEYSTONE_NAVIGATOR_DMA)	+= knav_dma.o
+ obj-$(CONFIG_AMX3_PM)			+= pm33xx.o
+ obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
+ obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
++obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
+diff --git a/drivers/soc/ti/ti_sci_inta_msi.c b/drivers/soc/ti/ti_sci_inta_msi.c
+new file mode 100644
+index 000000000000..0eb9462f609e
+--- /dev/null
++++ b/drivers/soc/ti/ti_sci_inta_msi.c
+@@ -0,0 +1,146 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Texas Instruments' K3 Interrupt Aggregator MSI bus
++ *
++ * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
++ *	Lokesh Vutla <lokeshvutla@ti.com>
++ */
++
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/msi.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/soc/ti/ti_sci_inta_msi.h>
++#include <linux/soc/ti/ti_sci_protocol.h>
++
++static void ti_sci_inta_msi_write_msg(struct irq_data *data,
++				      struct msi_msg *msg)
++{
++	/* Nothing to do */
++}
++
++static void ti_sci_inta_msi_compose_msi_msg(struct irq_data *data,
++					    struct msi_msg *msg)
++{
++	/* Nothing to do */
++}
++
++static void ti_sci_inta_msi_update_chip_ops(struct msi_domain_info *info)
++{
++	struct irq_chip *chip = info->chip;
++
++	if (WARN_ON(!chip))
++		return;
++
++	chip->irq_request_resources = irq_chip_request_resources_parent;
++	chip->irq_release_resources = irq_chip_release_resources_parent;
++	chip->irq_compose_msi_msg = ti_sci_inta_msi_compose_msi_msg;
++	chip->irq_write_msi_msg = ti_sci_inta_msi_write_msg;
++	chip->irq_set_type = irq_chip_set_type_parent;
++	chip->irq_unmask = irq_chip_unmask_parent;
++	chip->irq_mask = irq_chip_mask_parent;
++	chip->irq_ack = irq_chip_ack_parent;
++}
++
++struct irq_domain *ti_sci_inta_msi_create_irq_domain(struct fwnode_handle *fwnode,
++						     struct msi_domain_info *info,
++						     struct irq_domain *parent)
++{
++	struct irq_domain *domain;
++
++	ti_sci_inta_msi_update_chip_ops(info);
++
++	domain = msi_create_irq_domain(fwnode, info, parent);
++	if (domain)
++		irq_domain_update_bus_token(domain, DOMAIN_BUS_TI_SCI_INTA_MSI);
++
++	return domain;
++}
++EXPORT_SYMBOL_GPL(ti_sci_inta_msi_create_irq_domain);
++
++static void ti_sci_inta_msi_free_descs(struct device *dev)
++{
++	struct msi_desc *desc, *tmp;
++
++	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
++		list_del(&desc->list);
++		free_msi_entry(desc);
++	}
++}
++
++static int ti_sci_inta_msi_alloc_descs(struct device *dev,
++				       struct ti_sci_resource *res)
++{
++	struct msi_desc *msi_desc;
++	int set, i, count = 0;
++
++	for (set = 0; set < res->sets; set++) {
++		for (i = 0; i < res->desc[set].num; i++) {
++			msi_desc = alloc_msi_entry(dev, 1, NULL);
++			if (!msi_desc) {
++				ti_sci_inta_msi_free_descs(dev);
++				return -ENOMEM;
++			}
++
++			msi_desc->inta.dev_index = res->desc[set].start + i;
++			INIT_LIST_HEAD(&msi_desc->list);
++			list_add_tail(&msi_desc->list, dev_to_msi_list(dev));
++			count++;
++		}
++	}
++
++	return count;
++}
++
++int ti_sci_inta_msi_domain_alloc_irqs(struct device *dev,
++				      struct ti_sci_resource *res)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct irq_domain *msi_domain;
++	int ret, nvec;
++
++	msi_domain = dev_get_msi_domain(dev);
++	if (!msi_domain)
++		return -EINVAL;
++
++	if (pdev->id < 0)
++		return -ENODEV;
++
++	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
++	if (nvec <= 0)
++		return nvec;
++
++	ret = msi_domain_alloc_irqs(msi_domain, dev, nvec);
++	if (ret) {
++		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
++		goto cleanup;
++	}
++
++	return 0;
++
++cleanup:
++	ti_sci_inta_msi_free_descs(&pdev->dev);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
++
++void ti_sci_inta_msi_domain_free_irqs(struct device *dev)
++{
++	msi_domain_free_irqs(dev->msi_domain, dev);
++	ti_sci_inta_msi_free_descs(dev);
++}
++EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_free_irqs);
++
++unsigned int ti_sci_inta_msi_get_virq(struct device *dev, u32 dev_index)
++{
++	struct msi_desc *desc;
++
++	for_each_msi_entry(desc, dev)
++		if (desc->inta.dev_index == dev_index)
++			return desc->irq;
++
++	return -ENODEV;
++}
++EXPORT_SYMBOL_GPL(ti_sci_inta_msi_get_virq);
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 61706b430907..07ec8b390161 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -82,6 +82,7 @@ enum irq_domain_bus_token {
+ 	DOMAIN_BUS_NEXUS,
+ 	DOMAIN_BUS_IPI,
+ 	DOMAIN_BUS_FSL_MC_MSI,
++	DOMAIN_BUS_TI_SCI_INTA_MSI,
+ };
  
--	return 0;
--error:
--	gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
- 	return r;
- }
+ /**
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 7e9b81c3b50d..7c28762851a3 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -47,6 +47,14 @@ struct fsl_mc_msi_desc {
+ 	u16				msi_index;
+ };
  
-@@ -386,10 +380,8 @@ static void thunderx_gpio_irq_release_resources(struct irq_data *data)
- {
- 	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
- 	struct thunderx_gpio *txgpio = txline->txgpio;
--	struct irq_data *parent_data = data->parent_data;
++/**
++ * ti_sci_inta_msi_desc - TISCI based INTA specific msi descriptor data
++ * @dev_index: TISCI device index
++ */
++struct ti_sci_inta_msi_desc {
++	u16	dev_index;
++};
++
+ /**
+  * struct msi_desc - Descriptor structure for MSI based interrupts
+  * @list:	List head for management
+@@ -68,6 +76,7 @@ struct fsl_mc_msi_desc {
+  * @mask_base:	[PCI MSI-X] Mask register base address
+  * @platform:	[platform]  Platform device specific msi descriptor data
+  * @fsl_mc:	[fsl-mc]    FSL MC device specific msi descriptor data
++ * @inta:	[INTA]	    TISCI based INTA specific msi descriptor data
+  */
+ struct msi_desc {
+ 	/* Shared device/bus type independent data */
+@@ -106,6 +115,7 @@ struct msi_desc {
+ 		 */
+ 		struct platform_msi_desc platform;
+ 		struct fsl_mc_msi_desc fsl_mc;
++		struct ti_sci_inta_msi_desc inta;
+ 	};
+ };
  
--	if (parent_data && parent_data->chip->irq_release_resources)
--		parent_data->chip->irq_release_resources(parent_data);
-+	irq_chip_release_resources_parent(data);
- 
- 	gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
- }
+diff --git a/include/linux/soc/ti/ti_sci_inta_msi.h b/include/linux/soc/ti/ti_sci_inta_msi.h
+new file mode 100644
+index 000000000000..11fb5048f5f6
+--- /dev/null
++++ b/include/linux/soc/ti/ti_sci_inta_msi.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Texas Instruments' K3 TI SCI INTA MSI helper
++ *
++ * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
++ *	Lokesh Vutla <lokeshvutla@ti.com>
++ */
++
++#ifndef __INCLUDE_LINUX_TI_SCI_INTA_MSI_H
++#define __INCLUDE_LINUX_TI_SCI_INTA_MSI_H
++
++#include <linux/msi.h>
++#include <linux/soc/ti/ti_sci_protocol.h>
++
++struct irq_domain
++*ti_sci_inta_msi_create_irq_domain(struct fwnode_handle *fwnode,
++				   struct msi_domain_info *info,
++				   struct irq_domain *parent);
++int ti_sci_inta_msi_domain_alloc_irqs(struct device *dev,
++				      struct ti_sci_resource *res);
++unsigned int ti_sci_inta_msi_get_virq(struct device *dev, u32 index);
++void ti_sci_inta_msi_domain_free_irqs(struct device *dev);
++#endif /* __INCLUDE_LINUX_IRQCHIP_TI_SCI_INTA_H */
 -- 
 2.21.0
 
