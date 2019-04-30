@@ -2,105 +2,83 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF68CC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E02C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2DD20645
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:55:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dRlJqITI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iwrdSDqw"
+	by mail.kernel.org (Postfix) with ESMTP id 46A1720645
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfD3Qzu (ORCPT
+        id S1726560AbfD3Q4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:55:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50974 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD3Qzu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:55:50 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8EA5F60A42; Tue, 30 Apr 2019 16:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556643349;
-        bh=d1iRsf4F2z9V/o+Mttdya64V61jxD6FJmL9Sbb5c4rU=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=dRlJqITIpTIeKH2kFazFIpghIYIHKRLsZExY/OUwPDD/P0bhqjIw86TooZQLteDWO
-         k8nMDI7qsjq92UE+Hh0hZZi2sxJf2iXeXk9J1r1wTds1RqH19f2twJdTkwyIABefpx
-         nxkTtlPRiMnB29QEhI4rd6ml0nsdoA7qDrlK+GQ4=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B683760214;
-        Tue, 30 Apr 2019 16:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556643348;
-        bh=d1iRsf4F2z9V/o+Mttdya64V61jxD6FJmL9Sbb5c4rU=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=iwrdSDqwIAJFr2YWw6YwfmFhLU30STWamHkZINhNuYCk7Y8t283enoJjjogwZFWYY
-         OINDYJGDIftyqHoLOOtcHmfLles5KDNVfN+18gTZ7AOnUaGVWXmpZ8Aj50MnidQeC1
-         iJSdvdu9cDlcy0EEqpgwp+0VeeZ7ab2ZTdd4V5MM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B683760214
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: pull-request: wireless-drivers 2019-04-30
-References: <8736lzpm0m.fsf@kamboji.qca.qualcomm.com>
-        <20190430.120117.1616322040923778364.davem@davemloft.net>
-Date:   Tue, 30 Apr 2019 19:55:45 +0300
-In-Reply-To: <20190430.120117.1616322040923778364.davem@davemloft.net> (David
-        Miller's message of "Tue, 30 Apr 2019 12:01:17 -0400 (EDT)")
-Message-ID: <87r29jo2jy.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 30 Apr 2019 12:56:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:16164 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbfD3Q43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:56:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:56:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="169352293"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Apr 2019 09:56:27 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id A9B8E11F; Tue, 30 Apr 2019 19:56:26 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Evan Green <evgreen@chromium.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2] mfd: intel-lpss: Add Intel Comet Lake PCI IDs
+Date:   Tue, 30 Apr 2019 19:56:26 +0300
+Message-Id: <20190430165626.31639-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller <davem@davemloft.net> writes:
+Intel Comet Lake has the same LPSS than Intel Cannon Lake.
+Add the new IDs to the list of supported devices.
 
-> From: Kalle Valo <kvalo@codeaurora.org>
-> Date: Tue, 30 Apr 2019 18:10:01 +0300
->
->> here's one more pull request to net tree for 5.1, more info below.
->> 
->> Also note that this pull conflicts with net-next. And I want to emphasie
->> that it's really net-next, so when you pull this to net tree it should
->> go without conflicts. Stephen reported the conflict here:
->> 
->> https://lkml.kernel.org/r/20190429115338.5decb50b@canb.auug.org.au
->> 
->> In iwlwifi oddly commit 154d4899e411 adds the IS_ERR_OR_NULL() in
->> wireless-drivers but commit c9af7528c331 removes the whole check in
->> wireless-drivers-next. The fix is easy, just drop the whole check for
->> mvmvif->dbgfs_dir in iwlwifi/mvm/debugfs-vif.c, it's unneeded anyway.
->> 
->> As usual, please let me know if you have any problems.
->
-> Pulled, thanks Kalle.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+- update i2c info
+ drivers/mfd/intel-lpss-pci.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Great, thanks.
-
-> Thanks for the conflict resolution information, it is very helpful.
->
-> However, can you put it into the merge commit text next time as well?
-> I cut and pasted it in there when I pulled this stuff in.
-
-A good idea, I'll do that. Just to be sure, do you mean that I should
-add it only with conflicts between net and net-next (like in this case)?
-Or should I add it everytime I see a conflict, for example between
-wireless-drivers-next and net-next? I hope my question is not too
-confusing...
-
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index a67f67c90ec4..417569482481 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -129,6 +129,19 @@ static const struct intel_lpss_platform_info cnl_i2c_info = {
+ };
+ 
+ static const struct pci_device_id intel_lpss_pci_ids[] = {
++	/* CML */
++	{ PCI_VDEVICE(INTEL, 0x02a8), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x02a9), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x02aa), (kernel_ulong_t)&spt_info },
++	{ PCI_VDEVICE(INTEL, 0x02ab), (kernel_ulong_t)&spt_info },
++	{ PCI_VDEVICE(INTEL, 0x02c5), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x02c6), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x02c7), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x02e8), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x02e9), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x02ea), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x02eb), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x02fb), (kernel_ulong_t)&spt_info },
+ 	/* BXT A-Step */
+ 	{ PCI_VDEVICE(INTEL, 0x0aac), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x0aae), (kernel_ulong_t)&bxt_i2c_info },
 -- 
-Kalle Valo
+2.20.1
+
