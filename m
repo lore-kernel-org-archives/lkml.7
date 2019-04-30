@@ -2,54 +2,52 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D91C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35054C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4AD2177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029D32177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624668;
-	bh=TsqbLPI9d0YrYZoXI3eaFV8J5vqZeYuaLMLw8AWhRy8=;
+	s=default; t=1556624671;
+	bh=YEOO92+O+3+p3qSzNn72tyfz8WhLv3cbBk0aEgiY0ZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTVO4dSfxqE1zxSABCEwycZ4Fa/opZTVfzbznpdfIXSQjl3y0X+2llIwEXo1WOAiZ
-	 Zm+xf6m6b4wxg4Z0M7aGbGJ2csMq51TfThmnui0Ra5NiZznuivmuUFMPh69KrdfgQq
-	 OQMZomnRGfAjFaH+ReeDBSUu3uZ+qqNyso0YNgdY=
+	b=150Np4Hdxgk6THK0HZVjsh53F0Pijm/72vHGYV50JTxRVDBm2v936nBXOtugQkPTX
+	 lcX8YW9cMPnbFcjXVQYmBlTDDM3e5ZyZkRPabH1FccMP8gRmlrzmN1JtnByNhCpFsJ
+	 UZ+02eh2iSAQVqoz9GK8Wsbh1FpiwQB/sV4wNFMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbfD3Lo1 (ORCPT
+        id S1728816AbfD3Lo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55634 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbfD3LoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:44:25 -0400
+        id S1729266AbfD3Lo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B1FC2173E;
-        Tue, 30 Apr 2019 11:44:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 149C521783;
+        Tue, 30 Apr 2019 11:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624664;
-        bh=TsqbLPI9d0YrYZoXI3eaFV8J5vqZeYuaLMLw8AWhRy8=;
+        s=default; t=1556624666;
+        bh=YEOO92+O+3+p3qSzNn72tyfz8WhLv3cbBk0aEgiY0ZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqVNgi9Ib3KrE9Z45TNzeXbEkxtQ+L/O0gU+j8VO2MZeECKAANPXTJGqxvzeUtUPc
-         vOzYpLyazgjQs0JT8ReUQ94+Si3x8WxGPdDlJckbB7EJ1a3G+Od+O8pNVczWyVrWgc
-         37JU9ojxQBpWez1Nszh7Vbw0QZFcZjEE1hIy8z8I=
+        b=QpAIZE2FmyHQFRl4FnIoIsoyj8Hn0El4eotLraV4MpKknYYJ8d+KLYcZufQaMyJQ1
+         fhOy5cShw/3ievAl6tsz3FdfuUspKagejzr8s9oLXtLu6SZR8CFJ5LVxnA86Kpt1eO
+         bdDqd4Q6jd5ATm8wRjsRPFqyikQvefMU8duRkyB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 026/100] tracing: Fix buffer_ref pipe ops
-Date:   Tue, 30 Apr 2019 13:37:55 +0200
-Message-Id: <20190430113610.108174724@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 009/100] netfilter: nf_tables: fix set double-free in abort path
+Date:   Tue, 30 Apr 2019 13:37:38 +0200
+Message-Id: <20190430113609.064927621@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -62,140 +60,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+[ Upstream commit 40ba1d9b4d19796afc9b7ece872f5f3e8f5e2c13 ]
 
-commit b987222654f84f7b4ca95b3a55eca784cb30235b upstream.
+The abort path can cause a double-free of an anonymous set.
+Added-and-to-be-aborted rule looks like this:
 
-This fixes multiple issues in buffer_pipe_buf_ops:
+udp dport { 137, 138 } drop
 
- - The ->steal() handler must not return zero unless the pipe buffer has
-   the only reference to the page. But generic_pipe_buf_steal() assumes
-   that every reference to the pipe is tracked by the page's refcount,
-   which isn't true for these buffers - buffer_pipe_buf_get(), which
-   duplicates a buffer, doesn't touch the page's refcount.
-   Fix it by using generic_pipe_buf_nosteal(), which refuses every
-   attempted theft. It should be easy to actually support ->steal, but the
-   only current users of pipe_buf_steal() are the virtio console and FUSE,
-   and they also only use it as an optimization. So it's probably not worth
-   the effort.
- - The ->get() and ->release() handlers can be invoked concurrently on pipe
-   buffers backed by the same struct buffer_ref. Make them safe against
-   concurrency by using refcount_t.
- - The pointers stored in ->private were only zeroed out when the last
-   reference to the buffer_ref was dropped. As far as I know, this
-   shouldn't be necessary anyway, but if we do it, let's always do it.
+The to-be-aborted transaction list looks like this:
 
-Link: http://lkml.kernel.org/r/20190404215925.253531-1-jannh@google.com
+newset
+newsetelem
+newsetelem
+rule
 
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: stable@vger.kernel.org
-Fixes: 73a757e63114d ("ring-buffer: Return reader page back into existing ring buffer")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This gets walked in reverse order, so first pass disables the rule, the
+set elements, then the set.
 
+After synchronize_rcu(), we then destroy those in same order: rule, set
+element, set element, newset.
+
+Problem is that the anonymous set has already been bound to the rule, so
+the rule (lookup expression destructor) already frees the set, when then
+cause use-after-free when trying to delete the elements from this set,
+then try to free the set again when handling the newset expression.
+
+Rule releases the bound set in first place from the abort path, this
+causes the use-after-free on set element removal when undoing the new
+element transactions. To handle this, skip new element transaction if
+set is bound from the abort path.
+
+This is still causes the use-after-free on set element removal.  To
+handle this, remove transaction from the list when the set is already
+bound.
+
+Joint work with Florian Westphal.
+
+Fixes: f6ac85858976 ("netfilter: nf_tables: unbind set in rule from commit path")
+Bugzilla: https://bugzilla.netfilter.org/show_bug.cgi?id=1325
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/splice.c               |    4 ++--
- include/linux/pipe_fs_i.h |    1 +
- kernel/trace/trace.c      |   28 ++++++++++++++--------------
- 3 files changed, 17 insertions(+), 16 deletions(-)
+ include/net/netfilter/nf_tables.h |  6 ++----
+ net/netfilter/nf_tables_api.c     | 17 +++++++++++------
+ 2 files changed, 13 insertions(+), 10 deletions(-)
 
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -333,8 +333,8 @@ const struct pipe_buf_operations default
- 	.get = generic_pipe_buf_get,
+diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
+index f66bb406004b..e5f879efcc92 100644
+--- a/include/net/netfilter/nf_tables.h
++++ b/include/net/netfilter/nf_tables.h
+@@ -416,7 +416,8 @@ struct nft_set {
+ 	unsigned char			*udata;
+ 	/* runtime data below here */
+ 	const struct nft_set_ops	*ops ____cacheline_aligned;
+-	u16				flags:14,
++	u16				flags:13,
++					bound:1,
+ 					genmask:2;
+ 	u8				klen;
+ 	u8				dlen;
+@@ -1330,15 +1331,12 @@ struct nft_trans_rule {
+ struct nft_trans_set {
+ 	struct nft_set			*set;
+ 	u32				set_id;
+-	bool				bound;
  };
  
--static int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
--				    struct pipe_buffer *buf)
-+int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
-+			     struct pipe_buffer *buf)
- {
- 	return 1;
- }
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -181,6 +181,7 @@ void free_pipe_info(struct pipe_inode_in
- void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
-+int generic_pipe_buf_nosteal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
- void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
+ #define nft_trans_set(trans)	\
+ 	(((struct nft_trans_set *)trans->data)->set)
+ #define nft_trans_set_id(trans)	\
+ 	(((struct nft_trans_set *)trans->data)->set_id)
+-#define nft_trans_set_bound(trans)	\
+-	(((struct nft_trans_set *)trans->data)->bound)
  
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6803,19 +6803,23 @@ struct buffer_ref {
- 	struct ring_buffer	*buffer;
- 	void			*page;
- 	int			cpu;
--	int			ref;
-+	refcount_t		refcount;
- };
- 
-+static void buffer_ref_release(struct buffer_ref *ref)
-+{
-+	if (!refcount_dec_and_test(&ref->refcount))
-+		return;
-+	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
-+	kfree(ref);
-+}
-+
- static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
- 				    struct pipe_buffer *buf)
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
--	if (--ref->ref)
--		return;
--
--	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
--	kfree(ref);
-+	buffer_ref_release(ref);
- 	buf->private = 0;
- }
- 
-@@ -6824,7 +6828,7 @@ static void buffer_pipe_buf_get(struct p
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
--	ref->ref++;
-+	refcount_inc(&ref->refcount);
- }
- 
- /* Pipe buffer operations for a buffer. */
-@@ -6832,7 +6836,7 @@ static const struct pipe_buf_operations
- 	.can_merge		= 0,
- 	.confirm		= generic_pipe_buf_confirm,
- 	.release		= buffer_pipe_buf_release,
--	.steal			= generic_pipe_buf_steal,
-+	.steal			= generic_pipe_buf_nosteal,
- 	.get			= buffer_pipe_buf_get,
- };
- 
-@@ -6845,11 +6849,7 @@ static void buffer_spd_release(struct sp
- 	struct buffer_ref *ref =
- 		(struct buffer_ref *)spd->partial[i].private;
- 
--	if (--ref->ref)
--		return;
--
--	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
--	kfree(ref);
-+	buffer_ref_release(ref);
- 	spd->partial[i].private = 0;
- }
- 
-@@ -6904,7 +6904,7 @@ tracing_buffers_splice_read(struct file
+ struct nft_trans_chain {
+ 	bool				update;
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index de5908d51758..959f123c1cf7 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -123,7 +123,7 @@ static void nft_set_trans_bind(const struct nft_ctx *ctx, struct nft_set *set)
+ 	list_for_each_entry_reverse(trans, &net->nft.commit_list, list) {
+ 		if (trans->msg_type == NFT_MSG_NEWSET &&
+ 		    nft_trans_set(trans) == set) {
+-			nft_trans_set_bound(trans) = true;
++			set->bound = true;
  			break;
  		}
- 
--		ref->ref = 1;
-+		refcount_set(&ref->refcount, 1);
- 		ref->buffer = iter->trace_buffer->buffer;
- 		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
- 		if (IS_ERR(ref->page)) {
+ 	}
+@@ -6547,8 +6547,7 @@ static void nf_tables_abort_release(struct nft_trans *trans)
+ 		nf_tables_rule_destroy(&trans->ctx, nft_trans_rule(trans));
+ 		break;
+ 	case NFT_MSG_NEWSET:
+-		if (!nft_trans_set_bound(trans))
+-			nft_set_destroy(nft_trans_set(trans));
++		nft_set_destroy(nft_trans_set(trans));
+ 		break;
+ 	case NFT_MSG_NEWSETELEM:
+ 		nft_set_elem_destroy(nft_trans_elem_set(trans),
+@@ -6621,8 +6620,11 @@ static int __nf_tables_abort(struct net *net)
+ 			break;
+ 		case NFT_MSG_NEWSET:
+ 			trans->ctx.table->use--;
+-			if (!nft_trans_set_bound(trans))
+-				list_del_rcu(&nft_trans_set(trans)->list);
++			if (nft_trans_set(trans)->bound) {
++				nft_trans_destroy(trans);
++				break;
++			}
++			list_del_rcu(&nft_trans_set(trans)->list);
+ 			break;
+ 		case NFT_MSG_DELSET:
+ 			trans->ctx.table->use++;
+@@ -6630,8 +6632,11 @@ static int __nf_tables_abort(struct net *net)
+ 			nft_trans_destroy(trans);
+ 			break;
+ 		case NFT_MSG_NEWSETELEM:
++			if (nft_trans_elem_set(trans)->bound) {
++				nft_trans_destroy(trans);
++				break;
++			}
+ 			te = (struct nft_trans_elem *)trans->data;
+-
+ 			te->set->ops->remove(net, te->set, &te->elem);
+ 			atomic_dec(&te->set->nelems);
+ 			break;
+-- 
+2.19.1
+
 
 
