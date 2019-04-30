@@ -2,96 +2,72 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F09C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF36C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC402080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BEF2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556613779;
+	bh=7o7DZwJEOripkUNr9As7Pg/o4reVXy70s+lqUnjJVJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FvI2EQQ+Y11JOgTJNwviPsG3kjrksq6G97LWN0mtOH6QyA95wDrpIkKk6MkmGTRaW
+	 UZK2yQ+pFlMpFYaRMf4wlLHFzCjse29vT0iymol2GoGz8WArBpKti6UIe7hV5VZR6+
+	 Pzg22lhVlzbiEMfl7hCxO+k2VFTuzivK6eOD3P38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfD3Img (ORCPT
+        id S1726790AbfD3Im6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:42:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59676 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725938AbfD3Img (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:42:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 97F30ABC3;
-        Tue, 30 Apr 2019 08:42:34 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 10:42:31 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-        geert+renesas@glider.be, me@tobin.cc, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH -next] lib/vsprintf: Make function pointer_string static
-Message-ID: <20190430084231.y5fm5zvjdcwyzt7t@pathway.suse.cz>
-References: <20190426164630.22104-1-yuehaibing@huawei.com>
- <20190426130204.23a5a05c@gandalf.local.home>
- <20190429110801.awvdxawpee3sxujs@pathway.suse.cz>
- <20190429091320.019e726b@gandalf.local.home>
- <20190429143037.3qu5fzdo6g26rsmf@pathway.suse.cz>
- <20190429103925.6233e45f@gandalf.local.home>
- <3078981761ff2a37354221eb79a1c24e43c30896.camel@perches.com>
+        Tue, 30 Apr 2019 04:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfD3Im5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:42:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9BC92080C;
+        Tue, 30 Apr 2019 08:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556613777;
+        bh=7o7DZwJEOripkUNr9As7Pg/o4reVXy70s+lqUnjJVJY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KtQ3efFrzbYXBRfbiJGPj+G83y9rGU5I9w+BoXWL+C/1NJjp7OAj3dpgXe4eAuMo5
+         ZKYr3jn5ysbaPvnLontEDZtEJiZGNyE9ZVuovs1rgVaqzqjJnfA2ZmzjHvMzrc3Iy8
+         ytIgyUJRPe1EMlwtkGeK0i4Ugx8rmicU2JDtJqG0=
+Date:   Tue, 30 Apr 2019 10:42:54 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] livepatch: Fix kobject memleak
+Message-ID: <20190430084254.GB11737@kroah.com>
+References: <20190430001534.26246-1-tobin@kernel.org>
+ <20190430001534.26246-2-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3078981761ff2a37354221eb79a1c24e43c30896.camel@perches.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190430001534.26246-2-tobin@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-04-29 09:42:30, Joe Perches wrote:
-> On Mon, 2019-04-29 at 10:39 -0400, Steven Rostedt wrote:
-> > [ added Joe ]
-> > > Good question. I have just double checked it. And pointer_string() with
-> > > "noinline_for_stack" does not make any difference in the stack
-> > > usage here.
-> > > 
-> > > I actually played with this before:
-> > > 
-> > > "noinline_for_stack" is a black magic added by
-> > > the commit cf3b429b03e827c7180 ("vsprintf.c: use noinline_for_stack").
-> > 
-> > From what I understand, "noinline_for_stack" is just noinline and the
-> > "for_stack" part is just to document that the noinline is used for
-> > stack purposes. If the compiler doesn't inline the function without the
-> > noinline, then it wont make any difference.
-> > 
-> > The point was to not inline the function because it can be used in
-> > stack critical areas, and that it's better to do the call than to
-> > increase the stack.
+On Tue, Apr 30, 2019 at 10:15:33AM +1000, Tobin C. Harding wrote:
+> Currently error return from kobject_init_and_add() is not followed by a
+> call to kobject_put().  This means there is a memory leak.
 > 
-> It was added because of %pV is recursive and recursive
-> functions can eat
-> a lot of stack.
+> Add call to kobject_put() in error path of kobject_init_and_add().
 > 
-> Using noinline_for_stack was just a bit more self-documenting.
-> 
-> I do still think it's a useful notation.
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 
-I understand the problem and noinline_for_stack improved some
-paths definitely.
-
-On the other hand, the call instruction uses the stack as well.
-Note that many of the annotated functions have 5 parameters.
-
-I believe that some of the annotated functions might get inlined
-with a lower stack usage in the caller than what is needed
-by the call.
-
-The problem is that it depends on the used compiler, optimization,
-and architecture. I personally do not want to invest much time
-into optimizing this unless people report real life problems.
-
-Best Regards,
-Petr
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
