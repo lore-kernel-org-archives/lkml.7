@@ -2,121 +2,89 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CDBC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3219C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378A72080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:44:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k1uR299Y"
+	by mail.kernel.org (Postfix) with ESMTP id 8163921734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfD3Joy (ORCPT
+        id S1727030AbfD3JpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:44:54 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39171 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfD3Jox (ORCPT
+        Tue, 30 Apr 2019 05:45:25 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:25758 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726119AbfD3JpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:44:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n25so3083779wmk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 02:44:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=looTlcqCIB3TJbyTND6k3EZ0RBWBOUlYZpKYaCAdqKk=;
-        b=k1uR299Yxm7EYSAONf0f2K3YOAM0GjiFXsqYolyfZZLTPyI1gj/cbv4DyO9ZJMMo9V
-         zaplBDtNX/iDfN7xaX2w1QFDFgjXVj/d5jAZ+h88IUQDUubQWZtxaRXTMD6XOyVdGCcy
-         PA8KZrF+CCn51wYuRpN3z978NEy4BUA0y5XChjhrGM3V9n4QCoq3AYP2efD/U13xsVsX
-         apuLMtSTLVH5zqkNoSSStkleNMmWoRppX04Wm32W6zOAMsv9N+zXPGE3QQ2a+Xx+s5Ni
-         0NwQhN2rC+YABt5EWFekssoF+dpWSarQBwAXZzOztlay5fsAmT8xixoblGjJWBWE8II9
-         4pYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=looTlcqCIB3TJbyTND6k3EZ0RBWBOUlYZpKYaCAdqKk=;
-        b=oo6OFdE2Ox4MYxPQnzVZEACyV4AV0RFkVsRNCoZV5h3AeRlEq7bP5q0In1yzMzRIxu
-         WyKdfpv30Wpznvydgy/E0OVBxcJuL56GF1S6b/hZftdv2PqlLZGKt60FN7Yz9C754dsx
-         65K0WMt3w0c+sm8BWjahE6z9Hs6QwBjo7kVgqDmrfI9cYF3Csr/2lkWMxtMOJRl2sZCa
-         Gy7iQ96z6EWCrrtbIaLAVhxUyqO8IG0GRd6NHklZllD9vusEjuiOP3aTvUPPpvRrDGIg
-         RIdym5t2p08N94j6HMUiaYaeEk12yBWsm3fKooIYxe4Bt70NDJh3It9Z36VOqVZukrmH
-         HYFQ==
-X-Gm-Message-State: APjAAAWF/vE9CBaBUN69BLdFITpxCNQnNO0EWQUjM4hhQWGJ+wwyr0LZ
-        kEb3P+SlPIi8uHqdX/XsPKLmuA==
-X-Google-Smtp-Source: APXvYqxDIo8nKc9Sp0C52XkXJ0RFa5uPzJ7miTrrLAzJ8p8qvVwZQM2Aq2xKA/IZYjIkM1ZaW930hQ==
-X-Received: by 2002:a1c:4b03:: with SMTP id y3mr2522912wma.113.1556617491604;
-        Tue, 30 Apr 2019 02:44:51 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id e10sm24031411wra.52.2019.04.30.02.44.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 02:44:50 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] thermal: rockchip: fix up the tsadc pinctrl
- setting error
-To:     "elaine.zhang" <zhangqing@rock-chips.com>, heiko@sntech.de
-Cc:     rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
-References: <1556187154-22632-1-git-send-email-zhangqing@rock-chips.com>
- <1556187154-22632-2-git-send-email-zhangqing@rock-chips.com>
- <be0170d7-64dc-896d-b847-5be192304791@linaro.org>
- <8d41ea98-e0e8-60c8-3237-ade5d0d169bf@rock-chips.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <70cc3a91-8f5d-da48-a815-eaf2670f9a93@linaro.org>
-Date:   Tue, 30 Apr 2019 11:44:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 05:45:25 -0400
+X-UUID: ec9be3eec23441189c65ca50889c6cfc-20190430
+X-UUID: ec9be3eec23441189c65ca50889c6cfc-20190430
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <henryc.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 521803043; Tue, 30 Apr 2019 17:45:20 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 30 Apr 2019 17:45:19 +0800
+Received: from mtkslt205.mediatek.inc (10.21.15.75) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 30 Apr 2019 17:45:20 +0800
+From:   Henry Chen <henryc.chen@mediatek.com>
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+CC:     Nicolas Boichat <drinkcat@google.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Henry Chen <henryc.chen@mediatek.com>
+Subject: [RFC V2 07/11] arm64: dts: mt8183: add dvfsrc related nodes
+Date:   Tue, 30 Apr 2019 16:51:01 +0800
+Message-ID: <1556614265-12745-8-git-send-email-henryc.chen@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
+References: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <8d41ea98-e0e8-60c8-3237-ade5d0d169bf@rock-chips.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 11:51, elaine.zhang wrote:
+Enable dvfsrc on mt8183 platform.
 
-[ ... ]
+Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> pinctrl select to gpio mode when tsadc suspend and shutdown.
-> 
-> When suspend, tsadc is disabled, the otp_pin should revert to the
-> default gpio state.
-> 
->>
->>>         return 0;
->>>   }
->>> @@ -1383,7 +1413,8 @@ static int __maybe_unused
->>> rockchip_thermal_resume(struct device *dev)
->>>       for (i = 0; i < thermal->chip->chn_num; i++)
->>>           rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
->>>   -    pinctrl_pm_select_default_state(dev);
->>> +    if (thermal->tshut_mode == TSHUT_MODE_GPIO)
->>> +        pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
->> And then
->>     pinctrl_select_state(thermal->pinctrl, thermal->pinctrl_state);
-> 
-> pinctrl select to otp mode when tsadc resume.
-
-Ok, thanks for clarifying.
-
-  -- Daniel
-
-
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 665d561..d298013 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -134,6 +134,13 @@
+ 		clock-output-names = "clk26m";
+ 	};
+ 
++	dvfsrc@10012000 {
++		compatible = "mediatek,mt8183-dvfsrc";
++		reg = <0 0x10012000 0 0x1000>;
++		clocks = <&infracfg CLK_INFRA_DVFSRC>;
++		clock-names = "dvfsrc";
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupt-parent = <&gic>;
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+1.9.1
 
