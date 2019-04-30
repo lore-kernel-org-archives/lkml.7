@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14212C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C712EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D23C021670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C2E21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624727;
-	bh=S53BebHbGSeIxthhUe6WhoXyIFqrlIj9nmyLSVbw1UI=;
+	s=default; t=1556624730;
+	bh=it4y10QxzMYL79fRr888y34aBF6kHIuMRynzRyZCdRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H5fvkCl0VWcR+qklCB+xz/FGIpned1fcSOmW+Snr5b9/+TBGiIo0JZ68c3dIsFY8Q
-	 CgmwYKqNda1SqH64EcVRsDYTRm6+04nIvoLq5ZsMJ2c08cKuJvAaJ0vMTsl29VUtc5
-	 Ly5UHaWJ+k1v21ipkCWAIkIZb78xwzPZOeUsU3UU=
+	b=revgMSLqy7QfYV+MGsFAz5bLQX5CXYPV/D3ibV54WH+irXEmTfNXEu0JjYSAajuEK
+	 l0AQMIWEmUKNb6VLvIuQB963sM3iQVxOWTkb49dxQgKvj6SG7XbqkLkZEx4OXWJwy9
+	 3Fs/+gu+K+HIP1e1CVnr+WQUVImviVT0csMYDNlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfD3Lp0 (ORCPT
+        id S1730405AbfD3Lp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730381AbfD3LpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:24 -0400
+        id S1730397AbfD3Lp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70D7021670;
-        Tue, 30 Apr 2019 11:45:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D53E21734;
+        Tue, 30 Apr 2019 11:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624723;
-        bh=S53BebHbGSeIxthhUe6WhoXyIFqrlIj9nmyLSVbw1UI=;
+        s=default; t=1556624726;
+        bh=it4y10QxzMYL79fRr888y34aBF6kHIuMRynzRyZCdRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YNaHGGhG6IlKRZT9JBKK7ZZhFwmLynruoymVJErSR0yAtLQTbuhSu6bMsAa3Y50z1
-         ULv4ZD1t0YrWFbORPdhMb2/MDBFS6C2cKWoMbP2DbX9fWf0YrXrcvEoR3qIa23FgcE
-         Jq7QsWNu3CVFmkA/uJyirn1Utcl2RGJrG4yF6l0M=
+        b=X+wcKkOcbZ9ba29yxulSy+WZ0rI+X3TOSUGyCVt14eeJkcXkluG3nGHvq33otPILE
+         G0k2DwxZyfU24Bx2GqFiQQnpoK7qNj0L81Y2QpU//Boc7851GRxKkMw04pfwknhiwf
+         6qOwKZOv88XESLfOI2Hz9BEV7wRDQHc+VecGTK5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 013/100] net: mvpp2: fix validate for PPv2.1
-Date:   Tue, 30 Apr 2019 13:37:42 +0200
-Message-Id: <20190430113609.226045703@linuxfoundation.org>
+Subject: [PATCH 4.19 014/100] ext4: fix some error pointer dereferences
+Date:   Tue, 30 Apr 2019 13:37:43 +0200
+Message-Id: <20190430113609.275098560@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,35 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8b318f30ab4ef9bbc1241e6f8c1db366dbd347f2 ]
+[ Upstream commit 7159a986b4202343f6cca3bb8079ecace5816fd6 ]
 
-The Phylink validate function is the Marvell PPv2 driver makes a check
-on the GoP id. This is valid an has to be done when using PPv2.2 engines
-but makes no sense when using PPv2.1. The check done when using an RGMII
-interface makes sure the GoP id is not 0, but this breaks PPv2.1. Fixes
-it.
+We can't pass error pointers to brelse().
 
-Fixes: 0fb628f0f250 ("net: mvpp2: fix phylink handling of invalid PHY modes")
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: fb265c9cb49e ("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/xattr.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 9988c89ed9fd..9b10abb604cb 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4272,7 +4272,7 @@ static void mvpp2_phylink_validate(struct net_device *dev,
- 	case PHY_INTERFACE_MODE_RGMII_ID:
- 	case PHY_INTERFACE_MODE_RGMII_RXID:
- 	case PHY_INTERFACE_MODE_RGMII_TXID:
--		if (port->gop_id == 0)
-+		if (port->priv->hw_version == MVPP22 && port->gop_id == 0)
- 			goto empty_set;
- 		break;
- 	default:
+diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+index c0ba5206cd9d..006c277dc22e 100644
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -829,6 +829,7 @@ int ext4_get_inode_usage(struct inode *inode, qsize_t *usage)
+ 		bh = ext4_sb_bread(inode->i_sb, EXT4_I(inode)->i_file_acl, REQ_PRIO);
+ 		if (IS_ERR(bh)) {
+ 			ret = PTR_ERR(bh);
++			bh = NULL;
+ 			goto out;
+ 		}
+ 
+@@ -2907,6 +2908,7 @@ int ext4_xattr_delete_inode(handle_t *handle, struct inode *inode,
+ 			if (error == -EIO)
+ 				EXT4_ERROR_INODE(inode, "block %llu read error",
+ 						 EXT4_I(inode)->i_file_acl);
++			bh = NULL;
+ 			goto cleanup;
+ 		}
+ 		error = ext4_xattr_check_block(inode, bh);
+@@ -3063,6 +3065,7 @@ ext4_xattr_block_cache_find(struct inode *inode,
+ 		if (IS_ERR(bh)) {
+ 			if (PTR_ERR(bh) == -ENOMEM)
+ 				return NULL;
++			bh = NULL;
+ 			EXT4_ERROR_INODE(inode, "block %lu read error",
+ 					 (unsigned long)ce->e_value);
+ 		} else if (ext4_xattr_cmp(header, BHDR(bh)) == 0) {
 -- 
 2.19.1
 
