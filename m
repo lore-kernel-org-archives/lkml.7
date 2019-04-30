@@ -2,130 +2,86 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B80C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54374C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D60021670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22EE921670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:59:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zrsmprsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfD3Q6W (ORCPT
+        id S1726487AbfD3Q74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:58:22 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:48655 "EHLO honk.sigxcpu.org"
+        Tue, 30 Apr 2019 12:59:56 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50300 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfD3Q6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:58:22 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id D1245FB03;
-        Tue, 30 Apr 2019 18:58:18 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id m4ARVJI0QoKf; Tue, 30 Apr 2019 18:58:17 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 15AA24027E; Tue, 30 Apr 2019 18:58:17 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 18:58:17 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Johan Hovold <johan@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Message-ID: <20190430165817.GB29626@bogon.m.sigxcpu.org>
-References: <cover.1556633413.git.agx@sigxcpu.org>
- <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
- <CAOMZO5BerzB94YvJgZoOVYaA3fCsHQiuC5FyVVVRV+ttEg92uQ@mail.gmail.com>
+        id S1725950AbfD3Q74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:59:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=DpyzH6C7CDzVv5rpAbyNDaHnn+kRSb3nqDne+G2smGk=; b=zrsmprsfOsmr3PVItgVW65jyC+
+        w94doDuf92Q955drappbRDqSk2RC3NVZHRX9L+6cSVatkujdMCpfQQGhEDZ0UvFeVH+l6moueXPEo
+        wLZLCJrXhuP7Prm1kzSDUF9Q2JnRo71EXhS2iWB5L3FN4k64wUTdWgKP6XQl0vcxxxNg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hLW6O-0001v8-07; Tue, 30 Apr 2019 18:59:32 +0200
+Date:   Tue, 30 Apr 2019 18:59:31 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/12] net: ll_temac: Support indirect_mutex share
+ within TEMAC IP
+Message-ID: <20190430165931.GC30817@lunn.ch>
+References: <20190429083422.4356-1-esben@geanix.com>
+ <20190430071759.2481-1-esben@geanix.com>
+ <20190430071759.2481-8-esben@geanix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMZO5BerzB94YvJgZoOVYaA3fCsHQiuC5FyVVVRV+ttEg92uQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190430071759.2481-8-esben@geanix.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
-On Tue, Apr 30, 2019 at 01:24:45PM -0300, Fabio Estevam wrote:
-> Hi Guido,
+On Tue, Apr 30, 2019 at 09:17:54AM +0200, Esben Haabendal wrote:
+> Indirect register access goes through a DCR bus bridge, which
+> allows only one outstanding transaction.  And to make matters
+> worse, each TEMAC IP block contains two Ethernet interfaces, and
+> although they seem to have separate registers for indirect access,
+> they actually share the registers.  Or to be more specific, MSW, LSW
+> and CTL registers are physically shared between Ethernet interfaces
+> in same TEMAC IP, with RDY register being (almost) specificic to
+> the Ethernet interface.  The 0x10000 bit in RDY reflects combined
+> bus ready state though.
 > 
-> On Tue, Apr 30, 2019 at 11:40 AM Guido Günther <agx@sigxcpu.org> wrote:
-> >
-> > This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
-> > this is an IP core it will likely be found on others in the future. So
-> > instead of adding this to the nwl host driver make it a generic PHY
-> > driver.
-> >
-> > The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
-> > added once the necessary system controller bits are in via
-> > mixel_dphy_devdata.
-> >
-> > Co-authored-by: Robert Chiras <robert.chiras@nxp.com>
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> So we need to take care to synchronize not only within a single
+> device, but also between devices in same TEMAC IP.
 > 
-> I wish I could test it on a imx8m-evk , but there are some other
-> pieces needed such as Northwest Logic driver, mxsfb changes for
-> supporting mx8m, OLED panel driver, etc
+> This commit allows to do that with legacy platform devices.
 > 
-> Anyway, it looks good to me and I have only a few minor comments:
+> For OF devices, the xlnx,compound parent of the temac node should be
+> used to find siblings, and setup a shared indirect_mutex between them.
+> I will leave this work to somebody else, as I don't have hardware to
+> test that.  No regression is introduced by that, as before this commit
+> using two Ethernet interfaces in same TEMAC block is simply broken.
 > 
-> > ---
-> >  drivers/phy/freescale/Kconfig                 |  11 +
-> >  drivers/phy/freescale/Makefile                |   1 +
-> >  .../phy/freescale/phy-fsl-imx8-mipi-dphy.c    | 506 ++++++++++++++++++
-> >  3 files changed, 518 insertions(+)
-> >  create mode 100644 drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
-> >
-> > diff --git a/drivers/phy/freescale/Kconfig b/drivers/phy/freescale/Kconfig
-> > index 832670b4952b..a111b130f9d2 100644
-> > --- a/drivers/phy/freescale/Kconfig
-> > +++ b/drivers/phy/freescale/Kconfig
-> > @@ -3,3 +3,14 @@ config PHY_FSL_IMX8MQ_USB
-> >         depends on OF && HAS_IOMEM
-> >         select GENERIC_PHY
-> >         default ARCH_MXC && ARM64
-> > +
-> > +config PHY_MIXEL_MIPI_DPHY
-> > +       tristate "Mixel MIPI DSI PHY support"
-> > +       depends on OF && HAS_IOMEM
-> > +       select GENERIC_PHY
-> > +       select GENERIC_PHY_MIPI_DPHY
-> > +       select REGMAP_MMIO
-> > +       default ARCH_MXC && ARM64
-> 
-> I don't think that this default is a good idea.
-> 
-> There are imx8m systems that do not have display, so in this case it
-> does not make sense to always force the build of this driver.
+> Signed-off-by: Esben Haabendal <esben@geanix.com>
 
-O.k. - we can enable this based on imx-nwl later on. I've also addressed
-your other comments. Will wait for a v10 for a couple of days in case
-there's more feedback.
-Thanks,
- -- Guido
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
