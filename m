@@ -2,83 +2,128 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8418C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D3EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8873620675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1218521734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:56:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E6X+aRgl";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JjTv4Or/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfD3Nz6 (ORCPT
+        id S1727469AbfD3N4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:55:58 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:36067 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725938AbfD3Nz5 (ORCPT
+        Tue, 30 Apr 2019 09:56:05 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38258 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfD3N4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:55:57 -0400
-X-UUID: 22f4d06481c74227b1a782e889908a5d-20190430
-X-UUID: 22f4d06481c74227b1a782e889908a5d-20190430
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 705396054; Tue, 30 Apr 2019 21:55:53 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 30 Apr 2019 21:55:50 +0800
-Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 30 Apr 2019 21:55:50 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>
-CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v3] mt76: add TX/RX antenna pattern capabilities
-Date:   Tue, 30 Apr 2019 21:55:38 +0800
-Message-ID: <1e054441bab22ee28fdad597ca36d891500b4a66.1556624322.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 773063FDE1F70878361AFD26064A2C2E185522FBBD99B1D7194B6634151CC7CF2000:8
-X-MTK:  N
+        Tue, 30 Apr 2019 09:56:04 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6FE0660247; Tue, 30 Apr 2019 13:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556632563;
+        bh=V74Xn+4Xecuy8X76IYwMZ5DL3OaMc8SDcfUZGzNca7Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=E6X+aRglJUsJVbGzBifTMnPRqeKI7HJochINZKgypPMQJwwqiTHQXXE9OGUxOMBXC
+         SyGk2Jcrvg1vkWIa+Kw8K0aU8TKoAhhkLpn1vTPZzec9KUjN6A/d7Frji1u6d3s0JG
+         Lr7IyX0Z2zKSbpSEGWppEI7GCkq0D2uwmnmPBOF4=
+Received: from prsood-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: prsood@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D44360247;
+        Tue, 30 Apr 2019 13:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556632562;
+        bh=V74Xn+4Xecuy8X76IYwMZ5DL3OaMc8SDcfUZGzNca7Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JjTv4Or/8PdZiHbNn1HIJXS4YfXdaOZwWvx4MakDXa09Ye6adoak74p6FPzrzUMgO
+         Zqyb62K0guI1yigEVqRzcjNXRJ2Fwjo8X9Rwt2dalh8LBoGHSCfD294htWSx3/y6YK
+         Y0UZzE5bX6rxmNCjvBcypEwv0lzvByKaau/Eqjtg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D44360247
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+From:   Prateek Sood <prsood@codeaurora.org>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     sramana@codeaurora.org, prsood@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers: core: Remove glue dirs early only when refcount is 1
+Date:   Tue, 30 Apr 2019 19:25:40 +0530
+Message-Id: <1556632540-17382-1-git-send-email-prsood@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Announce antenna pattern cap to adapt PHY and baseband settings.
+While loading firmware blobs parallely in different threads, it is possible
+to free sysfs node of glue_dirs in device_del() from a thread while another
+thread is trying to add subdir from device_add() in glue_dirs sysfs node.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
-Changes since v3:
-- Move these flags to common code.
-Changes since v2:
-- Add a prefix mt76 in the title.
----
- drivers/net/wireless/mediatek/mt76/mac80211.c | 2 ++
- 1 file changed, 2 insertions(+)
+    CPU1                                           CPU2
+_request_firmware_load()
+  device_add()
+    get_device_parent()
+      class_dir_create_and_add()
+        kobject_add_internal()
+          create_dir() // glue_dir
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mac80211.c b/drivers/net/wireless/mediatek/mt76/mac80211.c
-index 851caabbecda..26a336ef86c5 100644
---- a/drivers/net/wireless/mediatek/mt76/mac80211.c
-+++ b/drivers/net/wireless/mediatek/mt76/mac80211.c
-@@ -214,6 +214,8 @@ mt76_init_sband(struct mt76_dev *dev, struct mt76_sband *msband,
- 	vht_cap->cap |= IEEE80211_VHT_CAP_RXLDPC |
- 			IEEE80211_VHT_CAP_RXSTBC_1 |
- 			IEEE80211_VHT_CAP_SHORT_GI_80 |
-+			IEEE80211_VHT_CAP_RX_ANTENNA_PATTERN |
-+			IEEE80211_VHT_CAP_TX_ANTENNA_PATTERN |
- 			(3 << IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_SHIFT);
+                                           _request_firmware_load()
+                                             device_add()
+                                               get_device_parent()
+                                                 kobject_get() //glue_dir
+
+  device_del()
+    cleanup_glue_dir()
+      kobject_del()
+
+                                               kobject_add()
+                                                 kobject_add_internal()
+                                                   create_dir() // in glue_dir
+                                                     kernfs_create_dir_ns()
+
+       sysfs_remove_dir() //glue_dir->sd=NULL
+       sysfs_put() // free glue_dir->sd
+
+                                                       kernfs_new_node()
+                                                         kernfs_get(glue_dir)
+
+Fix this race by making sure that kernfs_node for glue_dir is released only
+when refcount for glue_dir kobj is 1.
+
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+---
+ drivers/base/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 4aeaa0c..3955d07 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1820,12 +1820,15 @@ static inline struct kobject *get_glue_dir(struct device *dev)
+  */
+ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
+ {
++	unsigned int refcount;
++
+ 	/* see if we live in a "glue" directory */
+ 	if (!live_in_glue_dir(glue_dir, dev))
+ 		return;
  
- 	return 0;
+ 	mutex_lock(&gdp_mutex);
+-	if (!kobject_has_children(glue_dir))
++	refcount = kref_read(&glue_dir->kref);
++	if (!kobject_has_children(glue_dir) && !--refcount)
+ 		kobject_del(glue_dir);
+ 	kobject_put(glue_dir);
+ 	mutex_unlock(&gdp_mutex);
 -- 
-2.18.0
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
