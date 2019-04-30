@@ -4,61 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088BDC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB0DC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6FDA2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1E721734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625511;
-	bh=5vTVgx5rzCtrmNgVqwNFZgnPXSr7nJIQmp1UOJVDO8k=;
+	s=default; t=1556625514;
+	bh=VXeTnSbomDi0Y/Z+Fpka6oYLyBPXstistLtTankbMtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h2C3f+NUfYC0gFEuxE+eHByVZHJ1MERjXxDnP/bM276ne6A5j+aJmDoWXM6qB+Ep8
-	 XAoFTxR3hOLHiwbzllVIlnl/IJsyG3v1/LoF7cZ1BRneCieET1a+hzGwprndB0LlV8
-	 5D+wLpLu43/x1ygDM0dPG7MM/lvu0Yn4elxxTZJM=
+	b=L7j1MwLyq0rhaNDkXEqzvjDz3fdwKp3cHgcvMtxGH6UIgWRbgO5qQbjWDVOhou/gX
+	 3bgU0y2rqFNkrcdF3A04r7hndcm4g5w9IXcjHhJNkxCQbgtqYr6YLJFWI7Vn0mIROT
+	 Ad3z6VCWLfAGWmbABYGzOPJHj9DY1UK+e+5rE7+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfD3LrK (ORCPT
+        id S1728070AbfD3L6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730629AbfD3Lq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:59 -0400
+        id S1730059AbfD3LrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE3F721783;
-        Tue, 30 Apr 2019 11:46:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB9E21670;
+        Tue, 30 Apr 2019 11:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624818;
-        bh=5vTVgx5rzCtrmNgVqwNFZgnPXSr7nJIQmp1UOJVDO8k=;
+        s=default; t=1556624828;
+        bh=VXeTnSbomDi0Y/Z+Fpka6oYLyBPXstistLtTankbMtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8Ac3gQbGy5DiDnBGzU+/5EWIR/r4U8IxNCZNkFWT15Swl99WRIvNCauXpLsOmoXZ
-         +sEJ+vxUioE6wnCCWMryl+bDdn9pxn04fwnJRrbwGqFbWSMS6TDSmapM0GH1Dp7XVA
-         iUViE3wPrFBYlLEofzZiZoL18/qgjDVqgiNZk07Q=
+        b=0XNM58kjYJ1zzUZlF/gaRL/0UrtWDoDbCytMbLlr725FO/69FE0n5J+BvopYSw5fb
+         ALQnwoksbhgWH7EFT/muTx0MGq1SpS2/8gpeTdWLK49NAUo0CvSWMgbrzys8VCx6Qg
+         QccyMzIOBepZoK2IT0ssRVnxijrho2oV5h681ywk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>, Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kvm ML <kvm@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.19 083/100] x86/fpu: Dont export __kernel_fpu_{begin,end}()
-Date:   Tue, 30 Apr 2019 13:38:52 +0200
-Message-Id: <20190430113612.682532449@linuxfoundation.org>
+        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 4.19 050/100] USB: Add new USB LPM helpers
+Date:   Tue, 30 Apr 2019 13:38:19 +0200
+Message-Id: <20190430113611.376528024@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -71,127 +57,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 12209993e98c5fa1855c467f22a24e3d5b8be205 upstream.
+commit 7529b2574a7aaf902f1f8159fbc2a7caa74be559 upstream.
 
-There is one user of __kernel_fpu_begin() and before invoking it,
-it invokes preempt_disable(). So it could invoke kernel_fpu_begin()
-right away. The 32bit version of arch_efi_call_virt_setup() and
-arch_efi_call_virt_teardown() does this already.
+Use new helpers to make LPM enabling/disabling more clear.
 
-The comment above *kernel_fpu*() claims that before invoking
-__kernel_fpu_begin() preemption should be disabled and that KVM is a
-good example of doing it. Well, KVM doesn't do that since commit
+This is a preparation to subsequent patch.
 
-  f775b13eedee2 ("x86,kvm: move qemu/guest FPU switching out to vcpu_run")
-
-so it is not an example anymore.
-
-With EFI gone as the last user of __kernel_fpu_{begin|end}(), both can
-be made static and not exported anymore.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Rik van Riel <riel@surriel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: kvm ML <kvm@vger.kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181129150210.2k4mawt37ow6c2vq@linutronix.de
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: stable <stable@vger.kernel.org> # after much soaking
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/efi.h     |    6 ++----
- arch/x86/include/asm/fpu/api.h |   15 +++++----------
- arch/x86/kernel/fpu/core.c     |    6 ++----
- 3 files changed, 9 insertions(+), 18 deletions(-)
+ drivers/usb/core/driver.c  |   12 +++++++++++-
+ drivers/usb/core/hub.c     |   12 ++++++------
+ drivers/usb/core/message.c |    2 +-
+ drivers/usb/core/sysfs.c   |    5 ++++-
+ drivers/usb/core/usb.h     |   10 ++++++++--
+ 5 files changed, 30 insertions(+), 11 deletions(-)
 
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -82,8 +82,7 @@ struct efi_scratch {
- #define arch_efi_call_virt_setup()					\
- ({									\
- 	efi_sync_low_kernel_mappings();					\
--	preempt_disable();						\
--	__kernel_fpu_begin();						\
-+	kernel_fpu_begin();						\
- 	firmware_restrict_branch_speculation_start();			\
- 									\
- 	if (!efi_enabled(EFI_OLD_MEMMAP))				\
-@@ -99,8 +98,7 @@ struct efi_scratch {
- 		efi_switch_mm(efi_scratch.prev_mm);			\
- 									\
- 	firmware_restrict_branch_speculation_end();			\
--	__kernel_fpu_end();						\
--	preempt_enable();						\
-+	kernel_fpu_end();						\
- })
- 
- extern void __iomem *__init efi_ioremap(unsigned long addr, unsigned long size,
---- a/arch/x86/include/asm/fpu/api.h
-+++ b/arch/x86/include/asm/fpu/api.h
-@@ -12,17 +12,12 @@
- #define _ASM_X86_FPU_API_H
- 
- /*
-- * Careful: __kernel_fpu_begin/end() must be called with preempt disabled
-- * and they don't touch the preempt state on their own.
-- * If you enable preemption after __kernel_fpu_begin(), preempt notifier
-- * should call the __kernel_fpu_end() to prevent the kernel/user FPU
-- * state from getting corrupted. KVM for example uses this model.
-- *
-- * All other cases use kernel_fpu_begin/end() which disable preemption
-- * during kernel FPU usage.
-+ * Use kernel_fpu_begin/end() if you intend to use FPU in kernel context. It
-+ * disables preemption so be careful if you intend to use it for long periods
-+ * of time.
-+ * If you intend to use the FPU in softirq you need to check first with
-+ * irq_fpu_usable() if it is possible.
-  */
--extern void __kernel_fpu_begin(void);
--extern void __kernel_fpu_end(void);
- extern void kernel_fpu_begin(void);
- extern void kernel_fpu_end(void);
- extern bool irq_fpu_usable(void);
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -93,7 +93,7 @@ bool irq_fpu_usable(void)
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -1899,7 +1899,7 @@ int usb_runtime_idle(struct device *dev)
+ 	return -EBUSY;
  }
- EXPORT_SYMBOL(irq_fpu_usable);
  
--void __kernel_fpu_begin(void)
-+static void __kernel_fpu_begin(void)
+-int usb_set_usb2_hardware_lpm(struct usb_device *udev, int enable)
++static int usb_set_usb2_hardware_lpm(struct usb_device *udev, int enable)
  {
- 	struct fpu *fpu = &current->thread.fpu;
+ 	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
+ 	int ret = -EPERM;
+@@ -1916,6 +1916,16 @@ int usb_set_usb2_hardware_lpm(struct usb
+ 	return ret;
+ }
  
-@@ -111,9 +111,8 @@ void __kernel_fpu_begin(void)
- 		__cpu_invalidate_fpregs_state();
++int usb_enable_usb2_hardware_lpm(struct usb_device *udev)
++{
++	return usb_set_usb2_hardware_lpm(udev, 1);
++}
++
++int usb_disable_usb2_hardware_lpm(struct usb_device *udev)
++{
++	return usb_set_usb2_hardware_lpm(udev, 0);
++}
++
+ #endif /* CONFIG_PM */
+ 
+ struct bus_type usb_bus_type = {
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3218,7 +3218,7 @@ int usb_port_suspend(struct usb_device *
+ 
+ 	/* disable USB2 hardware LPM */
+ 	if (udev->usb2_hw_lpm_enabled == 1)
+-		usb_set_usb2_hardware_lpm(udev, 0);
++		usb_disable_usb2_hardware_lpm(udev);
+ 
+ 	if (usb_disable_ltm(udev)) {
+ 		dev_err(&udev->dev, "Failed to disable LTM before suspend\n");
+@@ -3257,7 +3257,7 @@ int usb_port_suspend(struct usb_device *
+  err_ltm:
+ 		/* Try to enable USB2 hardware LPM again */
+ 		if (udev->usb2_hw_lpm_capable == 1)
+-			usb_set_usb2_hardware_lpm(udev, 1);
++			usb_enable_usb2_hardware_lpm(udev);
+ 
+ 		if (udev->do_remote_wakeup)
+ 			(void) usb_disable_remote_wakeup(udev);
+@@ -3541,7 +3541,7 @@ int usb_port_resume(struct usb_device *u
+ 	} else  {
+ 		/* Try to enable USB2 hardware LPM */
+ 		if (udev->usb2_hw_lpm_capable == 1)
+-			usb_set_usb2_hardware_lpm(udev, 1);
++			usb_enable_usb2_hardware_lpm(udev);
+ 
+ 		/* Try to enable USB3 LTM */
+ 		usb_enable_ltm(udev);
+@@ -4432,7 +4432,7 @@ static void hub_set_initial_usb2_lpm_pol
+ 	if ((udev->bos->ext_cap->bmAttributes & cpu_to_le32(USB_BESL_SUPPORT)) ||
+ 			connect_type == USB_PORT_CONNECT_TYPE_HARD_WIRED) {
+ 		udev->usb2_hw_lpm_allowed = 1;
+-		usb_set_usb2_hardware_lpm(udev, 1);
++		usb_enable_usb2_hardware_lpm(udev);
  	}
  }
--EXPORT_SYMBOL(__kernel_fpu_begin);
  
--void __kernel_fpu_end(void)
-+static void __kernel_fpu_end(void)
- {
- 	struct fpu *fpu = &current->thread.fpu;
+@@ -5609,7 +5609,7 @@ static int usb_reset_and_verify_device(s
+ 	 * It will be re-enabled by the enumeration process.
+ 	 */
+ 	if (udev->usb2_hw_lpm_enabled == 1)
+-		usb_set_usb2_hardware_lpm(udev, 0);
++		usb_disable_usb2_hardware_lpm(udev);
  
-@@ -122,7 +121,6 @@ void __kernel_fpu_end(void)
+ 	/* Disable LPM while we reset the device and reinstall the alt settings.
+ 	 * Device-initiated LPM, and system exit latency settings are cleared
+@@ -5712,7 +5712,7 @@ static int usb_reset_and_verify_device(s
  
- 	kernel_fpu_enable();
+ done:
+ 	/* Now that the alt settings are re-installed, enable LTM and LPM. */
+-	usb_set_usb2_hardware_lpm(udev, 1);
++	usb_enable_usb2_hardware_lpm(udev);
+ 	usb_unlocked_enable_lpm(udev);
+ 	usb_enable_ltm(udev);
+ 	usb_release_bos_descriptor(udev);
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1244,7 +1244,7 @@ void usb_disable_device(struct usb_devic
+ 		}
+ 
+ 		if (dev->usb2_hw_lpm_enabled == 1)
+-			usb_set_usb2_hardware_lpm(dev, 0);
++			usb_disable_usb2_hardware_lpm(dev);
+ 		usb_unlocked_disable_lpm(dev);
+ 		usb_disable_ltm(dev);
+ 
+--- a/drivers/usb/core/sysfs.c
++++ b/drivers/usb/core/sysfs.c
+@@ -528,7 +528,10 @@ static ssize_t usb2_hardware_lpm_store(s
+ 
+ 	if (!ret) {
+ 		udev->usb2_hw_lpm_allowed = value;
+-		ret = usb_set_usb2_hardware_lpm(udev, value);
++		if (value)
++			ret = usb_enable_usb2_hardware_lpm(udev);
++		else
++			ret = usb_disable_usb2_hardware_lpm(udev);
+ 	}
+ 
+ 	usb_unlock_device(udev);
+--- a/drivers/usb/core/usb.h
++++ b/drivers/usb/core/usb.h
+@@ -92,7 +92,8 @@ extern int usb_remote_wakeup(struct usb_
+ extern int usb_runtime_suspend(struct device *dev);
+ extern int usb_runtime_resume(struct device *dev);
+ extern int usb_runtime_idle(struct device *dev);
+-extern int usb_set_usb2_hardware_lpm(struct usb_device *udev, int enable);
++extern int usb_enable_usb2_hardware_lpm(struct usb_device *udev);
++extern int usb_disable_usb2_hardware_lpm(struct usb_device *udev);
+ 
+ #else
+ 
+@@ -112,7 +113,12 @@ static inline int usb_autoresume_device(
+ 	return 0;
  }
--EXPORT_SYMBOL(__kernel_fpu_end);
  
- void kernel_fpu_begin(void)
+-static inline int usb_set_usb2_hardware_lpm(struct usb_device *udev, int enable)
++static inline int usb_enable_usb2_hardware_lpm(struct usb_device *udev)
++{
++	return 0;
++}
++
++static inline int usb_disable_usb2_hardware_lpm(struct usb_device *udev)
  {
+ 	return 0;
+ }
 
 
