@@ -2,101 +2,154 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2123C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDED20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB0F2087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:29:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pK5kLEoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfD3XMS (ORCPT
+        id S1726952AbfD3X3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 19:12:18 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34884 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfD3XMS (ORCPT
+        Tue, 30 Apr 2019 19:29:01 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43590 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfD3X3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 19:12:18 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w197so12717625oia.2;
-        Tue, 30 Apr 2019 16:12:18 -0700 (PDT)
+        Tue, 30 Apr 2019 19:29:01 -0400
+Received: by mail-pf1-f194.google.com with SMTP id e67so7813261pfe.10;
+        Tue, 30 Apr 2019 16:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pyMMSM+fgLxcULxr3o3ubN2tbBmzJbfDcFZgE1qRVpM=;
+        b=pK5kLEoN76oBaCrVQaxWTbbivV84cg7cfUG/G8dHO9NvOFRYJiM5FTnMLEKOf3jIrB
+         EAIYIOwKT8cpzIzUvx8mZtPxWcKL4g0DpruOl1fo8bv3mUeZZivLSj20e4DBUiFRyiK6
+         Vh9/fkx78iy/iCpSx1EeXfNqGNgHMKBhnlPgXxyz1JUGX+ckmea3Ln1y4BTcGq0Tw3Kw
+         E0eJWK+rhh8KJf5ScvMpAsTaaY1bOSXn901djE5EXUBUmHHIgJ5LxvXDBkginF2z7Nmj
+         53XBeIWbI7/p4OGS3n13VkUyyHhJDeV//Mg7L3zOKxtN6baB+1x4RpmU7gcNpTiwE6R4
+         muTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Kaz0HzSce5UNE/bdT7lOJbyMWjOGQSNQhXNQdmqdS0=;
-        b=cQ5IywG2uJhiQCfZqVl1eYsmJJItNOjy9Dqoz5hB5W1qlOwglUCYXp7ZEiV+fxg6Qi
-         3qN7Q5GPv1zFuhuBrA58BvPCak6tr1qsYO9S9aL2qz3ooU/z4N4zwvRP3kgrnRbn0L2A
-         0thuzqHRY6ewMzet2ivXajl1UrrF43Oo4T/C4RnIRsVcnSnXXtybJr0dFavzeVWzGL9m
-         W+mejUJSIZ4PC8fio4ShzdrBw4SPVxDFJ/yJl7sUvQv0ZYaDHqOtcCGjJXcKuzFpa4To
-         xZOdgdhk5mx3OSFsAFIcSb4j8/p1oAJpvqRWAqXWD/vDrAirGsuF4eD1W+XUc8NU7qZF
-         rpvQ==
-X-Gm-Message-State: APjAAAVzssXweaZvLvy5skCpRK9/UEOG7wVlQk0/4Zd+u0MOr0PrCSYI
-        r9C15YpjU16tBxVbjkdeM1qic0QTAzk=
-X-Google-Smtp-Source: APXvYqzmU7J8Jyis0/HpmPawqrY+cd6LELrQPuOHWXXTQ7fuZCaHzNCH9tMw56lzVdYSKIKHoo0hEA==
-X-Received: by 2002:aca:f4cf:: with SMTP id s198mr4598529oih.153.1556665937217;
-        Tue, 30 Apr 2019 16:12:17 -0700 (PDT)
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
-        by smtp.gmail.com with ESMTPSA id p8sm17018925oib.9.2019.04.30.16.12.16
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pyMMSM+fgLxcULxr3o3ubN2tbBmzJbfDcFZgE1qRVpM=;
+        b=ki8g1w3uASYVYxhbpKwRhk6fV3v0RWA9t7dRMgiNk5p0Bbe8lyg3jtvoHezrde7PZV
+         y0zoituy96LhzkWI8AGuWylINex+e2s2+hx4SdWZ/HMAfa7CZgv/ikYScvWcI2FW5u+q
+         q5lUCqZBIuqemuchnyCcCG5ZMRvnSqkq4zEP7WKJkgMk/FEJBts6IIVwOxU+Io2obcI8
+         Yz43cuoK15PUuj8UeVSeChNW17hHhwRTdvqjQC+OHKGY5mNiWExjfh77fMFMPkQR/lB4
+         a+J5skcs4e3l7K8mH13YV5pO3nH+BVk/iHJNIT104MoVaJp0meVkYVsOnhdhAwk19m9I
+         mGBw==
+X-Gm-Message-State: APjAAAVSiqlVzzwc4lyzoG03rCaVto4Wh6bFaucSC2TK/idVbxZwdtBs
+        1giBbMQvJ4PbT6IcPT82DE1u9nwY
+X-Google-Smtp-Source: APXvYqx7y6GOjqZLNyaIYGc+H3Attof7wOD6qPcJ54YeQp4/Jzyu1VslMgO7P2qeteEZd8aJu3vmTg==
+X-Received: by 2002:a62:2587:: with SMTP id l129mr35576226pfl.151.1556666939953;
+        Tue, 30 Apr 2019 16:28:59 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g32sm2635151pgl.16.2019.04.30.16.28.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 16:12:16 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id y64so7167440oia.7;
-        Tue, 30 Apr 2019 16:12:16 -0700 (PDT)
-X-Received: by 2002:aca:4e83:: with SMTP id c125mr4539473oib.13.1556665936485;
- Tue, 30 Apr 2019 16:12:16 -0700 (PDT)
+        Tue, 30 Apr 2019 16:28:58 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] dt-bindings: power: supply: Add bindings for
+ Microchip UCS1002
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-pm@vger.kernel.org,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20190430064557.28469-1-andrew.smirnov@gmail.com>
+ <20190430064557.28469-4-andrew.smirnov@gmail.com>
+ <20190430161542.GB731@roeck-us.net> <20190430223236.GA10236@bogus>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <8e4fa5ae-9547-83b3-d2f6-3a7b7ad32cbf@roeck-us.net>
+Date:   Tue, 30 Apr 2019 16:28:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190430051723.31345-1-yinbo.zhu@nxp.com>
-In-Reply-To: <20190430051723.31345-1-yinbo.zhu@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Tue, 30 Apr 2019 18:12:05 -0500
-X-Gmail-Original-Message-ID: <CADRPPNQ4RYhe5n_ZA_xrhG8VARsvV3cwVgnuinedb2VHKkDzbQ@mail.gmail.com>
-Message-ID: <CADRPPNQ4RYhe5n_ZA_xrhG8VARsvV3cwVgnuinedb2VHKkDzbQ@mail.gmail.com>
-Subject: Re: [PATCH v1] mmc: dt: add DT bindings for ls1028a eSDHC host controller
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190430223236.GA10236@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:16 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
->
-> From: Yinbo Zhu <yinbo.zhu@nxp.com>
+On 4/30/19 3:32 PM, Rob Herring wrote:
+> On Tue, Apr 30, 2019 at 09:15:42AM -0700, Guenter Roeck wrote:
+>> On Mon, Apr 29, 2019 at 11:45:57PM -0700, Andrey Smirnov wrote:
+>>> Add bindings for Microchip UCS1002 Programmable USB Port Power
+>>> Controller with Charger Emulation.
+>>>
+>>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>>> Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
+>>> Cc: Chris Healy <cphealy@gmail.com>
+>>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>>> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+>>> Cc: Guenter Roeck <linux@roeck-us.net>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: Sebastian Reichel <sre@kernel.org>
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Cc: linux-pm@vger.kernel.org
+>>> ---
+>>>   .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
+>>>   1 file changed, 27 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+>>> new file mode 100644
+>>> index 000000000000..021fd7aba75e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+>>> @@ -0,0 +1,27 @@
+>>> +Microchip UCS1002 USB Port Power Controller
+>>> +
+>>> +Required properties:
+>>> +- compatible		: Should be "microchip,ucs1002";
+>>> +- reg			: I2C slave address
+>>> +
+>>> +Optional properties:
+>>> +- interrupts-extended	: A list of interrupts lines present (could be either
+>>> +			  corresponding to A_DET# pin, ALERT# pin, or both)
+> 
+> Just make this 'interrupts'. Support for 'interrupts-extended' is
+> implied.
+> 
+> With that,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+>>> +- interrupt-names	: A list of interrupt names. Should contain (if
+>>> +			  present):
+>>> +			  - "a_det" for line connected to A_DET# pin
+>>> +			  - "alert" for line connected to ALERT# pin
+>>> +			  Both are expected to be IRQ_TYPE_EDGE_BOTH
+>>> +Example:
+>>> +
+>>> +&i2c3 {
+>>> +	charger@32 {
+>>> +		compatible = "microchip,ucs1002";
+>>> +		pinctrl-names = "default";
+>>> +		pinctrl-0 = <&pinctrl_ucs1002_pins>;
+>>
+>> Document the above ? Or is that optional ?
+> 
+> I would have said to document this, but recently we had some discussion
+> about allowing this to be implied when there's only a 'default' entry.
+> We'll add it automatically for schemas.
+> 
 
-The patch title better to be "dt-bindings: mmc: ..."
->
-> Add "fsl,ls1028a-esdhc" bindings for ls1028a eSDHC host controller
->
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> ---
->  .../devicetree/bindings/mmc/fsl-esdhc.txt          |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> index 99c5cf8..a7250b9 100644
-> --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> @@ -21,6 +21,7 @@ Required properties:
->         "fsl,ls1043a-esdhc"
->         "fsl,ls1046a-esdhc"
->         "fsl,ls2080a-esdhc"
-> +       "fsl,ls1028a-esdhc"
+Good to know. Thanks for the information!
 
-Better to be alphabetical order.
-
->    - clock-frequency : specifies eSDHC base clock frequency.
->
->  Optional properties:
-> --
-> 1.7.1
->
+Guenter
