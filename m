@@ -7,69 +7,73 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5ACEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD98BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A7721743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891C92087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mPxLMpoX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TCRtICDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfD3UZC (ORCPT
+        id S1726864AbfD3UZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 16:25:02 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38279 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfD3UZC (ORCPT
+        Tue, 30 Apr 2019 16:25:22 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39507 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfD3UZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 16:25:02 -0400
-Received: by mail-pg1-f193.google.com with SMTP id j26so7369634pgl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 13:25:01 -0700 (PDT)
+        Tue, 30 Apr 2019 16:25:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id e92so7256115plb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 13:25:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cZbWR8UVfZ8GI/ZAitfCAp4Uvgb8pmAiiJi8Ym1dyi0=;
-        b=mPxLMpoXrjW84+Q+dAXzwjWJ9L1mxjS352qOAnO+1VCFDzPfebz3qqp2pN4tHOfFLB
-         9gPyAEyVAoUBTWi9vlizYePWV/gIED0jBojgBoKtfkl0THUjpDKUvk+cx9EAx2t+YQ8I
-         i+CVzWSecEmDbyCzSu/GmIJE3TROPyjQc+hd/u/Wi1pSM9sf0nMrBb5itinoLOoJNW2S
-         FBNpyGM1d8oMm58eSxSTVOO3Qi1vpAiPg0bXUOOSnzcRXhHymgOVxuYjdED9DhMpa6do
-         PLdlvIUGLSOnOolrYC/RrfrHLkLkaPftYndaxR5NWQyMvdnJzaK0+J1TqWglKBwnXuIb
-         NpLA==
+        bh=QpOw1LWaSCoGQRUTl79/lNw4kFsB+PPCBpCh4+YZCQE=;
+        b=TCRtICDPnDgpFyJwe6+2uP7WT68bwJi4k5jLcAgur8MXs/FK0NgxSz3x0P+byJtArA
+         rqd6kxabOeOzYgAMGzIbY5qSNMd6cCycSCfagmGG9DOy2cVLu3UcDLfAaR6fHUAtvSni
+         A+H8E0iDlF8ZR/F7bB9aSIWdBivF+v5/h1KmCKVdaEONYJOPJJEtKhOEwljnsYl4kTgx
+         CFvktFT6PmkBoPzvi/1EgBN0Sy4QhDjYDO5UPe3AdviUeWJSqNgJea/P+jxOFFUPqSJC
+         67RwGLTodfIjCmvNmaBRgXKsV5Y6/pfJfc8yRXPBWrtM49bdyHuGwkPHfDFvRljGPA0+
+         pGeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cZbWR8UVfZ8GI/ZAitfCAp4Uvgb8pmAiiJi8Ym1dyi0=;
-        b=VL5kKkwu60Vv0T530mcZzzAYGfA0cqU0Ro5UARZ5ZQnwvYjLe15i1gwQv+00e67Qy1
-         FE2N3COmuLbDS7T+qeE3n8cGNggk8F3R0JYeHB2oog+0Ss4OejuKloP6iUAtMZYATGpC
-         i426iaQR2SREJ533QyYTrvh9QsaZzqBHH5NIvRei2FU/TmSZOsiYqr0DDTafQyQz/Yf+
-         xiAvYoaKR2vppDTzt8VNNfc9alOJVkP7lAsk+JcsDbxv9mj+4b4iPiFXuHsA5RVdnNdx
-         BvgtMDlfkLVQZmjnFmd/RfND6vPhNV5lbQDyayO7eDwuHj0QAdhurO868A8621A7uCfx
-         r3OA==
-X-Gm-Message-State: APjAAAWICP20NrpVsOuo68K779Y8bTU/dTCvT2E2WjdeKokYV+SEs8/H
-        KVQfSSyaxezUVvyk0zDAJRRWZWAQySW9Z6U9GaAluQ==
-X-Google-Smtp-Source: APXvYqwcrOTSBIpt8uvCRs55U+qx6snTYGoytm6Fw7QoPc1UUSu1WG0QFpUFlFgyfNfj7Pzb+675wZlbrF28unvbtZ0=
-X-Received: by 2002:a63:4558:: with SMTP id u24mr65997972pgk.225.1556655900784;
- Tue, 30 Apr 2019 13:25:00 -0700 (PDT)
+        bh=QpOw1LWaSCoGQRUTl79/lNw4kFsB+PPCBpCh4+YZCQE=;
+        b=oKW1nUhfibZz41xegUqmqJGyBXrEwafngAvJw6EEZa17+kMASN4JI5kVqvd93tKBJR
+         /0vAglsiwdVaKZ44RnT8hUoZtdVvFK1Sk5zDEZRlYM1H/i/dmEGQd4gfQflvFf7rMu1O
+         M+ym8CiajUXcmkT/4H/6Dt38YjG4StMEdc8FmBKwwt9YibcKKSLQ7RwzrqXBVt+teS1u
+         zVgOJgMy4sU/Sx4uZPN7U4D95cYyLjzKDu11PCNSX28TftueZzbCqWuunCiL+OZyZ46k
+         9xdnaMGTN3K9uj18EfqC9wMBXcq2tZgHyYsgkaudAnzBs4az8exIk/v3Wh4zQtQoTsKq
+         wuOA==
+X-Gm-Message-State: APjAAAWrmOr6Z9bA8wZUeztyNibNy3fqVbkmCaHWkgZzb/S+f20/t62X
+        5jAsOxuB7xFQl2j1qr/HE/yk1K1owlfct2ZJ5anprw==
+X-Google-Smtp-Source: APXvYqxrdXvmMXDMe/UzHW4z1+JQoAtpcG8BLtt+dDf0JbS3wANA9BWiiZlz9SHtypl8cIPKFB0LhaPSJcMcTLwXDyw=
+X-Received: by 2002:a17:902:e287:: with SMTP id cf7mr72624788plb.217.1556655920547;
+ Tue, 30 Apr 2019 13:25:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190423204821.241925-1-ndesaulniers@google.com>
-In-Reply-To: <20190423204821.241925-1-ndesaulniers@google.com>
+References: <20190423210058.249510-1-ndesaulniers@google.com>
+In-Reply-To: <20190423210058.249510-1-ndesaulniers@google.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 30 Apr 2019 13:24:49 -0700
-Message-ID: <CAKwvOd=ws1D95ydQjGtK0U0KQ-5poyj8Oek5Yka6-cvtCdpJ-g@mail.gmail.com>
-Subject: Re: [PATCH] ia64: require -Wl,--hash-style=sysv
-To:     tony.luck@intel.com, fenghua.yu@intel.com
+Date:   Tue, 30 Apr 2019 13:25:09 -0700
+Message-ID: <CAKwvOd=aR_GsJkaMTtV83UAAyqkZGuToD+3Zbq5sv=U_bogXmg@mail.gmail.com>
+Subject: Re: [PATCH] s390: vdso: drop unnecessary cc-ldoption
+To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-ia64@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 1:48 PM Nick Desaulniers
+On Tue, Apr 23, 2019 at 2:01 PM Nick Desaulniers
 <ndesaulniers@google.com> wrote:
 >
 > Towards the goal of removing cc-ldoption, it seems that --hash-style=
@@ -82,28 +86,41 @@ On Tue, Apr 23, 2019 at 1:48 PM Nick Desaulniers
 > Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 > ---
->  arch/ia64/kernel/Makefile.gate | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/s390/kernel/vdso32/Makefile | 2 +-
+>  arch/s390/kernel/vdso64/Makefile | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/ia64/kernel/Makefile.gate b/arch/ia64/kernel/Makefile.gate
-> index f53faf48b7ce..846867bff6d6 100644
-> --- a/arch/ia64/kernel/Makefile.gate
-> +++ b/arch/ia64/kernel/Makefile.gate
-> @@ -11,7 +11,7 @@ quiet_cmd_gate = GATE    $@
->        cmd_gate = $(CC) -nostdlib $(GATECFLAGS_$(@F)) -Wl,-T,$(filter-out FORCE,$^) -o $@
+> diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
+> index e76309fbbcb3..aee9ffbccb54 100644
+> --- a/arch/s390/kernel/vdso32/Makefile
+> +++ b/arch/s390/kernel/vdso32/Makefile
+> @@ -19,7 +19,7 @@ KBUILD_AFLAGS_31 += -m31 -s
+>  KBUILD_CFLAGS_31 := $(filter-out -m64,$(KBUILD_CFLAGS))
+>  KBUILD_CFLAGS_31 += -m31 -fPIC -shared -fno-common -fno-builtin
+>  KBUILD_CFLAGS_31 += -nostdlib -Wl,-soname=linux-vdso32.so.1 \
+> -                       $(call cc-ldoption, -Wl$(comma)--hash-style=both)
+> +                   -Wl,--hash-style=both
 >
->  GATECFLAGS_gate.so = -shared -s -Wl,-soname=linux-gate.so.1 \
-> -                    $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
-> +                    -Wl,--hash-style=sysv
->  $(obj)/gate.so: $(obj)/gate.lds $(obj)/gate.o FORCE
->         $(call if_changed,gate)
+>  $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_31)
+>  $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_31)
+> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+> index f849ac61c5da..bec19e7e6e1c 100644
+> --- a/arch/s390/kernel/vdso64/Makefile
+> +++ b/arch/s390/kernel/vdso64/Makefile
+> @@ -19,7 +19,7 @@ KBUILD_AFLAGS_64 += -m64 -s
+>  KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+>  KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
+>  KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+> -                       $(call cc-ldoption, -Wl$(comma)--hash-style=both)
+> +                   -Wl,--hash-style=both
 >
+>  $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+>  $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
 > --
 > 2.21.0.593.g511ec345e18-goog
 >
 
 bumping for review
-
 -- 
 Thanks,
 ~Nick Desaulniers
