@@ -2,77 +2,118 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4074DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B438C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143A82080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1448D20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfD3IbG (ORCPT
+        id S1726667AbfD3IbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:31:06 -0400
-Received: from mga09.intel.com ([134.134.136.24]:22719 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfD3IbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:31:06 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 01:31:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,413,1549958400"; 
-   d="scan'208";a="144800557"
-Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Apr 2019 01:31:03 -0700
-Date:   Tue, 30 Apr 2019 16:35:05 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Eric W Biederman <ebiederm@xmission.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ying Huang <ying.huang@intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] latencytop lock usage improvement
-Message-ID: <20190430083505.n5mozwybbnwydo3z@shbuild888>
-References: <1556525011-28022-1-git-send-email-feng.tang@intel.com>
- <20190430080910.GI2623@hirez.programming.kicks-ass.net>
+        Tue, 30 Apr 2019 04:31:17 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:37195 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfD3IbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:31:16 -0400
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id EF872FF80F;
+        Tue, 30 Apr 2019 08:31:12 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 10:40:01 +0200
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190430084000.GT2754@voidbox.localdomain>
+References: <20190316161243.29517-1-repk@triplefau.lt>
+ <20190425210439.GG11428@google.com>
+ <20190425222756.GR2754@voidbox.localdomain>
+ <20190429194532.GA119268@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430080910.GI2623@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <20190429194532.GA119268@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-
-On Tue, Apr 30, 2019 at 10:09:10AM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 29, 2019 at 04:03:28PM +0800, Feng Tang wrote:
-> > Hi All,
-> > 
-> > latencytop is a very nice tool for tracing system latency hotspots, and
-> > we heavily use it in our LKP test suites.
+On Mon, Apr 29, 2019 at 02:45:32PM -0500, Bjorn Helgaas wrote:
+> On Fri, Apr 26, 2019 at 12:27:57AM +0200, Remi Pommarel wrote:
+> > On Thu, Apr 25, 2019 at 04:04:39PM -0500, Bjorn Helgaas wrote:
+> > > On Sat, Mar 16, 2019 at 05:12:43PM +0100, Remi Pommarel wrote:
 > 
-> What data does latency-top give that perf cannot give you? Ideally we'd
-> remove latencytop entirely.
+> > > It sounds like reading and/or writing some registers during a retrain
+> > > causes some sort of EL1 error?  Is this a separate erratum?  Is there
+> > > a list of the registers and operations (read/write) that are affected?
+> > > The backtrace below suggests that it's actually a read of LNKCAP or
+> > > LNKCTL (not LNKSTA) that caused the error.
+> > 
+> > IIUC, the backtrace below produces an EL1 error when doing a PIO
+> > transfer while the link is still retraining. See my comment below for
+> > more about that. But accessing any root complex's register seems fine.
+> > > 
+> > > It sounds like there are really two problems:
+> > > 
+> > >   1) Reading PCI_EXP_LNKSTA (or the Aardvark equivalent) doesn't give
+> > >      valid data for PCI_EXP_LNKSTA_LT.
+> > 
+> > The 1) is correct.
+> > 
+> > >   2) Sometimes config reads cause EL1 errors.
+> > 
+> > Actually EL1 error happens when we try to access device's register with
+> > a PIO transfer, which is when we try to use the link while it is being
+> > retrained.
+> > 
+> > IMHO, 1) and 2) are linked. ASPM core tries to use the link too early
+> > because it has read invalid data for PCI_EXP_LNKSTA_LT.
+> 
+> From the software point of view, there is no such thing as "using the
+> link too early".  The pattern of:
+> 
+>   - Verify that link is up
+>   - Access device on other end of link
+> 
+> is always racy because the link can go down at any time due to hotplug
+> or other issues.  In particular, the link can go down after we verify
+> that the link is up, but before we access the device.
+> 
+> Software must be able to deal with that gracefully.  I don't know
+> whether that means catching and recovering from that EL1 error, or
+> masking it, or what.  This is architecture-specific stuff that's
+> outside the scope of PCIe itself.
+> 
+> But a link going down should never directly cause a kernel panic.
 
-Thanks for the review. In 0day/LKP test service, we have many tools for
-monitoring and analyzing the test results, perf is the most important
-one, which has the most parts in our auto-generated comparing results.   
-For example to identify spinlock contentions and system hotspots.
+Ah, yes, you are right. There is "worse" than the EL1 error though, boot
+can also hang while accessing those registers when link is not in a
+ready state.
 
-latencytop is another tool we used to find why systems go idle, like why
-workload chose to sleep or waiting for something. 
+So, yes, I do agree that there are two issues here. The
+PCI_EXP_LNKSTA_LT register one and the EL1 error or hang one. On the
+other hand I don't think I can split it in two because this patch only
+fixes the former which happens to not trigger the latter (ASPM core is
+kind enough to wait for the link to be ready after retraining).
 
-Thanks,
-Feng
+Thus the second issue remains and hot plugging for example would
+likely trigger it. I'll try to see with Thomas if we could reach the
+vendor about that.
+
+By the way, I have replied to Lorenzo with, what I think, is a more
+legible patch. I could send a v3 with it if you prefer this one.
+
+-- 
+Remi
