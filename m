@@ -2,132 +2,86 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B4DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD9AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F652087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5972087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hsbb4zvG"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="shTWbIkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfD3WFt (ORCPT
+        id S1727268AbfD3WGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:05:49 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54105 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfD3WFt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:05:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 26so5483954wmj.3;
-        Tue, 30 Apr 2019 15:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=y6vP4hYrf6L2R1nCYtwD5NUV8WoDQGLraizp3UD5ZuE=;
-        b=Hsbb4zvGd44HUCIbJdbWWTLQukySYzUkhsL5T8CzT+7rTRFekBh63UBCCyZfNwtwrv
-         VeS3crVV12zS4KgF2fsPnxONgmpFFvMDondFbiNfErFa1SqIchaAowYO/zU2yPNvXT9O
-         Juxr3Fg0Y6deDVt85knKcv/vp5m4yLAgbZMdw/cNQC4wMfvPryHWrvNRxZLbXi/h6ngO
-         LBwYo2/ycFP6q7Y7lsdv7NQBWN3vAYCpFHl3FMw6AhoXdHTbKKA2wddEGXfbX2XyRTEI
-         mce2IcyPhfOPKkg8FXFJEuNYaHIERbifPnZRu3Fs/sZNHgjPlXvoEMinfcE5jaoqwsDf
-         u+Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y6vP4hYrf6L2R1nCYtwD5NUV8WoDQGLraizp3UD5ZuE=;
-        b=OMIitKeAObw+mrZY69hMwJkI1MGnvlhi7q1z51ikr5rMi48yG/x4ZgnaVTTeLE+yjo
-         hi+Mgt0s25B5Rh5uh3TyIyu6KfjZZU6VW4WPEWoX5ERZ258NVLG7MsGfPLbhD+q+J2/H
-         9TPu3w0d8kLcaSFMTxWFngp2JSJf86SdhOO48tBTHrbTvZPDOch4PkH/rJNof99MBmtq
-         mRw0bT95X2taquaafpsqFA6IqulKuA55JYEYJ9+IsjxjcG4N9+CPm0mrAYa1G+oA0frx
-         Zx+7w3HBTv07bP4D6sT2q8DqbOztL25awB2h9AV5AUvmO/WABW7o5Fn5d/6qwqzj1J9J
-         PujA==
-X-Gm-Message-State: APjAAAWyEK03rfYswm/H3J/K4vGqD2+RgRrnqZ+JWSznUfXTwBNc6GBX
-        6MC5Ly6/02QIEt1+LH2zC8jb4+Jb
-X-Google-Smtp-Source: APXvYqxe/y1dIKw3f3ALvCh6x4lw7Q4g+CmKcaCWURZCs21Iw9+80EWdJk4ypeFw+2tUloljPLjpVA==
-X-Received: by 2002:a7b:c218:: with SMTP id x24mr4520722wmi.57.1556661947387;
-        Tue, 30 Apr 2019 15:05:47 -0700 (PDT)
-Received: from [192.168.1.19] (chf176.neoplus.adsl.tpnet.pl. [83.31.3.176])
-        by smtp.gmail.com with ESMTPSA id r29sm7087384wra.56.2019.04.30.15.05.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 15:05:46 -0700 (PDT)
-Subject: Re: [PATCH v3 0/7] LMU Common code intro
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     pavel@ucw.cz, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>
-References: <20190430191730.19450-1-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <34088323-9b40-7dea-5449-6a01bb721c00@gmail.com>
-Date:   Wed, 1 May 2019 00:05:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 18:06:12 -0400
+Received: from ozlabs.org ([203.11.71.1]:36703 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbfD3WGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 18:06:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44twb50TgJz9s9y;
+        Wed,  1 May 2019 08:06:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556661969;
+        bh=F43uIaJHtzhE1YqoLJxKTd2kj4WqWVqb1/ue09EoLtg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=shTWbIkOyWlmyEx0nZrZObrLCr+6izxp8mXVCuE6cCP7Yy9n6wtPNS3bukoWK+iio
+         v8xRAf3xothHFbR8Ob717WlxEWRCKELet5nJHNDRFL7qOTsbpqXIePK444F2IOXLmI
+         IjLghm5rCRl6AGB7eKdDdAWhit4Mc1zMYJ6/Vs3jIpxxDp8G103SD37x1J2XjCil9A
+         bqG2Izi4Y3qBbzuoJkchwpXb5Cr3banGbqkGKafSkFULRuE9Pow+M1KazIg/lVze0X
+         +3lFIOIcmPtALbTXMhliAsOslb/d3p084bFVn3gevirGHJdmGCwZ7mWyCbos15tGSi
+         wGYUIvRd5hXWw==
+Date:   Wed, 1 May 2019 08:06:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the ext4 tree
+Message-ID: <20190501080607.0eb96cca@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190430191730.19450-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/hVu=l+HBvRm+Ub+a1kBDF5F"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+--Sig_/hVu=l+HBvRm+Ub+a1kBDF5F
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch set has dependency on the previous one for lm3532, which
-also touches ti-lmu.txt bindings, and for which I already created
-immutable branch. Now if I created another immutable branch for
-this patch set we would have to resolve conflicts between the two,
-as they would both be based on 5.1-rc1. Adds much overhead and
-is error prone. Therefore I propose to apply this patch set on
-top of my merge of LED tree with the immutable branch for lm3532.
+Hi all,
 
-Please let me know if you see it differently. I'll wait for your
-response until Friday, and then proceed with the above as I think
-it should be harmless for MFD.
+Commit
 
-Best regards,
-Jacek Anaszewski
+  60ae11086c04 ("unicode: update unicode database unicode version 12.1.0")
 
-On 4/30/19 9:17 PM, Dan Murphy wrote:
-> Hello
-> 
-> I have added the Reviewed-by for dt bindings as well as made the Kconfig change
-> pointed out for the common code flag
-> 
-> Dan
-> 
-> Dan Murphy (7):
->    dt-bindings: mfd: LMU: Fix lm3632 dt binding example
->    dt-bindings: mfd: LMU: Add the ramp up/down property
->    dt-bindings: mfd: LMU: Add ti,brightness-resolution
->    leds: TI LMU: Add common code for TI LMU devices
->    dt-bindings: ti-lmu: Modify dt bindings for the LM3697
->    mfd: ti-lmu: Remove support for LM3697
->    leds: lm3697: Introduce the lm3697 driver
-> 
->   .../devicetree/bindings/leds/leds-lm3697.txt  |  73 ++++
->   .../devicetree/bindings/mfd/ti-lmu.txt        |  56 ++-
->   drivers/leds/Kconfig                          |  15 +
->   drivers/leds/Makefile                         |   2 +
->   drivers/leds/leds-lm3697.c                    | 395 ++++++++++++++++++
->   drivers/leds/ti-lmu-led-common.c              | 155 +++++++
->   drivers/mfd/Kconfig                           |   2 +-
->   drivers/mfd/ti-lmu.c                          |  17 -
->   include/linux/mfd/ti-lmu-register.h           |  44 --
->   include/linux/mfd/ti-lmu.h                    |   1 -
->   include/linux/ti-lmu-led-common.h             |  47 +++
->   11 files changed, 712 insertions(+), 95 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
->   create mode 100644 drivers/leds/leds-lm3697.c
->   create mode 100644 drivers/leds/ti-lmu-led-common.c
->   create mode 100644 include/linux/ti-lmu-led-common.h
-> 
+is missing a Signed-off-by from its committer.
 
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/hVu=l+HBvRm+Ub+a1kBDF5F
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzIxs8ACgkQAVBC80lX
+0Gy/Cgf/WUkgseW71XeOjl36gvbgapRffGsHJTgcXb4HCeMM7GctKR/9zd+N+qC2
+YoUt2fxU+pEBv8ZeQIJQmZqiq8IV+Wu8m1tHlKKwvYV+cAGnV/7in+rWIRpgmUG4
+S4WW3YrkambUFJUBd/wvURENGY+7ZxBU6q/Ejlvry0iUiIDsiaoxystyZfyiS3sV
+hLpJLw7PKybv5dDEILZ2atRYu+mV13FCGfSOmQoD41QUveLMkM7pchengWuZnFBm
+OghQr6yXfaCP+zOyGMbqONYYFp8gNe0xFmo+amJJwMRqhwTeIoJ6C1zgsDCrZ6Gv
+UpFA8ft1sr9OvqlORb9T7g/q0EkXlQ==
+=h4iu
+-----END PGP SIGNATURE-----
+
+--Sig_/hVu=l+HBvRm+Ub+a1kBDF5F--
