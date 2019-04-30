@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E8FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248EDC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A9921783
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD7321707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624929;
-	bh=QxCnPLDxI3vzo4dtboAXHm8v6VZkQ2zXc8lzd9GYQDw=;
+	s=default; t=1556624934;
+	bh=PeyLxRrvPim8ODYBuucyUJC6RM4ioJ05WxbCoJag5Y8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oG0gi/qHktAdNRdkGIAJ4UBxi18XoSV27r2reH6ptKqLeIHtmrUdgm2KYy7ljO6Qw
-	 OpAqAPeqb8gf/9KkaqDVSf029ZLdzA3iH2gwo7fk6mJ+gLxeCBZm5N5rfOi0r83Y8i
-	 oCkh+8pUL+6vcHm8iy8yNZUJqWqWcveXla9oQsgw=
+	b=CwgKB70KDbNmK2GOfPjK8qbgnvvYp7fCWjC1sEmwlo2/q79s0lFVgq8ovMF7Ofe61
+	 zG2RWntbCrZbtCrGdUOTanbH5d1zgj3gTgcdWafFLaP6zsjKdh/bCk1295YiELqt/3
+	 PQz/GZE2Lboq86sTuRbtTSuScA58p5eRzw03nwUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfD3Lss (ORCPT
+        id S1730916AbfD3Lsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:48:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34968 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:48:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730882AbfD3Lso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:44 -0400
+        id S1730367AbfD3Lst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FB282054F;
-        Tue, 30 Apr 2019 11:48:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76B1B2054F;
+        Tue, 30 Apr 2019 11:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624923;
-        bh=QxCnPLDxI3vzo4dtboAXHm8v6VZkQ2zXc8lzd9GYQDw=;
+        s=default; t=1556624929;
+        bh=PeyLxRrvPim8ODYBuucyUJC6RM4ioJ05WxbCoJag5Y8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2OqMQr7bZIAOU8/vWnyNnSWt3N3lrEijKrJmVqvRHCiiXODJrbrFWJ6OPGkd+J7Y
-         QpjyYLj2DfDKS/ewNa85P8BiKg9duOPgFqF3QpgIGvCR5OHpVjiaOuOpTbqywot9cJ
-         wNadJZQlL743ApUrj9tFcm1lv5L8riDdpN9/n7/8=
+        b=aceNiob4ZH9Zt+ld19K6rW2vgLxSN5pm0HFThXR77i83ij4CLI+HCBxeqI3WVReo+
+         S29vNV0ItFTv8tLka4ToOYnDpUH8VT2gbLsSAFO7bwPdG1oGa0TOrsJyJAV72oEETe
+         bT7cQaRFC+OiON+wzDvTD9WW6Ic0yTW+/kWtZlog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Haggai Eran <haggaie@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: [PATCH 5.0 24/89] RDMA/mlx5: Use rdma_user_map_io for mapping BAR pages
-Date:   Tue, 30 Apr 2019 13:38:15 +0200
-Message-Id: <20190430113611.159345140@linuxfoundation.org>
+        stable@vger.kernel.org, Xie XiuQi <xiexiuqi@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, cj.chengjian@huawei.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.0 26/89] sched/numa: Fix a possible divide-by-zero
+Date:   Tue, 30 Apr 2019 13:38:17 +0200
+Message-Id: <20190430113611.222275490@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,44 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-commit d5e560d3f72382ac4e3bfe4e0f0420e6a220b039 upstream.
+commit a860fa7b96e1a1c974556327aa1aee852d434c21 upstream.
 
-Since mlx5 supports device disassociate it must use this API for all
-BAR page mmaps, otherwise the pages can remain mapped after the device
-is unplugged causing a system crash.
+sched_clock_cpu() may not be consistent between CPUs. If a task
+migrates to another CPU, then se.exec_start is set to that CPU's
+rq_clock_task() by update_stats_curr_start(). Specifically, the new
+value might be before the old value due to clock skew.
 
-Cc: stable@vger.kernel.org
-Fixes: 5f9794dc94f5 ("RDMA/ucontext: Add a core API for mmaping driver IO memory")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Reviewed-by: Haggai Eran <haggaie@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+So then if in numa_get_avg_runtime() the expression:
+
+  'now - p->last_task_numa_placement'
+
+ends up as -1, then the divider '*period + 1' in task_numa_placement()
+is 0 and things go bang. Similar to update_curr(), check if time goes
+backwards to avoid this.
+
+[ peterz: Wrote new changelog. ]
+[ mingo: Tweaked the code comment. ]
+
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: cj.chengjian@huawei.com
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20190425080016.GX11158@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/main.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ kernel/sched/fair.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -2154,14 +2154,12 @@ static int mlx5_ib_mmap(struct ib_uconte
- 		if (PAGE_SIZE > 4096)
- 			return -EOPNOTSUPP;
- 
--		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
- 		pfn = (dev->mdev->iseg_base +
- 		       offsetof(struct mlx5_init_seg, internal_timer_h)) >>
- 			PAGE_SHIFT;
--		if (io_remap_pfn_range(vma, vma->vm_start, pfn,
--				       PAGE_SIZE, vma->vm_page_prot))
--			return -EAGAIN;
--		break;
-+		return rdma_user_mmap_io(&context->ibucontext, vma, pfn,
-+					 PAGE_SIZE,
-+					 pgprot_noncached(vma->vm_page_prot));
- 	case MLX5_IB_MMAP_CLOCK_INFO:
- 		return mlx5_ib_mmap_clock_info_page(dev, vma, context);
- 
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1994,6 +1994,10 @@ static u64 numa_get_avg_runtime(struct t
+ 	if (p->last_task_numa_placement) {
+ 		delta = runtime - p->last_sum_exec_runtime;
+ 		*period = now - p->last_task_numa_placement;
++
++		/* Avoid time going backwards, prevent potential divide error: */
++		if (unlikely((s64)*period < 0))
++			*period = 0;
+ 	} else {
+ 		delta = p->se.avg.load_sum;
+ 		*period = LOAD_AVG_MAX;
 
 
