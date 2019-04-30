@@ -2,72 +2,100 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCD2C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEC0C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C004C21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E1820645
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L9SVJOCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfD3TK2 (ORCPT
+        id S1726901AbfD3TRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:10:28 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:40807 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfD3TK2 (ORCPT
+        Tue, 30 Apr 2019 15:17:34 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52836 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbfD3TRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:10:28 -0400
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 35361240007;
-        Tue, 30 Apr 2019 19:10:21 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 21:10:21 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] rtc: digicolor: set range
-Message-ID: <20190430191021.GH11339@piout.net>
-References: <20190430093212.28425-1-alexandre.belloni@bootlin.com>
- <20190430093212.28425-2-alexandre.belloni@bootlin.com>
- <877ebbu3lz.fsf@tarshish>
- <20190430114702.GD11339@piout.net>
- <875zqvu1l3.fsf@tarshish>
- <20190430130544.GF11339@piout.net>
- <87y33rsef3.fsf@tarshish>
+        Tue, 30 Apr 2019 15:17:34 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UJHSZt072407;
+        Tue, 30 Apr 2019 14:17:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556651848;
+        bh=CAcuzsZlcjBc1jlbv8INWEI3nZWV72+jYZzsHbl232A=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=L9SVJOCQHLa5Obp/l5mycVeZWzFCg6+Cv2vmz1TKT64Ik4hk+onDEIbmaUJ76r+Xa
+         0jWJI2cdcExASiJAxmfKKCKLBjLoRj/+I5jogjzMz44a8rpVkjDh2e96b+ugSm/Ywn
+         dXbZLuUYFIyAOyGVy/7BEcAO0w3Brv37zxmE0JMw=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UJHSGA078475
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Apr 2019 14:17:28 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
+ Apr 2019 14:17:28 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 30 Apr 2019 14:17:28 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UJHSSI007754;
+        Tue, 30 Apr 2019 14:17:28 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/7] dt-bindings: mfd: LMU: Fix lm3632 dt binding example
+Date:   Tue, 30 Apr 2019 14:17:24 -0500
+Message-ID: <20190430191730.19450-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+In-Reply-To: <20190430191730.19450-1-dmurphy@ti.com>
+References: <20190430191730.19450-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y33rsef3.fsf@tarshish>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2019 18:25:52+0300, Baruch Siach wrote:
-> > Yes, this is ok to return a valid value that is higher than range_max.
-> > However, at that time, you will not be able to set any alarms anymore as
-> > the core doesn't allow to set alarms after range_max.
-> >
-> > I would think that this is fine because this will happen in 2106 and we
-> > have a way to offset the time (the whole goal of setting the range)
-> > using device tree.
-> 
-> That's the sort of documentation that I'm missing. The 'start-year'
-> property is mentioned in the DT binding documentation. But I don't see
-> where range_max is documented as a facility for the time offset feature.
-> 
+Fix the lm3632 dt binding examples as the LCM enable GPIOs
+are defined as enable GPIOs per the regulator/lm363x-regulator.txt
+bindings document.
 
-Sure, I'm planning to document better how a proper RTC driver should be
-written. I needed to cleanup the digicolor driver because I4m removing
-.set_mmss and .set_mmss64 this cycle.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
+v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchwork/patch/1058757/
+v2 - There was no v2 I add this patch on top of this series
 
+ Documentation/devicetree/bindings/mfd/ti-lmu.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+index 980394d701a7..86ca786d54fc 100644
+--- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
++++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+@@ -104,8 +104,8 @@ lm3632@11 {
+ 	regulators {
+ 		compatible = "ti,lm363x-regulator";
+ 
+-		ti,lcm-en1-gpio = <&pioC 0 GPIO_ACTIVE_HIGH>; /* PC0 */
+-		ti,lcm-en2-gpio = <&pioC 1 GPIO_ACTIVE_HIGH>; /* PC1 */
++		enable-gpios = <&pioC 0 GPIO_ACTIVE_HIGH>,
++			       <&pioC 1 GPIO_ACTIVE_HIGH>;
+ 
+ 		vboost {
+ 			regulator-name = "lcd_boost";
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.21.0.5.gaeb582a983
+
