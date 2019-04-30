@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E760C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E097EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41C442075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCFC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625396;
-	bh=TKqAad3HeCTQ5jzhurH98iRs8WRCsusuiIuMh6eGFjM=;
+	s=default; t=1556625403;
+	bh=ZjSnPPE3GJxDV7BkqDZlz1xwMuO9b69kcF0NnUB0768=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=taq4g46+PqRmjygeg/TAkBZvOT+OBzO2hgfRUC6bo2o5Q38OM26YUXqcR9K0vqQwp
-	 +iHMCodyWMVQV3n7A1/tmQReRkRNX7Iy7NxLJ/yolXnkwPjonAkknyt7zTxKQa7fii
-	 rysaa0EcOmSJdzz3bj2c/W8EXPITFCEOSqUNbUTU=
+	b=QBoX4k4Dj/BQBoTnfBdASl39hwq4lKDW6/X3dNXbAT/v+w3mUFxEefiWPF2hUs+s9
+	 D0ZVsJU/RJjXtB1bUBZZ1HnHRfeduzdeMiwkD+dvDI45nsu2M7tjApMWrabFl9vm/H
+	 8bFTqVM9KEIzxXy8JK1h1h1foaa5Mxg+TcHDovOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfD3L4f (ORCPT
+        id S1727215AbfD3L4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:56:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34900 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:56:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730866AbfD3Lsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:41 -0400
+        id S1730875AbfD3Lsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7902B20449;
-        Tue, 30 Apr 2019 11:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FFC520449;
+        Tue, 30 Apr 2019 11:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624921;
-        bh=TKqAad3HeCTQ5jzhurH98iRs8WRCsusuiIuMh6eGFjM=;
+        s=default; t=1556624915;
+        bh=ZjSnPPE3GJxDV7BkqDZlz1xwMuO9b69kcF0NnUB0768=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lQlyzBzsWxcBHwvdqU7LxmzNFreBQDY77LN9+DwGjNj22iA+SeNuSEiNMTSoAqEwZ
-         u1PpzVQlTzO1l+8DjVzFfY94M77RJB9eMTkxUqI0hKq3wGX484w19SDExLTmDD+aGq
-         hJftTl77n15B9jkex9uIq+MhanK7wX0vOiIdEK9w=
+        b=aG2XUpM6BO/3Txynx4zXmYTbE0uvEiEDlXpaThnyxPiZ5IL3NIFd8IGyJWF7sCD9v
+         KXQSUSM5Oyfh0Vaj/htIwsDvUcH7tsL3B9wW8hVmzP/vzrITlgTUa23kRKzHT9Fz+T
+         fOZohROoE3KYCy3SmTjlxM1Xm6d5npzyzjyrYcn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Haggai Eran <haggaie@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: [PATCH 5.0 23/89] RDMA/mlx5: Do not allow the user to write to the clock page
-Date:   Tue, 30 Apr 2019 13:38:14 +0200
-Message-Id: <20190430113611.124712220@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.0 21/89] arm64: mm: Ensure tail of unaligned initrd is reserved
+Date:   Tue, 30 Apr 2019 13:38:12 +0200
+Message-Id: <20190430113611.059391513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,41 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-commit c660133c339f9ab684fdf568c0d51b9ae5e86002 upstream.
+commit d4d18e3ec6091843f607e8929a56723e28f393a6 upstream.
 
-The intent of this VMA was to be read-only from user space, but the
-VM_MAYWRITE masking was missed, so mprotect could make it writable.
+In the event that the start address of the initrd is not aligned, but
+has an aligned size, the base + size will not cover the entire initrd
+image and there is a chance that the kernel will corrupt the tail of the
+image.
 
+By aligning the end of the initrd to a page boundary and then
+subtracting the adjusted start address the memblock reservation will
+cover all pages that contains the initrd.
+
+Fixes: c756c592e442 ("arm64: Utilize phys_initrd_start/phys_initrd_size")
 Cc: stable@vger.kernel.org
-Fixes: 5c99eaecb1fc ("IB/mlx5: Mmap the HCA's clock info to user-space")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Reviewed-by: Haggai Eran <haggaie@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/main.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/mm/init.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -1982,6 +1982,7 @@ static int mlx5_ib_mmap_clock_info_page(
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -406,7 +406,7 @@ void __init arm64_memblock_init(void)
+ 		 * Otherwise, this is a no-op
+ 		 */
+ 		u64 base = phys_initrd_start & PAGE_MASK;
+-		u64 size = PAGE_ALIGN(phys_initrd_size);
++		u64 size = PAGE_ALIGN(phys_initrd_start + phys_initrd_size) - base;
  
- 	if (vma->vm_flags & VM_WRITE)
- 		return -EPERM;
-+	vma->vm_flags &= ~VM_MAYWRITE;
- 
- 	if (!dev->mdev->clock_info_page)
- 		return -EOPNOTSUPP;
-@@ -2147,6 +2148,7 @@ static int mlx5_ib_mmap(struct ib_uconte
- 
- 		if (vma->vm_flags & VM_WRITE)
- 			return -EPERM;
-+		vma->vm_flags &= ~VM_MAYWRITE;
- 
- 		/* Don't expose to user-space information it shouldn't have */
- 		if (PAGE_SIZE > 4096)
+ 		/*
+ 		 * We can only add back the initrd memory if we don't end up
 
 
