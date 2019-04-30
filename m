@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA90EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1FDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755D721670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9030D21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625701;
-	bh=9WWqTf8S241NksPDWAxQdu6ZeSXtiS7q+7BIE6qqmbg=;
+	s=default; t=1556625704;
+	bh=2rx6RYvoypUmGKFVBsB99WFzaCdfl5OUBVZSEiFnDWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cXwMqXI9z1KtpH8El5WZX0iHkJ8Dn38DIJS3qh72eMAsf/adonqqgK2ejeEy1GOiT
-	 tDr1yGbl0V8SxNrrhXGDVmA2ih1bVofQl5kQwGNoQBKJOLe2Hjr5zColDoCEVvxkEp
-	 ABTL2jjPmXzDCyXcch7xuY2CM6q5DLgQNFTbGs+I=
+	b=B6xkEx+c5SO8PrSx8nImPb0JPEBLqBaY1APx/jVJXJbXUZt0YBgEvVoWkOMTA5mHv
+	 M/SHkBV7xyYPn3tCKCXzSGkBcSUamKR51ZU+LTk/DP8FBLg6fpgdWKmjGV7W7/xcRx
+	 YqT3S+GJD8UDqrpBKNDzuhzfE5drkkKvJkqD6yS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfD3Lo5 (ORCPT
+        id S1728961AbfD3Lo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56610 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:44:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730270AbfD3Lou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:44:50 -0400
+        id S1730258AbfD3Lor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97ED821707;
-        Tue, 30 Apr 2019 11:44:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD49217D4;
+        Tue, 30 Apr 2019 11:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624690;
-        bh=9WWqTf8S241NksPDWAxQdu6ZeSXtiS7q+7BIE6qqmbg=;
+        s=default; t=1556624687;
+        bh=2rx6RYvoypUmGKFVBsB99WFzaCdfl5OUBVZSEiFnDWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TEtSIYSCc0g33fYxEyNSTceZnZLdSQ69H8ivT5/Iz0Z+Pl3iF5z6VwULLAEkn8Mks
-         JtsnRGUf4gRKvbx8rj/If3MNooqyFjWeh//B/grCNi2J3mHxUPInt4r1/GSrtNuE/L
-         xLx36Jz9Pbw7cAsKg++6oECQlvnw6wDIhp58a9WE=
+        b=o7jcrNKw0xH3Xb+XDG6yOu2M7ucmR0PKh8TiPX883L5r+nZ4dL469zgJtmAziNJep
+         m+be2FyZGsp16o26CSrOMvq4hFBmMfkJm7s9w35hGKr7qh7I9vBeQ75aIYrKQAY0Bw
+         BMig5tgcmcEgRhh4OX2ibeZ/k9jsLxUJUy7jbiKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben England <bengland@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 4.19 035/100] ceph: only use d_name directly when parent is locked
-Date:   Tue, 30 Apr 2019 13:38:04 +0200
-Message-Id: <20190430113610.420894026@linuxfoundation.org>
+        stable@vger.kernel.org, Xie XiuQi <xiexiuqi@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, cj.chengjian@huawei.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 034/100] sched/numa: Fix a possible divide-by-zero
+Date:   Tue, 30 Apr 2019 13:38:03 +0200
+Message-Id: <20190430113610.390325327@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,165 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-commit 1bcb344086f3ecf8d6705f6d708441baa823beb3 upstream.
+commit a860fa7b96e1a1c974556327aa1aee852d434c21 upstream.
 
-Ben reported tripping the BUG_ON in create_request_message during some
-performance testing. Analysis of the vmcore showed that the length of
-the r_dentry->d_name string changed after we allocated the buffer, but
-before we encoded it.
+sched_clock_cpu() may not be consistent between CPUs. If a task
+migrates to another CPU, then se.exec_start is set to that CPU's
+rq_clock_task() by update_stats_curr_start(). Specifically, the new
+value might be before the old value due to clock skew.
 
-build_dentry_path returns pointers to d_name in the common case of
-non-snapped dentries, but this optimization isn't safe unless the parent
-directory is locked. When it isn't, have the code make a copy of the
-d_name while holding the d_lock.
+So then if in numa_get_avg_runtime() the expression:
 
-Cc: stable@vger.kernel.org
-Reported-by: Ben England <bengland@redhat.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+  'now - p->last_task_numa_placement'
+
+ends up as -1, then the divider '*period + 1' in task_numa_placement()
+is 0 and things go bang. Similar to update_curr(), check if time goes
+backwards to avoid this.
+
+[ peterz: Wrote new changelog. ]
+[ mingo: Tweaked the code comment. ]
+
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: cj.chengjian@huawei.com
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20190425080016.GX11158@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/mds_client.c |   61 +++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 50 insertions(+), 11 deletions(-)
+ kernel/sched/fair.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -1945,10 +1945,39 @@ retry:
- 	return path;
- }
- 
-+/* Duplicate the dentry->d_name.name safely */
-+static int clone_dentry_name(struct dentry *dentry, const char **ppath,
-+			     int *ppathlen)
-+{
-+	u32 len;
-+	char *name;
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2016,6 +2016,10 @@ static u64 numa_get_avg_runtime(struct t
+ 	if (p->last_task_numa_placement) {
+ 		delta = runtime - p->last_sum_exec_runtime;
+ 		*period = now - p->last_task_numa_placement;
 +
-+retry:
-+	len = READ_ONCE(dentry->d_name.len);
-+	name = kmalloc(len + 1, GFP_NOFS);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	spin_lock(&dentry->d_lock);
-+	if (dentry->d_name.len != len) {
-+		spin_unlock(&dentry->d_lock);
-+		kfree(name);
-+		goto retry;
-+	}
-+	memcpy(name, dentry->d_name.name, len);
-+	spin_unlock(&dentry->d_lock);
-+
-+	name[len] = '\0';
-+	*ppath = name;
-+	*ppathlen = len;
-+	return 0;
-+}
-+
- static int build_dentry_path(struct dentry *dentry, struct inode *dir,
- 			     const char **ppath, int *ppathlen, u64 *pino,
--			     int *pfreepath)
-+			     bool *pfreepath, bool parent_locked)
- {
-+	int ret;
- 	char *path;
- 
- 	rcu_read_lock();
-@@ -1957,8 +1986,15 @@ static int build_dentry_path(struct dent
- 	if (dir && ceph_snap(dir) == CEPH_NOSNAP) {
- 		*pino = ceph_ino(dir);
- 		rcu_read_unlock();
--		*ppath = dentry->d_name.name;
--		*ppathlen = dentry->d_name.len;
-+		if (parent_locked) {
-+			*ppath = dentry->d_name.name;
-+			*ppathlen = dentry->d_name.len;
-+		} else {
-+			ret = clone_dentry_name(dentry, ppath, ppathlen);
-+			if (ret)
-+				return ret;
-+			*pfreepath = true;
-+		}
- 		return 0;
- 	}
- 	rcu_read_unlock();
-@@ -1966,13 +2002,13 @@ static int build_dentry_path(struct dent
- 	if (IS_ERR(path))
- 		return PTR_ERR(path);
- 	*ppath = path;
--	*pfreepath = 1;
-+	*pfreepath = true;
- 	return 0;
- }
- 
- static int build_inode_path(struct inode *inode,
- 			    const char **ppath, int *ppathlen, u64 *pino,
--			    int *pfreepath)
-+			    bool *pfreepath)
- {
- 	struct dentry *dentry;
- 	char *path;
-@@ -1988,7 +2024,7 @@ static int build_inode_path(struct inode
- 	if (IS_ERR(path))
- 		return PTR_ERR(path);
- 	*ppath = path;
--	*pfreepath = 1;
-+	*pfreepath = true;
- 	return 0;
- }
- 
-@@ -1999,7 +2035,7 @@ static int build_inode_path(struct inode
- static int set_request_path_attr(struct inode *rinode, struct dentry *rdentry,
- 				  struct inode *rdiri, const char *rpath,
- 				  u64 rino, const char **ppath, int *pathlen,
--				  u64 *ino, int *freepath)
-+				  u64 *ino, bool *freepath, bool parent_locked)
- {
- 	int r = 0;
- 
-@@ -2009,7 +2045,7 @@ static int set_request_path_attr(struct
- 		     ceph_snap(rinode));
- 	} else if (rdentry) {
- 		r = build_dentry_path(rdentry, rdiri, ppath, pathlen, ino,
--					freepath);
-+					freepath, parent_locked);
- 		dout(" dentry %p %llx/%.*s\n", rdentry, *ino, *pathlen,
- 		     *ppath);
- 	} else if (rpath || rino) {
-@@ -2035,7 +2071,7 @@ static struct ceph_msg *create_request_m
- 	const char *path2 = NULL;
- 	u64 ino1 = 0, ino2 = 0;
- 	int pathlen1 = 0, pathlen2 = 0;
--	int freepath1 = 0, freepath2 = 0;
-+	bool freepath1 = false, freepath2 = false;
- 	int len;
- 	u16 releases;
- 	void *p, *end;
-@@ -2043,16 +2079,19 @@ static struct ceph_msg *create_request_m
- 
- 	ret = set_request_path_attr(req->r_inode, req->r_dentry,
- 			      req->r_parent, req->r_path1, req->r_ino1.ino,
--			      &path1, &pathlen1, &ino1, &freepath1);
-+			      &path1, &pathlen1, &ino1, &freepath1,
-+			      test_bit(CEPH_MDS_R_PARENT_LOCKED,
-+					&req->r_req_flags));
- 	if (ret < 0) {
- 		msg = ERR_PTR(ret);
- 		goto out;
- 	}
- 
-+	/* If r_old_dentry is set, then assume that its parent is locked */
- 	ret = set_request_path_attr(NULL, req->r_old_dentry,
- 			      req->r_old_dentry_dir,
- 			      req->r_path2, req->r_ino2.ino,
--			      &path2, &pathlen2, &ino2, &freepath2);
-+			      &path2, &pathlen2, &ino2, &freepath2, true);
- 	if (ret < 0) {
- 		msg = ERR_PTR(ret);
- 		goto out_free1;
++		/* Avoid time going backwards, prevent potential divide error: */
++		if (unlikely((s64)*period < 0))
++			*period = 0;
+ 	} else {
+ 		delta = p->se.avg.load_sum;
+ 		*period = LOAD_AVG_MAX;
 
 
