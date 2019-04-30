@@ -2,103 +2,125 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BB3C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69E2C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4116F20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556637172;
-	bh=9bXglXrsQ58dYJPtausFim0eSqFTaF6Z7IsE6A9zyaA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PJrhyqJnypA7FyqoHwKeF1l8CkkAk/k7rqO4ttLPsEsY1r3i+VqCt9n2oxfryuViA
-	 MYIx9LStap1k8demaDFfsKcRZe5dRvWn7OYal0F+UvFAdLYVsv6GvLY4PexMrppQUW
-	 NWDUxqA/UYuCgoUJPp71KL/v53SAbmoFFeB2ztCM=
+	by mail.kernel.org (Postfix) with ESMTP id B05A120835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NNZiJIi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfD3PMv (ORCPT
+        id S1726090AbfD3POl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:12:51 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35156 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfD3PMu (ORCPT
+        Tue, 30 Apr 2019 11:14:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41684 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD3POl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:12:50 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w197so11545449oia.2;
-        Tue, 30 Apr 2019 08:12:50 -0700 (PDT)
+        Tue, 30 Apr 2019 11:14:41 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f6so6975536pgs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 08:14:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d8dn/0dTKiykpcgtb/y9QsyEoWiQzsibeWC7CLJMvwc=;
+        b=NNZiJIi2WT1N0507K72evR/BwmrEwAGuAarbetxNWBhkR9dS73mA51rISAyU5CMJnx
+         xOZtroOnkEue6rrtt4jkSD1X54vzGc/BQWyOZwJweYHq+6hD7AKb2SrYdFKVvnLLwwJU
+         MnMM/EecZ9vKnJaVgVjNGb9WRoOXQwC+hX1vi5bTQg+CcVcxayzzHBN8FqbU2lW8ChsR
+         OSF1uouxhbqtiZjQq4d+Jzg8B/Lpw3vOKqSrI21L6gHA4wpC47FJ+KTAAoNF8tpixhOa
+         tgP2/gN3dYrC5R1xvbk8r6qJqSzC7jqqUxEXXymcLJGlXFEQO7SWie46y980eZeayUSo
+         /vAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7aahexJfH3+ZCWyzwJ4HVTibyUsm/U8CQ+avun/lb8w=;
-        b=M5GbafMPEw1FpUNuPjUwms7Cxan/YhI0LBNBnJ1NgEifzyephSGFy7trreF1QLuWZN
-         9phJCGSBD9crQT60BJWkeBZS7Be36B4Qpht0y9svV1UC5W42Cwi2JFbAx5R7+fTaWhc6
-         ZUJAvGzg5l3HA/3dODChYMIBwoNJKnT2U9yDXYmeTivpKtHxLK98B9Q7jwvqn+sltgUx
-         rZYXQUDQUAB0IrO52LJKGp4vmQKYrPwYHgUq7tv2g/5LHZzTBJ5HIjUG0pxyY+ULMkp+
-         +PlJ+eUK5NJGibNv0vYV9DkaLrR/mOHxWuoGJZ/0tsm392BWIEIU1stUlXu4ahSz0eHq
-         xbXg==
-X-Gm-Message-State: APjAAAXGD74hm5RcB9NSOHchEisoAEiBDMOg2gzHg5RjR3IcBeYpu+fv
-        ia4I9xI92hsFSxJlr3r+tHCCh9I=
-X-Google-Smtp-Source: APXvYqw+7CtQGpDl9egPhX/Ibog5Hs4VhoUaMkukQMspgHXvHnYdx7igDWd16RY8bjIjwyxtwGAzZQ==
-X-Received: by 2002:aca:55c1:: with SMTP id j184mr3206627oib.119.1556637164785;
-        Tue, 30 Apr 2019 08:12:44 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o1sm16620919otj.11.2019.04.30.08.12.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 08:12:43 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 10:12:43 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        khilman@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: add a 'drive-strength-uA'
- property
-Message-ID: <20190430151243.GA6879@bogus>
-References: <20190418124758.24022-1-glaroque@baylibre.com>
- <20190418124758.24022-2-glaroque@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d8dn/0dTKiykpcgtb/y9QsyEoWiQzsibeWC7CLJMvwc=;
+        b=Tq+bs3ux4OsQdImLQRcak02/m2m1xMf7rn8TOyby6q5JlHu7bwCSKP+wojDPYcztnx
+         iQ4M/mz+19xjEfCdDNWzi/r1alCv+ICdKenOMlgR05Thn0BT4689wX1hLus+GWNBkMmy
+         Z9XaR3jgwJ4D1CsSBd+n9J9EcCcOzBWQAEpSTZKAzjrepM3UYQcqVA1AmZerWB5KNSc5
+         kSeVAN3/GZCQbWZws3tvM4eN8/ETx+l+FvlQdB4GT8zHDhMruO5TPkzDsldpplCVD35X
+         lz/V901xTol8nyBf2SPldHeHK+U3yWO9bKw0XoLAqk4kO4cmYUbdxBDjG2Tq3ygs//0+
+         DVnQ==
+X-Gm-Message-State: APjAAAUEAvvXsCdWLsYPPA3JMdqunb9w7UAY+wnmyslo/B9lmX7yExOY
+        zyYth4/0BoLOOrmwFrwgYOjO+txbDOOuw+2VBJ6ebg==
+X-Google-Smtp-Source: APXvYqyvAA3eJRPNypOhfXPzlmZ04818wxauB/jQRH57quac32ODx5CTPaelKgpLLLI28p0EZrCHsD2dpQjnLdwCCSA=
+X-Received: by 2002:a65:628b:: with SMTP id f11mr1068488pgv.95.1556637280087;
+ Tue, 30 Apr 2019 08:14:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190418124758.24022-2-glaroque@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000004101370587c052fb@google.com> <Pine.LNX.4.44L0.1904301058150.1465-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1904301058150.1465-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 30 Apr 2019 17:14:28 +0200
+Message-ID: <CAAeHK+zYQ0QF_vo+iYns2d0O7RZ=Uq0kxi1mWc1W_0bBxMGR0A@mail.gmail.com>
+Subject: Re: WARNING: Support for this device (Terratec Grabster AV400) is experimental.
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 02:47:55PM +0200, Guillaume La Roque wrote:
-> This property allow drive-strength parameter in uA instead of mA.
-> 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> index cef2b5855d60..fc7018459aa2 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> @@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
->  drive-open-drain	- drive with open drain
->  drive-open-source	- drive with open source
->  drive-strength		- sink or source at most X mA
-> +drive-strength-uA	- sink or source at most X uA
->  input-enable		- enable input on pin (no effect on output, such as
->  			  enabling an input buffer)
->  input-disable		- disable input on pin (no effect on output, such as
-> @@ -326,6 +327,8 @@ arguments are described below.
->  
->  - drive-strength takes as argument the target strength in mA.
->  
-> +- drive-strength-uA takes as argument the target strength in uA.
-> +
+On Tue, Apr 30, 2019 at 5:00 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Tue, 30 Apr 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=141ca62d200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=af8f8d2ac0d39b0ed3a0
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1405bedd200000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ce3bbb200000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
+> >
+> > usb 1-1: New USB device found, idVendor=0ccd, idProduct=0039, bcdDevice=
+> > d.3c
+> > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> > usb 1-1: config 0 descriptor??
+> > pvrusb2: Hardware description: Terratec Grabster AV400
+> > pvrusb2: **********
+> > pvrusb2: WARNING: Support for this device (Terratec Grabster AV400) is
+> > experimental.
+> > pvrusb2: Important functionality might not be entirely working.
+> > pvrusb2: Please consider contacting the driver author to help with further
+> > stabilization of the driver.
+> > pvrusb2: **********
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> This does seem like a bug in syzbot.  Why does it think this pr_info()
+> output indicates a crash?  Is it fooled by the capitalized "WARNING" at
+> the start of one of the lines?
 
-We have standard unit suffixes defined in bindings/property-units.txt. 
-Use them please.
+Well, as of [1] WARN*() should only be used to indicate a kernel bug.
+Normally, WARN*() prints a line that start with a warning, which is
+followed by a stack trace. Unfortunately the stack trace is not always
+present (kernel memory is badly corrupted, console deadlocked, etc.),
+so syzbot detects the "WARNING:" line as a beginning of a WARN*()
+reported bug. In this case the driver does something like
+`pr_info("WARNING: ...", ...)`, which confuses syzbot. I'd say it's
+the kernel that needs to be changed here to use some other kind of
+prefix for printing warning messages.
 
-Rob
+[1] https://github.com/torvalds/linux/commit/96c6a32ccb55a366054fd82cc63523bb7f7493d3
