@@ -2,165 +2,109 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D822CC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09005C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F59E20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCE6217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556657777;
-	bh=vIonBKxvBO/0Url8PBV02Z1MbaAI+P/UqSe7365pugo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RojMLyILlA9R2DFkQE5Qlor4QBvOeEfyL/b+0LAlu1qNFL5j6I1Zg7GTcL+by6E5s
-	 iD6760Pmz8fIKcQ2LYRVa5XDyCh4tkUrmQizo2N3RI8ni2mUKDBiyGTwjdSmSmYwUw
-	 PrSd2SH77f3lCVnnEvgd2GvWa2e2EltDEzlYa3zw=
+	s=default; t=1556657781;
+	bh=g3M/5b15eERHdZTOti1ql2/n1RS20eeqRM8IM0ukWMQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
+	 From;
+	b=ClC98HRzqZi/kB3xqL3obMY0rwkawwj6m/cTGZcL6kCWD9uLSFMaMR/0+zvCQwhlD
+	 qxSitZ3isbc8bFqgcYHp2kK6aap7KW82kXK+qOeYtNPTKEa3JV8PFCOd22QweMjmNP
+	 Ve7DybtoBDwWt6MaNzh5kFFXbPNoym5qyVpLdppM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfD3U4Q (ORCPT
+        id S1727128AbfD3U4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 16:56:16 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35795 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfD3U4Q (ORCPT
+        Tue, 30 Apr 2019 16:56:20 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43318 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfD3U4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 16:56:16 -0400
-Received: by mail-io1-f67.google.com with SMTP id r18so13488739ioh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 13:56:15 -0700 (PDT)
+        Tue, 30 Apr 2019 16:56:17 -0400
+Received: by mail-io1-f66.google.com with SMTP id v9so13431056iol.10;
+        Tue, 30 Apr 2019 13:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=qosL0dV6bbRZ3VIPPW56CxbgXb6OsdU10dHOhPo3aH4=;
-        b=WW/R1/jxdzJKTqMajuGmJFkqOoYYsZxqx1kxNX5u42RI2vIKCNW/lr1bYFCskSsKfl
-         r6iv3AHPUmTjtkCbcx8rVRPJAP3e+DcX634mrWho6mY8DpGTe8G41lT0Nbu8t1Hiku9o
-         /fhszQLfRLc6szroeok15yf/7tMQis1YDHzsi2D2AQMHNHnZ53tqlmoeVEtzWbM2Onmf
-         LfTrfhSyTmwm9Fg0G3aX+QyPFyMMxOrOUJBXlSQ5PSDdMsPrfJVJTacRQu5IrQ0PKmuM
-         XuRFBNjFrCGKBBFc0X35+mBWSsL7cAdlV+6SETHCZkQ0F4doYLxXm1zKZeyMF7cI1Bpq
-         W/rw==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :reply-to:organization;
+        bh=Nk48nKxFrzVCbK/utRpRT/1210jzyM5INfoRqpnVTi0=;
+        b=JC9RP1PAJ4wPslne3YxWdgFBhxdcrznJ3DVy3eYjVtyMdLTSuli4n9I4YFo4CCjas5
+         qh8q/skC0vqJxWhUATvrkZJu6U5yd1aYksIbi3M/l05SPjPed4RCAV60rA15m8uXD23O
+         SD/QHVG5qNnaAsMKvUUVY1G7KuFNXDvN7ttytEMPIMCv7TYr7ZbdICk850cnVIf2Ue7s
+         duxulTxg77YZeQJRiV42Uta/L2U3phmf7BayD1sdWELI1eC12f+x3o7WsgD2q0UMTwc9
+         OiKI00d745wVfj+7s+AuWnYFpruQJOLDjbc96v7dsv4V007TxLOcFZCVfAvfkEhn1oNW
+         TaWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=qosL0dV6bbRZ3VIPPW56CxbgXb6OsdU10dHOhPo3aH4=;
-        b=YRs6siNpAwB/i28XB+bILGnPMLjtnoj8fUfGEgjZ80ihENne9/OVeiXhYBswMtc3Hb
-         sMRr8eiHiQELv/wi9+ciqm8BYBTR7zdferkA0cM3+z1b7Wro4NvVyagvlntWqznpfkSm
-         zx2d/Yye6sPB7Mcv7aapEMLmjnpFksZnOAWYbuiPnimRAyinz+MBWv3cJmXbVSKj5ulo
-         nBe6rPSy32fatSn9+TGkcmCgJrqIY09AeNKT4NdsEMEOqIiGy31PgFbzzcZEgAHetRh/
-         X0ASA1ktEV4jsVRFqD7mbkYTXo4BQJ7Msx+Ja9cjUEU59tFvdl0YM6of2CZmL0R/pYi1
-         G/8Q==
-X-Gm-Message-State: APjAAAXzjKnTixDXQb6tB2oVlz2q3oB4d60nHCp7/nPJxDvPE59+BFs5
-        X+/W++LX26XgmcL8gAZEfsA=
-X-Google-Smtp-Source: APXvYqwkzcTKYFhUpJ1OwJhi/0RJgXLwLsoYa9NShOMOU6JrUsn9ty0NMgkTXHcX2ftmRmaKEXuSAQ==
-X-Received: by 2002:a6b:6405:: with SMTP id t5mr29043205iog.190.1556657775034;
-        Tue, 30 Apr 2019 13:56:15 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:reply-to:organization;
+        bh=Nk48nKxFrzVCbK/utRpRT/1210jzyM5INfoRqpnVTi0=;
+        b=uQfFJsqCfe14vf5rm2mhJY8V8NQ6HlWMTah9jHQPMdqGF8hlQsC6TMSrJF3STY78p7
+         xciYjvVmn/hAgwOk/JTyhUzsbOIQDo2w6iPdQ1Rqxeod9uF7Bl3lGno4atrKfk5zrEq/
+         JUQObh8SZOEWDPXwIMr6BATwKq6NSkfscQSFePnl+CCSNyan04rKfqP5XZUQp1obbNne
+         wHiE3HqSkZhEmxwFPCKo1FkQAGnKMjpABPoIFeP5XWXDcXS7XbkRlOZ+qwk7vUw8FSSS
+         yFo3JWmHEYSQqMyWU4h30mcbJWhO/T91k1ChwYw2QhQYrIzi8pvTiwEPZsCKVd0voFDj
+         EmIA==
+X-Gm-Message-State: APjAAAV2v89k0RvP/I70MIuJ0ibz5gmoPjdyq+ISfRBgTXyHGMZi6zAe
+        kZXb9hWfx7OvbzzuDU2QZ61tPWBs
+X-Google-Smtp-Source: APXvYqysNVvwAWKWk+F/FWqYbfu128lG9yApZDobXbPKb0ChNtihLllDRiGhHIl5HRX5FF9ZD2Elhw==
+X-Received: by 2002:a6b:7d08:: with SMTP id c8mr2501993ioq.259.1556657776258;
+        Tue, 30 Apr 2019 13:56:16 -0700 (PDT)
 Received: from nuc8.lan (h69-131-112-51.cntcnh.dsl.dynamic.tds.net. [69.131.112.51])
-        by smtp.gmail.com with ESMTPSA id s7sm9799349ioo.17.2019.04.30.13.56.14
+        by smtp.gmail.com with ESMTPSA id s7sm9799349ioo.17.2019.04.30.13.56.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 13:56:14 -0700 (PDT)
+        Tue, 30 Apr 2019 13:56:15 -0700 (PDT)
 From:   Len Brown <lenb@kernel.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 0/18] v3 multi-die/package topology support
-Date:   Tue, 30 Apr 2019 16:55:45 -0400
-Message-Id: <20190430205559.30226-1-lenb@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        linux-doc@vger.kernel.org
+Subject: [PATCH 01/14] x86 topology: Fix doc typo
+Date:   Tue, 30 Apr 2019 16:55:46 -0400
+Message-Id: <75386dff62ee869eb7357dff1e60dfd9b3e68023.1553624867.git.len.brown@intel.com>
 X-Mailer: git-send-email 2.18.0-rc0
+In-Reply-To: <20190430205559.30226-1-lenb@kernel.org>
+References: <20190430205559.30226-1-lenb@kernel.org>
+Reply-To: Len Brown <lenb@kernel.org>
+Organization: Intel Open Source Technology Center
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series does 4 things.
+From: Len Brown <len.brown@intel.com>
 
-1. Parse the new CPUID.1F leaf to discover multi-die/package topology
+Syntax only, no functional or semantic change.
 
-2. Export multi-die topology inside the kernel
+reflect actual cpuinfo_x86 field name:
 
-3. Update 4 places (coretemp, pkgtemp, rapl, perf) that that need to know
-   the difference between die and package-scope MSR.
+s/logical_id/logical_proc_id/
 
-4. Export multi-die topology to user-space via sysfs
-
-These changes should have 0 impact on cache topology,
-NUMA topology, Linux scheduler, or system performance.
-
-These topology changes primarily impact parts of the kernel
-and some applications that care about package MSR scope.
-Also, some software is licensed per package, and other tools,
-such as benchmark reporting software sometimes cares about packages.
-
+Signed-off-by: Len Brown <len.brown@intel.com>
+Cc: linux-doc@vger.kernel.org
 ---
-Updates since v2:
+ Documentation/x86/topology.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-All review feedback has been addressed.
-
-In response to brice, peterz and Morten Rasmussen,
-used the word "cpu" rather than "thread" for the new sysfs attributes.
-
-In response to tglx, replaced access to cpuinfo_x86.x86_max_dies,
-with macro topology_max_die_per_package().  In doing so,
-deleted this new per-cpu field entirely, as a global is sufficient.
-
-Also, appended 3 patches from Kan Liang, updating the perf code
-to be multi-die aware.  These patches are similar to the preceding
-power and temperature patches.  I believe that with these patches,
-this series now includes all needed multi-die kernel support.
-
----
-The following changes since commit 085b7755808aa11f78ab9377257e1dad2e6fa4bb:
-
-  Linux 5.1-rc6 (2019-04-21 10:45:57 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git x86
-
-for you to fetch changes up to 6c4891c7f2f1eacfcab00bf5d84b5ac119f654b9:
-
-  perf/x86/intel/cstate: Support multi-die/package (2019-04-30 16:49:26 -0400)
-
-----------------------------------------------------------------
-Kan Liang (3):
-      perf/x86/intel/uncore: Support multi-die/package
-      perf/x86/intel/rapl: Support multi-die/package
-      perf/x86/intel/cstate: Support multi-die/package
-
-Len Brown (10):
-      x86 topology: Fix doc typo
-      topology: Simplify cputopology.txt formatting and wording
-      x86 smpboot: Rename match_die() to match_pkg()
-      x86 topology: Add CPUID.1F multi-die/package support
-      x86 topology: Create topology_max_die_per_package()
-      cpu topology: Export die_id
-      x86 topology: Define topology_die_id()
-      x86 topology: Define topology_logical_die_id()
-      topology: Create package_cpus sysfs attribute
-      topology: Create core_cpus and die_cpus sysfs attributes
-
-Zhang Rui (5):
-      powercap/intel_rapl: Simplify rapl_find_package()
-      powercap/intel_rapl: Support multi-die/package
-      thermal/x86_pkg_temp_thermal: Support multi-die/package
-      powercap/intel_rapl: update rapl domain name and debug messages
-      hwmon/coretemp: Support multi-die/package
-
- Documentation/cputopology.txt                | 80 +++++++++++++++----------
- Documentation/x86/topology.txt               |  6 +-
- arch/x86/events/intel/cstate.c               | 14 +++--
- arch/x86/events/intel/rapl.c                 | 10 ++--
- arch/x86/events/intel/uncore.c               | 20 ++++---
- arch/x86/include/asm/processor.h             |  4 +-
- arch/x86/include/asm/smp.h                   |  1 +
- arch/x86/include/asm/topology.h              | 17 ++++++
- arch/x86/kernel/cpu/common.c                 |  1 +
- arch/x86/kernel/cpu/topology.c               | 88 ++++++++++++++++++++++------
- arch/x86/kernel/smpboot.c                    | 75 +++++++++++++++++++++++-
- arch/x86/xen/smp_pv.c                        |  1 +
- drivers/base/topology.c                      | 22 +++++++
- drivers/hwmon/coretemp.c                     |  9 +--
- drivers/powercap/intel_rapl.c                | 75 +++++++++++++-----------
- drivers/thermal/intel/x86_pkg_temp_thermal.c |  8 +--
- include/linux/topology.h                     |  6 ++
- 17 files changed, 322 insertions(+), 115 deletions(-)
+diff --git a/Documentation/x86/topology.txt b/Documentation/x86/topology.txt
+index 2953e3ec9a02..06b3cdbc4048 100644
+--- a/Documentation/x86/topology.txt
++++ b/Documentation/x86/topology.txt
+@@ -51,7 +51,7 @@ The topology of a system is described in the units of:
+     The physical ID of the package. This information is retrieved via CPUID
+     and deduced from the APIC IDs of the cores in the package.
+ 
+-  - cpuinfo_x86.logical_id:
++  - cpuinfo_x86.logical_proc_id:
+ 
+     The logical ID of the package. As we do not trust BIOSes to enumerate the
+     packages in a consistent way, we introduced the concept of logical package
+-- 
+2.18.0-rc0
 
