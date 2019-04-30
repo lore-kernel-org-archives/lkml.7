@@ -2,159 +2,148 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7407EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE9BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D5B20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:44:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DF1HwDne";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kGMOcQFK"
+	by mail.kernel.org (Postfix) with ESMTP id D9D3C20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfD3Hop (ORCPT
+        id S1726528AbfD3Hov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:44:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50690 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfD3Hom (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:44:42 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9E23660214; Tue, 30 Apr 2019 07:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556610281;
-        bh=ObjUo2Emxi2WJIUfB5bP3tzczg3thQ2BFG0+EiKejcU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DF1HwDne6KsQJn6A25Ut2I4bvUJhIOjGIJxneekaxPT+JNTuqU1vLmQeuRHPvkmnj
-         V6NjozPDiwyGiNa0og23Dg4n+tjlMBUsH6SKvDl3aiXfFqZKuD5hiV6aHic2fdOFBL
-         /V1ZpTnhASbiMN/UreAHMuNI8hS+QBlEtgQR2TuE=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id BD65B60247;
-        Tue, 30 Apr 2019 07:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556610280;
-        bh=ObjUo2Emxi2WJIUfB5bP3tzczg3thQ2BFG0+EiKejcU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kGMOcQFKz3h9bavJPMPr2fToJGjB7cEP2m+hFQW+iXZAVAaceiJRBDBxc2R6zB/yL
-         mtAMgC6qweAXy4SUQbrxZZBjuboaZFOkWVN760lOIJqJ2Sg4HKoC4aXKgFfe8sF/O5
-         dqJhbWA+dbjWQjDSyKLJ5yNo801QCh6KuLouyv5Q=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 30 Apr 2019 13:14:40 +0530
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] Bluetooth: hci_qca: Rename STATE_<flags> to
- QCA_<flags>
-In-Reply-To: <20190429232131.183049-1-mka@chromium.org>
-References: <20190429232131.183049-1-mka@chromium.org>
-Message-ID: <472ef0468852806f6afa8aa6e7713de2@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Tue, 30 Apr 2019 03:44:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33436 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfD3Hou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:44:50 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 74112811A9;
+        Tue, 30 Apr 2019 07:44:50 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-43.pek2.redhat.com [10.72.12.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD13188EB;
+        Tue, 30 Apr 2019 07:44:41 +0000 (UTC)
+From:   Lianbo Jiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, akpm@linux-foundation.org, x86@kernel.org,
+        hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
+        Thomas.Lendacky@amd.com, brijesh.singh@amd.com
+Subject: [PATCH 1/3 v3] x86/kexec: Do not map the kexec area as decrypted when SEV is active
+Date:   Tue, 30 Apr 2019 15:44:19 +0800
+Message-Id: <20190430074421.7852-2-lijiang@redhat.com>
+In-Reply-To: <20190430074421.7852-1-lijiang@redhat.com>
+References: <20190430074421.7852-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 30 Apr 2019 07:44:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathhias,
+When a virtual machine panic, also need to dump its memory for analysis.
+But, for the SEV virtual machine, the memory is encrypted. To support
+the SEV kdump, these changes would be necessary, otherwise, it will not
+work.
 
-On 2019-04-30 04:51, Matthias Kaehlcke wrote:
-> Rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IBS_ENABLED. The constant
-> represents a flag (multiple flags can be set at once), not a unique
-> state of the controller or driver.
-> 
-> Also make the flag an enum value instead of a pre-processor constant
-> (more flags will be added to the enum group by another patch).
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v3:
-> - rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IBS_ENABLED
-> 
-> Changes in v2:
-> - don't use BIT()
-> - change to enum type
-> - updated commit message
-> ---
->  drivers/bluetooth/hci_qca.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index c53ee8d8ca15..57322c42bb2d 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -54,9 +54,6 @@
->  #define HCI_IBS_WAKE_ACK	0xFC
->  #define HCI_MAX_IBS_SIZE	10
-> 
-> -/* Controller states */
-> -#define STATE_IN_BAND_SLEEP_ENABLED	1
-> -
->  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
->  #define IBS_TX_IDLE_TIMEOUT_MS		2000
->  #define CMD_TRANS_TIMEOUT_MS		100
-> @@ -67,6 +64,10 @@
->  /* Controller debug log header */
->  #define QCA_DEBUG_HANDLE	0x2EDC
-> 
-> +enum qca_flags {
-> +	QCA_IBS_ENABLED,
-> +};
-> +
->  /* HCI_IBS transmit side sleep protocol states */
->  enum tx_ibs_states {
->  	HCI_IBS_TX_ASLEEP,
-> @@ -792,7 +793,7 @@ static int qca_enqueue(struct hci_uart *hu, struct
-> sk_buff *skb)
->  	/* Don't go to sleep in middle of patch download or
->  	 * Out-Of-Band(GPIOs control) sleep is selected.
->  	 */
-> -	if (!test_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
-> +	if (!test_bit(QCA_IBS_ENABLED, &qca->flags)) {
->  		skb_queue_tail(&qca->txq, skb);
->  		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
->  		return 0;
-> @@ -1202,7 +1203,7 @@ static int qca_setup(struct hci_uart *hu)
->  		return ret;
-> 
->  	/* Patch downloading has to be done without IBS mode */
-> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-> +	clear_bit(QCA_IBS_ENABLED, &qca->flags);
-> 
->  	if (qca_is_wcn399x(soc_type)) {
->  		bt_dev_info(hdev, "setting up wcn3990");
-> @@ -1246,7 +1247,7 @@ static int qca_setup(struct hci_uart *hu)
->  	/* Setup patch / NVM configurations */
->  	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
->  	if (!ret) {
-> -		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-> +		set_bit(QCA_IBS_ENABLED, &qca->flags);
->  		qca_debugfs_init(hdev);
->  	} else if (ret == -ENOENT) {
->  		/* No patch/nvm-config found, run with original fw/config */
-> @@ -1315,7 +1316,7 @@ static void qca_power_shutdown(struct hci_uart 
-> *hu)
->  	 * data in skb's.
->  	 */
->  	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
-> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-> +	clear_bit(QCA_IBS_ENABLED, &qca->flags);
->  	qca_flush(hu);
->  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+Lets consider the following situations:
 
-Change looks fine to me.
+[1] How to load the images(kernel and initrd) when SEV is enabled in the
+    first kernel?
 
-Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+    Based on the amd-memory-encryption.txt and SEV's patch series, the
+    boot images must be encrypted before guest(VM) can be booted(Please
+    see Secure Encrypted Virutualization Key Management 'Launching a
+    guest(usage flow)'). Naturally use the similar way to load the images
+    (kernel and initrd) to the crash reserved areas, and these areas are
+    encrypted when SEV is active.
+
+    That is to say, when SEV is active in the first kernel, need to load
+    the kernel and initrd to the encrypted areas, so i made the following
+    changes:
+
+    [a] Do not map the kexec area as decrypted when SEV is active.
+        Currently, the arch_kexec_post_{alloc,free}_pages() unconditionally
+        maps the kexec areas as decrypted. Obviously, for the SEV case, it
+        can not work well, need to improve them.
+
+    [b] Set the C-bit in the identity map page table when SEV is active.
+        Because the second kernel images(kernel and initrd) are loaded to
+        the encrypted areas, in order to correctly access these encrypted
+        memory(pages), need to set the C-bit in the identity mapping page
+        table when kexec builds the identity mapping page table.
+
+[2] How to dump the old memory in the second kernel?
+
+    Here, it is similar to the SME kdump, if SEV was enabled in the first
+    kernel, the old memory is also encrypted, the old memory has to be
+    remapped with memory encryption mask in order to access it properly.
+
+    [a] The ioremap_encrypted() is still necessary.
+        Used to remap the old memory with memory encryption mask.
+
+    [b] Enable dumping encrypted memory when SEV was active.
+        Because the whole memory is encrypted in the first kernel when SEV
+        is enabled, that is to say, the notes and elfcorehdr are also
+        encrypted, and they are also saved to the encrypted memory.
+        Following commit 992b649a3f01 ("kdump, proc/vmcore: Enable kdumping
+        encrypted memory with SME enabled"), both SME and SEV cases need to
+        be considered and modified correctly.
+
+As above mentioned, currently, the arch_kexec_post_{alloc,free}_pages()
+unconditionally maps the kexec area as decrypted. Lets make sure that
+arch_kexec_post_{alloc,free}_pages() does not clear the memory encryption
+mask from the kexec area when SEV is active.
+
+Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+---
+ arch/x86/kernel/machine_kexec_64.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index ceba408ea982..f60611531d17 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -559,18 +559,33 @@ void arch_kexec_unprotect_crashkres(void)
+ 	kexec_mark_crashkres(false);
+ }
+ 
++/*
++ * During a traditional boot under SME, SME will encrypt the kernel,
++ * so the SME kexec kernel also needs to be un-encrypted in order to
++ * replicate a normal SME boot.
++ * During a traditional boot under SEV, the kernel has already been
++ * loaded encrypted, so the SEV kexec kernel needs to be encrypted in
++ * order to replicate a normal SEV boot.
++ */
+ int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp)
+ {
++	if (sev_active())
++		return 0;
++
+ 	/*
+ 	 * If SME is active we need to be sure that kexec pages are
+ 	 * not encrypted because when we boot to the new kernel the
+ 	 * pages won't be accessed encrypted (initially).
+ 	 */
+ 	return set_memory_decrypted((unsigned long)vaddr, pages);
++
+ }
+ 
+ void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages)
+ {
++	if (sev_active())
++		return;
++
+ 	/*
+ 	 * If SME is active we need to reset the pages back to being
+ 	 * an encrypted mapping before freeing them.
 -- 
-Regards
-Balakrishna.
+2.17.1
+
