@@ -2,133 +2,146 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48ECC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA90C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8992087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:25:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="COv+Fw3q"
+	by mail.kernel.org (Postfix) with ESMTP id 997A321744
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556655962;
+	bh=DSxEhAEipVnpxa4FsOU9wQm9HGZcB8UKp6vsmLFKzKI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F7TBQ8hxEupoT7JFPyTKiROC+OHdndnas1DickSKMRVhNEEiaWxo1mlKP1jAOj2aY
+	 ekG1SH5D4GTguiydwS0HAo33TdqdHCokcKMs5W7jgtKNIw0oqby8GavDxvgT2Nm1Ol
+	 KBbu68/20N+S909p8kmEcHyIa7nzxJRFQ+8MHRc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfD3UZw (ORCPT
+        id S1727013AbfD3U0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 16:25:52 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33339 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfD3UZw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 16:25:52 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k19so7380242pgh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 13:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PumMms/fmvRZNGgk1wpaT/iecwtP2mfoCrsOEiXiMBw=;
-        b=COv+Fw3qYpQJGBIu/FlHN4GwAnWb+mBOMG3BzMpMWRcjr0uvOtAeIxDScZFZT+bw7k
-         nvDtQ1BYuJQ9P1OVIjzsX8vbEFl6U9x1i62pua//qQiKBVPaM0GruaoDc01Sgq5ZCvEO
-         zAeBrm73peFGCc4ffFShl5jVh79XwrcrTrS/600nprTYXF/O60fZtpjAMDo+sfyXoiAh
-         U0j6I2sp7hCnCLsoE8QzLLeGghv6zAIxRTrar+5bEildulXLpmV+svPWfe+WSqap9x+2
-         o0gDraqO7iUecqRNdiF7D2r0Y5GD7l6giiH+OWVuccUhC9mCOSPv3XgOrD7uurIhnkQF
-         JbmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PumMms/fmvRZNGgk1wpaT/iecwtP2mfoCrsOEiXiMBw=;
-        b=bp+1+io4Bnp6UoWbvsrBetujsW5BGpRxnOtfQVZCcR3vT98Z5lEq7vGHijJPlEsxuJ
-         Z8z3eTmAfe5rJacjjPoU/ebUjvjPcs9ZqAOuSGIjWJj1GIgmCJBQzd1j6p7RGlgCQH6w
-         JFjIrQvbEGwXcjaeSIuA+DmIYc0vKAYchilic7dTm7W9xv7vGMTEzeO2pkYfRJCHVcRJ
-         wEKy0Mn3+KXFJJebUTbG2SU0hIJu4aKIayzp2hlb2ociP7LYvgpEDAwHqvyYNAyrihS6
-         yAK+90CVGJHFsQdLmRAQ/3E41pwGcCSDD2Atg+DR7eQU28I16NlcM98qd9j0xTp2txlE
-         x9Cg==
-X-Gm-Message-State: APjAAAWoqg7l+KIj0RPiIFu13CD0wkitWcwQ2YaNj4Uqhr9uF47S8vc4
-        5Sx0LQM05T8JxADmIVMGwjbIOYdsvIWSnakExDOv8Q==
-X-Google-Smtp-Source: APXvYqxPruPo3q2EEOLkAgwqeO24bHPYSbHgRM4IkVR8xVhZ8jhDuWMYQDccRT/raKHKAmEfAQt5wvtxASCfnyBCnjc=
-X-Received: by 2002:a63:f817:: with SMTP id n23mr27483996pgh.302.1556655950636;
- Tue, 30 Apr 2019 13:25:50 -0700 (PDT)
+        Tue, 30 Apr 2019 16:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfD3U0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 16:26:01 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F216F21744;
+        Tue, 30 Apr 2019 20:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556655960;
+        bh=DSxEhAEipVnpxa4FsOU9wQm9HGZcB8UKp6vsmLFKzKI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hWGNDLin8Jv7R3octK9+WNK6NDkFYqRon781t/+3Uaohgl5JBv0p8/YLze24pXZPA
+         BnB/vbFXRIBB3+ftQnARjE7ILIkYGn0fJVbShd9VrtK0ZNVoNzckTnIRx6vAWjIOJm
+         rFyC/x1QpMlMO7dUwXT7s/gVuO/syR9PmXkZqYb0=
+Received: by mail-qt1-f171.google.com with SMTP id p20so17849432qtc.9;
+        Tue, 30 Apr 2019 13:25:59 -0700 (PDT)
+X-Gm-Message-State: APjAAAW9W6gIt7cWbGdE8J/vRA1Wbb7iJ4DK1LMNGN5/IRc6el4VWDNX
+        bR8fQy/A/UWS+VPoB9sFBmhDJ/ogRqN5KqHnzw==
+X-Google-Smtp-Source: APXvYqxCFou195GvOeGCcRlljrl+D9VyKQ+Gjb47JpcOdGhFwHx38K3aZX9kIiEUbEXlzu2ItILlnXJhN99f9b9CsTY=
+X-Received: by 2002:aed:306c:: with SMTP id 99mr1000209qte.38.1556655959214;
+ Tue, 30 Apr 2019 13:25:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190423211116.261111-1-ndesaulniers@google.com>
-In-Reply-To: <20190423211116.261111-1-ndesaulniers@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 30 Apr 2019 13:25:39 -0700
-Message-ID: <CAKwvOd=dBLXQUzv8R3-JqF=pUTH0-5O3v+_ceekT3W23VxtDbg@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: vdso: drop unnecessary cc-ldoption
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>
-Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+ <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com>
+In-Reply-To: <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 30 Apr 2019 15:25:47 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+Message-ID: <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        devicetree@vger.kernel.org,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 2:11 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
 >
-> Towards the goal of removing cc-ldoption, it seems that --hash-style=
-> was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-> of binutils for the kernel according to
-> Documentation/process/changes.rst is 2.20.
+> On 30/04/2019 16:02, Rob Herring wrote:
+> > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> > <geert+renesas@glider.be> wrote:
+> >>
+> >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> ---
+> >> v2:
+> >>   - Add "renesas,gic-spi-base",
+> >>   - Document RZ/A2M.
+> >> ---
+> >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+> >>  1 file changed, 30 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >> new file mode 100644
+> >> index 0000000000000000..ea8ddb6955338ccd
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >> @@ -0,0 +1,30 @@
+> >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> >> +
+> >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> >> +RZ/A1 and RZ/A2 SoCs:
+> >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> >> +    interrupts,
+> >> +  - NMI edge select.
+> >> +
+> >> +Required properties:
+> >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> >> +               fallback.
+> >> +               Examples with soctypes are:
+> >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> >> +                                in interrupts.txt in this directory)
+> >> +  - interrupt-controller: Marks the device as an interrupt controller
+> >> +  - reg: Base address and length of the memory resource used by the interrupt
+> >> +         controller
+> >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+> >
+> > Why isn't this just an 'interrupts' property?
 >
-> Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-> Cc: clang-built-linux@googlegroups.com
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  arch/powerpc/kernel/vdso32/Makefile | 5 ++---
->  arch/powerpc/kernel/vdso64/Makefile | 5 ++---
->  2 files changed, 4 insertions(+), 6 deletions(-)
+> That's likely because of kernel limitations. The DT code does an
+> of_populate() on any device that it finds, parse the "interrupts"
+> propertiy, resulting in the irq_descs being populated.
 >
-> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-> index ce199f6e4256..06f54d947057 100644
-> --- a/arch/powerpc/kernel/vdso32/Makefile
-> +++ b/arch/powerpc/kernel/vdso32/Makefile
-> @@ -26,9 +26,8 @@ GCOV_PROFILE := n
->  KCOV_INSTRUMENT := n
->  UBSAN_SANITIZE := n
->
-> -ccflags-y := -shared -fno-common -fno-builtin
-> -ccflags-y += -nostdlib -Wl,-soname=linux-vdso32.so.1 \
-> -               $(call cc-ldoption, -Wl$(comma)--hash-style=both)
-> +ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
-> +       -Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
->  asflags-y := -D__VDSO32__ -s
->
->  obj-y += vdso32_wrapper.o
-> diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
-> index 28e7d112aa2f..32ebb3522ea1 100644
-> --- a/arch/powerpc/kernel/vdso64/Makefile
-> +++ b/arch/powerpc/kernel/vdso64/Makefile
-> @@ -12,9 +12,8 @@ GCOV_PROFILE := n
->  KCOV_INSTRUMENT := n
->  UBSAN_SANITIZE := n
->
-> -ccflags-y := -shared -fno-common -fno-builtin
-> -ccflags-y += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
-> -               $(call cc-ldoption, -Wl$(comma)--hash-style=both)
-> +ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
-> +       -Wl,-soname=linux-vdso64.so.1 -Wl,--hash-style=both
->  asflags-y := -D__VDSO64__ -s
->
->  obj-y += vdso64_wrapper.o
-> --
-> 2.21.0.593.g511ec345e18-goog
->
+> That creates havoc, as these interrupts are not for this device, but for
+> something that is connected to it. This is merely a bridge of some sort.
 
-bumping for review
--- 
-Thanks,
-~Nick Desaulniers
+'interrupt-map' would avoid that problem I think.
+
+> Furthermore, this is a rather long established practice: gic-v2m,
+> gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
+> for one reason or another plug onto the GIC use the same method.
+
+All handling the mapping to the parent in their own way...
+
+> > Plus, without 'interrupts' walking the hierarchy is broken.
+>
+> Erm... Which hierarchy?
+
+of_irq_init() expects that an interrupt-controller without an
+interrupt-parent is the root controller. So you're right. We only need
+to have an 'interrupt-parent', but not 'interrupts'.
+
+Rob
