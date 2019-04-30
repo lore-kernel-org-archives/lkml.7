@@ -2,110 +2,143 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65783C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E675DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FD72173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PaVG+9Rw"
+	by mail.kernel.org (Postfix) with ESMTP id BD10820675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727343AbfD3KrU (ORCPT
+        id S1727004AbfD3Kvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:47:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59070 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfD3KrT (ORCPT
+        Tue, 30 Apr 2019 06:51:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35162 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726294AbfD3Kvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:47:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hqqOHMMUuBvpuVQELeBZmURuJXjgQFqffW8kA9cAK/I=; b=PaVG+9RwpCsXq15eaBB6EYSbN
-        kSbHYkqvjqUvSv3jpTDD9Z/uLy3t//bG0X+q/rBM5tUljQmNVrSIAC16d5DWJjguWhS03TvhXFVke
-        m2tBVj6tvBTp0mR573beuNeRyZSVhY3M1m+BidytXleKrDBBZqCaR6QJFLPSlaidaZ2HPF+y1bEwS
-        WZ1t8L0HPIZFikNyRg3L6ZMurl0eejHBOFV4y+vUIr5iMBjfipjE7DJFdIwN7KNXOmwsbqnddIIb4
-        x8YKCMOSStKAuoQRJbG7ZhKn3fq3uJb2stY/jCun14hfRD3yhi8H7az6tyHPLffJLOAMnz4bRGxeN
-        41K2u1XDw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLQHi-0004y1-Ln; Tue, 30 Apr 2019 10:46:50 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F4112203E886A; Tue, 30 Apr 2019 12:46:48 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 12:46:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-Message-ID: <20190430104648.GR2623@hirez.programming.kicks-ass.net>
-References: <20190427100639.15074-1-nstange@suse.de>
- <20190427100639.15074-4-nstange@suse.de>
- <20190427102657.GF2623@hirez.programming.kicks-ass.net>
- <20190428133826.3e142cfd@oasis.local.home>
- <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <20190429145250.1a5da6ed@gandalf.local.home>
+        Tue, 30 Apr 2019 06:51:41 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UAhJgk144190;
+        Tue, 30 Apr 2019 06:51:31 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6hj3gyye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Apr 2019 06:51:31 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x3U4s422004003;
+        Tue, 30 Apr 2019 04:55:23 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 2s4eq3sdkq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Apr 2019 04:55:23 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UApTok25624786
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 10:51:29 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A09F7B2066;
+        Tue, 30 Apr 2019 10:51:29 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80792B2065;
+        Tue, 30 Apr 2019 10:51:29 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.213.184])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Apr 2019 10:51:29 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 0707016C0A0D; Tue, 30 Apr 2019 03:51:30 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 03:51:30 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, andrea.parri@amarulasolutions.com
+Subject: Re: Question about sched_setaffinity()
+Message-ID: <20190430105129.GA3923@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190427180246.GA15502@linux.ibm.com>
+ <20190430100318.GP2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429145250.1a5da6ed@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190430100318.GP2623@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 02:52:50PM -0400, Steven Rostedt wrote:
-> On Mon, 29 Apr 2019 11:06:58 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, Apr 30, 2019 at 12:03:18PM +0200, Peter Zijlstra wrote:
+> On Sat, Apr 27, 2019 at 11:02:46AM -0700, Paul E. McKenney wrote:
 > 
-> > +void replace_call(void *addr, const void *opcode, size_t len, void *target)
-> > +{
-> > +	bp_int3_call_target = target;
-> > +	bp_int3_call_return = addr + len;
-> > +	bp_int3_handler_irqoff = emulate_call_irqoff;
-> > +	text_poke_bp(addr, opcode, len, emulate_call_irqon);
-> > +}
+> > This actually passes rcutorture.  But, as Andrea noted, not klitmus.
+> > After some investigation, it turned out that klitmus was creating kthreads
+> > with PF_NO_SETAFFINITY, hence the failures.  But that prompted me to
+> > put checks into my code: After all, rcutorture can be fooled.
+> > 
+> > 	void synchronize_rcu(void)
+> > 	{
+> > 		int cpu;
+> > 
+> > 		for_each_online_cpu(cpu) {
+> > 			sched_setaffinity(current->pid, cpumask_of(cpu));
+> > 			WARN_ON_ONCE(raw_smp_processor_id() != cpu);
+> > 		}
+> > 	}
+> > 
+> > This triggers fairly quickly, usually in less than a minute of rcutorture
+> > testing.
+> >
+> > And further investigation shows that sched_setaffinity()
+> > always returned 0. 
 > 
-> Note, the function tracer does not use text poke. It does it in batch
-> mode. It can update over 40,000 calls in one go:
+> > Is this expected behavior?  Is there some configuration or setup that I
+> > might be missing?
+> 
+> ISTR there is hotplug involved in RCU torture? In that case, it can be
+> sched_setaffinity() succeeds to place us on a CPU, which CPU hotplug
+> then takes away. So when we run the WARN thingy, we'll be running on a
+> different CPU than expected.
 
-Note that Daniel is adding batch stuff to text_poke(), because
-jump_label/static_key stuffs also end up wanting to change more than one
-site at a time and IPI spraying the machine for every single instance is
-hurting.
+There can be CPU hotplug involved in rcutorture, but it was disabled
+during this run.
 
-So ideally ftrace would start to use the 'normal' code when that
-happens.
+> If OTOH, your loop is written like (as it really should be):
+> 
+> 	void synchronize_rcu(void)
+> 	{
+> 		int cpu;
+> 
+> 		cpus_read_lock();
+> 		for_each_online_cpu(cpu) {
+> 			sched_setaffinity(current->pid, cpumask_of(cpu));
+> 			WARN_ON_ONCE(raw_smp_processor_id() != cpu);
+> 		}
+> 		cpus_read_unlock();
+> 	}
+> 
+> Then I'm not entirely sure how we can return 0 and not run on the
+> expected CPU. If we look at __set_cpus_allowed_ptr(), the only paths out
+> to 0 are:
+> 
+>  - if the mask didn't change
+>  - if we already run inside the new mask
+>  - if we migrated ourself with the stop-task
+>  - if we're not in fact running
+> 
+> That last case should never trigger in your circumstances, since @p ==
+> current and current is obviously running. But for completeness, the
+> wakeup of @p would do the task placement in that case.
+
+Are there some diagnostics I could add that would help track this down,
+be it my bug or yours?
+
+							Thanx, Paul
