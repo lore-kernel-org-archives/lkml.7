@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF0EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D8FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DCFD21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8357D21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624838;
-	bh=NFyh9jmCr76n4ys++b/1up6xP/NAR0DL/423dXlIRV0=;
+	s=default; t=1556624843;
+	bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTFM8t1GuLrj+c8QdAa02ajBeyTP6U0Qfa+M8i9Fy6z1OWpGPXH3vgdfjLGMoZ3D7
-	 2b3TnmrzbxfpslDdCxRFletb9+e1HIYXqJnvOKoyVDwK6trey4HuNPZLvx0oX2JVOf
-	 IDjJAPtFyA0hltCtQhHhZWkU1s14e1cVdJublU2g=
+	b=mhJiqX6A7p7MvNC+2X1wiUyuzaZxlh3GE6nnVliBg3LWEbzLrN2OOEdvr3EbhsXi7
+	 MKrk7c4hcIpz2cNAORGOnZgST2ldavTuf/B8uTap/SjFd0VSuYR1icUF0ZUumzzpRw
+	 MEwdzKMWjgnNaR7sj1SGO9pymZ6qGVE4uwGAvZkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbfD3LrR (ORCPT
+        id S1730694AbfD3LrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60610 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730666AbfD3LrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:12 -0400
+        id S1730678AbfD3LrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3D0720449;
-        Tue, 30 Apr 2019 11:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D3FF20449;
+        Tue, 30 Apr 2019 11:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624831;
-        bh=NFyh9jmCr76n4ys++b/1up6xP/NAR0DL/423dXlIRV0=;
+        s=default; t=1556624833;
+        bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxEh/G2+m7VJPAZ+TYtGHyxan+c08DECz+jKLRSjf9Vf5L77o6LMyzQt5rn1bekCz
-         kOEpUGvcJ+KIX0F1vDMszV5QCNKpNHPzM0dbxE5UER/8ya8uGf6vRi5lLMg5X2EW/9
-         TPGVbs2II+eAhEE7WIIYeT97bsIkyIXiSXLkWYqg=
+        b=zhgYwhV38+RTtnqYWVbovOpsswTOM8hAFNrplVAlhiq8egr+5zSZu4/jFWvdYl0oZ
+         4L/vvYMNP8ck7cNbXx7E6YGazhjW3ZAVueXckXTI/1Q4z5+6d6WDr8q9E6jUMWbt5z
+         u1LRlDJ3KJr0fe4E4/lZmVlBQyBIRQcSasmW9MHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 4.19 051/100] USB: Consolidate LPM checks to avoid enabling LPM twice
-Date:   Tue, 30 Apr 2019 13:38:20 +0200
-Message-Id: <20190430113611.411705961@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com,
+        Ben Hutchings <ben@decadent.org.uk>,
+        David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 052/100] slip: make slhc_free() silently accept an error pointer
+Date:   Tue, 30 Apr 2019 13:38:21 +0200
+Message-Id: <20190430113611.444954713@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -58,122 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit d7a6c0ce8d26412903c7981503bad9e1cc7c45d2 upstream.
+commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e upstream.
 
-USB Bluetooth controller QCA ROME (0cf3:e007) sometimes stops working
-after S3:
-[ 165.110742] Bluetooth: hci0: using NVM file: qca/nvm_usb_00000302.bin
-[ 168.432065] Bluetooth: hci0: Failed to send body at 4 of 1953 (-110)
+This way, slhc_free() accepts what slhc_init() returns, whether that is
+an error or not.
 
-After some experiments, I found that disabling LPM can workaround the
-issue.
+In particular, the pattern in sl_alloc_bufs() is
 
-On some platforms, the USB power is cut during S3, so the driver uses
-reset-resume to resume the device. During port resume, LPM gets enabled
-twice, by usb_reset_and_verify_device() and usb_port_resume().
+        slcomp = slhc_init(16, 16);
+        ...
+        slhc_free(slcomp);
 
-Consolidate all checks into new LPM helpers to make sure LPM only gets
-enabled once.
+for the error handling path, and rather than complicate that code, just
+make it ok to always free what was returned by the init function.
 
-Fixes: de68bab4fa96 ("usb: Don't enable USB 2.0 Link PM by default.”)
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: stable <stable@vger.kernel.org> # after much soaking
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+That's what the code used to do before commit 4ab42d78e37a ("ppp, slip:
+Validate VJ compression slot parameters completely") when slhc_init()
+just returned NULL for the error case, with no actual indication of the
+details of the error.
+
+Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
+Fixes: 4ab42d78e37a ("ppp, slip: Validate VJ compression slot parameters completely")
+Acked-by: Ben Hutchings <ben@decadent.org.uk>
+Cc: David Miller <davem@davemloft.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/driver.c  |   11 ++++++++---
- drivers/usb/core/hub.c     |   12 ++++--------
- drivers/usb/core/message.c |    3 +--
- 3 files changed, 13 insertions(+), 13 deletions(-)
+ drivers/net/slip/slhc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/core/driver.c
-+++ b/drivers/usb/core/driver.c
-@@ -1904,9 +1904,6 @@ static int usb_set_usb2_hardware_lpm(str
- 	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
- 	int ret = -EPERM;
- 
--	if (enable && !udev->usb2_hw_lpm_allowed)
--		return 0;
--
- 	if (hcd->driver->set_usb2_hw_lpm) {
- 		ret = hcd->driver->set_usb2_hw_lpm(hcd, udev, enable);
- 		if (!ret)
-@@ -1918,11 +1915,19 @@ static int usb_set_usb2_hardware_lpm(str
- 
- int usb_enable_usb2_hardware_lpm(struct usb_device *udev)
+--- a/drivers/net/slip/slhc.c
++++ b/drivers/net/slip/slhc.c
+@@ -153,7 +153,7 @@ out_fail:
+ void
+ slhc_free(struct slcompress *comp)
  {
-+	if (!udev->usb2_hw_lpm_capable ||
-+	    !udev->usb2_hw_lpm_allowed ||
-+	    udev->usb2_hw_lpm_enabled)
-+		return 0;
-+
- 	return usb_set_usb2_hardware_lpm(udev, 1);
- }
+-	if ( comp == NULLSLCOMPR )
++	if ( IS_ERR_OR_NULL(comp) )
+ 		return;
  
- int usb_disable_usb2_hardware_lpm(struct usb_device *udev)
- {
-+	if (!udev->usb2_hw_lpm_enabled)
-+		return 0;
-+
- 	return usb_set_usb2_hardware_lpm(udev, 0);
- }
- 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -3217,8 +3217,7 @@ int usb_port_suspend(struct usb_device *
- 	}
- 
- 	/* disable USB2 hardware LPM */
--	if (udev->usb2_hw_lpm_enabled == 1)
--		usb_disable_usb2_hardware_lpm(udev);
-+	usb_disable_usb2_hardware_lpm(udev);
- 
- 	if (usb_disable_ltm(udev)) {
- 		dev_err(&udev->dev, "Failed to disable LTM before suspend\n");
-@@ -3256,8 +3255,7 @@ int usb_port_suspend(struct usb_device *
- 		usb_enable_ltm(udev);
-  err_ltm:
- 		/* Try to enable USB2 hardware LPM again */
--		if (udev->usb2_hw_lpm_capable == 1)
--			usb_enable_usb2_hardware_lpm(udev);
-+		usb_enable_usb2_hardware_lpm(udev);
- 
- 		if (udev->do_remote_wakeup)
- 			(void) usb_disable_remote_wakeup(udev);
-@@ -3540,8 +3538,7 @@ int usb_port_resume(struct usb_device *u
- 		hub_port_logical_disconnect(hub, port1);
- 	} else  {
- 		/* Try to enable USB2 hardware LPM */
--		if (udev->usb2_hw_lpm_capable == 1)
--			usb_enable_usb2_hardware_lpm(udev);
-+		usb_enable_usb2_hardware_lpm(udev);
- 
- 		/* Try to enable USB3 LTM */
- 		usb_enable_ltm(udev);
-@@ -5608,8 +5605,7 @@ static int usb_reset_and_verify_device(s
- 	/* Disable USB2 hardware LPM.
- 	 * It will be re-enabled by the enumeration process.
- 	 */
--	if (udev->usb2_hw_lpm_enabled == 1)
--		usb_disable_usb2_hardware_lpm(udev);
-+	usb_disable_usb2_hardware_lpm(udev);
- 
- 	/* Disable LPM while we reset the device and reinstall the alt settings.
- 	 * Device-initiated LPM, and system exit latency settings are cleared
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -1243,8 +1243,7 @@ void usb_disable_device(struct usb_devic
- 			dev->actconfig->interface[i] = NULL;
- 		}
- 
--		if (dev->usb2_hw_lpm_enabled == 1)
--			usb_disable_usb2_hardware_lpm(dev);
-+		usb_disable_usb2_hardware_lpm(dev);
- 		usb_unlocked_disable_lpm(dev);
- 		usb_disable_ltm(dev);
- 
+ 	if ( comp->tstate != NULLSLSTATE )
 
 
