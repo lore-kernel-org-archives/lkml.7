@@ -2,121 +2,128 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECECC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF45C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C69E20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:28:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sVSA9x2l"
+	by mail.kernel.org (Postfix) with ESMTP id 8F086216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556613005;
+	bh=L44o5mnTaulGd8/A/x404M3tsCXjrGsZL4cOq+2J79A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kXNvjxHDsPz69Vrbuvrr1nWZtK8CyTPARu4KsifUO2AKi+92NVVpLsgzJKb256FUl
+	 iMUk5FjespGrc3Adb10XOD7Dxt4zRJQTp3l4UvziNyPt4Oee1ctA6fzY2KdYaanLMv
+	 MJBp8FmoT7LhztoOnYP0KuvkN6dMI0NrS+V4te5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfD3I2S (ORCPT
+        id S1726479AbfD3IaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:28:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59914 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfD3I2S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:28:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ztnwMSHtedoT9Gv7PEZNypm2kmS00QDMZIphrledsXY=; b=sVSA9x2lnTx39ltHEPZtds4dz
-        YiEJNhm1B4JWAiJA5kIIQke8QAp+P/wvO+MpBgMwf/WxjFPOs6jG2rak9aVm/M3/ZdBxZWQ8Eq0M/
-        ppL6ZO2RZepBB8jhJQrqnBf+2+TlFCa5wiCDSdV9mUx2Bqi4zaHrvr8IGK76jyx6gZ3OCEqffBoNx
-        +2UCQ8lh0ZVLit+1SZaRrM7rwNKZRcSpx7EHI2aacowq6goEHq2RGVSazG9OVR/uInVVLQoIZsrI7
-        +vDBej0JLuz1/PGPwdXuziIx5UaGdIyy/HNLAzXTGbvd3z56RtJFYqjc7l5pAqPfKlQvpwWrcgQwL
-        RuMaM33Dw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLO7b-00018M-Rz; Tue, 30 Apr 2019 08:28:16 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 60AFC29D2D6D8; Tue, 30 Apr 2019 10:28:14 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 10:28:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 5/5] IB/hfi1: Fix improper uses of smp_mb__before_atomic()
-Message-ID: <20190430082814.GC2677@hirez.programming.kicks-ass.net>
-References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1556568902-12464-6-git-send-email-andrea.parri@amarulasolutions.com>
+        Tue, 30 Apr 2019 04:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbfD3IaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:30:04 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA0212080C;
+        Tue, 30 Apr 2019 08:30:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556613003;
+        bh=L44o5mnTaulGd8/A/x404M3tsCXjrGsZL4cOq+2J79A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a19ABJwBx7uM7bDncmxkYDjL+4cW9Ip/BQrprS8FSfQXXRboeP3bVIE7U/mJ7wvQH
+         LSOn92WOL65zOTtCmoez8V+TLqEfF7jttCeJsLxHHQ4H94Vy5XrzNSf5NV4yuwfyAA
+         bcyUr4NhvaYKPTR0QXQWeLm61SIpN7FfUmFvhlw4=
+Date:   Tue, 30 Apr 2019 13:59:54 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] dmaengine: sprd: Add device validation to support
+ multiple controllers
+Message-ID: <20190430082954.GQ3845@vkoul-mobl.Dlink>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
+ <d77dca51a14087873627d735a17adcfde5517398.1555330115.git.baolin.wang@linaro.org>
+ <20190429115723.GK3845@vkoul-mobl.Dlink>
+ <CAMz4kuLf4wgr4Js3xH1aQVc4c2XK1Oq2TnsUq=NSowQUq5ZN5g@mail.gmail.com>
+ <20190429140537.GN3845@vkoul-mobl.Dlink>
+ <CAMz4ku+ctQrcR+6t1ouakeG3dbgL3qR8fz-Hft4s9FnxtFL1ng@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556568902-12464-6-git-send-email-andrea.parri@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMz4ku+ctQrcR+6t1ouakeG3dbgL3qR8fz-Hft4s9FnxtFL1ng@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:15:01PM +0200, Andrea Parri wrote:
-> This barrier only applies to the read-modify-write operations; in
-> particular, it does not apply to the atomic_read() primitive.
+On 30-04-19, 13:30, Baolin Wang wrote:
+> On Mon, 29 Apr 2019 at 22:05, Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > On 29-04-19, 20:20, Baolin Wang wrote:
+> > > On Mon, 29 Apr 2019 at 19:57, Vinod Koul <vkoul@kernel.org> wrote:
+> > > >
+> > > > On 15-04-19, 20:14, Baolin Wang wrote:
+> > > > > From: Eric Long <eric.long@unisoc.com>
+> > > > >
+> > > > > Since we can support multiple DMA engine controllers, we should add
+> > > > > device validation in filter function to check if the correct controller
+> > > > > to be requested.
+> > > > >
+> > > > > Signed-off-by: Eric Long <eric.long@unisoc.com>
+> > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > > > ---
+> > > > >  drivers/dma/sprd-dma.c |    5 +++++
+> > > > >  1 file changed, 5 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> > > > > index 0f92e60..9f99d4b 100644
+> > > > > --- a/drivers/dma/sprd-dma.c
+> > > > > +++ b/drivers/dma/sprd-dma.c
+> > > > > @@ -1020,8 +1020,13 @@ static void sprd_dma_free_desc(struct virt_dma_desc *vd)
+> > > > >  static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param)
+> > > > >  {
+> > > > >       struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
+> > > > > +     struct of_phandle_args *dma_spec =
+> > > > > +             container_of(param, struct of_phandle_args, args[0]);
+> > > > >       u32 slave_id = *(u32 *)param;
+> > > > >
+> > > > > +     if (chan->device->dev->of_node != dma_spec->np)
+> > > >
+> > > > Are you not using of_dma_find_controller() that does this, so this would
+> > > > be useless!
+> > >
+> > > Yes, we can use of_dma_find_controller(), but that will be a little
+> > > complicated than current solution. Since we need introduce one
+> > > structure to save the node to validate in the filter function like
+> > > below, which seems make things complicated. But if you still like to
+> > > use of_dma_find_controller(), I can change to use it in next version.
+> >
+> > Sorry I should have clarified more..
+> >
+> > of_dma_find_controller() is called by xlate, so you already run this
+> > check, so why use this :)
 > 
-> Replace the barrier with an smp_mb().
-> 
-> Fixes: 856cc4c237add ("IB/hfi1: Add the capability for reserved operations")
-> Cc: stable@vger.kernel.org
-> Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Reported-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
-> Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: linux-rdma@vger.kernel.org
-> ---
->  drivers/infiniband/sw/rdmavt/qp.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-> index a34b9a2a32b60..b64fd151d31fb 100644
-> --- a/drivers/infiniband/sw/rdmavt/qp.c
-> +++ b/drivers/infiniband/sw/rdmavt/qp.c
-> @@ -1863,11 +1863,11 @@ static inline int rvt_qp_is_avail(
->  	u32 reserved_used;
->  
->  	/* see rvt_qp_wqe_unreserve() */
+> The of_dma_find_controller() can save the requested device node into
+> dma_spec, and in the of_dma_simple_xlate() function, it will call
+> dma_request_channel() to request one channel, but it did not validate
+> the device node to find the corresponding dma device in
+> dma_request_channel(). So we should in our filter function to validate
+> the device node with the device node specified by the dma_spec. Hope I
+> make things clear.
 
-I see a completely bogus comment in rvf_op_wqe_unreserve(), referring to
-bogus comments makes this barrier bogus too.
+But dma_request_channel() calls of_dma_request_slave_channel() which
+invokes of_dma_find_controller() why is it broken for you if that is the
+case..
 
-> -	smp_mb__before_atomic();
-> +	smp_mb();
->  	reserved_used = atomic_read(&qp->s_reserved_used);
->  	if (unlikely(reserved_op)) {
->  		/* see rvt_qp_wqe_unreserve() */
-> -		smp_mb__before_atomic();
-
-This was before, but there is nothing _after_ this. Which means this
-barrier was complete garbage anyway.
-
-> +		smp_mb();
->  		if (reserved_used >= rdi->dparms.reserved_operations)
->  			return -ENOMEM;
->  		return 0;
-> @@ -1882,7 +1882,7 @@ static inline int rvt_qp_is_avail(
->  		avail = slast - qp->s_head;
->  
->  	/* see rvt_qp_wqe_unreserve() */
-> -	smp_mb__before_atomic();
-> +	smp_mb();
-
-Same as the first.
-
->  	reserved_used = atomic_read(&qp->s_reserved_used);
->  	avail =  avail - 1 -
->  		(rdi->dparms.reserved_operations - reserved_used);
+-- 
+~Vinod
