@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D12FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDDEC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34AFE2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33E72080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="XrR5isrI"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="TLa9X32V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfD3HSp (ORCPT
+        id S1726710AbfD3HSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:18:45 -0400
-Received: from first.geanix.com ([116.203.34.67]:43728 "EHLO first.geanix.com"
+        Tue, 30 Apr 2019 03:18:49 -0400
+Received: from first.geanix.com ([116.203.34.67]:43758 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbfD3HSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:18:37 -0400
+        id S1726650AbfD3HSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:18:43 -0400
 Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id 93690308E9D;
-        Tue, 30 Apr 2019 07:18:30 +0000 (UTC)
+        by first.geanix.com (Postfix) with ESMTPSA id 64555308E9F;
+        Tue, 30 Apr 2019 07:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1556608710; bh=DAjULfeqzzhfRAwoGb6qT4ROYTcoiZ5UMEfG1sSyqwE=;
+        t=1556608715; bh=UQLE8VpCv3H1XnniIW5bE3FmCFUWCrjGdch+TKnVucE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=XrR5isrIxnDNZT6BiKSVeGFIiLNNkraLx1S1jEjxtIsnSttINxL4DbM895/VaNTMO
-         RWeCntKFPGSoH2ceWfb7vXq0DjFKKou4YzUKGs1Cv6jFlb94URnExlu8h/otCDJ+Va
-         3KEjR0aqg7g0mrTckcapDYV0n/e/ZmhkUCPaf4PjTi/ljmfCkwZBRtOImTIflleANq
-         r3OsMJGwyy7tyOjFQMViLhOC0FGSnAUg2V83UJFuStzevzZwNvM4UNPlicC/7+3IHX
-         LBhTr0DX1UKsQDlg2pLgutrTmet6e9q+CCp6NnT+c0CFuVaWkoL6RpR+Ffdol48MJ/
-         O3Ax46WjCS5pg==
+        b=TLa9X32VcVwJhAYMoIvsFZdvpVn4UUIlfZbVrF7sO8x2rq40FcuDrMPDxx0XoDdSP
+         S3S5w7NlLEO+NUE4a7fUCAkUw+4iFmfkeP+qNXAuaTOexd5cXD1IUdOcLrxfWVQDiz
+         xI5X9qTy2vKdSq7DBGfCunQfiqT+Mcsc42TpLZYVe4VJRMR3TNjm6jlJ1eh1Nf1/Zh
+         20lCYVJsCkxuSzbqOmQFr3bEa/ZYqQXDhw36Yw+tNnuQ5PHZwwNLK5cagQyR4SE+R6
+         kErnKqS6SSz+2ZjLA4NzbejOXSOj7OENx+D39hsZOY3fLow3JTOqsiVzPskXTAZnRy
+         R6NqENBdMz4Xg==
 From:   Esben Haabendal <esben@geanix.com>
 To:     netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Michal Simek <michal.simek@xilinx.com>,
-        Yang Wei <yang.wei9@zte.com.cn>,
         Luis Chamberlain <mcgrof@kernel.org>,
+        Yang Wei <yang.wei9@zte.com.cn>,
         YueHaibing <yuehaibing@huawei.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/12] net: ll_temac: Fix iommu/swiotlb leak
-Date:   Tue, 30 Apr 2019 09:17:55 +0200
-Message-Id: <20190430071759.2481-9-esben@geanix.com>
+Subject: [PATCH v3 10/12] net: ll_temac: Replace bad usage of msleep() with usleep_range()
+Date:   Tue, 30 Apr 2019 09:17:57 +0200
+Message-Id: <20190430071759.2481-11-esben@geanix.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430071759.2481-1-esben@geanix.com>
 References: <20190429083422.4356-1-esben@geanix.com>
@@ -56,27 +57,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unmap the actual buffer length, not the amount of data received, avoiding
-resource exhaustion of swiotlb (seen on x86_64 platform).
+Use usleep_range() to avoid problems with msleep() actually sleeping
+much longer than expected.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
  drivers/net/ethernet/xilinx/ll_temac_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index d3899e7..7e42746 100644
+index 6837565..fec8e4c 100644
 --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
 +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -820,7 +820,7 @@ static void ll_temac_recv(struct net_device *ndev)
- 		length = be32_to_cpu(cur_p->app4) & 0x3FFF;
- 
- 		dma_unmap_single(ndev->dev.parent, be32_to_cpu(cur_p->phys),
--				 length, DMA_FROM_DEVICE);
-+				 XTE_MAX_JUMBO_FRAME_SIZE, DMA_FROM_DEVICE);
- 
- 		skb_put(skb, length);
- 		skb->protocol = eth_type_trans(skb, ndev);
+@@ -92,7 +92,7 @@ int temac_indirect_busywait(struct temac_local *lp)
+ 			WARN_ON(1);
+ 			return -ETIMEDOUT;
+ 		}
+-		msleep(1);
++		usleep_range(500, 1000);
+ 	}
+ 	return 0;
+ }
 -- 
 2.4.11
 
