@@ -2,231 +2,160 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F8AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7D9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B614221707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E94E21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKbCWZaq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7QlO3Pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbfD3BSX (ORCPT
+        id S1729786AbfD3BWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:18:23 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:33800 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729626AbfD3BSW (ORCPT
+        Mon, 29 Apr 2019 21:22:43 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42955 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbfD3BWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:18:22 -0400
-Received: by mail-yw1-f66.google.com with SMTP id u14so4734576ywe.1;
-        Mon, 29 Apr 2019 18:18:21 -0700 (PDT)
+        Mon, 29 Apr 2019 21:22:43 -0400
+Received: by mail-pl1-f193.google.com with SMTP id x15so5932678pln.9;
+        Mon, 29 Apr 2019 18:22:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+WIm5hmSN2OmSuQJOts8t0F9/3FnmKAv+vIoX+0L1nY=;
-        b=vKbCWZaqDdiUDwCF2w/QZx7zr85DmDYqwSMT5r3GhSK2RTouX2BnfZoaQpoJ9XOQEs
-         8ryw7GxbpwfscspO206/iC6c/d3kFXnEE9F1hRdu8xJc/3R0cKIURcvEg6ifiotKAH33
-         wLcQu8FZwq2lkeiPS0F4e+VBM/AqyiCChIKWEvTcVo4ngvNxD8AgJ/n7mqKsDC6BbFKV
-         VMvpeZQpFSYGwCi4cpL7aoTiMEYyke8ZfFjxRSsZ2xLzN5+R80Z1dbwm6T9uFWq0YKJJ
-         8wGk6CxlOuPZRxJRA/LAXRDwtpRiTNs/mYlDcxzdbsGRaIe0rR6R+suv5Kgc0NcpwSpE
-         vI6w==
+        h=from:to:cc:subject:date:message-id;
+        bh=EoMvgvSdq7xp2mVjAhF0hgkQM6qSVYMsPBoCdVngzjI=;
+        b=c7QlO3Pm+qLe5755G7xHlb6GhkRlzAhC70A+iC1eY4JRlIEANWoK/iDWrhbpzc0LMC
+         DgKZDg8E7TAdA461+vb7nL1RWYJNwnkHf3aalSXmz9b4cAvStJFzEouR2Gfo4FTsPPeh
+         T3vx6/uqECBqh64qGPU7efV0rOyA3QYS3A2ytwX0xgReD/g/36sJQOJHHphiIIfL7iEN
+         hNKoftGwFfcCtVGv9vOKz+L2TRKNS95s9m94/uw3Wlqtl+EVMFW4GwcylLN1owJ0WpqB
+         D+ehNtkz2gZIHnEHqjF4/TYW8lGET4f4ECWnjpgAKaY94N3XggTk8kXWK/OP/umUKsQY
+         kXTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+WIm5hmSN2OmSuQJOts8t0F9/3FnmKAv+vIoX+0L1nY=;
-        b=CWMVxGhx0ohTif25nt9kejP1JMFpPsELVW1XbmiPPhrcl89irz6ur2omqlE2WDqKdF
-         7Jnopz9pXYZJxL6ACPeRavqtdhKWl0C8NT5v3olPSN2FW4wIuRMxbelHVEW0PiV0d56h
-         7bRrVRaaQO91GdNhOW5jf7xD8/Gu6AY329qxuTMncQsTMOzuhx0FJp7wrxrU36CLVhaO
-         17AZfsHBRuWGCkkwhor8TMGkoB9Kc+5yl1Ds7zGVovwnihANzJ0qQFdrr4otMd8aszCy
-         FRj7m+sTGLxsmA0D7CcNduPTFGbef/S4mee5fj6KqcKE8RvsDpJ2uckxiNUiVYkOqnSt
-         2a7w==
-X-Gm-Message-State: APjAAAXRP5XfLiZUfAAFEDXxBU2XmYENE448PLE9Z07C3fzbQ94hl8nk
-        NhTadWED3EGv3ud31UZrt0DiLA+Q
-X-Google-Smtp-Source: APXvYqyUk1/sS5cJIMAOwt8HA/QHDr6iPh3ipJYdAuwTQ/ezBphEz65aik1SJWQnNoGlN5hCqrSpSg==
-X-Received: by 2002:a81:9845:: with SMTP id p66mr19305979ywg.497.1556587101308;
-        Mon, 29 Apr 2019 18:18:21 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
-        by smtp.gmail.com with ESMTPSA id i206sm16087163ywi.99.2019.04.29.18.18.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 18:18:19 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F32DF4111F; Mon, 29 Apr 2019 21:18:18 -0400 (EDT)
-Date:   Mon, 29 Apr 2019 21:18:18 -0400
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: perf tools build broken after v5.1-rc1
-Message-ID: <20190430011818.GE7857@kernel.org>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org>
- <20190425214800.GC21829@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EoMvgvSdq7xp2mVjAhF0hgkQM6qSVYMsPBoCdVngzjI=;
+        b=b7OBGq6t1bYD7VNEwI0vcpIYfvrv/7B85MBnzZfWG4kTpGBzHCDttf87HqrrWjVxhu
+         trx+kpZPZeos/54+dsTN/zH0hHaBlSQZCBujjvAQ3uxnRaXkdvyBPEEmAXHD1zbPx4fF
+         z1n1jNojQLg54bln3/s9LWaZBRWmdfQPEi2BG6sAHSttjPjB9Tc31hsyEVIaFTl6H1NC
+         rp8IB44Bh7AzvhWOzRA8cNVPNO8C1TO3vwP5gbFNeIfVxnN+gcBa0nFWrYzQWfhQ86uH
+         zn/RYJJ7A1x8E44rX6D7KZAvBHoae3usGV0F6jePghRSpjDfCcOtT79MZuF8ZzIkOc7a
+         vgzA==
+X-Gm-Message-State: APjAAAXww0CE/HEp62vH/6VPq3ROFWCAFflkDgiX9KZVfPbNmRjUwvqU
+        ZqMuo1dsgMUtebybgmkyUhI=
+X-Google-Smtp-Source: APXvYqw/LEUE+KiL7EniyAU18MXAjpCPXJormtvvZLg/UGUm3s4DAWZritdQghy25tajK8dfJMFg7g==
+X-Received: by 2002:a17:902:7e04:: with SMTP id b4mr44288169plm.211.1556587362108;
+        Mon, 29 Apr 2019 18:22:42 -0700 (PDT)
+Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id y3sm11207510pfe.9.2019.04.29.18.22.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 18:22:41 -0700 (PDT)
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+To:     peter_hong@fintek.com.tw, johan@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+Subject: [PATCH V9 1/4] USB: serial: f81232: fix interrupt worker not stop
+Date:   Tue, 30 Apr 2019 09:22:29 +0800
+Message-Id: <1556587352-19500-1-git-send-email-hpeter+linux_kernel@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Apr 29, 2019 at 05:14:54PM +0000, Vineet Gupta escreveu:
-> On 4/25/19 2:48 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:
-> >>> When building perf for ARC (v5.1-rc2) I get the following
-> >>  
-> >>> | In file included from bench/futex-hash.c:26:
-> >>> | bench/futex.h: In function 'futex_wait':
-> >>> | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this function);
-> >>  
-> >>> git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools headers uapi:
-> >>> Sync copy of asm-generic/unistd.h with the kernel sources")
-> >> Humm, I have to check why this:
-> >>
-> >> [perfbuilder@quaco ~]$ podman images | grep ARC
-> >> docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uClibc          4c259582a8e6   5 weeks ago      846 MB
-> >> [perfbuilder@quaco ~]$
-> >>
-> >> isn't catching this... :-\
-> >>
-> >> FROM docker.io/fedora:24
-> >> MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>
-> >> ENV TOOLCHAIN=arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install
-> >> ENV CROSS=arc-linux-
-> >> ENV SOURCEFILE=${TOOLCHAIN}.tar.gz
-> >> RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findutils xz
-> >> RUN wget https://urldefense.proofpoint.com/v2/url?u=https-3A__github.com_foss-2Dfor-2Dsynopsys-2Ddwc-2Darc-2Dprocessors_toolchain_releases_download_arc-2D2017.09-2Drc2_-24-257BSOURCEFILE-257D&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=7FgpX6o3vAhwMrMhLh-4ZJey5kjdNUwOL2CWsFwR4T8&m=HjtufCLozrW47pS5C2YH3safLHQE7eEtmHFZsSWrz1M&s=29g4oKvGuYcLgheCUvZh3wojhhljivpLd8aj7Ur4sKQ&e=
-> >> <SNIP>
-> >> COPY rx_and_build.sh /
-> >> ENV EXTRA_MAKE_ARGS=NO_LIBBPF=1
-> >> ENV ARCH=arc
-> >> ENV CROSS_COMPILE=/${TOOLCHAIN}/bin/${CROSS}
-> >> ENV EXTRA_CFLAGS=-matomic
-> > So, now I have a libnuma crossbuilt in this container that allows me to
-> > build a ARC perf binary linked with zlib and numactl-devel, but only
-> > after I applied the fix below.
-> >
-> > Can you please provide the feature detection header in the build? I.e.
-> > what I have with my ARC cross build container right now, after applying
-> > the patch below is:
-> >
-> > [perfbuilder@60d5802468f6 perf]$ make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" -C /git/perf/tools/perf O=/tmp/build/perf
-> > make: Entering directory '/git/perf/tools/perf'
-> >   BUILD:   Doing 'make -j8' parallel build
-> > sh: line 0: command: -c: invalid option
-> > command: usage: command [-pVv] command [arg ...]
-> >
-> > Auto-detecting system features:
-> > ...                         dwarf: [ OFF ]
-> > ...            dwarf_getlocations: [ OFF ]
-> > ...                         glibc: [ on  ]
-> 
-> Not related to current issue, this run uses a uClibc toolchain and yet it is
-> detecting glibc - doesn't seem right to me.
+The F81232 will use interrupt worker to handle MSR change.
+This patch will fix the issue that interrupt work should stop
+in close() and suspend().
 
-Ok, I'll improve that, I think it just tries to detect a libc, yeah,
-see:
+Cc: Johan Hovold <johan@kernel.org>
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+---
+v9:
+	1: change the sequence from patch index from 2 to 1.
+	2: using tty_port_initialized() to determinate port open state.
 
-[acme@quaco linux]$ cat tools/build/feature/test-glibc.c
-// SPDX-License-Identifier: GPL-2.0
-#include <stdlib.h>
+v8:
+	1: no change
 
-#if !defined(__UCLIBC__)
-#include <gnu/libc-version.h>
-#else
-#define XSTR(s) STR(s)
-#define STR(s) #s
-#endif
+v7:
+	1: first introduce to this series patch.
 
-int main(void)
-{
-#if !defined(__UCLIBC__)
-	const char *version = gnu_get_libc_version();
-#else
-	const char *version = XSTR(__GLIBC__) "." XSTR(__GLIBC_MINOR__);
-#endif
+ drivers/usb/serial/f81232.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-	return (long)version;
-}
-[acme@quaco linux]$
-
-[perfbuilder@59ca4b424ded /]$ grep __GLIBC__ /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/*.h
-/arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:   The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
-/arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:#define	__GLIBC__	2
-/arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
-[perfbuilder@59ca4b424ded /]$
-
-Isn't that part of uClibc?
+diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
+index 0dcdcb4b2cde..d43ec999bc5e 100644
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -556,9 +556,12 @@ static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
  
-> > ...                          gtk2: [ OFF ]
-> > ...                      libaudit: [ OFF ]
-> > ...                        libbfd: [ OFF ]
-> > ...                        libelf: [ OFF ]
-> > ...                       libnuma: [ on  ]
-> 
-> Wondering why that is - for me numa is off - even when using a glibc toolchain.
-> 
-> > ...        numa_num_possible_cpus: [ on  ]
-> > ...                       libperl: [ OFF ]
-> > ...                     libpython: [ OFF ]
-> > ...                      libslang: [ OFF ]
-> > ...                     libcrypto: [ OFF ]
-> > ...                     libunwind: [ OFF ]
-> > ...            libdw-dwarf-unwind: [ OFF ]
-> > ...                          zlib: [ OFF ]
-> > ...                          lzma: [ OFF ]
-> > ...                     get_cpuid: [ OFF ]
-> > ...                           bpf: [ on  ]
-> > ...                        libaio: [ OFF ]
-> > ...        disassembler-four-args: [ OFF ]
-> >
-> >
-> 
-> For my glibc toolchain, here's the feature detection output
-> 
-> Auto-detecting system features:
-> ...                         dwarf: [ on  ]
-> ...            dwarf_getlocations: [ OFF ]
-> ...                         glibc: [ on  ]
-> ...                          gtk2: [ OFF ]
-> ...                      libaudit: [ OFF ]
-> ...                        libbfd: [ OFF ]
-> ...                        libelf: [ on  ]
-> ...                       libnuma: [ OFF ]
-> ...        numa_num_possible_cpus: [ OFF ]
-> ...                       libperl: [ OFF ]
-> ...                     libpython: [ OFF ]
-> ...                      libslang: [ OFF ]
-> ...                     libcrypto: [ OFF ]
-> ...                     libunwind: [ OFF ]
-> ...            libdw-dwarf-unwind: [ OFF ]
-> ...                          zlib: [ OFF ]
-> ...                          lzma: [ OFF ]
-> ...                     get_cpuid: [ OFF ]
-> ...                           bpf: [ on  ]
-> ...                        libaio: [ on  ]
-> ...        disassembler-four-args: [ OFF ]
-> 
-> 
-
+ static void f81232_close(struct usb_serial_port *port)
+ {
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++
+ 	f81232_port_disable(port);
+ 	usb_serial_generic_close(port);
+ 	usb_kill_urb(port->interrupt_in_urb);
++	flush_work(&port_priv->interrupt_work);
+ }
+ 
+ static void f81232_dtr_rts(struct usb_serial_port *port, int on)
+@@ -632,6 +635,40 @@ static int f81232_port_remove(struct usb_serial_port *port)
+ 	return 0;
+ }
+ 
++static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
++{
++	struct usb_serial_port *port = serial->port[0];
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i)
++		usb_kill_urb(port->read_urbs[i]);
++
++	usb_kill_urb(port->interrupt_in_urb);
++
++	if (port_priv)
++		flush_work(&port_priv->interrupt_work);
++
++	return 0;
++}
++
++static int f81232_resume(struct usb_serial *serial)
++{
++	struct usb_serial_port *port = serial->port[0];
++	int result;
++
++	if (tty_port_initialized(&port->port)) {
++		result = usb_submit_urb(port->interrupt_in_urb, GFP_NOIO);
++		if (result) {
++			dev_err(&port->dev, "submit interrupt urb failed: %d",
++					result);
++			return result;
++		}
++	}
++
++	return usb_serial_generic_resume(serial);
++}
++
+ static struct usb_serial_driver f81232_device = {
+ 	.driver = {
+ 		.owner =	THIS_MODULE,
+@@ -655,6 +692,8 @@ static struct usb_serial_driver f81232_device = {
+ 	.read_int_callback =	f81232_read_int_callback,
+ 	.port_probe =		f81232_port_probe,
+ 	.port_remove =		f81232_port_remove,
++	.suspend =		f81232_suspend,
++	.resume =		f81232_resume,
+ };
+ 
+ static struct usb_serial_driver * const serial_drivers[] = {
 -- 
+2.7.4
 
-- Arnaldo
