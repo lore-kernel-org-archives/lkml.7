@@ -2,292 +2,123 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B60DC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEA5C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3836021670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B790B205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbHTatfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfD3NSp (ORCPT
+        id S1727453AbfD3NUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:18:45 -0400
-Received: from mga12.intel.com ([192.55.52.136]:11199 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfD3NSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:18:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 06:18:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,413,1549958400"; 
-   d="scan'208";a="146996241"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 30 Apr 2019 06:18:41 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hLSef-0004OS-8W; Tue, 30 Apr 2019 21:18:41 +0800
-Date:   Tue, 30 Apr 2019 21:17:47 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     kbuild-all@01.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v4] proc/sysctl: add shared variables for range check
-Message-ID: <201904302103.x1aEbTZu%lkp@intel.com>
-References: <20190429222613.13345-1-mcroce@redhat.com>
+        Tue, 30 Apr 2019 09:20:31 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38297 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfD3NUb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:20:31 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e18so6861279lja.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GxUTvEwj+NBZpurZ2Ig0gOAGnCDy3ToJRSMidXZgrwA=;
+        b=nbHTatfrSBU52QO6/XAOdHj9n3sbWKACiGEOroIP1njriZJp1154c0zcMmUOEddftb
+         RHJG5EOjKR045xHsmGwBRk25Zpt4plyqn/QjXipfndHY4PBSZlr5wG+o+/JwaTTPxM2T
+         MhoVB9YsVgacvd6KF90nDt0wxErlKPxttItAjzHqChSUXtBUcL7DiCOtUiI8jtGV7l9u
+         /GRXc024g7onhK63Wn5BuFgcj1Jpq59TJA3MVz5rJv+nnUP5E3LhdOkx2Z1fDCT5B/Ez
+         8uTClrIbXDUjeJm3JKcRdmGlroD9T1vDJT8AYsYZwtLLO5K78rkzLewM9joqBiOrcpzh
+         wTjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GxUTvEwj+NBZpurZ2Ig0gOAGnCDy3ToJRSMidXZgrwA=;
+        b=Rz1IqRf7fU3HgBPP0aFWqz+Zc5mDRqmYp78uJ8XWzm86vbLOdNpxd5QUfNvyu3Q75J
+         WeEp+n6W6KbetxZp7fK7gNb9VLlnQ0yR2V6zzCmIySIt/8fmKr0fzQnErGIcQgi+zdNy
+         lpTkZECob3aKjWdXkp6SS8ax6u8xxK8WVQ0iL/iauV8O7tRgNKtn3IabimKi60Jx0dlz
+         FPCu1u9/sv26TqZGfMX2u2jyeM7F1gwLqp1rDBY57BWpVk+tGE5y2YxJGdwcuPFtrLKA
+         AmP3T7wRIIy2IGs5mpvkFVxM9vhGQCH/5IMMGmK8ohHco6NXMPcJpGcuftHl42docEkv
+         81VA==
+X-Gm-Message-State: APjAAAW2orGX5LMZX9HpcBw+CDyBevCLy1Smxi6kVmQ0XAtpugFptcBo
+        tXFHhww0mlICTOdv/+gpQWCJFROsDjRrP8bNXrlMLg==
+X-Google-Smtp-Source: APXvYqz6/C5cOSAi+LjOLFLkuA/ISsQ8fKMilHFI35qQ0Q11aqKw0onTyfbnQdSYNfhdSjCiVudD/DPj+qhrxqtjTUA=
+X-Received: by 2002:a2e:3a0f:: with SMTP id h15mr35417830lja.194.1556630428902;
+ Tue, 30 Apr 2019 06:20:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190429222613.13345-1-mcroce@redhat.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <CA+G9fYuZhS+QfgM0HrNm4B8Yb+0kwScxaURJDYXKPY-ML_L0cQ@mail.gmail.com>
+ <35ebc45a-5894-e2ab-3a97-2ce3f7efda44@xs4all.nl>
+In-Reply-To: <35ebc45a-5894-e2ab-3a97-2ce3f7efda44@xs4all.nl>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 30 Apr 2019 18:50:17 +0530
+Message-ID: <CA+G9fYuTpeu1MdLVe3ZNp3Bvx0c79mXwh2qun5MWseEweRO=FQ@mail.gmail.com>
+Subject: Re: vidioc_g_edid: BUG: Unable to handle kernel NULL pointer
+ dereference at virtual address 00000716
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>,
+        paul.kocialkowski@bootlin.com, ezequiel@collabora.com,
+        treding@nvidia.com, niklas.soderlund+renesas@ragnatech.se,
+        sakari.ailus@linux.intel.com,
+        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matteo,
+Hi Hans,
 
-Thank you for the patch! Perhaps something to improve:
+On Tue, 30 Apr 2019 at 12:58, Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>
+> On 4/30/19 9:10 AM, Naresh Kamboju wrote:
+> > v4l2-compliance test running on linux stable 4.9 reported kernel bug.
+> > The crash is pointing to kernel module "vivid.ko" which was loaded by
+> > test case. (  modprobe vivid.ko)
+> >
+> >
+>
+> It's a CEC related bug, this vivid patch should fix it. It's a backport of
+> commit ed356f110403 ("media: vivid: check if the cec_adapter is valid"). This
+> commit was only backported to 4.12 and up since it didn't apply to older kernels.
 
-[auto build test WARNING on net/master]
-[also build test WARNING on v5.1-rc7]
-[cannot apply to next-20190429]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Matteo-Croce/proc-sysctl-add-shared-variables-for-range-check/20190430-065026
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+I have tested this patch on x86_64 and confirms this works.
+v4l2-compliance test runs to complete successfully.
 
 
-sparse warnings: (new ones prefixed by >>)
+>
+> Feel free to post this patch (after testing!) to the stable mailinglist for
+> inclusion into 4.9.
 
->> drivers/parport/procfs.c:76:49: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct parport_device_info *info @@    got evice_info *info @@
->> drivers/parport/procfs.c:76:49: sparse:    expected struct parport_device_info *info
->> drivers/parport/procfs.c:76:49: sparse:    got void const *extra2
---
->> net/ipv4/devinet.c:2322:47: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct ipv4_devconf *cnf @@    got v4_devconf *cnf @@
->> net/ipv4/devinet.c:2322:47: sparse:    expected struct ipv4_devconf *cnf
->> net/ipv4/devinet.c:2322:47: sparse:    got void const *extra1
->> net/ipv4/devinet.c:2323:38: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net *net @@    got struct net *net @@
->> net/ipv4/devinet.c:2323:38: sparse:    expected struct net *net
->> net/ipv4/devinet.c:2323:38: sparse:    got void const *extra2
-   net/ipv4/devinet.c:2376:38: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net *net @@    got struct net *net @@
-   net/ipv4/devinet.c:2376:38: sparse:    expected struct net *net
-   net/ipv4/devinet.c:2376:38: sparse:    got void const *extra2
-   net/ipv4/devinet.c:2388:63: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct ipv4_devconf *cnf @@    got v4_devconf *cnf @@
-   net/ipv4/devinet.c:2388:63: sparse:    expected struct ipv4_devconf *cnf
-   net/ipv4/devinet.c:2388:63: sparse:    got void const *extra1
-   net/ipv4/devinet.c:2417:30: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net *net @@    got struct net *net @@
-   net/ipv4/devinet.c:2417:30: sparse:    expected struct net *net
-   net/ipv4/devinet.c:2417:30: sparse:    got void const *extra2
---
->> net/ipv6/addrconf.c:6029:37: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct inet6_dev *idev @@    got  inet6_dev *idev @@
->> net/ipv6/addrconf.c:6029:37: sparse:    expected struct inet6_dev *idev
->> net/ipv6/addrconf.c:6029:37: sparse:    got void const *extra1
->> net/ipv6/addrconf.c:6136:38: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net *net @@    got struct net *net @@
->> net/ipv6/addrconf.c:6136:38: sparse:    expected struct net *net
->> net/ipv6/addrconf.c:6136:38: sparse:    got void const *extra2
-   net/ipv6/addrconf.c:6152:53: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct inet6_dev *idev @@    got  inet6_dev *idev @@
-   net/ipv6/addrconf.c:6152:53: sparse:    expected struct inet6_dev *idev
-   net/ipv6/addrconf.c:6152:53: sparse:    got void const *extra1
-   net/ipv6/addrconf.c:6235:30: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net *net @@    got struct net *net @@
-   net/ipv6/addrconf.c:6235:30: sparse:    expected struct net *net
-   net/ipv6/addrconf.c:6235:30: sparse:    got void const *extra2
-   net/ipv6/addrconf.c:6282:45: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct inet6_dev *idev @@    got  inet6_dev *idev @@
-   net/ipv6/addrconf.c:6282:45: sparse:    expected struct inet6_dev *idev
-   net/ipv6/addrconf.c:6282:45: sparse:    got void const *extra1
---
->> net/ipv6/ndisc.c:1826:37: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net_device *dev @@    got net_device *dev @@
->> net/ipv6/ndisc.c:1826:37: sparse:    expected struct net_device *dev
->> net/ipv6/ndisc.c:1826:37: sparse:    got void const *extra1
---
->> net/decnet/dn_dev.c:252:39: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net_device *dev @@    got net_device *dev @@
->> net/decnet/dn_dev.c:252:39: sparse:    expected struct net_device *dev
->> net/decnet/dn_dev.c:252:39: sparse:    got void const *extra1
---
->> fs/fscache/main.c:61:46: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct workqueue_struct **wqp @@    got ue_struct **wqp @@
->> fs/fscache/main.c:61:46: sparse:    expected struct workqueue_struct **wqp
->> fs/fscache/main.c:61:46: sparse:    got void const *extra1
---
->> net/mpls/af_mpls.c:1370:44: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct mpls_dev *mdev @@    got t mpls_dev *mdev @@
->> net/mpls/af_mpls.c:1370:44: sparse:    expected struct mpls_dev *mdev
->> net/mpls/af_mpls.c:1370:44: sparse:    got void const *extra1
->> net/mpls/af_mpls.c:1372:38: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net *net @@    got struct net *net @@
->> net/mpls/af_mpls.c:1372:38: sparse:    expected struct net *net
->> net/mpls/af_mpls.c:1372:38: sparse:    got void const *extra2
---
->> net/netfilter/nf_log.c:422:32: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct net *net @@    got struct net *net @@
->> net/netfilter/nf_log.c:422:32: sparse:    expected struct net *net
->> net/netfilter/nf_log.c:422:32: sparse:    got void const *extra2
---
->> net/netfilter/ipvs/ip_vs_ctl.c:1664:40: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected struct netns_ipvs *ipvs @@    got netns_ipvs *ipvs @@
->> net/netfilter/ipvs/ip_vs_ctl.c:1664:40: sparse:    expected struct netns_ipvs *ipvs
->> net/netfilter/ipvs/ip_vs_ctl.c:1664:40: sparse:    got void const *extra2
-   net/netfilter/ipvs/ip_vs_ctl.c:1298:27: sparse: sparse: dereference of noderef expression
+I will post this patch on stable mailing list.
 
-vim +6029 net/ipv6/addrconf.c
+>
+> Regards,
+>
+>         Hans
+>
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> ---
+> --- a/drivers/media/platform/vivid/vivid-vid-common.c   2019-04-30 09:23:37.296797292 +0200
+> +++ b/drivers/media/platform/vivid/vivid-vid-common.c   2019-04-30 09:24:09.581261759 +0200
+> @@ -841,6 +841,7 @@
+>         if (edid->start_block + edid->blocks > dev->edid_blocks)
+>                 edid->blocks = dev->edid_blocks - edid->start_block;
+>         memcpy(edid->edid, dev->edid, edid->blocks * 128);
+> -       cec_set_edid_phys_addr(edid->edid, edid->blocks * 128, adap->phys_addr);
+> +       if (adap)
+> +               cec_set_edid_phys_addr(edid->edid, edid->blocks * 128, adap->phys_addr);
+>         return 0;
+>  }
 
-^1da177e Linus Torvalds    2005-04-16  6024  
-77751427 Marcelo Leitner   2015-02-23  6025  static
-77751427 Marcelo Leitner   2015-02-23  6026  int addrconf_sysctl_mtu(struct ctl_table *ctl, int write,
-77751427 Marcelo Leitner   2015-02-23  6027  			void __user *buffer, size_t *lenp, loff_t *ppos)
-77751427 Marcelo Leitner   2015-02-23  6028  {
-77751427 Marcelo Leitner   2015-02-23 @6029  	struct inet6_dev *idev = ctl->extra1;
-77751427 Marcelo Leitner   2015-02-23  6030  	int min_mtu = IPV6_MIN_MTU;
-77751427 Marcelo Leitner   2015-02-23  6031  	struct ctl_table lctl;
-77751427 Marcelo Leitner   2015-02-23  6032  
-77751427 Marcelo Leitner   2015-02-23  6033  	lctl = *ctl;
-77751427 Marcelo Leitner   2015-02-23  6034  	lctl.extra1 = &min_mtu;
-77751427 Marcelo Leitner   2015-02-23  6035  	lctl.extra2 = idev ? &idev->dev->mtu : NULL;
-77751427 Marcelo Leitner   2015-02-23  6036  
-77751427 Marcelo Leitner   2015-02-23  6037  	return proc_dointvec_minmax(&lctl, write, buffer, lenp, ppos);
-77751427 Marcelo Leitner   2015-02-23  6038  }
-77751427 Marcelo Leitner   2015-02-23  6039  
-56d417b1 Brian Haley       2009-06-01  6040  static void dev_disable_change(struct inet6_dev *idev)
-56d417b1 Brian Haley       2009-06-01  6041  {
-75538c2b Cong Wang         2013-05-29  6042  	struct netdev_notifier_info info;
-75538c2b Cong Wang         2013-05-29  6043  
-56d417b1 Brian Haley       2009-06-01  6044  	if (!idev || !idev->dev)
-56d417b1 Brian Haley       2009-06-01  6045  		return;
-56d417b1 Brian Haley       2009-06-01  6046  
-75538c2b Cong Wang         2013-05-29  6047  	netdev_notifier_info_init(&info, idev->dev);
-56d417b1 Brian Haley       2009-06-01  6048  	if (idev->cnf.disable_ipv6)
-75538c2b Cong Wang         2013-05-29  6049  		addrconf_notify(NULL, NETDEV_DOWN, &info);
-56d417b1 Brian Haley       2009-06-01  6050  	else
-75538c2b Cong Wang         2013-05-29  6051  		addrconf_notify(NULL, NETDEV_UP, &info);
-56d417b1 Brian Haley       2009-06-01  6052  }
-56d417b1 Brian Haley       2009-06-01  6053  
-56d417b1 Brian Haley       2009-06-01  6054  static void addrconf_disable_change(struct net *net, __s32 newf)
-56d417b1 Brian Haley       2009-06-01  6055  {
-56d417b1 Brian Haley       2009-06-01  6056  	struct net_device *dev;
-56d417b1 Brian Haley       2009-06-01  6057  	struct inet6_dev *idev;
-56d417b1 Brian Haley       2009-06-01  6058  
-03e4deff Kefeng Wang       2017-01-19  6059  	for_each_netdev(net, dev) {
-56d417b1 Brian Haley       2009-06-01  6060  		idev = __in6_dev_get(dev);
-56d417b1 Brian Haley       2009-06-01  6061  		if (idev) {
-56d417b1 Brian Haley       2009-06-01  6062  			int changed = (!idev->cnf.disable_ipv6) ^ (!newf);
-56d417b1 Brian Haley       2009-06-01  6063  			idev->cnf.disable_ipv6 = newf;
-56d417b1 Brian Haley       2009-06-01  6064  			if (changed)
-56d417b1 Brian Haley       2009-06-01  6065  				dev_disable_change(idev);
-56d417b1 Brian Haley       2009-06-01  6066  		}
-56d417b1 Brian Haley       2009-06-01  6067  	}
-56d417b1 Brian Haley       2009-06-01  6068  }
-56d417b1 Brian Haley       2009-06-01  6069  
-013d97e9 Francesco Ruggeri 2012-01-16  6070  static int addrconf_disable_ipv6(struct ctl_table *table, int *p, int newf)
-56d417b1 Brian Haley       2009-06-01  6071  {
-56d417b1 Brian Haley       2009-06-01  6072  	struct net *net;
-013d97e9 Francesco Ruggeri 2012-01-16  6073  	int old;
-013d97e9 Francesco Ruggeri 2012-01-16  6074  
-013d97e9 Francesco Ruggeri 2012-01-16  6075  	if (!rtnl_trylock())
-013d97e9 Francesco Ruggeri 2012-01-16  6076  		return restart_syscall();
-56d417b1 Brian Haley       2009-06-01  6077  
-56d417b1 Brian Haley       2009-06-01  6078  	net = (struct net *)table->extra2;
-013d97e9 Francesco Ruggeri 2012-01-16  6079  	old = *p;
-013d97e9 Francesco Ruggeri 2012-01-16  6080  	*p = newf;
-56d417b1 Brian Haley       2009-06-01  6081  
-013d97e9 Francesco Ruggeri 2012-01-16  6082  	if (p == &net->ipv6.devconf_dflt->disable_ipv6) {
-013d97e9 Francesco Ruggeri 2012-01-16  6083  		rtnl_unlock();
-56d417b1 Brian Haley       2009-06-01  6084  		return 0;
-88af182e Eric W. Biederman 2010-02-19  6085  	}
-56d417b1 Brian Haley       2009-06-01  6086  
-56d417b1 Brian Haley       2009-06-01  6087  	if (p == &net->ipv6.devconf_all->disable_ipv6) {
-56d417b1 Brian Haley       2009-06-01  6088  		net->ipv6.devconf_dflt->disable_ipv6 = newf;
-56d417b1 Brian Haley       2009-06-01  6089  		addrconf_disable_change(net, newf);
-013d97e9 Francesco Ruggeri 2012-01-16  6090  	} else if ((!newf) ^ (!old))
-56d417b1 Brian Haley       2009-06-01  6091  		dev_disable_change((struct inet6_dev *)table->extra1);
-56d417b1 Brian Haley       2009-06-01  6092  
-56d417b1 Brian Haley       2009-06-01  6093  	rtnl_unlock();
-56d417b1 Brian Haley       2009-06-01  6094  	return 0;
-56d417b1 Brian Haley       2009-06-01  6095  }
-56d417b1 Brian Haley       2009-06-01  6096  
-56d417b1 Brian Haley       2009-06-01  6097  static
-fe2c6338 Joe Perches       2013-06-11  6098  int addrconf_sysctl_disable(struct ctl_table *ctl, int write,
-56d417b1 Brian Haley       2009-06-01  6099  			    void __user *buffer, size_t *lenp, loff_t *ppos)
-56d417b1 Brian Haley       2009-06-01  6100  {
-56d417b1 Brian Haley       2009-06-01  6101  	int *valp = ctl->data;
-56d417b1 Brian Haley       2009-06-01  6102  	int val = *valp;
-88af182e Eric W. Biederman 2010-02-19  6103  	loff_t pos = *ppos;
-fe2c6338 Joe Perches       2013-06-11  6104  	struct ctl_table lctl;
-56d417b1 Brian Haley       2009-06-01  6105  	int ret;
-56d417b1 Brian Haley       2009-06-01  6106  
-013d97e9 Francesco Ruggeri 2012-01-16  6107  	/*
-013d97e9 Francesco Ruggeri 2012-01-16  6108  	 * ctl->data points to idev->cnf.disable_ipv6, we should
-013d97e9 Francesco Ruggeri 2012-01-16  6109  	 * not modify it until we get the rtnl lock.
-013d97e9 Francesco Ruggeri 2012-01-16  6110  	 */
-013d97e9 Francesco Ruggeri 2012-01-16  6111  	lctl = *ctl;
-013d97e9 Francesco Ruggeri 2012-01-16  6112  	lctl.data = &val;
-013d97e9 Francesco Ruggeri 2012-01-16  6113  
-013d97e9 Francesco Ruggeri 2012-01-16  6114  	ret = proc_dointvec(&lctl, write, buffer, lenp, ppos);
-56d417b1 Brian Haley       2009-06-01  6115  
-56d417b1 Brian Haley       2009-06-01  6116  	if (write)
-56d417b1 Brian Haley       2009-06-01  6117  		ret = addrconf_disable_ipv6(ctl, valp, val);
-88af182e Eric W. Biederman 2010-02-19  6118  	if (ret)
-88af182e Eric W. Biederman 2010-02-19  6119  		*ppos = pos;
-56d417b1 Brian Haley       2009-06-01  6120  	return ret;
-56d417b1 Brian Haley       2009-06-01  6121  }
-56d417b1 Brian Haley       2009-06-01  6122  
-c92d5491 stephen hemminger 2013-12-17  6123  static
-c92d5491 stephen hemminger 2013-12-17  6124  int addrconf_sysctl_proxy_ndp(struct ctl_table *ctl, int write,
-c92d5491 stephen hemminger 2013-12-17  6125  			      void __user *buffer, size_t *lenp, loff_t *ppos)
-c92d5491 stephen hemminger 2013-12-17  6126  {
-c92d5491 stephen hemminger 2013-12-17  6127  	int *valp = ctl->data;
-c92d5491 stephen hemminger 2013-12-17  6128  	int ret;
-c92d5491 stephen hemminger 2013-12-17  6129  	int old, new;
-c92d5491 stephen hemminger 2013-12-17  6130  
-c92d5491 stephen hemminger 2013-12-17  6131  	old = *valp;
-c92d5491 stephen hemminger 2013-12-17  6132  	ret = proc_dointvec(ctl, write, buffer, lenp, ppos);
-c92d5491 stephen hemminger 2013-12-17  6133  	new = *valp;
-c92d5491 stephen hemminger 2013-12-17  6134  
-c92d5491 stephen hemminger 2013-12-17  6135  	if (write && old != new) {
-c92d5491 stephen hemminger 2013-12-17 @6136  		struct net *net = ctl->extra2;
-c92d5491 stephen hemminger 2013-12-17  6137  
-c92d5491 stephen hemminger 2013-12-17  6138  		if (!rtnl_trylock())
-c92d5491 stephen hemminger 2013-12-17  6139  			return restart_syscall();
-c92d5491 stephen hemminger 2013-12-17  6140  
-c92d5491 stephen hemminger 2013-12-17  6141  		if (valp == &net->ipv6.devconf_dflt->proxy_ndp)
-85b3daad David Ahern       2017-03-28  6142  			inet6_netconf_notify_devconf(net, RTM_NEWNETCONF,
-85b3daad David Ahern       2017-03-28  6143  						     NETCONFA_PROXY_NEIGH,
-c92d5491 stephen hemminger 2013-12-17  6144  						     NETCONFA_IFINDEX_DEFAULT,
-c92d5491 stephen hemminger 2013-12-17  6145  						     net->ipv6.devconf_dflt);
-c92d5491 stephen hemminger 2013-12-17  6146  		else if (valp == &net->ipv6.devconf_all->proxy_ndp)
-85b3daad David Ahern       2017-03-28  6147  			inet6_netconf_notify_devconf(net, RTM_NEWNETCONF,
-85b3daad David Ahern       2017-03-28  6148  						     NETCONFA_PROXY_NEIGH,
-c92d5491 stephen hemminger 2013-12-17  6149  						     NETCONFA_IFINDEX_ALL,
-c92d5491 stephen hemminger 2013-12-17  6150  						     net->ipv6.devconf_all);
-c92d5491 stephen hemminger 2013-12-17  6151  		else {
-c92d5491 stephen hemminger 2013-12-17  6152  			struct inet6_dev *idev = ctl->extra1;
-c92d5491 stephen hemminger 2013-12-17  6153  
-85b3daad David Ahern       2017-03-28  6154  			inet6_netconf_notify_devconf(net, RTM_NEWNETCONF,
-85b3daad David Ahern       2017-03-28  6155  						     NETCONFA_PROXY_NEIGH,
-c92d5491 stephen hemminger 2013-12-17  6156  						     idev->dev->ifindex,
-c92d5491 stephen hemminger 2013-12-17  6157  						     &idev->cnf);
-c92d5491 stephen hemminger 2013-12-17  6158  		}
-c92d5491 stephen hemminger 2013-12-17  6159  		rtnl_unlock();
-c92d5491 stephen hemminger 2013-12-17  6160  	}
-c92d5491 stephen hemminger 2013-12-17  6161  
-c92d5491 stephen hemminger 2013-12-17  6162  	return ret;
-c92d5491 stephen hemminger 2013-12-17  6163  }
-c92d5491 stephen hemminger 2013-12-17  6164  
 
-:::::: The code at line 6029 was first introduced by commit
-:::::: 77751427a1ff25b27d47a4c36b12c3c8667855ac ipv6: addrconf: validate new MTU before applying it
-
-:::::: TO: Marcelo Leitner <mleitner@redhat.com>
-:::::: CC: David S. Miller <davem@davemloft.net>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Best regards
+Naresh Kamboju
