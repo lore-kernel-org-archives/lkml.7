@@ -2,97 +2,99 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10190C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7BBC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D44D621734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556642830;
-	bh=S48pNAsTw7BEZ36AW1e1TSyWImwtIKer4k1K+rKGgdc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=shtrajp3A8HQM4KLoZna6Hcjc5JwU6DDf81i6q0CtTz9cmYfbhKjX4F722NEiFwre
-	 3Wriq0IzVL6wmLs37aXJC5c0Qn6uQBj5nej0TqZHfImxsnqvQC7IMU1ZrDjC1QJD8W
-	 yk+PGEE7tp9Wu+H7rt46HxYPSnC293Jq3SCGmS1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 0903D2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfD3QrJ (ORCPT
+        id S1726514AbfD3Qrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 12:47:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:51649 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbfD3QrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:47:09 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26F482173E
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 16:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556642828;
-        bh=S48pNAsTw7BEZ36AW1e1TSyWImwtIKer4k1K+rKGgdc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OfHCGrtUbiFJqLJB8TSFf7ldICXZA8iqik5XHx+uu4ZsE2UzlSk2VQWW6WYUsnUZr
-         hB6najoPJUOCFObaMzBNFOEjtzUHebohanEO9HfhAwUAKuM2Lq8Up3CVLv213XzgBu
-         yfoLpbcuVy3Wm2yY972dudRHvVjBb4hHzg0rXing=
-Received: by mail-wr1-f50.google.com with SMTP id k16so21839887wrn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:47:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAWh+HnjCq9W83ZwzmompChx+3SKqFSGf8JEYPBxmRWvkNhIH7pY
-        86tSjtKwrZjo3bP92reWK39wf4sAT2SXEbCvKNHRAA==
-X-Google-Smtp-Source: APXvYqzHEqvh6x3xmyRtRqKnO98xcUmDJgjMNHD1klJcb2L6wbWRNt5Tm23i28W+RKElRE+GeRwRbM4AmqFkXIl8JL4=
-X-Received: by 2002:a5d:4e82:: with SMTP id e2mr2206324wru.199.1556642826765;
- Tue, 30 Apr 2019 09:47:06 -0700 (PDT)
+        id S1725942AbfD3Qrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:47:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:47:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="342168766"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga005.fm.intel.com with ESMTP; 30 Apr 2019 09:47:45 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hLVuy-0007xt-7k; Tue, 30 Apr 2019 19:47:44 +0300
+Date:   Tue, 30 Apr 2019 19:47:44 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     linux-acpi@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] ACPI / property: fix handling of data_nodes in
+ acpi_get_next_subnode()
+Message-ID: <20190430164744.GO9224@smile.fi.intel.com>
+References: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
+ <20190430163041.GN9224@smile.fi.intel.com>
+ <ba56e822-92ee-7a75-5c62-45f3a572ccde@linux.intel.com>
 MIME-Version: 1.0
-References: <20190318104925.16600-1-sudeep.holla@arm.com> <20190318104925.16600-4-sudeep.holla@arm.com>
-In-Reply-To: <20190318104925.16600-4-sudeep.holla@arm.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 30 Apr 2019 09:46:54 -0700
-X-Gmail-Original-Message-ID: <CALCETrXEebRqX0W8MuS0SeaMDpEO5KdS3k7id279hZgHrmc8yA@mail.gmail.com>
-Message-ID: <CALCETrXEebRqX0W8MuS0SeaMDpEO5KdS3k7id279hZgHrmc8yA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
- ptrace_syscall_enter hook
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     X86 ML <x86@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Jeff Dike <jdike@addtoit.com>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba56e822-92ee-7a75-5c62-45f3a572ccde@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 3:49 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> Now that we have a new hook ptrace_syscall_enter that can be called from
-> syscall entry code and it handles PTRACE_SYSEMU in generic code, we
-> can do some cleanup using the same in syscall_trace_enter.
->
-> Further the extra logic to find single stepping PTRACE_SYSEMU_SINGLESTEP
-> in syscall_slow_exit_work seems unnecessary. Let's remove the same.
->
+On Tue, Apr 30, 2019 at 11:41:50AM -0500, Pierre-Louis Bossart wrote:
+> On 4/30/19 11:30 AM, Andy Shevchenko wrote:
+> > On Tue, Apr 30, 2019 at 10:52:29AM -0500, Pierre-Louis Bossart wrote:
+> > > When the DSDT tables expose devices with subdevices and a set of
+> > > hierarchical _DSD properties, the data returned by
+> > > acpi_get_next_subnode() is incorrect, with the results suggesting a bad
+> > > pointer assignment. The parser works fine with device_nodes or
+> > > data_nodes, but not with a combination of the two.
+> > > 
+> > > The problem is traced to an invalid pointer used when jumping from
+> > > handling device_nodes to data nodes. The existing code looks for data
+> > > nodes below the last subdevice found instead of the common root. Fix
+> > > by forcing the acpi_device pointer to be derived from the same fwnode
+> > > for the two types of subnodes.
+> > > 
+> > > This same problem of handling device and data nodes was already fixed
+> > > in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
+> > > node parsing in acpi_get_next_subnode()")' but broken later by 'commit
+> > > 34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
+> > > this should probably go to linux-stable all the way to 4.12
+> > 
+> > Period is missed in above sentence.
+> > 
+> > I think it make sense to add Fixes: tag.
+> 
+> Thanks Andy for the review. I hesitated to add a fixes tag. The line about
+> resetting the adev pointer was indeed removed in the latter commit, but
+> there were a slew of other changes done later by Sakari on hierarchical _DSD
+> so it's quite complicated to say when this was last fully functional.
 
-Unless the patch set contains a selftest that exercises all the
-interesting cases here, NAK.  To be clear, there needs to be a test
-that passes on an unmodified kernel and still passes on a patched
-kernel.  And that test case needs to *fail* if, for example, you force
-"emulated" to either true or false rather than reading out the actual
-value.
+I see, btw, you forgot to add Sakari to Cc list, he is doing a lot lately WRT
+device properties.
 
---Andy
+> > Nevertheless,
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > 
+> > Thank you for fixing this interesting issue!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
