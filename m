@@ -2,185 +2,167 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE26C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66E5C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395112147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LVUwgkJE"
+	by mail.kernel.org (Postfix) with ESMTP id 7380821670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfD3Pbf (ORCPT
+        id S1726124AbfD3PfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:31:35 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40672 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfD3Pbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:31:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UFVIjv111448;
-        Tue, 30 Apr 2019 10:31:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556638278;
-        bh=4QGSJ62ES/Rz1i9PeLAfB7uPMJpr8cbFT9IZNWvLw44=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=LVUwgkJEySc1NQiMsX7SfPcrMmupuezK/cY5XOVpW+9wsYmba8CupcBX2Z/8ciJTn
-         eMabujMf2PJ5J2ait6x+tEDoU/sViesLPsZcoq4kWsF5adYVLcbnyUoyCeXl/RYe1z
-         wrzaZdhGIF5WnPsr0JL9TqciPofjnJuHifm+FjLk=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UFVICH095519
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 10:31:18 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 10:31:18 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 10:31:18 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UFVIqs113684;
-        Tue, 30 Apr 2019 10:31:18 -0500
-Date:   Tue, 30 Apr 2019 10:31:18 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     "Matwey V. Kornilov" <matwey@sai.msu.ru>
-CC:     <gregkh@linuxfoundation.org>, <matwey.kornilov@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 6/6] usb: musb: Decrease URB starting latency in
- musb_advance_schedule()
-Message-ID: <20190430153118.GI20993@uda0271908>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        gregkh@linuxfoundation.org, matwey.kornilov@gmail.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20190403185310.8437-1-matwey@sai.msu.ru>
- <20190403185310.8437-7-matwey@sai.msu.ru>
+        Tue, 30 Apr 2019 11:35:00 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49272 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfD3Pe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:34:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A538374;
+        Tue, 30 Apr 2019 08:34:59 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E52C43F719;
+        Tue, 30 Apr 2019 08:34:56 -0700 (PDT)
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+To:     Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        devicetree@vger.kernel.org,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be>
+ <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com>
+Date:   Tue, 30 Apr 2019 16:34:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190403185310.8437-7-matwey@sai.msu.ru>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg and all devs,
-
-On Wed, Apr 03, 2019 at 09:53:10PM +0300, Matwey V. Kornilov wrote:
-> Previously, the algorithm was the following:
+On 30/04/2019 16:02, Rob Herring wrote:
+> On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+>>
+>> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>> v2:
+>>   - Add "renesas,gic-spi-base",
+>>   - Document RZ/A2M.
+>> ---
+>>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+>>  1 file changed, 30 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+>> new file mode 100644
+>> index 0000000000000000..ea8ddb6955338ccd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+>> @@ -0,0 +1,30 @@
+>> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+>> +
+>> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+>> +RZ/A1 and RZ/A2 SoCs:
+>> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+>> +    interrupts,
+>> +  - NMI edge select.
+>> +
+>> +Required properties:
+>> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+>> +               fallback.
+>> +               Examples with soctypes are:
+>> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+>> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+>> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+>> +                                in interrupts.txt in this directory)
+>> +  - interrupt-controller: Marks the device as an interrupt controller
+>> +  - reg: Base address and length of the memory resource used by the interrupt
+>> +         controller
+>> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
 > 
->  1. giveback current URB
->  2. if current qh is not empty
->     then start next URB
->  3. if current qh is empty
->     then dispose the qh, find next qh if any, and start URB.
-> 
-> It may take a while to run urb->callback inside URB giveback which is
-> run synchronously in musb. In order to improve the latency we rearrange
-> the function behaviour for the case when qh is not empty: next URB is
-> started before URB giveback. When qh is empty then the behaviour is
-> intentionally kept in order not to break existing inter qh scheduling:
-> URB giveback could potentionally enqueue other URB to the empty qh
-> preventing it from being disposed.
+> Why isn't this just an 'interrupts' property?
 
-This patch changes the sequence of urb giveback in musb.
+That's likely because of kernel limitations. The DT code does an
+of_populate() on any device that it finds, parse the "interrupts"
+propertiy, resulting in the irq_descs being populated.
 
-	before				after
-	------				-----
-1. giveback current urb			1. start next urb if qh != empty
-2. start next urb if qh != empty	2. giveback current urb
+That creates havoc, as these interrupts are not for this device, but for
+something that is connected to it. This is merely a bridge of some sort.
 
-I see there is a potential that the urb giveback could be out of order,
-for example, if urb giveback in BH and the next urb finishes before BH
-runs.
+Furthermore, this is a rather long established practice: gic-v2m,
+gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
+for one reason or another plug onto the GIC use the same method.
 
-If this potential is possible, is it a problem for any class driver?
+> Plus, without 'interrupts' walking the hierarchy is broken.
+
+Erm... Which hierarchy?
 
 Thanks,
--Bin.
-
-> 
-> Before this patch, time spent in urb->callback led to the following
-> glitches between the host and a hub during isoc transfer (line 4):
-> 
->     11.624492 d=  0.000124 [130.6 +  1.050] [  4] SPLIT
->     11.624492 d=  0.000000 [130.6 +  1.467] [  3] IN   : 3.5
->     11.624493 d=  0.000000 [130.6 +  1.967] [ 37] DATA0: aa 08 [skipped...]
->     11.625617 d=  0.001124 [131.7 +  1.050] [  4] SPLIT
->     11.625617 d=  0.000000 [131.7 +  1.467] [  3] IN   : 3.5
->     11.625867 d=  0.000250 [132.1 +  1.050] [  4] SPLIT
->     11.625867 d=  0.000000 [132.1 +  1.467] [  3] IN   : 3.5
->     11.625868 d=  0.000001 [132.1 +  1.983] [  3] DATA0: 00 00
->     11.626617 d=  0.000749 [132.7 +  1.050] [  4] SPLIT
->     11.626617 d=  0.000000 [132.7 +  1.467] [  3] IN   : 3.5
->     11.626867 d=  0.000250 [133.1 +  1.050] [  4] SPLIT
->     11.626867 d=  0.000000 [133.1 +  1.467] [  3] IN   : 3.5
->     11.626868 d=  0.000000 [133.1 +  1.967] [  3] DATA0: 00 00
-> 
-> After the hub, they look as the following and may lead to broken
-> perepherial transfer (as in case of PWC based webcam):
-> 
->     11.332004 d=  0.000997 [ 30.0 +  3.417] [  3] IN   : 5.5
->     11.332007 d=  0.000003 [ 30.0 +  6.833] [800] DATA0: 8a 1c [skipped...]
->     11.334004 d=  0.001997 [ 32.0 +  3.417] [  3] IN   : 5.5
->     11.334007 d=  0.000003 [ 32.0 +  6.750] [  3] DATA0: 00 00
->     11.335004 d=  0.000997 [ 33   +  3.417] [  3] IN   : 5.5
->     11.335007 d=  0.000003 [ 33   +  6.750] [  3] DATA0: 00 00
-> 
-> Removing this glitches makes us able to successfully run 10fps
-> video stream from the webcam attached via USB hub. That was
-> previously impossible.
-> 
-> Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
-> ---
->  drivers/usb/musb/musb_host.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-> index ed99ecd4e63a..75be92873b5b 100644
-> --- a/drivers/usb/musb/musb_host.c
-> +++ b/drivers/usb/musb/musb_host.c
-> @@ -85,6 +85,11 @@ static bool musb_qh_empty(struct musb_qh *qh)
->  	return list_empty(&qh->hep->urb_list);
->  }
->  
-> +static bool musb_qh_singular(struct musb_qh *qh)
-> +{
-> +	return list_is_singular(&qh->hep->urb_list);
-> +}
-> +
->  static void musb_qh_unlink_hep(struct musb_qh *qh)
->  {
->  	if (!qh->hep)
-> @@ -362,6 +367,19 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
->  		break;
->  	}
->  
-> +	if (ready && !musb_qh_singular(qh)) {
-> +		struct urb *next_urb = list_next_entry(urb, urb_list);
-> +
-> +		musb_dbg(musb, "... next ep%d %cX urb %p", hw_ep->epnum, is_in ? 'R' : 'T', next_urb);
-> +		musb_start_urb(musb, is_in, qh, next_urb);
-> +
-> +		qh->is_ready = 0;
-> +		musb_giveback(musb, urb, status);
-> +		qh->is_ready = ready;
-> +
-> +		return;
-> +	}
-> +
->  	qh->is_ready = 0;
->  	musb_giveback(musb, urb, status);
->  	qh->is_ready = ready;
-> -- 
-> 2.16.4
-> 
+	
+	M.
+-- 
+Jazz is not dead. It just smells funny...
