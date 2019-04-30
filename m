@@ -2,243 +2,73 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C194C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B91C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9BD2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2143E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:09:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2RoXeika"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfD3IGF (ORCPT
+        id S1726488AbfD3IJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:06:05 -0400
-Received: from 7.mo68.mail-out.ovh.net ([46.105.63.230]:58615 "EHLO
-        7.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfD3IGF (ORCPT
+        Tue, 30 Apr 2019 04:09:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33996 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfD3IJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:06:05 -0400
-X-Greylist: delayed 601 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Apr 2019 04:06:02 EDT
-Received: from player787.ha.ovh.net (unknown [10.108.54.209])
-        by mo68.mail-out.ovh.net (Postfix) with ESMTP id 2A693123CE5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:49:19 +0200 (CEST)
-Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player787.ha.ovh.net (Postfix) with ESMTPSA id 0350155C06F1;
-        Tue, 30 Apr 2019 07:49:02 +0000 (UTC)
-From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 2/2] media: imx7-media-csi: add i.MX6UL support
-Date:   Tue, 30 Apr 2019 09:49:11 +0200
-Message-Id: <20190430074911.8361-1-sebastien.szymanski@armadeus.com>
-X-Mailer: git-send-email 2.19.2
+        Tue, 30 Apr 2019 04:09:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NM23KKv9SPDsosuv69/SSr34Q0Nt39CFbFpZnOc9o7E=; b=2RoXeikaey7tkyiZJ806dJcKL
+        WQdWjIeIkwi/PW4lIDdFjmPcRfayzpGW0zdBM7HnrQa+ufVDRFxU+WqeHF4aXbAV4mwEfoDUfhMCw
+        nwoRJUivRcJiMgB7DdyRvaA9+9k0vaicPVdwvUySaXzJoRUJopMzQ6CIF0W4p6PS0jDpFm+oLyRFL
+        bjkdTkUoRH3gXr2nwqhDSDaJzonBr6UZcoifdnbEP+brpwFpgd1TwXO6OGL4SJ40KMfTg36yT8Obr
+        ONFGFRKja6mswOuSVY/wmgu8tO4XumxyjC6Zq/1HZp/N+j/aCAreT8lE+h7amjhSNlb8StYZJYi+z
+        OaL4tRvGw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLNpA-0007Ms-LZ; Tue, 30 Apr 2019 08:09:12 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 555A129D2D6D4; Tue, 30 Apr 2019 10:09:10 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 10:09:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eric W Biederman <ebiederm@xmission.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ying Huang <ying.huang@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] latencytop lock usage improvement
+Message-ID: <20190430080910.GI2623@hirez.programming.kicks-ass.net>
+References: <1556525011-28022-1-git-send-email-feng.tang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 18302347411810046999
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdduvdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556525011-28022-1-git-send-email-feng.tang@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L support
-to imx7-media-csi driver.
+On Mon, Apr 29, 2019 at 04:03:28PM +0800, Feng Tang wrote:
+> Hi All,
+> 
+> latencytop is a very nice tool for tracing system latency hotspots, and
+> we heavily use it in our LKP test suites.
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
----
- This patch needs the following patch from Rui Miguel Silva:
- https://patchwork.linuxtv.org/patch/55657/
-
- I have tested this patch with a OV5640 sensor (8-bit parallel). The pipeline is:
-
- Device topology
- - entity 1: csi (2 pads, 2 links)
-            type V4L2 subdev subtype Unknown flags 0
-            device node name /dev/v4l-subdev0
-        pad0: Sink
-                [fmt:UYVY8_2X8/640x480 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
-                <- "ov5640 1-003c":0 [ENABLED]
-        pad1: Source
-                [fmt:UYVY8_2X8/640x480 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
-                -> "csi capture":0 [ENABLED]
-
- - entity 4: csi capture (1 pad, 1 link)
-            type Node subtype V4L flags 0
-            device node name /dev/video0
-        pad0: Sink
-                <- "csi":1 [ENABLED]
-
- - entity 10: ov5640 1-003c (1 pad, 1 link)
-             type V4L2 subdev subtype Sensor flags 0
-             device node name /dev/v4l-subdev1
-        pad0: Source
-                [fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:srgb xfer:srgb ycbcr:601 quantization:full-range]
-                -> "csi":0 [ENABLED]
-
- drivers/staging/media/imx/imx7-media-csi.c | 61 ++++++++++++++++------
- 1 file changed, 46 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index a708a0340eb1..ef4534a96fa0 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -154,6 +154,11 @@
- 
- static const char * const imx7_csi_clk_id[] = {"axi", "dcic", "mclk"};
- 
-+enum csi_type {
-+	IMX7,
-+	IMX6UL
-+};
-+
- struct imx7_csi {
- 	struct device *dev;
- 	struct v4l2_subdev sd;
-@@ -195,6 +200,7 @@ struct imx7_csi {
- 	bool is_init;
- 	bool is_streaming;
- 	bool is_csi2;
-+	enum csi_type type;
- 
- 	struct completion last_eof_completion;
- };
-@@ -554,6 +560,14 @@ static int imx7_csi_pad_link_validate(struct v4l2_subdev *sd,
- 	if (ret)
- 		return ret;
- 
-+	if (csi->type == IMX6UL) {
-+		mutex_lock(&csi->lock);
-+		csi->is_csi2 = false;
-+		mutex_unlock(&csi->lock);
-+
-+		return 0;
-+	}
-+
- 	ret = imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
- 	if (ret) {
- 		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
-@@ -763,6 +777,7 @@ static int imx7_csi_configure(struct imx7_csi *csi)
- 	struct v4l2_pix_format *out_pix = &vdev->fmt.fmt.pix;
- 	__u32 in_code = csi->format_mbus[IMX7_CSI_PAD_SINK].code;
- 	u32 cr1, cr18;
-+	int width = out_pix->width;
- 
- 	if (out_pix->field == V4L2_FIELD_INTERLACED) {
- 		imx7_csi_deinterlace_enable(csi, true);
-@@ -772,15 +787,27 @@ static int imx7_csi_configure(struct imx7_csi *csi)
- 		imx7_csi_buf_stride_set(csi, 0);
- 	}
- 
--	imx7_csi_set_imagpara(csi, out_pix->width, out_pix->height);
-+	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
-+
-+	if (!csi->is_csi2) {
-+		if (out_pix->pixelformat == V4L2_PIX_FMT_UYVY ||
-+		    out_pix->pixelformat == V4L2_PIX_FMT_YUYV)
-+			width *= 2;
-+
-+		imx7_csi_set_imagpara(csi, width, out_pix->height);
-+
-+		cr18 |= (BIT_BASEADDR_SWITCH_EN | BIT_BASEADDR_SWITCH_SEL |
-+			BIT_BASEADDR_CHG_ERR_EN);
-+		imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
- 
--	if (!csi->is_csi2)
- 		return 0;
-+	}
-+
-+	imx7_csi_set_imagpara(csi, width, out_pix->height);
- 
- 	cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
- 	cr1 &= ~BIT_GCLK_MODE;
- 
--	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
- 	cr18 &= BIT_MIPI_DATA_FORMAT_MASK;
- 	cr18 |= BIT_DATA_FROM_MIPI;
- 
-@@ -815,12 +842,9 @@ static int imx7_csi_enable(struct imx7_csi *csi)
- {
- 	imx7_csi_sw_reset(csi);
- 
--	if (csi->is_csi2) {
--		imx7_csi_dmareq_rff_enable(csi);
--		imx7_csi_hw_enable_irq(csi);
--		imx7_csi_hw_enable(csi);
--		return 0;
--	}
-+	imx7_csi_dmareq_rff_enable(csi);
-+	imx7_csi_hw_enable_irq(csi);
-+	imx7_csi_hw_enable(csi);
- 
- 	return 0;
- }
-@@ -1218,20 +1242,33 @@ static int imx7_csi_clocks_get(struct imx7_csi *csi)
- 	return devm_clk_bulk_get(dev, csi->num_clks, csi->clks);
- }
- 
-+static const struct of_device_id imx7_csi_of_match[] = {
-+	{ .compatible = "fsl,imx7-csi", .data = (void *)IMX7 },
-+	{ .compatible = "fsl,imx6ul-csi", .data = (void *)IMX6UL },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
-+
- static int imx7_csi_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
- 	struct imx_media_dev *imxmd;
- 	struct imx7_csi *csi;
-+	const struct of_device_id *of_id;
- 	struct resource *res;
- 	int ret;
- 
-+	of_id = of_match_node(imx7_csi_of_match, node);
-+	if (!of_id)
-+		return -ENODEV;
-+
- 	csi = devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
- 	if (!csi)
- 		return -ENOMEM;
- 
- 	csi->dev = dev;
-+	csi->type = (enum csi_type)of_id->data;
- 
- 	ret = imx7_csi_clocks_get(csi);
- 	if (ret < 0) {
-@@ -1349,12 +1386,6 @@ static int imx7_csi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id imx7_csi_of_match[] = {
--	{ .compatible = "fsl,imx7-csi" },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
--
- static struct platform_driver imx7_csi_driver = {
- 	.probe = imx7_csi_probe,
- 	.remove = imx7_csi_remove,
--- 
-2.19.2
-
+What data does latency-top give that perf cannot give you? Ideally we'd
+remove latencytop entirely.
