@@ -2,107 +2,142 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E8BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3BDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312512075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxutZQVn"
+	by mail.kernel.org (Postfix) with ESMTP id 45EA02075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfD3NYI (ORCPT
+        id S1727282AbfD3NYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:24:08 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34804 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfD3NYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:24:07 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 3so226279lfr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qnpMUYkMmL9pa1NwW2JEoP1ItjcZEv+YmAjkVOUYqyQ=;
-        b=PxutZQVnmGiTrO83tBry4NYVOaB4lJN09Oxip41bc355LYSr1LYeo1lMf41kY1dbPT
-         Az2YTmBmBe5x538dT+JRe1+JYJCz1FoZpsDQi9caft0FfB24tBWxwTJv5idXE3tCj309
-         ndFGbbBo2539UPe3H3O748UbjUEB5fXovu/9xWmEfhXYjNsDa8MGUA7FNgzTEwcV2NYx
-         BzUCxvrUpvXfcEOn53rFrUqaBy+pwlNLr7oHR8TPl+xrEZ1Otp/fmWcn5hIPL8+9gurK
-         qq05lb0/OOuJZi6nG1tjGqZ27/O0Si7Z+rZrnHkVNiZ1eEaLz2uJksbogv7Sccdikqvu
-         +sog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qnpMUYkMmL9pa1NwW2JEoP1ItjcZEv+YmAjkVOUYqyQ=;
-        b=pzJiAuxAkNC9GyWmiTtIN8PV0HNmLU+C3W6ASp0HOGb3AKLyGzM/ELNOq6nbTe7Pjl
-         3RMYhZJcbnNeYo0YEL2pXg3pbUiDsT6K0RZtLB/BmF67YLUK945bQj0SgD1YxT2lxKrH
-         YV73lBQgZ8XWdIA24YQFO5185EOgN5epwKQMlpd64x5AoEvQYLpPUHhSM3NCYbmgySC0
-         91RRBUUIaRBOJ+HkbHkjCKrKsD7kGPtUn0tQVpL5MBGKh+8Opbkxw/spApihWFJu9ME9
-         4IDGVdGYioNJ/BaBAxhuueYcYHPRnQ7p8ujpE8wXpJfaikP+kTFwRQLkYB2E5s6133JT
-         jbkg==
-X-Gm-Message-State: APjAAAVjlkk0vcZiUbS3mmDJQrd5+aMZBw1aG1mfvf/2I130TvYWoexB
-        fy7azHJj5GgByNcKk5zy1TQ=
-X-Google-Smtp-Source: APXvYqxY66JUV3S/EHKt8chK3vxOG3tpmuDiZ0EEFbAfPD2vCxwBJVAqoqvpolQPE+tgSK7CerPsJg==
-X-Received: by 2002:a19:5507:: with SMTP id n7mr15109749lfe.140.1556630645642;
-        Tue, 30 Apr 2019 06:24:05 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id s24sm7499626ljs.30.2019.04.30.06.24.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 06:24:04 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 7333A46019C; Tue, 30 Apr 2019 16:24:03 +0300 (MSK)
-Date:   Tue, 30 Apr 2019 16:24:03 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, brgl@bgdev.pl,
-        arunks@codeaurora.org, geert+renesas@glider.be, mhocko@kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        ldufour@linux.ibm.com, rppt@linux.ibm.com, mguzik@redhat.com,
-        mkoutny@suse.cz, vbabka@suse.cz, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] mm: get_cmdline use arg_lock instead of mmap_sem
-Message-ID: <20190430132403.GG2673@uranus.lan>
-References: <20190418182321.GJ3040@uranus.lan>
- <20190430081844.22597-1-mkoutny@suse.com>
- <20190430081844.22597-2-mkoutny@suse.com>
- <4c79fb09-c310-4426-68f7-8b268100359a@virtuozzo.com>
- <20190430093808.GD2673@uranus.lan>
- <1a7265fa-610b-1f2a-e55f-b3a307a39bf2@virtuozzo.com>
- <20190430104517.GF2673@uranus.lan>
- <20190430105609.GA23779@blackbody.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190430105609.GA23779@blackbody.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 30 Apr 2019 09:24:15 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47040 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbfD3NYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:24:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE63780D;
+        Tue, 30 Apr 2019 06:24:14 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D3BA3F5AF;
+        Tue, 30 Apr 2019 06:24:13 -0700 (PDT)
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: [PATCH] io_uring: avoid page allocation warnings
+Date:   Tue, 30 Apr 2019 14:24:05 +0100
+Message-Id: <20190430132405.8268-1-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:56:10PM +0200, Michal Koutný wrote:
-> On Tue, Apr 30, 2019 at 01:45:17PM +0300, Cyrill Gorcunov <gorcunov@gmail.com> wrote:
-> > It setups these parameters unconditionally. I need to revisit
-> > this moment. Technically (if only I'm not missing something
-> > obvious) we might have a race here with prctl setting up new
-> > params, but this should be harmless since most of them (except
-> > stack setup) are purely informative data.
->
-> FTR, when I reviewed that usage, I noticed it was missing the
-> synchronization. My understanding was that the mm_struct isn't yet
-> shared at this moment. I can see some of the operations take place after
-> flush_old_exec (where current->mm = mm_struct), so potentially it is
-> shared since then. OTOH, I guess there aren't concurrent parties that
-> could access the field at this stage of exec.
+In io_sqe_buffer_register() we allocate a number of arrays based on the
+iov_len from the user-provided iov. While we limit iov_len to SZ_1G,
+we can still attempt to allocate arrays exceeding MAX_ORDER.
 
-Just revisited this code -- we're either executing prctl, either execve.
-Since both operates with current task we're safe.
+On a 64-bit system with 4KiB pages, for an iov where iov_base = 0x10 and
+iov_len = SZ_1G, we'll calculate that nr_pages = 262145. When we try to
+allocate a corresponding array of (16-byte) bio_vecs, requiring 4194320
+bytes, which is greater than 4MiB. This results in SLUB warning that
+we're trying to allocate greater than MAX_ORDER, and failing the
+allocation.
+
+Avoid this by passing __GFP_NOWARN when allocating arrays for the
+user-provided iov_len. We'll gracefully handle the failed allocation,
+returning -ENOMEM to userspace.
+
+We should probably consider lowering the limit below SZ_1G, or reworking
+the array allocations.
+
+Full splat from before this patch:
+
+WARNING: CPU: 1 PID: 2314 at mm/page_alloc.c:4595 __alloc_pages_nodemask+0x7ac/0x2938 mm/page_alloc.c:4595
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 2314 Comm: syz-executor326 Not tainted 5.1.0-rc7-dirty #4
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+ dump_backtrace+0x0/0x2f0 include/linux/compiler.h:193
+ show_stack+0x20/0x30 arch/arm64/kernel/traps.c:158
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x110/0x190 lib/dump_stack.c:113
+ panic+0x384/0x68c kernel/panic.c:214
+ __warn+0x2bc/0x2c0 kernel/panic.c:571
+ report_bug+0x228/0x2d8 lib/bug.c:186
+ bug_handler+0xa0/0x1a0 arch/arm64/kernel/traps.c:956
+ call_break_hook arch/arm64/kernel/debug-monitors.c:301 [inline]
+ brk_handler+0x1d4/0x388 arch/arm64/kernel/debug-monitors.c:316
+ do_debug_exception+0x1a0/0x468 arch/arm64/mm/fault.c:831
+ el1_dbg+0x18/0x8c
+ __alloc_pages_nodemask+0x7ac/0x2938 mm/page_alloc.c:4595
+ alloc_pages_current+0x164/0x278 mm/mempolicy.c:2132
+ alloc_pages include/linux/gfp.h:509 [inline]
+ kmalloc_order+0x20/0x50 mm/slab_common.c:1231
+ kmalloc_order_trace+0x30/0x2b0 mm/slab_common.c:1243
+ kmalloc_large include/linux/slab.h:480 [inline]
+ __kmalloc+0x3dc/0x4f0 mm/slub.c:3791
+ kmalloc_array include/linux/slab.h:670 [inline]
+ io_sqe_buffer_register fs/io_uring.c:2472 [inline]
+ __io_uring_register fs/io_uring.c:2962 [inline]
+ __do_sys_io_uring_register fs/io_uring.c:3008 [inline]
+ __se_sys_io_uring_register fs/io_uring.c:2990 [inline]
+ __arm64_sys_io_uring_register+0x9e0/0x1bc8 fs/io_uring.c:2990
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
+ el0_svc_common.constprop.0+0x148/0x2e0 arch/arm64/kernel/syscall.c:83
+ el0_svc_handler+0xdc/0x100 arch/arm64/kernel/syscall.c:129
+ el0_svc+0x8/0xc arch/arm64/kernel/entry.S:948
+SMP: stopping secondary CPUs
+Dumping ftrace buffer:
+   (ftrace buffer empty)
+Kernel Offset: disabled
+CPU features: 0x002,23000438
+Memory Limit: none
+Rebooting in 1 seconds..
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/io_uring.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 48fa6e86bfd6..25fc8cb56fc5 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2453,10 +2453,10 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+ 			kfree(vmas);
+ 			kfree(pages);
+ 			pages = kmalloc_array(nr_pages, sizeof(struct page *),
+-						GFP_KERNEL);
++						GFP_KERNEL | __GFP_NOWARN);
+ 			vmas = kmalloc_array(nr_pages,
+ 					sizeof(struct vm_area_struct *),
+-					GFP_KERNEL);
++					GFP_KERNEL | __GFP_NOWARN);
+ 			if (!pages || !vmas) {
+ 				ret = -ENOMEM;
+ 				if (ctx->account_mem)
+@@ -2467,7 +2467,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+ 		}
+ 
+ 		imu->bvec = kmalloc_array(nr_pages, sizeof(struct bio_vec),
+-						GFP_KERNEL);
++						GFP_KERNEL | __GFP_NOWARN);
+ 		ret = -ENOMEM;
+ 		if (!imu->bvec) {
+ 			if (ctx->account_mem)
+-- 
+2.11.0
+
