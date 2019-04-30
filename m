@@ -2,315 +2,231 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC339C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB16C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88EAD2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C8E21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="P5g0wcUh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N19U9oDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfD3HfU (ORCPT
+        id S1726657AbfD3HfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:35:20 -0400
-Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:7758
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726145AbfD3HfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:35:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vbjdh2AfeHkuvuS2ySYHDZD5qcbaXKW2Tm84wUv7+E4=;
- b=P5g0wcUhqbRTgDkZW2C2Es2aWCbOTVe0BEQutEawh2NKnupRDEgmAOEBCdS+Zs7W8gf+zaPvX+skAi6C6spblKeeRMqHvLKPROPYq2al3X28c7VFAXVmkNOPNdMostDrXEZCaied2CstyPWbvv3vNBueQivUermFjffVITFs4cY=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB4973.eurprd08.prod.outlook.com (10.255.158.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 07:35:11 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::6841:2153:b91f:759]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::6841:2153:b91f:759%4]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
- 07:35:11 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [v1,1/2] drm/komeda: Adds SMMU support
-Thread-Topic: [v1,1/2] drm/komeda: Adds SMMU support
-Thread-Index: AQHU/yc+xmv2QA5efE+dpUJtxoIdaQ==
-Date:   Tue, 30 Apr 2019 07:35:11 +0000
-Message-ID: <20190430073505.GA9516@james-ThinkStation-P300>
-References: <1556605118-22700-2-git-send-email-lowry.li@arm.com>
-In-Reply-To: <1556605118-22700-2-git-send-email-lowry.li@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.9.4 (2018-02-28)
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR0302CA0016.apcprd03.prod.outlook.com
- (2603:1096:202::26) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1d83dda2-8fff-41e7-a3dc-08d6cd3e60a0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4973;
-x-ms-traffictypediagnostic: VE1PR08MB4973:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VE1PR08MB4973117985943CBAC67AFB0DB33A0@VE1PR08MB4973.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:183;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(39860400002)(346002)(136003)(396003)(376002)(366004)(189003)(199004)(53936002)(52116002)(14454004)(76176011)(102836004)(71190400001)(71200400001)(9686003)(6512007)(81156014)(5024004)(4326008)(186003)(14444005)(6862004)(256004)(8936002)(7736002)(25786009)(305945005)(26005)(8676002)(6246003)(33656002)(81166006)(66066001)(6636002)(2906002)(33716001)(66446008)(11346002)(1076003)(5660300002)(6436002)(64756008)(3846002)(316002)(66556008)(66476007)(386003)(6116002)(86362001)(486006)(446003)(66946007)(476003)(54906003)(68736007)(6486002)(6506007)(478600001)(99286004)(97736004)(229853002)(55236004)(73956011)(58126008)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4973;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VqB5iF2l4N69VvhOn0bP7TM1pvDLW2gJrK60L6kUSfg99EWDnKLKhdxdanRu9gRnQLTZMYeNxgzAYWPdtkYCQo9xhZ4IRc9BmmEZyhmjyDiq+OHAFIyy7UAV5f2aw/pH/lPCvG/DlxpRni2dOJyN0vUx1rIuWdGU2jMHHZunBDz4cyLlKi1NYCGixFdRuGbYHBfV/Lh9H//2Tgqc0s7fV6XHeLNDR4HP+a63T/Ge0o7V7fFGLezwEuIUSZUQPn2HDn9n+lxbrr7A47DYHecEAU4oBjHL3nzD1pzrgU+X0yVTohU4Mm4ZEjAolLHW+G+rTr6TWaLr5VxdTdvQ3SNy0YJM7ZZQIWemPnIxtEPKQ5OOFnqlf/+tDn0pKRhYTGU8a3/KuoQjvGk5DyKWilPhCdV7U4zDbzHykJ+0O4ASbdI=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <57024DA22CC5984B82F94FF156699D59@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Apr 2019 03:35:10 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45548 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfD3HfI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:35:08 -0400
+Received: by mail-lj1-f195.google.com with SMTP id w12so42439ljh.12;
+        Tue, 30 Apr 2019 00:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mtTeypozSEdVW8H84rjErApUVCz52elY8ixwIbauNlE=;
+        b=N19U9oDaIa0WH54p4wVwJulsqsAi7JJpPotAcBQKUnrnOLXGyWemV6NBT+9ikDwQMr
+         +9ww2vlWtsrIZTrG8M0yXoa8oMIDULAusp8o8tjuuJXTlK2ic4WjZHcE6Eoz5hlHTmh8
+         5MzaXAO7YcIe0z2eIYuY9ZzgqsQKdJoKcQ33p7i0P5bsoI7hxBavjeJzufy2M5NYJ+7Z
+         r7VtfJCu/PWAYEcXg/gld+oXXfSSxc89hXrTNhvRKXYzFP3R5OOFlZw2SMIsbZ/Nh5Zx
+         QUfMz1EZl+OBxJwENe4k7GKa+i4xYu5awaRXN9Nw1TkhxqWUrl8IAlNlb8bLqMNHk7Fn
+         2gow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mtTeypozSEdVW8H84rjErApUVCz52elY8ixwIbauNlE=;
+        b=d1nwZl/qneIu3EV0DZ5PoM8SLu+PFqIQvn/B05MMkwUNtXTW9PoqMAnMA3uOzjlLs0
+         LTDq1LQj44grN5Cangjksa13T6kwjo3B3Fh5VIntsohtqKJOrcFJ6SwjBbOj7+Y9wXy8
+         8ULKdOb5Hpf5vVYjuDCUwZ99RAq/Rm6YBpANoUhtkLsaobvlDuxTLaUGPOi0kipF1U8J
+         fdimrOswD2y9TEUYyJPBE3/lnrYO+2yny0JY5ueINOf4jyiQ1/x+UPiX0BKVZSnrdFxs
+         aa1900EcU9eWzdhxk1HWuksCZFAu41+f8ecYmEoBSq87PgdJoK4gH7osRHYHKtIRfbwL
+         tH8A==
+X-Gm-Message-State: APjAAAUhf3uArzoTKOMQbpbwCY8Rc+X+dbf4Bnfb8+AkWI832cDgEFNA
+        N/EpbXldP/grQZsZWEHZwG0=
+X-Google-Smtp-Source: APXvYqxlzXiycrEmuePqR2+Qh9TD8x6HKtIy1DSOa8Jhg8qnv5FqJtTZmY2KgpulLigr5KphIx9tGQ==
+X-Received: by 2002:a2e:8e93:: with SMTP id z19mr15920182ljk.159.1556609705372;
+        Tue, 30 Apr 2019 00:35:05 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.133.52])
+        by smtp.gmail.com with ESMTPSA id v23sm2400572ljk.14.2019.04.30.00.35.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 00:35:04 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Pavel Begunkov <asml.silence@gmail.com>
+Subject: [PATCH 5/7] blk-mq: Precalculate hybrid polling time
+Date:   Tue, 30 Apr 2019 10:34:17 +0300
+Message-Id: <25f7593a0350e07997fc31d1317218ffeec4f6bf.1556609582.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1556609582.git.asml.silence@gmail.com>
+References: <cover.1556609582.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d83dda2-8fff-41e7-a3dc-08d6cd3e60a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 07:35:11.4722
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4973
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 06:19:29AM +0000, Lowry Li (Arm Technology China) w=
-rote:
-> Adds iommu_connect and disconnect for SMMU support, and configures
-> TBU translation once SMMU has been attached to the display device.
->=20
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> ---
->  .../gpu/drm/arm/display/komeda/d71/d71_component.c |  5 +++
->  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c   | 49 ++++++++++++++++=
-++++++
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.c    | 17 ++++++++
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.h    |  7 ++++
->  .../drm/arm/display/komeda/komeda_framebuffer.c    |  2 +
->  .../drm/arm/display/komeda/komeda_framebuffer.h    |  2 +
->  6 files changed, 82 insertions(+)
->=20
-> --=20
-> 1.9.1
->=20
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/dri=
-vers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> index 33ca171..9065040 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> @@ -215,6 +215,8 @@ static void d71_layer_update(struct komeda_component =
-*c,
->  	malidp_write32(reg, LAYER_FMT, kfb->format_caps->hw_id);
->  	malidp_write32(reg, BLK_IN_SIZE, HV_SIZE(st->hsize, st->vsize));
-> =20
-> +	if (kfb->is_va)
-> +		ctrl |=3D L_TBU_EN;
->  	malidp_write32_mask(reg, BLK_CONTROL, ctrl_mask, ctrl);
->  }
-> =20
-> @@ -348,6 +350,9 @@ static void d71_wb_layer_update(struct komeda_compone=
-nt *c,
->  			       fb->pitches[i] & 0xFFFF);
->  	}
-> =20
-> +	if (kfb->is_va)
-> +		ctrl |=3D LW_TBU_EN;
-> +
->  	malidp_write32(reg, LAYER_FMT, kfb->format_caps->hw_id);
->  	malidp_write32(reg, BLK_IN_SIZE, HV_SIZE(st->hsize, st->vsize));
->  	malidp_write32(reg, BLK_INPUT_ID0, to_d71_input_id(&state->inputs[0]));
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c b/drivers/g=
-pu/drm/arm/display/komeda/d71/d71_dev.c
-> index 9603de9..45c98a7 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> @@ -517,6 +517,53 @@ static void d71_init_fmt_tbl(struct komeda_dev *mdev=
-)
->  	table->n_formats =3D ARRAY_SIZE(d71_format_caps_table);
->  }
-> =20
-> +static int d71_connect_iommu(struct komeda_dev *mdev)
-> +{
-> +	struct d71_dev *d71 =3D mdev->chip_data;
-> +	u32 __iomem *reg =3D d71->gcu_addr;
-> +	u32 check_bits =3D (d71->num_pipelines =3D=3D 2) ?
-> +			 GCU_STATUS_TCS0 | GCU_STATUS_TCS1 : GCU_STATUS_TCS0;
-> +	int i, ret;
-> +
-> +	if (!d71->integrates_tbu)
-> +		return -1;
-> +
-> +	malidp_write32_mask(reg, BLK_CONTROL, 0x7, TBU_CONNECT_MODE);
-> +
-> +	ret =3D dp_wait_cond(has_bits(check_bits, malidp_read32(reg, BLK_STATUS=
-)),
-> +			100, 1000, 1000);
-> +	if (ret <=3D 0) {
-> +		DRM_ERROR("connect to TCU timeout!\n");
-> +		malidp_write32_mask(reg, BLK_CONTROL, 0x7, INACTIVE_MODE);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	for (i =3D 0; i < d71->num_pipelines; i++)
-> +		malidp_write32_mask(d71->pipes[i]->lpu_addr, LPU_TBU_CONTROL,
-> +				    LPU_TBU_CTRL_TLBPEN, LPU_TBU_CTRL_TLBPEN);
-> +	return 0;
-> +}
-> +
-> +static int d71_disconnect_iommu(struct komeda_dev *mdev)
-> +{
-> +	struct d71_dev *d71 =3D mdev->chip_data;
-> +	u32 __iomem *reg =3D d71->gcu_addr;
-> +	u32 check_bits =3D (d71->num_pipelines =3D=3D 2) ?
-> +			 GCU_STATUS_TCS0 | GCU_STATUS_TCS1 : GCU_STATUS_TCS0;
-> +	int ret;
-> +
-> +	malidp_write32_mask(reg, BLK_CONTROL, 0x7, TBU_DISCONNECT_MODE);
-> +
-> +	ret =3D dp_wait_cond(((malidp_read32(reg, BLK_STATUS) & check_bits) =3D=
-=3D 0),
-> +			100, 1000, 1000);
-> +	if (ret <=3D 0) {
-> +		DRM_ERROR("disconnect from TCU timeout!\n");
-> +		malidp_write32_mask(reg, BLK_CONTROL, 0x7, INACTIVE_MODE);
-> +	}
-> +
-> +	return ret > 0 ? 0 : -1;
-> +}
-> +
->  static struct komeda_dev_funcs d71_chip_funcs =3D {
->  	.init_format_table =3D d71_init_fmt_tbl,
->  	.enum_resources	=3D d71_enum_resources,
-> @@ -527,6 +574,8 @@ static void d71_init_fmt_tbl(struct komeda_dev *mdev)
->  	.on_off_vblank	=3D d71_on_off_vblank,
->  	.change_opmode	=3D d71_change_opmode,
->  	.flush		=3D d71_flush,
-> +	.connect_iommu	=3D d71_connect_iommu,
-> +	.disconnect_iommu =3D d71_disconnect_iommu,
->  };
-> =20
->  struct komeda_dev_funcs *
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gp=
-u/drm/arm/display/komeda/komeda_dev.c
-> index e4e5b58..2d97c82 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> @@ -251,6 +251,18 @@ struct komeda_dev *komeda_dev_create(struct device *=
-dev)
->  	dev->dma_parms =3D &mdev->dma_parms;
->  	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
-> =20
-> +	mdev->iommu =3D iommu_get_domain_for_dev(mdev->dev);
-> +	if (!mdev->iommu)
-> +		DRM_INFO("continue without IOMMU support!\n");
-> +
-> +	if (mdev->iommu && mdev->funcs->connect_iommu) {
-> +		err =3D mdev->funcs->connect_iommu(mdev);
-> +		if (err) {
-> +			DRM_ERROR("connect iommu failed.\n");
-> +			goto err_cleanup;
-> +		}
-> +	}
-> +
->  	err =3D sysfs_create_group(&dev->kobj, &komeda_sysfs_attr_group);
->  	if (err) {
->  		DRM_ERROR("create sysfs group failed.\n");
-> @@ -280,6 +292,11 @@ void komeda_dev_destroy(struct komeda_dev *mdev)
->  	debugfs_remove_recursive(mdev->debugfs_root);
->  #endif
-> =20
-> +	if (mdev->iommu && mdev->funcs->disconnect_iommu)
-> +		if (mdev->funcs->disconnect_iommu(mdev))
-> +			DRM_ERROR("disconnect iommu failed.\n");
-> +	mdev->iommu =3D NULL;
-> +
->  	for (i =3D 0; i < mdev->n_pipelines; i++) {
->  		komeda_pipeline_destroy(mdev, mdev->pipelines[i]);
->  		mdev->pipelines[i] =3D NULL;
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gp=
-u/drm/arm/display/komeda/komeda_dev.h
-> index 83ace71..dac1eda 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> @@ -92,6 +92,10 @@ struct komeda_dev_funcs {
->  	int (*enum_resources)(struct komeda_dev *mdev);
->  	/** @cleanup: call to chip to cleanup komeda_dev->chip data */
->  	void (*cleanup)(struct komeda_dev *mdev);
-> +	/** @connect_iommu: Optional, connect to external iommu */
-> +	int (*connect_iommu)(struct komeda_dev *mdev);
-> +	/** @disconnect_iommu: Optional, disconnect to external iommu */
-> +	int (*disconnect_iommu)(struct komeda_dev *mdev);
->  	/**
->  	 * @irq_handler:
->  	 *
-> @@ -184,6 +188,9 @@ struct komeda_dev {
->  	 */
->  	void *chip_data;
-> =20
-> +	/** @iommu: iommu domain */
-> +	struct iommu_domain *iommu;
-> +
->  	/** @debugfs_root: root directory of komeda debugfs */
->  	struct dentry *debugfs_root;
->  };
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c b/dr=
-ivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> index d5822a3..360ab70 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> @@ -201,6 +201,8 @@ struct drm_framebuffer *
->  		goto err_cleanup;
->  	}
-> =20
-> +	kfb->is_va =3D mdev->iommu ? true : false;
-> +
->  	return &kfb->base;
-> =20
->  err_cleanup:
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.h b/dr=
-ivers/gpu/drm/arm/display/komeda/komeda_framebuffer.h
-> index 6cbb2f6..f4046e2 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.h
-> @@ -21,6 +21,8 @@ struct komeda_fb {
->  	 * extends drm_format_info for komeda specific information
->  	 */
->  	const struct komeda_format_caps *format_caps;
-> +	/** @is_va: if smmu is enabled, it will be true */
-> +	bool is_va;
->  	/** @aligned_w: aligned frame buffer width */
->  	u32 aligned_w;
->  	/** @aligned_h: aligned frame buffer height */
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-Looks good to me.
+Calculation of sleep time for adaptive hybrid polling on per-request
+basis could become time consuming in the future.
+Precalculate it once per statistics gathering round.
 
-James.
---=20
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
-m>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ block/blk-core.c       |  5 ++++-
+ block/blk-mq-debugfs.c |  4 ++--
+ block/blk-mq.c         | 39 ++++++++++++++++++++++-----------------
+ include/linux/blkdev.h |  8 +++++++-
+ 4 files changed, 35 insertions(+), 21 deletions(-)
+
+diff --git a/block/blk-core.c b/block/blk-core.c
+index a55389ba8779..daadce545e43 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -474,7 +474,7 @@ static void blk_timeout_work(struct work_struct *work)
+ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id)
+ {
+ 	struct request_queue *q;
+-	int ret;
++	int ret, bucket;
+ 
+ 	q = kmem_cache_alloc_node(blk_requestq_cachep,
+ 				gfp_mask | __GFP_ZERO, node_id);
+@@ -536,6 +536,9 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id)
+ 	if (blkcg_init_queue(q))
+ 		goto fail_ref;
+ 
++	for (bucket = 0; bucket < BLK_MQ_POLL_STATS_BKTS; bucket++)
++		q->poll_info[bucket].sleep_ns = 0;
++
+ 	return q;
+ 
+ fail_ref:
+diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+index b62bd4468db3..ab55446cb570 100644
+--- a/block/blk-mq-debugfs.c
++++ b/block/blk-mq-debugfs.c
+@@ -44,11 +44,11 @@ static int queue_poll_stat_show(void *data, struct seq_file *m)
+ 
+ 	for (bucket = 0; bucket < BLK_MQ_POLL_STATS_BKTS/2; bucket++) {
+ 		seq_printf(m, "read  (%d Bytes): ", 1 << (9+bucket));
+-		print_stat(m, &q->poll_stat[2*bucket]);
++		print_stat(m, &q->poll_info[2*bucket].stat);
+ 		seq_puts(m, "\n");
+ 
+ 		seq_printf(m, "write (%d Bytes): ",  1 << (9+bucket));
+-		print_stat(m, &q->poll_stat[2*bucket+1]);
++		print_stat(m, &q->poll_info[2*bucket+1].stat);
+ 		seq_puts(m, "\n");
+ 	}
+ 	return 0;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index cc3f73e4e01c..4e54a004e345 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3312,14 +3312,32 @@ static void blk_mq_poll_stats_start(struct request_queue *q)
+ 	blk_stat_activate_msecs(q->poll_cb, 100);
+ }
+ 
++static void blk_mq_update_poll_info(struct poll_info *pi,
++				    struct blk_rq_stat *stat)
++{
++	u64 sleep_ns;
++
++	if (!stat->nr_samples)
++		sleep_ns = 0;
++	else
++		sleep_ns = (stat->mean + 1) / 2;
++
++	pi->stat = *stat;
++	pi->sleep_ns = sleep_ns;
++}
++
+ static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb)
+ {
+ 	struct request_queue *q = cb->data;
+ 	int bucket;
+ 
+ 	for (bucket = 0; bucket < BLK_MQ_POLL_STATS_BKTS; bucket++) {
+-		if (cb->stat[bucket].nr_samples)
+-			q->poll_stat[bucket] = cb->stat[bucket];
++		if (cb->stat[bucket].nr_samples) {
++			struct poll_info *pi = &q->poll_info[bucket];
++			struct blk_rq_stat *stat = &cb->stat[bucket];
++
++			blk_mq_update_poll_info(pi, stat);
++		}
+ 	}
+ }
+ 
+@@ -3327,7 +3345,6 @@ static unsigned long blk_mq_poll_nsecs(struct request_queue *q,
+ 				       struct blk_mq_hw_ctx *hctx,
+ 				       struct request *rq)
+ {
+-	unsigned long ret = 0;
+ 	int bucket;
+ 
+ 	/*
+@@ -3337,23 +3354,11 @@ static unsigned long blk_mq_poll_nsecs(struct request_queue *q,
+ 	if (!blk_poll_stats_enable(q))
+ 		return 0;
+ 
+-	/*
+-	 * As an optimistic guess, use half of the mean service time
+-	 * for this type of request. We can (and should) make this smarter.
+-	 * For instance, if the completion latencies are tight, we can
+-	 * get closer than just half the mean. This is especially
+-	 * important on devices where the completion latencies are longer
+-	 * than ~10 usec. We do use the stats for the relevant IO size
+-	 * if available which does lead to better estimates.
+-	 */
+ 	bucket = blk_mq_poll_stats_bkt(rq);
+ 	if (bucket < 0)
+-		return ret;
+-
+-	if (q->poll_stat[bucket].nr_samples)
+-		ret = (q->poll_stat[bucket].mean + 1) / 2;
++		return 0;
+ 
+-	return ret;
++	return q->poll_info[bucket].sleep_ns;
+ }
+ 
+ static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 317ab30d2904..40c77935fd61 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -385,6 +385,12 @@ static inline int blkdev_reset_zones_ioctl(struct block_device *bdev,
+ 
+ #endif /* CONFIG_BLK_DEV_ZONED */
+ 
++struct poll_info
++{
++	struct blk_rq_stat	stat;
++	u64			sleep_ns;
++};
++
+ struct request_queue {
+ 	/*
+ 	 * Together with queue_head for cacheline sharing
+@@ -477,7 +483,7 @@ struct request_queue {
+ 	int			poll_nsec;
+ 
+ 	struct blk_stat_callback	*poll_cb;
+-	struct blk_rq_stat	poll_stat[BLK_MQ_POLL_STATS_BKTS];
++	struct poll_info	poll_info[BLK_MQ_POLL_STATS_BKTS];
+ 
+ 	struct timer_list	timeout;
+ 	struct work_struct	timeout_work;
+-- 
+2.21.0
+
