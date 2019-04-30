@@ -2,165 +2,280 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8759C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B63C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B64F321734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A3020835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="PGyU6Gmh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Plflcced"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfD3QUd (ORCPT
+        id S1726547AbfD3QVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:20:33 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:50799 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfD3QUb (ORCPT
+        Tue, 30 Apr 2019 12:21:01 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34162 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfD3QVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:20:31 -0400
-Received: by mail-it1-f195.google.com with SMTP id q14so5649324itk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:20:30 -0700 (PDT)
+        Tue, 30 Apr 2019 12:21:01 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r30so425317lfn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=03ijMv3pe9wYEbXxfAK0xCr66KgdDf7vWbmZYlw+LGA=;
-        b=PGyU6Gmho9l/ZEy0l80G3ZBJ9GXjRmIO54nH4zlUDdlQWbPvOPm+kkJ5pXgC1uPvcE
-         DSGoqrba32u3DihKxfzsvcJ9X8U+U1pWzrMTMXKlKnEjl49pDOE75v9mDxPTBudyQYUF
-         0Ia9XgYnSNupinYJvomlYvrCwIzMTShGJdZJmpDBnKssQm1s0+v30K46NP03JlDaQhsq
-         JqvamY51I2GjnEUIKgJ1q5ZRITcuga/GOVtXwbePQQrceIOhr9Csx5XG43lT5ji7ES3u
-         VVeGmovdkwnXOjfsBZqvcBkUnxtqF2+SyVguJ54T8CoV1CjiwWrokj0YJfsE0fsfdDVn
-         Z2Fg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7LFX4m6Lt3Fkpbl5tbdO/OCAW/j54g5f6sgRiV7eIds=;
+        b=PlflccedOJwtsDcIZGqT2n6aDF1/5ZVOTQ2Xi1/qXc2hCdqTWY6ATSZn01TGmx3NYX
+         d9eYGo11mf3Fvgc+ryS5hZ2vdU2eh6hENLQXatdcLr3wkvNVhqF6ysiEZBdlS9S632Z2
+         ikpDdN57shcZTvPxpk175ctfhZ7f99+2fnhiBTIAMDy/ftfOY01E21PyBKbMn3m3/iSE
+         ICHn/tVb6l5PrQujWHs09VQJVmXKfeBWrPSTU06X85T7UUNILvnVblVeER7akFJlZAsP
+         6HSmrCjF6z/dkwXWXN0QAwQ85g4E/danUjkPNm6tE5mQGzS9YrRu4JOn2ISTioIk7ObY
+         1mDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=03ijMv3pe9wYEbXxfAK0xCr66KgdDf7vWbmZYlw+LGA=;
-        b=iwT9wGao6Ukn4RNeQXVdm75BKE1O2/QcmrqNtKvo3LgAcyP01sN7it6hWIAbFx4Cdf
-         RCckW7PUiyPzjHI0Qbgwe0+dJbokmk+anzOYcWXPiRJqidFwz8Vg8So0Hh7FAfKaakna
-         gzQfPZdNIc48Lpv+0K14FQJhFXy+bmirvjrkzwW757dEskTNIpna6EceefTtcl2ZdUZv
-         Zgitsvrg59e3REeHaGNP6lYH+zN+FL8c1xJc752yEOeNjuqy6qsSHGvLDv2JOZPiJpYL
-         fWcOIEd23vTuOw+21GhsUKOgim9XDeDWV9UwlRji6GYQKrQtaBlfkzUbyQB3syf1H3Ef
-         9yIg==
-X-Gm-Message-State: APjAAAUrEt4AuXMA3N+leN0GXlfHC+2TCexhh3baGsaPO0OYzL53zmkp
-        btyiPymhFfpCa4CCUne+wEYCsQ==
-X-Google-Smtp-Source: APXvYqwUryhDnffsFIh3zZKpZsR5lr+x1JWy0gtNIlVE7+ofo3OlcHTgfSCFq1qKOOUrG4fjMTNL8A==
-X-Received: by 2002:a24:5f90:: with SMTP id r138mr4298837itb.43.1556641229584;
-        Tue, 30 Apr 2019 09:20:29 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id i203sm1676403iti.7.2019.04.30.09.20.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 09:20:28 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: fix SQPOLL cpu validation
-To:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20190430123451.44227-1-mark.rutland@arm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4acfc374-1d4d-4698-51b9-6d12d30fb488@kernel.dk>
-Date:   Tue, 30 Apr 2019 10:20:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7LFX4m6Lt3Fkpbl5tbdO/OCAW/j54g5f6sgRiV7eIds=;
+        b=BJ2vBUcjG8GUjmOJ5gNtiWfZg/qnF+k/tdYehJKus21ttH0YP/J8mur5yyKFLG9VSv
+         O6us3w2C7bP7ob4pWddqzfmLfc++6TpIhf/qh6KWvc6lLksXlL+UY79o8oVqLKCNqPtS
+         GXmGZE54Nbdbbg5FbFT2EpdUOQwxZRDLvySd4zuEBAmo28Iz5Iy9DnGV8x9ewOJdYdcP
+         /rBayzlYGVnRshZKwN92LSK49PSVZz7AlOl8+BF2w00AsXzJWNAqkrAtKvZjoU/wOnKc
+         LrZUT6gr/Vm+b1srN+KXCQa56ap72fK7eMo4J+hLNJ/npjumbpnQyEKBnm7N2BKHK/e8
+         67zQ==
+X-Gm-Message-State: APjAAAW7w0s5xxUrEcYjyxw6+pldpKmWDIeNj5blwcd8XMCYoplYGjHI
+        QEdi00Ybd8g9uZaFWShplCJTjdSozs/uaC2dHZqIbA==
+X-Google-Smtp-Source: APXvYqwrbF5g3W+Lo2P1gvUFBtaVpkJNclSwI4AdhLaUElIUvqJDcP52COWBkS1vL/vehNKKQfMHhcZUeYaQTA6OXR4=
+X-Received: by 2002:a19:7005:: with SMTP id h5mr10850848lfc.143.1556641258150;
+ Tue, 30 Apr 2019 09:20:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190430123451.44227-1-mark.rutland@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190408214539.2705660-1-songliubraving@fb.com>
+ <20190410115907.GE19434@e105550-lin.cambridge.arm.com> <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
+ <CAKfTPtAFB3gSZYJN1BcjU_XoY=Pfu2xtea+2MEw7FkVc3mwTSA@mail.gmail.com>
+ <E97E73F4-CE8C-4CD7-B6B6-5F63A4E881B1@fb.com> <F0A127DD-F9B6-4FBE-B9AD-8E8B00A7D676@fb.com>
+ <CAKfTPtA_ouYCes9LnYn0quAKm273mi3vP-++GTBtYcQn07xc6Q@mail.gmail.com> <A62E5068-4A1E-44E3-99BB-02E98229C1E2@fb.com>
+In-Reply-To: <A62E5068-4A1E-44E3-99BB-02E98229C1E2@fb.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 30 Apr 2019 18:20:46 +0200
+Message-ID: <CAKfTPtAG3v=37wyLjzkNNK_6HdoMK6WO7AMYfa+G24rq2iyAfg@mail.gmail.com>
+Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Kernel Team <Kernel-team@fb.com>,
+        viresh kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 6:34 AM, Mark Rutland wrote:
-> In io_sq_offload_start(), we call cpu_possible() on an unbounded cpu
-> value from userspace. On v5.1-rc7 on arm64 with
-> CONFIG_DEBUG_PER_CPU_MAPS, this results in a splat:
-> 
->   WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpu_max_bits_warn include/linux/cpumask.h:121 [inline]
-> 
-> There was an attempt to fix this in commit:
-> 
->   917257daa0fea7a0 ("io_uring: only test SQPOLL cpu after we've verified it")
-> 
-> ... by adding a check after the cpu value had been limited to NR_CPU_IDS
-> using array_index_nospec(). However, this left an unbound check at the
-> start of the function, for which the warning still fires.
-> 
-> Let's fix this correctly by checking that the cpu value is bound by
-> nr_cpu_ids before passing it to cpu_possible(). Note that only
-> nr_cpu_ids of a cpumask are guaranteed to exist at runtime, and
-> nr_cpu_ids can be significantly smaller than NR_CPUs. For example, an
-> arm64 defconfig has NR_CPUS=256, while my test VM has 4 vCPUs.
-> 
-> Following the intent from the commit message for 917257daa0fea7a0, the
-> check is moved under the SQ_AFF branch, which is the only branch where
-> the cpu values is consumed. The check is performed before bounding the
-> value with array_index_nospec() so that we don't silently accept bogus
-> cpu values from userspace, where array_index_nospec() would force these
-> values to 0.
-> 
-> I suspect we can remove the array_index_nospec() call entirely, but I've
-> conservatively left that in place, updated to use nr_cpu_ids to match
-> the prior check.
-> 
-> Tested on arm64 with the Syzkaller reproducer:
-> 
->   https://syzkaller.appspot.com/bug?extid=cd714a07c6de2bc34293
->   https://syzkaller.appspot.com/x/repro.syz?x=15d8b397200000
-> 
-> Full splat from before this patch:
-> 
-> WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpu_max_bits_warn include/linux/cpumask.h:121 [inline]
-> WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpumask_check include/linux/cpumask.h:128 [inline]
-> WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 cpumask_test_cpu include/linux/cpumask.h:344 [inline]
-> WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_sq_offload_start fs/io_uring.c:2244 [inline]
-> WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_uring_create fs/io_uring.c:2864 [inline]
-> WARNING: CPU: 1 PID: 27601 at include/linux/cpumask.h:121 io_uring_setup+0x1108/0x15a0 fs/io_uring.c:2916
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 27601 Comm: syz-executor.0 Not tainted 5.1.0-rc7 #3
-> Hardware name: linux,dummy-virt (DT)
-> Call trace:
->  dump_backtrace+0x0/0x2f0 include/linux/compiler.h:193
->  show_stack+0x20/0x30 arch/arm64/kernel/traps.c:158
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x110/0x190 lib/dump_stack.c:113
->  panic+0x384/0x68c kernel/panic.c:214
->  __warn+0x2bc/0x2c0 kernel/panic.c:571
->  report_bug+0x228/0x2d8 lib/bug.c:186
->  bug_handler+0xa0/0x1a0 arch/arm64/kernel/traps.c:956
->  call_break_hook arch/arm64/kernel/debug-monitors.c:301 [inline]
->  brk_handler+0x1d4/0x388 arch/arm64/kernel/debug-monitors.c:316
->  do_debug_exception+0x1a0/0x468 arch/arm64/mm/fault.c:831
->  el1_dbg+0x18/0x8c
->  cpu_max_bits_warn include/linux/cpumask.h:121 [inline]
->  cpumask_check include/linux/cpumask.h:128 [inline]
->  cpumask_test_cpu include/linux/cpumask.h:344 [inline]
->  io_sq_offload_start fs/io_uring.c:2244 [inline]
->  io_uring_create fs/io_uring.c:2864 [inline]
->  io_uring_setup+0x1108/0x15a0 fs/io_uring.c:2916
->  __do_sys_io_uring_setup fs/io_uring.c:2929 [inline]
->  __se_sys_io_uring_setup fs/io_uring.c:2926 [inline]
->  __arm64_sys_io_uring_setup+0x50/0x70 fs/io_uring.c:2926
->  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
->  invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
->  el0_svc_common.constprop.0+0x148/0x2e0 arch/arm64/kernel/syscall.c:83
->  el0_svc_handler+0xdc/0x100 arch/arm64/kernel/syscall.c:129
->  el0_svc+0x8/0xc arch/arm64/kernel/entry.S:948
-> SMP: stopping secondary CPUs
-> Dumping ftrace buffer:
->    (ftrace buffer empty)
-> Kernel Offset: disabled
-> CPU features: 0x002,23000438
-> Memory Limit: none
-> Rebooting in 1 seconds..
+Hi Song,
 
-Applied, thanks.
+On Tue, 30 Apr 2019 at 08:11, Song Liu <songliubraving@fb.com> wrote:
+>
+>
+>
+> > On Apr 29, 2019, at 8:24 AM, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+> >
+> > Hi Song,
+> >
+> > On Sun, 28 Apr 2019 at 21:47, Song Liu <songliubraving@fb.com> wrote:
+> >>
+> >> Hi Morten and Vincent,
+> >>
+> >>> On Apr 22, 2019, at 6:22 PM, Song Liu <songliubraving@fb.com> wrote:
+> >>>
+> >>> Hi Vincent,
+> >>>
+> >>>> On Apr 17, 2019, at 5:56 AM, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+> >>>>
+> >>>> On Wed, 10 Apr 2019 at 21:43, Song Liu <songliubraving@fb.com> wrote:
+> >>>>>
+> >>>>> Hi Morten,
+> >>>>>
+> >>>>>> On Apr 10, 2019, at 4:59 AM, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
+> >>>>>>
+> >>>>
+> >>>>>>
+> >>>>>> The bit that isn't clear to me, is _why_ adding idle cycles helps your
+> >>>>>> workload. I'm not convinced that adding headroom gives any latency
+> >>>>>> improvements beyond watering down the impact of your side jobs. AFAIK,
+> >>>>>
+> >>>>> We think the latency improvements actually come from watering down the
+> >>>>> impact of side jobs. It is not just statistically improving average
+> >>>>> latency numbers, but also reduces resource contention caused by the side
+> >>>>> workload. I don't know whether it is from reducing contention of ALUs,
+> >>>>> memory bandwidth, CPU caches, or something else, but we saw reduced
+> >>>>> latencies when headroom is used.
+> >>>>>
+> >>>>>> the throttling mechanism effectively removes the throttled tasks from
+> >>>>>> the schedule according to a specific duty cycle. When the side job is
+> >>>>>> not throttled the main workload is experiencing the same latency issues
+> >>>>>> as before, but by dynamically tuning the side job throttling you can
+> >>>>>> achieve a better average latency. Am I missing something?
+> >>>>>>
+> >>>>>> Have you looked at your distribution of main job latency and tried to
+> >>>>>> compare with when throttling is active/not active?
+> >>>>>
+> >>>>> cfs_bandwidth adjusts allowed runtime for each task_group each period
+> >>>>> (configurable, 100ms by default). cpu.headroom logic applies gentle
+> >>>>> throttling, so that the side workload gets some runtime in every period.
+> >>>>> Therefore, if we look at time window equal to or bigger than 100ms, we
+> >>>>> don't really see "throttling active time" vs. "throttling inactive time".
+> >>>>>
+> >>>>>>
+> >>>>>> I'm wondering if the headroom solution is really the right solution for
+> >>>>>> your use-case or if what you are really after is something which is
+> >>>>>> lower priority than just setting the weight to 1. Something that
+> >>>>>
+> >>>>> The experiments show that, cpu.weight does proper work for priority: the
+> >>>>> main workload gets priority to use the CPU; while the side workload only
+> >>>>> fill the idle CPU. However, this is not sufficient, as the side workload
+> >>>>> creates big enough contention to impact the main workload.
+> >>>>>
+> >>>>>> (nearly) always gets pre-empted by your main job (SCHED_BATCH and
+> >>>>>> SCHED_IDLE might not be enough). If your main job consist
+> >>>>>> of lots of relatively short wake-ups things like the min_granularity
+> >>>>>> could have significant latency impact.
+> >>>>>
+> >>>>> cpu.headroom gives benefits in addition to optimizations in pre-empt
+> >>>>> side. By maintaining some idle time, fewer pre-empt actions are
+> >>>>> necessary, thus the main workload will get better latency.
+> >>>>
+> >>>> I agree with Morten's proposal, SCHED_IDLE should help your latency
+> >>>> problem because side job will be directly preempted unlike normal cfs
+> >>>> task even lowest priority.
+> >>>> In addition to min_granularity, sched_period also has an impact on the
+> >>>> time that a task has to wait before preempting the running task. Also,
+> >>>> some sched_feature like GENTLE_FAIR_SLEEPERS can also impact the
+> >>>> latency of a task.
+> >>>>
+> >>>> It would be nice to know if the latency problem comes from contention
+> >>>> on cache resources or if it's mainly because you main load waits
+> >>>> before running on a CPU
+> >>>>
+> >>>> Regards,
+> >>>> Vincent
+> >>>
+> >>> Thanks for these suggestions. Here are some more tests to show the impact
+> >>> of scheduler knobs and cpu.headroom.
+> >>>
+> >>> side-load | cpu.headroom | side/cpu.weight | min_gran | cpu-idle | main/latency
+> >>> --------------------------------------------------------------------------------
+> >>> none    |      0       |     n/a         |    1 ms  |  45.20%  |   1.00
+> >>> ffmpeg   |      0       |      1          |   10 ms  |   3.38%  |   1.46
+> >>> ffmpeg   |      0       |   SCHED_IDLE    |    1 ms  |   5.69%  |   1.42
+> >>> ffmpeg   |    20%       |   SCHED_IDLE    |    1 ms  |  19.00%  |   1.13
+> >>> ffmpeg   |    30%       |   SCHED_IDLE    |    1 ms  |  27.60%  |   1.08
+> >>>
+> >>> In all these cases, the main workload is loaded with same level of
+> >>> traffic (request per second). Main workload latency numbers are normalized
+> >>> based on the baseline (first row).
+> >>>
+> >>> For the baseline, the main workload runs without any side workload, the
+> >>> system has about 45.20% idle CPU.
+> >>>
+> >>> The next two rows compare the impact of scheduling knobs cpu.weight and
+> >>> sched_min_granularity. With cpu.weight of 1 and min_granularity of 10ms,
+> >>> we see a latency of 1.46; with SCHED_IDLE and min_granularity of 1ms, we
+> >>> see a latency of 1.42. So SCHED_IDLE and min_granularity help protecting
+> >>> the main workload. However, it is not sufficient, as the latency overhead
+> >>> is high (>40%).
+> >>>
+> >>> The last two rows show the benefit of cpu.headroom. With 20% headroom,
+> >>> the latency is 1.13; while with 30% headroom, the latency is 1.08.
+> >>>
+> >>> We can also see a clear correlation between latency and global idle CPU:
+> >>> more idle CPU yields better lower latency.
+> >>>
+> >>> Over all, these results show that cpu.headroom provides effective
+> >>> mechanism to control the latency impact of side workloads. Other knobs
+> >>> could also help the latency, but they are not as effective and flexible
+> >>> as cpu.headroom.
+> >>>
+> >>> Does this analysis address your concern?
+> >
+> > So, you results show that sched_idle class doesn't provide the
+> > intended behavior because it still delay the scheduling of sched_other
+> > tasks. In fact, the wakeup path of the scheduler doesn't make any
+> > difference between a cpu running a sched_other and a cpu running a
+> > sched_idle when looking for the idlest cpu and it can create some
+> > contentions between sched_other tasks whereas a cpu runs sched_idle
+> > task.
+>
+> I don't think scheduling delay is the only (or dominating) factor of
+> extra latency. Here are some data to show it.
+>
+> I measured IPC (instructions per cycle) of the main workload under
+> different scenarios:
+>
+> side-load | cpu.headroom | side/cpu.weight  | IPC
+> ----------------------------------------------------
+>  none     |     0%       |       N/A        | 0.66
+>  ffmpeg   |     0%       |    SCHED_IDLE    | 0.53
+>  ffmpeg   |    20%       |    SCHED_IDLE    | 0.58
+>  ffmpeg   |    30%       |    SCHED_IDLE    | 0.62
+>
+> These data show that the side workload has a negative impact on the
+> main workload's IPC. And cpu.headroom could help reduce this impact.
+>
+> Therefore, while optimizations in the wakeup path should help the
+> latency; cpu.headroom would add _significant_ benefit on top of that.
 
--- 
-Jens Axboe
+It seems normal that side workload has a negative impact on IPC
+because of resources sharing but your previous results showed a 42%
+regression of latency with sched_idle which is can't be only linked to
+resources access contention
 
+>
+> Does this assessment make sense?
+>
+>
+> > Viresh (cced to this email) is working on improving such behavior at
+> > wake up and has sent an patch related to the subject:
+> > https://lkml.org/lkml/2019/4/25/251
+> > I'm curious if this would improve the results.
+>
+> I could try it with our workload next week (I am at LSF/MM this
+> week). Also, please keep in mind that this test sometimes takes
+> multiple days to setup and run.
+
+Yes. I understand. That would be good to have a simpler setup to
+reproduce the behavior of your setup in order to do preliminary tests
+and analyse the behavior
+
+>
+> Thanks,
+> Song
+>
+> >
+> > Regards,
+> > Vincent
+> >
+> >>>
+> >>> Thanks,
+> >>> Song
+> >>>
+> >>
+> >> Could you please share your comments and suggestions on this work? Did
+> >> the results address your questions/concerns?
+> >>
+> >> Thanks again,
+> >> Song
+> >>
+> >>>>
+> >>>>>
+> >>>>> Thanks,
+> >>>>> Song
+> >>>>>
+> >>>>>>
+> >>>>>> Morten
+>
