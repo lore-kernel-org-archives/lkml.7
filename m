@@ -2,169 +2,128 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B711C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A05C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B98220644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556642049;
-	bh=+7m+vDUlDtrlaNOzQneMzscMBhl0wuy482hLt99Pw24=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TLajvevuAY7+TuvaUkHxQDxBEEUwW3G5vyleyXxZQdvAduQgb/N+cmHrwY8SWmQu2
-	 jMoIkhqr1Ykdwt08wz5mRtVsPIW48BMrN9qBna62kCZ0ea//jsk82ukl5DsfalyFtY
-	 1+I6AN93q5lFK6Ou2q7ciOS96Zi2ccbz6/vaFnyI=
+	by mail.kernel.org (Postfix) with ESMTP id 1BAD120644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfD3QeI (ORCPT
+        id S1726570AbfD3Qec convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:34:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfD3QeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:34:07 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 566482184B
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 16:34:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556642046;
-        bh=+7m+vDUlDtrlaNOzQneMzscMBhl0wuy482hLt99Pw24=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SQ3WD6JGj2rfpj1pZpQt9iBLCEw3KJUoQ0o0OruuyIpbQgwpRt1MXShYRRcRy0Usp
-         gAeC1aF/3cUrFIIdAyRkO3dlJb8Ys5+aLXJk9/34BsSDYhvXqPhUjGKyfYAxejyYl/
-         nCyI8zJ0pmp/laRF1qEXhGhS5UUwT3twrheTvF+o=
-Received: by mail-wr1-f48.google.com with SMTP id v16so19363183wrp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:34:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAUZc8d0HP0iwg3VymzGX8F5rKTeuKz8heukrhngx/psZBfDQM7N
-        QzonAUGVipQDSfy16AjKClM4Dtm8/Rcp8J1NurJmKw==
-X-Google-Smtp-Source: APXvYqw/JUfSK40rBP/CjGQtWaZs/dUObYS+HMalp4FiLimIf58D0PzjA0iOWcIZ4E+bI9N8YBmphCEO5sC4OrJN4os=
-X-Received: by 2002:a5d:4b0c:: with SMTP id v12mr30170120wrq.330.1556642043097;
- Tue, 30 Apr 2019 09:34:03 -0700 (PDT)
+        Tue, 30 Apr 2019 12:34:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57538 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726105AbfD3Qeb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:34:31 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UGM0Fa068788
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:34:30 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6rkj4kmr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:34:29 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nathanl@linux.ibm.com>;
+        Tue, 30 Apr 2019 17:34:29 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Apr 2019 17:34:26 +0100
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UGYPTI19464192
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 16:34:26 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D9C10AC05E;
+        Tue, 30 Apr 2019 16:34:25 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ADC1BAC065;
+        Tue, 30 Apr 2019 16:34:25 +0000 (GMT)
+Received: from localhost (unknown [9.80.206.5])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Apr 2019 16:34:25 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH v4] powerpc/pseries: Remove limit in wait for dying CPU
+In-Reply-To: <20190423223914.3882-1-bauerman@linux.ibm.com>
+References: <20190423223914.3882-1-bauerman@linux.ibm.com>
+Date:   Tue, 30 Apr 2019 11:34:25 -0500
 MIME-Version: 1.0
-References: <20190428133826.3e142cfd@oasis.local.home> <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
- <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
- <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
- <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
- <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
- <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
- <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
- <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
- <20190430135602.GD2589@hirez.programming.kicks-ass.net> <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
-In-Reply-To: <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 30 Apr 2019 09:33:51 -0700
-X-Gmail-Original-Message-ID: <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
-Message-ID: <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19043016-0072-0000-0000-000004233511
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011023; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01196625; UDB=6.00627556; IPR=6.00977474;
+ MB=3.00026669; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-30 16:34:28
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19043016-0073-0000-0000-00004C0622C1
+Message-Id: <877ebbsb8u.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 9:06 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+> This can be a problem because if the busy loop finishes too early, then the
+> kernel may offline another CPU before the previous one finished dying,
+> which would lead to two concurrent calls to rtas-stop-self, which is
+> prohibited by the PAPR.
 >
-> On Tue, Apr 30, 2019 at 6:56 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
+> Since the hotplug machinery already assumes that cpu_die() is going to
+> work, we can simply loop until the CPU stops.
 >
-> Realistically, I don't think you can hit the problem in practice. The
-> only way to hit that incredibly small race of "one instruction, *both*
-> NMI and interrupts" is to have a lot of interrupts going all at the
-> same time, but that will also then solve the latency problem, so the
-> very act of triggering it will also fix it.
->
-> I don't see any case where it's really bad. The "sti sysexit" race is
-> similar, just about latency of user space signal reporting (and
-> perhaps any pending TIF_WORK_xyz flags).
+> Also change the loop to wait 100 µs between each call to
+> smp_query_cpu_stopped() to avoid querying RTAS too often.
 
-In the worst case, it actually kills the machine.  Last time I tracked
-a bug like this down, I think the issue was that we got preempted
-after the last TIF_ check, entered a VM, exited, context switched
-back, and switched to user mode without noticing that there was a
-ending KVM user return notifier.  This left us with bogus CPU state
-and the machine exploded.
+[...]
 
-Linus, can I ask you to reconsider your opposition to Josh's other
-approach of just shifting the stack on int3 entry?  I agree that it's
-ugly, but the ugliness is easily manageable and fairly self-contained.
-We add a little bit of complication to the entry asm (but it's not
-like it's unprecedented -- the entry asm does all kinds of stack
-rearrangement due to IST and PTI crap already), and we add an
-int3_emulate_call(struct pt_regs *regs, unsigned long target) helper
-that has appropriate assertions that the stack is okay and emulates
-the call.  And that's it.
+> diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+> index 97feb6e79f1a..d75cee60644c 100644
+> --- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
+> +++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+> @@ -214,13 +214,17 @@ static void pseries_cpu_die(unsigned int cpu)
+>  			msleep(1);
+>  		}
+>  	} else if (get_preferred_offline_state(cpu) == CPU_STATE_OFFLINE) {
+> -
+> -		for (tries = 0; tries < 25; tries++) {
+> +		/*
+> +		 * rtas_stop_self() panics if the CPU fails to stop and our
+> +		 * callers already assume that we are going to succeed, so we
+> +		 * can just loop until the CPU stops.
+> +		 */
+> +		while (true) {
+>  			cpu_status = smp_query_cpu_stopped(pcpu);
+>  			if (cpu_status == QCSS_STOPPED ||
+>  			    cpu_status == QCSS_HARDWARE_ERROR)
+>  				break;
+> -			cpu_relax();
+> +			udelay(100);
+>  		}
+>  	}
 
-In contrast, your approach involves multiple asm trampolines, hash
-tables, batching complications, and sti shadows.
+I agree with looping indefinitely but doesn't it need a cond_resched()
+or similar check?
 
-As an additional argument, with the stack-shifting approach, it runs
-on *every int3 from kernel mode*.  This means that we can do something
-like this:
-
-static bool int3_emulate_call_okay(struct pt_regs *regs)
-{
-    unsigned long available_stack = regs->sp - (unsigned long);
-    return available_stack >= sizeof(long);
-}
-
-void do_int3(...) {
-{
-  WARN_ON_ONCE(!user_mode(regs) && !int3_emulate_call_okay(regs));
-  ...;
-}
-
-static void int3_emulate_call(struct pt_regs *regs, unsigned long target)
-{
-  BUG_ON(user_mode(regs) || !int3_emulate_call_okey(regs));
-  regs->sp -= sizeof(unsigned long);
-  *(unsigned long *)regs->sp = target;
-  /* CET SHSTK fixup goes here */
-}
-
-Obviously the CET SHSTK fixup might be rather nasty, but I suspect
-it's a solvable problem.
-
-A major benefit of this is that the entry asm nastiness will get
-exercised all the time, and, if we screw it up, the warning will fire.
-This is the basic principle behind why the entry stuff *works* these
-days.  I've put a lot of effort into making sure that running kernels
-with CONFIG_DEBUG_ENTRY and running the selftests actually exercises
-the nasty cases.
-
---Andy
