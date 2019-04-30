@@ -2,123 +2,197 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB10C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A46C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7FE2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D032064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKipQ1pd"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ezXQGgWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfD3RNl (ORCPT
+        id S1726872AbfD3ROK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:13:41 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42749 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfD3RNk (ORCPT
+        Tue, 30 Apr 2019 13:14:10 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:49662 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726006AbfD3ROK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:13:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w25so7365223pfi.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:13:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8M09mf4d9C1R3KhxiH2MmcrT4xP2EWrCq3b8NOgfWsA=;
-        b=gKipQ1pdsxyErkdzR4ohu+KryhsxU0t02ME3acogkXzYjGZqrLQpbvN2VvU/jZHq0m
-         r/2mcwlwkVfldN3jyPeDdZHsaaDkJUcRscSvQQ9fxAi6uurcWSbzsMHMlOfYlpW0dNRo
-         UlzG43xtofCSz8L9oBYfvJ021Cg9PWvy/ekarl2gcVf+ONj/mhHFzK7dJSILqyCx2kqR
-         l+BKgBsF91HV/77sLCLVJ81dHeq+1dQLCuelv4G5L1h7Y96YkCfCOHX/BbD3XGQx1/FU
-         uQk5s8d0Wx/tHdp6tNYmWm7XdWXau+vl8W70B/QdeoaeOFMfjuoSUNe0ugFEPOpHCEGz
-         wuqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8M09mf4d9C1R3KhxiH2MmcrT4xP2EWrCq3b8NOgfWsA=;
-        b=ld8rAOYNCD2QofL20vl+TWJVZJG3LShiwwGTiTV0Xrd0K8EPDAMHtjjxix8pT1tw5W
-         E8oUKWcy6f+1vMauyzQfU+CdsQ2WmNtRpg0ap6Jn8vnodMHP2SpcIPFM/S6229oEDcTJ
-         ncGkMlMRNSsoiPF4aH2oADWy5w12OPaprfL0TigEKLr/9BXr2dmIq92U87WVWcUp67fB
-         bDUnmhWybRJiN4jmWp6oRasKA/PV848HkrEAXwQa16Ju9VkYVFIOJ5xAeSkvrL0ziUfz
-         oKhSOnWWBbPubd2XIEo7eHoiaDjLQwyAUBLXL7EmdKBsK4Azx7T6fNEJgCOuFHe7NiZ0
-         MYPQ==
-X-Gm-Message-State: APjAAAVI7FRIQ05OaraFVgV/c4r56FDzpsS5VK/fHiogik2nDVKBPodL
-        lvM4IrMQyfijRWZtJ2hfi5Gj6Q==
-X-Google-Smtp-Source: APXvYqwIV6fARS8L5xf7OJfpsq2RSKwS5E7u2mONG4DLIAVZsS+loPGnOikPOS8QYUxQ3gJEOj4fIQ==
-X-Received: by 2002:a63:e003:: with SMTP id e3mr36640958pgh.0.1556644418940;
-        Tue, 30 Apr 2019 10:13:38 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k7sm11692657pfk.93.2019.04.30.10.13.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 10:13:37 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 10:13:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/8] qcom: spmi/ssbi gpio: correct gpio hogging
-Message-ID: <20190430171339.GE2867@tuxbook-pro>
-References: <20190306005316.12232-1-masneyb@onstation.org>
- <20190427053034.GH3137@builder>
- <20190427102206.GA296@basecamp>
+        Tue, 30 Apr 2019 13:14:10 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 72DE6C016C;
+        Tue, 30 Apr 2019 17:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556644447; bh=pFmxsA9jL3iujLHh4IbC5H9BSvNYfN4Ebgy/3KLAzd4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
+        b=ezXQGgWBOg4sMfWaCMAChBJGQZ/l7tkuIR4AL4HmAekN+psgjZUXhEnJMnjprnQYT
+         t/rtCCsepDXLzsxQFurPLyw/4/WZw9OdzBuuSBUEQuSX/Cbh4nnXOXsbvYjm2k6jTc
+         lzRUXObZ+32ipwERzdc+k392I6SHPq+c+x+bXAOwpsWpJ6M7lXEjm6iYF8yI3hcN5u
+         3kYU0+Z1gjHIhqynQ6N2sTPChV9HPCM36jwi+UaCltSjctGppM5dclOG8Gvwo+qHu6
+         FTsWx7lOhcNG9Arm48z/gMzW5/Al+qSK0yNG+3T7llFxjq0YiBFDX9I9ENDLURUv1/
+         wFRVKFb/hSYlQ==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id C9F09A006D;
+        Tue, 30 Apr 2019 17:14:07 +0000 (UTC)
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 30 Apr 2019 10:13:47 -0700
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 30 Apr 2019 22:43:55 +0530
+Received: from [10.10.161.89] (10.10.161.89) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 30 Apr 2019 22:43:54 +0530
+Subject: Re: Detecting libc in perf (was Re: perf tools build broken after
+ v5.1-rc1)
+To:     Rich Felker <dalias@libc.org>
+CC:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        "devel@uclibc-ng.org" <devel@uclibc-ng.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, "Jiri Olsa" <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Newsgroups: gmane.linux.kernel,gmane.comp.lib.uclibc-ng,gmane.linux.kernel.perf.user,gmane.linux.kernel.arc
+References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
+ <20190422152027.GB11750@kernel.org> <20190425214800.GC21829@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
+ <20190430011818.GE7857@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A250601B@us01wembx1.internal.synopsys.com>
+ <20190430170404.GX23599@brightrain.aerifal.cx>
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vgupta@synopsys.com; keydata=
+ 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
+ hhqBJlyU6MVUa6vZNv8E
+Message-ID: <17a86bc7-c1f9-8c3c-8f1d-711e95dac49d@synopsys.com>
+Date:   Tue, 30 Apr 2019 10:13:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190427102206.GA296@basecamp>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190430170404.GX23599@brightrain.aerifal.cx>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.10.161.89]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 27 Apr 03:22 PDT 2019, Brian Masney wrote:
+On 4/30/19 10:04 AM, Rich Felker wrote:
+> On Tue, Apr 30, 2019 at 03:53:18PM +0000, Vineet Gupta wrote:
+>> On 4/29/19 6:18 PM, Arnaldo Carvalho de Melo wrote:
+>>>>> Auto-detecting system features:
+>>>>> ...                         dwarf: [ OFF ]
+>>>>> ...            dwarf_getlocations: [ OFF ]
+>>>>> ...                         glibc: [ on  ]
+>>>> Not related to current issue, this run uses a uClibc toolchain and yet it is
+>>>> detecting glibc - doesn't seem right to me.
+>>> Ok, I'll improve that, I think it just tries to detect a libc, yeah,
+>>> see:
+>>>
+>>> [acme@quaco linux]$ cat tools/build/feature/test-glibc.c
+>>> // SPDX-License-Identifier: GPL-2.0
+>>> #include <stdlib.h>
+>>>
+>>> #if !defined(__UCLIBC__)
+>>> #include <gnu/libc-version.h>
+>>> #else
+>>> #define XSTR(s) STR(s)
+>>> #define STR(s) #s
+>>> #endif
+>>>
+>>> int main(void)
+>>> {
+>>> #if !defined(__UCLIBC__)
+>>> 	const char *version = gnu_get_libc_version();
+>>> #else
+>>> 	const char *version = XSTR(__GLIBC__) "." XSTR(__GLIBC_MINOR__);
+>>> #endif
+>>>
+>>> 	return (long)version;
+>>> }
+>>> [acme@quaco linux]$
+>>>
+>>> [perfbuilder@59ca4b424ded /]$ grep __GLIBC__ /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/*.h
+>>> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:   The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
+>>> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:#define	__GLIBC__	2
+>>> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
+>>> [perfbuilder@59ca4b424ded /]$
+>>>
+>>> Isn't that part of uClibc?
+>>
+>> Right you are. Per the big fat comment right above that code, this gross hack in
+>> uclibc is unavoidable as applications tend to rely on that define.
+>> So a better fix would be to check for various !GLIBC libs explicitly.
+>>
+>> #ifdef __UCLIBC__
+>>
+>> #elseif defined __MUSL__
+>>
+>> ....
+>>
+>> Not pretty from app usage pov, but that seems to be the only sane way of doing it.
+> 
+> What are you trying to achieve? I was just CC'd and I'm missing the
+> context.
 
-> Hi Bjorn,
-> 
-> On Fri, Apr 26, 2019 at 10:30:34PM -0700, Bjorn Andersson wrote:
-> > On Tue 05 Mar 16:53 PST 2019, Brian Masney wrote:
-> > 
-> > > Here are some patches that fix gpio hogging for all boards that use
-> > > spmi-gpio and ssbi-gpio. These depend on the following two patches
-> > > that were merged in 4.20-rc1:
-> > > 
-> > > commit 149a96047237 ("pinctrl: qcom: spmi-gpio: fix gpio-hog related
-> > > boot issues")
-> > > 
-> > > commit 7ed078557738 ("pinctrl: qcom: ssbi-gpio: fix gpio-hog related
-> > > boot issues")
-> > > 
-> > > I've already fixed pm8941 for the Nexus 5 and that fix is queued to go
-> > > into v5.1 during this merge window:
-> > > 
-> > > https://lore.kernel.org/lkml/20181101001149.13453-7-masneyb@onstation.org/
-> > > 
-> > > Andy: You may want to consider submitting these post rc1 as a fix for
-> > > v5.1 and possibly marking these for stable.
-> > > 
-> > > Brian Masney (8):
-> > >   ARM: dts: qcom: apq8064: add gpio-ranges
-> > >   ARM: dts: qcom: mdm9615: add gpio-ranges
-> > >   ARM: dts: qcom: msm8660: add gpio-ranges
-> > >   ARM: dts: qcom: pma8084: add gpio-ranges
-> > 
-> > Looks like I missed the ARM patches before. All 8 picked up now, with
-> > Linus' r-b.
-> 
-> Andy already picked these 8 patches up in his tree.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
-> 
+Sorry I added you as a subject matter expert but didn't provide enough context.
 
-Perfect. And I see that all 8 are included in Andy's pull request for
-5.2
+The original issue [1] was perf failing to build on ARC due to perf tools needing
+a copy of unistd.h but this thread [2] was a small side issue of auto-detecting
+libc variaint in perf tools where despite uClibc tools, glibc is declared to be
+detected, due to uClibc's historical hack of defining __GLIBC__. So __GLIBC__ is
+not sufficient (and probably not the right interface to begin wtih) to ensure glibc.
 
-Regards,
-Bjorn
+[1] http://lists.infradead.org/pipermail/linux-snps-arc/2019-April/005676.html
+[2] http://lists.infradead.org/pipermail/linux-snps-arc/2019-April/005684.html
