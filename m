@@ -2,78 +2,96 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47EAC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9111FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F448204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A8E21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLvRzkIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfD3Lg2 (ORCPT
+        id S1727554AbfD3Lhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:36:28 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:58374 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbfD3Lg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:36:27 -0400
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 3EEC444028D;
-        Tue, 30 Apr 2019 14:36:25 +0300 (IDT)
-References: <20190430093212.28425-1-alexandre.belloni@bootlin.com> <20190430093212.28425-2-alexandre.belloni@bootlin.com>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] rtc: digicolor: set range
-In-reply-to: <20190430093212.28425-2-alexandre.belloni@bootlin.com>
-Date:   Tue, 30 Apr 2019 14:36:24 +0300
-Message-ID: <877ebbu3lz.fsf@tarshish>
+        Tue, 30 Apr 2019 07:37:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45514 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfD3Lhc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:37:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e24so6894959pfi.12;
+        Tue, 30 Apr 2019 04:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ArYktBF09rhGuKJJvxws6bmCXNyXRl7oK9w8DZA3jMs=;
+        b=cLvRzkIcWgly0/Gpwh4ATcidIfK8nunE+CfEIHNMuZlNChdocwBsWQWtV9mWnVh+Tg
+         IGR5E1rHZxWIne0KNjl2kr2YsvbAXEuoxT6l/Wxt+P82QPQh19Ahw3b3Nvo7O6QtRRAO
+         2d49DVJvlqH6/4su4vBDD15NeprPTxITbkR1EwwrxbkB45eIgU9iyp4M/GQWXNYtgZRE
+         2fY0EwBPEjxd293a2C7drN6MWLvLPNPzKUNgA8EuSNrdnPKCFl+PkHADjj47egCx4chJ
+         KBwhuLm03wz9qDJjUmeciMHaVvaMzPJFgqSEo3ZLsQD6oP1idZ5WaaoIEjkCFQ7/B1NW
+         rldw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ArYktBF09rhGuKJJvxws6bmCXNyXRl7oK9w8DZA3jMs=;
+        b=Y2YutZUxK8twNQj0nT0tD/hGQNZOBR1WRKrr3Ehd1mTlFbgUa8B00BZ9MjrtpTyb92
+         p44PrvGG8UWnr8UXTNTkbXHdCVFbEsztNTiviXhMtZI+9Wjtco0RoIIHXfVkbwSMJnLK
+         tH9uE1zz2TWsEuVO9I5RFmuvzXVXxwGRRPKbIPqZaxOzYuFRVlXTI01TXCoFE+AEtHlC
+         /9bJ61uo6iYOzKMXfl1c86tXHbHoL38Pu/oNZNUw0YR8np1g/MsbO17ElkeTBSGmerDE
+         7fPVRq30/nKg2Jj2mHk3dpEaDknW0oh722yTeosUUR/DrdVgh1+h2q3Agfw4rBu9iAlR
+         oeUw==
+X-Gm-Message-State: APjAAAWGwgZu94o6NaIOMxu8IA4doHSWGcDi2GK3DDS77RySFufqfplP
+        HVYURie0jDZNrysgE1e4z6oOA9MW/hK4S9ZT8h8=
+X-Google-Smtp-Source: APXvYqxeTLEwPB3TIeB8WOLsRYNJsiWdLDF7iEquJbzVoKTXQ0DmwzZH0n+9/pxWuXYK29wkHSrqbfnjMvyNB8fX6AA=
+X-Received: by 2002:a63:c54e:: with SMTP id g14mr65308627pgd.265.1556624252039;
+ Tue, 30 Apr 2019 04:37:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190415055358.9269-1-chiu@endlessm.com> <CACRpkdanhW206AEj7m+2FQBhJ5epUzw60Y6v+k-eoJLLW_-SSQ@mail.gmail.com>
+ <20190426125031.GQ9224@smile.fi.intel.com> <CAB4CAwfF7FoQK9OndOm_yHQe19j=E_cNLn3eTBfoggEacONiyg@mail.gmail.com>
+In-Reply-To: <CAB4CAwfF7FoQK9OndOm_yHQe19j=E_cNLn3eTBfoggEacONiyg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 30 Apr 2019 14:37:21 +0300
+Message-ID: <CAHp75VfXj=1Ef7aXWyETyiaUF3ftLEodTs3azoDHTq=yrj7adw@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl:intel: Retain HOSTSW_OWN for requested gpio pin
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Daniel Drake <drake@endlessm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+On Tue, Apr 30, 2019 at 5:15 AM Chris Chiu <chiu@endlessm.com> wrote:
+> On Fri, Apr 26, 2019 at 8:50 PM Andriy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Tue, Apr 23, 2019 at 12:38:17PM +0200, Linus Walleij wrote:
+> > > On Mon, Apr 15, 2019 at 7:54 AM Chris Chiu <chiu@endlessm.com> wrote:
 
-On Tue, Apr 30 2019, Alexandre Belloni wrote:
-
-> While the range of REFERENCE + TIME is actually 33 bits, the counter
-> itself (TIME) is a 32-bits seconds counter.
+> > > This v3 patch applied with Mika's ACK.
+> >
+> > Hmm... It's supposed to go along with our PR.
 >
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/rtc/rtc-digicolor.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/rtc/rtc-digicolor.c b/drivers/rtc/rtc-digicolor.c
-> index 5bb14c56bc9a..e6e16aaac254 100644
-> --- a/drivers/rtc/rtc-digicolor.c
-> +++ b/drivers/rtc/rtc-digicolor.c
-> @@ -206,6 +206,7 @@ static int __init dc_rtc_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, rtc);
->  
->  	rtc->rtc_dev->ops = &dc_rtc_ops;
-> +	rtc->rtc_dev->range_max = U32_MAX;
+> Anything I can help with?
 
-Where can I find documentation on the meaning and usage of the range_max
-value? I could not find anything in the kernel source.
-
-baruch
-
->  
->  	return rtc_register_device(rtc->rtc_dev);
->  }
-
+Not sure.
+I sent PR to Linus and asked at the same time to drop Intel specifics
+from devel queue. Fortunately, for-next doesn't have such issue.
+Linus?
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+With Best Regards,
+Andy Shevchenko
