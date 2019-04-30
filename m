@@ -2,202 +2,213 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBEBC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDAFC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30EAA20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="r7g3pzNC"
+	by mail.kernel.org (Postfix) with ESMTP id E487B21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556600626;
+	bh=eXP7RsfXrfyUY+29h6lW8hzlF88lmatIbZgOpU48Bno=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Blg2fB013CzXVj2Kb18/vV4ulae7CRFYzgK/KXvzSa0onW0ifZkTH0tgHOkllWvef
+	 NrsW6BqDAeRZcpjauYw52uxqxW69coYbKOvJsW18J3p4TutZr82aL63BLjXXG2P8qp
+	 HVwG/0gxiLLuPBuUibM8C4em7DPoZ8tVnY0KaBvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbfD3EzQ (ORCPT
+        id S1726050AbfD3FDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 00:55:16 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:19624 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfD3EzP (ORCPT
+        Tue, 30 Apr 2019 01:03:44 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37442 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfD3FDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 00:55:15 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190430045512epoutp04d832f6a9f8020916e0f8b8a92ebbebd7~aJ44qi_Fg2062820628epoutp04w
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:55:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190430045512epoutp04d832f6a9f8020916e0f8b8a92ebbebd7~aJ44qi_Fg2062820628epoutp04w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556600112;
-        bh=Kr2EJtQBEjvLCyCDiIHvPHj47DooKA1ezT8asW04amk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=r7g3pzNC27OEfvgALYh48GdC2omwF2HviuTs+2OXdgbDwzcBEU6JhX5GCs4K3Tq+I
-         SP5hgHL5MEsNJlzQwQPIbv4YYIoh23pkvmR5m/vTFUJBWLVGN9ii2PR+xm0TmmxEag
-         YCbaihHFL5QD6U4T1KAc2lf9vPTi8Ww16n/4VR0s=
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190430045509epcas1p2302c64dfbd4a8ab28246de25e11fd1bd~aJ41LZ7E50715107151epcas1p2r;
-        Tue, 30 Apr 2019 04:55:09 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D9.BD.04143.C25D7CC5; Tue, 30 Apr 2019 13:55:08 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190430045508epcas1p2bd7798f5d17968714afc0fb029932f9b~aJ40uIxav0935909359epcas1p2M;
-        Tue, 30 Apr 2019 04:55:08 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190430045508epsmtrp1d456c57b94621fed9fb12ad1823bd74a~aJ40sgk9L1373413734epsmtrp1i;
-        Tue, 30 Apr 2019 04:55:08 +0000 (GMT)
-X-AuditID: b6c32a37-f31ff7000000102f-be-5cc7d52c12a2
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5C.5E.03662.C25D7CC5; Tue, 30 Apr 2019 13:55:08 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190430045508epsmtip1938639aed89129727ab18664d4554cef~aJ40ZzIa52651326513epsmtip1D;
-        Tue, 30 Apr 2019 04:55:08 +0000 (GMT)
-Subject: Re: [PATCH v3 1/4] include: dt-bindings: add Performance Monitoring
- Unit for Exynos
-To:     Lukasz Luba <l.luba@partner.samsung.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, kgene@kernel.org,
-        willy.mh.wolff.ml@gmail.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <a1ff3566-6117-b670-a2f3-b60a2bbec14a@samsung.com>
-Date:   Tue, 30 Apr 2019 13:56:23 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 30 Apr 2019 01:03:43 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y5so2269263wma.2;
+        Mon, 29 Apr 2019 22:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uJMhjgb5zxPxkYouwBqnhllNEC+efi0qURt/Ty+nHUo=;
+        b=FyOMuExG82iTN6oz4qYVha+B3bpp5KXoEGFM4poaUXkHBlgm4D3jxK7KjJ1WCC7u07
+         GfhX3l0TgtL+N2ryxbvIoWI3p1mxnodj/Gelgl4MB/iStPTMl3C216nBQ1OLYcr9LWv7
+         f9fJWLRRPGlb9ehm9AItbG1ZRg/359MY24IeY0nSQ6+65n4LVYcFXp8uB5wYJ+6F0VWy
+         clD3PWaTfJpPV2gF9rfpz1DradCzkf4vFbiN+Pob75PEbuLEvulxANn/CoifX47ttGIG
+         UF5u7Wmog/KSABmwpt5wW/dQSGtG1HMX7sUsv5I2Zkq4bmwyhySw83vE7B6toFKDVF67
+         szkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uJMhjgb5zxPxkYouwBqnhllNEC+efi0qURt/Ty+nHUo=;
+        b=YVatzHLDedn0k+xiCesuiYo6FasJmVpXFcPa71mO4qJTEJe6tTduirWrjIfAkmHCfd
+         zkMpd3fK0SLjKZQQNTSaknjh4YGx8OAYdAeTv1jtpIqj7zePbx/ir+X5ApZGPhcx97mF
+         0t9dX13V6dGs+3o1IHrkca1pvIOMPqVCJWASupRln2rioc1fBi+vBXyiEWuBIfmgCOsd
+         orlmC4RS0fVxFxrLKemIHAj0jeyWgk5IRIE0j4YcdSwEU/A7ULAhEnuUUSEVnFq+i7XB
+         dz2xLEeW94b32E4vPxzsRLwVka2y0LtzrVkIA81b2mIhrVa19NgVS//BQlW4BnXRgcZR
+         vQFg==
+X-Gm-Message-State: APjAAAUgyZi3VTn9dqFqv3Vu9Z2brftl2YPTPJtuL+RM0J3kNL038n6K
+        cCQO0yYcZDv2jpHsdS9Accg=
+X-Google-Smtp-Source: APXvYqwIr1Hdnaga2YnCv7mTHEVJtWQOAcNEnI7VSaNz5v1406HQx408Ikkg4gOEKA7FxbiBmbab6A==
+X-Received: by 2002:a1c:a851:: with SMTP id r78mr1628659wme.36.1556600620617;
+        Mon, 29 Apr 2019 22:03:40 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id a4sm1224745wmf.45.2019.04.29.22.03.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 22:03:39 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 07:03:37 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux-MM <linux-mm@kvack.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call
+ isolation
+Message-ID: <20190430050336.GA92357@gmail.com>
+References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
+ <1556228754-12996-3-git-send-email-rppt@linux.ibm.com>
+ <20190426083144.GA126896@gmail.com>
+ <20190426095802.GA35515@gmail.com>
+ <CALCETrV3xZdaMn_MQ5V5nORJbcAeMmpc=gq1=M9cmC_=tKVL3A@mail.gmail.com>
+ <20190427084752.GA99668@gmail.com>
+ <20190427104615.GA55518@gmail.com>
+ <CALCETrUn_86VAd8FGacJ169xcWE6XQngAMMhvgd1Aa6ZxhGhtA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1555681688-19643-2-git-send-email-l.luba@partner.samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNJsWRmVeSWpSXmKPExsWy7bCmvq7O1eMxBp97LC02zljPajH/yDlW
-        i/7Hr5ktzp/fwG5xtukNu8WtBhmLTY+vsVpc3jWHzeJz7xFGixnn9zFZrD1yl91i6fWLTBa3
-        G1ewWbTuPcJucfhNO6vFtxOPGB0EPNbMW8PosXPWXXaPTas62Tw2L6n3OPhuD5NH35ZVjB6f
-        N8kFsEdl22SkJqakFimk5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYA
-        3a6kUJaYUwoUCkgsLlbSt7Mpyi8tSVXIyC8usVVKLUjJKbAs0CtOzC0uzUvXS87PtTI0MDAy
-        BSpMyM44tDixYJJwxeEVf1gaGE/zdzFyckgImEis27OIrYuRi0NIYAejxI2GHYwQzidGiQPr
-        lkBlvjFK3NvYwQ7T0jphATNEYi+jxI+GS1At7xklJh/bCFYlLBAnsW7LTHaQhIjAWUaJB03b
-        wGYxC3xmlDj54BorSBWbgJbE/hc32EBsfgFFias/HjOC2LwCdhKLdz0Cm8QioCrReOUgmC0q
-        ECFx/9gGVogaQYmTM5+wgNicAt4SLx+/BpvDLCAucevJfCYIW16ieetsZoi7D7FLTJiYBGG7
-        SCzfdpsJwhaWeHV8C9RvUhIv+9ug7GqJlSePgB0tIdDBKLFl/wVWiISxxP6lk4GaOYAWaEqs
-        36UPsYtP4t3XHlaQsIQAr0RHmxBEtbLE5Qd3oVZJSixu72SDsD0k7r6ayjiBUXEWkm9mIflg
-        FpIPZiEsW8DIsopRLLWgODc9tdiwwBg5ujcxghO2lvkOxg3nfA4xCnAwKvHwerw7FiPEmlhW
-        XJl7iFGCg1lJhNfj+NEYId6UxMqq1KL8+KLSnNTiQ4ymwMCeyCwlmpwPzCZ5JfGGpkbGxsYW
-        JoZmpoaGSuK86x2cY4QE0hNLUrNTUwtSi2D6mDg4pRoYSyQmdIiaM25WF9ziV5IkPeF8glxo
-        5gPDe3mMVyenTHwyw+Uj33qzKcxPPtvU3XjyaNbPPXJRu+ouMMtoyYYUT49fPeW2EoO5TBrD
-        bc9ZOqvu5CeyK705LXPAaMbDhuuavje7f31T0d9kYRnlwG2npdsRqrhAWmZ1Zql397+v+TPl
-        medw9KYrsRRnJBpqMRcVJwIA/3wlNe4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsWy7bCSnK7O1eMxBrNvSltsnLGe1WL+kXOs
-        Fv2PXzNbnD+/gd3ibNMbdotbDTIWmx5fY7W4vGsOm8Xn3iOMFjPO72OyWHvkLrvF0usXmSxu
-        N65gs2jde4Td4vCbdlaLbyceMToIeKyZt4bRY+esu+wem1Z1snlsXlLvcfDdHiaPvi2rGD0+
-        b5ILYI/isklJzcksSy3St0vgyji0OLFgknDF4RV/WBoYT/N3MXJySAiYSLROWMDcxcjFISSw
-        m1Hi9o3FTBAJSYlpF48CJTiAbGGJw4eLIWreMko8Ov2cGaRGWCBOYt2WmewgCRGBs4wSiyYt
-        AHOYBT4zSkxfcxlq7H1GicY7l9hAWtgEtCT2v7gBZvMLKEpc/fGYEcTmFbCTWLzrETuIzSKg
-        KtF45SCYLSoQIXHm/QoWiBpBiZMzn4DZnALeEi8fvwabwyygLvFn3iVmCFtc4taT+UwQtrxE
-        89bZzBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQI
-        jl0trR2MJ07EH2IU4GBU4uH1eHcsRog1say4MvcQowQHs5IIr8fxozFCvCmJlVWpRfnxRaU5
-        qcWHGKU5WJTEeeXzj0UKCaQnlqRmp6YWpBbBZJk4OKUaGF0uz85/e0H9zg3djE96YhtFX+nr
-        VzMy7ll0fkXARt6F0R9Ntm81n7jzHNtM3wW3OKqFD/ouCjl+4mfv5b7vU9l9GspmWd1xzp82
-        t+Zf7p2JvrY7t7+U+Slwm/WCQdzKtbN8nD5zvOdQ+Kq/oKRO5qHVjYnFdq6HZO5sEN7QdHnR
-        ZU3DN8EOraeVWIozEg21mIuKEwHrghTB2QIAAA==
-X-CMS-MailID: 20190430045508epcas1p2bd7798f5d17968714afc0fb029932f9b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190419134820eucas1p154e839769af0e1b8bae17ce3efa0ba93
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134820eucas1p154e839769af0e1b8bae17ce3efa0ba93@eucas1p1.samsung.com>
-        <1555681688-19643-2-git-send-email-l.luba@partner.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUn_86VAd8FGacJ169xcWE6XQngAMMhvgd1Aa6ZxhGhtA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-I agree of this patch. But, I add the minor comments.
+* Andy Lutomirski <luto@kernel.org> wrote:
 
-If you edit them according to my comment, feel free to add my following tag:
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> On Sat, Apr 27, 2019 at 3:46 AM Ingo Molnar <mingo@kernel.org> wrote:
 
-On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
-> This patch add support of a new feature which can be used in DT:
-> Performance Monitoring Unit with defined event data type.
-> In this patch the event data types are defined for Exynos PPMU.
-> The patch also updates the MAINTAINERS file accordingly and
-> adds the header file to devfreq event subsystem.
+> > So I'm wondering whether there's a 4th choice as well, which avoids
+> > control flow corruption *before* it happens:
+> >
+> >  - A C language runtime that is a subset of current C syntax and
+> >    semantics used in the kernel, and which doesn't allow access outside
+> >    of existing objects and thus creates a strictly enforced separation
+> >    between memory used for data, and memory used for code and control
+> >    flow.
+> >
+> >  - This would involve, at minimum:
+> >
+> >     - tracking every type and object and its inherent length and valid
+> >       access patterns, and never losing track of its type.
+> >
+> >     - being a lot more organized about initialization, i.e. no
+> >       uninitialized variables/fields.
+> >
+> >     - being a lot more strict about type conversions and pointers in
+> >       general.
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  MAINTAINERS                           |  1 +
->  include/dt-bindings/pmu/exynos_ppmu.h | 26 ++++++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
->  create mode 100644 include/dt-bindings/pmu/exynos_ppmu.h
+> You're not the only one to suggest this.  There are at least a few
+> things that make this extremely difficult if not impossible.  For
+> example, consider this code:
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3671fde..1ba4b9b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4560,6 +4560,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
->  S:	Supported
->  F:	drivers/devfreq/event/
->  F:	drivers/devfreq/devfreq-event.c
-> +F:	include/dt-bindings/pmu/exynos_ppmu.h
->  F:	include/linux/devfreq-event.h
->  F:	Documentation/devicetree/bindings/devfreq/event/
->  
-> diff --git a/include/dt-bindings/pmu/exynos_ppmu.h b/include/dt-bindings/pmu/exynos_ppmu.h
-> new file mode 100644
-> index 0000000..08fdce9
-> --- /dev/null
-> +++ b/include/dt-bindings/pmu/exynos_ppmu.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Samsung Exynos PPMU event types for counting in regs
-> + *
-> + * Copyright (c) 2019, Samsung
-
-Mabye, "Samsung Electronics" instead of 'Samsung'.
-
-> + * Author: Lukasz Luba <l.luba@partner.samsung.com>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_PMU_EXYNOS_PPMU_H
-> +#define __DT_BINDINGS_PMU_EXYNOS_PPMU_H
-> +
-> +
-
-Remove unneeded blank line.
-
-> +#define PPMU_RO_BUSY_CYCLE_CNT		0x0
-> +#define PPMU_WO_BUSY_CYCLE_CNT		0x1
-> +#define PPMU_RW_BUSY_CYCLE_CNT		0x2
-> +#define PPMU_RO_REQUEST_CNT		0x3
-> +#define PPMU_WO_REQUEST_CNT		0x4
-> +#define PPMU_RO_DATA_CNT		0x5
-> +#define PPMU_WO_DATA_CNT		0x6
-> +#define PPMU_RO_LATENCY			0x12
-> +#define PPMU_WO_LATENCY			0x16
-> +#define PPMU_V2_RO_DATA_CNT		0x4
-> +#define PPMU_V2_WO_DATA_CNT		0x5
-> +#define PPMU_V2_EVT3_RW_DATA_CNT	0x22
-> +
-> +#endif
+> void maybe_buggy(void)
+> {
+>   int a, b;
+>   int *p = &a;
+>   int *q = (int *)some_function((unsigned long)p);
+>   *q = 1;
+> }
 > 
+> If some_function(&a) returns &a, then all is well.  But if
+> some_function(&a) returns &b or even a valid address of some unrelated
+> kernel object, then the code might be entirely valid and correct C,
+> but I don't see how the runtime checks are supposed to tell whether
+> the resulting address is valid or is a bug.  This type of code is, I
+> think, quite common in the kernel -- it happens in every data
+> structure where we have unions of pointers and integers or where we
+> steal some known-zero bits of a pointer to store something else.
 
+So the thing is, for the infinitely large state space of "valid C code" 
+we already disallow an infinitely many versions in the Linux kernel.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+We have complicated rules that disallow certain C syntactical and 
+semantical constructs, both on the tooling (build failure/warning) and on 
+the review (style/taste) level.
+
+So the question IMHO isn't whether it's "valid C", because we already 
+have the Linux kernel's own C syntax variant and are enforcing it with 
+varying degrees of success.
+
+The question is whether the example you gave can be written in a strongly 
+typed fashion, whether it makes sense to do so, and what the costs are.
+
+I think it's evident that it can be written with strongly typed 
+constructs, by separating pointers from embedded error codes - with 
+negative side effects to code generation: for example it increases 
+structure sizes and error return paths.
+
+I think there's four main costs of converting such a pattern to strongly 
+typed constructs:
+
+ - memory/cache footprint:  there's a nonzero cost there.
+ - performance:             this will hurt too.
+ - code readability:        this will probably improve.
+ - code robustness:         this will improve too.
+
+So I think the proper question to ask is not whether there's common C 
+syntax within the kernel that would have to be rewritten, but whether the 
+total sum of memory and runtime overhead of strongly typed C programming 
+(if it's possible/desirable) is larger than the total sum of a typical 
+Linux distro enabling the various current and proposed kernel hardening 
+features that have a runtime overhead:
+
+ - the SMAP/SMEP overhead of STAC/CLAC for every single user copy
+
+ - other usercopy hardening features
+
+ - stackprotector
+
+ - KASLR
+
+ - compiler plugins against information leaks
+
+ - proposed KASLR extension to implement module randomization and -PIE overhead
+
+ - proposed function call integrity checks
+
+ - proposed per system call kernel stack offset randomization
+
+ - ( and I'm sure I forgot about a few more, and it's all still only 
+     reactive security, not proactive security. )
+
+That's death by a thousand cuts and CR3 switching during system calls is 
+also throwing a hand grenade into the fight ;-)
+
+So if people are also proposing to do CR3 switches in every system call, 
+I'm pretty sure the answer is "yes, even a managed C runtime is probably 
+faster than *THAT* sum of a performanc mess" - at least with the current 
+CR3 switching x86-uarch cost structure...
+
+Thanks,
+
+	Ingo
