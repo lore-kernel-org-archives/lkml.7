@@ -2,187 +2,67 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB490C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D3CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7487A2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A8B21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfD3ISb (ORCPT
+        id S1726597AbfD3IT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:18:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44836 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726165AbfD3ISa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:18:30 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3U8CakN086779
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:18:29 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6fjv70k8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:18:29 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 30 Apr 2019 09:18:27 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 09:18:23 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3U8IMkd45613280
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 08:18:22 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8F8111C052;
-        Tue, 30 Apr 2019 08:18:21 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2734B11C050;
-        Tue, 30 Apr 2019 08:18:21 +0000 (GMT)
-Received: from [9.152.222.31] (unknown [9.152.222.31])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Apr 2019 08:18:21 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
- <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
- <20190429185002.6041eecc.pasic@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 30 Apr 2019 10:18:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 04:19:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55528 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726202AbfD3IT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:19:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B7A6FAE3F;
+        Tue, 30 Apr 2019 08:19:24 +0000 (UTC)
+From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To:     gorcunov@gmail.com
+Cc:     akpm@linux-foundation.org, arunks@codeaurora.org, brgl@bgdev.pl,
+        geert+renesas@glider.be, ldufour@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mguzik@redhat.com, mhocko@kernel.org, mkoutny@suse.com,
+        rppt@linux.ibm.com, vbabka@suse.cz, ktkhai@virtuozzo.com
+Subject: [PATCH 0/3] Reduce mmap_sem usage for args manipulation
+Date:   Tue, 30 Apr 2019 10:18:41 +0200
+Message-Id: <20190430081844.22597-1-mkoutny@suse.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190418182321.GJ3040@uranus.lan>
+References: <20190418182321.GJ3040@uranus.lan>
 MIME-Version: 1.0
-In-Reply-To: <20190429185002.6041eecc.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19043008-0016-0000-0000-00000276C5AE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043008-0017-0000-0000-000032D34F2C
-Message-Id: <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 18:50, Halil Pasic wrote:
-> On Fri, 26 Apr 2019 15:01:27 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> +static struct ap_queue_status vfio_ap_setirq(struct vfio_ap_queue *q)
->> +{
->> +	struct ap_qirq_ctrl aqic_gisa = {};
->> +	struct ap_queue_status status = {};
->> +	struct kvm_s390_gisa *gisa;
->> +	struct kvm *kvm;
->> +	unsigned long h_nib, h_pfn;
->> +	int ret;
->> +
->> +	q->a_pfn = q->a_nib >> PAGE_SHIFT;
->> +	ret = vfio_pin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1,
->> +			     IOMMU_READ | IOMMU_WRITE, &h_pfn);
->> +	switch (ret) {
->> +	case 1:
->> +		break;
->> +	case -EINVAL:
->> +	case -E2BIG:
->> +		status.response_code = AP_RESPONSE_INVALID_ADDRESS;
->> +		/* Fallthrough */
->> +	default:
->> +		return status;
-> 
-> Can we actually hit the default label? AFICT you would return an
-> all-zero status, i.e. status.response_code == 0 'Normal completion'.
+Hello.
 
-hum right, the setting of AP_INVALID_ADDRESS should be in the default 
-and there is no need for the two error cases, they will match the default.
+(apologies for late reply) I've aggregated the two previously discussed patches
+into one series and based on responses made some changes summed below.
+
+v2
+- insert a patch refactoring validate_prctl_map
+- move find_vma out of the arg_lock critical section
 
 
-> 
->> +	}
->> +
->> +	kvm = q->matrix_mdev->kvm;
->> +	gisa = kvm->arch.gisa_int.origin;
->> +
->> +	h_nib = (h_pfn << PAGE_SHIFT) | (q->a_nib & ~PAGE_MASK);
->> +	aqic_gisa.gisc = q->a_isc;
->> +	aqic_gisa.isc = kvm_s390_gisc_register(kvm, q->a_isc);
->> +	aqic_gisa.ir = 1;
->> +	aqic_gisa.gisa = gisa->next_alert >> 4;
-> 
-> Why gisa->next_alert? Isn't this supposed to get set to gisa origin
-> (without some bits on the left)?
+Michal Koutný (3):
+  mm: get_cmdline use arg_lock instead of mmap_sem
+  prctl_set_mm: Refactor checks from validate_prctl_map
+  prctl_set_mm: downgrade mmap_sem to read lock
 
-Someone already asked this question.
-The answer is: look at the ap_qirq_ctrl structure, you will see that the 
-gisa field is 27 bits wide.
-
-> 
->> +
->> +	status = ap_aqic(q->apqn, aqic_gisa, (void *)h_nib);
->> +	switch (status.response_code) {
->> +	case AP_RESPONSE_NORMAL:
->> +		/* See if we did clear older IRQ configuration */
->> +		if (q->p_pfn)
->> +			vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
->> +					 &q->p_pfn, 1);
->> +		if (q->p_isc != VFIO_AP_ISC_INVALID)
->> +			kvm_s390_gisc_unregister(kvm, q->p_isc);
->> +		q->p_pfn = q->a_pfn;
->> +		q->p_isc = q->a_isc;
->> +		break;
->> +	case AP_RESPONSE_OTHERWISE_CHANGED:
->> +		/* We could not modify IRQ setings: clear new configuration */
->> +		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1);
->> +		kvm_s390_gisc_unregister(kvm, q->a_isc);
-> 
-> Hm, see below. Wouldn't you want to set a_isc to VFIO_AP_ISC_INVALID?
-
-grrr!!! when did I insert these 3 lines, it was OK in previous series!
-all 3 lines, vfio_unpin() / gisc_unregister / break must go away.
-
-> 
->> +		break;
->> +	default:	/* Fall Through */
-> 
-> Is it 'break' or is it 'Fall Through'?
-
-it is a fall through
-
-> 
->> +		pr_warn("%s: apqn %04x: response: %02x\n", __func__, q->apqn,
->> +			status.response_code);
->> +		vfio_ap_free_irq_data(q);
->> +		break;
->> +	}
->> +
->> +	return status;
->> +}
-
+ kernel/sys.c | 55 ++++++++++++++++++++++++++++---------------------------
+ mm/util.c    |  4 ++--
+ 2 files changed, 30 insertions(+), 29 deletions(-)
 
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+2.16.4
 
