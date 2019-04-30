@@ -2,216 +2,249 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9ECC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5CEC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0227B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6982075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BP7nn9vt"
+	dkim=pass (2048-bit key) header.d=outv.im header.i=@outv.im header.b="bujAN6lS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yll4mLx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfD3GO4 (ORCPT
+        id S1726229AbfD3GQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:14:56 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:62418 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbfD3GOz (ORCPT
+        Tue, 30 Apr 2019 02:16:56 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:44011 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725554AbfD3GQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:14:55 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190430061451epoutp049031f4ee400fe1b2e252180e864524af~aK_bVXMkM3013330133epoutp04t
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:14:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190430061451epoutp049031f4ee400fe1b2e252180e864524af~aK_bVXMkM3013330133epoutp04t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556604891;
-        bh=WJb+Cvmknz8hSilXK5stDWt6Ffwo/cFmz3E+umI80Lw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=BP7nn9vtNH+sG9dASYJfuE/jNf0Z2g4CyNpdbL6IXjzU4h4+/pIBr/PgNjwFFhKLw
-         n5HZ66/tKBuS2C2HHygX5MChCcVVcxxZLTZtqKVUeDbI3gNx9+613DWoKkZpDDdynz
-         B11NmqYsCJ+4v42Fz5BI6VLuuyNQPDLgOqiUk8IA=
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190430061450epcas1p13807d3828b1819dfd48b9bdaf73ac0fa~aK_Z15ws03071130711epcas1p16;
-        Tue, 30 Apr 2019 06:14:50 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        70.35.04142.9D7E7CC5; Tue, 30 Apr 2019 15:14:49 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190430061449epcas1p2ec80e66533f22b069220106f5bebbf63~aK_Zmq7xn1333613336epcas1p2-;
-        Tue, 30 Apr 2019 06:14:49 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190430061449epsmtrp12160b23b169e2d774048dd51bfe7dfc0~aK_ZlwQF80891208912epsmtrp1-;
-        Tue, 30 Apr 2019 06:14:49 +0000 (GMT)
-X-AuditID: b6c32a36-cf9ff7000000102e-31-5cc7e7d9b248
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        61.63.03662.9D7E7CC5; Tue, 30 Apr 2019 15:14:49 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190430061449epsmtip2a1fc43e97f636a9b7801fe6e4444257f~aK_ZQPIkw2206222062epsmtip2j;
-        Tue, 30 Apr 2019 06:14:49 +0000 (GMT)
-Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
- description
-To:     Lukasz Luba <l.luba@partner.samsung.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, kgene@kernel.org,
-        willy.mh.wolff.ml@gmail.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <52204c4b-80fa-1a87-2e00-1cfb774478f6@samsung.com>
-Date:   Tue, 30 Apr 2019 15:16:04 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJsWRmVeSWpSXmKPExsWy7bCmvu7N58djDM49t7HYOGM9q8X8I+dY
-        Lfofv2a2OH9+A7vF2aY37Ba3GmQsNj2+xmpxedccNovPvUcYLWac38dksfbIXXaLpdcvMlnc
-        blzBZtG69wi7xeE37awW3048YnQQ8Fgzbw2jx85Zd9k9Nq3qZPPYvKTe4+C7PUwefVtWMXp8
-        3iQXwB6VbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkD
-        dLuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CyQK84Mbe4NC9dLzk/18rQwMDI
-        FKgwITtjXs8j1oJpshWPPr1lbGCcJdbFyMkhIWAi8a1lB3MXIxeHkMAORolJs5cyQTifGCUe
-        fD8I5XxjlJj66jgLTMvl1s2sEIm9jBJrulYyQjjvGSWWrDwEViUsECKx7t41dpCEiMBZoFlN
-        29hAHGaBz4wSJx9cYwWpYhPQktj/4gYbiM0voChx9cdjRhCbV8BO4uCPx2CTWARUJRoaboHZ
-        ogIREvePbWCFqBGUODnzCVicU8Bb4vbeK2BzmAXEJW49mc8EYctLNG+dDfaehMAhdolNl1uY
-        IJ5wkVjc3MIMYQtLvDq+hR3ClpJ42d8GZVdLrDx5hA2iuYNRYsv+C6wQCWOJ/UsnAw3iANqg
-        KbF+lz7EMj6Jd197WEHCEgK8Eh1tQhDVyhKXH9yFWispsbi9kw3C9pCYMvknywRGxVlI3pmF
-        5IVZSF6YhbBsASPLKkax1ILi3PTUYsMCI+QI38QITtpaZjsYF53zOcQowMGoxMPr8e5YjBBr
-        YllxZe4hRgkOZiURXo/jR2OEeFMSK6tSi/Lji0pzUosPMZoCQ3sis5Rocj4wo+SVxBuaGhkb
-        G1uYGJqZGhoqifOud3COERJITyxJzU5NLUgtgulj4uCUamCckMzw1EBi9ZQ1Nw/yXmCzvVrV
-        Zrjyru3lCp44y3CrrAdOgo/9OLU/PZ6xmN1L522mlv3KV1efnjjWZe6Q9rKRz+9l6eOEAMPN
-        k47Kuitwz1r51Va3IbMt/N33qvWRC052nS3Mfp4o8vQpw1Wzg1eN+UQ9nzl+23c03W6l+teq
-        pQyx6V3Ht+9XYinOSDTUYi4qTgQAi2ypK/ADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRmVeSWpSXmKPExsWy7bCSvO7N58djDHbvUrfYOGM9q8X8I+dY
-        Lfofv2a2OH9+A7vF2aY37Ba3GmQsNj2+xmpxedccNovPvUcYLWac38dksfbIXXaLpdcvMlnc
-        blzBZtG69wi7xeE37awW3048YnQQ8Fgzbw2jx85Zd9k9Nq3qZPPYvKTe4+C7PUwefVtWMXp8
-        3iQXwB7FZZOSmpNZllqkb5fAlTGv5xFrwTTZikef3jI2MM4S62Lk5JAQMJG43LqZtYuRi0NI
-        YDejxOEdrSwQCUmJaRePMncxcgDZwhKHDxdD1LxllNj7eQkbSI2wQIjEunvX2EESIgJnGSUW
-        TVoA5jALfGaUmL7mMjNEy31GiaubZoKNZRPQktj/4gZYO7+AosTVH48ZQWxeATuJgz8eg9Ww
-        CKhKNDTcArNFBSIkzrxfwQJRIyhxcuYTMJtTwFvi9t4rYHOYBdQl/sy7xAxhi0vcejKfCcKW
-        l2jeOpt5AqPwLCTts5C0zELSMgtJywJGllWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmb
-        GMHRq6W1g/HEifhDjAIcjEo8vB7vjsUIsSaWFVfmHmKU4GBWEuH1OH40Rog3JbGyKrUoP76o
-        NCe1+BCjNAeLkjivfP6xSCGB9MSS1OzU1ILUIpgsEwenVAOjvF1yb8Pmhw0p98rOnbq7aEP7
-        oo87xDd+yNyrGzRj85yQnG035L8bC2xW2vFNs8nG9cpFO29pEe/i9yVORrYBAUEfvq0//ct0
-        Uc7UD2sk9jrnv1hxW4uFYePf1jIVLZvdnDe32i76yVmccnLnT+cQTcOs6PaKE4wrJRjcHzME
-        fOjR288zKcBKiaU4I9FQi7moOBEAXHzNeNoCAAA=
-X-CMS-MailID: 20190430061449epcas1p2ec80e66533f22b069220106f5bebbf63
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
-        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
+        Tue, 30 Apr 2019 02:16:56 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 361A32B31;
+        Tue, 30 Apr 2019 02:16:55 -0400 (EDT)
+Received: from imap7 ([10.202.2.57])
+  by compute6.internal (MEProxy); Tue, 30 Apr 2019 02:16:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outv.im; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=03QS6RZPHtW8N3aqWEZwQJvrvEGYI5K
+        PAoUcPMOtzvQ=; b=bujAN6lSzV9JQLAR+PVnZUoRAYzRlUUVfbitJlymTGt1Q96
+        TPvjaELB9UGUiBop7Ivdd78vDLStHctV1FmhAa6iaGkzVawj0I+h6mK+FriKStX2
+        7ZpLit9Ytik6m7Y4eZtMxZVcXwPN3zQZVDieCjmxQJOhU7xtV7ssX2EoygHE5VBa
+        r7ba07ygEgZvZ8LOyXzvMyHuzyxahoKDkDjt5W7+W/lt7jaYNCP62gm7eiH14o3w
+        AUauYO6F5JurPGvC9McH3Rd9yWIhwAFeyBwWHQ36W3OeMQkw0982OAbzmWht/dcO
+        h7pp/i0zT3Vbcuw5uIOa2sF77mL0Mhi0UmBsLOA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=03QS6R
+        ZPHtW8N3aqWEZwQJvrvEGYI5KPAoUcPMOtzvQ=; b=yll4mLx8Yec6B0RVkYypxv
+        oNRo0wd9RTtLBQMwB/910Hx9IVQzzTltN3OsQRXiHRjkREWx914JOUyk7YbeXjZd
+        Zo8zzlhCN1ZrZaUv1tO/nf7aGrOPNnf6rl69UaLSkyi7Ma8oofz6B+TPxwV+HapH
+        fQwasQeBSs2kNuUZHVx0otHNdWmQFYfimlVCVeVl/WxBemrYs4wq1dKn+LutJSYJ
+        aQ9Gr5B1d+l8Rp3gY1nNVXpRQ5QIjXeu1fMpz9BArj1sJGzXdZLAXIEtzO+A0nP1
+        mfPWj+aB99XLjP8YhOgNvd/vJi/dVf2DCmO3MhSCSPbaMXUF+tTIeH3ugzJ7MMzQ
+        ==
+X-ME-Sender: <xms:VejHXCKIVYD6506mJV0Sjn4if2pq99zTwLmsSzJR3Y5Nolb9O5mD-Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgddutdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfgjfhffhffvufgtsehttd
+    ertderredtnecuhfhrohhmpedfqfhuthhvihcuggdfuceoihesohhuthhvrdhimheqnecu
+    ffhomhgrihhnpegrrhgthhhlihhnuhigrdhorhhgnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehisehouhhtvhdrihhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:VejHXOZ3Nhk9pqIScxa7nngCRff4fqwasnpjRMWMMEXPmxCOcp6Phg>
+    <xmx:VejHXNudnGlm3O0WCZDfrilweQoKy3H0GFFZvYv-nFCW6bDz44_utA>
+    <xmx:VejHXLsBZSyGScsv5AdUBbMBYL92XljcXcH4CaJDpCGwHCxtVLJanQ>
+    <xmx:VujHXFOPH7wpzCrcjwhs6RokuyLN32ujrY1nAaLEL3fmo_tXl60o3w>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 79A15211BA; Tue, 30 Apr 2019 02:16:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-448-g5cc1c91-fmstable-20190429v1
+Mime-Version: 1.0
+Message-Id: <9db8c26a-d9fd-4cc9-a3aa-bd593d8f73ac@www.fastmail.com>
+In-Reply-To: <0c87e12c-c964-40a3-b97e-af2286c318c4@www.fastmail.com>
+References: <0c87e12c-c964-40a3-b97e-af2286c318c4@www.fastmail.com>
+Date:   Tue, 30 Apr 2019 02:16:32 -0400
+From:   "Outvi V" <i@outv.im>
+To:     dmitry.torokhov@gmail.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [SOLVED] PROBLEM: Elan touchpad regression on Kernel 5.0.10
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+Hello,
 
-On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
-> Extend the documenation by events description with new 'event-data-type'
-> field. Add example how the event might be defined in DT.
+  After a cold restart, this problems seem to be solved automatically on kernel 5.0.10.
+
+Regards,
+
+On Tue, Apr 30, 2019, at 12:21, Outvi V wrote:
+> Hello,
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  .../devicetree/bindings/devfreq/event/exynos-ppmu.txt  | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> [1.] One line summary of the problem: Elan touchpad regression on Kernel 5.0.10
 > 
-> diff --git a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-> index 3e36c1d..47feb5f 100644
-> --- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-> @@ -145,3 +145,21 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
->  			reg = <0x104d0000 0x2000>;
->  			status = "disabled";
->  		};
-> +
-> +The 'event' type specified in the PPMU node defines 'event-name'
-> +which also contains 'id' number and optionally 'event-data-type'.
-> +
-> +Example:
-> +
-> +		events {
-> +			ppmu_leftbus_0: ppmu-event0-leftbus {
-> +				event-name = "ppmu-event0-leftbus";
-> +				event-data-type = <PPMU_RO_DATA_CNT>;
-> +			};
-> +		};
-> +
-> +The 'event-data-type' defines the type of data which shell be counted
-> +by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
-> +all possible type, i.e. count read requests, count write data in bytes,
-> +etc. This field is optional and when it is missing, the driver code will
-> +use default data type.
+> [2.] Full description of the problem/report:
+>   Elan touchpad does not work on 5.0.10 while working on 5.0.9
 > 
-
-How about editing it as following?
-
---- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-+++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-@@ -10,14 +10,23 @@ The Exynos PPMU driver uses the devfreq-event class to provide event data
- to various devfreq devices. The devfreq devices would use the event data when
- derterming the current state of each IP.
- 
--Required properties:
-+Required properties for PPMU device:
- - compatible: Should be "samsung,exynos-ppmu" or "samsung,exynos-ppmu-v2.
- - reg: physical base address of each PPMU and length of memory mapped region.
- 
--Optional properties:
-+Optional properties for PPMU device:
- - clock-names : the name of clock used by the PPMU, "ppmu"
- - clocks : phandles for clock specified in "clock-names" property
- 
-+Required properties for 'events' child node of PPMU device:
-+- event-name : the unique event name among PPMU device
-+Optional properties for 'events' child node of PPMU device:
-+- event-data-type : Define the type of data which shell be counted
-+by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
-+all possible type, i.e. count read requests, count write data in bytes,
-+etc. This field is optional and when it is missing, the driver code
-+will use default data type.
-+
- Example1 : PPMUv1 nodes in exynos3250.dtsi are listed below.
- 
-                ppmu_dmc0: ppmu_dmc0@106a0000 {
-@@ -145,3 +154,16 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
-                        reg = <0x104d0000 0x2000>;
-                        status = "disabled";
-                };
-+
-+Example4 : 'event-data-type' in exynos4412-ppmu-common.dtsi are listed below.
-+
-+       &ppmu_dmc0 {
-+               status = "okay";
-+               events {
-+                       ppmu_dmc0_3: ppmu-event3-dmc0 {
-+                               event-name = "ppmu-event3-dmc0";
-+                               event-data-type = <(PPMU_RO_DATA_CNT |
-+                                               PPMU_WO_DATA_CNT)>;
-+                       };
-+               };
-+       };
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> [3.] Keywords: elan_i2c_core elan i2c touchpad 5.0.10
+> 
+> [4.] Kernel information
+> [4.1.] Kernel version:
+>   Linux version 5.0.10-arch1-1-ARCH (builduser@heftig-2592) (gcc 
+> version 8.3.0 (GCC)) #1 SMP PREEMPT Sat Apr 27 20:06:45 UTC 2019
+> [4.2.] Kernel .config file:
+>   I'm not sure, but I think it may be referring to
+>   
+> https://git.archlinux.org/svntogit/packages.git/tree/trunk/config?h=packages/linux
+> [5.] Most recent kernel version which did not have the bug: 5.0.9
+> 
+> [6.] Output of Oops.. message (if applicable) with symbolic information
+>      resolved (Not appliable)
+> [7.] A small shell script or example program which triggers the
+>      problem: (Not appliable)
+> 
+> [8.] Environment
+> [8.1.] Software (add the output of the ver_linux script here)
+>   
+> Linux sheltty 5.0.10-arch1-1-ARCH #1 SMP PREEMPT Sat Apr 27 20:06:45 
+> UTC 2019 x86_64 GNU/Linux
+> 
+> GNU C                   8.3.0
+> GNU Make                4.2.1
+> Binutils                2.32
+> Util-linux              2.33.2
+> Mount                   2.33.2
+> Module-init-tools       26
+> E2fsprogs               1.45.0
+> Jfsutils                1.1.15
+> Reiserfsprogs           3.6.27
+> Xfsprogs                4.20.0
+> PPP                     2.4.7
+> Linux C Library         2.29
+> Dynamic linker (ldd)    2.29
+> Linux C++ Library       6.0.25
+> Procps                  3.3.15
+> Kbd                     2.0.4
+> Console-tools           2.0.4
+> Sh-utils                8.31
+> Udev                    242
+> Modules Loaded          8021q 8250_dw ac ac97_bus acpi_thermal_rel 
+> aesni_intel aes_x86_64 agpgart ahci arc4 atkbd battery bbswitch 
+> bluetooth btbcm btintel btrtl btusb cfg80211 coretemp crc16 
+> crc32c_generic crc32c_intel crc32_pclmul crct10dif_pclmul cryptd 
+> crypto_simd crypto_user drm drm_kms_helper ecdh_generic elan_i2c evdev 
+> ext4 fat fb_sys_fops fscrypto garp ghash_clmulni_intel glue_helper hid 
+> hid_generic i2c_algo_bit i2c_hid i2c_i801 i8042 i915 idma64 input_leds 
+> int3400_thermal int3403_thermal int340x_thermal_zone intel_cstate 
+> intel_gtt intel_lpss intel_lpss_pci intel_pch_thermal intel_powerclamp 
+> intel_rapl intel_rapl_perf intel_soc_dts_iosf intel_uncore 
+> intel_wmi_thunderbolt ip_tables irqbypass iTCO_vendor_support iTCO_wdt 
+> jbd2 joydev kvm kvmgt kvm_intel ledtrig_audio libahci libata libphy 
+> libps2 llc mac80211 mac_hid mbcache mdev media mei mei_me mousedev mrp 
+> nls_cp437 nls_iso8859_1 pcc_cpufreq processor_thermal_device r8169 
+> r8822be realtek rfkill rng_core scsi_mod serio serio_raw snd 
+> snd_compress snd_hda_codec snd_hda_codec_generic snd_hda_codec_hdmi 
+> snd_hda_codec_realtek snd_hda_core snd_hda_ext_core snd_hda_intel 
+> snd_hwdep snd_pcm snd_pcm_dmaengine snd_soc_acpi 
+> snd_soc_acpi_intel_match snd_soc_core snd_soc_hdac_hda snd_soc_skl 
+> snd_soc_skl_ipc snd_soc_sst_dsp snd_soc_sst_ipc snd_timer soundcore stp 
+> syscopyarea sysfillrect sysimgblt tpm tpm_crb tpm_tis tpm_tis_core 
+> typec typec_ucsi ucsi_acpi usbhid uvcvideo vfat vfio vfio_iommu_type1 
+> vfio_mdev videobuf2_common videobuf2_memops videobuf2_v4l2 
+> videobuf2_vmalloc videodev wmi wmi_bmof x86_pkg_temp_thermal xhci_hcd 
+> xhci_pci x_tables
+> 
+> [8.2.] Processor information (from /proc/cpuinfo): (Maybe not appliable)
+> [8.3.] Module information (from /proc/modules): 
+> 
+> (Parts related to i2c and elan:)
+> 
+> i2c_algo_bit 16384 1 i915, Live 0x0000000000000000
+> i2c_hid 32768 0 - Live 0x0000000000000000
+> hid 147456 3 hid_generic,usbhid,i2c_hid, Live 0x0000000000000000
+> elan_i2c 49152 0 - Live 0x0000000000000000
+> i2c_i801 36864 0 - Live 0x0000000000000000
+> 
+> [8.4.] Loaded driver and hardware information (/proc/ioports, /proc/iomem)
+> 
+> /proc/ioports:
+> 0000-0000 : PCI Bus 0000:00
+>   0000-0000 : dma1
+>   0000-0000 : pic1
+>   0000-0000 : iTCO_wdt
+>   0000-0000 : timer0
+>   0000-0000 : timer1
+>   0000-0000 : keyboard
+>   0000-0000 : PNP0C09:00
+>     0000-0000 : EC data
+>   0000-0000 : keyboard
+>   0000-0000 : PNP0C09:00
+>     0000-0000 : EC cmd
+>   0000-0000 : rtc0
+>   0000-0000 : dma page reg
+>   0000-0000 : pic2
+>   0000-0000 : dma2
+>   0000-0000 : fpu
+>     0000-0000 : PNP0C04:00
+>   0000-0000 : iTCO_wdt
+>   0000-0000 : pnp 00:02
+> 0000-0000 : PCI conf1
+> 0000-0000 : PCI Bus 0000:00
+>   0000-0000 : pnp 00:02
+>   0000-0000 : pnp 00:00
+>     0000-0000 : ACPI PM1a_EVT_BLK
+>     0000-0000 : ACPI PM1a_CNT_BLK
+>     0000-0000 : ACPI PM_TMR
+>     0000-0000 : ACPI CPU throttle
+>     0000-0000 : ACPI PM2_CNT_BLK
+>     0000-0000 : pnp 00:04
+>     0000-0000 : ACPI GPE0_BLK
+>   0000-0000 : pnp 00:01
+>   0000-0000 : PCI Bus 0000:08
+>     0000-0000 : 0000:08:00.0
+>   0000-0000 : PCI Bus 0000:07
+>     0000-0000 : 0000:07:00.0
+>       0000-0000 : r8822be
+>   0000-0000 : PCI Bus 0000:01
+>     0000-0000 : 0000:01:00.0
+>   0000-0000 : 0000:00:02.0
+>   0000-0000 : 0000:00:1f.4
+>     0000-0000 : i801_smbus
+>   0000-0000 : 0000:00:17.0
+>     0000-0000 : ahci
+>   0000-0000 : 0000:00:17.0
+>     0000-0000 : ahci
+>   0000-0000 : 0000:00:17.0
+>     0000-0000 : ahci
+> 
+> 
+> [8.5.] PCI information
+>   It seems to be long (over 700 lines) and unrelated to this 
+> regression. Omitted to avoid flooding. I've kept an archive so feel 
+> free to ask me to post it if needed.
+> 
+> [8.6.] SCSI information (from /proc/scsi/scsi): (Empty)
+> [8.7.] Other information that might be relevant to the problem:
+> 
+>   dmesg is constantly showing "elan_i2c i2c-ELAN061B:00: invalid report 
+> id data (d)".
+>   I checked the git log and it is likely to be related to commit 
+> "95df599f95f398b0a34d081dadfdee3126e58163".
+>   I'm using Arch Linux, its kernel repository link: [1]
+>   I checked the related file "elan_i2c_core.c" in Arch Linux's kernel 
+> repository [2], and it is the same as in 5.0.10 on kernel.org.
+>   My laptop is a Lenovo Legion Y7000.
+> 
+> Links:
+> [1]. https://git.archlinux.org/linux.git
+> [2]. 
+> https://git.archlinux.org/linux.git/tree/drivers/input/mouse/elan_i2c_core.c?h=v5.0.10-arch1
+> 
+> Please don't hesitate if more information or operation is needed.
