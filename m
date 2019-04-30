@@ -4,52 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBBDC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B5AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D47C2177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E078217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624414;
-	bh=VcpKBqHheq+0zxr5mfTmUUIAIN1pPJCWkgC44Ioi6eU=;
+	s=default; t=1556624418;
+	bh=PY83nNRfvy6AsMvB6zhM8qpy4kWbxWXj25HJ8FDV6TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/Isjrwg2PV4qzlMRQsUl8WiOVaWwIgG5v5TgB9ZX4Q1J7WsieuX/aQPo+qoPedXW
-	 U2i6rZYX/EI4HXk00iHeT5nM3lvBocaeXsqfAPK2Q5eB4PgetzsjgjX1ripEOoMBOB
-	 cbOoQFbeXLF2T3kZCQ02TMtunNPqjdv10C+LWS5o=
+	b=NfCtj6h+nSR3aGHwtdLOoRrNpx+0wH3IwP1b+G2hXwCkkaHtw/ilhh7bMtSUBlnMW
+	 UgEQwUQ+dyRJv3tx1tBFvcfQDQUFY7LlEOUvC7iTEGEvACNMRq8jfa5PEL3x4BxuKB
+	 oeZHfRgof86RwxCwZf0xAnkDT0S9zJWFW8nLMo1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfD3LkN (ORCPT
+        id S1728380AbfD3LkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46214 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728302AbfD3LkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:40:11 -0400
+        id S1728302AbfD3LkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:40:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7903521707;
-        Tue, 30 Apr 2019 11:40:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E01ED21743;
+        Tue, 30 Apr 2019 11:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624411;
-        bh=VcpKBqHheq+0zxr5mfTmUUIAIN1pPJCWkgC44Ioi6eU=;
+        s=default; t=1556624413;
+        bh=PY83nNRfvy6AsMvB6zhM8qpy4kWbxWXj25HJ8FDV6TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=juKXwUexu3IftoKNqljaZkbaGflbOE7LE6+CJVtEonplZAWFt0pG0hUoo9ODsJXxN
-         irGGQBoiXyPYDkLhDjP/U4oFcJIyS7ClnEn7TV0HPotE2sgkJa6EWKFu86xAIBMa8e
-         Jq/nRF9ZQzXhHNkv+50FcFp/rVsrxMVLHUWlbuw0=
+        b=INsho6eLrOVyVfOTjT4iCxnpTmekPeL3+NvpNS+hlIDu9uzzcKcJvWef5SQgJtKkd
+         jFRbVbFlZXXor4Xs7iSXEDK+YCeVZnGeYYiW3lvBeceKgL8UBJkwdmQek3LfOnRoic
+         oYHQ+HH8yTwY/32LrOBGO0i9kPFZt3jMiNGzSLrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Jarno <aurelien@aurel32.net>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.9 04/41] MIPS: scall64-o32: Fix indirect syscall number load
-Date:   Tue, 30 Apr 2019 13:38:15 +0200
-Message-Id: <20190430113525.306156222@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.9 05/41] trace: Fix preempt_enable_no_resched() abuse
+Date:   Tue, 30 Apr 2019 13:38:16 +0200
+Message-Id: <20190430113525.540918012@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -62,50 +71,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Jarno <aurelien@aurel32.net>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 79b4a9cf0e2ea8203ce777c8d5cfa86c71eae86e upstream.
+commit d6097c9e4454adf1f8f2c9547c2fa6060d55d952 upstream.
 
-Commit 4c21b8fd8f14 (MIPS: seccomp: Handle indirect system calls (o32))
-added indirect syscall detection for O32 processes running on MIPS64,
-but it did not work correctly for big endian kernel/processes. The
-reason is that the syscall number is loaded from ARG1 using the lw
-instruction while this is a 64-bit value, so zero is loaded instead of
-the syscall number.
+Unless the very next line is schedule(), or implies it, one must not use
+preempt_enable_no_resched(). It can cause a preemption to go missing and
+thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
 
-Fix the code by using the ld instruction instead. When running a 32-bit
-processes on a 64 bit CPU, the values are properly sign-extended, so it
-ensures the value passed to syscall_trace_enter is correct.
+Link: http://lkml.kernel.org/r/20190423200318.GY14281@hirez.programming.kicks-ass.net
 
-Recent systemd versions with seccomp enabled whitelist the getpid
-syscall for their internal  processes (e.g. systemd-journald), but call
-it through syscall(SYS_getpid). This fix therefore allows O32 big endian
-systems with a 64-bit kernel to run recent systemd versions.
-
-Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-Cc: <stable@vger.kernel.org> # v3.15+
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Cc: Waiman Long <longman@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: the arch/x86 maintainers <x86@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: huang ying <huang.ying.caritas@gmail.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: stable@vger.kernel.org
+Fixes: 2c2d7329d8af ("tracing/ftrace: use preempt_enable_no_resched_notrace in ring_buffer_time_stamp()")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/scall64-o32.S |    2 +-
+ kernel/trace/ring_buffer.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/kernel/scall64-o32.S
-+++ b/arch/mips/kernel/scall64-o32.S
-@@ -125,7 +125,7 @@ trace_a_syscall:
- 	subu	t1, v0,  __NR_O32_Linux
- 	move	a1, v0
- 	bnez	t1, 1f /* __NR_syscall at offset 0 */
--	lw	a1, PT_R4(sp) /* Arg1 for __NR_syscall case */
-+	ld	a1, PT_R4(sp) /* Arg1 for __NR_syscall case */
- 	.set	pop
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -701,7 +701,7 @@ u64 ring_buffer_time_stamp(struct ring_b
  
- 1:	jal	syscall_trace_enter
+ 	preempt_disable_notrace();
+ 	time = rb_time_stamp(buffer);
+-	preempt_enable_no_resched_notrace();
++	preempt_enable_notrace();
+ 
+ 	return time;
+ }
 
 
