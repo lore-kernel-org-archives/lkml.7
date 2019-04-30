@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA5AC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6281DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6042C21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3702075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625324;
-	bh=mtP6FXwC+gbYIeehYgsHw94R8YvjVniVqPG3sgvr41s=;
+	s=default; t=1556625329;
+	bh=R4EoRxp5VUPcegQvGoO6HysLF8EDfQpLxNG6/h6hV9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b2htJq4LZe8Tk4WLdBuZkk0je+ezFGVXvjzuDS8C7ne3cNyyg/ZsFMDWl2Aya+0r1
-	 VIUmIiFbJyr3l3FdFJaWOBd04LaMu9qwcp9RTWfOW5+EWU+CRUMzFkPv7hO4Jw2UyG
-	 to7fuE3lu8HlqqhsNV4FyOttOiDwkDOOD8DgIUAw=
+	b=yz5NmH73ib42bvBBMkdN00lSPmfs2AKnN/QN8tiiKjWUdU+htk3rkFlt+6lOmMHgk
+	 Rfst/vIdwFR8nxJokkphd/zvhlzak2NEVIfV0wVkdhqC+xlzajJeDuadEqe9Jb6uzk
+	 CfQ2W3LLVk0VPiLGqhwAy717TNOITABlpDgWaZxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfD3LzN (ORCPT
+        id S1730696AbfD3Lt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36260 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731027AbfD3Ltk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:40 -0400
+        id S1730985AbfD3LtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F46020449;
-        Tue, 30 Apr 2019 11:49:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57A4621734;
+        Tue, 30 Apr 2019 11:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624978;
-        bh=mtP6FXwC+gbYIeehYgsHw94R8YvjVniVqPG3sgvr41s=;
+        s=default; t=1556624962;
+        bh=R4EoRxp5VUPcegQvGoO6HysLF8EDfQpLxNG6/h6hV9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mrNhbeu119OMEKharebKJe4l+0DlPoZGXIy1Y8dDV9uTs7sUPYYUWpdtbTpJPboeo
-         VonxRbGA/FjluuwYuP/OZyjEEtc+QB+gnUtelkWqW229R/EoW+wLeTA4fduGKPhzkL
-         2JF43FGx8/f704X4q1BCkmE+8xOk2PGJUyZQfXyE=
+        b=Q5MAQuR11t5gIrjOWoqcIytsuGQYWg3/T/ESSG3ImakS6OMMDwA5+eIrUqODA2O0P
+         +//uxCCWmOd14C1l7LS4wC5CW+LkG5iTjNqjhVz6L5tzP4976z8mQ4NkiZw6hb/u/2
+         tnZ8Vr2u41b3zCDO9JWC3mSshtu1rMjADmR0aFmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.0 43/89] drm/ttm: fix re-init of global structures
-Date:   Tue, 30 Apr 2019 13:38:34 +0200
-Message-Id: <20190430113611.784740880@linuxfoundation.org>
+        Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.0 38/89] dmaengine: sh: rcar-dmac: Fix glitch in dmaengine_tx_status
+Date:   Tue, 30 Apr 2019 13:38:29 +0200
+Message-Id: <20190430113611.612017498@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -61,101 +62,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
 
-commit bd4264112f93045704731850c5e4d85db981cd85 upstream.
+commit 6e7da74775348d96e2d7efaf3f91410e18c481ef upstream.
 
-When a driver unloads without unloading TTM we don't correctly
-clear the global structures leading to errors on re-init.
+The tx_status poll in the rcar_dmac driver reads the status register
+which indicates which chunk is busy (DMACHCRB). Afterwards the point
+inside the chunk is read from DMATCRB. It is possible that the chunk
+has changed between the two reads. The result is a non-monotonous
+increase of the residue. Fix this by introducing a 'safe read' logic.
 
-Next step should probably be to remove the global structures and
-kobjs all together, but this is tricky since we need to maintain
-backward compatibility.
-
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Karol Herbst <kherbst@redhat.com>
-Tested-by: Karol Herbst <kherbst@redhat.com>
-CC: stable@vger.kernel.org # 5.0.x
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 73a47bd0da66 ("dmaengine: rcar-dmac: use TCRB instead of TCR for residue")
+Signed-off-by: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: <stable@vger.kernel.org> # v4.16+
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/ttm/ttm_bo.c     |   10 +++++-----
- drivers/gpu/drm/ttm/ttm_memory.c |    5 +++--
- include/drm/ttm/ttm_bo_driver.h  |    1 -
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/dma/sh/rcar-dmac.c |   26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/ttm/ttm_bo.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo.c
-@@ -49,9 +49,8 @@ static void ttm_bo_global_kobj_release(s
-  * ttm_global_mutex - protecting the global BO state
-  */
- DEFINE_MUTEX(ttm_global_mutex);
--struct ttm_bo_global ttm_bo_glob = {
--	.use_count = 0
--};
-+unsigned ttm_bo_glob_use_count;
-+struct ttm_bo_global ttm_bo_glob;
- 
- static struct attribute ttm_bo_count = {
- 	.name = "bo_count",
-@@ -1535,12 +1534,13 @@ static void ttm_bo_global_release(void)
- 	struct ttm_bo_global *glob = &ttm_bo_glob;
- 
- 	mutex_lock(&ttm_global_mutex);
--	if (--glob->use_count > 0)
-+	if (--ttm_bo_glob_use_count > 0)
- 		goto out;
- 
- 	kobject_del(&glob->kobj);
- 	kobject_put(&glob->kobj);
- 	ttm_mem_global_release(&ttm_mem_glob);
-+	memset(glob, 0, sizeof(*glob));
- out:
- 	mutex_unlock(&ttm_global_mutex);
- }
-@@ -1552,7 +1552,7 @@ static int ttm_bo_global_init(void)
- 	unsigned i;
- 
- 	mutex_lock(&ttm_global_mutex);
--	if (++glob->use_count > 1)
-+	if (++ttm_bo_glob_use_count > 1)
- 		goto out;
- 
- 	ret = ttm_mem_global_init(&ttm_mem_glob);
---- a/drivers/gpu/drm/ttm/ttm_memory.c
-+++ b/drivers/gpu/drm/ttm/ttm_memory.c
-@@ -461,8 +461,8 @@ out_no_zone:
- 
- void ttm_mem_global_release(struct ttm_mem_global *glob)
- {
--	unsigned int i;
- 	struct ttm_mem_zone *zone;
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1282,6 +1282,9 @@ static unsigned int rcar_dmac_chan_get_r
+ 	enum dma_status status;
+ 	unsigned int residue = 0;
+ 	unsigned int dptr = 0;
++	unsigned int chcrb;
++	unsigned int tcrb;
 +	unsigned int i;
  
- 	/* let the page allocator first stop the shrink work. */
- 	ttm_page_alloc_fini();
-@@ -475,9 +475,10 @@ void ttm_mem_global_release(struct ttm_m
- 		zone = glob->zones[i];
- 		kobject_del(&zone->kobj);
- 		kobject_put(&zone->kobj);
--			}
+ 	if (!desc)
+ 		return 0;
+@@ -1330,14 +1333,31 @@ static unsigned int rcar_dmac_chan_get_r
+ 	}
+ 
+ 	/*
++	 * We need to read two registers.
++	 * Make sure the control register does not skip to next chunk
++	 * while reading the counter.
++	 * Trying it 3 times should be enough: Initial read, retry, retry
++	 * for the paranoid.
++	 */
++	for (i = 0; i < 3; i++) {
++		chcrb = rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
++					    RCAR_DMACHCRB_DPTR_MASK;
++		tcrb = rcar_dmac_chan_read(chan, RCAR_DMATCRB);
++		/* Still the same? */
++		if (chcrb == (rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
++			      RCAR_DMACHCRB_DPTR_MASK))
++			break;
 +	}
- 	kobject_del(&glob->kobj);
- 	kobject_put(&glob->kobj);
-+	memset(glob, 0, sizeof(*glob));
- }
- 
- static void ttm_check_swapping(struct ttm_mem_global *glob)
---- a/include/drm/ttm/ttm_bo_driver.h
-+++ b/include/drm/ttm/ttm_bo_driver.h
-@@ -411,7 +411,6 @@ extern struct ttm_bo_global {
- 	/**
- 	 * Protected by ttm_global_mutex.
++	WARN_ONCE(i >= 3, "residue might be not continuous!");
++
++	/*
+ 	 * In descriptor mode the descriptor running pointer is not maintained
+ 	 * by the interrupt handler, find the running descriptor from the
+ 	 * descriptor pointer field in the CHCRB register. In non-descriptor
+ 	 * mode just use the running descriptor pointer.
  	 */
--	unsigned int use_count;
- 	struct list_head device_list;
+ 	if (desc->hwdescs.use) {
+-		dptr = (rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
+-			RCAR_DMACHCRB_DPTR_MASK) >> RCAR_DMACHCRB_DPTR_SHIFT;
++		dptr = chcrb >> RCAR_DMACHCRB_DPTR_SHIFT;
+ 		if (dptr == 0)
+ 			dptr = desc->nchunks;
+ 		dptr--;
+@@ -1355,7 +1375,7 @@ static unsigned int rcar_dmac_chan_get_r
+ 	}
  
- 	/**
+ 	/* Add the residue for the current chunk. */
+-	residue += rcar_dmac_chan_read(chan, RCAR_DMATCRB) << desc->xfer_shift;
++	residue += tcrb << desc->xfer_shift;
+ 
+ 	return residue;
+ }
 
 
