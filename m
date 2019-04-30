@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB14C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744BBC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D6121734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B3A217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624776;
-	bh=Bk1OXFfBQ8nFn9DBuyA7O+lCPWPwyZ/9BBvNMa9vLfc=;
+	s=default; t=1556624782;
+	bh=Zg4db8LoDzBXLgSjLE8jo84UGSvGZibJth0gdEseMZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWElPrmW5QYFqMm1RPVsaw16jeeNLtm17RmzNr1bSEnNmWZO/5sSsmOFxHw5ufe+d
-	 QmETxO9TZb6nlLxNc1ALvwlvVfGP0UjxQftgAMGtc2VRYVJuEFXNjrcdvALHn+ETE5
-	 fauFdxz1Rvf4tfyBgfiqreLJgU1M597o/rcc9f8I=
+	b=NGBZBNZ03/LoZ8dqJqZ1qnELX8zuNUTubaEIgM315oo/jEUg9iy9qYzFM19vSkpnW
+	 kH8l71B3T1X/AZNrc7BBaXRp+uh1U6v4FP+bdjBK+sGBeKYr7KkfMagEHlWbfg+l/m
+	 qaWMXPBsPbFOSABihWfDR/lFVez8oRZ/T4hPrw+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbfD3LqQ (ORCPT
+        id S1729604AbfD3LqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58948 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730516AbfD3LqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:12 -0400
+        id S1728087AbfD3LqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5397D2173E;
-        Tue, 30 Apr 2019 11:46:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A13FC21670;
+        Tue, 30 Apr 2019 11:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624771;
-        bh=Bk1OXFfBQ8nFn9DBuyA7O+lCPWPwyZ/9BBvNMa9vLfc=;
+        s=default; t=1556624777;
+        bh=Zg4db8LoDzBXLgSjLE8jo84UGSvGZibJth0gdEseMZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kXmm/JGrBftNYLi5SrvO6riXdo26U9H4y7cerdjQoZWzt4yLkDBaEAyD8k2eRhpVc
-         dIc4ZJxp5jEd0j9giY4qY1vL/rUNXmsh0qskwPayX6ZeNjV7fYkaRc8dESeHZ3sSdi
-         1LDkBbshnZvbtCArnfLdprkBnEpDpOFTLpEp2/2E=
+        b=TPf5TcX432xEGebMr7orhhxaK/qiA6NjgkRy4PvSXEi36MKMEX+twV6Ef4atKFcXK
+         Fz8YKLAVsTugcUkscck1D/wn5kK9STUv8xzjQ0Bqco7sEpIC8MaGOU393XnTmSp/z9
+         pO5WbSBm0OOakLR7550+BygBhiN3hAJ7aN/2faFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
         Jens Axboe <axboe@kernel.dk>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 066/100] aio: clear IOCB_HIPRI
-Date:   Tue, 30 Apr 2019 13:38:35 +0200
-Message-Id: <20190430113611.914864134@linuxfoundation.org>
+Subject: [PATCH 4.19 068/100] aio: separate out ring reservation from req allocation
+Date:   Tue, 30 Apr 2019 13:38:37 +0200
+Message-Id: <20190430113611.983878715@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -63,49 +62,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christoph Hellwig <hch@lst.de>
 
-commit 154989e45fd8de9bfb52bbd6e5ea763e437e54c5 upstream.
+commit 432c79978c33ecef91b1b04cea6936c20810da29 upstream.
 
-No one is going to poll for aio (yet), so we must clear the HIPRI
-flag, as we would otherwise send it down the poll queues, where no
-one will be polling for completions.
+This is in preparation for certain types of IO not needing a ring
+reserveration.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-IOCB_HIPRI, not RWF_HIPRI.
-
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/aio.c |   30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
 --- a/fs/aio.c
 +++ b/fs/aio.c
-@@ -1438,8 +1438,7 @@ static int aio_prep_rw(struct kiocb *req
- 		ret = ioprio_check_cap(iocb->aio_reqprio);
- 		if (ret) {
- 			pr_debug("aio ioprio check cap error: %d\n", ret);
--			fput(req->ki_filp);
--			return ret;
-+			goto out_fput;
- 		}
+@@ -902,7 +902,7 @@ static void put_reqs_available(struct ki
+ 	local_irq_restore(flags);
+ }
  
- 		req->ki_ioprio = iocb->aio_reqprio;
-@@ -1448,7 +1447,13 @@ static int aio_prep_rw(struct kiocb *req
+-static bool get_reqs_available(struct kioctx *ctx)
++static bool __get_reqs_available(struct kioctx *ctx)
+ {
+ 	struct kioctx_cpu *kcpu;
+ 	bool ret = false;
+@@ -994,6 +994,14 @@ static void user_refill_reqs_available(s
+ 	spin_unlock_irq(&ctx->completion_lock);
+ }
  
- 	ret = kiocb_set_rw_flags(req, iocb->aio_rw_flags);
- 	if (unlikely(ret))
--		fput(req->ki_filp);
-+		goto out_fput;
++static bool get_reqs_available(struct kioctx *ctx)
++{
++	if (__get_reqs_available(ctx))
++		return true;
++	user_refill_reqs_available(ctx);
++	return __get_reqs_available(ctx);
++}
 +
-+	req->ki_flags &= ~IOCB_HIPRI; /* no one is going to poll for this I/O */
-+	return 0;
+ /* aio_get_req
+  *	Allocate a slot for an aio request.
+  * Returns NULL if no requests are free.
+@@ -1002,24 +1010,15 @@ static inline struct aio_kiocb *aio_get_
+ {
+ 	struct aio_kiocb *req;
+ 
+-	if (!get_reqs_available(ctx)) {
+-		user_refill_reqs_available(ctx);
+-		if (!get_reqs_available(ctx))
+-			return NULL;
+-	}
+-
+ 	req = kmem_cache_alloc(kiocb_cachep, GFP_KERNEL|__GFP_ZERO);
+ 	if (unlikely(!req))
+-		goto out_put;
++		return NULL;
+ 
+ 	percpu_ref_get(&ctx->reqs);
+ 	INIT_LIST_HEAD(&req->ki_list);
+ 	refcount_set(&req->ki_refcnt, 0);
+ 	req->ki_ctx = ctx;
+ 	return req;
+-out_put:
+-	put_reqs_available(ctx, 1);
+-	return NULL;
+ }
+ 
+ static struct kioctx *lookup_ioctx(unsigned long ctx_id)
+@@ -1813,9 +1812,13 @@ static int io_submit_one(struct kioctx *
+ 		return -EINVAL;
+ 	}
+ 
++	if (!get_reqs_available(ctx))
++		return -EAGAIN;
 +
-+out_fput:
-+	fput(req->ki_filp);
++	ret = -EAGAIN;
+ 	req = aio_get_req(ctx);
+ 	if (unlikely(!req))
+-		return -EAGAIN;
++		goto out_put_reqs_available;
+ 
+ 	if (iocb.aio_flags & IOCB_FLAG_RESFD) {
+ 		/*
+@@ -1878,11 +1881,12 @@ static int io_submit_one(struct kioctx *
+ 		goto out_put_req;
+ 	return 0;
+ out_put_req:
+-	put_reqs_available(ctx, 1);
+ 	percpu_ref_put(&ctx->reqs);
+ 	if (req->ki_eventfd)
+ 		eventfd_ctx_put(req->ki_eventfd);
+ 	kmem_cache_free(kiocb_cachep, req);
++out_put_reqs_available:
++	put_reqs_available(ctx, 1);
  	return ret;
  }
  
