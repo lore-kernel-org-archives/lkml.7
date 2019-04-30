@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9C1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC49C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C59621707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE06B21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624953;
-	bh=+T1F1qSVXdecpRNVPxr8tVprDNtm46AYHKTyhyYoIOg=;
+	s=default; t=1556624958;
+	bh=3Tq88hR5hv0Ak6dU50bZT9K8PkyxvQU6ZbbPLIXGtXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dLmSHr9kA11BY5YNZ7zDTtwNzJEzNQ4UDL+hPXaSleegftuueWOSK5zdu8nK4mDVW
-	 w/PZodWUtPi0AJtjB4XFqUJ2K+iufew1YMW5QxwVRhZK5gp+OHNRRiMgIDTkynB1op
-	 Y4uQYLhfhlQq+3cil9mXMnWUR+scPaE/ihhBRI3U=
+	b=evtJNOQyddR0WZSuME69Bex4OE9ruJe2Tf2uSDJc9l3VNDOc3DENlqQVb17iZXjVQ
+	 MhmwPgcH+vf/HVzIdjHDx3XGjpebnozU2zDL0vmw1BQarNUndzZCBEEPLK8iqm43xY
+	 IPkgct4kdTOvY+OgfG3b282EZrctc6AEfV7ZqlDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730959AbfD3LtL (ORCPT
+        id S1730974AbfD3LtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35532 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730949AbfD3LtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:07 -0400
+        id S1730278AbfD3LtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91A2220449;
-        Tue, 30 Apr 2019 11:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C858B21670;
+        Tue, 30 Apr 2019 11:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624947;
-        bh=+T1F1qSVXdecpRNVPxr8tVprDNtm46AYHKTyhyYoIOg=;
+        s=default; t=1556624952;
+        bh=3Tq88hR5hv0Ak6dU50bZT9K8PkyxvQU6ZbbPLIXGtXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f55pOvF3+tlCSMX1w6qGR13VcLD0BpzbqlNdM+u4fXQ+GmveX8ykcp6dsHd+jjJrN
-         pMspOrJXDMkeGhXrB98yZI1OzaqhPJJJoXOQO1z+M5HaVIH6Qw3RzgPlrjU5X3TL50
-         Zx8zYwNYOKvZSs65NP+MfEbRQZdIXLiQgxUq5BbI=
+        b=FZjC8/T4kZg8JQ/cB/8jdivw+P59pDzk7czZzyGv8ZhT3niOVAc3VouiTg0JyIOl+
+         8Q6CNHL4bT/OufsjMv5ZiuJx/HaF10Q669xzUwNNSqjHqwp7sFuAnvdho6OqyZdBMw
+         G1qNxQSZf9YXj+a3a9HWl0lDX0H/pHYXo2LoNcGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Slawomir Pryczek <slawek1211@gmail.com>,
-        Neil Brown <neilb@suse.com>, Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.0 32/89] nfsd: wake blocked file lock waiters before sending callback
-Date:   Tue, 30 Apr 2019 13:38:23 +0200
-Message-Id: <20190430113611.416526562@linuxfoundation.org>
+        stable@vger.kernel.org, Harry Pan <harry.pan@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, gs0622@gmail.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.0 34/89] perf/x86/intel: Update KBL Package C-state events to also include PC8/PC9/PC10 counters
+Date:   Tue, 30 Apr 2019 13:38:25 +0200
+Message-Id: <20190430113611.481702887@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,56 +67,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Harry Pan <harry.pan@intel.com>
 
-commit f456458e4d25a8962d0946891617c76cc3ff5fb9 upstream.
+commit 82c99f7a81f28f8c1be5f701c8377d14c4075b10 upstream.
 
-When a blocked NFS lock is "awoken" we send a callback to the server and
-then wake any hosts waiting on it. If a client attempts to get a lock
-and then drops off the net, we could end up waiting for a long time
-until we end up waking locks blocked on that request.
+Kaby Lake (and Coffee Lake) has PC8/PC9/PC10 residency counters.
 
-So, wake any other waiting lock requests before sending the callback.
-Do this by calling locks_delete_block in a new "prepare" phase for
-CB_NOTIFY_LOCK callbacks.
+This patch updates the list of Kaby/Coffee Lake PMU event counters
+from the snb_cstates[] list of events to the hswult_cstates[]
+list of events, which keeps all previously supported events and
+also adds the PKG_C8, PKG_C9 and PKG_C10 residency counters.
 
-URL: https://bugzilla.kernel.org/show_bug.cgi?id=203363
-Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
-Reported-by: Slawomir Pryczek <slawek1211@gmail.com>
-Cc: Neil Brown <neilb@suse.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+This allows user space tools to profile them through the perf interface.
+
+Signed-off-by: Harry Pan <harry.pan@intel.com>
+Cc: <stable@vger.kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: gs0622@gmail.com
+Link: http://lkml.kernel.org/r/20190424145033.1924-1-harry.pan@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/events/intel/cstate.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -298,6 +298,14 @@ remove_blocked_locks(struct nfs4_lockown
- 	}
- }
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -76,15 +76,15 @@
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C8_RESIDENCY:  Package C8 Residency Counter.
+  *			       perf code: 0x04
+- *			       Available model: HSW ULT,CNL
++ *			       Available model: HSW ULT,KBL,CNL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C9_RESIDENCY:  Package C9 Residency Counter.
+  *			       perf code: 0x05
+- *			       Available model: HSW ULT,CNL
++ *			       Available model: HSW ULT,KBL,CNL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
+  *			       perf code: 0x06
+- *			       Available model: HSW ULT,GLM,CNL
++ *			       Available model: HSW ULT,KBL,GLM,CNL
+  *			       Scope: Package (physical package)
+  *
+  */
+@@ -572,8 +572,8 @@ static const struct x86_cpu_id intel_cst
+ 	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_DESKTOP, snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X, snb_cstates),
  
-+static void
-+nfsd4_cb_notify_lock_prepare(struct nfsd4_callback *cb)
-+{
-+	struct nfsd4_blocked_lock	*nbl = container_of(cb,
-+						struct nfsd4_blocked_lock, nbl_cb);
-+	locks_delete_block(&nbl->nbl_lock);
-+}
-+
- static int
- nfsd4_cb_notify_lock_done(struct nfsd4_callback *cb, struct rpc_task *task)
- {
-@@ -325,6 +333,7 @@ nfsd4_cb_notify_lock_release(struct nfsd
- }
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE,  snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_DESKTOP, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE,  hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_DESKTOP, hswult_cstates),
  
- static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops = {
-+	.prepare	= nfsd4_cb_notify_lock_prepare,
- 	.done		= nfsd4_cb_notify_lock_done,
- 	.release	= nfsd4_cb_notify_lock_release,
- };
+ 	X86_CSTATES_MODEL(INTEL_FAM6_CANNONLAKE_MOBILE, cnl_cstates),
+ 
 
 
