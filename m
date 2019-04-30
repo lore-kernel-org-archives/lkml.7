@@ -2,92 +2,95 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FB0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54420C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D9221707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1628121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556625436;
+	bh=N3aEVoJ6zXx6nbSZpcU5Yo9Re3BOt9G3seEmxMhSMOE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zOwCsl/aCBAM2l2bSxMrhoBjA7PEw+dEjdwtoXHrpNtzK9PRX0Vi1aLS6djm2zAKu
+	 Nt+iaA/XcosLyOXNQCcN/fV4eEDPiKl6E93Tf9QQpUXcIIsosFZEUIkN9zj4Fj8Ooe
+	 ESNzmTZMqY9ffVlZEwYjclFmIZdwd3UjMhofQgy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfD3L5J (ORCPT
+        id S1730809AbfD3LsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:57:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727359AbfD3L5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:57:05 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UBqEMo012991
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 07:57:05 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6kf9pvm4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 07:57:04 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Tue, 30 Apr 2019 12:57:02 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 12:56:59 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UBuwXV54132838
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 11:56:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 806A1AE045;
-        Tue, 30 Apr 2019 11:56:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9EFCAE04D;
-        Tue, 30 Apr 2019 11:56:56 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.85.97.254])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 30 Apr 2019 11:56:56 +0000 (GMT)
-Date:   Tue, 30 Apr 2019 17:26:51 +0530
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] livepatch: Remove duplicate warning about missing
- reliable stacktrace support
-References: <20190430091049.30413-1-pmladek@suse.com>
- <20190430091049.30413-2-pmladek@suse.com>
+        Tue, 30 Apr 2019 07:48:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730798AbfD3LsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 656622054F;
+        Tue, 30 Apr 2019 11:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556624888;
+        bh=N3aEVoJ6zXx6nbSZpcU5Yo9Re3BOt9G3seEmxMhSMOE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mPVWRGcJHAIH5p3/zrFWL7zTpa1udOFUrKTPlak+tVuj3jq3tfFK1J44ADnG3U/2I
+         O1lj2CFVPKrNYaR9zoY72DLgYBmvNr8+sGiOfru8oBau3ztfJPtXbXBBM0EXqn3xeg
+         Q2eos2fJn23cBDMvruU67KY2WvZYDPbPl1FEakTg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 03/89] intel_th: gth: Fix an off-by-one in output unassigning
+Date:   Tue, 30 Apr 2019 13:37:54 +0200
+Message-Id: <20190430113609.964782030@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
+References: <20190430113609.741196396@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430091049.30413-2-pmladek@suse.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-TM-AS-GCONF: 00
-x-cbid: 19043011-0016-0000-0000-00000276DC19
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043011-0017-0000-0000-000032D366D7
-Message-Id: <20190430115651.GA18595@JAVRIS.in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=973 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300078
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:10:48AM +0200, Petr Mladek wrote:
-> WARN_ON_ONCE() could not be called safely under rq lock because
-> of console deadlock issues. Fortunately, there is another check
-> for the reliable stacktrace support in klp_enable_patch().
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+[ Upstream commit 91d3f8a629849968dc91d6ce54f2d46abf4feb7f ]
 
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Commit 9ed3f22223c3 ("intel_th: Don't reference unassigned outputs")
+fixes a NULL dereference for all masters except the last one ("256+"),
+which keeps the stale pointer after the output driver had been unassigned.
+
+Fix the off-by-one.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 9ed3f22223c3 ("intel_th: Don't reference unassigned outputs")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hwtracing/intel_th/gth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwtracing/intel_th/gth.c b/drivers/hwtracing/intel_th/gth.c
+index cc287cf6eb29..edc52d75e6bd 100644
+--- a/drivers/hwtracing/intel_th/gth.c
++++ b/drivers/hwtracing/intel_th/gth.c
+@@ -616,7 +616,7 @@ static void intel_th_gth_unassign(struct intel_th_device *thdev,
+ 	othdev->output.port = -1;
+ 	othdev->output.active = false;
+ 	gth->output[port].output = NULL;
+-	for (master = 0; master < TH_CONFIGURABLE_MASTERS; master++)
++	for (master = 0; master <= TH_CONFIGURABLE_MASTERS; master++)
+ 		if (gth->master[master] == port)
+ 			gth->master[master] = -1;
+ 	spin_unlock(&gth->gth_lock);
+-- 
+2.19.1
+
+
 
