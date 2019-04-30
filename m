@@ -2,144 +2,113 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DD7C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB42C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC6121670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:34:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEWC0960"
+	by mail.kernel.org (Postfix) with ESMTP id E90012080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfD3Jd7 (ORCPT
+        id S1726894AbfD3Jh3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:33:59 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40922 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfD3Jd6 (ORCPT
+        Tue, 30 Apr 2019 05:37:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54450 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726309AbfD3Jh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:33:58 -0400
-Received: by mail-ed1-f66.google.com with SMTP id e56so5381067ede.7;
-        Tue, 30 Apr 2019 02:33:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xXVuZT9o/FNmvDm0pIXd3RCS4RdZ9uBOKl62XaEXi0s=;
-        b=OEWC0960b3sBt4NuJ41uUOatQP99aY0qXghC+CPlWl4EbzU8FIIufaO25Z0Bfu2/tn
-         G8Q7QzNsoCSviGltVES/70t0cltU3Ah5wSE4sLjU15wDNuIoWFeK6OrKK+JBW7G4Juap
-         80Wwdv23RT3j29Pu9PriyP1bzYcaDfTQ+kU+lLZYPWvXUcB1ohgNaDOjYuATbSNDZgW1
-         ACfu4iwANtRp9Z23ebHqMjQ1DQpETFv8Dz7PXJRG6ksS72lKw/Z7SB0T0IvQtXr9S82t
-         ITC4/ggMuWwwsP8UbO1P7tYbrQqPHl7Qe5HKtyJjDdJH6wm4HelbihUIXxmjam8GvwNh
-         NCBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xXVuZT9o/FNmvDm0pIXd3RCS4RdZ9uBOKl62XaEXi0s=;
-        b=a7j+ucBQJ4v5G24v7E0At7btgWW0t9r1xKP1k16PoGqynSGsWka28yg1VbmGfheeiv
-         K5u7B+4FcHEDM5nQLYjtS4LBFr9zATGgS5aKnW2x+IkLkgYe6lps9jFCqKmz0p3Z8wv8
-         6sZtZLKFoosKfu/wSFsnr2cEXjZ6F8Tmx0+qHgYjXsPaG29mYRmdubrZfxStMMomioFD
-         KcWGokTzt4+g51Wu+TCu+m5b52TN37OUeaM8/R6oNHZbCmipN9VKVHmeY9iyDuXj2dy2
-         sC4iTPq+tUszEsPgAsnR60r0wjrb4/4jy1Jd0iN8sj52RJjHP7SzyQoENM3SCu/Z7SqE
-         ZbYw==
-X-Gm-Message-State: APjAAAXZh+yD0ndQmULDWK5UatC/7+Vq/5tLefeDY96hujKth5u6OHGf
-        c6E7x2v2iYkX9ElMPxPppTk=
-X-Google-Smtp-Source: APXvYqyI6XSUvzs/j55ZG4mgA3Ho9zCb0zC9LtbFNbGktxZFDeY7EI+uYi9vzGFZTWpui/wM21Qrtw==
-X-Received: by 2002:a50:a3c5:: with SMTP id t5mr18488914edb.191.1556616836688;
-        Tue, 30 Apr 2019 02:33:56 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id r4sm3443236edp.78.2019.04.30.02.33.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Apr 2019 02:33:54 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 02:33:52 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH] kbuild: Enable -Wsometimes-uninitialized
-Message-ID: <20190430093352.GA16941@archlinux-i9>
-References: <20190430010037.6216-1-natechancellor@gmail.com>
- <CAK8P3a0gAnruPgGMFcAfoHpj_zDnsn-RJjYiYUXDDj-CrwoO8A@mail.gmail.com>
+        Tue, 30 Apr 2019 05:37:28 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3U9SbQB032616
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 05:37:26 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6hjdx5km-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 05:37:26 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 30 Apr 2019 10:37:24 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Apr 2019 10:37:22 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3U9bKEm32702580
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 09:37:20 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5CC394204F;
+        Tue, 30 Apr 2019 09:37:20 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CAEF342042;
+        Tue, 30 Apr 2019 09:37:19 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.116])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Apr 2019 09:37:19 +0000 (GMT)
+Date:   Tue, 30 Apr 2019 11:37:18 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+In-Reply-To: <efa8840b-35b1-2823-697f-ab56d4898854@linux.ibm.com>
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+        <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+        <20190429185002.6041eecc.pasic@linux.ibm.com>
+        <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
+        <efa8840b-35b1-2823-697f-ab56d4898854@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0gAnruPgGMFcAfoHpj_zDnsn-RJjYiYUXDDj-CrwoO8A@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19043009-4275-0000-0000-0000032FDA31
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19043009-4276-0000-0000-0000383F323E
+Message-Id: <20190430113718.426392f0.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=634 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 09:16:50AM +0200, Arnd Bergmann wrote:
-> On Tue, Apr 30, 2019 at 3:01 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > This is Clang's version of GCC's -Wmaybe-uninitialized. Up to this
-> > point, it has not been used because -Wuninitialized has been disabled,
-> > which also turns off -Wsometimes-uninitialized, meaning that we miss out
-> > on finding some bugs [1]. In my experience, it appears to be more
-> > accurate than GCC and catch some things that GCC can't.
-> >
-> > All of these warnings have now been fixed in -next across arm, arm64,
-> > and x86_64 defconfig/allyesconfig so this should be enabled for everyone
-> > to prevent more from easily creeping in.
-> >
-> > As of next-20190429:
-> >
-> > $ git log --oneline --grep="sometimes-uninitialized" | wc -l
-> > 45
-> >
-> > [1]: https://lore.kernel.org/lkml/86649ee4-9794-77a3-502c-f4cd10019c36@lca.pw/
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/381
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >
-> > Masahiro, I am not sure how you want to handle merging this with regards
-> > to all of the patches floating around in -next but I wanted to send this
-> > out to let everyone know this is ready to be turned on.
-> >
-> > Arnd, are there many remaning -Wsometimes-uninitialized warnings in
-> > randconfigs?
-> 
-> No, I don't see any with the patches that I submitted. I haven't checked
-> if there are any that still need to get merged into linux-next though.
-> 
-> > diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> > index 768306add591..f4332981ea85 100644
-> > --- a/scripts/Makefile.extrawarn
-> > +++ b/scripts/Makefile.extrawarn
-> > @@ -72,5 +72,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, format)
-> >  KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
-> >  KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
-> >  KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
-> > +KBUILD_CFLAGS += $(call cc-option, -Wsometimes-uninitialized)
-> >  endif
-> >  endif
-> 
-> This doesn't look right. Shouldn't you remove the line that turns off
-> -Wuninitilized
-> instead of adding only -Wsometimes-uninitialized?
+On Tue, 30 Apr 2019 10:32:52 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Well, there are still some outstanding issues with -Wuninitialized
-right? Like with DECLARE_WAIT_QUEUE_HEAD_ONSTACK? I'd rather not
-add warnings to the build but if you feel strongly, we could turn it on
-then fix them after.
+> >>> +    aqic_gisa.gisa = gisa->next_alert >> 4;  
+> >>
+> >> Why gisa->next_alert? Isn't this supposed to get set to gisa origin
+> >> (without some bits on the left)?  
 
-Nathan
+s/left/right/
 
-> 
-> If we warn about the instances that may or may not be wrong, we should
-> also warn about those that are provably wrong.
-> 
->         Arnd
+> > 
+> > Someone already asked this question.
+
+It must have been in some previous iteration... Can you give me a
+pointer?
+
+> > The answer is: look at the ap_qirq_ctrl structure, you will see that the 
+> > gisa field is 27 bits wide.
+
+My question was not about the width, but about gisa->next_alert being
+used.
+
+Regards,
+Halil
+
