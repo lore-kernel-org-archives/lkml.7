@@ -2,112 +2,111 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6EAC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4075C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B47620652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="hWd+aIEW"
+	by mail.kernel.org (Postfix) with ESMTP id ABE7520652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfD3Gkt (ORCPT
+        id S1726428AbfD3Gls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:40:49 -0400
-Received: from mout.gmx.net ([212.227.17.21]:36955 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfD3Gks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:40:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1556606441;
-        bh=bKS025PSTsBnOa8/vzDCWX1uOiZEOQaRN/JroWKQru8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=hWd+aIEWgQoYazFzjz8DogAj9Ct4jI6TADaMwu4esujror9n7c6eeCIOHkCgA1fe2
-         Vu6D2ZfDoZ6P3P3qljHCB71FHjygFr2M53ReErtpJm52cdU5ByNKT8E9Phzp091OBz
-         3Lg2uAaP0b7BdRlLGVbj+e6I1kzoObyOf/JEQqs4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([218.18.229.179]) by mail.gmx.com
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1Mel3t-1gke33271x-00an99; Tue, 30 Apr 2019 08:40:41 +0200
-From:   Chengguang Xu <cgxu519@gmx.com>
-To:     jack@suse.com
-Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@gmx.com>
-Subject: [PATCH] quota: check time limit when back out space/inode change
-Date:   Tue, 30 Apr 2019 14:40:10 +0800
-Message-Id: <20190430064010.22406-1-cgxu519@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 30 Apr 2019 02:41:48 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7146 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725790AbfD3Gls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 02:41:48 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 63D569E02EAB98E9051E;
+        Tue, 30 Apr 2019 14:41:46 +0800 (CST)
+Received: from [127.0.0.1] (10.67.78.74) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Apr 2019
+ 14:41:43 +0800
+Subject: Re: [RFC] Question about reset order for xhci controller and pci
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     <mathias.nyman@intel.com>, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <Pine.LNX.4.44L0.1904291002290.1632-100000@iolanthe.rowland.org>
+From:   "Tangnianyao (ICT)" <tangnianyao@huawei.com>
+Message-ID: <b4176223-e44f-5454-0a02-b75a65384fa6@huawei.com>
+Date:   Tue, 30 Apr 2019 14:41:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WSxrfsVyDlW4Mk4nR6xoBnrEsApg862G2AG8EoC/1SjlMOiVZDN
- FSPUGkC298ltweQTFptgHvQC7dykdU3AYxYJAQ+JvhQdntAU3wQU8gT2wDNC7C4pLy1IkjN
- /R9TIqsR3cWr7fluH6yI4OGI54AJI0UN2Ouk+yUY43wmITkMEuTZqUNNL1jbQglWEGT8KfT
- WRbGnk/6MbNindxsOcMrA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:O32kz2t8GeY=:mtEBCeLB6OK8u+aZz9Cdcg
- LwMrhJLlhU2puIltqRQ4/wywWlx3HUSwAhGls5/a1W+rJmIzwN1fxDk9ie5xCqFyjqUmP7ZTG
- STaiX4zgWhg6ua3VA8HHfIVWZinTgUamxqVgwH+nEVGuPjdpoweyrQO8j6KbbDIV9hw3Q93H4
- iE5n1A9+Du15iF036sDvQNLke3HIoOCqN14vLQInAnFCyp+wJlXxFEvsa4COP4PoUjdjWFCUW
- kiEDOzlBbnI5kmr+PIvZyCcdqmirH793//Adv/T6Or3vafL1D4/ZcJFMAtbtUcQs29PdFuhqi
- sla/DRciC44xNWPozothqT0JkA8RB9kIW30OeLJUoWkuxQRV4bKge/Tji6X3Bax/HmxgDrFQR
- VyA7IoH+Fv1LwGnkGEGpM6SGqgj3iJ37eLsGCT4xXoBbKv8nqHtsCFMElOF/DyoczdG9QMIzB
- EmnG8tdCIIpH756pPyfI0ncSflnAEGe+Ai+tIITysebbD3/lHBfOl2GkokfqMm0DkMgDMXcyY
- SKTr30yo/LaPHOjyyNLdZO9uu0j5bxw+0oWYzETgTZ7O2vVJPxX/asCshDT/oCzJ3+AHETj+3
- U2Ehe8rOqADgiEz+s58znNTORQNSMDnmFks2u0DdTIvx87Vfh4TfY4QiUNNz4hu8D3iQlbswb
- kXn/hlPmw76ZnKlk/3PxEIbLd2XS9WtjuFsLaEskeRfu1Rf9T5vBLvLTz9FByqXHubGDDGIIq
- nC6arDug9UUj9Yd1MZcprX1MO4yANw0CXMtrbrYJjDDlgqMb/wUVF8scmSPTEYxUdE2z2eVMS
- d2RXpZQblIHzcsr6OG94oGi/d9SLBxh032eCi9lj9JiHrozQxjO2jTc9Ff8eHkkqanuUcZktg
- ZZ11ZMh3ClWE7owdfsF735qJiDLX6fptds3pk/vJ4mpzoCgggCX0zXeha+4uAK
+In-Reply-To: <Pine.LNX.4.44L0.1904291002290.1632-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.78.74]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we fail from allocating inode/space, we back out
-the change we already did. In a special case which has
-exceeded soft limit by the change, we should also check
-time limit and reset it properly.
 
-Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-=2D--
- fs/quota/dquot.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 9d7dfc47c854..58f15a083dd1 100644
-=2D-- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -1681,13 +1681,11 @@ int __dquot_alloc_space(struct inode *inode, qsize=
-_t number, int flags)
- 				if (!dquots[cnt])
- 					continue;
- 				spin_lock(&dquots[cnt]->dq_dqb_lock);
--				if (reserve) {
--					dquots[cnt]->dq_dqb.dqb_rsvspace -=3D
--									number;
--				} else {
--					dquots[cnt]->dq_dqb.dqb_curspace -=3D
--									number;
--				}
-+				if (reserve)
-+					dquot_free_reserved_space(dquots[cnt],
-+								  number);
-+				else
-+					dquot_decr_space(dquots[cnt], number);
- 				spin_unlock(&dquots[cnt]->dq_dqb_lock);
- 			}
- 			spin_unlock(&inode->i_lock);
-@@ -1738,7 +1736,7 @@ int dquot_alloc_inode(struct inode *inode)
- 					continue;
- 				/* Back out changes we already did */
- 				spin_lock(&dquots[cnt]->dq_dqb_lock);
--				dquots[cnt]->dq_dqb.dqb_curinodes--;
-+				dquot_decr_inodes(dquots[cnt], 1);
- 				spin_unlock(&dquots[cnt]->dq_dqb_lock);
- 			}
- 			goto warn_put_all;
-=2D-
-2.20.1
+On 2019/4/29 22:06, Alan Stern wrote:
+
+Hi, Alan
+
+> On Mon, 29 Apr 2019, Tangnianyao (ICT) wrote:
+> 
+>> Using command "echo 1 > /sys/bus/pci/devices/0000:7a:02.0/reset"
+>> on centos7.5 system to reset xhci.
+>>
+>> On 2019/4/26 11:07, Tangnianyao (ICT) wrote:
+>>> Hi,all
+>>>
+>>> I've meet a problem about reset xhci and it may be caused by the
+>>> reset order of pci and xhci.
+>>> Using xhci-pci, when users send reset command in os(centos or red-hat os),
+>>> it would first reset PCI device by pci_reset_function. During this
+>>> process, it would disable BME(Bus Master Enable) and set BME=0, and
+>>> then enable it and set BME=1.
+>>> And then it comes to xhci reset process. First, it would send an
+>>> endpoint stop command in xhci_urb_dequeue. However, this stop ep command
+>>> fails to finish. The reason is that BME is set to 0 in former process and
+>>> xhci RUN/STOP changes to 0, and when BME is set to 1 again, RUN/STOP doesn't
+>>> recover to 1.
+>>> I've checked BME behavior in xhci spec, it shows that "If the BME bit is set to 0
+>>> when xHC is running, the xHC may treat this as a Host Controller Error, asserting
+>>> HCE(1) and immediately halt(R/S=0 and HCH=1). Recovery from this state will
+>>> require an HCRST." It seems that the stop ep command failure is reasonable.
+>>> Maybe I've missed something and please let me know.
+> 
+> Your email subject says "Question about...".  What is the question?
+> 
+Sorry I didn't descibe it clearly.
+When sending a reset command, now the reset order is first BME and then xhci.
+BME reset would make xhci controller stop, resulting in xhci reset failure,
+because it can't finish stop ep command in xhci_urb_dequeue.
+I'm not sure if this situation is in expectation.
+
+> Also, given that your question concerns what happens when you write to
+> /sys/bus/pci/..., perhaps you should consider mailing it to some PCI
+> maintainers as well as to the USB maintainers.
+> ok, I will mailing it to PCI maintainer as well.
+
+> Perhaps the reset was not meant to be used the way you are doing it.  
+> A more conservative approach would be to unbind xhci-hcd from the 
+> device before doing the reset and then rebind it afterward.
+> 
+> Alan Stern
+>
+>
+> .
+>
+
+I think this approach not work. When reset BME, xhci controller is stopped and
+can't recover even BME is set enable later. According to xhci spec, it's appropriate.
+When rebind it afterward, with xhci stop, xhci driver would consider the
+xhci controller already died and it fails to work again.
+
+To recover xhci, now I rmmod xhci-pci.ko and then insmod it again.
+
+Thanks,
+Tang
+
 
