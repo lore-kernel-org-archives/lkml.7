@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE3EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52300C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3CC21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F2321670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624376;
-	bh=nLCMzDTipK2iPDywH9QjuhrH1j+pd1EQip2pgPgje2M=;
+	s=default; t=1556624381;
+	bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0gJKzHThRpm+Tt4pcQoiU/q7/mtel79jAzRA00x3FmrI5IPvdY43GL1P7MH2w9PoW
-	 AOabD3vSq6su6VgiasYUavzjdtsVjLkVZn6HffU3e7DGcvTQG6I8pWgGefzwddsobW
-	 K0LEjjEz+tjENNa91R2TvjSidwIV71vRx78R6Ox8=
+	b=XY0RR8oNg8qpZ3PdWXsMYvrd9gsb8mgAcRj9k2hrTMaD2MqzEmTMo2PyMrosQgpIp
+	 qIzFayfnw9k4HeFgZGvjj+1aB9VI498orONYt7oQ0QM8MgaOf70WPetWCjiu2l8gvH
+	 ywQAmAu1gnBfyqT4AoTM52wC0mQfT2atK8PL6ifI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfD3Ljf (ORCPT
+        id S1727939AbfD3Ljk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbfD3Ljc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:39:32 -0400
+        id S1727654AbfD3Ljf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:39:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 518EE2173E;
-        Tue, 30 Apr 2019 11:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3F0A21670;
+        Tue, 30 Apr 2019 11:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624371;
-        bh=nLCMzDTipK2iPDywH9QjuhrH1j+pd1EQip2pgPgje2M=;
+        s=default; t=1556624374;
+        bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kuIwSODtewgNNTMnGzQ/qLy6Kj4dHQuVd/O/IZkCaQxz+XgRr061MnUILVX2HN9Dq
-         VON2B2V3qv9gvHR1RLOMaPJaYGwR1ymJJXntXmjOslhFol+gtg8FFhP3ewIFvqEU9S
-         qfcz/qH9i/g3N/7GAliH8V5BjokC4+naUKXouhvE=
+        b=Klsx+bREMJSgIycokV1yjOf19nUH4mvx793t65XUDMLALrAcuyZ5tA+nz7mlfgah1
+         gEUZu+bXYOiEbIT+bnlhtiBJVlZBzi3dFZvliAN+UVQzYzt6QC/pN0brRquti2jj4m
+         RAZpAZdsHGd8xL0YAcwLeBTA26PFaIRBYuwH8Qp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.9 10/41] nfsd: Dont release the callback slot unless it was actually held
-Date:   Tue, 30 Apr 2019 13:38:21 +0200
-Message-Id: <20190430113527.552502516@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
+        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
+Subject: [PATCH 4.9 11/41] sunrpc: dont mark uninitialised items as VALID.
+Date:   Tue, 30 Apr 2019 13:38:22 +0200
+Message-Id: <20190430113527.693910490@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -60,82 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: NeilBrown <neilb@suse.com>
 
-commit e6abc8caa6deb14be2a206253f7e1c5e37e9515b upstream.
+commit d58431eacb226222430940134d97bfd72f292fcd upstream.
 
-If there are multiple callbacks queued, waiting for the callback
-slot when the callback gets shut down, then they all currently
-end up acting as if they hold the slot, and call
-nfsd4_cb_sequence_done() resulting in interesting side-effects.
+A recent commit added a call to cache_fresh_locked()
+when an expired item was found.
+The call sets the CACHE_VALID flag, so it is important
+that the item actually is valid.
+There are two ways it could be valid:
+1/ If ->update has been called to fill in relevant content
+2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
 
-In addition, the 'retry_nowait' path in nfsd4_cb_sequence_done()
-causes a loop back to nfsd4_cb_prepare() without first freeing the
-slot, which causes a deadlock when nfsd41_cb_get_slot() gets called
-a second time.
+An expired item that is waiting for an update will be neither.
+Setting CACHE_VALID will mean that a subsequent call to cache_put()
+will be likely to dereference uninitialised pointers.
 
-This patch therefore adds a boolean to track whether or not the
-callback did pick up the slot, so that it can do the right thing
-in these 2 cases.
+So we must make sure the item is valid, and we already have code to do
+that in try_to_negate_entry().  This takes the hash lock and so cannot
+be used directly, so take out the two lines that we need and use them.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Now cache_fresh_locked() is certain to be called only on
+a valid item.
+
+Cc: stable@kernel.org # 2.6.35
+Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
+Signed-off-by: NeilBrown <neilb@suse.com>
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4callback.c |    8 +++++++-
- fs/nfsd/state.h        |    1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ net/sunrpc/cache.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -934,8 +934,9 @@ static void nfsd4_cb_prepare(struct rpc_
- 	cb->cb_seq_status = 1;
- 	cb->cb_status = 0;
- 	if (minorversion) {
--		if (!nfsd41_cb_get_slot(clp, task))
-+		if (!cb->cb_holds_slot && !nfsd41_cb_get_slot(clp, task))
- 			return;
-+		cb->cb_holds_slot = true;
- 	}
- 	rpc_call_start(task);
- }
-@@ -962,6 +963,9 @@ static bool nfsd4_cb_sequence_done(struc
- 		return true;
- 	}
- 
-+	if (!cb->cb_holds_slot)
-+		goto need_restart;
-+
- 	switch (cb->cb_seq_status) {
- 	case 0:
- 		/*
-@@ -999,6 +1003,7 @@ static bool nfsd4_cb_sequence_done(struc
- 			cb->cb_seq_status);
- 	}
- 
-+	cb->cb_holds_slot = false;
- 	clear_bit(0, &clp->cl_cb_slot_busy);
- 	rpc_wake_up_next(&clp->cl_cb_waitq);
- 	dprintk("%s: freed slot, new seqid=%d\n", __func__,
-@@ -1206,6 +1211,7 @@ void nfsd4_init_cb(struct nfsd4_callback
- 	cb->cb_seq_status = 1;
- 	cb->cb_status = 0;
- 	cb->cb_need_restart = false;
-+	cb->cb_holds_slot = false;
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -54,6 +54,7 @@ static void cache_init(struct cache_head
+ 	h->last_refresh = now;
  }
  
- void nfsd4_run_cb(struct nfsd4_callback *cb)
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -69,6 +69,7 @@ struct nfsd4_callback {
- 	int cb_seq_status;
- 	int cb_status;
- 	bool cb_need_restart;
-+	bool cb_holds_slot;
- };
- 
- struct nfsd4_callback_ops {
++static inline int cache_is_valid(struct cache_head *h);
+ static void cache_fresh_locked(struct cache_head *head, time_t expiry,
+ 				struct cache_detail *detail);
+ static void cache_fresh_unlocked(struct cache_head *head,
+@@ -100,6 +101,8 @@ struct cache_head *sunrpc_cache_lookup(s
+ 			if (cache_is_expired(detail, tmp)) {
+ 				hlist_del_init(&tmp->cache_list);
+ 				detail->entries --;
++				if (cache_is_valid(tmp) == -EAGAIN)
++					set_bit(CACHE_NEGATIVE, &tmp->flags);
+ 				cache_fresh_locked(tmp, 0, detail);
+ 				freeme = tmp;
+ 				break;
 
 
