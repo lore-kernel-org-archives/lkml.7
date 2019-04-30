@@ -2,116 +2,143 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B31AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EB6C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB40E20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:02:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="arN3KVce"
+	by mail.kernel.org (Postfix) with ESMTP id 89DA121707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfD3OCF (ORCPT
+        id S1727785AbfD3ODk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:02:05 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37708 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfD3OCE (ORCPT
+        Tue, 30 Apr 2019 10:03:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33184 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725938AbfD3ODk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:02:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rh1UoXmD5zwiQcFTPHDC+ouw2UZKwHjXHIPnLEAGwn0=; b=arN3KVcev8piYVhoLEoUS4jCpD
-        j7pbtaoDHh3nDZqX4dWCKiaEECQSpxlYY/QPt4mBnzO4w8BhWfvGQlu2ED2W2LswHE/NKQwJgwdD+
-        zb+VLRH5CbCYa58DSWvwoDg0S7/GZgcqHEG30cG8llRRht1gQPTPt7BcMEfEGIOD26px3gVJRyHPp
-        cHw/YLSJiA4SwgLG0YU62eozoCVNc7ZvFB2PqRoX7I5Vyh1IMBK+O+UubTY50DGu3usW4pmY/h0hG
-        yF9DGoGD7Gj96R1SB1JadwdvyXYkPAEyY6bs2XuImPTeC7bt7TFNSdddfNZVyA456ge0mE3U+2Fnb
-        mN9UhiDg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLTKX-0001Sr-IJ; Tue, 30 Apr 2019 14:01:57 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 100B32139B604; Tue, 30 Apr 2019 16:01:56 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 16:01:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, jack@suse.com
-Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
- current) with fsfreeze (4.19.25-rt16)
-Message-ID: <20190430140156.GE2589@hirez.programming.kicks-ass.net>
-References: <20190326093421.GA29508@localhost.localdomain>
- <20190419085627.GI4742@localhost.localdomain>
- <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
- <20190430132811.GB2589@hirez.programming.kicks-ass.net>
- <20190430134547.lll7kjrslh3zat2b@linutronix.de>
+        Tue, 30 Apr 2019 10:03:40 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UE3IFd147294
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:03:39 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6q981t4m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:03:38 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 30 Apr 2019 15:03:36 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Apr 2019 15:03:33 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UE3VGY45088966
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 14:03:31 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C7224A4066;
+        Tue, 30 Apr 2019 14:03:31 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D45BA405B;
+        Tue, 30 Apr 2019 14:03:31 +0000 (GMT)
+Received: from [9.145.13.117] (unknown [9.145.13.117])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Apr 2019 14:03:31 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+ <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+ <20190430160031.198b83c1.pasic@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 30 Apr 2019 16:03:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190430160031.198b83c1.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190430134547.lll7kjrslh3zat2b@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19043014-0008-0000-0000-000002E1E0CC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19043014-0009-0000-0000-0000224E48F5
+Message-Id: <40c7e3a5-06b1-8ab9-e32d-c0305c60d63f@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 03:45:48PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-04-30 15:28:11 [+0200], Peter Zijlstra wrote:
-> > On Tue, Apr 30, 2019 at 02:51:31PM +0200, Sebastian Andrzej Siewior wrote:
-> > > On 2019-04-19 10:56:27 [+0200], Juri Lelli wrote:
-> > > > On 26/03/19 10:34, Juri Lelli wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > Running this reproducer on a 4.19.25-rt16 kernel (with lock debugging
-> > > > > turned on) produces warning below.
-> > > > 
-> > > > And I now think this might lead to an actual crash.
-> > > 
-> > > Peter, could you please take a look at the thread:
-> > >   https://lkml.kernel.org/r/20190419085627.GI4742@localhost.localdomain
-> > > 
-> > > I assumed that returning to userland with acquired locks is something we
-> > > did not want…
-> > 
-> > Yeah, but AFAIK fs freezing code has a history of doing exactly that..
-> > This is just the latest incarnation here.
-> > 
-> > So the immediate problem here is that the task doing thaw isn't the same
-> > that did freeze, right? The thing is, I'm not seeing how that isn't a
-> > problem with upstream either.
-> > 
-> > The freeze code seems to do: percpu_down_write() for the various states,
-> > and then frobs lockdep state.
-> > 
-> > Thaw then does the reverse, frobs lockdep and then does: percpu_up_write().
-> > 
-> > percpu_down_write() directly relies on down_write(), and
-> > percpu_up_write() on up_write(). And note how __up_write() has:
-> > 
-> > 	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
-> > 
-> > So why isn't this same code coming unstuck in mainline?
+On 30/04/2019 16:00, Halil Pasic wrote:
+> On Fri, 26 Apr 2019 15:01:27 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
 > 
-> I have to re-route most of this questions to Juri Lelli.
-> Lockdep has these gems:
-> 	lockdep_sb_freeze_release() / lockdep_sb_freeze_acquire()
+>> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+>> index 18dcc4d..7cc02ff 100644
+>> --- a/drivers/s390/crypto/vfio_ap_private.h
+>> +++ b/drivers/s390/crypto/vfio_ap_private.h
+>> @@ -4,6 +4,7 @@
+>>    *
+>>    * Author(s): Tony Krowiak <akrowiak@linux.ibm.com>
+>>    *	      Halil Pasic <pasic@linux.ibm.com>
+>> + *	      Pierre Morel <pmorel@linux.ibm.com>
+>>    *
+>>    * Copyright IBM Corp. 2018
+>>    */
+>> @@ -90,4 +91,14 @@ struct ap_matrix_mdev {
+>>   extern int vfio_ap_mdev_register(void);
+>>   extern void vfio_ap_mdev_unregister(void);
+>>   
+>> +struct vfio_ap_queue {
+>> +	struct ap_matrix_mdev *matrix_mdev;
+>> +	unsigned long a_nib;
+>> +	unsigned long a_pfn;
+>> +	unsigned long p_pfn;
+>> +	int	apqn;
+>> +#define VFIO_AP_ISC_INVALID 0xff
+> 
+> How about -1?
+> 
+>> +	unsigned char a_isc;
+>> +	unsigned char p_isc;
+>> +};
+>>   #endif /* _VFIO_AP_PRIVATE_H_ */
+> 
+> I assume a_ and p_ are for argument and private, or? Anyway it would be
+> nice to have nicer names for these.
+> 
+> If the a_ members are really just arguments, we could probably live
+> without the. I'm fine either way.
+> 
+> Regards,
+> Halil
+> 
 
-Yeah, saw those, but irrespective of them, the rwsem code (not
-percpu_rwsem) should complain about freeze and thaw not being the same
-process.
+Since there will be another iteration to modify other part of this patch
+I will simplify this handling and make the names clearer.
 
-Anyway; it's Oleg and Jan who put this together. I simply don't see how
-upstream is correct here.
+Thanks
+Pierre
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
