@@ -7,66 +7,68 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0085C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5949C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8532E20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CEF520675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XcStXd6M"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IvLEuXdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfD3L03 (ORCPT
+        id S1727670AbfD3L0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:26:29 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48259 "EHLO
+        Tue, 30 Apr 2019 07:26:50 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60401 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfD3L02 (ORCPT
+        with ESMTP id S1726129AbfD3L0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:26:28 -0400
+        Tue, 30 Apr 2019 07:26:49 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBOr6F1349846
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBQDBG1350029
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Apr 2019 04:24:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBOr6F1349846
+        Tue, 30 Apr 2019 04:26:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBQDBG1350029
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556623494;
-        bh=SKqyjkKkUDLjBS9G3beqEjgVckXlIO1PsPx1XhNUISI=;
+        s=2019041745; t=1556623575;
+        bh=BC+4bx5WkZ0UdWa31Z5nh+00EjeJneeRxrRiV+oolq4=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=XcStXd6M/gWcgu2M+2Hq1tGTsdkj3k50DGBx5L+bkCmoCfccwMicjrxS2lAAOWw2e
-         2N6wJfiJu6iT15y91ZX4h9AcaRNdjAtPROZoSuAlykKJNfvKhIElr4mQOCXGcEdumv
-         C1cXiGCYStc9Z+wEKqNu2Xn+YhTxNXgaWPW7wJP8leI0++ncXRKtEOE3p4OB6ruLqw
-         2vaXjg0tP8W8Fxbc7D2YzPzJeztUF4IdBuVgaz6AIEXi2YsnSaXi8UzC+hCpn6ag/G
-         9suXH+HA1xFOi7upLXLgduSz5nNYgX4Scy0gWksHBcf0tywYnS4mJ9fqnYJQxzHxJQ
-         qZz0HCnYkBhOQ==
+        b=IvLEuXdiWCU9Btbd/IbwqdKzrAT/SrunumaoQ6azXSbzD1HGVl+gQj24qNmPgf8VI
+         qXo9JyR799HJ5nCTFSGcb7tSUoRBZ6cimt6DexAUNqLczm1V5p5gnJRWFX1wgm2wTi
+         wRHcdxCFICNrlvVGOSMMkUP7iOGi8hjt4kV0AiFHaufS80zpPxvwW683Mqx+thTEnZ
+         GQ6+RF+YHe4GAFNJSzki+zRQZJIWQFTLKlaep+LMO3U/QTZArvm6P0EhwtByAuwmC6
+         rUQgCmkYWZcg4g7qAukBa0lHTdkI6Bm6V0sbENWMErWTx/bPlJdAMh5jfuUwg9Fjli
+         NTudosSFqtfwQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBOq4P1349843;
-        Tue, 30 Apr 2019 04:24:52 -0700
-Date:   Tue, 30 Apr 2019 04:24:52 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBQDmW1350026;
+        Tue, 30 Apr 2019 04:26:13 -0700
+Date:   Tue, 30 Apr 2019 04:26:13 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Rick Edgecombe <tipbot@zytor.com>
-Message-ID: <tip-d253ca0c3865a8d9a8c01143cf20425e0be4d0ce@git.kernel.org>
-Cc:     riel@surriel.com, will.deacon@arm.com, luto@kernel.org,
-        kristen@linux.intel.com, deneen.t.dock@intel.com,
-        dave.hansen@linux.intel.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        peterz@infradead.org, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        rick.p.edgecombe@intel.com, kernel-hardening@lists.openwall.com,
-        linux_dti@icloud.com, bp@alien8.de, nadav.amit@gmail.com,
-        hpa@zytor.com
-Reply-To: peterz@infradead.org, torvalds@linux-foundation.org,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          ard.biesheuvel@linaro.org, akpm@linux-foundation.org,
-          rick.p.edgecombe@intel.com, kernel-hardening@lists.openwall.com,
-          hpa@zytor.com, nadav.amit@gmail.com, linux_dti@icloud.com,
-          bp@alien8.de, will.deacon@arm.com, riel@surriel.com,
-          kristen@linux.intel.com, deneen.t.dock@intel.com,
-          luto@kernel.org, mingo@kernel.org, dave.hansen@linux.intel.com
-In-Reply-To: <20190426001143.4983-15-namit@vmware.com>
-References: <20190426001143.4983-15-namit@vmware.com>
+Message-ID: <tip-868b104d7379e28013e9d48bdd2db25e0bdcf751@git.kernel.org>
+Cc:     rick.p.edgecombe@intel.com, mingo@kernel.org, will.deacon@arm.com,
+        riel@surriel.com, hpa@zytor.com, torvalds@linux-foundation.org,
+        linux_dti@icloud.com, nadav.amit@gmail.com,
+        ard.biesheuvel@linaro.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, kristen@linux.intel.com,
+        peterz@infradead.org, bp@alien8.de,
+        kernel-hardening@lists.openwall.com, deneen.t.dock@intel.com,
+        luto@kernel.org
+Reply-To: peterz@infradead.org, bp@alien8.de, deneen.t.dock@intel.com,
+          luto@kernel.org, kernel-hardening@lists.openwall.com,
+          dave.hansen@intel.com, akpm@linux-foundation.org,
+          kristen@linux.intel.com, linux-kernel@vger.kernel.org,
+          ard.biesheuvel@linaro.org, tglx@linutronix.de,
+          will.deacon@arm.com, mingo@kernel.org,
+          rick.p.edgecombe@intel.com, hpa@zytor.com, linux_dti@icloud.com,
+          riel@surriel.com, torvalds@linux-foundation.org,
+          nadav.amit@gmail.com
+In-Reply-To: <20190426001143.4983-17-namit@vmware.com>
+References: <20190426001143.4983-17-namit@vmware.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] x86/mm/cpa: Add set_direct_map_*() functions
-Git-Commit-ID: d253ca0c3865a8d9a8c01143cf20425e0be4d0ce
+Subject: [tip:x86/mm] mm/vmalloc: Add flag for freeing of special
+ permsissions
+Git-Commit-ID: 868b104d7379e28013e9d48bdd2db25e0bdcf751
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -80,26 +82,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d253ca0c3865a8d9a8c01143cf20425e0be4d0ce
-Gitweb:     https://git.kernel.org/tip/d253ca0c3865a8d9a8c01143cf20425e0be4d0ce
+Commit-ID:  868b104d7379e28013e9d48bdd2db25e0bdcf751
+Gitweb:     https://git.kernel.org/tip/868b104d7379e28013e9d48bdd2db25e0bdcf751
 Author:     Rick Edgecombe <rick.p.edgecombe@intel.com>
-AuthorDate: Thu, 25 Apr 2019 17:11:34 -0700
+AuthorDate: Thu, 25 Apr 2019 17:11:36 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 30 Apr 2019 12:37:56 +0200
+CommitDate: Tue, 30 Apr 2019 12:37:58 +0200
 
-x86/mm/cpa: Add set_direct_map_*() functions
+mm/vmalloc: Add flag for freeing of special permsissions
 
-Add two new functions set_direct_map_default_noflush() and
-set_direct_map_invalid_noflush() for setting the direct map alias for the
-page to its default valid permissions and to an invalid state that cannot
-be cached in a TLB, respectively. These functions do not flush the TLB.
+Add a new flag VM_FLUSH_RESET_PERMS, for enabling vfree operations to
+immediately clear executable TLB entries before freeing pages, and handle
+resetting permissions on the directmap. This flag is useful for any kind
+of memory with elevated permissions, or where there can be related
+permissions changes on the directmap. Today this is RO+X and RO memory.
 
-Note, __kernel_map_pages() does something similar but flushes the TLB and
-doesn't reset the permission bits to default on all architectures.
+Although this enables directly vfreeing non-writeable memory now,
+non-writable memory cannot be freed in an interrupt because the allocation
+itself is used as a node on deferred free list. So when RO memory needs to
+be freed in an interrupt the code doing the vfree needs to have its own
+work queue, as was the case before the deferred vfree list was added to
+vmalloc.
 
-Also add an ARCH config ARCH_HAS_SET_DIRECT_MAP for specifying whether
-these have an actual implementation or a default empty one.
+For architectures with set_direct_map_ implementations this whole operation
+can be done with one TLB flush when centralized like this. For others with
+directmap permissions, currently only arm64, a backup method using
+set_memory functions is used to reset the directmap. When arm64 adds
+set_direct_map_ functions, this backup can be removed.
 
+When the TLB is flushed to both remove TLB entries for the vmalloc range
+mapping and the direct map permissions, the lazy purge operation could be
+done to try to save a TLB flush later. However today vm_unmap_aliases
+could flush a TLB range that does not include the directmap. So a helper
+is added with extra parameters that can allow both the vmalloc address and
+the direct mapping to be flushed during this operation. The behavior of the
+normal vm_unmap_aliases function is unchanged.
+
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Suggested-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: <akpm@linux-foundation.org>
@@ -108,124 +129,217 @@ Cc: <deneen.t.dock@intel.com>
 Cc: <kernel-hardening@lists.openwall.com>
 Cc: <kristen@linux.intel.com>
 Cc: <linux_dti@icloud.com>
-Cc: <will.deacon@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Nadav Amit <nadav.amit@gmail.com>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190426001143.4983-15-namit@vmware.com
+Link: https://lkml.kernel.org/r/20190426001143.4983-17-namit@vmware.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/Kconfig                      |  4 ++++
- arch/x86/Kconfig                  |  1 +
- arch/x86/include/asm/set_memory.h |  3 +++
- arch/x86/mm/pageattr.c            | 14 +++++++++++---
- include/linux/set_memory.h        | 11 +++++++++++
- 5 files changed, 30 insertions(+), 3 deletions(-)
+ include/linux/vmalloc.h |  15 +++++++
+ mm/vmalloc.c            | 113 ++++++++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 109 insertions(+), 19 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 33687dddd86a..88e5a92a9e58 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -249,6 +249,10 @@ config ARCH_HAS_FORTIFY_SOURCE
- config ARCH_HAS_SET_MEMORY
- 	bool
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 398e9c95cd61..c6eebb839552 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -21,6 +21,11 @@ struct notifier_block;		/* in notifier.h */
+ #define VM_UNINITIALIZED	0x00000020	/* vm_struct is not fully initialized */
+ #define VM_NO_GUARD		0x00000040      /* don't add guard page */
+ #define VM_KASAN		0x00000080      /* has allocated kasan shadow memory */
++/*
++ * Memory with VM_FLUSH_RESET_PERMS cannot be freed in an interrupt or with
++ * vfree_atomic().
++ */
++#define VM_FLUSH_RESET_PERMS	0x00000100      /* Reset direct map and flush TLB on unmap */
+ /* bits [20..32] reserved for arch specific ioremap internals */
  
-+# Select if arch has all set_direct_map_invalid/default() functions
-+config ARCH_HAS_SET_DIRECT_MAP
-+	bool
-+
- # Select if arch init_task must go in the __init_task_data section
- config ARCH_TASK_STRUCT_ON_STACK
-        bool
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index bd6f93ce0633..cee3f22ce8d1 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -65,6 +65,7 @@ config X86
- 	select ARCH_HAS_UACCESS_FLUSHCACHE	if X86_64
- 	select ARCH_HAS_UACCESS_MCSAFE		if X86_64 && X86_MCE
- 	select ARCH_HAS_SET_MEMORY
-+	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 07a25753e85c..ae7b909dc242 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -85,6 +85,9 @@ int set_pages_nx(struct page *page, int numpages);
- int set_pages_ro(struct page *page, int numpages);
- int set_pages_rw(struct page *page, int numpages);
- 
-+int set_direct_map_invalid_noflush(struct page *page);
-+int set_direct_map_default_noflush(struct page *page);
-+
- extern int kernel_set_to_readonly;
- void set_kernel_text_rw(void);
- void set_kernel_text_ro(void);
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 4c570612e24e..3574550192c6 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -2209,8 +2209,6 @@ int set_pages_rw(struct page *page, int numpages)
- 	return set_memory_rw(addr, numpages);
- }
- 
--#ifdef CONFIG_DEBUG_PAGEALLOC
--
- static int __set_pages_p(struct page *page, int numpages)
- {
- 	unsigned long tempaddr = (unsigned long) page_address(page);
-@@ -2249,6 +2247,17 @@ static int __set_pages_np(struct page *page, int numpages)
- 	return __change_page_attr_set_clr(&cpa, 0);
- }
- 
-+int set_direct_map_invalid_noflush(struct page *page)
+ /*
+@@ -142,6 +147,13 @@ extern int map_kernel_range_noflush(unsigned long start, unsigned long size,
+ 				    pgprot_t prot, struct page **pages);
+ extern void unmap_kernel_range_noflush(unsigned long addr, unsigned long size);
+ extern void unmap_kernel_range(unsigned long addr, unsigned long size);
++static inline void set_vm_flush_reset_perms(void *addr)
 +{
-+	return __set_pages_np(page, 1);
-+}
++	struct vm_struct *vm = find_vm_area(addr);
 +
-+int set_direct_map_default_noflush(struct page *page)
-+{
-+	return __set_pages_p(page, 1);
++	if (vm)
++		vm->flags |= VM_FLUSH_RESET_PERMS;
 +}
-+
-+#ifdef CONFIG_DEBUG_PAGEALLOC
- void __kernel_map_pages(struct page *page, int numpages, int enable)
+ #else
+ static inline int
+ map_kernel_range_noflush(unsigned long start, unsigned long size,
+@@ -157,6 +169,9 @@ static inline void
+ unmap_kernel_range(unsigned long addr, unsigned long size)
  {
- 	if (PageHighMem(page))
-@@ -2282,7 +2291,6 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
  }
- 
- #ifdef CONFIG_HIBERNATION
--
- bool kernel_page_present(struct page *page)
- {
- 	unsigned int level;
-diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
-index 2a986d282a97..b5071497b8cb 100644
---- a/include/linux/set_memory.h
-+++ b/include/linux/set_memory.h
-@@ -17,6 +17,17 @@ static inline int set_memory_x(unsigned long addr,  int numpages) { return 0; }
- static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
++static inline void set_vm_flush_reset_perms(void *addr)
++{
++}
  #endif
  
-+#ifndef CONFIG_ARCH_HAS_SET_DIRECT_MAP
-+static inline int set_direct_map_invalid_noflush(struct page *page)
-+{
-+	return 0;
-+}
-+static inline int set_direct_map_default_noflush(struct page *page)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifndef set_mce_nospec
- static inline int set_mce_nospec(unsigned long pfn)
+ /* Allocate/destroy a 'vmalloc' VM area. */
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index e86ba6e74b50..e5e9e1fcac01 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -18,6 +18,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
++#include <linux/set_memory.h>
+ #include <linux/debugobjects.h>
+ #include <linux/kallsyms.h>
+ #include <linux/list.h>
+@@ -1059,24 +1060,9 @@ static void vb_free(const void *addr, unsigned long size)
+ 		spin_unlock(&vb->lock);
+ }
+ 
+-/**
+- * vm_unmap_aliases - unmap outstanding lazy aliases in the vmap layer
+- *
+- * The vmap/vmalloc layer lazily flushes kernel virtual mappings primarily
+- * to amortize TLB flushing overheads. What this means is that any page you
+- * have now, may, in a former life, have been mapped into kernel virtual
+- * address by the vmap layer and so there might be some CPUs with TLB entries
+- * still referencing that page (additional to the regular 1:1 kernel mapping).
+- *
+- * vm_unmap_aliases flushes all such lazy mappings. After it returns, we can
+- * be sure that none of the pages we have control over will have any aliases
+- * from the vmap layer.
+- */
+-void vm_unmap_aliases(void)
++static void _vm_unmap_aliases(unsigned long start, unsigned long end, int flush)
  {
+-	unsigned long start = ULONG_MAX, end = 0;
+ 	int cpu;
+-	int flush = 0;
+ 
+ 	if (unlikely(!vmap_initialized))
+ 		return;
+@@ -1113,6 +1099,27 @@ void vm_unmap_aliases(void)
+ 		flush_tlb_kernel_range(start, end);
+ 	mutex_unlock(&vmap_purge_lock);
+ }
++
++/**
++ * vm_unmap_aliases - unmap outstanding lazy aliases in the vmap layer
++ *
++ * The vmap/vmalloc layer lazily flushes kernel virtual mappings primarily
++ * to amortize TLB flushing overheads. What this means is that any page you
++ * have now, may, in a former life, have been mapped into kernel virtual
++ * address by the vmap layer and so there might be some CPUs with TLB entries
++ * still referencing that page (additional to the regular 1:1 kernel mapping).
++ *
++ * vm_unmap_aliases flushes all such lazy mappings. After it returns, we can
++ * be sure that none of the pages we have control over will have any aliases
++ * from the vmap layer.
++ */
++void vm_unmap_aliases(void)
++{
++	unsigned long start = ULONG_MAX, end = 0;
++	int flush = 0;
++
++	_vm_unmap_aliases(start, end, flush);
++}
+ EXPORT_SYMBOL_GPL(vm_unmap_aliases);
+ 
+ /**
+@@ -1505,6 +1512,72 @@ struct vm_struct *remove_vm_area(const void *addr)
+ 	return NULL;
+ }
+ 
++static inline void set_area_direct_map(const struct vm_struct *area,
++				       int (*set_direct_map)(struct page *page))
++{
++	int i;
++
++	for (i = 0; i < area->nr_pages; i++)
++		if (page_address(area->pages[i]))
++			set_direct_map(area->pages[i]);
++}
++
++/* Handle removing and resetting vm mappings related to the vm_struct. */
++static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
++{
++	unsigned long addr = (unsigned long)area->addr;
++	unsigned long start = ULONG_MAX, end = 0;
++	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
++	int i;
++
++	/*
++	 * The below block can be removed when all architectures that have
++	 * direct map permissions also have set_direct_map_() implementations.
++	 * This is concerned with resetting the direct map any an vm alias with
++	 * execute permissions, without leaving a RW+X window.
++	 */
++	if (flush_reset && !IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
++		set_memory_nx(addr, area->nr_pages);
++		set_memory_rw(addr, area->nr_pages);
++	}
++
++	remove_vm_area(area->addr);
++
++	/* If this is not VM_FLUSH_RESET_PERMS memory, no need for the below. */
++	if (!flush_reset)
++		return;
++
++	/*
++	 * If not deallocating pages, just do the flush of the VM area and
++	 * return.
++	 */
++	if (!deallocate_pages) {
++		vm_unmap_aliases();
++		return;
++	}
++
++	/*
++	 * If execution gets here, flush the vm mapping and reset the direct
++	 * map. Find the start and end range of the direct mappings to make sure
++	 * the vm_unmap_aliases() flush includes the direct map.
++	 */
++	for (i = 0; i < area->nr_pages; i++) {
++		if (page_address(area->pages[i])) {
++			start = min(addr, start);
++			end = max(addr, end);
++		}
++	}
++
++	/*
++	 * Set direct map to something invalid so that it won't be cached if
++	 * there are any accesses after the TLB flush, then flush the TLB and
++	 * reset the direct map permissions to the default.
++	 */
++	set_area_direct_map(area, set_direct_map_invalid_noflush);
++	_vm_unmap_aliases(start, end, 1);
++	set_area_direct_map(area, set_direct_map_default_noflush);
++}
++
+ static void __vunmap(const void *addr, int deallocate_pages)
+ {
+ 	struct vm_struct *area;
+@@ -1526,7 +1599,8 @@ static void __vunmap(const void *addr, int deallocate_pages)
+ 	debug_check_no_locks_freed(area->addr, get_vm_area_size(area));
+ 	debug_check_no_obj_freed(area->addr, get_vm_area_size(area));
+ 
+-	remove_vm_area(addr);
++	vm_remove_mappings(area, deallocate_pages);
++
+ 	if (deallocate_pages) {
+ 		int i;
+ 
+@@ -1961,8 +2035,9 @@ EXPORT_SYMBOL(vzalloc_node);
+  */
+ void *vmalloc_exec(unsigned long size)
+ {
+-	return __vmalloc_node(size, 1, GFP_KERNEL, PAGE_KERNEL_EXEC,
+-			      NUMA_NO_NODE, __builtin_return_address(0));
++	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
++			GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
++			NUMA_NO_NODE, __builtin_return_address(0));
+ }
+ 
+ #if defined(CONFIG_64BIT) && defined(CONFIG_ZONE_DMA32)
