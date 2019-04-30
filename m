@@ -2,192 +2,136 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A3AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C163C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 557382080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423462173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ql4MxagX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfD3Dsl (ORCPT
+        id S1730086AbfD3D6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 23:48:41 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54863 "EHLO mga18.intel.com"
+        Mon, 29 Apr 2019 23:58:50 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38047 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730081AbfD3DsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 23:48:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 20:48:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,412,1549958400"; 
-   d="scan'208";a="138598245"
-Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
-  by orsmga008.jf.intel.com with ESMTP; 29 Apr 2019 20:48:20 -0700
-From:   Zhao Yakui <yakui.zhao@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     tglx@linutronix.de, bp@alien8.de,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: [PATCH v6 2/4] x86: Add the support of Linux guest on ACRN hypervisor
-Date:   Tue, 30 Apr 2019 11:45:24 +0800
-Message-Id: <1556595926-17910-3-git-send-email-yakui.zhao@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556595926-17910-1-git-send-email-yakui.zhao@intel.com>
-References: <1556595926-17910-1-git-send-email-yakui.zhao@intel.com>
+        id S1730060AbfD3D6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 23:58:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44tSSQ6DQFz9s9T;
+        Tue, 30 Apr 2019 13:58:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556596727;
+        bh=60QoE5PheWPk3/TqzSOXTiJAWSvXWl0GYLdzDyHstQY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ql4MxagXKHDfXXVyThUhuznJ6iDnG4RueD1UZakXM9D6iHi+RmFI0KzSO61B/oV91
+         lK87Lxic5SaE3nRzMLmEylVhPSOl6O+aOlUuaG5D9PgNYW5WEjPxTtbOoeu64e73y3
+         h7mZdXVlDKySKDIC8BLyeyefa/zUBUqZkyGttbpSgCxbBWd+9+w67MB//uvTGpFUZk
+         R+4bVWxWwwiRh52jru0/T8yAJz2/3gFmhj9P6UhZDmVzUO51+14df9xUkuuSKO1APT
+         9hlRgtZdu/Fe+6McZxnObt0VVfahmBi3bhjR4/u9biTu1MnUbpa20POZgEYDoKEECU
+         9mgTExLWVOFqA==
+Date:   Tue, 30 Apr 2019 13:58:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vu Pham <vuhuong@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Mark Bloch <markb@mellanox.com>
+Subject: linux-next: manual merge of the mlx5-next tree with the rdma tree
+Message-ID: <20190430135846.0c17df6e@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/x6h10r0CWB.mHV.8Wd_JDuP"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACRN is an open-source hypervisor maintained by Linux Foundation.
-It is built for embedded IOT with small footprint and real-time features.
-Add the ACRN guest support so that it allows linux to be booted under the
-ACRN hypervisor. Following this patch it will setup the upcall
-notification vector, enable hypercall and provide the interface that is
-used to manage the virtualized CPU/memory/device/interrupt for other
-guest OS.
+--Sig_/x6h10r0CWB.mHV.8Wd_JDuP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
----
-v1->v2: Change the CONFIG_ACRN to CONFIG_ACRN_GUEST, which makes it easy to
-understand.
-        Remove the export of x86_hyper_acrn.
+Hi Leon,
 
-v2->v3: Remove the unnecessary dependency of PARAVIRT
-v3->v4: Refine the commit log and add more meaningful description in Kconfig
-v4->v5: No change
-v5->v6: No change
----
- arch/x86/Kconfig                  | 12 ++++++++++++
- arch/x86/include/asm/hypervisor.h |  1 +
- arch/x86/kernel/cpu/Makefile      |  1 +
- arch/x86/kernel/cpu/acrn.c        | 39 +++++++++++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/hypervisor.c  |  4 ++++
- 5 files changed, 57 insertions(+)
- create mode 100644 arch/x86/kernel/cpu/acrn.c
+Today's linux-next merge of the mlx5-next tree got a conflict in:
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 2fc9297..8dc4200 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -845,6 +845,18 @@ config JAILHOUSE_GUEST
- 	  cell. You can leave this option disabled if you only want to start
- 	  Jailhouse and run Linux afterwards in the root cell.
- 
-+config ACRN_GUEST
-+	bool "ACRN Guest support"
-+	depends on X86_64
-+	help
-+	  This option allows to run Linux as guest in ACRN hypervisor. Enabling
-+	  this will allow the kernel to boot in virtualized environment under
-+	  the ACRN hypervisor.
-+	  ACRN is a flexible, lightweight reference open-source hypervisor, built
-+	  with real-time and safety-criticality in mind. It is built for embedded
-+	  IOT with small footprint and real-time features. More details can be
-+	  found in https://projectacrn.org/
-+
- endif #HYPERVISOR_GUEST
- 
- source "arch/x86/Kconfig.cpu"
-diff --git a/arch/x86/include/asm/hypervisor.h b/arch/x86/include/asm/hypervisor.h
-index 8c5aaba..50a30f6 100644
---- a/arch/x86/include/asm/hypervisor.h
-+++ b/arch/x86/include/asm/hypervisor.h
-@@ -29,6 +29,7 @@ enum x86_hypervisor_type {
- 	X86_HYPER_XEN_HVM,
- 	X86_HYPER_KVM,
- 	X86_HYPER_JAILHOUSE,
-+	X86_HYPER_ACRN,
- };
- 
- #ifdef CONFIG_HYPERVISOR_GUEST
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index cfd24f9..17a7cdf 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_X86_CPU_RESCTRL)		+= resctrl/
- obj-$(CONFIG_X86_LOCAL_APIC)		+= perfctr-watchdog.o
- 
- obj-$(CONFIG_HYPERVISOR_GUEST)		+= vmware.o hypervisor.o mshyperv.o
-+obj-$(CONFIG_ACRN_GUEST)		+= acrn.o
- 
- ifdef CONFIG_X86_FEATURE_NAMES
- quiet_cmd_mkcapflags = MKCAP   $@
-diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-new file mode 100644
-index 0000000..f556640
---- /dev/null
-+++ b/arch/x86/kernel/cpu/acrn.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ACRN detection support
-+ *
-+ * Copyright (C) 2019 Intel Corporation. All rights reserved.
-+ *
-+ * Jason Chen CJ <jason.cj.chen@intel.com>
-+ * Zhao Yakui <yakui.zhao@intel.com>
-+ *
-+ */
-+
-+#include <asm/hypervisor.h>
-+
-+static uint32_t __init acrn_detect(void)
-+{
-+	return hypervisor_cpuid_base("ACRNACRNACRN\0\0", 0);
-+}
-+
-+static void __init acrn_init_platform(void)
-+{
-+}
-+
-+static bool acrn_x2apic_available(void)
-+{
-+	/* x2apic is not supported now.
-+	 * Later it needs to check the X86_FEATURE_X2APIC bit of cpu info
-+	 * returned by CPUID to determine whether the x2apic is
-+	 * supported in Linux guest.
-+	 */
-+	return false;
-+}
-+
-+const __initconst struct hypervisor_x86 x86_hyper_acrn = {
-+	.name                   = "ACRN",
-+	.detect                 = acrn_detect,
-+	.type			= X86_HYPER_ACRN,
-+	.init.init_platform     = acrn_init_platform,
-+	.init.x2apic_available  = acrn_x2apic_available,
-+};
-diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
-index 479ca47..87e39ad 100644
---- a/arch/x86/kernel/cpu/hypervisor.c
-+++ b/arch/x86/kernel/cpu/hypervisor.c
-@@ -32,6 +32,7 @@ extern const struct hypervisor_x86 x86_hyper_xen_pv;
- extern const struct hypervisor_x86 x86_hyper_xen_hvm;
- extern const struct hypervisor_x86 x86_hyper_kvm;
- extern const struct hypervisor_x86 x86_hyper_jailhouse;
-+extern const struct hypervisor_x86 x86_hyper_acrn;
- 
- static const __initconst struct hypervisor_x86 * const hypervisors[] =
- {
-@@ -49,6 +50,9 @@ static const __initconst struct hypervisor_x86 * const hypervisors[] =
- #ifdef CONFIG_JAILHOUSE_GUEST
- 	&x86_hyper_jailhouse,
- #endif
-+#ifdef CONFIG_ACRN_GUEST
-+	&x86_hyper_acrn,
-+#endif
- };
- 
- enum x86_hypervisor_type x86_hyper_type;
--- 
-2.7.4
+  drivers/infiniband/hw/mlx5/main.c
 
+between commit:
+
+  35b0aa67b298 ("RDMA/mlx5: Refactor netdev affinity code")
+
+from the rdma tree and commit:
+
+  c42260f19545 ("net/mlx5: Separate and generalize dma device from pci devi=
+ce")
+
+from the mlx5-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/infiniband/hw/mlx5/main.c
+index 6135a0b285de,fae6a6a1fbea..000000000000
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@@ -200,12 -172,18 +200,12 @@@ static int mlx5_netdev_event(struct not
+ =20
+  	switch (event) {
+  	case NETDEV_REGISTER:
+ +		/* Should already be registered during the load */
+ +		if (ibdev->is_rep)
+ +			break;
+  		write_lock(&roce->netdev_lock);
+- 		if (ndev->dev.parent =3D=3D &mdev->pdev->dev)
+ -		if (ibdev->rep) {
+ -			struct mlx5_eswitch *esw =3D ibdev->mdev->priv.eswitch;
+ -			struct net_device *rep_ndev;
+ -
+ -			rep_ndev =3D mlx5_ib_get_rep_netdev(esw,
+ -							  ibdev->rep->vport);
+ -			if (rep_ndev =3D=3D ndev)
+ -				roce->netdev =3D ndev;
+ -		} else if (ndev->dev.parent =3D=3D mdev->device) {
+++		if (ndev->dev.parent =3D=3D mdev->device)
+  			roce->netdev =3D ndev;
+ -		}
+  		write_unlock(&roce->netdev_lock);
+  		break;
+ =20
+
+--Sig_/x6h10r0CWB.mHV.8Wd_JDuP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzHx/YACgkQAVBC80lX
+0Gzdcwf/TE5ogvk+bySoFuMFWxuO8ThJFKEgBwtNn3z3FV1lPop11h70cpNlLj0G
+2ZHQE5KFv3hos740rD/WELzVBnJUjPndb4OPV3VtRj0WAdiI1XemQ7i5Jf87j6yd
+LnpbcwtAF9jV2wjhJh5o9btd3RfqMpP4FDl6ew7PT5lMqcbyP+bBuWHScCsvW0jj
+pT7xo3Pf6zwfxiJoRlVRt1aW9QR1XJPIaxAKna5PKrvYRo1Y2Q00KU7yJv0ub8WB
+xfZJT6l8+Fa/jfqaZHHXZ8G9n16GHgYvq+6+OxkVYW4tIjRWgq1dwRAFja3M92up
+EESHkiDITShEDV5vj04TQnCMGfORsQ==
+=0oRm
+-----END PGP SIGNATURE-----
+
+--Sig_/x6h10r0CWB.mHV.8Wd_JDuP--
