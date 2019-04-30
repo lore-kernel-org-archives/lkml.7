@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D8FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1DFC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8357D21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3C821670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624843;
-	bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
+	s=default; t=1556624847;
+	bh=oKlPAoQ9ZBkCJzVeAwx87mKWHmnicgEOjcEmv6Oj014=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mhJiqX6A7p7MvNC+2X1wiUyuzaZxlh3GE6nnVliBg3LWEbzLrN2OOEdvr3EbhsXi7
-	 MKrk7c4hcIpz2cNAORGOnZgST2ldavTuf/B8uTap/SjFd0VSuYR1icUF0ZUumzzpRw
-	 MEwdzKMWjgnNaR7sj1SGO9pymZ6qGVE4uwGAvZkA=
+	b=xTzFSWOUItFs/EL8+dgL5HNo8HJCAEfKvikhOBF4NquBxOietR0XkPPXRVGgf+Lxz
+	 YfwR9tx3ekgnhbZfmwg7cZVC2GHptvXySLQOPGpR8ntOBIuiG6WY5OJdiB1Mqscbnh
+	 94Y7HyyILgrx2/E5FwldVKVYd6LbV8Rklw19e6Y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfD3LrW (ORCPT
+        id S1729695AbfD3Lr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbfD3LrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:14 -0400
+        id S1728862AbfD3LrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D3FF20449;
-        Tue, 30 Apr 2019 11:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAA562054F;
+        Tue, 30 Apr 2019 11:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624833;
-        bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
+        s=default; t=1556624841;
+        bh=oKlPAoQ9ZBkCJzVeAwx87mKWHmnicgEOjcEmv6Oj014=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhgYwhV38+RTtnqYWVbovOpsswTOM8hAFNrplVAlhiq8egr+5zSZu4/jFWvdYl0oZ
-         4L/vvYMNP8ck7cNbXx7E6YGazhjW3ZAVueXckXTI/1Q4z5+6d6WDr8q9E6jUMWbt5z
-         u1LRlDJ3KJr0fe4E4/lZmVlBQyBIRQcSasmW9MHc=
+        b=UXA/CBYXWu+Hkp6OmedE0dStkoUQlSTcRO38JPyUi14NwhXeM0jSHpovIfpdBvaSS
+         xq2caHEbTiGibhfm0mnLcsZMeuo3M8BOoGB4pFzHpfxFX2dxctI9vQnfIm2haoCOIK
+         AhkS02qN0bZh8MNqyypZE8siw1kL5QgSV6JkYf9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com,
-        Ben Hutchings <ben@decadent.org.uk>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 052/100] slip: make slhc_free() silently accept an error pointer
-Date:   Tue, 30 Apr 2019 13:38:21 +0200
-Message-Id: <20190430113611.444954713@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 4.19 045/100] ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the cache
+Date:   Tue, 30 Apr 2019 13:38:14 +0200
+Message-Id: <20190430113611.214119965@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -62,48 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e upstream.
+commit e17b1af96b2afc38e684aa2f1033387e2ed10029 upstream.
 
-This way, slhc_free() accepts what slhc_init() returns, whether that is
-an error or not.
+The EFI stub is entered with the caches and MMU enabled by the
+firmware, and once the stub is ready to hand over to the decompressor,
+we clean and disable the caches.
 
-In particular, the pattern in sl_alloc_bufs() is
+The cache clean routines use CP15 barrier instructions, which can be
+disabled via SCTLR. Normally, when using the provided cache handling
+routines to enable the caches and MMU, this bit is enabled as well.
+However, but since we entered the stub with the caches already enabled,
+this routine is not executed before we call the cache clean routines,
+resulting in undefined instruction exceptions if the firmware never
+enabled this bit.
 
-        slcomp = slhc_init(16, 16);
-        ...
-        slhc_free(slcomp);
+So set the bit explicitly in the EFI entry code, but do so in a way that
+guarantees that the resulting code can still run on v6 cores as well
+(which are guaranteed to have CP15 barriers enabled)
 
-for the error handling path, and rather than complicate that code, just
-make it ok to always free what was returned by the init function.
-
-That's what the code used to do before commit 4ab42d78e37a ("ppp, slip:
-Validate VJ compression slot parameters completely") when slhc_init()
-just returned NULL for the error case, with no actual indication of the
-details of the error.
-
-Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
-Fixes: 4ab42d78e37a ("ppp, slip: Validate VJ compression slot parameters completely")
-Acked-by: Ben Hutchings <ben@decadent.org.uk>
-Cc: David Miller <davem@davemloft.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <stable@vger.kernel.org> # v4.9+
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/slip/slhc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/compressed/head.S |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/drivers/net/slip/slhc.c
-+++ b/drivers/net/slip/slhc.c
-@@ -153,7 +153,7 @@ out_fail:
- void
- slhc_free(struct slcompress *comp)
- {
--	if ( comp == NULLSLCOMPR )
-+	if ( IS_ERR_OR_NULL(comp) )
- 		return;
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -1395,7 +1395,21 @@ ENTRY(efi_stub_entry)
  
- 	if ( comp->tstate != NULLSLSTATE )
+ 		@ Preserve return value of efi_entry() in r4
+ 		mov	r4, r0
+-		bl	cache_clean_flush
++
++		@ our cache maintenance code relies on CP15 barrier instructions
++		@ but since we arrived here with the MMU and caches configured
++		@ by UEFI, we must check that the CP15BEN bit is set in SCTLR.
++		@ Note that this bit is RAO/WI on v6 and earlier, so the ISB in
++		@ the enable path will be executed on v7+ only.
++		mrc	p15, 0, r1, c1, c0, 0	@ read SCTLR
++		tst	r1, #(1 << 5)		@ CP15BEN bit set?
++		bne	0f
++		orr	r1, r1, #(1 << 5)	@ CP15 barrier instructions
++		mcr	p15, 0, r1, c1, c0, 0	@ write SCTLR
++ ARM(		.inst	0xf57ff06f		@ v7+ isb	)
++ THUMB(		isb						)
++
++0:		bl	cache_clean_flush
+ 		bl	cache_off
+ 
+ 		@ Set parameters for booting zImage according to boot protocol
 
 
