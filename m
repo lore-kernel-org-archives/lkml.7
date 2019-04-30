@@ -2,198 +2,167 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB0DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373A5C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7158A21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F379B20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUEPYUjq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sq8KNLYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfD3VcX (ORCPT
+        id S1726667AbfD3VfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 17:32:23 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55390 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfD3VcX (ORCPT
+        Tue, 30 Apr 2019 17:35:22 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:34853 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfD3VfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 17:32:23 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o25so5355492wmf.5;
-        Tue, 30 Apr 2019 14:32:21 -0700 (PDT)
+        Tue, 30 Apr 2019 17:35:22 -0400
+Received: by mail-it1-f194.google.com with SMTP id l140so5990002itb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 14:35:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qGEDZIrjz+mZmi3TRXtVhlxe6rs7vi4QvUIAjTZkRLQ=;
-        b=oUEPYUjqIjo/FZz6WHyKmra5hz4bPQkSPi5JdIakP3dbnIg2D2UEnuIeO1iLg0jPJj
-         k2sW3NA0LkNCvoHFugZpvbbDOX+i/8Wv2jtLIMOItgI/OZ/A6qUhCcG85cUTqurEztHy
-         dZAfcC2TuCz5h60C6oWp8BTY43IGEqlcZgC58nTuMnd8hRX/0NQnMfzxvOpxYyhc3o8z
-         OtV8teIu5mptdYUHUzv716US8zx1P8YOgpkI1CnFJTL6CmyMcbcMcBYpTC9xbMvhB0KT
-         wcpL4me7A4me+CEOlfLQ+jCfj9/NoX9bQrPXdDTv9e+aNJ+eQPOMloiBOLV3iNex0Eii
-         JwLw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xwbA6m1IlkHcQAdDn+q8EF7OA9bDmXUDL8pQ3xlxeqo=;
+        b=Sq8KNLYMoEQTJQ8Stw6ktrYFYw+zkDUBePOHtQKKTkZvwVtovOluTVKwMnP5OxwkEI
+         xRPL4YOMPiqolt7cnNDIoRjpVwHdC9cPNhE5Az/2QlbtpvjxgVHuNqQuQHGGwpUVVukW
+         nC5xJQiZfC1wh2gFeunojseYcQqwKNo5P06mvHmBW2ZJ7630qxkTzOArc13ieUXbbmh7
+         u5k9icmaMxO9TnXKm5AyU5gnXzs5kmyR4Kumoh2cWT3xkILJnt8pw/wQ2BbT/p/BhhX2
+         Y8Wt5n3FwizMxkHPOOXZHoN+O5XlGBIpYOk+347M3eRzLEcaJhRYkVvbP14mTC1og8mp
+         0aeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qGEDZIrjz+mZmi3TRXtVhlxe6rs7vi4QvUIAjTZkRLQ=;
-        b=dwkdKR6iWR2jF/k6zDtxvTT4QrX+5eulOTrQ+ZzjNm77rd7f+YTVIuFB4pbFIrG+Fy
-         PhYpT+pTJtk2tD8tezjJtvftcp4Oc1GrAx1h2GQ0L1hKj1DQbkdGSX3QcGgpArhy0riW
-         +WK1UO7byQUwBpdGGtArSZhnikhIJYk2trZoaJHxPCZKnErj+5x29X2cqMZ5rocCxYPX
-         ZcywJJu5BFK6NB+FMuZj5G/8o2+Mi0xCq5B9+l751bWI5vvV6p4AH7isaSeTB3/qwS9g
-         FnbeZ46FzAZrVM2IAt0F1iPIZTeaPyx+f6gGVYSgkuEdYtUZJMYLUaZIRkqR+TXMhoEH
-         5Pmw==
-X-Gm-Message-State: APjAAAWm0G3yuPEpW7YX93D5EiI1NBIrkGgK0avMyLlXLf7/MbtgWl2d
-        GrBVLGRJjOSjV1lmw0Ke+nU=
-X-Google-Smtp-Source: APXvYqxKKbif0nHIaHfQBzuoLjB4rzTfApWlFrmWlpG76VJITPiopj1mzxN0Aa/zB5DNjkC1/wHcsQ==
-X-Received: by 2002:a7b:c38c:: with SMTP id s12mr399063wmj.136.1556659940431;
-        Tue, 30 Apr 2019 14:32:20 -0700 (PDT)
-Received: from debian64.daheim (p4FD09424.dip0.t-ipconnect.de. [79.208.148.36])
-        by smtp.gmail.com with ESMTPSA id c63sm5263700wma.29.2019.04.30.14.32.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 14:32:18 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
-        by debian64.daheim with esmtp (Exim 4.92)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1hLaMM-0006lQ-3O; Tue, 30 Apr 2019 23:32:18 +0200
-From:   Christian Lamparter <chunkeey@gmail.com>
-To:     Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
-Date:   Tue, 30 Apr 2019 23:32:17 +0200
-Message-ID: <2683948.V7X3pFLLSZ@debian64>
-In-Reply-To: <20190428150822.13935-1-j.neuschaefer@gmx.net>
-References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xwbA6m1IlkHcQAdDn+q8EF7OA9bDmXUDL8pQ3xlxeqo=;
+        b=NweeWmdHH9KBo4NBNA2KlNdpRr1OEpAIazUEw/L3LGXUybjXFNdGm8sVSmU81Jf9v1
+         8E3RxbzSBfOWGZkWib7RS1JtdYPJKTy4Lu3AfVq1l4xH1bPlE1H7HbjNlrpO7VvJXkKN
+         fegtrT+vwQB1pqG7hbxCF8seN9ptha7IhW922TOH7+g2Xo3TtO03129tKun38t+0WNqP
+         KtB408/nRgDD2G5GrxINvALWgYmvFQrXG9qvJooqynzN6YnSVpXTB+SuhV1L7mcK/rSo
+         P/zYvjCmsQSUiMENYo0QiErjfXT+w+zIcbOUtbrvfjEeqIvf5dJfWyUYrBm2k4V0f1hW
+         6kRA==
+X-Gm-Message-State: APjAAAXQLjtQ0OgDiGzNRfZJ4ypKASztRlo2VUxoCrF86A/eok15xjGO
+        A2gEMnojd7TbYSWru7AwOmGUpf5Y+PVbUtwYj6WgYw==
+X-Google-Smtp-Source: APXvYqzIenEc1fHVzRGEEU14wPVQmKcjNo/JeR+UzSCvKt1pTOpxhl8Bq8KqDZSLgHNDy7fTG9L+3o5JTKEc6QSn4hM=
+X-Received: by 2002:a24:a86:: with SMTP id 128mr5346735itw.118.1556660120632;
+ Tue, 30 Apr 2019 14:35:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+References: <20190227202658.197113-1-matthewgarrett@google.com>
+ <20190227202658.197113-3-matthewgarrett@google.com> <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
+ <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com>
+In-Reply-To: <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Tue, 30 Apr 2019 14:35:09 -0700
+Message-ID: <CACdnJuvYAfFboej4e5jQ=iwhb-5Pi7BgSKEWGqJ0q=uarCoOfQ@mail.gmail.com>
+Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
+To:     Bartosz Szczepanek <bsz@semihalf.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Content-Type: multipart/mixed; boundary="0000000000008759370587c62d7b"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday, April 28, 2019 5:08:22 PM CEST Jonathan Neusch=E4fer wrote:
-> The property is spelled 'bias-pull-up', as documented in
-> pinctrl-bindings.txt.
->=20
+--0000000000008759370587c62d7b
+Content-Type: text/plain; charset="UTF-8"
 
-I also sent out a patch for that... back in 2017:
+On Tue, Apr 30, 2019 at 12:51 PM Matthew Garrett <mjg59@google.com> wrote:
+> Yes, it looks like this is just broken. Can you try with the attached patch?
 
-https://patchwork.ozlabs.org/patch/763151/
+Actually, please try this one.
 
-It's marked Accepted and Archived.
+--0000000000008759370587c62d7b
+Content-Type: text/x-patch; charset="US-ASCII"; name="fix_log.diff"
+Content-Disposition: attachment; filename="fix_log.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jv4b8h1f0>
+X-Attachment-Id: f_jv4b8h1f0
 
-@rob ?
-
-> Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
-> ---
->  .../devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt        | 2 +-
->  .../devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt        | 2 +-
->  .../devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt        | 2 +-
->  .../devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt        | 2 +-
->  .../devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt        | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinct=
-rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-> index c2dbb3e8d840..4e90ddd77784 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-> @@ -42,7 +42,7 @@ information about e.g. the mux function.
->  The following generic properties as defined in pinctrl-bindings.txt are =
-valid
->  to specify in a pin configuration subnode:
->=20
-> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
-gth,
-> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
-gth,
->   output-low, output-high.
->=20
->  Non-empty subnodes must specify the 'pins' property.
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinct=
-rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-> index 991be0cd0948..84be0f2c6f3b 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-> @@ -44,7 +44,7 @@ information about e.g. the mux function.
->=20
->  The following generic properties as defined in pinctrl-bindings.txt are =
-valid
->  to specify in a pin configuration subnode:
-> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
-gth.
-> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
-gth.
->=20
->  Non-empty subnodes must specify the 'pins' property.
->  Note that not all properties are valid for all pins.
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinct=
-rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-> index 7ed56a1b70fc..a7aaaa7db83b 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-> @@ -42,7 +42,7 @@ information about e.g. the mux function.
->  The following generic properties as defined in pinctrl-bindings.txt are =
-valid
->  to specify in a pin configuration subnode:
->=20
-> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
-gth,
-> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
-gth,
->   output-low, output-high.
->=20
->  Non-empty subnodes must specify the 'pins' property.
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinct=
-rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
-> index cdc4787e59d2..f095209848c8 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
-> @@ -42,7 +42,7 @@ information about e.g. the mux function.
->  The following generic properties as defined in pinctrl-bindings.txt are =
-valid
->  to specify in a pin configuration subnode:
->=20
-> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
-gth,
-> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
-gth,
->   output-low, output-high.
->=20
->  Non-empty subnodes must specify the 'pins' property.
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinct=
-rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-> index c22e6c425d0b..004056506679 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-> @@ -41,7 +41,7 @@ information about e.g. the mux function.
->=20
->  The following generic properties as defined in pinctrl-bindings.txt are =
-valid
->  to specify in a pin configuration subnode:
-> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
-gth.
-> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
-gth.
->=20
->  Non-empty subnodes must specify the 'pins' property.
->  Note that not all properties are valid for all pins.
-> --
-> 2.20.1
->=20
-
-
-
-
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL3RwbS5jIGIvZHJpdmVycy9maXJtd2Fy
+ZS9lZmkvdHBtLmMKaW5kZXggMmNjYWE2NjYxYWFmLi5kYjBmZGFhOWM2NjYgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvZmlybXdhcmUvZWZpL3RwbS5jCisrKyBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL3Rw
+bS5jCkBAIC0yOCw2ICsyOCw3IEBAIHN0YXRpYyBpbnQgdHBtMl9jYWxjX2V2ZW50X2xvZ19zaXpl
+KHZvaWQgKmRhdGEsIGludCBjb3VudCwgdm9pZCAqc2l6ZV9pbmZvKQogCQlpZiAoZXZlbnRfc2l6
+ZSA9PSAwKQogCQkJcmV0dXJuIC0xOwogCQlzaXplICs9IGV2ZW50X3NpemU7CisJCWNvdW50LS07
+CiAJfQogCiAJcmV0dXJuIHNpemU7CkBAIC00MSw2ICs0Miw3IEBAIGludCBfX2luaXQgZWZpX3Rw
+bV9ldmVudGxvZ19pbml0KHZvaWQpCiAJc3RydWN0IGxpbnV4X2VmaV90cG1fZXZlbnRsb2cgKmxv
+Z190Ymw7CiAJc3RydWN0IGVmaV90Y2cyX2ZpbmFsX2V2ZW50c190YWJsZSAqZmluYWxfdGJsOwog
+CXVuc2lnbmVkIGludCB0Ymxfc2l6ZTsKKwlpbnQgcmV0ID0gMDsKIAogCWlmIChlZmkudHBtX2xv
+ZyA9PSBFRklfSU5WQUxJRF9UQUJMRV9BRERSKSB7CiAJCS8qCkBAIC02MCwxMCArNjIsOSBAQCBp
+bnQgX19pbml0IGVmaV90cG1fZXZlbnRsb2dfaW5pdCh2b2lkKQogCiAJdGJsX3NpemUgPSBzaXpl
+b2YoKmxvZ190YmwpICsgbG9nX3RibC0+c2l6ZTsKIAltZW1ibG9ja19yZXNlcnZlKGVmaS50cG1f
+bG9nLCB0Ymxfc2l6ZSk7Ci0JZWFybHlfbWVtdW5tYXAobG9nX3RibCwgc2l6ZW9mKCpsb2dfdGJs
+KSk7CiAKIAlpZiAoZWZpLnRwbV9maW5hbF9sb2cgPT0gRUZJX0lOVkFMSURfVEFCTEVfQUREUikK
+LQkJcmV0dXJuIDA7CisJCWdvdG8gb3V0OwogCiAJZmluYWxfdGJsID0gZWFybHlfbWVtcmVtYXAo
+ZWZpLnRwbV9maW5hbF9sb2csIHNpemVvZigqZmluYWxfdGJsKSk7CiAKQEAgLTcxLDE3ICs3Miwy
+MCBAQCBpbnQgX19pbml0IGVmaV90cG1fZXZlbnRsb2dfaW5pdCh2b2lkKQogCQlwcl9lcnIoIkZh
+aWxlZCB0byBtYXAgVFBNIEZpbmFsIEV2ZW50IExvZyB0YWJsZSBAIDB4JWx4XG4iLAogCQkgICAg
+ICAgZWZpLnRwbV9maW5hbF9sb2cpOwogCQllZmkudHBtX2ZpbmFsX2xvZyA9IEVGSV9JTlZBTElE
+X1RBQkxFX0FERFI7Ci0JCXJldHVybiAtRU5PTUVNOworCQlyZXQgPSAtRU5PTUVNOworCQlnb3Rv
+IG91dDsKIAl9CiAKIAl0Ymxfc2l6ZSA9IHRwbTJfY2FsY19ldmVudF9sb2dfc2l6ZShmaW5hbF90
+YmwtPmV2ZW50cywKIAkJCQkJICAgIGZpbmFsX3RibC0+bnJfZXZlbnRzLAotCQkJCQkgICAgKHZv
+aWQgKillZmkudHBtX2xvZyk7CisJCQkJCSAgICBsb2dfdGJsLT5sb2cpOwogCW1lbWJsb2NrX3Jl
+c2VydmUoKHVuc2lnbmVkIGxvbmcpZmluYWxfdGJsLAogCQkJIHRibF9zaXplICsgc2l6ZW9mKCpm
+aW5hbF90YmwpKTsKIAllYXJseV9tZW11bm1hcChmaW5hbF90YmwsIHNpemVvZigqZmluYWxfdGJs
+KSk7CiAJZWZpX3RwbV9maW5hbF9sb2dfc2l6ZSA9IHRibF9zaXplOwogCi0JcmV0dXJuIDA7Citv
+dXQ6CisJZWFybHlfbWVtdW5tYXAobG9nX3RibCwgc2l6ZW9mKCpsb2dfdGJsKSk7CisJcmV0dXJu
+IHJldDsKIH0KIApkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC90cG1fZXZlbnRsb2cuaCBiL2lu
+Y2x1ZGUvbGludXgvdHBtX2V2ZW50bG9nLmgKaW5kZXggZGNjYzk3ZTYxMzVjLi42NjI0MTA3MTBh
+YzAgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvdHBtX2V2ZW50bG9nLmgKKysrIGIvaW5jbHVk
+ZS9saW51eC90cG1fZXZlbnRsb2cuaApAQCAtMTU4LDcgKzE1OCw2IEBAIHN0YXRpYyBpbmxpbmUg
+aW50IF9fY2FsY190cG0yX2V2ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2
+ZW50LAogewogCXN0cnVjdCB0Y2dfZWZpX3NwZWNpZF9ldmVudF9oZWFkICplZmlzcGVjaWQ7CiAJ
+c3RydWN0IHRjZ19ldmVudF9maWVsZCAqZXZlbnRfZmllbGQ7Ci0Jdm9pZCAqbWFwcGluZyA9IE5V
+TEw7CiAJaW50IG1hcHBpbmdfc2l6ZTsKIAl2b2lkICptYXJrZXI7CiAJdm9pZCAqbWFya2VyX3N0
+YXJ0OwpAQCAtMTc2LDkgKzE3NSw5IEBAIHN0YXRpYyBpbmxpbmUgaW50IF9fY2FsY190cG0yX2V2
+ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2ZW50LAogCS8qIE1hcCB0aGUg
+ZXZlbnQgaGVhZGVyICovCiAJaWYgKGRvX21hcHBpbmcpIHsKIAkJbWFwcGluZ19zaXplID0gbWFy
+a2VyIC0gbWFya2VyX3N0YXJ0OwotCQltYXBwaW5nID0gZWFybHlfbWVtcmVtYXAoKHVuc2lnbmVk
+IGxvbmcpbWFya2VyX3N0YXJ0LAorCQlldmVudCA9IGVhcmx5X21lbXJlbWFwKCh1bnNpZ25lZCBs
+b25nKW1hcmtlcl9zdGFydCwKIAkJCQkJIG1hcHBpbmdfc2l6ZSk7Ci0JCWlmICghbWFwcGluZykg
+eworCQlpZiAoIWV2ZW50KSB7CiAJCQlzaXplID0gMDsKIAkJCWdvdG8gb3V0OwogCQl9CkBAIC0x
+OTksOSArMTk4LDkgQEAgc3RhdGljIGlubGluZSBpbnQgX19jYWxjX3RwbTJfZXZlbnRfc2l6ZShz
+dHJ1Y3QgdGNnX3Bjcl9ldmVudDJfaGVhZCAqZXZlbnQsCiAJCWlmIChkb19tYXBwaW5nKSB7CiAJ
+CQllYXJseV9tZW11bm1hcChtYXBwaW5nLCBtYXBwaW5nX3NpemUpOwogCQkJbWFwcGluZ19zaXpl
+ID0gbWFya2VyIC0gbWFya2VyX3N0YXJ0ICsgaGFsZ19zaXplOwotCQkJbWFwcGluZyA9IGVhcmx5
+X21lbXJlbWFwKCh1bnNpZ25lZCBsb25nKW1hcmtlcl9zdGFydCwKKwkJCWV2ZW50ID0gZWFybHlf
+bWVtcmVtYXAoKHVuc2lnbmVkIGxvbmcpbWFya2VyX3N0YXJ0LAogCQkJCQkJIG1hcHBpbmdfc2l6
+ZSk7Ci0JCQlpZiAoIW1hcHBpbmcpIHsKKwkJCWlmICghZXZlbnQpIHsKIAkJCQlzaXplID0gMDsK
+IAkJCQlnb3RvIG91dDsKIAkJCX0KQEAgLTIxOSw5ICsyMTgsOSBAQCBzdGF0aWMgaW5saW5lIGlu
+dCBfX2NhbGNfdHBtMl9ldmVudF9zaXplKHN0cnVjdCB0Y2dfcGNyX2V2ZW50Ml9oZWFkICpldmVu
+dCwKIAkJCQlpZiAoZG9fbWFwcGluZykgewogCQkJCQllYXJseV9tZW11bm1hcChtYXBwaW5nLCBt
+YXBwaW5nX3NpemUpOwogCQkJCQltYXBwaW5nX3NpemUgPSBtYXJrZXIgLSBtYXJrZXJfc3RhcnQ7
+Ci0JCQkJCW1hcHBpbmcgPSBlYXJseV9tZW1yZW1hcCgodW5zaWduZWQgbG9uZyltYXJrZXJfc3Rh
+cnQsCisJCQkJCWV2ZW50ID0gZWFybHlfbWVtcmVtYXAoKHVuc2lnbmVkIGxvbmcpbWFya2VyX3N0
+YXJ0LAogCQkJCQkJICAgICAgbWFwcGluZ19zaXplKTsKLQkJCQkJaWYgKCFtYXBwaW5nKSB7CisJ
+CQkJCWlmICghZXZlbnQpIHsKIAkJCQkJCXNpemUgPSAwOwogCQkJCQkJZ290byBvdXQ7CiAJCQkJ
+CX0KQEAgLTI0MywxMSArMjQyLDExIEBAIHN0YXRpYyBpbmxpbmUgaW50IF9fY2FsY190cG0yX2V2
+ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2ZW50LAogCSAqIHdlIGRvbid0
+IG5lZWQgdG8gbWFwIGl0CiAJICovCiAJaWYgKGRvX21hcHBpbmcpIHsKLQkJZWFybHlfbWVtdW5t
+YXAobWFya2VyX3N0YXJ0LCBtYXBwaW5nX3NpemUpOworCQllYXJseV9tZW11bm1hcChtYXBwaW5n
+LCBtYXBwaW5nX3NpemUpOwogCQltYXBwaW5nX3NpemUgKz0gc2l6ZW9mKGV2ZW50X2ZpZWxkLT5l
+dmVudF9zaXplKTsKLQkJbWFwcGluZyA9IGVhcmx5X21lbXJlbWFwKCh1bnNpZ25lZCBsb25nKW1h
+cmtlcl9zdGFydCwKLQkJCQkJIG1hcHBpbmdfc2l6ZSk7Ci0JCWlmICghbWFwcGluZykgeworCQll
+dmVudCA9IGVhcmx5X21lbXJlbWFwKCh1bnNpZ25lZCBsb25nKW1hcmtlcl9zdGFydCwKKwkJCQkg
+ICAgICAgbWFwcGluZ19zaXplKTsKKwkJaWYgKCFldmVudCkgewogCQkJc2l6ZSA9IDA7CiAJCQln
+b3RvIG91dDsKIAkJfQpAQCAtMjU3LDggKzI1Niw2IEBAIHN0YXRpYyBpbmxpbmUgaW50IF9fY2Fs
+Y190cG0yX2V2ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2ZW50LAogCQkr
+IGV2ZW50X2ZpZWxkLT5ldmVudF9zaXplOwogCXNpemUgPSBtYXJrZXIgLSBtYXJrZXJfc3RhcnQ7
+CiAKLQlpZiAoKGV2ZW50LT5ldmVudF90eXBlID09IDApICYmIChldmVudF9maWVsZC0+ZXZlbnRf
+c2l6ZSA9PSAwKSkKLQkJc2l6ZSA9IDA7CiBvdXQ6CiAJaWYgKGRvX21hcHBpbmcpCiAJCWVhcmx5
+X21lbXVubWFwKG1hcHBpbmcsIG1hcHBpbmdfc2l6ZSk7Cg==
+--0000000000008759370587c62d7b--
