@@ -2,170 +2,111 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48AFC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA323C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821EF2087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECB12087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="OVblrJdI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U8r20nCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfD3Wj0 convert rfc822-to-8bit (ORCPT
+        id S1727548AbfD3Wkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:39:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58638 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbfD3WjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:39:25 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 237C2308A9E2;
-        Tue, 30 Apr 2019 22:39:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 669F317244;
-        Tue, 30 Apr 2019 22:39:21 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     jmorris@namei.org
-cc:     dhowells@redhat.com, dwalsh@redhat.com, vgoyal@redhat.com,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [GIT PULL] keys: Namespacing
+        Tue, 30 Apr 2019 18:40:36 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:46365 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726056AbfD3Wkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 18:40:35 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id B97612329E;
+        Tue, 30 Apr 2019 18:40:34 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 30 Apr 2019 18:40:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=uSxjqNftJ9OpafDOpoXJOCCkS+q
+        PtA+kvIr1Yk5mjnU=; b=OVblrJdIh9NfZAks9MSGdeTlodHm49AyY2o11wxi710
+        n3/+hM8UM0DLZjBqBfvIflQWqVD1brVvxGCdQMMg5CG83sRX3OTubzXPilqhPljg
+        fJDhQXHVRMwe0rWKcx+Bd0rBEB/oGGxlZNdH6hxvYGlO9bxsqarIuFYeCy+rd4em
+        yYbPWXTr9ih200bXgEQdD4zOMROiTk/N2NclJd2Vmw4DDVzdRKyd+czThEUG5TZE
+        sfD1tDEiepc4VsIf1YbP8Dx92YbyJofywbpC9TE1gtA0I0aI/nsLZo8alQBXoiXv
+        OGgSoYzkaaj+dw3vWpV1YHfUVtlPDYm7IPKXf0U55lg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=uSxjqN
+        ftJ9OpafDOpoXJOCCkS+qPtA+kvIr1Yk5mjnU=; b=U8r20nCq5Ym2C6mmddce/E
+        nK7Js5/U+3l4k/+6ficF1l3c42PsXmZbVoRUrbJQuZjWrz/Fv5qgDBcJI2rXfI98
+        pWH/10DOwpXtPV3N8626w9a3ULwoI9jfmeETK9J642xAMGiIIs6eSrgQpV4LTlFQ
+        gezJquUfpMdu9fPcBG+N3hSpZKr45BWgc/Sost6CuoEVOTQOr8BQnpDjMX960Tnm
+        ypGVN9QxUMuz3eSqSRXqyKJEJJOBoWHyuCc8maH5/YNnWMlu6iP768e05pabKPSz
+        Ax/N6lfrV6VaT5CrgXcA5EBIfhSaWFRMNSnryP3qVOc1o/G3hLknC6T6efibbycw
+        ==
+X-ME-Sender: <xms:4s7IXEUIdiynEnnSqmnGdcfxX3Qv8FIcumEky_iMZuKLj0WDxbZ4cQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieeigddufecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgepud
+X-ME-Proxy: <xmx:4s7IXDzBSj8xwHlJJmYrq0S8vrumP5Svw1D5GxpQvRF-0QfxMJJ4Kw>
+    <xmx:4s7IXMOs-IPcdUSoCXtgk2BSAvGH0HoZ87RvEOny10FRMV9i_cWtEw>
+    <xmx:4s7IXNrGidhUELoO5k2sST02ZEY8lokNo_vvzOoVtOCZDD3hSVt93w>
+    <xmx:4s7IXNuw2nd_sVz00w7z3D1W1uP3m1uelAKhLRZ_7pKyyIBLk3zeOA>
+Received: from localhost (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0A6E8103CA;
+        Tue, 30 Apr 2019 18:40:32 -0400 (EDT)
+Date:   Wed, 1 May 2019 08:39:57 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] livepatch: Fix kobject memleak
+Message-ID: <20190430223957.GF9454@eros.localdomain>
+References: <20190430001534.26246-1-tobin@kernel.org>
+ <20190430001534.26246-2-tobin@kernel.org>
+ <20190430084254.GB11737@kroah.com>
+ <alpine.LSU.2.21.1904301235450.8507@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <560.1556663960.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 30 Apr 2019 23:39:20 +0100
-Message-ID: <561.1556663960@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 30 Apr 2019 22:39:25 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.1904301235450.8507@pobox.suse.cz>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Tue, Apr 30, 2019 at 12:44:55PM +0200, Miroslav Benes wrote:
+> On Tue, 30 Apr 2019, Greg Kroah-Hartman wrote:
+> 
+> > On Tue, Apr 30, 2019 at 10:15:33AM +1000, Tobin C. Harding wrote:
+> > > Currently error return from kobject_init_and_add() is not followed by a
+> > > call to kobject_put().  This means there is a memory leak.
+> > > 
+> > > Add call to kobject_put() in error path of kobject_init_and_add().
+> > > 
+> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > 
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> Well, it does not even compile...
 
-Can you pull this set of patches into the security tree and pass them along
-to Linus in the next merge window?  The primary thrust is to add
-namespacing to keyrings.
+My apologies, I did compile this but obviously I don't know how to
+configure the kernel.
 
-One miscellaneous and four prerequisite patches start:
+Thanks for the review.
 
- (1) Use invalidation to kill off request_key authentication tokens more
-     quickly than revoking them.
-
- (2) Remove request_key_async{,_with_auxdata} - I would need to add extra
-     arguments, but they're not currently used.
-
- (3), (4) Simplify the key description management and cache the hash value
-     to avoid the need for constant recalculation during a search.  This
-     makes it easier to add namespace info to a key's index key.
-
- (5) Make it possible for keyring_search() to do searches that don't
-     recurse down into and search keyrings linked to from the starting
-     keyring.
-
-Then the rest are about namespacing:
-
- (6) Replace the global list of keyring names with per-user_namespace lists
-     and exclude certain internal keyrings from being added to the lists.
-
- (7) Move the user and user-session keyrings from the user_struct, and
-     store them instead in a "user keyring register" in the user_namespace.
-     This prevents KEY_SPEC_* specifiers from picking keyrings from the
-     wrong namespace.  Note that it also means that uids that share a
-     user_struct will not see the same user keyrings inside and outside a
-     user_namespace.
-
-     This has been tested by Dan Walsh in a Fedora environment, though the
-     patch was modified from the one here.
-
- (8) Provide the ability to add a domain tag to a key's index key, so that
-     a keyring can hold keys of the same type and description, but
-     different target namespace/domain.
-
- (9) Make the garbage collector remove keys for which the target domain tag
-     has been removed.
-
-(10) Provide a domain tag for each network namespace.
-
-(11) Tag DNS resolver keys and rxrpc/afs keys so that keys for different
-     domains can coexist in the same keyrings.
-
-In the future, hopefully, it will be possible to use the domain tags in
-ACLs to grant permissions to namespaces for containerisation.
-
-David
----
-The following changes since commit 6beff00b79ca0b5caf0ce6fb8e11f57311bd95f8:
-
-  seccomp: fix up grammar in comment (2019-04-23 16:21:12 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-namespace-20190430
-
-for you to fetch changes up to ccedc142360bd68fdaf444671d67d42fa306398b:
-
-  keys: Pass the network namespace into request_key mechanism (2019-04-25 13:10:25 +0100)
-
-----------------------------------------------------------------
-Keyrings namespacing
-
-----------------------------------------------------------------
-David Howells (11):
-      keys: Invalidate used request_key authentication keys
-      keys: Kill off request_key_async{,_with_auxdata}
-      keys: Simplify key description management
-      keys: Cache the hash value to avoid lots of recalculation
-      keys: Add a 'recurse' flag for keyring searches
-      keys: Namespace keyring names
-      keys: Move the user and user-session keyrings to the user_namespace
-      keys: Include target namespace in match criteria
-      keys: Garbage collect keys for which the domain has been removed
-      keys: Network namespace domain tag
-      keys: Pass the network namespace into request_key mechanism
-
- Documentation/security/keys/core.rst     |  10 +-
- certs/blacklist.c                        |   2 +-
- crypto/asymmetric_keys/asymmetric_type.c |   2 +-
- fs/afs/addr_list.c                       |   4 +-
- fs/afs/dynroot.c                         |   7 +-
- fs/cifs/dns_resolve.c                    |   3 +-
- fs/nfs/dns_resolve.c                     |   2 +-
- include/linux/dns_resolver.h             |   3 +-
- include/linux/key-type.h                 |   3 +
- include/linux/key.h                      |  50 ++++--
- include/linux/sched/user.h               |  14 --
- include/linux/user_namespace.h           |  12 +-
- include/net/net_namespace.h              |   4 +
- kernel/user.c                            |  10 +-
- kernel/user_namespace.c                  |   9 +-
- lib/digsig.c                             |   2 +-
- net/ceph/messenger.c                     |   3 +-
- net/core/net_namespace.c                 |  19 +++
- net/dns_resolver/dns_key.c               |   1 +
- net/dns_resolver/dns_query.c             |   6 +-
- net/rxrpc/key.c                          |   6 +-
- net/rxrpc/security.c                     |   2 +-
- security/integrity/digsig_asymmetric.c   |   4 +-
- security/keys/gc.c                       |   2 +-
- security/keys/internal.h                 |  10 +-
- security/keys/key.c                      |   9 +-
- security/keys/keyctl.c                   |   4 +-
- security/keys/keyring.c                  | 263 +++++++++++++++++--------------
- security/keys/persistent.c               |  10 +-
- security/keys/proc.c                     |   3 +-
- security/keys/process_keys.c             | 252 ++++++++++++++++++-----------
- security/keys/request_key.c              | 113 ++++++-------
- security/keys/request_key_auth.c         |   3 +-
- 33 files changed, 508 insertions(+), 339 deletions(-)
+	Tobin
