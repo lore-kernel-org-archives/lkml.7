@@ -2,123 +2,151 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA63C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB259C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B09B21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB47D21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556587412;
-	bh=TNbkka32dDokHvEekZPM54zKlOh6IiXzyfGMUhlLNiE=;
+	s=default; t=1556587439;
+	bh=T6f30+WoVKVaY+7aeD2/Kqbvm/PGLIV2SoIxOTfCCd0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zSHmZBtYBVxoFYK1AmKz2KoZLcm3BuUQpaKicPSsmhCeDWuAZCqV3/0OwMeFjXKmV
-	 vmanUJpGIgDIRgBchlQ9Cdd4agylVJHLuy6VDZNQwmlh1ybcwBiqXoJUKyzdc5y78k
-	 d6oQ0l9Q6Upj4JP+v4/9ILOIJMORlutV99U+PFKg=
+	b=PXwHy5KJgDmUZ//5/UaZm0hRccWwS6MONKO7Eg5pfysPNp8vmiPhSFlP1KRlTeldg
+	 UX7hjAlTqj+imM2JgZYYDiahYleXLa9/7QqRimdARlISkMr2GTDV9LHDfPi2M/mdA1
+	 tT9SMWrq33shTpQv79JJ5C29VMUgaJuQ7pjxpxYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbfD3BXb (ORCPT
+        id S1729889AbfD3BX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:23:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42495 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729801AbfD3BXb (ORCPT
+        Mon, 29 Apr 2019 21:23:58 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60035 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729801AbfD3BX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:23:31 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f23so10438638otl.9;
-        Mon, 29 Apr 2019 18:23:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fLCNptbAqgGLbxmiV5m9esJWTcO9d7PGiLKbWNbQI4Y=;
-        b=pyInkl149oIz0fINvWOVMsdn8AcUZzZMsqlSa7v85gg4KE35r4uck69xNm/ho+Knq4
-         IzzSs7aMjmL5Eaj+6oFFGMJWvwrQoIb3956nOZPBgl3FX6H5fMKhpHk4dISx6fGnCukc
-         zWcgPF4nwZgI4lIXvZOm/tg7YfbuPlwiXFtfB2h/uxfRlZpdfJ/8UyWyA+fnAe3Ff7OC
-         QROaB0oudBdvbMfvRBtSD+tbC8do0lojlFgN9sX8VFKXonOOnxrqrUmwEr5RLCjdVOMu
-         BDIasEacD+4LbgEW4TtTbCw8lBLG5F3IVAHSYy+J1fDNCrHxwhSklxul5vl/eleUX3uo
-         4SXg==
-X-Gm-Message-State: APjAAAVREX0ePY2/L7rj+HhgwSdB4P5sCe+xd3U7Q/FVfRHH8h9196zA
-        u1H5Svz8POQS9r/0gW369Q==
-X-Google-Smtp-Source: APXvYqxr8Cm+FM9VThpkbETtAkluspE6CKnCHzDXX3Pa3YrGOQn38oLZRa/gk3PUp+5WlkzbxZyFuQ==
-X-Received: by 2002:a9d:6153:: with SMTP id c19mr5171001otk.110.1556587410598;
-        Mon, 29 Apr 2019 18:23:30 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w13sm922030otl.26.2019.04.29.18.23.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 18:23:29 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 20:23:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>, heiko@sntech.de,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Artur Petrosyan <Arthur.Petrosyan@synopsys.com>,
-        amstan@chromium.org, linux-rockchip@lists.infradead.org,
-        William Wu <william.wu@rock-chips.com>,
-        linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Randy Li <ayaka@soulik.info>, zyw@rock-chips.com,
-        mka@chromium.org, ryandcase@chromium.org,
-        Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org,
-        dinguyen@opensource.altera.com,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mon, 29 Apr 2019 21:23:58 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id F069311761;
+        Mon, 29 Apr 2019 21:23:56 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 29 Apr 2019 21:23:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=U802eO
+        OelwertqC80gnxnMwTiQXrwdFYQ7LZKBGQt7c=; b=MPXHHQomdU37KyhhAIgL7L
+        MnoMJElis48Jw0J2mIvl4w3lmexJr+h1/6YjTNa6pm+rv3eIDrWxlMKJ+tmhFQrb
+        dk4OiQ+fQ1PLdl9TKNRcuaLjfNKAoZwbD/WSV6H3KJNp8Sr1cJuH1EMU+FdSNecO
+        QvXOk88p2DNbvDHRtJ7oXBr7TyT9JUu9BoOce38aP50qI6OGcC0q9xdAYYDXIC/A
+        Bwjk6SQTECIVugZnFV81mzH3gSPzB8O4j7adEZPpeb1UuI9MTd8MhPF4kZ+sWR3n
+        d1wLN8zIlzrSsQ+MZCY9PLLcRzBf1XLxrwplRBb4JNrxUqHVA9R57DZZJ5s8Rhxw
+        ==
+X-ME-Sender: <xms:q6PHXEqeLaDbkntYfC-LIbq6ls_z0bV8tKpBLt8jSNzu1HZxROtZmQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdegiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    etfedtuddqtdduucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceothhosghinh
+    eskhgvrhhnvghlrdhorhhgqeenucfkphepuddvuddrgeegrddvfedtrddukeeknecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhush
+    htvghrufhiiigvpedt
+X-ME-Proxy: <xmx:q6PHXIkpFJ7qPLvOs-BaBB24V5PeCU1mNRKVxDPKFva4CKasNtBPIg>
+    <xmx:q6PHXLgGpHtVfF7fQo3XoKjasm-5v97sGje3sXJrh6zG9IHLplJtNA>
+    <xmx:q6PHXAeHQw0KihM5_jTQz8AzmYX8Yv2YTwDjMkRiRLwEoSMDxuxp-g>
+    <xmx:rKPHXCB9hBfgrOCmlMdWVx7l8WgtHe4tgeu9qFevCQhc8kohC7nP0g>
+Received: from localhost (ppp121-44-230-188.bras2.syd2.internode.on.net [121.44.230.188])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3FDFD1037C;
+        Mon, 29 Apr 2019 21:23:54 -0400 (EDT)
+Date:   Tue, 30 Apr 2019 11:23:15 +1000
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 3/5] Documentation: dt-bindings: Add
- snps,need-phy-for-wake for dwc2 USB
-Message-ID: <20190430012328.GA25660@bogus>
-References: <20190418001356.124334-1-dianders@chromium.org>
- <20190418001356.124334-4-dianders@chromium.org>
+        Tyler Hicks <tyhicks@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] bridge: Fix error path for kobject_init_and_add()
+Message-ID: <20190430012315.GA18524@eros.localdomain>
+References: <20190430002817.10785-1-tobin@kernel.org>
+ <20190430002817.10785-2-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190418001356.124334-4-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190430002817.10785-2-tobin@kernel.org>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 05:13:54PM -0700, Douglas Anderson wrote:
-> Some SoCs with a dwc2 USB controller may need to keep the PHY on to
-> support remote wakeup.  Allow specifying this as a device tree
-> property.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> For relevant prior discussion on this patch, see:
-> 
-> https://lkml.kernel.org/r/1435017144-2971-3-git-send-email-dianders@chromium.org
-> 
-> I didn't make any changes from the prior version since I never found
-> out what Rob thought of my previous arguments.  If folks want a
-> change, perhaps they could choose from these options:
-> 
-> 1. Assume that all dwc2 hosts would like to keep their PHY on for
->    suspend if there's a USB wakeup enabled, thus we totally drop this
->    binding.  This doesn't seem super great to me since I'd bet that
->    many devices that use dwc2 weren't designed for USB wakeup (they
->    may not keep enough clocks or rails on) so we might be wasting
->    power for nothing.
+On Tue, Apr 30, 2019 at 10:28:15AM +1000, Tobin C. Harding wrote:
 
-1b. Use SoC specific compatible strings to enable/disable remote 
-wake-up. We can debate what the default is I guess.
+[snip]
 
-> 2. Rename this property to "snps,wakeup-from-suspend-with-phy" to make
->    it more obvious that this property is intended both to document
->    that wakeup from suspend is possible and that we need the PHY for
->    said wakeup.
-> 3. Rename this property to "snps,can-wakeup-from-suspend" and assume
->    it's implicit that if we can wakeup from suspend that we need to
->    keep the PHY on.  If/when someone shows that a device exists using
->    dwc2 where we can wakeup from suspend without the PHY they can add
->    a new property.
-> 
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+The cover letter appears to have gotten lost, I can resend if it makes
+things better for you Dave.
+
+FTR this is the contents from it:
+
+Hi Dave,
+
+There are a few places in net/ that are not correctly handling the error
+path after calls to kobject_init_and_add().  This set fixes all of these
+for net/
+
+This corrects a memory leak if kobject_init() is not followed by a call
+to kobject_put()
+
+This set is part of an effort to check/fix all of these mem leaks across
+the kernel tree.
+
+For reference this is the behaviour that we are trying to achieve
+
+void fn(void)
+{
+	int ret;
+
+	ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
+	if (ret) {
+		kobject_put(kobj);
+		return ret;
+	}
+
+	ret = some_init_fn();
+	if (ret)
+		goto err;
+
+	ret = some_other_init_fn();
+	if (ret)
+		goto other_err;
+
+	kobject_uevent(kobj, KOBJ_ADD);
+	return 0;
+
+other_err:
+	other_clean_up_fn();
+err:
+	kobject_del(kobj);
+	return ret;
+}
+
+
+ Testing: No testing done, built with config options
+
+CONFIG_NET=y
+CONFIG_SYSFS=y
+CONFIG_BRIDGE=y
+
+
+thanks,
+Tobin.
