@@ -6,123 +6,109 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232D8C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0ECF21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A1A2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="UlrB1v2Q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vZ8aI4Dw"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ettHd6os";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hAw+WC/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfD3INu (ORCPT
+        id S1726129AbfD3IOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:13:50 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:59451 "EHLO
+        Tue, 30 Apr 2019 04:14:16 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:39317 "EHLO
         wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725790AbfD3INu (ORCPT
+        by vger.kernel.org with ESMTP id S1725790AbfD3IOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:13:50 -0400
+        Tue, 30 Apr 2019 04:14:16 -0400
 Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id BDC5A551;
-        Tue, 30 Apr 2019 04:13:48 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id C052C71E;
+        Tue, 30 Apr 2019 04:14:14 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 30 Apr 2019 04:13:49 -0400
+  by compute6.internal (MEProxy); Tue, 30 Apr 2019 04:14:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=cdFeCbmF2JOlSkSFgqVW8iAZ49D
-        tq1g4z3meNqi1GVo=; b=UlrB1v2Q3cwjJ8IAYZejQxZWX1sbREPN2GcHRsifs0h
-        LFvNTmfkLyA1KdNmQlv3rp7lXJ6X1EY/PWHZMOY08SyEn8F7PDxBQ/E/+YgSxDvm
-        fJ53qbszRgEds7FLzeCJN3T4U78nN+3y1MHBkIRMZiD/9YN9r5xRvvNp7IDukPcs
-        Ik3RevOjyRzNetQHE4nG3LabqQ8ctoCZzjl0lARPUk+ysOzu5vO6Fqp1FUNkFfVk
-        DPUSA/TloU66UhNl1Sw43McKEOMB0pAInN8QvNjaGrbdEvv1IsoqCTkzDWkroa4i
-        4IxBEpQqT++fK3fz6ar4DsNGex4VjPcieZA2qI0jS9g==
+        :content-type:in-reply-to; s=fm3; bh=QaMnlBFGPZs+DEMS0nyUumPQ3/f
+        Otf0Ip12DCFXxfKM=; b=ettHd6osx2iW0UtF6UIP15gDoVrZSwKKvXyyWManic5
+        c4fbeX/H5u96nd1CPeTvHaK7wqIFAzEVX9/n0JbmduAvEC8yp5v5wd2c9bS4eaBi
+        yG8gXiTI7ZqZxOkF52dkRP/EjBD6MmUZ25FBaBUcLXxLAwOxCZ8UjFuhKQvNsmp6
+        K+hmDKtxkzZmLHDbL9Ez6KzB/mp8nXdqOsHR4AF9yHS5Od+aXKLsQCx6UxI45jck
+        DVxpNpjSR/rj795NgUCeXpJsYRMlYjF2/Q3Xrr1kzw83RvTA4eaVOomVHy12xl/c
+        43h2/3O0PjxqB4dluDKnin8mPT/dWgdzVYzMjxcuDQw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=cdFeCb
-        mF2JOlSkSFgqVW8iAZ49Dtq1g4z3meNqi1GVo=; b=vZ8aI4DwwcJ/dMT52JJz1E
-        C3hnYGiEnQWCvQxRzRgKK3d2X8j/7ei+kTGhLvZiP8dXwS2Kmw2GBQDxgTbsjCHn
-        JfzXBx/jJ1qKlkZYpY7LydG5G8UU+6i9UweqcinL+hGtA2UZPZseAC4LYPN4zqq8
-        UqLJSjSv9ytAazdXoZjOkI2nGJaLa+icu0RXSRJwa9Ez7EjbFPAEsc+3a456Xwg4
-        IlAeAMZNZurYyfnpTXufFw+c+Vg/+O+hnwc5HH2aeQF6qd55OxkQGmuiXWEPIQYZ
-        iP2KHtGDAiuhlsExWJN20BBMklJo4eDQbGlssCDYqVI/7Y0DTZMyaursPeOTmYfA
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=QaMnlB
+        FGPZs+DEMS0nyUumPQ3/fOtf0Ip12DCFXxfKM=; b=hAw+WC/2lxijMbOmK0FzBz
+        9zU4JGzeYtYiUbrEpBsOuUXx77j2x8vPv6GpC0EnBizC1LvwGRI78/0iWkW0CaQW
+        0Z0hWvtAE3LXxL0l+SyoI/bRR6Uoocym42wmRCMe0hxak/I23AModNPr1aBQfK+R
+        RVxeUhm4PBnkuMLe5QK3+OmJiNM7cHiSIuvW8kqgX/yhF1f50AKUy69p1dBdJKJQ
+        6ShMj9zems5cwR52oJxvvJzDKxg0M9grpksiyR6g3HRablgHIv+3UR/FlW2fs31Z
+        lykGPomgVueI0EamLgp8r6GnJ52LJ+Q+ZqDE6ArGfkUk0c0cD/p9lqD6sSimOZFw
         ==
-X-ME-Sender: <xms:uwPIXKxzsm3xg9i_FKfh0E9gbxnTvTqiR6JgYSDqcOpd3M-3UQnYSA>
+X-ME-Sender: <xms:0wPIXDRZ49IfAdk99l-irItgHMakpbd3T1b-2qg0ujtK8U1PXLXG9w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieeggddtvdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
     mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
     ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:uwPIXFRHf6kgV_Oqoy0QC7zbuMjFSyigoMf0hLg0cpqFc-FpbSwx_g>
-    <xmx:uwPIXMe2Esg0a3UftFbBMkaBgEpznnuGlRc_Atn6XAPYfAzr0sfJJw>
-    <xmx:uwPIXC6EMYCFcWDrdyWmtd2fs4mPLY7uSNp-o-T6YGa5tt5SfyiQPA>
-    <xmx:vAPIXCfd96gSLzYED7Me7lT2a_1JMbfDeR5oOZcJlVgP5BYQanggfA>
+    lhhushhtvghrufhiiigvpedu
+X-ME-Proxy: <xmx:0wPIXHvR4nC5ai6CDHmXQJrfkFr3kX8ANvoImXYwxiIRaxPWGjxMRQ>
+    <xmx:0wPIXBAI9PxnJaCj0eEZmp6jDyQ2L_G5Ky4qxOBMw_03bHwBkVlYrQ>
+    <xmx:0wPIXB1z397X-cmBS4dtg4bIP_8g_IiOYEc5bn3YJMZUAZRgkSzgJA>
+    <xmx:1gPIXNF5dDQuAaGY28NzFR9jjaGCQOlybbvnl0RgvXbvl_JqTZ18Fw>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B9E0EE44B6;
-        Tue, 30 Apr 2019 04:13:46 -0400 (EDT)
-Date:   Tue, 30 Apr 2019 10:13:44 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id C5A6EE454A;
+        Tue, 30 Apr 2019 04:14:10 -0400 (EDT)
+Date:   Tue, 30 Apr 2019 10:14:08 +0200
 From:   Greg KH <greg@kroah.com>
 To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: linux-next: manual merge of the staging tree with the pm tree
-Message-ID: <20190430081344.GA8245@kroah.com>
-References: <20190430174829.4f33e8b0@canb.auug.org.au>
+        Patrick Venture <venture@google.com>
+Subject: Re: linux-next: manual merge of the char-misc tree with the arm-soc
+ tree
+Message-ID: <20190430081408.GB8245@kroah.com>
+References: <20190430174051.038c77c8@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430174829.4f33e8b0@canb.auug.org.au>
+In-Reply-To: <20190430174051.038c77c8@canb.auug.org.au>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 05:48:29PM +1000, Stephen Rothwell wrote:
+On Tue, Apr 30, 2019 at 05:40:51PM +1000, Stephen Rothwell wrote:
 > Hi all,
 > 
-> Today's linux-next merge of the staging tree got a conflict in:
+> Today's linux-next merge of the char-misc tree got conflicts in:
 > 
->   Documentation/driver-api/index.rst
+>   drivers/misc/Kconfig
+>   drivers/misc/Makefile
 > 
 > between commit:
 > 
->   680e6ffa1510 ("Documentation: add Linux ACPI to Sphinx TOC tree")
+>   524feb799408 ("soc: add aspeed folder and misc drivers")
 > 
-> from the pm tree and commit:
+> from the arm-soc tree and commit:
 > 
->   09e7d4ed8991 ("docs: Add Generic Counter interface documentation")
+>   01c60dcea9f7 ("drivers/misc: Add Aspeed P2A control driver")
 > 
-> from the staging tree.
+> from the char-misc tree.
 > 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc Documentation/driver-api/index.rst
-> index aa87075c7846,201247b7c1e8..000000000000
-> --- a/Documentation/driver-api/index.rst
-> +++ b/Documentation/driver-api/index.rst
-> @@@ -56,7 -56,7 +56,8 @@@ available subsections can be seen below
->      slimbus
->      soundwire/index
->      fpga/index
->  +   acpi/index
-> +    generic-counter
+> I fixed it up (see below - though the additions probably want to be
+> moved as in the arm-soc commit)
 
-Looks good to me, thanks!
+People are still arguing about this, so let's leave this as-is for now
+:)
+
+Thanks for the merge resolution,
 
 greg k-h
