@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C038EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6F8C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEF9217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D194E217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624423;
-	bh=a5ZeR0MDjNUpU1MX8cFgcVq7fOAd1SREaSmh5eqyE/Y=;
+	s=default; t=1556624425;
+	bh=1v3inFiLJzSCitqpL2LAc8O+IpCjNakfSNz/Xoc3Gdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EEgQjPmS/EPS7yNFpak01z1hcBkJ6z9Yt6g3f6y/VjfPE/RLbG0MohWDFSErk44R/
-	 gOtloy80ts10ynPKJtISF3qSdmVYIS2HPI6ValINe5jK+POgiFqUEvAjCXXRM0Hb9U
-	 6j8+YfvR2bMHX4BEP3WaAqEN609RtTlxh+8c2USQ=
+	b=fN213OfvDnkbkVfZsKiTgekwhftDIZQ6LojmBaa1gOrO6pbsFeHA5whJCi9h/4FmC
+	 TSxDnFDcs9l8rn6+qaiMQ0ARLs3LJ/imYrFFejUQ+JnqEsJ0Oz9VkY6Ad9VkV8dvBz
+	 x9wiRFkfU7AEiIVLhGA11qyNGiH58wP1/mos/R6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbfD3LkW (ORCPT
+        id S1728433AbfD3LkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfD3LkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:40:19 -0400
+        id S1728408AbfD3LkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:40:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 266A6217D4;
-        Tue, 30 Apr 2019 11:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B061B2177B;
+        Tue, 30 Apr 2019 11:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624418;
-        bh=a5ZeR0MDjNUpU1MX8cFgcVq7fOAd1SREaSmh5eqyE/Y=;
+        s=default; t=1556624421;
+        bh=1v3inFiLJzSCitqpL2LAc8O+IpCjNakfSNz/Xoc3Gdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JRIHTn8avpPm0jmikhJIV+R1lPfWFBdlJqA+6+/Ixkn8+T4iOoXKYgrQ/IbWsISjQ
-         Mixmno2+DSTBjBVDXqICuNhxmNgX13FTI5vbzxlQA1tWkUuQEdDvIoUJLe2O7C5NS6
-         4Lrb5hYjPGs2V4ROBOfOJ61PrQbhc2BiKKZupIEU=
+        b=Ct2IG2aBPHUM+FgmSMZSnbSmAj6skz3yseulXh2fA4yeBEJyKhaVbDGCMHReuv7Dd
+         R4Rgnr7KLLYTJu14Wp2niXY3sUluHLScSEQHjEPl27ru3bo28XP2bP3Kh6FKqoovYG
+         sazh+ySQeLt5UdKb2egbaF2Pblv9i6fQWJoCFCTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xie XiuQi <xiexiuqi@huawei.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, cj.chengjian@huawei.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 07/41] sched/numa: Fix a possible divide-by-zero
-Date:   Tue, 30 Apr 2019 13:38:18 +0200
-Message-Id: <20190430113526.406683131@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 4.9 08/41] ceph: ensure d_name stability in ceph_dentry_hash()
+Date:   Tue, 30 Apr 2019 13:38:19 +0200
+Message-Id: <20190430113526.560682600@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -62,53 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie XiuQi <xiexiuqi@huawei.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit a860fa7b96e1a1c974556327aa1aee852d434c21 upstream.
+commit 76a495d666e5043ffc315695f8241f5e94a98849 upstream.
 
-sched_clock_cpu() may not be consistent between CPUs. If a task
-migrates to another CPU, then se.exec_start is set to that CPU's
-rq_clock_task() by update_stats_curr_start(). Specifically, the new
-value might be before the old value due to clock skew.
+Take the d_lock here to ensure that d_name doesn't change.
 
-So then if in numa_get_avg_runtime() the expression:
-
-  'now - p->last_task_numa_placement'
-
-ends up as -1, then the divider '*period + 1' in task_numa_placement()
-is 0 and things go bang. Similar to update_curr(), check if time goes
-backwards to avoid this.
-
-[ peterz: Wrote new changelog. ]
-[ mingo: Tweaked the code comment. ]
-
-Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: cj.chengjian@huawei.com
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20190425080016.GX11158@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ceph/dir.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1925,6 +1925,10 @@ static u64 numa_get_avg_runtime(struct t
- 	if (p->last_task_numa_placement) {
- 		delta = runtime - p->last_sum_exec_runtime;
- 		*period = now - p->last_task_numa_placement;
-+
-+		/* Avoid time going backwards, prevent potential divide error: */
-+		if (unlikely((s64)*period < 0))
-+			*period = 0;
- 	} else {
- 		delta = p->se.avg.load_sum / p->se.load.weight;
- 		*period = LOAD_AVG_MAX;
+--- a/fs/ceph/dir.c
++++ b/fs/ceph/dir.c
+@@ -1471,6 +1471,7 @@ void ceph_dentry_lru_del(struct dentry *
+ unsigned ceph_dentry_hash(struct inode *dir, struct dentry *dn)
+ {
+ 	struct ceph_inode_info *dci = ceph_inode(dir);
++	unsigned hash;
+ 
+ 	switch (dci->i_dir_layout.dl_dir_hash) {
+ 	case 0:	/* for backward compat */
+@@ -1478,8 +1479,11 @@ unsigned ceph_dentry_hash(struct inode *
+ 		return dn->d_name.hash;
+ 
+ 	default:
+-		return ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
++		spin_lock(&dn->d_lock);
++		hash = ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
+ 				     dn->d_name.name, dn->d_name.len);
++		spin_unlock(&dn->d_lock);
++		return hash;
+ 	}
+ }
+ 
 
 
