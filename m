@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C6DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ABAC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7252054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376C82177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625007;
-	bh=mhXp3yi9SmczJXGFbcmNB5kdXerbdBiyCIswjE75ejQ=;
+	s=default; t=1556625011;
+	bh=xbKEgOhDb/KeV2EQJ1W78kNHva9NY2Y2U0+Mturycfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JY83UkJUb2O6ZJqiq0xE/5xTgffN24Lg6Lc0j7YqPbxQKQjcWnQ56MzOTtIJtr7fL
-	 G8UcRENESuUnt+v2fjsIute2tIXeYpWlhJmFcYpn4Ym6wrVdlXNFHmMZsaOXTBoWXr
-	 3G8l8Qfn4Hxp9b0q8F6LNU6z2lGN5PwV8O9zNp/k=
+	b=LkVPPTiHnwX5UKkqw0ym7bsaQujU1EyyXNnu5KuDNlm98AHa6MiI37aMMTvDLg97u
+	 VL2av5uL2U4KK12jobXljuNicXAK68BvZ/6xq40kO9u/QrzH5RKwKTmpFNFI1R2QY6
+	 GD/AeE/LDlJqa6sd0tpj9l7cGMrL7y2imVgO2vsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731141AbfD3LuG (ORCPT
+        id S1731149AbfD3LuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36910 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731122AbfD3LuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:50:04 -0400
+        id S1731122AbfD3LuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA8F321783;
-        Tue, 30 Apr 2019 11:50:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6958121783;
+        Tue, 30 Apr 2019 11:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625004;
-        bh=mhXp3yi9SmczJXGFbcmNB5kdXerbdBiyCIswjE75ejQ=;
+        s=default; t=1556625006;
+        bh=xbKEgOhDb/KeV2EQJ1W78kNHva9NY2Y2U0+Mturycfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9h98rSdhmeQY0BvmWKuk67mxnt7VmaH8bWP7cM+Z2Ue19DR7JGrBp9LPQTqg3COb
-         pUQTHAhH4b/zlsyuZOMkOOKzrL4wVe7LTa05h9IlrlWvFFo0ngFcT7VXQMXzimpNRt
-         nL5U92b81iLhEYtJuwuqBMvKliKV5HXuysmg/HN8=
+        b=BNXcJY/Gs0z2Lhg9Zymz0JLTZ9Lc1xdKdckpNwAU9D8lZ3/oNU0sq8icHK6T7UvJV
+         eWjLOztLw+HNSFJEjC/FzZh3q5yU6jhLRl0OiUsAqeVurqEHqe/FukvmPn9Guw5D/R
+         1mrg5pjWTIy0PvZIuV28MJYW6zw4C1rONwpo3q5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 5.0 10/89] cifs: do not attempt cifs operation on smb2+ rename error
-Date:   Tue, 30 Apr 2019 13:38:01 +0200
-Message-Id: <20190430113610.231633947@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.0 48/89] ext4: fix some error pointer dereferences
+Date:   Tue, 30 Apr 2019 13:38:39 +0200
+Message-Id: <20190430113611.965705103@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,38 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 652727bbe1b17993636346716ae5867627793647 upstream.
+commit 7159a986b4202343f6cca3bb8079ecace5816fd6 upstream.
 
-A path-based rename returning EBUSY will incorrectly try opening
-the file with a cifs (NT Create AndX) operation on an smb2+ mount,
-which causes the server to force a session close.
+We can't pass error pointers to brelse().
 
-If the mount is smb2+, skip the fallback.
-
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Fixes: fb265c9cb49e ("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ext4/xattr.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1735,6 +1735,10 @@ cifs_do_rename(const unsigned int xid, s
- 	if (rc == 0 || rc != -EBUSY)
- 		goto do_rename_exit;
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -829,6 +829,7 @@ int ext4_get_inode_usage(struct inode *i
+ 		bh = ext4_sb_bread(inode->i_sb, EXT4_I(inode)->i_file_acl, REQ_PRIO);
+ 		if (IS_ERR(bh)) {
+ 			ret = PTR_ERR(bh);
++			bh = NULL;
+ 			goto out;
+ 		}
  
-+	/* Don't fall back to using SMB on SMB 2+ mount */
-+	if (server->vals->protocol_id != 0)
-+		goto do_rename_exit;
-+
- 	/* open-file renames don't work across directories */
- 	if (to_dentry->d_parent != from_dentry->d_parent)
- 		goto do_rename_exit;
+@@ -2903,6 +2904,7 @@ int ext4_xattr_delete_inode(handle_t *ha
+ 			if (error == -EIO)
+ 				EXT4_ERROR_INODE(inode, "block %llu read error",
+ 						 EXT4_I(inode)->i_file_acl);
++			bh = NULL;
+ 			goto cleanup;
+ 		}
+ 		error = ext4_xattr_check_block(inode, bh);
+@@ -3059,6 +3061,7 @@ ext4_xattr_block_cache_find(struct inode
+ 		if (IS_ERR(bh)) {
+ 			if (PTR_ERR(bh) == -ENOMEM)
+ 				return NULL;
++			bh = NULL;
+ 			EXT4_ERROR_INODE(inode, "block %lu read error",
+ 					 (unsigned long)ce->e_value);
+ 		} else if (ext4_xattr_cmp(header, BHDR(bh)) == 0) {
 
 
