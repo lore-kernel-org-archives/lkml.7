@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6281DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF23C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3702075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7E52177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625329;
-	bh=R4EoRxp5VUPcegQvGoO6HysLF8EDfQpLxNG6/h6hV9k=;
+	s=default; t=1556625331;
+	bh=0ciGWazNr8j4GuCDsuHETt61WKcUTfQMjk8tZXtymO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yz5NmH73ib42bvBBMkdN00lSPmfs2AKnN/QN8tiiKjWUdU+htk3rkFlt+6lOmMHgk
-	 Rfst/vIdwFR8nxJokkphd/zvhlzak2NEVIfV0wVkdhqC+xlzajJeDuadEqe9Jb6uzk
-	 CfQ2W3LLVk0VPiLGqhwAy717TNOITABlpDgWaZxI=
+	b=kshOTDk9pw+ZC/oVodcCy+LNm1fGyz2Ay6fN5As8S0Xz1qeHsj55mjAA2n1jnxPpX
+	 SGOethXeU7/OFwDS5e12YcLabZOFwQXQa2NjkoEbbNAFcvkxU80K6z9Df3u2XEedWw
+	 eFYWWx6Wn8ptzSMqzJo8KZaE1oT2ctrks5gbkSfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbfD3Lt2 (ORCPT
+        id S1728248AbfD3Lza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35908 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730985AbfD3LtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:24 -0400
+        id S1730985AbfD3Lt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57A4621734;
-        Tue, 30 Apr 2019 11:49:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92E382054F;
+        Tue, 30 Apr 2019 11:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624962;
-        bh=R4EoRxp5VUPcegQvGoO6HysLF8EDfQpLxNG6/h6hV9k=;
+        s=default; t=1556624968;
+        bh=0ciGWazNr8j4GuCDsuHETt61WKcUTfQMjk8tZXtymO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5MAQuR11t5gIrjOWoqcIytsuGQYWg3/T/ESSG3ImakS6OMMDwA5+eIrUqODA2O0P
-         +//uxCCWmOd14C1l7LS4wC5CW+LkG5iTjNqjhVz6L5tzP4976z8mQ4NkiZw6hb/u/2
-         tnZ8Vr2u41b3zCDO9JWC3mSshtu1rMjADmR0aFmA=
+        b=kQqbXzS98Fs326DGwVXD/a+X0vQcBOJ9Scgz6WPE7HG5yKBmQapTyOBYtOLpvPplT
+         zvRb42WVehskVe4qOMEERwv7HOzphWU4Gj3IV9MZXp4/9YxdLpMfJIsfp/dlyuRGou
+         1kOzpL1hixzWpmay//acdaRXVCzbtVJWuMCuuNxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.0 38/89] dmaengine: sh: rcar-dmac: Fix glitch in dmaengine_tx_status
-Date:   Tue, 30 Apr 2019 13:38:29 +0200
-Message-Id: <20190430113611.612017498@linuxfoundation.org>
+        syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: [PATCH 5.0 13/89] crypto: xts - Fix atomic sleep when walking skcipher
+Date:   Tue, 30 Apr 2019 13:38:04 +0200
+Message-Id: <20190430113610.342144523@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -62,82 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 6e7da74775348d96e2d7efaf3f91410e18c481ef upstream.
+commit 44427c0fbc09b448b22410978a4ef6ee37599d25 upstream.
 
-The tx_status poll in the rcar_dmac driver reads the status register
-which indicates which chunk is busy (DMACHCRB). Afterwards the point
-inside the chunk is read from DMATCRB. It is possible that the chunk
-has changed between the two reads. The result is a non-monotonous
-increase of the residue. Fix this by introducing a 'safe read' logic.
+When we perform a walk in the completion function, we need to ensure
+that it is atomic.
 
-Fixes: 73a47bd0da66 ("dmaengine: rcar-dmac: use TCRB instead of TCR for residue")
-Signed-off-by: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: <stable@vger.kernel.org> # v4.16+
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reported-by: syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com
+Fixes: 78105c7e769b ("crypto: xts - Drop use of auxiliary buffer")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/sh/rcar-dmac.c |   26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+ crypto/xts.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1282,6 +1282,9 @@ static unsigned int rcar_dmac_chan_get_r
- 	enum dma_status status;
- 	unsigned int residue = 0;
- 	unsigned int dptr = 0;
-+	unsigned int chcrb;
-+	unsigned int tcrb;
-+	unsigned int i;
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -137,8 +137,12 @@ static void crypt_done(struct crypto_asy
+ {
+ 	struct skcipher_request *req = areq->data;
  
- 	if (!desc)
- 		return 0;
-@@ -1330,14 +1333,31 @@ static unsigned int rcar_dmac_chan_get_r
- 	}
- 
- 	/*
-+	 * We need to read two registers.
-+	 * Make sure the control register does not skip to next chunk
-+	 * while reading the counter.
-+	 * Trying it 3 times should be enough: Initial read, retry, retry
-+	 * for the paranoid.
-+	 */
-+	for (i = 0; i < 3; i++) {
-+		chcrb = rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
-+					    RCAR_DMACHCRB_DPTR_MASK;
-+		tcrb = rcar_dmac_chan_read(chan, RCAR_DMATCRB);
-+		/* Still the same? */
-+		if (chcrb == (rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
-+			      RCAR_DMACHCRB_DPTR_MASK))
-+			break;
-+	}
-+	WARN_ONCE(i >= 3, "residue might be not continuous!");
+-	if (!err)
++	if (!err) {
++		struct rctx *rctx = skcipher_request_ctx(req);
 +
-+	/*
- 	 * In descriptor mode the descriptor running pointer is not maintained
- 	 * by the interrupt handler, find the running descriptor from the
- 	 * descriptor pointer field in the CHCRB register. In non-descriptor
- 	 * mode just use the running descriptor pointer.
- 	 */
- 	if (desc->hwdescs.use) {
--		dptr = (rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
--			RCAR_DMACHCRB_DPTR_MASK) >> RCAR_DMACHCRB_DPTR_SHIFT;
-+		dptr = chcrb >> RCAR_DMACHCRB_DPTR_SHIFT;
- 		if (dptr == 0)
- 			dptr = desc->nchunks;
- 		dptr--;
-@@ -1355,7 +1375,7 @@ static unsigned int rcar_dmac_chan_get_r
- 	}
++		rctx->subreq.base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
+ 		err = xor_tweak_post(req);
++	}
  
- 	/* Add the residue for the current chunk. */
--	residue += rcar_dmac_chan_read(chan, RCAR_DMATCRB) << desc->xfer_shift;
-+	residue += tcrb << desc->xfer_shift;
- 
- 	return residue;
+ 	skcipher_request_complete(req, err);
  }
 
 
