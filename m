@@ -2,111 +2,141 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4075C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B12C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE7520652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538C920652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:46:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeSUdYeA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfD3Gls (ORCPT
+        id S1726366AbfD3GqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:41:48 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7146 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725790AbfD3Gls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:41:48 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 63D569E02EAB98E9051E;
-        Tue, 30 Apr 2019 14:41:46 +0800 (CST)
-Received: from [127.0.0.1] (10.67.78.74) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Apr 2019
- 14:41:43 +0800
-Subject: Re: [RFC] Question about reset order for xhci controller and pci
-To:     Alan Stern <stern@rowland.harvard.edu>
-CC:     <mathias.nyman@intel.com>, <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <Pine.LNX.4.44L0.1904291002290.1632-100000@iolanthe.rowland.org>
-From:   "Tangnianyao (ICT)" <tangnianyao@huawei.com>
-Message-ID: <b4176223-e44f-5454-0a02-b75a65384fa6@huawei.com>
-Date:   Tue, 30 Apr 2019 14:41:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Tue, 30 Apr 2019 02:46:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40621 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfD3GqO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 02:46:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d31so6371456pgl.7;
+        Mon, 29 Apr 2019 23:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ny9jUsl8uuat0Ih56MKj3A5QL7L7pjAw7XWyUkIrdUQ=;
+        b=DeSUdYeAG5RVmBI7UsYUqPrgBV5WFoJ6jNz0N1AUqRDtNdBqPhz42vN+XiwLSuYMqL
+         WVkvd5mZX2cFaYBDG44etsB8dP2Sn2S2902GAtrR3g+1IMlIZZL0XqsyBQ12WiQqUsLS
+         +5r3tVpvTRzg26ggz9Q2Gof83xHtTzbjYjq7A45Yop/rYNWL7IQMaTCYe3ddPecgy+PP
+         VMbiIgzjUi2V+o9Mx1xiPfGzEpWq7NHwO5L0fJby6hELZ2EP0aDAmnT93uDoPkYoJsfG
+         dpDYuBuFRsHXURuePtz5u57uHT5RNzmDZP022i1b5lQr5WvKHRXqpGU5ddR6j3Dvoc5p
+         QRHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ny9jUsl8uuat0Ih56MKj3A5QL7L7pjAw7XWyUkIrdUQ=;
+        b=fm9D9NO4XjeMVwab4aTGVWoV8uYFTiR45u0+BTq1/rwNDWoL7njU7RuWBdPZ6eVZvN
+         TadOSHO6rCCImYenSA3u3WaNJG+umtuvr9EPIaCmu5ZCpDPubF5TUVvuLhEV+EZ2Qv16
+         5Bnvm/rq06GxhEarEpCr5Fs17h89IE0EdgA3/yz4kkx/RCb4bg2zOce4AzegQKXUgSZh
+         GbjNwx3MD4LT19cIMQXJztKZMgazaAWc+b3WPNRyRzcjiZ1RwK1Z4MuejfEG1XK0pGx0
+         JtqST0VthSqg6+Xk9c9bXAtxHnoGfQjy+e6JRi5+OpRdh6Cxlz8KgrX7j356S9CwSg7T
+         brEg==
+X-Gm-Message-State: APjAAAWR/Wi9oDTbu/4vwgejTSlnbeHk0P+7s6TSFpNTlP8PnsDTD8Fd
+        F5AI88zE7G+El9uoBiIRIZ7uns0oWGA=
+X-Google-Smtp-Source: APXvYqw5jczVZynupEVDwZS94Pkxypcw/lPFXdWbO6AoDhImmYahO2Cs9LwXWKHxTAMLacDOYTXbSQ==
+X-Received: by 2002:a63:8e4b:: with SMTP id k72mr21433095pge.428.1556606773602;
+        Mon, 29 Apr 2019 23:46:13 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id a9sm47336010pfo.17.2019.04.29.23.46.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 23:46:12 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] Driver for UCS1002
+Date:   Mon, 29 Apr 2019 23:45:54 -0700
+Message-Id: <20190430064557.28469-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44L0.1904291002290.1632-100000@iolanthe.rowland.org>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.78.74]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Everyone:
 
-On 2019/4/29 22:06, Alan Stern wrote:
+This small series adds a driver for UCS1002 Programmable USB Port
+Power Controller with Charger Emulation. See [page] for product page
+and [datasheet] for device dataseet. Hopefully each individual patch
+is self explanatory.
 
-Hi, Alan
+Note that this series is a revival of the upstreaming effort by Enric
+Balletbo Serra last version of which can be found at [original-effort]
 
-> On Mon, 29 Apr 2019, Tangnianyao (ICT) wrote:
-> 
->> Using command "echo 1 > /sys/bus/pci/devices/0000:7a:02.0/reset"
->> on centos7.5 system to reset xhci.
->>
->> On 2019/4/26 11:07, Tangnianyao (ICT) wrote:
->>> Hi,all
->>>
->>> I've meet a problem about reset xhci and it may be caused by the
->>> reset order of pci and xhci.
->>> Using xhci-pci, when users send reset command in os(centos or red-hat os),
->>> it would first reset PCI device by pci_reset_function. During this
->>> process, it would disable BME(Bus Master Enable) and set BME=0, and
->>> then enable it and set BME=1.
->>> And then it comes to xhci reset process. First, it would send an
->>> endpoint stop command in xhci_urb_dequeue. However, this stop ep command
->>> fails to finish. The reason is that BME is set to 0 in former process and
->>> xhci RUN/STOP changes to 0, and when BME is set to 1 again, RUN/STOP doesn't
->>> recover to 1.
->>> I've checked BME behavior in xhci spec, it shows that "If the BME bit is set to 0
->>> when xHC is running, the xHC may treat this as a Host Controller Error, asserting
->>> HCE(1) and immediately halt(R/S=0 and HCH=1). Recovery from this state will
->>> require an HCRST." It seems that the stop ep command failure is reasonable.
->>> Maybe I've missed something and please let me know.
-> 
-> Your email subject says "Question about...".  What is the question?
-> 
-Sorry I didn't descibe it clearly.
-When sending a reset command, now the reset order is first BME and then xhci.
-BME reset would make xhci controller stop, resulting in xhci reset failure,
-because it can't finish stop ep command in xhci_urb_dequeue.
-I'm not sure if this situation is in expectation.
-
-> Also, given that your question concerns what happens when you write to
-> /sys/bus/pci/..., perhaps you should consider mailing it to some PCI
-> maintainers as well as to the USB maintainers.
-> ok, I will mailing it to PCI maintainer as well.
-
-> Perhaps the reset was not meant to be used the way you are doing it.  
-> A more conservative approach would be to unbind xhci-hcd from the 
-> device before doing the reset and then rebind it afterward.
-> 
-> Alan Stern
->
->
-> .
->
-
-I think this approach not work. When reset BME, xhci controller is stopped and
-can't recover even BME is set enable later. According to xhci spec, it's appropriate.
-When rebind it afterward, with xhci stop, xhci driver would consider the
-xhci controller already died and it fails to work again.
-
-To recover xhci, now I rmmod xhci-pci.ko and then insmod it again.
+Feedback is welcome!
 
 Thanks,
-Tang
+Andrey Smirnov
 
+Changes since [v3]:
+
+    - Added a check for negative values to ucs1002_set_usb_type()
+
+Changes since [v2]:
+
+    - Fixed a bug pointed out by Lucas
+
+Changes since [v1]:
+
+    - Moved IRQ trigger specification to DT
+
+    - Fixed silent error paths in probe()
+    
+    - Dropped error message in ucs1002_set_max_current()
+
+    - Fixed license mismatch
+
+    - Changed the driver to configure the chip to BC1.2 CDP by default
+
+    - Made other small fixes as per feedback for v1
+
+[v3] https://lore.kernel.org/lkml/20190429195349.20335-1-andrew.smirnov@gmail.com
+[v2] https://lore.kernel.org/lkml/20190429054741.7286-1-andrew.smirnov@gmail.com
+[v1] https://lore.kernel.org/lkml/20190417084457.28747-1-andrew.smirnov@gmail.com/
+[page] https://www.microchip.com/wwwproducts/en/UCS1002-2
+[datasheet] https://ww1.microchip.com/downloads/en/DeviceDoc/UCS1002-2%20Data%20Sheet.pdf
+[original-effort] https://lore.kernel.org/lkml/1460705181-10493-1-git-send-email-enric.balletbo@collabora.com/
+
+Andrey Smirnov (3):
+  power: supply: core: Add POWER_SUPPLY_HEALTH_OVERCURRENT constant
+  power: supply: Add driver for Microchip UCS1002
+  dt-bindings: power: supply: Add bindings for Microchip UCS1002
+
+ .../power/supply/microchip,ucs1002.txt        |  27 +
+ drivers/power/supply/Kconfig                  |   9 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/power_supply_sysfs.c     |   2 +-
+ drivers/power/supply/ucs1002_power.c          | 646 ++++++++++++++++++
+ include/linux/power_supply.h                  |   1 +
+ 6 files changed, 685 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+ create mode 100644 drivers/power/supply/ucs1002_power.c
+
+-- 
+2.20.1
 
