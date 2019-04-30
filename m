@@ -2,76 +2,100 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF1C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C301C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F8521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="QEyLbGOE"
+	by mail.kernel.org (Postfix) with ESMTP id 5665F21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:42:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfD3NlA (ORCPT
+        id S1727141AbfD3NmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:41:00 -0400
-Received: from a9-99.smtp-out.amazonses.com ([54.240.9.99]:55078 "EHLO
-        a9-99.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726145AbfD3NlA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:41:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1556631659;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=beBu285rmqBNDiQNDcTz2JoVAX9N/IQQNqAAuEjGf9w=;
-        b=QEyLbGOEOCUS+pzuVbWu7CfTSXtyfCXiSu09ABe7LGl3MQTXMcdv5F6CYG7Mn9m9
-        Cr2tVt+C3bCs9O4bKVDgiFAK0s7ET2m4BRnOyzLL0HT/l29zNxm4UfubaGLY/kPzA8v
-        J2Qz0gIalm+NimzzeXwHdPJ+XRPsb0atevd5DX+M=
-Date:   Tue, 30 Apr 2019 13:40:59 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Christoph Hellwig <hch@infradead.org>
-cc:     "Luck, Tony" <tony.luck@intel.com>, Meelis Roos <mroos@linux.ee>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
-Subject: Re: DISCONTIGMEM is deprecated
-In-Reply-To: <20190429200957.GB27158@infradead.org>
-Message-ID: <0100016a6e7a22d8-dcd24705-508f-4acc-8883-e5d61f4c0fa4-000000@email.amazonses.com>
-References: <20190419094335.GJ18914@techsingularity.net> <20190419140521.GI7751@bombadil.infradead.org> <0100016a461809ed-be5bd8fc-9925-424d-9624-4a325a7a8860-000000@email.amazonses.com> <25cabb7c-9602-2e09-2fe0-cad3e54595fa@linux.ee> <20190428081353.GB30901@infradead.org>
- <3908561D78D1C84285E8C5FCA982C28F7E9140BA@ORSMSX104.amr.corp.intel.com> <20190429200957.GB27158@infradead.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 30 Apr 2019 09:42:04 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:45898 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfD3NmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:42:03 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 40B3FFB03;
+        Tue, 30 Apr 2019 15:41:59 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MVPIx0ODc5we; Tue, 30 Apr 2019 15:41:58 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id CC8274027E; Tue, 30 Apr 2019 15:41:57 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: imx8mq: Add a node for irqsteer
+Date:   Tue, 30 Apr 2019 15:41:57 +0200
+Message-Id: <a08a0a2fdd2090f4f42fe50d8ed70ee08b2fbcaf.1556631673.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.04.30-54.240.9.99
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019, Christoph Hellwig wrote:
+Add a node for the irqsteer interrupt controller found on the iMX8MQ
+SoC.
 
-> So maybe it it time to mark SN2 broken and see if anyone screams?
->
-> Without SN2 the whole machvec mess could basically go away - the
-> only real difference between the remaining machvecs is which iommu
-> if any we set up.
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-SPARSEMEM with VMEMMAP was developed to address these
-issues and allow one mapping scheme across the different platforms.
-
-You do not need DISCONTIGMEM support for SN2. And as far as I know (from a
-decade ago ok....) the distributions were using VMEMMAP instead.
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 2cc939cfbd75..ce0e137ec8ee 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -798,6 +798,27 @@
+ 			};
+ 		};
+ 
++		bus@32c00000 { /* AIPS4 */
++			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x32c00000 0x32c00000 0x400000>;
++
++			irqsteer: interrupt-controller@32e2d000 {
++				compatible = "fsl,imx8m-irqsteer",
++					     "fsl,imx-irqsteer";
++				reg = <0x32e2d000 0x1000>;
++				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
++				clock-names = "ipg";
++				fsl,channel = <0>;
++				fsl,num-irqs = <64>;
++				interrupt-controller;
++				interrupt-parent = <&gic>;
++				#interrupt-cells = <1>;
++			};
++		};
++
+ 		gpu: gpu@38000000 {
+ 			compatible = "vivante,gc";
+ 			reg = <0x38000000 0x40000>;
+-- 
+2.20.1
 
