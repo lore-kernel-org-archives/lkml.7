@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15AEC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB221C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDE421743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE6921743
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfD3Wtt (ORCPT
+        id S1727613AbfD3Wtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:49:49 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:45872 "EHLO
+        Tue, 30 Apr 2019 18:49:55 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:45901 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727469AbfD3Wts (ORCPT
+        with ESMTP id S1727574AbfD3Wtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:49:48 -0400
+        Tue, 30 Apr 2019 18:49:53 -0400
 Received: from Internal Mail-Server by MTLPINE2 (envelope-from parav@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 1 May 2019 01:49:45 +0300
+        with ESMTPS (AES256-SHA encrypted); 1 May 2019 01:49:48 +0300
 Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x3UMncnX009688;
-        Wed, 1 May 2019 01:49:44 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x3UMncnZ009688;
+        Wed, 1 May 2019 01:49:47 +0300
 From:   Parav Pandit <parav@mellanox.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         kwankhede@nvidia.com, alex.williamson@redhat.com
 Cc:     cjia@nvidia.com, parav@mellanox.com
-Subject: [PATCHv2 03/10] vfio/mdev: Drop redundant extern for exported symbols
-Date:   Tue, 30 Apr 2019 17:49:30 -0500
-Message-Id: <20190430224937.57156-4-parav@mellanox.com>
+Subject: [PATCHv2 05/10] vfio/mdev: Follow correct remove sequence
+Date:   Tue, 30 Apr 2019 17:49:32 -0500
+Message-Id: <20190430224937.57156-6-parav@mellanox.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190430224937.57156-1-parav@mellanox.com>
 References: <20190430224937.57156-1-parav@mellanox.com>
@@ -42,51 +42,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need use 'extern' for exported functions.
+mdev_remove_sysfs_files() should follow exact mirror sequence of a
+create, similar to what is followed in error unwinding path of
+mdev_create_sysfs_files().
 
-Acked-by: Cornelia Huck <cohuck@redhat.com>
+Fixes: 6a62c1dfb5c7 ("vfio/mdev: Re-order sysfs attribute creation")
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 Signed-off-by: Parav Pandit <parav@mellanox.com>
 ---
- include/linux/mdev.h | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/vfio/mdev/mdev_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-index d7aee90e5da5..4924d8038814 100644
---- a/include/linux/mdev.h
-+++ b/include/linux/mdev.h
-@@ -118,21 +118,20 @@ struct mdev_driver {
+diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+index 5193a0e0ce5a..cbf94b8165ea 100644
+--- a/drivers/vfio/mdev/mdev_sysfs.c
++++ b/drivers/vfio/mdev/mdev_sysfs.c
+@@ -280,7 +280,7 @@ int  mdev_create_sysfs_files(struct device *dev, struct mdev_type *type)
  
- #define to_mdev_driver(drv)	container_of(drv, struct mdev_driver, driver)
- 
--extern void *mdev_get_drvdata(struct mdev_device *mdev);
--extern void mdev_set_drvdata(struct mdev_device *mdev, void *data);
--extern const guid_t *mdev_uuid(struct mdev_device *mdev);
-+void *mdev_get_drvdata(struct mdev_device *mdev);
-+void mdev_set_drvdata(struct mdev_device *mdev, void *data);
-+const guid_t *mdev_uuid(struct mdev_device *mdev);
- 
- extern struct bus_type mdev_bus_type;
- 
--extern int  mdev_register_device(struct device *dev,
--				 const struct mdev_parent_ops *ops);
--extern void mdev_unregister_device(struct device *dev);
-+int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops);
-+void mdev_unregister_device(struct device *dev);
- 
--extern int  mdev_register_driver(struct mdev_driver *drv, struct module *owner);
--extern void mdev_unregister_driver(struct mdev_driver *drv);
-+int mdev_register_driver(struct mdev_driver *drv, struct module *owner);
-+void mdev_unregister_driver(struct mdev_driver *drv);
- 
--extern struct device *mdev_parent_dev(struct mdev_device *mdev);
--extern struct device *mdev_dev(struct mdev_device *mdev);
--extern struct mdev_device *mdev_from_dev(struct device *dev);
-+struct device *mdev_parent_dev(struct mdev_device *mdev);
-+struct device *mdev_dev(struct mdev_device *mdev);
-+struct mdev_device *mdev_from_dev(struct device *dev);
- 
- #endif /* MDEV_H */
+ void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type)
+ {
++	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
+ 	sysfs_remove_link(&dev->kobj, "mdev_type");
+ 	sysfs_remove_link(type->devices_kobj, dev_name(dev));
+-	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
+ }
 -- 
 2.19.2
 
