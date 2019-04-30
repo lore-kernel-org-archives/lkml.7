@@ -2,105 +2,70 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D210C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C70C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB9C20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8C521734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fVri6ote"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sWAEJBmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfD3PFO (ORCPT
+        id S1726198AbfD3PFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:05:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34244 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfD3PFO (ORCPT
+        Tue, 30 Apr 2019 11:05:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38328 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfD3PFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:05:14 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UF569i081840;
-        Tue, 30 Apr 2019 10:05:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556636706;
-        bh=vJWhXu0Jh+0tJ1eUhYoAiRXv//TbW/dkbRln1sv+k38=;
-        h=Date:From:To:Subject:References:In-Reply-To;
-        b=fVri6otet+nmdKkNhrUye+Xminen0sb6NvsbH3YMsiuazjD32ZVfL4ozmZDgULhqA
-         5BoL6Sj0HumfCfkVvQpwTqmb9EnX/4MHT5zbx9wMaMO1t8SsRZCUQTVdQzK5/XEkDT
-         v9kkCO2oJKFtRPiOMNy0Rt+Q75HiitC1rNRInNhY=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UF56Jx052350
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 10:05:06 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 10:05:06 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 10:05:06 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UF56j1078783;
-        Tue, 30 Apr 2019 10:05:06 -0500
-Date:   Tue, 30 Apr 2019 10:05:06 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Paul Cercueil <paul@crapouillou.net>, <od@zcrc.me>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: musb: Disable pullup in gadget setup
-Message-ID: <20190430150506.GF20993@uda0271908>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Paul Cercueil <paul@crapouillou.net>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190404093743.6470-1-paul@crapouillou.net>
- <20190404161046.GA30182@uda0271908>
+        Tue, 30 Apr 2019 11:05:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0xdy8/6cVPDCTA4KqHYwmMG/mADuOV15e+WMpCce+eQ=; b=sWAEJBmmETqq2/gocj40ak1yU
+        ZpviYJxIK/oPpIjAJwsgyrAs3pEUdTXq1ACOcROYeaS8R/6T6AiR2BN15WFOzgH8CVNVOfOIaSTmd
+        VeESS/wORMxI/dQ6j9U8WA/BF0OKM/keKw1E/qX3oY0W5zE1LBXoDqKiZHgNSljxosL+9zuV0GWJU
+        X/nzjE/5Z37n8Qquzi/sJKTHOD7mqqewb2lZbJuyzemuKl3/tQSG9Waey7oIGHMP9f23UKXOHzqO+
+        14PBU0YwXva41P5/c6kwhwfue7pLWP27TsJ1ErmAM399UoyxE6u+N7/5ZoOvuT9Ek4v92QY9uWzQG
+        GVCL5qXZw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLUKE-0001n4-5K; Tue, 30 Apr 2019 15:05:42 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DEADA29B2FDBB; Tue, 30 Apr 2019 17:05:35 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 17:05:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Perr Zhang <strongbox8@zoho.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, tglx@linutronix.de, stable@vger.kernel.org,
+        mingo@redhat.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: revert the order of calls in kvm_fast_pio()
+Message-ID: <20190430150535.GK2589@hirez.programming.kicks-ass.net>
+References: <20190430142423.3393-1-strongbox8@zoho.com>
+ <20190430143201.GH2589@hirez.programming.kicks-ass.net>
+ <20190430145724.GA32170@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190404161046.GA30182@uda0271908>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190430145724.GA32170@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-On Thu, Apr 04, 2019 at 11:10:46AM -0500, Bin Liu wrote:
-> On Thu, Apr 04, 2019 at 11:37:43AM +0200, Paul Cercueil wrote:
-> > The pullup may be already enabled before the driver is initialized.
-> > It has to be disabled at init time, as we cannot guarantee that a gadget
-> > driver will be bound to the UDC.
-> > 
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > ---
-> >  drivers/usb/musb/musb_gadget.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/usb/musb/musb_gadget.c b/drivers/usb/musb/musb_gadget.c
-> > index ffe462a657b1..094dc59c834c 100644
-> > --- a/drivers/usb/musb/musb_gadget.c
-> > +++ b/drivers/usb/musb/musb_gadget.c
-> > @@ -1794,6 +1794,7 @@ int musb_gadget_setup(struct musb *musb)
-> >  
-> >  	musb->is_active = 0;
-> >  	musb_platform_try_idle(musb, 0);
-> > +	musb_pullup(musb, 0);
-> >  
-> >  	status = usb_add_gadget_udc(musb->controller, &musb->g);
-> >  	if (status)
+On Tue, Apr 30, 2019 at 07:57:24AM -0700, Sean Christopherson wrote:
+> There's a more precise fix submitted for this bug[1].  In theory v2
+> already went out, but I still don't see it posted to the KVM list.
+> Either the KVM list or my mail client is being weird.
 > 
-> Applied.
+> [1] https://patchwork.kernel.org/patch/10919849/
 
-Sorry, I have dropped this patch from my tree. I realized the gadget
-core already defines callbacks to control the pullup. I think the
-proper fix should be calling usb_udc_vbus_handler() in musb gadget or
-glue layers.
-
--Bin.
+Thanks!
