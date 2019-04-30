@@ -6,182 +6,136 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10189C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24446C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E4B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E4A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QjHo7GC0"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="HrvHF61H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfD3Mj6 (ORCPT
+        id S1728496AbfD3MkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:39:58 -0400
+        Tue, 30 Apr 2019 08:40:04 -0400
 Received: from pegase1.c-s.fr ([93.17.236.30]:10276 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728084AbfD3Mi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:38:57 -0400
+        id S1728034AbfD3Miz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 08:38:55 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44th0Z3krWz9vD38;
-        Tue, 30 Apr 2019 14:38:54 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44th0X3cCYz9vD36;
+        Tue, 30 Apr 2019 14:38:52 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=QjHo7GC0; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=HrvHF61H; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 8R6cxy9lUxcR; Tue, 30 Apr 2019 14:38:54 +0200 (CEST)
+        with ESMTP id qcKjiFmINjSp; Tue, 30 Apr 2019 14:38:52 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44th0Z2jSnz9vD30;
-        Tue, 30 Apr 2019 14:38:54 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44th0X2ZS3z9vD30;
+        Tue, 30 Apr 2019 14:38:52 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556627934; bh=XvXA4BMh4E6TIZg6dxaZb2e6bZuem4Kr4mb92NmoWwk=;
+        t=1556627932; bh=FpWIdVhXPqB6vibTfnZhtBnlLfysFeUxuV/R0Sq2tt8=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=QjHo7GC09riyX1k3X58u6arozIlXejsrrIiXDw+eC1rkjrrjtvytadbAr9IAmKGkl
-         jvv6GEaO7kFFX2Si8VkNkNNMxuNb/7kcY5AUmMipPyqZ6UOqkYMpDKxIPmJDoPcQue
-         42MEDUkd6qv0Mv7QjZpAYthFoVhZXVmyc6BzT5OA=
+        b=HrvHF61Hd31XM7m4BiH5qt5XLcUXBam4p2I0mi2ThYNlMfnVi1tnWABJ/mAecJAYZ
+         090tQz9HmHMFDuRzAWYSik8SdgxidVR0/YTRNWtioZW8IOJ0pLRAJZld2tbnqQW8FN
+         B/zHXM1lv7YEgEwLSUxrHP+B7hPHTwAr/8tVuSQQ=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BAF068B8DF;
-        Tue, 30 Apr 2019 14:38:55 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 97D4B8B8DF;
+        Tue, 30 Apr 2019 14:38:53 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 68_IWAWmCRjB; Tue, 30 Apr 2019 14:38:55 +0200 (CEST)
+        with ESMTP id y54Sach3IEss; Tue, 30 Apr 2019 14:38:53 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7D7138B8C2;
-        Tue, 30 Apr 2019 14:38:55 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 69E878B8C2;
+        Tue, 30 Apr 2019 14:38:53 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 50DC6666F8; Tue, 30 Apr 2019 12:38:55 +0000 (UTC)
-Message-Id: <7a379bb42fc4433878d4451b05a5581985ed3afc.1556627571.git.christophe.leroy@c-s.fr>
+        id 43425666F8; Tue, 30 Apr 2019 12:38:53 +0000 (UTC)
+Message-Id: <f922ea7e0fc4c827d9255b285cf93d2a10cb9448.1556627571.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1556627571.git.christophe.leroy@c-s.fr>
 References: <cover.1556627571.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 06/16] powerpc/40x: Split and rename
- NORMAL_EXCEPTION_PROLOG
+Subject: [PATCH v3 04/16] powerpc/40x: Don't use SPRN_SPRG_SCRATCH2 in
+ EXCEPTION_PROLOG
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 30 Apr 2019 12:38:55 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 12:38:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch splits NORMAL_EXCEPTION_PROLOG in the same way as in
-head_8xx.S and head_32.S and renames it EXCEPTION_PROLOG() as well
-to match head_32.h
+Unlike said in the comment, r1 is not reused by the critical
+exception handler, as it uses a dedicated critirq_ctx stack.
+Decrementing r1 early is then unneeded.
+
+Should the above be valid, the code is crap buggy anyway as
+r1 gets some intermediate values that would jeopardise the
+whole process (for instance after mfspr   r1,SPRN_SPRG_THREAD)
+
+Using SPRN_SPRG_SCRATCH2 to save r1 is then not needed, r11 can be
+used instead. This avoids one mtspr and one mfspr and makes the
+prolog closer to what's done on 6xx and 8xx.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/head_40x.S | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ arch/powerpc/kernel/head_40x.S | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
 diff --git a/arch/powerpc/kernel/head_40x.S b/arch/powerpc/kernel/head_40x.S
-index cb95a5c17cea..1547750567b6 100644
+index a9c934f2319b..f49b0278e995 100644
 --- a/arch/powerpc/kernel/head_40x.S
 +++ b/arch/powerpc/kernel/head_40x.S
-@@ -103,10 +103,14 @@ _ENTRY(saved_ksp_limit)
+@@ -102,23 +102,20 @@ _ENTRY(saved_ksp_limit)
+  * Exception vector entry code. This code runs with address translation
   * turned off (i.e. using physical addresses). We assume SPRG_THREAD has
   * the physical address of the current task thread_struct.
+- * Note that we have to have decremented r1 before we write to any fields
+- * of the exception frame, since a critical interrupt could occur at any
+- * time, and it will write to the area immediately below the current r1.
   */
--#define NORMAL_EXCEPTION_PROLOG						     \
-+#define EXCEPTION_PROLOG						     \
+ #define NORMAL_EXCEPTION_PROLOG						     \
  	mtspr	SPRN_SPRG_SCRATCH0,r10;	/* save two registers to work with */\
  	mtspr	SPRN_SPRG_SCRATCH1,r11;					     \
+-	mtspr	SPRN_SPRG_SCRATCH2,r1;					     \
  	mfcr	r10;			/* save CR in r10 for now	   */\
-+	EXCEPTION_PROLOG_1;						     \
-+	EXCEPTION_PROLOG_2
-+
-+#define EXCEPTION_PROLOG_1						     \
  	mfspr	r11,SPRN_SRR1;		/* check whether user or kernel    */\
  	andi.	r11,r11,MSR_PR;						     \
+-	beq	1f;							     \
+-	mfspr	r1,SPRN_SPRG_THREAD;	/* if from user, start at top of   */\
+-	lwz	r1,TASK_STACK-THREAD(r1); /* this thread's kernel stack   */\
+-	addi	r1,r1,THREAD_SIZE;					     \
+-1:	subi	r1,r1,INT_FRAME_SIZE;	/* Allocate an exception frame     */\
  	tophys(r11,r1);							     \
-@@ -115,7 +119,9 @@ _ENTRY(saved_ksp_limit)
- 	lwz	r11,TASK_STACK-THREAD(r11); /* this thread's kernel stack */\
- 	addi	r11,r11,THREAD_SIZE;					     \
- 	tophys(r11,r11);						     \
--1:	subi	r11,r11,INT_FRAME_SIZE;	/* Allocate an exception frame     */\
-+1:	subi	r11,r11,INT_FRAME_SIZE	/* Allocate an exception frame     */
-+
-+#define EXCEPTION_PROLOG_2						     \
++	beq	1f;							     \
++	mfspr	r11,SPRN_SPRG_THREAD;	/* if from user, start at top of   */\
++	lwz	r11,TASK_STACK-THREAD(r11); /* this thread's kernel stack */\
++	addi	r11,r11,THREAD_SIZE;					     \
++	tophys(r11,r11);						     \
++1:	subi	r11,r11,INT_FRAME_SIZE;	/* Allocate an exception frame     */\
  	stw	r10,_CCR(r11);          /* save various registers	   */\
  	stw	r12,GPR12(r11);						     \
  	stw	r9,GPR9(r11);						     \
-@@ -205,7 +211,7 @@ label:
- 
- #define EXCEPTION(n, label, hdlr, xfer)				\
- 	START_EXCEPTION(n, label);				\
--	NORMAL_EXCEPTION_PROLOG;				\
-+	EXCEPTION_PROLOG;				\
- 	addi	r3,r1,STACK_FRAME_OVERHEAD;			\
- 	xfer(n, hdlr)
- 
-@@ -396,7 +402,7 @@ label:
-  * This is caused by a fetch from non-execute or guarded pages.
-  */
- 	START_EXCEPTION(0x0400, InstructionAccess)
--	NORMAL_EXCEPTION_PROLOG
-+	EXCEPTION_PROLOG
- 	mr	r4,r12			/* Pass SRR0 as arg2 */
- 	li	r5,0			/* Pass zero as arg3 */
- 	EXC_XFER_LITE(0x400, handle_page_fault)
-@@ -406,7 +412,7 @@ label:
- 
- /* 0x0600 - Alignment Exception */
- 	START_EXCEPTION(0x0600, Alignment)
--	NORMAL_EXCEPTION_PROLOG
-+	EXCEPTION_PROLOG
- 	mfspr	r4,SPRN_DEAR		/* Grab the DEAR and save it */
- 	stw	r4,_DEAR(r11)
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
-@@ -414,7 +420,7 @@ label:
- 
- /* 0x0700 - Program Exception */
- 	START_EXCEPTION(0x0700, ProgramCheck)
--	NORMAL_EXCEPTION_PROLOG
-+	EXCEPTION_PROLOG
- 	mfspr	r4,SPRN_ESR		/* Grab the ESR and save it */
- 	stw	r4,_ESR(r11)
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
-@@ -427,7 +433,7 @@ label:
- 
- /* 0x0C00 - System Call Exception */
- 	START_EXCEPTION(0x0C00,	SystemCall)
--	NORMAL_EXCEPTION_PROLOG
-+	EXCEPTION_PROLOG
- 	EXC_XFER_EE_LITE(0xc00, DoSyscall)
- 
- 	EXCEPTION(0x0D00, Trap_0D, unknown_exception, EXC_XFER_EE)
-@@ -733,7 +739,7 @@ label:
- 
- 	/* Programmable Interval Timer (PIT) Exception. (from 0x1000) */
- Decrementer:
--	NORMAL_EXCEPTION_PROLOG
-+	EXCEPTION_PROLOG
- 	lis	r0,TSR_PIS@h
- 	mtspr	SPRN_TSR,r0		/* Clear the PIT exception */
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
-@@ -741,7 +747,7 @@ Decrementer:
- 
- 	/* Fixed Interval Timer (FIT) Exception. (from 0x1010) */
- FITException:
--	NORMAL_EXCEPTION_PROLOG
-+	EXCEPTION_PROLOG
- 	addi	r3,r1,STACK_FRAME_OVERHEAD;
- 	EXC_XFER_EE(0x1010, unknown_exception)
- 
-@@ -759,7 +765,7 @@ WDTException:
-  * if they can't resolve the lightweight TLB fault.
-  */
- DataAccess:
--	NORMAL_EXCEPTION_PROLOG
-+	EXCEPTION_PROLOG
- 	mfspr	r5,SPRN_ESR		/* Grab the ESR, save it, pass arg3 */
- 	stw	r5,_ESR(r11)
- 	mfspr	r4,SPRN_DEAR		/* Grab the DEAR, save it, pass arg2 */
+@@ -128,11 +125,11 @@ _ENTRY(saved_ksp_limit)
+ 	stw	r12,GPR11(r11);						     \
+ 	mflr	r10;							     \
+ 	stw	r10,_LINK(r11);						     \
+-	mfspr	r10,SPRN_SPRG_SCRATCH2;					     \
+ 	mfspr	r12,SPRN_SRR0;						     \
+-	stw	r10,GPR1(r11);						     \
++	stw	r1,GPR1(r11);						     \
+ 	mfspr	r9,SPRN_SRR1;						     \
+-	stw	r10,0(r11);						     \
++	stw	r1,0(r11);						     \
++	tovirt(r1,r11);			/* set new kernel sp */	\
+ 	rlwinm	r9,r9,0,14,12;		/* clear MSR_WE (necessary?)	   */\
+ 	stw	r0,GPR0(r11);						     \
+ 	SAVE_4GPRS(3, r11);						     \
 -- 
 2.13.3
 
