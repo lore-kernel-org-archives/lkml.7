@@ -2,114 +2,97 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C57C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E41C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD0D2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1BC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:18:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="R3e+bOV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfD3HRK (ORCPT
+        id S1726428AbfD3HSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:17:10 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46125 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfD3HRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:17:08 -0400
-Received: by mail-qk1-f194.google.com with SMTP id w73so7509339qkb.13;
-        Tue, 30 Apr 2019 00:17:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wuhJyRYvZ9esfFTmLHI+19kmI+qg43HVpdDIPGRGgeQ=;
-        b=g/aRf6Mi8g/j19SW23CgD/Im4AVFPJSLxIILaf+3RFZPPHmbLFJSc4ge4DrkH9vMwS
-         zDybyeH2/ixTJ2KJTfksPXgdyRs+QEou6Wgx4gDMp5znfFj5kXdRdxZmeYHFYHugNRVW
-         1jxBjqHd4B44lcdzMDlK7LIruxq7oPYN5kvzF6bBmxw0VzsLLOMxzG6myHnmGwvOAStt
-         6NRvoAFRtlalKXlBJO0IA+Pv2w0T7bRSbSH9vx8zqhLTtF6SXe4gBjkVSIxHh/s32Z3p
-         bxe5wTaEBBM4nYqaUw9UfZShNJOMJbDn6rq9Rcwu5yxtz2A5RrQhE7Pn1J/cil6uO1Mw
-         paYw==
-X-Gm-Message-State: APjAAAUMT881skdoFpEmT4sRB83czZJXvTqUnPvr9S+JWNxvOAO/FyPr
-        GEnMbFpOLRd6nB08ksaFyxD5AkN1X8Q8rwI2xRo=
-X-Google-Smtp-Source: APXvYqz4FceHyHkim/0BxeERnYA/xGsIelFpSTapPHTYrrSQKx75sl0UWxdMB4/mMrlqmB2NxkApJVkK+Dzb6kSdiJE=
-X-Received: by 2002:ae9:ee15:: with SMTP id i21mr47207016qkg.107.1556608626808;
- Tue, 30 Apr 2019 00:17:06 -0700 (PDT)
+        Tue, 30 Apr 2019 03:18:02 -0400
+Received: from first.geanix.com ([116.203.34.67]:43578 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbfD3HSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:18:02 -0400
+Received: from localhost (unknown [193.163.1.7])
+        by first.geanix.com (Postfix) with ESMTPSA id AC378308E8F;
+        Tue, 30 Apr 2019 07:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1556608674; bh=4rqV1Wk3WHJpxTLnolP66mxNSRcVmroFO5cATlZaLUI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=R3e+bOV/z04aUZC05P782AkVNVzP1SWU6XSRxW2w8ynpYLunNL+dyGNphRhx36lGF
+         WjJMgnNJQ2FnLBk85yOPRPFau/Bk5ioVFxGfGzL/WYX1UH6OJtH9u2dZ5UU9i5zarK
+         ZHcNq3E7zfzfhNhiGQtuCUjLXtIwwYnG0GlWSaSzaUQ2JPmUdDmopfp+DI6pHFVdI1
+         /gTHirVWGZD6zl15W4rZBHJRlsUf1AGFkobu6QtDmlp++z8JJE/tvE0NdXj1xOjUDG
+         hmhlbnJQIQ1jFd8x/zd+xzrjSVeaFKX+47+rCrODl3nahf0/ug/66D0HWHhc4zgwXC
+         tuKvjAhFq8A9Q==
+From:   Esben Haabendal <esben@geanix.com>
+To:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/12] net: ll_temac: x86_64 support
+Date:   Tue, 30 Apr 2019 09:17:47 +0200
+Message-Id: <20190430071759.2481-1-esben@geanix.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190429083422.4356-1-esben@geanix.com>
+References: <20190429083422.4356-1-esben@geanix.com>
 MIME-Version: 1.0
-References: <20190430010037.6216-1-natechancellor@gmail.com>
-In-Reply-To: <20190430010037.6216-1-natechancellor@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Apr 2019 09:16:50 +0200
-Message-ID: <CAK8P3a0gAnruPgGMFcAfoHpj_zDnsn-RJjYiYUXDDj-CrwoO8A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Enable -Wsometimes-uninitialized
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 3:01 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> This is Clang's version of GCC's -Wmaybe-uninitialized. Up to this
-> point, it has not been used because -Wuninitialized has been disabled,
-> which also turns off -Wsometimes-uninitialized, meaning that we miss out
-> on finding some bugs [1]. In my experience, it appears to be more
-> accurate than GCC and catch some things that GCC can't.
->
-> All of these warnings have now been fixed in -next across arm, arm64,
-> and x86_64 defconfig/allyesconfig so this should be enabled for everyone
-> to prevent more from easily creeping in.
->
-> As of next-20190429:
->
-> $ git log --oneline --grep="sometimes-uninitialized" | wc -l
-> 45
->
-> [1]: https://lore.kernel.org/lkml/86649ee4-9794-77a3-502c-f4cd10019c36@lca.pw/
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/381
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->
-> Masahiro, I am not sure how you want to handle merging this with regards
-> to all of the patches floating around in -next but I wanted to send this
-> out to let everyone know this is ready to be turned on.
->
-> Arnd, are there many remaning -Wsometimes-uninitialized warnings in
-> randconfigs?
+This patch series adds support for use of ll_temac driver with
+platform_data configuration and fixes endianess and 64-bit problems so
+that it can be used on x86_64 platform.
 
-No, I don't see any with the patches that I submitted. I haven't checked
-if there are any that still need to get merged into linux-next though.
+A few bugfixes are also included.
 
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 768306add591..f4332981ea85 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -72,5 +72,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, format)
->  KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
->  KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
->  KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
-> +KBUILD_CFLAGS += $(call cc-option, -Wsometimes-uninitialized)
->  endif
->  endif
+Changes since v2:
+  - Fixed lp->indirect_mutex initialization regression for OF
+    platforms introduced in v2
 
-This doesn't look right. Shouldn't you remove the line that turns off
--Wuninitilized
-instead of adding only -Wsometimes-uninitialized?
+Changes since v1:
+  - Make indirect_mutex specification mandatory when using platform_data
+  - Move header to include/linux/platform_data
+  - Enable COMPILE_TEST for XILINX_LL_TEMAC
+  - Rebased to v5.1-rc7
 
-If we warn about the instances that may or may not be wrong, we should
-also warn about those that are provably wrong.
 
-        Arnd
+Esben Haabendal (12):
+  net: ll_temac: Fix and simplify error handling by using devres
+    functions
+  net: ll_temac: Extend support to non-device-tree platforms
+  net: ll_temac: Fix support for 64-bit platforms
+  net: ll_temac: Add support for non-native register endianness
+  net: ll_temac: Fix support for little-endian platforms
+  net: ll_temac: Allow use on x86 platforms
+  net: ll_temac: Support indirect_mutex share within TEMAC IP
+  net: ll_temac: Fix iommu/swiotlb leak
+  net: ll_temac: Fix bug causing buffer descriptor overrun
+  net: ll_temac: Replace bad usage of msleep() with usleep_range()
+  net: ll_temac: Allow configuration of IRQ coalescing
+  net: ll_temac: Enable DMA when ready, not before
+
+ drivers/net/ethernet/xilinx/Kconfig           |   5 +-
+ drivers/net/ethernet/xilinx/ll_temac.h        |  26 +-
+ drivers/net/ethernet/xilinx/ll_temac_main.c   | 519 +++++++++++++++++---------
+ drivers/net/ethernet/xilinx/ll_temac_mdio.c   |  53 +--
+ include/linux/platform_data/xilinx-ll-temac.h |  32 ++
+ 5 files changed, 432 insertions(+), 203 deletions(-)
+ create mode 100644 include/linux/platform_data/xilinx-ll-temac.h
+
+-- 
+2.4.11
+
