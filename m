@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD711C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386ADC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD97C21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A4D21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624704;
-	bh=/1f/prvhfIyLJ4CXqV7l33F0hU6K9Ft5iwbrXw6u2qI=;
+	s=default; t=1556624710;
+	bh=3Tq88hR5hv0Ak6dU50bZT9K8PkyxvQU6ZbbPLIXGtXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EoIvzsXkW3irsCr1zQ2+5MSU3mI0Tc4dch2DLbXIjs8OZL4e6zoSqbMaows/tAaUJ
-	 hZqxj5UBdfsMut/SwZWyihfmV+Q30mPhoy7E/xe6oRxxLhLJm3wJp7lEa9ETe4pWlh
-	 waI8rZEpFKqL7tfuzUc/frt46AVTLGIOFWmJNqr0=
+	b=eNVtVDbYfoEgJPelWbVijw3/4tTTEPJNlv0RUPrHfQCqtbRm48kDjuadEP12bqM/l
+	 x+Y7qEAJSNhvAQsLjv1hNPEfRO9ECcLhVgq3hWRVgvt8nAOmcQdRppBtvCSRfi0wRd
+	 tAVTUWX7Y5HZ90WuKG0tjQIxlp0fnrXTJEMF0TmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbfD3LpD (ORCPT
+        id S1730346AbfD3LpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbfD3LpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:00 -0400
+        id S1729535AbfD3LpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E91F721670;
-        Tue, 30 Apr 2019 11:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1668921670;
+        Tue, 30 Apr 2019 11:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624700;
-        bh=/1f/prvhfIyLJ4CXqV7l33F0hU6K9Ft5iwbrXw6u2qI=;
+        s=default; t=1556624705;
+        bh=3Tq88hR5hv0Ak6dU50bZT9K8PkyxvQU6ZbbPLIXGtXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JmFdV+qs7aPZ23RiJJ70BejVEZ8wikFQpAmaLBnJ55t5CsQjn3nx7/LGQIBCnBX28
-         /K/3djNDLzPVcpwhtjG3vU7C5KupBju4j0ROl7E7G3Wt7WEfeYUAI9Djks+F2FfPfs
-         k+PFHytBOQDyHbCqUzcSpDHmrgetoRWaQlldKS2I=
+        b=PxGDzFW5kJzikREv3aVuKWr4mluFGhdD6FbxxHOdQCCuPXTVk4EElg/IMHzg7ZswA
+         lxHbYvYNtwBFOwBhgcRVj3PVaZqMJnNAuJinslth8qcxxvKA28ArtSZexM0OpSZsCB
+         mDGeuvDEhlQZBulMGRy+CBMELhinOWF+vN5ym2ew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.19 038/100] nfsd: Dont release the callback slot unless it was actually held
-Date:   Tue, 30 Apr 2019 13:38:07 +0200
-Message-Id: <20190430113610.756745508@linuxfoundation.org>
+        stable@vger.kernel.org, Harry Pan <harry.pan@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, gs0622@gmail.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 040/100] perf/x86/intel: Update KBL Package C-state events to also include PC8/PC9/PC10 counters
+Date:   Tue, 30 Apr 2019 13:38:09 +0200
+Message-Id: <20190430113611.050594851@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,82 +67,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Harry Pan <harry.pan@intel.com>
 
-commit e6abc8caa6deb14be2a206253f7e1c5e37e9515b upstream.
+commit 82c99f7a81f28f8c1be5f701c8377d14c4075b10 upstream.
 
-If there are multiple callbacks queued, waiting for the callback
-slot when the callback gets shut down, then they all currently
-end up acting as if they hold the slot, and call
-nfsd4_cb_sequence_done() resulting in interesting side-effects.
+Kaby Lake (and Coffee Lake) has PC8/PC9/PC10 residency counters.
 
-In addition, the 'retry_nowait' path in nfsd4_cb_sequence_done()
-causes a loop back to nfsd4_cb_prepare() without first freeing the
-slot, which causes a deadlock when nfsd41_cb_get_slot() gets called
-a second time.
+This patch updates the list of Kaby/Coffee Lake PMU event counters
+from the snb_cstates[] list of events to the hswult_cstates[]
+list of events, which keeps all previously supported events and
+also adds the PKG_C8, PKG_C9 and PKG_C10 residency counters.
 
-This patch therefore adds a boolean to track whether or not the
-callback did pick up the slot, so that it can do the right thing
-in these 2 cases.
+This allows user space tools to profile them through the perf interface.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Harry Pan <harry.pan@intel.com>
+Cc: <stable@vger.kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: gs0622@gmail.com
+Link: http://lkml.kernel.org/r/20190424145033.1924-1-harry.pan@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4callback.c |    8 +++++++-
- fs/nfsd/state.h        |    1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/cstate.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -926,8 +926,9 @@ static void nfsd4_cb_prepare(struct rpc_
- 	cb->cb_seq_status = 1;
- 	cb->cb_status = 0;
- 	if (minorversion) {
--		if (!nfsd41_cb_get_slot(clp, task))
-+		if (!cb->cb_holds_slot && !nfsd41_cb_get_slot(clp, task))
- 			return;
-+		cb->cb_holds_slot = true;
- 	}
- 	rpc_call_start(task);
- }
-@@ -954,6 +955,9 @@ static bool nfsd4_cb_sequence_done(struc
- 		return true;
- 	}
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -76,15 +76,15 @@
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C8_RESIDENCY:  Package C8 Residency Counter.
+  *			       perf code: 0x04
+- *			       Available model: HSW ULT,CNL
++ *			       Available model: HSW ULT,KBL,CNL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C9_RESIDENCY:  Package C9 Residency Counter.
+  *			       perf code: 0x05
+- *			       Available model: HSW ULT,CNL
++ *			       Available model: HSW ULT,KBL,CNL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
+  *			       perf code: 0x06
+- *			       Available model: HSW ULT,GLM,CNL
++ *			       Available model: HSW ULT,KBL,GLM,CNL
+  *			       Scope: Package (physical package)
+  *
+  */
+@@ -572,8 +572,8 @@ static const struct x86_cpu_id intel_cst
+ 	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_DESKTOP, snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X, snb_cstates),
  
-+	if (!cb->cb_holds_slot)
-+		goto need_restart;
-+
- 	switch (cb->cb_seq_status) {
- 	case 0:
- 		/*
-@@ -992,6 +996,7 @@ static bool nfsd4_cb_sequence_done(struc
- 			cb->cb_seq_status);
- 	}
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE,  snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_DESKTOP, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE,  hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_DESKTOP, hswult_cstates),
  
-+	cb->cb_holds_slot = false;
- 	clear_bit(0, &clp->cl_cb_slot_busy);
- 	rpc_wake_up_next(&clp->cl_cb_waitq);
- 	dprintk("%s: freed slot, new seqid=%d\n", __func__,
-@@ -1199,6 +1204,7 @@ void nfsd4_init_cb(struct nfsd4_callback
- 	cb->cb_seq_status = 1;
- 	cb->cb_status = 0;
- 	cb->cb_need_restart = false;
-+	cb->cb_holds_slot = false;
- }
+ 	X86_CSTATES_MODEL(INTEL_FAM6_CANNONLAKE_MOBILE, cnl_cstates),
  
- void nfsd4_run_cb(struct nfsd4_callback *cb)
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -70,6 +70,7 @@ struct nfsd4_callback {
- 	int cb_seq_status;
- 	int cb_status;
- 	bool cb_need_restart;
-+	bool cb_holds_slot;
- };
- 
- struct nfsd4_callback_ops {
 
 
