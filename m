@@ -2,66 +2,67 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA6C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BE8C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403E72081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C595A2081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfD3Q0b (ORCPT
+        id S1726579AbfD3Q0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:26:31 -0400
-Received: from foss.arm.com ([217.140.101.70]:49836 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3Q0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:26:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B78D374;
-        Tue, 30 Apr 2019 09:26:30 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4949C3F5C1;
-        Tue, 30 Apr 2019 09:26:29 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 17:26:26 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.or
-Subject: Re: [PATCH] io_uring: free allocated io_memory once
-Message-ID: <20190430162626.GC8314@lakrids.cambridge.arm.com>
-References: <20190430162018.40040-1-mark.rutland@arm.com>
- <89bc35e4-ae74-a15f-03fd-9f766c86315a@kernel.dk>
+        Tue, 30 Apr 2019 12:26:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44674 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725942AbfD3Q0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:26:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A8B90AE64;
+        Tue, 30 Apr 2019 16:26:52 +0000 (UTC)
+From:   mrostecki@opensuse.org
+Cc:     Michal Rostecki <mrostecki@opensuse.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] bpf, libbpf: Add .so files to gitignore
+Date:   Tue, 30 Apr 2019 18:25:01 +0200
+Message-Id: <20190430162501.13256-1-mrostecki@opensuse.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <89bc35e4-ae74-a15f-03fd-9f766c86315a@kernel.dk>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 10:22:23AM -0600, Jens Axboe wrote:
-> On 4/30/19 10:20 AM, Mark Rutland wrote:
-> > -	io_mem_free(ctx->sq_ring);
-> > -	io_mem_free(ctx->sq_sqes);
-> > -	io_mem_free(ctx->cq_ring);
-> > +	if (ctx->sq_ring)
-> > +		io_mem_free(ctx->sq_ring);
-> > +	if (ctx->sq_sqes)
-> > +		io_mem_free(ctx->sq_sqes);
-> > +	if (ctx->cq_ring)
-> > +		io_mem_free(ctx->cq_ring);
-> 
-> Please just make io_mem_free() handle a NULL pointer so we don't need
-> these checks.
+From: Michal Rostecki <mrostecki@opensuse.org>
 
-Sure; I'll spin a v2 momentarily.
+This change adds libbpf shared libraries to .gitignore which were
+previously not included there.
 
-Thanks,
-Mark.
+Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+---
+ tools/lib/bpf/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/lib/bpf/.gitignore b/tools/lib/bpf/.gitignore
+index 7d9e182a1f51..0b181b23f97d 100644
+--- a/tools/lib/bpf/.gitignore
++++ b/tools/lib/bpf/.gitignore
+@@ -1,4 +1,5 @@
+ libbpf_version.h
+ libbpf.pc
++libbpf.so.0*
+ FEATURE-DUMP.libbpf
+ test_libbpf
+-- 
+2.21.0
+
