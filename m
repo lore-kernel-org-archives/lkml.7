@@ -2,55 +2,85 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DA4C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FEFC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5E421707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C116121734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:33:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dDD5+vZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfD3Lcq (ORCPT
+        id S1727570AbfD3LdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:32:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41544 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726202AbfD3Lcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:32:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 63784AF95;
-        Tue, 30 Apr 2019 11:32:44 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 13:32:43 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] livepatch: Use static buffer for debugging messages
- under rq lock
-In-Reply-To: <20190430091049.30413-3-pmladek@suse.com>
-Message-ID: <alpine.LSU.2.21.1904301332310.8507@pobox.suse.cz>
-References: <20190430091049.30413-1-pmladek@suse.com> <20190430091049.30413-3-pmladek@suse.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 30 Apr 2019 07:33:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38432 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfD3Lc7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:32:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bTJakeGtXfCFO8teZRiPCc85hwY+hi5jOYp83RF2vK8=; b=dDD5+vZ4p7vFzthS3GF6A0TlP
+        ou3DVrSmopmodYFGsBbdcncayzVXwQG3COqT57jRiBZUGiydOiTieZk5+UCHSbNOGdwMhA3TK3I5f
+        tZ3149OtnCiWjvgs+yLvDEwj3ntD3Kf0bfxa/+FEReeeRVjYs5JGFmBcNOf9H1ulIRxXk5aILadkd
+        8td8Z7QYGelf3PNUPabK7mtdtZ/YBJie8Lr7Jfb3avfZnu6GGONkihvjPeK56qnyAEgV4CSxuMSKS
+        5VCu/Q1DOFX/FBg7oC5ZE6sEaKbjonvJSX/oXJGOGcS4KM4fNZ2FfQzjL/fS2ZaHkhjEDrsU5wjOp
+        SkVGgORmA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLR0H-00069j-G0; Tue, 30 Apr 2019 11:32:53 +0000
+Date:   Tue, 30 Apr 2019 04:32:53 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Tom Murphy <tmurphy@arista.com>,
+        iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        David Brown <david.brown@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        murphyt7@tcd.ie, David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH v2 3/4] iommu/dma-iommu: Use the dev->coherent_dma_mask
+Message-ID: <20190430113253.GA23210@infradead.org>
+References: <20190430002952.18909-1-tmurphy@arista.com>
+ <20190430002952.18909-4-tmurphy@arista.com>
+ <20190430111222.GA3191@infradead.org>
+ <da835ce2-f73e-3035-e1d7-d3028cc1a838@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da835ce2-f73e-3035-e1d7-d3028cc1a838@arm.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019, Petr Mladek wrote:
-
-> klp_try_switch_task() is called under klp_mutex. The buffer for
-> debugging messages might be static.
+On Tue, Apr 30, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
+> > Hmm, I don't think we need the DMA mask for the MSI mapping, this
+> > should probably always use a 64-bit mask.
 > 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> If that were true then we wouldn't need DMA masks for regular mappings
+> either. If we have to map the MSI doorbell at all, then we certainly have to
+> place it at an IOVA that the relevant device is actually capable of
+> addressing.
 
-Acked-by: Miroslav Benes <mbenes@suse.cz>
-
-Miroslav
+Well, as shown by the patch below we don't even look at the DMA mask
+for the MSI page - we just allocate from bottom to top.
