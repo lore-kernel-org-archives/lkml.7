@@ -4,61 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88701C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417D8C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58FDE21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117B22075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625276;
-	bh=qbLCJNg0D11LxC1eJ3fp26o5Cig2xtZy+vtQ0WHfRbc=;
+	s=default; t=1556625294;
+	bh=KEhExBwW+bHSSxCUnJm+SSFsXODCLJjrRJKT/oBSk9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v2Uk7HpZWDe/3PuaTbf0U06xeVqeZUbQnxb7HFroZlnRsBlgIgoBYu1iAnbnDFyI2
-	 TxZXL2xxKuhOZYg4tYTmeZLj+Sd6joAQmb22967leuyuA6C2djGisuW4bW9JaqzRxK
-	 ZFGZRT8zuJj244tBJJ4BpkTGNHRHx+iusEmPtSPc=
+	b=foNkFJn3uzTkfNUzG4RYLmR5O+OmraI0DqfMtPWPYQUZpQOmTpo3hLVrBweZKgby0
+	 JHgOG5Frvk2WtilGtRHGJGEG0GTxfGaWmErnTrY1OLrDMvDVCFcK+j8mFBQFw25vjY
+	 M91uTIiK/+8dlxDmm0wtChURtSPXoDSFf+EYCu3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731130AbfD3LuF (ORCPT
+        id S1731068AbfD3Ltu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36820 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731117AbfD3LuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:50:02 -0400
+        id S1731048AbfD3Ltr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3419221707;
-        Tue, 30 Apr 2019 11:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09B152173E;
+        Tue, 30 Apr 2019 11:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625001;
-        bh=qbLCJNg0D11LxC1eJ3fp26o5Cig2xtZy+vtQ0WHfRbc=;
+        s=default; t=1556624986;
+        bh=KEhExBwW+bHSSxCUnJm+SSFsXODCLJjrRJKT/oBSk9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFL7VuMIMVOcY2Df4X8qBixtIJmoZGAL7UgkeT7oYjuoaqS0UjKtV2OVX7WbTJd6R
-         h/4eZONrdSjPgUnhF8QgFEdfGrAul4RRaL4v7Mn/FyXvhIoh0UFGBsHfelA3x3JvE1
-         diRmbgv3n1uCzdpmC15qlg4+1Y/C7DIwUlKI3710=
+        b=XZoYwNBcROLj7o9Fl14Pk5D4tcdd2YMp94cS1mwVEFZcRvhYkA5+fCDU7qR4B5ani
+         A/9458vRoJ8+t1l3mSz31lL/LpW4pKLqglmncqp/vKStMQW8s3nM+DQ5wy0j/NjbED
+         BXYPH6KjFpZn3BxpQtGV1KrR2D2v71sKyrwV6+RQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.0 19/89] trace: Fix preempt_enable_no_resched() abuse
-Date:   Tue, 30 Apr 2019 13:38:10 +0200
-Message-Id: <20190430113610.964519574@linuxfoundation.org>
+        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 5.0 46/89] USB: Add new USB LPM helpers
+Date:   Tue, 30 Apr 2019 13:38:37 +0200
+Message-Id: <20190430113611.891831881@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -71,48 +58,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit d6097c9e4454adf1f8f2c9547c2fa6060d55d952 upstream.
+commit 7529b2574a7aaf902f1f8159fbc2a7caa74be559 upstream.
 
-Unless the very next line is schedule(), or implies it, one must not use
-preempt_enable_no_resched(). It can cause a preemption to go missing and
-thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+Use new helpers to make LPM enabling/disabling more clear.
 
-Link: http://lkml.kernel.org/r/20190423200318.GY14281@hirez.programming.kicks-ass.net
+This is a preparation to subsequent patch.
 
-Cc: Waiman Long <longman@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: the arch/x86 maintainers <x86@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: huang ying <huang.ying.caritas@gmail.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: stable@vger.kernel.org
-Fixes: 2c2d7329d8af ("tracing/ftrace: use preempt_enable_no_resched_notrace in ring_buffer_time_stamp()")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: stable <stable@vger.kernel.org> # after much soaking
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ring_buffer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/driver.c  |   12 +++++++++++-
+ drivers/usb/core/hub.c     |   12 ++++++------
+ drivers/usb/core/message.c |    2 +-
+ drivers/usb/core/sysfs.c   |    5 ++++-
+ drivers/usb/core/usb.h     |   10 ++++++++--
+ 5 files changed, 30 insertions(+), 11 deletions(-)
 
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -776,7 +776,7 @@ u64 ring_buffer_time_stamp(struct ring_b
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -1896,7 +1896,7 @@ int usb_runtime_idle(struct device *dev)
+ 	return -EBUSY;
+ }
  
- 	preempt_disable_notrace();
- 	time = rb_time_stamp(buffer);
--	preempt_enable_no_resched_notrace();
-+	preempt_enable_notrace();
+-int usb_set_usb2_hardware_lpm(struct usb_device *udev, int enable)
++static int usb_set_usb2_hardware_lpm(struct usb_device *udev, int enable)
+ {
+ 	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
+ 	int ret = -EPERM;
+@@ -1913,6 +1913,16 @@ int usb_set_usb2_hardware_lpm(struct usb
+ 	return ret;
+ }
  
- 	return time;
++int usb_enable_usb2_hardware_lpm(struct usb_device *udev)
++{
++	return usb_set_usb2_hardware_lpm(udev, 1);
++}
++
++int usb_disable_usb2_hardware_lpm(struct usb_device *udev)
++{
++	return usb_set_usb2_hardware_lpm(udev, 0);
++}
++
+ #endif /* CONFIG_PM */
+ 
+ struct bus_type usb_bus_type = {
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3221,7 +3221,7 @@ int usb_port_suspend(struct usb_device *
+ 
+ 	/* disable USB2 hardware LPM */
+ 	if (udev->usb2_hw_lpm_enabled == 1)
+-		usb_set_usb2_hardware_lpm(udev, 0);
++		usb_disable_usb2_hardware_lpm(udev);
+ 
+ 	if (usb_disable_ltm(udev)) {
+ 		dev_err(&udev->dev, "Failed to disable LTM before suspend\n");
+@@ -3260,7 +3260,7 @@ int usb_port_suspend(struct usb_device *
+  err_ltm:
+ 		/* Try to enable USB2 hardware LPM again */
+ 		if (udev->usb2_hw_lpm_capable == 1)
+-			usb_set_usb2_hardware_lpm(udev, 1);
++			usb_enable_usb2_hardware_lpm(udev);
+ 
+ 		if (udev->do_remote_wakeup)
+ 			(void) usb_disable_remote_wakeup(udev);
+@@ -3544,7 +3544,7 @@ int usb_port_resume(struct usb_device *u
+ 	} else  {
+ 		/* Try to enable USB2 hardware LPM */
+ 		if (udev->usb2_hw_lpm_capable == 1)
+-			usb_set_usb2_hardware_lpm(udev, 1);
++			usb_enable_usb2_hardware_lpm(udev);
+ 
+ 		/* Try to enable USB3 LTM */
+ 		usb_enable_ltm(udev);
+@@ -4435,7 +4435,7 @@ static void hub_set_initial_usb2_lpm_pol
+ 	if ((udev->bos->ext_cap->bmAttributes & cpu_to_le32(USB_BESL_SUPPORT)) ||
+ 			connect_type == USB_PORT_CONNECT_TYPE_HARD_WIRED) {
+ 		udev->usb2_hw_lpm_allowed = 1;
+-		usb_set_usb2_hardware_lpm(udev, 1);
++		usb_enable_usb2_hardware_lpm(udev);
+ 	}
+ }
+ 
+@@ -5650,7 +5650,7 @@ static int usb_reset_and_verify_device(s
+ 	 * It will be re-enabled by the enumeration process.
+ 	 */
+ 	if (udev->usb2_hw_lpm_enabled == 1)
+-		usb_set_usb2_hardware_lpm(udev, 0);
++		usb_disable_usb2_hardware_lpm(udev);
+ 
+ 	/* Disable LPM while we reset the device and reinstall the alt settings.
+ 	 * Device-initiated LPM, and system exit latency settings are cleared
+@@ -5753,7 +5753,7 @@ static int usb_reset_and_verify_device(s
+ 
+ done:
+ 	/* Now that the alt settings are re-installed, enable LTM and LPM. */
+-	usb_set_usb2_hardware_lpm(udev, 1);
++	usb_enable_usb2_hardware_lpm(udev);
+ 	usb_unlocked_enable_lpm(udev);
+ 	usb_enable_ltm(udev);
+ 	usb_release_bos_descriptor(udev);
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1244,7 +1244,7 @@ void usb_disable_device(struct usb_devic
+ 		}
+ 
+ 		if (dev->usb2_hw_lpm_enabled == 1)
+-			usb_set_usb2_hardware_lpm(dev, 0);
++			usb_disable_usb2_hardware_lpm(dev);
+ 		usb_unlocked_disable_lpm(dev);
+ 		usb_disable_ltm(dev);
+ 
+--- a/drivers/usb/core/sysfs.c
++++ b/drivers/usb/core/sysfs.c
+@@ -528,7 +528,10 @@ static ssize_t usb2_hardware_lpm_store(s
+ 
+ 	if (!ret) {
+ 		udev->usb2_hw_lpm_allowed = value;
+-		ret = usb_set_usb2_hardware_lpm(udev, value);
++		if (value)
++			ret = usb_enable_usb2_hardware_lpm(udev);
++		else
++			ret = usb_disable_usb2_hardware_lpm(udev);
+ 	}
+ 
+ 	usb_unlock_device(udev);
+--- a/drivers/usb/core/usb.h
++++ b/drivers/usb/core/usb.h
+@@ -92,7 +92,8 @@ extern int usb_remote_wakeup(struct usb_
+ extern int usb_runtime_suspend(struct device *dev);
+ extern int usb_runtime_resume(struct device *dev);
+ extern int usb_runtime_idle(struct device *dev);
+-extern int usb_set_usb2_hardware_lpm(struct usb_device *udev, int enable);
++extern int usb_enable_usb2_hardware_lpm(struct usb_device *udev);
++extern int usb_disable_usb2_hardware_lpm(struct usb_device *udev);
+ 
+ #else
+ 
+@@ -112,7 +113,12 @@ static inline int usb_autoresume_device(
+ 	return 0;
+ }
+ 
+-static inline int usb_set_usb2_hardware_lpm(struct usb_device *udev, int enable)
++static inline int usb_enable_usb2_hardware_lpm(struct usb_device *udev)
++{
++	return 0;
++}
++
++static inline int usb_disable_usb2_hardware_lpm(struct usb_device *udev)
+ {
+ 	return 0;
  }
 
 
