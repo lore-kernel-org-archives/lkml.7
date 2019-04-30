@@ -2,53 +2,52 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27115C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD711C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF73821707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD97C21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624702;
-	bh=Qv2Evd3CgQZwK5SPydDwljCIPXexZ5jejr5XCiNlUSM=;
+	s=default; t=1556624704;
+	bh=/1f/prvhfIyLJ4CXqV7l33F0hU6K9Ft5iwbrXw6u2qI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YtSYfz/EIk/JeG7Nh+P1fuad5Z4oWWPASs5MWsghEALvXhHRlX+kQ4l5O+Zsh4Ulf
-	 8a2uVVj82QGhZNIgtb43E26DEaPKikPZFEhaJFegXxuaOEz+e0Y4vJAmz6KLlzfF0K
-	 L0kv1yI3//7xwZBNSVsJicsDj18rvoXETndmzk0U=
+	b=EoIvzsXkW3irsCr1zQ2+5MSU3mI0Tc4dch2DLbXIjs8OZL4e6zoSqbMaows/tAaUJ
+	 hZqxj5UBdfsMut/SwZWyihfmV+Q30mPhoy7E/xe6oRxxLhLJm3wJp7lEa9ETe4pWlh
+	 waI8rZEpFKqL7tfuzUc/frt46AVTLGIOFWmJNqr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbfD3LpA (ORCPT
+        id S1730324AbfD3LpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbfD3Lo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:44:56 -0400
+        id S1730284AbfD3LpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C35A321707;
-        Tue, 30 Apr 2019 11:44:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E91F721670;
+        Tue, 30 Apr 2019 11:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624695;
-        bh=Qv2Evd3CgQZwK5SPydDwljCIPXexZ5jejr5XCiNlUSM=;
+        s=default; t=1556624700;
+        bh=/1f/prvhfIyLJ4CXqV7l33F0hU6K9Ft5iwbrXw6u2qI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zcUxXR1SIgPCfaB+RhlImXs8yxV/a4YMEsTpRqd55LkcvwLmBz+TMYp0fcHjmpfug
-         vRl0IWZ/r0Rr0zp7FSFVbF+aTXu7MvdmcOd+6Nk7GAgVPmYy2cSB1mlf1+yaYQJypA
-         vXP1Y2Z1HQxjqy6kF/tK0SiPv6M861gD8SBVjcO8=
+        b=JmFdV+qs7aPZ23RiJJ70BejVEZ8wikFQpAmaLBnJ55t5CsQjn3nx7/LGQIBCnBX28
+         /K/3djNDLzPVcpwhtjG3vU7C5KupBju4j0ROl7E7G3Wt7WEfeYUAI9Djks+F2FfPfs
+         k+PFHytBOQDyHbCqUzcSpDHmrgetoRWaQlldKS2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?V=C3=A1clav=20Zindulka?= <vaclav.zindulka@tlapnet.cz>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/100] netfilter: nf_tables: bogus EBUSY when deleting set after flush
-Date:   Tue, 30 Apr 2019 13:37:39 +0200
-Message-Id: <20190430113609.103453229@linuxfoundation.org>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.19 038/100] nfsd: Dont release the callback slot unless it was actually held
+Date:   Tue, 30 Apr 2019 13:38:07 +0200
+Message-Id: <20190430113610.756745508@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,220 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 273fe3f1006ea5ebc63d6729e43e8e45e32b256a ]
+From: Trond Myklebust <trondmy@gmail.com>
 
-Set deletion after flush coming in the same batch results in EBUSY. Add
-set use counter to track the number of references to this set from
-rules. We cannot rely on the list of bindings for this since such list
-is still populated from the preparation phase.
+commit e6abc8caa6deb14be2a206253f7e1c5e37e9515b upstream.
 
-Reported-by: Václav Zindulka <vaclav.zindulka@tlapnet.cz>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If there are multiple callbacks queued, waiting for the callback
+slot when the callback gets shut down, then they all currently
+end up acting as if they hold the slot, and call
+nfsd4_cb_sequence_done() resulting in interesting side-effects.
+
+In addition, the 'retry_nowait' path in nfsd4_cb_sequence_done()
+causes a loop back to nfsd4_cb_prepare() without first freeing the
+slot, which causes a deadlock when nfsd41_cb_get_slot() gets called
+a second time.
+
+This patch therefore adds a boolean to track whether or not the
+callback did pick up the slot, so that it can do the right thing
+in these 2 cases.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/net/netfilter/nf_tables.h |  6 ++++++
- net/netfilter/nf_tables_api.c     | 28 +++++++++++++++++++++++++++-
- net/netfilter/nft_dynset.c        | 13 +++++++++----
- net/netfilter/nft_lookup.c        | 13 +++++++++----
- net/netfilter/nft_objref.c        | 13 +++++++++----
- 5 files changed, 60 insertions(+), 13 deletions(-)
+ fs/nfsd/nfs4callback.c |    8 +++++++-
+ fs/nfsd/state.h        |    1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
-index e5f879efcc92..f2be5d041ba3 100644
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -382,6 +382,7 @@ void nft_unregister_set(struct nft_set_type *type);
-  * 	@dtype: data type (verdict or numeric type defined by userspace)
-  * 	@objtype: object type (see NFT_OBJECT_* definitions)
-  * 	@size: maximum set size
-+ *	@use: number of rules references to this set
-  * 	@nelems: number of elements
-  * 	@ndeact: number of deactivated elements queued for removal
-  *	@timeout: default timeout value in jiffies
-@@ -407,6 +408,7 @@ struct nft_set {
- 	u32				dtype;
- 	u32				objtype;
- 	u32				size;
-+	u32				use;
- 	atomic_t			nelems;
- 	u32				ndeact;
- 	u64				timeout;
-@@ -467,6 +469,10 @@ struct nft_set_binding {
- 	u32				flags;
- };
- 
-+enum nft_trans_phase;
-+void nf_tables_deactivate_set(const struct nft_ctx *ctx, struct nft_set *set,
-+			      struct nft_set_binding *binding,
-+			      enum nft_trans_phase phase);
- int nf_tables_bind_set(const struct nft_ctx *ctx, struct nft_set *set,
- 		       struct nft_set_binding *binding);
- void nf_tables_unbind_set(const struct nft_ctx *ctx, struct nft_set *set,
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 959f123c1cf7..1af54119bafc 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -3585,6 +3585,9 @@ err1:
- 
- static void nft_set_destroy(struct nft_set *set)
- {
-+	if (WARN_ON(set->use > 0))
-+		return;
-+
- 	set->ops->destroy(set);
- 	module_put(to_set_type(set->ops)->owner);
- 	kfree(set->name);
-@@ -3625,7 +3628,7 @@ static int nf_tables_delset(struct net *net, struct sock *nlsk,
- 		NL_SET_BAD_ATTR(extack, attr);
- 		return PTR_ERR(set);
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -926,8 +926,9 @@ static void nfsd4_cb_prepare(struct rpc_
+ 	cb->cb_seq_status = 1;
+ 	cb->cb_status = 0;
+ 	if (minorversion) {
+-		if (!nfsd41_cb_get_slot(clp, task))
++		if (!cb->cb_holds_slot && !nfsd41_cb_get_slot(clp, task))
+ 			return;
++		cb->cb_holds_slot = true;
  	}
--	if (!list_empty(&set->bindings) ||
-+	if (set->use ||
- 	    (nlh->nlmsg_flags & NLM_F_NONREC && atomic_read(&set->nelems) > 0)) {
- 		NL_SET_BAD_ATTR(extack, attr);
- 		return -EBUSY;
-@@ -3655,6 +3658,9 @@ int nf_tables_bind_set(const struct nft_ctx *ctx, struct nft_set *set,
- 	struct nft_set_binding *i;
- 	struct nft_set_iter iter;
- 
-+	if (set->use == UINT_MAX)
-+		return -EOVERFLOW;
-+
- 	if (!list_empty(&set->bindings) && nft_set_is_anonymous(set))
- 		return -EBUSY;
- 
-@@ -3682,6 +3688,7 @@ bind:
- 	binding->chain = ctx->chain;
- 	list_add_tail_rcu(&binding->list, &set->bindings);
- 	nft_set_trans_bind(ctx, set);
-+	set->use++;
- 
- 	return 0;
+ 	rpc_call_start(task);
  }
-@@ -3701,6 +3708,25 @@ void nf_tables_unbind_set(const struct nft_ctx *ctx, struct nft_set *set,
- }
- EXPORT_SYMBOL_GPL(nf_tables_unbind_set);
+@@ -954,6 +955,9 @@ static bool nfsd4_cb_sequence_done(struc
+ 		return true;
+ 	}
  
-+void nf_tables_deactivate_set(const struct nft_ctx *ctx, struct nft_set *set,
-+			      struct nft_set_binding *binding,
-+			      enum nft_trans_phase phase)
-+{
-+	switch (phase) {
-+	case NFT_TRANS_PREPARE:
-+		set->use--;
-+		return;
-+	case NFT_TRANS_ABORT:
-+	case NFT_TRANS_RELEASE:
-+		set->use--;
-+		/* fall through */
-+	default:
-+		nf_tables_unbind_set(ctx, set, binding,
-+				     phase == NFT_TRANS_COMMIT);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(nf_tables_deactivate_set);
++	if (!cb->cb_holds_slot)
++		goto need_restart;
 +
- void nf_tables_destroy_set(const struct nft_ctx *ctx, struct nft_set *set)
- {
- 	if (list_empty(&set->bindings) && nft_set_is_anonymous(set))
-diff --git a/net/netfilter/nft_dynset.c b/net/netfilter/nft_dynset.c
-index f1172f99752b..eb7f9a5f2aeb 100644
---- a/net/netfilter/nft_dynset.c
-+++ b/net/netfilter/nft_dynset.c
-@@ -241,11 +241,15 @@ static void nft_dynset_deactivate(const struct nft_ctx *ctx,
- {
- 	struct nft_dynset *priv = nft_expr_priv(expr);
+ 	switch (cb->cb_seq_status) {
+ 	case 0:
+ 		/*
+@@ -992,6 +996,7 @@ static bool nfsd4_cb_sequence_done(struc
+ 			cb->cb_seq_status);
+ 	}
  
--	if (phase == NFT_TRANS_PREPARE)
--		return;
-+	nf_tables_deactivate_set(ctx, priv->set, &priv->binding, phase);
-+}
-+
-+static void nft_dynset_activate(const struct nft_ctx *ctx,
-+				const struct nft_expr *expr)
-+{
-+	struct nft_dynset *priv = nft_expr_priv(expr);
- 
--	nf_tables_unbind_set(ctx, priv->set, &priv->binding,
--			     phase == NFT_TRANS_COMMIT);
-+	priv->set->use++;
++	cb->cb_holds_slot = false;
+ 	clear_bit(0, &clp->cl_cb_slot_busy);
+ 	rpc_wake_up_next(&clp->cl_cb_waitq);
+ 	dprintk("%s: freed slot, new seqid=%d\n", __func__,
+@@ -1199,6 +1204,7 @@ void nfsd4_init_cb(struct nfsd4_callback
+ 	cb->cb_seq_status = 1;
+ 	cb->cb_status = 0;
+ 	cb->cb_need_restart = false;
++	cb->cb_holds_slot = false;
  }
  
- static void nft_dynset_destroy(const struct nft_ctx *ctx,
-@@ -293,6 +297,7 @@ static const struct nft_expr_ops nft_dynset_ops = {
- 	.eval		= nft_dynset_eval,
- 	.init		= nft_dynset_init,
- 	.destroy	= nft_dynset_destroy,
-+	.activate	= nft_dynset_activate,
- 	.deactivate	= nft_dynset_deactivate,
- 	.dump		= nft_dynset_dump,
+ void nfsd4_run_cb(struct nfsd4_callback *cb)
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -70,6 +70,7 @@ struct nfsd4_callback {
+ 	int cb_seq_status;
+ 	int cb_status;
+ 	bool cb_need_restart;
++	bool cb_holds_slot;
  };
-diff --git a/net/netfilter/nft_lookup.c b/net/netfilter/nft_lookup.c
-index 14496da5141d..161c3451a747 100644
---- a/net/netfilter/nft_lookup.c
-+++ b/net/netfilter/nft_lookup.c
-@@ -127,11 +127,15 @@ static void nft_lookup_deactivate(const struct nft_ctx *ctx,
- {
- 	struct nft_lookup *priv = nft_expr_priv(expr);
  
--	if (phase == NFT_TRANS_PREPARE)
--		return;
-+	nf_tables_deactivate_set(ctx, priv->set, &priv->binding, phase);
-+}
-+
-+static void nft_lookup_activate(const struct nft_ctx *ctx,
-+				const struct nft_expr *expr)
-+{
-+	struct nft_lookup *priv = nft_expr_priv(expr);
- 
--	nf_tables_unbind_set(ctx, priv->set, &priv->binding,
--			     phase == NFT_TRANS_COMMIT);
-+	priv->set->use++;
- }
- 
- static void nft_lookup_destroy(const struct nft_ctx *ctx,
-@@ -222,6 +226,7 @@ static const struct nft_expr_ops nft_lookup_ops = {
- 	.size		= NFT_EXPR_SIZE(sizeof(struct nft_lookup)),
- 	.eval		= nft_lookup_eval,
- 	.init		= nft_lookup_init,
-+	.activate	= nft_lookup_activate,
- 	.deactivate	= nft_lookup_deactivate,
- 	.destroy	= nft_lookup_destroy,
- 	.dump		= nft_lookup_dump,
-diff --git a/net/netfilter/nft_objref.c b/net/netfilter/nft_objref.c
-index ae178e914486..d8737c115257 100644
---- a/net/netfilter/nft_objref.c
-+++ b/net/netfilter/nft_objref.c
-@@ -161,11 +161,15 @@ static void nft_objref_map_deactivate(const struct nft_ctx *ctx,
- {
- 	struct nft_objref_map *priv = nft_expr_priv(expr);
- 
--	if (phase == NFT_TRANS_PREPARE)
--		return;
-+	nf_tables_deactivate_set(ctx, priv->set, &priv->binding, phase);
-+}
-+
-+static void nft_objref_map_activate(const struct nft_ctx *ctx,
-+				    const struct nft_expr *expr)
-+{
-+	struct nft_objref_map *priv = nft_expr_priv(expr);
- 
--	nf_tables_unbind_set(ctx, priv->set, &priv->binding,
--			     phase == NFT_TRANS_COMMIT);
-+	priv->set->use++;
- }
- 
- static void nft_objref_map_destroy(const struct nft_ctx *ctx,
-@@ -182,6 +186,7 @@ static const struct nft_expr_ops nft_objref_map_ops = {
- 	.size		= NFT_EXPR_SIZE(sizeof(struct nft_objref_map)),
- 	.eval		= nft_objref_map_eval,
- 	.init		= nft_objref_map_init,
-+	.activate	= nft_objref_map_activate,
- 	.deactivate	= nft_objref_map_deactivate,
- 	.destroy	= nft_objref_map_destroy,
- 	.dump		= nft_objref_map_dump,
--- 
-2.19.1
-
+ struct nfsd4_callback_ops {
 
 
