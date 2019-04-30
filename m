@@ -2,128 +2,87 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E938C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2ADC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097AB2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="R/6PPSdm"
+	by mail.kernel.org (Postfix) with ESMTP id 7F57A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfD3MjK (ORCPT
+        id S1728312AbfD3MjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:39:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:46452 "EHLO pegase1.c-s.fr"
+        Tue, 30 Apr 2019 08:39:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39766 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728212AbfD3MjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:39:08 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44th0m65ppz9vD38;
-        Tue, 30 Apr 2019 14:39:04 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=R/6PPSdm; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id beeXf01hbNiG; Tue, 30 Apr 2019 14:39:04 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44th0m54ftz9vD30;
-        Tue, 30 Apr 2019 14:39:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556627944; bh=nyn5PbqqhKTzRamqkQ3I4adO6bi1wUC9r3Z2MBImYHM=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=R/6PPSdmoZ5NAyiTzibrVYDs+LWf6peMGsGja1FzLfUaXr0uR03458Ccu+LjW6l6L
-         FiQRZShCWNqCOiW96vULutGUYPJMu/8pwwYPcdDRFLqOxAaYDy2bvE4wSWgfTqDE7p
-         tvmD7dS/yKSGSf4WnLUULND++03zCwyoDYj2H7yQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EF4D48B8E1;
-        Tue, 30 Apr 2019 14:39:05 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LCQMn-uA0xdE; Tue, 30 Apr 2019 14:39:05 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CC76E8B8DF;
-        Tue, 30 Apr 2019 14:39:05 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 91C83666F8; Tue, 30 Apr 2019 12:39:05 +0000 (UTC)
-Message-Id: <5e4c040b7c1f89b960bd5df2d7eb073bcd72c96d.1556627571.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1556627571.git.christophe.leroy@c-s.fr>
-References: <cover.1556627571.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 16/16] powerpc/32: Don't add dummy frames when calling
- trace_hardirqs_on/off
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 30 Apr 2019 12:39:05 +0000 (UTC)
+        id S1727469AbfD3MjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 08:39:11 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C16833091786;
+        Tue, 30 Apr 2019 12:39:10 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7C2301001E91;
+        Tue, 30 Apr 2019 12:39:04 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 30 Apr 2019 14:39:08 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 14:39:01 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jann Horn <jannh@google.com>, Kevin Easton <kevin@guarana.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
+ CLONE_PIDFD]
+Message-ID: <20190430123901.GD23020@redhat.com>
+References: <20190414201436.19502-1-christian@brauner.io>
+ <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+ <20190415195911.z7b7miwsj67ha54y@yavin>
+ <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
+ <20190420071406.GA22257@ip-172-31-15-78>
+ <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
+ <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
+ <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 30 Apr 2019 12:39:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need to add dummy frames when calling trace_hardirqs_on or
-trace_hardirqs_off. GCC properly handles empty stacks.
+On 04/29, Linus Torvalds wrote:
+>
+> Linux vfork() is very much a real vfork(). What do you mean?
 
-In addition, powerpc doesn't set CONFIG_FRAME_POINTER, therefore
-__builtin_return_address(1..) returns NULL at all time. So the
-dummy frames are definitely unneeded here.
+Yes, but I am wondering if man vfork should clarify what "child terminates"
+actually means. I mean, the child can do clone(CLONE_THREAD) + sys_exit(),
+this will wake the parent thread up before the child process exits or execs.
 
-In the meantime, avoid reading memory for loading r1 with a value
-we already know.
+I see nothing wrong, but I was always curious whether it was designed this
+way on purpose or not.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/entry_32.S | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
-
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index e65c3e70c648..235a01d34b6d 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -243,12 +243,7 @@ transfer_to_handler_cont:
- 
- reenable_mmu:
- 	/*
--	 * The trace_hardirqs_off will use CALLER_ADDR0 and CALLER_ADDR1.
--	 * If from user mode there is only one stack frame on the stack, and
--	 * accessing CALLER_ADDR1 will cause oops. So we need create a dummy
--	 * stack frame to make trace_hardirqs_off happy.
--	 *
--	 * This is handy because we also need to save a bunch of GPRs,
-+	 * We save a bunch of GPRs,
- 	 * r3 can be different from GPR3(r1) at this point, r9 and r11
- 	 * contains the old MSR and handler address respectively,
- 	 * r4 & r5 can contain page fault arguments that need to be passed
-@@ -950,18 +945,11 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_TYPE_47x)
- 	 */
- 	andi.	r10,r9,MSR_EE
- 	beq	1f
--	/*
--	 * Since the ftrace irqsoff latency trace checks CALLER_ADDR1,
--	 * which is the stack frame here, we need to force a stack frame
--	 * in case we came from user space.
--	 */
- 	stwu	r1,-32(r1)
- 	mflr	r0
- 	stw	r0,4(r1)
--	stwu	r1,-32(r1)
- 	bl	trace_hardirqs_on
--	lwz	r1,0(r1)
--	lwz	r1,0(r1)
-+	addi	r1, r1, 32
- 	lwz	r9,_MSR(r1)
- 1:
- #endif /* CONFIG_TRACE_IRQFLAGS */
--- 
-2.13.3
+Oleg.
 
