@@ -2,148 +2,278 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D507C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4C0C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEEE52075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jv7DxdnV"
+	by mail.kernel.org (Postfix) with ESMTP id 2380721670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfD3RD7 (ORCPT
+        id S1726830AbfD3REF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:03:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43226 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfD3RD6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:03:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id v9so12827382iol.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=etJ1WR4qO+3IuPfLuVdMXPbV+XDBvAU6tcECrR4xCrc=;
-        b=jv7DxdnVudtPMbDXxMEw/GM6NMPqoYoCohNeCzcb2ZSDFyhwR53p8yt5rztmB+SlAf
-         /6HkkM1OGFkTHmp6HqKcBGui9wGjTtcdnfFajTPjETmcuAIhe9NUW0xK/jTAi7NKtmHI
-         lL2AftBMEwQCtNz7CwfBTolnOwMRZxouvJvbRP9iDJKEwDZbq+agZE/edhY16NycGWzf
-         D0zkdHg9jEo/1wZ4p2aGffpsSAtgX6TsX+Vd0um8aKmDQ3T9FoNbSkve4NsttbhxTaq4
-         o5LzkTsG3l9hA0mHJxLmZ2vDRt2nqULQ71SsYLA1yapsTMA5oOJoYFdsY9wZ06I3p7yQ
-         /tDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=etJ1WR4qO+3IuPfLuVdMXPbV+XDBvAU6tcECrR4xCrc=;
-        b=n2cSponVud87jOBqrV364ArDEKtb/x5xgdbb1vBAXeqrLiEKB+/oCnig5KA2jcYUkk
-         loU1LraleilZi+lmBdPG8pzKRuIwCCdYxEkVOJoMRtl29PN6oW9FsBTUHZutb3vNSPx8
-         poUlM740iDrZ/iSvxWgvdeqSDIL+IltfKD19Wyq1h9Ha5UM5e8367NmHFkKWdd2Yriky
-         DLPn8SWe+Te5yJrka03AP5S1ds/09mAUZO7B8H1wR2W9ecL7l/G/GlGgOFc1PAQjtwXp
-         wHFcJxjWtXYt6Hbg4bF0O+Ksyx5+haEos8y78aomHVsU8mk3fAwgOVajUXKs0whq9xXm
-         +crA==
-X-Gm-Message-State: APjAAAXfaLzDDLRLkJhGoggrF6NSSKM6vyfVPQqbI/uHoJpIapb/4UX+
-        Hjar8uN/lKbyUr30MNMZtcm3XQ==
-X-Google-Smtp-Source: APXvYqwtQ6krzDTRPbFVrDov44ozx7k+PlhNoNgKqYFMwYfxTI/Usg4vUIfk12zixNg61hOvW70aRA==
-X-Received: by 2002:a5e:9307:: with SMTP id k7mr16429275iom.155.1556643837925;
-        Tue, 30 Apr 2019 10:03:57 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id 12sm526406itm.2.2019.04.30.10.03.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 10:03:57 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 10:03:56 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, richard@nod.at, palmer@sifive.com,
-        paul.walmsley@sifive.com, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] mtd: spi-nor: add support for is25wp256
-In-Reply-To: <1556474956-27786-2-git-send-email-sagar.kadam@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1904301002170.7063@viisi.sifive.com>
-References: <1556474956-27786-1-git-send-email-sagar.kadam@sifive.com> <1556474956-27786-2-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 30 Apr 2019 13:04:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbfD3REF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:04:05 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 613032075E;
+        Tue, 30 Apr 2019 17:04:01 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 13:03:59 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+Message-ID: <20190430130359.330e895b@gandalf.local.home>
+In-Reply-To: <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
+References: <20190428133826.3e142cfd@oasis.local.home>
+        <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+        <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
+        <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+        <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+        <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
+        <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
+        <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
+        <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
+        <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
+        <20190430135602.GD2589@hirez.programming.kicks-ass.net>
+        <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
+        <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Apr 2019, Sagar Shrikant Kadam wrote:
+On Tue, 30 Apr 2019 09:33:51 -0700
+Andy Lutomirski <luto@kernel.org> wrote:
 
-> Update spi_nor_id tablet for is25wp256 (32MB)device from ISSI,
-> present on HiFive Unleashed dev board (Rev: A00).
-> 
-> Set method to enable quad mode for ISSI device in flash parameters
-> table.
 
-This patch was based on one originally written by Wes and/or Palmer: 
-https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
+> Linus, can I ask you to reconsider your opposition to Josh's other
+> approach of just shifting the stack on int3 entry?  I agree that it's
+> ugly, but the ugliness is easily manageable and fairly self-contained.
+> We add a little bit of complication to the entry asm (but it's not
+> like it's unprecedented -- the entry asm does all kinds of stack
+> rearrangement due to IST and PTI crap already), and we add an
+> int3_emulate_call(struct pt_regs *regs, unsigned long target) helper
+> that has appropriate assertions that the stack is okay and emulates
+> the call.  And that's it.
 
-The right thing to do is to note this in the commit message.
+I also prefer Josh's stack shift solution, as I personally believe
+that's a cleaner solution. But I went ahead and implemented Linus's
+version to get it working for ftrace. Here's the code, and it survived
+some preliminary tests.
 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> ---
->  drivers/mtd/spi-nor/spi-nor.c | 10 +++++++++-
->  include/linux/mtd/spi-nor.h   |  1 +
->  2 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index fae1474..c5408ed 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -1834,6 +1834,10 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
->  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->  	{ "is25wp128",  INFO(0x9d7018, 0, 64 * 1024, 256,
->  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> +	{ "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 1024,
-> +			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> +			SPI_NOR_4B_OPCODES)
-> +	},
->  
->  	/* Macronix */
->  	{ "mx25l512e",   INFO(0xc22010, 0, 64 * 1024,   1, SECT_4K) },
-> @@ -3650,6 +3654,10 @@ static int spi_nor_init_params(struct spi_nor *nor,
->  		case SNOR_MFR_MACRONIX:
->  			params->quad_enable = macronix_quad_enable;
->  			break;
-> +		case SNOR_MFR_ISSI:
-> +			params->quad_enable = macronix_quad_enable;
-> +			break;
-> +
->  
->  		case SNOR_MFR_ST:
->  		case SNOR_MFR_MICRON:
-> @@ -4127,7 +4135,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->  	if (ret)
->  		return ret;
->  
-> -	if (nor->addr_width) {
-> +	if (nor->addr_width && JEDEC_MFR(info) != SNOR_MFR_ISSI) {
->  		/* already configured from SFDP */
->  	} else if (info->addr_width) {
->  		nor->addr_width = info->addr_width;
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index b3d360b..ff13297 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -19,6 +19,7 @@
->  #define SNOR_MFR_ATMEL		CFI_MFR_ATMEL
->  #define SNOR_MFR_GIGADEVICE	0xc8
->  #define SNOR_MFR_INTEL		CFI_MFR_INTEL
-> +#define SNOR_MFR_ISSI		0x9d		/* ISSI */
->  #define SNOR_MFR_ST		CFI_MFR_ST	/* ST Micro */
->  #define SNOR_MFR_MICRON		CFI_MFR_MICRON	/* Micron */
->  #define SNOR_MFR_MACRONIX	CFI_MFR_MACRONIX
-> -- 
-> 1.9.1
-> 
-> 
+There's three places that use the update code. One is the start of
+every function call (yes, I counted that as one, and that case is
+determined by: ftrace_location(ip)). The other is the trampoline itself
+has an update. That could also be converted to a text poke, but for now
+its here as it was written before text poke existed. The third place is
+actually a jump (to the function graph code). But that can be safely
+skipped if we are converting it, as it only goes from jump to nop, or
+nop to jump.
+
+The trampolines reflect this. Also, as NMI code is traced by ftrace, I
+had to duplicate the trampolines for the nmi case (but only for the
+interrupts disabled case as NMIs don't have interrupts enabled).
+
+-- Steve
+
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index ef49517f6bb2..bf320bf791dd 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -17,6 +17,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/ftrace.h>
+ #include <linux/percpu.h>
++#include <linux/frame.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/init.h>
+@@ -232,6 +233,9 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
+ 
+ static unsigned long ftrace_update_func;
+ 
++/* Used within inline asm below */
++unsigned long ftrace_update_func_call;
++
+ static int update_ftrace_func(unsigned long ip, void *new)
+ {
+ 	unsigned char old[MCOUNT_INSN_SIZE];
+@@ -259,6 +263,8 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
+ 	unsigned char *new;
+ 	int ret;
+ 
++	ftrace_update_func_call = (unsigned long)func;
++
+ 	new = ftrace_call_replace(ip, (unsigned long)func);
+ 	ret = update_ftrace_func(ip, new);
+ 
+@@ -280,6 +286,70 @@ static nokprobe_inline int is_ftrace_caller(unsigned long ip)
+ 	return 0;
+ }
+ 
++extern asmlinkage void ftrace_emulate_call_irqon(void);
++extern asmlinkage void ftrace_emulate_call_irqoff(void);
++extern asmlinkage void ftrace_emulate_call_nmi(void);
++extern asmlinkage void ftrace_emulate_call_update_irqoff(void);
++extern asmlinkage void ftrace_emulate_call_update_irqon(void);
++extern asmlinkage void ftrace_emulate_call_update_nmi(void);
++
++static DEFINE_PER_CPU(void *, ftrace_bp_call_return);
++static DEFINE_PER_CPU(void *, ftrace_bp_call_nmi_return);
++
++asm(
++	".text\n"
++	".global ftrace_emulate_call_irqoff\n"
++	".type ftrace_emulate_call_irqoff, @function\n"
++	"ftrace_emulate_call_irqoff:\n\t"
++		"push %gs:ftrace_bp_call_return\n\t"
++		"sti\n\t"
++		"jmp ftrace_caller\n"
++	".size ftrace_emulate_call_irqoff, .-ftrace_emulate_call_irqoff\n"
++
++	".global ftrace_emulate_call_irqon\n"
++	".type ftrace_emulate_call_irqon, @function\n"
++	"ftrace_emulate_call_irqon:\n\t"
++		"push %gs:ftrace_bp_call_return\n\t"
++		"jmp ftrace_caller\n"
++	".size ftrace_emulate_call_irqon, .-ftrace_emulate_call_irqon\n"
++
++	".global ftrace_emulate_call_nmi\n"
++	".type ftrace_emulate_call_nmi, @function\n"
++	"ftrace_emulate_call_nmi:\n\t"
++		"push %gs:ftrace_bp_call_nmi_return\n\t"
++		"jmp ftrace_caller\n"
++	".size ftrace_emulate_call_nmi, .-ftrace_emulate_call_nmi\n"
++
++	".global ftrace_emulate_call_update_irqoff\n"
++	".type ftrace_emulate_call_update_irqoff, @function\n"
++	"ftrace_emulate_call_update_irqoff:\n\t"
++		"push %gs:ftrace_bp_call_return\n\t"
++		"sti\n\t"
++		"jmp *ftrace_update_func_call\n"
++	".size ftrace_emulate_call_update_irqoff, .-ftrace_emulate_call_update_irqoff\n"
++
++	".global ftrace_emulate_call_update_irqon\n"
++	".type ftrace_emulate_call_update_irqon, @function\n"
++	"ftrace_emulate_call_update_irqon:\n\t"
++		"push %gs:ftrace_bp_call_return\n\t"
++		"jmp *ftrace_update_func_call\n"
++	".size ftrace_emulate_call_update_irqon, .-ftrace_emulate_call_update_irqon\n"
++
++	".global ftrace_emulate_call_update_nmi\n"
++	".type ftrace_emulate_call_update_nmi, @function\n"
++	"ftrace_emulate_call_update_nmi:\n\t"
++		"push %gs:ftrace_bp_call_nmi_return\n\t"
++		"jmp *ftrace_update_func_call\n"
++	".size ftrace_emulate_call_update_nmi, .-ftrace_emulate_call_update_nmi\n"
++	".previous\n");
++
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_irqoff);
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_irqon);
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_nmi);
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_irqoff);
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_irqon);
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_nmi);
++
+ /*
+  * A breakpoint was added to the code address we are about to
+  * modify, and this is the handle that will just skip over it.
+@@ -295,10 +365,40 @@ int ftrace_int3_handler(struct pt_regs *regs)
+ 		return 0;
+ 
+ 	ip = regs->ip - 1;
+-	if (!ftrace_location(ip) && !is_ftrace_caller(ip))
++	if (ftrace_location(ip)) {
++		if (in_nmi()) {
++			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
++			regs->ip = (unsigned long) ftrace_emulate_call_nmi;
++			return 1;
++		}
++		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
++		if (regs->flags & X86_EFLAGS_IF) {
++			regs->flags &= ~X86_EFLAGS_IF;
++			regs->ip = (unsigned long) ftrace_emulate_call_irqoff;
++		} else {
++			regs->ip = (unsigned long) ftrace_emulate_call_irqon;
++		}
++	} else if (is_ftrace_caller(ip)) {
++		/* If it's a jump, just need to skip it */
++		if (!ftrace_update_func_call) {
++			regs->ip += MCOUNT_INSN_SIZE -1;
++			return 1;
++		}
++		if (in_nmi()) {
++			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
++			regs->ip = (unsigned long) ftrace_emulate_call_update_nmi;
++			return 1;
++		}
++		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
++		if (regs->flags & X86_EFLAGS_IF) {
++			regs->flags &= ~X86_EFLAGS_IF;
++			regs->ip = (unsigned long) ftrace_emulate_call_update_irqoff;
++		} else {
++			regs->ip = (unsigned long) ftrace_emulate_call_update_irqon;
++		}
++	} else {
+ 		return 0;
+-
+-	regs->ip += MCOUNT_INSN_SIZE - 1;
++	}
+ 
+ 	return 1;
+ }
+@@ -859,6 +959,8 @@ void arch_ftrace_update_trampoline(struct ftrace_ops *ops)
+ 
+ 	func = ftrace_ops_get_func(ops);
+ 
++	ftrace_update_func_call = (unsigned long)func;
++
+ 	/* Do a safe modify in case the trampoline is executing */
+ 	new = ftrace_call_replace(ip, (unsigned long)func);
+ 	ret = update_ftrace_func(ip, new);
+@@ -960,6 +1062,7 @@ static int ftrace_mod_jmp(unsigned long ip, void *func)
+ {
+ 	unsigned char *new;
+ 
++	ftrace_update_func_call = 0;
+ 	new = ftrace_jmp_replace(ip, (unsigned long)func);
+ 
+ 	return update_ftrace_func(ip, new);
+
