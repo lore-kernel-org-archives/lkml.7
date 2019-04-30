@@ -2,162 +2,147 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC410C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51622C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6C220835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:21:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="oP4zRwJ1"
+	by mail.kernel.org (Postfix) with ESMTP id 26CEE21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfD3LVQ (ORCPT
+        id S1727681AbfD3LVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:21:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46045 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfD3LVQ (ORCPT
+        Tue, 30 Apr 2019 07:21:36 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:33963 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726129AbfD3LVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:21:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBKijg1347492
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Apr 2019 04:20:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBKijg1347492
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556623245;
-        bh=C3t0slo8rzkJUyCXpbSIjvhOc4r5emWnLyOAWlZs5yE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=oP4zRwJ1czyBEH/vhk20eXQZMX4bvYf/RyvH0pwHj+FatGAIki+jZf7iKUXseE0+g
-         MmwvV3v6VShRpqHdTi4crfvklL9M8oMScw//xnGmZ4FZBv57s6OwjIBdUTChBQhegZ
-         xrd2drw0VE7S6xl0pGcc2zXYjycv4vU9tBGVi8CEpjkjeo51+b6gwwXJEWyA98qWyC
-         DXbonRhXXR7+kWfRcn8+0EtJZ97P3YRkSD6CtUYh0Oxz3HI4vzFmuQjbexLXBqmbdN
-         bSTWJQUAC2a35+xMFha0zPYYYtYk0wXkqTy5XsmIz9QxYlkVNHpOZTU+ylmhQB1Uwf
-         Nyb67qOnaaoew==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBKhQD1347488;
-        Tue, 30 Apr 2019 04:20:43 -0700
-Date:   Tue, 30 Apr 2019 04:20:43 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nadav Amit <tipbot@zytor.com>
-Message-ID: <tip-86a22057127d1c0462a18901421bf1ff89491392@git.kernel.org>
-Cc:     linux_dti@icloud.com, kristen@linux.intel.com, bp@alien8.de,
-        deneen.t.dock@intel.com, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, akpm@linux-foundation.org, riel@surriel.com,
-        namit@vmware.com, mingo@kernel.org, rick.p.edgecombe@intel.com,
-        tglx@linutronix.de, dave.hansen@linux.intel.com,
-        ard.biesheuvel@linaro.org, hpa@zytor.com,
-        torvalds@linux-foundation.org, luto@kernel.org,
-        will.deacon@arm.com, kernel-hardening@lists.openwall.com
-Reply-To: torvalds@linux-foundation.org, hpa@zytor.com,
-          ard.biesheuvel@linaro.org, will.deacon@arm.com,
-          kernel-hardening@lists.openwall.com, luto@kernel.org,
-          rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
-          tglx@linutronix.de, riel@surriel.com, akpm@linux-foundation.org,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          namit@vmware.com, mingo@kernel.org, linux_dti@icloud.com,
-          kristen@linux.intel.com, deneen.t.dock@intel.com, bp@alien8.de
-In-Reply-To: <20190426001143.4983-9-namit@vmware.com>
-References: <20190426001143.4983-9-namit@vmware.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] x86/kgdb: Avoid redundant comparison of patched code
-Git-Commit-ID: 86a22057127d1c0462a18901421bf1ff89491392
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Apr 2019 07:21:35 -0400
+X-UUID: fe58e1bc20b74c34aac0d21a6cfca7f5-20190430
+X-UUID: fe58e1bc20b74c34aac0d21a6cfca7f5-20190430
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <roger.lu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1490610211; Tue, 30 Apr 2019 19:21:31 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 30 Apr 2019 19:21:29 +0800
+Received: from mtkslt207.mediatek.inc (10.21.15.94) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 30 Apr 2019 19:21:29 +0800
+From:   Roger Lu <roger.lu@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+CC:     Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Roger Lu <roger.lu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: [RFC v1 1/3] dt-bindings: soc: add mtk svs dt-bindings
+Date:   Tue, 30 Apr 2019 19:20:10 +0800
+Message-ID: <20190430112012.4514-2-roger.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190430112012.4514-1-roger.lu@mediatek.com>
+References: <20190430112012.4514-1-roger.lu@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain
+X-TM-SNTS-SMTP: E98BCA2A6482E39BD36EDBBB3E007502447FBA8A75806DE18C05AF44705A47AC2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  86a22057127d1c0462a18901421bf1ff89491392
-Gitweb:     https://git.kernel.org/tip/86a22057127d1c0462a18901421bf1ff89491392
-Author:     Nadav Amit <namit@vmware.com>
-AuthorDate: Thu, 25 Apr 2019 17:11:28 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 30 Apr 2019 12:37:53 +0200
+Document the binding for enabling mtk svs on MediaTek SoC.
 
-x86/kgdb: Avoid redundant comparison of patched code
-
-text_poke() already ensures that the written value is the correct one
-and fails if that is not the case. There is no need for an additional
-comparison. Remove it.
-
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <akpm@linux-foundation.org>
-Cc: <ard.biesheuvel@linaro.org>
-Cc: <deneen.t.dock@intel.com>
-Cc: <kernel-hardening@lists.openwall.com>
-Cc: <kristen@linux.intel.com>
-Cc: <linux_dti@icloud.com>
-Cc: <will.deacon@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190426001143.4983-9-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Roger Lu <roger.lu@mediatek.com>
 ---
- arch/x86/kernel/kgdb.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+ .../devicetree/bindings/power/mtk-svs.txt     | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
 
-diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
-index 2b203ee5b879..13b13311b792 100644
---- a/arch/x86/kernel/kgdb.c
-+++ b/arch/x86/kernel/kgdb.c
-@@ -747,7 +747,6 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long ip)
- int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- {
- 	int err;
--	char opc[BREAK_INSTR_SIZE];
- 
- 	bpt->type = BP_BREAKPOINT;
- 	err = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
-@@ -766,11 +765,6 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- 		return -EBUSY;
- 	text_poke_kgdb((void *)bpt->bpt_addr, arch_kgdb_ops.gdb_bpt_instr,
- 		       BREAK_INSTR_SIZE);
--	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
--	if (err)
--		return err;
--	if (memcmp(opc, arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_SIZE))
--		return -EINVAL;
- 	bpt->type = BP_POKE_BREAKPOINT;
- 
- 	return err;
-@@ -778,9 +772,6 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- 
- int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- {
--	int err;
--	char opc[BREAK_INSTR_SIZE];
--
- 	if (bpt->type != BP_POKE_BREAKPOINT)
- 		goto knl_write;
- 	/*
-@@ -791,10 +782,7 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- 		goto knl_write;
- 	text_poke_kgdb((void *)bpt->bpt_addr, bpt->saved_instr,
- 		       BREAK_INSTR_SIZE);
--	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
--	if (err || memcmp(opc, bpt->saved_instr, BREAK_INSTR_SIZE))
--		goto knl_write;
--	return err;
-+	return 0;
- 
- knl_write:
- 	return probe_kernel_write((char *)bpt->bpt_addr,
+diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+new file mode 100644
+index 000000000000..355329db74ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+@@ -0,0 +1,70 @@
++* Mediatek Smart Voltage Scaling (MTK SVS)
++
++This describes the device tree binding for the MTK SVS controller
++which helps provide the optimized CPU/GPU/CCI voltages. This device also
++needs thermal data to calculate thermal slope for accurately compensate
++the voltages when temperature change.
++
++Required properties:
++- compatible:
++  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
++- reg: Address range of the MTK SVS controller.
++- interrupts: IRQ for the MTK SVS controller.
++- clocks, clock-names: Clocks needed for the svs controller. required
++                       clocks are:
++		       "main_clk": Main clock needed for register access
++- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
++- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
++- svs_xxx: Phandle of svs_bank device for controlling corresponding opp
++           table and power-domains.
++- vxxx-supply: Phandle to each regulator. vxxx can be "vcpu_little",
++	       "vcpu_big", "vcci" and "vgpu".
++
++Example:
++
++	svs: svs@1100b000 {
++		compatible = "mediatek,mt8183-svs";
++		reg = <0 0x1100b000 0 0x1000>;
++		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
++		clocks = <&infracfg CLK_INFRA_THERM>;
++		clock-names = "main_clk";
++		nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
++		nvmem-cell-names = "svs-calibration-data", "calibration-data";
++
++		svs_cpu_little: svs_cpu_little {
++			compatible = "mediatek,mt8183-svs-cpu-little";
++			operating-points-v2 = <&cluster0_opp>;
++		};
++
++		svs_cpu_big: svs_cpu_big {
++			compatible = "mediatek,mt8183-svs-cpu-big";
++			operating-points-v2 = <&cluster1_opp>;
++		};
++
++		svs_cci: svs_cci {
++			compatible = "mediatek,mt8183-svs-cci";
++			operating-points-v2 = <&cluster2_opp>;
++		};
++
++		svs_gpu: svs_gpu {
++			compatible = "mediatek,mt8183-svs-gpu";
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
++			operating-points-v2 = <&gpu_opp_table>;
++		};
++	};
++
++	&svs_cpu_little {
++		vcpu_little-supply = <&mt6358_vproc12_reg>;
++	};
++
++	&svs_cpu_big {
++		vcpu_big-supply = <&mt6358_vproc11_reg>;
++	};
++
++	&svs_cci {
++		vcci-supply = <&mt6358_vproc12_reg>;
++	};
++
++	&svs_gpu {
++		vgpu-spply = <&mt6358_vgpu_reg>;
++	};
+-- 
+2.18.0
+
