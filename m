@@ -2,64 +2,65 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF78FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D302C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6C721670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB41B20449
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624563;
-	bh=r2w+PBfnx47CgPVpcg9tD2mystB7cwHRux/mG4kiUZ4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cqcgU6yJeNJVFvhdhydNI6jH98UpnBl1IlErmaxeNjqjjdSUD//QNCM+fSY8+rYjZ
-	 nPEciE4qiEJM6QGLdNBvVDFOe/7Pam2A6uibiGJzSvzK2BjnayLwMj0uUGhcsJULqP
-	 OIH7oWymOq+2TtCKbaRoqJBlwO1bszHkFAth4L6c=
+	s=default; t=1556624567;
+	bh=AgE5NMk3KoqOl3px5GL8ybRBHG4Sc6dAno+ZR3osuAo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D1N0lXEL66wRoFSk/qVOzUWLTPg8spTAPQEHjDqoPqdD4/uHzdXbAu7LUFh57eEfz
+	 +9peJeueThHWEjEQzDahHj75dBvv3k6vCIaaG7y+5cjGctUgN8oiLoDYYGIaWWCC51
+	 Fp4SWoNRM5bC83+yRC1dtWYSeHcki47WXKB/3z08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfD3Lmm (ORCPT
+        id S1729544AbfD3Lmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:42:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51872 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:42:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbfD3Lmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:42:38 -0400
+        id S1729443AbfD3Lmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:42:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D8D9217D7;
-        Tue, 30 Apr 2019 11:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF052173E;
+        Tue, 30 Apr 2019 11:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624557;
-        bh=r2w+PBfnx47CgPVpcg9tD2mystB7cwHRux/mG4kiUZ4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DbHcAST6Fl8Z2roOQD2RFyU2Sw6kGWJKCRW7P4B+ccINGamV4L11qSp61DslIZX2D
-         FvdUHvnkACUc6YYe/OS71Me299+8vI5gG7zFD9C4h/5PEu3TAdsC7sIcdHQCXQmwIG
-         dG6Bkna77bhcspBSDt2//q6uGTgztW9rMbiNOD/o=
+        s=default; t=1556624562;
+        bh=AgE5NMk3KoqOl3px5GL8ybRBHG4Sc6dAno+ZR3osuAo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jD3hDSFfu4wXqVD7Mujz287sSspHZRh2TcdNd/wCfZDDJMhQ1PbUfUy7UunvLL5we
+         A03/QcgUUkoOzQrxZIEjn53jGCSNv+46EOSb34uTAVJ6BQxZCEexIvASid2nMGHkdA
+         Kc/zEh4vO64xmvQmtQ28wpjJgt5kR0TjrpQg8GQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/53] 4.14.115-stable review
-Date:   Tue, 30 Apr 2019 13:38:07 +0200
-Message-Id: <20190430113549.400132183@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Liska <mliska@suse.cz>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 41/53] x86/retpolines: Disable switch jump tables when retpolines are enabled
+Date:   Tue, 30 Apr 2019 13:38:48 +0200
+Message-Id: <20190430113558.190448835@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
+In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
+References: <20190430113549.400132183@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.115-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.115-rc1
-X-KernelTest-Deadline: 2019-05-02T11:36+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,256 +68,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.115 release.
-There are 53 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-Responses should be made by Thu 02 May 2019 11:34:49 AM UTC.
-Anything received after that time might be too late.
+commit a9d57ef15cbe327fe54416dd194ee0ea66ae53a4 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.115-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+Commit ce02ef06fcf7 ("x86, retpolines: Raise limit for generating indirect
+calls from switch-case") raised the limit under retpolines to 20 switch
+cases where gcc would only then start to emit jump tables, and therefore
+effectively disabling the emission of slow indirect calls in this area.
 
-thanks,
+After this has been brought to attention to gcc folks [0], Martin Liska
+has then fixed gcc to align with clang by avoiding to generate switch jump
+tables entirely under retpolines. This is taking effect in gcc starting
+from stable version 8.4.0. Given kernel supports compilation with older
+versions of gcc where the fix is not being available or backported anymore,
+we need to keep the extra KBUILD_CFLAGS around for some time and generally
+set the -fno-jump-tables to align with what more recent gcc is doing
+automatically today.
 
-greg k-h
+More than 20 switch cases are not expected to be fast-path critical, but
+it would still be good to align with gcc behavior for versions < 8.4.0 in
+order to have consistency across supported gcc versions. vmlinux size is
+slightly growing by 0.27% for older gcc. This flag is only set to work
+around affected gcc, no change for clang.
 
--------------
-Pseudo-Shortlog of commits:
+  [0] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86952
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.115-rc1
+Suggested-by: Martin Liska <mliska@suse.cz>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+Cc: Björn Töpel<bjorn.topel@intel.com>
+Cc: Magnus Karlsson <magnus.karlsson@intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: H.J. Lu <hjl.tools@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: David S. Miller <davem@davemloft.net>
+Link: https://lkml.kernel.org/r/20190325135620.14882-1-daniel@iogearbox.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-    ipv4: set the tcp_min_rtt_wlen range from 0 to one day
+---
+ arch/x86/Makefile |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Eric Dumazet <edumazet@google.com>
-    net/rose: fix unbound loop in rose_loopback_timer()
-
-Kees Cook <keescook@chromium.org>
-    net/rose: Convert timers to use timer_setup()
-
-Hangbin Liu <liuhangbin@gmail.com>
-    team: fix possible recursive locking when add slaves
-
-Su Bao Cheng <baocheng.su@siemens.com>
-    stmmac: pci: Adjust IOT2000 matching
-
-Vinod Koul <vkoul@kernel.org>
-    net: stmmac: move stmmac_check_ether_addr() to driver probe
-
-Zhu Yanjun <yanjun.zhu@oracle.com>
-    net: rds: exchange of 8K and 1M pool
-
-Erez Alfasi <ereza@mellanox.com>
-    net/mlx5e: ethtool, Remove unsupported SFP EEPROM high pages query
-
-Amit Cohen <amitc@mellanox.com>
-    mlxsw: spectrum: Fix autoneg status in ethtool
-
-Eric Dumazet <edumazet@google.com>
-    ipv4: add sanity checks in ipv4_link_failure()
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "block/loop: Use global lock for ioctl() operation."
-
-Jan Kara <jack@suse.cz>
-    mm: Fix warning in insert_pfn()
-
-Daniel Borkmann <daniel@iogearbox.net>
-    x86/retpolines: Disable switch jump tables when retpolines are enabled
-
-Daniel Borkmann <daniel@iogearbox.net>
-    x86, retpolines: Raise limit for generating indirect calls from switch-case
-
-Mikulas Patocka <mpatocka@redhat.com>
-    dm integrity: change memcmp to strncmp in dm_integrity_ctr
-
-Xin Long <lucien.xin@gmail.com>
-    tipc: check link name with right length in tipc_nl_compat_link_set
-
-Xin Long <lucien.xin@gmail.com>
-    tipc: check bearer name with right length in tipc_nl_compat_bearer_enable
-
-Yue Haibing <yuehaibing@huawei.com>
-    fm10k: Fix a potential NULL pointer dereference
-
-Florian Westphal <fw@strlen.de>
-    netfilter: ebtables: CONFIG_COMPAT: drop a bogus WARN_ON
-
-Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
-
-luca abeni <luca.abeni@santannapisa.it>
-    sched/deadline: Correctly handle active 0-lag timers
-
-Todd Kjos <tkjos@android.com>
-    binder: fix handling of misaligned binder object
-
-Andrea Claudi <aclaudi@redhat.com>
-    ipvs: fix warning on unused variable
-
-YueHaibing <yuehaibing@huawei.com>
-    fs/proc/proc_sysctl.c: Fix a NULL pointer dereference
-
-Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    intel_th: gth: Fix an off-by-one in output unassigning
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    slip: make slhc_free() silently accept an error pointer
-
-Xin Long <lucien.xin@gmail.com>
-    tipc: handle the err returned from cmd header function
-
-Adalbert Lazăr <alazar@bitdefender.com>
-    vsock/virtio: fix kernel panic from virtio_transport_reset_no_sock
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    ext4: fix some error pointer dereferences
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    USB: Consolidate LPM checks to avoid enabling LPM twice
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    USB: Add new USB LPM helpers
-
-Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-    drm/vc4: Fix compilation error reported by kbuild test bot
-
-Dave Airlie <airlied@redhat.com>
-    Revert "drm/i915/fbdev: Actually configure untiled displays"
-
-Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-    drm/vc4: Fix memory leak during gpu reset.
-
-Ard Biesheuvel <ard.biesheuvel@linaro.org>
-    ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the cache
-
-Dirk Behme <dirk.behme@de.bosch.com>
-    dmaengine: sh: rcar-dmac: With cyclic DMA residue 0 is valid
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/type1: Limit DMA mappings per container
-
-Lucas Stach <l.stach@pengutronix.de>
-    Input: synaptics-rmi4 - write config register values to the right offset
-
-NeilBrown <neilb@suse.com>
-    sunrpc: don't mark uninitialised items as VALID.
-
-Trond Myklebust <trondmy@gmail.com>
-    nfsd: Don't release the callback slot unless it was actually held
-
-Yan, Zheng <zyan@redhat.com>
-    ceph: fix ci->i_head_snapc leak
-
-Jeff Layton <jlayton@kernel.org>
-    ceph: ensure d_name stability in ceph_dentry_hash()
-
-Jeff Layton <jlayton@kernel.org>
-    ceph: only use d_name directly when parent is locked
-
-Xie XiuQi <xiexiuqi@huawei.com>
-    sched/numa: Fix a possible divide-by-zero
-
-Josh Collier <josh.d.collier@intel.com>
-    IB/rdmavt: Fix frwr memory registration
-
-Peter Zijlstra <peterz@infradead.org>
-    trace: Fix preempt_enable_no_resched() abuse
-
-Aurelien Jarno <aurelien@aurel32.net>
-    MIPS: scall64-o32: Fix indirect syscall number load
-
-YueHaibing <yuehaibing@huawei.com>
-    lib/Kconfig.debug: fix build error without CONFIG_BLOCK
-
-Jérôme Glisse <jglisse@redhat.com>
-    zram: pass down the bvec we need to read into in the work struct
-
-Jann Horn <jannh@google.com>
-    tracing: Fix buffer_ref pipe ops
-
-Wenwen Wang <wang6495@umn.edu>
-    tracing: Fix a memory leak by early error exit in trace_pid_write()
-
-Frank Sorenson <sorenson@redhat.com>
-    cifs: do not attempt cifs operation on smb2+ rename error
-
-Masahiro Yamada <yamada.masahiro@socionext.com>
-    kbuild: simplify ld-option implementation
-
-
--------------
-
-Diffstat:
-
- Documentation/networking/ip-sysctl.txt             |  1 +
- Makefile                                           |  4 +-
- arch/arm/boot/compressed/head.S                    | 16 ++++-
- arch/mips/kernel/scall64-o32.S                     |  2 +-
- arch/x86/Makefile                                  |  9 +++
- drivers/android/binder_alloc.c                     | 18 +++---
- drivers/block/loop.c                               | 58 +++++++++---------
- drivers/block/loop.h                               |  1 +
- drivers/block/zram/zram_drv.c                      |  5 +-
- drivers/dma/sh/rcar-dmac.c                         |  4 +-
- drivers/gpu/drm/i915/intel_fbdev.c                 | 12 ++--
- drivers/gpu/drm/vc4/vc4_crtc.c                     |  2 +-
- drivers/hwtracing/intel_th/gth.c                   |  2 +-
- drivers/infiniband/sw/rdmavt/mr.c                  | 17 +++---
- drivers/input/rmi4/rmi_f11.c                       |  2 +-
- drivers/md/dm-integrity.c                          |  6 +-
- drivers/net/ethernet/intel/fm10k/fm10k_main.c      |  2 +
- .../net/ethernet/mellanox/mlx5/core/en_ethtool.c   |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/port.c     |  4 --
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c     |  4 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  4 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   |  8 ++-
- drivers/net/slip/slhc.c                            |  2 +-
- drivers/net/team/team.c                            |  6 ++
- drivers/usb/core/driver.c                          | 23 +++++--
- drivers/usb/core/hub.c                             | 16 ++---
- drivers/usb/core/message.c                         |  3 +-
- drivers/usb/core/sysfs.c                           |  5 +-
- drivers/usb/core/usb.h                             | 10 +++-
- drivers/vfio/vfio_iommu_type1.c                    | 14 +++++
- fs/ceph/dir.c                                      |  6 +-
- fs/ceph/mds_client.c                               | 70 ++++++++++++++++++----
- fs/ceph/snap.c                                     |  7 ++-
- fs/cifs/inode.c                                    |  4 ++
- fs/ext4/xattr.c                                    |  3 +
- fs/nfs/super.c                                     |  3 +-
- fs/nfsd/nfs4callback.c                             |  8 ++-
- fs/nfsd/state.h                                    |  1 +
- fs/proc/proc_sysctl.c                              |  6 +-
- fs/splice.c                                        |  4 +-
- include/linux/pipe_fs_i.h                          |  1 +
- kernel/sched/deadline.c                            |  3 +-
- kernel/sched/fair.c                                |  4 ++
- kernel/trace/ring_buffer.c                         |  2 +-
- kernel/trace/trace.c                               | 33 +++++-----
- lib/Kconfig.debug                                  |  1 +
- mm/memory.c                                        |  9 ++-
- net/bridge/netfilter/ebtables.c                    |  3 +-
- net/ipv4/route.c                                   | 32 +++++++---
- net/ipv4/sysctl_net_ipv4.c                         |  5 +-
- net/netfilter/ipvs/ip_vs_ctl.c                     |  3 +-
- net/rds/ib_fmr.c                                   | 11 ++++
- net/rds/ib_rdma.c                                  |  3 -
- net/rose/af_rose.c                                 | 17 +++---
- net/rose/rose_link.c                               | 16 +++--
- net/rose/rose_loopback.c                           | 36 +++++------
- net/rose/rose_route.c                              |  8 +--
- net/rose/rose_timer.c                              | 30 ++++------
- net/sunrpc/cache.c                                 |  3 +
- net/tipc/netlink_compat.c                          | 24 ++++++--
- net/vmw_vsock/virtio_transport_common.c            | 22 ++++---
- scripts/Kbuild.include                             |  4 +-
- 62 files changed, 424 insertions(+), 220 deletions(-)
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -245,8 +245,12 @@ ifdef CONFIG_RETPOLINE
+   # Additionally, avoid generating expensive indirect jumps which
+   # are subject to retpolines for small number of switch cases.
+   # clang turns off jump table generation by default when under
+-  # retpoline builds, however, gcc does not for x86.
+-  KBUILD_CFLAGS += $(call cc-option,--param=case-values-threshold=20)
++  # retpoline builds, however, gcc does not for x86. This has
++  # only been fixed starting from gcc stable version 8.4.0 and
++  # onwards, but not for older ones. See gcc bug #86952.
++  ifndef CONFIG_CC_IS_CLANG
++    KBUILD_CFLAGS += $(call cc-option,-fno-jump-tables)
++  endif
+ endif
+ 
+ archscripts: scripts_basic
 
 
