@@ -2,216 +2,120 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4B4C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93938C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0834321744
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FEC205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F7TIWgjY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nnxc1mQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfD3TSM (ORCPT
+        id S1726415AbfD3TTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:18:12 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35656 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbfD3TRi (ORCPT
+        Tue, 30 Apr 2019 15:19:47 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41691 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbfD3TTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:17:38 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UJHaGS074218;
-        Tue, 30 Apr 2019 14:17:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556651856;
-        bh=55aFxS37+ts7a5rVXEuf6vFbFoPDWE7uJGT2pp1DmwQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=F7TIWgjYmfyjPMcCTjVuFXdGUTrArANyuZUWI9uTMNjZFctjRE0LtQfWbfZvoYPvi
-         so0LIrqH+/QOES2e7yTeLYLIYgU+J0W5aI9z7oPv7a2cKb5oZwdG4l6IvGMv0aL18c
-         05hzHBAqRTRmRYKsRipITXNHNX2XZGPy19J/YReU=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UJHao2088690
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 14:17:36 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 14:17:35 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 14:17:35 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UJHZTO063032;
-        Tue, 30 Apr 2019 14:17:35 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 6/7] mfd: ti-lmu: Remove support for LM3697
-Date:   Tue, 30 Apr 2019 14:17:29 -0500
-Message-ID: <20190430191730.19450-7-dmurphy@ti.com>
-X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-In-Reply-To: <20190430191730.19450-1-dmurphy@ti.com>
-References: <20190430191730.19450-1-dmurphy@ti.com>
+        Tue, 30 Apr 2019 15:19:47 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v23so12055846oif.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g3qC6EpvLSeHFr2sRZhVsgJD/RMgh/dYJRkIiVXTq9w=;
+        b=Nnxc1mQbpIdlfxZJ7b65LkwEBcnT2G3SZCW1ewlTv0HCLQ4SeZltNWI5DB2nRlxokd
+         RbaAGI3WnQpjuhLJY9ogavnDOrcrgDcvHLoP1iCDhPh5D+pmfThLuStn7g+aL5vdM5ar
+         sr/4+METBLx3UHpY+uyqkruCyquSMHVBY6rqFpT8B7wIk5ADufaYUkL6d/EkL+nrEEJL
+         A52w4k7dbRxEjbEjnCVFV55IGN5uMzHbR/DBtTPsL+cdGWrwxwSHUVqQrT8gQ7y1NYdl
+         R9H10F3TJ2anAK5lqoJyjCsDV1U8YOZ066fwedQIWhxvucztM9lbs98EpH9FMtFY+vbv
+         PdHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g3qC6EpvLSeHFr2sRZhVsgJD/RMgh/dYJRkIiVXTq9w=;
+        b=XbTJGFhSkCkagreR2l6kWx64Uk0tsYPvJkTiHnhLSOiNq9XmVO4Yoj58h440mGvgdo
+         YXoDua8cy2QAsZ0piAdsHB3nOVB+QlxMD3p/EgxGPZgios0v73XIKuDxVYoRRxXAYCfy
+         5OlDoRlc0pTcKG4jRRHg67gUtMzMcELrCr7nldJz2fMtCKdAXdv33bpB8qroHjd8aMk1
+         z8iCNpqE04wm2e3vKlZL141Zkh5AFIyewX0y61IRwgWDDpDT9N6KKrG5307wDX5PuWXs
+         KR2PgofoT0sy7IXS7ANSXF5FD2kywL8kvVz1Cz9wf7QsPg7bj5V8JYjc8J8uoPCl3fXu
+         dnAQ==
+X-Gm-Message-State: APjAAAV6NPsJEMZL0BEsVgGBtlvyUE5RZ3QhFlVQNN/V4azfkHVG4jPX
+        nNIDOSqFjTQ6I2WZN4RKk9BoM6hUnO/0iPc/Ff2oYQ==
+X-Google-Smtp-Source: APXvYqxkhEi0s8vy1kV0tccLSHaysowwTaDcwz5lI7gFIXwU1OEMUPDBxvGY5LUoFgErWFKKyHF8OmhxBFF+gGMYJP8=
+X-Received: by 2002:aca:dcd7:: with SMTP id t206mr4274264oig.68.1556651985980;
+ Tue, 30 Apr 2019 12:19:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190404003249.14356-1-matthewgarrett@google.com> <20190404003249.14356-23-matthewgarrett@google.com>
+In-Reply-To: <20190404003249.14356-23-matthewgarrett@google.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 30 Apr 2019 15:19:20 -0400
+Message-ID: <CAG48ez0uVYJHycXv8jTvYrSGomhsQrQkR+Jpf-vXYJYn58eEjw@mail.gmail.com>
+Subject: Re: [PATCH V32 22/27] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+To:     Matthew Garrett <matthewgarrett@google.com>, bpf@vger.kernel.org
+Cc:     James Morris <jmorris@namei.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove support for the LM3697 from the ti-lmu driver in favor of a
-dedicated LED driver.
++bpf list
 
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+On Wed, Apr 3, 2019 at 8:34 PM Matthew Garrett
+<matthewgarrett@google.com> wrote:
+> There are some bpf functions can be used to read kernel memory:
+> bpf_probe_read, bpf_probe_write_user and bpf_trace_printk.  These allow
+> private keys in kernel memory (e.g. the hibernation image signing key) to
+> be read by an eBPF program and kernel memory to be altered without
+> restriction. Disable them if the kernel has been locked down in
+> confidentiality mode.
+>
+> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> cc: netdev@vger.kernel.org
+> cc: Chun-Yi Lee <jlee@suse.com>
+> cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> ---
+>  kernel/trace/bpf_trace.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 8b068adb9da1..9e8eda605b5e 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -137,6 +137,9 @@ BPF_CALL_3(bpf_probe_read, void *, dst, u32, size, const void *, unsafe_ptr)
+>  {
+>         int ret;
+>
+> +       if (kernel_is_locked_down("BPF", LOCKDOWN_CONFIDENTIALITY))
+> +               return -EINVAL;
+> +
+>         ret = probe_kernel_read(dst, unsafe_ptr, size);
+>         if (unlikely(ret < 0))
+>                 memset(dst, 0, size);
 
-v3 - No changes - https://lore.kernel.org/patchwork/patch/1058760/
-
-v2 - Fixed commit message LF, removed leds/Kconfig from patch. -
-https://lore.kernel.org/patchwork/patch/1054502/
-
- drivers/mfd/Kconfig                 |  2 +-
- drivers/mfd/ti-lmu.c                | 17 -----------
- include/linux/mfd/ti-lmu-register.h | 44 -----------------------------
- include/linux/mfd/ti-lmu.h          |  1 -
- 4 files changed, 1 insertion(+), 63 deletions(-)
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 26ad6468d13a..fcae244229b3 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1312,7 +1312,7 @@ config MFD_TI_LMU
- 	help
- 	  Say yes here to enable support for TI LMU chips.
- 
--	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697.
-+	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, and LM3695.
- 	  It consists of backlight, LED and regulator driver.
- 	  It provides consistent device controls for lighting functions.
- 
-diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
-index b06cb908d1aa..89b1c5b584af 100644
---- a/drivers/mfd/ti-lmu.c
-+++ b/drivers/mfd/ti-lmu.c
-@@ -111,20 +111,6 @@ static const struct mfd_cell lm3695_devices[] = {
- 	},
- };
- 
--static const struct mfd_cell lm3697_devices[] = {
--	{
--		.name          = "ti-lmu-backlight",
--		.id            = LM3697,
--		.of_compatible = "ti,lm3697-backlight",
--	},
--	/* Monitoring driver for open/short circuit detection */
--	{
--		.name          = "ti-lmu-fault-monitor",
--		.id            = LM3697,
--		.of_compatible = "ti,lm3697-fault-monitor",
--	},
--};
--
- #define TI_LMU_DATA(chip, max_reg)		\
- static const struct ti_lmu_data chip##_data =	\
- {						\
-@@ -137,7 +123,6 @@ TI_LMU_DATA(lm3631, LM3631_MAX_REG);
- TI_LMU_DATA(lm3632, LM3632_MAX_REG);
- TI_LMU_DATA(lm3633, LM3633_MAX_REG);
- TI_LMU_DATA(lm3695, LM3695_MAX_REG);
--TI_LMU_DATA(lm3697, LM3697_MAX_REG);
- 
- static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- {
-@@ -206,7 +191,6 @@ static const struct of_device_id ti_lmu_of_match[] = {
- 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
- 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
- 	{ .compatible = "ti,lm3695", .data = &lm3695_data },
--	{ .compatible = "ti,lm3697", .data = &lm3697_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
-@@ -216,7 +200,6 @@ static const struct i2c_device_id ti_lmu_ids[] = {
- 	{ "lm3632", LM3632 },
- 	{ "lm3633", LM3633 },
- 	{ "lm3695", LM3695 },
--	{ "lm3697", LM3697 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, ti_lmu_ids);
-diff --git a/include/linux/mfd/ti-lmu-register.h b/include/linux/mfd/ti-lmu-register.h
-index f09510561a55..76998b01764b 100644
---- a/include/linux/mfd/ti-lmu-register.h
-+++ b/include/linux/mfd/ti-lmu-register.h
-@@ -189,48 +189,4 @@
- #define LM3695_REG_BRT_MSB			0x14
- 
- #define LM3695_MAX_REG				0x14
--
--/* LM3697 */
--#define LM3697_REG_HVLED_OUTPUT_CFG		0x10
--#define LM3697_HVLED1_CFG_MASK			BIT(0)
--#define LM3697_HVLED2_CFG_MASK			BIT(1)
--#define LM3697_HVLED3_CFG_MASK			BIT(2)
--#define LM3697_HVLED1_CFG_SHIFT			0
--#define LM3697_HVLED2_CFG_SHIFT			1
--#define LM3697_HVLED3_CFG_SHIFT			2
--
--#define LM3697_REG_BL0_RAMP			0x11
--#define LM3697_REG_BL1_RAMP			0x12
--#define LM3697_RAMPUP_MASK			0xF0
--#define LM3697_RAMPUP_SHIFT			4
--#define LM3697_RAMPDN_MASK			0x0F
--#define LM3697_RAMPDN_SHIFT			0
--
--#define LM3697_REG_RAMP_CONF			0x14
--#define LM3697_RAMP_MASK			0x0F
--#define LM3697_RAMP_EACH			0x05
--
--#define LM3697_REG_PWM_CFG			0x1C
--#define LM3697_PWM_A_MASK			BIT(0)
--#define LM3697_PWM_B_MASK			BIT(1)
--
--#define LM3697_REG_IMAX_A			0x17
--#define LM3697_REG_IMAX_B			0x18
--
--#define LM3697_REG_FEEDBACK_ENABLE		0x19
--
--#define LM3697_REG_BRT_A_LSB			0x20
--#define LM3697_REG_BRT_A_MSB			0x21
--#define LM3697_REG_BRT_B_LSB			0x22
--#define LM3697_REG_BRT_B_MSB			0x23
--
--#define LM3697_REG_ENABLE			0x24
--
--#define LM3697_REG_OPEN_FAULT_STATUS		0xB0
--
--#define LM3697_REG_SHORT_FAULT_STATUS		0xB2
--
--#define LM3697_REG_MONITOR_ENABLE		0xB4
--
--#define LM3697_MAX_REG				0xB4
- #endif
-diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
-index 7762c1bce55d..54e9d272e81c 100644
---- a/include/linux/mfd/ti-lmu.h
-+++ b/include/linux/mfd/ti-lmu.h
-@@ -26,7 +26,6 @@ enum ti_lmu_id {
- 	LM3632,
- 	LM3633,
- 	LM3695,
--	LM3697,
- 	LMU_MAX_ID,
- };
- 
--- 
-2.21.0.5.gaeb582a983
-
+This looks wrong. bpf_probe_read_proto is declared with an
+ARG_PTR_TO_UNINIT_MEM argument, so if you don't do a "memset(dst, 0,
+size);" like in the probe_kernel_read() error path, the BPF program
+can read uninitialized memory.
