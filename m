@@ -2,112 +2,194 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BF0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0076FC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BF02080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YKGy5m/G"
+	by mail.kernel.org (Postfix) with ESMTP id C9CC92080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfD3Ic3 (ORCPT
+        id S1726735AbfD3IdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:32:29 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55014 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfD3Ic2 (ORCPT
+        Tue, 30 Apr 2019 04:33:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726119AbfD3IdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:32:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3U8JsQt158710;
-        Tue, 30 Apr 2019 08:32:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=yWR9MTfmutWwKIN9OJ1tFhcDDCjFC5vqWJwkYOA89/4=;
- b=YKGy5m/GkNSaOWuhhhU1lZANzX7gdYTSvMMyT4V5YBgrFWmrFeXkZGZhdHPW6RpDkFlL
- jkT+RTDok4lMOD6Z+WDW1cYOpqkTFqCB+5w/NYs/E1U1Dma3/HKmbf6OkiOW0EzVjwb4
- ou4mqosGOrG99dRZd5lM6+wN0Bc6HzOaAMqm50w80r/AjYJZJaVjDlgZXxXDVVGMEQom
- nU4c3XcqhwwrdLl4x2C3JsfNlk+NkfNdpISxkUCZs6HymnXUZ3vnw/ef4sX8ALdSlnIc
- hdEWxl8o/4CVmwOOFKULD40ZD3Kj8B6oCx3PFgfbg1PdH/uA71nQuGoPmHKVR/TMio93 gA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2s4fqq2wmh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 08:32:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3U8UjFs079719;
-        Tue, 30 Apr 2019 08:32:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2s4ew142ue-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 08:32:21 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3U8WJkX025399;
-        Tue, 30 Apr 2019 08:32:19 GMT
-Received: from kadam (/196.97.65.153)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 30 Apr 2019 01:32:19 -0700
-Date:   Tue, 30 Apr 2019 11:32:06 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Chengguang Xu <cgxu519@gmx.com>
-Cc:     gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] chardev: set variable ret to -EBUSY before
- checking minor range overlap
-Message-ID: <20190430083206.GA2239@kadam>
-References: <20190426073837.23086-1-cgxu519@gmx.com>
+        Tue, 30 Apr 2019 04:33:01 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3U8MKY1015277
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:33:00 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6hs0axtt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:32:59 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 30 Apr 2019 09:32:58 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Apr 2019 09:32:55 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3U8WrrL53608484
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 08:32:53 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2A1511C04C;
+        Tue, 30 Apr 2019 08:32:53 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0739C11C052;
+        Tue, 30 Apr 2019 08:32:53 +0000 (GMT)
+Received: from [9.152.222.31] (unknown [9.152.222.31])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Apr 2019 08:32:52 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+ <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+ <20190429185002.6041eecc.pasic@linux.ibm.com>
+ <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
+Date:   Tue, 30 Apr 2019 10:32:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426073837.23086-1-cgxu519@gmx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904300057
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904300057
+In-Reply-To: <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19043008-4275-0000-0000-0000032FD3BF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19043008-4276-0000-0000-0000383F2B89
+Message-Id: <efa8840b-35b1-2823-697f-ab56d4898854@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please don't say RESEND, say [PATCH v2].  RESEND is for when we ignored
-your patch.  (Maybe we made a mistake or maybe the mailing list tagged
-it as spam and deleted it or something).  Use [PATCH v2] instead.
-
-On Fri, Apr 26, 2019 at 03:38:37PM +0800, Chengguang Xu wrote:
-> When allocating dynamic major, the minor range overlap check
-> in __register_chrdev_region() will not fail, so actually
-> there is no real case to passing non negative error code to
-> caller. However, set variable ret to -EBUSY before chekcking
-> minor range overlap will avoid false-positive warning from
-> code analyzing tool(like Smatch) and also make the code more
-> easy to understand.
+On 30/04/2019 10:18, Pierre Morel wrote:
+> On 29/04/2019 18:50, Halil Pasic wrote:
+>> On Fri, 26 Apr 2019 15:01:27 +0200
+>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>
+>>> +static struct ap_queue_status vfio_ap_setirq(struct vfio_ap_queue *q)
+>>> +{
+>>> +    struct ap_qirq_ctrl aqic_gisa = {};
+>>> +    struct ap_queue_status status = {};
+>>> +    struct kvm_s390_gisa *gisa;
+>>> +    struct kvm *kvm;
+>>> +    unsigned long h_nib, h_pfn;
+>>> +    int ret;
+>>> +
+>>> +    q->a_pfn = q->a_nib >> PAGE_SHIFT;
+>>> +    ret = vfio_pin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1,
+>>> +                 IOMMU_READ | IOMMU_WRITE, &h_pfn);
+>>> +    switch (ret) {
+>>> +    case 1:
+>>> +        break;
+>>> +    case -EINVAL:
+>>> +    case -E2BIG:
+>>> +        status.response_code = AP_RESPONSE_INVALID_ADDRESS;
+>>> +        /* Fallthrough */
+>>> +    default:
+>>> +        return status;
+>>
+>> Can we actually hit the default label? AFICT you would return an
+>> all-zero status, i.e. status.response_code == 0 'Normal completion'.
 > 
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-> ---
+> hum right, the setting of AP_INVALID_ADDRESS should be in the default 
+> and there is no need for the two error cases, they will match the default.
+> 
+> 
+>>
+>>> +    }
+>>> +
+>>> +    kvm = q->matrix_mdev->kvm;
+>>> +    gisa = kvm->arch.gisa_int.origin;
+>>> +
+>>> +    h_nib = (h_pfn << PAGE_SHIFT) | (q->a_nib & ~PAGE_MASK);
+>>> +    aqic_gisa.gisc = q->a_isc;
+>>> +    aqic_gisa.isc = kvm_s390_gisc_register(kvm, q->a_isc);
+>>> +    aqic_gisa.ir = 1;
+>>> +    aqic_gisa.gisa = gisa->next_alert >> 4;
+>>
+>> Why gisa->next_alert? Isn't this supposed to get set to gisa origin
+>> (without some bits on the left)?
+> 
+> Someone already asked this question.
+> The answer is: look at the ap_qirq_ctrl structure, you will see that the 
+> gisa field is 27 bits wide.
+> 
+>>
+>>> +
+>>> +    status = ap_aqic(q->apqn, aqic_gisa, (void *)h_nib);
+>>> +    switch (status.response_code) {
+>>> +    case AP_RESPONSE_NORMAL:
+>>> +        /* See if we did clear older IRQ configuration */
+>>> +        if (q->p_pfn)
+>>> +            vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
+>>> +                     &q->p_pfn, 1);
+>>> +        if (q->p_isc != VFIO_AP_ISC_INVALID)
+>>> +            kvm_s390_gisc_unregister(kvm, q->p_isc);
+>>> +        q->p_pfn = q->a_pfn;
+>>> +        q->p_isc = q->a_isc;
+>>> +        break;
+>>> +    case AP_RESPONSE_OTHERWISE_CHANGED:
+>>> +        /* We could not modify IRQ setings: clear new configuration */
+>>> +        vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1);
+>>> +        kvm_s390_gisc_unregister(kvm, q->a_isc);
+>>
+>> Hm, see below. Wouldn't you want to set a_isc to VFIO_AP_ISC_INVALID?
+> 
+> grrr!!! when did I insert these 3 lines, it was OK in previous series!
+> all 3 lines, vfio_unpin() / gisc_unregister / break must go away.
 
-Then here under the --- cut off line put:
+No it wasn't, I will correct this.
 
-v2: rebase against the latest linux-next
-
-That way we will remember why the patch was sent twice and what changed.
-
->  fs/char_dev.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+>>
+>>> +        break;
+>>> +    default:    /* Fall Through */
+>>
+>> Is it 'break' or is it 'Fall Through'?
+> 
+> it is a fall through
+> 
+>>
+>>> +        pr_warn("%s: apqn %04x: response: %02x\n", __func__, q->apqn,
+>>> +            status.response_code);
+>>> +        vfio_ap_free_irq_data(q);
+>>> +        break;
+>>> +    }
+>>> +
+>>> +    return status;
+>>> +}
+> 
 > 
 
-regards,
-dan carpenter
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
