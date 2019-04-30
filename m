@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3717AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A0CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB50721670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834A32075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625377;
-	bh=fNU+POHS0F6DCbGOR6/viQQKgNCjWVnUZmiRFkNT+Yo=;
+	s=default; t=1556625386;
+	bh=YLgDBj29fs5z7tKNSm5DCu3BMVVy8eo/o3FNyZrZx0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bf8MUb5aJpZEJpvJYL9kLYERNjmsFKKH/++Zdf7WS26ar+hdr+8w+eNdDxp51Apdd
-	 lsYYqsppxLn6/JQlkWOktjac6DHo2leOUQDG6Tk3wjWLd+1wQXBTjY4xIeyiktYRCL
-	 yM2rnifKPTkOf41UJLvaW4odPqz4mAFYlQBGI26A=
+	b=HZQDi1YdccGkobfpB8+S50m5oDAkkxrLIRjoBurNsQLyUtJp1Gxf8ZHfOdQmUUnGL
+	 fgLIhWJO4ZKkuSKUjEUnAyoP9c9P9C7eqfibqKqDnHQSx5ePtyjvK7O6udootbzw9g
+	 Ih2oxVibJxfnsvahyvFsJ6yJ1iG84d4FnT2d7J+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfD3L4O (ORCPT
+        id S1726541AbfD3L4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:56:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730399AbfD3Ls5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:57 -0400
+        id S1730898AbfD3Lsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 261EA20449;
-        Tue, 30 Apr 2019 11:48:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7C0820449;
+        Tue, 30 Apr 2019 11:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624936;
-        bh=fNU+POHS0F6DCbGOR6/viQQKgNCjWVnUZmiRFkNT+Yo=;
+        s=default; t=1556624926;
+        bh=YLgDBj29fs5z7tKNSm5DCu3BMVVy8eo/o3FNyZrZx0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dMUoMc/TwwQKaBuE14O6/tqU8UD/J8PNoWMBRUKYxvz4Ejtequ4hHrfaaAsUvktf0
-         qv6SmhCACz+eiXyRNeKZuSKLdCz5+KMpGX5nooEFMhJZnCHChxNyUpqcdo9q1af9Rx
-         V2LKHQumdhH1hSOfBzF0BJZ/LIWjOU3WuXK0zA+U=
+        b=dTmPl364WAVd6xgCCSpfFShEYNxpwWc4+711hb+jqeRhqx1W4Errdi7oFknazN4sA
+         c0MOnqbcMGYwWM/Ad0ASHGyjxaS83aIuFcZlLvEL4cjpkottUqQqkCfslfkLNXqqju
+         mFdbwqqEhCURtnJ0veSroWNa3fUMBWmE5cWEiI/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH 5.0 29/89] ceph: fix ci->i_head_snapc leak
-Date:   Tue, 30 Apr 2019 13:38:20 +0200
-Message-Id: <20190430113611.316091671@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: [PATCH 5.0 25/89] RDMA/ucontext: Fix regression with disassociate
+Date:   Tue, 30 Apr 2019 13:38:16 +0200
+Message-Id: <20190430113611.189238783@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,59 +60,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan, Zheng <zyan@redhat.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 37659182bff1eeaaeadcfc8f853c6d2b6dbc3f47 upstream.
+commit 67f269b37f9b4d52c5e7f97acea26c0852e9b8a1 upstream.
 
-We missed two places that i_wrbuffer_ref_head, i_wr_ref, i_dirty_caps
-and i_flushing_caps may change. When they are all zeros, we should free
-i_head_snapc.
+When this code was consolidated the intention was that the VMA would
+become backed by anonymous zero pages after the zap_vma_pte - however this
+very subtly relied on setting the vm_ops = NULL and clearing the VM_SHARED
+bits to transform the VMA into an anonymous VMA. Since the vm_ops was
+removed this broke.
+
+Now userspace gets a SIGBUS if it touches the vma after disassociation.
+
+Instead of converting the VMA to anonymous provide a fault handler that
+puts a zero'd page into the VMA when user-space touches it after
+disassociation.
 
 Cc: stable@vger.kernel.org
-Link: https://tracker.ceph.com/issues/38224
-Reported-and-tested-by: Luis Henriques <lhenriques@suse.com>
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
+Fixes: 5f9794dc94f5 ("RDMA/ucontext: Add a core API for mmaping driver IO memory")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/mds_client.c |    9 +++++++++
- fs/ceph/snap.c       |    7 ++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/uverbs.h      |    1 
+ drivers/infiniband/core/uverbs_main.c |   52 ++++++++++++++++++++++++++++++++--
+ 2 files changed, 50 insertions(+), 3 deletions(-)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -1286,6 +1286,15 @@ static int remove_session_caps_cb(struct
- 			list_add(&ci->i_prealloc_cap_flush->i_list, &to_remove);
- 			ci->i_prealloc_cap_flush = NULL;
- 		}
-+
-+               if (drop &&
-+                  ci->i_wrbuffer_ref_head == 0 &&
-+                  ci->i_wr_ref == 0 &&
-+                  ci->i_dirty_caps == 0 &&
-+                  ci->i_flushing_caps == 0) {
-+                      ceph_put_snap_context(ci->i_head_snapc);
-+                      ci->i_head_snapc = NULL;
-+               }
- 	}
- 	spin_unlock(&ci->i_ceph_lock);
- 	while (!list_empty(&to_remove)) {
---- a/fs/ceph/snap.c
-+++ b/fs/ceph/snap.c
-@@ -568,7 +568,12 @@ void ceph_queue_cap_snap(struct ceph_ino
- 	old_snapc = NULL;
+--- a/drivers/infiniband/core/uverbs.h
++++ b/drivers/infiniband/core/uverbs.h
+@@ -160,6 +160,7 @@ struct ib_uverbs_file {
  
- update_snapc:
--	if (ci->i_head_snapc) {
-+       if (ci->i_wrbuffer_ref_head == 0 &&
-+           ci->i_wr_ref == 0 &&
-+           ci->i_dirty_caps == 0 &&
-+           ci->i_flushing_caps == 0) {
-+               ci->i_head_snapc = NULL;
-+       } else {
- 		ci->i_head_snapc = ceph_get_snap_context(new_snapc);
- 		dout(" new snapc is %p\n", new_snapc);
+ 	struct mutex umap_lock;
+ 	struct list_head umaps;
++	struct page *disassociate_page;
+ 
+ 	struct idr		idr;
+ 	/* spinlock protects write access to idr */
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -208,6 +208,9 @@ void ib_uverbs_release_file(struct kref
+ 		kref_put(&file->async_file->ref,
+ 			 ib_uverbs_release_async_event_file);
+ 	put_device(&file->device->dev);
++
++	if (file->disassociate_page)
++		__free_pages(file->disassociate_page, 0);
+ 	kfree(file);
+ }
+ 
+@@ -876,9 +879,50 @@ static void rdma_umap_close(struct vm_ar
+ 	kfree(priv);
+ }
+ 
++/*
++ * Once the zap_vma_ptes has been called touches to the VMA will come here and
++ * we return a dummy writable zero page for all the pfns.
++ */
++static vm_fault_t rdma_umap_fault(struct vm_fault *vmf)
++{
++	struct ib_uverbs_file *ufile = vmf->vma->vm_file->private_data;
++	struct rdma_umap_priv *priv = vmf->vma->vm_private_data;
++	vm_fault_t ret = 0;
++
++	if (!priv)
++		return VM_FAULT_SIGBUS;
++
++	/* Read only pages can just use the system zero page. */
++	if (!(vmf->vma->vm_flags & (VM_WRITE | VM_MAYWRITE))) {
++		vmf->page = ZERO_PAGE(vmf->vm_start);
++		get_page(vmf->page);
++		return 0;
++	}
++
++	mutex_lock(&ufile->umap_lock);
++	if (!ufile->disassociate_page)
++		ufile->disassociate_page =
++			alloc_pages(vmf->gfp_mask | __GFP_ZERO, 0);
++
++	if (ufile->disassociate_page) {
++		/*
++		 * This VMA is forced to always be shared so this doesn't have
++		 * to worry about COW.
++		 */
++		vmf->page = ufile->disassociate_page;
++		get_page(vmf->page);
++	} else {
++		ret = VM_FAULT_SIGBUS;
++	}
++	mutex_unlock(&ufile->umap_lock);
++
++	return ret;
++}
++
+ static const struct vm_operations_struct rdma_umap_ops = {
+ 	.open = rdma_umap_open,
+ 	.close = rdma_umap_close,
++	.fault = rdma_umap_fault,
+ };
+ 
+ static struct rdma_umap_priv *rdma_user_mmap_pre(struct ib_ucontext *ucontext,
+@@ -888,6 +932,9 @@ static struct rdma_umap_priv *rdma_user_
+ 	struct ib_uverbs_file *ufile = ucontext->ufile;
+ 	struct rdma_umap_priv *priv;
+ 
++	if (!(vma->vm_flags & VM_SHARED))
++		return ERR_PTR(-EINVAL);
++
+ 	if (vma->vm_end - vma->vm_start != size)
+ 		return ERR_PTR(-EINVAL);
+ 
+@@ -991,7 +1038,7 @@ void uverbs_user_mmap_disassociate(struc
+ 		 * at a time to get the lock ordering right. Typically there
+ 		 * will only be one mm, so no big deal.
+ 		 */
+-		down_write(&mm->mmap_sem);
++		down_read(&mm->mmap_sem);
+ 		if (!mmget_still_valid(mm))
+ 			goto skip_mm;
+ 		mutex_lock(&ufile->umap_lock);
+@@ -1005,11 +1052,10 @@ void uverbs_user_mmap_disassociate(struc
+ 
+ 			zap_vma_ptes(vma, vma->vm_start,
+ 				     vma->vm_end - vma->vm_start);
+-			vma->vm_flags &= ~(VM_SHARED | VM_MAYSHARE);
+ 		}
+ 		mutex_unlock(&ufile->umap_lock);
+ 	skip_mm:
+-		up_write(&mm->mmap_sem);
++		up_read(&mm->mmap_sem);
+ 		mmput(mm);
  	}
+ }
 
 
