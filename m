@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF23C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73FEC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7E52177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C6A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625331;
-	bh=0ciGWazNr8j4GuCDsuHETt61WKcUTfQMjk8tZXtymO4=;
+	s=default; t=1556625346;
+	bh=ZBbxzEzM68irpAlpYV2xErPYncDbMHz9b36z2Ynmjd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kshOTDk9pw+ZC/oVodcCy+LNm1fGyz2Ay6fN5As8S0Xz1qeHsj55mjAA2n1jnxPpX
-	 SGOethXeU7/OFwDS5e12YcLabZOFwQXQa2NjkoEbbNAFcvkxU80K6z9Df3u2XEedWw
-	 eFYWWx6Wn8ptzSMqzJo8KZaE1oT2ctrks5gbkSfc=
+	b=MjAAD5N7dFkucU53TW7JE9SCjxM01KgNtlmzrL+/vcUSBldMqEvirHjF1s39cUJ16
+	 mwl2/FB1z+LT5h7n+gIZT+BB67w+EbbWQ5Axo3Ucv5odOT6qVKkhdmCf0QDb/KU6hF
+	 683Bl2181TIx+pl9JxOcZPNNy7mN7SR9WOnq1LFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfD3Lza (ORCPT
+        id S1730966AbfD3LtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36026 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730985AbfD3Lt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:28 -0400
+        id S1730934AbfD3LtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92E382054F;
-        Tue, 30 Apr 2019 11:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B2362177B;
+        Tue, 30 Apr 2019 11:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624968;
-        bh=0ciGWazNr8j4GuCDsuHETt61WKcUTfQMjk8tZXtymO4=;
+        s=default; t=1556624949;
+        bh=ZBbxzEzM68irpAlpYV2xErPYncDbMHz9b36z2Ynmjd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQqbXzS98Fs326DGwVXD/a+X0vQcBOJ9Scgz6WPE7HG5yKBmQapTyOBYtOLpvPplT
-         zvRb42WVehskVe4qOMEERwv7HOzphWU4Gj3IV9MZXp4/9YxdLpMfJIsfp/dlyuRGou
-         1kOzpL1hixzWpmay//acdaRXVCzbtVJWuMCuuNxc=
+        b=iQ0liYcHbalUI0cit/ips0burQQy3Qik9lfR3tXWugFdZ4TiaNOlrAVhm5P30PrFo
+         lwvgqhjwOlX2Pj1Y1gApktSMHDyW4zXhpAq9io20G1z3sVnpgyFdQ3edBuvjNoRiRT
+         hYsT3uNs/MPt5hMIAxTZNnejNk7zY1UOjtcq7A9A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Subject: [PATCH 5.0 13/89] crypto: xts - Fix atomic sleep when walking skcipher
-Date:   Tue, 30 Apr 2019 13:38:04 +0200
-Message-Id: <20190430113610.342144523@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
+        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
+Subject: [PATCH 5.0 33/89] sunrpc: dont mark uninitialised items as VALID.
+Date:   Tue, 30 Apr 2019 13:38:24 +0200
+Message-Id: <20190430113611.449275841@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -61,40 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: NeilBrown <neilb@suse.com>
 
-commit 44427c0fbc09b448b22410978a4ef6ee37599d25 upstream.
+commit d58431eacb226222430940134d97bfd72f292fcd upstream.
 
-When we perform a walk in the completion function, we need to ensure
-that it is atomic.
+A recent commit added a call to cache_fresh_locked()
+when an expired item was found.
+The call sets the CACHE_VALID flag, so it is important
+that the item actually is valid.
+There are two ways it could be valid:
+1/ If ->update has been called to fill in relevant content
+2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
 
-Reported-by: syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com
-Fixes: 78105c7e769b ("crypto: xts - Drop use of auxiliary buffer")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Acked-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+An expired item that is waiting for an update will be neither.
+Setting CACHE_VALID will mean that a subsequent call to cache_put()
+will be likely to dereference uninitialised pointers.
+
+So we must make sure the item is valid, and we already have code to do
+that in try_to_negate_entry().  This takes the hash lock and so cannot
+be used directly, so take out the two lines that we need and use them.
+
+Now cache_fresh_locked() is certain to be called only on
+a valid item.
+
+Cc: stable@kernel.org # 2.6.35
+Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/xts.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/sunrpc/cache.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/crypto/xts.c
-+++ b/crypto/xts.c
-@@ -137,8 +137,12 @@ static void crypt_done(struct crypto_asy
- {
- 	struct skcipher_request *req = areq->data;
- 
--	if (!err)
-+	if (!err) {
-+		struct rctx *rctx = skcipher_request_ctx(req);
-+
-+		rctx->subreq.base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
- 		err = xor_tweak_post(req);
-+	}
- 
- 	skcipher_request_complete(req, err);
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -54,6 +54,7 @@ static void cache_init(struct cache_head
+ 	h->last_refresh = now;
  }
+ 
++static inline int cache_is_valid(struct cache_head *h);
+ static void cache_fresh_locked(struct cache_head *head, time_t expiry,
+ 				struct cache_detail *detail);
+ static void cache_fresh_unlocked(struct cache_head *head,
+@@ -105,6 +106,8 @@ static struct cache_head *sunrpc_cache_a
+ 			if (cache_is_expired(detail, tmp)) {
+ 				hlist_del_init_rcu(&tmp->cache_list);
+ 				detail->entries --;
++				if (cache_is_valid(tmp) == -EAGAIN)
++					set_bit(CACHE_NEGATIVE, &tmp->flags);
+ 				cache_fresh_locked(tmp, 0, detail);
+ 				freeme = tmp;
+ 				break;
 
 
