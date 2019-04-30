@@ -2,193 +2,345 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3554EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D66C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDDC92075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3F22075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fTRsK6w/"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="i0VpaIhI";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="cjRHWy9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfD3GJm (ORCPT
+        id S1726263AbfD3GLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:09:42 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:63104 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfD3GJl (ORCPT
+        Tue, 30 Apr 2019 02:11:24 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33702 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725788AbfD3GLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:09:41 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190430060937epoutp01d77a243876793694fc639e8d6ae2ac6f~aK523PnUT3196731967epoutp01o
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:09:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190430060937epoutp01d77a243876793694fc639e8d6ae2ac6f~aK523PnUT3196731967epoutp01o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556604577;
-        bh=s4+gCxQmp9Ft0gltHb67tjlRyzWs9lclWGMzsc5X/xI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=fTRsK6w/rsRH4dp7XOUr/fw3skEk6HJ68mF8kKAsy4QLGjFcSr8sTdIJLvYMqwqZ4
-         iHNWwcJThl1NYKKIBRnx9lfHFpd/yiRPkclKU7vvUo24s4JBUef1eocujvu8GOQEOO
-         58lZB0clT7ZIOwsxxFSkF2Z/SEXEbG859K7w4ecc=
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.155]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190430060931epcas1p39482c1bb63551d588b515f8ca887a9c3~aK5w8xPcP0921309213epcas1p3e;
-        Tue, 30 Apr 2019 06:09:31 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F4.EC.04139.B96E7CC5; Tue, 30 Apr 2019 15:09:31 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190430060930epcas1p4858f6f12ec5e7a0221b76178ebdc4edc~aK5wYkdYN0046400464epcas1p4i;
-        Tue, 30 Apr 2019 06:09:30 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190430060930epsmtrp1f49f5db76537f4890e80f9cf41e2c4c1~aK5wXrW9I0761107611epsmtrp1_;
-        Tue, 30 Apr 2019 06:09:30 +0000 (GMT)
-X-AuditID: b6c32a35-deaec9c00000102b-58-5cc7e69b1984
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5E.D2.03662.A96E7CC5; Tue, 30 Apr 2019 15:09:30 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190430060930epsmtip1e427ea154bc532509ae59b8844ec8028~aK5wCKkYq2006320063epsmtip1V;
-        Tue, 30 Apr 2019 06:09:30 +0000 (GMT)
-Subject: Re: [PATCH v3 4/4] DT: arm: exynos4412: add event data type which
- is monitored
-To:     Lukasz Luba <l.luba@partner.samsung.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, kgene@kernel.org,
-        willy.mh.wolff.ml@gmail.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <cee7b5a2-377e-59d6-7c6e-b6f9b3140d4f@samsung.com>
-Date:   Tue, 30 Apr 2019 15:10:45 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1555681688-19643-5-git-send-email-l.luba@partner.samsung.com>
+        Tue, 30 Apr 2019 02:11:24 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x3U63pFe019772;
+        Mon, 29 Apr 2019 23:10:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=gRgkygZzBGln/G/Zh+guVByvS/trVR9H02ChKFnZOaw=;
+ b=i0VpaIhIoraLiaJ0U52b0KfPuKaEXisMLacY7goxtCVqvFhJTz/7XRpS5q5K/ARVOupq
+ T9E3gWhR8tMIcXAMCeojYc75GaMGCfGJ2svCQY3Dj6WT6Djt8dscOPWAbpGZRUKS5VUm
+ nZJu04844ffUxhQJ67ruYthEuywebl03blA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2s69fk14k2-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 29 Apr 2019 23:10:57 -0700
+Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 29 Apr 2019 23:10:56 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 29 Apr 2019 23:10:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gRgkygZzBGln/G/Zh+guVByvS/trVR9H02ChKFnZOaw=;
+ b=cjRHWy9QHlXAsOZXbVsBBhUsJu4r//kyS7bbipv11vQVUFqI1Fp7FtnTD3CaLZ4FLkj1xS4bw6FguSOuzrznZwFwUv5Id1yuy0JI41S2p9ce8hq+OFKGlhYP8yx5H4Dy1GB48q7y5acfERzZcBSPU3AGlfnIiugeRcuIuuI2SRE=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1727.namprd15.prod.outlook.com (10.174.254.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Tue, 30 Apr 2019 06:10:53 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15%10]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
+ 06:10:53 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+CC:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Kernel Team <Kernel-team@fb.com>,
+        viresh kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+Thread-Topic: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+Thread-Index: AQHU7lSD68FtcB4UGUOYupgC9AfmOKY1TPCAgACBxACACo6VgIAIioaAgAkx7ACAARa2gIABKdKA
+Date:   Tue, 30 Apr 2019 06:10:52 +0000
+Message-ID: <A62E5068-4A1E-44E3-99BB-02E98229C1E2@fb.com>
+References: <20190408214539.2705660-1-songliubraving@fb.com>
+ <20190410115907.GE19434@e105550-lin.cambridge.arm.com>
+ <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
+ <CAKfTPtAFB3gSZYJN1BcjU_XoY=Pfu2xtea+2MEw7FkVc3mwTSA@mail.gmail.com>
+ <E97E73F4-CE8C-4CD7-B6B6-5F63A4E881B1@fb.com>
+ <F0A127DD-F9B6-4FBE-B9AD-8E8B00A7D676@fb.com>
+ <CAKfTPtA_ouYCes9LnYn0quAKm273mi3vP-++GTBtYcQn07xc6Q@mail.gmail.com>
+In-Reply-To: <CAKfTPtA_ouYCes9LnYn0quAKm273mi3vP-++GTBtYcQn07xc6Q@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJsWRmVeSWpSXmKPExsWy7bCmru7sZ8djDLat57LYOGM9q8X8I+dY
-        Lfofv2a2OH9+A7vF2aY37Ba3GmQsNj2+xmpxedccNovPvUcYLWac38dksfbIXXaLpdcvMlnc
-        blzBZtG69wi7xeE37awW3048YnQQ8Fgzbw2jx85Zd9k9Nq3qZPPYvKTe4+C7PUwefVtWMXp8
-        3iQXwB6VbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkD
-        dLuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CyQK84Mbe4NC9dLzk/18rQwMDI
-        FKgwITtjZ3snW8Eu/op9ex6zNzD+4epi5OSQEDCROLP+AXMXIxeHkMAORokZO6+wQDifGCVO
-        TZ7PDuF8Y5TYcP8kM0zL93vzoar2MkrcmHcfqv89o8THZXPAqoQFIiV63vQwgiREBM4ySjxo
-        2sYG4jALfGaUOPngGitIFZuAlsT+FzfYQGx+AUWJqz8eM4LYvAJ2EivbbjCB2CwCqhIvdv4G
-        qxcViJC4f2wDK0SNoMTJmU9YQGxOAW+Jt5dngtUzC4hL3HoyH8qWl2jeOhvsPAmBY+wSTQtn
-        MUI84SKxcfIFKFtY4tXxLewQtpTEy/42KLtaYuXJI2wQzR2MElv2X2CFSBhL7F86GWgDB9AG
-        TYn1u/QhlvFJvPvawwoSlhDglehoE4KoVpa4/OAuE4QtKbEYGA0QtofE3Kmv2CYwKs5C8s4s
-        JC/MQvLCLIRlCxhZVjGKpRYU56anFhsWGCJH+CZGcNLWMt3BOOWczyFGAQ5GJR5ej3fHYoRY
-        E8uKK3MPMUpwMCuJ8HocPxojxJuSWFmVWpQfX1Sak1p8iNEUGNoTmaVEk/OBGSWvJN7Q1MjY
-        2NjCxNDM1NBQSZx3vYNzjJBAemJJanZqakFqEUwfEwenVANjRetkxpzbC2Q+HChc9mevsKe+
-        vbKW0VqVRra7HGnhe+T1PjG2bJZzDjx/9D7btSdzFLR1M/Nta1crL1l8IJLlr9rbTsVnljeX
-        fsyefun87G9vFM1VHcsW+NYGCcQ3/jsynW8ve4XFtlNlGjaqzz7tXTC1bMnCnYeVGVf0r2Ds
-        cVnFVli3NUpdiaU4I9FQi7moOBEAc4p47/ADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsWy7bCSnO6sZ8djDN6+UrDYOGM9q8X8I+dY
-        Lfofv2a2OH9+A7vF2aY37Ba3GmQsNj2+xmpxedccNovPvUcYLWac38dksfbIXXaLpdcvMlnc
-        blzBZtG69wi7xeE37awW3048YnQQ8Fgzbw2jx85Zd9k9Nq3qZPPYvKTe4+C7PUwefVtWMXp8
-        3iQXwB7FZZOSmpNZllqkb5fAlbGzvZOtYBd/xb49j9kbGP9wdTFyckgImEh8vzefpYuRi0NI
-        YDejxMPVB1kgEpIS0y4eZe5i5ACyhSUOHy6GqHnLKDHl5VdGkLiwQKTEwb4CkLiIwFlGiUWT
-        FrCDOMwCnxklpq+5zAwySEjgPqPE3Zn6IDabgJbE/hc32EBsfgFFias/HjOC2LwCdhIr224w
-        gdgsAqoSL3b+ZgWxRQUiJM68X8ECUSMocXLmEzCbU8Bb4u3lmWD1zALqEn/mXWKGsMUlbj2Z
-        DxWXl2jeOpt5AqPwLCTts5C0zELSMgtJywJGllWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ
-        +bmbGMGRq6W1g/HEifhDjAIcjEo8vB7vjsUIsSaWFVfmHmKU4GBWEuH1OH40Rog3JbGyKrUo
-        P76oNCe1+BCjNAeLkjivfP6xSCGB9MSS1OzU1ILUIpgsEwenVAOjSu1J7q/LZ3Q/FHT0jT71
-        deXz39KPuxjqFswJfSYgkxTJ/EhUi3Xx0s889cumpPtm71co2mB7u2tlDq/0rjcf5lclfhXl
-        s58hVKnAz8g5W/7Wk79BnM6GRnwFk7iDWjndHec99Dv5K9t+24If20piNyReSzt+dPXM1w9K
-        pf7FzjML21LrJLdXiaU4I9FQi7moOBEAJ1cgT9gCAAA=
-X-CMS-MailID: 20190430060930epcas1p4858f6f12ec5e7a0221b76178ebdc4edc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6@eucas1p1.samsung.com>
-        <1555681688-19643-5-git-send-email-l.luba@partner.samsung.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c091:180::25e5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 82facd73-77f4-4447-4606-08d6cd3299c4
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1727;
+x-ms-traffictypediagnostic: MWHPR15MB1727:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR15MB17278328DD68CC7D2375D3B8B33A0@MWHPR15MB1727.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00235A1EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(366004)(39860400002)(346002)(199004)(189003)(54014002)(51914003)(561944003)(2906002)(478600001)(71190400001)(68736007)(71200400001)(86362001)(83716004)(6116002)(33656002)(36756003)(82746002)(966005)(186003)(14454004)(4326008)(50226002)(446003)(66446008)(57306001)(53546011)(6506007)(11346002)(54906003)(97736004)(229853002)(66476007)(66946007)(81156014)(93886005)(8676002)(76176011)(8936002)(81166006)(53936002)(6246003)(14444005)(256004)(316002)(6486002)(6512007)(64756008)(73956011)(102836004)(6916009)(66556008)(6306002)(25786009)(486006)(2616005)(76116006)(7736002)(91956017)(305945005)(476003)(6436002)(5660300002)(99286004)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1727;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: le7jHbOw20GlvzoO2RsgOPnyFGEEcZ76bfN4HFC0nG1Y5fWlSi5GyrvNdDeguH76mYQj2xDPuPOtKA+meS2XRmxPAO7zi+nHJwtEWX2XaimnKbPQX/yZF7iWWdlCryP8ly6YK3p6D2uS5smKBOPGi/FdifNZZUtaaiBFVpTE/vqiO6FHkn59Xqg0hx/j6azpEH5Zcey4R/LJ0L6OPIV2JLyUkhARJomHJrhjTLbl0jxALX8XZ12S1bWFD78W94HI91EN1Xc7cboJWrlbWJIxTi/hS2UJYUeJTTg3wxcD59R7p6TuTaTen9RaVrbh5VhvCFLw99+G2k825vC/h8jqh3KsvhBPC5o1iZiqYdJg3A/Ftp3PI10eQWRZhyJMq/UfbQTJvn0F+eKI3ofJfYB3ouqClmvwitdZyg2ZJ48XyOc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A68FE30862D0884AAC470CC176BAE0D9@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82facd73-77f4-4447-4606-08d6cd3299c4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 06:10:52.9658
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1727
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300041
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
-> The patch adds new field in the PPMU event which shows explicitly
-> what kind of data the event is monitoring. It is possible to change it
-> using defined values in exynos_ppmu.h file.
-> 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
-> index 3a3b2fa..549faba 100644
-> --- a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
-> @@ -6,12 +6,16 @@
->   * Author: Chanwoo Choi <cw00.choi@samsung.com>
->   */
->  
-> +#include <dt-bindings/pmu/exynos_ppmu.h>
-> +
->  &ppmu_dmc0 {
->         status = "okay";
->  
->         events {
->  	       ppmu_dmc0_3: ppmu-event3-dmc0 {
->  		       event-name = "ppmu-event3-dmc0";
-> +		       event-data-type = <(PPMU_RO_DATA_CNT |
-> +					   PPMU_WO_DATA_CNT)>;
->  	       };
->         };
->  };
-> @@ -22,6 +26,8 @@
->         events {
->  	       ppmu_dmc1_3: ppmu-event3-dmc1 {
->  		       event-name = "ppmu-event3-dmc1";
-> +		       event-data-type = <(PPMU_RO_DATA_CNT |
-> +					   PPMU_WO_DATA_CNT)>;
->  	       };
->         };
->  };
-> @@ -32,6 +38,8 @@
->         events {
->  	       ppmu_leftbus_3: ppmu-event3-leftbus {
->  		       event-name = "ppmu-event3-leftbus";
-> +		       event-data-type = <(PPMU_RO_DATA_CNT |
-> +					   PPMU_WO_DATA_CNT)>;
->  	       };
->         };
->  };
-> @@ -42,6 +50,8 @@
->         events {
->  	       ppmu_rightbus_3: ppmu-event3-rightbus {
->  		       event-name = "ppmu-event3-rightbus";
-> +		       event-data-type = <(PPMU_RO_DATA_CNT |
-> +					   PPMU_WO_DATA_CNT)>;
->  	       };
->         };
->  };
-> 
-
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> On Apr 29, 2019, at 8:24 AM, Vincent Guittot <vincent.guittot@linaro.org>=
+ wrote:
+>=20
+> Hi Song,
+>=20
+> On Sun, 28 Apr 2019 at 21:47, Song Liu <songliubraving@fb.com> wrote:
+>>=20
+>> Hi Morten and Vincent,
+>>=20
+>>> On Apr 22, 2019, at 6:22 PM, Song Liu <songliubraving@fb.com> wrote:
+>>>=20
+>>> Hi Vincent,
+>>>=20
+>>>> On Apr 17, 2019, at 5:56 AM, Vincent Guittot <vincent.guittot@linaro.o=
+rg> wrote:
+>>>>=20
+>>>> On Wed, 10 Apr 2019 at 21:43, Song Liu <songliubraving@fb.com> wrote:
+>>>>>=20
+>>>>> Hi Morten,
+>>>>>=20
+>>>>>> On Apr 10, 2019, at 4:59 AM, Morten Rasmussen <morten.rasmussen@arm.=
+com> wrote:
+>>>>>>=20
+>>>>=20
+>>>>>>=20
+>>>>>> The bit that isn't clear to me, is _why_ adding idle cycles helps yo=
+ur
+>>>>>> workload. I'm not convinced that adding headroom gives any latency
+>>>>>> improvements beyond watering down the impact of your side jobs. AFAI=
+K,
+>>>>>=20
+>>>>> We think the latency improvements actually come from watering down th=
+e
+>>>>> impact of side jobs. It is not just statistically improving average
+>>>>> latency numbers, but also reduces resource contention caused by the s=
+ide
+>>>>> workload. I don't know whether it is from reducing contention of ALUs=
+,
+>>>>> memory bandwidth, CPU caches, or something else, but we saw reduced
+>>>>> latencies when headroom is used.
+>>>>>=20
+>>>>>> the throttling mechanism effectively removes the throttled tasks fro=
+m
+>>>>>> the schedule according to a specific duty cycle. When the side job i=
+s
+>>>>>> not throttled the main workload is experiencing the same latency iss=
+ues
+>>>>>> as before, but by dynamically tuning the side job throttling you can
+>>>>>> achieve a better average latency. Am I missing something?
+>>>>>>=20
+>>>>>> Have you looked at your distribution of main job latency and tried t=
+o
+>>>>>> compare with when throttling is active/not active?
+>>>>>=20
+>>>>> cfs_bandwidth adjusts allowed runtime for each task_group each period
+>>>>> (configurable, 100ms by default). cpu.headroom logic applies gentle
+>>>>> throttling, so that the side workload gets some runtime in every peri=
+od.
+>>>>> Therefore, if we look at time window equal to or bigger than 100ms, w=
+e
+>>>>> don't really see "throttling active time" vs. "throttling inactive ti=
+me".
+>>>>>=20
+>>>>>>=20
+>>>>>> I'm wondering if the headroom solution is really the right solution =
+for
+>>>>>> your use-case or if what you are really after is something which is
+>>>>>> lower priority than just setting the weight to 1. Something that
+>>>>>=20
+>>>>> The experiments show that, cpu.weight does proper work for priority: =
+the
+>>>>> main workload gets priority to use the CPU; while the side workload o=
+nly
+>>>>> fill the idle CPU. However, this is not sufficient, as the side workl=
+oad
+>>>>> creates big enough contention to impact the main workload.
+>>>>>=20
+>>>>>> (nearly) always gets pre-empted by your main job (SCHED_BATCH and
+>>>>>> SCHED_IDLE might not be enough). If your main job consist
+>>>>>> of lots of relatively short wake-ups things like the min_granularity
+>>>>>> could have significant latency impact.
+>>>>>=20
+>>>>> cpu.headroom gives benefits in addition to optimizations in pre-empt
+>>>>> side. By maintaining some idle time, fewer pre-empt actions are
+>>>>> necessary, thus the main workload will get better latency.
+>>>>=20
+>>>> I agree with Morten's proposal, SCHED_IDLE should help your latency
+>>>> problem because side job will be directly preempted unlike normal cfs
+>>>> task even lowest priority.
+>>>> In addition to min_granularity, sched_period also has an impact on the
+>>>> time that a task has to wait before preempting the running task. Also,
+>>>> some sched_feature like GENTLE_FAIR_SLEEPERS can also impact the
+>>>> latency of a task.
+>>>>=20
+>>>> It would be nice to know if the latency problem comes from contention
+>>>> on cache resources or if it's mainly because you main load waits
+>>>> before running on a CPU
+>>>>=20
+>>>> Regards,
+>>>> Vincent
+>>>=20
+>>> Thanks for these suggestions. Here are some more tests to show the impa=
+ct
+>>> of scheduler knobs and cpu.headroom.
+>>>=20
+>>> side-load | cpu.headroom | side/cpu.weight | min_gran | cpu-idle | main=
+/latency
+>>> -----------------------------------------------------------------------=
+---------
+>>> none    |      0       |     n/a         |    1 ms  |  45.20%  |   1.00
+>>> ffmpeg   |      0       |      1          |   10 ms  |   3.38%  |   1.4=
+6
+>>> ffmpeg   |      0       |   SCHED_IDLE    |    1 ms  |   5.69%  |   1.4=
+2
+>>> ffmpeg   |    20%       |   SCHED_IDLE    |    1 ms  |  19.00%  |   1.1=
+3
+>>> ffmpeg   |    30%       |   SCHED_IDLE    |    1 ms  |  27.60%  |   1.0=
+8
+>>>=20
+>>> In all these cases, the main workload is loaded with same level of
+>>> traffic (request per second). Main workload latency numbers are normali=
+zed
+>>> based on the baseline (first row).
+>>>=20
+>>> For the baseline, the main workload runs without any side workload, the
+>>> system has about 45.20% idle CPU.
+>>>=20
+>>> The next two rows compare the impact of scheduling knobs cpu.weight and
+>>> sched_min_granularity. With cpu.weight of 1 and min_granularity of 10ms=
+,
+>>> we see a latency of 1.46; with SCHED_IDLE and min_granularity of 1ms, w=
+e
+>>> see a latency of 1.42. So SCHED_IDLE and min_granularity help protectin=
+g
+>>> the main workload. However, it is not sufficient, as the latency overhe=
+ad
+>>> is high (>40%).
+>>>=20
+>>> The last two rows show the benefit of cpu.headroom. With 20% headroom,
+>>> the latency is 1.13; while with 30% headroom, the latency is 1.08.
+>>>=20
+>>> We can also see a clear correlation between latency and global idle CPU=
+:
+>>> more idle CPU yields better lower latency.
+>>>=20
+>>> Over all, these results show that cpu.headroom provides effective
+>>> mechanism to control the latency impact of side workloads. Other knobs
+>>> could also help the latency, but they are not as effective and flexible
+>>> as cpu.headroom.
+>>>=20
+>>> Does this analysis address your concern?
+>=20
+> So, you results show that sched_idle class doesn't provide the
+> intended behavior because it still delay the scheduling of sched_other
+> tasks. In fact, the wakeup path of the scheduler doesn't make any
+> difference between a cpu running a sched_other and a cpu running a
+> sched_idle when looking for the idlest cpu and it can create some
+> contentions between sched_other tasks whereas a cpu runs sched_idle
+> task.
+
+I don't think scheduling delay is the only (or dominating) factor of=20
+extra latency. Here are some data to show it.=20
+
+I measured IPC (instructions per cycle) of the main workload under=20
+different scenarios:
+
+side-load | cpu.headroom | side/cpu.weight  | IPC  =20
+----------------------------------------------------
+ none     |     0%       |       N/A        | 0.66=20
+ ffmpeg   |     0%       |    SCHED_IDLE    | 0.53=20
+ ffmpeg   |    20%       |    SCHED_IDLE    | 0.58=20
+ ffmpeg   |    30%       |    SCHED_IDLE    | 0.62=20
+
+These data show that the side workload has a negative impact on the=20
+main workload's IPC. And cpu.headroom could help reduce this impact. =20
+
+Therefore, while optimizations in the wakeup path should help the=20
+latency; cpu.headroom would add _significant_ benefit on top of that.=20
+
+Does this assessment make sense?=20
+
+
+> Viresh (cced to this email) is working on improving such behavior at
+> wake up and has sent an patch related to the subject:
+> https://lkml.org/lkml/2019/4/25/251
+> I'm curious if this would improve the results.
+
+I could try it with our workload next week (I am at LSF/MM this=20
+week). Also, please keep in mind that this test sometimes takes=20
+multiple days to setup and run.=20
+
+Thanks,
+Song
+
+>=20
+> Regards,
+> Vincent
+>=20
+>>>=20
+>>> Thanks,
+>>> Song
+>>>=20
+>>=20
+>> Could you please share your comments and suggestions on this work? Did
+>> the results address your questions/concerns?
+>>=20
+>> Thanks again,
+>> Song
+>>=20
+>>>>=20
+>>>>>=20
+>>>>> Thanks,
+>>>>> Song
+>>>>>=20
+>>>>>>=20
+>>>>>> Morten
+
