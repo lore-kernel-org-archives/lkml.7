@@ -2,176 +2,477 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5216C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999A7C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8D621670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528CC2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfD3KTx (ORCPT
+        id S1726977AbfD3Kbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:19:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42712 "EHLO mx1.redhat.com"
+        Tue, 30 Apr 2019 06:31:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56384 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfD3KTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:19:53 -0400
+        id S1726129AbfD3Kbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 06:31:32 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 678E185360;
-        Tue, 30 Apr 2019 10:19:52 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A57386152B;
-        Tue, 30 Apr 2019 10:19:48 +0000 (UTC)
-Subject: Re: [PATCH v4 3/3] PCI: iproc: Add sorted dma ranges resource entries
- to host bridge
-To:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
- <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <53a7463f-0b31-42ad-96a1-a3f40f02b119@redhat.com>
-Date:   Tue, 30 Apr 2019 12:19:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mx1.redhat.com (Postfix) with ESMTPS id A3E4A88317;
+        Tue, 30 Apr 2019 10:31:31 +0000 (UTC)
+Received: from ws.net.home (unknown [10.40.205.130])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 15CD36154C;
+        Tue, 30 Apr 2019 10:31:29 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 12:31:27 +0200
+From:   Karel Zak <kzak@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        util-linux@vger.kernel.org
+Subject: [ANNOUNCE] util-linux v2.34-rc1
+Message-ID: <20190430103127.ln3hlfwe2pdf5lcn@ws.net.home>
 MIME-Version: 1.0
-In-Reply-To: <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20180716-1584-710bcd
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 30 Apr 2019 10:19:52 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 30 Apr 2019 10:31:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinath,
 
-On 4/12/19 5:13 AM, Srinath Mannam wrote:
-> IPROC host has the limitation that it can use only those address ranges
-> given by dma-ranges property as inbound address. So that the memory
-> address holes in dma-ranges should be reserved to allocate as DMA address.
-> 
-> Inbound address of host accessed by PCIe devices will not be translated
-> before it comes to IOMMU or directly to PE. But the limitation of this
-> host is, access to few address ranges are ignored. So that IOVA ranges
-> for these address ranges have to be reserved.
-> 
-> All allowed address ranges are listed in dma-ranges DT parameter. These
-> address ranges are converted as resource entries and listed in sorted
-> order add added to dma_ranges list of PCI host bridge structure.
-s/add added/and added
-> 
-> Ex:
-> dma-ranges = < \
->   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
->   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
->   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
-> 
-> In the above example of dma-ranges, memory address from
-> 0x0 - 0x80000000,
-> 0x100000000 - 0x800000000,
-> 0x1000000000 - 0x8000000000 and
-> 0x10000000000 - 0xffffffffffffffff.
-> are not allowed to use as inbound addresses.
-s/to use/to be used
-> 
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+Util-linux 2.34 Release Notes
+=============================
+
+Release highlights
+------------------
+
+hardlink -- NEW COMMAND to consolidate duplicate files via hardlinks has been
+merged into util-linux. The new command is not enabled by default. The original
+author is Jakub Jelinek.
+
+The command lsblk(8) has been rewritten. Now it keeps all hierarchy of the block
+devices in memory before it's printed. It allows to modify or reorder the graph.
+The new features based on this functionality are:
+
+ * output de-duplication by --dedup, for example 'lsblk --dedup WWN' to
+   de-duplicate devices by WWN number (e.g. multi-path devices)
+
+ * merge repeating parts of the tree by --merge, see for example:
+   http://karelzak.blogspot.com/2018/11/lsblk-merge.html
+
+The command umount(8) now supports user unmount for FUSE mounts. The requirement
+is FUSE specific user_id=<uid> in /proc/self/mountinfo for the filesystem. 
+
+The command mount(8) now allows to use "--all -o remount". In this case all
+filters (-t and -O) are applied to the table of already mounted filesystems.
+
+The command su(1) now prefers /etc/default/su over /etc/login.defs and
+ENV_SUPATH over ENV_ROOTPATH. The option --pty has been improved and it is not
+marked as experimental anymore.
+
+The command unshare(1) now allows set user ID and group ID by new command line
+options -S/--setuid and -G/--setgid; and new options -R/--root and -w/--wd
+allows to set root and working directory (like nsenter(1)).
+
+The command lscpu(1) now prints 'Frequency boost' and 'Vulnerability' fields.
+The caches calculation has been modified to print summary from all system caches
+rather than per code numbers.
+
+The command logger(1) merges multiple MESSAGE= lines into one journald message.
+
+The library libblkid now does not depend on libuuid and newly supports DRBD9
+detection.
+
+The libsmartcols has been extended to support N:M relationships when print
+tree-like output. This new feature is used by new lsblk --merge output.
+
+The systemd services for fstrim and uuidd now contains hardening settings to
+improve security and service isolation.
+
+The command fstrim now trims also root filesystem on --fstab and checks for 
+read-only filesystems on --all and --fstab. 
+
+The package build-system now accepts --enable-asan to compile commands and
+execute regression tests with addresses sanitizer.
 
 
-> ---
->  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 43 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> index c20fd6b..94ba5c0 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
-> @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
->  	return ret;
->  }
->  
-> +static int
-> +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
-> +			 struct of_pci_range *range)
-> +{
-> +	struct resource *res;
-> +	struct resource_entry *entry, *tmp;
-> +	struct list_head *head = resources;
-> +
-> +	res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	resource_list_for_each_entry(tmp, resources) {
-> +		if (tmp->res->start < range->cpu_addr)
-> +			head = &tmp->node;
-> +	}
-> +
-> +	res->start = range->cpu_addr;
-> +	res->end = res->start + range->size - 1;
-> +
-> +	entry = resource_list_create_entry(res, 0);
-> +	if (!entry)
-> +		return -ENOMEM;
-> +
-> +	entry->offset = res->start - range->cpu_addr;
-> +	resource_list_add(entry, head);
-> +
-> +	return 0;
-> +}
-> +
->  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
->  {
-> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
->  	struct of_pci_range range;
->  	struct of_pci_range_parser parser;
->  	int ret;
-> +	LIST_HEAD(resources);
->  
->  	/* Get the dma-ranges from DT */
->  	ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
-> @@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
->  		return ret;
->  
->  	for_each_of_pci_range(&parser, &range) {
-> +		ret = iproc_pcie_add_dma_range(pcie->dev,
-> +					       &resources,
-> +					       &range);
-> +		if (ret)
-> +			goto out;
->  		/* Each range entry corresponds to an inbound mapping region */
->  		ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
->  		if (ret)
-> -			return ret;
-> +			goto out;
->  	}
->  
-> +	list_splice_init(&resources, &host->dma_ranges);
-> +
->  	return 0;
-> +out:
-> +	pci_free_resource_list(&resources);
-> +	return ret;
->  }
->  
->  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Stable maintenance releases between v2.33 and v2.34
+---------------------------------------------------
 
-Thanks
+util-linux 2.33.1 [Jan 1 2019]
 
-Eric
+ * https://www.kernel.org/pub/linux/utils/util-linux/v2.33/v2.33.1-ReleaseNotes
+   https://www.kernel.org/pub/linux/utils/util-linux/v2.33/v2.33.1-ChangeLog
+
+util-linux 2.33.2 [Apr 4 2019]
+
+ * https://www.kernel.org/pub/linux/utils/util-linux/v2.33/v2.33.2-ReleaseNotes
+   https://www.kernel.org/pub/linux/utils/util-linux/v2.33/v2.33.2-ChangeLog
+
+
+Changes between v2.33 and v2.34
+-------------------------------
+
+agetty:
+   - Fix input of non-ASCII characters in get_logname()  [Stanislav Brabec]
+   - Return old behavior with empty logname  [Stanislav Brabec]
+   - Switch to 8-bit processing in get_logname() for UTF-8 terminals  [Stanislav Brabec]
+   - fix output of escaped characters  [Christian Hesse]
+   - fix portability issues  [Samuel Thibault]
+bash-completion:
+   - umount support relative path and ~ as home shorthands  [Sami Kerola]
+blkid:
+   - (man) cleanup return code section  [Karel Zak]
+   - fix usage()  [Karel Zak]
+   - make PART_ENTRY_* tags optional (add --no-part-details)  [Karel Zak]
+blockdev:
+   - make –-getbsz less confusing for end-users  [Karel Zak]
+build-sys:
+   - add 'make checklibdoc'  [Karel Zak]
+   - add ASAN_LDFLAGS  [Karel Zak]
+   - add check-programs make target  [Karel Zak]
+   - add devel-non-asan.conf  [Karel Zak]
+   - do not require crypt()  [Karel Zak]
+   - do not require dirfd()  [Karel Zak]
+   - don't use ASAN on XOS  [Karel Zak]
+   - enable ASAN on travis-ci  [Karel Zak]
+   - fix crypt() detection without -lcrypt  [Johannes Nixdorf]
+   - improve error message  [Karel Zak]
+   - make fdisk, sfdisk, cfdisk optional (enabled by default)  [Carlos Santos]
+   - make sure HAVE_TIMER_CREATE defined  [Karel Zak]
+   - use REALTIME_LIBS for hwclock due to monotonic.c  [Karel Zak]
+cal:
+   - fix Sexit and Senter  [Karel Zak]
+   - use standout mode on monochrome terminals  [Karel Zak]
+chcpu:
+   - fix memory leak  [Karel Zak]
+chmem:
+   - add initilizer [clang]  [Sami Kerola]
+choom:
+   - fix negative adjust score usage  [Karel Zak]
+col:
+   - improve error message, update regression test  [Karel Zak]
+   - make flush_line() a little bit robust  [Karel Zak]
+column:
+   - Address fill-order confusion in documentation  [dana]
+dmesg:
+   - correct "-n, --console-level level" example in manual page  [Jean-Philippe ROMAIN]
+docs:
+   - TODO lscpu --list-caches  [Karel Zak]
+   - add col(1) to TODO  [Karel Zak]
+   - add link to mail list archive  [Sami Kerola]
+   - add lsblk --merge to TODO  [Karel Zak]
+   - fix typo  [Jakub Wilk]
+   - fix typos [codespell]  [Sami Kerola]
+   - update AUTHORS file  [Karel Zak]
+   - update TODO  [Karel Zak]
+fdisk:
+   - make partition types uses more robust  [Karel Zak]
+   - support CTRL+C on change-partition-type dialog  [Karel Zak]
+   - use 2 decimal places for size in disk summary  [Karel Zak]
+fsck:
+   - (man) labels are available for all filesystems  [Karel Zak]
+fsck.cramfs:
+   - fix utimes() usage  [Karel Zak]
+   - use utimes() instead of utime() that is obsolete  [Sami Kerola]
+fstrim:
+   - Add Documentation key to fstrim.service  [Andreas Henriksson]
+   - Add hardening settings to fstrim.service  [Andreas Henriksson]
+   - check for read-only devices on -a/-A  [Karel Zak]
+   - document kernel return minlen explicitly  [Wang Shilong]
+   - fix usage()  [Karel Zak]
+   - get realpath before trim ioctl  [Wang Shilong]
+   - trim also root FS on --fstab  [Karel Zak]
+   - use long options in systemd service file  [Sami Kerola]
+fstrim.c:
+   - Remove commnet about vfat not supporting fstrim  [Marcos Paulo de Souza]
+hardlink:
+   - (man) add AVAILABILITY  [Karel Zak]
+   - add first simple tests  [Ruediger Meier]
+   - add long options  [Karel Zak]
+   - cleanup error messages, use xalloc.h  [Karel Zak]
+   - cleanup global variables  [Karel Zak]
+   - cleanup verbose and warning messages  [Karel Zak]
+   - enable build with and without pcre2  [Ruediger Meier]
+   - fix compiler warnings  [Ruediger Meier]
+   - make code more readable  [Karel Zak]
+   - remove \r from output  [Karel Zak]
+   - remove typedefs  [Karel Zak]
+   - rename function  [Karel Zak]
+   - style indentations and license header  [Ruediger Meier]
+   - util-linux usage  [Ruediger Meier]
+hardlink, wall:
+   - fix variable shadowing  [Sami Kerola]
+hexdump:
+   - fix potential null pointer dereference warnings  [Sami Kerola]
+hwclock:
+   - use monotonic time to measure how long setting time takes  [Sami Kerola]
+include:
+   - add indirect monotonic clock id specifier  [Sami Kerola]
+   - add no return function attribute  [Sami Kerola]
+include/c:
+   - add print_version() macro  [Karel Zak]
+   - check returns_nonnull function attribute with __GNUC_PREREQ  [Sami Kerola]
+   - re-add type checking in container_of()  [Ruediger Meier]
+   - use returns_nonnull function attribute in xalloc.h  [Sami Kerola]
+include/closestream:
+   - add close_stdout_atexit()  [Karel Zak]
+include/list:
+   - add list_entry_is_first() and list_count_entries()  [Karel Zak]
+include/path.h:
+   - remove duplicate header inclusion  [Sami Kerola]
+include/strutils:
+   - add functions to replace and remove chars from string  [Karel Zak]
+last:
+   - do not use non-standard __UT_NAMESIZE  [Patrick Steinhardt]
+   - fix wtmp user name buffer overflow [asan]  [Sami Kerola]
+ldattach:
+   - Check for value of _HAVE_STRUCT_TERMIOS_C_ISPEED  [Khem Raj]
+lib/canonicalize:
+   - do restricted canonicalize in a subprocess  [Rian Hunter, Karel Zak]
+   - fix typo  [Karel Zak]
+lib/colors:
+   - force to "never" mode on non-terminal output  [Karel Zak]
+lib/fileutils:
+   - add xreaddir()  [Karel Zak]
+lib/loopdev:
+   - differentiate between setter()s and ioctl calls  [Karel Zak]
+   - set blocksize when create a new device  [Karel Zak]
+lib/loopdev.c:
+   - Inline loopcxt_has_device  [Marcos Paulo de Souza]
+lib/path:
+   - allow to close dirfd  [Karel Zak]
+   - remove extra semi-colons  [Karel Zak]
+lib/strutils:
+   - support two decimal places in size_to_human_string() output  [Karel Zak]
+lib/sysfs:
+   - add function to detect partitioned devices  [Karel Zak]
+lib/timer:
+   - add fallback if timer_create() not available  [Karel Zak]
+libblkid:
+   - (bluestore) terminate magic strings array  [Karel Zak]
+   - (ntfs) fix compiler warning [-Wpedantic]  [Karel Zak]
+   - Fix hidding typo  [Andreas Henriksson]
+   - add check for DRBD9  [Roland Kammerer]
+   - fix detection of dm-integrity superblock  [Milan Broz]
+   - improve whole-disk detection when read /proc/partitions  [Karel Zak]
+   - remove dependence on libuuid  [Karel Zak]
+   - stratis  correct byte order  [Tony Asleson]
+   - tiny code simplification  [Karel Zak]
+libfdisk:
+   - (dos) Use strtoul to parse the label-id  [Juerg Haefliger]
+   - (dos) improve first unused sector for logical partitions  [Karel Zak]
+   - (dos) rewrite fist/last free sector functions  [Karel Zak]
+   - (gpt) add HiFive Unleashed bootloader partition UUIDs  [Icenowy Zheng]
+   - add comment to fdisk_set_first_lba()  [Karel Zak]
+   - sanity check, to prevent overlapping partitions from being partly reported as free  [Fabian.Kirsch@dlr.de]
+   - use list_add_tail() in more robust way  [Karel Zak]
+libmount:
+   - (fuse) follow only user_id= on umount  [Karel Zak]
+   - (tabdiff) use list_add_tail() in more robust way  [Karel Zak]
+   - (umount) make mnt_stat_mountpoin() usable for relative paths  [Karel Zak]
+   - Recognize more fuse filesystems as pseudofs and netfs  [Stanislav Brabec]
+   - Support unmount FUSE mounts  [Rian Hunter, Karel Zak]
+   - add mnt_table_{find,insert,move}_fs()  [Karel Zak, Tim Hildering]
+   - add support for MS_REMOUNT on --all  [Karel Zak]
+   - check table membership before adding entry  [Tim Hildering]
+   - don't use sscanf() for fstab parsing  [Karel Zak]
+   - don't use sscanf() for mountinfo parsing  [Karel Zak]
+   - don't use sscanf() for swaps parsing  [Karel Zak]
+   - export mnt_guess_system_root() by API  [Karel Zak]
+   - fix compiler warning [-Wsometimes-uninitialized]  [Karel Zak]
+   - fix memleak on parse errors  [Karel Zak]
+   - improve fs referencing in tables  [Tim Hildering]
+libsmartcols:
+   - add another UTF symbols  [Karel Zak]
+   - add grouping API docs  [Karel Zak]
+   - add grouping samples  [Karel Zak]
+   - add is_last_child(), move is_last_column()  [Karel Zak]
+   - add lines grouping support  [Karel Zak]
+   - fix  variable shadowing  [Sami Kerola]
+   - move buffer stuff to buffer.c  [Karel Zak]
+   - move width calculation to separate file  [Karel Zak]
+   - print tree also for empty cells  [Karel Zak]
+   - remove extra ';' outside of a function [-Wextra-semi]  [Sami Kerola]
+   - rename table_print.c to print.c  [Karel Zak]
+   - split print.c into print.c, put.c and print-api.c  [Karel Zak]
+   - use list_add_tail() in more robust way  [Karel Zak]
+libuuid:
+   - fix man page typos  [Seth Girvan]
+logger:
+   - (man) add info about rewrite and authors  [Karel Zak]
+   - (man) make more obvious that --server/socket is required  [Karel Zak]
+   - concatenate multiple lines of MESSAGE into a single field.  [Karel Zak]
+login:
+   - add support for login.defs(5) LASTLOG_UID_MAX  [Karel Zak]
+login-utils/logindefs:
+   - clenaup API  [Karel Zak]
+losetup:
+   - man page has repeating words [make checkmans]  [Karel Zak]
+   - properly use --sector-size when create a new device  [Karel Zak]
+   - update an error message  [Jeffrey Ferreira]
+   - use offset in warn_size() calculation  [Karel Zak]
+lsblk:
+   - add --dedup <column>  [Karel Zak]
+   - add --merge  [Karel Zak]
+   - add basic function to build devices tree  [Karel Zak]
+   - add comments  [Karel Zak]
+   - add devtree_get_device_or_new()  [Karel Zak]
+   - add lsblk_device_has_dependence()  [Karel Zak]
+   - add process_all_devices_inverse()  [Karel Zak]
+   - allow to specify tree column  [Karel Zak]
+   - apply --nodeps to partitions too  [Karel Zak]
+   - cleanup device reference in the tree  [Karel Zak]
+   - don't keep sysfs dirs open  [Karel Zak]
+   - fix devtree deallocation  [Karel Zak]
+   - fix null pointer dereferences  [Sami Kerola]
+   - force tree on --json --tree independently on used columns  [Karel Zak]
+   - keep functions names consistent  [Karel Zak]
+   - make device_get_data() more generic  [Karel Zak]
+   - make devtree dependences more generic  [Karel Zak]
+   - make process_partitions() more readable  [Karel Zak]
+   - process_one_device() refactoring  [Karel Zak]
+   - properly initialize structs  [Karel Zak]
+   - read queue/discard_granularity only when necessary  [Karel Zak]
+   - remember whole-disk, remove unused struct member  [Karel Zak]
+   - remove badly named debug interface name  [Karel Zak]
+   - remove unncessary parent pointer  [Karel Zak]
+   - remove unused reset_device()  [Karel Zak]
+   - rename blkdev_cxt to lsblk_device  [Karel Zak]
+   - rename reset_lsblk_device() to reset_device()  [Karel Zak]
+   - rename set_device()  [Karel Zak]
+   - reorder functions  [Karel Zak]
+   - reuse 'removable' flag from parent  [Karel Zak]
+   - split sysfs reading and scols table filling  [Karel Zak]
+   - use ID_SCSI_SERIAL when available  [Sven Wiltink]
+   - use devtree functions  [Karel Zak]
+   - use real rather than hardcoded parent  [Karel Zak]
+lscpu:
+   - (man) make SYNOPSIS compatible with another utils  [Karel Zak]
+   - (man) tiny changes  [Karel Zak]
+   - Add aarch32 detection on aarch64  [Jeremy Linton]
+   - add 'Frequency boost'  [Karel Zak]
+   - add --bytes  [Karel Zak]
+   - add --caches  [Karel Zak]
+   - define libsmartcols flags for -e  [Karel Zak]
+   - document --hex output regression (since v2.30)  [Karel Zak]
+   - fix --caches order  [Karel Zak]
+   - fix and document --output-all  [Karel Zak]
+   - fix excl[] array order  [Karel Zak]
+   - rename macros and functions  [Karel Zak]
+   - report CPU vulnerabilities  [Karel Zak]
+   - report more usable cache sizes  [Karel Zak]
+   - wrap default output long lines on terminal  [Karel Zak]
+lslogins:
+   - Fix discrepancies of SYS_UID_MIN  [Stanislav Brabec]
+   - make valid_pwd() more robust  [Karel Zak]
+   - remove duplicate NULL check  [Sami Kerola]
+misc:
+   - consolidate version printing and close_stdout()  [Karel Zak]
+mkswap:
+   - be more explicit about maximal number of pages  [Karel Zak]
+   - fix page size warning message  [Noel Cragg]
+   - use dd(1) in example rather than fallocate(1)  [Karel Zak]
+mount:
+   - (man) add note about --all to remount desc  [Karel Zak]
+   - Do not call mnt_pretty_path() on net file systems.  [Stanislav Brabec]
+   - mount.8 clarify (no)suid behavior on file capabilities  [Peter Wu]
+po:
+   - merge changes  [Karel Zak]
+   - update de.po (from translationproject.org)  [Mario Blättermann]
+   - update es.po (from translationproject.org)  [Antonio Ceballos Roa]
+   - update fr.po (from translationproject.org)  [Frédéric Marchal]
+   - update hr.po (from translationproject.org)  [Božidar Putanec]
+   - update sv.po (from translationproject.org)  [Sebastian Rasmussen]
+readprofile:
+   - check input file is not empty [asan]  [Sami Kerola]
+rtcwake:
+   - use poweroff if shutdown is not found  [Justin Chen]
+setarch:
+   - add new e2k subarches  [Andrew Savchenko]
+   - don't return address of automatic variable  [Andreas Schwab]
+   - fix obscure sparc32bash use-case  [Karel Zak]
+setterm:
+   - disallow "default" for --ulcolor/--hbcolor  [Jakub Wilk]
+   - fix --hbcolor description  [Jakub Wilk]
+   - fix bright colors for --ulcolor/--hbcolor  [Jakub Wilk]
+   - update comments about -ulcolor/-hbcolor syntax  [Jakub Wilk]
+sfdisk:
+   - Avoid out of boundary read with readline  [Tobias Stoeckmann]
+   - fix logical partition resize when start specified  [Karel Zak]
+su:
+   - add note about ECHO on --pty  [Karel Zak]
+   - be sensitive to another SIGCHLD ssi_codes  [Karel Zak]
+   - change error message  [Karel Zak]
+   - fix --pty terminal initialization  [Karel Zak]
+   - make comment more friedly to 'make checkxalloc'  [Karel Zak]
+su-common.c:
+   - prefer /etc/default/su over login.defs  [Stanislav Brabec]
+   - prefer ENV_SUPATH over ENV_ROOTPATH  [Stanislav Brabec]
+su/runuser:
+   - don't mark --pty as experimental, add it to runuser.1 too  [Karel Zak]
+swapon:
+   - (man) cleanup note about holes  [Karel Zak]
+   - (man) iomap for swapfile is already supported by kernel  [Karel Zak]
+   - be more explicit about BTRFS  [Karel Zak]
+   - rewrite section about swapfiles  [Karel Zak]
+   - swapon.8 mention btrfs(5)  [Marcos Mello]
+taskset:
+   - fix cpuset list parser  [Karel Zak]
+tastset:
+   - (man) add  N stride for CPU lists  [Karel Zak]
+test:
+   - Adding AMD EPYC 7451 24-Core Processor  [Erwan Velu]
+tests:
+   - (hardlink) update noregex  [Karel Zak]
+   - (hardlink) update summary output  [Karel Zak]
+   - (kill) do not use shell build-in  [Karel Zak]
+   - add --noskip-commands  [Karel Zak]
+   - add --use-system-commands  [Karel Zak]
+   - add /mnt/test/foo^Mbar to mountinfo tests  [Karel Zak]
+   - add fdisk (dos) first sector dialog test  [Karel Zak]
+   - add missing TS_CMD_UMOUNT check  [Karel Zak]
+   - add missing ts_check_test_command call  [Karel Zak]
+   - add missing ts_check_test_command calls  [Karel Zak]
+   - add test images for drbd v08/v09  [Roland Kammerer]
+   - auto-enable ASAN option if necessary  [Karel Zak]
+   - build-sys update  [Karel Zak]
+   - check for tar and {b,g}zip  [Karel Zak]
+   - enlarge backing file for fstab-btrfs  [Karel Zak]
+   - fix TS_ENABLE_ASAN usage  [Karel Zak]
+   - ignore errors with enabled ASAN in python bindings  [Karel Zak]
+   - make lsns-netnsid portable  [Karel Zak]
+   - make sure TS_HELPER_MBSENCODE compiled  [Karel Zak]
+   - run oids test only when uuidgen tool was built  [Thomas Deutschmann]
+   - update fdisk outputs  [Karel Zak]
+   - update lscpu due to 'Vulnerability' fields  [Karel Zak]
+   - update lscpu output  [Karel Zak]
+   - use TS_ENABLE_ASAN in tests to detect ASAN  [Karel Zak]
+   - use subtests in fdisk/mbr-nondos-mode  [Karel Zak]
+timeutils:
+   - match today day and this year correctly  [Sami Kerola]
+umount:
+   - fix --quiet  [Karel Zak]
+unshare:
+   - allow to set a new root  [Laurent Vivier]
+   - allow to set user ID and group ID  [Laurent Vivier]
+utmpdump:
+   - fix word swapping in manual page  [Carlos Santos]
+uuidd:
+   - Add Documentation key to uuidd.service  [Andreas Henriksson]
+   - Add hardening settings to uuidd.service  [Andreas Henriksson]
+various:
+   - fix 'uninitialized when used' warnings [clang]  [Sami Kerola]
+wall:
+   - remove unnecessary warning  [Karel Zak]
+whereis:
+   - search in /(s)bin before /usr/lib  [Karel Zak]
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
