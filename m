@@ -2,347 +2,495 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DD0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58780C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0151821670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LCjBUga8";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="P8AWQTB/"
+	by mail.kernel.org (Postfix) with ESMTP id 16B952147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfD3GGc (ORCPT
+        id S1726320AbfD3GHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:06:32 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:52768 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725554AbfD3GGb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:06:31 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Tue, 30 Apr 2019 02:07:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:65088 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbfD3GHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 02:07:02 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B653BC004D;
-        Tue, 30 Apr 2019 06:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556604391; bh=v57Lc5qEJQEbqpWZJHgfBy/s9g8JdJin+UyR2xA0EN0=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=LCjBUga8v8p65eOzBIjWCKN4mcfw33iN4gYQIE1wwWB4YcxCpNOlqJeKXqAB4BRx5
-         JONvO5DlREB//bkGmvwJhFNiNR/05bfCIzQgQigs0iBFHoT9Y/qSR5lqpKnnF6OuNL
-         SjAArA7OxvQx+xw8lLDCAJKzyG6+MQZCc1HNZNX7s53/ePBGviubSairZ1IX2EE/6M
-         2hdVnqcWi13cBhPgRbixC+DHF5KVGhsdllfn8DFzj8eb175+SL40C3gb7j82ikPWOs
-         10RHB/19mJCSkvJbsPPZRthARBKIx5raRqJmIyTzU9VHHIzPve6w5HPsp5XaAZ+r4m
-         U70Omwp6IeqHg==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 95402A0067;
-        Tue, 30 Apr 2019 06:06:25 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 29 Apr 2019 23:05:27 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 29 Apr 2019 23:05:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0U4FQ17djSGy5iqZxiL6Sgpa131uidFWQrZIhQwFKUg=;
- b=P8AWQTB/Tnirc9JTvlE3v3rNt3oyt/Rjem62WcyX+pcJZskYefTmzsx+J50Se4IuxL/Pd4RkAnV7D5rgmAqXBy26tPMqi8gDyEFPw5qNz0rnxYCqJUSTboOsDkjD7ejQQ0vUuKfmEBAsytoH40IvbLeC/Ubgoo4bLo7w9AeS/nw=
-Received: from SN1PR12MB2431.namprd12.prod.outlook.com (52.132.195.146) by
- SN1PR12MB0717.namprd12.prod.outlook.com (10.163.209.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 06:05:21 +0000
-Received: from SN1PR12MB2431.namprd12.prod.outlook.com
- ([fe80::1982:4b45:2adf:9a1f]) by SN1PR12MB2431.namprd12.prod.outlook.com
- ([fe80::1982:4b45:2adf:9a1f%4]) with mapi id 15.20.1835.010; Tue, 30 Apr 2019
- 06:05:21 +0000
-From:   Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
-To:     Doug Anderson <dianders@chromium.org>
-CC:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "amstan@chromium.org" <amstan@chromium.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        William Wu <william.wu@rock-chips.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Randy Li <ayaka@soulik.info>,
-        "zyw@rock-chips.com" <zyw@rock-chips.com>,
-        "mka@chromium.org" <mka@chromium.org>,
-        "ryandcase@chromium.org" <ryandcase@chromium.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        "jwerner@chromium.org" <jwerner@chromium.org>,
-        "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>,
-        "Elaine Zhang" <zhangqing@rock-chips.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] usb: dwc2: bus suspend/resume for hosts with
- DWC2_POWER_DOWN_PARAM_NONE
-Thread-Topic: [PATCH v2 1/5] usb: dwc2: bus suspend/resume for hosts with
- DWC2_POWER_DOWN_PARAM_NONE
-Thread-Index: AQHU9XvT/eL2bASAskajIQu3Y3ICkw==
-Date:   Tue, 30 Apr 2019 06:05:21 +0000
-Message-ID: <SN1PR12MB24317F315C5A4DFE70F9CB0DA73A0@SN1PR12MB2431.namprd12.prod.outlook.com>
-References: <20190418001356.124334-1-dianders@chromium.org>
- <20190418001356.124334-2-dianders@chromium.org>
- <SN1PR12MB243108D1EF3239EC4F730ACDA7390@SN1PR12MB2431.namprd12.prod.outlook.com>
- <CAD=FV=UOmfNeuZPrDcZRdwAkF4yRifCpBGUuZTsmmz0UVEZ+yA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=arturp@synopsys.com; 
-x-originating-ip: [84.53.141.183]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7d285ef8-4bc7-4bde-de41-08d6cd31d457
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:SN1PR12MB0717;
-x-ms-traffictypediagnostic: SN1PR12MB0717:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <SN1PR12MB071732B43D42CB23DFEF7069A73A0@SN1PR12MB0717.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(136003)(376002)(39850400004)(189003)(199004)(55674003)(5660300002)(52536014)(478600001)(8936002)(66066001)(68736007)(102836004)(14444005)(8676002)(81166006)(81156014)(256004)(76176011)(229853002)(7696005)(6916009)(316002)(54906003)(99286004)(53546011)(6506007)(71200400001)(71190400001)(55016002)(6436002)(15650500001)(4326008)(6306002)(9686003)(6246003)(25786009)(53936002)(97736004)(26005)(93886005)(476003)(14454004)(446003)(186003)(486006)(33656002)(74316002)(64756008)(66556008)(66946007)(66476007)(91956017)(66446008)(305945005)(966005)(7416002)(76116006)(6116002)(73956011)(86362001)(7736002)(3846002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN1PR12MB0717;H:SN1PR12MB2431.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Y0slcSJZsQUBb35x3QxOCUjT2bTnz00Fwkud7cq9I1u59UiBHedG1NGg2CxDP5V10Pqh1J+ML2+oe1JTdoFrVS0LQsU4BImb659h1Kn/z0+I7Bg2YEyLdoxxFkDFG1NXxJI5US+BHfZdx6gykFU0IViO9x1Y3oAH3Ly7I5dukHGtlRVbaYJa9QjlB2j6MOkjoPQbmk71GK9j7wiVaaZVrEh/wI8khYg3v4Oqnj43r4wEbgsQRd9kJUZ0XTIDkcTNTnBKpUo7j8K6r5aR4lxOZGbWZiQEbDHEtJbIs1pGROR4cX0cYocUaRk8pHmUDfCNu0jF62TXQkDb+iH0AZ8DsZmYozh8OJvx0Xn3q+imw86OEOVbIM6v6nsgyo97k5wu+4hwfkTd26Gqq822ljz7xbqjKouLmBz3j2C1ylvrRQI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mx1.redhat.com (Postfix) with ESMTPS id 14CD8307D90D;
+        Tue, 30 Apr 2019 06:07:01 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4B47179CB;
+        Tue, 30 Apr 2019 06:07:00 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id B7C2641F3C;
+        Tue, 30 Apr 2019 06:06:59 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 02:06:59 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Yuval Shaia <yuval.shaia@oracle.com>
+Cc:     cohuck@redhat.com, jack@suse.cz, kvm@vger.kernel.org,
+        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
+        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        kilobyte@angband.pl, riel@surriel.com, stefanha@redhat.com,
+        imammedo@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, pbonzini@redhat.com
+Message-ID: <3322630.24640048.1556604419234.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190430055318.GA5108@lap1>
+References: <20190426050039.17460-1-pagupta@redhat.com> <20190426050039.17460-3-pagupta@redhat.com> <20190430055318.GA5108@lap1>
+Subject: Re: [Qemu-devel] [PATCH v7 2/6] virtio-pmem: Add virtio pmem driver
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d285ef8-4bc7-4bde-de41-08d6cd31d457
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 06:05:21.8203
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB0717
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.16.97, 10.4.195.12]
+Thread-Topic: virtio-pmem: Add virtio pmem driver
+Thread-Index: +SzkNZuLcN6G4o5b/Bde3Y74k8dk7A==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 30 Apr 2019 06:07:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,=0A=
-=0A=
-On 4/29/2019 21:34, Doug Anderson wrote:=0A=
-> Hi,=0A=
-> =0A=
-> On Mon, Apr 29, 2019 at 1:43 AM Artur Petrosyan=0A=
-> <Arthur.Petrosyan@synopsys.com> wrote:=0A=
->>=0A=
->> Hi,=0A=
->>=0A=
->> On 4/18/2019 04:15, Douglas Anderson wrote:=0A=
->>> This is an attempt to rehash commit 0cf884e819e0 ("usb: dwc2: add bus=
-=0A=
->>> suspend/resume for dwc2") on ToT.  That commit was reverted in commit=
-=0A=
->>> b0bb9bb6ce01 ("Revert "usb: dwc2: add bus suspend/resume for dwc2"")=0A=
->>> because apparently it broke the Altera SOCFPGA.=0A=
->>>=0A=
->>> With all the changes that have happened to dwc2 in the meantime, it's=
-=0A=
->>> possible that the Altera SOCFPGA will just magically work with this=0A=
->>> change now.  ...and it would be good to get bus suspend/resume=0A=
->>> implemented.=0A=
->>>=0A=
->>> This change is a forward port of one that's been living in the Chrome=
-=0A=
->>> OS 3.14 kernel tree.=0A=
->>>=0A=
->>> Signed-off-by: Douglas Anderson <dianders@chromium.org>=0A=
->>> ---=0A=
->>> This patch was last posted at:=0A=
->>>=0A=
->>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.kernel.org_=
-r_1446237173-2D15263-2D1-2Dgit-2Dsend-2Demail-2Ddianders-40chromium.org&d=
-=3DDwIDAg&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3D9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVzYqr=
-C_D7niMJI&m=3DMMfe-4lZePyty6F5zfQ54kiYGuJWNulyRat944LkOsc&s=3DnExFpAPP_0plZ=
-fO5LMG1B-mqt1vyCvE35elVcyVgs8Y&e=3D=0A=
->>>=0A=
->>> ...and appears to have died the death of silence.  Maybe it could get=
-=0A=
->>> some bake time in linuxnext if we can't find any proactive testing?=0A=
->>>=0A=
->>> I will also freely admit that I don't know tons about the theory=0A=
->>> behind this patch.  I'm mostly just re-hashing the original commit=0A=
->>> from Kever that was reverted since:=0A=
->>> * Turning on partial power down on rk3288 doesn't "just work".  I=0A=
->>>     don't get hotplug events.  This is despite dwc2 auto-detecting that=
-=0A=
->>>     we are power optimized.=0A=
->> What do you mean by doesn't "just work" ? It seem to me that even after=
-=0A=
->> adding this patch you don't get issues fixed.=0A=
->> You mention that you don't get the hotplug events. Please provide dwc2=
-=0A=
->> debug logs and register dumps on this issue.=0A=
-> =0A=
-> I mean that partial power down in the currently upstream driver=0A=
-> doesn't work.  AKA: if I turn on partial power down in the upstream=0A=
-> driver then hotplug events break.  I can try to provide some logs.  On=0A=
-> what exact version of the code do you want logs?  Just your series?=0A=
-> Just my series?  Mainline?  Some attempt at combining both series?  As=0A=
-> I said things seem to sorta work with the combined series.  I can try=0A=
-> to clarify if that's the series you want me to test with.  ...or I can=0A=
-> wait for your next version?=0A=
-As I said this patch doesn't fix the issue with hotplug. With this patch =
-=0A=
-or without the hotplug behaves as it was. I have tested it on our setup.=0A=
-=0A=
-Have you debugged your patch? Does it make any difference on your setup =0A=
-? Does it fix the issue with hotplug?=0A=
-=0A=
-Try to debug with the following steps.=0A=
-1. Debug code with just your patch. Capture the logs and provide. So =0A=
-that I can see what is difference with your patch.=0A=
-2. Debug only with my series and see if those issues with hotplug are =0A=
-still there.=0A=
-=0A=
-=0A=
-> =0A=
-> =0A=
->>> @@ -4506,21 +4507,35 @@ static int _dwc2_hcd_suspend(struct usb_hcd *hc=
-d)=0A=
->>>         */=0A=
->>>        if (!hsotg->bus_suspended) {=0A=
->>>                hprt0 =3D dwc2_read_hprt0(hsotg);=0A=
->>> -             hprt0 |=3D HPRT0_SUSP;=0A=
->>> -             hprt0 &=3D ~HPRT0_PWR;=0A=
->>> -             dwc2_writel(hsotg, hprt0, HPRT0);=0A=
->>> -             spin_unlock_irqrestore(&hsotg->lock, flags);=0A=
->>> -             dwc2_vbus_supply_exit(hsotg);=0A=
->>> -             spin_lock_irqsave(&hsotg->lock, flags);=0A=
->>> +             if (hprt0 & HPRT0_CONNSTS) { > +                        h=
-prt0 |=3D HPRT0_SUSP;=0A=
->> Here you set "HPRT0_SUSP" bit but what if core doesn't support both=0A=
->> hibernation and Partial Power down assuming that=0A=
->> hsotg->params.power_down" value us equal to "DWC2_POWER_DOWN_PARAM_NONE"=
-=0A=
->> which is 0.=0A=
-> =0A=
-> I am by no means an expert on dwc2, but an assumption made in my patch=0A=
-> is that even cores that can't support partial power down can still=0A=
-> save some amount of power when hcd_suspend is called.=0A=
-Have you tried to debug dwc2 with power_down =3D=3D DWC2_POWER_DOWN_PARAM_N=
-ONE ?=0A=
-> =0A=
-> Some evidence that this should be possible: looking at mainline Linux=0A=
-> and at dwc2_port_suspend(), I see:=0A=
-> =0A=
-> * It is currently called even when we have DWC2_POWER_DOWN_PARAM_NONE=0A=
-Currently (without your and my patches) (looking at mainline Linux) the =0A=
-function dwc2_port_suspend() is called anyway because its call is issued =
-=0A=
-by the system. But it performs entering to suspend only in case of =0A=
-DWC2_POWER_DOWN_PARAM_PARTIAL.=0A=
-=0A=
-This is not an assumption. What I am pointing out is based on debugging =0A=
-and before making assumptions without debugging for me seems not ok.=0A=
-=0A=
-Currently without your patch and without my patches. In the =0A=
-dwc2_port_suspend() it will enter to suspend only in case that =0A=
-power_down =3D=3D DWC2_POWER_DOWN_PARAM_PARTIAL. Because if you look at the=
- =0A=
-code more carefully you will see=0A=
-=0A=
-  	if (hsotg->params.power_down !=3D DWC2_POWER_DOWN_PARAM_PARTIAL)=0A=
-		goto skip_power_saving;=0A=
-=0A=
-This says if power_down is not DWC2_POWER_DOWN_PARAM_PARTIAL then skip =0A=
-power saving.=0A=
-=0A=
-So but after your patch. If power_down is DWC2_POWER_DOWN_PARAM_NONE it =0A=
-tries to suspend.=0A=
-=0A=
-=0A=
-> =0A=
-> * It currently sets HPRT0_SUSP=0A=
-> =0A=
-> * It currently sets PCGCTL_STOPPCLK specifically in the case where=0A=
-> power down is DWC2_POWER_DOWN_PARAM_NONE.=0A=
-It currently (without my and your patches) doesn't set PCGCTL_STOPPCLK =0A=
-when power down is DWC2_POWER_DOWN_PARAM_NONE. Because again and again =0A=
-when power down is DWC2_POWER_DOWN_PARAM_NONE power saving is skipped.=0A=
-=0A=
-=0A=
-> =0A=
-> ...I believe that the net effect of my patch ends up doing both those=0A=
-> same two things in hcd_suspend.  That is: when power_down is=0A=
-> DWC2_POWER_DOWN_PARAM_NONE I believe my patch is really just doing the=0A=
-> same thing that dwc2_port_suspend() would do in the same case.  Is=0A=
-> that not OK?=0A=
-No if your patch is doing the same thing as it was doing before what is =0A=
-the purpose of the patch ?=0A=
-=0A=
-My testes show that your patch doesn't fix the issue related partial =0A=
-power down.=0A=
-=0A=
-> =0A=
-> =0A=
-> =0A=
->>> +                     if (hsotg->params.power_down =3D=3D DWC2_POWER_DO=
-WN_PARAM_PARTIAL)=0A=
->> You make one checking of hsotg->params.power_down mode here.=0A=
->>> +                             hprt0 &=3D ~HPRT0_PWR;=0A=
->>> +                     dwc2_writel(hsotg, hprt0, HPRT0);=0A=
->>> +             }=0A=
->>> +             if (hsotg->params.power_down =3D=3D DWC2_POWER_DOWN_PARAM=
-_PARTIAL) {=0A=
->> another checking of power_down mode here.=0A=
-> =0A=
-> Yeah, we can debate about how to best share/split code.  I'm not in=0A=
-> love with the current structure either.  When I rebased your patches=0A=
-> atop mine I changed this to more fully split them and I agree that was=0A=
-> better.=0A=
-> =0A=
-> =0A=
->>> @@ -4592,10 +4612,12 @@ static int _dwc2_hcd_resume(struct usb_hcd *hcd=
-)=0A=
->>>                spin_unlock_irqrestore(&hsotg->lock, flags);=0A=
->>>                dwc2_port_resume(hsotg);=0A=
->>>        } else {=0A=
->>> -             dwc2_vbus_supply_init(hsotg);=0A=
->>> +             if (hsotg->params.power_down =3D=3D DWC2_POWER_DOWN_PARAM=
-_PARTIAL) {=0A=
->>> +                     dwc2_vbus_supply_init(hsotg);=0A=
->>>=0A=
->>> -             /* Wait for controller to correctly update D+/D- level */=
-=0A=
->>> -             usleep_range(3000, 5000);=0A=
->>> +                     /* Wait for controller to correctly update D+/D- =
-level */=0A=
->>> +                     usleep_range(3000, 5000);=0A=
->>> +             }=0A=
->>>=0A=
->>>                /*=0A=
->>>                 * Clear Port Enable and Port Status changes.=0A=
->>>=0A=
->>=0A=
->> I have tested the patch on HAPS-DX. With this patch or without it when I=
-=0A=
->> have a device connected core  enters to partial power down and doesn't=
-=0A=
->> exit from it. So I cannot use the device.=0A=
-> =0A=
-> Can you explain what HAPS-DX is?=0A=
-It is the general setup to perform our use case testes.=0A=
-For more information about the details you can google about it.=0A=
-=0A=
-> =0A=
-> =0A=
-> -Doug=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Regards,=0A=
-Artur=0A=
+
+> 
+> On Fri, Apr 26, 2019 at 10:30:35AM +0530, Pankaj Gupta wrote:
+> > This patch adds virtio-pmem driver for KVM guest.
+> > 
+> > Guest reads the persistent memory range information from
+> > Qemu over VIRTIO and registers it on nvdimm_bus. It also
+> > creates a nd_region object with the persistent memory
+> > range information so that existing 'nvdimm/pmem' driver
+> > can reserve this into system memory map. This way
+> > 'virtio-pmem' driver uses existing functionality of pmem
+> > driver to register persistent memory compatible for DAX
+> > capable filesystems.
+> > 
+> > This also provides function to perform guest flush over
+> > VIRTIO from 'pmem' driver when userspace performs flush
+> > on DAX memory range.
+> > 
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > ---
+> >  drivers/nvdimm/virtio_pmem.c     | 114 +++++++++++++++++++++++++++++
+> >  drivers/virtio/Kconfig           |  10 +++
+> >  drivers/virtio/Makefile          |   1 +
+> >  drivers/virtio/pmem.c            | 118 +++++++++++++++++++++++++++++++
+> >  include/linux/virtio_pmem.h      |  60 ++++++++++++++++
+> >  include/uapi/linux/virtio_ids.h  |   1 +
+> >  include/uapi/linux/virtio_pmem.h |  10 +++
+> >  7 files changed, 314 insertions(+)
+> >  create mode 100644 drivers/nvdimm/virtio_pmem.c
+> >  create mode 100644 drivers/virtio/pmem.c
+> >  create mode 100644 include/linux/virtio_pmem.h
+> >  create mode 100644 include/uapi/linux/virtio_pmem.h
+> > 
+> > diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
+> > new file mode 100644
+> > index 000000000000..66b582f751a3
+> > --- /dev/null
+> > +++ b/drivers/nvdimm/virtio_pmem.c
+> > @@ -0,0 +1,114 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * virtio_pmem.c: Virtio pmem Driver
+> > + *
+> > + * Discovers persistent memory range information
+> > + * from host and provides a virtio based flushing
+> > + * interface.
+> > + */
+> > +#include <linux/virtio_pmem.h>
+> > +#include "nd.h"
+> > +
+> > + /* The interrupt handler */
+> > +void host_ack(struct virtqueue *vq)
+> > +{
+> > +	unsigned int len;
+> > +	unsigned long flags;
+> > +	struct virtio_pmem_request *req, *req_buf;
+> > +	struct virtio_pmem *vpmem = vq->vdev->priv;
+> > +
+> > +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > +	while ((req = virtqueue_get_buf(vq, &len)) != NULL) {
+> > +		req->done = true;
+> > +		wake_up(&req->host_acked);
+> > +
+> > +		if (!list_empty(&vpmem->req_list)) {
+> > +			req_buf = list_first_entry(&vpmem->req_list,
+> > +					struct virtio_pmem_request, list);
+> > +			list_del(&vpmem->req_list);
+> > +			req_buf->wq_buf_avail = true;
+> > +			wake_up(&req_buf->wq_buf);
+> > +		}
+> > +	}
+> > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > +}
+> > +EXPORT_SYMBOL_GPL(host_ack);
+> > +
+> > + /* The request submission function */
+> > +int virtio_pmem_flush(struct nd_region *nd_region)
+> > +{
+> > +	int err;
+> > +	unsigned long flags;
+> > +	struct scatterlist *sgs[2], sg, ret;
+> > +	struct virtio_device *vdev = nd_region->provider_data;
+> > +	struct virtio_pmem *vpmem = vdev->priv;
+> > +	struct virtio_pmem_request *req;
+> > +
+> > +	might_sleep();
+> > +	req = kmalloc(sizeof(*req), GFP_KERNEL);
+> > +	if (!req)
+> > +		return -ENOMEM;
+> > +
+> > +	req->done = req->wq_buf_avail = false;
+> > +	strcpy(req->name, "FLUSH");
+> > +	init_waitqueue_head(&req->host_acked);
+> > +	init_waitqueue_head(&req->wq_buf);
+> > +	sg_init_one(&sg, req->name, strlen(req->name));
+> > +	sgs[0] = &sg;
+> > +	sg_init_one(&ret, &req->ret, sizeof(req->ret));
+> > +	sgs[1] = &ret;
+> > +
+> > +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > +	err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req, GFP_ATOMIC);
+> > +	if (err) {
+> > +		dev_err(&vdev->dev, "failed to send command to virtio pmem device\n");
+> > +
+> > +		list_add_tail(&vpmem->req_list, &req->list);
+> > +		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > +
+> > +		/* When host has read buffer, this completes via host_ack */
+> > +		wait_event(req->wq_buf, req->wq_buf_avail);
+> > +		spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > +	}
+> > +	err = virtqueue_kick(vpmem->req_vq);
+> > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > +
+> > +	if (!err) {
+> > +		err = -EIO;
+> > +		goto ret;
+> > +	}
+> > +	/* When host has read buffer, this completes via host_ack */
+> > +	wait_event(req->host_acked, req->done);
+> > +	err = req->ret;
+> > +ret:
+> > +	kfree(req);
+> > +	return err;
+> > +};
+> > +
+> > + /* The asynchronous flush callback function */
+> > +int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
+> > +{
+> > +	int rc = 0;
+> > +
+> > +	/* Create child bio for asynchronous flush and chain with
+> > +	 * parent bio. Otherwise directly call nd_region flush.
+> > +	 */
+> > +	if (bio && bio->bi_iter.bi_sector != -1) {
+> > +		struct bio *child = bio_alloc(GFP_ATOMIC, 0);
+> > +
+> > +		if (!child)
+> > +			return -ENOMEM;
+> > +		bio_copy_dev(child, bio);
+> > +		child->bi_opf = REQ_PREFLUSH;
+> > +		child->bi_iter.bi_sector = -1;
+> > +		bio_chain(child, bio);
+> > +		submit_bio(child);
+> > +	} else {
+> > +		if (virtio_pmem_flush(nd_region))
+> > +			rc = -EIO;
+> > +	}
+> > +
+> > +	return rc;
+> > +};
+> > +EXPORT_SYMBOL_GPL(async_pmem_flush);
+> > +MODULE_LICENSE("GPL");
+> > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> > index 35897649c24f..9f634a2ed638 100644
+> > --- a/drivers/virtio/Kconfig
+> > +++ b/drivers/virtio/Kconfig
+> > @@ -42,6 +42,16 @@ config VIRTIO_PCI_LEGACY
+> >  
+> >  	  If unsure, say Y.
+> >  
+> > +config VIRTIO_PMEM
+> > +	tristate "Support for virtio pmem driver"
+> > +	depends on VIRTIO
+> > +	depends on LIBNVDIMM
+> > +	help
+> > +	This driver provides support for virtio based flushing interface
+> > +	for persistent memory range.
+> > +
+> > +	If unsure, say M.
+> > +
+> >  config VIRTIO_BALLOON
+> >  	tristate "Virtio balloon driver"
+> >  	depends on VIRTIO
+> > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> > index 3a2b5c5dcf46..143ce91eabe9 100644
+> > --- a/drivers/virtio/Makefile
+> > +++ b/drivers/virtio/Makefile
+> > @@ -6,3 +6,4 @@ virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
+> >  virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) += virtio_pci_legacy.o
+> >  obj-$(CONFIG_VIRTIO_BALLOON) += virtio_balloon.o
+> >  obj-$(CONFIG_VIRTIO_INPUT) += virtio_input.o
+> > +obj-$(CONFIG_VIRTIO_PMEM) += pmem.o ../nvdimm/virtio_pmem.o
+> > diff --git a/drivers/virtio/pmem.c b/drivers/virtio/pmem.c
+> > new file mode 100644
+> > index 000000000000..309788628e41
+> > --- /dev/null
+> > +++ b/drivers/virtio/pmem.c
+> > @@ -0,0 +1,118 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * virtio_pmem.c: Virtio pmem Driver
+> > + *
+> > + * Discovers persistent memory range information
+> > + * from host and registers the virtual pmem device
+> > + * with libnvdimm core.
+> > + */
+> > +#include <linux/virtio_pmem.h>
+> > +#include <../../drivers/nvdimm/nd.h>
+> > +
+> > +static struct virtio_device_id id_table[] = {
+> > +	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
+> > +	{ 0 },
+> > +};
+> > +
+> > + /* Initialize virt queue */
+> > +static int init_vq(struct virtio_pmem *vpmem)
+> > +{
+> > +	/* single vq */
+> > +	vpmem->req_vq = virtio_find_single_vq(vpmem->vdev,
+> > +				host_ack, "flush_queue");
+> > +	if (IS_ERR(vpmem->req_vq))
+> > +		return PTR_ERR(vpmem->req_vq);
+> > +
+> > +	spin_lock_init(&vpmem->pmem_lock);
+> > +	INIT_LIST_HEAD(&vpmem->req_list);
+> > +
+> > +	return 0;
+> > +};
+> > +
+> > +static int virtio_pmem_probe(struct virtio_device *vdev)
+> > +{
+> > +	int err = 0;
+> > +	struct resource res;
+> > +	struct virtio_pmem *vpmem;
+> > +	struct nd_region_desc ndr_desc = {};
+> > +	int nid = dev_to_node(&vdev->dev);
+> > +	struct nd_region *nd_region;
+> > +
+> > +	if (!vdev->config->get) {
+> > +		dev_err(&vdev->dev, "%s failure: config access disabled\n",
+> > +			__func__);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem), GFP_KERNEL);
+> > +	if (!vpmem) {
+> > +		err = -ENOMEM;
+> > +		goto out_err;
+> > +	}
+> > +
+> > +	vpmem->vdev = vdev;
+> > +	vdev->priv = vpmem;
+> > +	err = init_vq(vpmem);
+> > +	if (err)
+> > +		goto out_err;
+> > +
+> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> > +			start, &vpmem->start);
+> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> > +			size, &vpmem->size);
+> > +
+> > +	res.start = vpmem->start;
+> > +	res.end   = vpmem->start + vpmem->size-1;
+> > +	vpmem->nd_desc.provider_name = "virtio-pmem";
+> > +	vpmem->nd_desc.module = THIS_MODULE;
+> > +
+> > +	vpmem->nvdimm_bus = nvdimm_bus_register(&vdev->dev,
+> > +						&vpmem->nd_desc);
+> > +	if (!vpmem->nvdimm_bus)
+> > +		goto out_vq;
+> > +
+> > +	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
+> > +
+> > +	ndr_desc.res = &res;
+> > +	ndr_desc.numa_node = nid;
+> > +	ndr_desc.flush = async_pmem_flush;
+> > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
+> > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
+> > +	nd_region = nvdimm_pmem_region_create(vpmem->nvdimm_bus, &ndr_desc);
+> > +
+> > +	if (!nd_region)
+> > +		goto out_nd;
+> > +	nd_region->provider_data =  dev_to_virtio
+> 
+> Delete extra space here ----------^^
+
+ah. Sure. 
+
+> I think this will let you join the two lines.
+> 
+> > +					(nd_region->dev.parent->parent);
+> > +	return 0;
+> > +out_nd:
+> > +	err = -ENXIO;
+> > +	nvdimm_bus_unregister(vpmem->nvdimm_bus);
+> > +out_vq:
+> > +	vdev->config->del_vqs(vdev);
+> > +out_err:
+> > +	dev_err(&vdev->dev, "failed to register virtio pmem memory\n");
+> > +	return err;
+> > +}
+> > +
+> > +static void virtio_pmem_remove(struct virtio_device *vdev)
+> > +{
+> > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
+> > +
+> > +	nvdimm_bus_unregister(nvdimm_bus);
+> > +	vdev->config->del_vqs(vdev);
+> > +	vdev->config->reset(vdev);
+> > +}
+> > +
+> > +static struct virtio_driver virtio_pmem_driver = {
+> > +	.driver.name		= KBUILD_MODNAME,
+> > +	.driver.owner		= THIS_MODULE,
+> > +	.id_table		= id_table,
+> > +	.probe			= virtio_pmem_probe,
+> > +	.remove			= virtio_pmem_remove,
+> > +};
+> > +
+> > +module_virtio_driver(virtio_pmem_driver);
+> > +MODULE_DEVICE_TABLE(virtio, id_table);
+> > +MODULE_DESCRIPTION("Virtio pmem driver");
+> > +MODULE_LICENSE("GPL");
+> > diff --git a/include/linux/virtio_pmem.h b/include/linux/virtio_pmem.h
+> > new file mode 100644
+> > index 000000000000..ab1da877575d
+> > --- /dev/null
+> > +++ b/include/linux/virtio_pmem.h
+> > @@ -0,0 +1,60 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * virtio_pmem.h: virtio pmem Driver
+> > + *
+> > + * Discovers persistent memory range information
+> > + * from host and provides a virtio based flushing
+> > + * interface.
+> > + **/
+> > +
+> > +#ifndef _LINUX_VIRTIO_PMEM_H
+> > +#define _LINUX_VIRTIO_PMEM_H
+> > +
+> > +#include <linux/virtio_ids.h>
+> > +#include <linux/module.h>
+> > +#include <linux/virtio_config.h>
+> > +#include <uapi/linux/virtio_pmem.h>
+> > +#include <linux/libnvdimm.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +struct virtio_pmem_request {
+> > +	/* Host return status corresponding to flush request */
+> > +	int ret;
+> > +
+> > +	/* command name*/
+> > +	char name[16];
+> > +
+> > +	/* Wait queue to process deferred work after ack from host */
+> > +	wait_queue_head_t host_acked;
+> > +	bool done;
+> > +
+> > +	/* Wait queue to process deferred work after virt queue buffer avail */
+> > +	wait_queue_head_t wq_buf;
+> > +	bool wq_buf_avail;
+> > +	struct list_head list;
+> > +};
+> > +
+> > +struct virtio_pmem {
+> > +	struct virtio_device *vdev;
+> > +
+> > +	/* Virtio pmem request queue */
+> > +	struct virtqueue *req_vq;
+> > +
+> > +	/* nvdimm bus registers virtio pmem device */
+> > +	struct nvdimm_bus *nvdimm_bus;
+> > +	struct nvdimm_bus_descriptor nd_desc;
+> > +
+> > +	/* List to store deferred work if virtqueue is full */
+> > +	struct list_head req_list;
+> > +
+> > +	/* Synchronize virtqueue data */
+> > +	spinlock_t pmem_lock;
+> > +
+> > +	/* Memory region information */
+> > +	uint64_t start;
+> > +	uint64_t size;
+> > +};
+> > +
+> > +void host_ack(struct virtqueue *vq);
+> > +int async_pmem_flush(struct nd_region *nd_region, struct bio *bio);
+> > +#endif
+> > diff --git a/include/uapi/linux/virtio_ids.h
+> > b/include/uapi/linux/virtio_ids.h
+> > index 6d5c3b2d4f4d..32b2f94d1f58 100644
+> > --- a/include/uapi/linux/virtio_ids.h
+> > +++ b/include/uapi/linux/virtio_ids.h
+> > @@ -43,5 +43,6 @@
+> >  #define VIRTIO_ID_INPUT        18 /* virtio input */
+> >  #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
+> >  #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
+> > +#define VIRTIO_ID_PMEM         27 /* virtio pmem */
+> >  
+> >  #endif /* _LINUX_VIRTIO_IDS_H */
+> > diff --git a/include/uapi/linux/virtio_pmem.h
+> > b/include/uapi/linux/virtio_pmem.h
+> > new file mode 100644
+> > index 000000000000..fa3f7d52717a
+> > --- /dev/null
+> > +++ b/include/uapi/linux/virtio_pmem.h
+> > @@ -0,0 +1,10 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +
+> > +#ifndef _UAPI_LINUX_VIRTIO_PMEM_H
+> > +#define _UAPI_LINUX_VIRTIO_PMEM_H
+> > +
+> > +struct virtio_pmem_config {
+> > +	__le64 start;
+> > +	__le64 size;
+> > +};
+> > +#endif
+> 
+> Suggesting to fix the above minor formatting error.
+> 
+> With this:
+> 
+> Reviewed-by: Yuval Shaia <yuval.shaia@oracle.com>
+
+Thank You!
+
+Best regards,
+Pankaj
+
+> 
+> > --
+> > 2.20.1
+> > 
+> > 
+> 
+> 
