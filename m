@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDE9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9996C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D155621707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF9E21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624828;
-	bh=FDTVPW8SHiwC8dpz6dmpjUaciFW8vnK86bEFkFWc3bw=;
+	s=default; t=1556624834;
+	bh=oXHMxZGy4L8cj7bvx3gqs70TABM/NOfiyKnXnucg2No=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nrR41zNDqBmeK+GQiO4KcREYsdACJWNMcFcqzG9tagQSvFXFuTyR9TsCkFZm4tB+p
-	 3okIWNYP+ljdH6UM+t6O7qRpmi7ygVQhBpHrtN1Ohm0RDwOm9KW2lhcmcvXFE6Z8+l
-	 qH8KAz76jNRNbkoS5SWR3C4zi7OYf4pcEzyccZJU=
+	b=T9RpgjnnV/HS7d+vJn/MeXba0oeIDqZP57wKpfE2Zy6sIaelri4kz1gv5vjIMVg98
+	 +i1Kl4wndP7n1Luxd2/NO08Qsg6EmDt3eRCpDTKEX3GQDHrW6kXxorPZJZgmGSGgEp
+	 qOn5UHgxhCMfZXtNl6C5VJRKE2W38s6GVDNs/jUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbfD3LrH (ORCPT
+        id S1730255AbfD3LrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729896AbfD3Lq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:57 -0400
+        id S1730641AbfD3LrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CA152173E;
-        Tue, 30 Apr 2019 11:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62F31217F4;
+        Tue, 30 Apr 2019 11:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624815;
-        bh=FDTVPW8SHiwC8dpz6dmpjUaciFW8vnK86bEFkFWc3bw=;
+        s=default; t=1556624820;
+        bh=oXHMxZGy4L8cj7bvx3gqs70TABM/NOfiyKnXnucg2No=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NpsWuZ8eSnNFZhoOuaCqmqCx7eFRdvsZ8KVyKztn0dXJ172DjjSi6JPIRXMsDV37S
-         DHGtcWuxLpygCSGGohpZTNhCQF+CFVZjxWyNOAivovDtIyLAxLD1ERqJIu1ECj29M8
-         VW3MIj7tPPoN9NYW8dSt+v5nSsL4YIM1rEfHUoR4=
+        b=igIyuDuKX2Rab3nk7/0sKSW43JA/hjIBsCrECxfgx3encftFd+KE+atVSQq7Bl4eB
+         6aIeHJPDBUDJC8lg2cb/A82t7TQ5PuWzLojZk4UVLL7pZCTj38myDOfZ+PBgMT8Zyi
+         dKdsfRzhbDKwF7kGbIJLj1IoF9DKm+vK6ndZR+pM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ross Zwisler <ross.zwisler@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 082/100] mm: Fix warning in insert_pfn()
-Date:   Tue, 30 Apr 2019 13:38:51 +0200
-Message-Id: <20190430113612.628743517@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 084/100] ipv4: add sanity checks in ipv4_link_failure()
+Date:   Tue, 30 Apr 2019 13:38:53 +0200
+Message-Id: <20190430113612.739788942@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -63,74 +61,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Eric Dumazet <edumazet@google.com>
 
-commit f2c57d91b0d96aa13ccff4e3b178038f17b00658 upstream.
+[ Upstream commit 20ff83f10f113c88d0bb74589389b05250994c16 ]
 
-In DAX mode a write pagefault can race with write(2) in the following
-way:
+Before calling __ip_options_compile(), we need to ensure the network
+header is a an IPv4 one, and that it is already pulled in skb->head.
 
-CPU0                            CPU1
-                                write fault for mapped zero page (hole)
-dax_iomap_rw()
-  iomap_apply()
-    xfs_file_iomap_begin()
-      - allocates blocks
-    dax_iomap_actor()
-      invalidate_inode_pages2_range()
-        - invalidates radix tree entries in given range
-                                dax_iomap_pte_fault()
-                                  grab_mapping_entry()
-                                    - no entry found, creates empty
-                                  ...
-                                  xfs_file_iomap_begin()
-                                    - finds already allocated block
-                                  ...
-                                  vmf_insert_mixed_mkwrite()
-                                    - WARNs and does nothing because there
-                                      is still zero page mapped in PTE
-        unmap_mapping_pages()
+RAW sockets going through a tunnel can end up calling ipv4_link_failure()
+with total garbage in the skb, or arbitrary lengthes.
 
-This race results in WARN_ON from insert_pfn() and is occasionally
-triggered by fstest generic/344. Note that the race is otherwise
-harmless as before write(2) on CPU0 is finished, we will invalidate page
-tables properly and thus user of mmap will see modified data from
-write(2) from that point on. So just restrict the warning only to the
-case when the PFN in PTE is not zero page.
+syzbot report :
 
-Link: http://lkml.kernel.org/r/20180824154542.26872-1-jack@suse.cz
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ross Zwisler <ross.zwisler@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:355 [inline]
+BUG: KASAN: stack-out-of-bounds in __ip_options_echo+0x294/0x1120 net/ipv4/ip_options.c:123
+Write of size 69 at addr ffff888096abf068 by task syz-executor.4/9204
+
+CPU: 0 PID: 9204 Comm: syz-executor.4 Not tainted 5.1.0-rc5+ #77
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+ memcpy+0x38/0x50 mm/kasan/common.c:133
+ memcpy include/linux/string.h:355 [inline]
+ __ip_options_echo+0x294/0x1120 net/ipv4/ip_options.c:123
+ __icmp_send+0x725/0x1400 net/ipv4/icmp.c:695
+ ipv4_link_failure+0x29f/0x550 net/ipv4/route.c:1204
+ dst_link_failure include/net/dst.h:427 [inline]
+ vti6_xmit net/ipv6/ip6_vti.c:514 [inline]
+ vti6_tnl_xmit+0x10d4/0x1c0c net/ipv6/ip6_vti.c:553
+ __netdev_start_xmit include/linux/netdevice.h:4414 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4423 [inline]
+ xmit_one net/core/dev.c:3292 [inline]
+ dev_hard_start_xmit+0x1b2/0x980 net/core/dev.c:3308
+ __dev_queue_xmit+0x271d/0x3060 net/core/dev.c:3878
+ dev_queue_xmit+0x18/0x20 net/core/dev.c:3911
+ neigh_direct_output+0x16/0x20 net/core/neighbour.c:1527
+ neigh_output include/net/neighbour.h:508 [inline]
+ ip_finish_output2+0x949/0x1740 net/ipv4/ip_output.c:229
+ ip_finish_output+0x73c/0xd50 net/ipv4/ip_output.c:317
+ NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+ ip_output+0x21f/0x670 net/ipv4/ip_output.c:405
+ dst_output include/net/dst.h:444 [inline]
+ NF_HOOK include/linux/netfilter.h:289 [inline]
+ raw_send_hdrinc net/ipv4/raw.c:432 [inline]
+ raw_sendmsg+0x1d2b/0x2f20 net/ipv4/raw.c:663
+ inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xdd/0x130 net/socket.c:661
+ sock_write_iter+0x27c/0x3e0 net/socket.c:988
+ call_write_iter include/linux/fs.h:1866 [inline]
+ new_sync_write+0x4c7/0x760 fs/read_write.c:474
+ __vfs_write+0xe4/0x110 fs/read_write.c:487
+ vfs_write+0x20c/0x580 fs/read_write.c:549
+ ksys_write+0x14f/0x2d0 fs/read_write.c:599
+ __do_sys_write fs/read_write.c:611 [inline]
+ __se_sys_write fs/read_write.c:608 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:608
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458c29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f293b44bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458c29
+RDX: 0000000000000014 RSI: 00000000200002c0 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f293b44c6d4
+R13: 00000000004c8623 R14: 00000000004ded68 R15: 00000000ffffffff
+
+The buggy address belongs to the page:
+page:ffffea00025aafc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0x1fffc0000000000()
+raw: 01fffc0000000000 0000000000000000 ffffffff025a0101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888096abef80: 00 00 00 f2 f2 f2 f2 f2 00 00 00 00 00 00 00 f2
+ ffff888096abf000: f2 f2 f2 f2 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888096abf080: 00 00 f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00
+                         ^
+ ffff888096abf100: 00 00 00 00 f1 f1 f1 f1 00 00 f3 f3 00 00 00 00
+ ffff888096abf180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Fixes: ed0de45a1008 ("ipv4: recompile ip options in ipv4_link_failure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Stephen Suryaputra <ssuryaextr@gmail.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/memory.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/ipv4/route.c |   34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1787,10 +1787,15 @@ static int insert_pfn(struct vm_area_str
- 			 * in may not match the PFN we have mapped if the
- 			 * mapped PFN is a writeable COW page.  In the mkwrite
- 			 * case we are creating a writable PTE for a shared
--			 * mapping and we expect the PFNs to match.
-+			 * mapping and we expect the PFNs to match. If they
-+			 * don't match, we are likely racing with block
-+			 * allocation and mapping invalidation so just skip the
-+			 * update.
- 			 */
--			if (WARN_ON_ONCE(pte_pfn(*pte) != pfn_t_to_pfn(pfn)))
-+			if (pte_pfn(*pte) != pfn_t_to_pfn(pfn)) {
-+				WARN_ON_ONCE(!is_zero_pfn(pte_pfn(*pte)));
- 				goto out_unlock;
-+			}
- 			entry = *pte;
- 			goto out_mkwrite;
- 		} else
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1185,25 +1185,39 @@ static struct dst_entry *ipv4_dst_check(
+ 	return dst;
+ }
+ 
+-static void ipv4_link_failure(struct sk_buff *skb)
++static void ipv4_send_dest_unreach(struct sk_buff *skb)
+ {
+ 	struct ip_options opt;
+-	struct rtable *rt;
+ 	int res;
+ 
+ 	/* Recompile ip options since IPCB may not be valid anymore.
++	 * Also check we have a reasonable ipv4 header.
+ 	 */
+-	memset(&opt, 0, sizeof(opt));
+-	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
+-
+-	rcu_read_lock();
+-	res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
+-	rcu_read_unlock();
+-
+-	if (res)
++	if (!pskb_network_may_pull(skb, sizeof(struct iphdr)) ||
++	    ip_hdr(skb)->version != 4 || ip_hdr(skb)->ihl < 5)
+ 		return;
+ 
++	memset(&opt, 0, sizeof(opt));
++	if (ip_hdr(skb)->ihl > 5) {
++		if (!pskb_network_may_pull(skb, ip_hdr(skb)->ihl * 4))
++			return;
++		opt.optlen = ip_hdr(skb)->ihl * 4 - sizeof(struct iphdr);
++
++		rcu_read_lock();
++		res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
++		rcu_read_unlock();
++
++		if (res)
++			return;
++	}
+ 	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
++}
++
++static void ipv4_link_failure(struct sk_buff *skb)
++{
++	struct rtable *rt;
++
++	ipv4_send_dest_unreach(skb);
+ 
+ 	rt = skb_rtable(skb);
+ 	if (rt)
 
 
