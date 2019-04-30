@@ -2,212 +2,165 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB604C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D822CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF18C20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:54:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF3VHj4A"
+	by mail.kernel.org (Postfix) with ESMTP id 8F59E20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556657777;
+	bh=vIonBKxvBO/0Url8PBV02Z1MbaAI+P/UqSe7365pugo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RojMLyILlA9R2DFkQE5Qlor4QBvOeEfyL/b+0LAlu1qNFL5j6I1Zg7GTcL+by6E5s
+	 iD6760Pmz8fIKcQ2LYRVa5XDyCh4tkUrmQizo2N3RI8ni2mUKDBiyGTwjdSmSmYwUw
+	 PrSd2SH77f3lCVnnEvgd2GvWa2e2EltDEzlYa3zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfD3UyR (ORCPT
+        id S1726832AbfD3U4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 16:54:17 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35650 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfD3UyR (ORCPT
+        Tue, 30 Apr 2019 16:56:16 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35795 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfD3U4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 16:54:17 -0400
-Received: by mail-ed1-f68.google.com with SMTP id y67so13529176ede.2;
-        Tue, 30 Apr 2019 13:54:15 -0700 (PDT)
+        Tue, 30 Apr 2019 16:56:16 -0400
+Received: by mail-io1-f67.google.com with SMTP id r18so13488739ioh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 13:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mrrcH0wpIA3AryJf9NOtPAeF4YldmZdmuNLGq+LqXpo=;
-        b=WF3VHj4ANkBllLpEaJMY1umz8TOfltG1fpY2ohdaTZvuYIDiLmGeL112SXNoQC+2Q6
-         WCjpIALKxPNxwi/69AgQdVFACYueqyD/7wvbNzBnEuZP2AyCoMtXF1Yy5pPnPpT8saVI
-         5/mejqZgREZFaesnC0g/lMxFB7CMnR+H0o6WrH+XlRdO1MJkA/4gSugo0xJacipIBeTO
-         kUbanebwiZsOI/1Hz1huf2nSIwHY004MtNlaVLEv7UjDji9VW0ZsjJfBbqdyqbhWQPul
-         mjNQnVNcDkB0KAgCGsnlVxReoCPcX4B8sWcQPmrrsSf/sjUcIHuQiUSJMmWb0pFEPYQc
-         KQUA==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=qosL0dV6bbRZ3VIPPW56CxbgXb6OsdU10dHOhPo3aH4=;
+        b=WW/R1/jxdzJKTqMajuGmJFkqOoYYsZxqx1kxNX5u42RI2vIKCNW/lr1bYFCskSsKfl
+         r6iv3AHPUmTjtkCbcx8rVRPJAP3e+DcX634mrWho6mY8DpGTe8G41lT0Nbu8t1Hiku9o
+         /fhszQLfRLc6szroeok15yf/7tMQis1YDHzsi2D2AQMHNHnZ53tqlmoeVEtzWbM2Onmf
+         LfTrfhSyTmwm9Fg0G3aX+QyPFyMMxOrOUJBXlSQ5PSDdMsPrfJVJTacRQu5IrQ0PKmuM
+         XuRFBNjFrCGKBBFc0X35+mBWSsL7cAdlV+6SETHCZkQ0F4doYLxXm1zKZeyMF7cI1Bpq
+         W/rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mrrcH0wpIA3AryJf9NOtPAeF4YldmZdmuNLGq+LqXpo=;
-        b=Q3I1QH7nlic+Nomd3X4JbWs6RYVZbqN3uJnKkC0u04zzl93Q85Kr0epuNNS4rh5CgX
-         NYJiQjG4iHd/5QggcZ5Dfe/p+ulFLe6TxhZHoYoC4PzGRfA1Ii7zIIWgNVzzRIMpzQEC
-         aTbuYyfStFv867H5GC0PZRlBYlESYBsRnwHdQktk0OH1XZ3BCDY3DcW4oWz5phyTYH3r
-         pwG/6vOi08R8FB0rE3cX/rZC63MbIWiypPirpMKOv2qQQefFXjXnnMxz09n7kRQY2SMb
-         rhPpx5XbJFNDfTZa65uREuK1WUNrtEeBdE0mB0h19rQOg6HMC/LjqkDCjvp4NYhQ4/rH
-         1Vaw==
-X-Gm-Message-State: APjAAAUJ6l511L+VspoiQz7O3je5ltRPSL59mZGsbrKntQTCFlkfEA5k
-        Vc0Dp8Irt1NiMUJo8MHeZ0k=
-X-Google-Smtp-Source: APXvYqxz0gHI1/9wqXsmUHKr9dMzjFOo+0Peh4Dmux12dMGKFXUZKW3qgouHNLgawnOnIOug2XBlfQ==
-X-Received: by 2002:a17:906:e10e:: with SMTP id gj14mr12867406ejb.285.1556657654583;
-        Tue, 30 Apr 2019 13:54:14 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id 10sm3593003edu.61.2019.04.30.13.54.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Apr 2019 13:54:13 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 13:54:11 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH] kbuild: Enable -Wsometimes-uninitialized
-Message-ID: <20190430205411.GA5628@archlinux-i9>
-References: <20190430010037.6216-1-natechancellor@gmail.com>
- <CAK8P3a0gAnruPgGMFcAfoHpj_zDnsn-RJjYiYUXDDj-CrwoO8A@mail.gmail.com>
- <20190430093352.GA16941@archlinux-i9>
- <CAK8P3a20t1f6Fmjd7HcGVSXCxx9SP2q7_WpZyj16MgnJe8m8zQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a20t1f6Fmjd7HcGVSXCxx9SP2q7_WpZyj16MgnJe8m8zQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=qosL0dV6bbRZ3VIPPW56CxbgXb6OsdU10dHOhPo3aH4=;
+        b=YRs6siNpAwB/i28XB+bILGnPMLjtnoj8fUfGEgjZ80ihENne9/OVeiXhYBswMtc3Hb
+         sMRr8eiHiQELv/wi9+ciqm8BYBTR7zdferkA0cM3+z1b7Wro4NvVyagvlntWqznpfkSm
+         zx2d/Yye6sPB7Mcv7aapEMLmjnpFksZnOAWYbuiPnimRAyinz+MBWv3cJmXbVSKj5ulo
+         nBe6rPSy32fatSn9+TGkcmCgJrqIY09AeNKT4NdsEMEOqIiGy31PgFbzzcZEgAHetRh/
+         X0ASA1ktEV4jsVRFqD7mbkYTXo4BQJ7Msx+Ja9cjUEU59tFvdl0YM6of2CZmL0R/pYi1
+         G/8Q==
+X-Gm-Message-State: APjAAAXzjKnTixDXQb6tB2oVlz2q3oB4d60nHCp7/nPJxDvPE59+BFs5
+        X+/W++LX26XgmcL8gAZEfsA=
+X-Google-Smtp-Source: APXvYqwkzcTKYFhUpJ1OwJhi/0RJgXLwLsoYa9NShOMOU6JrUsn9ty0NMgkTXHcX2ftmRmaKEXuSAQ==
+X-Received: by 2002:a6b:6405:: with SMTP id t5mr29043205iog.190.1556657775034;
+        Tue, 30 Apr 2019 13:56:15 -0700 (PDT)
+Received: from nuc8.lan (h69-131-112-51.cntcnh.dsl.dynamic.tds.net. [69.131.112.51])
+        by smtp.gmail.com with ESMTPSA id s7sm9799349ioo.17.2019.04.30.13.56.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 13:56:14 -0700 (PDT)
+From:   Len Brown <lenb@kernel.org>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 0/18] v3 multi-die/package topology support
+Date:   Tue, 30 Apr 2019 16:55:45 -0400
+Message-Id: <20190430205559.30226-1-lenb@kernel.org>
+X-Mailer: git-send-email 2.18.0-rc0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:46:44AM +0200, Arnd Bergmann wrote:
-> On Tue, Apr 30, 2019 at 11:33 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > On Tue, Apr 30, 2019 at 09:16:50AM +0200, Arnd Bergmann wrote:
-> > > On Tue, Apr 30, 2019 at 3:01 AM Nathan Chancellor
-> > > <natechancellor@gmail.com> wrote:
-> > > >
-> > > > This is Clang's version of GCC's -Wmaybe-uninitialized. Up to this
-> > > > point, it has not been used because -Wuninitialized has been disabled,
-> > > > which also turns off -Wsometimes-uninitialized, meaning that we miss out
-> > > > on finding some bugs [1]. In my experience, it appears to be more
-> > > > accurate than GCC and catch some things that GCC can't.
-> > > >
-> > > > All of these warnings have now been fixed in -next across arm, arm64,
-> > > > and x86_64 defconfig/allyesconfig so this should be enabled for everyone
-> > > > to prevent more from easily creeping in.
-> > > >
-> > > > As of next-20190429:
-> > > >
-> > > > $ git log --oneline --grep="sometimes-uninitialized" | wc -l
-> > > > 45
-> > > >
-> > > > [1]: https://lore.kernel.org/lkml/86649ee4-9794-77a3-502c-f4cd10019c36@lca.pw/
-> > > >
-> > > > Link: https://github.com/ClangBuiltLinux/linux/issues/381
-> > > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > > ---
-> > > >
-> > > > Masahiro, I am not sure how you want to handle merging this with regards
-> > > > to all of the patches floating around in -next but I wanted to send this
-> > > > out to let everyone know this is ready to be turned on.
-> > > >
-> > > > Arnd, are there many remaning -Wsometimes-uninitialized warnings in
-> > > > randconfigs?
-> > >
-> > > No, I don't see any with the patches that I submitted. I haven't checked
-> > > if there are any that still need to get merged into linux-next though.
-> > >
-> > > > diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> > > > index 768306add591..f4332981ea85 100644
-> > > > --- a/scripts/Makefile.extrawarn
-> > > > +++ b/scripts/Makefile.extrawarn
-> > > > @@ -72,5 +72,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, format)
-> > > >  KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
-> > > >  KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
-> > > >  KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
-> > > > +KBUILD_CFLAGS += $(call cc-option, -Wsometimes-uninitialized)
-> > > >  endif
-> > > >  endif
-> > >
-> > > This doesn't look right. Shouldn't you remove the line that turns off
-> > > -Wuninitilized
-> > > instead of adding only -Wsometimes-uninitialized?
-> >
-> > Well, there are still some outstanding issues with -Wuninitialized
-> > right? Like with DECLARE_WAIT_QUEUE_HEAD_ONSTACK? I'd rather not
-> > add warnings to the build but if you feel strongly, we could turn it on
-> > then fix them after.
-> 
-> Ah, I thought they were all fixed, as I don't see any remaining warnings
-> in my tree. It seems that I never send this workaround for
-> DECLARE_WAIT_QUEUE_HEAD_ONSTACK:
-> 
-> diff --git a/include/linux/wait.h b/include/linux/wait.h
-> index 5f3efabc36f4..cbe1ea0fce84 100644
-> --- a/include/linux/wait.h
-> +++ b/include/linux/wait.h
-> @@ -68,8 +68,15 @@ extern void __init_waitqueue_head(struct
-> wait_queue_head *wq_head, const char *n
->         } while (0)
-> 
->  #ifdef CONFIG_LOCKDEP
-> -# define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) \
-> -       ({ init_waitqueue_head(&name); name; })
-> +# define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) {
->                  \
-> +       .lock           = __SPIN_LOCK_UNLOCKED(name.lock),
->          \
-> +       .head           = ({
->          \
-> +               static struct lock_class_key __key;
->          \
-> +               lockdep_set_class_and_name(&(name).lock, &__key, #
-> name);       \
-> +               (struct list_head){ &(name).head, &(name).head };
->          \
-> +       }),
->          \
-> +}
-> +
->  # define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
->         struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
->  #else
-> 
-> Are there any others you see?
-> 
->       Arnd
+This patch series does 4 things.
 
-After applying that diff by hand and another patch that was accepted but
-not in -next (https://lore.kernel.org/lkml/20190325125147.1436083-1-arnd@arndb.de/),
-I see three other warnings:
+1. Parse the new CPUID.1F leaf to discover multi-die/package topology
 
-arm, arm64, and x86_64 allyesconfig:
+2. Export multi-die topology inside the kernel
 
-drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: error: variable 'data'
-is uninitialized when used here [-Werror,-Wuninitialized]
+3. Update 4 places (coretemp, pkgtemp, rapl, perf) that that need to know
+   the difference between die and package-scope MSR.
 
-https://github.com/ClangBuiltLinux/linux/issues/464
+4. Export multi-die topology to user-space via sysfs
 
-x86 allyesconfig:
+These changes should have 0 impact on cache topology,
+NUMA topology, Linux scheduler, or system performance.
 
-mm/kasan/common.c:490:40: error: variable 'tag' is uninitialized when
-used here [-Werror,-Wuninitialized]
+These topology changes primarily impact parts of the kernel
+and some applications that care about package MSR scope.
+Also, some software is licensed per package, and other tools,
+such as benchmark reporting software sometimes cares about packages.
 
-https://github.com/ClangBuiltLinux/linux/issues/465
+---
+Updates since v2:
 
-drivers/misc/sgi-xp/xpc_partition.c:73:14: error: variable 'buf' is
-uninitialized when used within its own initialization
-[-Werror,-Wuninitialized]
+All review feedback has been addressed.
 
-https://github.com/ClangBuiltLinux/linux/issues/466
+In response to brice, peterz and Morten Rasmussen,
+used the word "cpu" rather than "thread" for the new sysfs attributes.
 
-These shouldn't be difficult to fix then we can turn both uninitialized
-warnings.
+In response to tglx, replaced access to cpuinfo_x86.x86_max_dies,
+with macro topology_max_die_per_package().  In doing so,
+deleted this new per-cpu field entirely, as a global is sufficient.
 
-Please let me know if you have any input with regards to fixing them, I
-am going to try to look at them later today.
+Also, appended 3 patches from Kan Liang, updating the perf code
+to be multi-die aware.  These patches are similar to the preceding
+power and temperature patches.  I believe that with these patches,
+this series now includes all needed multi-die kernel support.
 
-Nathan
+---
+The following changes since commit 085b7755808aa11f78ab9377257e1dad2e6fa4bb:
+
+  Linux 5.1-rc6 (2019-04-21 10:45:57 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git x86
+
+for you to fetch changes up to 6c4891c7f2f1eacfcab00bf5d84b5ac119f654b9:
+
+  perf/x86/intel/cstate: Support multi-die/package (2019-04-30 16:49:26 -0400)
+
+----------------------------------------------------------------
+Kan Liang (3):
+      perf/x86/intel/uncore: Support multi-die/package
+      perf/x86/intel/rapl: Support multi-die/package
+      perf/x86/intel/cstate: Support multi-die/package
+
+Len Brown (10):
+      x86 topology: Fix doc typo
+      topology: Simplify cputopology.txt formatting and wording
+      x86 smpboot: Rename match_die() to match_pkg()
+      x86 topology: Add CPUID.1F multi-die/package support
+      x86 topology: Create topology_max_die_per_package()
+      cpu topology: Export die_id
+      x86 topology: Define topology_die_id()
+      x86 topology: Define topology_logical_die_id()
+      topology: Create package_cpus sysfs attribute
+      topology: Create core_cpus and die_cpus sysfs attributes
+
+Zhang Rui (5):
+      powercap/intel_rapl: Simplify rapl_find_package()
+      powercap/intel_rapl: Support multi-die/package
+      thermal/x86_pkg_temp_thermal: Support multi-die/package
+      powercap/intel_rapl: update rapl domain name and debug messages
+      hwmon/coretemp: Support multi-die/package
+
+ Documentation/cputopology.txt                | 80 +++++++++++++++----------
+ Documentation/x86/topology.txt               |  6 +-
+ arch/x86/events/intel/cstate.c               | 14 +++--
+ arch/x86/events/intel/rapl.c                 | 10 ++--
+ arch/x86/events/intel/uncore.c               | 20 ++++---
+ arch/x86/include/asm/processor.h             |  4 +-
+ arch/x86/include/asm/smp.h                   |  1 +
+ arch/x86/include/asm/topology.h              | 17 ++++++
+ arch/x86/kernel/cpu/common.c                 |  1 +
+ arch/x86/kernel/cpu/topology.c               | 88 ++++++++++++++++++++++------
+ arch/x86/kernel/smpboot.c                    | 75 +++++++++++++++++++++++-
+ arch/x86/xen/smp_pv.c                        |  1 +
+ drivers/base/topology.c                      | 22 +++++++
+ drivers/hwmon/coretemp.c                     |  9 +--
+ drivers/powercap/intel_rapl.c                | 75 +++++++++++++-----------
+ drivers/thermal/intel/x86_pkg_temp_thermal.c |  8 +--
+ include/linux/topology.h                     |  6 ++
+ 17 files changed, 322 insertions(+), 115 deletions(-)
+
