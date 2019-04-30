@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FF6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185D3C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C00221707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE7721670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F40Yx/nt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mo6y7xYp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbfD3KNt (ORCPT
+        id S1727241AbfD3KNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:13:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36928 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfD3KNr (ORCPT
+        Tue, 30 Apr 2019 06:13:54 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56746 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbfD3KNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:13:47 -0400
+        Tue, 30 Apr 2019 06:13:53 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UADJNj044340;
-        Tue, 30 Apr 2019 05:13:19 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UADXVA010141;
+        Tue, 30 Apr 2019 05:13:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556619199;
-        bh=1pY+BosnFAL5omdv10vYeqXVIaqAUaCtcfwgHr7h9tw=;
+        s=ti-com-17Q1; t=1556619213;
+        bh=xPQl9JjmQxyn3zo4bM1wLXs+byZ03Zol063XB/EjZcQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=F40Yx/ntWpzU1kWmwkcWpcNPGkFI9EJCZlIs2j4q2yLrsgiQW89IwniohoPeHNw3x
-         jsol1orRa8hZXlo/Cc8b5uFr71wqwCzQI7Z1flDZzS7LZIf/TfOtTP0SbmgEfYxNuU
-         WrAcofKz3OJwl7QSaDG47vWldJTXYyeeIYWNpr9w=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UADJtH125869
+        b=mo6y7xYpMHsgFc7vM+Voz7QCzhSAu67LApEALVUUjrR9mHjKYVlj6KZZ5OYa4qkEZ
+         GLnzyuAGX7cvCctyDrINmtiKuEW+B/RZxUHeCy7s/+8x0TsK6idfx3GCN3IChQXbMk
+         FqVyxCXmb1/Y1K/P82oNiRAa/N4xlMNl6b8CEtos=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UADXLh126058
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 05:13:19 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 30 Apr 2019 05:13:33 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 05:13:18 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 05:13:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 05:13:18 -0500
+ Frontend Transport; Tue, 30 Apr 2019 05:13:32 -0500
 Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0Y5085082;
-        Tue, 30 Apr 2019 05:13:14 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0Y8085082;
+        Tue, 30 Apr 2019 05:13:28 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <marc.zyngier@arm.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
@@ -60,9 +60,9 @@ CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Lokesh Vutla <lokeshvutla@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>
-Subject: [PATCH v8 03/14] firmware: ti_sci: Add support for IRQ management
-Date:   Tue, 30 Apr 2019 15:42:19 +0530
-Message-ID: <20190430101230.21794-4-lokeshvutla@ti.com>
+Subject: [PATCH v8 06/14] genirq: Introduce irq_chip_{request,release}_resource_parent() apis
+Date:   Tue, 30 Apr 2019 15:42:22 +0530
+Message-ID: <20190430101230.21794-7-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
 References: <20190430101230.21794-1-lokeshvutla@ti.com>
@@ -75,413 +75,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TISCI abstracts the handling of IRQ routes where interrupt sources
-are not directly connected to host interrupt controller. Add support
-for the set of TISCI commands for requesting and releasing IRQs.
+Introduce irq_chip_{request,release}_resource_parent() apis so
+that these can be used in hierarchical irqchips.
 
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
 Changes since v7:
-- Updated to latest system firmware version for not tracking INTR configuration
-  coming from INTA.
+-None
 
- drivers/firmware/ti_sci.c              | 245 +++++++++++++++++++++++++
- drivers/firmware/ti_sci.h              |  60 ++++++
- include/linux/soc/ti/ti_sci_protocol.h |  26 +++
- 3 files changed, 331 insertions(+)
+ include/linux/irq.h |  2 ++
+ kernel/irq/chip.c   | 27 +++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 503195223c09..4ccdf9a53648 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -1765,6 +1765,245 @@ int ti_sci_cmd_get_resource_range_from_shost(const struct ti_sci_handle *handle,
- 					 range_start, range_num);
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 7ae8de5ad0f2..fb301cf29148 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -625,6 +625,8 @@ extern int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on);
+ extern int irq_chip_set_vcpu_affinity_parent(struct irq_data *data,
+ 					     void *vcpu_info);
+ extern int irq_chip_set_type_parent(struct irq_data *data, unsigned int type);
++extern int irq_chip_request_resources_parent(struct irq_data *data);
++extern void irq_chip_release_resources_parent(struct irq_data *data);
+ #endif
+ 
+ /* Handling of unhandled and spurious interrupts: */
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 51128bea3846..29d6c7d070b4 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1459,6 +1459,33 @@ int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on)
+ 	return -ENOSYS;
  }
- 
+ EXPORT_SYMBOL_GPL(irq_chip_set_wake_parent);
++
 +/**
-+ * ti_sci_manage_irq() - Helper api to configure/release the irq route between
-+ *			 the requested source and destination
-+ * @handle:		Pointer to TISCI handle.
-+ * @valid_params:	Bit fields defining the validity of certain params
-+ * @src_id:		Device ID of the IRQ source
-+ * @src_index:		IRQ source index within the source device
-+ * @dst_id:		Device ID of the IRQ destination
-+ * @dst_host_irq:	IRQ number of the destination device
-+ * @ia_id:		Device ID of the IA, if the IRQ flows through this IA
-+ * @vint:		Virtual interrupt to be used within the IA
-+ * @global_event:	Global event number to be used for the requesting event
-+ * @vint_status_bit:	Virtual interrupt status bit to be used for the event
-+ * @s_host:		Secondary host ID to which the irq/event is being
-+ *			requested for.
-+ * @type:		Request type irq set or release.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
++ * irq_chip_request_resources_parent - Request resources on the parent interrupt
++ * @data:	Pointer to interrupt specific data
 + */
-+static int ti_sci_manage_irq(const struct ti_sci_handle *handle,
-+			     u32 valid_params, u16 src_id, u16 src_index,
-+			     u16 dst_id, u16 dst_host_irq, u16 ia_id, u16 vint,
-+			     u16 global_event, u8 vint_status_bit, u8 s_host,
-+			     u16 type)
++int irq_chip_request_resources_parent(struct irq_data *data)
 +{
-+	struct ti_sci_msg_req_manage_irq *req;
-+	struct ti_sci_msg_hdr *resp;
-+	struct ti_sci_xfer *xfer;
-+	struct ti_sci_info *info;
-+	struct device *dev;
-+	int ret = 0;
++	data = data->parent_data;
 +
-+	if (IS_ERR(handle))
-+		return PTR_ERR(handle);
-+	if (!handle)
-+		return -EINVAL;
++	if (data->chip->irq_request_resources)
++		return data->chip->irq_request_resources(data);
 +
-+	info = handle_to_ti_sci_info(handle);
-+	dev = info->dev;
-+
-+	xfer = ti_sci_get_one_xfer(info, type, TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-+				   sizeof(*req), sizeof(*resp));
-+	if (IS_ERR(xfer)) {
-+		ret = PTR_ERR(xfer);
-+		dev_err(dev, "Message alloc failed(%d)\n", ret);
-+		return ret;
-+	}
-+	req = (struct ti_sci_msg_req_manage_irq *)xfer->xfer_buf;
-+	req->valid_params = valid_params;
-+	req->src_id = src_id;
-+	req->src_index = src_index;
-+	req->dst_id = dst_id;
-+	req->dst_host_irq = dst_host_irq;
-+	req->ia_id = ia_id;
-+	req->vint = vint;
-+	req->global_event = global_event;
-+	req->vint_status_bit = vint_status_bit;
-+	req->secondary_host = s_host;
-+
-+	ret = ti_sci_do_xfer(info, xfer);
-+	if (ret) {
-+		dev_err(dev, "Mbox send fail %d\n", ret);
-+		goto fail;
-+	}
-+
-+	resp = (struct ti_sci_msg_hdr *)xfer->xfer_buf;
-+
-+	ret = ti_sci_is_response_ack(resp) ? 0 : -ENODEV;
-+
-+fail:
-+	ti_sci_put_one_xfer(&info->minfo, xfer);
-+
-+	return ret;
++	return -ENOSYS;
 +}
++EXPORT_SYMBOL_GPL(irq_chip_request_resources_parent);
 +
 +/**
-+ * ti_sci_set_irq() - Helper api to configure the irq route between the
-+ *		      requested source and destination
-+ * @handle:		Pointer to TISCI handle.
-+ * @valid_params:	Bit fields defining the validity of certain params
-+ * @src_id:		Device ID of the IRQ source
-+ * @src_index:		IRQ source index within the source device
-+ * @dst_id:		Device ID of the IRQ destination
-+ * @dst_host_irq:	IRQ number of the destination device
-+ * @ia_id:		Device ID of the IA, if the IRQ flows through this IA
-+ * @vint:		Virtual interrupt to be used within the IA
-+ * @global_event:	Global event number to be used for the requesting event
-+ * @vint_status_bit:	Virtual interrupt status bit to be used for the event
-+ * @s_host:		Secondary host ID to which the irq/event is being
-+ *			requested for.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
++ * irq_chip_release_resources_parent - Release resources on the parent interrupt
++ * @data:	Pointer to interrupt specific data
 + */
-+static int ti_sci_set_irq(const struct ti_sci_handle *handle, u32 valid_params,
-+			  u16 src_id, u16 src_index, u16 dst_id,
-+			  u16 dst_host_irq, u16 ia_id, u16 vint,
-+			  u16 global_event, u8 vint_status_bit, u8 s_host)
++void irq_chip_release_resources_parent(struct irq_data *data)
 +{
-+	pr_debug("%s: IRQ set with valid_params = 0x%x from src = %d, index = %d, to dst = %d, irq = %d,via ia_id = %d, vint = %d, global event = %d,status_bit = %d\n",
-+		 __func__, valid_params, src_id, src_index,
-+		 dst_id, dst_host_irq, ia_id, vint, global_event,
-+		 vint_status_bit);
-+
-+	return ti_sci_manage_irq(handle, valid_params, src_id, src_index,
-+				 dst_id, dst_host_irq, ia_id, vint,
-+				 global_event, vint_status_bit, s_host,
-+				 TI_SCI_MSG_SET_IRQ);
++	data = data->parent_data;
++	if (data->chip->irq_release_resources)
++		data->chip->irq_release_resources(data);
 +}
-+
-+/**
-+ * ti_sci_free_irq() - Helper api to free the irq route between the
-+ *			   requested source and destination
-+ * @handle:		Pointer to TISCI handle.
-+ * @valid_params:	Bit fields defining the validity of certain params
-+ * @src_id:		Device ID of the IRQ source
-+ * @src_index:		IRQ source index within the source device
-+ * @dst_id:		Device ID of the IRQ destination
-+ * @dst_host_irq:	IRQ number of the destination device
-+ * @ia_id:		Device ID of the IA, if the IRQ flows through this IA
-+ * @vint:		Virtual interrupt to be used within the IA
-+ * @global_event:	Global event number to be used for the requesting event
-+ * @vint_status_bit:	Virtual interrupt status bit to be used for the event
-+ * @s_host:		Secondary host ID to which the irq/event is being
-+ *			requested for.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_free_irq(const struct ti_sci_handle *handle, u32 valid_params,
-+			   u16 src_id, u16 src_index, u16 dst_id,
-+			   u16 dst_host_irq, u16 ia_id, u16 vint,
-+			   u16 global_event, u8 vint_status_bit, u8 s_host)
-+{
-+	pr_debug("%s: IRQ release with valid_params = 0x%x from src = %d, index = %d, to dst = %d, irq = %d,via ia_id = %d, vint = %d, global event = %d,status_bit = %d\n",
-+		 __func__, valid_params, src_id, src_index,
-+		 dst_id, dst_host_irq, ia_id, vint, global_event,
-+		 vint_status_bit);
-+
-+	return ti_sci_manage_irq(handle, valid_params, src_id, src_index,
-+				 dst_id, dst_host_irq, ia_id, vint,
-+				 global_event, vint_status_bit, s_host,
-+				 TI_SCI_MSG_FREE_IRQ);
-+}
-+
-+/**
-+ * ti_sci_cmd_set_irq() - Configure a host irq route between the requested
-+ *			  source and destination.
-+ * @handle:		Pointer to TISCI handle.
-+ * @src_id:		Device ID of the IRQ source
-+ * @src_index:		IRQ source index within the source device
-+ * @dst_id:		Device ID of the IRQ destination
-+ * @dst_host_irq:	IRQ number of the destination device
-+ * @vint_irq:		Boolean specifying if this interrupt belongs to
-+ *			Interrupt Aggregator.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_cmd_set_irq(const struct ti_sci_handle *handle, u16 src_id,
-+			      u16 src_index, u16 dst_id, u16 dst_host_irq)
-+{
-+	u32 valid_params = MSG_FLAG_DST_ID_VALID | MSG_FLAG_DST_HOST_IRQ_VALID;
-+
-+	return ti_sci_set_irq(handle, valid_params, src_id, src_index, dst_id,
-+			      dst_host_irq, 0, 0, 0, 0, 0);
-+}
-+
-+/**
-+ * ti_sci_cmd_set_event_map() - Configure an event based irq route between the
-+ *				requested source and Interrupt Aggregator.
-+ * @handle:		Pointer to TISCI handle.
-+ * @src_id:		Device ID of the IRQ source
-+ * @src_index:		IRQ source index within the source device
-+ * @ia_id:		Device ID of the IA, if the IRQ flows through this IA
-+ * @vint:		Virtual interrupt to be used within the IA
-+ * @global_event:	Global event number to be used for the requesting event
-+ * @vint_status_bit:	Virtual interrupt status bit to be used for the event
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_cmd_set_event_map(const struct ti_sci_handle *handle,
-+				    u16 src_id, u16 src_index, u16 ia_id,
-+				    u16 vint, u16 global_event,
-+				    u8 vint_status_bit)
-+{
-+	u32 valid_params = MSG_FLAG_IA_ID_VALID | MSG_FLAG_VINT_VALID |
-+			   MSG_FLAG_GLB_EVNT_VALID |
-+			   MSG_FLAG_VINT_STS_BIT_VALID;
-+
-+	return ti_sci_set_irq(handle, valid_params, src_id, src_index, 0, 0,
-+			      ia_id, vint, global_event, vint_status_bit, 0);
-+}
-+
-+/**
-+ * ti_sci_cmd_free_irq() - Free a host irq route between the between the
-+ *			   requested source and destination.
-+ * @handle:		Pointer to TISCI handle.
-+ * @src_id:		Device ID of the IRQ source
-+ * @src_index:		IRQ source index within the source device
-+ * @dst_id:		Device ID of the IRQ destination
-+ * @dst_host_irq:	IRQ number of the destination device
-+ * @vint_irq:		Boolean specifying if this interrupt belongs to
-+ *			Interrupt Aggregator.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_cmd_free_irq(const struct ti_sci_handle *handle, u16 src_id,
-+			       u16 src_index, u16 dst_id, u16 dst_host_irq)
-+{
-+	u32 valid_params = MSG_FLAG_DST_ID_VALID | MSG_FLAG_DST_HOST_IRQ_VALID;
-+
-+	return ti_sci_free_irq(handle, valid_params, src_id, src_index, dst_id,
-+			       dst_host_irq, 0, 0, 0, 0, 0);
-+}
-+
-+/**
-+ * ti_sci_cmd_free_event_map() - Free an event map between the requested source
-+ *				 and Interrupt Aggregator.
-+ * @handle:		Pointer to TISCI handle.
-+ * @src_id:		Device ID of the IRQ source
-+ * @src_index:		IRQ source index within the source device
-+ * @ia_id:		Device ID of the IA, if the IRQ flows through this IA
-+ * @vint:		Virtual interrupt to be used within the IA
-+ * @global_event:	Global event number to be used for the requesting event
-+ * @vint_status_bit:	Virtual interrupt status bit to be used for the event
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_cmd_free_event_map(const struct ti_sci_handle *handle,
-+				     u16 src_id, u16 src_index, u16 ia_id,
-+				     u16 vint, u16 global_event,
-+				     u8 vint_status_bit)
-+{
-+	u32 valid_params = MSG_FLAG_IA_ID_VALID |
-+			   MSG_FLAG_VINT_VALID | MSG_FLAG_GLB_EVNT_VALID |
-+			   MSG_FLAG_VINT_STS_BIT_VALID;
-+
-+	return ti_sci_free_irq(handle, valid_params, src_id, src_index, 0, 0,
-+			       ia_id, vint, global_event, vint_status_bit, 0);
-+}
-+
- /*
-  * ti_sci_setup_ops() - Setup the operations structures
-  * @info:	pointer to TISCI pointer
-@@ -1776,6 +2015,7 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
- 	struct ti_sci_dev_ops *dops = &ops->dev_ops;
- 	struct ti_sci_clk_ops *cops = &ops->clk_ops;
- 	struct ti_sci_rm_core_ops *rm_core_ops = &ops->rm_core_ops;
-+	struct ti_sci_rm_irq_ops *iops = &ops->rm_irq_ops;
- 
- 	core_ops->reboot_device = ti_sci_cmd_core_reboot;
- 
-@@ -1810,6 +2050,11 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
- 	rm_core_ops->get_range = ti_sci_cmd_get_resource_range;
- 	rm_core_ops->get_range_from_shost =
- 				ti_sci_cmd_get_resource_range_from_shost;
-+
-+	iops->set_irq = ti_sci_cmd_set_irq;
-+	iops->set_event_map = ti_sci_cmd_set_event_map;
-+	iops->free_irq = ti_sci_cmd_free_irq;
-+	iops->free_event_map = ti_sci_cmd_free_event_map;
- }
- 
- /**
-diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
-index a043c4762791..4983827151bf 100644
---- a/drivers/firmware/ti_sci.h
-+++ b/drivers/firmware/ti_sci.h
-@@ -38,6 +38,10 @@
- /* Resource Management Requests */
- #define TI_SCI_MSG_GET_RESOURCE_RANGE	0x1500
- 
-+/* IRQ requests */
-+#define TI_SCI_MSG_SET_IRQ		0x1000
-+#define TI_SCI_MSG_FREE_IRQ		0x1001
-+
- /**
-  * struct ti_sci_msg_hdr - Generic Message Header for All messages and responses
-  * @type:	Type of messages: One of TI_SCI_MSG* values
-@@ -503,4 +507,60 @@ struct ti_sci_msg_resp_get_resource_range {
- 	u16 range_num;
- } __packed;
- 
-+/**
-+ * struct ti_sci_msg_req_manage_irq - Request to configure/release the route
-+ *					between the dev and the host.
-+ * @hdr:		Generic Header
-+ * @valid_params:	Bit fields defining the validity of interrupt source
-+ *			parameters. If a bit is not set, then corresponding
-+ *			field is not valid and will not be used for route set.
-+ *			Bit field definitions:
-+ *			0 - Valid bit for @dst_id
-+ *			1 - Valid bit for @dst_host_irq
-+ *			2 - Valid bit for @ia_id
-+ *			3 - Valid bit for @vint
-+ *			4 - Valid bit for @global_event
-+ *			5 - Valid bit for @vint_status_bit_index
-+ *			31 - Valid bit for @secondary_host
-+ * @src_id:		IRQ source peripheral ID.
-+ * @src_index:		IRQ source index within the peripheral
-+ * @dst_id:		IRQ Destination ID. Based on the architecture it can be
-+ *			IRQ controller or host processor ID.
-+ * @dst_host_irq:	IRQ number of the destination host IRQ controller
-+ * @ia_id:		Device ID of the interrupt aggregator in which the
-+ *			vint resides.
-+ * @vint:		Virtual interrupt number if the interrupt route
-+ *			is through an interrupt aggregator.
-+ * @global_event:	Global event that is to be mapped to interrupt
-+ *			aggregator virtual interrupt status bit.
-+ * @vint_status_bit:	Virtual interrupt status bit if the interrupt route
-+ *			utilizes an interrupt aggregator status bit.
-+ * @secondary_host:	Host ID of the IRQ destination computing entity. This is
-+ *			required only when destination host id is different
-+ *			from ti sci interface host id.
-+ *
-+ * Request type is TI_SCI_MSG_SET/RELEASE_IRQ.
-+ * Response is generic ACK / NACK message.
-+ */
-+struct ti_sci_msg_req_manage_irq {
-+	struct ti_sci_msg_hdr hdr;
-+#define MSG_FLAG_DST_ID_VALID			TI_SCI_MSG_FLAG(0)
-+#define MSG_FLAG_DST_HOST_IRQ_VALID		TI_SCI_MSG_FLAG(1)
-+#define MSG_FLAG_IA_ID_VALID			TI_SCI_MSG_FLAG(2)
-+#define MSG_FLAG_VINT_VALID			TI_SCI_MSG_FLAG(3)
-+#define MSG_FLAG_GLB_EVNT_VALID			TI_SCI_MSG_FLAG(4)
-+#define MSG_FLAG_VINT_STS_BIT_VALID		TI_SCI_MSG_FLAG(5)
-+#define MSG_FLAG_SHOST_VALID			TI_SCI_MSG_FLAG(31)
-+	u32 valid_params;
-+	u16 src_id;
-+	u16 src_index;
-+	u16 dst_id;
-+	u16 dst_host_irq;
-+	u16 ia_id;
-+	u16 vint;
-+	u16 global_event;
-+	u8 vint_status_bit;
-+	u8 secondary_host;
-+} __packed;
-+
- #endif /* __TI_SCI_H */
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index 0c92a922db6a..d0bc4123232e 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -217,17 +217,43 @@ struct ti_sci_rm_core_ops {
- 				    u16 *range_start, u16 *range_num);
- };
- 
-+/**
-+ * struct ti_sci_rm_irq_ops: IRQ management operations
-+ * @set_irq:		Set an IRQ route between the requested source
-+ *			and destination
-+ * @set_event_map:	Set an Event based peripheral irq to Interrupt
-+ *			Aggregator.
-+ * @free_irq:		Free an an IRQ route between the requested source
-+ *			destination.
-+ * @free_event_map:	Free an event based peripheral irq to Interrupt
-+ *			Aggregator.
-+ */
-+struct ti_sci_rm_irq_ops {
-+	int (*set_irq)(const struct ti_sci_handle *handle, u16 src_id,
-+		       u16 src_index, u16 dst_id, u16 dst_host_irq);
-+	int (*set_event_map)(const struct ti_sci_handle *handle, u16 src_id,
-+			     u16 src_index, u16 ia_id, u16 vint,
-+			     u16 global_event, u8 vint_status_bit);
-+	int (*free_irq)(const struct ti_sci_handle *handle, u16 src_id,
-+			u16 src_index, u16 dst_id, u16 dst_host_irq);
-+	int (*free_event_map)(const struct ti_sci_handle *handle, u16 src_id,
-+			      u16 src_index, u16 ia_id, u16 vint,
-+			      u16 global_event, u8 vint_status_bit);
-+};
-+
- /**
-  * struct ti_sci_ops - Function support for TI SCI
-  * @dev_ops:	Device specific operations
-  * @clk_ops:	Clock specific operations
-  * @rm_core_ops:	Resource management core operations.
-+ * @rm_irq_ops:		IRQ management specific operations
-  */
- struct ti_sci_ops {
- 	struct ti_sci_core_ops core_ops;
- 	struct ti_sci_dev_ops dev_ops;
- 	struct ti_sci_clk_ops clk_ops;
- 	struct ti_sci_rm_core_ops rm_core_ops;
-+	struct ti_sci_rm_irq_ops rm_irq_ops;
- };
++EXPORT_SYMBOL_GPL(irq_chip_release_resources_parent);
+ #endif
  
  /**
 -- 
