@@ -2,183 +2,88 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6F1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F53AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB5921743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:58:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="I9ED5Fy7"
+	by mail.kernel.org (Postfix) with ESMTP id 731F020854
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfD3W6k (ORCPT
+        id S1727368AbfD3XJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:58:40 -0400
-Received: from mail-eopbgr750132.outbound.protection.outlook.com ([40.107.75.132]:24393
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726102AbfD3W6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:58:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+wSTc+nSzbhvb3vZPkDndqCAWSHfo+ILB9lcdNYYBls=;
- b=I9ED5Fy7sc3h7Y6l4wXSVVgfppFMHg26FHvzQjO7uDi8wNawv7NSJfuOQMr91qc2Ch1zuh3G80QOXBk1FE4tYN0pgf1t4wcaUnvMXEGwjTCNMk0lBbvAMpJJvvc6p8KfgKlAkvQhFAqBJFnSTuErdmifbfIgrq2633M9vJiqcnQ=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1744.namprd22.prod.outlook.com (10.164.206.162) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 22:58:33 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
- 22:58:33 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
-Thread-Topic: [PATCH 04/12] mips: Reserve memory for the kernel image
- resources
-Thread-Index: AQHU+ibQQIEJaXUkgEWNBapHcAUrdaZL6giAgAGn0ACAB8pRAA==
-Date:   Tue, 30 Apr 2019 22:58:33 +0000
-Message-ID: <20190430225832.cjk7mj6dotw3cib6@pburton-laptop>
-References: <20190423224748.3765-1-fancer.lancer@gmail.com>
- <20190423224748.3765-5-fancer.lancer@gmail.com>
- <20190424224343.4skr727fszycwksq@pburton-laptop>
- <20190426000035.yfonfvrapmm4j3fg@mobilestation>
-In-Reply-To: <20190426000035.yfonfvrapmm4j3fg@mobilestation>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR02CA0025.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::38) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8703eca8-92fe-4aa6-ac3a-08d6cdbf5ee7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1744;
-x-ms-traffictypediagnostic: MWHPR2201MB1744:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MWHPR2201MB1744827D6BFBB405171FD301C13A0@MWHPR2201MB1744.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(39850400004)(396003)(136003)(376002)(346002)(51444003)(189003)(199004)(52116002)(478600001)(76176011)(66946007)(66476007)(7416002)(54906003)(44832011)(476003)(73956011)(42882007)(99286004)(6506007)(64756008)(58126008)(66556008)(33716001)(1076003)(446003)(14454004)(316002)(26005)(386003)(486006)(66446008)(66066001)(11346002)(186003)(7736002)(25786009)(305945005)(102836004)(6246003)(6486002)(53936002)(6916009)(229853002)(8676002)(81156014)(81166006)(3846002)(5660300002)(6512007)(6306002)(68736007)(71190400001)(71200400001)(9686003)(2906002)(8936002)(6436002)(256004)(6116002)(966005)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1744;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 08x5VgZdrekKyTBipVEOTlyMt6uAssa9K/eOFLGJVmYYpXCOOJKubL3sgV1DQBN352jfyHGmfxzrwr93De2/cpPg4GBga02hZVTooOp7KZkwOTO3T6KJf2buQHDAgT4vie4egl+E8XoobbCmdyK85AyaIZ1EVIPf6mdDyAQLBZyUYWxZV4G4r2V3nAvp6XKnNsX7s0htVwT71tG53zzF86fRf/trUXOt5us2zRn525y8b1VAu+99B2pYq1Gg7jqU6Yk1DBRjveJGYoVu3jq190IquteZgLB8jcSVLbfX2Oo0/06vw+xvQRFylQ8N8gIchZZ/vHKB3vzEmIxWqyqvhfXAy6tFidS6KoXSa7dn3UVnUaqJqNOea/hOeqQP7aM16c6IA6poYKTmhi6Vg5H70HbG7cBDIytxFAkLYsfIdQA=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <31CA1FFD45D7C846A8B813AF16D3E80F@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Apr 2019 19:09:42 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:33607 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfD3XJl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 19:09:41 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6CC8C300002A0;
+        Wed,  1 May 2019 01:09:39 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 21B39C2785; Wed,  1 May 2019 01:09:39 +0200 (CEST)
+Date:   Wed, 1 May 2019 01:09:39 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Alex G <mr.nuke.me@gmail.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
+ bandwidth notification"
+Message-ID: <20190430230939.5bn5ktirkbrx3vhy@wunner.de>
+References: <20190429185611.121751-1-helgaas@kernel.org>
+ <20190429185611.121751-2-helgaas@kernel.org>
+ <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
+ <20190430161151.GB145057@google.com>
+ <20190430180508.GB25654@localhost.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8703eca8-92fe-4aa6-ac3a-08d6cdbf5ee7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 22:58:33.8286
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1744
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430180508.GB25654@localhost.localdomain>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Serge,
+On Tue, Apr 30, 2019 at 12:05:09PM -0600, Keith Busch wrote:
+> On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
+> > > I'm not convinced a revert is the best call.
+> > 
+> > I have very limited options at this stage of the release, but I'd be
+> > glad to hear suggestions.  My concern is that if we release v5.1
+> > as-is, we'll spend a lot of energy on those false positives.
+> 
+> May be too late now if the revert is queued up, but I think this feature
+> should have been a default 'false' Kconfig bool rather than always on.
 
-On Fri, Apr 26, 2019 at 03:00:36AM +0300, Serge Semin wrote:
-> >  1) Older systems generally had something like an ISA bus which used
-> >     addresses below the kernel, and bootloaders like YAMON left behind
-> >     functions that could be called right at the start of RAM. This sort
-> >     of thing should be accounted for by /memreserve/ in DT or similar
-> >     platform-specific reservations though rather than generically, and
-> >     at least Malta & SEAD-3 DTs already have /memreserve/ entries for
-> >     it. So this part I think is OK. Some other older platforms might
-> >     need updating, but that's fine.
-> >=20
->=20
-> Regarding ISA. As far as I remember devices on that bus can DMA only to t=
-he
-> lowest 16MB. So in case if kernel is too big or placed pretty much high,
-> they may be left even without reachable memory at all in current
-> implementation.
+Good idea, this would seem to be a less harsh solution than a revert.
 
-Sure - I'm not too worried about these old buses, platforms can continue
-to reserve the memory through DT or otherwise if they need to.
+Enabling the feature by default for everyone was probably overly confident.
+I recall I did bring up in a review comment that all other port services
+have a Kconfig option.  Alex replied that he's not using one because
+on device enumeration, downtraining is checked unconditionally as well.
 
-> >  2) trap_init() only allocates memory for the exception vector if using
-> >     a vectored interrupt mode. In other cases it just uses CAC_BASE
-> >     which currently gets reserved as part of this region between
-> >     PHYS_OFFSET & _text.
-> >=20
-> >     I think this behavior is bogus, and we should instead:
-> >=20
-> >     - Allocate the exception vector memory using memblock_alloc() for
-> >       CPUs implementing MIPSr2 or higher (ie. CPUs with a programmable
-> >       EBase register). If we're not using vectored interrupts then
-> >       allocating one page will do, and we already have the size
-> >       calculation for if we are.
-> >=20
-> >     - Otherwise use CAC_BASE but call memblock_reserve() on the first
-> >       page.
-> >=20
-> >     I think we should make that change before this one goes in. I can
-> >     try to get to it tomorrow, but feel free to beat me to it.
-> >=20
->=20
-> As far as I understood you and the code this should be enough to fix
-> the problem:
-> diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
-> index 98ca55d62201..f680253e2617 100644
-> --- a/arch/mips/kernel/traps.c
-> +++ b/arch/mips/kernel/traps.c
-> @@ -2326,6 +2326,8 @@ void __init trap_init(void)
->  				ebase +=3D (read_c0_ebase() & 0x3ffff000);
->  			}
->  		}
-> +
-> +		memblock_reserve(ebase, PAGE_SIZE);
->  	}
-> =20
->  	if (cpu_has_mmips) {
-> ---
->=20
-> Allocation has already been implemented in the if-branch under the
-> (cpu_has_veic || cpu_has_vint) condition. So we don't need to change
-> there anything.
-> In case if vectored interrupts aren't supported the else-clause is
-> taken and we need to reserve whatever is set in the exception base
-> address variable.
->=20
-> I'll add this patch between 3d and 4th ones if you are ok with it.
+Bandwidth notification might be a feature that's not used by many operating
+systems.  Such features don't get much real world exposure or aren't even
+validated by manufacturers.  Inevitably, unpleasant side effects occur
+once Linux supports them.
 
-I think that would work, but I have other motivations to allocate the
-memory in non-vectored cases anyway. I just sent a series that does that
-& cleans up a little [1]. If you could take a look that would be great.
-With that change made I think this patch will be good to apply.
+However if we keep the code and default to "N" in Kconfig, at least people
+get a chance to test and validate the functionality and hopefully this
+will lead to either better hardware or better driver support in the future.
 
 Thanks,
-    Paul
 
-[1] https://lore.kernel.org/linux-mips/20190430225216.7164-1-paul.burton@mi=
-ps.com/T/#t
+Lukas
