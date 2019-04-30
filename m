@@ -2,153 +2,118 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E44BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14897C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D30021670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556649564;
-	bh=zIfp/xPA9lce71AxAooxgWdU3Lzhzli/1SFQ1qjTcI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pqAVYaT6/GTqifWrJLYkC9TF/UjW4gxDVrxIzASiwnVZKqwef57i1Qw3C9r1mZ67N
-	 6ogY2BAAfDOrU8U3iL2G1lzahK+RVnLp0kXW8hhfHgJ39blsWWPT6srPd2jCNTQtnp
-	 Cn5QF3KwL1pnkyTwGiYhpOZCoxGNTXBVd+wjFiW4=
+	by mail.kernel.org (Postfix) with ESMTP id E1E3121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfD3SjS (ORCPT
+        id S1726831AbfD3Sma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 14:39:18 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34767 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfD3SjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:39:18 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s7so11036256ljh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uKQ5wQDmcWGNS5cFgE6sknQ1Vaz0sJXUmzUNGiZJEQw=;
-        b=cA+Fnbmk0I5OJp9OtlS1S8PhpJVuthIr36z1RS/i4PikRfFVCqQc79YE883gVNbbQX
-         rU4NivMUS9CGP8EKH0Hrd/XaBHYNd2ifkjss3yQ02d2fuubygig5Isugs+12vrC+6Brv
-         XyP/4uH/8t46MMd0PxWi8jRHESv+uau/CAOfo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uKQ5wQDmcWGNS5cFgE6sknQ1Vaz0sJXUmzUNGiZJEQw=;
-        b=eXY7WqXXB6vSqzohjSt1J+MIUbaOy1C9G9YH0QS55xqV1Sb5r3LsDJcPkWEDbGUShY
-         0MsFJwQilCBE0baFBexWZXJdebRp4h1MLdgI95TU6BQ9GuBywWd6G+59QO+WtxiT+ME5
-         nEnYu6/GcEfOYjWqkrGh3QAjKJByLBuOeXHVm7+HmbcMc7dvevmhxtBI9IrZ5ZBi5LSO
-         zbxGqMEjH4hRQq989vye9GlQcav5hj4Z/L7uYuvMOScrv8eojfCy6ypjjGqC0SOGMScl
-         4c1lHVCzdkDiDDONF8z0NIHG5hbCscg2KnzF0HzEistfKb4NTOjyfwUsuc4rEeZeqoAP
-         jcjw==
-X-Gm-Message-State: APjAAAUrLfZCkL6NRy8lYYOhci+32y1K3SElMfKR6NtlP1Z2KfMvcYrQ
-        tgIjcubAuDbvFVhWrixXQhUWbAa9jWI=
-X-Google-Smtp-Source: APXvYqzymjTnM741PS8dq/bOMgWWZjQq5pfeUWzRD9zKIidOSzIPQtn1EZr1jQaHTgWKy/XBVLjH6A==
-X-Received: by 2002:a2e:655a:: with SMTP id z87mr1840427ljb.150.1556649555644;
-        Tue, 30 Apr 2019 11:39:15 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id y7sm7622532ljy.65.2019.04.30.11.39.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 11:39:15 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id y8so7350924ljd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:39:15 -0700 (PDT)
-X-Received: by 2002:a2e:22c4:: with SMTP id i187mr36309820lji.94.1556649217849;
- Tue, 30 Apr 2019 11:33:37 -0700 (PDT)
+        Tue, 30 Apr 2019 14:42:30 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51516 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbfD3Sma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:42:30 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:42:29 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga002.jf.intel.com with ESMTP; 30 Apr 2019 11:42:29 -0700
+Date:   Tue, 30 Apr 2019 11:42:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH] x86/kvm/mmu: reset MMU context when 32-bit guest
+ switches PAE
+Message-ID: <20190430184229.GE32170@linux.intel.com>
+References: <20190430173326.1956-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-References: <20190428133826.3e142cfd@oasis.local.home> <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
- <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
- <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
- <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
- <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
- <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
- <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
- <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
- <20190430135602.GD2589@hirez.programming.kicks-ass.net> <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
- <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
- <20190430130359.330e895b@gandalf.local.home> <20190430132024.0f03f5b8@gandalf.local.home>
- <20190430134913.4e29ce72@gandalf.local.home>
-In-Reply-To: <20190430134913.4e29ce72@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 30 Apr 2019 11:33:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
-Message-ID: <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
-Subject: Re: [RFC][PATCH] ftrace/x86: Emulate call function while updating in
- breakpoint handler
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430173326.1956-1-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 10:49 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> +
-> +asm(
-> +       ".text\n"
-> +
-> +       /* Trampoline for function update with interrupts enabled */
-> +       ".global ftrace_emulate_call_irqoff\n"
-> +       ".type ftrace_emulate_call_irqoff, @function\n"
-> +       "ftrace_emulate_call_irqoff:\n\t"
-> +               "push %gs:ftrace_bp_call_return\n\t"
+On Tue, Apr 30, 2019 at 07:33:26PM +0200, Vitaly Kuznetsov wrote:
+> Commit 47c42e6b4192 ("KVM: x86: fix handling of role.cr4_pae and rename it
+> to 'gpte_size'") introduced a regression: 32-bit PAE guests stopped
 
-Well, as mentioned in my original suggestion, this won't work on
-32-bit, or on UP. They have different models for per-cpu data (32-bti
-uses %fs, and UP doesn't use a segment override at all).
+"gpte_is_8_bytes" is really confusing in this case. :-(  Unfortunately I
+can't think I can't think of a better name that isn't ridiculously verbose.
 
-Maybe we just don't care about UP at all for this code, of course.
+> working. The issue appears to be: when guest switches (enables) PAE we need
+> to re-initialize MMU context (set context->root_level, do
+> reset_rsvds_bits_mask(), ...) but init_kvm_tdp_mmu() doesn't do that
+> because we threw away is_pae(vcpu) flag from mmu role. Restore it to
+> kvm_mmu_extended_role (as we now don't need it in base role) to fix
+> the issue.
 
-And maybe we can make the decision to also make 32-bit just not use
-this either - so maybe the code is ok per se, just needs to make sure
-it never triggers for the cases that it's not written for..
+The change makes sense, but I'm amazed that there's a kernel that can
+actually trigger the bug.  The extended role tracks CR0.PG, so I'm pretty
+sure hitting this bug requires toggling CR4.PAE *while paging is enabled*.
+Which is legal, but crazy.  E.g. my 32-bit Linux VM runs fine with and
+without PAE enabled.
 
-> +       "ftrace_emulate_call_update_irqoff:\n\t"
-> +               "push %gs:ftrace_bp_call_return\n\t"
-> +               "sti\n\t"
-> +               "jmp *ftrace_update_func_call\n"
+> Fixes: 47c42e6b4192 ("KVM: x86: fix handling of role.cr4_pae and rename it to 'gpte_size'")
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-.. and this should then use the "push push sti ret" model instead.
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Plus get updated for objtool complaints.
+> ---
+> - RFC: it was proven multiple times that mmu code is more complex than it
+>   appears (at least to me) :-)
 
-Anyway, since Andy really likes the entry code change, can we have
-that patch in parallel and judge the difference that way? Iirc, that
-was x86-64 specific too.
+LOL, maybe you're just more optimistic than most people.  Every time I
+look at the code I say something along the lines of "holy $&*#".
 
-                           Linus
+> ---
+>  arch/x86/include/asm/kvm_host.h | 1 +
+>  arch/x86/kvm/mmu.c              | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index a9d03af34030..c79abe7ca093 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -295,6 +295,7 @@ union kvm_mmu_extended_role {
+>  		unsigned int valid:1;
+>  		unsigned int execonly:1;
+>  		unsigned int cr0_pg:1;
+> +		unsigned int cr4_pae:1;
+>  		unsigned int cr4_pse:1;
+>  		unsigned int cr4_pke:1;
+>  		unsigned int cr4_smap:1;
+> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> index e10962dfc203..d9c7b45d231f 100644
+> --- a/arch/x86/kvm/mmu.c
+> +++ b/arch/x86/kvm/mmu.c
+> @@ -4781,6 +4781,7 @@ static union kvm_mmu_extended_role kvm_calc_mmu_role_ext(struct kvm_vcpu *vcpu)
+>  	union kvm_mmu_extended_role ext = {0};
+>  
+>  	ext.cr0_pg = !!is_paging(vcpu);
+> +	ext.cr4_pae = !!is_pae(vcpu);
+
+This got me thinking, I wonder if we can/should leave the CR4 bits clear
+if !is_paging().  Technically I think we're unnecessarily purging the MMU
+when the guest is toggling CR4 bits with CR0.PG==0.  And I think we can
+also git rid of the oddball nx flag in struct kvm_mmu.  I'll play around
+with the code and hopefully send a patch or two.
+
+>  	ext.cr4_smep = !!kvm_read_cr4_bits(vcpu, X86_CR4_SMEP);
+>  	ext.cr4_smap = !!kvm_read_cr4_bits(vcpu, X86_CR4_SMAP);
+>  	ext.cr4_pse = !!is_pse(vcpu);
+> -- 
+> 2.20.1
+> 
