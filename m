@@ -2,437 +2,212 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C8BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2F1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55D72075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6EAF20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:10:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfD3HFM (ORCPT
+        id S1726381AbfD3HKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:05:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60302 "EHLO mx1.redhat.com"
+        Tue, 30 Apr 2019 03:10:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52858 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfD3HFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:05:12 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1725769AbfD3HKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:10:00 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7AB4AC02490D;
-        Tue, 30 Apr 2019 07:05:11 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E89681DF4;
+        Tue, 30 Apr 2019 07:09:59 +0000 (UTC)
 Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 440BD16BF0;
-        Tue, 30 Apr 2019 07:05:03 +0000 (UTC)
-Subject: Re: [PATCH v2 15/19] iommu/vt-d: Add bind guest PASID support
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-16-git-send-email-jacob.jun.pan@linux.intel.com>
- <66758de4-2b76-7380-3636-7da1c0a6dc65@redhat.com>
- <20190429082550.76f3f736@jacob-builder>
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E30C51001DD2;
+        Tue, 30 Apr 2019 07:09:52 +0000 (UTC)
+Subject: Re: [PATCH v7 00/23] SMMUv3 Nested Stage Setup
+To:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+References: <20190408121911.24103-1-eric.auger@redhat.com>
 From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <0af838f6-3830-9538-2cb9-a0dc26b24768@redhat.com>
-Date:   Tue, 30 Apr 2019 09:05:01 +0200
+Message-ID: <d9967a8c-cd3b-6994-c5ef-c4341aaaf0fd@redhat.com>
+Date:   Tue, 30 Apr 2019 09:09:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190429082550.76f3f736@jacob-builder>
+In-Reply-To: <20190408121911.24103-1-eric.auger@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 30 Apr 2019 07:05:11 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 30 Apr 2019 07:09:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Robin,
 
+On 4/8/19 2:18 PM, Eric Auger wrote:
+> This series allows a virtualizer to program the nested stage mode.
+> This is useful when both the host and the guest are exposed with
+> an SMMUv3 and a PCI device is assigned to the guest using VFIO.
+> 
+> In this mode, the physical IOMMU must be programmed to translate
+> the two stages: the one set up by the guest (IOVA -> GPA) and the
+> one set up by the host VFIO driver as part of the assignment process
+> (GPA -> HPA).
+> 
+> On Intel, this is traditionnaly achieved by combining the 2 stages
+> into a single physical stage. However this relies on the capability
+> to trap on each guest translation structure update. This is possible
+> by using the VTD Caching Mode. Unfortunately the ARM SMMUv3 does
+> not offer a similar mechanism.
+> 
+> However, the ARM SMMUv3 architecture supports 2 physical stages! Those
+> were devised exactly with that use case in mind. Assuming the HW
+> implements both stages (optional), the guest now can use stage 1
+> while the host uses stage 2.
+> 
+> This assumes the virtualizer has means to propagate guest settings
+> to the host SMMUv3 driver. This series brings this VFIO/IOMMU
+> infrastructure.  Those services are:
+> - bind the guest stage 1 configuration to the stream table entry
+> - propagate guest TLB invalidations
+> - bind MSI IOVAs
+> - propagate faults collected at physical level up to the virtualizer
+> 
+> This series largely reuses the user API and infrastructure originally
+> devised for SVA/SVM and patches submitted by Jacob, Yi Liu, Tianyu in
+> [1-2] and Jean-Philippe [3-4].
 
-On 4/29/19 5:25 PM, Jacob Pan wrote:
-> On Fri, 26 Apr 2019 18:15:27 +0200
-> Auger Eric <eric.auger@redhat.com> wrote:
-> 
->> Hi Jacob,
->>
->> On 4/24/19 1:31 AM, Jacob Pan wrote:
->>> When supporting guest SVA with emulated IOMMU, the guest PASID
->>> table is shadowed in VMM. Updates to guest vIOMMU PASID table
->>> will result in PASID cache flush which will be passed down to
->>> the host as bind guest PASID calls.
->>>
->>> For the SL page tables, it will be harvested from device's
->>> default domain (request w/o PASID), or aux domain in case of
->>> mediated device.
->>>
->>>     .-------------.  .---------------------------.
->>>     |   vIOMMU    |  | Guest process CR3, FL only|
->>>     |             |  '---------------------------'
->>>     .----------------/
->>>     | PASID Entry |--- PASID cache flush -
->>>     '-------------'                       |
->>>     |             |                       V
->>>     |             |                CR3 in GPA
->>>     '-------------'
->>> Guest
->>> ------| Shadow |--------------------------|--------
->>>       v        v                          v
->>> Host
->>>     .-------------.  .----------------------.
->>>     |   pIOMMU    |  | Bind FL for GVA-GPA  |
->>>     |             |  '----------------------'
->>>     .----------------/  |
->>>     | PASID Entry |     V (Nested xlate)
->>>     '----------------\.------------------------------.
->>>     |             |   |SL for GPA-HPA, default domain|
->>>     |             |   '------------------------------'
->>>     '-------------'
->>> Where:
->>>  - FL = First level/stage one page tables
->>>  - SL = Second level/stage two page tables
->>>
->>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
->>> ---
->>>  drivers/iommu/intel-iommu.c |   4 +
->>>  drivers/iommu/intel-svm.c   | 174
->>> ++++++++++++++++++++++++++++++++++++++++++++
->>> include/linux/intel-iommu.h |  10 ++- include/linux/intel-svm.h
->>> |   7 ++ 4 files changed, 193 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/iommu/intel-iommu.c
->>> b/drivers/iommu/intel-iommu.c index 77bbe1b..89989b5 100644
->>> --- a/drivers/iommu/intel-iommu.c
->>> +++ b/drivers/iommu/intel-iommu.c
->>> @@ -5768,6 +5768,10 @@ const struct iommu_ops intel_iommu_ops = {
->>>  	.dev_enable_feat	= intel_iommu_dev_enable_feat,
->>>  	.dev_disable_feat	= intel_iommu_dev_disable_feat,
->>>  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
->>> +#ifdef CONFIG_INTEL_IOMMU_SVM
->>> +	.sva_bind_gpasid	= intel_svm_bind_gpasid,
->>> +	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
->>> +#endif
->>>  };
->>>  
->>>  static void quirk_iommu_g4x_gfx(struct pci_dev *dev)
->>> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
->>> index 8fff212..0a973c2 100644
->>> --- a/drivers/iommu/intel-svm.c
->>> +++ b/drivers/iommu/intel-svm.c
->>> @@ -227,6 +227,180 @@ static const struct mmu_notifier_ops
->>> intel_mmuops = { 
->>>  static DEFINE_MUTEX(pasid_mutex);
->>>  static LIST_HEAD(global_svm_list);
->>> +#define for_each_svm_dev() \
->>> +	list_for_each_entry(sdev, &svm->devs, list)	\
->>> +	if (dev == sdev->dev)				\
->>> +
->>> +int intel_svm_bind_gpasid(struct iommu_domain *domain,
->>> +			struct device *dev,
->>> +			struct gpasid_bind_data *data)
->>> +{
->>> +	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
->>> +	struct intel_svm_dev *sdev;
->>> +	struct intel_svm *svm = NULL;
->>> +	struct dmar_domain *ddomain;
->>> +	int pasid_max;
->>> +	int ret = 0;
->>> +
->>> +	if (WARN_ON(!iommu) || !data)
->>> +		return -EINVAL;
->>> +
->>> +	if (dev_is_pci(dev)) {
->>> +		pasid_max = pci_max_pasids(to_pci_dev(dev));
->>> +		if (pasid_max < 0)
->>> +			return -EINVAL;
->>> +	} else
->>> +		pasid_max = 1 << 20;
->>> +
->>> +	if (data->pasid <= 0 || data->pasid >= pasid_max)
->>> +		return -EINVAL;
->>> +
->>> +	ddomain = to_dmar_domain(domain);
->>> +	/* REVISIT:
->>> +	 * Sanity check adddress width and paging mode support
->>> +	 * width matching in two dimensions:
->>> +	 * 1. paging mode CPU <= IOMMU
->>> +	 * 2. address width Guest <= Host.
->>> +	 */
->>> +	mutex_lock(&pasid_mutex);
->>> +	svm = ioasid_find(NULL, data->pasid, NULL);
->>> +	if (IS_ERR(svm)) {
->>> +		ret = PTR_ERR(svm);
->>> +		goto out;
->>> +	}
->>> +	if (svm) {
->>> +		if (list_empty(&svm->devs)) {
->>> +			dev_err(dev, "GPASID %d has no devices
->>> bond but SVA is allocated\n",
->>> +				data->pasid);
->>> +			ret = -ENODEV; /*
->>> +					* If we found svm for the
->>> PASID, there must be at
->>> +					* least one device bond,
->>> otherwise svm should be freed.
->>> +					*/  
->> comment should be put after list_empty I think. In which circumstances
->> can it happen, I mean, isn't it a BUG_ON case?
-> Well, I think failing to bind guest PASID is not severe enough to the
-> host to use BUG_ON. It has to be something more catastrophic to use
-> BUG_ON right? I will relocate the comments.
-When the error is due to a programming error at kernel error (not
-induced by any userspace call) I guess it is acceptable to put a BUG_ON.
-However the usage of BUG_ON() is generally frown upon so my question
-rather was to understand if this can really happen and why?
->>> +			goto out;
->>> +		}
->>> +		for_each_svm_dev() {
->>> +			/* In case of multiple sub-devices of the
->>> same pdev assigned, we should
->>> +			 * allow multiple bind calls with the same
->>> PASID and pdev.
->>> +			 */
->>> +			sdev->users++;
->>> +			goto out;
->>> +		}
->>> +	} else {
->>> +		/* We come here when PASID has never been bond to
->>> a device. */
->>> +		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
->>> +		if (!svm) {
->>> +			ret = -ENOMEM;
->>> +			goto out;
->>> +		}
->>> +		/* REVISIT: upper layer/VFIO can track host
->>> process that bind the PASID.
->>> +		 * ioasid_set = mm might be sufficient for vfio to
->>> check pasid VMM
->>> +		 * ownership.
->>> +		 */
->>> +		svm->mm = get_task_mm(current);
->>> +		svm->pasid = data->pasid;
->>> +		refcount_set(&svm->refs, 0);
->>> +		ioasid_set_data(data->pasid, svm);
->>> +		INIT_LIST_HEAD_RCU(&svm->devs);
->>> +		INIT_LIST_HEAD(&svm->list);
->>> +
->>> +		mmput(svm->mm);
->>> +	}
->>> +	svm->flags |= SVM_FLAG_GUEST_MODE;
->>> +	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
->>> +	if (!sdev) {
->>> +		ret = -ENOMEM;  
->> in case of failure what is the state of svm (you added the
->> SVM_FLAG_GUEST_MODE bit typically, is it safe to leave it?)
-> The SVM_FLAG_GUEST_MODE flag is used for fault reporting where faults
-> such as PRQ need to be injected into the guest. If this kzalloc()
-> fails, the nested translation would not be setup for this PASID. So
-> there shouldn't be any user of the flag. But I think it is better to
-> move svm->flags |= SVM_FLAG_GUEST_MODE; to the end when everything is
-> setup for nesting.
-ok
-> 
->>> +		goto out;
->>> +	}
->>> +	sdev->dev = dev;
->>> +	sdev->users = 1;
->>> +
->>> +	/* Set up device context entry for PASID if not enabled
->>> already */
->>> +	ret = intel_iommu_enable_pasid(iommu, sdev->dev);
->>> +	if (ret) {
->>> +		dev_err(dev, "Failed to enable PASID
->>> capability\n");
->>> +		kfree(sdev);  
->> same here
->>> +		goto out;
->>> +	}
->>> +
->>> +	/*
->>> +	 * For guest bind, we need to set up PASID table entry as
->>> follows:
->>> +	 * - FLPM matches guest paging mode
->>> +	 * - turn on nested mode
->>> +	 * - SL guest address width matching
->>> +	 */
->>> +	ret = intel_pasid_setup_nested(iommu,
->>> +				dev,
->>> +				(pgd_t *)data->gcr3,
->>> +				data->pasid,
->>> +				data->flags,
->>> +				ddomain,
->>> +				data->addr_width);
->>> +	if (ret) {
->>> +		dev_err(dev, "Failed to set up PASID %d in nested
->>> mode, Err %d\n",
->>> +			data->pasid, ret);
->>> +		kfree(sdev);
->>> +		goto out;
->>> +	}
->>> +
->>> +	init_rcu_head(&sdev->rcu);
->>> +	refcount_inc(&svm->refs);
->>> +	list_add_rcu(&sdev->list, &svm->devs);
->>> + out:
->>> +	mutex_unlock(&pasid_mutex);
->>> +	return ret;
->>> +}
->>> +
->>> +int intel_svm_unbind_gpasid(struct device *dev, int pasid)
->>> +{
->>> +	struct intel_svm_dev *sdev;
->>> +	struct intel_iommu *iommu;
->>> +	struct intel_svm *svm;
->>> +	int ret = -EINVAL;
->>> +
->>> +	mutex_lock(&pasid_mutex);
->>> +	iommu = intel_svm_device_to_iommu(dev);
->>> +	if (!iommu)
->>> +		goto out;
->>> +
->>> +	svm = ioasid_find(NULL, pasid, NULL);
->>> +	if (IS_ERR(svm)) {
->>> +		ret = PTR_ERR(svm);
->>> +		goto out;
->>> +	}
->>> +
->>> +	if (!svm)
->>> +		goto out;
->>> +
->>> +	for_each_svm_dev() {
->>> +		ret = 0;
->>> +		sdev->users--;
->>> +		if (!sdev->users) {
->>> +			list_del_rcu(&sdev->list);
->>> +			intel_pasid_tear_down_entry(iommu, dev,
->>> svm->pasid);
->>> +			/* TODO: Drain in flight PRQ for the PASID
->>> since it
->>> +			 * may get reused soon, we don't want to
->>> +			 * confuse with its previous live.
->>> +			 * intel_svm_drain_prq(dev, pasid);
->>> +			 */
->>> +			kfree_rcu(sdev, rcu);
->>> +
->>> +			if (list_empty(&svm->devs)) {
->>> +				list_del(&svm->list);
->>> +				kfree(svm);
->>> +				/*
->>> +				 * We do not free PASID here until
->>> explicit call
->>> +				 * from the guest to free.  
->> can you be confident in the guest?
-> No. But I have confident in the kernel VFIO code to manage guest life
-> cycle :)
-> I assume when a guest doesn't do unbind when it dies or unload a
-> assigned device, I expect VFIO to free all the PASIDs. VFIO needs to
-> police the PASID ownership anyway in order to make sure a PASID
-> assigned to guest A cannot be used to bind from guest B.
-> This is the flow I worked out with Yi, who is doing the VFIO part. Any
-> particular concerns?
-No I just wanted to make sure someone is going to take care of the final
-tear down even if the userspace fails to do things as expected. Maybe
-adding a comment to explain who has the ownership of the final tear down
-would help here.
+I am going to respin on top of latest Jean-Philippe's 5.2 changes in
+arm-smmu-v3.c. Do you have some comments on changes done since your last
+review? Does it go towards the good direction from the iommu API pov and
+smmuv3 implementation?
 
 Thanks
 
 Eric
 > 
->>> +				 */
->>> +				ioasid_set_data(pasid, NULL);
->>> +			}
->>> +		}
->>> +		break;
->>> +	}
->>> + out:
->>> +	mutex_unlock(&pasid_mutex);
->>> +
->>> +	return ret;
->>> +}
->>>  
->>>  int intel_svm_bind_mm(struct device *dev, int *pasid, int flags,
->>> struct svm_dev_ops *ops) {
->>> diff --git a/include/linux/intel-iommu.h
->>> b/include/linux/intel-iommu.h index 48fa164..5d67d0d4 100644
->>> --- a/include/linux/intel-iommu.h
->>> +++ b/include/linux/intel-iommu.h
->>> @@ -677,7 +677,9 @@ int intel_iommu_enable_pasid(struct intel_iommu
->>> *iommu, struct device *dev); int intel_svm_init(struct intel_iommu
->>> *iommu); extern int intel_svm_enable_prq(struct intel_iommu *iommu);
->>>  extern int intel_svm_finish_prq(struct intel_iommu *iommu);
->>> -
->>> +extern int intel_svm_bind_gpasid(struct iommu_domain *domain,
->>> +		struct device *dev, struct gpasid_bind_data *data);
->>> +extern int intel_svm_unbind_gpasid(struct device *dev, int pasid);
->>>  struct svm_dev_ops;
->>>  
->>>  struct intel_svm_dev {
->>> @@ -693,12 +695,16 @@ struct intel_svm_dev {
->>>  
->>>  struct intel_svm {
->>>  	struct mmu_notifier notifier;
->>> -	struct mm_struct *mm;
->>> +	union {
->>> +		struct mm_struct *mm;
->>> +		u64 gcr3;
->>> +	};
->>>  	struct intel_iommu *iommu;
->>>  	int flags;
->>>  	int pasid;
->>>  	struct list_head devs;
->>>  	struct list_head list;
->>> +	refcount_t refs; /* # of devs bond to the PASID */  
->> number of devices sharing the same PASID?
-> more clear wording, thanks.
->>>  };
->>>  
->>>  extern struct intel_iommu *intel_svm_device_to_iommu(struct device
->>> *dev); diff --git a/include/linux/intel-svm.h
->>> b/include/linux/intel-svm.h index e3f7631..34b0a3b 100644
->>> --- a/include/linux/intel-svm.h
->>> +++ b/include/linux/intel-svm.h
->>> @@ -52,6 +52,13 @@ struct svm_dev_ops {
->>>   * do such IOTLB flushes automatically.
->>>   */
->>>  #define SVM_FLAG_SUPERVISOR_MODE	(1<<1)
->>> +/*
->>> + * The SVM_FLAG_GUEST_MODE flag is used when a guest process bind
->>> to a device.  
->> binds
-> will fix
+> Best Regards
 > 
->>> + * In this case the mm_struct is in the guest kernel or userspace,
->>> its life
->>> + * cycle is managed by VMM and VFIO layer. For IOMMU driver, this
->>> API provides
->>> + * means to bind/unbind guest CR3 with PASIDs allocated for a
->>> device.
->>> + */
->>> +#define SVM_FLAG_GUEST_MODE	(1<<2)
->>>  
->>>  #ifdef CONFIG_INTEL_IOMMU_SVM
->>>  
->>>   
->>
->> Thanks
->>
->> Eric
+> Eric
 > 
-> [Jacob Pan]
+> This series can be found at:
+> https://github.com/eauger/linux/tree/v5.1-rc3-2stage-v7
+> 
+> References:
+> [1] [PATCH v5 00/23] IOMMU and VT-d driver support for Shared Virtual
+>     Address (SVA)
+>     https://lwn.net/Articles/754331/
+> [2] [RFC PATCH 0/8] Shared Virtual Memory virtualization for VT-d
+>     (VFIO part)
+>     https://lists.linuxfoundation.org/pipermail/iommu/2017-April/021475.html
+> [3] [v2,00/40] Shared Virtual Addressing for the IOMMU
+>     https://patchwork.ozlabs.org/cover/912129/
+> [4] [PATCH v3 00/10] Shared Virtual Addressing for the IOMMU
+>     https://patchwork.kernel.org/cover/10608299/
+> 
+> History:
+> v6 -> v7:
+> - removed device handle from bind/unbind_guest_msi
+> - added "iommu/smmuv3: Nested mode single MSI doorbell per domain
+>   enforcement"
+> - added few uapi comments as suggested by Jean, Jacop and Alex
+> 
+> v5 -> v6:
+> - Fix compilation issue when CONFIG_IOMMU_API is unset
+> 
+> v4 -> v5:
+> - fix bug reported by Vincent: fault handler unregistration now happens in
+>   vfio_pci_release
+> - IOMMU_FAULT_PERM_* moved outside of struct definition + small
+>   uapi changes suggested by Kean-Philippe (except fetch_addr)
+> - iommu: introduce device fault report API: removed the PRI part.
+> - see individual logs for more details
+> - reset the ste abort flag on detach
+> 
+> v3 -> v4:
+> - took into account Alex, jean-Philippe and Robin's comments on v3
+> - rework of the smmuv3 driver integration
+> - add tear down ops for msi binding and PASID table binding
+> - fix S1 fault propagation
+> - put fault reporting patches at the beginning of the series following
+>   Jean-Philippe's request
+> - update of the cache invalidate and fault API uapis
+> - VFIO fault reporting rework with 2 separate regions and one mmappable
+>   segment for the fault queue
+> - moved to PATCH
+> 
+> v2 -> v3:
+> - When registering the S1 MSI binding we now store the device handle. This
+>   addresses Robin's comment about discimination of devices beonging to
+>   different S1 groups and using different physical MSI doorbells.
+> - Change the fault reporting API: use VFIO_PCI_DMA_FAULT_IRQ_INDEX to
+>   set the eventfd and expose the faults through an mmappable fault region
+> 
+> v1 -> v2:
+> - Added the fault reporting capability
+> - asid properly passed on invalidation (fix assignment of multiple
+>   devices)
+> - see individual change logs for more info
+> 
+> 
+> Eric Auger (14):
+>   iommu: Introduce bind/unbind_guest_msi
+>   vfio: VFIO_IOMMU_BIND/UNBIND_MSI
+>   iommu/smmuv3: Get prepared for nested stage support
+>   iommu/smmuv3: Implement attach/detach_pasid_table
+>   iommu/smmuv3: Implement cache_invalidate
+>   dma-iommu: Implement NESTED_MSI cookie
+>   iommu/smmuv3: Nested mode single MSI doorbell per domain enforcement
+>   iommu/smmuv3: Implement bind/unbind_guest_msi
+>   iommu/smmuv3: Report non recoverable faults
+>   vfio-pci: Add a new VFIO_REGION_TYPE_NESTED region type
+>   vfio-pci: Register an iommu fault handler
+>   vfio_pci: Allow to mmap the fault queue
+>   vfio-pci: Add VFIO_PCI_DMA_FAULT_IRQ_INDEX
+>   vfio: Document nested stage control
+> 
+> Jacob Pan (4):
+>   driver core: add per device iommu param
+>   iommu: introduce device fault data
+>   iommu: introduce device fault report API
+>   iommu: Introduce attach/detach_pasid_table API
+> 
+> Jean-Philippe Brucker (2):
+>   iommu/arm-smmu-v3: Link domains and devices
+>   iommu/arm-smmu-v3: Maintain a SID->device structure
+> 
+> Liu, Yi L (3):
+>   iommu: Introduce cache_invalidate API
+>   vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE
+>   vfio: VFIO_IOMMU_CACHE_INVALIDATE
+> 
+>  Documentation/vfio.txt              |  83 ++++
+>  drivers/iommu/arm-smmu-v3.c         | 631 ++++++++++++++++++++++++++--
+>  drivers/iommu/dma-iommu.c           | 129 +++++-
+>  drivers/iommu/iommu.c               | 205 ++++++++-
+>  drivers/vfio/pci/vfio_pci.c         | 214 ++++++++++
+>  drivers/vfio/pci/vfio_pci_intrs.c   |  19 +
+>  drivers/vfio/pci/vfio_pci_private.h |  18 +
+>  drivers/vfio/pci/vfio_pci_rdwr.c    |  73 ++++
+>  drivers/vfio/vfio_iommu_type1.c     | 172 ++++++++
+>  include/linux/device.h              |   3 +
+>  include/linux/dma-iommu.h           |  17 +
+>  include/linux/iommu.h               | 135 ++++++
+>  include/uapi/linux/iommu.h          | 240 +++++++++++
+>  include/uapi/linux/vfio.h           | 107 +++++
+>  14 files changed, 2013 insertions(+), 33 deletions(-)
+>  create mode 100644 include/uapi/linux/iommu.h
 > 
