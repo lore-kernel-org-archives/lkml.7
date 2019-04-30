@@ -2,165 +2,97 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F62C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9753CC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF46020652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7AD21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfD3OKI (ORCPT
+        id S1727705AbfD3OKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:10:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33354 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726758AbfD3OKI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:10:08 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UE3qWZ076192
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:10:07 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6q3ctt1j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:10:06 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 30 Apr 2019 15:10:04 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 15:10:01 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UE9xmd39780582
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 14:09:59 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BEE96A405C;
-        Tue, 30 Apr 2019 14:09:59 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12383A4054;
-        Tue, 30 Apr 2019 14:09:59 +0000 (GMT)
-Received: from [9.145.13.117] (unknown [9.145.13.117])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Apr 2019 14:09:59 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
- <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
- <20190430152605.3bb21f31.pasic@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 30 Apr 2019 16:09:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 10:10:38 -0400
+Received: from mga02.intel.com ([134.134.136.20]:61608 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbfD3OKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:10:38 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 07:10:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="342158227"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Apr 2019 07:10:31 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hLTSn-0006VO-Gw; Tue, 30 Apr 2019 17:10:29 +0300
+Date:   Tue, 30 Apr 2019 17:10:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        linux-ia64@vger.kernel.org, linux-serial@vger.kernel.org,
+        andrew@aj.id.au, gregkh@linuxfoundation.org, sudeep.holla@arm.com,
+        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
+        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
+        khilman@baylibre.com, macro@linux-mips.org,
+        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
+        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        davem@davemloft.net
+Subject: Re: [PATCH 22/41] drivers: tty: serial: cpm_uart: fix logging calls
+Message-ID: <20190430141029.GK9224@smile.fi.intel.com>
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-23-git-send-email-info@metux.net>
+ <a00ba23b-e73e-c964-a6d0-347cb605b8c8@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <20190430152605.3bb21f31.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19043014-4275-0000-0000-0000032FF55F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043014-4276-0000-0000-0000383F4E5C
-Message-Id: <622a9ab0-579d-17f4-6fa1-74d73da13b19@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=863 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300089
+In-Reply-To: <a00ba23b-e73e-c964-a6d0-347cb605b8c8@c-s.fr>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2019 15:26, Halil Pasic wrote:
-> On Fri, 26 Apr 2019 15:01:27 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Mon, Apr 29, 2019 at 05:59:04PM +0200, Christophe Leroy wrote:
+> Le 27/04/2019 à 14:52, Enrico Weigelt, metux IT consult a écrit :
+> > Fix checkpatch warnings by using pr_err():
+> > 
+> >      WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ... then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
+> >      #109: FILE: drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c:109:
+> >      +		printk(KERN_ERR
+> > 
+> >      WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ... then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
+> >      #128: FILE: drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c:128:
+> >      +		printk(KERN_ERR
+> > 
+> >      WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ... then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
+> >      +           printk(KERN_ERR
+> > 
+> >      WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ... then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
+> >      +           printk(KERN_ERR
+> > 
+> > Signed-off-by: Enrico Weigelt <info@metux.net>
 > 
->> +/**
->> + * vfio_ap_clrirq: Disable Interruption for a APQN
->> + *
->> + * @dev: the device associated with the ap_queue
->> + * @q:   the vfio_ap_queue holding AQIC parameters
->> + *
->> + * Issue the host side PQAP/AQIC
->> + * On success: unpin the NIB saved in *q and unregister from GIB
->> + * interface
->> + *
->> + * Return the ap_queue_status returned by the ap_aqic()
->> + */
->> +static struct ap_queue_status vfio_ap_clrirq(struct vfio_ap_queue *q)
->> +{
->> +	struct ap_qirq_ctrl aqic_gisa = {};
->> +	struct ap_queue_status status;
->> +	int checks = 10;
->> +
->> +	status = ap_aqic(q->apqn, aqic_gisa, NULL);
->> +	if (!status.response_code) {
->> +		while (status.irq_enabled && checks--) {
->> +			msleep(20);
+> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > 
-> Hm, that seems like a lot of time to me. And I suppose we are holding the
-> kvm lock: e.g. no other instruction can be interpreted by kvm in the
-> meantime.
+> But is that really worth doing those changes ?
 > 
->> +			status = ap_tapq(q->apqn, NULL);
->> +		}
->> +		if (checks >= 0)
->> +			vfio_ap_free_irq_data(q);
-> 
-> Actually we don't have to wait for the async part to do it's magic
-> (indicated by the status.irq_enabled --> !status.irq_enabled transition)
-> in the instruction handler. We have to wait so we can unpin the NIB but
-> that could be done async (e.g. workqueue).
-> 
-> BTW do you have any measurements here? How many msleep(20) do we
-> experience for one clear on average?
+> If we want to do something useful, wouldn't it make more sense to introduce
+> the use of dev_err() in order to identify the faulting device in the message
+> ?
 
-No idea but it is probably linked to the queue state and usage history.
-I can use a lower sleep time and increment the retry count.
-
-> 
-> If linux is not using clear (you told so offline, and I also remember
-> something similar), we can probably get away with something like this,
-> and do it properly (from performance standpoint) later.
-
-In the Linux AP code it is only used once, in the explicit
-ap_queue_enable_interruption() function.
-
-Yes, thanks, I will keep it as is, may be just play with msleep()time 
-and retry count.
-
-Regards,
-Pierre
-
-> 
-> Regards,
-> Halil
-> 
->> +		else
->> +			WARN_ONCE("%s: failed disabling IRQ", __func__);
->> +	}
->> +
->> +	return status;
->> +}
-> 
-
++1 for switching to dev_*().
 
 -- 
-Pierre Morel
-Linux/KVM/QEMU in BÃ¶blingen - Germany
+With Best Regards,
+Andy Shevchenko
+
 
