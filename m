@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBB7C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47870C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E2E217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1651A217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625044;
-	bh=aQ1rL1k9S06B0KOKHQbHGPsnAnrmOYzAs+UycxW6/1U=;
+	s=default; t=1556625046;
+	bh=X5foVGflye9cJxsiqleKbMhbGXwsz1Zsd1/Sdea2fdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nYppd9smIkr67Dx99Tg7QN02eUiEGp/SLFDWmUmUQmWemcB1qtHmZej3scfkczOx7
-	 5oT3hcnWR6Jk2a5xxNWpIU+kKB+SNKuP0aQ02fUu3wESdfQV1Bteg2zbEltRK6/FRP
-	 hN7SiZmm77DwSQvnB688Cepd/LdoekYL/PV76sbc=
+	b=f30svaZKi5+wP9pS1+DKgfDnRrMpprlZtWZ0kd2tUeEj0JQzTVY+ZeiBNubyPQTPy
+	 Ko//myxfhSbPWWRtauyRE1OC7PlgJ3bYC6AHn63NN8gm2T6izPVdD5euqjwPxTg6om
+	 b+GI6Yc+2XU7nMYVGjD60lGqvjF5fju2tOmXXWlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731229AbfD3Lum (ORCPT
+        id S1730711AbfD3Luo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:50:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37734 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:50:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730873AbfD3Lug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:50:36 -0400
+        id S1730106AbfD3Luj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343AC21734;
-        Tue, 30 Apr 2019 11:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D66072177B;
+        Tue, 30 Apr 2019 11:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625035;
-        bh=aQ1rL1k9S06B0KOKHQbHGPsnAnrmOYzAs+UycxW6/1U=;
+        s=default; t=1556625038;
+        bh=X5foVGflye9cJxsiqleKbMhbGXwsz1Zsd1/Sdea2fdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aqyk8UcU7448x19Yk5Dc38WX/OnGWdYs9bC+p+TLL1Zv1DGLIUba7BY1N+6/p/Q7W
-         SfU+3LQeQCZNlmSL2ZN2fcoONxQiZOCPCgvMlHTjxvIUwuJRYIEzqq6ri2/uzh/9vi
-         4m4Spg5z8vtrRO4BoHBqOsZlu3z+iYtD1rKvg73o=
+        b=LTUOq0PSTz0SkTnCTvr+KwrzW3C0BlBnCdze2V7pzVoDBI3274PfS9wd6ha9bQcAk
+         3QoM7KCzkKx9qrQRrOYvLU2B488cgeJkvkam2qsCZYL6jr8sa0XiKIVoKsxGg9D6u/
+         tN1hgLuHpkILhiK0d5lRG6hb1y1SXq4jaQ/nkY0U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.0 49/89] loop: do not print warn message if partition scan is successful
-Date:   Tue, 30 Apr 2019 13:38:40 +0200
-Message-Id: <20190430113611.999291753@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.0 67/89] aio: store event at final iocb_put()
+Date:   Tue, 30 Apr 2019 13:38:58 +0200
+Message-Id: <20190430113612.872379426@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,35 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 40853d6fc619a6fd3d3177c3973a2eac9b598a80 upstream.
+commit 2bb874c0d873d13bd9b9b9c6d7b7c4edab18c8b4 upstream.
 
-Do not print warn message when the partition scan returns 0.
+Instead of having aio_complete() set ->ki_res.{res,res2}, do that
+explicitly in its callers, drop the reference (as aio_complete()
+used to do) and delay the rest until the final iocb_put().
 
-Fixes: d57f3374ba48 ("loop: Move special partition reread handling in loop_clr_fd()")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/loop.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/aio.c |   33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1111,8 +1111,9 @@ out_unlock:
- 			err = __blkdev_reread_part(bdev);
- 		else
- 			err = blkdev_reread_part(bdev);
--		pr_warn("%s: partition scan of loop%d failed (rc=%d)\n",
--			__func__, lo_number, err);
-+		if (err)
-+			pr_warn("%s: partition scan of loop%d failed (rc=%d)\n",
-+				__func__, lo_number, err);
- 		/* Device is gone, no point in returning error */
- 		err = 0;
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -1077,16 +1077,10 @@ static inline void iocb_destroy(struct a
+ 	kmem_cache_free(kiocb_cachep, iocb);
+ }
+ 
+-static inline void iocb_put(struct aio_kiocb *iocb)
+-{
+-	if (refcount_dec_and_test(&iocb->ki_refcnt))
+-		iocb_destroy(iocb);
+-}
+-
+ /* aio_complete
+  *	Called when the io request on the given iocb is complete.
+  */
+-static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
++static void aio_complete(struct aio_kiocb *iocb)
+ {
+ 	struct kioctx	*ctx = iocb->ki_ctx;
+ 	struct aio_ring	*ring;
+@@ -1094,8 +1088,6 @@ static void aio_complete(struct aio_kioc
+ 	unsigned tail, pos, head;
+ 	unsigned long	flags;
+ 
+-	iocb->ki_res.res = res;
+-	iocb->ki_res.res2 = res2;
+ 	/*
+ 	 * Add a completion event to the ring buffer. Must be done holding
+ 	 * ctx->completion_lock to prevent other code from messing with the tail
+@@ -1161,7 +1153,14 @@ static void aio_complete(struct aio_kioc
+ 
+ 	if (waitqueue_active(&ctx->wait))
+ 		wake_up(&ctx->wait);
+-	iocb_put(iocb);
++}
++
++static inline void iocb_put(struct aio_kiocb *iocb)
++{
++	if (refcount_dec_and_test(&iocb->ki_refcnt)) {
++		aio_complete(iocb);
++		iocb_destroy(iocb);
++	}
+ }
+ 
+ /* aio_read_events_ring
+@@ -1435,7 +1434,9 @@ static void aio_complete_rw(struct kiocb
+ 		file_end_write(kiocb->ki_filp);
  	}
+ 
+-	aio_complete(iocb, res, res2);
++	iocb->ki_res.res = res;
++	iocb->ki_res.res2 = res2;
++	iocb_put(iocb);
+ }
+ 
+ static int aio_prep_rw(struct kiocb *req, const struct iocb *iocb)
+@@ -1583,11 +1584,10 @@ static ssize_t aio_write(struct kiocb *r
+ 
+ static void aio_fsync_work(struct work_struct *work)
+ {
+-	struct fsync_iocb *req = container_of(work, struct fsync_iocb, work);
+-	int ret;
++	struct aio_kiocb *iocb = container_of(work, struct aio_kiocb, fsync.work);
+ 
+-	ret = vfs_fsync(req->file, req->datasync);
+-	aio_complete(container_of(req, struct aio_kiocb, fsync), ret, 0);
++	iocb->ki_res.res = vfs_fsync(iocb->fsync.file, iocb->fsync.datasync);
++	iocb_put(iocb);
+ }
+ 
+ static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+@@ -1608,7 +1608,8 @@ static int aio_fsync(struct fsync_iocb *
+ 
+ static inline void aio_poll_complete(struct aio_kiocb *iocb, __poll_t mask)
+ {
+-	aio_complete(iocb, mangle_poll(mask), 0);
++	iocb->ki_res.res = mangle_poll(mask);
++	iocb_put(iocb);
+ }
+ 
+ static void aio_poll_complete_work(struct work_struct *work)
 
 
