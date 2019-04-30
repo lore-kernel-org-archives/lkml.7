@@ -2,112 +2,171 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F58C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A5AC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EDC20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:06:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=strongbox8@zoho.com header.b="l7eqyrh5"
+	by mail.kernel.org (Postfix) with ESMTP id CC57620652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfD3PGX (ORCPT
+        id S1726358AbfD3PGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:06:23 -0400
-Received: from sender-pp-092.zoho.com ([135.84.80.237]:25411 "EHLO
-        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726198AbfD3PGV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:06:21 -0400
-X-Greylist: delayed 2710 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Apr 2019 11:06:21 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1556634062; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=FekgT0yaoJTctRbEqW1SPQP+2EyMyVLnIk+jFPDwuwkRFyZeiaGlVsQcfK6kKGs5srwRz46tPuJTfeBB5ltW72KkBhuFXkzNQDvgSjM0mVBgJQsYo2H8uK5xcvsm+BN4x+HhaLIkMW8hIICe/8VIP2W/sA4cZ34YKBHTmvPHK4I=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1556634062; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
-        bh=K5BzyEqf24wVQe40Lud47ZVAeu3TYSMvcKqwIoHWhsQ=; 
-        b=DZxtfUb3RAvB/+5+saUGnk5PJyXA0E6E8QZK1AbGNJ8xT1J9C0vZFeAtBTt75MDLTllPW37bKv1VppsawEuWWLQvs643BHHMwo/DaRaQYYoVrKXwHyzNgcy7RbX1SAxiJT4asdDvCfAENeo+ETzLSoW3GI5DWi4afJwLgVor4d4=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=strongbox8@zoho.com;
-        dmarc=pass header.from=<strongbox8@zoho.com> header.from=<strongbox8@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:message-id:subject:date:mime-version:content-type; 
-  b=LO7DJBJFTxshes/zPiT1qmQZpcE/5taXzgE75P3UwqIHDKWzcLRxKmA+DeDIx3BgVzKwkYAQqKhB
-    DnMimChn5Do1y1RKMT8yWmhPBC6dp25PwbyQD8SpWbKsEO6wR8xR  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1556634062;
-        s=default; d=zoho.com; i=strongbox8@zoho.com;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        l=1352; bh=K5BzyEqf24wVQe40Lud47ZVAeu3TYSMvcKqwIoHWhsQ=;
-        b=l7eqyrh568GmCaIvp38TDBukNpIyFXmgwrAMPIfQb4aFP3f2HY3vY6ZVZKIb7lIM
-        PMu12LiE/W31YzMWXRANWwGBrC+1HACSfDBaXVT/8K8kbFwAsCLKsldZ41MKX6vv/lm
-        uFHAmaPVWdRJ6IvVHImfQ76dz1xdmDapdp3pEbs8=
-Received: from archlinux.localdomain (180.97.206.46 [180.97.206.46]) by mx.zohomail.com
-        with SMTPS id 1556634059124564.1015564377054; Tue, 30 Apr 2019 07:20:59 -0700 (PDT)
-From:   Perr Zhang <strongbox8@zoho.com>
-To:     pbonzini@redhat.com
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, stable@vger.kernel.org,
-        mingo@redhat.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <20190430142056.3133-1-strongbox8@zoho.com>
-Subject: [PATCH] KVM: x86: revert the order of calls in kvm_fast_pio()
-Date:   Tue, 30 Apr 2019 22:20:56 +0800
-X-Mailer: git-send-email 2.21.0
+        Tue, 30 Apr 2019 11:06:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43850 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfD3PGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:06:38 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 550DE83F3B;
+        Tue, 30 Apr 2019 15:06:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F006B600C2;
+        Tue, 30 Apr 2019 15:06:32 +0000 (UTC)
+Subject: [PATCH 00/11] keys: Namespacing [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     ebiederm@xmission.com
+Cc:     linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        Jann Horn <jannh@google.com>, keyrings@vger.kernel.org,
+        dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwalsh@redhat.com, vgoyal@redhat.com
+Date:   Tue, 30 Apr 2019 16:06:31 +0100
+Message-ID: <155663679069.31331.3777091898004242996.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 30 Apr 2019 15:06:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 45def77ebf79, the order of function calls in kvm_fast_pio()
-was changed. This causes that the vm(XP,and also XP's iso img) failed
-to boot. This doesn't happen with win10 or ubuntu.
 
-After revert the order, the vm(XP) succeedes to boot. In addition, the
-change of calls's order of kvm_fast_pio() in commit 45def77ebf79 has no
-obvious reason.
+Here are some patches to make keys and keyrings more namespace aware.  Note
+that the branch is dependent on security/next-general.
 
-Fixes: 45def77ebf79 ("KVM: x86: update %rip after emulating IO")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Perr Zhang <strongbox8@zoho.com>
+Firstly some miscellaneous patches to make the process easier:
+
+ (1) Invalidate rather than revoke request_key() authentication keys to
+     recycle them more quickly.
+
+ (2) Remove request_key_async*() as they aren't used and would have to be
+     namespaced.
+
+ (3) Simplify key index_key handling so that the word-sized chunks
+     assoc_array requires don't have to be shifted about, making it easier
+     to add more bits into the key.
+
+ (4) Cache the hash value so that we don't have to calculate on every key
+     we examine during a search (it involves a bunch of multiplications).
+
+ (5) Allow keying_search() to search non-recursively.
+
+Then the main patches:
+
+ (6) Make it so that keyring names are per-user_namespace from the point of
+     view of KEYCTL_JOIN_SESSION_KEYRING so that they're not accessible
+     cross-user_namespace.
+
+ (7) Move the user and user-session keyrings to the user_namespace rather
+     than the user_struct.  This prevents them propagating directly across
+     user_namespaces boundaries (ie. the KEY_SPEC_* flags will only pick
+     from the current user_namespace).
+
+ (8) Make it possible to include the target namespace in which the key shall
+     operate in the index_key.  This will allow the possibility of multiple
+     keys with the same description, but different target domains to be held
+     in the same keyring.
+
+ (9) Make it so that keys are implicitly invalidated by removal of a domain
+     tag, causing them to be garbage collected.
+
+(10) Institute a network namespace domain tag that allows keys to be
+     differentiated by the network namespace in which they operate.  New keys
+     that are of a type marked 'KEY_TYPE_NET_DOMAIN' are assigned the network
+     domain in force when they are created.
+
+(11) Make it so that the desired network namespace can be handed down into the
+     request_key() mechanism.  This allows AFS, NFS, etc. to request keys
+     specific to the network namespace of the superblock.
+
+     This also means that the keys in the DNS record cache are thenceforth
+     namespaced, provided network filesystems pass the appropriate network
+     namespace down into dns_query().
+
+     For DNS, AFS and NFS are good; CIFS and Ceph are not.  Other cache
+     keyrings, such as idmapper keyrings, also need to set the domain tag.
+
+
+Changes:
+
+V2 fixes:
+ - Missing initialisation of net key_domain usage count.
+ - Missing barriering on the keyring register pointer.
+ - Use snprintf() rather than sprintf().
+ - Incorrect error handling in search_my_process_keyrings().
+ - Incorrect error handling in call_sbin_request_key().
+
+The patches can be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-namespace
+
+David
 ---
- arch/x86/kvm/x86.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a0d1fc80ac5a..248753cb94a1 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6610,13 +6610,12 @@ static int kvm_fast_pio_in(struct kvm_vcpu *vcpu, i=
-nt size,
-=20
- int kvm_fast_pio(struct kvm_vcpu *vcpu, int size, unsigned short port, int=
- in)
- {
--=09int ret;
-+=09int ret =3D kvm_skip_emulated_instruction(vcpu);
-=20
- =09if (in)
--=09=09ret =3D kvm_fast_pio_in(vcpu, size, port);
-+=09=09return kvm_fast_pio_in(vcpu, size, port) && ret;
- =09else
--=09=09ret =3D kvm_fast_pio_out(vcpu, size, port);
--=09return ret && kvm_skip_emulated_instruction(vcpu);
-+=09=09return kvm_fast_pio_out(vcpu, size, port) && ret;
- }
- EXPORT_SYMBOL_GPL(kvm_fast_pio);
-=20
---=20
-2.21.0
+David Howells (11):
+      keys: Invalidate used request_key authentication keys
+      keys: Kill off request_key_async{,_with_auxdata}
+      keys: Simplify key description management
+      keys: Cache the hash value to avoid lots of recalculation
+      keys: Add a 'recurse' flag for keyring searches
+      keys: Namespace keyring names
+      keys: Move the user and user-session keyrings to the user_namespace
+      keys: Include target namespace in match criteria
+      keys: Garbage collect keys for which the domain has been removed
+      keys: Network namespace domain tag
+      keys: Pass the network namespace into request_key mechanism
 
 
+ Documentation/security/keys/core.rst     |   10 +
+ certs/blacklist.c                        |    2 
+ crypto/asymmetric_keys/asymmetric_type.c |    2 
+ fs/afs/addr_list.c                       |    4 
+ fs/afs/dynroot.c                         |    7 -
+ fs/cifs/dns_resolve.c                    |    3 
+ fs/nfs/dns_resolve.c                     |    2 
+ include/linux/dns_resolver.h             |    3 
+ include/linux/key-type.h                 |    3 
+ include/linux/key.h                      |   50 ++++--
+ include/linux/sched/user.h               |   14 --
+ include/linux/user_namespace.h           |   12 +
+ include/net/net_namespace.h              |    4 
+ kernel/user.c                            |   10 -
+ kernel/user_namespace.c                  |    9 -
+ lib/digsig.c                             |    2 
+ net/ceph/messenger.c                     |    3 
+ net/core/net_namespace.c                 |   19 ++
+ net/dns_resolver/dns_key.c               |    1 
+ net/dns_resolver/dns_query.c             |    6 -
+ net/rxrpc/key.c                          |    6 -
+ net/rxrpc/security.c                     |    2 
+ security/integrity/digsig_asymmetric.c   |    4 
+ security/keys/gc.c                       |    2 
+ security/keys/internal.h                 |   10 +
+ security/keys/key.c                      |    9 +
+ security/keys/keyctl.c                   |    4 
+ security/keys/keyring.c                  |  263 +++++++++++++++++-------------
+ security/keys/persistent.c               |   10 +
+ security/keys/proc.c                     |    3 
+ security/keys/process_keys.c             |  252 ++++++++++++++++++-----------
+ security/keys/request_key.c              |  113 +++++++------
+ security/keys/request_key_auth.c         |    3 
+ 33 files changed, 508 insertions(+), 339 deletions(-)
 
