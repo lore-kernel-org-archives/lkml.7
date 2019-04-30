@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D833CC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D247C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94EBD21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34CF921707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625449;
-	bh=A4XMC9p/3HF6St1IjCxVuL4dvn3duw+BucvGvAO14To=;
+	s=default; t=1556625454;
+	bh=kNLEkDNqDIPHFOrHu1Pv3oTZu0+9OW87EzZ8XsfrTgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gGRPS2ADiRbgBPr0FwoBrx7PmkNen5qJEBmS3DRH9x2yWjlWSJhyZYmt45wQe0g7R
-	 5YI+qo5t8aRzjzgFFM3Z1A+m4Aq2yyz5fdQpyrCkAAD6csPYy6Lp6EUvAvmmrDzDJR
-	 G7zUxP41qsbMAP3wAav4mcxhORz4po/hchDifcXg=
+	b=wm4p2ndqQl/AkMpu+ooHXZ0wo5EO/DRhl1RI1/pj/x0azTtb0ip5KDVgL0czAmuC6
+	 x6ybC75P9i1EbyjSd1PHTq0Yjo3ZpVdp30DTSeAthhYesn1UKrU3KiWWsp2CBAUirv
+	 xIqFRBtK0EcQgDiXSb6NYBeU42bEfI5/93bcFg8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfD3L52 (ORCPT
+        id S1730779AbfD3Lr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730782AbfD3Lr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Apr 2019 07:47:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730212AbfD3Lrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C91B221670;
-        Tue, 30 Apr 2019 11:47:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C4A421670;
+        Tue, 30 Apr 2019 11:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624878;
-        bh=A4XMC9p/3HF6St1IjCxVuL4dvn3duw+BucvGvAO14To=;
+        s=default; t=1556624873;
+        bh=kNLEkDNqDIPHFOrHu1Pv3oTZu0+9OW87EzZ8XsfrTgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K7emmPBbpZHOHWDgHOhhi+g0c4wdT3sSm5AnlB/Cag5SqeSAxu8GGiP7xS5yqJ7p1
-         x+lZpDBOhfsACmBKTgNXRzwd351mCpIxATjgzN/b78PO/LT4OVSNdQyzdKwyXYhA6N
-         614aXFqij1PZ0gA2Lw5JLOx/US5P3YFGizchooPc=
+        b=an/p+eJih/7XNA35kTHAUn2E4khQ9k/VKNSpUQLgtkT/e7PK2U6wF4YfpqvnfyOJD
+         9tTV997/0CfbQgJgkAP9zFVqpl3XoT0xuMUEdi9aBvMcK7eD39s1QNHJI6n5uOkGoK
+         zP2NsfyhXtCCYK2omjBIqoE6fvZZFeXWF0BWe/yA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 095/100] mlxsw: pci: Reincrease PCI reset timeout
-Date:   Tue, 30 Apr 2019 13:39:04 +0200
-Message-Id: <20190430113613.315782422@linuxfoundation.org>
+Subject: [PATCH 4.19 093/100] team: fix possible recursive locking when add slaves
+Date:   Tue, 30 Apr 2019 13:39:02 +0200
+Message-Id: <20190430113613.211637903@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -59,41 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 1ab3030193d25878b3b1409060e1e0a879800c95 ]
+[ Upstream commit 925b0c841e066b488cc3a60272472b2c56300704 ]
 
-During driver initialization the driver sends a reset to the device and
-waits for the firmware to signal that it is ready to continue.
+If we add a bond device which is already the master of the team interface,
+we will hold the team->lock in team_add_slave() first and then request the
+lock in team_set_mac_address() again. The functions are called like:
 
-Commit d2f372ba0914 ("mlxsw: pci: Increase PCI SW reset timeout")
-increased the timeout to 13 seconds due to longer PHY calibration in
-Spectrum-2 compared to Spectrum-1.
+- team_add_slave()
+ - team_port_add()
+   - team_port_enter()
+     - team_modeop_port_enter()
+       - __set_port_dev_addr()
+         - dev_set_mac_address()
+           - bond_set_mac_address()
+             - dev_set_mac_address()
+  	       - team_set_mac_address
 
-Recently it became apparent that this timeout is too short and therefore
-this patch increases it again to a safer limit that will be reduced in
-the future.
+Although team_upper_dev_link() would check the upper devices but it is
+called too late. Fix it by adding a checking before processing the slave.
 
-Fixes: c3ab435466d5 ("mlxsw: spectrum: Extend to support Spectrum-2 ASIC")
-Fixes: d2f372ba0914 ("mlxsw: pci: Increase PCI SW reset timeout")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+v2: Do not split the string in netdev_err()
+
+Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
 Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/pci_hw.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/team/team.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
-@@ -27,7 +27,7 @@
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -1160,6 +1160,13 @@ static int team_port_add(struct team *te
+ 		return -EINVAL;
+ 	}
  
- #define MLXSW_PCI_SW_RESET			0xF0010
- #define MLXSW_PCI_SW_RESET_RST_BIT		BIT(0)
--#define MLXSW_PCI_SW_RESET_TIMEOUT_MSECS	13000
-+#define MLXSW_PCI_SW_RESET_TIMEOUT_MSECS	20000
- #define MLXSW_PCI_SW_RESET_WAIT_MSECS		100
- #define MLXSW_PCI_FW_READY			0xA1844
- #define MLXSW_PCI_FW_READY_MASK			0xFFFF
++	if (netdev_has_upper_dev(dev, port_dev)) {
++		NL_SET_ERR_MSG(extack, "Device is already an upper device of the team interface");
++		netdev_err(dev, "Device %s is already an upper device of the team interface\n",
++			   portname);
++		return -EBUSY;
++	}
++
+ 	if (port_dev->features & NETIF_F_VLAN_CHALLENGED &&
+ 	    vlan_uses_dev(dev)) {
+ 		NL_SET_ERR_MSG(extack, "Device is VLAN challenged and team device has VLAN set up");
 
 
