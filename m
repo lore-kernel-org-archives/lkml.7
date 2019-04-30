@@ -2,150 +2,109 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45E5C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9542120652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6EA20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbfD3Phm (ORCPT
+        id S1726387AbfD3Phy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:37:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:56135 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfD3Phl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:37:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 08:37:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="153608978"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Apr 2019 08:37:38 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hLUp6-0007FV-Ki; Tue, 30 Apr 2019 18:37:36 +0300
-Date:   Tue, 30 Apr 2019 18:37:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Esben Haabendal <esben@geanix.com>
-Cc:     linux-serial@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Tue, 30 Apr 2019 11:37:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53415 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfD3Phx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:37:53 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=lindsey)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1hLUp6-00087j-33; Tue, 30 Apr 2019 15:37:36 +0000
+Date:   Tue, 30 Apr 2019 10:37:31 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial: 8250: Add support for using platform_device
- resources
-Message-ID: <20190430153736.GL9224@smile.fi.intel.com>
-References: <20190430140416.4707-1-esben@geanix.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] net-sysfs: Fix error path for kobject_init_and_add()
+Message-ID: <20190430153730.GC13709@lindsey>
+References: <20190430002817.10785-1-tobin@kernel.org>
+ <20190430002817.10785-4-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430140416.4707-1-esben@geanix.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190430002817.10785-4-tobin@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 04:04:13PM +0200, Esben Haabendal wrote:
-> Allow getting memory resource (mapbase or iobase) as well as irq from
-> platform_device resources.
+On 2019-04-30 10:28:17, Tobin C. Harding wrote:
+> Currently error return from kobject_init_and_add() is not followed by a
+> call to kobject_put().  This means there is a memory leak.
 > 
-> The UPF_DEV_RESOURCES flag must be set for devices where platform_device
-> resources are to be used.  When not set, driver behaves as before.
+> Add call to kobject_put() in error path of kobject_init_and_add().
 > 
-> This allows use of the serial8250 driver together with devices with
-> resources added by platform_device_add_resources(), such as mfd child
-> devices added with mfd_add_devices().
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> ---
+>  net/core/net-sysfs.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-
-> Remaining platform_data fields (other than mapbase, iobase, mapsize and
-> irq) are used just as before.  Note
-
-Note what?
-
-> +static int serial8250_probe_resources(struct platform_device *pdev,
-> +				      unsigned int num,
-> +				      struct plat_serial8250_port *p,
-> +				      struct uart_8250_port *uart)
-> +{
-> +	struct resource *r;
-> +	int irq;
-> +
-> +	switch (p->iotype) {
-> +	case UPIO_AU:
-> +	case UPIO_TSI:
-> +	case UPIO_MEM32:
-> +	case UPIO_MEM32BE:
-> +	case UPIO_MEM16:
-> +	case UPIO_MEM:
-> +		r = platform_get_resource(pdev, IORESOURCE_MEM, num);
-> +		if (!r)
-> +			return -ENODEV;
-> +		uart->port.mapbase = r->start;
-> +		uart->port.mapsize = resource_size(r);
-> +		uart->port.flags |= UPF_IOREMAP;
-> +		break;
-> +	case UPIO_HUB6:
-> +	case UPIO_PORT:
-> +		r = platform_get_resource(pdev, IORESOURCE_IO, num);
-> +		if (!r)
-> +			return -ENODEV;
-> +		uart->port.iobase = r->start;
-> +		uart->port.mapsize = resource_size(r);
-> +		break;
+> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> index 8f8b7b6c2945..9d4e3f47b789 100644
+> --- a/net/core/net-sysfs.c
+> +++ b/net/core/net-sysfs.c
+> @@ -925,8 +925,10 @@ static int rx_queue_add_kobject(struct net_device *dev, int index)
+>  	kobj->kset = dev->queues_kset;
+>  	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
+>  				     "rx-%u", index);
+> -	if (error)
+> +	if (error) {
+> +		kobject_put(kobj);
+>  		return error;
 > +	}
-> +
-> +	irq = platform_get_irq(pdev, num);
-> +	if (irq == -ENXIO)
-> +		uart->port.irq = 0; /* no interrupt -> use polling */
-> +	else if (irq < 0)
-> +		return irq;
-> +	uart->port.irq = irq;
-> +
-> +	return 0;
-> +}
 
-Hmm... Currently it's done inside individual port drivers, like 8250_dw.c.
-Each of the drivers can do it differently, for example 8250_lpss.c or
-8250_pnp.c.
+The commit message of the second patch in this series states, "The
+correct cleanup function if a call to kobject_init_and_add() has
+returned _successfully_ is kobject_del()." Doesn't that mean that
+kobject_del() needs to be called instead of kobject_put() when
+sysfs_create_group() fails a little lower in this function?
 
-> +				if (!(port->flags & UPF_DEV_RESOURCES))
-> +					release_mem_region(port->mapbase, size);
+>  
+>  	dev_hold(queue->dev);
+>  
+> @@ -1462,8 +1464,10 @@ static int netdev_queue_add_kobject(struct net_device *dev, int index)
+>  	kobj->kset = dev->queues_kset;
+>  	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
+>  				     "tx-%u", index);
+> -	if (error)
+> +	if (error) {
+> +		kobject_put(kobj);
+>  		return error;
+> +	}
+>  
+>  	dev_hold(queue->dev);
 
-This is again same issue. The parent should not request resource it doesn't use.
+I think the same s/kobject_put/kobject_del/ substitution may be needed
+in this function when sysfs_create_group() fails.
 
-I think I understand what is a confusion here.
+Tyler
 
-For the IO resources we have two operations:
-- mapping / re-mapping (may be shared)
-- requesting (exclusive)
-
-In the parenthesis I put a level of access to it. While many device drivers can
-*share* same resource (mapped or unmapped), the only one can actually request
-it.
-
-So, the parent can take an slice resources as it would be appropriated, but not
-requesting them.
-
-OTOH, it's possible to have a (weird) MFD case where parent *requested*
-resources, and *all* of its children are aware of that.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  
+> -- 
+> 2.21.0
+> 
