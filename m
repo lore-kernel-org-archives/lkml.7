@@ -2,117 +2,98 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4183CC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4F9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB0420835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:48:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eHG9jN0t"
+	by mail.kernel.org (Postfix) with ESMTP id 76124216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556610674;
+	bh=wYko4k9enIB2pNsP3VANKP6hvZL2c+kCSOeRtqgooLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v7pnoCtoL7A+4i+x0P0wn/K951jToHNv5mSsLJc26tdM5pNHqWuDdiPeQr2b+ijWT
+	 CiSJNBBy2IoVrv2u+hkDYhE4dhlKe+TNtfoz+Wk3iXEujGQcihjEyeAD/ZdWXYhLFc
+	 9SDIFrNWJS72xRtTs7hdLhHygcdPTejZPKhVGhck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfD3Hsf (ORCPT
+        id S1726460AbfD3HvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:48:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:43427 "EHLO ozlabs.org"
+        Tue, 30 Apr 2019 03:51:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbfD3Hse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:48:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725554AbfD3HvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:51:13 -0400
+Received: from linux-8ccs (unknown [95.90.219.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44tYYW4GWXz9s7T;
-        Tue, 30 Apr 2019 17:48:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556610512;
-        bh=8rOSl/GuJIamydyY1hpJYrSlMVfj1koZLQRXc4uPkJ4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eHG9jN0tlChImKgEFjTXfYyk69Bmxdpy2pdBEkoK0WpTyVcW6UrknaNK/D7YKiqvW
-         jWKb4VOVZHQeyTeVwSS3j3gA62JJxVxLcbpaVxaaRcwvfBS+f7goTgq9+vAEm9QlB0
-         GNkG/5QnWR1pnaHGYaR06xo/TbxUzMLDtlUiAgVG6V2l6BgUE63sOt3p0dJhuN28LS
-         sLPqX7EHjTFq+v9fN1wxFFqL5bigd1KYYSA4mL1xloznuCPrViUJXo5ubM2m9UePSD
-         QgWseGu0VqX3YNIPLrGqTFGK/mKDaegB7/0nIrxjANX5hsqDyWv40sb4Cb62CKaWG9
-         Na0oU78EKJHyg==
-Date:   Tue, 30 Apr 2019 17:48:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: linux-next: manual merge of the staging tree with the pm tree
-Message-ID: <20190430174829.4f33e8b0@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C79A20835;
+        Tue, 30 Apr 2019 07:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556610672;
+        bh=wYko4k9enIB2pNsP3VANKP6hvZL2c+kCSOeRtqgooLo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gxo8Wm/J96X+SHMnvlPUQIYI2PGgm6KIqsSkwYVCShxR19EYl2X0HZ41dCILHMzcE
+         Ok8hJ9c7TMkZaGOc6f2QaBWRhn1+GTJ7jq7hXCLA0gayxL4rNuOVrCz/0KSvFQIZUB
+         d8H/0wEJ1BOWK85h0zh6yYocojLO0Ft5y0e/jdok=
+Date:   Tue, 30 Apr 2019 09:51:08 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/module: Reschedule while waiting for modules to
+ finish loading
+Message-ID: <20190430075108.GA21092@linux-8ccs>
+References: <20190429151751.15424-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/tY5zH+.a1hnR/MQ9ywNeJ+P"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190429151751.15424-1-prarit@redhat.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tY5zH+.a1hnR/MQ9ywNeJ+P
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
++++ Prarit Bhargava [29/04/19 11:17 -0400]:
+>Heiko, do you want a Signed-off-by or a Reported-by?  Either one works
+>for me.
+>
+>P.
 
-Hi all,
+I think you forgot to CC Heiko :)
 
-Today's linux-next merge of the staging tree got a conflict in:
-
-  Documentation/driver-api/index.rst
-
-between commit:
-
-  680e6ffa1510 ("Documentation: add Linux ACPI to Sphinx TOC tree")
-
-from the pm tree and commit:
-
-  09e7d4ed8991 ("docs: Add Generic Counter interface documentation")
-
-from the staging tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/driver-api/index.rst
-index aa87075c7846,201247b7c1e8..000000000000
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@@ -56,7 -56,7 +56,8 @@@ available subsections can be seen below
-     slimbus
-     soundwire/index
-     fpga/index
- +   acpi/index
-+    generic-counter
- =20
-  .. only::  subproject and html
- =20
-
---Sig_/tY5zH+.a1hnR/MQ9ywNeJ+P
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzH/c0ACgkQAVBC80lX
-0Gzg5gf8Cu23ZHieu0LDK4k6BT34cgCWBgHWEzDcxCQhD/of7hf8e/nIryBzvICg
-4rTEWtv7PoNXtIBDoZDHAGSfS4FLqpkZCwoMi7JGO+RLZyjc7oV3aSO2rgthIFut
-QMqfKBG5Z9QLsBXGPMqCC9+/Wurwu5cDYYwLybJDgveKk2eaK78FdAX88K9Xzcaj
-Uy61mcW2cQ+e0guwTKWLoEV+gOoJeQaeMfNfj31+EzOKzguL4s9YOW76hAf6fJzx
-HvU+IIDXk/XB1QMx1hM8N5i5tEHIih9AAqZNtK7yvN0A7nxSJ5PDQTRUnIYKV4Kr
-F025sHq6kw0ryHH0eldgFX1Xz4FjvA==
-=DOkb
------END PGP SIGNATURE-----
-
---Sig_/tY5zH+.a1hnR/MQ9ywNeJ+P--
+>----8<----
+>
+>On a s390 z14 LAR with 2 cpus about stalls about 3% of the time while
+>loading the s390_trng.ko module.
+>
+>Add a reschedule point to the loop that waits for modules to complete
+>loading.
+>
+>Reported-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+>Fixes: linux-next commit f9a75c1d717f ("modules: Only return -EEXIST for modules that have finished loading")
+>Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>Cc: Jessica Yu <jeyu@kernel.org>
+>---
+> kernel/module.c | 1 +
+> 1 file changed, 1 insertion(+)
+>
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 410eeb7e4f1d..48748cfec991 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -3585,6 +3585,7 @@ static int add_unformed_module(struct module *mod)
+> 					       finished_loading(mod->name));
+> 			if (err)
+> 				goto out_unlocked;
+>+			cond_resched();
+> 			goto again;
+> 		}
+> 		err = -EEXIST;
+>-- 
+>2.18.1
+>
