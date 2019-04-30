@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81107C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D284C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC8520449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28F9217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624918;
-	bh=65pmRMBbYo3ufkKxy7b3RcIhY3PhDiYvr8C95TKgmdk=;
+	s=default; t=1556624921;
+	bh=BMQhf59ngHxcrEisMnwNzHCcj0mMR5dhpJStGP4pMZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qeWTcTZaiupFvsFOZ8iiJbTger11hpqYAgWYGR38uCKl7wDxtOWnCj96VG9SjIvl/
-	 lWxOdMoPEJdaYVHEuG/E9sTe1TRkNXXywUIxOO6JNuhRsWUf9mtEIi9yS3dsJxkc6X
-	 JmT+oMMinWXtU9xGCwj2xfDEny1iyEsSWq0V6Wzo=
+	b=SOYJ9JSvNgDVRwd+jNbQyDqNEktl2MmHOujbe6Ogrjj80dwUQHEQqEDLrUNViSHme
+	 CwJ0PbxTnCbgW2/dVFKKnRpCMJ2rKAXJXI6Fz6oPfIW9xQFOHNOsLYEo3J0OcjYjI7
+	 NszDKpryCTdgTt1LWSleviREvf4o+LttyeelJsE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbfD3Lsh (ORCPT
+        id S1730889AbfD3Lsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:48:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34720 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbfD3Lse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:34 -0400
+        id S1730866AbfD3Lsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5748217D4;
-        Tue, 30 Apr 2019 11:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 196852173E;
+        Tue, 30 Apr 2019 11:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624913;
-        bh=65pmRMBbYo3ufkKxy7b3RcIhY3PhDiYvr8C95TKgmdk=;
+        s=default; t=1556624910;
+        bh=BMQhf59ngHxcrEisMnwNzHCcj0mMR5dhpJStGP4pMZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c01D11wBct3nYWbP7oY1ZjQUtcCf9BbCkVzgBKe38njCC6gW3c4Kkvo2WiqzPK3Kb
-         ELHoCfkKTj7sx5wD50hVjgLAToA01SgTbVSQzvx/UcRk3w64FkWBqtX9mfWhoo/vH/
-         LNmpvse/f+fvOJd4PG4YdUCJ95x06QHMBJBZ3d2g=
+        b=DRwGooaxwd3SzClfT0+CxNoBcxtNARInHG4ObmWRyw9cz4wex3vmxcZcpq2hZUst5
+         inxsf57ZEQsJFEwnu5TBv6R3Wk37nq6Bg8fP6yaw3dNfrkji6wrIqMSqGsUIgjP6Ih
+         ZhB8Q/+YKefGrtCt9GzjKYuAd7DM9tZ47xBe//Z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 20/89] mm: do not boost watermarks to avoid fragmentation for the DISCONTIG memory model
-Date:   Tue, 30 Apr 2019 13:38:11 +0200
-Message-Id: <20190430113611.028764341@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.0 11/89] tracing: Fix a memory leak by early error exit in trace_pid_write()
+Date:   Tue, 30 Apr 2019 13:38:02 +0200
+Message-Id: <20190430113610.273122015@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -64,109 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mel Gorman <mgorman@techsingularity.net>
+From: Wenwen Wang <wang6495@umn.edu>
 
-commit 24512228b7a3f412b5a51f189df302616b021c33 upstream.
+commit 91862cc7867bba4ee5c8fcf0ca2f1d30427b6129 upstream.
 
-Mikulas Patocka reported that commit 1c30844d2dfe ("mm: reclaim small
-amounts of memory when an external fragmentation event occurs") "broke"
-memory management on parisc.
+In trace_pid_write(), the buffer for trace parser is allocated through
+kmalloc() in trace_parser_get_init(). Later on, after the buffer is used,
+it is then freed through kfree() in trace_parser_put(). However, it is
+possible that trace_pid_write() is terminated due to unexpected errors,
+e.g., ENOMEM. In that case, the allocated buffer will not be freed, which
+is a memory leak bug.
 
-The machine is not NUMA but the DISCONTIG model creates three pgdats
-even though it's a UMA machine for the following ranges
+To fix this issue, free the allocated buffer when an error is encountered.
 
-        0) Start 0x0000000000000000 End 0x000000003fffffff Size   1024 MB
-        1) Start 0x0000000100000000 End 0x00000001bfdfffff Size   3070 MB
-        2) Start 0x0000004040000000 End 0x00000040ffffffff Size   3072 MB
+Link: http://lkml.kernel.org/r/1555726979-15633-1-git-send-email-wang6495@umn.edu
 
-Mikulas reported:
-
-	With the patch 1c30844d2, the kernel will incorrectly reclaim the
-	first zone when it fills up, ignoring the fact that there are two
-	completely free zones. Basiscally, it limits cache size to 1GiB.
-
-	For example, if I run:
-	# dd if=/dev/sda of=/dev/null bs=1M count=2048
-
-	- with the proper kernel, there should be "Buffers - 2GiB"
-	when this command finishes. With the patch 1c30844d2, buffers
-	will consume just 1GiB or slightly more, because the kernel was
-	incorrectly reclaiming them.
-
-The page allocator and reclaim makes assumptions that pgdats really
-represent NUMA nodes and zones represent ranges and makes decisions on
-that basis.  Watermark boosting for small pgdats leads to unexpected
-results even though this would have behaved reasonably on SPARSEMEM.
-
-DISCONTIG is essentially deprecated and even parisc plans to move to
-SPARSEMEM so there is no need to be fancy, this patch simply disables
-watermark boosting by default on DISCONTIGMEM.
-
-Link: http://lkml.kernel.org/r/20190419094335.GJ18914@techsingularity.net
-Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external fragmentation event occurs")
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Reported-by: Mikulas Patocka <mpatocka@redhat.com>
-Tested-by: Mikulas Patocka <mpatocka@redhat.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: f4d34a87e9c10 ("tracing: Use pid bitmap instead of a pid array for set_event_pid")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/sysctl/vm.txt |   16 ++++++++--------
- mm/page_alloc.c             |   13 +++++++++++++
- 2 files changed, 21 insertions(+), 8 deletions(-)
+ kernel/trace/trace.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/Documentation/sysctl/vm.txt
-+++ b/Documentation/sysctl/vm.txt
-@@ -866,14 +866,14 @@ The intent is that compaction has less w
- increase the success rate of future high-order allocations such as SLUB
- allocations, THP and hugetlbfs pages.
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -496,8 +496,10 @@ int trace_pid_write(struct trace_pid_lis
+ 	 * not modified.
+ 	 */
+ 	pid_list = kmalloc(sizeof(*pid_list), GFP_KERNEL);
+-	if (!pid_list)
++	if (!pid_list) {
++		trace_parser_put(&parser);
+ 		return -ENOMEM;
++	}
  
--To make it sensible with respect to the watermark_scale_factor parameter,
--the unit is in fractions of 10,000. The default value of 15,000 means
--that up to 150% of the high watermark will be reclaimed in the event of
--a pageblock being mixed due to fragmentation. The level of reclaim is
--determined by the number of fragmentation events that occurred in the
--recent past. If this value is smaller than a pageblock then a pageblocks
--worth of pages will be reclaimed (e.g.  2MB on 64-bit x86). A boost factor
--of 0 will disable the feature.
-+To make it sensible with respect to the watermark_scale_factor
-+parameter, the unit is in fractions of 10,000. The default value of
-+15,000 on !DISCONTIGMEM configurations means that up to 150% of the high
-+watermark will be reclaimed in the event of a pageblock being mixed due
-+to fragmentation. The level of reclaim is determined by the number of
-+fragmentation events that occurred in the recent past. If this value is
-+smaller than a pageblock then a pageblocks worth of pages will be reclaimed
-+(e.g.  2MB on 64-bit x86). A boost factor of 0 will disable the feature.
+ 	pid_list->pid_max = READ_ONCE(pid_max);
  
- =============================================================
+@@ -507,6 +509,7 @@ int trace_pid_write(struct trace_pid_lis
  
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -266,7 +266,20 @@ compound_page_dtor * const compound_page
- 
- int min_free_kbytes = 1024;
- int user_min_free_kbytes = -1;
-+#ifdef CONFIG_DISCONTIGMEM
-+/*
-+ * DiscontigMem defines memory ranges as separate pg_data_t even if the ranges
-+ * are not on separate NUMA nodes. Functionally this works but with
-+ * watermark_boost_factor, it can reclaim prematurely as the ranges can be
-+ * quite small. By default, do not boost watermarks on discontigmem as in
-+ * many cases very high-order allocations like THP are likely to be
-+ * unsupported and the premature reclaim offsets the advantage of long-term
-+ * fragmentation avoidance.
-+ */
-+int watermark_boost_factor __read_mostly;
-+#else
- int watermark_boost_factor __read_mostly = 15000;
-+#endif
- int watermark_scale_factor = 10;
- 
- static unsigned long nr_kernel_pages __initdata;
+ 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
+ 	if (!pid_list->pids) {
++		trace_parser_put(&parser);
+ 		kfree(pid_list);
+ 		return -ENOMEM;
+ 	}
 
 
