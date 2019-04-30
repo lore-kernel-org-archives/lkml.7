@@ -2,362 +2,267 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4087C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808FBC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858DC21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D572087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0cDC3kD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfD3Vxk (ORCPT
+        id S1726832AbfD3V5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 17:53:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfD3Vxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 17:53:39 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FA252087B;
-        Tue, 30 Apr 2019 21:53:36 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 17:53:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: [RFC][PATCH v2] ftrace/x86: Emulate call function while updating in
- breakpoint handler
-Message-ID: <20190430175334.423821c0@gandalf.local.home>
-In-Reply-To: <20190430134913.4e29ce72@gandalf.local.home>
-References: <20190428133826.3e142cfd@oasis.local.home>
-        <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
-        <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
-        <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
-        <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
-        <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
-        <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
-        <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
-        <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
-        <20190430135602.GD2589@hirez.programming.kicks-ass.net>
-        <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
-        <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
-        <20190430130359.330e895b@gandalf.local.home>
-        <20190430132024.0f03f5b8@gandalf.local.home>
-        <20190430134913.4e29ce72@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Apr 2019 17:57:01 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40060 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfD3V5A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 17:57:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h11so5323012wmb.5;
+        Tue, 30 Apr 2019 14:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Xz72fmZg6inOKuWwSpK0E++ql/+/ETY0fbPA4KvUmzw=;
+        b=F0cDC3kDoomsaHmOwQcW3uGdPoUezJOcdQOaSpPkhY0SAa+bcBdawzb2foLSL12f78
+         f4S0la8j8TWM3PvenJNSv2OIk7icOrKrpP2hH6wCKdbXXao5wAdfhsp/WPKxMAaWLnti
+         4Q33/MUbbBGSYje1hkIjNGYGUtCmu0ELsiZ0fq3eTTG+syjV7mPBp/jtb2iBuuElLokk
+         rejc1TXFJwMsP96CjIa8hfLD5YP9gwmVxQsMWPS5KeqVgvamh7+YiXk84GnBYXPBIXHn
+         CzJ2mWo9PcdyP94BeRrogAXI9OSKmUFCacqFFOCVyHsRyMTUuns/D5CSvCM1dkN+/vNT
+         BKww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Xz72fmZg6inOKuWwSpK0E++ql/+/ETY0fbPA4KvUmzw=;
+        b=oznVy6JCIfa6ycZjEVHI6wgbNPa90sHb4/NALQQ/omx/tfaO8aOMVtssUr21+A9PJe
+         hU8PovsZajdAH/9dAoAJEQ29xSgM1RXzPvJW6rmuiB9LV+5U+R1PXguUXT4WYPifCpbG
+         ZLZ+xVBwiTwt7oo1g90cEKbOVBY9NXYgsszp0pQqpmiJVSYjaBvyK3FfI3U2vlgTIots
+         IbEAoTo7hTgh5e7zJTsJKEAVBh1V7PsxT4gQ1vfMscu3yDDfkMkq5/YcsMNIwoPkh7rX
+         1Ug5MRcq2E9ctYRxD+6SFH9pLoPy6fRMcX2fXfwo6uuXGB/QJmV0wYJoB8sd6xx9WizJ
+         wCug==
+X-Gm-Message-State: APjAAAWBdHeJYWk2zYWv53v1Y1zGaQoeZwSVGdC7Vu7oUwLN68h8EJIc
+        BhtS2C7PK38jfXgWXjF/FMXW4d25e97Apw==
+X-Google-Smtp-Source: APXvYqyvxSMuumvItW4h6XgAluAROE+SNTwE3YNLtVwmFQ0HIvBsa6tPJMtzpER6WIldYR0PB+2jIg==
+X-Received: by 2002:a7b:cf18:: with SMTP id l24mr3590479wmg.132.1556661417558;
+        Tue, 30 Apr 2019 14:56:57 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id s145sm7700622wme.38.2019.04.30.14.56.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 14:56:56 -0700 (PDT)
+References: <20190428190916.26567-1-slongerbeam@gmail.com> <20190428190916.26567-2-slongerbeam@gmail.com>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Steve Longerbeam <slongerbeam@gmail.com>
+Cc:     linux-media@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list\:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "moderated list\:ARM\/FREESCALE IMX \/ MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/8] media: staging/imx: Switch to sync registration for IPU subdevs
+In-reply-to: <20190428190916.26567-2-slongerbeam@gmail.com>
+Date:   Tue, 30 Apr 2019 22:56:54 +0100
+Message-ID: <m3a7g7nom1.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Hi Steve,
+On Sun 28 Apr 2019 at 20:09, Steve Longerbeam wrote:
+> Because the IPU sub-devices VDIC and IC are not present in the
+> device-tree, platform devices were created for them instead. This
+> allowed these sub-devices to be added to the media device's async
+> notifier and registered asynchronously along with the other
+> sub-devices that do have a device-tree presence (CSI and devices
+> external to the IPU and SoC).
+>
+> But that approach isn't really necessary. The IPU sub-devices don't
+> actually require a backing device (sd->dev is allowed to be NULL).
+> And that approach can't get around the fact that the IPU sub-devices
+> are not part of a device hierarchy, which makes it awkward to retrieve
+> the parent IPU of these devices.
+>
+> By registering them synchronously, they can be registered from the CSI
+> async bound notifier, so the init function for them can be given the CSI
+> subdev, who's dev->parent is the IPU. That is a somewhat cleaner way
+> to retrieve the parent IPU.
+>
+> So convert to synchronous registration for the VDIC and IC task
+> sub-devices, at the time a CSI sub-device is bound. There is no longer
+> a backing device for them (sd->dev is NULL), but that's ok. Also
+> set the VDIC/IC sub-device owner as the IPU, so that a reference can
+> be taken on the IPU module.
+>
+> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 
-Nicolai Stange discovered[1] that if live kernel patching is enabled, and the
-function tracer started tracing the same function that was patched, the
-conversion of the fentry call site during the translation of going from
-calling the live kernel patch trampoline to the iterator trampoline, would
-have as slight window where it didn't call anything.
+I am trying to bisect when my capture starts to fail to work with
+this series, since they are so many changes and reorg that I got
+lost on some of them. But... see below.
 
-As live kernel patching depends on ftrace to always call its code (to
-prevent the function being traced from being called, as it will redirect
-it). This small window would allow the old buggy function to be called, and
-this can cause undesirable results.
+> ---
+>  drivers/staging/media/imx/imx-ic-common.c     |  70 ++--
+>  drivers/staging/media/imx/imx-ic-prp.c        |  34 +-
+>  drivers/staging/media/imx/imx-ic-prpencvf.c   |  70 ++--
+>  drivers/staging/media/imx/imx-ic.h            |   7 +-
+>  drivers/staging/media/imx/imx-media-capture.c |   7 +-
+>  drivers/staging/media/imx/imx-media-csi.c     |   2 +-
+>  drivers/staging/media/imx/imx-media-dev.c     | 121 +-----
+>  .../staging/media/imx/imx-media-internal-sd.c | 356 ++++++++----------
+>  drivers/staging/media/imx/imx-media-of.c      |  38 +-
+>  drivers/staging/media/imx/imx-media-vdic.c    |  85 ++---
+>  drivers/staging/media/imx/imx-media.h         |  67 ++--
+>  drivers/staging/media/imx/imx7-media-csi.c    |   3 +-
+>  12 files changed, 325 insertions(+), 535 deletions(-)
+>
+> +	dev_dbg(priv->ipu_dev, "%s: link setup %s -> %s",
 
-Nicolai submitted new patches[2] but these were controversial. As this is
-similar to the static call emulation issues that came up a while ago[3],
-Linus suggested using per CPU data along with special trampolines[4] to emulate
-the calls.
+<snip>
 
-Linus's solution was for text poke (which was mostly what the static_call
-code did), but as ftrace has its own mechanism, it required doing its own
-thing.
+> +		sd->name, remote->entity->name, local->entity->name);
+>  
+>  	mutex_lock(&priv->lock);
+>  
+> @@ -864,9 +856,6 @@ static int vdic_registered(struct v4l2_subdev *sd)
+>  	int i, ret;
+>  	u32 code;
+>  
+> -	/* get media device */
+> -	priv->md = dev_get_drvdata(sd->v4l2_dev->dev);
+> -
+>  	for (i = 0; i < VDIC_NUM_PADS; i++) {
+>  		priv->pad[i].flags = (i == VDIC_SRC_PAD_DIRECT) ?
+>  			MEDIA_PAD_FL_SOURCE : MEDIA_PAD_FL_SINK;
+> @@ -938,77 +927,55 @@ static const struct v4l2_subdev_internal_ops vdic_internal_ops = {
+>  	.unregistered = vdic_unregistered,
+>  };
+>  
+> -static int imx_vdic_probe(struct platform_device *pdev)
+> +struct v4l2_subdev *imx_media_vdic_register(struct imx_media_dev *imxmd,
+> +					    struct device *ipu_dev,
+> +					    struct ipu_soc *ipu,
+> +					    u32 grp_id)
+>  {
+> -	struct imx_media_ipu_internal_sd_pdata *pdata;
+> +	struct v4l2_device *v4l2_dev = &imxmd->v4l2_dev;
+>  	struct vdic_priv *priv;
+>  	int ret;
+>  
+> -	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	priv = devm_kzalloc(ipu_dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+> -		return -ENOMEM;
+> +		return ERR_PTR(-ENOMEM);
+>  
+> -	platform_set_drvdata(pdev, &priv->sd);
+> -	priv->dev = &pdev->dev;
+> -
+> -	pdata = priv->dev->platform_data;
+> -	priv->ipu_id = pdata->ipu_id;
+> +	priv->ipu_dev = ipu_dev;
+> +	priv->ipu = ipu;
+> +	priv->md = imxmd;
+>  
+>  	v4l2_subdev_init(&priv->sd, &vdic_subdev_ops);
+>  	v4l2_set_subdevdata(&priv->sd, priv);
+>  	priv->sd.internal_ops = &vdic_internal_ops;
+>  	priv->sd.entity.ops = &vdic_entity_ops;
+>  	priv->sd.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
+> -	priv->sd.dev = &pdev->dev;
+> -	priv->sd.owner = THIS_MODULE;
+> +	priv->sd.owner = ipu_dev->driver->owner;
+>  	priv->sd.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
+> -	/* get our group id */
+> -	priv->sd.grp_id = pdata->grp_id;
+> -	strscpy(priv->sd.name, pdata->sd_name, sizeof(priv->sd.name));
+> +	priv->sd.grp_id = grp_id;
+> +	imx_media_grp_id_to_sd_name(priv->sd.name, sizeof(priv->sd.name),
+> +				    priv->sd.grp_id, ipu_get_num(ipu));
+>  
+>  	mutex_init(&priv->lock);
+>  
+> -	ret = v4l2_async_register_subdev(&priv->sd);
+> +	ret = v4l2_device_register_subdev(v4l2_dev, &priv->sd);
+>  	if (ret)
+>  		goto free;
+>  
+> -	return 0;
+> +	return &priv->sd;
+>  free:
+>  	mutex_destroy(&priv->lock);
+> -	return ret;
+> +	return ERR_PTR(ret);
+>  }
+>  
+> -static int imx_vdic_remove(struct platform_device *pdev)
+> +int imx_media_vdic_unregister(struct v4l2_subdev *sd)
+>  {
+> -	struct v4l2_subdev *sd = platform_get_drvdata(pdev);
+>  	struct vdic_priv *priv = v4l2_get_subdevdata(sd);
+>  
+>  	v4l2_info(sd, "Removing\n");
+>  
+> -	v4l2_async_unregister_subdev(sd);
+> +	v4l2_device_unregister_subdev(sd);
+>  	mutex_destroy(&priv->lock);
+>  	media_entity_cleanup(&sd->entity);
+>  
+>  	return 0;
+>  }
+> -
+> -static const struct platform_device_id imx_vdic_ids[] = {
+> -	{ .name = "imx-ipuv3-vdic" },
+> -	{ },
+> -};
+> -MODULE_DEVICE_TABLE(platform, imx_vdic_ids);
+> -
+> -static struct platform_driver imx_vdic_driver = {
+> -	.probe = imx_vdic_probe,
+> -	.remove = imx_vdic_remove,
+> -	.id_table = imx_vdic_ids,
+> -	.driver = {
+> -		.name = "imx-ipuv3-vdic",
+> -	},
+> -};
+> -module_platform_driver(imx_vdic_driver);
+> -
+> -MODULE_DESCRIPTION("i.MX VDIC subdev driver");
+> -MODULE_AUTHOR("Steve Longerbeam <steve_longerbeam@mentor.com>");
+> -MODULE_LICENSE("GPL");
+> -MODULE_ALIAS("platform:imx-ipuv3-vdic");
 
-Having ftrace use its own per CPU data and having its own set of specialized
-trampolines solves the issue of missed calls that live kernel patching
-suffers.
+This breaks compilation until patch 6/8. I think you need to make
+some makefile changes also in this patch.
 
-[1] http://lkml.kernel.org/r/20180726104029.7736-1-nstange@suse.de
-[2] http://lkml.kernel.org/r/20190427100639.15074-1-nstange@suse.de
-[3] http://lkml.kernel.org/r/3cf04e113d71c9f8e4be95fb84a510f085aa4afa.1541711457.git.jpoimboe@redhat.com
-[4] http://lkml.kernel.org/r/CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com
+WARNING: modpost: missing MODULE_LICENSE() in drivers/staging/media/imx/imx-media-ic.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/staging/media/imx/imx-media-vdic.o
+see include/linux/module.h for more information
+ERROR: "imx_media_ic_register" [drivers/staging/media/imx/imx-media.ko] undefined!
+ERROR: "imx_media_vdic_register" [drivers/staging/media/imx/imx-media.ko] undefined!
+ERROR: "imx_media_vdic_unregister" [drivers/staging/media/imx/imx-media.ko] undefined!
+ERROR: "imx_media_ic_unregister" [drivers/staging/media/imx/imx-media.ko] undefined!
+make[2]: *** [scripts/Makefile.modpost:91: __modpost] Error 1
+make[1]: *** [/dev/shm/linux-git/Makefile:1263: modules] Error 2
+make: *** [Makefile:170: sub-make] Error 2
 
-Inspired-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: stable@vger.kernel.org
-Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
-
-Changes since v1:
-
-  - Use "push push ret" instead of indirect jumps (Linus)
-  - Handle 32 bit as well as non SMP
-  - Fool lockdep into thinking interrupts are enabled
-
-
- arch/x86/kernel/ftrace.c | 175 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 170 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index ef49517f6bb2..9160f5cc3b6d 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -17,6 +17,7 @@
- #include <linux/uaccess.h>
- #include <linux/ftrace.h>
- #include <linux/percpu.h>
-+#include <linux/frame.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
- #include <linux/init.h>
-@@ -232,6 +233,9 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
- 
- static unsigned long ftrace_update_func;
- 
-+/* Used within inline asm below */
-+unsigned long ftrace_update_func_call;
-+
- static int update_ftrace_func(unsigned long ip, void *new)
- {
- 	unsigned char old[MCOUNT_INSN_SIZE];
-@@ -259,6 +263,8 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
- 	unsigned char *new;
- 	int ret;
- 
-+	ftrace_update_func_call = (unsigned long)func;
-+
- 	new = ftrace_call_replace(ip, (unsigned long)func);
- 	ret = update_ftrace_func(ip, new);
- 
-@@ -280,6 +286,125 @@ static nokprobe_inline int is_ftrace_caller(unsigned long ip)
- 	return 0;
- }
- 
-+/*
-+ * We need to handle the "call func1" -> "call func2" case.
-+ * Just skipping the call is not sufficient as it will be like
-+ * changing to "nop" first and then updating the call. But some
-+ * users of ftrace require calls never to be missed.
-+ *
-+ * To emulate the call while converting the call site with a breakpoint,
-+ * some trampolines are used along with per CPU buffers.
-+ * There are three trampolines for the call sites and three trampolines
-+ * for the updating of the call in ftrace trampoline. The three
-+ * trampolines are:
-+ *
-+ * 1) Interrupts are enabled when the breakpoint is hit
-+ * 2) Interrupts are disabled when the breakpoint is hit
-+ * 3) The breakpoint was hit in an NMI
-+ *
-+ * As per CPU data is used, interrupts must be disabled to prevent them
-+ * from corrupting the data. A separate NMI trampoline is used for the
-+ * NMI case. If interrupts are already disabled, then the return path
-+ * of where the breakpoint was hit (saved in the per CPU data) is pushed
-+ * on the stack and then a jump to either the ftrace_caller (which will
-+ * loop through all registered ftrace_ops handlers depending on the ip
-+ * address), or if its a ftrace trampoline call update, it will call
-+ * ftrace_update_func_call which will hold the call that should be
-+ * called.
-+ */
-+extern asmlinkage void ftrace_emulate_call_irqon(void);
-+extern asmlinkage void ftrace_emulate_call_irqoff(void);
-+extern asmlinkage void ftrace_emulate_call_nmi(void);
-+extern asmlinkage void ftrace_emulate_call_update_irqoff(void);
-+extern asmlinkage void ftrace_emulate_call_update_irqon(void);
-+extern asmlinkage void ftrace_emulate_call_update_nmi(void);
-+
-+static DEFINE_PER_CPU(void *, ftrace_bp_call_return);
-+static DEFINE_PER_CPU(void *, ftrace_bp_call_nmi_return);
-+
-+#ifdef CONFIG_SMP
-+#ifdef CONFIG_X86_64
-+# define BP_CALL_RETURN		"%gs:ftrace_bp_call_return"
-+# define BP_CALL_NMI_RETURN	"%gs:ftrace_bp_call_nmi_return"
-+#else
-+# define BP_CALL_RETURN		"%fs:ftrace_bp_call_return"
-+# define BP_CALL_NMI_RETURN	"%fs:ftrace_bp_call_nmi_return"
-+#endif
-+#else /* SMP */
-+# define BP_CALL_RETURN		"ftrace_bp_call_return"
-+# define BP_CALL_NMI_RETURN	"ftrace_bp_call_nmi_return"
-+#endif
-+
-+/* To hold the ftrace_caller address to push on the stack */
-+void *ftrace_caller_func = (void *)ftrace_caller;
-+
-+asm(
-+	".text\n"
-+
-+	/* Trampoline for function update with interrupts enabled */
-+	".global ftrace_emulate_call_irqoff\n"
-+	".type ftrace_emulate_call_irqoff, @function\n"
-+	"ftrace_emulate_call_irqoff:\n\t"
-+		"push "BP_CALL_RETURN"\n\t"
-+		"push ftrace_caller_func\n"
-+		"sti\n\t"
-+		"ret\n\t"
-+	".size ftrace_emulate_call_irqoff, .-ftrace_emulate_call_irqoff\n"
-+
-+	/* Trampoline for function update with interrupts disabled*/
-+	".global ftrace_emulate_call_irqon\n"
-+	".type ftrace_emulate_call_irqon, @function\n"
-+	"ftrace_emulate_call_irqon:\n\t"
-+		"push "BP_CALL_RETURN"\n\t"
-+		"push ftrace_caller_func\n"
-+		"ret\n\t"
-+	".size ftrace_emulate_call_irqon, .-ftrace_emulate_call_irqon\n"
-+
-+	/* Trampoline for function update in an NMI */
-+	".global ftrace_emulate_call_nmi\n"
-+	".type ftrace_emulate_call_nmi, @function\n"
-+	"ftrace_emulate_call_nmi:\n\t"
-+		"push "BP_CALL_NMI_RETURN"\n\t"
-+		"push ftrace_caller_func\n"
-+		"ret\n\t"
-+	".size ftrace_emulate_call_nmi, .-ftrace_emulate_call_nmi\n"
-+
-+	/* Trampoline for ftrace trampoline call update with interrupts enabled */
-+	".global ftrace_emulate_call_update_irqoff\n"
-+	".type ftrace_emulate_call_update_irqoff, @function\n"
-+	"ftrace_emulate_call_update_irqoff:\n\t"
-+		"push "BP_CALL_RETURN"\n\t"
-+		"push ftrace_update_func_call\n"
-+		"sti\n\t"
-+		"ret\n\t"
-+	".size ftrace_emulate_call_update_irqoff, .-ftrace_emulate_call_update_irqoff\n"
-+
-+	/* Trampoline for ftrace trampoline call update with interrupts disabled */
-+	".global ftrace_emulate_call_update_irqon\n"
-+	".type ftrace_emulate_call_update_irqon, @function\n"
-+	"ftrace_emulate_call_update_irqon:\n\t"
-+		"push "BP_CALL_RETURN"\n\t"
-+		"push ftrace_update_func_call\n"
-+		"ret\n\t"
-+	".size ftrace_emulate_call_update_irqon, .-ftrace_emulate_call_update_irqon\n"
-+
-+	/* Trampoline for ftrace trampoline call update in an NMI */
-+	".global ftrace_emulate_call_update_nmi\n"
-+	".type ftrace_emulate_call_update_nmi, @function\n"
-+	"ftrace_emulate_call_update_nmi:\n\t"
-+		"push "BP_CALL_NMI_RETURN"\n\t"
-+		"push ftrace_update_func_call\n"
-+		"ret\n\t"
-+	".size ftrace_emulate_call_update_nmi, .-ftrace_emulate_call_update_nmi\n"
-+	".previous\n");
-+
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_irqoff);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_irqon);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_nmi);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_irqoff);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_irqon);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_nmi);
-+
- /*
-  * A breakpoint was added to the code address we are about to
-  * modify, and this is the handle that will just skip over it.
-@@ -295,12 +420,49 @@ int ftrace_int3_handler(struct pt_regs *regs)
- 		return 0;
- 
- 	ip = regs->ip - 1;
--	if (!ftrace_location(ip) && !is_ftrace_caller(ip))
--		return 0;
--
--	regs->ip += MCOUNT_INSN_SIZE - 1;
-+	if (ftrace_location(ip)) {
-+		/* A breakpoint at the beginning of the function was hit */
-+		if (in_nmi()) {
-+			/* NMIs have their own trampoline */
-+			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
-+			regs->ip = (unsigned long) ftrace_emulate_call_nmi;
-+			return 1;
-+		}
-+		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
-+		if (regs->flags & X86_EFLAGS_IF) {
-+			regs->flags &= ~X86_EFLAGS_IF;
-+			regs->ip = (unsigned long) ftrace_emulate_call_irqoff;
-+			/* Tell lockdep here we are enabling interrupts */
-+			trace_hardirqs_on();
-+		} else {
-+			regs->ip = (unsigned long) ftrace_emulate_call_irqon;
-+		}
-+		return 1;
-+	} else if (is_ftrace_caller(ip)) {
-+		/* An ftrace trampoline is being updated */
-+		if (!ftrace_update_func_call) {
-+			/* If it's a jump, just need to skip it */
-+			regs->ip += MCOUNT_INSN_SIZE -1;
-+			return 1;
-+		}
-+		if (in_nmi()) {
-+			/* NMIs have their own trampoline */
-+			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
-+			regs->ip = (unsigned long) ftrace_emulate_call_update_nmi;
-+			return 1;
-+		}
-+		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
-+		if (regs->flags & X86_EFLAGS_IF) {
-+			regs->flags &= ~X86_EFLAGS_IF;
-+			regs->ip = (unsigned long) ftrace_emulate_call_update_irqoff;
-+			trace_hardirqs_on();
-+		} else {
-+			regs->ip = (unsigned long) ftrace_emulate_call_update_irqon;
-+		}
-+		return 1;
-+	}
- 
--	return 1;
-+	return 0;
- }
- NOKPROBE_SYMBOL(ftrace_int3_handler);
- 
-@@ -859,6 +1021,8 @@ void arch_ftrace_update_trampoline(struct ftrace_ops *ops)
- 
- 	func = ftrace_ops_get_func(ops);
- 
-+	ftrace_update_func_call = (unsigned long)func;
-+
- 	/* Do a safe modify in case the trampoline is executing */
- 	new = ftrace_call_replace(ip, (unsigned long)func);
- 	ret = update_ftrace_func(ip, new);
-@@ -960,6 +1124,7 @@ static int ftrace_mod_jmp(unsigned long ip, void *func)
- {
- 	unsigned char *new;
- 
-+	ftrace_update_func_call = 0;
- 	new = ftrace_jmp_replace(ip, (unsigned long)func);
- 
- 	return update_ftrace_func(ip, new);
--- 
-2.20.1
-
+Cheers,
+	Rui
 
