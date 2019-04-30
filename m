@@ -2,108 +2,80 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BE1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19431C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5ACF21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F05216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:22:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OCxU9UKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfD3IVd (ORCPT
+        id S1726519AbfD3IWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:21:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48016 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbfD3IVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:21:33 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E71933082B44;
-        Tue, 30 Apr 2019 08:21:31 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-90.ams2.redhat.com [10.36.116.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51C6A6B8E9;
-        Tue, 30 Apr 2019 08:21:22 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jann Horn <jannh@google.com>, Kevin Easton <kevin@guarana.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Enrico Weigelt\, metux IT consult" <lkml@metux.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
-References: <20190414201436.19502-1-christian@brauner.io>
-        <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
-        <20190415195911.z7b7miwsj67ha54y@yavin>
-        <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
-        <20190420071406.GA22257@ip-172-31-15-78>
-        <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
-        <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
-        <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com>
-        <CAG48ez1CV54c1xZ9s26ym=9avkihiNi=ppW-CWA1-qrCpYdc1A@mail.gmail.com>
-        <CAHk-=wg73au-kvOwWpPDY+rXrz8O5gwrcPiw1FZx-Qr2PqpRFg@mail.gmail.com>
-Date:   Tue, 30 Apr 2019 10:21:20 +0200
-In-Reply-To: <CAHk-=wg73au-kvOwWpPDY+rXrz8O5gwrcPiw1FZx-Qr2PqpRFg@mail.gmail.com>
-        (Linus Torvalds's message of "Mon, 29 Apr 2019 19:16:11 -0700")
-Message-ID: <87r29jaoov.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 30 Apr 2019 04:22:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59850 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfD3IWC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:22:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8DM06XtW1FFvD8grPjtHoQFBokiKn/DiGXyZQZQ/fSA=; b=OCxU9UKMhrzSRxfs1nNcuZD00
+        g2YUxi2+0w8VH36pCz/hU49ND1rAV5JPO3oWb4v0D0w25K33Z3lAmgV4TW6YEbn7b5WhIQocO/9sx
+        4/Z+63HVgMF50vKrZ6Su49hQ6ZnPNuFnE8IVdiCviWHJ0uabylm7wlLn/hnY9ltlMUuAFDA3ZlJdH
+        a60OOP071vHOPRHOoM+YDpMPUvlt1HdAHLHOgzIKZJ4xYni19bFoITocYVAq7ZsNk02DB3XY35Aod
+        D/8VamynNxLHKK3ukLVgwXdfJlu+8WsT37ktzeWt7zSVsvLyYcD1FCMoiy2XIRGvGqToqxrRtPmow
+        Cqr8ffS7Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLO1Z-0007yk-J0; Tue, 30 Apr 2019 08:22:01 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 504AE29D2D6D6; Tue, 30 Apr 2019 10:21:58 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 10:21:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH 2/5] bio: fix improper use of smp_mb__before_atomic()
+Message-ID: <20190430082158.GA2677@hirez.programming.kicks-ass.net>
+References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <1556568902-12464-3-git-send-email-andrea.parri@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 30 Apr 2019 08:21:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556568902-12464-3-git-send-email-andrea.parri@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Linus Torvalds:
+On Mon, Apr 29, 2019 at 10:14:58PM +0200, Andrea Parri wrote:
+> This barrier only applies to the read-modify-write operations; in
+> particular, it does not apply to the atomic_set() primitive.
+> 
+> Replace the barrier with an smp_mb().
 
-> Note that vfork() is "exciting" for the compiler in much the same way
-> "setjmp/longjmp()" is, because of the shared stack use in the child
-> and the parent. It is *very* easy to get this wrong and cause massive
-> and subtle memory corruption issues because the parent returns to
-> something that has been messed up by the child.
+> @@ -224,7 +224,7 @@ static inline void bio_cnt_set(struct bio *bio, unsigned int count)
+>  {
+>  	if (count != 1) {
+>  		bio->bi_flags |= (1 << BIO_REFFED);
+> -		smp_mb__before_atomic();
 
-Just using a wrapper around vfork is enough for that, if the return
-address is saved on the stack.  It's surprising hard to write a test
-case for that, but the corruption is definitely there.
+Maybe also add:
 
-> (In fact, if I recall correctly, the _reason_ we have an explicit
-> 'vfork()' entry point rather than using clone() with magic parameters
-> was that the lack of arguments meant that you didn't have to
-> save/restore any registers in user space, which made the whole stack
-> issue simpler. But it's been two decades, so my memory is bitrotting).
-
-That's an interesting point.  Using a callback-style interface avoids
-that because you never need to restore the registers in the new
-subprocess.  It's still appropriate to use an assembler implementation,
-I think, because it will be more obviously correct.
-
-> Also, particularly if you have a big address space, vfork()+execve()
-> can be quite a bit faster than fork()+execve(). Linux fork() is pretty
-> efficient, but if you have gigabytes of VM space to copy, it's going
-> to take time even if you do it fairly well.
-
-vfork is also more benign from a memory accounting perspective.  In some
-environments, it's not possible to call fork from a large process
-because the accounting assumes (conservatively) that the new process
-will dirty a lot of its private memory.
-
-Thanks,
-Florian
+		/*
+		 * XXX the comment that explain this barrier goes here
+		 */
+> +		smp_mb();
+>  	}
+>  	atomic_set(&bio->__bi_cnt, count);
+>  }
