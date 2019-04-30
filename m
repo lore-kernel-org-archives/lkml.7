@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1FDC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46314C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9030D21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1324921670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625704;
-	bh=2rx6RYvoypUmGKFVBsB99WFzaCdfl5OUBVZSEiFnDWc=;
+	s=default; t=1556625717;
+	bh=D7D3c28XvtlbFYGdMlPJRUn+QRGD4GJ2ROKUMmbZv5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B6xkEx+c5SO8PrSx8nImPb0JPEBLqBaY1APx/jVJXJbXUZt0YBgEvVoWkOMTA5mHv
-	 M/SHkBV7xyYPn3tCKCXzSGkBcSUamKR51ZU+LTk/DP8FBLg6fpgdWKmjGV7W7/xcRx
-	 YqT3S+GJD8UDqrpBKNDzuhzfE5drkkKvJkqD6yS8=
+	b=LixcyCnMgUjfyCfIdtlyg5yVU/+deCDaanHHuR4QyVupQcsu6+QblXvJ5K1oGJ1vN
+	 kslMp2btg+7UnKtCzdpnHHDdlnD+oujvUFnmATHM21Y10lhyq+nPYcRMYOOv7ePll3
+	 apb5aaClxDvejfkV/sJGBkZ8FBp1Ag1jusaupiV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbfD3Lo4 (ORCPT
+        id S1730223AbfD3Lof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:44:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730258AbfD3Lor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:44:47 -0400
+        id S1728710AbfD3Loc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD49217D4;
-        Tue, 30 Apr 2019 11:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7444221783;
+        Tue, 30 Apr 2019 11:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624687;
-        bh=2rx6RYvoypUmGKFVBsB99WFzaCdfl5OUBVZSEiFnDWc=;
+        s=default; t=1556624672;
+        bh=D7D3c28XvtlbFYGdMlPJRUn+QRGD4GJ2ROKUMmbZv5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o7jcrNKw0xH3Xb+XDG6yOu2M7ucmR0PKh8TiPX883L5r+nZ4dL469zgJtmAziNJep
-         m+be2FyZGsp16o26CSrOMvq4hFBmMfkJm7s9w35hGKr7qh7I9vBeQ75aIYrKQAY0Bw
-         BMig5tgcmcEgRhh4OX2ibeZ/k9jsLxUJUy7jbiKc=
+        b=JuA9n5k2bnlfAtInz4Ab9oqdKJaTOsAQ9uLIwT63iia6TPHskEw2q8Ht3Qx9KULnk
+         rvbVGTENqTc5f5mPF9UFovkIOxgf3OEKvfv94yM0p80n00xe9fKbSNyMIflnNOGbPN
+         Og2i3fFcX1X51ITa4FeQkXh0NHLh9D2nvIeXKppM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xie XiuQi <xiexiuqi@huawei.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, cj.chengjian@huawei.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 034/100] sched/numa: Fix a possible divide-by-zero
-Date:   Tue, 30 Apr 2019 13:38:03 +0200
-Message-Id: <20190430113610.390325327@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 028/100] zram: pass down the bvec we need to read into in the work struct
+Date:   Tue, 30 Apr 2019 13:37:57 +0200
+Message-Id: <20190430113610.177266356@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -62,53 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie XiuQi <xiexiuqi@huawei.com>
+From: Jérôme Glisse <jglisse@redhat.com>
 
-commit a860fa7b96e1a1c974556327aa1aee852d434c21 upstream.
+commit e153abc0739ff77bd89c9ba1688cdb963464af97 upstream.
 
-sched_clock_cpu() may not be consistent between CPUs. If a task
-migrates to another CPU, then se.exec_start is set to that CPU's
-rq_clock_task() by update_stats_curr_start(). Specifically, the new
-value might be before the old value due to clock skew.
+When scheduling work item to read page we need to pass down the proper
+bvec struct which points to the page to read into.  Before this patch it
+uses a randomly initialized bvec (only if PAGE_SIZE != 4096) which is
+wrong.
 
-So then if in numa_get_avg_runtime() the expression:
+Note that without this patch on arch/kernel where PAGE_SIZE != 4096
+userspace could read random memory through a zram block device (thought
+userspace probably would have no control on the address being read).
 
-  'now - p->last_task_numa_placement'
-
-ends up as -1, then the divider '*period + 1' in task_numa_placement()
-is 0 and things go bang. Similar to update_curr(), check if time goes
-backwards to avoid this.
-
-[ peterz: Wrote new changelog. ]
-[ mingo: Tweaked the code comment. ]
-
-Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: cj.chengjian@huawei.com
+Link: http://lkml.kernel.org/r/20190408183219.26377-1-jglisse@redhat.com
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20190425080016.GX11158@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/block/zram/zram_drv.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2016,6 +2016,10 @@ static u64 numa_get_avg_runtime(struct t
- 	if (p->last_task_numa_placement) {
- 		delta = runtime - p->last_sum_exec_runtime;
- 		*period = now - p->last_task_numa_placement;
-+
-+		/* Avoid time going backwards, prevent potential divide error: */
-+		if (unlikely((s64)*period < 0))
-+			*period = 0;
- 	} else {
- 		delta = p->se.avg.load_sum;
- 		*period = LOAD_AVG_MAX;
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -515,18 +515,18 @@ struct zram_work {
+ 	struct zram *zram;
+ 	unsigned long entry;
+ 	struct bio *bio;
++	struct bio_vec bvec;
+ };
+ 
+ #if PAGE_SIZE != 4096
+ static void zram_sync_read(struct work_struct *work)
+ {
+-	struct bio_vec bvec;
+ 	struct zram_work *zw = container_of(work, struct zram_work, work);
+ 	struct zram *zram = zw->zram;
+ 	unsigned long entry = zw->entry;
+ 	struct bio *bio = zw->bio;
+ 
+-	read_from_bdev_async(zram, &bvec, entry, bio);
++	read_from_bdev_async(zram, &zw->bvec, entry, bio);
+ }
+ 
+ /*
+@@ -539,6 +539,7 @@ static int read_from_bdev_sync(struct zr
+ {
+ 	struct zram_work work;
+ 
++	work.bvec = *bvec;
+ 	work.zram = zram;
+ 	work.entry = entry;
+ 	work.bio = bio;
 
 
