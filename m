@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73FEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF8AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C6A2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9592075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625346;
-	bh=ZBbxzEzM68irpAlpYV2xErPYncDbMHz9b36z2Ynmjd0=;
+	s=default; t=1556625350;
+	bh=1E80f6C6KKklPmtdQ4vXPcXRkfI+cNj4GBx96Yoj1oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MjAAD5N7dFkucU53TW7JE9SCjxM01KgNtlmzrL+/vcUSBldMqEvirHjF1s39cUJ16
-	 mwl2/FB1z+LT5h7n+gIZT+BB67w+EbbWQ5Axo3Ucv5odOT6qVKkhdmCf0QDb/KU6hF
-	 683Bl2181TIx+pl9JxOcZPNNy7mN7SR9WOnq1LFk=
+	b=Hx3EoFAIafmkvLLnFlscJGTPiwg2LITKI+DJe8LuYRcP2Q74nJrrQpaA34kVZNi3P
+	 gVsvOn+2Q+dOTMtK3vhTC8ypLSZcUDsRwWNd6RHtq+j0YPXddMjITu8rmo+bGunUyc
+	 KapVvKgi4y53xHUIEQL6xvTC7wBALm671dtGOxFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbfD3LtP (ORCPT
+        id S1728530AbfD3Lzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35606 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730934AbfD3LtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:10 -0400
+        id S1730668AbfD3LtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B2362177B;
-        Tue, 30 Apr 2019 11:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7844421707;
+        Tue, 30 Apr 2019 11:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624949;
-        bh=ZBbxzEzM68irpAlpYV2xErPYncDbMHz9b36z2Ynmjd0=;
+        s=default; t=1556624955;
+        bh=1E80f6C6KKklPmtdQ4vXPcXRkfI+cNj4GBx96Yoj1oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQ0liYcHbalUI0cit/ips0burQQy3Qik9lfR3tXWugFdZ4TiaNOlrAVhm5P30PrFo
-         lwvgqhjwOlX2Pj1Y1gApktSMHDyW4zXhpAq9io20G1z3sVnpgyFdQ3edBuvjNoRiRT
-         hYsT3uNs/MPt5hMIAxTZNnejNk7zY1UOjtcq7A9A=
+        b=fRtuQDYn6xfE49zUFpizY4Tii9N4784pnEDc+qogpjYAaZjlUg03iHvYFGqe1B/WL
+         zT3ITcbbAAbQgfOFAluXm0pe+5RGQSpuEk2v2UOhSq3qtp6T9mMc5m92Sud6yRJyoF
+         fx7l5CJvdMjuG55JHtItlN2tdmR/GMK+o+i5xfXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
-Subject: [PATCH 5.0 33/89] sunrpc: dont mark uninitialised items as VALID.
-Date:   Tue, 30 Apr 2019 13:38:24 +0200
-Message-Id: <20190430113611.449275841@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.0 35/89] Input: synaptics-rmi4 - write config register values to the right offset
+Date:   Tue, 30 Apr 2019 13:38:26 +0200
+Message-Id: <20190430113611.514987684@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,57 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-commit d58431eacb226222430940134d97bfd72f292fcd upstream.
+commit 3a349763cf11e63534b8f2d302f2d0c790566497 upstream.
 
-A recent commit added a call to cache_fresh_locked()
-when an expired item was found.
-The call sets the CACHE_VALID flag, so it is important
-that the item actually is valid.
-There are two ways it could be valid:
-1/ If ->update has been called to fill in relevant content
-2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
+Currently any changed config register values don't take effect, as the
+function to write them back is called with the wrong register offset.
 
-An expired item that is waiting for an update will be neither.
-Setting CACHE_VALID will mean that a subsequent call to cache_put()
-will be likely to dereference uninitialised pointers.
-
-So we must make sure the item is valid, and we already have code to do
-that in try_to_negate_entry().  This takes the hash lock and so cannot
-be used directly, so take out the two lines that we need and use them.
-
-Now cache_fresh_locked() is certain to be called only on
-a valid item.
-
-Cc: stable@kernel.org # 2.6.35
-Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: ff8f83708b3e (Input: synaptics-rmi4 - add support for 2D
+                     sensors and F11)
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/cache.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/input/rmi4/rmi_f11.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -54,6 +54,7 @@ static void cache_init(struct cache_head
- 	h->last_refresh = now;
- }
+--- a/drivers/input/rmi4/rmi_f11.c
++++ b/drivers/input/rmi4/rmi_f11.c
+@@ -1230,7 +1230,7 @@ static int rmi_f11_initialize(struct rmi
+ 	}
  
-+static inline int cache_is_valid(struct cache_head *h);
- static void cache_fresh_locked(struct cache_head *head, time_t expiry,
- 				struct cache_detail *detail);
- static void cache_fresh_unlocked(struct cache_head *head,
-@@ -105,6 +106,8 @@ static struct cache_head *sunrpc_cache_a
- 			if (cache_is_expired(detail, tmp)) {
- 				hlist_del_init_rcu(&tmp->cache_list);
- 				detail->entries --;
-+				if (cache_is_valid(tmp) == -EAGAIN)
-+					set_bit(CACHE_NEGATIVE, &tmp->flags);
- 				cache_fresh_locked(tmp, 0, detail);
- 				freeme = tmp;
- 				break;
+ 	rc = f11_write_control_regs(fn, &f11->sens_query,
+-			   &f11->dev_controls, fn->fd.query_base_addr);
++			   &f11->dev_controls, fn->fd.control_base_addr);
+ 	if (rc)
+ 		dev_warn(&fn->dev, "Failed to write control registers\n");
+ 
 
 
