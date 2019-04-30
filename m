@@ -2,119 +2,112 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9C2C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D036C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B1721707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEED21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfD3Nt4 (ORCPT
+        id S1727700AbfD3NuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:49:56 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:43624 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727138AbfD3Ntz (ORCPT
+        Tue, 30 Apr 2019 09:50:18 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43651 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfD3NuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:49:55 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 4C576634C7B;
-        Tue, 30 Apr 2019 16:49:45 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hLT8i-0000hV-Td; Tue, 30 Apr 2019 16:49:44 +0300
-Date:   Tue, 30 Apr 2019 16:49:44 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Nicholas Mc Guire <hofrat@opentech.at>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] media: smiapp: core: add range to usleep_range
-Message-ID: <20190430134944.6sutxdztj6crgo6w@valkosipuli.retiisi.org.uk>
-References: <1554603364-10500-1-git-send-email-hofrat@opentech.at>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554603364-10500-1-git-send-email-hofrat@opentech.at>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Tue, 30 Apr 2019 09:50:17 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hLT94-0001F1-TV; Tue, 30 Apr 2019 15:50:06 +0200
+Message-ID: <1556632204.2560.20.camel@pengutronix.de>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Add a node for irqsteer
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 30 Apr 2019 15:50:04 +0200
+In-Reply-To: <a08a0a2fdd2090f4f42fe50d8ed70ee08b2fbcaf.1556631673.git.agx@sigxcpu.org>
+References: <a08a0a2fdd2090f4f42fe50d8ed70ee08b2fbcaf.1556631673.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicholas,
-
-On Sun, Apr 07, 2019 at 04:16:02AM +0200, Nicholas Mc Guire wrote:
-> Allow the hrtimer subsystem to coalesce delay timers of lower accuracy
-> by providing a suitable range
+Am Dienstag, den 30.04.2019, 15:41 +0200 schrieb Guido Günther:
+> Add a node for the irqsteer interrupt controller found on the iMX8MQ
+> SoC.
 > 
-> Signed-off-by: Nicholas Mc Guire <hofrat@opentech.at>
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
 > ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> Problem located by an experimental coccinelle script
-> 
-> hrtimers in atomic context have limited accuracy due to possible
-> context-switching and interruption so the accuracy is limited 
-> anyway. Giving the hrtimer subsystem a reasonable range for merging
-> hrtimers helps to reduce the load on the hrtimer subsystem. As this
-> delays do not seem to mandate high accuracy the range of a factor
-> two seems acceptable.
-> 
-> Patch was compile tested with: x86_64_defconfig + MEDIA_SUPPORT=m,
-> MEDIA_CAMERA_SUPPORT=y, MEDIA_CONTROLLER=y, VIDEO_V4L2_SUBDEV_API=y,
-> VIDEO_SMIAPP=m                                                                                               
-> (with a number of sparse warnings on sizeof() usage)
-> 
-> Patch is against 5.1-rc3 (localversion-next is next-20190405)
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 2cc939cfbd75..ce0e137ec8ee 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -798,6 +798,27 @@
+>  			};
+>  		};
+>  
+> +		bus@32c00000 { /* AIPS4 */
+> +			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0x32c00000 0x32c00000 0x400000>;
+> +
+> +			irqsteer: interrupt-controller@32e2d000 {
+> +				compatible = "fsl,imx8m-irqsteer",
+> +					     "fsl,imx-irqsteer";
 
-The delays are exact for the reason that they are user-visible delays in
-image capturing related use cases. Sometimes milliseconds matter, or at
-least adding more does not help.
+This fits on a single line, right?
 
-> 
->  drivers/media/i2c/smiapp/smiapp-core.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-> index 58a45c3..c0c29ec 100644
-> --- a/drivers/media/i2c/smiapp/smiapp-core.c
-> +++ b/drivers/media/i2c/smiapp/smiapp-core.c
-> @@ -1222,19 +1222,19 @@ static int smiapp_power_on(struct device *dev)
->  		dev_err(&client->dev, "failed to enable vana regulator\n");
->  		return rval;
->  	}
-> -	usleep_range(1000, 1000);
-> +	usleep_range(1000, 2000);
->  
->  	rval = clk_prepare_enable(sensor->ext_clk);
->  	if (rval < 0) {
->  		dev_dbg(&client->dev, "failed to enable xclk\n");
->  		goto out_xclk_fail;
->  	}
-> -	usleep_range(1000, 1000);
-> +	usleep_range(1000, 2000);
->  
->  	gpiod_set_value(sensor->xshutdown, 1);
->  
->  	sleep = SMIAPP_RESET_DELAY(sensor->hwcfg->ext_clk);
-> -	usleep_range(sleep, sleep);
-> +	usleep_range(sleep, sleep*2);
->  
->  	mutex_lock(&sensor->mutex);
->  
-> @@ -1381,7 +1381,7 @@ static int smiapp_power_off(struct device *dev)
->  
->  	gpiod_set_value(sensor->xshutdown, 0);
->  	clk_disable_unprepare(sensor->ext_clk);
-> -	usleep_range(5000, 5000);
-> +	usleep_range(5000, 10000);
->  	regulator_disable(sensor->vana);
->  	sensor->streaming = false;
->  
+> +				reg = <0x32e2d000 0x1000>;
+> +				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
+> +				clock-names = "ipg";
+> +				fsl,channel = <0>;
+> +				fsl,num-irqs = <64>;
+> +				interrupt-controller;
+> +				interrupt-parent = <&gic>;
 
--- 
-Sakari Ailus
+This is wrong, the irqsteer upstream IRQ is routed through the GPC like
+all the other peripheral interrupts. You can just drop this property.
+
+With this fixed:
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
+Regards,
+Lucas
+
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +
+>  		gpu: gpu@38000000 {
+>  			compatible = "vivante,gc";
+>  			reg = <0x38000000 0x40000>;
