@@ -2,63 +2,110 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518FCC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D3FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209E320835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFDE2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfD3PVS (ORCPT
+        id S1726190AbfD3PXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:21:18 -0400
-Received: from verein.lst.de ([213.95.11.211]:47185 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfD3PVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:21:17 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 18DE167358; Tue, 30 Apr 2019 17:20:59 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 17:20:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>, hch@lst.de,
-        m.szyprowski@samsung.com, vdumpa@nvidia.com, linux@armlinux.org.uk,
-        catalin.marinas@arm.com, will.deacon@arm.com, chris@zankel.net,
-        jcmvbkbc@gmail.com, joro@8bytes.org, dwmw2@infradead.org,
-        tony@atomide.com, akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Subject: Re: [RFC/RFT PATCH 1/2] dma-contiguous: Simplify
- dma_*_from_contiguous() function calls
-Message-ID: <20190430152058.GC25447@lst.de>
-References: <20190430015521.27734-1-nicoleotsuka@gmail.com> <20190430015521.27734-2-nicoleotsuka@gmail.com> <d43e1cfe-1d12-c0c6-d76b-81330918d9ab@arm.com>
+        Tue, 30 Apr 2019 11:23:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53026 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfD3PXZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:23:25 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=lindsey)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1hLUbG-0006rZ-5q; Tue, 30 Apr 2019 15:23:18 +0000
+Date:   Tue, 30 Apr 2019 10:23:13 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] bridge: Fix error path for kobject_init_and_add()
+Message-ID: <20190430152312.GB13709@lindsey>
+References: <20190430002817.10785-1-tobin@kernel.org>
+ <20190430002817.10785-2-tobin@kernel.org>
+ <20190430151437.GA13709@lindsey>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d43e1cfe-1d12-c0c6-d76b-81330918d9ab@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190430151437.GA13709@lindsey>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 01:52:26PM +0100, Robin Murphy wrote:
-> As Catalin pointed out before, many of the users above may still have 
-> implicit assumptions about the default CMA area, i.e. that this won't 
-> return something above the limit they originally passed to 
-> dma_contiguous_reserve(). I'm not sure how straightforward that is to 
-> resolve - at the very least we may have to monkey around with GFP_DMA{32} 
-> flags based on where dma_contiguous_default_area lies :(
+On 2019-04-30 10:14:37, Tyler Hicks wrote:
+> On 2019-04-30 10:28:15, Tobin C. Harding wrote:
+> > Currently error return from kobject_init_and_add() is not followed by a
+> > call to kobject_put().  This means there is a memory leak.
+> > 
+> > Add call to kobject_put() in error path of kobject_init_and_add().
+> > 
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> >  net/bridge/br_if.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/net/bridge/br_if.c b/net/bridge/br_if.c
+> > index 41f0a696a65f..e5c8c9941c51 100644
+> > --- a/net/bridge/br_if.c
+> > +++ b/net/bridge/br_if.c
+> > @@ -607,8 +607,10 @@ int br_add_if(struct net_bridge *br, struct net_device *dev,
+> >  
+> >  	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
+> >  				   SYSFS_BRIDGE_PORT_ATTR);
+> > -	if (err)
+> > +	if (err) {
+> > +		kobject_put(&p->kobj);
+> >  		goto err1;
+> > +	}
+> 
+> I think this is duplicating the code under the err2 label and doing so
+> in a way that would introduce a double free.
+> 
+> If the refcount hits 0 in the kobject_put(), release_nbp() is called
+> which calls kfree() on the p pointer. However, the p pointer is never
+> set to NULL like what's done under the err2 label. Once we're back in
+> br_add_if(), kfree() is called on the p pointer again just before
+> returning.
+> 
+> I think it would be better if you just jumped to the err2 label instead
+> of err1. err1 will no longer be used so, unfortunately, you'll have to
+> refactor all the labels at the same time.
 
-Or just convert the callers one by one.  The two most interesting ones
-are dma-direct which always check addressability after the allocation,
-and dma-iommu, which doesn't care.  dma-iommu.c and intel-iommu.c also
-don't care, but should use dma-iommu by next merge window anyway,
-which leaves arm which is so complicated that we better don't touch
-it for now, and xtensa, which I hope to switch to dma-direct in the
-next merge window or two.
+I noticed that the last paragraph is bad advice after looking at patch
+#2 in this series. I guess you'd be better off calling kobject_put(),
+setting p to NULL (the only thing that's missing), and jumping to err1
+in this patch.
+
+Tyler
+
+> 
+> Tyler
+> 
+> >  
+> >  	err = br_sysfs_addif(p);
+> >  	if (err)
+> > -- 
+> > 2.21.0
+> > 
