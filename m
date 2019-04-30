@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02056C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F57C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C808721734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EC72173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624759;
-	bh=a+WU3jhEPTvZzuAODfMcmN5QRnutqchpHZn8X8hoRP0=;
+	s=default; t=1556624764;
+	bh=f2kp8Yn19tOO5hE/iw0tH8YfxpFbkFLA58pdnaasQS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HsUuMt001UAMbgLZIbhh58nSx5zxyAv+ZP0Sr4fyzzZBetzl8nAPg8YibBsJjsOvt
-	 zII+WS9J+QdDsJeG7e0r57Q8XmyRM/vf751ZU/2tmOkXmzBFElqv+g6px3vbYJwWdL
-	 Fbl9gpqcY2M61yTeaXVYsDIiYgxqMQJ8M7Jm832E=
+	b=J07YLbzlekAq27tYY2oXu7tUChJTA5cLGB93ejHTl50JnpXAqbnRI0QipN87XcZ6V
+	 pias0s8RoStuVX+AEhsYBRzYyuG3TmZQSZzpCO55IPxHUa6aeydrp7mTqsXR5kUTQU
+	 tKDGs7jWt1Bccji2cpeIRv6fNXL34g7ByzZ5kiU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbfD3Lp6 (ORCPT
+        id S1730081AbfD3LqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:46:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730454AbfD3Lpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:54 -0400
+        id S1727965AbfD3Lp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C07F621734;
-        Tue, 30 Apr 2019 11:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 554872177B;
+        Tue, 30 Apr 2019 11:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624753;
-        bh=a+WU3jhEPTvZzuAODfMcmN5QRnutqchpHZn8X8hoRP0=;
+        s=default; t=1556624755;
+        bh=f2kp8Yn19tOO5hE/iw0tH8YfxpFbkFLA58pdnaasQS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lAWerxcoVdsB62wnwCO5pmdkGvrGezFIkZ9dLNpcOQ+jh5uWO4Jv0tgZJvW85KwXV
-         N/Z/H7O7k0a9UK+/hdA8ved9UjjPx1tAiesPjfVnd4NgT4l5sl0c5VftpkdIn4Uxtz
-         oeEaZ2hY9uv78Y1M1/FAa8feAIZob8F+n5MX/B/M=
+        b=Do0JKKglvcm13RhcSUWL/LExXa0OovSKQeTFcDHP/Bvrzqb/LTps/z4kdkQYb4jaL
+         RqdmkStVw9kbKb8+INQL4k8Y4JdGhdcJKC1mrT9MSw/xZgis4hyFFbqT7SFAtvNW+T
+         4AYCfB3tIhWuNIj/kOf55ndmJaQbWaElFsnioiU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 4.19 060/100] fm10k: Fix a potential NULL pointer dereference
-Date:   Tue, 30 Apr 2019 13:38:29 +0200
-Message-Id: <20190430113611.714218676@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 061/100] tipc: check bearer name with right length in tipc_nl_compat_bearer_enable
+Date:   Tue, 30 Apr 2019 13:38:30 +0200
+Message-Id: <20190430113611.746234201@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,74 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Haibing <yuehaibing@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 01ca667133d019edc9f0a1f70a272447c84ec41f upstream.
+commit 6f07e5f06c8712acc423485f657799fc8e11e56c upstream.
 
-Syzkaller report this:
+Syzbot reported the following crash:
 
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 4378 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:__lock_acquire+0x95b/0x3200 kernel/locking/lockdep.c:3573
-Code: 00 0f 85 28 1e 00 00 48 81 c4 08 01 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 24 00 00 49 81 7d 00 e0 de 03 a6 41 bc 00 00
-RSP: 0018:ffff8881e3c07a40 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000010 RSI: 0000000000000000 RDI: 0000000000000080
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: ffff8881e3c07d98 R11: ffff8881c7f21f80 R12: 0000000000000001
-R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007fce2252e700(0000) GS:ffff8881f2400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fffc7eb0228 CR3: 00000001e5bea002 CR4: 00000000007606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- lock_acquire+0xff/0x2c0 kernel/locking/lockdep.c:4211
- __mutex_lock_common kernel/locking/mutex.c:925 [inline]
- __mutex_lock+0xdf/0x1050 kernel/locking/mutex.c:1072
- drain_workqueue+0x24/0x3f0 kernel/workqueue.c:2934
- destroy_workqueue+0x23/0x630 kernel/workqueue.c:4319
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x30c/0x480 kernel/module.c:961
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fce2252dc58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000140
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce2252e6bc
-R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
+BUG: KMSAN: uninit-value in memchr+0xce/0x110 lib/string.c:961
+  memchr+0xce/0x110 lib/string.c:961
+  string_is_valid net/tipc/netlink_compat.c:176 [inline]
+  tipc_nl_compat_bearer_enable+0x2c4/0x910 net/tipc/netlink_compat.c:401
+  __tipc_nl_compat_doit net/tipc/netlink_compat.c:321 [inline]
+  tipc_nl_compat_doit+0x3aa/0xaf0 net/tipc/netlink_compat.c:354
+  tipc_nl_compat_handle net/tipc/netlink_compat.c:1162 [inline]
+  tipc_nl_compat_recv+0x1ae7/0x2750 net/tipc/netlink_compat.c:1265
+  genl_family_rcv_msg net/netlink/genetlink.c:601 [inline]
+  genl_rcv_msg+0x185f/0x1a60 net/netlink/genetlink.c:626
+  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
+  genl_rcv+0x63/0x80 net/netlink/genetlink.c:637
+  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+  netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1336
+  netlink_sendmsg+0x127f/0x1300 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:622 [inline]
+  sock_sendmsg net/socket.c:632 [inline]
 
-If alloc_workqueue fails, it should return -ENOMEM, otherwise may
-trigger this NULL pointer dereference while unloading drivers.
+Uninit was created at:
+  __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
+  alloc_skb include/linux/skbuff.h:1012 [inline]
+  netlink_alloc_large_skb net/netlink/af_netlink.c:1182 [inline]
+  netlink_sendmsg+0xb82/0x1300 net/netlink/af_netlink.c:1892
+  sock_sendmsg_nosec net/socket.c:622 [inline]
+  sock_sendmsg net/socket.c:632 [inline]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 0a38c17a21a0 ("fm10k: Remove create_workqueue")
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+It was triggered when the bearer name size < TIPC_MAX_BEARER_NAME,
+it would check with a wrong len/TLV_GET_DATA_LEN(msg->req), which
+also includes priority and disc_domain length.
+
+This patch is to fix it by checking it with a right length:
+'TLV_GET_DATA_LEN(msg->req) - offsetof(struct tipc_bearer_config, name)'.
+
+Reported-by: syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/fm10k/fm10k_main.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/tipc/netlink_compat.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-+++ b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-@@ -41,6 +41,8 @@ static int __init fm10k_init_module(void
- 	/* create driver workqueue */
- 	fm10k_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
- 					  fm10k_driver_name);
-+	if (!fm10k_workqueue)
-+		return -ENOMEM;
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -403,7 +403,12 @@ static int tipc_nl_compat_bearer_enable(
+ 	if (!bearer)
+ 		return -EMSGSIZE;
  
- 	fm10k_dbg_init();
+-	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_BEARER_NAME);
++	len = TLV_GET_DATA_LEN(msg->req);
++	len -= offsetof(struct tipc_bearer_config, name);
++	if (len <= 0)
++		return -EINVAL;
++
++	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
+ 	if (!string_is_valid(b->name, len))
+ 		return -EINVAL;
  
 
 
