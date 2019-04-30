@@ -2,93 +2,103 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45957C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32591C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A982087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017AA2087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:33:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fjfi.cvut.cz header.i=@fjfi.cvut.cz header.b="L8t0ORuG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBqQmkme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfD3XbK (ORCPT
+        id S1727131AbfD3Xdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 19:31:10 -0400
-Received: from mailgw2.fjfi.cvut.cz ([147.32.9.131]:59484 "EHLO
-        mailgw2.fjfi.cvut.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfD3Xa7 (ORCPT
+        Tue, 30 Apr 2019 19:33:41 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34165 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfD3Xdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 19:30:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTP id 4D0A9A02D4;
-        Wed,  1 May 2019 01:21:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjfi.cvut.cz;
-        s=20151024; t=1556666468; i=@fjfi.cvut.cz;
-        bh=ilYqmYI1sLVecoSemBH0A3zy0RgR2DNeT9RBT5MmbSo=;
-        h=From:To:Cc:Subject:Date;
-        b=L8t0ORuGVcRX15rlXRKApnMQCXn6AHSyw2OZ82HybvsnSeSGSFvrbjfLhaea4B0vK
-         vhl3wF6T/IYabjEVeLDFzQa+ANvHBwnwLvZ7vu47GzQpnxKb3dvixIMDXj+4d5rZuB
-         82dPXFY40bwJdX81d1mNzBo9NkkxXnt+VCqeqOXg=
-X-CTU-FNSPE-Virus-Scanned: amavisd-new at fjfi.cvut.cz
-Received: from mailgw2.fjfi.cvut.cz ([127.0.0.1])
-        by localhost (mailgw2.fjfi.cvut.cz [127.0.0.1]) (amavisd-new, port 10022)
-        with ESMTP id 2RPag0q5S8ZB; Wed,  1 May 2019 01:21:00 +0200 (CEST)
-Received: from linux.fjfi.cvut.cz (linux.fjfi.cvut.cz [147.32.5.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTPS id 8DB6FA022D;
-        Wed,  1 May 2019 01:20:59 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailgw2.fjfi.cvut.cz 8DB6FA022D
-Received: by linux.fjfi.cvut.cz (Postfix, from userid 1001)
-        id 37BB46004D; Wed,  1 May 2019 01:20:59 +0200 (CEST)
-From:   David Kozub <zub@linux.fjfi.cvut.cz>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Scott Bauer <sbauer@plzdonthack.me>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: [PATCH 0/3] block: sed-opal: add support for shadow MBR done flag and write
-Date:   Wed,  1 May 2019 01:20:56 +0200
-Message-Id: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 30 Apr 2019 19:33:41 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c13so6599832pgt.1;
+        Tue, 30 Apr 2019 16:33:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yfh9BzfzF2kTBQWbbF//TMwNJfjcByuhaFdN+KNSCPY=;
+        b=MBqQmkmeWTkfrQNTOhiybCv6h3lmsmddjluCeIfh0JOaFsPZm7uvpVuaYn/NjhRJu/
+         GW0XRtE6gKh1QFL08ubQLvoeCuDZnOp1qLHuzseWONl5X1oYZvRE5/eoM/CJU6SGw+ta
+         GlCtYd8bNl5QxVEBB8iqC5U8KCBstuWEaxYwgnN04HNedQpielHoWvX84+U4pmoTQEqb
+         4wt5a7Zo+O0SnpSflR5I2QEuLprgsqC65aOrdFflN8LkLsmNEwthD670BDgMxz1qKgI0
+         McxxxhpbNA4130Dj6e5AUUA+9ODoiYQtOw6uq7+NdSxMX/HZPfXEQ4VdD0XQFNptSHoL
+         ulAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yfh9BzfzF2kTBQWbbF//TMwNJfjcByuhaFdN+KNSCPY=;
+        b=k8ylkl1DN0uNncRwA0R5WHHm452MlquTyeNxrpy0kgWqRG+3jGgteMJyNqiLCL8l+V
+         o528K5YTNWQD5ZYGrRm2Om577OSsgaD2gc6k5g/aOYAZsMUl2bnG4Voxommr8qxqAJIn
+         vIkNDfmu8mznCuqm48886U5xwau5UOcniBlqavfXp6VUUQO6tH95zOcMXIXu9sqSUHTS
+         FkiUIdRIJ6T7mo1XNYg5wBZvBIXV0FKV/YWLl9UgO82hag0m9Cr15Y/ZGVYJFdmGi3Yy
+         /ffCPa1v9+N2udt1souv8A8lGKvsOn22sHcl2+1hz9jIiGeuXm48tyuN9I3ztSpSOOeA
+         nVDg==
+X-Gm-Message-State: APjAAAWI204+TmbYALEEtseYyUdjrUjLuM6Ru5dvw8nIMMfU9wKQKa5t
+        YgA5RTUxwi9TSDll3oxmlBtYl6ItLmMF7SH4FKk=
+X-Google-Smtp-Source: APXvYqyj3rW7My3WNzBw5igeS1yAx1PECJvSaIg5pyZXw55zAl4M71Uo5sGHZggSWwy7P+khkn9g9PUhG21xhlk9IZE=
+X-Received: by 2002:a63:6604:: with SMTP id a4mr38265766pgc.104.1556667220498;
+ Tue, 30 Apr 2019 16:33:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+ <20190428030539.17776-1-yuehaibing@huawei.com> <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
+ <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com> <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
+ <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com> <CAM_iQpUfpruaFowbiTOY7aH4Ts-xcY4JACGLOT3CUjLqpg_zXw@mail.gmail.com>
+ <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
+ <CAM_iQpXNp4h-ZAf4S+OH_1kVE_qk_eb+r6=ZUsK1t2=3aQOOtw@mail.gmail.com> <89f38a2b-c416-f838-ee85-356bffed5bdb@huawei.com>
+In-Reply-To: <89f38a2b-c416-f838-ee85-356bffed5bdb@huawei.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 30 Apr 2019 16:33:28 -0700
+Message-ID: <CAM_iQpUvv5yMZYecaKeiThfoUqqK1Lwvn0gi8KLAeksUxDEyLA@mail.gmail.com>
+Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        "weiyongjun (A)" <weiyongjun1@huawei.com>,
+        David Miller <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Li,Rongqing" <lirongqing@baidu.com>,
+        nicolas dichtel <nicolas.dichtel@6wind.com>,
+        Chas Williams <3chas3@gmail.com>, wangli39@baidu.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        Peter Xu <peterx@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series extends SED Opal support: it adds IOCTL for setting the shadow
-MBR done flag which can be useful for unlocking an Opal disk on boot and it adds
-IOCTL for writing to the shadow MBR.
+On Mon, Apr 29, 2019 at 7:44 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> With SOCK_RCU_FREE tfile is ok ,
+>
+> but tfile->sk is freed by sock_put in __tun_detach, it will trgger
 
-The code has been already submitted in [1] but it was suggested to split this
-part off. In comparison to that version, I tried to apply Scott's suggestions
-from [2].
+SOCK_RCU_FREE is exactly for sock and for sock_put(),
+you need to look into sock_put() path to see where SOCK_RCU_FREE
+is tested.
 
-This series requires the previously-submitted Opal cleanup patches[3]. It
-applies on current linux-next/master (e.g. next-20190430).
 
-I successfully tested toggling the MBR done flag and writing the shadow MBR
-using some tools I hacked together[4] with a Samsung SSD 850 EVO drive.
+>
+> use-after-free in tun_net_xmit if tun->numqueues check passed.
 
-[1] https://lore.kernel.org/lkml/1549054223-12220-1-git-send-email-zub@linux.fjfi.cvut.cz/
-[2] https://lore.kernel.org/lkml/20190210182655.GA20491@hacktheplanet/
-[3] https://lore.kernel.org/lkml/1550103368-4605-1-git-send-email-zub@linux.fjfi.cvut.cz/
-[4] https://gitlab.com/zub2/opalctl
+Why do you believe we still have use-after-free with SOCK_RCU_FREE?
 
-Jonas Rabenstein (3):
-  block: sed-opal: add ioctl for done-mark of shadow mbr
-  block: sed-opal: ioctl for writing to shadow mbr
-  block: sed-opal: check size of shadow mbr
-
- block/opal_proto.h            |  16 ++++
- block/sed-opal.c              | 160 +++++++++++++++++++++++++++++++++-
- include/linux/sed-opal.h      |   2 +
- include/uapi/linux/sed-opal.h |  20 +++++
- 4 files changed, 196 insertions(+), 2 deletions(-)
-
--- 
-2.20.1
-
+tun_net_xmit() holds RCU read lock, so with SOCK_RCU_FREE,
+the sock won't be freed until tun_net_xmit() releases RCU read lock.
+This is just how RCU works...
