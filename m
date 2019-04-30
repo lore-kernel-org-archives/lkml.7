@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE94C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EF9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7A721707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A5B2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624966;
-	bh=z4ydPLtY8MXkZKPPSyu9HaRyKC1lHY5AqFb3OYwMQOA=;
+	s=default; t=1556624973;
+	bh=BdQhIG9wILFo7eLEILQEvL3B4jrM0QzUfDXwLdG2Sgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O3i8BW/57AlrUNeSpUv5nxMLq5Kkv6wg1hkeqwEC64LXkjy1CUKy4WG8SSPUb8+XF
-	 8h7PiEp8xTffA+5erclts5+lGhuf/vLPE9LqYXBk+4zkt7Zgom8K8IaxgZD4VOav6a
-	 yQ0zLNGPTc6F5w4+l2bol9JDFn8b2e3FdiBFanz0=
+	b=hCSHAWE900noPtxj4ZAfr7Vj3i0sw7rXkSvuYGlS2aFlgEdWL8N70CWsr8NgIqjwq
+	 1od8vRVqQVLiuy5ZVwDKEa+ZdIarfGoy6FbH5IE4o/CLDOW0b5fCEz2VR94QYiu3MG
+	 bcpzY9bUFsc1UE7W2V8H0oC6qc3rS4ULEFcJRMsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbfD3LtZ (ORCPT
+        id S1730511AbfD3Lta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730981AbfD3LtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:20 -0400
+        id S1730981AbfD3LtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F9F62054F;
-        Tue, 30 Apr 2019 11:49:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 167A22054F;
+        Tue, 30 Apr 2019 11:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624960;
-        bh=z4ydPLtY8MXkZKPPSyu9HaRyKC1lHY5AqFb3OYwMQOA=;
+        s=default; t=1556624965;
+        bh=BdQhIG9wILFo7eLEILQEvL3B4jrM0QzUfDXwLdG2Sgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1mvM+qUYs7TFwWq1iSsIYjKZNyJs+8Okb3DCUITQXUD12mOWwQKT3yitQRPsB39N
-         PPDEfMTeCWGKPSItemA8D7TH8HFr/Nzdl2qP0O2LjOIa++Ph50Zf5jK1xPDZsljmTK
-         xiimN6EhtmT8h0KTM2MeyW/+Lq9auJK28TVmw8zk=
+        b=xQf5uGBi4QkLZXS2VapUUTrwSgQrwKRmDDpNYxxNykRS79STCJqyLvBrAzNmmSx4J
+         utnFAyWhFh2OWIio85PRQ02LoN/mEWbs4dKlcN5pJtkKK4HEGTIXO30dD6ebICLzYI
+         JN5fL0/Vv2C8LxX0zx7Zw3x3IVtGQcmc5zhxJjiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
-        Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>,
-        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
-        Yao Lihua <ylhuajnu@outlook.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org, Shun-Chih Yu <shun-chih.yu@mediatek.com>,
         Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.0 37/89] dmaengine: sh: rcar-dmac: With cyclic DMA residue 0 is valid
-Date:   Tue, 30 Apr 2019 13:38:28 +0200
-Message-Id: <20190430113611.581847201@linuxfoundation.org>
+Subject: [PATCH 5.0 39/89] dmaengine: mediatek-cqdma: fix wrong register usage in mtk_cqdma_start
+Date:   Tue, 30 Apr 2019 13:38:30 +0200
+Message-Id: <20190430113611.648834954@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -64,51 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dirk Behme <dirk.behme@de.bosch.com>
+From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
 
-commit 907bd68a2edc491849e2fdcfe52c4596627bca94 upstream.
+commit 5bb5c3a3ac102158b799bf5eda871223aa5e9c25 upstream.
 
-Having a cyclic DMA, a residue 0 is not an indication of a completed
-DMA. In case of cyclic DMA make sure that dma_set_residue() is called
-and with this a residue of 0 is forwarded correctly to the caller.
+This patch fixes wrong register usage in the mtk_cqdma_start. The
+destination register should be MTK_CQDMA_DST2 instead.
 
-Fixes: 3544d2878817 ("dmaengine: rcar-dmac: use result of updated get_residue in tx_status")
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
-Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Signed-off-by: Yao Lihua <ylhuajnu@outlook.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: <stable@vger.kernel.org> # v4.8+
+Fixes: b1f01e48df5a ("dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for MT6765 SoC")
+Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/sh/rcar-dmac.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/mediatek/mtk-cqdma.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1368,6 +1368,7 @@ static enum dma_status rcar_dmac_tx_stat
- 	enum dma_status status;
- 	unsigned long flags;
- 	unsigned int residue;
-+	bool cyclic;
+--- a/drivers/dma/mediatek/mtk-cqdma.c
++++ b/drivers/dma/mediatek/mtk-cqdma.c
+@@ -253,7 +253,7 @@ static void mtk_cqdma_start(struct mtk_c
+ #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+ 	mtk_dma_set(pc, MTK_CQDMA_DST2, cvd->dest >> MTK_CQDMA_ADDR2_SHFIT);
+ #else
+-	mtk_dma_set(pc, MTK_CQDMA_SRC2, 0);
++	mtk_dma_set(pc, MTK_CQDMA_DST2, 0);
+ #endif
  
- 	status = dma_cookie_status(chan, cookie, txstate);
- 	if (status == DMA_COMPLETE || !txstate)
-@@ -1375,10 +1376,11 @@ static enum dma_status rcar_dmac_tx_stat
- 
- 	spin_lock_irqsave(&rchan->lock, flags);
- 	residue = rcar_dmac_chan_get_residue(rchan, cookie);
-+	cyclic = rchan->desc.running ? rchan->desc.running->cyclic : false;
- 	spin_unlock_irqrestore(&rchan->lock, flags);
- 
- 	/* if there's no residue, the cookie is complete */
--	if (!residue)
-+	if (!residue && !cyclic)
- 		return DMA_COMPLETE;
- 
- 	dma_set_residue(txstate, residue);
+ 	/* setup the length */
 
 
