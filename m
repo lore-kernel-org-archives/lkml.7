@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB6DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC73C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 492DC2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E5321670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625422;
-	bh=anrotz1C9fOH+b6UZBvHZyzMJdl96x+yIRuz/JNQ6TU=;
+	s=default; t=1556625427;
+	bh=WClKCRlJDD7W2lTkvYKzQ7G9NElNSD/2db0/8zxai6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWgIF8DqdaMUaK93Mnch6lb6e3Bx+7Z+e1BIyWZWVjljO+FFLUowMpYdywM8OCpBR
-	 /zRGXzCC6pHfe75A6lJ2h7XsfhBocwdfrO4eUwIaUvck85d24jVQhwIPWxuEIU0HAe
-	 9ww3auTMmver1ZQNFm88o0uL0bo5RUOHXM0ZReas=
+	b=JkvRM91k3ygSqbGnBulTvByJdHT2MaWJe3jDxEDDiNh0xjtV0ByZIbHlFIurmneWw
+	 rwbS6RwwGhsyYcTUV5GVsOB6BVpk8rJS6HFuMlc8IPVnWwP2PezsSaMIisis5sFdEV
+	 N/cEwCwOIg5A7gvtWDj5zsJ7M/zF016oMIH3dpyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfD3L5A (ORCPT
+        id S1730820AbfD3LsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34376 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730271AbfD3LsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:20 -0400
+        id S1730808AbfD3LsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 421FD2054F;
-        Tue, 30 Apr 2019 11:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19D682054F;
+        Tue, 30 Apr 2019 11:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624899;
-        bh=anrotz1C9fOH+b6UZBvHZyzMJdl96x+yIRuz/JNQ6TU=;
+        s=default; t=1556624891;
+        bh=WClKCRlJDD7W2lTkvYKzQ7G9NElNSD/2db0/8zxai6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vPbam7QuxwFykPRYxG0+7QOjXvEFCzddESUmS44WaB4mTRvZ4jVdcn83YFzhv+spU
-         N++aC7lIvW4yESW+j4aIl9B6sHChiZ1ax3zYNNaeDm/qJF9e+KSrSnuZ64ETx3Hvum
-         4XN4Sc4GtJnuVLHNWFOeVyTddiYCYOxvr2QRKIvQ=
+        b=cLM8efW7Lqm+mtuMHHz23tOJFYPAm3yva2K9EcIkQcr6aUABV1Ysl8OXhy3FoCPRh
+         cx14kzpPOba+S4/xRbEICaAUf99kHTZwxdZ1Bz3L04IFlNr1B3rgFqfxdnWYYwLZmL
+         Zv/f9NTAPl0d+K16qj6KyfLCQFQ1ZdZ3gSgkq/Ts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitrii Tcvetkov <demfloro@demfloro.ru>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 07/89] block, bfq: fix use after free in bfq_bfqq_expire
-Date:   Tue, 30 Apr 2019 13:37:58 +0200
-Message-Id: <20190430113610.117110202@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 04/89] powerpc/vdso32: fix CLOCK_MONOTONIC on PPC64
+Date:   Tue, 30 Apr 2019 13:37:55 +0200
+Message-Id: <20190430113610.012559626@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -61,141 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eed47d19d9362bdd958e4ab56af480b9dbf6b2b6 ]
+[ Upstream commit dd9a994fc68d196a052b73747e3366c57d14a09e ]
 
-The function bfq_bfqq_expire() invokes the function
-__bfq_bfqq_expire(), and the latter may free the in-service bfq-queue.
-If this happens, then no other instruction of bfq_bfqq_expire() must
-be executed, or a use-after-free will occur.
+Commit b5b4453e7912 ("powerpc/vdso64: Fix CLOCK_MONOTONIC
+inconsistencies across Y2038") changed the type of wtom_clock_sec
+to s64 on PPC64. Therefore, VDSO32 needs to read it with a 4 bytes
+shift in order to retrieve the lower part of it.
 
-Basing on the assumption that __bfq_bfqq_expire() invokes
-bfq_put_queue() on the in-service bfq-queue exactly once, the queue is
-assumed to be freed if its refcounter is equal to one right before
-invoking __bfq_bfqq_expire().
-
-But, since commit 9dee8b3b057e ("block, bfq: fix queue removal from
-weights tree") this assumption is false. __bfq_bfqq_expire() may also
-invoke bfq_weights_tree_remove() and, since commit 9dee8b3b057e
-("block, bfq: fix queue removal from weights tree"), also
-the latter function may invoke bfq_put_queue(). So __bfq_bfqq_expire()
-may invoke bfq_put_queue() twice, and this is the actual case where
-the in-service queue may happen to be freed.
-
-To address this issue, this commit moves the check on the refcounter
-of the queue right around the last bfq_put_queue() that may be invoked
-on the queue.
-
-Fixes: 9dee8b3b057e ("block, bfq: fix queue removal from weights tree")
-Reported-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: b5b4453e7912 ("powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038")
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 15 +++++++--------
- block/bfq-iosched.h |  2 +-
- block/bfq-wf2q.c    | 17 +++++++++++++++--
- 3 files changed, 23 insertions(+), 11 deletions(-)
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index e5ed28629271..72510c470001 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2804,7 +2804,7 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
- 	bfq_remove_request(q, rq);
- }
- 
--static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
-+static bool __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- {
- 	/*
- 	 * If this bfqq is shared between multiple processes, check
-@@ -2837,9 +2837,11 @@ static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- 	/*
- 	 * All in-service entities must have been properly deactivated
- 	 * or requeued before executing the next function, which
--	 * resets all in-service entites as no more in service.
-+	 * resets all in-service entities as no more in service. This
-+	 * may cause bfqq to be freed. If this happens, the next
-+	 * function returns true.
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index 1e0bc5955a40..afd516b572f8 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -98,7 +98,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	 * can be used, r7 contains NSEC_PER_SEC.
  	 */
--	__bfq_bfqd_reset_in_service(bfqd);
-+	return __bfq_bfqd_reset_in_service(bfqd);
- }
  
- /**
-@@ -3244,7 +3246,6 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
- 	bool slow;
- 	unsigned long delta = 0;
- 	struct bfq_entity *entity = &bfqq->entity;
--	int ref;
+-	lwz	r5,WTOM_CLOCK_SEC(r9)
++	lwz	r5,(WTOM_CLOCK_SEC+LOPART)(r9)
+ 	lwz	r6,WTOM_CLOCK_NSEC(r9)
  
- 	/*
- 	 * Check whether the process is slow (see bfq_bfqq_is_slow).
-@@ -3313,10 +3314,8 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
- 	 * reason.
- 	 */
- 	__bfq_bfqq_recalc_budget(bfqd, bfqq, reason);
--	ref = bfqq->ref;
--	__bfq_bfqq_expire(bfqd, bfqq);
--
--	if (ref == 1) /* bfqq is gone, no more actions on it */
-+	if (__bfq_bfqq_expire(bfqd, bfqq))
-+		/* bfqq is gone, no more actions on it */
- 		return;
- 
- 	bfqq->injected_service = 0;
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 746bd570b85a..ca98c98a8179 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -993,7 +993,7 @@ bool __bfq_deactivate_entity(struct bfq_entity *entity,
- 			     bool ins_into_idle_tree);
- bool next_queue_may_preempt(struct bfq_data *bfqd);
- struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd);
--void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
-+bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
- void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 			 bool ins_into_idle_tree, bool expiration);
- void bfq_activate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq);
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 4aab1a8191f0..8077bf71d2ac 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -1599,7 +1599,8 @@ struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd)
- 	return bfqq;
- }
- 
--void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
-+/* returns true if the in-service queue gets freed */
-+bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
- {
- 	struct bfq_queue *in_serv_bfqq = bfqd->in_service_queue;
- 	struct bfq_entity *in_serv_entity = &in_serv_bfqq->entity;
-@@ -1623,8 +1624,20 @@ void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
- 	 * service tree either, then release the service reference to
- 	 * the queue it represents (taken with bfq_get_entity).
- 	 */
--	if (!in_serv_entity->on_st)
-+	if (!in_serv_entity->on_st) {
-+		/*
-+		 * If no process is referencing in_serv_bfqq any
-+		 * longer, then the service reference may be the only
-+		 * reference to the queue. If this is the case, then
-+		 * bfqq gets freed here.
-+		 */
-+		int ref = in_serv_bfqq->ref;
- 		bfq_put_queue(in_serv_bfqq);
-+		if (ref == 1)
-+			return true;
-+	}
-+
-+	return false;
- }
- 
- void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 	/* We now have our offset in r5,r6. We create a fake dependency
 -- 
 2.19.1
 
