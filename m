@@ -2,170 +2,277 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF8CC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ED1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D6821743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A096B2087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ApRLQsRW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFwObtZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfD3V5u (ORCPT
+        id S1727119AbfD3V7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 17:57:50 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:41436 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfD3V5u (ORCPT
+        Tue, 30 Apr 2019 17:59:18 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40384 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfD3V7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 17:57:50 -0400
-Received: by mail-vk1-f195.google.com with SMTP id q193so2188052vkf.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 14:57:49 -0700 (PDT)
+        Tue, 30 Apr 2019 17:59:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e56so7319678ede.7;
+        Tue, 30 Apr 2019 14:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nrmJg5mJkdOB4HxRtlUftJxszIDcsroWGgIpxMUexwY=;
-        b=ApRLQsRWLYDRB1zjywf8XpfE+dW75Bh0LDN3wBrHZvQM/bXYOhCwOGGI+1zXg59ILI
-         0gnOtO2l5+pHTLyDMucFKFf69zIPwLIGs+etrKYFG0DV7GFQX3Amh06repKBlVkPOxCo
-         nTYhV1brRDRIvMaLpnT8uySSjAIWhQTwI1dTs=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=LJjGuRjlqfpGmpPjlCquHx8kcOlygrzBLbFITedv3d0=;
+        b=uFwObtZ6pwaI0kZMGhis4CSKl4QPHu3xJ9HCJboLlDvKX9a8Zn70X3fqK6/XxuH4F6
+         DvvfdfwU2O+ijVVWImqCXFSmPzLH67y2ODtdTQUWSuagCJOifDcEK377rOJ/pQmZuk/n
+         ltAND11Y0EG3vxVEpxtK6WoN31mN+rISlS5nZD/ToymIfnhJCLaj9zXl6lA4kPLxOKnh
+         60giF8Wj432AFz3JZgqm4uNsMHt4nhB/psIRgNHZ+H6l/40ge1dblxcbD/34zLx+6w39
+         FU/1603Vd88MO+djd5ufYUKtVPAh5WqwECV+5DbxaMVOKdP9LOyqc/v+MxMa704/DXcs
+         AMPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nrmJg5mJkdOB4HxRtlUftJxszIDcsroWGgIpxMUexwY=;
-        b=sjx7U/h8Hnr164h0h+QAYPsYpN/RXtWkprH/+vmGA43fYhMVjPJ0UqfQZ9G5/XqW2C
-         vEbNlfeSVBjaCk6/CzrqUOXG1sOLPJDK3HjiOU4H/SZsLgnxjEWcHKX/wQuX9cyPQwfm
-         SuzK4rueVpAm06cXsi9PktfFBwBXYgpOw7WGbRb92P7bv7FB3ip0cjKoaqvyqvaigqt0
-         Q9q0rgwd0EDnYA7+GpnGFUdzwSSFMWxPtX9GCs39GO/iTkVKRF8LHK0/g4j2kZE3/BPA
-         oAPTtCu+qHT1rGAkzqadGEtjRfMb7kBnkU36Sv1ANBa6y/1zgdAeCND8ZpavcuC4sEyb
-         Wi7Q==
-X-Gm-Message-State: APjAAAViaD4fDv9Bm5LUHZqoH+l35jP6L0wZnKjMCRroED/BsndUZQRR
-        gumihtXbZ+zmumZXEy2xBx6jMUWZ+sA=
-X-Google-Smtp-Source: APXvYqx44LXy/3jlB94VlevSJiyYelBBSQP+NWhaSNA49orabirJZ9dNUxQOVPseBpe5Do8SGSbtNA==
-X-Received: by 2002:a1f:a544:: with SMTP id o65mr38073041vke.86.1556661468798;
-        Tue, 30 Apr 2019 14:57:48 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id b5sm8360510vsd.18.2019.04.30.14.57.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 14:57:47 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id o33so5304159uae.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 14:57:47 -0700 (PDT)
-X-Received: by 2002:ab0:1646:: with SMTP id l6mr35938169uae.75.1556661467134;
- Tue, 30 Apr 2019 14:57:47 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=LJjGuRjlqfpGmpPjlCquHx8kcOlygrzBLbFITedv3d0=;
+        b=HkVVVh9UtXDmkwp5FLnW8zvBJRoL0xalKbmZrFqTaVmZLrZMPtKww1qQf0pEkvZGID
+         wpXQNtQNNm9gSSDDq7sD5fBvcEpNRRCH3lzgiDkZGkYYXH8xS2t0ul68EmNh7NMU/SDB
+         0ciG2izYlE1I3KQl3han/VCR7Vm79PEaEW3371OUcGX3v2Zv3zYmRXQu8J5gBVtEVyNm
+         CEQWx2IqvchCVCX3KSvzt4SGem2VFYoYrPLk65KiM4c92Umf7TYIUz/bBtHDiIKTbyPx
+         phHPf8vbP/bh4U3e8mr8EwfIyGIqqqwcwYw+QaVjQmpfjYpODqAtznNpXfuYA03ZMj2j
+         xJkw==
+X-Gm-Message-State: APjAAAVRKrhS1JljzpKxC1xw1CTV2xgv9yNjYjG/utVXD3+vNt9jv1fR
+        jmXmAfaMMKGmytFMVF2W1tLKbSQJ
+X-Google-Smtp-Source: APXvYqw46cVWQ+ntHFnusosHesUXZioNi+MAuWzAVAQXAwqcBz/IQNDzCyZihW4BySX+ZIBX78G6mg==
+X-Received: by 2002:a50:99ca:: with SMTP id n10mr7288099edb.279.1556661554794;
+        Tue, 30 Apr 2019 14:59:14 -0700 (PDT)
+Received: from [172.30.89.180] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id r2sm2001990ejp.76.2019.04.30.14.59.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 14:59:13 -0700 (PDT)
+Subject: Re: [PATCH v2 1/8] media: staging/imx: Switch to sync registration
+ for IPU subdevs
+To:     Rui Miguel Silva <rmfrfs@gmail.com>
+Cc:     linux-media@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190428190916.26567-1-slongerbeam@gmail.com>
+ <20190428190916.26567-2-slongerbeam@gmail.com> <m3a7g7nom1.fsf@gmail.com>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <d73e9504-5d4a-14cd-d834-0e21d0ca0d65@gmail.com>
+Date:   Tue, 30 Apr 2019 14:59:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190430214724.66699-1-samitolvanen@google.com>
-In-Reply-To: <20190430214724.66699-1-samitolvanen@google.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 30 Apr 2019 14:57:35 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jLfLsiKJurVL_+zr5t6D1B6OMw2hPo5WZSjUhv1-4AONg@mail.gmail.com>
-Message-ID: <CAGXu5jLfLsiKJurVL_+zr5t6D1B6OMw2hPo5WZSjUhv1-4AONg@mail.gmail.com>
-Subject: Re: [PATCH] mm: fix filler_t callback type mismatch with readpage
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <m3a7g7nom1.fsf@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 2:47 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> Casting mapping->a_ops->readpage to filler_t causes an indirect call
-> type mismatch with Control-Flow Integrity checking. This change fixes
-> the mismatch in read_cache_page_gfp and read_mapping_page by adding a
-> stub callback function with the correct type.
->
-> As the kernel only has a couple of instances of read_cache_page(s)
-> being called with a callback function that doesn't accept struct file*
-> as the first parameter, Android kernels have previously fixed this by
-> changing filler_t to int (*filler_t)(struct file *, struct page *):
->
->   https://android-review.googlesource.com/c/kernel/common/+/671260
->
-> While this approach did fix most of the issues, the few remaining
-> cases where unrelated private data are passed to the callback become
-> rather awkward. Keeping filler_t unchanged and using a stub function
-> for readpage instead solves this problem.
->
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Thanks Rui for catching the bisect problem, I will fix for v3.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Steve
 
--Kees
 
+On 4/30/19 2:56 PM, Rui Miguel Silva wrote:
+> Hi Steve,
+> On Sun 28 Apr 2019 at 20:09, Steve Longerbeam wrote:
+>> Because the IPU sub-devices VDIC and IC are not present in the
+>> device-tree, platform devices were created for them instead. This
+>> allowed these sub-devices to be added to the media device's async
+>> notifier and registered asynchronously along with the other
+>> sub-devices that do have a device-tree presence (CSI and devices
+>> external to the IPU and SoC).
+>>
+>> But that approach isn't really necessary. The IPU sub-devices don't
+>> actually require a backing device (sd->dev is allowed to be NULL).
+>> And that approach can't get around the fact that the IPU sub-devices
+>> are not part of a device hierarchy, which makes it awkward to retrieve
+>> the parent IPU of these devices.
+>>
+>> By registering them synchronously, they can be registered from the CSI
+>> async bound notifier, so the init function for them can be given the CSI
+>> subdev, who's dev->parent is the IPU. That is a somewhat cleaner way
+>> to retrieve the parent IPU.
+>>
+>> So convert to synchronous registration for the VDIC and IC task
+>> sub-devices, at the time a CSI sub-device is bound. There is no longer
+>> a backing device for them (sd->dev is NULL), but that's ok. Also
+>> set the VDIC/IC sub-device owner as the IPU, so that a reference can
+>> be taken on the IPU module.
+>>
+>> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+> I am trying to bisect when my capture starts to fail to work with
+> this series, since they are so many changes and reorg that I got
+> lost on some of them. But... see below.
+>
+>> ---
+>>   drivers/staging/media/imx/imx-ic-common.c     |  70 ++--
+>>   drivers/staging/media/imx/imx-ic-prp.c        |  34 +-
+>>   drivers/staging/media/imx/imx-ic-prpencvf.c   |  70 ++--
+>>   drivers/staging/media/imx/imx-ic.h            |   7 +-
+>>   drivers/staging/media/imx/imx-media-capture.c |   7 +-
+>>   drivers/staging/media/imx/imx-media-csi.c     |   2 +-
+>>   drivers/staging/media/imx/imx-media-dev.c     | 121 +-----
+>>   .../staging/media/imx/imx-media-internal-sd.c | 356 ++++++++----------
+>>   drivers/staging/media/imx/imx-media-of.c      |  38 +-
+>>   drivers/staging/media/imx/imx-media-vdic.c    |  85 ++---
+>>   drivers/staging/media/imx/imx-media.h         |  67 ++--
+>>   drivers/staging/media/imx/imx7-media-csi.c    |   3 +-
+>>   12 files changed, 325 insertions(+), 535 deletions(-)
+>>
+>> +	dev_dbg(priv->ipu_dev, "%s: link setup %s -> %s",
+> <snip>
+>
+>> +		sd->name, remote->entity->name, local->entity->name);
+>>   
+>>   	mutex_lock(&priv->lock);
+>>   
+>> @@ -864,9 +856,6 @@ static int vdic_registered(struct v4l2_subdev *sd)
+>>   	int i, ret;
+>>   	u32 code;
+>>   
+>> -	/* get media device */
+>> -	priv->md = dev_get_drvdata(sd->v4l2_dev->dev);
+>> -
+>>   	for (i = 0; i < VDIC_NUM_PADS; i++) {
+>>   		priv->pad[i].flags = (i == VDIC_SRC_PAD_DIRECT) ?
+>>   			MEDIA_PAD_FL_SOURCE : MEDIA_PAD_FL_SINK;
+>> @@ -938,77 +927,55 @@ static const struct v4l2_subdev_internal_ops vdic_internal_ops = {
+>>   	.unregistered = vdic_unregistered,
+>>   };
+>>   
+>> -static int imx_vdic_probe(struct platform_device *pdev)
+>> +struct v4l2_subdev *imx_media_vdic_register(struct imx_media_dev *imxmd,
+>> +					    struct device *ipu_dev,
+>> +					    struct ipu_soc *ipu,
+>> +					    u32 grp_id)
+>>   {
+>> -	struct imx_media_ipu_internal_sd_pdata *pdata;
+>> +	struct v4l2_device *v4l2_dev = &imxmd->v4l2_dev;
+>>   	struct vdic_priv *priv;
+>>   	int ret;
+>>   
+>> -	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>> +	priv = devm_kzalloc(ipu_dev, sizeof(*priv), GFP_KERNEL);
+>>   	if (!priv)
+>> -		return -ENOMEM;
+>> +		return ERR_PTR(-ENOMEM);
+>>   
+>> -	platform_set_drvdata(pdev, &priv->sd);
+>> -	priv->dev = &pdev->dev;
+>> -
+>> -	pdata = priv->dev->platform_data;
+>> -	priv->ipu_id = pdata->ipu_id;
+>> +	priv->ipu_dev = ipu_dev;
+>> +	priv->ipu = ipu;
+>> +	priv->md = imxmd;
+>>   
+>>   	v4l2_subdev_init(&priv->sd, &vdic_subdev_ops);
+>>   	v4l2_set_subdevdata(&priv->sd, priv);
+>>   	priv->sd.internal_ops = &vdic_internal_ops;
+>>   	priv->sd.entity.ops = &vdic_entity_ops;
+>>   	priv->sd.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
+>> -	priv->sd.dev = &pdev->dev;
+>> -	priv->sd.owner = THIS_MODULE;
+>> +	priv->sd.owner = ipu_dev->driver->owner;
+>>   	priv->sd.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
+>> -	/* get our group id */
+>> -	priv->sd.grp_id = pdata->grp_id;
+>> -	strscpy(priv->sd.name, pdata->sd_name, sizeof(priv->sd.name));
+>> +	priv->sd.grp_id = grp_id;
+>> +	imx_media_grp_id_to_sd_name(priv->sd.name, sizeof(priv->sd.name),
+>> +				    priv->sd.grp_id, ipu_get_num(ipu));
+>>   
+>>   	mutex_init(&priv->lock);
+>>   
+>> -	ret = v4l2_async_register_subdev(&priv->sd);
+>> +	ret = v4l2_device_register_subdev(v4l2_dev, &priv->sd);
+>>   	if (ret)
+>>   		goto free;
+>>   
+>> -	return 0;
+>> +	return &priv->sd;
+>>   free:
+>>   	mutex_destroy(&priv->lock);
+>> -	return ret;
+>> +	return ERR_PTR(ret);
+>>   }
+>>   
+>> -static int imx_vdic_remove(struct platform_device *pdev)
+>> +int imx_media_vdic_unregister(struct v4l2_subdev *sd)
+>>   {
+>> -	struct v4l2_subdev *sd = platform_get_drvdata(pdev);
+>>   	struct vdic_priv *priv = v4l2_get_subdevdata(sd);
+>>   
+>>   	v4l2_info(sd, "Removing\n");
+>>   
+>> -	v4l2_async_unregister_subdev(sd);
+>> +	v4l2_device_unregister_subdev(sd);
+>>   	mutex_destroy(&priv->lock);
+>>   	media_entity_cleanup(&sd->entity);
+>>   
+>>   	return 0;
+>>   }
+>> -
+>> -static const struct platform_device_id imx_vdic_ids[] = {
+>> -	{ .name = "imx-ipuv3-vdic" },
+>> -	{ },
+>> -};
+>> -MODULE_DEVICE_TABLE(platform, imx_vdic_ids);
+>> -
+>> -static struct platform_driver imx_vdic_driver = {
+>> -	.probe = imx_vdic_probe,
+>> -	.remove = imx_vdic_remove,
+>> -	.id_table = imx_vdic_ids,
+>> -	.driver = {
+>> -		.name = "imx-ipuv3-vdic",
+>> -	},
+>> -};
+>> -module_platform_driver(imx_vdic_driver);
+>> -
+>> -MODULE_DESCRIPTION("i.MX VDIC subdev driver");
+>> -MODULE_AUTHOR("Steve Longerbeam <steve_longerbeam@mentor.com>");
+>> -MODULE_LICENSE("GPL");
+>> -MODULE_ALIAS("platform:imx-ipuv3-vdic");
+> This breaks compilation until patch 6/8. I think you need to make
+> some makefile changes also in this patch.
+>
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/staging/media/imx/imx-media-ic.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/staging/media/imx/imx-media-vdic.o
+> see include/linux/module.h for more information
+> ERROR: "imx_media_ic_register" [drivers/staging/media/imx/imx-media.ko] undefined!
+> ERROR: "imx_media_vdic_register" [drivers/staging/media/imx/imx-media.ko] undefined!
+> ERROR: "imx_media_vdic_unregister" [drivers/staging/media/imx/imx-media.ko] undefined!
+> ERROR: "imx_media_ic_unregister" [drivers/staging/media/imx/imx-media.ko] undefined!
+> make[2]: *** [scripts/Makefile.modpost:91: __modpost] Error 1
+> make[1]: *** [/dev/shm/linux-git/Makefile:1263: modules] Error 2
+> make: *** [Makefile:170: sub-make] Error 2
+>
 > ---
->  include/linux/pagemap.h | 22 +++++++++++++++++++---
->  mm/filemap.c            |  7 +++++--
->  2 files changed, 24 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index bcf909d0de5f8..e5652a5ba1584 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -383,11 +383,27 @@ extern struct page * read_cache_page_gfp(struct address_space *mapping,
->  extern int read_cache_pages(struct address_space *mapping,
->                 struct list_head *pages, filler_t *filler, void *data);
->
-> +struct file_filler_data {
-> +       int (*filler)(struct file *, struct page *);
-> +       struct file *filp;
-> +};
-> +
-> +static inline int __file_filler(void *data, struct page *page)
-> +{
-> +       struct file_filler_data *ffd = (struct file_filler_data *)data;
-> +
-> +       return ffd->filler(ffd->filp, page);
-> +}
-> +
->  static inline struct page *read_mapping_page(struct address_space *mapping,
-> -                               pgoff_t index, void *data)
-> +                               pgoff_t index, struct file *filp)
->  {
-> -       filler_t *filler = (filler_t *)mapping->a_ops->readpage;
-> -       return read_cache_page(mapping, index, filler, data);
-> +       struct file_filler_data data = {
-> +               .filler = mapping->a_ops->readpage,
-> +               .filp   = filp
-> +       };
-> +
-> +       return read_cache_page(mapping, index, __file_filler, &data);
->  }
->
->  /*
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index d78f577baef2a..6cc41c25ca3bf 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -2977,9 +2977,12 @@ struct page *read_cache_page_gfp(struct address_space *mapping,
->                                 pgoff_t index,
->                                 gfp_t gfp)
->  {
-> -       filler_t *filler = (filler_t *)mapping->a_ops->readpage;
-> +       struct file_filler_data data = {
-> +               .filler = mapping->a_ops->readpage,
-> +               .filp   = NULL
-> +       };
->
-> -       return do_read_cache_page(mapping, index, filler, NULL, gfp);
-> +       return do_read_cache_page(mapping, index, __file_filler, &data, gfp);
->  }
->  EXPORT_SYMBOL(read_cache_page_gfp);
->
-> --
-> 2.21.0.593.g511ec345e18-goog
+> Cheers,
+> 	Rui
 >
 
-
--- 
-Kees Cook
