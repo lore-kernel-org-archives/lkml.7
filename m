@@ -2,115 +2,69 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB984C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854A0C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEE921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5755621734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556648644;
-	bh=9oaD9A4M16f814eUiYybr55q9veyq6DrGjdRObx772s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZFXwlK1UVhURnLbQf8t8PeKIE1pH0at4d9zZ/PXHnsdkir9hdl/pVVWdMJFYgccNt
-	 zgnlPwmaplzw7lxNbWEGg1TiXtL28pHhoohF9Y69idfSmaq7qqLOOZCWF8Qm3DXQuI
-	 LTKY9HvASt8Da3AQD3WqZSBGoEtJN3ffch3vkRvA=
+	s=default; t=1556648705;
+	bh=lH6236Wdd2e1xct8m9E1lVmpcCCpId/hAfshAXY5srE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=t1ZIHh+2x5REExuqHgbrYrRkxU911G5nQ77sStx0De17TAp8NfE29vsKT6Pklo70O
+	 nky/cBzsat/UAvbeRFG/cjny4voZfYs+TcAQeOLWeust5BULML9UfZAlEH8hLRya6m
+	 lnlNzF04Yta6Bj8JET5xXzu6IUJ3rYdof9dh0Pyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfD3SYD (ORCPT
+        id S1727071AbfD3SZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 14:24:03 -0400
-Received: from mga06.intel.com ([134.134.136.31]:35329 "EHLO mga06.intel.com"
+        Tue, 30 Apr 2019 14:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbfD3SYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:24:02 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:24:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="169379061"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Apr 2019 11:24:01 -0700
-Date:   Tue, 30 Apr 2019 12:18:13 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Alex G <mr.nuke.me@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20190430181813.GC25654@localhost.localdomain>
-References: <20190429185611.121751-1-helgaas@kernel.org>
- <20190429185611.121751-2-helgaas@kernel.org>
- <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
- <20190430161151.GB145057@google.com>
- <20190430180508.GB25654@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430180508.GB25654@localhost.localdomain>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+        id S1726431AbfD3SZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:25:04 -0400
+Subject: Re: [GIT PULL] SELinux fixes for v5.1 (#3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556648703;
+        bh=lH6236Wdd2e1xct8m9E1lVmpcCCpId/hAfshAXY5srE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=2ChchlfVxElYvAyi4CHpXDHp83y+g9Dqo/R9JhaKY1nUZEw/T59NtH+OXHce5+R81
+         G4lTIwxRSy6qMWGwC2fumbqt/7CavoTu8+o+NYpZ/zcyZlP1i+C7J1iUC5y86fl+ym
+         ywk631HhYicttyS328caszXhtFVMW08Qh05fUKwg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAHC9VhQ6QF7LvuFjr2YdYNX-3pW80nm+VJh4jK080JsKOzOVsA@mail.gmail.com>
+References: <CAHC9VhQ6QF7LvuFjr2YdYNX-3pW80nm+VJh4jK080JsKOzOVsA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAHC9VhQ6QF7LvuFjr2YdYNX-3pW80nm+VJh4jK080JsKOzOVsA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+ tags/selinux-pr-20190429
+X-PR-Tracked-Commit-Id: dfbd199a7cfe3e3cd8531e1353cdbd7175bfbc5e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fea27bc7ff43a8beb6bebe6d4fe9eb889e185d4a
+Message-Id: <155664870354.13312.10312761470463339803.pr-tracker-bot@kernel.org>
+Date:   Tue, 30 Apr 2019 18:25:03 +0000
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:05:09PM -0600, Keith Busch wrote:
-> On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
-> > > I'm not convinced a revert is the best call.
-> > 
-> > I have very limited options at this stage of the release, but I'd be
-> > glad to hear suggestions.  My concern is that if we release v5.1
-> > as-is, we'll spend a lot of energy on those false positives.
-> 
-> May be too late now if the revert is queued up, but I think this feature
-> should have been a default 'false' Kconfig bool rather than always on.
+The pull request you sent on Mon, 29 Apr 2019 18:55:19 -0400:
 
-This is what I mean:
+> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20190429
 
----
-diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-index 5cbdbca904ac..7f480685df93 100644
---- a/drivers/pci/pcie/Kconfig
-+++ b/drivers/pci/pcie/Kconfig
-@@ -142,3 +142,12 @@ config PCIE_PTM
- 
- 	  This is only useful if you have devices that support PTM, but it
- 	  is safe to enable even if you don't.
-+
-+config PCIE_BW
-+	bool "PCI Express Bandwidth Change Notification"
-+	default n
-+	depends on PCIEPORTBUS
-+	help
-+	  This enables PCI Express Bandwidth Change Notification. If
-+	  you know link width or rate changes occur only to correct
-+	  unreliable links, you may answer Y.
-diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-index f1d7bc1e5efa..d356a5bdb158 100644
---- a/drivers/pci/pcie/Makefile
-+++ b/drivers/pci/pcie/Makefile
-@@ -3,7 +3,6 @@
- # Makefile for PCI Express features and port driver
- 
- pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
--pcieportdrv-y			+= bw_notification.o
- 
- obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
- 
-@@ -13,3 +12,4 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
- obj-$(CONFIG_PCIE_PME)		+= pme.o
- obj-$(CONFIG_PCIE_DPC)		+= dpc.o
- obj-$(CONFIG_PCIE_PTM)		+= ptm.o
-+obj-$(CONFIG_PCIE_BW)		:= bw_notification.o
---
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fea27bc7ff43a8beb6bebe6d4fe9eb889e185d4a
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
