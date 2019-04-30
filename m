@@ -2,249 +2,116 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5CEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD61C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6982075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E902075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=outv.im header.i=@outv.im header.b="bujAN6lS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yll4mLx8"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="mM563E5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfD3GQ4 (ORCPT
+        id S1726264AbfD3GTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:16:56 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:44011 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725554AbfD3GQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:16:56 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 361A32B31;
-        Tue, 30 Apr 2019 02:16:55 -0400 (EDT)
-Received: from imap7 ([10.202.2.57])
-  by compute6.internal (MEProxy); Tue, 30 Apr 2019 02:16:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outv.im; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=03QS6RZPHtW8N3aqWEZwQJvrvEGYI5K
-        PAoUcPMOtzvQ=; b=bujAN6lSzV9JQLAR+PVnZUoRAYzRlUUVfbitJlymTGt1Q96
-        TPvjaELB9UGUiBop7Ivdd78vDLStHctV1FmhAa6iaGkzVawj0I+h6mK+FriKStX2
-        7ZpLit9Ytik6m7Y4eZtMxZVcXwPN3zQZVDieCjmxQJOhU7xtV7ssX2EoygHE5VBa
-        r7ba07ygEgZvZ8LOyXzvMyHuzyxahoKDkDjt5W7+W/lt7jaYNCP62gm7eiH14o3w
-        AUauYO6F5JurPGvC9McH3Rd9yWIhwAFeyBwWHQ36W3OeMQkw0982OAbzmWht/dcO
-        h7pp/i0zT3Vbcuw5uIOa2sF77mL0Mhi0UmBsLOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=03QS6R
-        ZPHtW8N3aqWEZwQJvrvEGYI5KPAoUcPMOtzvQ=; b=yll4mLx8Yec6B0RVkYypxv
-        oNRo0wd9RTtLBQMwB/910Hx9IVQzzTltN3OsQRXiHRjkREWx914JOUyk7YbeXjZd
-        Zo8zzlhCN1ZrZaUv1tO/nf7aGrOPNnf6rl69UaLSkyi7Ma8oofz6B+TPxwV+HapH
-        fQwasQeBSs2kNuUZHVx0otHNdWmQFYfimlVCVeVl/WxBemrYs4wq1dKn+LutJSYJ
-        aQ9Gr5B1d+l8Rp3gY1nNVXpRQ5QIjXeu1fMpz9BArj1sJGzXdZLAXIEtzO+A0nP1
-        mfPWj+aB99XLjP8YhOgNvd/vJi/dVf2DCmO3MhSCSPbaMXUF+tTIeH3ugzJ7MMzQ
-        ==
-X-ME-Sender: <xms:VejHXCKIVYD6506mJV0Sjn4if2pq99zTwLmsSzJR3Y5Nolb9O5mD-Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgddutdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfgjfhffhffvufgtsehttd
-    ertderredtnecuhfhrohhmpedfqfhuthhvihcuggdfuceoihesohhuthhvrdhimheqnecu
-    ffhomhgrihhnpegrrhgthhhlihhnuhigrdhorhhgnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehisehouhhtvhdrihhmnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:VejHXOZ3Nhk9pqIScxa7nngCRff4fqwasnpjRMWMMEXPmxCOcp6Phg>
-    <xmx:VejHXNudnGlm3O0WCZDfrilweQoKy3H0GFFZvYv-nFCW6bDz44_utA>
-    <xmx:VejHXLsBZSyGScsv5AdUBbMBYL92XljcXcH4CaJDpCGwHCxtVLJanQ>
-    <xmx:VujHXFOPH7wpzCrcjwhs6RokuyLN32ujrY1nAaLEL3fmo_tXl60o3w>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 79A15211BA; Tue, 30 Apr 2019 02:16:53 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-448-g5cc1c91-fmstable-20190429v1
-Mime-Version: 1.0
-Message-Id: <9db8c26a-d9fd-4cc9-a3aa-bd593d8f73ac@www.fastmail.com>
-In-Reply-To: <0c87e12c-c964-40a3-b97e-af2286c318c4@www.fastmail.com>
-References: <0c87e12c-c964-40a3-b97e-af2286c318c4@www.fastmail.com>
-Date:   Tue, 30 Apr 2019 02:16:32 -0400
-From:   "Outvi V" <i@outv.im>
-To:     dmitry.torokhov@gmail.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [SOLVED] PROBLEM: Elan touchpad regression on Kernel 5.0.10
-Content-Type: text/plain
+        Tue, 30 Apr 2019 02:19:43 -0400
+Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:12590
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725554AbfD3GTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 02:19:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KRfCslS5BivaJdQ4r8y29b9HXjtsBhEvUGgi3eov+C4=;
+ b=mM563E5ndDL39aWGryqD3wmMUj9yW0vHp7tTLYhPMwk/3BMPpS7AGI32L7zGYPYC9q8W9TgBtvevM95v0Dt4I6MElciZgi6/081FxLppUv1oPZyug56EppWKS88+3VKx/babfH2nKSJUCpzZ5UMsHNilm+Qe9a/RtEFHlhhguQA=
+Received: from DB7PR08MB3530.eurprd08.prod.outlook.com (20.177.120.80) by
+ DB7PR08MB3130.eurprd08.prod.outlook.com (52.134.110.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Tue, 30 Apr 2019 06:19:25 +0000
+Received: from DB7PR08MB3530.eurprd08.prod.outlook.com
+ ([fe80::90f3:99ab:9445:1187]) by DB7PR08MB3530.eurprd08.prod.outlook.com
+ ([fe80::90f3:99ab:9445:1187%3]) with mapi id 15.20.1856.008; Tue, 30 Apr 2019
+ 06:19:25 +0000
+From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: [PATCH v1 0/2] drm/komeda: Add SMMU support on Komeda driver
+Thread-Topic: [PATCH v1 0/2] drm/komeda: Add SMMU support on Komeda driver
+Thread-Index: AQHU/xyoEzxyzFw260iTS8/Rf+MrxQ==
+Date:   Tue, 30 Apr 2019 06:19:24 +0000
+Message-ID: <1556605118-22700-1-git-send-email-lowry.li@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2P15301CA0024.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:202:1::34) To DB7PR08MB3530.eurprd08.prod.outlook.com
+ (2603:10a6:10:49::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Lowry.Li@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8969a0aa-c562-4642-6a1c-08d6cd33ca81
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB7PR08MB3130;
+x-ms-traffictypediagnostic: DB7PR08MB3130:
+x-ms-exchange-purlcount: 3
+nodisclaimer: True
+x-microsoft-antispam-prvs: <DB7PR08MB31300B291E445B9DAAE8F1959F3A0@DB7PR08MB3130.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00235A1EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(376002)(136003)(396003)(366004)(189003)(199004)(6436002)(36756003)(110136005)(386003)(97736004)(8676002)(81156014)(81166006)(14454004)(26005)(3846002)(478600001)(5660300002)(8936002)(54906003)(2501003)(55236004)(102836004)(6486002)(25786009)(6506007)(6116002)(4326008)(256004)(316002)(966005)(68736007)(305945005)(66066001)(7736002)(86362001)(72206003)(2201001)(486006)(2616005)(2906002)(6306002)(6512007)(73956011)(66946007)(53936002)(476003)(6636002)(50226002)(66446008)(4744005)(66476007)(52116002)(71200400001)(71190400001)(186003)(64756008)(99286004)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3130;H:DB7PR08MB3530.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sD5ZCMsBrOwvopU4dnKGWZtfXwqk+OL3YZC2nuLexmgHZOl4dUsWWOv4sDRJmzbEM5OllePjRAFkGYxhEa2PSaN0+22L8e6KLS93lbD1WthmHUS4Ha2QnQiXOmNBOyHSxIwY+IYOTppFYGgCYEtGOsCe6sOZLQWkAlYgREKkruNM3CdUtBFtzlkzXLpuQQUfBPrEhEOIuIbFLCLXqvcYZ41IAqgNLTv/UhYvNBv1yUZYcx6Ch8B5OpDibq020jJeRIf67sNyME7QJHMo+CJhy2L9BnX9qTgN2kvvG6fIBZHT9Mk8wBwW+qF/g34ilyifWxdtTx6b17f7rfrP02MZo8JSlRZjjEWRjhKuvEwjaCEoOrXvbuJ+Hc1ulrj25uTLo036js1jXn+jbxY4bhbzeJvnsnd+7/lzyT0ZJDXZkEg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8969a0aa-c562-4642-6a1c-08d6cd33ca81
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 06:19:24.9102
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-  After a cold restart, this problems seem to be solved automatically on kernel 5.0.10.
-
-Regards,
-
-On Tue, Apr 30, 2019, at 12:21, Outvi V wrote:
-> Hello,
-> 
-> [1.] One line summary of the problem: Elan touchpad regression on Kernel 5.0.10
-> 
-> [2.] Full description of the problem/report:
->   Elan touchpad does not work on 5.0.10 while working on 5.0.9
-> 
-> [3.] Keywords: elan_i2c_core elan i2c touchpad 5.0.10
-> 
-> [4.] Kernel information
-> [4.1.] Kernel version:
->   Linux version 5.0.10-arch1-1-ARCH (builduser@heftig-2592) (gcc 
-> version 8.3.0 (GCC)) #1 SMP PREEMPT Sat Apr 27 20:06:45 UTC 2019
-> [4.2.] Kernel .config file:
->   I'm not sure, but I think it may be referring to
->   
-> https://git.archlinux.org/svntogit/packages.git/tree/trunk/config?h=packages/linux
-> [5.] Most recent kernel version which did not have the bug: 5.0.9
-> 
-> [6.] Output of Oops.. message (if applicable) with symbolic information
->      resolved (Not appliable)
-> [7.] A small shell script or example program which triggers the
->      problem: (Not appliable)
-> 
-> [8.] Environment
-> [8.1.] Software (add the output of the ver_linux script here)
->   
-> Linux sheltty 5.0.10-arch1-1-ARCH #1 SMP PREEMPT Sat Apr 27 20:06:45 
-> UTC 2019 x86_64 GNU/Linux
-> 
-> GNU C                   8.3.0
-> GNU Make                4.2.1
-> Binutils                2.32
-> Util-linux              2.33.2
-> Mount                   2.33.2
-> Module-init-tools       26
-> E2fsprogs               1.45.0
-> Jfsutils                1.1.15
-> Reiserfsprogs           3.6.27
-> Xfsprogs                4.20.0
-> PPP                     2.4.7
-> Linux C Library         2.29
-> Dynamic linker (ldd)    2.29
-> Linux C++ Library       6.0.25
-> Procps                  3.3.15
-> Kbd                     2.0.4
-> Console-tools           2.0.4
-> Sh-utils                8.31
-> Udev                    242
-> Modules Loaded          8021q 8250_dw ac ac97_bus acpi_thermal_rel 
-> aesni_intel aes_x86_64 agpgart ahci arc4 atkbd battery bbswitch 
-> bluetooth btbcm btintel btrtl btusb cfg80211 coretemp crc16 
-> crc32c_generic crc32c_intel crc32_pclmul crct10dif_pclmul cryptd 
-> crypto_simd crypto_user drm drm_kms_helper ecdh_generic elan_i2c evdev 
-> ext4 fat fb_sys_fops fscrypto garp ghash_clmulni_intel glue_helper hid 
-> hid_generic i2c_algo_bit i2c_hid i2c_i801 i8042 i915 idma64 input_leds 
-> int3400_thermal int3403_thermal int340x_thermal_zone intel_cstate 
-> intel_gtt intel_lpss intel_lpss_pci intel_pch_thermal intel_powerclamp 
-> intel_rapl intel_rapl_perf intel_soc_dts_iosf intel_uncore 
-> intel_wmi_thunderbolt ip_tables irqbypass iTCO_vendor_support iTCO_wdt 
-> jbd2 joydev kvm kvmgt kvm_intel ledtrig_audio libahci libata libphy 
-> libps2 llc mac80211 mac_hid mbcache mdev media mei mei_me mousedev mrp 
-> nls_cp437 nls_iso8859_1 pcc_cpufreq processor_thermal_device r8169 
-> r8822be realtek rfkill rng_core scsi_mod serio serio_raw snd 
-> snd_compress snd_hda_codec snd_hda_codec_generic snd_hda_codec_hdmi 
-> snd_hda_codec_realtek snd_hda_core snd_hda_ext_core snd_hda_intel 
-> snd_hwdep snd_pcm snd_pcm_dmaengine snd_soc_acpi 
-> snd_soc_acpi_intel_match snd_soc_core snd_soc_hdac_hda snd_soc_skl 
-> snd_soc_skl_ipc snd_soc_sst_dsp snd_soc_sst_ipc snd_timer soundcore stp 
-> syscopyarea sysfillrect sysimgblt tpm tpm_crb tpm_tis tpm_tis_core 
-> typec typec_ucsi ucsi_acpi usbhid uvcvideo vfat vfio vfio_iommu_type1 
-> vfio_mdev videobuf2_common videobuf2_memops videobuf2_v4l2 
-> videobuf2_vmalloc videodev wmi wmi_bmof x86_pkg_temp_thermal xhci_hcd 
-> xhci_pci x_tables
-> 
-> [8.2.] Processor information (from /proc/cpuinfo): (Maybe not appliable)
-> [8.3.] Module information (from /proc/modules): 
-> 
-> (Parts related to i2c and elan:)
-> 
-> i2c_algo_bit 16384 1 i915, Live 0x0000000000000000
-> i2c_hid 32768 0 - Live 0x0000000000000000
-> hid 147456 3 hid_generic,usbhid,i2c_hid, Live 0x0000000000000000
-> elan_i2c 49152 0 - Live 0x0000000000000000
-> i2c_i801 36864 0 - Live 0x0000000000000000
-> 
-> [8.4.] Loaded driver and hardware information (/proc/ioports, /proc/iomem)
-> 
-> /proc/ioports:
-> 0000-0000 : PCI Bus 0000:00
->   0000-0000 : dma1
->   0000-0000 : pic1
->   0000-0000 : iTCO_wdt
->   0000-0000 : timer0
->   0000-0000 : timer1
->   0000-0000 : keyboard
->   0000-0000 : PNP0C09:00
->     0000-0000 : EC data
->   0000-0000 : keyboard
->   0000-0000 : PNP0C09:00
->     0000-0000 : EC cmd
->   0000-0000 : rtc0
->   0000-0000 : dma page reg
->   0000-0000 : pic2
->   0000-0000 : dma2
->   0000-0000 : fpu
->     0000-0000 : PNP0C04:00
->   0000-0000 : iTCO_wdt
->   0000-0000 : pnp 00:02
-> 0000-0000 : PCI conf1
-> 0000-0000 : PCI Bus 0000:00
->   0000-0000 : pnp 00:02
->   0000-0000 : pnp 00:00
->     0000-0000 : ACPI PM1a_EVT_BLK
->     0000-0000 : ACPI PM1a_CNT_BLK
->     0000-0000 : ACPI PM_TMR
->     0000-0000 : ACPI CPU throttle
->     0000-0000 : ACPI PM2_CNT_BLK
->     0000-0000 : pnp 00:04
->     0000-0000 : ACPI GPE0_BLK
->   0000-0000 : pnp 00:01
->   0000-0000 : PCI Bus 0000:08
->     0000-0000 : 0000:08:00.0
->   0000-0000 : PCI Bus 0000:07
->     0000-0000 : 0000:07:00.0
->       0000-0000 : r8822be
->   0000-0000 : PCI Bus 0000:01
->     0000-0000 : 0000:01:00.0
->   0000-0000 : 0000:00:02.0
->   0000-0000 : 0000:00:1f.4
->     0000-0000 : i801_smbus
->   0000-0000 : 0000:00:17.0
->     0000-0000 : ahci
->   0000-0000 : 0000:00:17.0
->     0000-0000 : ahci
->   0000-0000 : 0000:00:17.0
->     0000-0000 : ahci
-> 
-> 
-> [8.5.] PCI information
->   It seems to be long (over 700 lines) and unrelated to this 
-> regression. Omitted to avoid flooding. I've kept an archive so feel 
-> free to ask me to post it if needed.
-> 
-> [8.6.] SCSI information (from /proc/scsi/scsi): (Empty)
-> [8.7.] Other information that might be relevant to the problem:
-> 
->   dmesg is constantly showing "elan_i2c i2c-ELAN061B:00: invalid report 
-> id data (d)".
->   I checked the git log and it is likely to be related to commit 
-> "95df599f95f398b0a34d081dadfdee3126e58163".
->   I'm using Arch Linux, its kernel repository link: [1]
->   I checked the related file "elan_i2c_core.c" in Arch Linux's kernel 
-> repository [2], and it is the same as in 5.0.10 on kernel.org.
->   My laptop is a Lenovo Legion Y7000.
-> 
-> Links:
-> [1]. https://git.archlinux.org/linux.git
-> [2]. 
-> https://git.archlinux.org/linux.git/tree/drivers/input/mouse/elan_i2c_core.c?h=v5.0.10-arch1
-> 
-> Please don't hesitate if more information or operation is needed.
+SGksDQoNClRoaXMgc2VyaWUgYWltcyBhdCBhZGRpbmcgdGhlIHN1cHBvcnQgZm9yIFNNTVUgb24g
+S29tZWRhIGRyaXZlci4NCkFsc28gdXBkYXRlcyB0aGUgZGV2aWNlLXRyZWUgZG9jIGFib3V0IGhv
+dyB0byBlbmFibGUgU01NVSBieSBkZXZpY2V0cmVlLg0KDQpUaGlzIHBhdGNoIHNlcmllcyBkZXBl
+bmRzIG9uOg0KLSBodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzU4NzEw
+Lw0KLSBodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzU5MDAwLw0KLSBo
+dHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzU5MDAyLw0KDQpUaGFua3Ms
+DQpMb3dyeQ0KDQpMb3dyeSBMaSAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEpICgyKToNCiAgZHJtL2tv
+bWVkYTogQWRkcyBTTU1VIHN1cHBvcnQNCiAgZHQvYmluZGluZ3M6IGRybS9rb21lZGE6IEFkZHMg
+U01NVSBzdXBwb3J0IGZvciBENzEgZGV2aWNldHJlZQ0KDQogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9hcm0sa29tZWRhLnR4dCAgICAgfCAgNyArKysrDQogLi4uL2dwdS9kcm0vYXJt
+L2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMgfCAgNSArKysNCiBkcml2ZXJzL2dw
+dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfZGV2LmMgICB8IDQ5ICsrKysrKysrKysr
+KysrKysrKysrKysNCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9k
+ZXYuYyAgICB8IDE3ICsrKysrKysrDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVk
+YS9rb21lZGFfZGV2LmggICAgfCAgNyArKysrDQogLi4uL2RybS9hcm0vZGlzcGxheS9rb21lZGEv
+a29tZWRhX2ZyYW1lYnVmZmVyLmMgICAgfCAgMiArDQogLi4uL2RybS9hcm0vZGlzcGxheS9rb21l
+ZGEva29tZWRhX2ZyYW1lYnVmZmVyLmggICAgfCAgMiArDQogNyBmaWxlcyBjaGFuZ2VkLCA4OSBp
+bnNlcnRpb25zKCspDQoNCi0tIA0KMS45LjENCg0K
