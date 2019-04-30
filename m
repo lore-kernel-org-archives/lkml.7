@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F83AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB14C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F20A20449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D6121734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624773;
-	bh=AcU1qu3A9mj5ZHpFuzc36xawwD0FGkvOP8e7qd9xy54=;
+	s=default; t=1556624776;
+	bh=Bk1OXFfBQ8nFn9DBuyA7O+lCPWPwyZ/9BBvNMa9vLfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMdhTsjtrbI2rW2ln+wkgAAt9/W0fDS1ybMpJf4XDVyQucEYkOlUzCI0u9obRv8qJ
-	 23AeKdUVM0qt5lFCJ8QcZ6I4NU0otEAS8Tl6lH9uXGFnR9dQfQIyKXKSCPu3viCLsF
-	 p4gNo3r4EubTLv4NeuG5z05lmBVd5pYruzoeN/8I=
+	b=wWElPrmW5QYFqMm1RPVsaw16jeeNLtm17RmzNr1bSEnNmWZO/5sSsmOFxHw5ufe+d
+	 QmETxO9TZb6nlLxNc1ALvwlvVfGP0UjxQftgAMGtc2VRYVJuEFXNjrcdvALHn+ETE5
+	 fauFdxz1Rvf4tfyBgfiqreLJgU1M597o/rcc9f8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbfD3LqM (ORCPT
+        id S1730529AbfD3LqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730499AbfD3LqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:07 -0400
+        id S1730516AbfD3LqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D85B21734;
-        Tue, 30 Apr 2019 11:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5397D2173E;
+        Tue, 30 Apr 2019 11:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624766;
-        bh=AcU1qu3A9mj5ZHpFuzc36xawwD0FGkvOP8e7qd9xy54=;
+        s=default; t=1556624771;
+        bh=Bk1OXFfBQ8nFn9DBuyA7O+lCPWPwyZ/9BBvNMa9vLfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1iY5J7hbTk/6mBl9/M5EpX+j5jqzZL+Fox3AHb/OwUPkm/QwVBMJDJasswvwdr1T
-         oW/DS0yTiOHcutlniGM2q1ZilkQqtTnU3k4cfJQpCRy6+CAWXxcU5c//l/AGwM44vL
-         mpDHggHfutHX2cSi1oTE4CutM5/alnWhxgcLyFpY=
+        b=kXmm/JGrBftNYLi5SrvO6riXdo26U9H4y7cerdjQoZWzt4yLkDBaEAyD8k2eRhpVc
+         dIc4ZJxp5jEd0j9giY4qY1vL/rUNXmsh0qskwPayX6ZeNjV7fYkaRc8dESeHZ3sSdi
+         1LDkBbshnZvbtCArnfLdprkBnEpDpOFTLpEp2/2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Subject: [PATCH 4.19 047/100] drm/vc4: Fix memory leak during gpu reset.
-Date:   Tue, 30 Apr 2019 13:38:16 +0200
-Message-Id: <20190430113611.280201035@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 066/100] aio: clear IOCB_HIPRI
+Date:   Tue, 30 Apr 2019 13:38:35 +0200
+Message-Id: <20190430113611.914864134@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -59,35 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+From: Christoph Hellwig <hch@lst.de>
 
-commit d08106796a78a4273e39e1bbdf538dc4334b2635 upstream.
+commit 154989e45fd8de9bfb52bbd6e5ea763e437e54c5 upstream.
 
-__drm_atomic_helper_crtc_destroy_state does not free memory, it only
-cleans it up. Fix this by calling the functions own destroy function.
+No one is going to poll for aio (yet), so we must clear the HIPRI
+flag, as we would otherwise send it down the poll queues, where no
+one will be polling for completions.
 
-Fixes: 6d6e50039187 ("drm/vc4: Allocate the right amount of space for boot-time CRTC state.")
-Cc: Eric Anholt <eric@anholt.net>
-Cc: <stable@vger.kernel.org> # v4.6+
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190301125627.7285-2-maarten.lankhorst@linux.intel.com
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+IOCB_HIPRI, not RWF_HIPRI.
+
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/aio.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/vc4/vc4_crtc.c
-+++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -998,7 +998,7 @@ static void
- vc4_crtc_reset(struct drm_crtc *crtc)
- {
- 	if (crtc->state)
--		__drm_atomic_helper_crtc_destroy_state(crtc->state);
-+		vc4_crtc_destroy_state(crtc->state);
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -1438,8 +1438,7 @@ static int aio_prep_rw(struct kiocb *req
+ 		ret = ioprio_check_cap(iocb->aio_reqprio);
+ 		if (ret) {
+ 			pr_debug("aio ioprio check cap error: %d\n", ret);
+-			fput(req->ki_filp);
+-			return ret;
++			goto out_fput;
+ 		}
  
- 	crtc->state = kzalloc(sizeof(struct vc4_crtc_state), GFP_KERNEL);
- 	if (crtc->state)
+ 		req->ki_ioprio = iocb->aio_reqprio;
+@@ -1448,7 +1447,13 @@ static int aio_prep_rw(struct kiocb *req
+ 
+ 	ret = kiocb_set_rw_flags(req, iocb->aio_rw_flags);
+ 	if (unlikely(ret))
+-		fput(req->ki_filp);
++		goto out_fput;
++
++	req->ki_flags &= ~IOCB_HIPRI; /* no one is going to poll for this I/O */
++	return 0;
++
++out_fput:
++	fput(req->ki_filp);
+ 	return ret;
+ }
+ 
 
 
