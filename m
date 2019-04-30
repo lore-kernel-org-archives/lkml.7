@@ -2,97 +2,130 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9753CC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA401C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7AD21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E8421707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfD3OKi (ORCPT
+        id S1727345AbfD3ONk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:10:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:61608 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbfD3OKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:10:38 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 07:10:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="342158227"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Apr 2019 07:10:31 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hLTSn-0006VO-Gw; Tue, 30 Apr 2019 17:10:29 +0300
-Date:   Tue, 30 Apr 2019 17:10:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        linux-ia64@vger.kernel.org, linux-serial@vger.kernel.org,
-        andrew@aj.id.au, gregkh@linuxfoundation.org, sudeep.holla@arm.com,
-        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
-        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
-        khilman@baylibre.com, macro@linux-mips.org,
-        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
-        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        davem@davemloft.net
-Subject: Re: [PATCH 22/41] drivers: tty: serial: cpm_uart: fix logging calls
-Message-ID: <20190430141029.GK9224@smile.fi.intel.com>
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-23-git-send-email-info@metux.net>
- <a00ba23b-e73e-c964-a6d0-347cb605b8c8@c-s.fr>
+        Tue, 30 Apr 2019 10:13:40 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:35354 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726294AbfD3ONj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:13:39 -0400
+Received: (qmail 1597 invoked by uid 2102); 30 Apr 2019 10:13:38 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 30 Apr 2019 10:13:38 -0400
+Date:   Tue, 30 Apr 2019 10:13:38 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     syzbot <syzbot+a9fefd18c7b240f19c54@syzkaller.appspotmail.com>,
+        <andreyknvl@google.com>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <rafael@kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in hex_string
+In-Reply-To: <20190429210917.GA251866@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1904301007320.1465-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a00ba23b-e73e-c964-a6d0-347cb605b8c8@c-s.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 05:59:04PM +0200, Christophe Leroy wrote:
-> Le 27/04/2019 à 14:52, Enrico Weigelt, metux IT consult a écrit :
-> > Fix checkpatch warnings by using pr_err():
-> > 
-> >      WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ... then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
-> >      #109: FILE: drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c:109:
-> >      +		printk(KERN_ERR
-> > 
-> >      WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ... then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
-> >      #128: FILE: drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c:128:
-> >      +		printk(KERN_ERR
-> > 
-> >      WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ... then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
-> >      +           printk(KERN_ERR
-> > 
-> >      WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ... then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
-> >      +           printk(KERN_ERR
-> > 
-> > Signed-off-by: Enrico Weigelt <info@metux.net>
-> 
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> 
-> But is that really worth doing those changes ?
-> 
-> If we want to do something useful, wouldn't it make more sense to introduce
-> the use of dev_err() in order to identify the faulting device in the message
-> ?
+On Mon, 29 Apr 2019, Eric Biggers wrote:
 
-+1 for switching to dev_*().
+> On Mon, Apr 29, 2019 at 04:07:04PM -0400, Alan Stern wrote:
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > Accessing beyond the end of the descriptor.
+> > 
+> > #syz test: https://github.com/google/kasan.git usb-fuzzer
+> > 
+> > --- a/drivers/video/fbdev/udlfb.c
+> > +++ b/drivers/video/fbdev/udlfb.c
+> > @@ -1511,6 +1511,7 @@ static int dlfb_parse_vendor_descriptor(
+> >  	char *buf;
+> >  	char *desc_end;
+> >  	int total_len;
+> > +	int width;
+> >  
+> >  	buf = kzalloc(MAX_VENDOR_DESCRIPTOR_SIZE, GFP_KERNEL);
+> >  	if (!buf)
+> > @@ -1529,9 +1530,10 @@ static int dlfb_parse_vendor_descriptor(
+> >  	}
+> >  
+> >  	if (total_len > 5) {
+> > +		width = min(total_len, 11);
+> >  		dev_info(&intf->dev,
+> > -			 "vendor descriptor length: %d data: %11ph\n",
+> > -			 total_len, desc);
+> > +			 "vendor descriptor length: %d data: %*ph\n",
+> > +			 total_len, width, desc);
+> >  
+> >  		if ((desc[0] != total_len) || /* descriptor length */
+> >  		    (desc[1] != 0x5f) ||   /* vendor descriptor type */
+> > 
+> > 
+> 
+> Why not write just:
+> 
+>                 dev_info(&intf->dev,
+>                          "vendor descriptor length: %d data: %*ph\n",
+>                          total_len, min(total_len, 11), desc);
 
+I did consider doing that.  In the end I decided adding an extra
+temporary variable made the code a little more readable.  (For some 
+reason, extra recursion -- a function call embedded in a function 
+argument -- seems to demand more mental effort than an extra 
+temporary.  Maybe my brain is just getting old...)
+
+> Also, aren't there more out-of-bounds reads in the code just after?  It only
+> checks for at least 1 byte available, but then it reads up to 7 bytes:
+> 
+> 		while (desc < desc_end) {
+> 			u8 length;
+> 			u16 key;
+> 
+> 			key = *desc++;
+> 			key |= (u16)*desc++ << 8;
+> 			length = *desc++;
+> 
+> 			switch (key) {
+> 			case 0x0200: { /* max_area */
+> 				u32 max_area = *desc++;
+> 				max_area |= (u32)*desc++ << 8;
+> 				max_area |= (u32)*desc++ << 16;
+> 				max_area |= (u32)*desc++ << 24;
+> 				dev_warn(&intf->dev,
+> 					 "DL chip limited to %d pixel modes\n",
+> 					 max_area);
+> 				dlfb->sku_pixel_limit = max_area;
+> 				break;
+> 			}
+> 			default:
+> 				break;
+> 			}
+> 			desc += length;
+> 		}
+
+Quite right.  Please feel free to submit a patch fixing all these 
+problems.
+
+> Also I couldn't help but notice it's also using 'char' rather than 'u8',
+> so bytes >= 0x80 are read incorrectly as they're sign extended...
+
+As I recall, the C standard doesn't specify whether char is signed or
+unsigned; it can vary with the implementation.  However you are
+certainly correct that to ensure there is no sign extension, the code
+should use unsigned char or u8.
+
+Alan Stern
 
