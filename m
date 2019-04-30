@@ -2,175 +2,197 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670DAC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F69C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2789D20651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E3720651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UDLJlhBF"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="eo8mbG6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfD3RTL (ORCPT
+        id S1726810AbfD3RTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:19:11 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9589 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3RTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:19:10 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44tpCv00Zkz9v1kM;
-        Tue, 30 Apr 2019 19:19:07 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UDLJlhBF; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id rKe8bcM0kqZZ; Tue, 30 Apr 2019 19:19:06 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44tpCt5h8rz9v1kF;
-        Tue, 30 Apr 2019 19:19:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556644746; bh=8M9gBHLm9qLvpKuZX/2ssSbHZfFKU8w8o0K+AXL3j6o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UDLJlhBFtSat+7juCpwpai6J+FXOCEyq4VXAoPPRThPSgZT484ylZa/AuqFsDhQQt
-         xovxPbswSQzR14ffx8wMPLNOtUo3+ADODFGJqkRt3KwbLYSEjkr/WuOQwkyhL/eypA
-         ot7Rx5E4eT0Go6ISIxv7Sdc/0wzZ7J1sQWjS8QBQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E11F8B8F3;
-        Tue, 30 Apr 2019 19:19:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ROkgZ5J4l8t6; Tue, 30 Apr 2019 19:19:08 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D37A18B8DF;
-        Tue, 30 Apr 2019 19:19:07 +0200 (CEST)
-Subject: Re: [PATCH 4/5] soc/fsl/qe: qe.c: support fsl,qe-snums property
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     Valentin Longchamp <valentin.longchamp@keymile.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
- <20190430133615.25721-5-rasmus.villemoes@prevas.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <4c1c4fe8-9412-2543-e9bc-83b7e5d7c202@c-s.fr>
-Date:   Tue, 30 Apr 2019 19:19:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 13:19:14 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38160 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD3RTN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:19:13 -0400
+Received: by mail-it1-f196.google.com with SMTP id q19so5988327itk.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=FiLJnoBGMZ9oBi3dnF5JorKlP2R1B74woYmCiWU3q4E=;
+        b=eo8mbG6Zp1FjFJ0ysrn85VPXjbAGAkyFP1/8x3Tfyv07vBVd3xQMhqQhkSo/4dHdtf
+         IrzOuPgDagw3ot0zYzQwuk2RaosxuSxg48PlJaiM0Xb/0bjQ7esnFaokU9deuYPAcuDv
+         MwIAn1YR7T7wQ1DJvLVNGNWLjRbroxu/rmzSI0h7Wql1u2D2rXf+HQhG9zZZH/4JH3Qi
+         y5jBvYI4NI5rSOmlzCSYUkwxCIck9lW4CxA31M0oH5ox3yjS/pvMXZGc2CUJ16trf6vs
+         8+ejFS6yxbXoGzPlILgTGgEXvNESG9DY8+8ufs3ZkD9mEm5LBpWR1q2QXdf+GhpwxYFU
+         uvFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=FiLJnoBGMZ9oBi3dnF5JorKlP2R1B74woYmCiWU3q4E=;
+        b=IemiRCgMMdUyQtE2Gr0kGhzTu+f2wcvpIfk4wT7X4WTosWUw6yy8NzjTXS3cMAFLuj
+         M1dViqhd5bHtOegcf94BnHRgwlLbAUImUp71+Dz0uqn54Nfy6fDmwHl4jXhh3SXr6agD
+         +9JeDNVlUPzTrN1I+AVo+IjrkIHVEh2v0Vt/McbdnR3b5mdY54gYe/7TZLB6ieej5qgr
+         ol/gNwj5B2jjyeH2xsZykHFAX/TAhe7RNMKUJShpy/Pu2z8wNvEwO1hBHE7qPKsEi23A
+         j2m3V8M8USadvZTXX8EWgh/6N00fgPXRv9S/l36ZFEOnuG2ezb6H8LMGjsctv2FGNZdR
+         alEQ==
+X-Gm-Message-State: APjAAAWY9DYlJXuKFfkJL+nLYemCSieEUAXdcMzrH9qsHOH9ij8q6rRr
+        anj0baSrxsvgco6B8Py2lf6VjA==
+X-Google-Smtp-Source: APXvYqzrp/nKimnoq8jslzC4Mbr5Q2qCr/jPkQ8YAvMQ/Fpquys4+OccO/DxegQ1qHLcD4SMXFGNEA==
+X-Received: by 2002:a24:7608:: with SMTP id z8mr4377301itb.116.1556644752532;
+        Tue, 30 Apr 2019 10:19:12 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id t196sm1949364ita.4.2019.04.30.10.19.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 10:19:11 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 10:19:10 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        bbrezillon@kernel.org, richard@nod.at, palmer@sifive.com,
+        paul.walmsley@sifive.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 2/3] mtd: spi-nor: add support to unlock flash
+ device.
+In-Reply-To: <1556474956-27786-3-git-send-email-sagar.kadam@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1904301016400.7063@viisi.sifive.com>
+References: <1556474956-27786-1-git-send-email-sagar.kadam@sifive.com> <1556474956-27786-3-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <20190430133615.25721-5-rasmus.villemoes@prevas.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 28 Apr 2019, Sagar Shrikant Kadam wrote:
 
+> Nor device (is25wp256 mounted on HiFive unleashed Rev A00 board) from ISSI
+> have memory blocks guarded by block protection bits BP[0,1,2,3].
+> 
+> Clearing block protection bits,unlocks the flash memory regions
+> The unlock scheme is registered during nor scans.
 
-Le 30/04/2019 à 15:36, Rasmus Villemoes a écrit :
-> The current code assumes that the set of snum _values_ to populate the
-> snums[] array with is a function of the _number_ of snums
-> alone. However, reading table 4-30, and its footnotes, of the QUICC
-> Engine Block Reference Manual shows that that is a bit too naive.
-> 
-> As an alternative, this introduces a new binding fsl,qe-snums, which
-> automatically encodes both the number of snums and the actual values to
-> use. Conveniently, of_property_read_variable_u8_array does exactly
-> what we need.
-> 
-> For example, for the MPC8309, one would specify the property as
-> 
->                 fsl,qe-snums = /bits/ 8 <
->                         0x88 0x89 0x98 0x99 0xa8 0xa9 0xb8 0xb9
->                         0xc8 0xc9 0xd8 0xd9 0xe8 0xe9>;
-> 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+This also looks like it's partially based on Wes or Palmer's patch from 
+
+https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
+
+Please note that in the patch message.
+
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 > ---
->   .../devicetree/bindings/soc/fsl/cpm_qe/qe.txt      |  8 +++++++-
->   drivers/soc/fsl/qe/qe.c                            | 14 +++++++++++++-
->   2 files changed, 20 insertions(+), 2 deletions(-)
+>  drivers/mtd/spi-nor/spi-nor.c | 48 ++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/mtd/spi-nor.h   |  1 +
+>  2 files changed, 48 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt
-> index d7afaff5faff..05f5f485562a 100644
-> --- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt
-> +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt
-> @@ -18,7 +18,8 @@ Required properties:
->   - reg : offset and length of the device registers.
->   - bus-frequency : the clock frequency for QUICC Engine.
->   - fsl,qe-num-riscs: define how many RISC engines the QE has.
-> -- fsl,qe-num-snums: define how many serial number(SNUM) the QE can use for the
-> +- fsl,qe-snums: This property has to be specified as '/bits/ 8' value,
-> +  defining the array of serial number (SNUM) values for the virtual
->     threads.
->   
->   Optional properties:
-> @@ -34,6 +35,11 @@ Recommended properties
->   - brg-frequency : the internal clock source frequency for baud-rate
->     generators in Hz.
->   
-> +Deprecated properties
-> +- fsl,qe-num-snums: define how many serial number(SNUM) the QE can use
-> +  for the threads. Use fsl,qe-snums instead to not only specify the
-> +  number of snums, but also their values.
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index c5408ed..81c7b3e 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -1461,6 +1461,46 @@ static int macronix_quad_enable(struct spi_nor *nor)
+>  }
+>  
+>  /**
+> + * issi_unlock() - clear BP[0123] write-protection.
+> + * @nor: pointer to a 'struct spi_nor'
+> + * @ofs: offset from which to unlock memory
+> + * @len: number of bytes to unlock
+> + * Bits [2345] of the Status Register are BP[0123].
+> + * ISSI chips use a different block protection scheme than other chips.
+> + * Just disable the write-protect unilaterally.
+> + * Return: 0 on success, -errno otherwise.
+
+This is closer to kernel-doc format, but not quite.  Please update this to 
+align to
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/doc-guide/kernel-doc.rst#n57
+
+
+- Paul
+
+> + */
+> +static int issi_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+> +{
+> +	int ret, val;
+> +	u8 mask = SR_BP0 | SR_BP1 | SR_BP2 | SR_BP3;
 > +
->   Example:
->        qe@e0100000 {
->   	#address-cells = <1>;
-> diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-> index aff9d1373529..af3c2b2b268f 100644
-> --- a/drivers/soc/fsl/qe/qe.c
-> +++ b/drivers/soc/fsl/qe/qe.c
-> @@ -283,7 +283,6 @@ EXPORT_SYMBOL(qe_clock_source);
->    */
->   static void qe_snums_init(void)
->   {
-> -	int i;
-
-Why do you move this one ?
-
->   	static const u8 snum_init_76[] = {
->   		0x04, 0x05, 0x0C, 0x0D, 0x14, 0x15, 0x1C, 0x1D,
->   		0x24, 0x25, 0x2C, 0x2D, 0x34, 0x35, 0x88, 0x89,
-> @@ -304,9 +303,22 @@ static void qe_snums_init(void)
->   		0x28, 0x29, 0x38, 0x39, 0x48, 0x49, 0x58, 0x59,
->   		0x68, 0x69, 0x78, 0x79, 0x80, 0x81,
->   	};
-> +	struct device_node *qe;
->   	const u8 *snum_init;
-> +	int i;
->   
->   	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
-> +	qe = qe_get_device_node();
-> +	if (qe) {
-> +		i = of_property_read_variable_u8_array(qe, "fsl,qe-snums",
-> +						       snums, 1, QE_NUM_OF_SNUM);
-> +		of_node_put(qe);
-> +		if (i > 0) {
-> +			qe_num_of_snum = i;
-> +			return;
-
-In that case you skip the rest of the init ? Can you explain ?
-
-Christophe
-
-> +		}
+> +	val = read_sr(nor);
+> +	if (val < 0)
+> +		return val;
+> +	if (!(val & mask))
+> +		return 0;
+> +
+> +	write_enable(nor);
+> +
+> +	write_sr(nor, val & ~mask);
+> +
+> +	ret = spi_nor_wait_till_ready(nor);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = read_sr(nor);
+> +	if (ret > 0 && !(ret & mask)) {
+> +		dev_info(nor->dev,
+> +			"ISSI Block Protection Bits cleared SR=0x%x", ret);
+> +		return 0;
+> +	} else {
+> +		dev_err(nor->dev, "ISSI Block Protection Bits not cleared\n");
+> +		return -EINVAL;
 > +	}
+> +}
 > +
->   	qe_num_of_snum = qe_get_num_of_snums();
->   
->   	if (qe_num_of_snum == 76)
+> +/**
+>   * spansion_quad_enable() - set QE bit in Configuraiton Register.
+>   * @nor:	pointer to a 'struct spi_nor'
+>   *
+> @@ -1836,7 +1876,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+>  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 1024,
+>  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+> -			SPI_NOR_4B_OPCODES)
+> +			SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK)
+>  	},
+>  
+>  	/* Macronix */
+> @@ -4078,6 +4118,12 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  		nor->flash_is_locked = stm_is_locked;
+>  	}
+>  
+> +	/* NOR protection support for ISSI chips */
+> +	if (JEDEC_MFR(info) == SNOR_MFR_ISSI ||
+> +	    info->flags & SPI_NOR_HAS_LOCK) {
+> +		nor->flash_unlock = issi_unlock;
+> +
+> +	}
+>  	if (nor->flash_lock && nor->flash_unlock && nor->flash_is_locked) {
+>  		mtd->_lock = spi_nor_lock;
+>  		mtd->_unlock = spi_nor_unlock;
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index ff13297..9a7d719 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -127,6 +127,7 @@
+>  #define SR_BP0			BIT(2)	/* Block protect 0 */
+>  #define SR_BP1			BIT(3)	/* Block protect 1 */
+>  #define SR_BP2			BIT(4)	/* Block protect 2 */
+> +#define SR_BP3			BIT(5)	/* Block protect 3 for ISSI device*/
+>  #define SR_TB			BIT(5)	/* Top/Bottom protect */
+>  #define SR_SRWD			BIT(7)	/* SR write protect */
+>  /* Spansion/Cypress specific status bits */
+> -- 
+> 1.9.1
+> 
 > 
