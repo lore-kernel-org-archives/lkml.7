@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54420C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F7BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1628121670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA94C21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625436;
-	bh=N3aEVoJ6zXx6nbSZpcU5Yo9Re3BOt9G3seEmxMhSMOE=;
+	s=default; t=1556625442;
+	bh=17cVRuU6W8q7VjDf23UMfIcNffAFqd8hJoMrPf6lOa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOwCsl/aCBAM2l2bSxMrhoBjA7PEw+dEjdwtoXHrpNtzK9PRX0Vi1aLS6djm2zAKu
-	 Nt+iaA/XcosLyOXNQCcN/fV4eEDPiKl6E93Tf9QQpUXcIIsosFZEUIkN9zj4Fj8Ooe
-	 ESNzmTZMqY9ffVlZEwYjclFmIZdwd3UjMhofQgy8=
+	b=uCYPxAwedcDwqaMW3s5cL6W0Yq95NhVLTkUTw1umNhwnXoh1n8qm6KL3Ztz7Es6ty
+	 VOORElkZnlAyB3XBvVvXr1iF6l9PGxIsjswAkKTSUo3Sk7qoMnF7/zvX1+aqoiDOlb
+	 dgeKqMZIv7FyWDGpnam0IZFQqz49iyQ4hAdfKgsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbfD3LsM (ORCPT
+        id S1727501AbfD3L5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:57:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730798AbfD3LsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:09 -0400
+        id S1728926AbfD3LsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 656622054F;
-        Tue, 30 Apr 2019 11:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1B0C2054F;
+        Tue, 30 Apr 2019 11:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624888;
-        bh=N3aEVoJ6zXx6nbSZpcU5Yo9Re3BOt9G3seEmxMhSMOE=;
+        s=default; t=1556624886;
+        bh=17cVRuU6W8q7VjDf23UMfIcNffAFqd8hJoMrPf6lOa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPVWRGcJHAIH5p3/zrFWL7zTpa1udOFUrKTPlak+tVuj3jq3tfFK1J44ADnG3U/2I
-         O1lj2CFVPKrNYaR9zoY72DLgYBmvNr8+sGiOfru8oBau3ztfJPtXbXBBM0EXqn3xeg
-         Q2eos2fJn23cBDMvruU67KY2WvZYDPbPl1FEakTg=
+        b=zUOtV+tXxNPfWTaJdWPuhe7xr8vABRP+ix5D2MhZ3heD0WHhZDfoYuWzzTB8Y1lVl
+         TDbphLE+vgNihQmBlk2IBnbXN/6sKtMJThrXdAVyftA/wZzI24qQU/tvZ6F9vOP6tY
+         YHEVPmynbUiA9KGK8qGS7NoH4hZujciiGPQkgvxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        stable@vger.kernel.org, Laura Garcia <nevola@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 03/89] intel_th: gth: Fix an off-by-one in output unassigning
-Date:   Tue, 30 Apr 2019 13:37:54 +0200
-Message-Id: <20190430113609.964782030@linuxfoundation.org>
+Subject: [PATCH 5.0 02/89] netfilter: nf_tables: bogus EBUSY in helper removal from transaction
+Date:   Tue, 30 Apr 2019 13:37:53 +0200
+Message-Id: <20190430113609.924618319@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,35 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 91d3f8a629849968dc91d6ce54f2d46abf4feb7f ]
+[ Upstream commit 8ffcd32f64633926163cdd07a7d295c500a947d1 ]
 
-Commit 9ed3f22223c3 ("intel_th: Don't reference unassigned outputs")
-fixes a NULL dereference for all masters except the last one ("256+"),
-which keeps the stale pointer after the output driver had been unassigned.
+Proper use counter updates when activating and deactivating the object,
+otherwise, this hits bogus EBUSY error.
 
-Fix the off-by-one.
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 9ed3f22223c3 ("intel_th: Don't reference unassigned outputs")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: cd5125d8f518 ("netfilter: nf_tables: split set destruction in deactivate and destroy phase")
+Reported-by: Laura Garcia <nevola@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/intel_th/gth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nft_objref.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwtracing/intel_th/gth.c b/drivers/hwtracing/intel_th/gth.c
-index cc287cf6eb29..edc52d75e6bd 100644
---- a/drivers/hwtracing/intel_th/gth.c
-+++ b/drivers/hwtracing/intel_th/gth.c
-@@ -616,7 +616,7 @@ static void intel_th_gth_unassign(struct intel_th_device *thdev,
- 	othdev->output.port = -1;
- 	othdev->output.active = false;
- 	gth->output[port].output = NULL;
--	for (master = 0; master < TH_CONFIGURABLE_MASTERS; master++)
-+	for (master = 0; master <= TH_CONFIGURABLE_MASTERS; master++)
- 		if (gth->master[master] == port)
- 			gth->master[master] = -1;
- 	spin_unlock(&gth->gth_lock);
+diff --git a/net/netfilter/nft_objref.c b/net/netfilter/nft_objref.c
+index d8737c115257..bf92a40dd1b2 100644
+--- a/net/netfilter/nft_objref.c
++++ b/net/netfilter/nft_objref.c
+@@ -64,21 +64,34 @@ nla_put_failure:
+ 	return -1;
+ }
+ 
+-static void nft_objref_destroy(const struct nft_ctx *ctx,
+-			       const struct nft_expr *expr)
++static void nft_objref_deactivate(const struct nft_ctx *ctx,
++				  const struct nft_expr *expr,
++				  enum nft_trans_phase phase)
+ {
+ 	struct nft_object *obj = nft_objref_priv(expr);
+ 
++	if (phase == NFT_TRANS_COMMIT)
++		return;
++
+ 	obj->use--;
+ }
+ 
++static void nft_objref_activate(const struct nft_ctx *ctx,
++				const struct nft_expr *expr)
++{
++	struct nft_object *obj = nft_objref_priv(expr);
++
++	obj->use++;
++}
++
+ static struct nft_expr_type nft_objref_type;
+ static const struct nft_expr_ops nft_objref_ops = {
+ 	.type		= &nft_objref_type,
+ 	.size		= NFT_EXPR_SIZE(sizeof(struct nft_object *)),
+ 	.eval		= nft_objref_eval,
+ 	.init		= nft_objref_init,
+-	.destroy	= nft_objref_destroy,
++	.activate	= nft_objref_activate,
++	.deactivate	= nft_objref_deactivate,
+ 	.dump		= nft_objref_dump,
+ };
+ 
 -- 
 2.19.1
 
