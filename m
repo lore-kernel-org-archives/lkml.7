@@ -2,178 +2,114 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD00C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47A9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C5520835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1A520835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="Zai/gP+v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Rjo0B2mS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMLOPFCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfD3Xit (ORCPT
+        id S1727251AbfD3Xmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 19:38:49 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:44293 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726105AbfD3Xit (ORCPT
+        Tue, 30 Apr 2019 19:42:44 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37095 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfD3Xmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 19:38:49 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 54502256B7;
-        Tue, 30 Apr 2019 19:38:46 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 30 Apr 2019 19:38:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:mime-version:content-type; s=fm3;
-         bh=8TVoOxfmq1R3Lbx6jbxXVrEWbN6MuryN18FbCzDou9s=; b=Zai/gP+vVuQx
-        WTyTP6dJRquBVk3yrK4Z4VAoO+4JROrrXcz8PB/ZYGDL9aMWSuG/Dx0Ry4/d3n7E
-        hoyMoXluZGPUjXrp2Ji/9hhjjZB9HN2eZPPmlj6vymgxs8RHlPW+NrUIP3aPdOt3
-        HLcpEyr0Qd3xKc9wMoBA9xx3u7oJymtELL94X71HpxkFsGXTC7DOjOiIyLUq4NZj
-        t+28eo8ppFjbecnwTavfrK4chWnPMNKjc1F7vnEZ2VWdu7LGJnAAr+tlmM4kjWm4
-        fRx34LvqaCgE3mClUFQf0gZkSupux1IpkXZqO6FAH0pPo0sjPdoOTuTpGvPgUIDY
-        /WWQbQmSFA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm2; bh=8TVoOxfmq1R3Lbx6jbxXVrEWbN6Mu
-        ryN18FbCzDou9s=; b=Rjo0B2mSm4lnRgEn36mgC64DVZYYMpGZal8CRkef0ade8
-        ky1LpNg0iSz6wLU+hQnbauWMSrAAGs8NuXqXJXaqaZBpNTS5UUz3UVraRxUC3p0T
-        xwce8ImAjofdHTRkhBdisl2DtEInRvMwmvDxT+M8EA4eRAaTfX77PdBUe8KwvvWf
-        GjPiHFo2evgOAPPawNEUW5/Kk5su5B3HYR9BY7Q3rpS1PYCYvVh2vZvZtek45cm7
-        3ux7xhAzkuDDTSgQBAbIeqG5h5eMfSGNXWb9NnWGpmyIJoWn0QpXPhimGmFVdCVx
-        VLjG1SGsJmwUWCBcUf6hqqBlLVdHHcNdZyaTMp9Yw==
-X-ME-Sender: <xms:hdzIXAj2OWPutOJPj5mpHZX_ZmcpL5_QNwUwWCMSCH5VrpM9RegrDQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieeigddvhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeftddmnecujfgurhepfffhvffukfggtgguofgfsehttdertdforedv
-    necuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosghinh
-    drtggtqeenucfkphepuddvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:hdzIXK5J3TwURYj2mo3UIBjd4pQUWWaSU4gPhY9jQ49VQgJzoc0GDQ>
-    <xmx:hdzIXNPkMHygKF-mPQpM0c6L18GEqGkTsnN_y5Ilk4udpy6gTefK6Q>
-    <xmx:hdzIXBdpvAT4ROL8m0hwnuJUKmvMFbyBwxiWTDYL3a5EgevykuNJ-w>
-    <xmx:htzIXPh7y2DOjMqkVivRCyx96tVcKmFr7p2uJB9G2v-coigTxQA-gQ>
-Received: from localhost (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3788FE442F;
-        Tue, 30 Apr 2019 19:38:42 -0400 (EDT)
-Date:   Wed, 1 May 2019 09:38:03 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: kobject_init_and_add() confusion
-Message-ID: <20190430233803.GB10777@eros.localdomain>
+        Tue, 30 Apr 2019 19:42:44 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so7579703pgc.4;
+        Tue, 30 Apr 2019 16:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ry7tbWIJBK9Hf7LIqKMAwHqMDwQA5WOsikziPF9zW00=;
+        b=qMLOPFCnndch3BcwtbTSRIveKdoxKzr6c2J4wNeHlXZk0Zehr7dB/B/PyzcL29w6zj
+         WKVgcG0RSDO2ZCsxisxMw+CNK7eY7Vo/ZIj2rvCYo2lUcNwxVVESGVWrhXwrLhP5gUS1
+         rdv5pv9iXQJR2NjFNoSCOPufM8J8/eBedl2GiKW7yy5PvJm7XHYFa/h3+p+NlUBMhsig
+         aQ23HVJ5PbocFP6beCY8Ae5mPr9O2MgWCzLuDw4VLU4DQSZys64qzAT5E+5/8IduV1yd
+         EqzqveCGFY2QWQmlE5z9nEQ7hxN6FJH5RakHFPXC4CFn1uozV6jMKI/6zvc38aYTjePS
+         eQAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ry7tbWIJBK9Hf7LIqKMAwHqMDwQA5WOsikziPF9zW00=;
+        b=CWswZvjYBWX6AoUp0qezvHDeV/TPXEhUYTp+KXTfgl71CZ8X6aEG9EvfygqduEDXyc
+         bZl6eOOdJi6YrTJm6SZQ8OZyLOCK3+HkDjgRUR52iov5HDMvUwcR/iCNidO8QItSPXVR
+         6JKY7mHZKL+ex4U15W/4e6kDNgmzATOk3xKQ5Fj5A5rpRh373HuPDJImnm+0HkPn6PSz
+         ybyKHztOVS7egzEx9Fu34o0f6Y4qL+0KxznBFGUEFaQAVxLMEPzqrbR/ikPCIoDCNrcb
+         8++6eeYqChMeh3k2+nGKcSSEm0hdt61nte2TcbzFwXOvrcB7enU7KroGyoRF5K2nx7kQ
+         GQ2w==
+X-Gm-Message-State: APjAAAWiQCQ4Oymv0v8T3nMF9DPYuMmju+Q198gjFgvNt0lj1q9s8rMx
+        BYESeMbsZEfrxyj+nGBFZ6zABlUABFmfVQIrUvI=
+X-Google-Smtp-Source: APXvYqwacrh2slPEFiUQM77AsbP5zFjDcSs/QvCDBs7gclIpUDjLLyNOTSSCCTYiv3dfG4LwkzXdI46WHFJBH3olu0Y=
+X-Received: by 2002:a63:6604:: with SMTP id a4mr38321480pgc.104.1556667763280;
+ Tue, 30 Apr 2019 16:42:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+ <20190428030539.17776-1-yuehaibing@huawei.com> <20190429105422-mutt-send-email-mst@kernel.org>
+ <CAM_iQpWvp2i6iOZtSPskqU_uXHL2zKfM_cS1rGTh_T0r3BwvnA@mail.gmail.com> <6AADFAC011213A4C87B956458587ADB4021FE16C@dggeml532-mbs.china.huawei.com>
+In-Reply-To: <6AADFAC011213A4C87B956458587ADB4021FE16C@dggeml532-mbs.china.huawei.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 30 Apr 2019 16:42:31 -0700
+Message-ID: <CAM_iQpXbQ4X+ohmNFy79D+MPu6remA7hU0DTTypS=Yt+BCxujA@mail.gmail.com>
+Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
+To:     "weiyongjun (A)" <weiyongjun1@huawei.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        yuehaibing <yuehaibing@huawei.com>,
+        David Miller <davem@davemloft.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "Li,Rongqing" <lirongqing@baidu.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Chas Williams <3chas3@gmail.com>,
+        "wangli39@baidu.com" <wangli39@baidu.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Looks like I've created a bit of confusion trying to fix memleaks in
-calls to kobject_init_and_add().  Its spread over various patches and
-mailing lists so I'm starting a new thread and CC'ing anyone that
-commented on one of those patches.
-
-If there is a better way to go about this discussion please do tell me.
-
-The problem
------------
-
-Calls to kobject_init_and_add() are leaking memory throughout the kernel
-because of how the error paths are handled.
-
-The solution
-------------
-
-Write the error path code correctly.
-
-Example
--------
-
-We have samples/kobject/kobject-example.c but it uses
-kobject_create_and_add().  I thought of adding another example file here
-but could not think of how to do it off the top of my head without being
-super contrived.  Can add this to the TODO list if it will help.
-
-Here is an attempted canonical usage of kobject_init_and_add() typical
-of the code that currently is getting it wrong.  This is the second time
-I've written this and the first time it was wrong even after review (you
-know who you are, you are definitely buying the next round of drinks :)
+On Mon, Apr 29, 2019 at 10:11 PM weiyongjun (A) <weiyongjun1@huawei.com> wrote:
+> This patch should not work. The key point is that when detach the queue
+> with index is equal to tun->numqueues - 1, we do not clear the point
+> in tun->tfiles:
+>
+> static void __tun_detach(...)
+> {
+> ...
+>         **** if index == tun->numqueues - 1, nothing changed ****
+>         rcu_assign_pointer(tun->tfiles[index],
+>                                                 tun->tfiles[tun->numqueues - 1]);
+> ....
+> }
 
 
-Assumes we have an object in memory already that has the kobject
-embedded in it. Variable 'kobj' below would typically be &ptr->kobj
+This is _perfectly_ fine. This is just how we _unpublish_ it, RCU is NOT
+against unpublish, you keep missing this point.
+
+Think about list_del_rcu(). RCU readers could still read the list entry
+even _after_ list_del_rcu(), this is perfectly fine, list_del_rcu() just
+unpublishes the list entry from a global list, kfree_rcu() is the one frees
+it. So, RCU readers never hate "unpublish", they just hate "free".
 
 
-	void fn(void)
-	{
-	        int ret;
+>
+> And after tfile free, xmit have change to get and use the freed file point.
 
-	        ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
-	        if (ret) {
-			/*
-			 * This means kobject_init() has succeeded
-			 * but kobject_add() failed.
-			 */
-			goto err_put;
-		}
+With SOCK_RCU_FREE, it won't be freed until the last reader is gone.
+This is the fundamental of RCU.
 
-	        ret = some_init_fn();
-	        if (ret) {
-			/*
-			 * We need to wind back kobject_add() AND kobject_put().
-			 * kobject_add() incremented the refcount in
-			 * kobj->parent, that needs to be decremented THEN we need
-			 * the call to kobject_put() to decrement the refcount of kobj.
-			 */
-			goto err_del;
-		}
+Please, at least look into sk_destruct().
 
-	        ret = some_other_init_fn();
-	        if (ret)
-	                goto other_err;
-
-	        kobject_uevent(kobj, KOBJ_ADD);
-	        return 0;
-
-	other_err:
-	        other_clean_up_fn();
-	err_del:
-	        kobject_del(kobj);
-	err_put:
-		kobject_put(kobj);
-
-	        return ret;
-	}
-
-
-Have I got this correct?
-
-TODO
-----
-
-- Fix all the callsites to kobject_init_and_add()
-- Further clarify the function docstring for kobject_init_and_add() [perhaps]
-- Add a section to Documentation/kobject.txt [optional]
-- Add a sample usage file under samples/kobject [optional]
-
-
-Thanks,
-Tobin.
+Thanks.
