@@ -2,130 +2,170 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9270BC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C800BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6407921670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556640716;
-	bh=KyJDGavjSpp4AuaU07L+2c6XypQvQiHt5+bPye/hGks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vyol9dD54xj81PMZkL+sM1hq9qPWATAQNRwBspNWKemozPP2ew3EzhegAr9Mjiosz
-	 rNkZ6fn3Hu1mk/Qx/pMtX2U3yz1tKX9ezvCLgQlMY3D9iJa5b2RZlzOPzEE4+1WS/3
-	 QWIIxAmUOtnQllhHapxOVV/TdigPwmX/HMQxc72k=
+	by mail.kernel.org (Postfix) with ESMTP id 6487E20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:12:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eDN5GMSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfD3QLz (ORCPT
+        id S1726651AbfD3QMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 12:12:02 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46148 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3QLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:11:54 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D126820835;
-        Tue, 30 Apr 2019 16:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556640713;
-        bh=KyJDGavjSpp4AuaU07L+2c6XypQvQiHt5+bPye/hGks=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bqsZ5BoME8haEyekKzM65WyuYHNiOijsLhfWQkt+MUOiL/MqQ1H0yg94wEIj5ekmB
-         +iSYf1rtA4JbjPbspm9HA7YRmWpOl3alprs/1Kzpe/o6LeT8wwzN/2ZgGu/FPJRuJL
-         HdNv22y9V1h1RcGzVYFi67ja4OxASysmlk4fa1n0=
-Date:   Tue, 30 Apr 2019 11:11:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex G <mr.nuke.me@gmail.com>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20190430161151.GB145057@google.com>
-References: <20190429185611.121751-1-helgaas@kernel.org>
- <20190429185611.121751-2-helgaas@kernel.org>
- <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1725942AbfD3QMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:12:01 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44tmkQ2KjPz9v9PT;
+        Tue, 30 Apr 2019 18:11:58 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=eDN5GMSx; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id MaxABZu7I_Cm; Tue, 30 Apr 2019 18:11:58 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44tmkQ0zj6z9tykx;
+        Tue, 30 Apr 2019 18:11:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556640718; bh=WThvMg35+cMW5Y7q2WlLGNaSdHo7IteuweRcj0Q4fHw=;
+        h=From:Subject:To:Cc:Date:From;
+        b=eDN5GMSxe5O4145L0Q12Qaw5uC1yFI+UUZBqjOzReLM6UDTAZKPKUjeGI2xukh+gw
+         DboDWAsGrsEfsIdFgbKrJIxKfHDPf/PSfmMm+FrVnklzOkO8neLAV0o4ILu+pONvlw
+         0vgWG1KYG0WmnbwgiHLlAcEm8YNmdjX1d+Ur1N7k=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BDDF88B8F1;
+        Tue, 30 Apr 2019 18:11:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 5pFLDNQb9zEw; Tue, 30 Apr 2019 18:11:59 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7C7908B8DF;
+        Tue, 30 Apr 2019 18:11:59 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3E7A767271; Tue, 30 Apr 2019 16:11:59 +0000 (UTC)
+Message-Id: <09733bd9d90f2ab9dfee9838442e0bea01df194d.1556640535.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2] powerpc/32s: fix BATs setting with
+ CONFIG_STRICT_KERNEL_RWX
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Serge Belyshev <belyshev@depni.sinp.msu.ru>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 30 Apr 2019 16:11:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 08:07:53PM -0500, Alex G wrote:
-> On 4/29/19 1:56 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > This reverts commit e8303bb7a75c113388badcc49b2a84b4121c1b3e.
-> > 
-> > e8303bb7a75c added logging whenever a link changed speed or width to a
-> > state that is considered degraded.  Unfortunately, it cannot differentiate
-> > signal integrity-related link changes from those intentionally initiated by
-> > an endpoint driver, including drivers that may live in userspace or VMs
-> > when making use of vfio-pci.  Some GPU drivers actively manage the link
-> > state to save power, which generates a stream of messages like this:
-> > 
-> >    vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5 GT/s x16 link)
-> > 
-> > We really *do* want to be alerted when the link bandwidth is reduced
-> > because of hardware failures, but degradation by intentional link state
-> > management is probably far more common, so the signal-to-noise ratio is
-> > currently low.
-> > 
-> > Until we figure out a way to identify the real problems or silence the
-> > intentional situations, revert the following commits, which include the
-> > initial implementation (e8303bb7a75c) and subsequent fixes:
-> 
-> I think we're overreacting to a bit of perceived verbosity in the system
-> log. Intentional degradation does not seem to me to be as common as
-> advertised. I have not observed this with either radeon, nouveau, or amdgpu,
-> and the proper mechanism to save power at the link level is ASPM. I stand to
-> be corrected and we have on CC some very knowledgeable fellows that I am
-> certain will jump at the opportunity to do so.
+Serge reported some crashes with CONFIG_STRICT_KERNEL_RWX enabled
+on a book3s32 machine.
 
-I can't quantify how common it is, but the verbosity is definitely
-*there*, and it seems unlikely to me that a hardware failure is more
-common than any intentional driver-driven degradation.
+Analysis shows two issues:
+- BATs addresses and sizes are not properly aligned.
+- There is a gap between the last address covered by BATs and the
+first address covered by pages.
 
-If we can reliably distinguish hardware failures from benign changes,
-we should certainly log the failures.  But in this case even the
-failures are fully functional, albeit at lower performance, so if the
-messages end up being 99% false positives, I think it'll just be
-confusing for users.
+Memory mapped with DBATs:
+0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
+1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
+2: 0xc0c00000-0xc13fffff 0x00c00000 Kernel RW coherent
+3: 0xc1400000-0xc23fffff 0x01400000 Kernel RW coherent
+4: 0xc2400000-0xc43fffff 0x02400000 Kernel RW coherent
+5: 0xc4400000-0xc83fffff 0x04400000 Kernel RW coherent
+6: 0xc8400000-0xd03fffff 0x08400000 Kernel RW coherent
+7: 0xd0400000-0xe03fffff 0x10400000 Kernel RW coherent
 
-> What it seems like to me is that a proprietary driver running in a VM is
-> initiating these changes. And if that is the case then it seems this is a
-> virtualization problem. A quick glance over GPU drivers in linux did not
-> reveal any obvious places where we intentionally downgrade a link.
+Memory mapped with pages:
+0xe1000000-0xefffffff  0x21000000       240M        rw       present           dirty  accessed
 
-I'm not 100% on board with the idea of drivers directly manipulating
-the link because it seems like the PCI core might need to be at least
-aware of this.  But some drivers certainly do manipulate it today for
-ASPM, gen2/gen3 retraining, etc.
+This patch fixes both issues. With the patch, we get the following
+which is as expected:
 
-If we treat this as a virtualization problem, I guess you're
-suggesting the host kernel should prevent that sort of link
-manipulation?  We could have a conversation about that, but it
-doesn't seem like the immediate solution to this problem.
+Memory mapped with DBATs:
+0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
+1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
+2: 0xc0c00000-0xc0ffffff 0x00c00000 Kernel RW coherent
+3: 0xc1000000-0xc1ffffff 0x01000000 Kernel RW coherent
+4: 0xc2000000-0xc3ffffff 0x02000000 Kernel RW coherent
+5: 0xc4000000-0xc7ffffff 0x04000000 Kernel RW coherent
+6: 0xc8000000-0xcfffffff 0x08000000 Kernel RW coherent
+7: 0xd0000000-0xdfffffff 0x10000000 Kernel RW coherent
 
-> I'm not convinced a revert is the best call.
+Memory mapped with pages:
+0xe0000000-0xefffffff  0x20000000       256M        rw       present           dirty  accessed
 
-I have very limited options at this stage of the release, but I'd be
-glad to hear suggestions.  My concern is that if we release v5.1
-as-is, we'll spend a lot of energy on those false positives.
+Reported-by: Serge Belyshev <belyshev@depni.sinp.msu.ru>
+Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+Cc: stable@vger.kernel.org
+Acked-by: Segher Boessenkool <segher@kernel.crashing.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ v2: Added comment to explain block_size() function as recommended by Segher.
 
-Bjorn
+ arch/powerpc/mm/ppc_mmu_32.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
+index bf1de3ca39bc..afd8dcb11432 100644
+--- a/arch/powerpc/mm/ppc_mmu_32.c
++++ b/arch/powerpc/mm/ppc_mmu_32.c
+@@ -98,10 +98,20 @@ static int find_free_bat(void)
+ 	return -1;
+ }
+ 
++/*
++ * This function calculates the size of the larger block usable to map the
++ * beginning of an area based on the start address and size of that area:
++ * - max block size is 8M on 601 and 256 on other 6xx.
++ * - base address must be aligned to the block size. So the maximum block size
++ *   is identified by the lowest bit set to 1 in the base address (for instance
++ *   if base is 0x16000000, max size is 0x02000000).
++ * - block size has to be a power of two. This is calculated by finding the
++ *   highest bit set to 1.
++ */
+ static unsigned int block_size(unsigned long base, unsigned long top)
+ {
+ 	unsigned int max_size = (cpu_has_feature(CPU_FTR_601) ? 8 : 256) << 20;
+-	unsigned int base_shift = (fls(base) - 1) & 31;
++	unsigned int base_shift = (ffs(base) - 1) & 31;
+ 	unsigned int block_shift = (fls(top - base) - 1) & 31;
+ 
+ 	return min3(max_size, 1U << base_shift, 1U << block_shift);
+@@ -157,7 +167,7 @@ static unsigned long __init __mmu_mapin_ram(unsigned long base, unsigned long to
+ 
+ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ {
+-	int done;
++	unsigned long done;
+ 	unsigned long border = (unsigned long)__init_begin - PAGE_OFFSET;
+ 
+ 	if (__map_without_bats) {
+@@ -169,10 +179,10 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		return __mmu_mapin_ram(base, top);
+ 
+ 	done = __mmu_mapin_ram(base, border);
+-	if (done != border - base)
++	if (done != border)
+ 		return done;
+ 
+-	return done + __mmu_mapin_ram(border, top);
++	return __mmu_mapin_ram(border, top);
+ }
+ 
+ void mmu_mark_initmem_nx(void)
+-- 
+2.13.3
+
