@@ -6,75 +6,72 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21B9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C14C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E2021670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B9D21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfD3J2j (ORCPT
+        id S1727093AbfD3J2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:28:39 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:46617 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfD3J2f (ORCPT
+        Tue, 30 Apr 2019 05:28:45 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:35760 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbfD3J2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:28:35 -0400
-X-Originating-IP: 109.213.14.175
-Received: from localhost (alyon-652-1-31-175.w109-213.abo.wanadoo.fr [109.213.14.175])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 899642000C;
-        Tue, 30 Apr 2019 09:28:32 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 7/7] rtc: jz4740: convert to SPDX identifier
-Date:   Tue, 30 Apr 2019 11:28:21 +0200
-Message-Id: <20190430092821.27963-7-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190430092821.27963-1-alexandre.belloni@bootlin.com>
-References: <20190430092821.27963-1-alexandre.belloni@bootlin.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 30 Apr 2019 05:28:37 -0400
+Received: from ramsan ([84.194.111.163])
+        by michel.telenet-ops.be with bizsmtp
+        id 6ZUZ2000S3XaVaC06ZUZGA; Tue, 30 Apr 2019 11:28:35 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hLP3x-0007LX-Ev; Tue, 30 Apr 2019 11:28:33 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hLP3x-0001vi-CX; Tue, 30 Apr 2019 11:28:33 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH -next] mlxsw: Remove obsolete dependency on THERMAL=m
+Date:   Tue, 30 Apr 2019 11:28:32 +0200
+Message-Id: <20190430092832.7376-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use SPDX-License-Identifier instead of a verbose license text.
+The THERMAL configuration option was changed from tristate to bool, but
+a dependency on THERMAL=m was forgotten, leading to a warning when
+running "make savedefconfig":
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+    boolean symbol THERMAL tested for 'm'? test forced to 'n'
+
+Fixes: be33e4fbbea581ea ("thermal/drivers/core: Remove the module Kconfig's option")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/rtc/rtc-jz4740.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index 6dd00b654f93..9e7b3a04debc 100644
---- a/drivers/rtc/rtc-jz4740.c
-+++ b/drivers/rtc/rtc-jz4740.c
-@@ -1,17 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-  *  Copyright (C) 2010, Paul Cercueil <paul@crapouillou.net>
-  *	 JZ4740 SoC RTC driver
-- *
-- *  This program is free software; you can redistribute it and/or modify it
-- *  under  the terms of  the GNU General Public License as published by the
-- *  Free Software Foundation;  either version 2 of the License, or (at your
-- *  option) any later version.
-- *
-- *  You should have received a copy of the GNU General Public License along
-- *  with this program; if not, write to the Free Software Foundation, Inc.,
-- *  675 Mass Ave, Cambridge, MA 02139, USA.
-- *
-  */
- 
- #include <linux/clk.h>
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/Kconfig b/drivers/net/ethernet/mellanox/mlxsw/Kconfig
+index b6b3ff0fe17f5c4e..7ccb950aa7d4aa30 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/Kconfig
++++ b/drivers/net/ethernet/mellanox/mlxsw/Kconfig
+@@ -22,7 +22,6 @@ config MLXSW_CORE_HWMON
+ config MLXSW_CORE_THERMAL
+ 	bool "Thermal zone support for Mellanox Technologies Switch ASICs"
+ 	depends on MLXSW_CORE && THERMAL
+-	depends on !(MLXSW_CORE=y && THERMAL=m)
+ 	default y
+ 	---help---
+ 	 Say Y here if you want to automatically control fans speed according
 -- 
-2.20.1
+2.17.1
 
