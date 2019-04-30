@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CDDC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68777C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F28420835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3993321670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625956;
-	bh=wSh+vCthql7JJLX/1r4HJUf6t9EDtOxHpRwPu8IoBQg=;
+	s=default; t=1556625969;
+	bh=Jkia0DhnlgV+tnqkEGrP8yfiK0rLeNFUaEhwZ9zKfNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X13Mo2sBhXULNrrqPe02W+lovkk5n72ji8fetgb/CjMj9shZZELEFlgvqeDKazDuZ
-	 DKgk2/nKUx8EwFjDMzlxUdv5vKkKb1rkw16nLgG7y1qsaJ8C97bI9/I18RkMW9VchU
-	 2K8gLKcrHOMWN97OElkBBBM5QB4wncNG5CcSZ780=
+	b=E49j/8dUZ7J1bc5W8Wh+lKLF3n5DzREzDBhAMxnk0eVyvGz47IZUn/dfcX1G7N7Ar
+	 KZ5Rg51lMHV7UpzRaCS0XM6CwhRu2UOzj81kR2c7huqWoEEwO0T4Ub1YRAfvtNi2KA
+	 c3lC3A0O/tUuEhkxafVKsLNpw6dQWt5inY169hEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfD3MFz (ORCPT
+        id S1729085AbfD3MGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:05:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49838 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:06:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbfD3Llp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:45 -0400
+        id S1728929AbfD3Llc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 776C72173E;
-        Tue, 30 Apr 2019 11:41:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6879821707;
+        Tue, 30 Apr 2019 11:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624505;
-        bh=wSh+vCthql7JJLX/1r4HJUf6t9EDtOxHpRwPu8IoBQg=;
+        s=default; t=1556624491;
+        bh=Jkia0DhnlgV+tnqkEGrP8yfiK0rLeNFUaEhwZ9zKfNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8FtWevVyw97aTCtNl3nk9OCtNEZ3kOrjfd7U6Ob494sTNwX7PbwSi90JLPf2VPOk
-         7EIfTAqVNI9/QGTU6SaZRbfjP26wRLW1cKRNGZHd1Zk5luNChin23TDiUk/aQt06aX
-         eO2OpBphuG5RA9n2ZlAgmsKCGoL5p/AdOkzLX4KY=
+        b=zNf2kA0DKKpwPMV/dxs3EZqrSWdODS/zq5SZgjayivLUyfUv3USLEl6WTO0R/BRU6
+         mtbb/WRIZfokYPEjW21LbIB6R6w80EjA9FjwT/FlgQFHFXEB6nDbBUdVrhKgwHD1Kd
+         JuAU6DqcR7t07XimvSlhIaxA3S7oMB/0ZjpyySUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.14 19/53] ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the cache
-Date:   Tue, 30 Apr 2019 13:38:26 +0200
-Message-Id: <20190430113554.181129613@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.14 14/53] nfsd: Dont release the callback slot unless it was actually held
+Date:   Tue, 30 Apr 2019 13:38:21 +0200
+Message-Id: <20190430113552.971683338@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -60,60 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit e17b1af96b2afc38e684aa2f1033387e2ed10029 upstream.
+commit e6abc8caa6deb14be2a206253f7e1c5e37e9515b upstream.
 
-The EFI stub is entered with the caches and MMU enabled by the
-firmware, and once the stub is ready to hand over to the decompressor,
-we clean and disable the caches.
+If there are multiple callbacks queued, waiting for the callback
+slot when the callback gets shut down, then they all currently
+end up acting as if they hold the slot, and call
+nfsd4_cb_sequence_done() resulting in interesting side-effects.
 
-The cache clean routines use CP15 barrier instructions, which can be
-disabled via SCTLR. Normally, when using the provided cache handling
-routines to enable the caches and MMU, this bit is enabled as well.
-However, but since we entered the stub with the caches already enabled,
-this routine is not executed before we call the cache clean routines,
-resulting in undefined instruction exceptions if the firmware never
-enabled this bit.
+In addition, the 'retry_nowait' path in nfsd4_cb_sequence_done()
+causes a loop back to nfsd4_cb_prepare() without first freeing the
+slot, which causes a deadlock when nfsd41_cb_get_slot() gets called
+a second time.
 
-So set the bit explicitly in the EFI entry code, but do so in a way that
-guarantees that the resulting code can still run on v6 cores as well
-(which are guaranteed to have CP15 barriers enabled)
+This patch therefore adds a boolean to track whether or not the
+callback did pick up the slot, so that it can do the right thing
+in these 2 cases.
 
-Cc: <stable@vger.kernel.org> # v4.9+
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/compressed/head.S |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4callback.c |    8 +++++++-
+ fs/nfsd/state.h        |    1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
---- a/arch/arm/boot/compressed/head.S
-+++ b/arch/arm/boot/compressed/head.S
-@@ -1393,7 +1393,21 @@ ENTRY(efi_stub_entry)
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -939,8 +939,9 @@ static void nfsd4_cb_prepare(struct rpc_
+ 	cb->cb_seq_status = 1;
+ 	cb->cb_status = 0;
+ 	if (minorversion) {
+-		if (!nfsd41_cb_get_slot(clp, task))
++		if (!cb->cb_holds_slot && !nfsd41_cb_get_slot(clp, task))
+ 			return;
++		cb->cb_holds_slot = true;
+ 	}
+ 	rpc_call_start(task);
+ }
+@@ -967,6 +968,9 @@ static bool nfsd4_cb_sequence_done(struc
+ 		return true;
+ 	}
  
- 		@ Preserve return value of efi_entry() in r4
- 		mov	r4, r0
--		bl	cache_clean_flush
++	if (!cb->cb_holds_slot)
++		goto need_restart;
 +
-+		@ our cache maintenance code relies on CP15 barrier instructions
-+		@ but since we arrived here with the MMU and caches configured
-+		@ by UEFI, we must check that the CP15BEN bit is set in SCTLR.
-+		@ Note that this bit is RAO/WI on v6 and earlier, so the ISB in
-+		@ the enable path will be executed on v7+ only.
-+		mrc	p15, 0, r1, c1, c0, 0	@ read SCTLR
-+		tst	r1, #(1 << 5)		@ CP15BEN bit set?
-+		bne	0f
-+		orr	r1, r1, #(1 << 5)	@ CP15 barrier instructions
-+		mcr	p15, 0, r1, c1, c0, 0	@ write SCTLR
-+ ARM(		.inst	0xf57ff06f		@ v7+ isb	)
-+ THUMB(		isb						)
-+
-+0:		bl	cache_clean_flush
- 		bl	cache_off
+ 	switch (cb->cb_seq_status) {
+ 	case 0:
+ 		/*
+@@ -1004,6 +1008,7 @@ static bool nfsd4_cb_sequence_done(struc
+ 			cb->cb_seq_status);
+ 	}
  
- 		@ Set parameters for booting zImage according to boot protocol
++	cb->cb_holds_slot = false;
+ 	clear_bit(0, &clp->cl_cb_slot_busy);
+ 	rpc_wake_up_next(&clp->cl_cb_waitq);
+ 	dprintk("%s: freed slot, new seqid=%d\n", __func__,
+@@ -1211,6 +1216,7 @@ void nfsd4_init_cb(struct nfsd4_callback
+ 	cb->cb_seq_status = 1;
+ 	cb->cb_status = 0;
+ 	cb->cb_need_restart = false;
++	cb->cb_holds_slot = false;
+ }
+ 
+ void nfsd4_run_cb(struct nfsd4_callback *cb)
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -69,6 +69,7 @@ struct nfsd4_callback {
+ 	int cb_seq_status;
+ 	int cb_status;
+ 	bool cb_need_restart;
++	bool cb_holds_slot;
+ };
+ 
+ struct nfsd4_callback_ops {
 
 
