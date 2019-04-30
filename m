@@ -2,29 +2,29 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D638C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCC3C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EF221670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148022075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfD3RF3 (ORCPT
+        id S1726882AbfD3RFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:05:29 -0400
-Received: from foss.arm.com ([217.140.101.70]:50392 "EHLO foss.arm.com"
+        Tue, 30 Apr 2019 13:05:34 -0400
+Received: from foss.arm.com ([217.140.101.70]:50408 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfD3RF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:05:29 -0400
+        id S1725930AbfD3RFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:05:32 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4319374;
-        Tue, 30 Apr 2019 10:05:28 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1272515A2;
+        Tue, 30 Apr 2019 10:05:32 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8655C3F5C1;
-        Tue, 30 Apr 2019 10:05:26 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 224E43F5C1;
+        Tue, 30 Apr 2019 10:05:28 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
@@ -35,59 +35,82 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
         Steve Capper <Steve.Capper@arm.com>,
         Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 0/4] ptrace: cleanup PTRACE_SYSEMU handling and add support for arm64
-Date:   Tue, 30 Apr 2019 18:05:16 +0100
-Message-Id: <20190430170520.29470-1-sudeep.holla@arm.com>
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH v3 1/4] ptrace: move clearing of TIF_SYSCALL_EMU flag to core
+Date:   Tue, 30 Apr 2019 18:05:17 +0100
+Message-Id: <20190430170520.29470-2-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190430170520.29470-1-sudeep.holla@arm.com>
+References: <20190430170520.29470-1-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+While the TIF_SYSCALL_EMU is set in ptrace_resume independent of any
+architecture, currently only powerpc and x86 unset the TIF_SYSCALL_EMU
+flag in ptrace_disable which gets called from ptrace_detach.
 
-This patchset evolved from the discussion in the thread[0][1]. When we
-wanted to add PTRACE_SYSEMU support to ARM64, we thought instead of
-duplicating what other architectures like x86 and powerpc have done,
-let consolidate the existing support and move it to the core as there's
-nothing arch specific in it.
+Let's move the clearing of TIF_SYSCALL_EMU flag to __ptrace_unlink
+which gets executed from ptrace_detach and also keep it along with
+or close to clearing of TIF_SYSCALL_TRACE.
 
-v2->v3:
-	- moved clearing of TIF_SYSCALL_EMU to __ptrace_unlink as Oleg
-	  suggested
-	- x86 cleanup as per Oleg's suggestion and dropped adding new
-	  ptrace_syscall_enter for SYSEMU handling
-	  (tested using tools/testing/selftests/x86/ptrace_syscall.c)
-	- Updated arm64 handling accordingly
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ arch/powerpc/kernel/ptrace.c | 1 -
+ arch/x86/kernel/ptrace.c     | 3 ---
+ kernel/ptrace.c              | 3 +++
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
-v1->v2:
-	- added comment for empty statement after tracehook_report_syscall_entry
-	- dropped x86 change in syscall_slow_exit_work as I had ended
-	  up changing logic unintentionally
-	- removed spurious change in powerpc moving user_exit()
-
-Regards,
-Sudeep
-
-[0] https://patchwork.kernel.org/patch/10585505/
-[1] https://patchwork.kernel.org/patch/10675237/
-
-Sudeep Holla (4):
-  ptrace: move clearing of TIF_SYSCALL_EMU flag to core
-  x86: simplify _TIF_SYSCALL_EMU handling
-  arm64: add PTRACE_SYSEMU{,SINGLESTEP} definations to uapi headers
-  arm64: ptrace: add support for syscall emulation
-
- arch/arm64/include/asm/thread_info.h |  5 ++++-
- arch/arm64/include/uapi/asm/ptrace.h |  3 +++
- arch/arm64/kernel/ptrace.c           |  6 +++++-
- arch/powerpc/kernel/ptrace.c         |  1 -
- arch/x86/entry/common.c              | 17 ++++++-----------
- arch/x86/kernel/ptrace.c             |  3 ---
- kernel/ptrace.c                      |  3 +++
- 7 files changed, 21 insertions(+), 17 deletions(-)
-
---
+diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+index d9ac7d94656e..2e2183b800a8 100644
+--- a/arch/powerpc/kernel/ptrace.c
++++ b/arch/powerpc/kernel/ptrace.c
+@@ -2520,7 +2520,6 @@ void ptrace_disable(struct task_struct *child)
+ {
+ 	/* make sure the single step bit is not set. */
+ 	user_disable_single_step(child);
+-	clear_tsk_thread_flag(child, TIF_SYSCALL_EMU);
+ }
+ 
+ #ifdef CONFIG_PPC_ADV_DEBUG_REGS
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 4b8ee05dd6ad..45792dbd2443 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -746,9 +746,6 @@ static int ioperm_get(struct task_struct *target,
+ void ptrace_disable(struct task_struct *child)
+ {
+ 	user_disable_single_step(child);
+-#ifdef TIF_SYSCALL_EMU
+-	clear_tsk_thread_flag(child, TIF_SYSCALL_EMU);
+-#endif
+ }
+ 
+ #if defined CONFIG_X86_32 || defined CONFIG_IA32_EMULATION
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 6f357f4fc859..16c7fc1eabcf 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -117,6 +117,9 @@ void __ptrace_unlink(struct task_struct *child)
+ 	BUG_ON(!child->ptrace);
+ 
+ 	clear_tsk_thread_flag(child, TIF_SYSCALL_TRACE);
++#ifdef TIF_SYSCALL_EMU
++	clear_tsk_thread_flag(child, TIF_SYSCALL_EMU);
++#endif
+ 
+ 	child->parent = child->real_parent;
+ 	list_del_init(&child->ptrace_entry);
+-- 
 2.17.1
 
