@@ -2,302 +2,102 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3A0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C3FC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBF120675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Rgl7WnTF"
+	by mail.kernel.org (Postfix) with ESMTP id 2E9C120675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfD3L1z (ORCPT
+        id S1727892AbfD3L14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 30 Apr 2019 07:27:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59158 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727570AbfD3L1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Apr 2019 07:27:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55623 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfD3L1y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:27:54 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBQrkD1350079
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Apr 2019 04:26:54 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBQrkD1350079
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556623615;
-        bh=xXyYrf0EgteWkvzKH3RVYTzxUw64JdnW8DeW9VS7Eag=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Rgl7WnTFdskDNyv+HGJ4Ut7YMo4tfN4PZ5h5dIxnOP3HPo4TZzZED/RLjM7wpJGYp
-         qcACMjZoMmnZ6WOkrCSVBJ/dP4exMt+ua7/gy7vtLPJzDxzvwzIBs5AdX8VKdwDV3n
-         IZ9YB8j6yEsaQB78oVWXWWZHQdxulBCBg8fkY2RXdk+ECmtqCU91f6LPyEA3KPgqTX
-         urGwmuz8Mj7PeEuFNv8DGG70n9I9P3L2OxCofFtDs74N9y+j+xfZQ+VP9F4MpiZxwz
-         LoM1bt/gyz32PC6EweXVhWB5GMNWi/QvuuFmd8UyUKhXyO3eAzGx17IC9R59QPgIj/
-         4l5/BhuOnh8Mg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBQrch1350076;
-        Tue, 30 Apr 2019 04:26:53 -0700
-Date:   Tue, 30 Apr 2019 04:26:53 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Rick Edgecombe <tipbot@zytor.com>
-Message-ID: <tip-1a7b7d9220819afe79d1ec5d759fe4349bd2453e@git.kernel.org>
-Cc:     tglx@linutronix.de, bp@alien8.de, mingo@kernel.org,
-        deneen.t.dock@intel.com, peterz@infradead.org, will.deacon@arm.com,
-        linux_dti@icloud.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
-        rostedt@goodmis.org, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com,
-        nadav.amit@gmail.com, ard.biesheuvel@linaro.org, luto@kernel.org,
-        hpa@zytor.com, jeyu@kernel.org, torvalds@linux-foundation.org,
-        riel@surriel.com
-Reply-To: kristen@linux.intel.com, akpm@linux-foundation.org,
-          rostedt@goodmis.org, dave.hansen@linux.intel.com,
-          nadav.amit@gmail.com, rick.p.edgecombe@intel.com,
-          mingo@kernel.org, tglx@linutronix.de, bp@alien8.de,
-          will.deacon@arm.com, deneen.t.dock@intel.com,
-          peterz@infradead.org, linux-kernel@vger.kernel.org,
-          kernel-hardening@lists.openwall.com, linux_dti@icloud.com,
-          torvalds@linux-foundation.org, riel@surriel.com,
-          ard.biesheuvel@linaro.org, luto@kernel.org, hpa@zytor.com,
-          jeyu@kernel.org
-In-Reply-To: <20190426001143.4983-18-namit@vmware.com>
-References: <20190426001143.4983-18-namit@vmware.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] modules: Use vmalloc special flag
-Git-Commit-ID: 1a7b7d9220819afe79d1ec5d759fe4349bd2453e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 892A83002619;
+        Tue, 30 Apr 2019 11:27:54 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 577D775274;
+        Tue, 30 Apr 2019 11:27:52 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 30 Apr 2019 13:27:52 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 13:27:49 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] rcu/sync: simplify the state machine
+Message-ID: <20190430112749.GA23020@redhat.com>
+References: <20190425164054.GA21309@redhat.com>
+ <20190425165055.GC21412@redhat.com>
+ <20190427210230.GE3923@linux.ibm.com>
+ <20190428222652.GA30908@linux.ibm.com>
+ <20190429160603.GC17715@redhat.com>
+ <20190429204041.GU3923@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190429204041.GU3923@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 30 Apr 2019 11:27:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1a7b7d9220819afe79d1ec5d759fe4349bd2453e
-Gitweb:     https://git.kernel.org/tip/1a7b7d9220819afe79d1ec5d759fe4349bd2453e
-Author:     Rick Edgecombe <rick.p.edgecombe@intel.com>
-AuthorDate: Thu, 25 Apr 2019 17:11:37 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 30 Apr 2019 12:37:58 +0200
+On 04/29, Paul E. McKenney wrote:
+>
+> On Mon, Apr 29, 2019 at 06:06:04PM +0200, Oleg Nesterov wrote:
+> >
+> > Well, at least WRITE_ONCE()'s look certainly unneeded to me, gp_state
+> > is protected by rss_lock.
+> >
+> > WARN_ON_ONCE(gp_state) can read gp_state lockless, but even in this case
+> > I do not understand what READ_ONCE() tries to prevent...
+> >
+> > Nevermind, this won't hurt and as I already said I don't understand the
+> > _ONCE() magic anyway ;)
+>
+> If I understand correctly, rcu_sync_is_idle() can be inline and returns
+> ->gp_state.
 
-modules: Use vmalloc special flag
+Ah, sorry! I didn't mean rcu_sync_is_idle(). To be honeest, I didn't even
+notice this change, but it looks obviously fine to me, with or without this
+patch.
 
-Use new flag for handling freeing of special permissioned memory in vmalloc
-and remove places where memory was set RW before freeing which is no longer
-needed.
+And yes,
 
-Since freeing of VM_FLUSH_RESET_PERMS memory is not supported in an
-interrupt by vmalloc, the freeing of init sections is moved to a work
-queue. Instead of call_rcu it now uses synchronize_rcu() in the work
-queue.
+> Without the READ_ONCE(), the compiler might fuse reads from
+> consecutive calls to rcu_sync_is_idle() or (under register pressure)
+> re-read from it, getting inconsistent results.  For example, this:
+>
+> 	tmp = rcu_sync_is_idle(rsp);
+> 	do_something(tmp);
+> 	do_something_else(tmp);
+>
+> Might become this:
+>
+> 	do_something(rcu_sync_is_idle(rsp));
+> 	do_something_else(rcu_sync_is_idle(rsp));
 
-Lastly, there is now a WARN_ON in module_memfree since it should not be
-called in an interrupt with special memory as is required for
-VM_FLUSH_RESET_PERMS.
 
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <akpm@linux-foundation.org>
-Cc: <ard.biesheuvel@linaro.org>
-Cc: <deneen.t.dock@intel.com>
-Cc: <kernel-hardening@lists.openwall.com>
-Cc: <kristen@linux.intel.com>
-Cc: <linux_dti@icloud.com>
-Cc: <will.deacon@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Nadav Amit <nadav.amit@gmail.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190426001143.4983-18-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/module.c | 77 +++++++++++++++++++++++++++++----------------------------
- 1 file changed, 39 insertions(+), 38 deletions(-)
+this is very clear. Even for me ;)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 2b2845ae983e..a9020bdd4cf6 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -98,6 +98,10 @@ DEFINE_MUTEX(module_mutex);
- EXPORT_SYMBOL_GPL(module_mutex);
- static LIST_HEAD(modules);
- 
-+/* Work queue for freeing init sections in success case */
-+static struct work_struct init_free_wq;
-+static struct llist_head init_free_list;
-+
- #ifdef CONFIG_MODULES_TREE_LOOKUP
- 
- /*
-@@ -1949,6 +1953,8 @@ void module_enable_ro(const struct module *mod, bool after_init)
- 	if (!rodata_enabled)
- 		return;
- 
-+	set_vm_flush_reset_perms(mod->core_layout.base);
-+	set_vm_flush_reset_perms(mod->init_layout.base);
- 	frob_text(&mod->core_layout, set_memory_ro);
- 	frob_text(&mod->core_layout, set_memory_x);
- 
-@@ -1972,15 +1978,6 @@ static void module_enable_nx(const struct module *mod)
- 	frob_writable_data(&mod->init_layout, set_memory_nx);
- }
- 
--static void module_disable_nx(const struct module *mod)
--{
--	frob_rodata(&mod->core_layout, set_memory_x);
--	frob_ro_after_init(&mod->core_layout, set_memory_x);
--	frob_writable_data(&mod->core_layout, set_memory_x);
--	frob_rodata(&mod->init_layout, set_memory_x);
--	frob_writable_data(&mod->init_layout, set_memory_x);
--}
--
- /* Iterate through all modules and set each module's text as RW */
- void set_all_modules_text_rw(void)
- {
-@@ -2024,23 +2021,8 @@ void set_all_modules_text_ro(void)
- 	}
- 	mutex_unlock(&module_mutex);
- }
--
--static void disable_ro_nx(const struct module_layout *layout)
--{
--	if (rodata_enabled) {
--		frob_text(layout, set_memory_rw);
--		frob_rodata(layout, set_memory_rw);
--		frob_ro_after_init(layout, set_memory_rw);
--	}
--	frob_rodata(layout, set_memory_x);
--	frob_ro_after_init(layout, set_memory_x);
--	frob_writable_data(layout, set_memory_x);
--}
--
- #else
--static void disable_ro_nx(const struct module_layout *layout) { }
- static void module_enable_nx(const struct module *mod) { }
--static void module_disable_nx(const struct module *mod) { }
- #endif
- 
- #ifdef CONFIG_LIVEPATCH
-@@ -2120,6 +2102,11 @@ static void free_module_elf(struct module *mod)
- 
- void __weak module_memfree(void *module_region)
- {
-+	/*
-+	 * This memory may be RO, and freeing RO memory in an interrupt is not
-+	 * supported by vmalloc.
-+	 */
-+	WARN_ON(in_interrupt());
- 	vfree(module_region);
- }
- 
-@@ -2171,7 +2158,6 @@ static void free_module(struct module *mod)
- 	mutex_unlock(&module_mutex);
- 
- 	/* This may be empty, but that's OK */
--	disable_ro_nx(&mod->init_layout);
- 	module_arch_freeing_init(mod);
- 	module_memfree(mod->init_layout.base);
- 	kfree(mod->args);
-@@ -2181,7 +2167,6 @@ static void free_module(struct module *mod)
- 	lockdep_free_key_range(mod->core_layout.base, mod->core_layout.size);
- 
- 	/* Finally, free the core (containing the module structure) */
--	disable_ro_nx(&mod->core_layout);
- 	module_memfree(mod->core_layout.base);
- }
- 
-@@ -3420,17 +3405,34 @@ static void do_mod_ctors(struct module *mod)
- 
- /* For freeing module_init on success, in case kallsyms traversing */
- struct mod_initfree {
--	struct rcu_head rcu;
-+	struct llist_node node;
- 	void *module_init;
- };
- 
--static void do_free_init(struct rcu_head *head)
-+static void do_free_init(struct work_struct *w)
- {
--	struct mod_initfree *m = container_of(head, struct mod_initfree, rcu);
--	module_memfree(m->module_init);
--	kfree(m);
-+	struct llist_node *pos, *n, *list;
-+	struct mod_initfree *initfree;
-+
-+	list = llist_del_all(&init_free_list);
-+
-+	synchronize_rcu();
-+
-+	llist_for_each_safe(pos, n, list) {
-+		initfree = container_of(pos, struct mod_initfree, node);
-+		module_memfree(initfree->module_init);
-+		kfree(initfree);
-+	}
- }
- 
-+static int __init modules_wq_init(void)
-+{
-+	INIT_WORK(&init_free_wq, do_free_init);
-+	init_llist_head(&init_free_list);
-+	return 0;
-+}
-+module_init(modules_wq_init);
-+
- /*
-  * This is where the real work happens.
-  *
-@@ -3507,7 +3509,6 @@ static noinline int do_init_module(struct module *mod)
- #endif
- 	module_enable_ro(mod, true);
- 	mod_tree_remove_init(mod);
--	disable_ro_nx(&mod->init_layout);
- 	module_arch_freeing_init(mod);
- 	mod->init_layout.base = NULL;
- 	mod->init_layout.size = 0;
-@@ -3518,14 +3519,18 @@ static noinline int do_init_module(struct module *mod)
- 	 * We want to free module_init, but be aware that kallsyms may be
- 	 * walking this with preempt disabled.  In all the failure paths, we
- 	 * call synchronize_rcu(), but we don't want to slow down the success
--	 * path, so use actual RCU here.
-+	 * path. module_memfree() cannot be called in an interrupt, so do the
-+	 * work and call synchronize_rcu() in a work queue.
-+	 *
- 	 * Note that module_alloc() on most architectures creates W+X page
- 	 * mappings which won't be cleaned up until do_free_init() runs.  Any
- 	 * code such as mark_rodata_ro() which depends on those mappings to
- 	 * be cleaned up needs to sync with the queued work - ie
- 	 * rcu_barrier()
- 	 */
--	call_rcu(&freeinit->rcu, do_free_init);
-+	if (llist_add(&freeinit->node, &init_free_list))
-+		schedule_work(&init_free_wq);
-+
- 	mutex_unlock(&module_mutex);
- 	wake_up_all(&module_wq);
- 
-@@ -3822,10 +3827,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 	module_bug_cleanup(mod);
- 	mutex_unlock(&module_mutex);
- 
--	/* we can't deallocate the module until we clear memory protection */
--	module_disable_ro(mod);
--	module_disable_nx(mod);
--
-  ddebug_cleanup:
- 	ftrace_release_mod(mod);
- 	dynamic_debug_remove(mod, info->debug);
+Thanks,
+
+Oleg.
+
