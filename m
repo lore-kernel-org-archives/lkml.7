@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD14C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE1AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAB721670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F38C21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624801;
-	bh=uXdfShyJJUnJCFZqwkhUDHpzoY8BpKlyrwVolj9fTNU=;
+	s=default; t=1556624805;
+	bh=7i0qbDAAVK4UIM2Ubwq1gfN+7iNggbZzTIJc5cVSH1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V0Pw5TwhRpQYbAZxru5Ot4qXMVlQ4AWa0j37Fofwj1pVUaxMlPSGBw1WAmy/rWWKD
-	 IduL3f8tN+KGOpxcD+NFWiecP/R/Sieqvl2FXNhWSj8FuVjdFRcIu8iPy2dRV8V3uT
-	 D9Xd9vPZYCPnWsSYJnUGiEKBG5jMGtlDmHc2tANg=
+	b=LWYxEHujzo+prbSYPsV/PeSNFBT5thKdHjW3uahydh7UwuhE/NiM7hMqf8H0ZzxRm
+	 WhkhVsjwklVs3SuebaW2bPNFp0+9r9NvqAkKrF0c1rCIUylHqROFIgMWnEg75h46NM
+	 j1jBrfAhSsNU8IAdQwcxOaqocVewiIZX5ZNxeI6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730586AbfD3Lqj (ORCPT
+        id S1730596AbfD3Lqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59598 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:46:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730576AbfD3Lqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:35 -0400
+        id S1730581AbfD3Lqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8D9620449;
-        Tue, 30 Apr 2019 11:46:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CB902173E;
+        Tue, 30 Apr 2019 11:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624795;
-        bh=uXdfShyJJUnJCFZqwkhUDHpzoY8BpKlyrwVolj9fTNU=;
+        s=default; t=1556624798;
+        bh=7i0qbDAAVK4UIM2Ubwq1gfN+7iNggbZzTIJc5cVSH1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCccw8sI03nsFmlr0t1Equlj/jGHMC/FaZ4iEvFvpmqrU+ZCFwpXitiy6GC6x6jlI
-         61PtjHb2wx0lCaKC+7ApESEWuHj9GWV88KvnEAWAAeTOhwwX1T3miPkEWRVMXbyWuz
-         jOqjRc48fIoTd+gMawzQN3Wz1pA5QK359HnPcCnk=
+        b=VkMGR735q05dA9wPIvQuryNVprGlHXcN1WlXn+5csN3hmTx86vcpcmNopXUSfWDQ5
+         Jkm88VUPzbaFQPS5UCeVDLu5IbMVFZhTtqgoVwOfR0MJBCrMYulj2/qT/yxg+ZjihE
+         5q0xUIsx0e7WRlowmswcOesn7DabZkDr7v4i50Cw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 4.19 048/100] Revert "drm/i915/fbdev: Actually configure untiled displays"
-Date:   Tue, 30 Apr 2019 13:38:17 +0200
-Message-Id: <20190430113611.311218385@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 075/100] pin iocb through aio.
+Date:   Tue, 30 Apr 2019 13:38:44 +0200
+Message-Id: <20190430113612.273058889@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -58,72 +61,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 9fa246256e09dc30820524401cdbeeaadee94025 upstream.
+commit b53119f13a04879c3bf502828d99d13726639ead upstream.
 
-This reverts commit d179b88deb3bf6fed4991a31fd6f0f2cad21fab5.
+aio_poll() is not the only case that needs file pinned; worse, while
+aio_read()/aio_write() can live without pinning iocb itself, the
+proof is rather brittle and can easily break on later changes.
 
-This commit is documented to break userspace X.org modesetting driver in certain configurations.
-
-The X.org modesetting userspace driver is broken. No fixes are available yet. In order for this patch to be applied it either needs a config option or a workaround developed.
-
-This has been reported a few times, saying it's a userspace problem is clearly against the regression rules.
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109806
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Cc: <stable@vger.kernel.org> # v3.19+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/intel_fbdev.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ fs/aio.c |   37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
---- a/drivers/gpu/drm/i915/intel_fbdev.c
-+++ b/drivers/gpu/drm/i915/intel_fbdev.c
-@@ -334,8 +334,8 @@ static bool intel_fb_initial_config(stru
- 				    bool *enabled, int width, int height)
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -1016,6 +1016,9 @@ static bool get_reqs_available(struct ki
+ /* aio_get_req
+  *	Allocate a slot for an aio request.
+  * Returns NULL if no requests are free.
++ *
++ * The refcount is initialized to 2 - one for the async op completion,
++ * one for the synchronous code that does this.
+  */
+ static inline struct aio_kiocb *aio_get_req(struct kioctx *ctx)
  {
- 	struct drm_i915_private *dev_priv = to_i915(fb_helper->dev);
-+	unsigned long conn_configured, conn_seq, mask;
- 	unsigned int count = min(fb_helper->connector_count, BITS_PER_LONG);
--	unsigned long conn_configured, conn_seq;
- 	int i, j;
- 	bool *save_enabled;
- 	bool fallback = true, ret = true;
-@@ -353,9 +353,10 @@ static bool intel_fb_initial_config(stru
- 		drm_modeset_backoff(&ctx);
+@@ -1028,7 +1031,7 @@ static inline struct aio_kiocb *aio_get_
+ 	percpu_ref_get(&ctx->reqs);
+ 	req->ki_ctx = ctx;
+ 	INIT_LIST_HEAD(&req->ki_list);
+-	refcount_set(&req->ki_refcnt, 0);
++	refcount_set(&req->ki_refcnt, 2);
+ 	req->ki_eventfd = NULL;
+ 	return req;
+ }
+@@ -1061,15 +1064,18 @@ out:
+ 	return ret;
+ }
  
- 	memcpy(save_enabled, enabled, count);
--	conn_seq = GENMASK(count - 1, 0);
-+	mask = GENMASK(count - 1, 0);
- 	conn_configured = 0;
- retry:
-+	conn_seq = conn_configured;
- 	for (i = 0; i < count; i++) {
- 		struct drm_fb_helper_connector *fb_conn;
- 		struct drm_connector *connector;
-@@ -368,8 +369,7 @@ retry:
- 		if (conn_configured & BIT(i))
- 			continue;
++static inline void iocb_destroy(struct aio_kiocb *iocb)
++{
++	if (iocb->ki_filp)
++		fput(iocb->ki_filp);
++	percpu_ref_put(&iocb->ki_ctx->reqs);
++	kmem_cache_free(kiocb_cachep, iocb);
++}
++
+ static inline void iocb_put(struct aio_kiocb *iocb)
+ {
+-	if (refcount_read(&iocb->ki_refcnt) == 0 ||
+-	    refcount_dec_and_test(&iocb->ki_refcnt)) {
+-		if (iocb->ki_filp)
+-			fput(iocb->ki_filp);
+-		percpu_ref_put(&iocb->ki_ctx->reqs);
+-		kmem_cache_free(kiocb_cachep, iocb);
+-	}
++	if (refcount_dec_and_test(&iocb->ki_refcnt))
++		iocb_destroy(iocb);
+ }
  
--		/* First pass, only consider tiled connectors */
--		if (conn_seq == GENMASK(count - 1, 0) && !connector->has_tile)
-+		if (conn_seq == 0 && !connector->has_tile)
- 			continue;
+ static void aio_fill_event(struct io_event *ev, struct aio_kiocb *iocb,
+@@ -1743,9 +1749,6 @@ static ssize_t aio_poll(struct aio_kiocb
+ 	INIT_LIST_HEAD(&req->wait.entry);
+ 	init_waitqueue_func_entry(&req->wait, aio_poll_wake);
  
- 		if (connector->status == connector_status_connected)
-@@ -473,10 +473,8 @@ retry:
- 		conn_configured |= BIT(i);
+-	/* one for removal from waitqueue, one for this function */
+-	refcount_set(&aiocb->ki_refcnt, 2);
+-
+ 	mask = vfs_poll(req->file, &apt.pt) & req->events;
+ 	if (unlikely(!req->head)) {
+ 		/* we did not manage to set up a waitqueue, done */
+@@ -1776,7 +1779,6 @@ out:
+ 
+ 	if (mask)
+ 		aio_poll_complete(aiocb, mask);
+-	iocb_put(aiocb);
+ 	return 0;
+ }
+ 
+@@ -1867,18 +1869,21 @@ static int __io_submit_one(struct kioctx
+ 		break;
  	}
  
--	if (conn_configured != conn_seq) { /* repeat until no more are found */
--		conn_seq = conn_configured;
-+	if ((conn_configured & mask) != mask && conn_configured != conn_seq)
- 		goto retry;
--	}
- 
++	/* Done with the synchronous reference */
++	iocb_put(req);
++
  	/*
- 	 * If the BIOS didn't enable everything it could, fall back to have the
+ 	 * If ret is 0, we'd either done aio_complete() ourselves or have
+ 	 * arranged for that to be done asynchronously.  Anything non-zero
+ 	 * means that we need to destroy req ourselves.
+ 	 */
+-	if (ret)
+-		goto out_put_req;
+-	return 0;
++	if (!ret)
++		return 0;
++
+ out_put_req:
+ 	if (req->ki_eventfd)
+ 		eventfd_ctx_put(req->ki_eventfd);
+-	iocb_put(req);
++	iocb_destroy(req);
+ out_put_reqs_available:
+ 	put_reqs_available(ctx, 1);
+ 	return ret;
 
 
