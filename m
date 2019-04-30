@@ -2,172 +2,338 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	TVD_PH_BODY_ACCOUNTS_PRE autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D03C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73C1C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8175C21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2202087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 21:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="tCOH4p5l"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QdS5VXN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfD3VQe (ORCPT
+        id S1727083AbfD3VTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 17:16:34 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38069 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfD3VQd (ORCPT
+        Tue, 30 Apr 2019 17:19:13 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:39174 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfD3VTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 17:16:33 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t70so6930426oif.5;
-        Tue, 30 Apr 2019 14:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x9ZdZ6bqDGn77i1srwmu08QqiEMLIMYWir0Z07Jgos4=;
-        b=tCOH4p5lTlmioAsZqTtSB+b0a25F+mDmltNf24TLMx/NVs8Ae6didfVzvIhMbq+f2v
-         Ke8egsIHm3e8me3HmnRcVBsary2K0iVbV2pmQ6DbZkCPQ/5+bjt8DMOLo6YTB4VYKMzp
-         87ZmW7Lz8f1d3EIqyejA4sHAY1q5gOWHhQzJkkCB/EIsDJjrTEsoG13cYKV1RUv6pT6c
-         9xZt+SqnMqFrSxwtERSJregeIUUYbvlP3DwoZ14k8uQ8d6hQ+FaOJR5VA0CD1ko/DAEE
-         G0xp3vXZ054tbPZ4IGASKq9oOajBFf94fQv//ibLur3dm+zDp8jpNr0zFV5vGpH6Vfow
-         PknA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x9ZdZ6bqDGn77i1srwmu08QqiEMLIMYWir0Z07Jgos4=;
-        b=o2CKOFZUtdTidmuBuejLkvJ3D0bLOdAKUshmtV+R3YL0ghwLhtJ9N0spErJ/mr6t32
-         DIB2xKIJ1kEE2V8HFjRq/vfBu3azIEvYEDOmKVu+6BoDiFBZs1otv4eCbfAY0ijMaIUZ
-         VMqUhZgLH0vbNLs96p4YwRr6Gl2umZXWK5dQELAvR+ob1GNUNPTPyWy84JmNNI4YJCq1
-         da/Y9HcgOC/pHvxSZqPgl1fT8uaGbKOhK/C1EYgEAMZo2d52z+erKA1xSZX5pMJJjCMh
-         UB79TjlxdYY0Ekp2Q/rD9ERrTNpwTCQTA7GpXlFLzJm9YZvNAaJwxzF25g8HImIc7jvJ
-         2GPQ==
-X-Gm-Message-State: APjAAAV/vACKXzZCamvgUAJy/gmy1435ZeO2xYPkD6qt02yakYJ72tjK
-        2QnWgRPYggFbn54qe/isjsf+paWqC9x3/lnTxwk=
-X-Google-Smtp-Source: APXvYqxpFku/XQC3iL9KSS5SgUZ1DZzVlX9Sw5r89SbJxBuDBWgOycj4EcLrUFnKQDJ6ePGahw8Lv6YYcjeUROR38us=
-X-Received: by 2002:aca:4482:: with SMTP id r124mr4713694oia.39.1556658992394;
- Tue, 30 Apr 2019 14:16:32 -0700 (PDT)
+        Tue, 30 Apr 2019 17:19:13 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190430211910euoutp010a1200a0b738c0a632fa652ea96240cd~aXUAG1cHW0523505235euoutp01E
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 21:19:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190430211910euoutp010a1200a0b738c0a632fa652ea96240cd~aXUAG1cHW0523505235euoutp01E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556659150;
+        bh=4EI1v4CayMjzpl2T5dvi9jPEnNc2wJ+J/pfui+gzwWs=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=QdS5VXN0sy6P8Wx2hmvLPSX/KhVJbalxEpv8W8NWRXOwH+ZHrE6GJ/ZuUCZiZO5LR
+         v0CcCHd1lE8Ut+Etdg6GvgkGy54kq26qVP56NFvyqRSmAzSUxyBm5mCBIendDd8fqP
+         rWDALLtJT9ImTVzZkz8c8L82kCqXS6u6ekYtClO8=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190430211909eucas1p2e0749e479fff20c4265196e24bcb93d8~aXT-Hxq7L2561325613eucas1p2u;
+        Tue, 30 Apr 2019 21:19:09 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id CE.85.04325.DCBB8CC5; Tue, 30
+        Apr 2019 22:19:09 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190430211907eucas1p24b3ebf45d318800450029f36634c2196~aXT9fEjMd2985729857eucas1p2N;
+        Tue, 30 Apr 2019 21:19:07 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190430211907eusmtrp2d3cd71e7687ee349645ca356e255f220~aXT9PZwjY1026210262eusmtrp2c;
+        Tue, 30 Apr 2019 21:19:07 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-13-5cc8bbcdded2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 96.44.04146.BCBB8CC5; Tue, 30
+        Apr 2019 22:19:07 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190430211906eusmtip197ae411abadc6b6716615af2d6afb0fc~aXT8Um-a81212112121eusmtip1L;
+        Tue, 30 Apr 2019 21:19:06 +0000 (GMT)
+Subject: Re: [PATCH v3 2/4] drivers: devfreq: events: extend events by type
+ of counted data
+To:     Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, kgene@kernel.org,
+        willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <adb6e86a-880e-f9b7-76b2-777a531895d2@partner.samsung.com>
+Date:   Tue, 30 Apr 2019 23:19:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190426212112.5624-1-fancer.lancer@gmail.com>
- <20190426212112.5624-2-fancer.lancer@gmail.com> <20190426214631.GV4041@lunn.ch>
- <20190426233511.qnkgz75ag7axt5lp@mobilestation> <f27df721-47aa-a708-aaee-69be53def814@gmail.com>
- <CA+h21hpTRCrD=FxDr=ihDPr+Pdhu6hXT3xcKs47-NZZZ3D9zyg@mail.gmail.com> <20190429211225.ce7cspqwvlhwdxv6@mobilestation>
-In-Reply-To: <20190429211225.ce7cspqwvlhwdxv6@mobilestation>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 30 Apr 2019 23:16:21 +0200
-Message-ID: <CAFBinCBxgMr6ZkOSGfXZ9VwJML=GnzrL+FSo5jMpN27L2o5+JA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] net: phy: realtek: Change TX-delay setting for
- RGMII modes only
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3557d507-0463-89de-4025-fbeaaef78bed@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJKsWRmVeSWpSXmKPExsWy7djP87pnd5+IMXgxX8xi44z1rBbXvzxn
+        tZh/5ByrRf/j18wW589vYLc42/SG3WLT42usFpd3zWGz+Nx7hNFixvl9TBZrj9xlt1h6/SKT
+        xe3GFWwWrXuPsFscftPOavHtxCNGBwGPNfPWMHrsnHWX3WPTqk42j81L6j36tqxi9Pi8SS6A
+        LYrLJiU1J7MstUjfLoEr49mGI6wF220r7q5sZmxgXKXTxcjJISFgItH+tZm9i5GLQ0hgBaPE
+        yWVHWSCcL4wSzQ/mM4FUCQl8ZpQ4viEFpuNl+0w2iKLljBJbn95ggSh6yyixfL4eiC0sECtx
+        a8I0VpAiEYGTjBK9jXfBHGaQSScfXANyODjYBPQkdqwqBGngFXCT+DLrITNImEVAVeL1XjaQ
+        sKhAhMT9YxtYIUoEJU7OfAK2i1PAXuL9uc1gNcwC4hK3nkAcyiwgL9G8dTYzyCoJgUYOielb
+        J7NBXO0i8fFgByuELSzx6vgWdghbRuL/TohmCYFiiYbehYwQdo3E4/65UDXWEoePXwQ7mVlA
+        U2L9Ln2IsKPE2/U/mEDCEgJ8EjfeCkKcwCcxadt0Zogwr0RHmxBEtYbElp4LUIvEJJavmcY+
+        gVFpFpLHZiF5ZhaSZ2Yh7F3AyLKKUTy1tDg3PbXYOC+1XK84Mbe4NC9dLzk/dxMjMMGd/nf8
+        6w7GfX+SDjEKcDAq8fBqeJ6IEWJNLCuuzD3EKMHBrCTC63H8aIwQb0piZVVqUX58UWlOavEh
+        RmkOFiVx3mqGB9FCAumJJanZqakFqUUwWSYOTqkGRgelpUqG2728uFwMyrW2+Ldd4ghzauWQ
+        KnOzD1CVuWZ83ZRx2Z78Opaq7NYfHz9xNS2qPSXrEBA0tXTRx21GOlGuxvPysz9fD1uRcejE
+        /LcuyxheXH8vM/FgM+dqCVHbFRtrkm5Kq0cKLEjlP7vNfWHboQnGRpfmaZkufZjnvd9WNc3T
+        yVxHiaU4I9FQi7moOBEA5/7qHWwDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsVy+t/xu7qnd5+IMdjYLWaxccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFucbXrDbrHp8TVWi8u75rBZfO49wmgx4/w+Jou1R+6yWyy9fpHJ
+        4nbjCjaL1r1H2C0Ov2lntfh24hGjg4DHmnlrGD12zrrL7rFpVSebx+Yl9R59W1YxenzeJBfA
+        FqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8WzD
+        EdaC7bYVd1c2MzYwrtLpYuTkkBAwkXjZPpOti5GLQ0hgKaPEre5NbBAJMYlJ+7azQ9jCEn+u
+        dUEVvWaU2LHiOCNIQlggVmL+4n2MIAkRgZOMErMn/GUCcZgFPjNKTF9zmRmiZQqTxLY/c4HK
+        ODjYBPQkdqwqBOnmFXCT+DLrITNImEVAVeL1XrDNogIREmfer2CBKBGUODnzCZjNKWAv8f7c
+        ZrAaZgEziXmbQVpBbHGJW0/mM0HY8hLNW2czT2AUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3
+        PbfYUK84Mbe4NC9dLzk/dxMjMLK3Hfu5eQfjpY3BhxgFOBiVeHgvuJ2IEWJNLCuuzD3EKMHB
+        rCTC63H8aIwQb0piZVVqUX58UWlOavEhRlOg3yYyS4km5wOTTl5JvKGpobmFpaG5sbmxmYWS
+        OG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsZk21yDyV7/Zwl5H53TIyFSFla672Zsn8r9P6oW
+        zN53bkz+eqN0f4SxyeGf874aK2x9XfbizNkDcirTX379fFQy0PlriQeHXps4Z9OJvdK5HJ6p
+        3YwOPr9fL532Z/XFpzZXjzC6PVr0tn+61p07mcksuYlGHiVz5aMirrcuFd8QknJpr9qJFyeV
+        WIozEg21mIuKEwE8Ie5bAgMAAA==
+X-CMS-MailID: 20190430211907eucas1p24b3ebf45d318800450029f36634c2196
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190419134821eucas1p2461a27e28387ff2b87c149f09582d2a0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190419134821eucas1p2461a27e28387ff2b87c149f09582d2a0
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134821eucas1p2461a27e28387ff2b87c149f09582d2a0@eucas1p2.samsung.com>
+        <1555681688-19643-3-git-send-email-l.luba@partner.samsung.com>
+        <3557d507-0463-89de-4025-fbeaaef78bed@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Hello Serge,
+Hi Chanwoo,
 
-On Mon, Apr 29, 2019 at 11:12 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-[...]
-> > > > Apparently the current config_init method doesn't support RXID setting.
-> > > > The patch introduced current function code was submitted by
-> > > > Martin Blumenstingl in 2016:
-> > > > https://patchwork.kernel.org/patch/9447581/
-> > > > and was reviewed by Florian. So we'd better ask him why it was ok to mark
-> > > > the RGMII_ID as supported while only TX-delay could be set.
-> > > > I also failed to find anything regarding programmatic rtl8211f delays setting
-> > > > in the Internet. So at this point we can set TX-delay only for f-model of the PHY.
-let me give you a bit of context on that patch:
-most boards (SBCs and TV boxes) with an Amlogic SoC and a Gigabit
-Ethernet PHY use a Realtek RTL8211F PHY. we were seeing high packet
-loss when transmitting from the board to another device.
-it took us very long to understand that a combination of different
-hardware and driver pieces lead to this issue:
-- in the MAC driver we enabled a 2ns TX delay by default, like Amlogic
-does it in their vendor (BSP) kernel
-- we used the upstream Realtek RTL8211F PHY driver which only enabled
-the TX delay if requested (it never disabled the TX delay)
-- hardware defaults or pin strapping of the Realtek RTL8211F PHY
-enabled the TX delay in the PHY
+On 4/30/19 9:34 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
+> 
+> On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
+>> This patch adds posibility to choose what type of data should be counted
+>> by the PPMU counter. Now the type comes from DT where the event has been
+>> defined. When there is no 'event-data-type' the default value is used,
+>> which is 'read data in bytes'.
+>> It is needed when you want to know not only read+write data bytes but
+>> i.e. only write data in byte, or number of read requests, etc.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   drivers/devfreq/event/exynos-ppmu.c | 61 +++++++++++++++++++++++++------------
+>>   include/linux/devfreq-event.h       |  6 ++++
+>>   2 files changed, 48 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+>> index c61de0b..073bf2c 100644
+>> --- a/drivers/devfreq/event/exynos-ppmu.c
+>> +++ b/drivers/devfreq/event/exynos-ppmu.c
+>> @@ -154,9 +154,9 @@ static int exynos_ppmu_set_event(struct devfreq_event_dev *edev)
+>>   	if (ret < 0)
+>>   		return ret;
+>>   
+>> -	/* Set the event of Read/Write data count  */
+>> +	/* Set the event of proper data type monitoring */
+>>   	ret = regmap_write(info->regmap, PPMU_BEVTxSEL(id),
+>> -				PPMU_RO_DATA_CNT | PPMU_WO_DATA_CNT);
+>> +			   edev->desc->data_type);
+>>   	if (ret < 0)
+>>   		return ret;
+>>   
+>> @@ -368,23 +368,11 @@ static int exynos_ppmu_v2_set_event(struct devfreq_event_dev *edev)
+>>   	if (ret < 0)
+>>   		return ret;
+>>   
+>> -	/* Set the event of Read/Write data count  */
+>> -	switch (id) {
+>> -	case PPMU_PMNCNT0:
+>> -	case PPMU_PMNCNT1:
+>> -	case PPMU_PMNCNT2:
+>> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+>> -				PPMU_V2_RO_DATA_CNT | PPMU_V2_WO_DATA_CNT);
+>> -		if (ret < 0)
+>> -			return ret;
+>> -		break;
+>> -	case PPMU_PMNCNT3:
+>> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+>> -				PPMU_V2_EVT3_RW_DATA_CNT);
+>> -		if (ret < 0)
+>> -			return ret;
+>> -		break;
+>> -	}
+>> +	/* Set the event of proper data type monitoring */
+>> +	ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+>> +			   edev->desc->data_type);
+>> +	if (ret < 0)
+>> +		return ret;
+>>   
+>>   	/* Reset cycle counter/performance counter and enable PPMU */
+>>   	ret = regmap_read(info->regmap, PPMU_V2_PMNC, &pmnc);
+>> @@ -508,6 +496,7 @@ static int of_get_devfreq_events(struct device_node *np,
+>>   	struct device *dev = info->dev;
+>>   	struct device_node *events_np, *node;
+>>   	int i, j, count;
+>> +	int ret;
+>>   
+>>   	events_np = of_get_child_by_name(np, "events");
+>>   	if (!events_np) {
+>> @@ -544,6 +533,40 @@ static int of_get_devfreq_events(struct device_node *np,
+>>   		desc[j].driver_data = info;
+>>   
+>>   		of_property_read_string(node, "event-name", &desc[j].name);
+>> +		ret = of_property_read_u32(node, "event-data-type",
+>> +					   &desc[j].data_type);
+>> +		if (ret) {
+>> +			/* Set the event of proper data type counting.
+>> +			 * Check if the data type has been defined in DT,
+>> +			 * use default if not.
+>> +			 */
+>> +			if (of_device_is_compatible(np,
+>> +					"samsung,exynos-ppmu-v2")) {
+> 
+> It is not proper to compare the compatible string again
+> in the device driver. Instead, you can define the ppmu device type
+> as following and then use 'struct of_device_id' in order to
+> identify the device type.
+I have been thinking about modifying the code in similar fashion as you
+did. Good to see similar approach. I'll take your changes with a small
+additional code, which sets the 'info->ppmu_type' before the for
+loop, as an additional patch. Would it be OK if I add you as an author
+and add Sign-off-by: Chanwoo Choi <cw00.choi@samsung.com>?
 
-This means that the TX delay was applied twice: once at the MAC and
-once at the PHY.
-That lead to high packet loss when transmitting data.
-To solve that I wrote the patch you mentioned, which has since been
-ported over to u-boot (for a non-Amlogic related board)
-
-> > > > Anyway lets clarify the situation before to proceed further. You are suggesting
-> > > > to return an error in case if either RGMII_ID or RGMII_RXID interface mode is
-> > > > requested to be enabled for the PHY. It's fair seeing the driver can't fully
-> > > > support either of them.
-I don't have any datasheet for the Realtek RTL8211F PHY and I'm not in
-the position to get one (company contracts seem to be required for
-this).
-Linux is not my main job, I do driver development in my spare time.
-
-there may or may not be a register or pin strapping to configure the RX delay.
-due to this I decided to leave the RX delay behavior "not defined"
-instead of rejecting RGMII_RXID and RGMII_ID.
-
-> > > That is how I read Andrew's suggestion and it is reasonable. WRT to the
-> > > original changes from Martin, he is probably the one you would want to
-> > > add to this conversation in case there are any RX delay control knobs
-> > > available, I certainly don't have the datasheet, and Martin's change
-> > > looks and looked reasonable, seemingly independent of the direction of
-> > > this very conversation we are having.
-the changes in patch 1 are looking good to me (except that I would use
-phy_modify_paged instead of open-coding it, functionally it's
-identical with what you have already)
-
-I'm not sure about patch 2:
-personally I would wait for someone to come up with the requirement to
-use RGMII_RXID with a RTL8211F PHY.
-that person will then a board to test the changes and (hopefully) a
-datasheet to explain the RX delay situation with that PHY.
-that way we only change the RGMII_RXID behavior once (when someone
-requests support for it) instead of twice (now with your change, later
-on when someone needs RGMII_RXID support in the RTL8211F driver)
-
-that said, the change in patch 2 itself looks fine on Amlogic boards
-(because all upstream .dts let the MAC generate the TX delay). I
-haven't runtime-tested your patch there yet.
-but there seem to be other boards (than the Amlogic ones, the RTL8211F
-PHY driver discussion in u-boot was not related to an Amlogic board)
-out there with a RTL8211F PHY (these may or may not be supported in
-mainline Linux or u-boot and may or may not use RGMII_RXID where you
-are now changing the behavior). that's not a problem by itself, but
-you should be aware of this.
-
-[...]
-> rtl8211(e|f) TX/RX delays can be configured either by external pins
-> strapping or via software registers. This is one of the clue to provide
-> a proper config_init method code. But not all rtl8211f phys provide
-> that software register, and if they do it only concerns TX-delay (as we
-> aware of). So we need to take this into account when creating the updated
-> versions of these functions.
->
-> (Martin, I also Cc'ed you in this discussion, so if you have anything to
-> say in this matter, please don't hesitate to comment.)
-Amlogic boards, such as the Hardkernel Odroid-C1 and Odroid-C2 as well
-as the Khadas VIM2 use a "RTL8211F" RGMII PHY. I don't know whether
-there are multiple versions of this PHY. all RTL8211F I have seen so
-far did behave exactly the same.
-
-I also don't know whether the RX delay is configurable (by pin
-strapping or some register) on RTL8211F PHYs because I don't have
-access to the datasheet.
-
-
-Martin
+Regards,
+Lukasz
+> 
+> 	enum exynos_ppmu_type {
+> 		EXYNOS_TYPE_PPMU,
+> 		EXYNOS_TYPE_PPMU_V2,
+> 	};
+> 
+>   static const struct of_device_id exynos_ppmu_id_match[] = {
+>          {
+>                  .compatible = "samsung,exynos-ppmu",
+> -               .data = (void *)&exynos_ppmu_ops,
+> +               .data = (void *)EXYNOS_TYPE_PPMU,
+>          }, {
+>                  .compatible = "samsung,exynos-ppmu-v2",
+> -               .data = (void *)&exynos_ppmu_v2_ops,
+> +               .data = (void *)EXYNOS_TYPE_PPMU_V2,
+>          },
+> 
+> 
+> The many device drivers in the mainline uses this code
+> in order to get the device type. You can refer the example
+> in the drivers/mfd/max14577.c.
+> 
+> (snip)
+> 
+> 
+> Example, I add the example. but it is not tested.
+> 
+> --- a/drivers/devfreq/event/exynos-ppmu.c
+> +++ b/drivers/devfreq/event/exynos-ppmu.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+>   #include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/regmap.h>
+>   #include <linux/suspend.h>
+> @@ -23,6 +24,11 @@
+>   
+>   #include "exynos-ppmu.h"
+>   
+> +enum exynos_ppmu_type {
+> +       EXYNOS_TYPE_PPMU,
+> +       EXYNOS_TYPE_PPMU_V2,
+> +};
+> +
+>   struct exynos_ppmu_data {
+>          struct clk *clk;
+>   };
+> @@ -36,6 +42,7 @@ struct exynos_ppmu {
+>          struct regmap *regmap;
+>   
+>          struct exynos_ppmu_data ppmu;
+> +       enum exynos_ppmu_type ppmu_type;
+>   };
+>   
+>   #define PPMU_EVENT(name)                       \
+>   
+>          /* Reset cycle counter/performance counter and enable PPMU */
+>          ret = regmap_read(info->regmap, PPMU_V2_PMNC, &pmnc);
+> @@ -483,31 +476,23 @@ static const struct devfreq_event_ops exynos_ppmu_v2_ops = {
+>   static const struct of_device_id exynos_ppmu_id_match[] = {
+>          {
+>                  .compatible = "samsung,exynos-ppmu",
+> -               .data = (void *)&exynos_ppmu_ops,
+> +               .data = (void *)EXYNOS_TYPE_PPMU,
+>          }, {
+>                  .compatible = "samsung,exynos-ppmu-v2",
+> -               .data = (void *)&exynos_ppmu_v2_ops,
+> +               .data = (void *)EXYNOS_TYPE_PPMU_V2,
+>          },
+>          { /* sentinel */ },
+>   };
+>   MODULE_DEVICE_TABLE(of, exynos_ppmu_id_match);
+>   
+> -static struct devfreq_event_ops *exynos_bus_get_ops(struct device_node *np)
+> -{
+> -       const struct of_device_id *match;
+> -
+> -       match = of_match_node(exynos_ppmu_id_match, np);
+> -       return (struct devfreq_event_ops *)match->data;
+> -}
+> -
+>   static int of_get_devfreq_events(struct device_node *np,
+>                                   struct exynos_ppmu *info)
+>   {
+>          struct devfreq_event_desc *desc;
+> -       struct devfreq_event_ops *event_ops;
+>          struct device *dev = info->dev;
+>          struct device_node *events_np, *node;
+>          int i, j, count;
+>   
+>          events_np = of_get_child_by_name(np, "events");
+>          if (!events_np) {
+> @@ -515,7 +500,6 @@ static int of_get_devfreq_events(struct device_node *np,
+>                          "failed to get child node of devfreq-event devices\n");
+>                  return -EINVAL;
+>          }
+> -       event_ops = exynos_bus_get_ops(np);
+>   
+>          count = of_get_child_count(events_np);
+>          desc = devm_kcalloc(dev, count, sizeof(*desc), GFP_KERNEL);
+> @@ -540,11 +524,38 @@ static int of_get_devfreq_events(struct device_node *np,
+>                          continue;
+>                  }
+>   
+> -               desc[j].ops = event_ops;
+> +               switch (info->ppmu_type) {
+> +               case EXYNOS_TYPE_PPMU:
+> +                       desc[j].ops = &exynos_ppmu_ops;
+> +                       break;
+> +               case EXYNOS_TYPE_PPMU_V2:
+> +                       desc[j].ops = &exynos_ppmu_v2_ops;
+> +                       break;
+> +               }
+> +
+> 
+> 
