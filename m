@@ -2,89 +2,110 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDB7C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9854C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE8E21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16AA20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556612854;
+	bh=qpWhxfKdvK06OPgNuI0PmE1gknQDuPHSD6Ow6PnrCtQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XJAE3iKhsRVD87GYx4dkFGNGQPcrDIAhOiX0+vRTe6iBPrfTrRr/sz9XBYdctXRsx
+	 HtOhJs4mqj8pVLFssJbbk1Hfdb052zRTJY9Fvj27neONa9np6u+y+lJwYadZS85Ifg
+	 7Mpk8Pf5FeXyKGsBh4drypUfAvmw1Hz+WVmjo82I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfD3I12 (ORCPT
+        id S1726539AbfD3I1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:27:28 -0400
-Received: from 18.mo4.mail-out.ovh.net ([188.165.54.143]:39203 "EHLO
-        18.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfD3I11 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:27:27 -0400
-X-Greylist: delayed 2391 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Apr 2019 04:27:27 EDT
-Received: from player799.ha.ovh.net (unknown [10.108.35.103])
-        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 2AA021E1A6C
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:47:35 +0200 (CEST)
-Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player799.ha.ovh.net (Postfix) with ESMTPSA id CCE9353F9AA5;
-        Tue, 30 Apr 2019 07:47:22 +0000 (UTC)
-From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 1/2] ARM: dts: imx6ul: Add csi node
-Date:   Tue, 30 Apr 2019 09:47:30 +0200
-Message-Id: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
-X-Mailer: git-send-email 2.19.2
+        Tue, 30 Apr 2019 04:27:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbfD3I1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:27:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 946472080C;
+        Tue, 30 Apr 2019 08:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556612852;
+        bh=qpWhxfKdvK06OPgNuI0PmE1gknQDuPHSD6Ow6PnrCtQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UCs9O3r1c1XINbUYUolN9sjlVVFUkTBPi/L2CvIGQfYsivM41zEEB+oBYCs/GKh8j
+         i/zt3TpNVX8BTAzhHB1d8epMursSTZD9R0CNKr/fZpN9qe7NAKNR61/ITtegl3pFJd
+         uQPQLeGsPQH5OiLPYDTTzWstOhtUYKQpSpkqWFVY=
+Date:   Tue, 30 Apr 2019 10:27:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: sysfs attrs for HW ECDSA signature
+Message-ID: <20190430082728.GE8245@kroah.com>
+References: <20190429234752.171b4f2b@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 18272792539178488855
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdduvdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429234752.171b4f2b@nic.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add csi node for i.MX6UL SoC.
+On Mon, Apr 29, 2019 at 11:47:52PM +0200, Marek Behun wrote:
+> Hi Greg and Tejun,
+> 
+> is it acceptable for a driver to expose sysfs attr files for ECDSA
+> signature generation?
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
----
- arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+What is "ECDSA signature generation"?  Is it a crypto thing?  If so, why
+not use the crypto api?  If not, what exactly is it?
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 62ed30c781ed..af322bc58333 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -951,6 +951,17 @@
- 				};
- 			};
- 
-+			csi: csi@21c4000 {
-+				compatible = "fsl,imx6ul-csi", "fsl,imx7-csi";
-+				reg = <0x021c4000 0x4000>;
-+				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX6UL_CLK_DUMMY>,
-+					 <&clks IMX6UL_CLK_CSI>,
-+					 <&clks IMX6UL_CLK_DUMMY>;
-+				clock-names = "axi", "mclk", "dcic";
-+				status = "disabled";
-+			};
-+
- 			lcdif: lcdif@21c8000 {
- 				compatible = "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
- 				reg = <0x021c8000 0x4000>;
--- 
-2.19.2
+> The thing is that
+>   1. AFAIK there isn't another API for userspace to do this.
+>      There were attempts in 2015 to expose akcipher via netlink to
+>      userspace, but the patchseries were not accepted.
 
+Pointers to that patchset?  Why was it not accepted?
+
+>   2. even if it was possible, that specific device for which I am
+>      writing this driver does not provide the ability to set the
+>      private key to sign with - the private key is just burned during
+>      manufacturing and cannot be read, only signed with.
+
+Why does this matter?
+
+> The current version of my driver exposes do_sign file in
+> /sys/firmware/turris_mox directory.
+> 
+> Userspace should write message to sign and then can read the signature
+> from this do_sign file.
+
+How big are messages and signatures?  Why does this have to be a sysfs
+api?
+
+> According to the one attr = one file principle, it would be better to
+> have two files: ecdsa_msg_to_sign (write-only) and ecdsa_signature
+> (read-only).
+> Would this be acceptable in the kernel for this driver?
+
+Why not use the crypto api, and if that doesn't work, why not just a
+char device to read/write?
+
+> I have also another question, if you would not mind:
+> 
+> This driver is dependant on a mailbox driver I have also written
+> ("mailbox: Add support for Armada 37xx rWTM mailbox"), but I have not
+> received any review for this driver from the mailbox subsystem
+> maintainer, and I have already sent three versions (on 12/17/2018,
+> 03/01/2019 and 03/15/2019).
+> What should I do in this case?
+
+Poke the maintainer again :)
+
+thanks,
+
+greg k-h
