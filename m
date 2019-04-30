@@ -2,184 +2,138 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A23C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72039C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6264520835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452FA21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MytLcW5D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AflxWRnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfD3LTP (ORCPT
+        id S1727770AbfD3LTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:19:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39505 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfD3LTO (ORCPT
+        Tue, 30 Apr 2019 07:19:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55220 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfD3LTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:19:14 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBIeWP1347157
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Apr 2019 04:18:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBIeWP1347157
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556623122;
-        bh=ZhGa5Rw2An+g9Pm5bMaZJRBKLbUWU/FVeTI2VZxezKQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=MytLcW5D5rC54iKa5hv8XWJ21/xogRmGGierAS8SWy8Fp6CDz+kkTEtbhujPGefJw
-         3rfxgycUOK3aIuSb+fTpgdFCOXboCHSb4/Nnn+qO/VExDNDKXzSmg7MjlsTDvqNqJw
-         s2Q8eCh+rT//3EdhYwjC6bB3hEa7BTdGPHkkjANdp3QbwHWuFsXgYHoTVyrzccO+UM
-         4bxOfzIDeM4sDRSKzAUmVsXIa63bjrDtqVCmP0Q/3mGVmn/dTBYa8yLRjsi7vcLLVU
-         yZpeeSLPiMMBvCGRGDTnyzJib/5N+MzwiirQ/jwBJFN3hhBwtbllqT454YRl3sNSwG
-         blhl0j03QEyLQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBIe5w1347154;
-        Tue, 30 Apr 2019 04:18:40 -0700
-Date:   Tue, 30 Apr 2019 04:18:40 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nadav Amit <tipbot@zytor.com>
-Message-ID: <tip-13585fa0668c724efab9635aaeef6ec390217415@git.kernel.org>
-Cc:     peterz@infradead.org, luto@kernel.org, mhiramat@kernel.org,
-        kristen@linux.intel.com, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, deneen.t.dock@intel.com, namit@vmware.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        dave.hansen@intel.com, mingo@kernel.org, linux_dti@icloud.com,
-        kernel-hardening@lists.openwall.com, will.deacon@arm.com,
-        rick.p.edgecombe@intel.com, riel@surriel.com,
-        keescook@chromium.org, akpm@linux-foundation.org, bp@alien8.de,
-        ard.biesheuvel@linaro.org
-Reply-To: rick.p.edgecombe@intel.com, will.deacon@arm.com,
-          riel@surriel.com, akpm@linux-foundation.org, bp@alien8.de,
-          keescook@chromium.org, ard.biesheuvel@linaro.org,
-          dave.hansen@intel.com, linux_dti@icloud.com, mingo@kernel.org,
-          kernel-hardening@lists.openwall.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com,
-          deneen.t.dock@intel.com, namit@vmware.com, tglx@linutronix.de,
-          torvalds@linux-foundation.org, peterz@infradead.org,
-          luto@kernel.org, mhiramat@kernel.org, kristen@linux.intel.com
-In-Reply-To: <20190426001143.4983-6-namit@vmware.com>
-References: <20190426001143.4983-6-namit@vmware.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] fork: Provide a function for copying init_mm
-Git-Commit-ID: 13585fa0668c724efab9635aaeef6ec390217415
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Apr 2019 07:19:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=L6RbtbALsHZdEB1dBgFqPR0csu0ISaHiL/UV6U5cQuY=; b=AflxWRnRKui1Arz8Gz8hqwfhh
+        hSyqQce0AL36oM5bSHSDDxAPOC8yZA3631xf2pNjInQQ+Un7XTJd4TFbRvjYkKdS3Cu0PFCRV6e+Q
+        Y5TK909VdvuD3W/E6upJEwVk8emMg+3FounrP4GB2EoELK7eMWRUArlQDxgsVSw9ze+j8UVAk6+Yh
+        T4zq2UaKM1xNBten2qYt3fKJYCCViKMEc6VmjxIQLPpEfv51twOcnPtNNjvhWz5ewQBFWXLA/A3d+
+        agzaOR9Yg6Ev9i/pHuyzq+Rq5k5T/zTbmaF1WvwmdS9DvY5cvsNYqrVnrbOLTQnjYFJ4I3pMttUFz
+        3zN9KWVBw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLQme-00086p-P4; Tue, 30 Apr 2019 11:18:48 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7A84129B1115A; Tue, 30 Apr 2019 13:18:46 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 13:18:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+Message-ID: <20190430111846.GS2623@hirez.programming.kicks-ass.net>
+References: <20190427100639.15074-1-nstange@suse.de>
+ <20190427100639.15074-4-nstange@suse.de>
+ <20190427102657.GF2623@hirez.programming.kicks-ass.net>
+ <20190428133826.3e142cfd@oasis.local.home>
+ <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
+ <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+ <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+ <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
+ <CAHk-=wjAQaowLHBrXs1M5K-Nr-eVQMt0K8oyCuWxKTvP9k=qqA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAHk-=wjAQaowLHBrXs1M5K-Nr-eVQMt0K8oyCuWxKTvP9k=qqA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  13585fa0668c724efab9635aaeef6ec390217415
-Gitweb:     https://git.kernel.org/tip/13585fa0668c724efab9635aaeef6ec390217415
-Author:     Nadav Amit <namit@vmware.com>
-AuthorDate: Thu, 25 Apr 2019 17:11:25 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 30 Apr 2019 12:37:51 +0200
+On Mon, Apr 29, 2019 at 03:06:30PM -0700, Linus Torvalds wrote:
+> On Mon, Apr 29, 2019 at 11:57 AM Andy Lutomirski <luto@kernel.org> wrote:
+> > >
+> > > Otherwise you could never trust the whole sti shadow thing - and it very much is part of the architecture.
+> >
+> > Is this documented somewhere?
+> 
+> Btw, if you really don't trust the sti shadow despite it going all the
+> way back to the 8086, then you could instead make the irqoff code do
+> 
+>         push %gs:bp_call_return
+>         push %gs:bp_call_target
+>         sti
+>         ret
 
-fork: Provide a function for copying init_mm
+This variant cures the RETPOLINE complaint; due to there not actually
+being an indirect jump anymore. And it cures the sibling call complaint,
+but trades it for "return with modified stack frame".
 
-Provide a function for copying init_mm. This function will be later used
-for setting a temporary mm.
+Something like so is clean:
 
-Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: <akpm@linux-foundation.org>
-Cc: <ard.biesheuvel@linaro.org>
-Cc: <deneen.t.dock@intel.com>
-Cc: <kernel-hardening@lists.openwall.com>
-Cc: <kristen@linux.intel.com>
-Cc: <linux_dti@icloud.com>
-Cc: <will.deacon@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190426001143.4983-6-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/sched/task.h |  1 +
- kernel/fork.c              | 24 ++++++++++++++++++------
- 2 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index 2e97a2227045..f1227f2c38a4 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -76,6 +76,7 @@ extern void exit_itimers(struct signal_struct *);
- extern long _do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *, unsigned long);
- extern long do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *);
- struct task_struct *fork_idle(int);
-+struct mm_struct *copy_init_mm(void);
- extern pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
- extern long kernel_wait4(pid_t, int __user *, int, struct rusage *);
- 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 44fba5e5e916..fbe9dfcd8680 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1299,13 +1299,20 @@ void mm_release(struct task_struct *tsk, struct mm_struct *mm)
- 		complete_vfork_done(tsk);
- }
- 
--/*
-- * Allocate a new mm structure and copy contents from the
-- * mm structure of the passed in task structure.
-+/**
-+ * dup_mm() - duplicates an existing mm structure
-+ * @tsk: the task_struct with which the new mm will be associated.
-+ * @oldmm: the mm to duplicate.
-+ *
-+ * Allocates a new mm structure and duplicates the provided @oldmm structure
-+ * content into it.
-+ *
-+ * Return: the duplicated mm or NULL on failure.
-  */
--static struct mm_struct *dup_mm(struct task_struct *tsk)
-+static struct mm_struct *dup_mm(struct task_struct *tsk,
-+				struct mm_struct *oldmm)
- {
--	struct mm_struct *mm, *oldmm = current->mm;
-+	struct mm_struct *mm;
- 	int err;
- 
- 	mm = allocate_mm();
-@@ -1372,7 +1379,7 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
- 	}
- 
- 	retval = -ENOMEM;
--	mm = dup_mm(tsk);
-+	mm = dup_mm(tsk, current->mm);
- 	if (!mm)
- 		goto fail_nomem;
- 
-@@ -2187,6 +2194,11 @@ struct task_struct *fork_idle(int cpu)
- 	return task;
- }
- 
-+struct mm_struct *copy_init_mm(void)
-+{
-+	return dup_mm(NULL, &init_mm);
-+}
++extern asmlinkage void emulate_call_irqon(void);
++extern asmlinkage void emulate_call_irqoff(void);
 +
- /*
-  *  Ok, this is the main fork-routine.
-  *
++asm(
++	".text\n"
++	".global emulate_call_irqoff\n"
++	".type emulate_call_irqoff, @function\n"
++	"emulate_call_irqoff:\n\t"
++		"push %gs:bp_call_return\n\t"
++		"push %gs:bp_call_target\n\t"
++		"sti\n\t"
++		"ret\n"
++	".size emulate_call_irqoff, .-emulate_call_irqoff\n"
++
++	".global emulate_call_irqon\n"
++	".type emulate_call_irqon, @function\n"
++	"emulate_call_irqon:\n\t"
++		"push %gs:bp_call_return\n\t"
++		"push %gs:bp_call_target\n\t"
++		"ret\n"
++	".size emulate_call_irqon, .-emulate_call_irqon\n"
++	".previous\n");
++
++STACK_FRAME_NON_STANDARD(emulate_call_irqoff);
++STACK_FRAME_NON_STANDARD(emulate_call_irqon);
