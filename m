@@ -2,99 +2,118 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30725C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60477C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F365921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:43:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O/YPSKpd"
+	by mail.kernel.org (Postfix) with ESMTP id 3107A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556639089;
+	bh=rrcsqZYKEnEJrIdXuKxxMtHlVHbhSKZ1Kz45Y55dS2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1847cjq7l1aa8E8lMES06QiYwI7xL6+ed80Mm+SuyOv+jVF/vIlVjvy+7c1QXu5p/
+	 cKhBF8yVdeKIyjMcD2mNyFuI7a0zBjYIcn2woCPY7wn0SQxBjfKkjxqsJvMk0IVMiV
+	 1uvdecLSqSSVCQvkrwfkzUtiHz0h88fFErVJlQL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbfD3PnC (ORCPT
+        id S1726203AbfD3Pos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:43:02 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:36006 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfD3PnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:43:01 -0400
-Received: by mail-vs1-f65.google.com with SMTP id x78so5847563vsc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 08:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rxw3hN1YSm26ISg+LOrlcUFUk2/ynydw3TOb8ZPeF0s=;
-        b=O/YPSKpdJNfI7U6oIOgur+JBh6lLTX26M/YLxxTMTTbCOdPzII6OA9QsPMywPziiVG
-         zpbQJz5mB/J7NdHufCTiy3vXfHvVklhiXXTRr5MFYctmmoM/5ysemaK2nE9o2A82LpFE
-         EkHyne5+Jcq6bx5DKtAGx12ur+JpsGrBj8JHk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rxw3hN1YSm26ISg+LOrlcUFUk2/ynydw3TOb8ZPeF0s=;
-        b=FC3RJQjsTc16tVzXv9DEzO7Gz+ct1l0WI+b//T8OyIPTwnWmNJ6Nyh2vv+lgUhVQXl
-         OVaJoN7bEs9oB5vzyHB3hTiKQKHgGbgbcDENaugpizFjgkwaTxixTWEjePDI0kwADT/L
-         NALsoSYjbNtOHLdb27OXVEbqGlWpWjUXJdTqEXI/monAYNKmb1q8zo5r7vkbQlFVQw9J
-         WaSxiLkOJU7de7rmPjYdzMzT773KlpnfnI8yYE/Jbxl+PRHolJXRj0h4rq1je8ewjiC+
-         TpGZu5u8fiVAlsp7xQ0xcOh4CbvizAJtcPgpOoLdXkJ0sgiU97lSC7+xjFQ5F9+Gd2pO
-         ArPg==
-X-Gm-Message-State: APjAAAUyQ2+/FRE+kQEjBceigXKj91NnszCY1ScN0Z1sT9CRDj2clq58
-        xMpuGdp4iSHv2/S3dFE7Y5fPaGsu1R0=
-X-Google-Smtp-Source: APXvYqyL0dmlO05ciEfV9jAndFvNTh1CXO5ZeV4jFGVVEiedFwLJ1FqyghUD2TebO9h89TzNBTGqVg==
-X-Received: by 2002:a67:a446:: with SMTP id p6mr36133665vsh.198.1556638979956;
-        Tue, 30 Apr 2019 08:42:59 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id v124sm8640444vke.42.2019.04.30.08.42.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 08:42:55 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id g127so8272416vsd.6
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 08:42:54 -0700 (PDT)
-X-Received: by 2002:a67:eecb:: with SMTP id o11mr36496756vsp.66.1556638973924;
- Tue, 30 Apr 2019 08:42:53 -0700 (PDT)
+        Tue, 30 Apr 2019 11:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfD3Por (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:44:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA30C21734;
+        Tue, 30 Apr 2019 15:44:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556639087;
+        bh=rrcsqZYKEnEJrIdXuKxxMtHlVHbhSKZ1Kz45Y55dS2U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FirvzScPjS7RmCBuQQS2UfrvORNpS6ms7ZN8jkKNd/7jz8fuGSfnsarVTtu+qTtam
+         kWtSTyY4vCTCPe1lNlvQzSiLcAPFcveskn0IRfmsrv3rKIixB8Mzp/gK+sGFIOXXFQ
+         VWrcQBTR5q9vwahfuQp4KuIM0UZclWBjJVQ9Gnjo=
+Date:   Tue, 30 Apr 2019 17:44:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] usbip: vhci_hcd: Mark expected switch fall-through
+Message-ID: <20190430154444.GA4224@kroah.com>
+References: <20190429143957.GA6725@embeddedor>
+ <1daec8c8929e4d18b2059ab1dfbfdf4a@AcuMS.aculab.com>
+ <287c8504-eafa-ebbb-aa39-babb86fdeb94@embeddedor.com>
 MIME-Version: 1.0
-References: <20190429222613.13345-1-mcroce@redhat.com> <CAGnkfhzkju6LXwHAVCHxCmMvAa1MLQGRY1czE1Boqz2OcEq39Q@mail.gmail.com>
-In-Reply-To: <CAGnkfhzkju6LXwHAVCHxCmMvAa1MLQGRY1czE1Boqz2OcEq39Q@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 30 Apr 2019 08:42:42 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+qejH0c9fG=TwmSyK0FkaiNidgqYZrqgKPf4D_=u2k8A@mail.gmail.com>
-Message-ID: <CAGXu5j+qejH0c9fG=TwmSyK0FkaiNidgqYZrqgKPf4D_=u2k8A@mail.gmail.com>
-Subject: Re: [PATCH v4] proc/sysctl: add shared variables for range check
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <287c8504-eafa-ebbb-aa39-babb86fdeb94@embeddedor.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 3:47 AM Matteo Croce <mcroce@redhat.com> wrote:
->
-> On Tue, Apr 30, 2019 at 12:26 AM Matteo Croce <mcroce@redhat.com> wrote:
-> >
-> > Add a const int array containing the most commonly used values,
-> > some macros to refer more easily to the correct array member,
-> > and use them instead of creating a local one for every object file.
-> >
->
-> Ok it seems that this simply can't be done, because there are at least
-> two points where extra1,2 are set to a non const struct:
-> in ip_vs_control_net_init_sysctl() it's assigned to struct netns_ipvs,
-> while in mpls_dev_sysctl_register() it's assigned to a struct mpls_dev
-> and a struct net.
+On Mon, Apr 29, 2019 at 10:05:51AM -0500, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 4/29/19 9:44 AM, David Laight wrote:
+> > From: Gustavo A. R. Silva
+> >> Sent: 29 April 2019 15:40
+> >> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> >> cases where we are expecting to fall through.
+> > ...
+> >> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> >> index 667d9c0ec905..000ab7225717 100644
+> >> --- a/drivers/usb/usbip/vhci_hcd.c
+> >> +++ b/drivers/usb/usbip/vhci_hcd.c
+> >> @@ -508,6 +508,7 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+> >>  		case USB_PORT_FEAT_U1_TIMEOUT:
+> >>  			usbip_dbg_vhci_rh(
+> >>  				" SetPortFeature: USB_PORT_FEAT_U1_TIMEOUT\n");
+> >> +			/* Fall through */
+> >>  		case USB_PORT_FEAT_U2_TIMEOUT:
+> >>  			usbip_dbg_vhci_rh(
+> >>  				" SetPortFeature: USB_PORT_FEAT_U2_TIMEOUT\n");
+> > 
+> > That doesn't look right, both debug messages seem to get printed.
+> > 
+> 
+> At first sight, I thought the same way, then I took a look into
+> commit:
+> 
+> 1c9de5bf428612458427943b724bea51abde520a
+> 
+> and noticed that the original developer properly added fall-through
+> comments in other places in the same switch() code, that gave me the
+> impression he knew what he was doing; then I noticed the following
+> error message in case USB_PORT_FEAT_U2_TIMEOUT:
+> 
+> 	if (hcd->speed != HCD_USB3) {
+> 		pr_err("USB_PORT_FEAT_U1/2_TIMEOUT req not "
+> 		       "supported for USB 2.0 roothub\n");
+> 		goto error;
+> 	}
+> 
+> this error message is what makes me think the fall-through is
+> intentional; otherwise I think it would look like this instead:
+> 
+> 	if (hcd->speed != HCD_USB3) {
+> 		pr_err("USB_PORT_FEAT_U2_TIMEOUT req not "
+> 		       "supported for USB 2.0 roothub\n");
+> 		goto error;
+> 	}
 
-Why can't these be converted to const also? I don't see the pointer
-changing anywhere. They're created in one place and never changed.
+I think you are right, that's horrid, but correct :(
 
-If it's only a couple places, it seems like it'd be nice to get these fixed.
+Will go queue this up, thanks.
 
--- 
-Kees Cook
+greg k-h
