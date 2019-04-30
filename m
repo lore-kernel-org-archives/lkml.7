@@ -2,109 +2,159 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EE9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7407EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7279920835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41D5B20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:44:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DF1HwDne";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kGMOcQFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfD3Hol (ORCPT
+        id S1726488AbfD3Hop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:44:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45888 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbfD3Hol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:44:41 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E9493084249;
+        Tue, 30 Apr 2019 03:44:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50690 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfD3Hom (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 03:44:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9E23660214; Tue, 30 Apr 2019 07:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556610281;
+        bh=ObjUo2Emxi2WJIUfB5bP3tzczg3thQ2BFG0+EiKejcU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DF1HwDne6KsQJn6A25Ut2I4bvUJhIOjGIJxneekaxPT+JNTuqU1vLmQeuRHPvkmnj
+         V6NjozPDiwyGiNa0og23Dg4n+tjlMBUsH6SKvDl3aiXfFqZKuD5hiV6aHic2fdOFBL
+         /V1ZpTnhASbiMN/UreAHMuNI8hS+QBlEtgQR2TuE=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id BD65B60247;
         Tue, 30 Apr 2019 07:44:40 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-43.pek2.redhat.com [10.72.12.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8720016BEC;
-        Tue, 30 Apr 2019 07:44:28 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, akpm@linux-foundation.org, x86@kernel.org,
-        hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com, brijesh.singh@amd.com
-Subject: [PATCH 0/3 v3] Add kdump support for the SEV enabled guest
-Date:   Tue, 30 Apr 2019 15:44:18 +0800
-Message-Id: <20190430074421.7852-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 30 Apr 2019 07:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556610280;
+        bh=ObjUo2Emxi2WJIUfB5bP3tzczg3thQ2BFG0+EiKejcU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kGMOcQFKz3h9bavJPMPr2fToJGjB7cEP2m+hFQW+iXZAVAaceiJRBDBxc2R6zB/yL
+         mtAMgC6qweAXy4SUQbrxZZBjuboaZFOkWVN760lOIJqJ2Sg4HKoC4aXKgFfe8sF/O5
+         dqJhbWA+dbjWQjDSyKLJ5yNo801QCh6KuLouyv5Q=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 30 Apr 2019 13:14:40 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] Bluetooth: hci_qca: Rename STATE_<flags> to
+ QCA_<flags>
+In-Reply-To: <20190429232131.183049-1-mka@chromium.org>
+References: <20190429232131.183049-1-mka@chromium.org>
+Message-ID: <472ef0468852806f6afa8aa6e7713de2@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like the physical machines support kdump, the virtual machines
-also need kdump. When a virtual machine panic, we also need to dump
-its memory for analysis.
+Hi Mathhias,
 
-For the SEV virtual machine, the memory is also encrypted. When SEV
-is enabled, the second kernel images(kernel and initrd) are loaded
-into the encrypted areas. Unlike the SME, the second kernel images
-are loaded into the decrypted areas.
+On 2019-04-30 04:51, Matthias Kaehlcke wrote:
+> Rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IBS_ENABLED. The constant
+> represents a flag (multiple flags can be set at once), not a unique
+> state of the controller or driver.
+> 
+> Also make the flag an enum value instead of a pre-processor constant
+> (more flags will be added to the enum group by another patch).
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v3:
+> - rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IBS_ENABLED
+> 
+> Changes in v2:
+> - don't use BIT()
+> - change to enum type
+> - updated commit message
+> ---
+>  drivers/bluetooth/hci_qca.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index c53ee8d8ca15..57322c42bb2d 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -54,9 +54,6 @@
+>  #define HCI_IBS_WAKE_ACK	0xFC
+>  #define HCI_MAX_IBS_SIZE	10
+> 
+> -/* Controller states */
+> -#define STATE_IN_BAND_SLEEP_ENABLED	1
+> -
+>  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
+>  #define IBS_TX_IDLE_TIMEOUT_MS		2000
+>  #define CMD_TRANS_TIMEOUT_MS		100
+> @@ -67,6 +64,10 @@
+>  /* Controller debug log header */
+>  #define QCA_DEBUG_HANDLE	0x2EDC
+> 
+> +enum qca_flags {
+> +	QCA_IBS_ENABLED,
+> +};
+> +
+>  /* HCI_IBS transmit side sleep protocol states */
+>  enum tx_ibs_states {
+>  	HCI_IBS_TX_ASLEEP,
+> @@ -792,7 +793,7 @@ static int qca_enqueue(struct hci_uart *hu, struct
+> sk_buff *skb)
+>  	/* Don't go to sleep in middle of patch download or
+>  	 * Out-Of-Band(GPIOs control) sleep is selected.
+>  	 */
+> -	if (!test_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
+> +	if (!test_bit(QCA_IBS_ENABLED, &qca->flags)) {
+>  		skb_queue_tail(&qca->txq, skb);
+>  		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+>  		return 0;
+> @@ -1202,7 +1203,7 @@ static int qca_setup(struct hci_uart *hu)
+>  		return ret;
+> 
+>  	/* Patch downloading has to be done without IBS mode */
+> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +	clear_bit(QCA_IBS_ENABLED, &qca->flags);
+> 
+>  	if (qca_is_wcn399x(soc_type)) {
+>  		bt_dev_info(hdev, "setting up wcn3990");
+> @@ -1246,7 +1247,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	/* Setup patch / NVM configurations */
+>  	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
+>  	if (!ret) {
+> -		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +		set_bit(QCA_IBS_ENABLED, &qca->flags);
+>  		qca_debugfs_init(hdev);
+>  	} else if (ret == -ENOENT) {
+>  		/* No patch/nvm-config found, run with original fw/config */
+> @@ -1315,7 +1316,7 @@ static void qca_power_shutdown(struct hci_uart 
+> *hu)
+>  	 * data in skb's.
+>  	 */
+>  	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
+> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +	clear_bit(QCA_IBS_ENABLED, &qca->flags);
+>  	qca_flush(hu);
+>  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
 
-Because of this difference between SME and SEV, we need to properly
-map the kexec memory area in order to correctly access it.
+Change looks fine to me.
 
-Test tools:
-makedumpfile[v1.6.5]:
-git://git.code.sf.net/p/makedumpfile/code
-commit <d222b01e516b> ("Add support for AMD Secure Memory Encryption")
-Note: This patch was merged into the devel branch.
-
-crash-7.2.5: https://github.com/crash-utility/crash.git
-commit <942d813cda35> ("Fix for the "kmem -i" option on Linux 5.0")
-
-kexec-tools-2.0.19:
-git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-commit <942d813cda35> ("Fix for the kmem '-i' option on Linux 5.0")
-http://lists.infradead.org/pipermail/kexec/2019-March/022576.html
-Note: The second kernel cann't boot without this patch.
-
-kernel:
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-commit <f261c4e529da> ("Merge branch 'akpm' (patches from Andrew)")
-
-Test steps:
-[1] load the vmlinux and initrd for kdump
-# kexec -p /boot/vmlinuz-5.0.0+ --initrd=/boot/initramfs-5.0.0+kdump.img --command-line="BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.0.0+ ro resume=UUID=126c5e95-fc8b-48d6-a23b-28409198a52e console=ttyS0,115200 earlyprintk=serial irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never disable_cpu_apicid=0"
-
-[2] trigger panic
-# echo 1 > /proc/sys/kernel/sysrq
-# echo c > /proc/sysrq-trigger
-
-[3] check and parse the vmcore
-# crash vmlinux /var/crash/127.0.0.1-2019-03-15-05\:03\:42/vmcore
-
-Changes since v1:
-1. Modify the patch subject prefixes.
-2. Improve patch log: add parentheses at the end of the function names.
-3. Fix the multiple confusing checks.
-4. Add comment in the arch_kexec_post_alloc_pages().
-
-Changes since v2:
-1. Add the explanation to the commit message[Boris' suggestion].
-2. Improve the patch log.
-
-Lianbo Jiang (3):
-  x86/kexec: Do not map the kexec area as decrypted when SEV is active
-  x86/kexec: Set the C-bit in the identity map page table when SEV is
-    active
-  kdump,proc/vmcore: Enable dumping encrypted memory when SEV was active
-
- arch/x86/kernel/machine_kexec_64.c | 27 ++++++++++++++++++++++++++-
- fs/proc/vmcore.c                   |  6 +++---
- 2 files changed, 29 insertions(+), 4 deletions(-)
-
+Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 -- 
-2.17.1
-
+Regards
+Balakrishna.
