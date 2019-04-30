@@ -4,48 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F18C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F343C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DE021783
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CEEC217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624817;
-	bh=FIm/dYJUGKyWJsw104A+MAzQhk1rZCq5KdDwZvA7XWk=;
+	s=default; t=1556624820;
+	bh=S5a57pgBbNhWtuYvTvpD2TIOjnaqE6tBXM5Uuq70EZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OwoyY/E7Uu28/bcSbblooX3KRJ80uhaX4nJPXQ886gCbaVOypKyxvbVm5Uv+79n0j
-	 MdT1H66Y1EqMZPYv/ODZQrjUGD7Pey73pMzbWD16qAsVcmxkBArGeAlyi+0W+kyhWN
-	 EFmzK/+XsR8s68/GQsUZKxQUX96sTAB1Y9YNOWrw=
+	b=h0Nfd6gfezPP0GIkoZWCQHI/nJC0zgbZoZfpnbeGAmMO0iRk5z6YHndZYWif1wHEr
+	 Jwa780/6+OoQ6eEERkkRxfpANEjd2LzgNPnEvX0R0hKpEXewpku49DtOFKGgQa7bv6
+	 pEJo5qxX3BsvsAUVpq8x7t7IshjVVum672kbQ7bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfD3Lqv (ORCPT
+        id S1730634AbfD3Lq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59712 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:46:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729801AbfD3Lql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:41 -0400
+        id S1727873AbfD3Lqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1439020449;
-        Tue, 30 Apr 2019 11:46:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6A512177B;
+        Tue, 30 Apr 2019 11:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624800;
-        bh=FIm/dYJUGKyWJsw104A+MAzQhk1rZCq5KdDwZvA7XWk=;
+        s=default; t=1556624813;
+        bh=S5a57pgBbNhWtuYvTvpD2TIOjnaqE6tBXM5Uuq70EZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NrqnzOQDsqKywnEUQIQWFNkDE8jy72RjJClxU8pgTx/Na1bHaqO9aNDEfQxEsBo9v
-         hCX4fjdg8FmNMFxiS6+CLxHwKmHoH67s5aeAqbkeopmlI1idpenUjFqukuqCmqrN/f
-         SitCB+OS8t/dsZBNzrmqCmO8bw2bnc4aZeXN5AEM=
+        b=HeqBsFLMpohduiKYkQu+18YgGGfOJcGLKYEQWKOC8UKMtaNc6U0kWWu8Yn/RJK/9Z
+         Q2fREE6mpP0jft1L9cZ+P0KcqjEHUCgFWgDtVAvABCQjHICU/ErVjsGZOPq1dcI9Wj
+         1xbnR0mTT/DLbEKx6Tf5RIh6qQ0ZlxW47Gnc2yR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 076/100] aio: fold lookup_kiocb() into its sole caller
-Date:   Tue, 30 Apr 2019 13:38:45 +0200
-Message-Id: <20190430113612.324229328@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Liska <mliska@suse.cz>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 081/100] x86/retpolines: Disable switch jump tables when retpolines are enabled
+Date:   Tue, 30 Apr 2019 13:38:50 +0200
+Message-Id: <20190430113612.580015455@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -58,62 +68,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit 833f4154ed560232120bc475935ee1d6a20e159f upstream.
+commit a9d57ef15cbe327fe54416dd194ee0ea66ae53a4 upstream.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Commit ce02ef06fcf7 ("x86, retpolines: Raise limit for generating indirect
+calls from switch-case") raised the limit under retpolines to 20 switch
+cases where gcc would only then start to emit jump tables, and therefore
+effectively disabling the emission of slow indirect calls in this area.
+
+After this has been brought to attention to gcc folks [0], Martin Liska
+has then fixed gcc to align with clang by avoiding to generate switch jump
+tables entirely under retpolines. This is taking effect in gcc starting
+from stable version 8.4.0. Given kernel supports compilation with older
+versions of gcc where the fix is not being available or backported anymore,
+we need to keep the extra KBUILD_CFLAGS around for some time and generally
+set the -fno-jump-tables to align with what more recent gcc is doing
+automatically today.
+
+More than 20 switch cases are not expected to be fast-path critical, but
+it would still be good to align with gcc behavior for versions < 8.4.0 in
+order to have consistency across supported gcc versions. vmlinux size is
+slightly growing by 0.27% for older gcc. This flag is only set to work
+around affected gcc, no change for clang.
+
+  [0] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86952
+
+Suggested-by: Martin Liska <mliska@suse.cz>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+Cc: Björn Töpel<bjorn.topel@intel.com>
+Cc: Magnus Karlsson <magnus.karlsson@intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: H.J. Lu <hjl.tools@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: David S. Miller <davem@davemloft.net>
+Link: https://lkml.kernel.org/r/20190325135620.14882-1-daniel@iogearbox.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |   29 +++++++----------------------
- 1 file changed, 7 insertions(+), 22 deletions(-)
+ arch/x86/Makefile |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1992,24 +1992,6 @@ COMPAT_SYSCALL_DEFINE3(io_submit, compat
- }
- #endif
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -227,8 +227,12 @@ ifdef CONFIG_RETPOLINE
+   # Additionally, avoid generating expensive indirect jumps which
+   # are subject to retpolines for small number of switch cases.
+   # clang turns off jump table generation by default when under
+-  # retpoline builds, however, gcc does not for x86.
+-  KBUILD_CFLAGS += $(call cc-option,--param=case-values-threshold=20)
++  # retpoline builds, however, gcc does not for x86. This has
++  # only been fixed starting from gcc stable version 8.4.0 and
++  # onwards, but not for older ones. See gcc bug #86952.
++  ifndef CONFIG_CC_IS_CLANG
++    KBUILD_CFLAGS += $(call cc-option,-fno-jump-tables)
++  endif
+ endif
  
--/* lookup_kiocb
-- *	Finds a given iocb for cancellation.
-- */
--static struct aio_kiocb *
--lookup_kiocb(struct kioctx *ctx, struct iocb __user *iocb)
--{
--	struct aio_kiocb *kiocb;
--
--	assert_spin_locked(&ctx->ctx_lock);
--
--	/* TODO: use a hash or array, this sucks. */
--	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
--		if (kiocb->ki_user_iocb == iocb)
--			return kiocb;
--	}
--	return NULL;
--}
--
- /* sys_io_cancel:
-  *	Attempts to cancel an iocb previously passed to io_submit.  If
-  *	the operation is successfully cancelled, the resulting event is
-@@ -2038,10 +2020,13 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
- 		return -EINVAL;
- 
- 	spin_lock_irq(&ctx->ctx_lock);
--	kiocb = lookup_kiocb(ctx, iocb);
--	if (kiocb) {
--		ret = kiocb->ki_cancel(&kiocb->rw);
--		list_del_init(&kiocb->ki_list);
-+	/* TODO: use a hash or array, this sucks. */
-+	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
-+		if (kiocb->ki_user_iocb == iocb) {
-+			ret = kiocb->ki_cancel(&kiocb->rw);
-+			list_del_init(&kiocb->ki_list);
-+			break;
-+		}
- 	}
- 	spin_unlock_irq(&ctx->ctx_lock);
- 
+ archscripts: scripts_basic
 
 
