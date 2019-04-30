@@ -2,154 +2,177 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2123C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C246EC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB0F2087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE942087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 23:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pK5kLEoN"
+	dkim=pass (1024-bit key) header.d=fjfi.cvut.cz header.i=@fjfi.cvut.cz header.b="OWW4MOfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfD3X3B (ORCPT
+        id S1727179AbfD3Xa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 19:29:01 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43590 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfD3X3B (ORCPT
+        Tue, 30 Apr 2019 19:30:58 -0400
+Received: from mailgw2.fjfi.cvut.cz ([147.32.9.131]:59470 "EHLO
+        mailgw2.fjfi.cvut.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfD3Xa6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 19:29:01 -0400
-Received: by mail-pf1-f194.google.com with SMTP id e67so7813261pfe.10;
-        Tue, 30 Apr 2019 16:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pyMMSM+fgLxcULxr3o3ubN2tbBmzJbfDcFZgE1qRVpM=;
-        b=pK5kLEoN76oBaCrVQaxWTbbivV84cg7cfUG/G8dHO9NvOFRYJiM5FTnMLEKOf3jIrB
-         EAIYIOwKT8cpzIzUvx8mZtPxWcKL4g0DpruOl1fo8bv3mUeZZivLSj20e4DBUiFRyiK6
-         Vh9/fkx78iy/iCpSx1EeXfNqGNgHMKBhnlPgXxyz1JUGX+ckmea3Ln1y4BTcGq0Tw3Kw
-         E0eJWK+rhh8KJf5ScvMpAsTaaY1bOSXn901djE5EXUBUmHHIgJ5LxvXDBkginF2z7Nmj
-         53XBeIWbI7/p4OGS3n13VkUyyHhJDeV//Mg7L3zOKxtN6baB+1x4RpmU7gcNpTiwE6R4
-         muTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pyMMSM+fgLxcULxr3o3ubN2tbBmzJbfDcFZgE1qRVpM=;
-        b=ki8g1w3uASYVYxhbpKwRhk6fV3v0RWA9t7dRMgiNk5p0Bbe8lyg3jtvoHezrde7PZV
-         y0zoituy96LhzkWI8AGuWylINex+e2s2+hx4SdWZ/HMAfa7CZgv/ikYScvWcI2FW5u+q
-         q5lUCqZBIuqemuchnyCcCG5ZMRvnSqkq4zEP7WKJkgMk/FEJBts6IIVwOxU+Io2obcI8
-         Yz43cuoK15PUuj8UeVSeChNW17hHhwRTdvqjQC+OHKGY5mNiWExjfh77fMFMPkQR/lB4
-         a+J5skcs4e3l7K8mH13YV5pO3nH+BVk/iHJNIT104MoVaJp0meVkYVsOnhdhAwk19m9I
-         mGBw==
-X-Gm-Message-State: APjAAAVSiqlVzzwc4lyzoG03rCaVto4Wh6bFaucSC2TK/idVbxZwdtBs
-        1giBbMQvJ4PbT6IcPT82DE1u9nwY
-X-Google-Smtp-Source: APXvYqx7y6GOjqZLNyaIYGc+H3Attof7wOD6qPcJ54YeQp4/Jzyu1VslMgO7P2qeteEZd8aJu3vmTg==
-X-Received: by 2002:a62:2587:: with SMTP id l129mr35576226pfl.151.1556666939953;
-        Tue, 30 Apr 2019 16:28:59 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g32sm2635151pgl.16.2019.04.30.16.28.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 16:28:58 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] dt-bindings: power: supply: Add bindings for
- Microchip UCS1002
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-pm@vger.kernel.org,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20190430064557.28469-1-andrew.smirnov@gmail.com>
- <20190430064557.28469-4-andrew.smirnov@gmail.com>
- <20190430161542.GB731@roeck-us.net> <20190430223236.GA10236@bogus>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <8e4fa5ae-9547-83b3-d2f6-3a7b7ad32cbf@roeck-us.net>
-Date:   Tue, 30 Apr 2019 16:28:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190430223236.GA10236@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 30 Apr 2019 19:30:58 -0400
+X-Greylist: delayed 590 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Apr 2019 19:30:56 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTP id DF98BA02BC;
+        Wed,  1 May 2019 01:21:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjfi.cvut.cz;
+        s=20151024; t=1556666464; i=@fjfi.cvut.cz;
+        bh=wk0H6UjZ3ZRLgaB+qQbvaTPB8cjejRZ9ZwlWfLnZ2vU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=OWW4MOfYYWRUrkN/PQlhZc35TYGYPqsBqBbYF/U2ZeOR8YZWlFSHR9S9YLLQRrFc2
+         8ty/QItxthh0Cf2WC/1qlddnqYjH4p8jCSP6V3HVZAFfS7INVFbJjb+PXWUf/YqdKV
+         PpTMToMJXvOBOeB7/OqbtXpVSxchlWfDmAlv5pYs=
+X-CTU-FNSPE-Virus-Scanned: amavisd-new at fjfi.cvut.cz
+Received: from mailgw2.fjfi.cvut.cz ([127.0.0.1])
+        by localhost (mailgw2.fjfi.cvut.cz [127.0.0.1]) (amavisd-new, port 10022)
+        with ESMTP id hkAN_t-_uT0y; Wed,  1 May 2019 01:21:00 +0200 (CEST)
+Received: from linux.fjfi.cvut.cz (linux.fjfi.cvut.cz [147.32.5.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTPS id 906D7A02AE;
+        Wed,  1 May 2019 01:20:59 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailgw2.fjfi.cvut.cz 906D7A02AE
+Received: by linux.fjfi.cvut.cz (Postfix, from userid 1001)
+        id 43C066002A; Wed,  1 May 2019 01:20:59 +0200 (CEST)
+From:   David Kozub <zub@linux.fjfi.cvut.cz>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Scott Bauer <sbauer@plzdonthack.me>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Subject: [PATCH 1/3] block: sed-opal: add ioctl for done-mark of shadow mbr
+Date:   Wed,  1 May 2019 01:20:57 +0200
+Message-Id: <1556666459-17948-2-git-send-email-zub@linux.fjfi.cvut.cz>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
+References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 3:32 PM, Rob Herring wrote:
-> On Tue, Apr 30, 2019 at 09:15:42AM -0700, Guenter Roeck wrote:
->> On Mon, Apr 29, 2019 at 11:45:57PM -0700, Andrey Smirnov wrote:
->>> Add bindings for Microchip UCS1002 Programmable USB Port Power
->>> Controller with Charger Emulation.
->>>
->>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->>> Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
->>> Cc: Chris Healy <cphealy@gmail.com>
->>> Cc: Lucas Stach <l.stach@pengutronix.de>
->>> Cc: Fabio Estevam <fabio.estevam@nxp.com>
->>> Cc: Guenter Roeck <linux@roeck-us.net>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: devicetree@vger.kernel.org
->>> Cc: Sebastian Reichel <sre@kernel.org>
->>> Cc: linux-kernel@vger.kernel.org
->>> Cc: linux-pm@vger.kernel.org
->>> ---
->>>   .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
->>>   1 file changed, 27 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
->>> new file mode 100644
->>> index 000000000000..021fd7aba75e
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
->>> @@ -0,0 +1,27 @@
->>> +Microchip UCS1002 USB Port Power Controller
->>> +
->>> +Required properties:
->>> +- compatible		: Should be "microchip,ucs1002";
->>> +- reg			: I2C slave address
->>> +
->>> +Optional properties:
->>> +- interrupts-extended	: A list of interrupts lines present (could be either
->>> +			  corresponding to A_DET# pin, ALERT# pin, or both)
-> 
-> Just make this 'interrupts'. Support for 'interrupts-extended' is
-> implied.
-> 
-> With that,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
->>> +- interrupt-names	: A list of interrupt names. Should contain (if
->>> +			  present):
->>> +			  - "a_det" for line connected to A_DET# pin
->>> +			  - "alert" for line connected to ALERT# pin
->>> +			  Both are expected to be IRQ_TYPE_EDGE_BOTH
->>> +Example:
->>> +
->>> +&i2c3 {
->>> +	charger@32 {
->>> +		compatible = "microchip,ucs1002";
->>> +		pinctrl-names = "default";
->>> +		pinctrl-0 = <&pinctrl_ucs1002_pins>;
->>
->> Document the above ? Or is that optional ?
-> 
-> I would have said to document this, but recently we had some discussion
-> about allowing this to be implied when there's only a 'default' entry.
-> We'll add it automatically for schemas.
-> 
+From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
 
-Good to know. Thanks for the information!
+Enable users to mark the shadow mbr as done without completely
+deactivating the shadow mbr feature. This may be useful on reboots,
+when the power to the disk is not disconnected in between and the shadow
+mbr stores the required boot files. Of course, this saves also the
+(few) commands required to enable the feature if it is already enabled
+and one only wants to mark the shadow mbr as done.
 
-Guenter
+Co-authored-by: David Kozub <zub@linux.fjfi.cvut.cz>
+Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
+---
+ block/sed-opal.c              | 27 +++++++++++++++++++++++++++
+ include/linux/sed-opal.h      |  1 +
+ include/uapi/linux/sed-opal.h | 12 ++++++++++++
+ 3 files changed, 40 insertions(+)
+
+diff --git a/block/sed-opal.c b/block/sed-opal.c
+index b1aa0cc25803..f1eb9c18e335 100644
+--- a/block/sed-opal.c
++++ b/block/sed-opal.c
+@@ -1986,6 +1986,30 @@ static int opal_enable_disable_shadow_mbr(struct opal_dev *dev,
+ 	return ret;
+ }
+ 
++static int opal_set_mbr_done(struct opal_dev *dev,
++			     struct opal_mbr_done *mbr_done)
++{
++	u8 mbr_done_tf = mbr_done->done_flag == OPAL_MBR_DONE ?
++		OPAL_TRUE : OPAL_FALSE;
++
++	const struct opal_step mbr_steps[] = {
++		{ start_admin1LSP_opal_session, &mbr_done->key },
++		{ set_mbr_done, &mbr_done_tf },
++		{ end_opal_session, }
++	};
++	int ret;
++
++	if (mbr_done->done_flag != OPAL_MBR_DONE &&
++	    mbr_done->done_flag != OPAL_MBR_NOT_DONE)
++		return -EINVAL;
++
++	mutex_lock(&dev->dev_lock);
++	setup_opal_dev(dev);
++	ret = execute_steps(dev, mbr_steps, ARRAY_SIZE(mbr_steps));
++	mutex_unlock(&dev->dev_lock);
++	return ret;
++}
++
+ static int opal_save(struct opal_dev *dev, struct opal_lock_unlock *lk_unlk)
+ {
+ 	struct opal_suspend_data *suspend;
+@@ -2299,6 +2323,9 @@ int sed_ioctl(struct opal_dev *dev, unsigned int cmd, void __user *arg)
+ 	case IOC_OPAL_ENABLE_DISABLE_MBR:
+ 		ret = opal_enable_disable_shadow_mbr(dev, p);
+ 		break;
++	case IOC_OPAL_MBR_DONE:
++		ret = opal_set_mbr_done(dev, p);
++		break;
+ 	case IOC_OPAL_ERASE_LR:
+ 		ret = opal_erase_locking_range(dev, p);
+ 		break;
+diff --git a/include/linux/sed-opal.h b/include/linux/sed-opal.h
+index 04b124fca51e..42b2ce5da7b3 100644
+--- a/include/linux/sed-opal.h
++++ b/include/linux/sed-opal.h
+@@ -47,6 +47,7 @@ static inline bool is_sed_ioctl(unsigned int cmd)
+ 	case IOC_OPAL_ENABLE_DISABLE_MBR:
+ 	case IOC_OPAL_ERASE_LR:
+ 	case IOC_OPAL_SECURE_ERASE_LR:
++	case IOC_OPAL_MBR_DONE:
+ 		return true;
+ 	}
+ 	return false;
+diff --git a/include/uapi/linux/sed-opal.h b/include/uapi/linux/sed-opal.h
+index e092e124dd16..81dd0e8886a1 100644
+--- a/include/uapi/linux/sed-opal.h
++++ b/include/uapi/linux/sed-opal.h
+@@ -29,6 +29,11 @@ enum opal_mbr {
+ 	OPAL_MBR_DISABLE = 0x01,
+ };
+ 
++enum opal_mbr_done_flag {
++	OPAL_MBR_NOT_DONE = 0x0,
++	OPAL_MBR_DONE = 0x01
++};
++
+ enum opal_user {
+ 	OPAL_ADMIN1 = 0x0,
+ 	OPAL_USER1 = 0x01,
+@@ -104,6 +109,12 @@ struct opal_mbr_data {
+ 	__u8 __align[7];
+ };
+ 
++struct opal_mbr_done {
++	struct opal_key key;
++	__u8 done_flag;
++	__u8 __align[7];
++};
++
+ #define IOC_OPAL_SAVE		    _IOW('p', 220, struct opal_lock_unlock)
+ #define IOC_OPAL_LOCK_UNLOCK	    _IOW('p', 221, struct opal_lock_unlock)
+ #define IOC_OPAL_TAKE_OWNERSHIP	    _IOW('p', 222, struct opal_key)
+@@ -116,5 +127,6 @@ struct opal_mbr_data {
+ #define IOC_OPAL_ENABLE_DISABLE_MBR _IOW('p', 229, struct opal_mbr_data)
+ #define IOC_OPAL_ERASE_LR           _IOW('p', 230, struct opal_session_info)
+ #define IOC_OPAL_SECURE_ERASE_LR    _IOW('p', 231, struct opal_session_info)
++#define IOC_OPAL_MBR_DONE           _IOW('p', 232, struct opal_mbr_done)
+ 
+ #endif /* _UAPI_SED_OPAL_H */
+-- 
+2.20.1
+
