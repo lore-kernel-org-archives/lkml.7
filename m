@@ -2,128 +2,172 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06D4C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ED6C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFEA02075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8875021670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625802;
-	bh=J0ShUQzD1srjF3bzW26x95MrxhY7MvI01lJ6PQT1qB4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sxn+Fj98zsW3Pklxb186nkRtY7FIs2y4nKaafiCT2TLkN4sSNk8tqI0NpwDhB0lwI
-	 Vg9a1J9J3ICo9AKPAUCmbALNOp1RUv+jSLSyAAvt/M0PT+n1QJJecjSIpCJl+zqBH/
-	 SvjwnAufazKNqSRRAsAncD0Myil1wbLZAmDXCw/Y=
+	s=default; t=1556625813;
+	bh=vfCr04KFuWTnfRIx5YFbzxFml3k6X036yCo56FLgZHw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=scFguShM7RDq6Ed0Pt4hitP/Jw31lVXed9Z6Uw/iHpdtM8MYF33EUmehgQBXob7It
+	 7eo12esa4zgi1cUWjiEMcCYAQf5mtd1ueQd6OWWcjWQR4h3URUjbXgHB2ajddm/+uh
+	 aLN5AV9P7JEP9EKj2SlW+pqubZ20SvB5x7cLJElM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfD3MDV (ORCPT
+        id S1729102AbfD3MDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:03:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53666 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729905AbfD3Ln1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:43:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727465AbfD3MD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 08:03:28 -0400
+Received: from localhost (unknown [193.47.165.251])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 480D52173E;
-        Tue, 30 Apr 2019 11:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5781F20835;
+        Tue, 30 Apr 2019 12:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624606;
-        bh=J0ShUQzD1srjF3bzW26x95MrxhY7MvI01lJ6PQT1qB4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gm1hcH5ez1Y+Y5O4mZepX8U62kO4SLyxPcoq03CEZ3aT8hbZ7eaqI5YJGz5sw0Ig9
-         6iveyCgD5LxOJqzjxlV76e8jgP1J7dV6h7HLXlLST/Md5UoVIRsIDfMO8cdwxfq1YO
-         OPCkTSgddlSQ27EqGbXz6ztZ/9vGEOKfWKCeTP6E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 37/53] tipc: check bearer name with right length in tipc_nl_compat_bearer_enable
-Date:   Tue, 30 Apr 2019 13:38:44 +0200
-Message-Id: <20190430113557.721290523@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
-References: <20190430113549.400132183@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1556625806;
+        bh=vfCr04KFuWTnfRIx5YFbzxFml3k6X036yCo56FLgZHw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JV95ZyezEgr2kzNrEuLil5pkzkqEL+QJXmM8eMx0gozO8Hty8hRwiQUnvITXu+MNW
+         /TO4ACMbTIsFza+bLXSh33ZElmvqbbD2Lu+SHn0q83lDt9L5/3rVYfbjuNqGQUI9S+
+         h66Nn25wjDLCBFUhOOXOrUusqUqAiBXR0jRxXwpM=
+Date:   Tue, 30 Apr 2019 15:03:21 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v13 16/20] IB/mlx4, arm64: untag user pointers in
+ mlx4_get_umem_mr
+Message-ID: <20190430120321.GF6705@mtr-leonro.mtl.com>
+References: <cover.1553093420.git.andreyknvl@google.com>
+ <1e2824fd77e8eeb351c6c6246f384d0d89fd2d58.1553093421.git.andreyknvl@google.com>
+ <20190429180915.GZ6705@mtr-leonro.mtl.com>
+ <20190430111625.GD29799@arrakis.emea.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430111625.GD29799@arrakis.emea.arm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+On Tue, Apr 30, 2019 at 12:16:25PM +0100, Catalin Marinas wrote:
+> (trimmed down the cc list slightly as the message bounces)
+>
+> On Mon, Apr 29, 2019 at 09:09:15PM +0300, Leon Romanovsky wrote:
+> > On Wed, Mar 20, 2019 at 03:51:30PM +0100, Andrey Konovalov wrote:
+> > > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > > pass tagged user pointers (with the top byte set to something else other
+> > > than 0x00) as syscall arguments.
+> > >
+> > > mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
+> > > only by done with untagged pointers.
+> > >
+> > > Untag user pointers in this function.
+> > >
+> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > ---
+> > >  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
+> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/infiniband/hw/mlx4/mr.c b/drivers/infiniband/hw/mlx4/mr.c
+> > > index 395379a480cb..9a35ed2c6a6f 100644
+> > > --- a/drivers/infiniband/hw/mlx4/mr.c
+> > > +++ b/drivers/infiniband/hw/mlx4/mr.c
+> > > @@ -378,6 +378,7 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
+> > >  	 * again
+> > >  	 */
+> > >  	if (!ib_access_writable(access_flags)) {
+> > > +		unsigned long untagged_start = untagged_addr(start);
+> > >  		struct vm_area_struct *vma;
+> > >
+> > >  		down_read(&current->mm->mmap_sem);
+> > > @@ -386,9 +387,9 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
+> > >  		 * cover the memory, but for now it requires a single vma to
+> > >  		 * entirely cover the MR to support RO mappings.
+> > >  		 */
+> > > -		vma = find_vma(current->mm, start);
+> > > -		if (vma && vma->vm_end >= start + length &&
+> > > -		    vma->vm_start <= start) {
+> > > +		vma = find_vma(current->mm, untagged_start);
+> > > +		if (vma && vma->vm_end >= untagged_start + length &&
+> > > +		    vma->vm_start <= untagged_start) {
+> > >  			if (vma->vm_flags & VM_WRITE)
+> > >  				access_flags |= IB_ACCESS_LOCAL_WRITE;
+> > >  		} else {
+> > > --
+> >
+> > Thanks,
+> > Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+>
+> Thanks for the review.
+>
+> > Interesting, the followup question is why mlx4 is only one driver in IB which
+> > needs such code in umem_mr. I'll take a look on it.
+>
+> I don't know. Just using the light heuristics of find_vma() shows some
+> other places. For example, ib_umem_odp_get() gets the umem->address via
+> ib_umem_start(). This was previously set in ib_umem_get() as called from
+> mlx4_get_umem_mr(). Should the above patch have just untagged "start" on
+> entry?
 
-commit 6f07e5f06c8712acc423485f657799fc8e11e56c upstream.
+ODP flows are not applicable to any driver except mlx5.
+According to commit message of d8f9cc328c88 ("IB/mlx4: Mark user
+MR as writable if actual virtual memory is writable"), the code in its
+current form needed to deal with different mappings between RDMA memory
+requested and VMA memory underlined.
 
-Syzbot reported the following crash:
+>
+> BTW, what's the provenience of such "start" address here? Is it
+> something that the user would have malloc()'ed? We try to impose some
+> restrictions one what is allowed to be tagged in user so that we don't
+> have to untag the addresses in the kernel. For example, if it was the
+> result of an mmap() on the device file, we don't allow tagging.
 
-BUG: KMSAN: uninit-value in memchr+0xce/0x110 lib/string.c:961
-  memchr+0xce/0x110 lib/string.c:961
-  string_is_valid net/tipc/netlink_compat.c:176 [inline]
-  tipc_nl_compat_bearer_enable+0x2c4/0x910 net/tipc/netlink_compat.c:401
-  __tipc_nl_compat_doit net/tipc/netlink_compat.c:321 [inline]
-  tipc_nl_compat_doit+0x3aa/0xaf0 net/tipc/netlink_compat.c:354
-  tipc_nl_compat_handle net/tipc/netlink_compat.c:1162 [inline]
-  tipc_nl_compat_recv+0x1ae7/0x2750 net/tipc/netlink_compat.c:1265
-  genl_family_rcv_msg net/netlink/genetlink.c:601 [inline]
-  genl_rcv_msg+0x185f/0x1a60 net/netlink/genetlink.c:626
-  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
-  genl_rcv+0x63/0x80 net/netlink/genetlink.c:637
-  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
-  netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1336
-  netlink_sendmsg+0x127f/0x1300 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
+The *_reg_user_mr() is called from userspace through ibv_reg_mr() call [1]
+and this is how "address" and access flags are provided.
 
-Uninit was created at:
-  __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
-  alloc_skb include/linux/skbuff.h:1012 [inline]
-  netlink_alloc_large_skb net/netlink/af_netlink.c:1182 [inline]
-  netlink_sendmsg+0xb82/0x1300 net/netlink/af_netlink.c:1892
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
+Right now, the address should point to memory accessible by
+get_user_pages(), however mmap-ed memory uses remap_pfn_range()
+to provide such pages which makes them unusable for get_user_pages().
 
-It was triggered when the bearer name size < TIPC_MAX_BEARER_NAME,
-it would check with a wrong len/TLV_GET_DATA_LEN(msg->req), which
-also includes priority and disc_domain length.
+I would be glad to see this is a current limitation of RDMA stack and
+not as a final design decision.
 
-This patch is to fix it by checking it with a right length:
-'TLV_GET_DATA_LEN(msg->req) - offsetof(struct tipc_bearer_config, name)'.
+[1] https://linux.die.net/man/3/ibv_reg_mr
 
-Reported-by: syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- net/tipc/netlink_compat.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -394,7 +394,12 @@ static int tipc_nl_compat_bearer_enable(
- 	if (!bearer)
- 		return -EMSGSIZE;
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_BEARER_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	len -= offsetof(struct tipc_bearer_config, name);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(b->name, len))
- 		return -EINVAL;
- 
-
-
+>
+> Thanks.
+>
+> --
+> Catalin
