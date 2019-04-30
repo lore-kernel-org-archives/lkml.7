@@ -2,198 +2,118 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A8EC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB85C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C658C20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F1820644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfD3Qa2 (ORCPT
+        id S1726821AbfD3Qap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:30:28 -0400
-Received: from foss.arm.com ([217.140.101.70]:49934 "EHLO foss.arm.com"
+        Tue, 30 Apr 2019 12:30:45 -0400
+Received: from mga03.intel.com ([134.134.136.65]:11907 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbfD3Qa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:30:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB3CC374;
-        Tue, 30 Apr 2019 09:30:26 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AADB13F5C1;
-        Tue, 30 Apr 2019 09:30:25 -0700 (PDT)
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCHv2] io_uring: free allocated io_memory once
-Date:   Tue, 30 Apr 2019 17:30:21 +0100
-Message-Id: <20190430163021.54711-1-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.11.0
+        id S1726102AbfD3Qao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:30:44 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:30:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="342198148"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Apr 2019 09:30:42 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hLVeT-0007p9-4i; Tue, 30 Apr 2019 19:30:41 +0300
+Date:   Tue, 30 Apr 2019 19:30:41 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     linux-acpi@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] ACPI / property: fix handling of data_nodes in
+ acpi_get_next_subnode()
+Message-ID: <20190430163041.GN9224@smile.fi.intel.com>
+References: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If io_allocate_scq_urings() fails to allocate an sq_* region, it will
-call io_mem_free() for any previously allocated regions, but leave
-dangling pointers to these regions in the ctx. Any regions which have
-not yet been allocated are left NULL. Note that when returning
--EOVERFLOW, the previously allocated sq_ring is not freed, which appears
-to be an unintentional leak.
+On Tue, Apr 30, 2019 at 10:52:29AM -0500, Pierre-Louis Bossart wrote:
+> When the DSDT tables expose devices with subdevices and a set of
+> hierarchical _DSD properties, the data returned by
+> acpi_get_next_subnode() is incorrect, with the results suggesting a bad
+> pointer assignment. The parser works fine with device_nodes or
+> data_nodes, but not with a combination of the two.
+> 
+> The problem is traced to an invalid pointer used when jumping from
+> handling device_nodes to data nodes. The existing code looks for data
+> nodes below the last subdevice found instead of the common root. Fix
+> by forcing the acpi_device pointer to be derived from the same fwnode
+> for the two types of subnodes.
+> 
+> This same problem of handling device and data nodes was already fixed
+> in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
+> node parsing in acpi_get_next_subnode()")' but broken later by 'commit
+> 34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
+> this should probably go to linux-stable all the way to 4.12
 
-When io_allocate_scq_urings() fails, io_uring_create() will call
-io_ring_ctx_wait_and_kill(), which calls io_mem_free() on all the sq_*
-regions, assuming the pointers are valid and not NULL.
+Period is missed in above sentence.
 
-This can result in pages being freed multiple times, which has been
-observed to corrupt the page state, leading to subsequent fun. This can
-also result in virt_to_page() on NULL, resulting in the use of bogus
-page addresses, and yet more subsequent fun. The latter can be detected
-with CONFIG_DEBUG_VIRTUAL on arm64.
+I think it make sense to add Fixes: tag.
 
-Adding a cleanup path to io_allocate_scq_urings() complicates the logic,
-so let's leave it to io_ring_ctx_free() to consistently free these
-pointers, and simplify the io_allocate_scq_urings() error paths.
+Nevertheless,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Full splats from before this patch below. Note that the pointer logged
-by the DEBUG_VIRTUAL "non-linear address" warning has been hashed, and
-is actually NULL.
+Thank you for fixing this interesting issue!
 
-[   26.098129] page:ffff80000e949a00 count:0 mapcount:-128 mapping:0000000000000000 index:0x0
-[   26.102976] flags: 0x63fffc000000()
-[   26.104373] raw: 000063fffc000000 ffff80000e86c188 ffff80000ea3df08 0000000000000000
-[   26.108917] raw: 0000000000000000 0000000000000001 00000000ffffff7f 0000000000000000
-[   26.137235] page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
-[   26.143960] ------------[ cut here ]------------
-[   26.146020] kernel BUG at include/linux/mm.h:547!
-[   26.147586] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[   26.149163] Modules linked in:
-[   26.150287] Process syz-executor.21 (pid: 20204, stack limit = 0x000000000e9cefeb)
-[   26.153307] CPU: 2 PID: 20204 Comm: syz-executor.21 Not tainted 5.1.0-rc7-00004-g7d30b2ea43d6 #18
-[   26.156566] Hardware name: linux,dummy-virt (DT)
-[   26.158089] pstate: 40400005 (nZcv daif +PAN -UAO)
-[   26.159869] pc : io_mem_free+0x9c/0xa8
-[   26.161436] lr : io_mem_free+0x9c/0xa8
-[   26.162720] sp : ffff000013003d60
-[   26.164048] x29: ffff000013003d60 x28: ffff800025048040
-[   26.165804] x27: 0000000000000000 x26: ffff800025048040
-[   26.167352] x25: 00000000000000c0 x24: ffff0000112c2820
-[   26.169682] x23: 0000000000000000 x22: 0000000020000080
-[   26.171899] x21: ffff80002143b418 x20: ffff80002143b400
-[   26.174236] x19: ffff80002143b280 x18: 0000000000000000
-[   26.176607] x17: 0000000000000000 x16: 0000000000000000
-[   26.178997] x15: 0000000000000000 x14: 0000000000000000
-[   26.181508] x13: 00009178a5e077b2 x12: 0000000000000001
-[   26.183863] x11: 0000000000000000 x10: 0000000000000980
-[   26.186437] x9 : ffff000013003a80 x8 : ffff800025048a20
-[   26.189006] x7 : ffff8000250481c0 x6 : ffff80002ffe9118
-[   26.191359] x5 : ffff80002ffe9118 x4 : 0000000000000000
-[   26.193863] x3 : ffff80002ffefe98 x2 : 44c06ddd107d1f00
-[   26.196642] x1 : 0000000000000000 x0 : 000000000000003e
-[   26.198892] Call trace:
-[   26.199893]  io_mem_free+0x9c/0xa8
-[   26.201155]  io_ring_ctx_wait_and_kill+0xec/0x180
-[   26.202688]  io_uring_setup+0x6c4/0x6f0
-[   26.204091]  __arm64_sys_io_uring_setup+0x18/0x20
-[   26.205576]  el0_svc_common.constprop.0+0x7c/0xe8
-[   26.207186]  el0_svc_handler+0x28/0x78
-[   26.208389]  el0_svc+0x8/0xc
-[   26.209408] Code: aa0203e0 d0006861 9133a021 97fcdc3c (d4210000)
-[   26.211995] ---[ end trace bdb81cd43a21e50d ]---
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/acpi/property.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index 5815356ea6ad..efc74f912f39 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -943,6 +943,16 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
+>  		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
+>  		struct acpi_data_node *dn;
+>  
+> +		/*
+> +		 * We can have a combination of device and data nodes,
+> +		 * e.g. with hierarchical _DSD properties. Make sure
+> +		 * the adev pointer is restored before going through
+> +		 * data nodes, otherwise we will be looking for
+> +		 * data_nodes below the last device found instead of
+> +		 * the common fwnode shared by device_nodes and
+> +		 * data_nodes
+> +		 */
+> +		adev = to_acpi_device_node(fwnode);
+>  		if (adev)
+>  			head = &adev->data.subnodes;
+>  		else if (data)
+> -- 
+> 2.17.1
+> 
 
-[   81.770626] ------------[ cut here ]------------
-[   81.825015] virt_to_phys used for non-linear address: 000000000d42f2c7 (          (null))
-[   81.827860] WARNING: CPU: 1 PID: 30171 at arch/arm64/mm/physaddr.c:15 __virt_to_phys+0x48/0x68
-[   81.831202] Modules linked in:
-[   81.832212] CPU: 1 PID: 30171 Comm: syz-executor.20 Not tainted 5.1.0-rc7-00004-g7d30b2ea43d6 #19
-[   81.835616] Hardware name: linux,dummy-virt (DT)
-[   81.836863] pstate: 60400005 (nZCv daif +PAN -UAO)
-[   81.838727] pc : __virt_to_phys+0x48/0x68
-[   81.840572] lr : __virt_to_phys+0x48/0x68
-[   81.842264] sp : ffff80002cf67c70
-[   81.843858] x29: ffff80002cf67c70 x28: ffff800014358e18
-[   81.846463] x27: 0000000000000000 x26: 0000000020000080
-[   81.849148] x25: 0000000000000000 x24: ffff80001bb01f40
-[   81.851986] x23: ffff200011db06c8 x22: ffff2000127e3c60
-[   81.854351] x21: ffff800014358cc0 x20: ffff800014358d98
-[   81.856711] x19: 0000000000000000 x18: 0000000000000000
-[   81.859132] x17: 0000000000000000 x16: 0000000000000000
-[   81.861586] x15: 0000000000000000 x14: 0000000000000000
-[   81.863905] x13: 0000000000000000 x12: ffff1000037603e9
-[   81.866226] x11: 1ffff000037603e8 x10: 0000000000000980
-[   81.868776] x9 : ffff80002cf67840 x8 : ffff80001bb02920
-[   81.873272] x7 : ffff1000037603e9 x6 : ffff80001bb01f47
-[   81.875266] x5 : ffff1000037603e9 x4 : dfff200000000000
-[   81.876875] x3 : ffff200010087528 x2 : ffff1000059ecf58
-[   81.878751] x1 : 44c06ddd107d1f00 x0 : 0000000000000000
-[   81.880453] Call trace:
-[   81.881164]  __virt_to_phys+0x48/0x68
-[   81.882919]  io_mem_free+0x18/0x110
-[   81.886585]  io_ring_ctx_wait_and_kill+0x13c/0x1f0
-[   81.891212]  io_uring_setup+0xa60/0xad0
-[   81.892881]  __arm64_sys_io_uring_setup+0x2c/0x38
-[   81.894398]  el0_svc_common.constprop.0+0xac/0x150
-[   81.896306]  el0_svc_handler+0x34/0x88
-[   81.897744]  el0_svc+0x8/0xc
-[   81.898715] ---[ end trace b4a703802243cbba ]---
-
-Fixes: 2b188cc1bb857a9d ("Add io_uring IO interface")
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: linux-block@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- fs/io_uring.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-Since v1:
-* fold NULL check into io_mem_free()
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 25fc8cb56fc5..7f13d1927f31 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2318,8 +2318,12 @@ static int io_account_mem(struct user_struct *user, unsigned long nr_pages)
- 
- static void io_mem_free(void *ptr)
- {
--	struct page *page = virt_to_head_page(ptr);
-+	struct page *page;
-+
-+	if (!ptr)
-+		return;
- 
-+	page = virt_to_head_page(ptr);
- 	if (put_page_testzero(page))
- 		free_compound_page(page);
- }
-@@ -2747,17 +2751,12 @@ static int io_allocate_scq_urings(struct io_ring_ctx *ctx,
- 		return -EOVERFLOW;
- 
- 	ctx->sq_sqes = io_mem_alloc(size);
--	if (!ctx->sq_sqes) {
--		io_mem_free(ctx->sq_ring);
-+	if (!ctx->sq_sqes)
- 		return -ENOMEM;
--	}
- 
- 	cq_ring = io_mem_alloc(struct_size(cq_ring, cqes, p->cq_entries));
--	if (!cq_ring) {
--		io_mem_free(ctx->sq_ring);
--		io_mem_free(ctx->sq_sqes);
-+	if (!cq_ring)
- 		return -ENOMEM;
--	}
- 
- 	ctx->cq_ring = cq_ring;
- 	cq_ring->ring_mask = p->cq_entries - 1;
 -- 
-2.11.0
+With Best Regards,
+Andy Shevchenko
+
 
