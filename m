@@ -2,109 +2,178 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C825C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CC9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C1C21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="lKJI4XL0"
+	by mail.kernel.org (Postfix) with ESMTP id 4EFB320651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfD3KQP (ORCPT
+        id S1727138AbfD3KRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:16:15 -0400
-Received: from mail-eopbgr50047.outbound.protection.outlook.com ([40.107.5.47]:63987
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Tue, 30 Apr 2019 06:17:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50390 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726145AbfD3KQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:16:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qVBYl4adfJw9avAY7gAeEW3zKUJvaL6L7QfhAggpSOY=;
- b=lKJI4XL0Vi8uSs+HXV6XTjqSqb5BQEAosh1M6a2ID1B+MI9lZ7DjN7g8PqLP7RHHJSStIQl01E6+1Mu5GMC8TXxhcTNdpTmuuBE63f3vM3Is6Pdn/4ea3X15tmrxVn/SvNgIwLdCuUwBvEZVGuVR0YWzA1u4Wzr/RqkhZzQ3Ims=
-Received: from AM0PR05MB6497.eurprd05.prod.outlook.com (20.179.34.15) by
- AM0PR05MB5668.eurprd05.prod.outlook.com (20.178.116.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 10:16:10 +0000
-Received: from AM0PR05MB6497.eurprd05.prod.outlook.com
- ([fe80::151:4fc5:f798:6ef1]) by AM0PR05MB6497.eurprd05.prod.outlook.com
- ([fe80::151:4fc5:f798:6ef1%5]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
- 10:16:10 +0000
-From:   Ido Schimmel <idosch@mellanox.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] mlxsw: Remove obsolete dependency on THERMAL=m
-Thread-Topic: [PATCH -next] mlxsw: Remove obsolete dependency on THERMAL=m
-Thread-Index: AQHU/zcWbVmtSGdyfka9Vz2WRuHnz6ZUfQUA
-Date:   Tue, 30 Apr 2019 10:16:10 +0000
-Message-ID: <20190430101608.GB6343@splinter>
-References: <20190430092832.7376-1-geert+renesas@glider.be>
-In-Reply-To: <20190430092832.7376-1-geert+renesas@glider.be>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4PR07CA0026.eurprd07.prod.outlook.com
- (2603:10a6:205:1::39) To AM0PR05MB6497.eurprd05.prod.outlook.com
- (2603:10a6:208:13f::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=idosch@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9633eb7e-cd1b-4f15-d57e-08d6cd54dde1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5668;
-x-ms-traffictypediagnostic: AM0PR05MB5668:
-x-microsoft-antispam-prvs: <AM0PR05MB5668EFFDF1B6CF8DCBAD0B42BF3A0@AM0PR05MB5668.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(366004)(136003)(396003)(376002)(346002)(39860400002)(199004)(189003)(6116002)(11346002)(66066001)(66446008)(6486002)(66946007)(102836004)(476003)(86362001)(3846002)(256004)(26005)(6506007)(186003)(71200400001)(73956011)(71190400001)(446003)(14444005)(64756008)(1076003)(386003)(33716001)(4744005)(486006)(66556008)(68736007)(66476007)(229853002)(5660300002)(8676002)(6436002)(305945005)(6246003)(33656002)(8936002)(6512007)(53936002)(81166006)(81156014)(76176011)(97736004)(25786009)(9686003)(7736002)(4326008)(478600001)(54906003)(52116002)(316002)(2906002)(14454004)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5668;H:AM0PR05MB6497.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Pu5JHGbshK5Ff5dvh79QdFNfjpqLiF3JH6cLxfr0Ss9FJ5yQqWNJEcgMxzfBdBLWL38HkFvq04Seg8K290ZS2N6gzjpbg7WcxMAn3rFIKjk0oqAhGlIwYH41CYLZvGdcCRLOyPT400Mhy6pSkLJpxNlBdlBKMEaRotp2/cEpkFCwLee2l+XFuyuL8cDlNtuNk3/oGfnIB6ps1gC/AxaWgu70rqmRh4iir1A90kJpho/ed7xk0R5EOBy6p2LkVo91Hh0/0hi+PN1M1Ix0piQbQC19KXAZO4Ri4wF2VtYbJG5+1jhuN9caqH7/I6/9EGe2ycyJ3sy3vYdX1oDLMxYmmsQAlDnoHoP0YhNcCjbt+faHhKrnb1vBTVoxmacd4mEqIier2X+aXKIoxRdKZ9GNW7IKWZnufZEHnZTFTGpsOxI=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <323BFEDD0C772C4F9395BE241D4B9385@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9633eb7e-cd1b-4f15-d57e-08d6cd54dde1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 10:16:10.6353
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5668
+        id S1726145AbfD3KRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 06:17:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B1395AD64;
+        Tue, 30 Apr 2019 10:17:35 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 12:17:35 +0200
+Message-ID: <s5h5zqvkda8.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Liwei Song <liwei.song@windriver.com>
+Cc:     <alsa-devel@alsa-project.org>, Yu Zhao <yuzhao@google.com>,
+        Mark Brown <broonie@kernel.org>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda: check RIRB to avoid use NULL pointer
+In-Reply-To: <5CC8156F.1030403@windriver.com>
+References: <1556604653-47363-1-git-send-email-liwei.song@windriver.com>
+        <s5himuwhru3.wl-tiwai@suse.de>
+        <5CC8082F.4090903@windriver.com>
+        <s5h4l6fj2m6.wl-tiwai@suse.de>
+        <5CC8156F.1030403@windriver.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:28:32AM +0200, Geert Uytterhoeven wrote:
-> The THERMAL configuration option was changed from tristate to bool, but
-> a dependency on THERMAL=3Dm was forgotten, leading to a warning when
-> running "make savedefconfig":
->=20
->     boolean symbol THERMAL tested for 'm'? test forced to 'n'
->=20
-> Fixes: be33e4fbbea581ea ("thermal/drivers/core: Remove the module Kconfig=
-'s option")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, 30 Apr 2019 11:29:19 +0200,
+Liwei Song wrote:
+> 
+> 
+> 
+> On 04/30/2019 04:53 PM, Takashi Iwai wrote:
+> > On Tue, 30 Apr 2019 10:32:47 +0200,
+> > Liwei Song wrote:
+> >>
+> >>
+> >>
+> >> On 04/30/2019 03:31 PM, Takashi Iwai wrote:
+> >>> On Tue, 30 Apr 2019 08:10:53 +0200,
+> >>> Song liwei wrote:
+> >>>>
+> >>>> From: Liwei Song <liwei.song@windriver.com>
+> >>>>
+> >>>> Fix the following BUG:
+> >>>>
+> >>>> BUG: unable to handle kernel NULL pointer dereference at 000000000000000c
+> >>>> Workqueue: events azx_probe_work [snd_hda_intel]
+> >>>> RIP: 0010:snd_hdac_bus_update_rirb+0x80/0x160 [snd_hda_core]
+> >>>> Call Trace:
+> >>>>  <IRQ>
+> >>>>  azx_interrupt+0x78/0x140 [snd_hda_codec]
+> >>>>  __handle_irq_event_percpu+0x49/0x300
+> >>>>  handle_irq_event_percpu+0x23/0x60
+> >>>>  handle_irq_event+0x3c/0x60
+> >>>>  handle_edge_irq+0xdb/0x180
+> >>>>  handle_irq+0x23/0x30
+> >>>>  do_IRQ+0x6a/0x140
+> >>>>  common_interrupt+0xf/0xf
+> >>>>
+> >>>> The Call Trace happened when run kdump on a NFS rootfs system.
+> >>>> Exist the following calling sequence when boot the second kernel:
+> >>>>
+> >>>> azx_first_init()
+> >>>>    --> azx_acquire_irq()
+> >>>>                       <-- interrupt come in, azx_interrupt() was called
+> >>>>    --> hda_intel_init_chip()
+> >>>>       --> azx_init_chip()
+> >>>>          --> snd_hdac_bus_init_chip()
+> >>>>               --> snd_hdac_bus_init_cmd_io();
+> >>>>                     --> init rirb.buf and corb.buf
+> >>>>
+> >>>> Interrupt happened after azx_acquire_irq() while RIRB still didn't got
+> >>>> initialized, then NULL pointer will be used when process the interrupt.
+> >>>>
+> >>>> Check the value of RIRB to ensure it is not NULL, to aviod some special
+> >>>> case may hang the system.
+> >>>>
+> >>>> Fixes: 14752412721c ("ALSA: hda - Add the controller helper codes to hda-core module")
+> >>>> Signed-off-by: Liwei Song <liwei.song@windriver.com>
+> >>>
+> >>> Oh, that's indeed a race there.
+> >>>
+> >>> But I guess the check introduced by the patch is still error-prone.
+> >>> Basically the interrupt handling should be moved after the chip
+> >>> initialization.  I suppose that your platform uses the shared
+> >>> interrupt, not the MSI?
+> >>
+> >> This is the information from /proc/interrupt
+> >> 134:          0        102          0          0  IR-PCI-MSI 514048-edge      snd_hda_intel:card0
+> > 
+> > Hm, then it's interesting...
+> > 
+> > 
+> >>> In anyway, alternative (and likely more certain) fix would be to move
+> >>> the azx_acquir_irq() call like the patch below (note: totally
+> >>> untested).  Could you check whether it works?
+> >>
+> >> Yes, It works.
+> >>
+> >> Considering a previous patch like the one you provide will import some issue, 
+> >> so I choose check the invalid value to low the risk, but just as you mentioned,
+> >> It is not a good solution.
+> >>
+> >> commit 542cedec53c9e8b73f3f05bf8468823598c50489
+> >> Author: Yu Zhao <yuzhao@google.com>
+> >> Date:   Tue Sep 11 15:12:46 2018 -0600
+> >>
+> >>     Revert "ASoC: Intel: Skylake: Acquire irq after RIRB allocation"
+> >>     
+> >>     This reverts commit 12eeeb4f4733bbc4481d01df35933fc15beb8b19.
+> >>     
+> >>     The patch doesn't fix accessing memory with null pointer in
+> >>     skl_interrupt().
+> >>     
+> >>     There are two problems: 1) skl_init_chip() is called twice, before
+> >>     and after dma buffer is allocate. The first call sets bus->chip_init
+> >>     which prevents the second from initializing bus->corb.buf and
+> >>     rirb.buf from bus->rb.area. 2) snd_hdac_bus_init_chip() enables
+> >>     interrupt before snd_hdac_bus_init_cmd_io() initializing dma buffers.
+> >>     There is a small window which skl_interrupt() can be called if irq
+> >>     has been acquired. If so, it crashes when using null dma buffer
+> >>     pointers.
+> > 
+> > Actually this followed by another fix b61749a89f82,
+> >     sound: enable interrupt after dma buffer initialization
+> >     
+> > and this moved the IRQ enablement after snd_hdac_bus_init_cmd_io().
+> > 
+> > So I wonder how the irq gets triggered in your case.
+> > If it were a shared irq, it's understandable.  But for MSI, it should
+> > have been the isolated source.
+> 
+> I'm still working on how the irq was triggered,
+> it is a little complex to reproduce it, first it must run with NFS rootfs,
+> without NFS rootfs it can not reproduced.
+> Then with kdump enabled, after "echo c > /proc/sysrq-trigger" crash the kernel,
+> the kernel specified by kdump will boot, then interrupt will trigger
+> soon after azx interrupt was register.
 
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+Ah, so it happens in a kdump kernel?  It implies that the interrupt
+line may be still active (or confused).  Then it's no wonder a stale
+interrupt comes up.
 
-I assume this will be applied to the thermal tree?
+> > In anyway, for the latest tree, the change I suggested would cover
+> > better although it's more radical as you pointed.
+> 
+> Got it, Thanks.
+
+OK, I'm going to submit and apply the proper patch.
+
+
+thanks,
+
+Takashi
