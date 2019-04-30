@@ -2,189 +2,123 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42109C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB10C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0590B2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7FE2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="emNtFUXx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKipQ1pd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfD3RNT (ORCPT
+        id S1726839AbfD3RNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:13:19 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42263 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD3RNT (ORCPT
+        Tue, 30 Apr 2019 13:13:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42749 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfD3RNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:13:19 -0400
-Received: by mail-io1-f66.google.com with SMTP id m188so12856818ioa.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:13:18 -0700 (PDT)
+        Tue, 30 Apr 2019 13:13:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w25so7365223pfi.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=jK04ckLw0I34yJUnmy5KSQzRcqzMiLH61Olu1nj5FW8=;
-        b=emNtFUXxA6u3/X0LFCk/N10uGRLXoXN7d7GVsStivjArpsRMcME2Zqrfdavw7fxwEb
-         XA/RviIt2rvTIl7KWC+tvORxzVDxNdl1cvTbRoU00fuR8cIIxYIlhPX2hB+khOPRzyM7
-         tM6XxbMozgawjRU+uj6KAtZ7XTtOTzlnjVg5bL6SxL3O7Gh+hvQDViflYBwZC+MaF3RD
-         Bfoj0xtDWxQ0xEFnQ2Wois9cUiiHE/bxIInR8J0YAiNe8/D3hUJeEzmjAIkRbgwzqgPl
-         MMgfqCg4jxKx04FT5kDGVHrh/zUr5yOMWuNKJa3Rhe3LCYEgWJEsTRIJol9jc7I3FhBl
-         9VtA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8M09mf4d9C1R3KhxiH2MmcrT4xP2EWrCq3b8NOgfWsA=;
+        b=gKipQ1pdsxyErkdzR4ohu+KryhsxU0t02ME3acogkXzYjGZqrLQpbvN2VvU/jZHq0m
+         r/2mcwlwkVfldN3jyPeDdZHsaaDkJUcRscSvQQ9fxAi6uurcWSbzsMHMlOfYlpW0dNRo
+         UlzG43xtofCSz8L9oBYfvJ021Cg9PWvy/ekarl2gcVf+ONj/mhHFzK7dJSILqyCx2kqR
+         l+BKgBsF91HV/77sLCLVJ81dHeq+1dQLCuelv4G5L1h7Y96YkCfCOHX/BbD3XGQx1/FU
+         uQk5s8d0Wx/tHdp6tNYmWm7XdWXau+vl8W70B/QdeoaeOFMfjuoSUNe0ugFEPOpHCEGz
+         wuqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=jK04ckLw0I34yJUnmy5KSQzRcqzMiLH61Olu1nj5FW8=;
-        b=s4BPjo3RFq6Fr/yhocr+T4Zy8ekfUhnodbBRPcxiIRAoEOou3EkJ3hIYwNqKJFMRBb
-         5VMaM/PIpWEXBCvSeuQdfVX/oGrtDkEGmm3gL/cAcRJ2h3+X2jXaUTRRXXQMy1RB5m3F
-         2pl0kmHQC+49sASY+DYjgH4mxiYJLB0KLN/r3V18BvDxQk+9miCKGWEAmwJHdxDkipsh
-         5nV2R53FgUgix3bC+drtYr4eSlRun+qkSea6QMv37eN9oh3xcN2z8GVY4fGRHMej0/Qc
-         Uwju3ITYLXf+rIUoSNuFp47ORx05sJ9n41A+AUMJHCUZZe0IouPL2eaxRkEj7DTo54QM
-         c37A==
-X-Gm-Message-State: APjAAAX1aVfvtkf+0z4Rxbb53b9rv7LQiAw2oF0dCGoVDUfgmPTYcT2B
-        aft8/MrOPJPb/TAl7mubj5Fs+Q==
-X-Google-Smtp-Source: APXvYqwmi65gW/QZM3FdeLpUsXcro8Mpg0Mj+1XnX3LL/CbQGIlPSbxiLXKUD6sVG4MQUwbLHM5tDA==
-X-Received: by 2002:a6b:4f0f:: with SMTP id d15mr5036524iob.48.1556644398210;
-        Tue, 30 Apr 2019 10:13:18 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id f204sm1787534itc.26.2019.04.30.10.13.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8M09mf4d9C1R3KhxiH2MmcrT4xP2EWrCq3b8NOgfWsA=;
+        b=ld8rAOYNCD2QofL20vl+TWJVZJG3LShiwwGTiTV0Xrd0K8EPDAMHtjjxix8pT1tw5W
+         E8oUKWcy6f+1vMauyzQfU+CdsQ2WmNtRpg0ap6Jn8vnodMHP2SpcIPFM/S6229oEDcTJ
+         ncGkMlMRNSsoiPF4aH2oADWy5w12OPaprfL0TigEKLr/9BXr2dmIq92U87WVWcUp67fB
+         bDUnmhWybRJiN4jmWp6oRasKA/PV848HkrEAXwQa16Ju9VkYVFIOJ5xAeSkvrL0ziUfz
+         oKhSOnWWBbPubd2XIEo7eHoiaDjLQwyAUBLXL7EmdKBsK4Azx7T6fNEJgCOuFHe7NiZ0
+         MYPQ==
+X-Gm-Message-State: APjAAAVI7FRIQ05OaraFVgV/c4r56FDzpsS5VK/fHiogik2nDVKBPodL
+        lvM4IrMQyfijRWZtJ2hfi5Gj6Q==
+X-Google-Smtp-Source: APXvYqwIV6fARS8L5xf7OJfpsq2RSKwS5E7u2mONG4DLIAVZsS+loPGnOikPOS8QYUxQ3gJEOj4fIQ==
+X-Received: by 2002:a63:e003:: with SMTP id e3mr36640958pgh.0.1556644418940;
+        Tue, 30 Apr 2019 10:13:38 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k7sm11692657pfk.93.2019.04.30.10.13.37
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 10:13:17 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 10:13:16 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, richard@nod.at, palmer@sifive.com,
-        paul.walmsley@sifive.com, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] mtd: spi-nor: add locking support for is25xxxxx
- device
-In-Reply-To: <1556474956-27786-4-git-send-email-sagar.kadam@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1904301004060.7063@viisi.sifive.com>
-References: <1556474956-27786-1-git-send-email-sagar.kadam@sifive.com> <1556474956-27786-4-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 30 Apr 2019 10:13:37 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 10:13:39 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 0/8] qcom: spmi/ssbi gpio: correct gpio hogging
+Message-ID: <20190430171339.GE2867@tuxbook-pro>
+References: <20190306005316.12232-1-masneyb@onstation.org>
+ <20190427053034.GH3137@builder>
+ <20190427102206.GA296@basecamp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190427102206.GA296@basecamp>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Apr 2019, Sagar Shrikant Kadam wrote:
+On Sat 27 Apr 03:22 PDT 2019, Brian Masney wrote:
 
-> The locking scheme for ISSI devices is based on stm_lock mechanism.
-> The is25xxxxx  devices have 4 bits for selecting the range of blocks to
-> be locked for write.
+> Hi Bjorn,
 > 
-> The current implementation, blocks entire 512 blocks of flash memory.
+> On Fri, Apr 26, 2019 at 10:30:34PM -0700, Bjorn Andersson wrote:
+> > On Tue 05 Mar 16:53 PST 2019, Brian Masney wrote:
+> > 
+> > > Here are some patches that fix gpio hogging for all boards that use
+> > > spmi-gpio and ssbi-gpio. These depend on the following two patches
+> > > that were merged in 4.20-rc1:
+> > > 
+> > > commit 149a96047237 ("pinctrl: qcom: spmi-gpio: fix gpio-hog related
+> > > boot issues")
+> > > 
+> > > commit 7ed078557738 ("pinctrl: qcom: ssbi-gpio: fix gpio-hog related
+> > > boot issues")
+> > > 
+> > > I've already fixed pm8941 for the Nexus 5 and that fix is queued to go
+> > > into v5.1 during this merge window:
+> > > 
+> > > https://lore.kernel.org/lkml/20181101001149.13453-7-masneyb@onstation.org/
+> > > 
+> > > Andy: You may want to consider submitting these post rc1 as a fix for
+> > > v5.1 and possibly marking these for stable.
+> > > 
+> > > Brian Masney (8):
+> > >   ARM: dts: qcom: apq8064: add gpio-ranges
+> > >   ARM: dts: qcom: mdm9615: add gpio-ranges
+> > >   ARM: dts: qcom: msm8660: add gpio-ranges
+> > >   ARM: dts: qcom: pma8084: add gpio-ranges
+> > 
+> > Looks like I missed the ARM patches before. All 8 picked up now, with
+> > Linus' r-b.
 > 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> ---
->  drivers/mtd/spi-nor/spi-nor.c | 60 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
+> Andy already picked these 8 patches up in his tree.
 > 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 81c7b3e..2dba7e9 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -1459,6 +1459,65 @@ static int macronix_quad_enable(struct spi_nor *nor)
->  
->  	return 0;
->  }
-> +/**
-
-The above sequence indicates a kerneldoc-style comment, but the format of 
-the comment is not in kerneldoc format.  Please fix this comment to 
-conform with
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/kernel-docs.rst
-
-
-> + * Lock a region of the flash.Implementation is based on stm_lock
-> + * Supports the block protection bits BP{0,1,2,3} in the status register
-> + * Returns negative on errors, 0 on success.
-> + */
-> +static int issi_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> +{
-
-Almost all of this function is copied and pasted from stm_lock().  Please 
-don't do this: it adds bloat, makes the code hard to maintain, and 
-increases the risk that fixes will only target one function rather than 
-both.  Instead please pull the common code out into a separate static 
-function.
-
-> +	struct mtd_info *mtd = &nor->mtd;
-> +	int status_old, status_new;
-> +	u8 mask = SR_BP3 | SR_BP2 | SR_BP1 | SR_BP0;
-> +	u8 shift = ffs(mask) - 1, pow, val = 0;
-> +	loff_t lock_len;
-> +	bool use_top = true;
-> +
-> +	status_old = read_sr(nor);
-> +
-> +	if (status_old < 0)
-> +		return status_old;
-> +
-> +	/* lock_len: length of region that should end up locked */
-> +	if (use_top)
-> +		lock_len = mtd->size - ofs;
-> +	else
-> +		lock_len = ofs + len;
-> +
-> +	/*
-> +	 * Need smallest pow such that:
-> +	 *
-> +	 *   1 / (2^pow) <= (len / size)
-> +	 *
-> +	 * so (assuming power-of-2 size) we do:
-> +	 *
-> +	 *   pow = ceil(log2(size / len)) = log2(size) - floor(log2(len))
-> +	 */
-> +	pow = ilog2(mtd->size) - ilog2(lock_len);
-> +	val = mask - (pow << shift);
-> +
-> +	if (val & ~mask)
-> +		return -EINVAL;
-> +
-> +	/* Don't "lock" with no region! */
-> +	if (!(val & mask))
-> +		return -EINVAL;
-> +
-> +	status_new = (status_old & ~mask & ~SR_TB) | val;
-> +
-> +	/* Disallow further writes if WP pin is asserted */
-> +	status_new |= SR_SRWD;
-> +
-> +	/* Don't bother if they're the same */
-> +	if (status_new == status_old)
-> +		return 0;
-> +
-> +	/* Only modify protection if it will not unlock other areas */
-> +	if ((status_new & mask) < (status_old & mask))
-> +		return -EINVAL;
-> +
-> +	return write_sr_and_check(nor, status_new, mask);
-> +}
->  
->  /**
->   * issi_unlock() - clear BP[0123] write-protection.
-> @@ -4121,6 +4180,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->  	/* NOR protection support for ISSI chips */
->  	if (JEDEC_MFR(info) == SNOR_MFR_ISSI ||
->  	    info->flags & SPI_NOR_HAS_LOCK) {
-> +		nor->flash_lock = issi_lock;
->  		nor->flash_unlock = issi_unlock;
->  
->  	}
-> -- 
-> 1.9.1
+> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
 > 
-> 
+
+Perfect. And I see that all 8 are included in Andy's pull request for
+5.2
+
+Regards,
+Bjorn
