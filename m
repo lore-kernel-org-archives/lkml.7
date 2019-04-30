@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE78C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF9CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7A721734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB4F2177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624663;
-	bh=mhXp3yi9SmczJXGFbcmNB5kdXerbdBiyCIswjE75ejQ=;
+	s=default; t=1556624665;
+	bh=BMQhf59ngHxcrEisMnwNzHCcj0mMR5dhpJStGP4pMZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GM1lRFkftMDyBw1haIOBSvDvfcHjCQWxU2Ej3eWcpLHDsD3RSNjPRnWHL1tZfHORV
-	 9rvh6oE3S8qeljVOzNHvND4kkARGV5wqPD8axthTItOW8V8+jVsC6AiPycwSJbPcsL
-	 RYPCvdjTQflLfpoSwNltivVZrNfAqQ/GfJVC0Xhw=
+	b=BWIV+2FZmn3CS6NCFtypF4JYPJWlqSRbZW8ShlI2/tdx7prHlUm+7JO60BsOryN0a
+	 vpL/KJ5QXukFSiP+WTYgR3ImnwydC5LD8R66QrfEvmq10+SVM7+NBdZSSyL2OIm8xX
+	 8Ax0UvrpnZcZQRQpItJOa88ibs4cuy3k0+0CGxwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfD3LoV (ORCPT
+        id S1730188AbfD3LoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:44:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55472 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbfD3LoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:44:19 -0400
+        id S1729236AbfD3LoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4400021670;
-        Tue, 30 Apr 2019 11:44:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE31F21670;
+        Tue, 30 Apr 2019 11:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624658;
-        bh=mhXp3yi9SmczJXGFbcmNB5kdXerbdBiyCIswjE75ejQ=;
+        s=default; t=1556624661;
+        bh=BMQhf59ngHxcrEisMnwNzHCcj0mMR5dhpJStGP4pMZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eFHCdZGqmNR0Or7ReHgEPN2NC9cG4jHLDPnGorM5rPXJAUluaNT+CW2UI6r8fKBYx
-         Py+IFuXgNG34t84j7Bz77tZV9uGgbm4l+3bBUQd9XYyOjUxCWfJ35Zl3vqfQL1kxj8
-         SmeCPhhDw4CTEKQe7d1rH8e3ZCGtxy7k05XNeiAs=
+        b=o00TzakDtGpny0pQlX7x0t3jjiALEfYnwrAsU/ARytozRwy6eYplF1v4+IDgidAmq
+         LOyofKR57jtRdvsxG70iDZzW1klAhfvpHsxl9BbDQf8l+O/VumjSBwaWzNa/t85KV1
+         bfZ5o7Is2aytpqXaSTxqOYG7VQR08NrW6eGj7dlA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.19 024/100] cifs: do not attempt cifs operation on smb2+ rename error
-Date:   Tue, 30 Apr 2019 13:37:53 +0200
-Message-Id: <20190430113610.027990865@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 025/100] tracing: Fix a memory leak by early error exit in trace_pid_write()
+Date:   Tue, 30 Apr 2019 13:37:54 +0200
+Message-Id: <20190430113610.065292755@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,38 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-commit 652727bbe1b17993636346716ae5867627793647 upstream.
+commit 91862cc7867bba4ee5c8fcf0ca2f1d30427b6129 upstream.
 
-A path-based rename returning EBUSY will incorrectly try opening
-the file with a cifs (NT Create AndX) operation on an smb2+ mount,
-which causes the server to force a session close.
+In trace_pid_write(), the buffer for trace parser is allocated through
+kmalloc() in trace_parser_get_init(). Later on, after the buffer is used,
+it is then freed through kfree() in trace_parser_put(). However, it is
+possible that trace_pid_write() is terminated due to unexpected errors,
+e.g., ENOMEM. In that case, the allocated buffer will not be freed, which
+is a memory leak bug.
 
-If the mount is smb2+, skip the fallback.
+To fix this issue, free the allocated buffer when an error is encountered.
 
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Link: http://lkml.kernel.org/r/1555726979-15633-1-git-send-email-wang6495@umn.edu
+
+Fixes: f4d34a87e9c10 ("tracing: Use pid bitmap instead of a pid array for set_event_pid")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/trace/trace.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1735,6 +1735,10 @@ cifs_do_rename(const unsigned int xid, s
- 	if (rc == 0 || rc != -EBUSY)
- 		goto do_rename_exit;
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -496,8 +496,10 @@ int trace_pid_write(struct trace_pid_lis
+ 	 * not modified.
+ 	 */
+ 	pid_list = kmalloc(sizeof(*pid_list), GFP_KERNEL);
+-	if (!pid_list)
++	if (!pid_list) {
++		trace_parser_put(&parser);
+ 		return -ENOMEM;
++	}
  
-+	/* Don't fall back to using SMB on SMB 2+ mount */
-+	if (server->vals->protocol_id != 0)
-+		goto do_rename_exit;
-+
- 	/* open-file renames don't work across directories */
- 	if (to_dentry->d_parent != from_dentry->d_parent)
- 		goto do_rename_exit;
+ 	pid_list->pid_max = READ_ONCE(pid_max);
+ 
+@@ -507,6 +509,7 @@ int trace_pid_write(struct trace_pid_lis
+ 
+ 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
+ 	if (!pid_list->pids) {
++		trace_parser_put(&parser);
+ 		kfree(pid_list);
+ 		return -ENOMEM;
+ 	}
 
 
