@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21090C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 024FDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC2821670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E9B21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625087;
-	bh=eKieE7if2lMhvvOxMlLJaaNlL71Am5r/lmbiTzC+8zU=;
+	s=default; t=1556625096;
+	bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBVtWSuNA66MovSMeUNXWHojQ3OzRMC7Zd3Iv07c9c+9YUi9s2b5Or/Wj1Iz4F32K
-	 OV+YynwjyOx10GAQK7q/q2BPXJYimR4g0MGIcn4RVimxjTrUKX0QnNanfdtYkrttrf
-	 4dyO4TS1roKF6tEqkhRY3orgTD5O8vxDliih/O+0=
+	b=IUrX5xu4gsgMlJm0yQXCLl9qzFHFf1S9hTUMMO4RFvOL9tqDOKwUfygN5kFoaovzE
+	 K0kDI4SYRcL/iqk7qxcq/Rw+6MYH0ljDA/aJ9Wui9eiHROGn0gx5Fz0RRztTfg9/YI
+	 qUbrYeMDBI4yzS4qAl2KqvjdsrPxxVJggxHdIATI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbfD3Lv0 (ORCPT
+        id S1731008AbfD3Lvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731377AbfD3LvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:23 -0400
+        id S1730995AbfD3Lvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:51:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFD0021670;
-        Tue, 30 Apr 2019 11:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B94342054F;
+        Tue, 30 Apr 2019 11:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625082;
-        bh=eKieE7if2lMhvvOxMlLJaaNlL71Am5r/lmbiTzC+8zU=;
+        s=default; t=1556625090;
+        bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c4Rj94x8X0Tk80O3Oai1HjyhAjF65KwKeSuC9NZ9jgeBMXqDasz/5JMbbTjkn993B
-         6XkTfz8eLllrjNGrEueQO3LgEEXr/RK0ad4qdKMOHR16N0kuWbmABNebI8YZVYfehk
-         +9ebfmH1n0685pIGB9bkshx9rE+qY8Tsl//IUGt4=
+        b=JfII/KYtYX0UkgdEsZd5Wx4oWGE7QF6nbC3inm4ZH3RdR2HQVsP5C8tSbF5RBIzT7
+         1TriJjRYCMzIEV63EbiZfiqVkU2s2WVADdT8ZkvwuohKZmwmGZCG8bo0vghzUGP6ci
+         5QULi4saBCP2z3gaSZeV08CM1615vNab03ahLhR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tao Ren <taoren@fb.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 83/89] net/ncsi: handle overflow when incrementing mac address
-Date:   Tue, 30 Apr 2019 13:39:14 +0200
-Message-Id: <20190430113613.686303493@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com,
+        Ben Hutchings <ben@decadent.org.uk>,
+        David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 51/89] slip: make slhc_free() silently accept an error pointer
+Date:   Tue, 30 Apr 2019 13:38:42 +0200
+Message-Id: <20190430113612.083040126@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -61,71 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <taoren@fb.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 1c5c12ee308aacf635c8819cd4baa3bd58f8a8b7 ]
+commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e upstream.
 
-Previously BMC's MAC address is calculated by simply adding 1 to the
-last byte of network controller's MAC address, and it produces incorrect
-result when network controller's MAC address ends with 0xFF.
+This way, slhc_free() accepts what slhc_init() returns, whether that is
+an error or not.
 
-The problem can be fixed by calling eth_addr_inc() function to increment
-MAC address; besides, the MAC address is also validated before assigning
-to BMC.
+In particular, the pattern in sl_alloc_bufs() is
 
-Fixes: cb10c7c0dfd9 ("net/ncsi: Add NCSI Broadcom OEM command")
-Signed-off-by: Tao Ren <taoren@fb.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Acked-by: Samuel Mendoza-Jonas <sam@mendozajonas.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+        slcomp = slhc_init(16, 16);
+        ...
+        slhc_free(slcomp);
+
+for the error handling path, and rather than complicate that code, just
+make it ok to always free what was returned by the init function.
+
+That's what the code used to do before commit 4ab42d78e37a ("ppp, slip:
+Validate VJ compression slot parameters completely") when slhc_init()
+just returned NULL for the error case, with no actual indication of the
+details of the error.
+
+Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
+Fixes: 4ab42d78e37a ("ppp, slip: Validate VJ compression slot parameters completely")
+Acked-by: Ben Hutchings <ben@decadent.org.uk>
+Cc: David Miller <davem@davemloft.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/etherdevice.h |   12 ++++++++++++
- net/ncsi/ncsi-rsp.c         |    6 +++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
 
---- a/include/linux/etherdevice.h
-+++ b/include/linux/etherdevice.h
-@@ -448,6 +448,18 @@ static inline void eth_addr_dec(u8 *addr
- }
+---
+ drivers/net/slip/slhc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/net/slip/slhc.c
++++ b/drivers/net/slip/slhc.c
+@@ -153,7 +153,7 @@ out_fail:
+ void
+ slhc_free(struct slcompress *comp)
+ {
+-	if ( comp == NULLSLCOMPR )
++	if ( IS_ERR_OR_NULL(comp) )
+ 		return;
  
- /**
-+ * eth_addr_inc() - Increment the given MAC address.
-+ * @addr: Pointer to a six-byte array containing Ethernet address to increment.
-+ */
-+static inline void eth_addr_inc(u8 *addr)
-+{
-+	u64 u = ether_addr_to_u64(addr);
-+
-+	u++;
-+	u64_to_ether_addr(u, addr);
-+}
-+
-+/**
-  * is_etherdev_addr - Tell if given Ethernet address belongs to the device.
-  * @dev: Pointer to a device structure
-  * @addr: Pointer to a six-byte array containing the Ethernet address
---- a/net/ncsi/ncsi-rsp.c
-+++ b/net/ncsi/ncsi-rsp.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/netdevice.h>
-+#include <linux/etherdevice.h>
- #include <linux/skbuff.h>
- 
- #include <net/ncsi.h>
-@@ -667,7 +668,10 @@ static int ncsi_rsp_handler_oem_bcm_gma(
- 	ndev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
- 	memcpy(saddr.sa_data, &rsp->data[BCM_MAC_ADDR_OFFSET], ETH_ALEN);
- 	/* Increase mac address by 1 for BMC's address */
--	saddr.sa_data[ETH_ALEN - 1]++;
-+	eth_addr_inc((u8 *)saddr.sa_data);
-+	if (!is_valid_ether_addr((const u8 *)saddr.sa_data))
-+		return -ENXIO;
-+
- 	ret = ops->ndo_set_mac_address(ndev, &saddr);
- 	if (ret < 0)
- 		netdev_warn(ndev, "NCSI: 'Writing mac address to device failed\n");
+ 	if ( comp->tstate != NULLSLSTATE )
 
 
