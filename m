@@ -2,167 +2,123 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66E5C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A9DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7380821670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A1721707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="gccH8dea";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PneItX3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfD3PfA (ORCPT
+        id S1726280AbfD3PfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:35:00 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49272 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfD3Pe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:34:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A538374;
-        Tue, 30 Apr 2019 08:34:59 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E52C43F719;
-        Tue, 30 Apr 2019 08:34:56 -0700 (PDT)
-Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/A1 Interrupt Controller
-To:     Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        devicetree@vger.kernel.org,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190430121254.3737-1-geert+renesas@glider.be>
- <20190430121254.3737-2-geert+renesas@glider.be>
- <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com>
-Date:   Tue, 30 Apr 2019 16:34:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 11:35:21 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:50283 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726014AbfD3PfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:35:20 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 95C746CF;
+        Tue, 30 Apr 2019 11:35:19 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 30 Apr 2019 11:35:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=lUhLByuCWkwkjJrzNCYlklmu1AZ
+        KvcruJii4RaKrLXk=; b=gccH8deaYaHtej3yNluzRWg7QUJlI659Biii8gdM+Sg
+        f0eGGW2Rd5kzG4+YbDYY8ftNUijxzDlnf5apvL5v/E/87Cne/RJjdxMxkEwfmS4p
+        eKncdIuxVsb7H9z7OU7rwYC+fDXywrM2eY5XsZT3IDj9SRocmzSLnj0k1r1HWux4
+        EqBiwJxrInPuCPh9+nJs1VNUaq7mUJwR5OXsXm6LSDdkt896isJaOSfZmiaBRcxV
+        hxujSTiwmxPO8lr/E7xZDY4C+WM2GiqColwtO8fhlLF3a31za8P3mFrKOyg3ukc+
+        XXRhRR1yNhj/Ycs2e2cfjO5687Get0hwFlve7z/PIZA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lUhLBy
+        uCWkwkjJrzNCYlklmu1AZKvcruJii4RaKrLXk=; b=PneItX3IUUZH8xHqv/p6XL
+        /ZPwYaqTGLgjrurBGpXc6j1xKRuheMqhdxqjNBLexHOTL5iPjU8vs+olxyozC8he
+        MWGK7viX2tOvg3HU07J5CEk4/G9u5gFv/tnYtz2uE+xtaVrXNZ5VfggD7+PxnFVU
+        ICWVvaCOOytD7ZHIgTzFECJTVjoWRT0deiug79dKsNn9COCQ6KUkc+fvtMgnFG6Z
+        fiBi64e4cFQ1ShDk4ZYt5H2mqqz5ddcdWaRNyy0VbO23mMr7ertFkVM7T/2Y1/Mw
+        lKq5zPoDSuEZnDfrSj53/lPUe3qF0SOoB3DwrU+mWrg78W1dJ0NrMQRmID2X++tw
+        ==
+X-ME-Sender: <xms:NmvIXI3eZ_jgXO2SVWsx285A9RC2sae2TKX1Tohku_JjYtcMRvV0dA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieehgdefudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrd
+    gtohhmpdgrphhpshhpohhtrdgtohhmnecukfhppeekfedrkeeirdekledruddtjeenucfr
+    rghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsth
+    gvrhfuihiivgeptd
+X-ME-Proxy: <xmx:NmvIXEpsL08XzciNi3FXWkmc77WCF640MdIYZnD7PLLE-8II4HMjUg>
+    <xmx:NmvIXHN-f8q_tsDEGX8YJ0xglms4P-0WPngqzpoqSwZNs7VPHkU-wQ>
+    <xmx:NmvIXNphjoOPVKK94FfDy93jwJmv2NaM3FJsltqK7aAwRCPRAeIG3A>
+    <xmx:N2vIXDvdxndjdJfCHRN-OXvXkmIgfXgbX-92dVYM2xMhCykIH0R9mA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3A6B1103CF;
+        Tue, 30 Apr 2019 11:35:18 -0400 (EDT)
+Date:   Tue, 30 Apr 2019 17:35:16 +0200
+From:   Greg KH <greg@kroah.com>
+To:     syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING: Detected a wedged cx25840 chip; the device will not
+ work.
+Message-ID: <20190430153516.GA23459@kroah.com>
+References: <00000000000048aa750587c052ef@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000048aa750587c052ef@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2019 16:02, Rob Herring wrote:
-> On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->>
->> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->> v2:
->>   - Add "renesas,gic-spi-base",
->>   - Document RZ/A2M.
->> ---
->>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
->> new file mode 100644
->> index 0000000000000000..ea8ddb6955338ccd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
->> @@ -0,0 +1,30 @@
->> +DT bindings for the Renesas RZ/A1 Interrupt Controller
->> +
->> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
->> +RZ/A1 and RZ/A2 SoCs:
->> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
->> +    interrupts,
->> +  - NMI edge select.
->> +
->> +Required properties:
->> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
->> +               fallback.
->> +               Examples with soctypes are:
->> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
->> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
->> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
->> +                                in interrupts.txt in this directory)
->> +  - interrupt-controller: Marks the device as an interrupt controller
->> +  - reg: Base address and length of the memory resource used by the interrupt
->> +         controller
->> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+On Tue, Apr 30, 2019 at 07:36:07AM -0700, syzbot wrote:
+> Hello,
 > 
-> Why isn't this just an 'interrupts' property?
+> syzbot found the following crash on:
+> 
+> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12df67c3200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> dashboard link: https://syzkaller.appspot.com/bug?extid=170a86bf206dd2c6217e
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108a28f3200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145d8a2d200000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
+> 
+> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> pvrusb2: Hardware description: Gotview USB 2.0 DVD 2
+> pvrusb2: Invalid write control endpoint
+> usb 1-1: USB disconnect, device number 2
+> pvrusb2: Invalid write control endpoint
+> pvrusb2: WARNING: Detected a wedged cx25840 chip; the device will not work.
+> pvrusb2: WARNING: Try power cycling the pvrusb2 device.
+> pvrusb2: WARNING: Disabling further access to the device to prevent other
+> foul-ups.
+> pvrusb2: Device being rendered inoperable
+> cx25840 0-0044: Unable to detect h/w, assuming cx23887
+> cx25840 0-0044: cx23887 A/V decoder found @ 0x88 (pvrusb2_a)
+> pvrusb2: Attached sub-driver cx25840
+> pvrusb2: Attempted to execute control transfer when device not ok
+> pvrusb2: Attempted to execute control transfer when device not ok
 
-That's likely because of kernel limitations. The DT code does an
-of_populate() on any device that it finds, parse the "interrupts"
-propertiy, resulting in the irq_descs being populated.
+As the driver said, power cycle your device, it crashed :)
 
-That creates havoc, as these interrupts are not for this device, but for
-something that is connected to it. This is merely a bridge of some sort.
+Seriously, I think your script detection failed here, sorry.
 
-Furthermore, this is a rather long established practice: gic-v2m,
-gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
-for one reason or another plug onto the GIC use the same method.
-
-> Plus, without 'interrupts' walking the hierarchy is broken.
-
-Erm... Which hierarchy?
-
-Thanks,
-	
-	M.
--- 
-Jazz is not dead. It just smells funny...
+greg k-h
