@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEFFC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EC8C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC51D21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F0B2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624866;
-	bh=S+Iykvg4Xa0Snio24a4EY6114LsbjfA2HXGzUv8Pbh4=;
+	s=default; t=1556624874;
+	bh=Dia8khkyeXuEmFqIkVPKZLv0GPdGtKJpyK5QhaOS6nA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xy0KVT2rNJlu0z+GwijGNv7OHKtPFiCJgTDZAUQRXpz4C/EZ7/PL+U5D154Xn8/D7
-	 DjNghe4ewuQboN1rKOlNd0HFL/xhDQjM2nTHyyuyXEyfwtB9XVgwpJO2VlDYXJ2P3z
-	 77pfM3zpkesC/DwqnkmlOVo2er+bLWx3kEYNNXMI=
+	b=QSkWUsdcirrZy7VSMlqex09jZwlQjrWus7ONqrSgST2ZDdUj72DPgUcGQKDfz7VCI
+	 9DjN9uTLnSFVxymlwkE4Uj0iwVhLErLxFUN9TUGfybNl+5Ra6RcSjXUMPpYkUcOG0A
+	 ZmrOwmoC7tibHA1bdHApPfSmacv+MCIQB36BHjAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbfD3Lro (ORCPT
+        id S1730771AbfD3Lrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33250 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:47:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbfD3Lrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:40 -0400
+        id S1730407AbfD3Lrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B1A2054F;
-        Tue, 30 Apr 2019 11:47:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5430721670;
+        Tue, 30 Apr 2019 11:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624860;
-        bh=S+Iykvg4Xa0Snio24a4EY6114LsbjfA2HXGzUv8Pbh4=;
+        s=default; t=1556624867;
+        bh=Dia8khkyeXuEmFqIkVPKZLv0GPdGtKJpyK5QhaOS6nA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DoVnRNmPaWkii7optjY1UN2huBdwa4HurahCRNAH0kTLSTkzlyDMZ+LkLGDuvvjXo
-         aQA5UK0rp8+9bwDYP4qLIWjV8s72a8MnGSPhey33rHQC/JWxOexz2nAJ7l9S7vCc2u
-         YHBEkqZeu/bO1Lak599lQvHhGuce4q0o+6rtGsLU=
+        b=QBLgO0vDr0+N+42xPLuhSbooE0bkQj7JcQQdI62++uSeAruYK2g/C1KPSgnKJ0sgl
+         SCHWFnpvXeann4duGp2aRttroBTn9fTvvZPO3aEHm/wNlWFXoFVs9KX2Inm1BeLPx+
+         ouGfjxed5wT4S57MgOidxW+AnXO8Sag2ZmjITFCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Hurley <john.hurley@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 088/100] net: rds: exchange of 8K and 1M pool
-Date:   Tue, 30 Apr 2019 13:38:57 +0200
-Message-Id: <20190430113612.954739931@linuxfoundation.org>
+Subject: [PATCH 4.19 091/100] net/tls: fix refcount adjustment in fallback
+Date:   Tue, 30 Apr 2019 13:39:00 +0200
+Message-Id: <20190430113613.108683352@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,80 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 4b9fc7146249a6e0e3175d0acc033fdcd2bfcb17 ]
+[ Upstream commit 9188d5ca454fd665145904267e726e9e8d122f5c ]
 
-Before the commit 490ea5967b0d ("RDS: IB: move FMR code to its own file"),
-when the dirty_count is greater than 9/10 of max_items of 8K pool,
-1M pool is used, Vice versa. After the commit 490ea5967b0d ("RDS: IB: move
-FMR code to its own file"), the above is removed. When we make the
-following tests.
+Unlike atomic_add(), refcount_add() does not deal well
+with a negative argument.  TLS fallback code reallocates
+the skb and is very likely to shrink the truesize, leading to:
 
-Server:
-  rds-stress -r 1.1.1.16 -D 1M
+[  189.513254] WARNING: CPU: 5 PID: 0 at lib/refcount.c:81 refcount_add_not_zero_checked+0x15c/0x180
+ Call Trace:
+  refcount_add_checked+0x6/0x40
+  tls_enc_skb+0xb93/0x13e0 [tls]
 
-Client:
-  rds-stress -r 1.1.1.14 -s 1.1.1.16 -D 1M
+Once wmem_allocated count saturates the application can no longer
+send data on the socket.  This is similar to Eric's fixes for GSO,
+TCP:
+commit 7ec318feeed1 ("tcp: gso: avoid refcount_t warning from tcp_gso_segment()")
+and UDP:
+commit 575b65bc5bff ("udp: avoid refcount_t saturation in __udp_gso_segment()").
 
-The following will appear.
-"
-connecting to 1.1.1.16:4000
-negotiated options, tasks will start in 2 seconds
-Starting up..header from 1.1.1.166:4001 to id 4001 bogus
-..
-tsks  tx/s  rx/s tx+rx K/s  mbi K/s  mbo K/s tx us/c  rtt us
-cpu %
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-...
-"
-So this exchange between 8K and 1M pool is added back.
+Unlike the GSO case, for TLS fallback it's likely that the skb has
+shrunk, so the "likely" annotation is the other way around (likely
+branch being "sub").
 
-Fixes: commit 490ea5967b0d ("RDS: IB: move FMR code to its own file")
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: John Hurley <john.hurley@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/ib_fmr.c  |   11 +++++++++++
- net/rds/ib_rdma.c |    3 ---
- 2 files changed, 11 insertions(+), 3 deletions(-)
+ net/tls/tls_device_fallback.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/net/rds/ib_fmr.c
-+++ b/net/rds/ib_fmr.c
-@@ -44,6 +44,17 @@ struct rds_ib_mr *rds_ib_alloc_fmr(struc
- 	else
- 		pool = rds_ibdev->mr_1m_pool;
+--- a/net/tls/tls_device_fallback.c
++++ b/net/tls/tls_device_fallback.c
+@@ -193,6 +193,9 @@ static void update_chksum(struct sk_buff
  
-+	if (atomic_read(&pool->dirty_count) >= pool->max_items / 10)
-+		queue_delayed_work(rds_ib_mr_wq, &pool->flush_worker, 10);
+ static void complete_skb(struct sk_buff *nskb, struct sk_buff *skb, int headln)
+ {
++	struct sock *sk = skb->sk;
++	int delta;
 +
-+	/* Switch pools if one of the pool is reaching upper limit */
-+	if (atomic_read(&pool->dirty_count) >=  pool->max_items * 9 / 10) {
-+		if (pool->pool_type == RDS_IB_MR_8K_POOL)
-+			pool = rds_ibdev->mr_1m_pool;
-+		else
-+			pool = rds_ibdev->mr_8k_pool;
-+	}
-+
- 	ibmr = rds_ib_try_reuse_ibmr(pool);
- 	if (ibmr)
- 		return ibmr;
---- a/net/rds/ib_rdma.c
-+++ b/net/rds/ib_rdma.c
-@@ -454,9 +454,6 @@ struct rds_ib_mr *rds_ib_try_reuse_ibmr(
- 	struct rds_ib_mr *ibmr = NULL;
- 	int iter = 0;
+ 	skb_copy_header(nskb, skb);
  
--	if (atomic_read(&pool->dirty_count) >= pool->max_items_soft / 10)
--		queue_delayed_work(rds_ib_mr_wq, &pool->flush_worker, 10);
--
- 	while (1) {
- 		ibmr = rds_ib_reuse_mr(pool);
- 		if (ibmr)
+ 	skb_put(nskb, skb->len);
+@@ -200,11 +203,15 @@ static void complete_skb(struct sk_buff
+ 	update_chksum(nskb, headln);
+ 
+ 	nskb->destructor = skb->destructor;
+-	nskb->sk = skb->sk;
++	nskb->sk = sk;
+ 	skb->destructor = NULL;
+ 	skb->sk = NULL;
+-	refcount_add(nskb->truesize - skb->truesize,
+-		     &nskb->sk->sk_wmem_alloc);
++
++	delta = nskb->truesize - skb->truesize;
++	if (likely(delta < 0))
++		WARN_ON_ONCE(refcount_sub_and_test(-delta, &sk->sk_wmem_alloc));
++	else if (delta)
++		refcount_add(delta, &sk->sk_wmem_alloc);
+ }
+ 
+ /* This function may be called after the user socket is already
 
 
