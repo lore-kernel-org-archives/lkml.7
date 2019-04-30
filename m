@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823B0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4462C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D3320449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862DE2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625135;
-	bh=ks4xiQnpwqFncGQQW/YdHI2ZiMXGEsEjj/h+pGcqWSM=;
+	s=default; t=1556625142;
+	bh=RlH34TrqR6+L8TPt7VcRdcG/xgNAd0vIlgQsh/n2KoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GVFnZx9u/NTigsbbLTRq/sIiBn/mO7k2dhgth7kjcoXiknF93LXKTJQtpV/+GSjXl
-	 esDDNwnvfl/5XsezUGtyoevuaot5Ay4SpM8xfQtAcyVtPUsLd1gS2NwTMiY42zYcEM
-	 uJlIfeN/x14RyrN6e2xU/MhLHdArsvxmH8xccNO0=
+	b=0uIFfldJwVf6P2fRbgSVTq9BQgve8bkkPVjGgqDHtDSRckKKlYsBqfnk6B7jDCO3D
+	 33vSX+JVXJWxB48MR/Mxlx08I6/3mt4DUEDRQeojWhYabea3q3ujVNLTcTbO+Uq8aw
+	 9aJMwMVfrXY4rZ7f2ZXwMml4fOnyVEkJWoe2qOso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbfD3LwN (ORCPT
+        id S1731436AbfD3Lvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:52:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39878 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730872AbfD3Lvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:49 -0400
+        id S1731423AbfD3Lvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:51:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07C412054F;
-        Tue, 30 Apr 2019 11:51:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC57021670;
+        Tue, 30 Apr 2019 11:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625108;
-        bh=ks4xiQnpwqFncGQQW/YdHI2ZiMXGEsEjj/h+pGcqWSM=;
+        s=default; t=1556625098;
+        bh=RlH34TrqR6+L8TPt7VcRdcG/xgNAd0vIlgQsh/n2KoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dLTTnoiK35x6ltGXBTKRqKWEBUVXlAuR2STkIPLK9X5JJ6IyG87Obx14BGnQGpKIH
-         waMJVMq4XsaqGpPIz1mmLMWCzJgOWT08gcPYFt36yUOQiDZC08HRX6LzDLx9V6w5o7
-         eLnPxJvzA9UARE2OooqLWrfNuVabqEOEZ5Z9Tm2o=
+        b=QICrzOo5sa3XKcWsoWZHp/woMYHBuGg25vPmSxtRmzqz0djnGTPjOizhnSgfW3Mu5
+         +gyDvyKTK2qF2WEYnrjVTnUc9km9nDPtptdldATd38lEKO2xRpx9cvsRKNTdlfBc/z
+         i4iP/oTFfXO7qhjCk18zElqLfNjYLxVmaAIZlG80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.0 87/89] net/mlx5e: Fix use-after-free after xdp_return_frame
-Date:   Tue, 30 Apr 2019 13:39:18 +0200
-Message-Id: <20190430113613.882729293@linuxfoundation.org>
+        stable@vger.kernel.org, luca abeni <luca.abeni@santannapisa.it>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.0 54/89] sched/deadline: Correctly handle active 0-lag timers
+Date:   Tue, 30 Apr 2019 13:38:45 +0200
+Message-Id: <20190430113612.212524332@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,46 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+From: luca abeni <luca.abeni@santannapisa.it>
 
-[ Upstream commit 12fc512f5741443a03adde2ead20724da8ad550a ]
+commit 1b02cd6a2d7f3e2a6a5262887d2cb2912083e42f upstream.
 
-xdp_return_frame releases the frame. It leads to releasing the page, so
-it's not allowed to access xdpi.xdpf->len after that, because xdpi.xdpf
-is at xdp->data_hard_start after convert_to_xdp_frame. This patch moves
-the memory access to precede the return of the frame.
+syzbot reported the following warning:
 
-Fixes: 58b99ee3e3ebe ("net/mlx5e: Add support for XDP_REDIRECT in device-out side")
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+   [ ] WARNING: CPU: 4 PID: 17089 at kernel/sched/deadline.c:255 task_non_contending+0xae0/0x1950
+
+line 255 of deadline.c is:
+
+	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+
+in task_non_contending().
+
+Unfortunately, in some cases (for example, a deadline task
+continuosly blocking and waking immediately) it can happen that
+a task blocks (and task_non_contending() is called) while the
+0-lag timer is still active.
+
+In this case, the safest thing to do is to immediately decrease
+the running bandwidth of the task, without trying to re-arm the 0-lag timer.
+
+Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: chengjian (D) <cj.chengjian@huawei.com>
+Link: https://lkml.kernel.org/r/20190325131530.34706-1-luca.abeni@santannapisa.it
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
-@@ -324,9 +324,9 @@ bool mlx5e_poll_xdpsq_cq(struct mlx5e_cq
- 					mlx5e_xdpi_fifo_pop(xdpi_fifo);
+---
+ kernel/sched/deadline.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -252,7 +252,6 @@ static void task_non_contending(struct t
+ 	if (dl_entity_is_special(dl_se))
+ 		return;
  
- 				if (is_redirect) {
--					xdp_return_frame(xdpi.xdpf);
- 					dma_unmap_single(sq->pdev, xdpi.dma_addr,
- 							 xdpi.xdpf->len, DMA_TO_DEVICE);
-+					xdp_return_frame(xdpi.xdpf);
- 				} else {
- 					/* Recycle RX page */
- 					mlx5e_page_release(rq, &xdpi.di, true);
-@@ -365,9 +365,9 @@ void mlx5e_free_xdpsq_descs(struct mlx5e
- 				mlx5e_xdpi_fifo_pop(xdpi_fifo);
+-	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+ 	WARN_ON(dl_se->dl_non_contending);
  
- 			if (is_redirect) {
--				xdp_return_frame(xdpi.xdpf);
- 				dma_unmap_single(sq->pdev, xdpi.dma_addr,
- 						 xdpi.xdpf->len, DMA_TO_DEVICE);
-+				xdp_return_frame(xdpi.xdpf);
- 			} else {
- 				/* Recycle RX page */
- 				mlx5e_page_release(rq, &xdpi.di, false);
+ 	zerolag_time = dl_se->deadline -
+@@ -269,7 +268,7 @@ static void task_non_contending(struct t
+ 	 * If the "0-lag time" already passed, decrease the active
+ 	 * utilization now, instead of starting a timer
+ 	 */
+-	if (zerolag_time < 0) {
++	if ((zerolag_time < 0) || hrtimer_active(&dl_se->inactive_timer)) {
+ 		if (dl_task(p))
+ 			sub_running_bw(dl_se, dl_rq);
+ 		if (!dl_task(p) || p->state == TASK_DEAD) {
 
 
