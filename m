@@ -2,89 +2,96 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799FBC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A62BC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E8721743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3765320652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BVI0+BiE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCIillAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfD3JEE (ORCPT
+        id S1726539AbfD3JIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:04:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40122 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfD3JED (ORCPT
+        Tue, 30 Apr 2019 05:08:11 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36754 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfD3JIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:04:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4gQNip9X7+WtfQxxzoOVYIad3pYtgAPuwNAK/8FhDEU=; b=BVI0+BiEXLbfm/foPysxDMdiw
-        i3wyMuYvfjxUHy4XmhGAzIjA+chi7eembXc9tMDt/xRfgZwGv3dKMk2YSRluWA9HvncksILQlTah6
-        r+i8nA8+sBeTUbDR1972ePKeRiY8Pp/fp7E6tNPC/iqd9Ey7LNeN8j21lwFfEehTemwYDzdK6UInF
-        oDRfL1/PtDSamrKk7sTKL6DEgG1xof73bhQmMylXxbQWAqIyfgtECukCONohQUuusyPIFaR7yrJBC
-        oal0bx+AMHjcjGE6tAGaDi9ks7V9ZkAaq8oKGjE1XrbIMinDJFCxHoBWGLzYRJ9Btyh7zJHCvVYHE
-        tTb6uau+g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLOgC-00065D-AP; Tue, 30 Apr 2019 09:04:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B056829AAD2A8; Tue, 30 Apr 2019 11:03:58 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 11:03:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        eranian@google.com, tj@kernel.org, ak@linux.intel.com
-Subject: Re: [PATCH 3/4] perf cgroup: Add cgroup ID as a key of RB tree
-Message-ID: <20190430090358.GL2623@hirez.programming.kicks-ass.net>
-References: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
- <1556549045-71814-4-git-send-email-kan.liang@linux.intel.com>
+        Tue, 30 Apr 2019 05:08:11 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u17so10279000lfi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 02:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9HjQ88MY4ZiDc1bI5n4MIBBh4bZ2A3E/q/QZEBk7alU=;
+        b=KCIillAxrZrXB5w7B79fb19nYg7F3YCwf/ztmA9aoE9VUD7WLkEyGA1XTGj7Kk7I9I
+         Q513ZwfxLRI6HJ4DrN1ZMjXfa842QSSs6yPwd0FUt+xZKwllptZpyag00LUFcGYK3EsC
+         XdEbFchQbx1GNf/krTIlE74LPo3MefjF2xV0uZ5Rt9BcNTBf/J2/0tgE/CjrS+/46uwD
+         ARjeDWBBqlnHHRKTKdiGH05RWZ9Qh2z5qOAaNQx9+9uWyCnSM+J6HGsn9mtkAkyisNb6
+         WLz5Pn17WNGE47oaQuTDdvGZvJ9oPYfrIEusa3M0SiUmfS8nh2ODl35nGOliRsB/77U5
+         zOrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9HjQ88MY4ZiDc1bI5n4MIBBh4bZ2A3E/q/QZEBk7alU=;
+        b=CRs2/jDPmNgUUM1lD+017iprN+Uxzi4z7yp1t0bS55eSukG9f7VrrTMHfzQhhwBqDd
+         Yfw1jRKUDIVXVMTSq9/LGeUJ+FVEQVmvEpXDx4hKld+qb+VrcUgKMC4MCf/wXlvCWirA
+         ZjjICN/cBW3tvuqS1Eojvjb+cLZGy+2dLeoOOsLqaxZYSIHl/LWiocQKfR1nprRgvET/
+         Uojb2KhRFCrMVHh+xNuK7YScXZB5/IDKTbk5YBjMseBxeYjvUTtLJ3aEiGvMvJAgD/hQ
+         YANyIuH8IJQbSQBFXTjblitW7H5vZ2zgOLHFy1e55nAAHRBDVVUXkUMZWlsghCJz7HW6
+         RNgQ==
+X-Gm-Message-State: APjAAAXEsdq5kpuBP2HyOIkpSLuE/QYr1LmUVq5rKUshcFIB350xrOID
+        +YPci3TsxVRvnliG5mQ5uCc=
+X-Google-Smtp-Source: APXvYqxC1zZd7LprV/dgF44Ba5ne0SfC/5gxd6UPTeJBnWPoKvFHoqjjCKTMw2d90XkBC0hQgb2Gkw==
+X-Received: by 2002:a19:f50f:: with SMTP id j15mr36291099lfb.135.1556615289352;
+        Tue, 30 Apr 2019 02:08:09 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id u22sm1374696lji.40.2019.04.30.02.08.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 02:08:08 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 45A444603CA; Tue, 30 Apr 2019 12:08:08 +0300 (MSK)
+Date:   Tue, 30 Apr 2019 12:08:08 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        akpm@linux-foundation.org, arunks@codeaurora.org, brgl@bgdev.pl,
+        geert+renesas@glider.be, ldufour@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mguzik@redhat.com, mhocko@kernel.org, rppt@linux.ibm.com,
+        vbabka@suse.cz
+Subject: Re: [PATCH 3/3] prctl_set_mm: downgrade mmap_sem to read lock
+Message-ID: <20190430090808.GC2673@uranus.lan>
+References: <20190418182321.GJ3040@uranus.lan>
+ <20190430081844.22597-1-mkoutny@suse.com>
+ <20190430081844.22597-4-mkoutny@suse.com>
+ <af8f7958-06aa-7134-c750-b7a994368e89@virtuozzo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556549045-71814-4-git-send-email-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <af8f7958-06aa-7134-c750-b7a994368e89@virtuozzo.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 07:44:04AM -0700, kan.liang@linux.intel.com wrote:
-> +static struct perf_event *
-> +perf_event_groups_first_cgroup(struct perf_event_groups *groups,
-> +			       int cpu, u64 cgrp_id)
-> +{
-> +	struct perf_event *node_event = NULL, *match = NULL;
-> +	struct rb_node *node = groups->tree.rb_node;
-> +
-> +	while (node) {
-> +		node_event = container_of(node, struct perf_event, group_node);
-> +
-> +		if (cpu < node_event->cpu) {
-> +			node = node->rb_left;
-> +		} else if (cpu > node_event->cpu) {
-> +			node = node->rb_right;
-> +		} else {
-> +			if (cgrp_id_low(cgrp_id) < cgrp_id_low(node_event->cgrp_id))
-> +				node = node->rb_left;
-> +			else if (cgrp_id_low(cgrp_id) > cgrp_id_low(node_event->cgrp_id))
-> +				node = node->rb_right;
-> +			else {
-> +				match = node_event;
-> +				node = node->rb_left;
-> +				}
-> +			}
-> +		}
-> +		return match;
-> +}
+On Tue, Apr 30, 2019 at 11:55:45AM +0300, Kirill Tkhai wrote:
+> > -	up_write(&mm->mmap_sem);
+> > +	spin_unlock(&mm->arg_lock);
+> > +	up_read(&mm->mmap_sem);
+> >  	return error;
+> 
+> Hm, shouldn't spin_lock()/spin_unlock() pair go as a fixup to existing code
+> in a separate patch? 
+> 
+> Without them, the existing code has a problem at least in get_mm_cmdline().
 
-That's whitespace challenged.
+Seems reasonable to merge it into patch 1.
