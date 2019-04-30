@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21487C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD14C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4EC02173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAB721670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624797;
-	bh=eUQUjbJZXwJvAIl8IRN9aj4vSZWvYjg+7dqI2/qrr9s=;
+	s=default; t=1556624801;
+	bh=uXdfShyJJUnJCFZqwkhUDHpzoY8BpKlyrwVolj9fTNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xj3GJHrKtaoyt8mSknBFEVP5FGc5lrKKVaHxPs+7AQ1e8Gm0A/yWPQ8V4SgHNE5SV
-	 kY3mjcXKb+rZXnds68VFLwFUWJ50P+DX846i0QePi2XmGn6/7gteQf/EozEIf9kMax
-	 zUDbrqtZ4bKvQILbNCSpTPpKREGsA4k4Utr0/6fE=
+	b=V0Pw5TwhRpQYbAZxru5Ot4qXMVlQ4AWa0j37Fofwj1pVUaxMlPSGBw1WAmy/rWWKD
+	 IduL3f8tN+KGOpxcD+NFWiecP/R/Sieqvl2FXNhWSj8FuVjdFRcIu8iPy2dRV8V3uT
+	 D9Xd9vPZYCPnWsSYJnUGiEKBG5jMGtlDmHc2tANg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbfD3Lqf (ORCPT
+        id S1730586AbfD3Lqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59444 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730568AbfD3Lqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:30 -0400
+        id S1730576AbfD3Lqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3077217D6;
-        Tue, 30 Apr 2019 11:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8D9620449;
+        Tue, 30 Apr 2019 11:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624790;
-        bh=eUQUjbJZXwJvAIl8IRN9aj4vSZWvYjg+7dqI2/qrr9s=;
+        s=default; t=1556624795;
+        bh=uXdfShyJJUnJCFZqwkhUDHpzoY8BpKlyrwVolj9fTNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O7CR8Ws5M/D87JGzhxWDbdzTMZlM0Dht//AHYUJANaKDw+6XT6UPHwo8Vyl2UFQV8
-         uv7uXETZJFTs0tnn/yxF2xaMU2RtQWsB/yJyMbBcGp8AW4rpnN/WanZZiOq55Mt8yG
-         4m/F24C4aBnP3PjaPyivVSMqmXe5OYyz8PSfyoGA=
+        b=nCccw8sI03nsFmlr0t1Equlj/jGHMC/FaZ4iEvFvpmqrU+ZCFwpXitiy6GC6x6jlI
+         61PtjHb2wx0lCaKC+7ApESEWuHj9GWV88KvnEAWAAeTOhwwX1T3miPkEWRVMXbyWuz
+         jOqjRc48fIoTd+gMawzQN3Wz1pA5QK359HnPcCnk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 073/100] aio: initialize kiocb private in case any filesystems expect it.
-Date:   Tue, 30 Apr 2019 13:38:42 +0200
-Message-Id: <20190430113612.187536714@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Airlie <airlied@redhat.com>
+Subject: [PATCH 4.19 048/100] Revert "drm/i915/fbdev: Actually configure untiled displays"
+Date:   Tue, 30 Apr 2019 13:38:17 +0200
+Message-Id: <20190430113611.311218385@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,32 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marshall <hubcap@omnibond.com>
+From: Dave Airlie <airlied@redhat.com>
 
-commit ec51f8ee1e63498e9f521ec0e5a6d04622bb2c67 upstream.
+commit 9fa246256e09dc30820524401cdbeeaadee94025 upstream.
 
-A recent optimization had left private uninitialized.
+This reverts commit d179b88deb3bf6fed4991a31fd6f0f2cad21fab5.
 
-Fixes: 2bc4ca9bb600 ("aio: don't zero entire aio_kiocb aio_get_req()")
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: Guenter Roeck <linux@roeck-us.net>
+This commit is documented to break userspace X.org modesetting driver in certain configurations.
+
+The X.org modesetting userspace driver is broken. No fixes are available yet. In order for this patch to be applied it either needs a config option or a workaround developed.
+
+This has been reported a few times, saying it's a userspace problem is clearly against the regression rules.
+
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109806
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Cc: <stable@vger.kernel.org> # v3.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/i915/intel_fbdev.c |   12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1430,6 +1430,7 @@ static int aio_prep_rw(struct kiocb *req
- 	if (unlikely(!req->ki_filp))
- 		return -EBADF;
- 	req->ki_complete = aio_complete_rw;
-+	req->private = NULL;
- 	req->ki_pos = iocb->aio_offset;
- 	req->ki_flags = iocb_flags(req->ki_filp);
- 	if (iocb->aio_flags & IOCB_FLAG_RESFD)
+--- a/drivers/gpu/drm/i915/intel_fbdev.c
++++ b/drivers/gpu/drm/i915/intel_fbdev.c
+@@ -334,8 +334,8 @@ static bool intel_fb_initial_config(stru
+ 				    bool *enabled, int width, int height)
+ {
+ 	struct drm_i915_private *dev_priv = to_i915(fb_helper->dev);
++	unsigned long conn_configured, conn_seq, mask;
+ 	unsigned int count = min(fb_helper->connector_count, BITS_PER_LONG);
+-	unsigned long conn_configured, conn_seq;
+ 	int i, j;
+ 	bool *save_enabled;
+ 	bool fallback = true, ret = true;
+@@ -353,9 +353,10 @@ static bool intel_fb_initial_config(stru
+ 		drm_modeset_backoff(&ctx);
+ 
+ 	memcpy(save_enabled, enabled, count);
+-	conn_seq = GENMASK(count - 1, 0);
++	mask = GENMASK(count - 1, 0);
+ 	conn_configured = 0;
+ retry:
++	conn_seq = conn_configured;
+ 	for (i = 0; i < count; i++) {
+ 		struct drm_fb_helper_connector *fb_conn;
+ 		struct drm_connector *connector;
+@@ -368,8 +369,7 @@ retry:
+ 		if (conn_configured & BIT(i))
+ 			continue;
+ 
+-		/* First pass, only consider tiled connectors */
+-		if (conn_seq == GENMASK(count - 1, 0) && !connector->has_tile)
++		if (conn_seq == 0 && !connector->has_tile)
+ 			continue;
+ 
+ 		if (connector->status == connector_status_connected)
+@@ -473,10 +473,8 @@ retry:
+ 		conn_configured |= BIT(i);
+ 	}
+ 
+-	if (conn_configured != conn_seq) { /* repeat until no more are found */
+-		conn_seq = conn_configured;
++	if ((conn_configured & mask) != mask && conn_configured != conn_seq)
+ 		goto retry;
+-	}
+ 
+ 	/*
+ 	 * If the BIOS didn't enable everything it could, fall back to have the
 
 
