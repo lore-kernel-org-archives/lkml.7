@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111BCC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4A7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E0421707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC5821743
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624495;
-	bh=H3DFlUfLXaoZvOYd7ajIC+uXD9+xmxHAYRCDfN0nouw=;
+	s=default; t=1556624502;
+	bh=Q0pLV2EOyNxF7SO6dQrgct4pt7SeONLWomO0a+1iI1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qmb/uZlRTJE2wey+fcJSH9Kfs/1XvasDIWCLXy45HEXoGdtVemhHhn/jKQmUj92mV
-	 ss3tBihjpt8OWMP5yS8qU/E+JJPHicnjfphw9Rn1F+ZTP+NHhoLjl4BjtO8Ug9ps31
-	 jN546QxP8ajeY77POyDXiBf0HGA23dDSZlWTFVp0=
+	b=GScw1jmMWwgGvMmeNC2hjPWuw2C7Z0Hf7wTDJ+cpLsN42gxe+NnEDfMPwhjyM1aNN
+	 xyOXWBosz81Lh7jGnDmiDW9owlp2sruEt+6ZlvQkmRoNzyaW15Oy9J35MzvytBBUNI
+	 JzbXkP+bFwiVg0cofSCii7q4Hd2JcQ1fnH5oPn1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfD3Lld (ORCPT
+        id S1728993AbfD3Lll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49204 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:41:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbfD3Lla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:30 -0400
+        id S1728955AbfD3Llh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C85B721670;
-        Tue, 30 Apr 2019 11:41:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7670621670;
+        Tue, 30 Apr 2019 11:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624489;
-        bh=H3DFlUfLXaoZvOYd7ajIC+uXD9+xmxHAYRCDfN0nouw=;
+        s=default; t=1556624496;
+        bh=Q0pLV2EOyNxF7SO6dQrgct4pt7SeONLWomO0a+1iI1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kcRSGqk9PJ6VN8kEht4L/z2Tc2sYVDxs9FNBNvo6bRNVZ1pcKuLJQq8cv1chRySpl
-         lme9HNJb0wcjKGBm5rpU3wL7Qn8Z6IXvRnDewbdVTGxQqfrKo96mO15sHsfHB8K7qG
-         R3yjUZqXQELtj//1ZIpC/lda0J1SKUZBfMGoe9eM=
+        b=TpqVpdFid74IuIu+xDLBQInu7kB6n9rgInjnGv1yZDA/AHPJMDQM/E8oNkfGiCfsF
+         8fqlKnR/gh+t0ci38GYS8RYM1XjZjCYQ9qOHlHirge0oBepEoRdFvSri5irGRkaZq5
+         1bPPoKDC235h4X8ryCHOUaQ0vP+Nud+5BRHIQU0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH 4.14 13/53] ceph: fix ci->i_head_snapc leak
-Date:   Tue, 30 Apr 2019 13:38:20 +0200
-Message-Id: <20190430113552.790188489@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 16/53] Input: synaptics-rmi4 - write config register values to the right offset
+Date:   Tue, 30 Apr 2019 13:38:23 +0200
+Message-Id: <20190430113553.312761433@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -60,59 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan, Zheng <zyan@redhat.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-commit 37659182bff1eeaaeadcfc8f853c6d2b6dbc3f47 upstream.
+commit 3a349763cf11e63534b8f2d302f2d0c790566497 upstream.
 
-We missed two places that i_wrbuffer_ref_head, i_wr_ref, i_dirty_caps
-and i_flushing_caps may change. When they are all zeros, we should free
-i_head_snapc.
+Currently any changed config register values don't take effect, as the
+function to write them back is called with the wrong register offset.
 
+Fixes: ff8f83708b3e (Input: synaptics-rmi4 - add support for 2D
+                     sensors and F11)
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: stable@vger.kernel.org
-Link: https://tracker.ceph.com/issues/38224
-Reported-and-tested-by: Luis Henriques <lhenriques@suse.com>
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/mds_client.c |    9 +++++++++
- fs/ceph/snap.c       |    7 ++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/input/rmi4/rmi_f11.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -1219,6 +1219,15 @@ static int remove_session_caps_cb(struct
- 			list_add(&ci->i_prealloc_cap_flush->i_list, &to_remove);
- 			ci->i_prealloc_cap_flush = NULL;
- 		}
-+
-+               if (drop &&
-+                  ci->i_wrbuffer_ref_head == 0 &&
-+                  ci->i_wr_ref == 0 &&
-+                  ci->i_dirty_caps == 0 &&
-+                  ci->i_flushing_caps == 0) {
-+                      ceph_put_snap_context(ci->i_head_snapc);
-+                      ci->i_head_snapc = NULL;
-+               }
+--- a/drivers/input/rmi4/rmi_f11.c
++++ b/drivers/input/rmi4/rmi_f11.c
+@@ -1239,7 +1239,7 @@ static int rmi_f11_initialize(struct rmi
  	}
- 	spin_unlock(&ci->i_ceph_lock);
- 	while (!list_empty(&to_remove)) {
---- a/fs/ceph/snap.c
-+++ b/fs/ceph/snap.c
-@@ -568,7 +568,12 @@ void ceph_queue_cap_snap(struct ceph_ino
- 	old_snapc = NULL;
  
- update_snapc:
--	if (ci->i_head_snapc) {
-+       if (ci->i_wrbuffer_ref_head == 0 &&
-+           ci->i_wr_ref == 0 &&
-+           ci->i_dirty_caps == 0 &&
-+           ci->i_flushing_caps == 0) {
-+               ci->i_head_snapc = NULL;
-+       } else {
- 		ci->i_head_snapc = ceph_get_snap_context(new_snapc);
- 		dout(" new snapc is %p\n", new_snapc);
- 	}
+ 	rc = f11_write_control_regs(fn, &f11->sens_query,
+-			   &f11->dev_controls, fn->fd.query_base_addr);
++			   &f11->dev_controls, fn->fd.control_base_addr);
+ 	if (rc)
+ 		dev_warn(&fn->dev, "Failed to write control registers\n");
+ 
 
 
