@@ -2,95 +2,110 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07738C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732D0C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12852147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C6E216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:51:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O+Mxzef/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbfD3Ctm convert rfc822-to-8bit (ORCPT
+        id S1729968AbfD3CvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 22:49:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:61778 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729803AbfD3Ctm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 22:49:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 19:49:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,412,1549958400"; 
-   d="scan'208";a="341973650"
-Received: from kmsmsx151.gar.corp.intel.com ([172.21.73.86])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2019 19:49:40 -0700
-Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.111]) by
- KMSMSX151.gar.corp.intel.com ([169.254.10.147]) with mapi id 14.03.0415.000;
- Tue, 30 Apr 2019 10:49:17 +0800
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "Andrew Lunn" <andrew@lunn.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>
-Subject: RE: [PATCH 3/7] net: stmmac: dma channel control register need to
- be init first
-Thread-Topic: [PATCH 3/7] net: stmmac: dma channel control register need to
- be init first
-Thread-Index: AQHU+n51zHATXbnSNU2iG6YzCcFjoaZMdYaggAX7OACAAZgcYA==
-Date:   Tue, 30 Apr 2019 02:49:16 +0000
-Message-ID: <D6759987A7968C4889FDA6FA91D5CBC8146F0B78@PGSMSX103.gar.corp.intel.com>
-References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
- <1556126241-2774-4-git-send-email-weifeng.voon@intel.com>
- <D6759987A7968C4889FDA6FA91D5CBC8146EF098@PGSMSX103.gar.corp.intel.com>
- <78EB27739596EE489E55E81C33FEC33A0B46E022@DE02WEMBXB.internal.synopsys.com>
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B46E022@DE02WEMBXB.internal.synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjhlMzk2MzgtYWVhNy00MmI5LWE4NDEtODg2MzM2ZDJmNTFmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicFZzRmNRTlBaamlxMEk1c2dMZjNQNmhLRGNiVEFpT1p0eHpHUk1ZTnZmdXJDZU53UGtSXC9IcnlRZXZKTVJ5U2sifQ==
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.206]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 29 Apr 2019 22:51:01 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49744 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729803AbfD3CvB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 22:51:01 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3U2iHwO091128;
+        Tue, 30 Apr 2019 02:50:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=EtJQIydI4TPLP0rJodfKGeaDXbBiYSZ0YPs/KP7B6wE=;
+ b=O+Mxzef/Mq3fzVGDLZPxBN4tKPZ+hw1xsnJJLTZBkEKlD6BgRt2SO1B5Ot4I/cj8fT6j
+ pgHvUaDqCKr6Doi57X03uFaqepjL3DD/iQeFV5Z64FGUfDZpSkbAvzUACAjbYflBDRhH
+ De1XwamOr4NSIpsAGBTZ3gzWtWhMyIjbU6Qy5v/NFQ94sfsZHIT/HBThu7c9lKeU5iVr
+ 0eU6Hd6NJrHgQ0xfgeYvr/XGwdAXpB7Y2aHKNpU+FhGaUq+ijB6po4Zh/OaT3uAHLseZ
+ 3OVEVgVLYfD7Bxk9CutbI4Hv9eKYbtzWpELLT5QSsNeuIzCAfS+/4XIL5U8gcHgAUmxm 4g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2s5j5txg6a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 02:50:41 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3U2mxaf080729;
+        Tue, 30 Apr 2019 02:50:41 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2s5u50qu10-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 02:50:41 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3U2oav9019485;
+        Tue, 30 Apr 2019 02:50:39 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Apr 2019 19:50:36 -0700
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Greg Edwards <gedwards@ddn.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH 1/2] blkdev.h: Introduce size_to_sectors hlper function
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190430013205.1561708-1-marcos.souza.org@gmail.com>
+        <20190430013205.1561708-2-marcos.souza.org@gmail.com>
+Date:   Mon, 29 Apr 2019 22:50:32 -0400
+In-Reply-To: <20190430013205.1561708-2-marcos.souza.org@gmail.com> (Marcos
+        Paulo de Souza's message of "Mon, 29 Apr 2019 22:32:04 -0300")
+Message-ID: <yq1bm0ow6iv.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=578
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904300017
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=610 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904300017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Voon, Weifeng <weifeng.voon@intel.com>
-> Date: Thu, Apr 25, 2019 at 08:06:08
-> 
-> > > stmmac_init_chan() needs to be called before stmmac_init_rx_chan()
-> > > and stmmac_init_tx_chan(). This is because if PBLx8 is to be used,
-> > > "DMA_CH(#i)_Control.PBLx8" needs to be set before programming
-> > > "DMA_CH(#i)_TX_Control.TxPBL" and "DMA_CH(#i)_RX_Control.RxPBL".
-> > >
-> > > Reviewed-by: Zhang, Baoli <baoli.zhang@intel.com>
-> > > Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
-> > > Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-> 
-> This is a fix so it should belong to -net tree and it should have the
-> "Fixes: " tag.
-> 
-> Thanks,
-> Jose Miguel Abreu
 
-Noted. I will add the "Fixes" tag and re-submit to -net tree. 
+Hi Marco,
 
-Regards,
-Weifeng
+> +static inline sector_t size_to_sectors(long long size)
+> +{
+> +	return size >> SECTOR_SHIFT;
+> +}
+> +
+
+FWIW, in SCSI we have:
+
+	logical_to_sectors()
+        logical_to_bytes()
+        bytes_to_logical()
+        sectors_to_logical()
+
+I'm not attached to "bytes" in any way but it would be nice to be
+consistent.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
