@@ -2,144 +2,193 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD905C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3554EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB1A2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDDC92075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gtwmZLRy"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fTRsK6w/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfD3GIz (ORCPT
+        id S1726294AbfD3GJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:08:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56208 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfD3GIy (ORCPT
+        Tue, 30 Apr 2019 02:09:42 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:63104 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfD3GJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:08:54 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3U68lEM082009;
-        Tue, 30 Apr 2019 01:08:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556604527;
-        bh=0M6lmMeJhzkU5LkeOUDGBKw3p7Z/SmATqnBWzbczRYU=;
-        h=From:To:CC:Subject:Date;
-        b=gtwmZLRyHDje9QfMHsnlB9wYrdnuA3gNOtVC1grL7ismRfVDVKlYMgpJdte4AHMyU
-         MnLzAdHNVH5oV5l0pT2ZyUtEHYsEJJbZaOhsnnCgSYadMkvkoj6UH1ScJdCrk5bekV
-         HbJFfFitgSA3W74xTwSTWOtDISZvMdUoBWN5ONgo=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3U68lom099365
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 01:08:47 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 01:08:47 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 01:08:47 -0500
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3U68iK1119094;
-        Tue, 30 Apr 2019 01:08:45 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
-        <bcousson@baylibre.com>, <faiz_abbas@ti.com>
-Subject: [PATCH] ARM: dts: dra76x: Update MMC2_HS200_MANUAL1 iodelay values
-Date:   Tue, 30 Apr 2019 11:38:56 +0530
-Message-ID: <20190430060856.18445-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+        Tue, 30 Apr 2019 02:09:41 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190430060937epoutp01d77a243876793694fc639e8d6ae2ac6f~aK523PnUT3196731967epoutp01o
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:09:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190430060937epoutp01d77a243876793694fc639e8d6ae2ac6f~aK523PnUT3196731967epoutp01o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556604577;
+        bh=s4+gCxQmp9Ft0gltHb67tjlRyzWs9lclWGMzsc5X/xI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=fTRsK6w/rsRH4dp7XOUr/fw3skEk6HJ68mF8kKAsy4QLGjFcSr8sTdIJLvYMqwqZ4
+         iHNWwcJThl1NYKKIBRnx9lfHFpd/yiRPkclKU7vvUo24s4JBUef1eocujvu8GOQEOO
+         58lZB0clT7ZIOwsxxFSkF2Z/SEXEbG859K7w4ecc=
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.155]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190430060931epcas1p39482c1bb63551d588b515f8ca887a9c3~aK5w8xPcP0921309213epcas1p3e;
+        Tue, 30 Apr 2019 06:09:31 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F4.EC.04139.B96E7CC5; Tue, 30 Apr 2019 15:09:31 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190430060930epcas1p4858f6f12ec5e7a0221b76178ebdc4edc~aK5wYkdYN0046400464epcas1p4i;
+        Tue, 30 Apr 2019 06:09:30 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190430060930epsmtrp1f49f5db76537f4890e80f9cf41e2c4c1~aK5wXrW9I0761107611epsmtrp1_;
+        Tue, 30 Apr 2019 06:09:30 +0000 (GMT)
+X-AuditID: b6c32a35-deaec9c00000102b-58-5cc7e69b1984
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5E.D2.03662.A96E7CC5; Tue, 30 Apr 2019 15:09:30 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190430060930epsmtip1e427ea154bc532509ae59b8844ec8028~aK5wCKkYq2006320063epsmtip1V;
+        Tue, 30 Apr 2019 06:09:30 +0000 (GMT)
+Subject: Re: [PATCH v3 4/4] DT: arm: exynos4412: add event data type which
+ is monitored
+To:     Lukasz Luba <l.luba@partner.samsung.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, kgene@kernel.org,
+        willy.mh.wolff.ml@gmail.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <cee7b5a2-377e-59d6-7c6e-b6f9b3140d4f@samsung.com>
+Date:   Tue, 30 Apr 2019 15:10:45 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1555681688-19643-5-git-send-email-l.luba@partner.samsung.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJsWRmVeSWpSXmKPExsWy7bCmru7sZ8djDLat57LYOGM9q8X8I+dY
+        Lfofv2a2OH9+A7vF2aY37Ba3GmQsNj2+xmpxedccNovPvUcYLWac38dksfbIXXaLpdcvMlnc
+        blzBZtG69wi7xeE37awW3048YnQQ8Fgzbw2jx85Zd9k9Nq3qZPPYvKTe4+C7PUwefVtWMXp8
+        3iQXwB6VbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkD
+        dLuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CyQK84Mbe4NC9dLzk/18rQwMDI
+        FKgwITtjZ3snW8Eu/op9ex6zNzD+4epi5OSQEDCROLP+AXMXIxeHkMAORokZO6+wQDifGCVO
+        TZ7PDuF8Y5TYcP8kM0zL93vzoar2MkrcmHcfqv89o8THZXPAqoQFIiV63vQwgiREBM4ySjxo
+        2sYG4jALfGaUOPngGitIFZuAlsT+FzfYQGx+AUWJqz8eM4LYvAJ2EivbbjCB2CwCqhIvdv4G
+        qxcViJC4f2wDK0SNoMTJmU9YQGxOAW+Jt5dngtUzC4hL3HoyH8qWl2jeOhvsPAmBY+wSTQtn
+        MUI84SKxcfIFKFtY4tXxLewQtpTEy/42KLtaYuXJI2wQzR2MElv2X2CFSBhL7F86GWgDB9AG
+        TYn1u/QhlvFJvPvawwoSlhDglehoE4KoVpa4/OAuE4QtKbEYGA0QtofE3Kmv2CYwKs5C8s4s
+        JC/MQvLCLIRlCxhZVjGKpRYU56anFhsWGCJH+CZGcNLWMt3BOOWczyFGAQ5GJR5ej3fHYoRY
+        E8uKK3MPMUpwMCuJ8HocPxojxJuSWFmVWpQfX1Sak1p8iNEUGNoTmaVEk/OBGSWvJN7Q1MjY
+        2NjCxNDM1NBQSZx3vYNzjJBAemJJanZqakFqEUwfEwenVANjRetkxpzbC2Q+HChc9mevsKe+
+        vbKW0VqVRra7HGnhe+T1PjG2bJZzDjx/9D7btSdzFLR1M/Nta1crL1l8IJLlr9rbTsVnljeX
+        fsyefun87G9vFM1VHcsW+NYGCcQ3/jsynW8ve4XFtlNlGjaqzz7tXTC1bMnCnYeVGVf0r2Ds
+        cVnFVli3NUpdiaU4I9FQi7moOBEAc4p47/ADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsWy7bCSnO6sZ8djDN6+UrDYOGM9q8X8I+dY
+        Lfofv2a2OH9+A7vF2aY37Ba3GmQsNj2+xmpxedccNovPvUcYLWac38dksfbIXXaLpdcvMlnc
+        blzBZtG69wi7xeE37awW3048YnQQ8Fgzbw2jx85Zd9k9Nq3qZPPYvKTe4+C7PUwefVtWMXp8
+        3iQXwB7FZZOSmpNZllqkb5fAlbGzvZOtYBd/xb49j9kbGP9wdTFyckgImEh8vzefpYuRi0NI
+        YDejxMPVB1kgEpIS0y4eZe5i5ACyhSUOHy6GqHnLKDHl5VdGkLiwQKTEwb4CkLiIwFlGiUWT
+        FrCDOMwCnxklpq+5zAwySEjgPqPE3Zn6IDabgJbE/hc32EBsfgFFias/HjOC2LwCdhIr224w
+        gdgsAqoSL3b+ZgWxRQUiJM68X8ECUSMocXLmEzCbU8Bb4u3lmWD1zALqEn/mXWKGsMUlbj2Z
+        DxWXl2jeOpt5AqPwLCTts5C0zELSMgtJywJGllWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ
+        +bmbGMGRq6W1g/HEifhDjAIcjEo8vB7vjsUIsSaWFVfmHmKU4GBWEuH1OH40Rog3JbGyKrUo
+        P76oNCe1+BCjNAeLkjivfP6xSCGB9MSS1OzU1ILUIpgsEwenVAOjSu1J7q/LZ3Q/FHT0jT71
+        deXz39KPuxjqFswJfSYgkxTJ/EhUi3Xx0s889cumpPtm71co2mB7u2tlDq/0rjcf5lclfhXl
+        s58hVKnAz8g5W/7Wk79BnM6GRnwFk7iDWjndHec99Dv5K9t+24If20piNyReSzt+dPXM1w9K
+        pf7FzjML21LrJLdXiaU4I9FQi7moOBEAJ1cgT9gCAAA=
+X-CMS-MailID: 20190430060930epcas1p4858f6f12ec5e7a0221b76178ebdc4edc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6@eucas1p1.samsung.com>
+        <1555681688-19643-5-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the MMC2_HS200_MANUAL1 iodelay values to match with the latest
-dra76x data manual[1].
+Hi,
 
-Also this particular pinctrl-array is using spaces instead of tabs for
-spacing between the values and the comments. Fix this as well.
+On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
+> The patch adds new field in the PPMU event which shows explicitly
+> what kind of data the event is monitoring. It is possible to change it
+> using defined values in exynos_ppmu.h file.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+> index 3a3b2fa..549faba 100644
+> --- a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+> @@ -6,12 +6,16 @@
+>   * Author: Chanwoo Choi <cw00.choi@samsung.com>
+>   */
+>  
+> +#include <dt-bindings/pmu/exynos_ppmu.h>
+> +
+>  &ppmu_dmc0 {
+>         status = "okay";
+>  
+>         events {
+>  	       ppmu_dmc0_3: ppmu-event3-dmc0 {
+>  		       event-name = "ppmu-event3-dmc0";
+> +		       event-data-type = <(PPMU_RO_DATA_CNT |
+> +					   PPMU_WO_DATA_CNT)>;
+>  	       };
+>         };
+>  };
+> @@ -22,6 +26,8 @@
+>         events {
+>  	       ppmu_dmc1_3: ppmu-event3-dmc1 {
+>  		       event-name = "ppmu-event3-dmc1";
+> +		       event-data-type = <(PPMU_RO_DATA_CNT |
+> +					   PPMU_WO_DATA_CNT)>;
+>  	       };
+>         };
+>  };
+> @@ -32,6 +38,8 @@
+>         events {
+>  	       ppmu_leftbus_3: ppmu-event3-leftbus {
+>  		       event-name = "ppmu-event3-leftbus";
+> +		       event-data-type = <(PPMU_RO_DATA_CNT |
+> +					   PPMU_WO_DATA_CNT)>;
+>  	       };
+>         };
+>  };
+> @@ -42,6 +50,8 @@
+>         events {
+>  	       ppmu_rightbus_3: ppmu-event3-rightbus {
+>  		       event-name = "ppmu-event3-rightbus";
+> +		       event-data-type = <(PPMU_RO_DATA_CNT |
+> +					   PPMU_WO_DATA_CNT)>;
+>  	       };
+>         };
+>  };
+> 
 
-[1] http://www.ti.com/lit/ds/symlink/dra76p.pdf
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
 
-Tested on dra76x-evm and am574x-idk.
-
- arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi | 40 +++++++++++------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
-index baba7b00eca7..fdca48186916 100644
---- a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
-+++ b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
-@@ -22,7 +22,7 @@
-  *
-  * Datamanual Revisions:
-  *
-- * DRA76x Silicon Revision 1.0: SPRS993A, Revised July 2017
-+ * DRA76x Silicon Revision 1.0: SPRS993E, Revised December 2018
-  *
-  */
- 
-@@ -169,25 +169,25 @@
- 	/* Corresponds to MMC2_HS200_MANUAL1 in datamanual */
- 	mmc2_iodelay_hs200_conf: mmc2_iodelay_hs200_conf {
- 		pinctrl-pin-array = <
--			0x190 A_DELAY_PS(384) G_DELAY_PS(0)       /* CFG_GPMC_A19_OEN */
--			0x194 A_DELAY_PS(0) G_DELAY_PS(174)       /* CFG_GPMC_A19_OUT */
--			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)       /* CFG_GPMC_A20_OEN */
--			0x1ac A_DELAY_PS(85) G_DELAY_PS(0)        /* CFG_GPMC_A20_OUT */
--			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)       /* CFG_GPMC_A21_OEN */
--			0x1b8 A_DELAY_PS(139) G_DELAY_PS(0)       /* CFG_GPMC_A21_OUT */
--			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)       /* CFG_GPMC_A22_OEN */
--			0x1c4 A_DELAY_PS(69) G_DELAY_PS(0)        /* CFG_GPMC_A22_OUT */
--			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	  /* CFG_GPMC_A23_OUT */
--			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)       /* CFG_GPMC_A24_OEN */
--			0x1dc A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A24_OUT */
--			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)       /* CFG_GPMC_A25_OEN */
--			0x1e8 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A25_OUT */
--			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)       /* CFG_GPMC_A26_OEN */
--			0x1f4 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A26_OUT */
--			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)       /* CFG_GPMC_A27_OEN */
--			0x200 A_DELAY_PS(36) G_DELAY_PS(0)        /* CFG_GPMC_A27_OUT */
--			0x364 A_DELAY_PS(759) G_DELAY_PS(0)       /* CFG_GPMC_CS1_OEN */
--			0x368 A_DELAY_PS(72) G_DELAY_PS(0)        /* CFG_GPMC_CS1_OUT */
-+			0x190 A_DELAY_PS(384) G_DELAY_PS(0)	/* CFG_GPMC_A19_OEN */
-+			0x194 A_DELAY_PS(350) G_DELAY_PS(174)	/* CFG_GPMC_A19_OUT */
-+			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)	/* CFG_GPMC_A20_OEN */
-+			0x1ac A_DELAY_PS(335) G_DELAY_PS(0)	/* CFG_GPMC_A20_OUT */
-+			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)	/* CFG_GPMC_A21_OEN */
-+			0x1b8 A_DELAY_PS(339) G_DELAY_PS(0)	/* CFG_GPMC_A21_OUT */
-+			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)	/* CFG_GPMC_A22_OEN */
-+			0x1c4 A_DELAY_PS(219) G_DELAY_PS(0)	/* CFG_GPMC_A22_OUT */
-+			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	/* CFG_GPMC_A23_OUT */
-+			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)	/* CFG_GPMC_A24_OEN */
-+			0x1dc A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A24_OUT */
-+			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)	/* CFG_GPMC_A25_OEN */
-+			0x1e8 A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A25_OUT */
-+			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)	/* CFG_GPMC_A26_OEN */
-+			0x1f4 A_DELAY_PS(200) G_DELAY_PS(0)	/* CFG_GPMC_A26_OUT */
-+			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)	/* CFG_GPMC_A27_OEN */
-+			0x200 A_DELAY_PS(236) G_DELAY_PS(0)	/* CFG_GPMC_A27_OUT */
-+			0x364 A_DELAY_PS(759) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OEN */
-+			0x368 A_DELAY_PS(372) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OUT */
- 	      >;
- 	};
- 
 -- 
-2.19.2
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
