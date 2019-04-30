@@ -2,52 +2,50 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7BBC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA530C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0903D2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBE121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfD3Qrs (ORCPT
+        id S1726560AbfD3QsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:47:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:51649 "EHLO mga09.intel.com"
+        Tue, 30 Apr 2019 12:48:18 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43074 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3Qrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:47:47 -0400
-X-Amp-Result: UNSCANNABLE
+        id S1725942AbfD3QsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:48:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:47:47 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:48:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="342168766"
+   d="scan'208";a="147045559"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Apr 2019 09:47:45 -0700
+  by orsmga003.jf.intel.com with ESMTP; 30 Apr 2019 09:48:14 -0700
 Received: from andy by smile with local (Exim 4.92)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hLVuy-0007xt-7k; Tue, 30 Apr 2019 19:47:44 +0300
-Date:   Tue, 30 Apr 2019 19:47:44 +0300
+        id 1hLVvR-0007yC-Ab; Tue, 30 Apr 2019 19:48:13 +0300
+Date:   Tue, 30 Apr 2019 19:48:13 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     linux-acpi@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] ACPI / property: fix handling of data_nodes in
- acpi_get_next_subnode()
-Message-ID: <20190430164744.GO9224@smile.fi.intel.com>
-References: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
- <20190430163041.GN9224@smile.fi.intel.com>
- <ba56e822-92ee-7a75-5c62-45f3a572ccde@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        hotwater438@tutanota.com, hdegoede@redhat.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: intel: Clear interrupt status in mask/unmask
+ callback
+Message-ID: <20190430164813.GP9224@smile.fi.intel.com>
+References: <20190430083753.18197-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ba56e822-92ee-7a75-5c62-45f3a572ccde@linux.intel.com>
+In-Reply-To: <20190430083753.18197-1-kai.heng.feng@canonical.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,43 +53,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:41:50AM -0500, Pierre-Louis Bossart wrote:
-> On 4/30/19 11:30 AM, Andy Shevchenko wrote:
-> > On Tue, Apr 30, 2019 at 10:52:29AM -0500, Pierre-Louis Bossart wrote:
-> > > When the DSDT tables expose devices with subdevices and a set of
-> > > hierarchical _DSD properties, the data returned by
-> > > acpi_get_next_subnode() is incorrect, with the results suggesting a bad
-> > > pointer assignment. The parser works fine with device_nodes or
-> > > data_nodes, but not with a combination of the two.
-> > > 
-> > > The problem is traced to an invalid pointer used when jumping from
-> > > handling device_nodes to data nodes. The existing code looks for data
-> > > nodes below the last subdevice found instead of the common root. Fix
-> > > by forcing the acpi_device pointer to be derived from the same fwnode
-> > > for the two types of subnodes.
-> > > 
-> > > This same problem of handling device and data nodes was already fixed
-> > > in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
-> > > node parsing in acpi_get_next_subnode()")' but broken later by 'commit
-> > > 34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
-> > > this should probably go to linux-stable all the way to 4.12
-> > 
-> > Period is missed in above sentence.
-> > 
-> > I think it make sense to add Fixes: tag.
+On Tue, Apr 30, 2019 at 04:37:53PM +0800, Kai-Heng Feng wrote:
+> Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
+> added because clearing interrupt status bit is required to avoid
+> unexpected behavior.
 > 
-> Thanks Andy for the review. I hesitated to add a fixes tag. The line about
-> resetting the adev pointer was indeed removed in the latter commit, but
-> there were a slew of other changes done later by Sakari on hierarchical _DSD
-> so it's quite complicated to say when this was last fully functional.
+> Turns out the unmask callback also needs the fix, which can solve weird
+> IRQ triggering issues on I2C touchpad ELAN1200.
 
-I see, btw, you forgot to add Sakari to Cc list, he is doing a lot lately WRT
-device properties.
+Pushed to my review and testing queue, thanks!
 
-> > Nevertheless,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > Thank you for fixing this interesting issue!
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v2:
+> - Clear interrupt status for both mask/umask cases.
+> - Reduce calculation under irq spinlock.
+> 
+>  drivers/pinctrl/intel/pinctrl-intel.c | 37 +++++----------------------
+>  1 file changed, 6 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index 3b1818184207..717148d2818c 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -913,35 +913,6 @@ static void intel_gpio_irq_ack(struct irq_data *d)
+>  	}
+>  }
+>  
+> -static void intel_gpio_irq_enable(struct irq_data *d)
+> -{
+> -	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> -	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
+> -	const struct intel_community *community;
+> -	const struct intel_padgroup *padgrp;
+> -	int pin;
+> -
+> -	pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), &community, &padgrp);
+> -	if (pin >= 0) {
+> -		unsigned int gpp, gpp_offset, is_offset;
+> -		unsigned long flags;
+> -		u32 value;
+> -
+> -		gpp = padgrp->reg_num;
+> -		gpp_offset = padgroup_offset(padgrp, pin);
+> -		is_offset = community->is_offset + gpp * 4;
+> -
+> -		raw_spin_lock_irqsave(&pctrl->lock, flags);
+> -		/* Clear interrupt status first to avoid unexpected interrupt */
+> -		writel(BIT(gpp_offset), community->regs + is_offset);
+> -
+> -		value = readl(community->regs + community->ie_offset + gpp * 4);
+> -		value |= BIT(gpp_offset);
+> -		writel(value, community->regs + community->ie_offset + gpp * 4);
+> -		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> -	}
+> -}
+> -
+>  static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+>  {
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> @@ -954,15 +925,20 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+>  	if (pin >= 0) {
+>  		unsigned int gpp, gpp_offset;
+>  		unsigned long flags;
+> -		void __iomem *reg;
+> +		void __iomem *reg, *is;
+>  		u32 value;
+>  
+>  		gpp = padgrp->reg_num;
+>  		gpp_offset = padgroup_offset(padgrp, pin);
+>  
+>  		reg = community->regs + community->ie_offset + gpp * 4;
+> +		is = community->regs + community->is_offset + gpp * 4;
+>  
+>  		raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +
+> +		/* Clear interrupt status first to avoid unexpected interrupt */
+> +		writel(BIT(gpp_offset), is);
+> +
+>  		value = readl(reg);
+>  		if (mask)
+>  			value &= ~BIT(gpp_offset);
+> @@ -1106,7 +1082,6 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
+>  
+>  static struct irq_chip intel_gpio_irqchip = {
+>  	.name = "intel-gpio",
+> -	.irq_enable = intel_gpio_irq_enable,
+>  	.irq_ack = intel_gpio_irq_ack,
+>  	.irq_mask = intel_gpio_irq_mask,
+>  	.irq_unmask = intel_gpio_irq_unmask,
+> -- 
+> 2.17.1
+> 
 
 -- 
 With Best Regards,
