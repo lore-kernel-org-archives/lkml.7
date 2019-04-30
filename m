@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC8BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F006C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D9D21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1308621734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624474;
-	bh=RHF1DLaqmrUNaOa7B+nacMsIMLe8B4jL0vl5J7UfX3g=;
+	s=default; t=1556624478;
+	bh=v56iP0Auzc2t58KRgL+KBiKAcquNGPm5lLMKIoWplFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPKA4eyWvmn8ZZc/sxvYagBwqJWU3u3DTQGb1eywh+0OpfzC93P3bzs69CPgwds5X
-	 NuTq5FWlHfgdyKT7IEgWR6DyZjWuPuLACgIae4zs/LU8hH97VIMoJqUHn0abqZEzuM
-	 0qrSiYdMNb9wHWLLoJYmxL1TmN6k8TvvcW2jliVo=
+	b=NbTcoIPJ+YaijEhdD8N6ur42OzRv56FG9jL4zLheFZxh7Puaacsj6l4drZMEKeeZ4
+	 tKaxW8YVPrEwueC6rlNp1OQe6+HQdfTBFppCx3jvYb5leaPr1RRiKinz7RP3OBODtR
+	 PTxysdrVg1pV9GCBwfokTO3HWerBDwLBa6sT4fz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfD3LlM (ORCPT
+        id S1728859AbfD3LlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:41:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48338 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:41:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbfD3LlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:09 -0400
+        id S1728808AbfD3LlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D81D22173E;
-        Tue, 30 Apr 2019 11:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3DBA21734;
+        Tue, 30 Apr 2019 11:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624468;
-        bh=RHF1DLaqmrUNaOa7B+nacMsIMLe8B4jL0vl5J7UfX3g=;
+        s=default; t=1556624473;
+        bh=v56iP0Auzc2t58KRgL+KBiKAcquNGPm5lLMKIoWplFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghIGcFREKSG1FF75VqxtOiPAYGxTVCZBGptIvhm0PAPnMICW6ixI2U0dKZd9k7ye/
-         SLvAf1oK5sB62ctHxRkm4SIFsD2Gf8knIMWYowiZy2iVuZASlRgrjhyozcYxZaDpOR
-         zufmgZQ9plmhjotxTuv5EO4wed1mI1Ttlx2rvwlg=
+        b=EhIHUtdR0gW/lISQcROBEQrxoMR+C2s6fZxgpFcR/BxTvhHw1L5bIjgRi9qP+yRVy
+         dwqEZe8Zc/LVnu6sP5GdmLPCltnGKDUx7uIg6goXfVgZoFDShEsgXiXQdrXQeg7raV
+         3c3i9rq8CDCoajolNdn17zomrG1JnGUnRzouDozU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 30/41] ipv4: add sanity checks in ipv4_link_failure()
-Date:   Tue, 30 Apr 2019 13:38:41 +0200
-Message-Id: <20190430113531.699206659@linuxfoundation.org>
+        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.9 32/41] net/mlx5e: ethtool, Remove unsupported SFP EEPROM high pages query
+Date:   Tue, 30 Apr 2019 13:38:43 +0200
+Message-Id: <20190430113532.035142535@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -61,154 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Erez Alfasi <ereza@mellanox.com>
 
-[ Upstream commit 20ff83f10f113c88d0bb74589389b05250994c16 ]
+[ Upstream commit ace329f4ab3ba434be2adf618073c752d083b524 ]
 
-Before calling __ip_options_compile(), we need to ensure the network
-header is a an IPv4 one, and that it is already pulled in skb->head.
+Querying EEPROM high pages data for SFP module is currently
+not supported by our driver and yet queried, resulting in
+invalid FW queries.
 
-RAW sockets going through a tunnel can end up calling ipv4_link_failure()
-with total garbage in the skb, or arbitrary lengthes.
+Set the EEPROM ethtool data length to 256 for SFP module will
+limit the reading for page 0 only and prevent invalid FW queries.
 
-syzbot report :
-
-BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:355 [inline]
-BUG: KASAN: stack-out-of-bounds in __ip_options_echo+0x294/0x1120 net/ipv4/ip_options.c:123
-Write of size 69 at addr ffff888096abf068 by task syz-executor.4/9204
-
-CPU: 0 PID: 9204 Comm: syz-executor.4 Not tainted 5.1.0-rc5+ #77
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
- kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x123/0x190 mm/kasan/generic.c:191
- memcpy+0x38/0x50 mm/kasan/common.c:133
- memcpy include/linux/string.h:355 [inline]
- __ip_options_echo+0x294/0x1120 net/ipv4/ip_options.c:123
- __icmp_send+0x725/0x1400 net/ipv4/icmp.c:695
- ipv4_link_failure+0x29f/0x550 net/ipv4/route.c:1204
- dst_link_failure include/net/dst.h:427 [inline]
- vti6_xmit net/ipv6/ip6_vti.c:514 [inline]
- vti6_tnl_xmit+0x10d4/0x1c0c net/ipv6/ip6_vti.c:553
- __netdev_start_xmit include/linux/netdevice.h:4414 [inline]
- netdev_start_xmit include/linux/netdevice.h:4423 [inline]
- xmit_one net/core/dev.c:3292 [inline]
- dev_hard_start_xmit+0x1b2/0x980 net/core/dev.c:3308
- __dev_queue_xmit+0x271d/0x3060 net/core/dev.c:3878
- dev_queue_xmit+0x18/0x20 net/core/dev.c:3911
- neigh_direct_output+0x16/0x20 net/core/neighbour.c:1527
- neigh_output include/net/neighbour.h:508 [inline]
- ip_finish_output2+0x949/0x1740 net/ipv4/ip_output.c:229
- ip_finish_output+0x73c/0xd50 net/ipv4/ip_output.c:317
- NF_HOOK_COND include/linux/netfilter.h:278 [inline]
- ip_output+0x21f/0x670 net/ipv4/ip_output.c:405
- dst_output include/net/dst.h:444 [inline]
- NF_HOOK include/linux/netfilter.h:289 [inline]
- raw_send_hdrinc net/ipv4/raw.c:432 [inline]
- raw_sendmsg+0x1d2b/0x2f20 net/ipv4/raw.c:663
- inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg+0xdd/0x130 net/socket.c:661
- sock_write_iter+0x27c/0x3e0 net/socket.c:988
- call_write_iter include/linux/fs.h:1866 [inline]
- new_sync_write+0x4c7/0x760 fs/read_write.c:474
- __vfs_write+0xe4/0x110 fs/read_write.c:487
- vfs_write+0x20c/0x580 fs/read_write.c:549
- ksys_write+0x14f/0x2d0 fs/read_write.c:599
- __do_sys_write fs/read_write.c:611 [inline]
- __se_sys_write fs/read_write.c:608 [inline]
- __x64_sys_write+0x73/0xb0 fs/read_write.c:608
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458c29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f293b44bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458c29
-RDX: 0000000000000014 RSI: 00000000200002c0 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f293b44c6d4
-R13: 00000000004c8623 R14: 00000000004ded68 R15: 00000000ffffffff
-
-The buggy address belongs to the page:
-page:ffffea00025aafc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0x1fffc0000000000()
-raw: 01fffc0000000000 0000000000000000 ffffffff025a0101 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888096abef80: 00 00 00 f2 f2 f2 f2 f2 00 00 00 00 00 00 00 f2
- ffff888096abf000: f2 f2 f2 f2 00 00 00 00 00 00 00 00 00 00 00 00
->ffff888096abf080: 00 00 f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00
-                         ^
- ffff888096abf100: 00 00 00 00 f1 f1 f1 f1 00 00 f3 f3 00 00 00 00
- ffff888096abf180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-Fixes: ed0de45a1008 ("ipv4: recompile ip options in ipv4_link_failure")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Stephen Suryaputra <ssuryaextr@gmail.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bb64143eee8c ("net/mlx5e: Add ethtool support for dump module EEPROM")
+Signed-off-by: Erez Alfasi <ereza@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/route.c |   34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/port.c       |    4 ----
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -1168,25 +1168,39 @@ static struct dst_entry *ipv4_dst_check(
- 	return dst;
- }
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1365,7 +1365,7 @@ static int mlx5e_get_module_info(struct
+ 		break;
+ 	case MLX5_MODULE_ID_SFP:
+ 		modinfo->type       = ETH_MODULE_SFF_8472;
+-		modinfo->eeprom_len = ETH_MODULE_SFF_8472_LEN;
++		modinfo->eeprom_len = MLX5_EEPROM_PAGE_LENGTH;
+ 		break;
+ 	default:
+ 		netdev_err(priv->netdev, "%s: cable type not recognized:0x%x\n",
+--- a/drivers/net/ethernet/mellanox/mlx5/core/port.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/port.c
+@@ -368,10 +368,6 @@ int mlx5_query_module_eeprom(struct mlx5
+ 		size -= offset + size - MLX5_EEPROM_PAGE_LENGTH;
  
--static void ipv4_link_failure(struct sk_buff *skb)
-+static void ipv4_send_dest_unreach(struct sk_buff *skb)
- {
- 	struct ip_options opt;
--	struct rtable *rt;
- 	int res;
+ 	i2c_addr = MLX5_I2C_ADDR_LOW;
+-	if (offset >= MLX5_EEPROM_PAGE_LENGTH) {
+-		i2c_addr = MLX5_I2C_ADDR_HIGH;
+-		offset -= MLX5_EEPROM_PAGE_LENGTH;
+-	}
  
- 	/* Recompile ip options since IPCB may not be valid anymore.
-+	 * Also check we have a reasonable ipv4 header.
- 	 */
--	memset(&opt, 0, sizeof(opt));
--	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
--
--	rcu_read_lock();
--	res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
--	rcu_read_unlock();
--
--	if (res)
-+	if (!pskb_network_may_pull(skb, sizeof(struct iphdr)) ||
-+	    ip_hdr(skb)->version != 4 || ip_hdr(skb)->ihl < 5)
- 		return;
- 
-+	memset(&opt, 0, sizeof(opt));
-+	if (ip_hdr(skb)->ihl > 5) {
-+		if (!pskb_network_may_pull(skb, ip_hdr(skb)->ihl * 4))
-+			return;
-+		opt.optlen = ip_hdr(skb)->ihl * 4 - sizeof(struct iphdr);
-+
-+		rcu_read_lock();
-+		res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
-+		rcu_read_unlock();
-+
-+		if (res)
-+			return;
-+	}
- 	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
-+}
-+
-+static void ipv4_link_failure(struct sk_buff *skb)
-+{
-+	struct rtable *rt;
-+
-+	ipv4_send_dest_unreach(skb);
- 
- 	rt = skb_rtable(skb);
- 	if (rt)
+ 	MLX5_SET(mcia_reg, in, l, 0);
+ 	MLX5_SET(mcia_reg, in, module, module_num);
 
 
