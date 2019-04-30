@@ -2,86 +2,89 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D62DC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDB7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A08721707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G3TUd0H0"
+	by mail.kernel.org (Postfix) with ESMTP id 8CE8E21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfD3IXf (ORCPT
+        id S1726409AbfD3I12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:23:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59880 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfD3IXe (ORCPT
+        Tue, 30 Apr 2019 04:27:28 -0400
+Received: from 18.mo4.mail-out.ovh.net ([188.165.54.143]:39203 "EHLO
+        18.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfD3I11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:23:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NZBXO1ME4yyhNikKDn25Wx/qhHtX/guFa4/8R+Ntg+Y=; b=G3TUd0H0Lh2EYnrNVTvuVyRLB
-        p6pHt9vlLF0QLkapwZMYwuiZGgRG5nqILhQdEldK2Q5ku+eWhOMMsFZuRTthTK8Vaj6yNr9G54AXa
-        VqzBhoWej4S3X7Se06W0n7BRMUS95nn89oFIyVjBt6OBJyEta7tADh+jbNq8OxpzU62PtyLDJZwcg
-        A4qlbpX5xjzGIsu7w2QXJgno6DCXC7RAuuYRUvefMQtf42OsIemUxBmtQ72NTHQnWZ7Dpo5khsmeA
-        vYBLOLAYixvT0RaOkkcLGB3tD4N4zSxUdTDkHqSrgzC1ej0rPOcG4a63mKQBQgyFGZirJJApeJEQf
-        zvEKEnWhw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLO33-00082Z-LQ; Tue, 30 Apr 2019 08:23:33 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 334EE29D2D6D6; Tue, 30 Apr 2019 10:23:32 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 10:23:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org
-Subject: Re: [PATCH 4/5] ceph: fix improper use of smp_mb__before_atomic()
-Message-ID: <20190430082332.GB2677@hirez.programming.kicks-ass.net>
-References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1556568902-12464-5-git-send-email-andrea.parri@amarulasolutions.com>
+        Tue, 30 Apr 2019 04:27:27 -0400
+X-Greylist: delayed 2391 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Apr 2019 04:27:27 EDT
+Received: from player799.ha.ovh.net (unknown [10.108.35.103])
+        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 2AA021E1A6C
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:47:35 +0200 (CEST)
+Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
+        (Authenticated sender: sebastien.szymanski@armadeus.com)
+        by player799.ha.ovh.net (Postfix) with ESMTPSA id CCE9353F9AA5;
+        Tue, 30 Apr 2019 07:47:22 +0000 (UTC)
+From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>
+Subject: [PATCH 1/2] ARM: dts: imx6ul: Add csi node
+Date:   Tue, 30 Apr 2019 09:47:30 +0200
+Message-Id: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556568902-12464-5-git-send-email-andrea.parri@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 18272792539178488855
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdduvdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:15:00PM +0200, Andrea Parri wrote:
-> This barrier only applies to the read-modify-write operations; in
-> particular, it does not apply to the atomic64_set() primitive.
-> 
-> Replace the barrier with an smp_mb().
-> 
+Add csi node for i.MX6UL SoC.
 
-> @@ -541,7 +541,7 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
->  					   long long release_count,
->  					   long long ordered_count)
->  {
-> -	smp_mb__before_atomic();
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+---
+ arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-same
-	/*
-	 * XXX: the comment that explain this barrier goes here.
-	 */
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 62ed30c781ed..af322bc58333 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -951,6 +951,17 @@
+ 				};
+ 			};
+ 
++			csi: csi@21c4000 {
++				compatible = "fsl,imx6ul-csi", "fsl,imx7-csi";
++				reg = <0x021c4000 0x4000>;
++				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6UL_CLK_DUMMY>,
++					 <&clks IMX6UL_CLK_CSI>,
++					 <&clks IMX6UL_CLK_DUMMY>;
++				clock-names = "axi", "mclk", "dcic";
++				status = "disabled";
++			};
++
+ 			lcdif: lcdif@21c8000 {
+ 				compatible = "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
+ 				reg = <0x021c8000 0x4000>;
+-- 
+2.19.2
 
-> +	smp_mb();
-
->  	atomic64_set(&ci->i_complete_seq[0], release_count);
->  	atomic64_set(&ci->i_complete_seq[1], ordered_count);
->  }
-> -- 
-> 2.7.4
-> 
