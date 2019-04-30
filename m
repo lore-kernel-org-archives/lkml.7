@@ -2,77 +2,78 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6683FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8CAC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CE820652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E6820652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfD3OxK (ORCPT
+        id S1727400AbfD3Oxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:53:10 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:43666 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfD3OxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:53:10 -0400
-Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7DB2014013FD3;
-        Tue, 30 Apr 2019 07:53:09 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 10:53:06 -0400 (EDT)
-Message-Id: <20190430.105306.1978317247998825768.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] rxrpc: Fix net namespace cleanup
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <155660964874.18872.7446174793302616529.stgit@warthog.procyon.org.uk>
-References: <155660964874.18872.7446174793302616529.stgit@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Apr 2019 07:53:10 -0700 (PDT)
+        Tue, 30 Apr 2019 10:53:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37484 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfD3Oxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:53:52 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3ABC2D3C0A;
+        Tue, 30 Apr 2019 14:53:52 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2A9686F57D;
+        Tue, 30 Apr 2019 14:53:46 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 30 Apr 2019 16:53:50 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 16:53:43 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>, jack@suse.com
+Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
+ current) with fsfreeze (4.19.25-rt16)
+Message-ID: <20190430145343.GG23020@redhat.com>
+References: <20190326093421.GA29508@localhost.localdomain>
+ <20190419085627.GI4742@localhost.localdomain>
+ <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
+ <20190430132811.GB2589@hirez.programming.kicks-ass.net>
+ <20190430141500.GE23020@redhat.com>
+ <20190430144252.GF23020@redhat.com>
+ <20190430144457.GJ2589@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430144457.GJ2589@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 30 Apr 2019 14:53:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Tue, 30 Apr 2019 08:34:08 +0100
+On 04/30, Peter Zijlstra wrote:
+>
+> On Tue, Apr 30, 2019 at 04:42:53PM +0200, Oleg Nesterov wrote:
+> > I have cloned linux-rt-devel.git
+> >
+> > If I understand correctly, in rt rw_semaphore is actually defined in rwsem_rt.h
+> > so percpu_rwsem_acquire() should probably do
+> >
+> > 	sem->rw_sem.rtmutex.owner = current;
+>
+> That'll screw the PI chain (if there is one), right?
 
-> In rxrpc_destroy_all_calls(), there are two phases: (1) make sure the
-> ->calls list is empty, emitting error messages if not, and (2) wait for the
-> RCU cleanup to happen on outstanding calls (ie. ->nr_calls becomes 0).
-> 
-> To avoid taking the call_lock, the function prechecks ->calls and if empty,
-> it returns to avoid taking the lock - this is wrong, however: it still
-> needs to go and do the second phase and wait for ->nr_calls to become 0.
-> 
-> Without this, the rxrpc_net struct may get deallocated before we get to the
-> RCU cleanup for the last calls.  This can lead to:
-> 
->   Slab corruption (Not tainted): kmalloc-16k start=ffff88802b178000, len=16384
->   050: 6b 6b 6b 6b 6b 6b 6b 6b 61 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkakkkkkkk
-> 
-> Note the "61" at offset 0x58.  This corresponds to the ->nr_calls member of
-> struct rxrpc_net (which is >9k in size, and thus allocated out of the 16k
-> slab).
-> 
-> 
-> Fix this by flipping the condition on the if-statement, putting the locked
-> section inside the if-body and dropping the return from there.  The
-> function will then always go on to wait for the RCU cleanup on outstanding
-> calls.
-> 
-> Fixes: 2baec2c3f854 ("rxrpc: Support network namespacing")
-> Signed-off-by: David Howells <dhowells@redhat.com>
+Yes, I have already realized this can't work after I glanced at this code, thanks.
 
-Applied and queued up for -stable, thanks.
+Oleg.
+
