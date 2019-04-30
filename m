@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52300C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38D2C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F2321670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3BC21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624381;
-	bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
+	s=default; t=1556624383;
+	bh=8W/ehXQACVYoYHOEBk7VSWUI8SF3BqYrJa0YNOBXKRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XY0RR8oNg8qpZ3PdWXsMYvrd9gsb8mgAcRj9k2hrTMaD2MqzEmTMo2PyMrosQgpIp
-	 qIzFayfnw9k4HeFgZGvjj+1aB9VI498orONYt7oQ0QM8MgaOf70WPetWCjiu2l8gvH
-	 ywQAmAu1gnBfyqT4AoTM52wC0mQfT2atK8PL6ifI=
+	b=yXD1kcwlz0Jsmg4ZWkVDxzuDu9hLqEnFBJKrkXbO+VRYhzlKgeCNCAbrZcgIaplwn
+	 T63rPBqV47C9WWRRWY+Eh1eUXt80LpQKritYXnwvg8BGqfy5fR8Cu/YqjKQidDc6SY
+	 3iqPuvohrCBijPg9IjsaBPkOUFIPMHrqznHlQXjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfD3Ljk (ORCPT
+        id S1727978AbfD3Ljl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:39:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfD3Ljf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:39:35 -0400
+        id S1727936AbfD3Ljk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:39:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3F0A21670;
-        Tue, 30 Apr 2019 11:39:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 051CD21734;
+        Tue, 30 Apr 2019 11:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624374;
-        bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
+        s=default; t=1556624379;
+        bh=8W/ehXQACVYoYHOEBk7VSWUI8SF3BqYrJa0YNOBXKRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Klsx+bREMJSgIycokV1yjOf19nUH4mvx793t65XUDMLALrAcuyZ5tA+nz7mlfgah1
-         gEUZu+bXYOiEbIT+bnlhtiBJVlZBzi3dFZvliAN+UVQzYzt6QC/pN0brRquti2jj4m
-         RAZpAZdsHGd8xL0YAcwLeBTA26PFaIRBYuwH8Qp8=
+        b=1z0nfUeD3hluBS/zJtR34SSYeOM3ax5aXXZ9CEv8et7QSXk2gHQdyJlIIdAsG0cLk
+         pmwgGR6xL3/sMgFqPN51TwgU0OW3leUzHSUwef+GeGRlyiTL5fTv0ZvuuSZ7s1TcQi
+         Jdllq9/OdwMV75m3h7x2AwCag+yTYvkIV+ur39v4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
-Subject: [PATCH 4.9 11/41] sunrpc: dont mark uninitialised items as VALID.
-Date:   Tue, 30 Apr 2019 13:38:22 +0200
-Message-Id: <20190430113527.693910490@linuxfoundation.org>
+        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
+        Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>,
+        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
+        Yao Lihua <ylhuajnu@outlook.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.9 13/41] dmaengine: sh: rcar-dmac: With cyclic DMA residue 0 is valid
+Date:   Tue, 30 Apr 2019 13:38:24 +0200
+Message-Id: <20190430113528.091286225@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -59,57 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
 
-commit d58431eacb226222430940134d97bfd72f292fcd upstream.
+commit 907bd68a2edc491849e2fdcfe52c4596627bca94 upstream.
 
-A recent commit added a call to cache_fresh_locked()
-when an expired item was found.
-The call sets the CACHE_VALID flag, so it is important
-that the item actually is valid.
-There are two ways it could be valid:
-1/ If ->update has been called to fill in relevant content
-2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
+Having a cyclic DMA, a residue 0 is not an indication of a completed
+DMA. In case of cyclic DMA make sure that dma_set_residue() is called
+and with this a residue of 0 is forwarded correctly to the caller.
 
-An expired item that is waiting for an update will be neither.
-Setting CACHE_VALID will mean that a subsequent call to cache_put()
-will be likely to dereference uninitialised pointers.
-
-So we must make sure the item is valid, and we already have code to do
-that in try_to_negate_entry().  This takes the hash lock and so cannot
-be used directly, so take out the two lines that we need and use them.
-
-Now cache_fresh_locked() is certain to be called only on
-a valid item.
-
-Cc: stable@kernel.org # 2.6.35
-Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 3544d2878817 ("dmaengine: rcar-dmac: use result of updated get_residue in tx_status")
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
+Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+Signed-off-by: Yao Lihua <ylhuajnu@outlook.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: <stable@vger.kernel.org> # v4.8+
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/cache.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/sh/rcar-dmac.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -54,6 +54,7 @@ static void cache_init(struct cache_head
- 	h->last_refresh = now;
- }
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1311,6 +1311,7 @@ static enum dma_status rcar_dmac_tx_stat
+ 	enum dma_status status;
+ 	unsigned long flags;
+ 	unsigned int residue;
++	bool cyclic;
  
-+static inline int cache_is_valid(struct cache_head *h);
- static void cache_fresh_locked(struct cache_head *head, time_t expiry,
- 				struct cache_detail *detail);
- static void cache_fresh_unlocked(struct cache_head *head,
-@@ -100,6 +101,8 @@ struct cache_head *sunrpc_cache_lookup(s
- 			if (cache_is_expired(detail, tmp)) {
- 				hlist_del_init(&tmp->cache_list);
- 				detail->entries --;
-+				if (cache_is_valid(tmp) == -EAGAIN)
-+					set_bit(CACHE_NEGATIVE, &tmp->flags);
- 				cache_fresh_locked(tmp, 0, detail);
- 				freeme = tmp;
- 				break;
+ 	status = dma_cookie_status(chan, cookie, txstate);
+ 	if (status == DMA_COMPLETE || !txstate)
+@@ -1318,10 +1319,11 @@ static enum dma_status rcar_dmac_tx_stat
+ 
+ 	spin_lock_irqsave(&rchan->lock, flags);
+ 	residue = rcar_dmac_chan_get_residue(rchan, cookie);
++	cyclic = rchan->desc.running ? rchan->desc.running->cyclic : false;
+ 	spin_unlock_irqrestore(&rchan->lock, flags);
+ 
+ 	/* if there's no residue, the cookie is complete */
+-	if (!residue)
++	if (!residue && !cyclic)
+ 		return DMA_COMPLETE;
+ 
+ 	dma_set_residue(txstate, residue);
 
 
