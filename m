@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E517C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0383C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0D120449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C0B20449
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625113;
-	bh=dRQmxGDorS+lESNzYyd3cJes+FHFTl2Vg09VzHfUl/o=;
+	s=default; t=1556625115;
+	bh=tAcEByJnxCkvC1bWn5c5HBQRKGIe0XWWjWn+u3L11jY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eQgYyAaqfWbXUorZNYh7fsNyHNkSvMV9BrCJrsKAYpBvUZiKQFhyPrw+xbTe6p0Vk
-	 0NPLH+Xl416kT3GEAgrSgrrs0aTHn/muNIHE5fYdC9mlr5zHBTnfzRqmK6zm9UETFW
-	 a/RTVccdLesNK4CWI7UNJiOaeUNY7q5pjSam0W0U=
+	b=RjNmx0v5W5p18zD7HBBX/NLAlGd6VOvWLvFtXqvHlxzWkTSq0CrNOK99TIQfNTAJL
+	 oWZxQbPSuTIFoWFtZfxn0nISjvfOQGVWmeI5e4YHrn4kUW0o9z2TE3HAAqP16QcDak
+	 1YAC3feBDWHxHvTjFVfPHTDIfgiY15EwHfuPD+Xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfD3Lvw (ORCPT
+        id S1731474AbfD3Lvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:51:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39826 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:51:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731448AbfD3Lvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:46 -0400
+        id S1731460AbfD3Lvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:51:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6419A21734;
-        Tue, 30 Apr 2019 11:51:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B852320449;
+        Tue, 30 Apr 2019 11:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625105;
-        bh=dRQmxGDorS+lESNzYyd3cJes+FHFTl2Vg09VzHfUl/o=;
+        s=default; t=1556625111;
+        bh=tAcEByJnxCkvC1bWn5c5HBQRKGIe0XWWjWn+u3L11jY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=La2yAyHA0NhoOYWvPHZA+/B1ZrF370G2x98JGbCwvoEbyZ1ZROR6PE2w/LUsbhiH9
-         6W957e9tQQPLhTLHRs0NaoG6MzJY6m/lgHE4E5ABWuEsKRO/6Pr7fpAeQrXbdgGZ9L
-         4zhITzN0N8qs6rY7LInFeUrjYL3XyA2YUaZObeu4=
+        b=zV6og2G201zT+d06A6esI9vJ+njejoDqsGp8ky9dS82qpgJpPeKVQdjQ34Lq+FiFJ
+         dWP33kZ2bUcvHrR/0kqXUXXoQoBO09+pk8zPH3Cji21g5HNkKbXxQSIVBlgDJElQSa
+         eJg7EA3+rzAlWplPlglEYOG6mg2IA+Cmp2pFa2ZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 5.0 47/89] USB: Consolidate LPM checks to avoid enabling LPM twice
-Date:   Tue, 30 Apr 2019 13:38:38 +0200
-Message-Id: <20190430113611.928229143@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 88/89] net/tls: avoid potential deadlock in tls_set_device_offload_rx()
+Date:   Tue, 30 Apr 2019 13:39:19 +0200
+Message-Id: <20190430113613.930256964@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -58,122 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-commit d7a6c0ce8d26412903c7981503bad9e1cc7c45d2 upstream.
+[ Upstream commit 62ef81d5632634d5e310ed25b9b940b2b6612b46 ]
 
-USB Bluetooth controller QCA ROME (0cf3:e007) sometimes stops working
-after S3:
-[ 165.110742] Bluetooth: hci0: using NVM file: qca/nvm_usb_00000302.bin
-[ 168.432065] Bluetooth: hci0: Failed to send body at 4 of 1953 (-110)
+If device supports offload, but offload fails tls_set_device_offload_rx()
+will call tls_sw_free_resources_rx() which (unhelpfully) releases
+and reacquires the socket lock.
 
-After some experiments, I found that disabling LPM can workaround the
-issue.
+For a small fix release and reacquire the device_offload_lock.
 
-On some platforms, the USB power is cut during S3, so the driver uses
-reset-resume to resume the device. During port resume, LPM gets enabled
-twice, by usb_reset_and_verify_device() and usb_port_resume().
-
-Consolidate all checks into new LPM helpers to make sure LPM only gets
-enabled once.
-
-Fixes: de68bab4fa96 ("usb: Don't enable USB 2.0 Link PM by default.”)
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: stable <stable@vger.kernel.org> # after much soaking
+Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/core/driver.c  |   11 ++++++++---
- drivers/usb/core/hub.c     |   12 ++++--------
- drivers/usb/core/message.c |    3 +--
- 3 files changed, 13 insertions(+), 13 deletions(-)
+ net/tls/tls_device.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/core/driver.c
-+++ b/drivers/usb/core/driver.c
-@@ -1901,9 +1901,6 @@ static int usb_set_usb2_hardware_lpm(str
- 	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
- 	int ret = -EPERM;
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -884,7 +884,9 @@ int tls_set_device_offload_rx(struct soc
+ 	goto release_netdev;
  
--	if (enable && !udev->usb2_hw_lpm_allowed)
--		return 0;
--
- 	if (hcd->driver->set_usb2_hw_lpm) {
- 		ret = hcd->driver->set_usb2_hw_lpm(hcd, udev, enable);
- 		if (!ret)
-@@ -1915,11 +1912,19 @@ static int usb_set_usb2_hardware_lpm(str
- 
- int usb_enable_usb2_hardware_lpm(struct usb_device *udev)
- {
-+	if (!udev->usb2_hw_lpm_capable ||
-+	    !udev->usb2_hw_lpm_allowed ||
-+	    udev->usb2_hw_lpm_enabled)
-+		return 0;
-+
- 	return usb_set_usb2_hardware_lpm(udev, 1);
- }
- 
- int usb_disable_usb2_hardware_lpm(struct usb_device *udev)
- {
-+	if (!udev->usb2_hw_lpm_enabled)
-+		return 0;
-+
- 	return usb_set_usb2_hardware_lpm(udev, 0);
- }
- 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -3220,8 +3220,7 @@ int usb_port_suspend(struct usb_device *
- 	}
- 
- 	/* disable USB2 hardware LPM */
--	if (udev->usb2_hw_lpm_enabled == 1)
--		usb_disable_usb2_hardware_lpm(udev);
-+	usb_disable_usb2_hardware_lpm(udev);
- 
- 	if (usb_disable_ltm(udev)) {
- 		dev_err(&udev->dev, "Failed to disable LTM before suspend\n");
-@@ -3259,8 +3258,7 @@ int usb_port_suspend(struct usb_device *
- 		usb_enable_ltm(udev);
-  err_ltm:
- 		/* Try to enable USB2 hardware LPM again */
--		if (udev->usb2_hw_lpm_capable == 1)
--			usb_enable_usb2_hardware_lpm(udev);
-+		usb_enable_usb2_hardware_lpm(udev);
- 
- 		if (udev->do_remote_wakeup)
- 			(void) usb_disable_remote_wakeup(udev);
-@@ -3543,8 +3541,7 @@ int usb_port_resume(struct usb_device *u
- 		hub_port_logical_disconnect(hub, port1);
- 	} else  {
- 		/* Try to enable USB2 hardware LPM */
--		if (udev->usb2_hw_lpm_capable == 1)
--			usb_enable_usb2_hardware_lpm(udev);
-+		usb_enable_usb2_hardware_lpm(udev);
- 
- 		/* Try to enable USB3 LTM */
- 		usb_enable_ltm(udev);
-@@ -5649,8 +5646,7 @@ static int usb_reset_and_verify_device(s
- 	/* Disable USB2 hardware LPM.
- 	 * It will be re-enabled by the enumeration process.
- 	 */
--	if (udev->usb2_hw_lpm_enabled == 1)
--		usb_disable_usb2_hardware_lpm(udev);
-+	usb_disable_usb2_hardware_lpm(udev);
- 
- 	/* Disable LPM while we reset the device and reinstall the alt settings.
- 	 * Device-initiated LPM, and system exit latency settings are cleared
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -1243,8 +1243,7 @@ void usb_disable_device(struct usb_devic
- 			dev->actconfig->interface[i] = NULL;
- 		}
- 
--		if (dev->usb2_hw_lpm_enabled == 1)
--			usb_disable_usb2_hardware_lpm(dev);
-+		usb_disable_usb2_hardware_lpm(dev);
- 		usb_unlocked_disable_lpm(dev);
- 		usb_disable_ltm(dev);
- 
+ free_sw_resources:
++	up_read(&device_offload_lock);
+ 	tls_sw_free_resources_rx(sk);
++	down_read(&device_offload_lock);
+ release_ctx:
+ 	ctx->priv_ctx_rx = NULL;
+ release_netdev:
 
 
