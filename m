@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B36C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F10C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB942075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB852075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625911;
-	bh=mYsck2O6L0TSOMoZIJFa6DPyUbyUdCI1J/Nh2xvFWXg=;
+	s=default; t=1556625920;
+	bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2duaDimOQjz4KYQ65yKAc3aaghrdcJJxTkdy/FpjFKmc8mbpMw6EM2SKilyNWWsRM
-	 SnhhxsPtVE32IrZ0bOFW7MIY3tWDKSwqVm+JbgfuKtA1MEuUf0L2eE7649oHqZo5W3
-	 0iveTidfi0Ollcto/MmI4lTvgisIwb6sCOYXMiyQ=
+	b=nnEAuRPJ0DC6id+ohpnGYFPu6l1fmZCRzjspPP8cAq7Ss6DwHZbdngTSIsxOjkABw
+	 S6bNosD9ea9aGr60h2eu4Ac9uQFoqy9YBUhAdDkJlR3ozKaB9j5DTb1s5JgnKxPrq/
+	 k9lFAwr+b21zWGgxnhPcAXtHOqx6kFYKQqzVyJiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbfD3Lm0 (ORCPT
+        id S1729171AbfD3MFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:42:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51220 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbfD3LmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:42:22 -0400
+        id S1729221AbfD3LmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:42:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE0E420449;
-        Tue, 30 Apr 2019 11:42:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9170921734;
+        Tue, 30 Apr 2019 11:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624541;
-        bh=mYsck2O6L0TSOMoZIJFa6DPyUbyUdCI1J/Nh2xvFWXg=;
+        s=default; t=1556624531;
+        bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R8mK4nkSzPlzdLsDoW+2N7g08NxZz+QL20QYpj8yOz5WApBxc3HlRUOa7Pa4x52hH
-         pzbEtbMl3Vze++QF+vZj9RZugB/ojZMMulAGRnzhA88YBb+GzozEB/6xXhTz8O9OzW
-         yHb9d05atGGTMxx19mRNHz/COap1ttQuSgHNLwIM=
+        b=sh0hC6vDJ3rIMvkCZ1IFLzd+hzD4mA6BgmbC4IhcEz0JUGo3hqkBlYm9oKbf7mThX
+         5m72smb937lNGXFuR2QQfKDD2RHZHoNjqBloE3WcT4rGGsRjJDhHWW0UpTOerS+g5o
+         b9t4i30ZEMZxxLshAbgBXjpx8qI6N/nzzJ0FsBAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 04/53] tracing: Fix buffer_ref pipe ops
-Date:   Tue, 30 Apr 2019 13:38:11 +0200
-Message-Id: <20190430113550.386761433@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com,
+        Ben Hutchings <ben@decadent.org.uk>,
+        David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 28/53] slip: make slhc_free() silently accept an error pointer
+Date:   Tue, 30 Apr 2019 13:38:35 +0200
+Message-Id: <20190430113556.164100265@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -62,140 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit b987222654f84f7b4ca95b3a55eca784cb30235b upstream.
+commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e upstream.
 
-This fixes multiple issues in buffer_pipe_buf_ops:
+This way, slhc_free() accepts what slhc_init() returns, whether that is
+an error or not.
 
- - The ->steal() handler must not return zero unless the pipe buffer has
-   the only reference to the page. But generic_pipe_buf_steal() assumes
-   that every reference to the pipe is tracked by the page's refcount,
-   which isn't true for these buffers - buffer_pipe_buf_get(), which
-   duplicates a buffer, doesn't touch the page's refcount.
-   Fix it by using generic_pipe_buf_nosteal(), which refuses every
-   attempted theft. It should be easy to actually support ->steal, but the
-   only current users of pipe_buf_steal() are the virtio console and FUSE,
-   and they also only use it as an optimization. So it's probably not worth
-   the effort.
- - The ->get() and ->release() handlers can be invoked concurrently on pipe
-   buffers backed by the same struct buffer_ref. Make them safe against
-   concurrency by using refcount_t.
- - The pointers stored in ->private were only zeroed out when the last
-   reference to the buffer_ref was dropped. As far as I know, this
-   shouldn't be necessary anyway, but if we do it, let's always do it.
+In particular, the pattern in sl_alloc_bufs() is
 
-Link: http://lkml.kernel.org/r/20190404215925.253531-1-jannh@google.com
+        slcomp = slhc_init(16, 16);
+        ...
+        slhc_free(slcomp);
 
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: stable@vger.kernel.org
-Fixes: 73a757e63114d ("ring-buffer: Return reader page back into existing ring buffer")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+for the error handling path, and rather than complicate that code, just
+make it ok to always free what was returned by the init function.
+
+That's what the code used to do before commit 4ab42d78e37a ("ppp, slip:
+Validate VJ compression slot parameters completely") when slhc_init()
+just returned NULL for the error case, with no actual indication of the
+details of the error.
+
+Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
+Fixes: 4ab42d78e37a ("ppp, slip: Validate VJ compression slot parameters completely")
+Acked-by: Ben Hutchings <ben@decadent.org.uk>
+Cc: David Miller <davem@davemloft.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/splice.c               |    4 ++--
- include/linux/pipe_fs_i.h |    1 +
- kernel/trace/trace.c      |   28 ++++++++++++++--------------
- 3 files changed, 17 insertions(+), 16 deletions(-)
+ drivers/net/slip/slhc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -332,8 +332,8 @@ const struct pipe_buf_operations default
- 	.get = generic_pipe_buf_get,
- };
- 
--static int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
--				    struct pipe_buffer *buf)
-+int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
-+			     struct pipe_buffer *buf)
+--- a/drivers/net/slip/slhc.c
++++ b/drivers/net/slip/slhc.c
+@@ -153,7 +153,7 @@ out_fail:
+ void
+ slhc_free(struct slcompress *comp)
  {
- 	return 1;
- }
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -182,6 +182,7 @@ void free_pipe_info(struct pipe_inode_in
- void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
-+int generic_pipe_buf_nosteal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
- void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
+-	if ( comp == NULLSLCOMPR )
++	if ( IS_ERR_OR_NULL(comp) )
+ 		return;
  
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6719,19 +6719,23 @@ struct buffer_ref {
- 	struct ring_buffer	*buffer;
- 	void			*page;
- 	int			cpu;
--	int			ref;
-+	refcount_t		refcount;
- };
- 
-+static void buffer_ref_release(struct buffer_ref *ref)
-+{
-+	if (!refcount_dec_and_test(&ref->refcount))
-+		return;
-+	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
-+	kfree(ref);
-+}
-+
- static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
- 				    struct pipe_buffer *buf)
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
--	if (--ref->ref)
--		return;
--
--	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
--	kfree(ref);
-+	buffer_ref_release(ref);
- 	buf->private = 0;
- }
- 
-@@ -6740,7 +6744,7 @@ static void buffer_pipe_buf_get(struct p
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
--	ref->ref++;
-+	refcount_inc(&ref->refcount);
- }
- 
- /* Pipe buffer operations for a buffer. */
-@@ -6748,7 +6752,7 @@ static const struct pipe_buf_operations
- 	.can_merge		= 0,
- 	.confirm		= generic_pipe_buf_confirm,
- 	.release		= buffer_pipe_buf_release,
--	.steal			= generic_pipe_buf_steal,
-+	.steal			= generic_pipe_buf_nosteal,
- 	.get			= buffer_pipe_buf_get,
- };
- 
-@@ -6761,11 +6765,7 @@ static void buffer_spd_release(struct sp
- 	struct buffer_ref *ref =
- 		(struct buffer_ref *)spd->partial[i].private;
- 
--	if (--ref->ref)
--		return;
--
--	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
--	kfree(ref);
-+	buffer_ref_release(ref);
- 	spd->partial[i].private = 0;
- }
- 
-@@ -6820,7 +6820,7 @@ tracing_buffers_splice_read(struct file
- 			break;
- 		}
- 
--		ref->ref = 1;
-+		refcount_set(&ref->refcount, 1);
- 		ref->buffer = iter->trace_buffer->buffer;
- 		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
- 		if (IS_ERR(ref->page)) {
+ 	if ( comp->tstate != NULLSLSTATE )
 
 
