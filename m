@@ -2,143 +2,189 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724D5C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439ACC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5F421734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FA121744
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556614179;
-	bh=4oEZTyi4cu+wwC6uBvxX94gI4HR+gwXAPqQgJjtgO3k=;
+	s=default; t=1556614326;
+	bh=rx7gaafRLvVxPDqwUax0KvGsKin5v/LWnnrVHNAHdO0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2giFK+PTyVQRnyYGHQQvuI6B/B9wJaPuPv8nkMeYCBCQ3yFhqsXcmy2mj7aEXcEVv
-	 0Bj4FDx2axIycty8PL84ek67AdVKW2l4O75MeBqpOdZSJ6G8kHVLXZ/PtNQqa/avJt
-	 /SzVH2mbCfyUt6cjygT0ZbMmTmqHrzvn7RbvNON8=
+	b=HCevGmGnuLJe2rFlHZSXLaoLiTuSUlHBJRd7UnPXod2jwmrr1tmRn5gnqWxrTLhto
+	 AdNV4iMSU1FCzb1TDtRFzjQ1U1+ApLSQ8A1JsDwKEY5kYNIb1jKW4CT1KuiNHXHF1V
+	 sAidl8hCqAMtBRNv20b2hpYvrdYUzuWSVZBVs0fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfD3Iti (ORCPT
+        id S1726519AbfD3IwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58658 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 04:52:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfD3Ith (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:49:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725938AbfD3IwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:52:04 -0400
+Received: from localhost (unknown [171.76.113.243])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A862080C;
-        Tue, 30 Apr 2019 08:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 226FE2080C;
+        Tue, 30 Apr 2019 08:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556614176;
-        bh=4oEZTyi4cu+wwC6uBvxX94gI4HR+gwXAPqQgJjtgO3k=;
+        s=default; t=1556614323;
+        bh=rx7gaafRLvVxPDqwUax0KvGsKin5v/LWnnrVHNAHdO0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vucCDva5kurj0uqHNPIPOHeu6NwpFUJsaFKneIpnjOgJego0/0DLEBJRMkWmbcVPE
-         gYGlA8OX8TLukLQ+w92qNC+/SQ18Ek4rDIWtRdwv3dCWm507Qoauj/ozKgC8afk8gx
-         uYTZTnBZjckAytp4U0ZxbnRYAaJN3QH1/CPyqk4c=
-Date:   Tue, 30 Apr 2019 10:49:33 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nicolas Iooss <nicolas.iooss@m4x.org>
-Subject: Re: scripts/selinux build error in 4.14 after glibc update
-Message-ID: <20190430084933.GI11737@kroah.com>
-References: <20190422210041.GA21711@archlinux-i9>
- <CAHC9VhTtz3OA3EchaZaAeg=DxoGoz_WFdj+Mi9nd9i+cmjmuJA@mail.gmail.com>
- <20190423132926.GK17719@sasha-vm>
- <CAHC9VhRcdY7G_ES2VqNVpkoU=CRJkJySb3m1sFdgKJwh3JQ2oA@mail.gmail.com>
- <20190429124002.GB31371@kroah.com>
- <CAHC9VhQxrtYJTOj=aOL4FY=myA4ZO-rcY7TdCeFbjVnCmgOxew@mail.gmail.com>
- <20190429140906.GA7412@kroah.com>
- <CAHC9VhRDoYd=vfz3Sm8NKpMW_QoX7t_VohumUxU5i6AjTwCRyQ@mail.gmail.com>
- <20190429145248.GA7111@kroah.com>
- <CAHC9VhQNdSLfZK6QD1WnCzhdpa9NyjzrDwMks7SKgtuc6+5JgA@mail.gmail.com>
+        b=qOonsrnINOv2RpSPsRKwi6zuWmuX0krW/BpoIRz9cg/hunslBxHyOt5lRy2WD3xeE
+         G+Mjm47KScEfQvJBqWA4JmtwApvmbu/STm9R4rgJ4o+W/35plnDKwH92gGB2DRXrCi
+         pK8z5OmGazLXqXDxW4Ds/Iv17ebR9CN1yfzlfOUE=
+Date:   Tue, 30 Apr 2019 14:21:53 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [PATCH v3 2/5] soundwire: fix style issues
+Message-ID: <20190430085153.GS3845@vkoul-mobl.Dlink>
+References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
+ <20190411031701.5926-3-pierre-louis.bossart@linux.intel.com>
+ <20190414095839.GG28103@vkoul-mobl>
+ <08ea1442-361a-ecfc-ca26-d3bd8a0ec37b@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhQNdSLfZK6QD1WnCzhdpa9NyjzrDwMks7SKgtuc6+5JgA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <08ea1442-361a-ecfc-ca26-d3bd8a0ec37b@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 06:37:03PM -0400, Paul Moore wrote:
-> On Mon, Apr 29, 2019 at 10:52 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Mon, Apr 29, 2019 at 10:47:00AM -0400, Paul Moore wrote:
-> > > On Mon, Apr 29, 2019 at 10:09 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > On Mon, Apr 29, 2019 at 10:02:29AM -0400, Paul Moore wrote:
-> > > > > On Mon, Apr 29, 2019 at 8:40 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > > > On Tue, Apr 23, 2019 at 09:43:09AM -0400, Paul Moore wrote:
-> > > > > > > On Tue, Apr 23, 2019 at 9:29 AM Sasha Levin <sashal@kernel.org> wrote:
-> > > > > > > > On Mon, Apr 22, 2019 at 09:59:47PM -0400, Paul Moore wrote:
-> > > > > > > > >On Mon, Apr 22, 2019 at 5:00 PM Nathan Chancellor
-> > > > > > > > ><natechancellor@gmail.com> wrote:
-> > > > > > > > >> Hi all,
-> > > > > > > > >>
-> > > > > > > > >> After a glibc update to 2.29, my 4.14 builds started failing like so:
-> > > > > > > > >
-> > > > > > > > >...
-> > > > > > > > >
-> > > > > > > > >>   HOSTCC  scripts/selinux/genheaders/genheaders
-> > > > > > > > >> In file included from scripts/selinux/genheaders/genheaders.c:19:
-> > > > > > > > >> ./security/selinux/include/classmap.h:245:2: error: #error New address family defined, please update secclass_map.
-> > > > > > > > >>  #error New address family defined, please update secclass_map.
-> > > > > > > > >>   ^~~~~
-> > > > > > > > >
-> > > > > > > > >This is a known problem that has a fix in the selinux/next branch and
-> > > > > > > > >will be going up to Linus during the next merge window.  The fix is
-> > > > > > > > >quite small and should be relatively easy for you to backport to your
-> > > > > > > > >kernel build if you are interested; the patch can be found at the
-> > > > > > > > >archive link below:
-> > > > > > > > >
-> > > > > > > > >https://lore.kernel.org/selinux/20190225005528.28371-1-paulo@paulo.ac
-> > > > > > > >
-> > > > > > > > Why is it waiting for the next merge window? It fixes a build bug that
-> > > > > > > > people hit.
-> > > > > > >
-> > > > > > > I place a reasonably high bar on patches that I send up to Linus
-> > > > > > > outside of the merge window and I didn't feel this patch met that
-> > > > > > > criteria.  Nathan is only the second person I've seen who has
-> > > > > > > encountered this problem, the first being the original patch author.
-> > > > > > > As far as I've seen, the problem is only seen by users building older
-> > > > > > > kernels on very new userspaces (e.g. glibc v2.29 was released in
-> > > > > > > February 2019, Linux v4.14 was released in 2017); this doesn't appear
-> > > > > > > to be a large group of people and I didn't want to risk breaking the
-> > > > > > > main kernel tree during the -rcX phase for such a small group.
-> > > > > >
-> > > > > > Ugh, this breaks my local builds, I would recommend getting it to Linus
-> > > > > > sooner please.
-> > > > >
-> > > > > Well, we are at -rc7 right now and it looks like an -rc8 is unlikely
-> > > > > so the question really comes down to can/do you want to wait a week?
-> > > >
-> > > > It's a regression in the 5.1-rc tree, that is hitting people now.  Why
-> > > > do you want to have a 5.1-final that is known to be broken?
-> > >
-> > > I believe I answered that in my reply to Sasha.  Can you answer the
-> > > question I asked of you above?
-> >
-> > If you don't submit it this week, I guess I can wait as I have no other
-> > choice.
-> >
-> > But note, this did break my build systems, and my main development
-> > system this weekend.  So yes, the number of people being affected might
-> > be "small", but that "small" number includes the people responsible for
-> > maintaining those stable kernels :(
-> >
-> > Anyway, it's your call, just letting you know I'm really annoyed at the
-> > moment by this...
+On 15-04-19, 08:09, Pierre-Louis Bossart wrote:
 > 
-> It's against my better judgement, but I'll send a PR up to Linus now.
+> > > 
+> > > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > > ---
+> > >   drivers/soundwire/Kconfig          |   2 +-
+> > >   drivers/soundwire/bus.c            |  87 ++++++++--------
+> > >   drivers/soundwire/bus.h            |  16 +--
+> > >   drivers/soundwire/bus_type.c       |   4 +-
+> > >   drivers/soundwire/cadence_master.c |  87 ++++++++--------
+> > >   drivers/soundwire/cadence_master.h |  22 ++--
+> > >   drivers/soundwire/intel.c          |  87 ++++++++--------
+> > >   drivers/soundwire/intel.h          |   4 +-
+> > >   drivers/soundwire/intel_init.c     |  12 +--
+> > >   drivers/soundwire/mipi_disco.c     | 116 +++++++++++----------
+> > >   drivers/soundwire/slave.c          |  10 +-
+> > >   drivers/soundwire/stream.c         | 161 +++++++++++++++--------------
+> > 
+> > I would prefer this to be a patch per module. It doesnt help to have a
+> > single patch for all the files!
+> > 
+> > It would be great to have cleanup done per logical group, for example
+> > typos in a patch, aligns in another etc...
+> 
+> You've got to be kidding. I've never seen people ask for this sort of
+> detail.
 
-Thank you for doing so,
+Nope this is the way it should be. A patch is patch and which
+should do one thing! Even if it is a cleanup one.
 
-greg k-h
+I dislike a patch which touches everything, core, modules, so please
+split up. As a said in review it takes guesswork to find why a change
+was done, was it whitespace fix, indentation or not, so please split up
+based on type of fixes.
+
+> 
+> > 
+> > >   12 files changed, 313 insertions(+), 295 deletions(-)
+> > > 
+> > > diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
+> > > index 19c8efb9a5ee..84876a74874f 100644
+> > > --- a/drivers/soundwire/Kconfig
+> > > +++ b/drivers/soundwire/Kconfig
+> > > @@ -4,7 +4,7 @@
+> > >   menuconfig SOUNDWIRE
+> > >   	bool "SoundWire support"
+> > > -	---help---
+> > > +	help
+> > 
+> > Not sure if this is a style issue, kernel seems to have 2990 instances
+> > of this!
+> 
+> this is reported by checkpatch.pl --strict.
+> 
+> > 
+> > >   	if (msg->page)
+> > >   		sdw_reset_page(bus, msg->dev_num);
+> > > @@ -243,7 +244,7 @@ int sdw_transfer(struct sdw_bus *bus, struct sdw_msg *msg)
+> > >    * Caller needs to hold the msg_lock lock while calling this
+> > >    */
+> > >   int sdw_transfer_defer(struct sdw_bus *bus, struct sdw_msg *msg,
+> > > -				struct sdw_defer *defer)
+> > > +		       struct sdw_defer *defer)
+> > 
+> > this does not seem aligned to me!
+> 
+> It is, I checked. 2 tabs and 7 spaces.
+> 
+> > 
+> > >   int sdw_fill_msg(struct sdw_msg *msg, struct sdw_slave *slave,
+> > > -		u32 addr, size_t count, u16 dev_num, u8 flags, u8 *buf)
+> > > +		 u32 addr, size_t count, u16 dev_num, u8 flags, u8 *buf)
+> > 
+> > this one too
+> 
+> 2 tabs and one space.
+> 
+> > 
+> > > @@ -458,13 +458,13 @@ static int sdw_assign_device_num(struct sdw_slave *slave)
+> > >   		mutex_unlock(&slave->bus->bus_lock);
+> > >   		if (dev_num < 0) {
+> > >   			dev_err(slave->bus->dev, "Get dev_num failed: %d",
+> > > -								dev_num);
+> > > +				dev_num);
+> > 
+> > It might read better if we move the log to second line along with
+> > dev_num...
+
+?
+
+> > 
+> > >   int sdw_configure_dpn_intr(struct sdw_slave *slave,
+> > > -			int port, bool enable, int mask)
+> > > +			   int port, bool enable, int mask)
+> > 
+> > not aligned
+> 
+> it is in the code. It's a diff illusion.
+> 
+> > 
+> > >   void sdw_extract_slave_id(struct sdw_bus *bus,
+> > > -			u64 addr, struct sdw_slave_id *id);
+> > > +			  u64 addr, struct sdw_slave_id *id);
+> > 
+> > Not aligned
+> 
+> it is in the code. It's a diff illusion.
+> 
+> > >   enum sdw_command_response
+> > >   cdns_xfer_msg_defer(struct sdw_bus *bus,
+> > > -		struct sdw_msg *msg, struct sdw_defer *defer)
+> > > +		    struct sdw_msg *msg, struct sdw_defer *defer)
+> > 
+> > this one too..
+> > 
+> > >   static int cdns_port_params(struct sdw_bus *bus,
+> > > -		struct sdw_port_params *p_params, unsigned int bank)
+> > > +			    struct sdw_port_params *p_params, unsigned int bank)
+> > 
+> > here as well.. (and giving up on rest)
+> 
+> Please check for yourself that this is a diff illusion w/ tab space.
+
+-- 
+~Vinod
