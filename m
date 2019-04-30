@@ -2,148 +2,115 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C044C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB984C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F222B20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEE921734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556648644;
+	bh=9oaD9A4M16f814eUiYybr55q9veyq6DrGjdRObx772s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZFXwlK1UVhURnLbQf8t8PeKIE1pH0at4d9zZ/PXHnsdkir9hdl/pVVWdMJFYgccNt
+	 zgnlPwmaplzw7lxNbWEGg1TiXtL28pHhoohF9Y69idfSmaq7qqLOOZCWF8Qm3DXQuI
+	 LTKY9HvASt8Da3AQD3WqZSBGoEtJN3ffch3vkRvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfD3SXm (ORCPT
+        id S1727012AbfD3SYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 14:23:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:4149 "EHLO mga14.intel.com"
+        Tue, 30 Apr 2019 14:24:03 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35329 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbfD3SXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:23:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726006AbfD3SYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:24:02 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:23:40 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:24:01 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="144938228"
-Received: from cng16-mobl.amr.corp.intel.com (HELO [10.252.205.95]) ([10.252.205.95])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Apr 2019 11:23:39 -0700
-Subject: Re: [alsa-devel] [PATCH] ACPI / device_sysfs: change _ADR
- representation to 64 bits
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        jank@cadence.com, Joe Perches <joe@perches.com>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Len Brown <lenb@kernel.org>
-References: <20190415151857.25531-1-pierre-louis.bossart@linux.intel.com>
- <20190416032923.GQ28103@vkoul-mobl>
- <CAJZ5v0jOkQ7aWn6B_yVTYd7y+78mpGSzBoGuWe3uCdzDRNE94Q@mail.gmail.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <eda0ed4e-fc36-a53a-225f-e7d54bb73413@linux.intel.com>
-Date:   Tue, 30 Apr 2019 13:23:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+   d="scan'208";a="169379061"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Apr 2019 11:24:01 -0700
+Date:   Tue, 30 Apr 2019 12:18:13 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alex G <mr.nuke.me@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
+ bandwidth notification"
+Message-ID: <20190430181813.GC25654@localhost.localdomain>
+References: <20190429185611.121751-1-helgaas@kernel.org>
+ <20190429185611.121751-2-helgaas@kernel.org>
+ <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
+ <20190430161151.GB145057@google.com>
+ <20190430180508.GB25654@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0jOkQ7aWn6B_yVTYd7y+78mpGSzBoGuWe3uCdzDRNE94Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430180508.GB25654@localhost.localdomain>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/16/19 3:09 AM, Rafael J. Wysocki wrote:
-> On Tue, Apr 16, 2019 at 5:29 AM Vinod Koul <vkoul@kernel.org> wrote:
->>
->> On 15-04-19, 10:18, Pierre-Louis Bossart wrote:
->>> Standards such as the MIPI DisCo for SoundWire 1.0 specification
->>> assume the _ADR field is 64 bits.
->>>
->>> _ADR is defined as an "Integer" represented as 64 bits since ACPI 2.0
->>> released in 2002. The low levels already use _ADR as 64 bits, e.g. in
->>> struct acpi_device_info.
->>>
->>> This patch bumps the representation used for sysfs to 64 bits.
->>>
->>> Example with a SoundWire device, the results show the complete
->>> vendorID and linkID which were omitted before:
->>>
->>> Before:
->>> $ more /sys/bus/acpi/devices/device\:38/adr
->>> 0x5d070000
->>> After:
->>> $ more /sys/bus/acpi/devices/device\:38/adr
->>> 0x000010025d070000
->>
->> This looks fine but the sysfs file is an ABI. Not sure if we can modify
->> the value returned this way.. Though it should not cause userspace
->> reading 32bits to break...
+On Tue, Apr 30, 2019 at 12:05:09PM -0600, Keith Busch wrote:
+> On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
+> > > I'm not convinced a revert is the best call.
+> > 
+> > I have very limited options at this stage of the release, but I'd be
+> > glad to hear suggestions.  My concern is that if we release v5.1
+> > as-is, we'll spend a lot of energy on those false positives.
 > 
-> Well, IIRC using "08" instead of "016" in the format field would
-> preserve the existing behavior for 32-bit values, wouldn't it?
+> May be too late now if the revert is queued up, but I think this feature
+> should have been a default 'false' Kconfig bool rather than always on.
 
-yes, but it makes the 64-bit address not aligned depending on the number 
-of leading zeroes, see below. I get a migraine just looking at the results.
+This is what I mean:
 
-Maybe add a test to use 08 for values that are below 0xFFFFFFFF and 16 
-for addresses who really need the full range, typically because of an 
-encoding?
-
-w/ value-dependent format:
-/sys/bus/acpi/devices# cat */*/adr
-
-0x00160000
-0x00140003
-0x000d0000
-0x000d0002
-0x000d0003
-0x00070000
-0x00070001
-0x00070002
-0x00070003
-0x000010025d070100
-0x000110025d070100
-0x000210025d070100
-0x000310025d070100
-0x000010025d070000
-0x000110025d070000
-0x000210025d070000
-0x000310025d070000
-0x00000000
-
-w/ 0x08 only:
-
-0x00160000
-0x00140003
-0x000d0000
-0x000d0002
-0x000d0003
-0x00070000
-0x00070001
-0x00070002
-0x00070003
-0x10025d070100
-0x110025d070100
-0x210025d070100
-0x310025d070100
-0x10025d070000
-0x110025d070000
-0x210025d070000
-0x310025d070000
-0x00000000
-0x00000000
-
+---
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 5cbdbca904ac..7f480685df93 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -142,3 +142,12 @@ config PCIE_PTM
+ 
+ 	  This is only useful if you have devices that support PTM, but it
+ 	  is safe to enable even if you don't.
++
++config PCIE_BW
++	bool "PCI Express Bandwidth Change Notification"
++	default n
++	depends on PCIEPORTBUS
++	help
++	  This enables PCI Express Bandwidth Change Notification. If
++	  you know link width or rate changes occur only to correct
++	  unreliable links, you may answer Y.
+diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+index f1d7bc1e5efa..d356a5bdb158 100644
+--- a/drivers/pci/pcie/Makefile
++++ b/drivers/pci/pcie/Makefile
+@@ -3,7 +3,6 @@
+ # Makefile for PCI Express features and port driver
+ 
+ pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
+-pcieportdrv-y			+= bw_notification.o
+ 
+ obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
+ 
+@@ -13,3 +12,4 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
+ obj-$(CONFIG_PCIE_PME)		+= pme.o
+ obj-$(CONFIG_PCIE_DPC)		+= dpc.o
+ obj-$(CONFIG_PCIE_PTM)		+= ptm.o
++obj-$(CONFIG_PCIE_BW)		:= bw_notification.o
+--
