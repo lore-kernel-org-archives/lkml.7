@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B59CC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F83AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C89821707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F20A20449
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624771;
-	bh=+ebOXy1Dc42e2ylzFgurqpriBg0nrITmuqCC5h/OTV4=;
+	s=default; t=1556624773;
+	bh=AcU1qu3A9mj5ZHpFuzc36xawwD0FGkvOP8e7qd9xy54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bFDGapk2whvqM72i6PPSZIGJoAedgYGEFHGXcCMij3AQjW+6gqUnK7ZVsqLOBWTop
-	 Vq/RWYGanRomeTkX4G/YLeePdHVOAxKbxeqrKOah5P5Yf3Oa0wYsQhBShauvwEpx9B
-	 IcxqL4FgEbeYI+u7SOEeaS0p+ZJwczBleNc/c7Ho=
+	b=mMdhTsjtrbI2rW2ln+wkgAAt9/W0fDS1ybMpJf4XDVyQucEYkOlUzCI0u9obRv8qJ
+	 23AeKdUVM0qt5lFCJ8QcZ6I4NU0otEAS8Tl6lH9uXGFnR9dQfQIyKXKSCPu3viCLsF
+	 p4gNo3r4EubTLv4NeuG5z05lmBVd5pYruzoeN/8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfD3LqJ (ORCPT
+        id S1730519AbfD3LqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58688 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730486AbfD3LqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:04 -0400
+        id S1730499AbfD3LqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5705F21734;
-        Tue, 30 Apr 2019 11:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D85B21734;
+        Tue, 30 Apr 2019 11:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624763;
-        bh=+ebOXy1Dc42e2ylzFgurqpriBg0nrITmuqCC5h/OTV4=;
+        s=default; t=1556624766;
+        bh=AcU1qu3A9mj5ZHpFuzc36xawwD0FGkvOP8e7qd9xy54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZORTwAyO9Yl+SkSqB8hnT3gAty2Rau6y6Dl8e+9ySmtz6drZuaQYMuJvigurRII8C
-         Gu/6nU70nMT7g0L5e5KafLq/cpoqcR/9e4fyGAsCdWV2ZG3IMKb+ECY+WwG1zWGdFy
-         zSUUMYMC7xSgv8OrBi9SN/AqKcwCcg2pMzHTeN8o=
+        b=s1iY5J7hbTk/6mBl9/M5EpX+j5jqzZL+Fox3AHb/OwUPkm/QwVBMJDJasswvwdr1T
+         oW/DS0yTiOHcutlniGM2q1ZilkQqtTnU3k4cfJQpCRy6+CAWXxcU5c//l/AGwM44vL
+         mpDHggHfutHX2cSi1oTE4CutM5/alnWhxgcLyFpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+0049bebbf3042dbd2e8f@syzkaller.appspotmail.com>,
-        syzbot <syzbot+915c9f99f3dbc4bd6cd1@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 064/100] net/rds: Check address length before reading address family
-Date:   Tue, 30 Apr 2019 13:38:33 +0200
-Message-Id: <20190430113611.844768997@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Subject: [PATCH 4.19 047/100] drm/vc4: Fix memory leak during gpu reset.
+Date:   Tue, 30 Apr 2019 13:38:16 +0200
+Message-Id: <20190430113611.280201035@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -63,52 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 
-commit dd3ac9a684358b8c1d5c432ca8322aaf5e4f28ee upstream.
+commit d08106796a78a4273e39e1bbdf538dc4334b2635 upstream.
 
-syzbot is reporting uninitialized value at rds_connect() [1] and
-rds_bind() [2]. This is because syzbot is passing ulen == 0 whereas
-these functions expect that it is safe to access sockaddr->family field
-in order to determine minimal address length for validation.
+__drm_atomic_helper_crtc_destroy_state does not free memory, it only
+cleans it up. Fix this by calling the functions own destroy function.
 
-[1] https://syzkaller.appspot.com/bug?id=f4e61c010416c1e6f0fa3ffe247561b60a50ad71
-[2] https://syzkaller.appspot.com/bug?id=a4bf9e41b7e055c3823fdcd83e8c58ca7270e38f
-
-Reported-by: syzbot <syzbot+0049bebbf3042dbd2e8f@syzkaller.appspotmail.com>
-Reported-by: syzbot <syzbot+915c9f99f3dbc4bd6cd1@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6d6e50039187 ("drm/vc4: Allocate the right amount of space for boot-time CRTC state.")
+Cc: Eric Anholt <eric@anholt.net>
+Cc: <stable@vger.kernel.org> # v4.6+
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190301125627.7285-2-maarten.lankhorst@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/rds/af_rds.c |    3 +++
- net/rds/bind.c   |    2 ++
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/vc4/vc4_crtc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/rds/af_rds.c
-+++ b/net/rds/af_rds.c
-@@ -506,6 +506,9 @@ static int rds_connect(struct socket *so
- 	struct rds_sock *rs = rds_sk_to_rs(sk);
- 	int ret = 0;
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -998,7 +998,7 @@ static void
+ vc4_crtc_reset(struct drm_crtc *crtc)
+ {
+ 	if (crtc->state)
+-		__drm_atomic_helper_crtc_destroy_state(crtc->state);
++		vc4_crtc_destroy_state(crtc->state);
  
-+	if (addr_len < offsetofend(struct sockaddr, sa_family))
-+		return -EINVAL;
-+
- 	lock_sock(sk);
- 
- 	switch (uaddr->sa_family) {
---- a/net/rds/bind.c
-+++ b/net/rds/bind.c
-@@ -173,6 +173,8 @@ int rds_bind(struct socket *sock, struct
- 	/* We allow an RDS socket to be bound to either IPv4 or IPv6
- 	 * address.
- 	 */
-+	if (addr_len < offsetofend(struct sockaddr, sa_family))
-+		return -EINVAL;
- 	if (uaddr->sa_family == AF_INET) {
- 		struct sockaddr_in *sin = (struct sockaddr_in *)uaddr;
- 
+ 	crtc->state = kzalloc(sizeof(struct vc4_crtc_state), GFP_KERNEL);
+ 	if (crtc->state)
 
 
