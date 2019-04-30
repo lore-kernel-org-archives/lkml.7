@@ -2,166 +2,227 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6C6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B7CC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157BF2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556599405;
-	bh=TeMBNG0STInOJKrZ7lzD0xdsHkPLuiCXL+1dTT2VabQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f8219o+2q2eDwY5jarmeThQximNj8VT6B8d6gNMvzTJRLRJl0PMSa7LyR6R1cLS8u
-	 eUPDGy6+CTZRXbvCtJyEuG3TQeCCC96RlYLe99MTp0eY6DUPTCY2wPVgUEdhB+K6eI
-	 GVLwQefytZ9Ljy5myBVZHYejTvi3XFkaEctarNKw=
+	by mail.kernel.org (Postfix) with ESMTP id 6C6F42075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:45:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UZc/y0oO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbfD3Em6 (ORCPT
+        id S1726049AbfD3EpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 00:42:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35818 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfD3Em5 (ORCPT
+        Tue, 30 Apr 2019 00:45:17 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:17680 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfD3EpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 00:42:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y197so2221607wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 21:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=95ElxBUisDLl2oakdawK7d9Lg88o3di7LnAFmSTN78w=;
-        b=CZYl3/rfLAl3eQocHA15kNDAUIaDHv2KmhrIyXoJQkmnhRb89gkeK4OIuYkomLWkwq
-         0HNalC+vrsnriyz4jhwEISRrXM7tJioKZsd0U0Ug0gajAYPE9d5AGli/7cYweDl9qprE
-         T1KgaGM44SX63uCwSlmjTibq34gaPzEJtTyPmmrLQCiI5WvKgKZ+0BX0N05Ul+SiIh6s
-         y80miI+Lih1uMZHGexwFpTdPTLGhmUfaCiasG4NtwGolO+XhbOIczip16AHIBg+VEJ+1
-         L50ycz6AnEJ5wWnaiLyUB7JyxIeiS0N+V1Ye6YLqL2lrof/VdCQFgy5rM3wVDNxQdPtm
-         RC7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=95ElxBUisDLl2oakdawK7d9Lg88o3di7LnAFmSTN78w=;
-        b=qD3wpbu2gybrmkxVEyjHwrwHqOXNoqXX6nmTJQwn1gX+QcGrpZNIuIIqbkY++h8TFp
-         jgNP9Q1T3nrVT2H50vdsiQoZS+WPzWo2oFi+boCqK0hhAfpsJu3Hic6q1eOh5rSK+GjP
-         56C+1C0lsuxr6DFj1dX6LX95T6enPIaNfRiBQko2Z5jkErYzCiLxQMKJDL3+kNSxBQKL
-         LQ6UUBUH15ujnmZs7m9o3MnHJ5bDvPr51WDwu1gWj2M/aQ1NJOMYP9q7zah8iWBIiNb7
-         iGdX3UFJxYYzhOQsYvSe77uWvUB94eix3QYDnztsR/EDBfS37UKg3EQwSDALjjTbByM4
-         /Hmw==
-X-Gm-Message-State: APjAAAU6P3Jc51VENUq7Arl0/AtZ13QG9AqGc1ianx8YFEPegAHr3ARZ
-        J8EXQszO8fBLptH7B1xfs+Y=
-X-Google-Smtp-Source: APXvYqwgwPb/NKpsdM7IVkp0jhMPnhiWVz1mq8A+QvUa3XoGsrDEo4WK1olGWOlfhobt2785YebZyQ==
-X-Received: by 2002:a1c:f910:: with SMTP id x16mr1556018wmh.114.1556599375049;
-        Mon, 29 Apr 2019 21:42:55 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id c6sm1091548wmb.21.2019.04.29.21.42.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 21:42:53 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 06:42:50 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190430044250.GC73609@gmail.com>
-References: <20190427142137.GA72051@gmail.com>
- <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
- <20190428093304.GA7393@gmail.com>
- <CAERHkrvaSSR1wRECF1AcLOhpmCAH0ecvFEL5MOFjK05F0xSuzA@mail.gmail.com>
- <20190428121721.GA121434@gmail.com>
- <db7c3e51-d013-b3d9-7bce-c247aa2e7144@linux.intel.com>
- <20190429061422.GA20939@gmail.com>
- <24bca399-5370-c4b5-725f-979db06bfc29@linux.intel.com>
- <20190429160058.GA82935@gmail.com>
- <CAERHkrvhggb8nkGOx1GHUftGhh5b0qLvq4HvuHJreNrRC1RXow@mail.gmail.com>
+        Tue, 30 Apr 2019 00:45:17 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190430044511epoutp017cf2a1cab377cae228626b30c4e2f6d2~aJwIvnCfc1834118341epoutp01B
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:45:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190430044511epoutp017cf2a1cab377cae228626b30c4e2f6d2~aJwIvnCfc1834118341epoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556599511;
+        bh=iLtmpVoztHGHt8Xumpmublav2Pa49uLZOMWWUpLkWwg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=UZc/y0oObrRYS6wtNjgcdhNtgs6foULG2w9FiqcEj/0fEq91pbhM4MwsmatyrPKLJ
+         AIACessyWWSPPQUIs/Su3KUNg8KDWbvxx4h/Nxo5/Npt6B1Un0I9YDy0lg93QgLsbH
+         Pe1yU6Qyv/52NycZRMHIt4xqvyWzcSV8Xj99zCvs=
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190430044506epcas1p1dd0d0bb4b2dc94e7e24ffc613fe10d71~aJwEGxBA61614616146epcas1p1U;
+        Tue, 30 Apr 2019 04:45:06 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4F.F8.04108.0D2D7CC5; Tue, 30 Apr 2019 13:45:04 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190430044503epcas1p185cd2dcb2c6531565224bcab5c34a01f~aJwBXcrLA2935429354epcas1p1P;
+        Tue, 30 Apr 2019 04:45:03 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190430044503epsmtrp21a4dc724d7070e700c38fb0ff8e65038~aJwBWfPUh0204202042epsmtrp2I;
+        Tue, 30 Apr 2019 04:45:03 +0000 (GMT)
+X-AuditID: b6c32a39-8b7ff7000000100c-5d-5cc7d2d044c5
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        33.00.03692.FC2D7CC5; Tue, 30 Apr 2019 13:45:03 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190430044502epsmtip2dc62d609fa591c63dcc2f314fd5215ac~aJwAV2KzV2453724537epsmtip2Z;
+        Tue, 30 Apr 2019 04:45:02 +0000 (GMT)
+Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add
+ Exynos5422 DMC device description
+To:     Lukasz Luba <l.luba@partner.samsung.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <babae08b-3ea6-30f4-6a46-85dea0eacd86@samsung.com>
+Date:   Tue, 30 Apr 2019 13:46:17 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAERHkrvhggb8nkGOx1GHUftGhh5b0qLvq4HvuHJreNrRC1RXow@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDJsWRmVeSWpSXmKPExsWy7bCmge6FS8djDPavZ7XYOANIzD9yjtVi
+        9cfHjBaTT81lsjjTnWvR//g1s8X58xvYLc42vWG3uNUgY3F51xw2i8+9RxgtZpzfx2Sx9shd
+        dovbjSvYLA6/aWe12H/Fy+L2bz6LbyceMToIeXz7OonFY3bDRRaPnbPusntsWtXJ5tHb/I7N
+        4+C7PUwefVtWMXpsPl3t8XmTXABnVLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWF
+        uZJCXmJuqq2Si0+ArltmDtAzSgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSClJwCywK9
+        4sTc4tK8dL3k/FwrQwMDI1OgwoTsjDvne5kK5slXXL7dzNjAOF+yi5GTQ0LARGLjqlusXYxc
+        HEICOxglOr69YYdwPjFK/L/8jgXC+cYosWbhJcYuRg6wlpOrgyHiexklLq1YA9XxnlFi977D
+        TCBzhQXSJGY928YEkhARWM4osW/qXUYQh1lgNZPEn69rWUGq2AS0JPa/uMEGYvMLKEpc/fGY
+        EcTmFbCT2HO1ix1kHYuAqsSig1kgYVGBCIn7xzawQpQISpyc+YQFxOYU8JboOtIGNoZZQFzi
+        1pP5TBC2vETz1tnMIHslBG6xS3zpWcsE8bWLxPQbU1ggbGGJV8e3sEPYUhKf3+1lg7CrJVae
+        PMIG0dzBKLFl/wVWiISxxP6lk5lAjmMW0JRYv0sfYhmfxLuvPayQIOKV6GgTgqhWlrj84C7U
+        WkmJxe2dUOM9JN4uPs06gVFxFpJ3ZiF5YRaSF2YhLFvAyLKKUSy1oDg3PbXYsMAUObo3MYJT
+        upblDsZj53wOMQpwMCrx8Hq8OxYjxJpYVlyZe4hRgoNZSYTX4/jRGCHelMTKqtSi/Pii0pzU
+        4kOMpsDAnsgsJZqcD8w3eSXxhqZGxsbGFiaGZqaGhkrivOsdnGOEBNITS1KzU1MLUotg+pg4
+        OKUaGPtP/fvXn/33V8T32CfFJ1hmec5P5fgvtHfxzlDZI/wr5yVJ+QlsN7i5+SmfINOJ22pB
+        KiU7lk4518TLVDjxvmuXbcPlT2vkH6om2Z4wm7uP8WCurtuZ1CcB6wXf+qS7u5V0K06zyc7c
+        qFZX+edGd8L8cFbFUD6HSiauOOmJE5Y6HV+wMiF6gxJLcUaioRZzUXEiAMwyW7H/AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsWy7bCSvO75S8djDLZ9lrPYOGM9q8X8I+dY
+        LVZ/fMxoMfnUXCaLM925Fv2PXzNbnD+/gd3ibNMbdotbDTIWl3fNYbP43HuE0WLG+X1MFmuP
+        3GW3uN24gs3i8Jt2Vov9V7wsbv/ms/h24hGjg5DHt6+TWDxmN1xk8dg56y67x6ZVnWwevc3v
+        2DwOvtvD5NG3ZRWjx+bT1R6fN8kFcEZx2aSk5mSWpRbp2yVwZdw538tUME++4vLtZsYGxvmS
+        XYwcHBICJhInVwd3MXJxCAnsZpR4cXoCcxcjJ1BcUmLaxaPMEDXCEocPF0PUvGWUeDJvHytI
+        jbBAmsTlq89YQBIiAssZJeb+XQrmMAusZpKY9HELG0TLfUaJ248mgo1lE9CS2P/iBhuIzS+g
+        KHH1x2NGEJtXwE5iz9UudpB1LAKqEosOZoGERQUiJM68X8ECUSIocXLmEzCbU8BboutIG9gY
+        ZgF1iT/zLjFD2OISt57MZ4Kw5SWat85mnsAoPAtJ+ywkLbOQtMxC0rKAkWUVo2RqQXFuem6x
+        YYFhXmq5XnFibnFpXrpecn7uJkZwbGtp7mC8vCT+EKMAB6MSD6/Hu2MxQqyJZcWVuYcYJTiY
+        lUR4PY4fjRHiTUmsrEotyo8vKs1JLT7EKM3BoiTO+zTvWKSQQHpiSWp2ampBahFMlomDU6qB
+        kfM0M/u6EN5nOkYhhyxre/5UFgoc1rFVq7L2iKrpttRXKTHWCBVprtvfsDKTn+fA0Wvz6i+J
+        Lt67PvLfxSjbV2faw3Z9b3s8K2tj0z7f79MWMnx+NOH87gxp/c1dYosqT62TesZftm6zXNS3
+        btGT9hvMapr/HTu2s/x/lmK5iuD0ixypF86WK7EUZyQaajEXFScCALJjUMTpAgAA
+X-CMS-MailID: 20190430044503epcas1p185cd2dcb2c6531565224bcab5c34a01f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc
+References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
+        <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Aubrey Li <aubrey.intel@gmail.com> wrote:
-
-> On Tue, Apr 30, 2019 at 12:01 AM Ingo Molnar <mingo@kernel.org> wrote:
-> > * Li, Aubrey <aubrey.li@linux.intel.com> wrote:
-> >
-> > > > I.e. showing the approximate CPU thread-load figure column would be
-> > > > very useful too, where '50%' shows half-loaded, '100%' fully-loaded,
-> > > > '200%' over-saturated, etc. - for each row?
-> > >
-> > > See below, hope this helps.
-> > > .--------------------------------------------------------------------------------------------------------------------------------------.
-> > > |NA/AVX vanilla-SMT     [std% / sem%]     cpu% |coresched-SMT   [std% / sem%]     +/-     cpu% |  no-SMT [std% / sem%]   +/-      cpu% |
-> > > |--------------------------------------------------------------------------------------------------------------------------------------|
-> > > |  1/1        508.5     [ 0.2%/ 0.0%]     2.1% |        504.7   [ 1.1%/ 0.1%]    -0.8%    2.1% |   509.0 [ 0.2%/ 0.0%]   0.1%     4.3% |
-> > > |  2/2       1000.2     [ 1.4%/ 0.1%]     4.1% |       1004.1   [ 1.6%/ 0.2%]     0.4%    4.1% |   997.6 [ 1.2%/ 0.1%]  -0.3%     8.1% |
-> > > |  4/4       1912.1     [ 1.0%/ 0.1%]     7.9% |       1904.2   [ 1.1%/ 0.1%]    -0.4%    7.9% |  1914.9 [ 1.3%/ 0.1%]   0.1%    15.1% |
-> > > |  8/8       3753.5     [ 0.3%/ 0.0%]    14.9% |       3748.2   [ 0.3%/ 0.0%]    -0.1%   14.9% |  3751.3 [ 0.4%/ 0.0%]  -0.1%    30.5% |
-> > > | 16/16      7139.3     [ 2.4%/ 0.2%]    30.3% |       7137.9   [ 1.8%/ 0.2%]    -0.0%   30.3% |  7049.2 [ 2.4%/ 0.2%]  -1.3%    60.4% |
-> > > | 32/32     10899.0     [ 4.2%/ 0.4%]    60.3% |      10780.3   [ 4.4%/ 0.4%]    -1.1%   55.9% | 10339.2 [ 9.6%/ 0.9%]  -5.1%    97.7% |
-> > > | 64/64     15086.1     [11.5%/ 1.2%]    97.7% |      14262.0   [ 8.2%/ 0.8%]    -5.5%   82.0% | 11168.7 [22.2%/ 1.7%] -26.0%   100.0% |
-> > > |128/128    15371.9     [22.0%/ 2.2%]   100.0% |      14675.8   [14.4%/ 1.4%]    -4.5%   82.8% | 10963.9 [18.5%/ 1.4%] -28.7%   100.0% |
-> > > |256/256    15990.8     [22.0%/ 2.2%]   100.0% |      12227.9   [10.3%/ 1.0%]   -23.5%   73.2% | 10469.9 [19.6%/ 1.7%] -34.5%   100.0% |
-> > > '--------------------------------------------------------------------------------------------------------------------------------------'
-> >
-> > Very nice, thank you!
-> >
-> > What's interesting is how in the over-saturated case (the last three
-> > rows: 128, 256 and 512 total threads) coresched-SMT leaves 20-30% CPU
-> > performance on the floor according to the load figures.
+On 19. 4. 19. 오후 11:19, Lukasz Luba wrote:
+> The patch adds description for DT binding for a new Exynos5422 Dynamic
+> Memory Controller device.
 > 
-> Yeah, I found the next focus.
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
 > 
-> > Is this true idle time (which shows up as 'id' during 'top'), or some 
-> > load average artifact?
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> new file mode 100644
+> index 0000000..133b3cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -0,0 +1,73 @@
+> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+> +
+> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+> +memory chips are connected. The driver is to monitor the controller in runtime
+> +and switch frequency and voltage. To monitor the usage of the controller in
+> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+> +is able to measure the current load of the memory.
+> +When 'userspace' governor is used for the driver, an application is able to
+> +switch the DMC and memory frequency.
+> +
+> +Required properties for DMC device for Exynos5422:
+> +- compatible: Should be "samsung,exynos5422-bus".
+
+As I already mentioned on many times, it is not fixed.
+You have to fix it as following:
+- exynos5422-bus -> exynos5422-dmc
+
+> +- clock-names : the name of clock used by the bus, "bus".
+
+The below examples doesn't contain the 'bus' clock name.
+
+> +- clocks : phandles for clock specified in "clock-names" property.
+> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +- vdd-supply : phandle for voltage regulator which is connected.
+> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
+> +- operating-points-v2 : phandle for OPPs described in v2 definition.
+> +- device-handle : phandle of the connected DRAM memory device. For more
+> +	information please refer to Documentation
+> +- devfreq-events : phandles of the PPMU events used by the controller.
+> +
+> +Example:
+> +
+> +	ppmu_dmc0_0: ppmu@10d00000 {
+> +		compatible = "samsung,exynos-ppmu";
+> +		reg = <0x10d00000 0x2000>;
+> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+> +		clock-names = "ppmu";
+> +		status = "okay";
+> +		events {
+> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+> +				event-name = "ppmu-event3-dmc0_0";
+> +			};
+> +		};
+> +	};
+> +
+> +	dmc: memory-controller@10c20000 {
+> +		compatible = "samsung,exynos5422-dmc";
+> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
+> +			<0x10000000 0x1000>, <0x10030000 0x1000>;
+> +		clocks = 	<&clock CLK_FOUT_SPLL>,
+> +				<&clock CLK_MOUT_SCLK_SPLL>,
+> +				<&clock CLK_FF_DOUT_SPLL2>,
+> +				<&clock CLK_FOUT_BPLL>,
+> +				<&clock CLK_MOUT_BPLL>,
+> +				<&clock CLK_SCLK_BPLL>,
+> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
+> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+> +				<&clock CLK_MOUT_MCLK_CDREX>,
+> +				<&clock CLK_DOUT_CLK2X_PHY0>,
+> +				<&clock CLK_CLKM_PHY0>,
+> +				<&clock CLK_CLKM_PHY1>;
+> +		clock-names =	"fout_spll",
+> +				"mout_sclk_spll",
+> +				"ff_dout_spll2",
+> +				"fout_bpll",
+> +				"mout_bpll",
+> +				"sclk_bpll",
+> +				"mout_mx_mspll_ccore",
+> +				"mout_mx_mspll_ccore_phy",
+> +				"mout_mclk_cdrex",
+> +				"dout_clk2x_phy0",
+> +				"clkm_phy0",
+> +			        "clkm_phy1";
+> +		status = "okay";
+> +		operating-points-v2 = <&dmc_opp_table>;
+> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+> +		operating-points-v2 = <&dmc_opp_table>;
+> +		device-handle = <&samsung_K3QF2F20DB>;
+> +		vdd-supply = <&buck1_reg>;
+> +	};
 > 
-> vmstat periodically reported intermediate CPU utilization in one 
-> second, it was running simultaneously when the benchmarks run. The cpu% 
-> is computed by the average of (100-idle) series.
 
-Ok - so 'vmstat' uses /proc/stat, which uses cpustat[CPUTIME_IDLE] (or 
-its NOHZ work-alike), so this should be true idle time - to the extent 
-the HZ process clock's sampling is accurate.
 
-So I guess the answer to my question is "yes". ;-)
-
-BTW., for robustness sake you might want to add iowait to idle time (it's 
-the 'wa' field of vmstat) - it shouldn't matter for this particular 
-benchmark which doesn't do much IO, but it might for others.
-
-Both CPUTIME_IDLE and CPUTIME_IOWAIT are idle states when a CPU is not 
-utilized.
-
-[ Side note: we should really implement precise idle time accounting when 
-  CONFIG_IRQ_TIME_ACCOUNTING=y is enabled. We pay all the costs of the 
-  timestamps, but AFAICS we don't propagate that into the idle cputime
-  metrics. ]
-
-Thanks,
-
-	Ingo
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
