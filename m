@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A81C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D6DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A71C21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A1F21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624752;
-	bh=RlH34TrqR6+L8TPt7VcRdcG/xgNAd0vIlgQsh/n2KoQ=;
+	s=default; t=1556624755;
+	bh=NEcgrKd6fVVVkKGsTFM/ZZecz70Caq1ykQr3R1KXNOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QaRjgOr9/sqyn1UaQdb/uBtZlJy7TO0c9DqQus4XKXxPSn1GzWsGh5diiaz1fVhdi
-	 D8rb96rKpY3z6tlgBgs09SlMK60L/RAka7HCSSLYklYOau0UO25V0Vy+0mPP1B1mrq
-	 xf8dFQOw1cr8fupPOUYEQosHUmRBVeBONxLroOJU=
+	b=XW3tl0O2xezU1QGGb5SPqwtoQK5iFPp+VUykV9jLz7zGNuQ86W20pkKiRrOvsxYXc
+	 0y9eukU9SrrTuuqdEBzYysvVOEcKrYBeTP/muzVhYPW2cEBpXzoNtRzeLeLsmANvlF
+	 gXXqmDkVa7NMQknkCCJ8gjraIwBxcsSzHvXG3BK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbfD3Lpv (ORCPT
+        id S1730460AbfD3Lpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58228 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbfD3Lpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:45 -0400
+        id S1730432AbfD3Lps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9BA721670;
-        Tue, 30 Apr 2019 11:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CC721734;
+        Tue, 30 Apr 2019 11:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624745;
-        bh=RlH34TrqR6+L8TPt7VcRdcG/xgNAd0vIlgQsh/n2KoQ=;
+        s=default; t=1556624747;
+        bh=NEcgrKd6fVVVkKGsTFM/ZZecz70Caq1ykQr3R1KXNOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QtSk443S92XvA6VtsAVYMgRq7fKR5Vurg7MBWyt9fZG0MiwE1ak371eUvKzhyVArC
-         93d8FdMwZIHcHd4AWFNABOnkLEItaO8FVugU/bd1Ta9c0FVUTYT9kFs0ceCXiyMK4M
-         znG13gzkGoPRwo9jYLLsVS7TQYuM+hJSvfC0IDEs=
+        b=NNG+xFuGpo+H9fdqimE/msj+o+FVA/SFJ55Ayw/zQ0koIrHClWUGgXsBoOctPkp7n
+         5DH6niWtkN69irI22PIh4BpcuzEBKrfo1AMpf2jBOLZv/ftkZo9ela06TuhcxiI9Px
+         gBCwlIznc2Q+8PjkYCNV5iIf3LQlKMHs1USzbd0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, luca abeni <luca.abeni@santannapisa.it>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "chengjian (D)" <cj.chengjian@huawei.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 057/100] sched/deadline: Correctly handle active 0-lag timers
-Date:   Tue, 30 Apr 2019 13:38:26 +0200
-Message-Id: <20190430113611.612094906@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.19 058/100] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
+Date:   Tue, 30 Apr 2019 13:38:27 +0200
+Message-Id: <20190430113611.644153664@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -64,61 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: luca abeni <luca.abeni@santannapisa.it>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 1b02cd6a2d7f3e2a6a5262887d2cb2912083e42f upstream.
+commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 upstream.
 
-syzbot reported the following warning:
+syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
+is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
+(which is embedded into user-visible "struct nfs_mount_data" structure)
+despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
+bytes of AF_INET6 address to rpc_sockaddr2uaddr().
 
-   [ ] WARNING: CPU: 4 PID: 17089 at kernel/sched/deadline.c:255 task_non_contending+0xae0/0x1950
+Since "struct nfs_mount_data" structure is user-visible, we can't change
+"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
+assuming that everybody is using AF_INET family when passing address via
+"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
 
-line 255 of deadline.c is:
+[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
 
-	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
-
-in task_non_contending().
-
-Unfortunately, in some cases (for example, a deadline task
-continuosly blocking and waking immediately) it can happen that
-a task blocks (and task_non_contending() is called) while the
-0-lag timer is still active.
-
-In this case, the safest thing to do is to immediately decrease
-the running bandwidth of the task, without trying to re-arm the 0-lag timer.
-
-Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: chengjian (D) <cj.chengjian@huawei.com>
-Link: https://lkml.kernel.org/r/20190325131530.34706-1-luca.abeni@santannapisa.it
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/deadline.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/super.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -252,7 +252,6 @@ static void task_non_contending(struct t
- 	if (dl_entity_is_special(dl_se))
- 		return;
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2052,7 +2052,8 @@ static int nfs23_validate_mount_data(voi
+ 		memcpy(sap, &data->addr, sizeof(data->addr));
+ 		args->nfs_server.addrlen = sizeof(data->addr);
+ 		args->nfs_server.port = ntohs(data->addr.sin_port);
+-		if (!nfs_verify_server_address(sap))
++		if (sap->sa_family != AF_INET ||
++		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
  
--	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
- 	WARN_ON(dl_se->dl_non_contending);
- 
- 	zerolag_time = dl_se->deadline -
-@@ -269,7 +268,7 @@ static void task_non_contending(struct t
- 	 * If the "0-lag time" already passed, decrease the active
- 	 * utilization now, instead of starting a timer
- 	 */
--	if (zerolag_time < 0) {
-+	if ((zerolag_time < 0) || hrtimer_active(&dl_se->inactive_timer)) {
- 		if (dl_task(p))
- 			sub_running_bw(dl_se, dl_rq);
- 		if (!dl_task(p) || p->state == TASK_DEAD) {
+ 		if (!(data->flags & NFS_MOUNT_TCP))
 
 
