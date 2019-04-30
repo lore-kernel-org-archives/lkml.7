@@ -2,110 +2,182 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E4AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEAAC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422D320835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB93A21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=strongbox8@zoho.com header.b="ZeaFanAG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KvjhZPSZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Lb3wHWzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfD3PKC (ORCPT
+        id S1726358AbfD3PKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:10:02 -0400
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25598 "EHLO
-        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfD3PKC (ORCPT
+        Tue, 30 Apr 2019 11:10:08 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44574 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfD3PKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:10:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1556634273; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=mfk8MAVDYBh5D+t5N8zXPT0V16NvwKIXypPd7J9iRimMxTcSSW2Ikd9TZ+V+L2hQlqrg+Pt6FcgF45MQyuT0Y/qjWmX+efWN89xMaaCbqbkcGK8zQm3xit8oDHdDmF8RdREAtRVmhZngSjinxrGE6Edlb858ivdJrEd2qiTPqes=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1556634273; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
-        bh=K5BzyEqf24wVQe40Lud47ZVAeu3TYSMvcKqwIoHWhsQ=; 
-        b=Ppn4+dJJOcgnoJ2/7Euo8xzz+czKtorAVcqEcHVW1CeND9KZrRqtgYc4NnmFWn42LHeI5GslDN6ijPXp17CdtsPSsGn+Slthn4pCTTPMXg2gYOUQTaWPjftVzeNsyZniTnfXZNkt66ogjZOE3CCiUagHoVg9CwNwMhnzzVxOgsg=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=strongbox8@zoho.com;
-        dmarc=pass header.from=<strongbox8@zoho.com> header.from=<strongbox8@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:message-id:subject:date:mime-version:content-type; 
-  b=g7f/SM0l7YPsKfWf4XXY773vIoWNkXScXKdqUEoq20PKHtZEgX0ZZNaI3qThm4WFY7hOy7MwzEZ6
-    ioMWF0o5TcuzzfIj5P3eIVMKysK20ZrEBjqaN5xiruYhC2vLzSXI  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1556634273;
-        s=default; d=zoho.com; i=strongbox8@zoho.com;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        l=1352; bh=K5BzyEqf24wVQe40Lud47ZVAeu3TYSMvcKqwIoHWhsQ=;
-        b=ZeaFanAGGV6ujArpeT3QkTx5zPIBAZyNrJgK2crNDcvIYe+myx6btSG/KfAdeUf2
-        0dML8vYXabECniOM2AreFsu25VySbOuTmfuni6/6H2rDxIf/nVlRXMSr+X6vPFc+V6T
-        lufqWfAwMYNwJcPJUcBBNSLdNC/xu8zjKWFpkIhE=
-Received: from archlinux.localdomain (106.2.239.74 [106.2.239.74]) by mx.zohomail.com
-        with SMTPS id 1556634269644614.490180315079; Tue, 30 Apr 2019 07:24:29 -0700 (PDT)
-From:   Perr Zhang <strongbox8@zoho.com>
-To:     pbonzini@redhat.com
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, stable@vger.kernel.org,
-        mingo@redhat.com, x86@kernel.org, kvm@vger.kernel.org,
+        Tue, 30 Apr 2019 11:10:06 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4FCDE60769; Tue, 30 Apr 2019 15:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556637005;
+        bh=5i02ENM+LkQVWsU6F8eKfdNUZEvPEdwgC5KJQwd7jeA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KvjhZPSZb44AXN3NafmGh2zrbp92qbxSyoEI4HteG4Q7MPUuPzkIOHg1geltGTe/y
+         ixhC4K4q8BWFFNR6seO+RgJt2oRfsr+OSusiJ9/CBrAIcFvTD+9TptwO7xtTWKZajB
+         JR9eV2SLpr/LRd7T36CnpbxXcXpl8M4jveckdD7I=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60A9D607DF;
+        Tue, 30 Apr 2019 15:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556637004;
+        bh=5i02ENM+LkQVWsU6F8eKfdNUZEvPEdwgC5KJQwd7jeA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Lb3wHWzO1WBuryn0cS0jdGu4wVtrb8wkpIVnBQuPgjttXYjofxMFj59BdvRXfj04Z
+         OmacREf4ssl99DXIgrN7xvrM8oXX1+wWHSU7oCSgCGKFQ8dz3H8G4ISFTuI3dwjia/
+         gO31G1q/uhyWQtExoRPQtYnfA2V5g1ZzC3oF5Kfw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60A9D607DF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Message-ID: <20190430142423.3393-1-strongbox8@zoho.com>
-Subject: [PATCH] KVM: x86: revert the order of calls in kvm_fast_pio()
-Date:   Tue, 30 Apr 2019 22:24:23 +0800
-X-Mailer: git-send-email 2.21.0
+Subject: pull-request: wireless-drivers 2019-04-30
+Date:   Tue, 30 Apr 2019 18:10:01 +0300
+Message-ID: <8736lzpm0m.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 45def77ebf79, the order of function calls in kvm_fast_pio()
-was changed. This causes that the vm(XP,and also XP's iso img) failed
-to boot. This doesn't happen with win10 or ubuntu.
+Hi Dave,
 
-After revert the order, the vm(XP) succeedes to boot. In addition, the
-change of calls's order of kvm_fast_pio() in commit 45def77ebf79 has no
-obvious reason.
+here's one more pull request to net tree for 5.1, more info below.
 
-Fixes: 45def77ebf79 ("KVM: x86: update %rip after emulating IO")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Perr Zhang <strongbox8@zoho.com>
----
- arch/x86/kvm/x86.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Also note that this pull conflicts with net-next. And I want to emphasie
+that it's really net-next, so when you pull this to net tree it should
+go without conflicts. Stephen reported the conflict here:
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a0d1fc80ac5a..248753cb94a1 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6610,13 +6610,12 @@ static int kvm_fast_pio_in(struct kvm_vcpu *vcpu, i=
-nt size,
-=20
- int kvm_fast_pio(struct kvm_vcpu *vcpu, int size, unsigned short port, int=
- in)
- {
--=09int ret;
-+=09int ret =3D kvm_skip_emulated_instruction(vcpu);
-=20
- =09if (in)
--=09=09ret =3D kvm_fast_pio_in(vcpu, size, port);
-+=09=09return kvm_fast_pio_in(vcpu, size, port) && ret;
- =09else
--=09=09ret =3D kvm_fast_pio_out(vcpu, size, port);
--=09return ret && kvm_skip_emulated_instruction(vcpu);
-+=09=09return kvm_fast_pio_out(vcpu, size, port) && ret;
- }
- EXPORT_SYMBOL_GPL(kvm_fast_pio);
-=20
---=20
-2.21.0
+https://lkml.kernel.org/r/20190429115338.5decb50b@canb.auug.org.au
 
+In iwlwifi oddly commit 154d4899e411 adds the IS_ERR_OR_NULL() in
+wireless-drivers but commit c9af7528c331 removes the whole check in
+wireless-drivers-next. The fix is easy, just drop the whole check for
+mvmvif->dbgfs_dir in iwlwifi/mvm/debugfs-vif.c, it's unneeded anyway.
 
+As usual, please let me know if you have any problems.
 
+Kalle
+
+The following changes since commit 614c70f35cd77a9af8e2ca841dcdb121cec3068f:
+
+  bnx2x: fix spelling mistake "dicline" -> "decline" (2019-04-15 17:23:09 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-04-30
+
+for you to fetch changes up to 7a0f8ad5ff6323dd8badfeb01d338db146569976:
+
+  Merge ath-current from git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git (2019-04-29 19:33:33 +0300)
+
+----------------------------------------------------------------
+wireless-drivers fixes for 5.1
+
+Third set of fixes for 5.1.
+
+iwlwifi
+
+* fix an oops when creating debugfs entries
+
+* fix bug when trying to capture debugging info while in rfkill
+
+* prevent potential uninitialized memory dumps into debugging logs
+
+* fix some initialization parameters for AX210 devices
+
+* fix an oops with non-MSIX devices
+
+* fix an oops when we receive a packet with bogus lengths
+
+* fix a bug that prevented 5350 devices from working
+
+* fix a small merge damage from the previous series
+
+mwifiex
+
+* fig regression with resume on SDIO
+
+ath10k
+
+* fix locking problem with crashdump
+
+* fix warnings during suspend and resume
+
+----------------------------------------------------------------
+Brian Norris (1):
+      ath10k: perform crash dump collection in workqueue
+
+Douglas Anderson (1):
+      mwifiex: Make resume actually do something useful again on SDIO cards
+
+Emmanuel Grumbach (1):
+      iwlwifi: fix driver operation for 5350
+
+Greg Kroah-Hartman (1):
+      iwlwifi: mvm: properly check debugfs dentry before using it
+
+Johannes Berg (1):
+      iwlwifi: mvm: don't attempt debug collection in rfkill
+
+Kalle Valo (3):
+      Merge tag 'iwlwifi-for-kalle-2019-04-19' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
+      Merge tag 'iwlwifi-for-kalle-2019-04-28' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
+      Merge ath-current from git://git.kernel.org/.../kvalo/ath.git
+
+Luca Coelho (2):
+      iwlwifi: mvm: check for length correctness in iwl_mvm_create_skb()
+      iwlwifi: mvm: fix merge damage in iwl_mvm_vif_dbgfs_register()
+
+Rafael J. Wysocki (1):
+      ath10k: Drop WARN_ON()s that always trigger during system resume
+
+Shahar S Matityahu (2):
+      iwlwifi: don't panic in error path on non-msix systems
+      iwlwifi: dbg_ini: check debug TLV type explicitly
+
+Shaul Triebitz (1):
+      iwlwifi: cfg: use family 22560 based_params for AX210 family
+
+ drivers/net/wireless/ath/ath10k/ce.c               |  2 +-
+ drivers/net/wireless/ath/ath10k/core.c             |  1 +
+ drivers/net/wireless/ath/ath10k/core.h             |  3 +++
+ drivers/net/wireless/ath/ath10k/coredump.c         |  6 ++---
+ drivers/net/wireless/ath/ath10k/mac.c              |  4 ++--
+ drivers/net/wireless/ath/ath10k/pci.c              | 24 +++++++++++++++----
+ drivers/net/wireless/ath/ath10k/pci.h              |  2 ++
+ drivers/net/wireless/intel/iwlwifi/cfg/22000.c     |  2 +-
+ drivers/net/wireless/intel/iwlwifi/cfg/5000.c      |  3 ++-
+ drivers/net/wireless/intel/iwlwifi/fw/file.h       | 15 +++++++-----
+ drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c   |  3 ++-
+ .../net/wireless/intel/iwlwifi/mvm/debugfs-vif.c   |  3 +--
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c        |  4 +++-
+ drivers/net/wireless/intel/iwlwifi/mvm/ops.c       |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c      | 28 ++++++++++++++++++----
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c    | 19 ++++++++++-----
+ drivers/net/wireless/marvell/mwifiex/sdio.c        |  2 +-
+ 17 files changed, 88 insertions(+), 35 deletions(-)
