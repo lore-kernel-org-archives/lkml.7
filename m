@@ -7,57 +7,54 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8685CC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B13C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE8021734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6347E21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624482;
-	bh=fF7jaDtHpmQSQ7ceoavLO0l3edO47I6/USZeAM0gI+4=;
+	s=default; t=1556624485;
+	bh=JfbBBb9GSwrn3uSbyVzEH030s2yAJCMAhdmxy2v/Pgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MHn8Ca1Rqq0ExVfdwrrw7uSb8H8TJvb3oDtwv0qEzcRHsqTgIhgvRnQkfmfE8tSjY
-	 zs2uq5pIRNIdo9Fc/nCwhnej5/2ZazkVFMOphn5PFeJXC14JizyrZ52hbyGwPRoOgI
-	 5gPGRB1mwXfyNTfMWQ+4DaAgvvmqh8L3XjZYHk6k=
+	b=VWwgQyRPE0z0tiWoQT64Xu44sTs9AH1se13knQ80F3yW4ySjw/yL2nAISJZsS9QXe
+	 Ch+k98jVPPfqHGkYTwSS6eBKoBZi62UY3t2MA15xg5KlH1340ZRSXLOxGlthICkSZs
+	 O71iNg9KwFfkKE0i1mM8sXloWXXXGYwq6JMdlxLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfD3LlU (ORCPT
+        id S1728904AbfD3LlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:41:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbfD3LlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:17 -0400
+        id S1728862AbfD3LlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 610852173E;
-        Tue, 30 Apr 2019 11:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 142DE21783;
+        Tue, 30 Apr 2019 11:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624475;
-        bh=fF7jaDtHpmQSQ7ceoavLO0l3edO47I6/USZeAM0gI+4=;
+        s=default; t=1556624478;
+        bh=JfbBBb9GSwrn3uSbyVzEH030s2yAJCMAhdmxy2v/Pgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LEzmY6e5iyxLAV1sc4Y/t2BvKcQtK35Ydl7xcQ59AzoH2GjWk1fxCKQSWd/Ha53kN
-         QdyzIfhaJzwh5lqbNhXa2B4VUTToC4zlOkaVWAt9Nr72cqeXhcqVqvWwGAOiYPBcUE
-         WVvrWrajqrtqV0IuQmUNAV0meZAdbzUw3iRQ/zQY=
+        b=hwOn1S6PGURLnAP5dORWmuAt6PSOAdwUJ5uBXuYVNk/03kDZIRHU7Ra9RZLl6VyeY
+         Q5MYanZnhoLBMkL4/pLnFCuDjlvMuODiTZScQ9wevqxk0/c8JWlm3Zic+8ldBZH+ys
+         eaLdoSSXaULoWvha4Xe6t1AKyUHriwWfIOejcZZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 23/41] fs/proc/proc_sysctl.c: Fix a NULL pointer dereference
-Date:   Tue, 30 Apr 2019 13:38:34 +0200
-Message-Id: <20190430113530.492945908@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 4.14 01/53] kbuild: simplify ld-option implementation
+Date:   Tue, 30 Apr 2019 13:38:08 +0200
+Message-Id: <20190430113549.630232113@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
-References: <20190430113524.451237916@linuxfoundation.org>
+In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
+References: <20190430113549.400132183@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,97 +63,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit 89189557b47b35683a27c80ee78aef18248eefb4 upstream.
+commit 0294e6f4a0006856e1f36b8cd8fa088d9e499e98 upstream.
 
-Syzkaller report this:
+Currently, linker options are tested by the coordination of $(CC) and
+$(LD) because $(LD) needs some object to link.
 
-  sysctl could not get directory: /net//bridge -12
-  kasan: CONFIG_KASAN_INLINE enabled
-  kasan: GPF could be caused by NULL-ptr deref or user memory access
-  general protection fault: 0000 [#1] SMP KASAN PTI
-  CPU: 1 PID: 7027 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-  RIP: 0010:__write_once_size include/linux/compiler.h:220 [inline]
-  RIP: 0010:__rb_change_child include/linux/rbtree_augmented.h:144 [inline]
-  RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:186 [inline]
-  RIP: 0010:rb_erase+0x5f4/0x19f0 lib/rbtree.c:459
-  Code: 00 0f 85 60 13 00 00 48 89 1a 48 83 c4 18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 89 f2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 75 0c 00 00 4d 85 ed 4c 89 2e 74 ce 4c 89 ea 48
-  RSP: 0018:ffff8881bb507778 EFLAGS: 00010206
-  RAX: dffffc0000000000 RBX: ffff8881f224b5b8 RCX: ffffffff818f3f6a
-  RDX: 000000000000000a RSI: 0000000000000050 RDI: ffff8881f224b568
-  RBP: 0000000000000000 R08: ffffed10376a0ef4 R09: ffffed10376a0ef4
-  R10: 0000000000000001 R11: ffffed10376a0ef4 R12: ffff8881f224b558
-  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-  FS:  00007f3e7ce13700(0000) GS:ffff8881f7300000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007fd60fbe9398 CR3: 00000001cb55c001 CR4: 00000000007606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  PKRU: 55555554
-  Call Trace:
-   erase_entry fs/proc/proc_sysctl.c:178 [inline]
-   erase_header+0xe3/0x160 fs/proc/proc_sysctl.c:207
-   start_unregistering fs/proc/proc_sysctl.c:331 [inline]
-   drop_sysctl_table+0x558/0x880 fs/proc/proc_sysctl.c:1631
-   get_subdir fs/proc/proc_sysctl.c:1022 [inline]
-   __register_sysctl_table+0xd65/0x1090 fs/proc/proc_sysctl.c:1335
-   br_netfilter_init+0x68/0x1000 [br_netfilter]
-   do_one_initcall+0xbc/0x47d init/main.c:901
-   do_init_module+0x1b5/0x547 kernel/module.c:3456
-   load_module+0x6405/0x8c10 kernel/module.c:3804
-   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  Modules linked in: br_netfilter(+) backlight comedi(C) hid_sensor_hub max3100 ti_ads8688 udc_core fddi snd_mona leds_gpio rc_streamzap mtd pata_netcell nf_log_common rc_winfast udp_tunnel snd_usbmidi_lib snd_usb_toneport snd_usb_line6 snd_rawmidi snd_seq_device snd_hwdep videobuf2_v4l2 videobuf2_common videodev media videobuf2_vmalloc videobuf2_memops rc_gadmei_rm008z 8250_of smm665 hid_tmff hid_saitek hwmon_vid rc_ati_tv_wonder_hd_600 rc_core pata_pdc202xx_old dn_rtmsg as3722 ad714x_i2c ad714x snd_soc_cs4265 hid_kensington panel_ilitek_ili9322 drm drm_panel_orientation_quirks ipack cdc_phonet usbcore phonet hid_jabra hid extcon_arizona can_dev industrialio_triggered_buffer kfifo_buf industrialio adm1031 i2c_mux_ltc4306 i2c_mux ipmi_msghandler mlxsw_core snd_soc_cs35l34 snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer ac97_bus snd_compress snd soundcore gpio_da9055 uio ecdh_generic mdio_thunder of_mdio fixed_phy libphy mdio_cavium iptable_security iptable_raw iptable_mangle
-   iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun joydev mousedev ppdev tpm kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel ide_pci_generic piix aes_x86_64 crypto_simd cryptd ide_core glue_helper input_leds psmouse intel_agp intel_gtt serio_raw ata_generic i2c_piix4 agpgart pata_acpi parport_pc parport floppy rtc_cmos sch_fq_codel ip_tables x_tables sha1_ssse3 sha1_generic ipv6 [last unloaded: br_netfilter]
-  Dumping ftrace buffer:
-     (ftrace buffer empty)
-  ---[ end trace 68741688d5fbfe85 ]---
+As commit 86a9df597cdd ("kbuild: fix linker feature test macros when
+cross compiling with Clang") addressed, we need to make sure $(CC)
+and $(LD) agree the underlying architecture of the passed object.
 
-commit 23da9588037e ("fs/proc/proc_sysctl.c: fix NULL pointer
-dereference in put_links") forgot to handle start_unregistering() case,
-while header->parent is NULL, it calls erase_header() and as seen in the
-above syzkaller call trace, accessing &header->parent->root will trigger
-a NULL pointer dereference.
+This could be a bit complex when we combine tools from different groups.
+For example, we can use clang for $(CC), but we still need to rely on
+GCC toolchain for $(LD).
 
-As that commit explained, there is also no need to call
-start_unregistering() if header->parent is NULL.
+So, I was searching for a way of standalone testing of linker options.
+A trick I found is to use '-v'; this not only prints the version string,
+but also tests if the given option is recognized.
 
-Link: http://lkml.kernel.org/r/20190409153622.28112-1-yuehaibing@huawei.com
-Fixes: 23da9588037e ("fs/proc/proc_sysctl.c: fix NULL pointer dereference in put_links")
-Fixes: 0e47c99d7fe25 ("sysctl: Replace root_list with links between sysctl_table_sets")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+If a given option is supported,
+
+  $ aarch64-linux-gnu-ld -v --fix-cortex-a53-843419
+  GNU ld (Linaro_Binutils-2017.11) 2.28.2.20170706
+  $ echo $?
+  0
+
+If unsupported,
+
+  $ aarch64-linux-gnu-ld -v --fix-cortex-a53-843419
+  GNU ld (crosstool-NG linaro-1.13.1-4.7-2013.04-20130415 - Linaro GCC 2013.04) 2.23.1
+  aarch64-linux-gnu-ld: unrecognized option '--fix-cortex-a53-843419'
+  aarch64-linux-gnu-ld: use the --help option for usage information
+  $ echo $?
+  1
+
+Gold works likewise.
+
+  $ aarch64-linux-gnu-ld.gold -v --fix-cortex-a53-843419
+  GNU gold (Linaro_Binutils-2017.11 2.28.2.20170706) 1.14
+  masahiro@pug:~/ref/linux$ echo $?
+  0
+  $ aarch64-linux-gnu-ld.gold -v --fix-cortex-a53-999999
+  GNU gold (Linaro_Binutils-2017.11 2.28.2.20170706) 1.14
+  aarch64-linux-gnu-ld.gold: --fix-cortex-a53-999999: unknown option
+  aarch64-linux-gnu-ld.gold: use the --help option for usage information
+  $ echo $?
+  1
+
+LLD too.
+
+  $ ld.lld -v --gc-sections
+  LLD 7.0.0 (http://llvm.org/git/lld.git 4a0e4190e74cea19f8a8dc625ccaebdf8b5d1585) (compatible with GNU linkers)
+  $ echo $?
+  0
+  $ ld.lld -v --fix-cortex-a53-843419
+  LLD 7.0.0 (http://llvm.org/git/lld.git 4a0e4190e74cea19f8a8dc625ccaebdf8b5d1585) (compatible with GNU linkers)
+  $ echo $?
+  0
+  $ ld.lld -v --fix-cortex-a53-999999
+  ld.lld: error: unknown argument: --fix-cortex-a53-999999
+  LLD 7.0.0 (http://llvm.org/git/lld.git 4a0e4190e74cea19f8a8dc625ccaebdf8b5d1585) (compatible with GNU linkers)
+  $ echo $?
+  1
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+[nc: try-run-cached was added later, just use try-run, which is the
+     current mainline state]
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/proc/proc_sysctl.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ scripts/Kbuild.include |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -1604,9 +1604,11 @@ static void drop_sysctl_table(struct ctl
- 	if (--header->nreg)
- 		return;
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -165,9 +165,7 @@ cc-ldoption = $(call try-run,\
  
--	if (parent)
-+	if (parent) {
- 		put_links(header);
--	start_unregistering(header);
-+		start_unregistering(header);
-+	}
-+
- 	if (!--header->count)
- 		kfree_rcu(header, rcu);
+ # ld-option
+ # Usage: LDFLAGS += $(call ld-option, -X)
+-ld-option = $(call try-run,\
+-	$(CC) $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -x c /dev/null -c -o "$$TMPO"; \
+-	$(LD) $(LDFLAGS) $(1) "$$TMPO" -o "$$TMP",$(1),$(2))
++ld-option = $(call try-run, $(LD) $(LDFLAGS) $(1) -v,$(1),$(2))
  
+ # ar-option
+ # Usage: KBUILD_ARFLAGS := $(call ar-option,D)
 
 
