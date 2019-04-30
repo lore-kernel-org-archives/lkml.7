@@ -2,178 +2,99 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0C7C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C7EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55B220644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCB420644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5fzeWhQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfD3NbS (ORCPT
+        id S1727341AbfD3Ncc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:31:18 -0400
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:40696 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbfD3NbR (ORCPT
+        Tue, 30 Apr 2019 09:32:32 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38424 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfD3Ncb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:31:17 -0400
-Subject: Re: perf build broken in 5.1-rc7
-To:     Song Liu <liu.song.a23@gmail.com>
-CC:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
- <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
- <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <b773df70-58e6-69f8-d566-282b0f7ae579@mageia.org>
-Date:   Tue, 30 Apr 2019 16:31:14 +0300
+        Tue, 30 Apr 2019 09:32:31 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t70so5665127oif.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IreQ0jouyS/D8gYDCyS7jEiprNx5trWg2oesU5FoXa0=;
+        b=C5fzeWhQ/2btZ4CD0g7sbhi3duroFEFBk9mAeRGfXv0yxlnxQn+udOTK1Uf1fcuH7+
+         L4aP4vVQCWq3O2BiKrQ+rP60GhxiGjJltQ3jzf6gTr0U2Slyrrtt2l1h09I552rIEQx4
+         s9Yq/IzHKhCnF4/KsslyPH9eTtosgtTr2URw/Afe5zVxA+du6KxX0zYQOV8EaaP6+PDd
+         n1yrXWZonSfJSyA7rqvbR7SzaQjlBhEN419wB4ARRyhsz/J9v5s18TMORrIXUUneTBEP
+         wp7YwnSn8qmY7V1sdrDBU0ZMwB08P5wESLNTFwGVnvRE/WGXONETkh7WAeyP6JK1vHbs
+         PEjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IreQ0jouyS/D8gYDCyS7jEiprNx5trWg2oesU5FoXa0=;
+        b=K9LmH8Npp3bDZmpdchf1643G2C7vYJ2QHl3+oopozxfha8dXNSBkBp71n6fFv7HkRM
+         Q12g1/JoBsKugCTqVmO1nHF3H6KPxgk+9VYniKXA8dYO/S51Xf1ycA8ERwEFi8kAPKQL
+         OLt/oXI0xUp2TkcelSaszBahj61w34E/DqT64V7ZKs2y6JxgShKCsqIYRmC1jcI+Ge3N
+         /IXygS4xjC5dGcfXNSLrFDhEl66TeAjaO2qztRx4igyKadooOyS6rhEIkkKozzVRhUV6
+         V3TgsiF2efo4jikZf5BXGuV31kkgzLhlyEzfuAXdBuiUMoI9uBPTHYluqGs3BJVTJYVb
+         THrQ==
+X-Gm-Message-State: APjAAAXIMBgfeod8NEagxp3btGJSxAls5ixBS6TivmAO0sq3PFb9lqC6
+        lkyN0/5WjeXMXjzcOIdxfVsnwBvLPetUpO61iVY=
+X-Google-Smtp-Source: APXvYqya3InPUbrIUL9K9lKgI8RlOhW4WAY+VMsSEUDEi0+OnTaqCKNfwyYxiJQa7n6joA4vDFzQscK5snCHLXTeXkE=
+X-Received: by 2002:aca:4202:: with SMTP id p2mr2741707oia.169.1556631150997;
+ Tue, 30 Apr 2019 06:32:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-WatchGuard-Spam-ID: str=0001.0A0C020B.5CC84E25.0007,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.195
-X-WatchGuard-Mail-From: tmb@mageia.org
+References: <1556517940-13725-1-git-send-email-hofrat@osadl.org>
+ <CAGngYiVDFL1fm2oKALXORNziX6pdcBBNtp7rSnj_FBdr6u4j5w@mail.gmail.com>
+ <20190430022238.GA22593@osadl.at> <20190430030223.GE23075@ZenIV.linux.org.uk>
+ <20190430033310.GB23144@osadl.at> <20190430041934.GI23075@ZenIV.linux.org.uk>
+In-Reply-To: <20190430041934.GI23075@ZenIV.linux.org.uk>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 30 Apr 2019 09:32:20 -0400
+Message-ID: <CAGngYiVSg86X+jD+hgwwrOYX82Fu3OWSLygwGFzyc9wYq6AesQ@mail.gmail.com>
+Subject: Re: [PATCH V2] staging: fieldbus: anybus-s: force endiannes annotation
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Nicholas Mc Guire <der.herr@hofr.at>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Den 30-04-2019 kl. 16:06, skrev Song Liu:
-> On Tue, Apr 30, 2019 at 12:55 AM Thomas Backlund <tmb@mageia.org> wrote:
->> Den 30-04-2019 kl. 10:26, skrev Thomas Backlund:
->>> Building perf in 5.1-rc5/6/7 fails:
->>>
->>>
->>> Build start:
->>>
->>>
->>>    make -s -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1
->>> WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1
->>> NO_BIONIC=1 NO_JVMTI=1 prefix=/usr lib=lib64 all
->>>     BUILD:   Doing 'make -j32' parallel build
->>>     HOSTCC   fixdep.o
->>>     HOSTLD   fixdep-in.o
->>>     LINK     fixdep
->>> Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h'
->>> differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
->>> diff -u tools/arch/x86/include/uapi/asm/vmx.h
->>> arch/x86/include/uapi/asm/vmx.h
->>>
->>> Auto-detecting system features:
->>> ...                         dwarf: [ on  ]
->>> ...            dwarf_getlocations: [ on  ]
->>> ...                         glibc: [ on  ]
->>> ...                          gtk2: [ on  ]
->>> ...                      libaudit: [ on  ]
->>> ...                        libbfd: [ on  ]
->>> ...                        libelf: [ on  ]
->>> ...                       libnuma: [ on  ]
->>> ...        numa_num_possible_cpus: [ on  ]
->>> ...                       libperl: [ on  ]
->>> ...                     libpython: [ on  ]
->>> ...                      libslang: [ on  ]
->>> ...                     libcrypto: [ on  ]
->>> ...                     libunwind: [ on  ]
->>> ...            libdw-dwarf-unwind: [ on  ]
->>> ...                          zlib: [ on  ]
->>> ...                          lzma: [ on  ]
->>> ...                     get_cpuid: [ on  ]
->>> ...                           bpf: [ on  ]
->>> ...                        libaio: [ on  ]
->>> ...        disassembler-four-args: [ OFF ]
->>>
->>> Makefile.config:473: No sys/sdt.h found, no SDT events are defined,
->>> please install systemtap-sdt-devel or systemtap-sdt-dev
->>> Makefile.config:853: No libbabeltrace found, disables 'perf data' CTF
->>> format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
->>>
->>>
->>> And breaks with:
->>>
->>>
->>> CC       ui/setup.o
->>> util/annotate.c: In function 'symbol__disassemble_bpf':
->>> util/annotate.c:1767:29: error: incompatible type for argument 1 of
->>> 'disassembler'
->>>     disassemble = disassembler(bfdf);
->>>                                ^~~~
->>> In file included from util/annotate.c:1689:
->>> /usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture'
->>> but argument is of type 'bfd *' {aka 'struct bfd *'}
->>>    extern disassembler_ftype disassembler (enum bfd_architecture arc,
->>>                                            ~~~~~~~~~~~~~~~~~~~~~~^~~
->>> util/annotate.c:1767:16: error: too few arguments to function
->>> 'disassembler'
->>>     disassemble = disassembler(bfdf);
->>>                   ^~~~~~~~~~~~
->>> In file included from util/annotate.c:1689:
->>> /usr/include/dis-asm.h:325:27: note: declared here
->>>    extern disassembler_ftype disassembler (enum bfd_architecture arc,
->>>                              ^~~~~~~~~~~~
->>>     CC       arch/x86/util/header.o
->>>     CC       arch/x86/util/tsc.o
->>>     CC       arch/x86/util/pmu.o
->>> mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
->>>     CC       bench/futex-requeue.o
->>>     CC       arch/x86/util/kvm-stat.o
->>> make[4]: ***
->>> [/work/rpmbuild/BUILD/kernel-x86_64/linux-5.0/tools/build/Makefile.build:97:
->>> util/annotate.o] Error 1
->>> make[4]: *** Waiting for unfinished jobs....
->>>     CC       util/build-id.o
->>>
->>>
->>>
->>
->> And I forgot...
->>
->> Reverting:
->>   From 6987561c9e86eace45f2dbb0c564964a63f4150a Mon Sep 17 00:00:00 2001
->> From: Song Liu <songliubraving@fb.com>
->> Date: Mon, 11 Mar 2019 22:30:48 -0700
->> Subject: perf annotate: Enable annotation of BPF programs
->>
->> Makes it build again.
->>
->> --
->> Thomas
->>
-> Hi Thomas,
+On Tue, Apr 30, 2019 at 12:19 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> Which system are you running this test on? I would like to repro it in a VM.
->
-> Thanks,
-> Song
+> ... not that there's much sense keeping ->fieldbus_type in host-endian,
+> while we are at it.
 
+Interesting! Suppose we make device->fieldbus_type bus-endian.
+Then the endinan-ness conversion either needs to happen in
+bus_match() (and we'd have to convert endianness each time
+this function is called).
+Or, we make driver->fieldbus_type bus-endian also, then there
+is no need for conversion... but the driver writer has to remember
+to specify this in bus endianness:
 
-Mageia Cauldron currently stabilizing to become Mageia 7 in ~1 month.
+static struct anybuss_client_driver profinet_driver = {
+        .probe = ...,
+        .fieldbus_type = endian convert?? (0x0089),
+};
 
+Which pushes bus implementation details onto the
+client driver writer? Also, how to convert a constant
+to a specific endianness in a static initializer?
 
-Basesystem is:
-
-binutils-2.32-5.mga7
-(includes all fixes from upstream binutils-2_32-branch)
-
-gcc-8.3.1-0.20190419.2.mga7
-
-glibc-2.29-7.mga7
-(includes all fixes from upstream glibc release/2.29/master branch up to 
-2019-04-15 for now)
-
-
-kernel-desktop-5.1.0-0.rc7.1.mga7
-kernel-userspace-headers-5.1.0-0.rc7.1.mga7
-
-
---
-
-Thomas
-
-
+You never make a remark without good reason, so what
+am I overlooking?
