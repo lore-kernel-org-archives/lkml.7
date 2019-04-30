@@ -3,180 +3,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8076C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5216C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A638521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8D621670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfD3KTa (ORCPT
+        id S1727243AbfD3KTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:19:30 -0400
-Received: from proxima.lasnet.de ([78.47.171.185]:57533 "EHLO
-        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfD3KT3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:19:29 -0400
-Received: from localhost.localdomain (p4FC2FAD0.dip0.t-ipconnect.de [79.194.250.208])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 30 Apr 2019 06:19:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42712 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbfD3KTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 06:19:53 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: stefan@datenfreihafen.org)
-        by proxima.lasnet.de (Postfix) with ESMTPSA id E8F5FC8CB9;
-        Tue, 30 Apr 2019 12:19:25 +0200 (CEST)
-Subject: Re: [PATCH] ieee802154: hwsim: Fix error handle path in
- hwsim_init_module
-To:     Yue Haibing <yuehaibing@huawei.com>, alex.aring@gmail.com,
-        davem@davemloft.net
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-wpan@vger.kernel.org
-References: <20190428141451.32956-1-yuehaibing@huawei.com>
-From:   Stefan Schmidt <stefan@datenfreihafen.org>
-Message-ID: <276a3533-19f3-a5f6-c61e-3ebbb4ef6600@datenfreihafen.org>
-Date:   Tue, 30 Apr 2019 12:19:25 +0200
+        by mx1.redhat.com (Postfix) with ESMTPS id 678E185360;
+        Tue, 30 Apr 2019 10:19:52 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A57386152B;
+        Tue, 30 Apr 2019 10:19:48 +0000 (UTC)
+Subject: Re: [PATCH v4 3/3] PCI: iproc: Add sorted dma ranges resource entries
+ to host bridge
+To:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+ <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <53a7463f-0b31-42ad-96a1-a3f40f02b119@redhat.com>
+Date:   Tue, 30 Apr 2019 12:19:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190428141451.32956-1-yuehaibing@huawei.com>
+In-Reply-To: <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 30 Apr 2019 10:19:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQWxleC4NCg0KDQpPbiAyOC4wNC4xOSAxNjoxNCwgWXVlIEhhaWJpbmcgd3JvdGU6
-DQo+IEZyb206IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2VpLmNvbT4NCj4gDQo+IEtB
-U0FOIHJlcG9ydCB0aGlzOg0KPiANCj4gQlVHOiB1bmFibGUgdG8gaGFuZGxlIGtlcm5lbCBw
-YWdpbmcgcmVxdWVzdCBhdCBmZmZmZmJmZmY4MzRmMDAxDQo+IFBHRCAyMzdmZTgwNjcgUDRE
-IDIzN2ZlODA2NyBQVUQgMjM3ZTY0MDY3IFBNRCAxYzk2OGQwNjcgUFRFIDANCj4gT29wczog
-MDAwMCBbIzFdIFNNUCBLQVNBTiBQVEkNCj4gQ1BVOiAxIFBJRDogODg3MSBDb21tOiBzeXot
-ZXhlY3V0b3IuMCBUYWludGVkOiBHICAgICAgICAgQyAgICAgICAgNS4wLjArICM1DQo+IEhh
-cmR3YXJlIG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKGk0NDBGWCArIFBJSVgsIDE5OTYpLCBC
-SU9TIDEuMTAuMi0xdWJ1bnR1MSAwNC8wMS8yMDE0DQo+IFJJUDogMDAxMDpzdHJjbXArMHgz
-MS8weGEwIGxpYi9zdHJpbmcuYzozMjgNCj4gQ29kZTogMDAgMDAgMDAgMDAgZmMgZmYgZGYg
-NTUgNTMgNDggODMgZWMgMDggZWIgMGEgODQgZGIgNDggODkgZWYgNzQgNWEgNGMgODkgZTYg
-NDggODkgZjggNDggODkgZmEgNDggOGQgNmYgMDEgNDggYzEgZTggMDMgODMgZTIgMDcgPDQy
-PiAwZiBiNiAwNCAyOCAzOCBkMCA3ZiAwNCA4NCBjMCA3NSA1MCA0OCA4OSBmMCA0OCA4OSBm
-MiAwZiBiNiA1ZA0KPiBSU1A6IDAwMTg6ZmZmZjg4ODFlMGM1NzgwMCBFRkxBR1M6IDAwMDEw
-MjQ2DQo+IFJBWDogMWZmZmZmZmZmODM0ZjAwMSBSQlg6IGZmZmZmZmZmYzFhNzgwMDAgUkNY
-OiBmZmZmZmZmZjgyN2I5NTAzDQo+IFJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmZm
-ZmZmYzFhNDAwMDggUkRJOiBmZmZmZmZmZmMxYTc4MDA4DQo+IFJCUDogZmZmZmZmZmZjMWE3
-ODAwOSBSMDg6IGZmZmZmYmZmZjZhOTIxOTUgUjA5OiBmZmZmZmJmZmY2YTkyMTk1DQo+IFIx
-MDogZmZmZjg4ODFlMGM1NzhiOCBSMTE6IGZmZmZmYmZmZjZhOTIxOTQgUjEyOiBmZmZmZmZm
-ZmMxYTQwMDA4DQo+IFIxMzogZGZmZmZjMDAwMDAwMDAwMCBSMTQ6IGZmZmZmZmZmYzFhM2U0
-NzAgUjE1OiBmZmZmZmZmZmMxYTQwMDAwDQo+IEZTOiAgMDAwMDdmZGNjMDJmZjcwMCgwMDAw
-KSBHUzpmZmZmODg4MWY3MzAwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCj4g
-Q1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPiBD
-UjI6IGZmZmZmYmZmZjgzNGYwMDEgQ1IzOiAwMDAwMDAwMWIzMTM0MDAzIENSNDogMDAwMDAw
-MDAwMDc2MDZlMA0KPiBEUjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAwMDAwMDAwMDAw
-MDAwIERSMjogMDAwMDAwMDAwMDAwMDAwMA0KPiBEUjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2
-OiAwMDAwMDAwMGZmZmUwZmYwIERSNzogMDAwMDAwMDAwMDAwMDQwMA0KPiBQS1JVOiA1NTU1
-NTU1NA0KPiBDYWxsIFRyYWNlOg0KPiAgZ2VubF9mYW1pbHlfZmluZF9ieW5hbWUrMHg3Zi8w
-eGYwIG5ldC9uZXRsaW5rL2dlbmV0bGluay5jOjEwNA0KPiAgZ2VubF9yZWdpc3Rlcl9mYW1p
-bHkrMHgxZTEvMHgxMDcwIG5ldC9uZXRsaW5rL2dlbmV0bGluay5jOjMzMw0KPiAgPyAweGZm
-ZmZmZmZmYzE5NzgwMDANCj4gIGh3c2ltX2luaXRfbW9kdWxlKzB4NmEvMHgxMDAwIFttYWM4
-MDIxNTRfaHdzaW1dDQo+ICA/IDB4ZmZmZmZmZmZjMTk3ODAwMA0KPiAgPyAweGZmZmZmZmZm
-YzE5NzgwMDANCj4gID8gMHhmZmZmZmZmZmMxOTc4MDAwDQo+ICBkb19vbmVfaW5pdGNhbGwr
-MHhiYy8weDQ3ZCBpbml0L21haW4uYzo4ODcNCj4gIGRvX2luaXRfbW9kdWxlKzB4MWI1LzB4
-NTQ3IGtlcm5lbC9tb2R1bGUuYzozNDU2DQo+ICBsb2FkX21vZHVsZSsweDY0MDUvMHg4YzEw
-IGtlcm5lbC9tb2R1bGUuYzozODA0DQo+ICBfX2RvX3N5c19maW5pdF9tb2R1bGUrMHgxNjIv
-MHgxOTAga2VybmVsL21vZHVsZS5jOjM4OTgNCj4gIGRvX3N5c2NhbGxfNjQrMHg5Zi8weDQ1
-MCBhcmNoL3g4Ni9lbnRyeS9jb21tb24uYzoyOTANCj4gIGVudHJ5X1NZU0NBTExfNjRfYWZ0
-ZXJfaHdmcmFtZSsweDQ5LzB4YmUNCj4gUklQOiAwMDMzOjB4NDYyZTk5DQo+IENvZGU6IGY3
-IGQ4IDY0IDg5IDAyIGI4IGZmIGZmIGZmIGZmIGMzIDY2IDBmIDFmIDQ0IDAwIDAwIDQ4IDg5
-IGY4IDQ4IDg5IGY3IDQ4IDg5IGQ2IDQ4IDg5IGNhIDRkIDg5IGMyIDRkIDg5IGM4IDRjIDhi
-IDRjIDI0IDA4IDBmIDA1IDw0OD4gM2QgMDEgZjAgZmYgZmYgNzMgMDEgYzMgNDggYzcgYzEg
-YmMgZmYgZmYgZmYgZjcgZDggNjQgODkgMDEgNDgNCj4gUlNQOiAwMDJiOjAwMDA3ZmRjYzAy
-ZmVjNTggRUZMQUdTOiAwMDAwMDI0NiBPUklHX1JBWDogMDAwMDAwMDAwMDAwMDEzOQ0KPiBS
-QVg6IGZmZmZmZmZmZmZmZmZmZGEgUkJYOiAwMDAwMDAwMDAwNzNiZjAwIFJDWDogMDAwMDAw
-MDAwMDQ2MmU5OQ0KPiBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAwMDAwMDIwMDAw
-MjAwIFJESTogMDAwMDAwMDAwMDAwMDAwMw0KPiBSQlA6IDAwMDA3ZmRjYzAyZmVjNzAgUjA4
-OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogMDAwMDAwMDAwMDAwMDAwMA0KPiBSMTA6IDAwMDAw
-MDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAwMDAwMjQ2IFIxMjogMDAwMDdmZGNjMDJmZjZi
-Yw0KPiBSMTM6IDAwMDAwMDAwMDA0YmNlZmEgUjE0OiAwMDAwMDAwMDAwNmY2ZmIwIFIxNTog
-MDAwMDAwMDAwMDAwMDAwNA0KPiBNb2R1bGVzIGxpbmtlZCBpbjogbWFjODAyMTU0X2h3c2lt
-KCspIG1hYzgwMjE1NCBpZWVlODAyMTU0IHNwZWFrdXAoQykgcmNfcHJvdGV1c18yMzA5IHJ0
-Y19yazgwOCBzdHJlZWJvZ19nZW5lcmljIHJkcyB2Ym94Z3Vlc3QgbWFkZXJhX3NwaSBtYWRl
-cmEgZGE5MDUyX3dkdCBtSVNETl9jb3JlIHVlYWdsZV9hdG0gdXNiYXRtIGF0bSBpcl9pbW9u
-X2RlY29kZXIgc2NzaV90cmFuc3BvcnRfc2FzIHJjX2RudHZfbGl2ZV9kdmJfdCBwYW5lbF9z
-YW1zdW5nX3M2ZDE2ZDAgZHJtIGRybV9wYW5lbF9vcmllbnRhdGlvbl9xdWlya3MgbGliODAy
-MTEgZmJfYWdtMTI2NGtfZmwoQykgZ3NwY2FfcGFjNzMwMiBnc3BjYV9tYWluIHZpZGVvYnVm
-Ml92NGwyIHNvdW5kd2lyZV9pbnRlbF9pbml0IGkyY19kbG4yIGRsbjIgdXNiY29yZSBoaWRf
-Z2FmZiA4OHBtODYwNyBuZm5ldGxpbmsgYXhwMjB4X2kyYyBheHAyMHggdWlvIHBhdGFfbWFy
-dmVsbCBwbWJ1c19jb3JlIHNuZF9zb25pY3ZpYmVzIGdhbWVwb3J0IHNuZF9wY20gc25kX29w
-bDNfbGliIHNuZF90aW1lciBzbmRfaHdkZXAgc25kX21wdTQwMV91YXJ0IHNuZF9yYXdtaWRp
-IHNuZF9zZXFfZGV2aWNlIHNuZCBzb3VuZGNvcmUgcnRjX2RzMTUxMSBydGNfZHMxNzQyIHZz
-b2NrIGR3Y194bGdtYWMgcnRjX3J4ODAxMCBsaWJwaHkgdHdvZmlzaF94ODZfNjRfM3dheSB0
-d29maXNoX3g4Nl82NCB0d29maXNoX2NvbW1vbiBhZDU2OTZfaTJjIGFkNTY4NiBscDg3ODhf
-Y2hhcmdlciBjeGQyODgwX3NwaSBkdmJfY29yZSB2aWRlb2J1ZjJfY29tbW9uIHZpZGVvZGV2
-IG1lZGlhIHZpZGVvYnVmMl92bWFsbG9jIHZpZGVvYnVmMl9tZW1vcHMgZmJ0ZnQoQykgc3lz
-aW1nYmx0IHN5c2ZpbGxyZWN0IHN5c2NvcHlhcmVhIGZiX3N5c19mb3BzIGphbnpfaWNhbjMg
-ZmlyZXdpcmVfbmV0IGZpcmV3aXJlX2NvcmUgY3JjX2l0dV90IHNwaV9zbGF2ZV9zeXN0ZW1f
-Y29udHJvbCBpMmNfbWF0cm94ZmIgaTJjX2FsZ29fYml0DQo+ICBtYXRyb3hmYl9iYXNlIGZi
-IGZiZGV2IG1hdHJveGZiX0RBQzEwNjQgbWF0cm94ZmJfYWNjZWwgY2ZiY29weWFyZWEgY2Zi
-aW1nYmx0IGNmYmZpbGxyZWN0IG1hdHJveGZiX1RpMzAyNiBtYXRyb3hmYl9nNDUwIGc0NTBf
-cGxsIG1hdHJveGZiX21pc2MgbGVkc19ibGlua20gdGlfZGFjNzMxMSBpbnRlbF9zcGlfcGNp
-IGludGVsX3NwaSBzcGlfbm9yIGhpZF9lbGFuIGhpZCBhc3luY190eCByY19jaW5lcmd5XzE0
-MDAgcmNfY29yZSBpbnRlbF9pc2h0cCBreGNqa18xMDEzIGluZHVzdHJpYWxpb190cmlnZ2Vy
-ZWRfYnVmZmVyIGtmaWZvX2J1ZiBjYW5fZGV2IGludGVsX3RoIHNwaV9weGEyeHhfcGxhdGZv
-cm0gcGF0YV9hcnRvcCB2bWVfY2E5MWN4NDIgZ2JfZ2JwaHkoQykgZ3JleWJ1cyhDKSBpbmR1
-c3RyaWFsaW8gbXB0YmFzZSBzdF9kcnYgY21hYyB0dHBjaV9lZXByb20gdmlhX3dkdCBncGlv
-X3hyYTE0MDMgbXRkIGlwdGFibGVfc2VjdXJpdHkgaXB0YWJsZV9yYXcgaXB0YWJsZV9tYW5n
-bGUgaXB0YWJsZV9uYXQgbmZfbmF0IG5mX2Nvbm50cmFjayBuZl9kZWZyYWdfaXB2NiBuZl9k
-ZWZyYWdfaXB2NCBpcHRhYmxlX2ZpbHRlciBicGZpbHRlciBpcDZfdnRpIGlwX3Z0aSBpcF9n
-cmUgaXBpcCBzaXQgdHVubmVsNCBpcF90dW5uZWwgaHNyIHZldGggbmV0ZGV2c2ltIHZ4Y2Fu
-IGJhdG1hbl9hZHYgY2ZnODAyMTEgcmZraWxsIGNobmxfbmV0IGNhaWYgbmxtb24gZHVtbXkg
-dGVhbSBib25kaW5nIHZjYW4gYnJpZGdlIHN0cCBsbGMgaXA2X2dyZSBncmUgaXA2X3R1bm5l
-bCB0dW5uZWw2IHR1biBqb3lkZXYgbW91c2VkZXYgcHBkZXYga3ZtX2ludGVsIGt2bSBpcnFi
-eXBhc3MgY3JjdDEwZGlmX3BjbG11bCBjcmMzMl9wY2xtdWwgY3JjMzJjX2ludGVsIGdoYXNo
-X2NsbXVsbmlfaW50ZWwgYWVzbmlfaW50ZWwgYWVzX3g4Nl82NCBpbnB1dF9sZWRzIGNyeXB0
-b19zaW1kIGNyeXB0ZCBnbHVlX2hlbHBlciBpZGVfcGNpX2dlbmVyaWMgcGlpeCBwc21vdXNl
-DQo+ICBpZGVfY29yZSBzZXJpb19yYXcgYXRhX2dlbmVyaWMgaTJjX3BpaXg0IHBhdGFfYWNw
-aSBwYXJwb3J0X3BjIHBhcnBvcnQgZmxvcHB5IHJ0Y19jbW9zIGludGVsX2FncCBpbnRlbF9n
-dHQgYWdwZ2FydCBzY2hfZnFfY29kZWwgaXBfdGFibGVzIHhfdGFibGVzIHNoYTFfc3NzZTMg
-c2hhMV9nZW5lcmljIGlwdjYgW2xhc3QgdW5sb2FkZWQ6IHNwZWFrdXBdDQo+IER1bXBpbmcg
-ZnRyYWNlIGJ1ZmZlcjoNCj4gICAgKGZ0cmFjZSBidWZmZXIgZW1wdHkpDQo+IENSMjogZmZm
-ZmZiZmZmODM0ZjAwMQ0KPiAtLS1bIGVuZCB0cmFjZSA1YWE3NzJjNzkzZTBlOTcxIF0tLS0N
-Cj4gUklQOiAwMDEwOnN0cmNtcCsweDMxLzB4YTAgbGliL3N0cmluZy5jOjMyOA0KPiBDb2Rl
-OiAwMCAwMCAwMCAwMCBmYyBmZiBkZiA1NSA1MyA0OCA4MyBlYyAwOCBlYiAwYSA4NCBkYiA0
-OCA4OSBlZiA3NCA1YSA0YyA4OSBlNiA0OCA4OSBmOCA0OCA4OSBmYSA0OCA4ZCA2ZiAwMSA0
-OCBjMSBlOCAwMyA4MyBlMiAwNyA8NDI+IDBmIGI2IDA0IDI4IDM4IGQwIDdmIDA0IDg0IGMw
-IDc1IDUwIDQ4IDg5IGYwIDQ4IDg5IGYyIDBmIGI2IDVkDQo+IFJTUDogMDAxODpmZmZmODg4
-MWUwYzU3ODAwIEVGTEFHUzogMDAwMTAyNDYNCj4gUkFYOiAxZmZmZmZmZmY4MzRmMDAxIFJC
-WDogZmZmZmZmZmZjMWE3ODAwMCBSQ1g6IGZmZmZmZmZmODI3Yjk1MDMNCj4gUkRYOiAwMDAw
-MDAwMDAwMDAwMDAwIFJTSTogZmZmZmZmZmZjMWE0MDAwOCBSREk6IGZmZmZmZmZmYzFhNzgw
-MDgNCj4gUkJQOiBmZmZmZmZmZmMxYTc4MDA5IFIwODogZmZmZmZiZmZmNmE5MjE5NSBSMDk6
-IGZmZmZmYmZmZjZhOTIxOTUNCj4gUjEwOiBmZmZmODg4MWUwYzU3OGI4IFIxMTogZmZmZmZi
-ZmZmNmE5MjE5NCBSMTI6IGZmZmZmZmZmYzFhNDAwMDgNCj4gUjEzOiBkZmZmZmMwMDAwMDAw
-MDAwIFIxNDogZmZmZmZmZmZjMWEzZTQ3MCBSMTU6IGZmZmZmZmZmYzFhNDAwMDANCj4gRlM6
-ICAwMDAwN2ZkY2MwMmZmNzAwKDAwMDApIEdTOmZmZmY4ODgxZjczMDAwMDAoMDAwMCkga25s
-R1M6MDAwMDAwMDAwMDAwMDAwMA0KPiBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1Iw
-OiAwMDAwMDAwMDgwMDUwMDMzDQo+IENSMjogZmZmZmZiZmZmODM0ZjAwMSBDUjM6IDAwMDAw
-MDAxYjMxMzQwMDMgQ1I0OiAwMDAwMDAwMDAwNzYwNmUwDQo+IERSMDogMDAwMDAwMDAwMDAw
-MDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAwMDAwMDAwMDAwMDAwDQo+IERS
-MzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBmZjAgRFI3OiAwMDAwMDAw
-MDAwMDAwNDAwDQo+IFBLUlU6IDU1NTU1NTU0DQo+IA0KPiBUaGUgZXJyb3IgaGFuZGluZyBw
-YXRoIG1pc3BsYWNlIHRoZSBjbGVhbnVwIGluIGh3c2ltX2luaXRfbW9kdWxlLA0KPiBzd2l0
-Y2ggdGhlIHR3byBjbGVhbnVwIGZ1bmN0aW9ucyB0byBmaXggYWJvdmUgaXNzdWVzLg0KPiAN
-Cj4gUmVwb3J0ZWQtYnk6IEh1bGsgUm9ib3QgPGh1bGtjaUBodWF3ZWkuY29tPg0KPiBGaXhl
-czogZjI1ZGE1MWZkYzM4ICgiaWVlZTgwMjE1NDogaHdzaW06IGFkZCByZXBsYWNlbWVudCBm
-b3IgZmFrZWxiIikNCj4gU2lnbmVkLW9mZi1ieTogWXVlSGFpYmluZyA8eXVlaGFpYmluZ0Bo
-dWF3ZWkuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2llZWU4MDIxNTQvbWFjODAyMTU0
-X2h3c2ltLmMgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyks
-IDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvaWVlZTgw
-MjE1NC9tYWM4MDIxNTRfaHdzaW0uYyBiL2RyaXZlcnMvbmV0L2llZWU4MDIxNTQvbWFjODAy
-MTU0X2h3c2ltLmMNCj4gaW5kZXggM2I4ODg0Ni4uYzJiNmZmYiAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9uZXQvaWVlZTgwMjE1NC9tYWM4MDIxNTRfaHdzaW0uYw0KPiArKysgYi9kcml2
-ZXJzL25ldC9pZWVlODAyMTU0L21hYzgwMjE1NF9od3NpbS5jDQo+IEBAIC05MTIsOSArOTEy
-LDkgQEAgc3RhdGljIF9faW5pdCBpbnQgaHdzaW1faW5pdF9tb2R1bGUodm9pZCkNCj4gIAly
-ZXR1cm4gMDsNCj4gIA0KPiAgcGxhdGZvcm1fZHJ2Og0KPiAtCWdlbmxfdW5yZWdpc3Rlcl9m
-YW1pbHkoJmh3c2ltX2dlbmxfZmFtaWx5KTsNCj4gLXBsYXRmb3JtX2RldjoNCj4gIAlwbGF0
-Zm9ybV9kZXZpY2VfdW5yZWdpc3RlcihtYWM4MDIxNTRod3NpbV9kZXYpOw0KPiArcGxhdGZv
-cm1fZGV2Og0KPiArCWdlbmxfdW5yZWdpc3Rlcl9mYW1pbHkoJmh3c2ltX2dlbmxfZmFtaWx5
-KTsNCj4gIAlyZXR1cm4gcmM7DQo+ICB9DQo+ICANCj4gDQoNCkNvdWxkIHlvdSBwbGVhc2Ug
-cmV2aWV3IHRoaXMgb2VuIGFuZCB0aGUgb3RoZXIgaWVlZTgwMjE1NF9od3NpbSBmaXggWXVl
-DQpzZW5kPw0KDQpyZWdhcmRzDQpTdGVmYW4gU2NobWlkdA0K
+Hi Srinath,
+
+On 4/12/19 5:13 AM, Srinath Mannam wrote:
+> IPROC host has the limitation that it can use only those address ranges
+> given by dma-ranges property as inbound address. So that the memory
+> address holes in dma-ranges should be reserved to allocate as DMA address.
+> 
+> Inbound address of host accessed by PCIe devices will not be translated
+> before it comes to IOMMU or directly to PE. But the limitation of this
+> host is, access to few address ranges are ignored. So that IOVA ranges
+> for these address ranges have to be reserved.
+> 
+> All allowed address ranges are listed in dma-ranges DT parameter. These
+> address ranges are converted as resource entries and listed in sorted
+> order add added to dma_ranges list of PCI host bridge structure.
+s/add added/and added
+> 
+> Ex:
+> dma-ranges = < \
+>   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
+>   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
+>   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
+> 
+> In the above example of dma-ranges, memory address from
+> 0x0 - 0x80000000,
+> 0x100000000 - 0x800000000,
+> 0x1000000000 - 0x8000000000 and
+> 0x10000000000 - 0xffffffffffffffff.
+> are not allowed to use as inbound addresses.
+s/to use/to be used
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+
+
+> ---
+>  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 43 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index c20fd6b..94ba5c0 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
+>  	return ret;
+>  }
+>  
+> +static int
+> +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
+> +			 struct of_pci_range *range)
+> +{
+> +	struct resource *res;
+> +	struct resource_entry *entry, *tmp;
+> +	struct list_head *head = resources;
+> +
+> +	res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
+> +	if (!res)
+> +		return -ENOMEM;
+> +
+> +	resource_list_for_each_entry(tmp, resources) {
+> +		if (tmp->res->start < range->cpu_addr)
+> +			head = &tmp->node;
+> +	}
+> +
+> +	res->start = range->cpu_addr;
+> +	res->end = res->start + range->size - 1;
+> +
+> +	entry = resource_list_create_entry(res, 0);
+> +	if (!entry)
+> +		return -ENOMEM;
+> +
+> +	entry->offset = res->start - range->cpu_addr;
+> +	resource_list_add(entry, head);
+> +
+> +	return 0;
+> +}
+> +
+>  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+>  {
+> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+>  	struct of_pci_range range;
+>  	struct of_pci_range_parser parser;
+>  	int ret;
+> +	LIST_HEAD(resources);
+>  
+>  	/* Get the dma-ranges from DT */
+>  	ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
+> @@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+>  		return ret;
+>  
+>  	for_each_of_pci_range(&parser, &range) {
+> +		ret = iproc_pcie_add_dma_range(pcie->dev,
+> +					       &resources,
+> +					       &range);
+> +		if (ret)
+> +			goto out;
+>  		/* Each range entry corresponds to an inbound mapping region */
+>  		ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
+>  		if (ret)
+> -			return ret;
+> +			goto out;
+>  	}
+>  
+> +	list_splice_init(&resources, &host->dma_ranges);
+> +
+>  	return 0;
+> +out:
+> +	pci_free_resource_list(&resources);
+> +	return ret;
+>  }
+>  
+>  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+> 
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Thanks
+
+Eric
