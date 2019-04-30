@@ -2,128 +2,136 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F012C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85ACC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC96621655
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731EE2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:09:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556593763;
+	bh=Au13uthtBTxdLXt18wPgrDh4hPRGQEFmSBEnyh8jQW4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nXpP23MQdRHqFH2hxS2sB7TJpVsTNEHH4XL6OPR+7a8hdSVbnSJMSC5dM5gkXva5l
+	 oTdLSJw09T9nLdU/biz7a0oH1aLaIUIg0sdyLWnrVJUQPISZ2peiq3psISpuBmlAun
+	 uS6JdIrj8IXUTr+pOorwGllnNJUoyfvwbJSdBxe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbfD3DJR (ORCPT
+        id S1730077AbfD3DJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 23:09:17 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:37472 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729883AbfD3DJR (ORCPT
+        Mon, 29 Apr 2019 23:09:22 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60789 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729883AbfD3DJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 23:09:17 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hLJ8s-0005zU-Pv; Tue, 30 Apr 2019 03:09:14 +0000
-Date:   Tue, 30 Apr 2019 04:09:14 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCHSET] sorting out RCU-delayed stuff in
- ->destroy_inode()
-Message-ID: <20190430030914.GF23075@ZenIV.linux.org.uk>
-References: <20190416174900.GT2217@ZenIV.linux.org.uk>
- <CAHk-=wh6cSEztastk6-A0HUSLtJT=9W38xMN5ht-OOAnL80jxg@mail.gmail.com>
+        Mon, 29 Apr 2019 23:09:21 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 269D8266A;
+        Mon, 29 Apr 2019 23:09:20 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 29 Apr 2019 23:09:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=rfKadsTflryLW7911DaQh925XQ0k2Bp3gi/G7eAxyJQ=; b=G/Duqu6R
+        IX98r8fGsTHboSiPaGfc+oXz7F7GTHMM+xq5e9jY+x01fnRalMqbv3hYxJYD+uZp
+        In3DEYyoYoQWtxbp7nwkNfxwIzekJplnUFlExEXLK+gw7KtIF585kzwLTEcCGZ++
+        06i8aJw/HpRVmjOrjZ+zcRByTtIlESsm/K8avMuIcAqnKHMqEZZQepONBedgJ86m
+        A7gBb+MrF+Uim8l1IKY6ZYJrysjVpKY0S1Q/GMa3HOeRPYOcXGEtHUUvCI4zAY0K
+        wtxNew6HgyxMWft46wy4hw8mz0Tw8GlU5LZdVhYFzFoI9JUZYgGDk3KA0aqvocjE
+        QNmgcFRnoU8vHg==
+X-ME-Sender: <xms:X7zHXAWpZWfwDdTcRbonp-iw1WBmGAsE95JETzgq3DNQBIAwY8p2ag>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdeikecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
+    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
+    epuddvuddrgeegrddvfedtrddukeeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeeg
+X-ME-Proxy: <xmx:X7zHXAb9EJfgs0IIzDk2InQleLnEpGTHFX44RSA9c2Kmdk9QpI3RLw>
+    <xmx:X7zHXJ5dnerfV3It8K9-H-nx-0rwOSBI3EHpoVHRPzHSZhk54UmYEg>
+    <xmx:X7zHXBzswA71xafmUYrxWnjFSPX09YhVCkksYucpAv_Ur-zrLsfAqw>
+    <xmx:YLzHXNTk8x9g-EuRTTWhzsFNH42LQG0MCSp2jhvFxrvKD5TxSBpgEQ>
+Received: from eros.localdomain (ppp121-44-230-188.bras2.syd2.internode.on.net [121.44.230.188])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 77B05103CB;
+        Mon, 29 Apr 2019 23:09:12 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        "Theodore Ts'o" <tytso@mit.edu>, Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v4 05/15] tools/vm/slabinfo: Add remote node defrag ratio output
+Date:   Tue, 30 Apr 2019 13:07:36 +1000
+Message-Id: <20190430030746.26102-6-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430030746.26102-1-tobin@kernel.org>
+References: <20190430030746.26102-1-tobin@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh6cSEztastk6-A0HUSLtJT=9W38xMN5ht-OOAnL80jxg@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 11:01:16AM -0700, Linus Torvalds wrote:
-> On Tue, Apr 16, 2019 at 10:49 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> >  83 files changed, 241 insertions(+), 516 deletions(-)
-> 
-> I think this single line is pretty convincing on its own. Ignoring
-> docs and fs/inode.c, we have
-> 
->  80 files changed, 190 insertions(+), 494 deletions(-)
-> 
-> IOW, just over 300 lines of boiler plate code removed.
-> 
-> The additions are
-> 
->  - Ten more lines of actual code in fs/inode.c (and that's not
-> actually added complexity, it looks simpler if anything - most of it
-> is the new "i_callback()" helper function)
-> 
->  - 19 lines of doc updates.
-> 
-> So it absolutely looks fine to me.
-> 
-> I only skimmed through the actual filesystem (and one networking)
-> patches, but they looked like trivial conversions to a better
-> interface.
+Add output line for NUMA remote node defrag ratio.
 
-... except that this callback can (and always could) get executed after
-freeing struct super_block.  So we can't just dereference ->i_sb->s_op
-and expect to survive; the table ->s_op pointed to will still be there,
-but ->i_sb might very well have been freed, with all its contents overwritten.
-We need to copy the callback into struct inode itself, unfortunately.
-The following incremental fixes it; I'm going to fold it into the first
-commit in there.
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+---
+ tools/vm/slabinfo.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/filesystems/porting b/Documentation/filesystems/porting
-index 9d80f9e0855e..b8d3ddd8b8db 100644
---- a/Documentation/filesystems/porting
-+++ b/Documentation/filesystems/porting
-@@ -655,3 +655,11 @@ in your dentry operations instead.
- 		* if ->free_inode() is non-NULL, it gets scheduled by call_rcu()
- 		* combination of NULL ->destroy_inode and NULL ->free_inode is
- 		  treated as NULL/free_inode_nonrcu, to preserve the compatibility.
-+
-+	Note that the callback (be it via ->free_inode() or explicit call_rcu()
-+	in ->destroy_inode()) is *NOT* ordered wrt superblock destruction;
-+	as the matter of fact, the superblock and all associated structures
-+	might be already gone.  The filesystem driver is guaranteed to be still
-+	there, but that's it.  Freeing memory in the callback is fine; doing
-+	more than that is possible, but requires a lot of care and is best
-+	avoided.
-diff --git a/fs/inode.c b/fs/inode.c
-index fb45590d284e..855dad43b11d 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -164,6 +164,7 @@ int inode_init_always(struct super_block *sb, struct inode *inode)
- 	inode->i_wb_frn_avg_time = 0;
- 	inode->i_wb_frn_history = 0;
- #endif
-+	inode->free_inode = sb->s_op->free_inode;
+diff --git a/tools/vm/slabinfo.c b/tools/vm/slabinfo.c
+index cbfc56c44c2f..d2c22f9ee2d8 100644
+--- a/tools/vm/slabinfo.c
++++ b/tools/vm/slabinfo.c
+@@ -34,6 +34,7 @@ struct slabinfo {
+ 	unsigned int sanity_checks, slab_size, store_user, trace;
+ 	int order, poison, reclaim_account, red_zone;
+ 	int movable, ctor;
++	int remote_node_defrag_ratio;
+ 	unsigned long partial, objects, slabs, objects_partial, objects_total;
+ 	unsigned long alloc_fastpath, alloc_slowpath;
+ 	unsigned long free_fastpath, free_slowpath;
+@@ -377,6 +378,10 @@ static void slab_numa(struct slabinfo *s, int mode)
+ 	if (skip_zero && !s->slabs)
+ 		return;
  
- 	if (security_inode_alloc(inode))
- 		goto out;
-@@ -211,8 +212,8 @@ EXPORT_SYMBOL(free_inode_nonrcu);
- static void i_callback(struct rcu_head *head)
- {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
--	if (inode->i_sb->s_op->free_inode)
--		inode->i_sb->s_op->free_inode(inode);
-+	if (inode->free_inode)
-+		inode->free_inode(inode);
- 	else
- 		free_inode_nonrcu(inode);
- }
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2e9b9f87caca..5ed6b39e588e 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -718,6 +718,7 @@ struct inode {
- #endif
- 
- 	void			*i_private; /* fs or device private pointer */
-+	void (*free_inode)(struct inode *);
- } __randomize_layout;
- 
- static inline unsigned int i_blocksize(const struct inode *node)
++	if (mode) {
++		printf("\nNUMA remote node defrag ratio: %3d\n",
++		       s->remote_node_defrag_ratio);
++	}
+ 	if (!line) {
+ 		printf("\n%-21s:", mode ? "NUMA nodes" : "Slab");
+ 		for(node = 0; node <= highest_node; node++)
+@@ -1272,6 +1277,8 @@ static void read_slab_dir(void)
+ 			slab->cpu_partial_free = get_obj("cpu_partial_free");
+ 			slab->alloc_node_mismatch = get_obj("alloc_node_mismatch");
+ 			slab->deactivate_bypass = get_obj("deactivate_bypass");
++			slab->remote_node_defrag_ratio =
++					get_obj("remote_node_defrag_ratio");
+ 			chdir("..");
+ 			if (read_slab_obj(slab, "ops")) {
+ 				if (strstr(buffer, "ctor :"))
+-- 
+2.21.0
+
