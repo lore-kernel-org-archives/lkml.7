@@ -2,141 +2,85 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD3EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4F1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABB52075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:40:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="KHaAJM/B"
+	by mail.kernel.org (Postfix) with ESMTP id 88A512075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfD3MkP (ORCPT
+        id S1727600AbfD3Mux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:40:15 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:32046 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbfD3Mix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:38:53 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44th0V1kCTz9vD34;
-        Tue, 30 Apr 2019 14:38:50 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=KHaAJM/B; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id V42lv4lB54r6; Tue, 30 Apr 2019 14:38:50 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44th0V0hwDz9vD30;
-        Tue, 30 Apr 2019 14:38:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556627930; bh=oZo26ga/N5W1sRlZ0takIa9iByo0b9ucIXy3EOdsTD0=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=KHaAJM/Bdnb0m9FjgQ/tJ0FsxQew7/rnD4BxoO4doKbBYfWULxsWeu09YUZxT+sgZ
-         K4l9BSdZfCjnAOo/utin+R6QkGprrrfQMghPUfd8mM7CdzfPZywzoF1BPb2mCs9eww
-         jv2V1NIhJn0q+z5Z5OnZSpzaaZ6BBA7K4XIj1skc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 717DA8B8DF;
-        Tue, 30 Apr 2019 14:38:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id zZGlvv43sQTX; Tue, 30 Apr 2019 14:38:51 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4BDC88B8C2;
-        Tue, 30 Apr 2019 14:38:51 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 27C20666F8; Tue, 30 Apr 2019 12:38:51 +0000 (UTC)
-Message-Id: <d1626649502f7cbbbb3a2b04397c6c7a0ca1d592.1556627571.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1556627571.git.christophe.leroy@c-s.fr>
-References: <cover.1556627571.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 02/16] powerpc/32: move LOAD_MSR_KERNEL() into head_32.h
- and use it
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 30 Apr 2019 12:38:51 +0000 (UTC)
+        Tue, 30 Apr 2019 08:50:53 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50147 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfD3Mux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 08:50:53 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hLSDe-00022T-2M; Tue, 30 Apr 2019 14:50:46 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hLSDb-0001O9-43; Tue, 30 Apr 2019 14:50:43 +0200
+Date:   Tue, 30 Apr 2019 14:50:43 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Chuanhua Han <chuanhua.han@nxp.com>
+Cc:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, festevam@gmail.com, linux-imx@nxp.com,
+        wsa+renesas@sang-engineering.com, u.kleine-koenig@pengutronix.de,
+        eha@deif.com, linux@rempel-privat.de, l.stach@pengutronix.de,
+        peda@axentia.se, sumit.batra@nxp.com
+Subject: Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider I2C_IPGCLK_SEL
+ RCW bit when using ls1046a SoC
+Message-ID: <20190430125043.weqwzim4gpsvtkfe@pengutronix.de>
+References: <20190430044719.30720-1-chuanhua.han@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430044719.30720-1-chuanhua.han@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:47:42 up 42 days, 23:58, 86 users,  load average: 1.11, 1.13,
+ 1.10
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As preparation for using head_32.h for head_40x.S, move
-LOAD_MSR_KERNEL() there and use it to load r10 with MSR_KERNEL value.
+On Tue, Apr 30, 2019 at 12:47:18PM +0800, Chuanhua Han wrote:
+> The current kernel driver does not consider I2C_IPGCLK_SEL (424 bit
+> of RCW) in deciding  i2c_clk_rate in function i2c_imx_set_clk()
+> { 0 Platform clock/4, 1 Platform clock/2}.
+> 
+> When using ls1046a SoC, this populates incorrect value in IBFD register
+> if I2C_IPGCLK_SEL = 0, which generates half of the desired Clock.
+> 
+> Therefore, if ls1046a SoC is used, we need to set the i2c clock
+> according to the corresponding RCW.
 
-In the mean time, this patch modifies it so that it takes into account
-the size of the passed value to determine if 'li' can be used or if
-'lis/ori' is needed instead of using the size of MSR_KERNEL. This is
-done by using gas macro.
+So the clock driver reports the wrong clock. Please fix the clock driver
+then.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/entry_32.S |  9 +--------
- arch/powerpc/kernel/head_32.h  | 15 ++++++++++++++-
- 2 files changed, 15 insertions(+), 9 deletions(-)
+Sascha
 
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 2f3d159c11d7..d0cea3deb86c 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -38,14 +38,7 @@
- #include <asm/barrier.h>
- #include <asm/kup.h>
- 
--/*
-- * MSR_KERNEL is > 0x10000 on 4xx/Book-E since it include MSR_CE.
-- */
--#if MSR_KERNEL >= 0x10000
--#define LOAD_MSR_KERNEL(r, x)	lis r,(x)@h; ori r,r,(x)@l
--#else
--#define LOAD_MSR_KERNEL(r, x)	li r,(x)
--#endif
-+#include "head_32.h"
- 
- /*
-  * Align to 4k in order to ensure that all functions modyfing srr0/srr1
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index 7456e2a45acc..cf3d00844597 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -5,6 +5,19 @@
- #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
- 
- /*
-+ * MSR_KERNEL is > 0x8000 on 4xx/Book-E since it include MSR_CE.
-+ */
-+.macro __LOAD_MSR_KERNEL r, x
-+.if \x >= 0x8000
-+	lis \r, (\x)@h
-+	ori \r, \r, (\x)@l
-+.else
-+	li \r, (\x)
-+.endif
-+.endm
-+#define LOAD_MSR_KERNEL(r, x) __LOAD_MSR_KERNEL r, x
-+
-+/*
-  * Exception entry code.  This code runs with address translation
-  * turned off, i.e. using physical addresses.
-  * We assume sprg3 has the physical address of the current
-@@ -89,7 +102,7 @@
- #define EXC_XFER_TEMPLATE(n, hdlr, trap, copyee, tfer, ret)	\
- 	li	r10,trap;					\
- 	stw	r10,_TRAP(r11);					\
--	li	r10,MSR_KERNEL;					\
-+	LOAD_MSR_KERNEL(r10, MSR_KERNEL);			\
- 	copyee(r10, r9);					\
- 	bl	tfer;						\
- i##n:								\
 -- 
-2.13.3
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
