@@ -2,70 +2,112 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C70C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F58C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8C521734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73EDC20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sWAEJBmm"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=strongbox8@zoho.com header.b="l7eqyrh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfD3PFt (ORCPT
+        id S1726279AbfD3PGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:05:49 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38328 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfD3PFt (ORCPT
+        Tue, 30 Apr 2019 11:06:23 -0400
+Received: from sender-pp-092.zoho.com ([135.84.80.237]:25411 "EHLO
+        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726198AbfD3PGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:05:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0xdy8/6cVPDCTA4KqHYwmMG/mADuOV15e+WMpCce+eQ=; b=sWAEJBmmETqq2/gocj40ak1yU
-        ZpviYJxIK/oPpIjAJwsgyrAs3pEUdTXq1ACOcROYeaS8R/6T6AiR2BN15WFOzgH8CVNVOfOIaSTmd
-        VeESS/wORMxI/dQ6j9U8WA/BF0OKM/keKw1E/qX3oY0W5zE1LBXoDqKiZHgNSljxosL+9zuV0GWJU
-        X/nzjE/5Z37n8Qquzi/sJKTHOD7mqqewb2lZbJuyzemuKl3/tQSG9Waey7oIGHMP9f23UKXOHzqO+
-        14PBU0YwXva41P5/c6kwhwfue7pLWP27TsJ1ErmAM399UoyxE6u+N7/5ZoOvuT9Ek4v92QY9uWzQG
-        GVCL5qXZw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLUKE-0001n4-5K; Tue, 30 Apr 2019 15:05:42 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DEADA29B2FDBB; Tue, 30 Apr 2019 17:05:35 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 17:05:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Perr Zhang <strongbox8@zoho.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, tglx@linutronix.de, stable@vger.kernel.org,
+        Tue, 30 Apr 2019 11:06:21 -0400
+X-Greylist: delayed 2710 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Apr 2019 11:06:21 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1556634062; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=FekgT0yaoJTctRbEqW1SPQP+2EyMyVLnIk+jFPDwuwkRFyZeiaGlVsQcfK6kKGs5srwRz46tPuJTfeBB5ltW72KkBhuFXkzNQDvgSjM0mVBgJQsYo2H8uK5xcvsm+BN4x+HhaLIkMW8hIICe/8VIP2W/sA4cZ34YKBHTmvPHK4I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1556634062; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=K5BzyEqf24wVQe40Lud47ZVAeu3TYSMvcKqwIoHWhsQ=; 
+        b=DZxtfUb3RAvB/+5+saUGnk5PJyXA0E6E8QZK1AbGNJ8xT1J9C0vZFeAtBTt75MDLTllPW37bKv1VppsawEuWWLQvs643BHHMwo/DaRaQYYoVrKXwHyzNgcy7RbX1SAxiJT4asdDvCfAENeo+ETzLSoW3GI5DWi4afJwLgVor4d4=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=strongbox8@zoho.com;
+        dmarc=pass header.from=<strongbox8@zoho.com> header.from=<strongbox8@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:message-id:subject:date:mime-version:content-type; 
+  b=LO7DJBJFTxshes/zPiT1qmQZpcE/5taXzgE75P3UwqIHDKWzcLRxKmA+DeDIx3BgVzKwkYAQqKhB
+    DnMimChn5Do1y1RKMT8yWmhPBC6dp25PwbyQD8SpWbKsEO6wR8xR  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1556634062;
+        s=default; d=zoho.com; i=strongbox8@zoho.com;
+        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        l=1352; bh=K5BzyEqf24wVQe40Lud47ZVAeu3TYSMvcKqwIoHWhsQ=;
+        b=l7eqyrh568GmCaIvp38TDBukNpIyFXmgwrAMPIfQb4aFP3f2HY3vY6ZVZKIb7lIM
+        PMu12LiE/W31YzMWXRANWwGBrC+1HACSfDBaXVT/8K8kbFwAsCLKsldZ41MKX6vv/lm
+        uFHAmaPVWdRJ6IvVHImfQ76dz1xdmDapdp3pEbs8=
+Received: from archlinux.localdomain (180.97.206.46 [180.97.206.46]) by mx.zohomail.com
+        with SMTPS id 1556634059124564.1015564377054; Tue, 30 Apr 2019 07:20:59 -0700 (PDT)
+From:   Perr Zhang <strongbox8@zoho.com>
+To:     pbonzini@redhat.com
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, stable@vger.kernel.org,
         mingo@redhat.com, x86@kernel.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: revert the order of calls in kvm_fast_pio()
-Message-ID: <20190430150535.GK2589@hirez.programming.kicks-ass.net>
-References: <20190430142423.3393-1-strongbox8@zoho.com>
- <20190430143201.GH2589@hirez.programming.kicks-ass.net>
- <20190430145724.GA32170@linux.intel.com>
+Message-ID: <20190430142056.3133-1-strongbox8@zoho.com>
+Subject: [PATCH] KVM: x86: revert the order of calls in kvm_fast_pio()
+Date:   Tue, 30 Apr 2019 22:20:56 +0800
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430145724.GA32170@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 07:57:24AM -0700, Sean Christopherson wrote:
-> There's a more precise fix submitted for this bug[1].  In theory v2
-> already went out, but I still don't see it posted to the KVM list.
-> Either the KVM list or my mail client is being weird.
-> 
-> [1] https://patchwork.kernel.org/patch/10919849/
+In commit 45def77ebf79, the order of function calls in kvm_fast_pio()
+was changed. This causes that the vm(XP,and also XP's iso img) failed
+to boot. This doesn't happen with win10 or ubuntu.
 
-Thanks!
+After revert the order, the vm(XP) succeedes to boot. In addition, the
+change of calls's order of kvm_fast_pio() in commit 45def77ebf79 has no
+obvious reason.
+
+Fixes: 45def77ebf79 ("KVM: x86: update %rip after emulating IO")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Perr Zhang <strongbox8@zoho.com>
+---
+ arch/x86/kvm/x86.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index a0d1fc80ac5a..248753cb94a1 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6610,13 +6610,12 @@ static int kvm_fast_pio_in(struct kvm_vcpu *vcpu, i=
+nt size,
+=20
+ int kvm_fast_pio(struct kvm_vcpu *vcpu, int size, unsigned short port, int=
+ in)
+ {
+-=09int ret;
++=09int ret =3D kvm_skip_emulated_instruction(vcpu);
+=20
+ =09if (in)
+-=09=09ret =3D kvm_fast_pio_in(vcpu, size, port);
++=09=09return kvm_fast_pio_in(vcpu, size, port) && ret;
+ =09else
+-=09=09ret =3D kvm_fast_pio_out(vcpu, size, port);
+-=09return ret && kvm_skip_emulated_instruction(vcpu);
++=09=09return kvm_fast_pio_out(vcpu, size, port) && ret;
+ }
+ EXPORT_SYMBOL_GPL(kvm_fast_pio);
+=20
+--=20
+2.21.0
+
+
+
