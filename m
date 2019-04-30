@@ -2,78 +2,66 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341A8C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F831C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB1E2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:45:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BO36wZjt"
+	by mail.kernel.org (Postfix) with ESMTP id 19E462147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbfD3OpC (ORCPT
+        id S1726839AbfD3Orb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:45:02 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38168 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfD3OpC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:45:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2zy5WWZhUu1HKZQxhEtm3bI8rt8uWeTC5jpNqHHiLhc=; b=BO36wZjt/Xs3KDdltNWtWIRFu
-        RWyGaCRcX78PcToiXOHA4rsfeDot/37zU5kXTBPEX7gHyeylUJsA+4A2f4AhlGTZ4CJ0y1OnykDl3
-        8+Pqz3vcDvF6A0mgfks9Ck0jdBsdNvSyBIMzBguvgNa3IylP633sYKcpUzxLKiY7NL8vmmMkSK3JF
-        7HUVFKN6yPGHP/kALsApiQ8aymr7HIRjbpp5lTX02nNAitp5r7eqXaFnW+yWgOyTd19Oqk+LGmuv3
-        q+91sbldcJ1FBqKDQAip9k77LHFVV33QIvhTTzgx2rKdDZrM72X1oA7z6bh4WVqVBS2eFiWc5oqT9
-        KWzXYV4RA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLU0B-0001gt-4y; Tue, 30 Apr 2019 14:44:59 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E5887236F9E80; Tue, 30 Apr 2019 16:44:57 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 16:44:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>, jack@suse.com
-Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
- current) with fsfreeze (4.19.25-rt16)
-Message-ID: <20190430144457.GJ2589@hirez.programming.kicks-ass.net>
-References: <20190326093421.GA29508@localhost.localdomain>
- <20190419085627.GI4742@localhost.localdomain>
- <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
- <20190430132811.GB2589@hirez.programming.kicks-ass.net>
- <20190430141500.GE23020@redhat.com>
- <20190430144252.GF23020@redhat.com>
+        Tue, 30 Apr 2019 10:47:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34293 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfD3Orb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:47:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 07:47:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="144881740"
+Received: from ruehl-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.47.22])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Apr 2019 07:47:28 -0700
+Date:   Tue, 30 Apr 2019 17:47:27 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        jmorris@namei.org
+Subject: Re: linux-next: build failure after merge of the tpmdd tree
+Message-ID: <20190430144727.GA7901@linux.intel.com>
+References: <20190416130740.7ff9e561@canb.auug.org.au>
+ <20190416153608.GA11353@linux.intel.com>
+ <CACdnJuvat4=kXD6NMnMw5E8M4KB_1nBP6Simi8gBUChdBs7eRw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430144252.GF23020@redhat.com>
+In-Reply-To: <CACdnJuvat4=kXD6NMnMw5E8M4KB_1nBP6Simi8gBUChdBs7eRw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 04:42:53PM +0200, Oleg Nesterov wrote:
-> I have cloned linux-rt-devel.git
+On Thu, Apr 18, 2019 at 12:40:48PM -0700, Matthew Garrett wrote:
+> On Tue, Apr 16, 2019 at 8:36 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> > Matthew, looking at the code I guess the includes are in wrong order
+> > i.e. early_ioremap.h should be included before tpm_eventlog.h. Do you
+> > agree that this is the correct conclusion? I can do the update.
 > 
-> If I understand correctly, in rt rw_semaphore is actually defined in rwsem_rt.h
-> so percpu_rwsem_acquire() should probably do
-> 
-> 	sem->rw_sem.rtmutex.owner = current;
+> Yes, I believe that that's the correct fix.
 
-That'll screw the PI chain (if there is one), right?
+I'll hold  up until the previous flush of patches is in
+security/next-general (bug fixes for v5.1 changes).
+
+/Jarkko
