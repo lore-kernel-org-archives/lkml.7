@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B248EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98167C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810A921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686A220835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625981;
-	bh=XNbZaC2bkVzYwueJFav1qBoTyWkP1EoYo+A+OBXkHqU=;
+	s=default; t=1556625992;
+	bh=2fVrfKPRJDmpuIYu/AVPqgHqNSEtakCjOlU/kwx6aWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9rr0E+g8afLRdWxRTkw3qVY1mxZJPb2LClWYhiTKZM4U3zEF4gpUSsr5RnI39Me7
-	 rYxTMonCyTEBZmESzmwT7CK1fLdJKksU6hUrRX4BlO9TdaYjJELoL/t9DTX/o1d+uZ
-	 KpKPSjRiD2LwT8sWpe7+DIFhRCpal3j0IawVCA3Q=
+	b=wpnW0i+vWCIdwnEVZNx4AOBElC1dqQqr5Z5QnGPf5rqzuYHgU9DRzQommtG7zY8Y2
+	 9VCcaGZD9vsPa28ejb1JWU1VbJPr2wcyO6SftATLo/zCW7vVVk66Qu1eWE+d2m0iBo
+	 Ucf/2yAfkppKeKaAJL3o9PJQPU5veglLoZtDjwmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfD3MGO (ORCPT
+        id S1729309AbfD3MGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728049AbfD3Ll1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:27 -0400
+        id S1727964AbfD3LlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D9EB21743;
-        Tue, 30 Apr 2019 11:41:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7353D21670;
+        Tue, 30 Apr 2019 11:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624486;
-        bh=XNbZaC2bkVzYwueJFav1qBoTyWkP1EoYo+A+OBXkHqU=;
+        s=default; t=1556624470;
+        bh=2fVrfKPRJDmpuIYu/AVPqgHqNSEtakCjOlU/kwx6aWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fe4aaC6ggJi5mxM43q/36xM/QHSzeyNpWYIjHNxDcfDiFAQqAVoFjGuH2BtaxNOSb
-         G2wwKJKoFbdrU7cdhEN1/YTrF1LmSicX3MZzA8Bvp+p9sesMj6I/DIqo1XLxdBjGs+
-         u9fskAtockTtJ7kmR7us8CpK+cHfNMWUMSDbPJBg=
+        b=xI0S1j8CbQfwUQYWj7V4TPCr5nr1xMsN4+rvN2SuS+wtjxypMwjLAvHUZzjrB1B5K
+         LEeKfeX4WJXw2gPQt+dvlbEU7ktF277GkjWj6f6VlQ5Nwz95wkqYBBTGl+S6ktlOzl
+         soTjsOzrDy1/wmlLuiKQaOJ22i6v4MD77RsaOZgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 4.14 12/53] ceph: ensure d_name stability in ceph_dentry_hash()
-Date:   Tue, 30 Apr 2019 13:38:19 +0200
-Message-Id: <20190430113552.650887870@linuxfoundation.org>
+        stable@vger.kernel.org, Amit Cohen <amitc@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 31/41] mlxsw: spectrum: Fix autoneg status in ethtool
+Date:   Tue, 30 Apr 2019 13:38:42 +0200
+Message-Id: <20190430113531.907091349@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
-References: <20190430113549.400132183@linuxfoundation.org>
+In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
+References: <20190430113524.451237916@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,44 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Amit Cohen <amitc@mellanox.com>
 
-commit 76a495d666e5043ffc315695f8241f5e94a98849 upstream.
+[ Upstream commit 151f0dddbbfe4c35c9c5b64873115aafd436af9d ]
 
-Take the d_lock here to ensure that d_name doesn't change.
+If link is down and autoneg is set to on/off, the status in ethtool does
+not change.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+The reason is when the link is down the function returns with zero
+before changing autoneg value.
+
+Move the checking of link state (up/down) to be performed after setting
+autoneg value, in order to be sure that autoneg will change in any case.
+
+Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
+Signed-off-by: Amit Cohen <amitc@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/ceph/dir.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ceph/dir.c
-+++ b/fs/ceph/dir.c
-@@ -1454,6 +1454,7 @@ void ceph_dentry_lru_del(struct dentry *
- unsigned ceph_dentry_hash(struct inode *dir, struct dentry *dn)
- {
- 	struct ceph_inode_info *dci = ceph_inode(dir);
-+	unsigned hash;
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -2059,11 +2059,11 @@ mlxsw_sp_port_set_link_ksettings(struct
+ 	if (err)
+ 		return err;
  
- 	switch (dci->i_dir_layout.dl_dir_hash) {
- 	case 0:	/* for backward compat */
-@@ -1461,8 +1462,11 @@ unsigned ceph_dentry_hash(struct inode *
- 		return dn->d_name.hash;
++	mlxsw_sp_port->link.autoneg = autoneg;
++
+ 	if (!netif_running(dev))
+ 		return 0;
  
- 	default:
--		return ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
-+		spin_lock(&dn->d_lock);
-+		hash = ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
- 				     dn->d_name.name, dn->d_name.len);
-+		spin_unlock(&dn->d_lock);
-+		return hash;
- 	}
- }
+-	mlxsw_sp_port->link.autoneg = autoneg;
+-
+ 	mlxsw_sp_port_admin_status_set(mlxsw_sp_port, false);
+ 	mlxsw_sp_port_admin_status_set(mlxsw_sp_port, true);
  
 
 
