@@ -2,121 +2,124 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73AFC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14343C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8256C2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D912080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="p9ATfaJm"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="F0uIwwoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfD3UoO (ORCPT
+        id S1726744AbfD3Uvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 16:44:14 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41407 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfD3UoN (ORCPT
+        Tue, 30 Apr 2019 16:51:32 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39553 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfD3Uvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 16:44:13 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g8so12209922otl.8;
-        Tue, 30 Apr 2019 13:44:13 -0700 (PDT)
+        Tue, 30 Apr 2019 16:51:32 -0400
+Received: by mail-it1-f195.google.com with SMTP id t200so7048996itf.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 13:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PTV15nJneVdfmyDcOrRVmlbOb/fi8FsOQi10bI3xRQw=;
-        b=p9ATfaJmi5ZNgwSqlP9r7LDOw6tzURlyulmIIU6vapZqDyOudh7DnDErqBzVG9c9SP
-         ReA2XymC4j5Jvi4KB2UhRmUAM68WSUWrUI2GVACGl/hB9qxaG3q9Ecd1vdPXWX7c80F1
-         V7qDxTw2WLTiHuGy5UasIwmBwQBBALpWTqV+WTdzfWNrVRThwW1XYJzpuM7bHEjPFqsR
-         C2j18a21kvPVS78oGX08tjY7OJoHUrzOxskU0hHtehO73nEF7K/wUx69Xs/QdIF8eyLd
-         LwR+VKUVzoVoBCqMHWVf+wczCWsH1TpzwjuzU+2tgb1iqIg773B+4cGOv0Us8ZSXXMtV
-         RXoA==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vjQtX5qzbngzO6WItWUMVIwx0kzAkLppgcgbD0Y95uE=;
+        b=F0uIwwoWKlnBD0zMndyAUgxMQWgstX0DeGWUgyikUtD+ZL9Ef8bN9f0oJWQaWvbvFw
+         85rBa8HLz4CIBild/BejxfpIYzucwPsZm6jNgFcwBaor5feaM/EmRCNpKIO43DZKx8Z9
+         RwbJnPR6SrC7LuwVrwXPZRsPeIPcKimDfH7G3OZm6AFNMPjYVAZfbjoaZpBNYC1+/gzW
+         FCxn8taXvl4WOtg0aS9EwvN9AhMSCgSmg8Mir1WWq1AuBHTLsb0E9rq95fRSubl/25Gm
+         IM3Zq8AI4oezyB5rIGxoW/eLLFOuIs/akYM/TWigLwLLqaIfMEnXr/0NEfNvfYfXwT8I
+         GbPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PTV15nJneVdfmyDcOrRVmlbOb/fi8FsOQi10bI3xRQw=;
-        b=dPKipP+aQsvru9sJd7eMLr9OWnqkxttSOY6CLckM2053HNNDRTJ/kvug+/VV8cPfoo
-         CZO71A9cVoBRNujvqTRvv5+7blmQt/Jc3d1Tv+EnHv/ArKFf4q5cccSkDmcOAxMAtJ9U
-         w00r8KRqGGzZMUz1uTu587bC5UKbYnEupjOeOHY8Cw2SuUNADQ/qZVG9S+e1H6KBd+3l
-         8DylAjCfFkyxE5fBbEuWfGKp9j7kgJbEQNcJ8spy+dh1BMeaWTfcMBx6/nmtHrwrclkd
-         QYYgs4YR6sqAltoiDvn/LSr7+6AfajMmwqrjGRsQotKiFGvTn4/DYR00BRqZ5uwmeX6D
-         vj5g==
-X-Gm-Message-State: APjAAAUT1Nrksi0OU+YEKrzx7YfAvQEzuh8VWw5nKsbynMcQ8DJRXVoI
-        8NLN5mhZwaVUByZbysU4kooHk34oomJGrtfRMr8=
-X-Google-Smtp-Source: APXvYqwXp+++he2rIyQNsyjXebRLLugDsonVUFyzm+I44eP5vPdEPyYcmjJUrYL3Hdexr69kyb4YdSEIjFGG2j9HrQ8=
-X-Received: by 2002:a9d:5e90:: with SMTP id f16mr2035975otl.86.1556657051625;
- Tue, 30 Apr 2019 13:44:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vjQtX5qzbngzO6WItWUMVIwx0kzAkLppgcgbD0Y95uE=;
+        b=PIjW7aXYSRiZ1HfNyaF6Me0hSsZpYWI0I6F1+ZTBRMaS4vcPyUTfFPwy+umXZxc86R
+         Kt3d82+RkKEFY+FxJ0uR0/um3z/kf3neW4H0LJFirakXvFaM2ph29aG+1we49jkurrUT
+         W3jRJfYMH9lkhzNeTK8ioVC+AIb6Ex6yl6dxZeRdm6Aryqj7tuV6Xr7d9Q7/c9VqsL5g
+         Ip30GZBe7KnNum9RnG4Zv6ND8r6bal7HkGhxbWVv4Tqe4GNv6NyZGk5PqykH+dD/GGKc
+         K5P5EEHE8SV187z2Sg4vpCjR1Q+56oSt9pcKAaqs+4ON+JQtVWYBxFRp+ALIBuCTUZCH
+         eRZQ==
+X-Gm-Message-State: APjAAAXia1eljKXxymlo5bdYCbUI7FV7ji+7zpTmpObrou0wW3iqao4k
+        LOekVCpfLyk7DiNzzErUDJBaZA==
+X-Google-Smtp-Source: APXvYqx8LPqX8+1jPVWOhnE83hohCgwnay3/bNio9Sr2ZTQMCvXG1lYnXsfpJOWygz06tzC47v2Dug==
+X-Received: by 2002:a24:7688:: with SMTP id z130mr5167604itb.57.1556657490516;
+        Tue, 30 Apr 2019 13:51:30 -0700 (PDT)
+Received: from viisi.lan (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id v134sm1998052ita.16.2019.04.30.13.51.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 13:51:29 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+To:     sboyd@kernel.org, mturquette@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-clk@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH v4 0/2] clk: add driver for the SiFive FU540 PRCI and PLLs it controls
+Date:   Tue, 30 Apr 2019 13:50:55 -0700
+Message-Id: <20190430205055.25673-1-paul.walmsley@sifive.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190426212112.5624-1-fancer.lancer@gmail.com>
- <20190426212112.5624-2-fancer.lancer@gmail.com> <20190426214631.GV4041@lunn.ch>
- <20190426233511.qnkgz75ag7axt5lp@mobilestation> <f27df721-47aa-a708-aaee-69be53def814@gmail.com>
- <CA+h21hpTRCrD=FxDr=ihDPr+Pdhu6hXT3xcKs47-NZZZ3D9zyg@mail.gmail.com>
- <20190429211225.ce7cspqwvlhwdxv6@mobilestation> <CA+h21hrbrc7NKrdhrEk-t7+atj-EdNfEpmy85XK7dOr4Cyj-ag@mail.gmail.com>
-In-Reply-To: <CA+h21hrbrc7NKrdhrEk-t7+atj-EdNfEpmy85XK7dOr4Cyj-ag@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 30 Apr 2019 22:44:00 +0200
-Message-ID: <CAFBinCC14+b_nnAMLf0RAET440jGMGz2KRheioffjM+-ftifRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] net: phy: realtek: Change TX-delay setting for
- RGMII modes only
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Vladimir,
+clk: add driver for the SiFive FU540 PRCI and PLLs it controls
 
-On Tue, Apr 30, 2019 at 12:37 AM Vladimir Oltean <olteanv@gmail.com> wrote:
-[...]
-> Moreover, RGMII *always* needs clock skew. As a fact, all delays
-> applied on RX and RX, by the PHY, MAC or traces, should always amount
-> to a logical "rgmii-id". There's nothing that needs to be described
-> about that. Everybody knows it.
-thank you for mentioning this - I didn't know about it. I thought that
-the delays have to be added in "some cases" only (without knowing the
-definition of "some cases").
+Add a driver for the SiFive FU540 PRCI IP block, which handles clock and
+some device reset control for the SiFive FU540 chip.  Also add a driver-
+independent library for the Analog Bits Wide-Range PLL (WRPLL), used by
+the PRCI driver to monitor and control the WRPLL instances on the FU540
+chip.
 
-> What Linux gets told through the phy-mode property for RGMII is where
-> there's extra stuff to do, and where there's nothing to do. There are
-> also unwritten rules about whose job it is to apply the clock skew
-> (MAC or PHY).That is 100% configuration and 0% description.
-the phy-mode property is documented here [0] and the rgmii modes have
-a short explanation about the delays.
-that said: the documentation currently ignores the fact that a PCB
-designer might have added a delay
+This fourth version incorporates changes requested by Stephen Boyd
+<sboyd@kernel.org>.  The DT bindings patch has been dropped since
+Stephen has already queued it.
 
-> > Then in accordance with the phy-mode property value MAC and PHY drivers
-> > determine which way the MAC and PHY are connected to each other and how
-> > their settings are supposed to be customized to comply with it. This
-> > interpretation perfectly fits with the "DT is the hardware description"
-> > rule.
-> >
->
-> Most of the phy-mode properties really mean nothing. I changed the
-> phy-mode from "sgmii" to "rgmii" on a PHY binding I had at hand and
-> nothing happened (traffic still runs normally). I think this behavior
-> is 100% within expectation.
-the PHY drivers I know of don't complain if the phy-mode is not supported.
-however, there are MAC drivers which complain in this case, see [1]
-for one example
+This patch series is also available, with the binding documentation
+patch, at:
+
+   https://github.com/sifive/riscv-linux/tree/dev/paulw/prci-v5.1-rc7
+
+Boot-tested on a SiFive HiFive Unleashed board, using BBL and the
+open-source FSBL with a mainline-focused DTB, using the following
+composite test branch:
+
+   https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.1-rc7-experimental
 
 
-Martin
+- Paul
 
+Paul Walmsley (2):
+  clk: analogbits: add Wide-Range PLL library
+  clk: sifive: add a driver for the SiFive FU540 PRCI IP block
 
-[0] https://github.com/torvalds/linux/blob/bf3bd966dfd7d9582f50e9bd08b15922197cd277/Documentation/devicetree/bindings/net/ethernet.txt#L17
-[1] https://github.com/torvalds/linux/blob/bf3bd966dfd7d9582f50e9bd08b15922197cd277/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c#L187
+ MAINTAINERS                                   |   6 +
+ drivers/clk/Kconfig                           |   3 +
+ drivers/clk/Makefile                          |   2 +
+ drivers/clk/analogbits/Kconfig                |   2 +
+ drivers/clk/analogbits/Makefile               |   3 +
+ drivers/clk/analogbits/wrpll-cln28hpc.c       | 364 ++++++++++
+ drivers/clk/sifive/Kconfig                    |  18 +
+ drivers/clk/sifive/Makefile                   |   1 +
+ drivers/clk/sifive/fu540-prci.c               | 630 ++++++++++++++++++
+ include/linux/clk/analogbits-wrpll-cln28hpc.h |  79 +++
+ 10 files changed, 1108 insertions(+)
+ create mode 100644 drivers/clk/analogbits/Kconfig
+ create mode 100644 drivers/clk/analogbits/Makefile
+ create mode 100644 drivers/clk/analogbits/wrpll-cln28hpc.c
+ create mode 100644 drivers/clk/sifive/Kconfig
+ create mode 100644 drivers/clk/sifive/Makefile
+ create mode 100644 drivers/clk/sifive/fu540-prci.c
+ create mode 100644 include/linux/clk/analogbits-wrpll-cln28hpc.h
+
+-- 
+2.20.1
+
