@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE6AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB246C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30045205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF29205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556626091;
-	bh=UhzJsLWRQqqF97PnXv1nCVLIjpwwH475GlR5l98dpBA=;
+	s=default; t=1556626095;
+	bh=YgvIXG6EbYT9zA84oNKUL2APiik8/DsVpRSHkNPcQak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B2ve+EVuae4ep6fyLZTqib53oF8/MoqcBSONtE4dbsrTDWc8BObX3HFfiFHAymV/k
-	 1K4YBWKTKLEcYHXuta4Nrr3Y35MTQryrY6vhJIAuH9Ci03zEqrH59KW94QC/LyMljm
-	 NJGGFYrKBvi5dnkVQAuV2aslGuB1EpkJz4NNjtQU=
+	b=OJ1umordU4ou2jQmqZCH9D3EzzhomjUslQ3ay/vTa+dezNulQxwzLzeAsTPhVQQvf
+	 yGfutJpG9MrHQ0k0zrPmgw2xvitpHiW0XL4BPFYm7dOQELCedDnGiq5PFg2B/HymyB
+	 YuYOy0DOKsmNBxl3DSD41ehXsDUtl1jbRILsZM7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbfD3LkM (ORCPT
+        id S1728301AbfD3LkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbfD3LkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:40:08 -0400
+        id S1728257AbfD3LkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:40:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA13B21670;
-        Tue, 30 Apr 2019 11:40:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 370D721734;
+        Tue, 30 Apr 2019 11:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624408;
-        bh=UhzJsLWRQqqF97PnXv1nCVLIjpwwH475GlR5l98dpBA=;
+        s=default; t=1556624405;
+        bh=YgvIXG6EbYT9zA84oNKUL2APiik8/DsVpRSHkNPcQak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cHxQNvhAtN2JWYxmGLaBJiZ+nlScDmQSmMOVh8hqfv52ruQg5z7DhAK7vX0ND2t0k
-         sHg9aL/TmHED50qfS88fJ+g7wnBceec4qSrgJVD+i2V/fqcZbtN45/llT1cKOPldCU
-         KxLzJuWkBpFH9bns5RYryX+EWu/SZr/t6a86gdwA=
+        b=rhk+UZRJnKbVvz3flR5NN3qOfqfWFuGiq3BhP6J9b7Vta77exXaqMW64HTNUz3EFj
+         qKxDi/e87YNqqNV2/pQFb2tXVdmZtvqHnJt7pdK5Hgowgab+tm4rOj5XJkSizoYF45
+         jgTwt1gHuCJQ8Ut3LLjLvn0B+wXffzyMR3OnzNGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.9 03/41] tracing: Fix a memory leak by early error exit in trace_pid_write()
-Date:   Tue, 30 Apr 2019 13:38:14 +0200
-Message-Id: <20190430113525.093145607@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.9 22/41] intel_th: gth: Fix an off-by-one in output unassigning
+Date:   Tue, 30 Apr 2019 13:38:33 +0200
+Message-Id: <20190430113530.299621071@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -59,52 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 91862cc7867bba4ee5c8fcf0ca2f1d30427b6129 upstream.
+commit 91d3f8a629849968dc91d6ce54f2d46abf4feb7f upstream.
 
-In trace_pid_write(), the buffer for trace parser is allocated through
-kmalloc() in trace_parser_get_init(). Later on, after the buffer is used,
-it is then freed through kfree() in trace_parser_put(). However, it is
-possible that trace_pid_write() is terminated due to unexpected errors,
-e.g., ENOMEM. In that case, the allocated buffer will not be freed, which
-is a memory leak bug.
+Commit 9ed3f22223c3 ("intel_th: Don't reference unassigned outputs")
+fixes a NULL dereference for all masters except the last one ("256+"),
+which keeps the stale pointer after the output driver had been unassigned.
 
-To fix this issue, free the allocated buffer when an error is encountered.
+Fix the off-by-one.
 
-Link: http://lkml.kernel.org/r/1555726979-15633-1-git-send-email-wang6495@umn.edu
-
-Fixes: f4d34a87e9c10 ("tracing: Use pid bitmap instead of a pid array for set_event_pid")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 9ed3f22223c3 ("intel_th: Don't reference unassigned outputs")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/hwtracing/intel_th/gth.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -500,8 +500,10 @@ int trace_pid_write(struct trace_pid_lis
- 	 * not modified.
- 	 */
- 	pid_list = kmalloc(sizeof(*pid_list), GFP_KERNEL);
--	if (!pid_list)
-+	if (!pid_list) {
-+		trace_parser_put(&parser);
- 		return -ENOMEM;
-+	}
- 
- 	pid_list->pid_max = READ_ONCE(pid_max);
- 
-@@ -511,6 +513,7 @@ int trace_pid_write(struct trace_pid_lis
- 
- 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
- 	if (!pid_list->pids) {
-+		trace_parser_put(&parser);
- 		kfree(pid_list);
- 		return -ENOMEM;
- 	}
+--- a/drivers/hwtracing/intel_th/gth.c
++++ b/drivers/hwtracing/intel_th/gth.c
+@@ -605,7 +605,7 @@ static void intel_th_gth_unassign(struct
+ 	othdev->output.port = -1;
+ 	othdev->output.active = false;
+ 	gth->output[port].output = NULL;
+-	for (master = 0; master < TH_CONFIGURABLE_MASTERS; master++)
++	for (master = 0; master <= TH_CONFIGURABLE_MASTERS; master++)
+ 		if (gth->master[master] == port)
+ 			gth->master[master] = -1;
+ 	spin_unlock(&gth->gth_lock);
 
 
