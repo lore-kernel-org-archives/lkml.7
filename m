@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9F6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF2AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F84821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6AD2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625100;
-	bh=QMKhlt3BS7uu0HAFlCN4qcRiUtHGvuEBPQthGHlGW0M=;
+	s=default; t=1556625105;
+	bh=IHeIEEDvmtHD80dmJEzDhiS1z4BpgEo5YUhqc93a+AY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eyefnEeBPw+Y8dGlSmccO2d1w6O4v+m36JyH3XrhvRNd+j8Hw7FvtFpDuXkXL+gPc
-	 v5+KvzEzWBNa6einRYo99CvM6ZKTU4XnwXHywMWfuvEN0ovAeoY0UXef6Mq1okvfFV
-	 Aj8szW5GpCZlCO1bVibpq3y/Ert2Xm9yijvRdEos=
+	b=Lt54OSI+YMfHKud+0LKFhe3p/iDs1OFW4mRFMSFPCOw4aUBOh/jvEHe4YeexFPcTW
+	 c4kyNvEQMINQ0ddqBD3vVwXPR48djVqoBkhetKLD4D2PCe7V/AAQfljTvoyh4nBL3O
+	 mAX8Gdcp4OqZE/4GSLn9PFzQzaHylPO2yC3qtphg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731427AbfD3Lvi (ORCPT
+        id S1731446AbfD3Lvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39460 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730995AbfD3Lvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:36 -0400
+        id S1731431AbfD3Lvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:51:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02F222054F;
-        Tue, 30 Apr 2019 11:51:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D182054F;
+        Tue, 30 Apr 2019 11:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625095;
-        bh=QMKhlt3BS7uu0HAFlCN4qcRiUtHGvuEBPQthGHlGW0M=;
+        s=default; t=1556625100;
+        bh=IHeIEEDvmtHD80dmJEzDhiS1z4BpgEo5YUhqc93a+AY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDjVcFvhxFPTwLc/tr6/aLKmxCDwV2xAes1ooWP0qShVWVIZHSG48wai8Q/rftFjG
-         V13G6rmijzspsPGTMHJ8pxCvy9sXEugsA/QL4qULCjmnnRl5CXwJLRxGwqWYRvGSOC
-         Z2U3zBBqHN9lFJDFoUYbTk9ZTcmXO9JWxO5kmsMo=
+        b=SFDTNw2gaOBgOu3AcCwfnkl553ohoysiTe/60pJHlRLRVmaCXm/g6CVZBe9qwksct
+         af6kFANoLoN6hr3sQzb/EozVa1vBBfpOSQ+4WAKWlAckbt/YJ7r+kWr8gKSpQOMFsd
+         qDziOycDm9tJrSmL1KfniXjeai6a62n4sQwe44JQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        syzbot+55de1eb4975dec156d8f@syzkaller.appspotmail.com
-Subject: [PATCH 5.0 53/89] binder: fix handling of misaligned binder object
-Date:   Tue, 30 Apr 2019 13:38:44 +0200
-Message-Id: <20190430113612.171167211@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8f91bd563bbff230d0ee@syzkaller.appspotmail.com,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.0 55/89] mac80211_hwsim: calculate if_combination.max_interfaces
+Date:   Tue, 30 Apr 2019 13:38:46 +0200
+Message-Id: <20190430113612.254757196@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,58 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 26528be6720bb40bc8844e97ee73a37e530e9c5e upstream.
+commit 45fcef8b727b6f171bc5443e8153181a367d7a15 upstream.
 
-Fixes crash found by syzbot:
-kernel BUG at drivers/android/binder_alloc.c:LINE! (2)
+If we just set this to 2048, and have multiple limits you
+can select from, the total number might run over and cause
+a warning in cfg80211. This doesn't make sense, so we just
+calculate the total max_interfaces now.
 
-Reported-and-tested-by: syzbot+55de1eb4975dec156d8f@syzkaller.appspotmail.com
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: stable <stable@vger.kernel.org> # 5.0, 4.19, 4.14
+Reported-by: syzbot+8f91bd563bbff230d0ee@syzkaller.appspotmail.com
+Fixes: 99e3a44bac37 ("mac80211_hwsim: allow setting iftype support")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder_alloc.c |   18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/net/wireless/mac80211_hwsim.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -959,14 +959,13 @@ enum lru_status binder_alloc_free_page(s
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -2642,7 +2642,7 @@ static int mac80211_hwsim_new_radio(stru
+ 	enum nl80211_band band;
+ 	const struct ieee80211_ops *ops = &mac80211_hwsim_ops;
+ 	struct net *net;
+-	int idx;
++	int idx, i;
+ 	int n_limits = 0;
  
- 	index = page - alloc->pages;
- 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
-+
-+	mm = alloc->vma_vm_mm;
-+	if (!mmget_not_zero(mm))
-+		goto err_mmget;
-+	if (!down_write_trylock(&mm->mmap_sem))
-+		goto err_down_write_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
--	if (vma) {
--		if (!mmget_not_zero(alloc->vma_vm_mm))
--			goto err_mmget;
--		mm = alloc->vma_vm_mm;
--		if (!down_write_trylock(&mm->mmap_sem))
--			goto err_down_write_mmap_sem_failed;
--	}
- 
- 	list_lru_isolate(lru, item);
- 	spin_unlock(lock);
-@@ -979,10 +978,9 @@ enum lru_status binder_alloc_free_page(s
- 			       PAGE_SIZE);
- 
- 		trace_binder_unmap_user_end(alloc, index);
--
--		up_write(&mm->mmap_sem);
--		mmput(mm);
+ 	if (WARN_ON(param->channels > 1 && !param->use_chanctx))
+@@ -2766,12 +2766,23 @@ static int mac80211_hwsim_new_radio(stru
+ 		goto failed_hw;
  	}
-+	up_write(&mm->mmap_sem);
-+	mmput(mm);
  
- 	trace_binder_unmap_kernel_start(alloc, index);
++	data->if_combination.max_interfaces = 0;
++	for (i = 0; i < n_limits; i++)
++		data->if_combination.max_interfaces +=
++			data->if_limits[i].max;
++
+ 	data->if_combination.n_limits = n_limits;
+-	data->if_combination.max_interfaces = 2048;
+ 	data->if_combination.limits = data->if_limits;
  
+-	hw->wiphy->iface_combinations = &data->if_combination;
+-	hw->wiphy->n_iface_combinations = 1;
++	/*
++	 * If we actually were asked to support combinations,
++	 * advertise them - if there's only a single thing like
++	 * only IBSS then don't advertise it as combinations.
++	 */
++	if (data->if_combination.max_interfaces > 1) {
++		hw->wiphy->iface_combinations = &data->if_combination;
++		hw->wiphy->n_iface_combinations = 1;
++	}
+ 
+ 	if (param->ciphers) {
+ 		memcpy(data->ciphers, param->ciphers,
 
 
