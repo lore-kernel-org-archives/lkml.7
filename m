@@ -2,139 +2,150 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46932C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45E5C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D01D21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bOQnutm+"
+	by mail.kernel.org (Postfix) with ESMTP id 9542120652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfD3Pfi (ORCPT
+        id S1726222AbfD3Phm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:35:38 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38748 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfD3Pfi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:35:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xkHmQ5VtLPFk5RCj2nSWg30TnIw2SSbj0nkad1c7W7E=; b=bOQnutm+bB+XMxG3zduAv4jW7
-        znSbbl+5BGbPorr8/ibz5INOWoVxj3R8KryAVGOpi+MvZjoflt9dvB3sz2LtLacGEKb7VtLESUYeG
-        xpJ5vyaOz8NWx3yGMQMdOABuahAZPhGd5TJMOVEBKO4soCdERdpqkwty7T7uxHDcLtbBMWTk3QeeJ
-        QvQ4dUboMm24ewnqZjK93nB95uy6P8M8rllYuaqBYVq5CnZcPUNnt2FPsVgfFQnNLE+26Xk+pTTtM
-        Zc4hm+xLMyGpzZ8gG3yzVNNXYwS2ntqc0mWbUdUvaoxJzwWyfa0MOAXUfmr8rxaipa3GCioOpDJR5
-        8Y+W9uNHw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLUn3-0001zI-Lf; Tue, 30 Apr 2019 15:35:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 22100236F9E80; Tue, 30 Apr 2019 17:35:28 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 17:35:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yuyang Du <duyuyang@gmail.com>
-Cc:     will.deacon@arm.com, mingo@kernel.org, bvanassche@acm.org,
-        ming.lei@redhat.com, frederic@kernel.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH 24/28] locking/lockdep: Remove !dir in lock irq usage
- check
-Message-ID: <20190430153528.GA2650@hirez.programming.kicks-ass.net>
-References: <20190424101934.51535-1-duyuyang@gmail.com>
- <20190424101934.51535-25-duyuyang@gmail.com>
- <20190425200336.GY12232@hirez.programming.kicks-ass.net>
+        Tue, 30 Apr 2019 11:37:42 -0400
+Received: from mga14.intel.com ([192.55.52.115]:56135 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfD3Phl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:37:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 08:37:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="153608978"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Apr 2019 08:37:38 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hLUp6-0007FV-Ki; Tue, 30 Apr 2019 18:37:36 +0300
+Date:   Tue, 30 Apr 2019 18:37:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     linux-serial@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] serial: 8250: Add support for using platform_device
+ resources
+Message-ID: <20190430153736.GL9224@smile.fi.intel.com>
+References: <20190430140416.4707-1-esben@geanix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425200336.GY12232@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190430140416.4707-1-esben@geanix.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:03:36PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 24, 2019 at 06:19:30PM +0800, Yuyang Du wrote:
-> > In mark_lock_irq(), the following checks are performed:
-> > 
-> >    ----------------------------------
-> >   |   ->      | unsafe | read unsafe |
-> >   |----------------------------------|
-> >   | safe      |  F  B  |    F* B*    |
-> >   |----------------------------------|
-> >   | read safe |  F? B* |      -      |
-> >    ----------------------------------
-> > 
-> > Where:
-> > F: check_usage_forwards
-> > B: check_usage_backwards
-> > *: check enabled by STRICT_READ_CHECKS
-> > ?: check enabled by the !dir condition
-> > 
-> > From checking point of view, the special F? case does not make sense,
-> > whereas it perhaps is made for peroformance concern. As later patch will
-> > address this issue, remove this exception, which makes the checks
-> > consistent later.
-> > 
-> > With STRICT_READ_CHECKS = 1 which is default, there is no functional
-> > change.
+On Tue, Apr 30, 2019 at 04:04:13PM +0200, Esben Haabendal wrote:
+> Allow getting memory resource (mapbase or iobase) as well as irq from
+> platform_device resources.
 > 
-> Oh man.. thinking required and it is way late.. anyway this whole read
-> stuff made me remember we had a patch set on readlocks last year.
+> The UPF_DEV_RESOURCES flag must be set for devices where platform_device
+> resources are to be used.  When not set, driver behaves as before.
 > 
->   https://lkml.kernel.org/r/20180411135110.9217-1-boqun.feng@gmail.com
+> This allows use of the serial8250 driver together with devices with
+> resources added by platform_device_add_resources(), such as mfd child
+> devices added with mfd_add_devices().
 > 
-> I remember reviewing that a few times and then it dropped on the floor,
-> probably because Spectre crap or something sucked up all my time again :/
 
-So if we look at Boqun's patches (as posted, I haven't looked at his
-github, but I'm assuming this hasn't changed with the 'Shared' state),
-we'll find he'll only does either 1 backward or 1 foward search (which
-is already an improvement over the current state).
+> Remaining platform_data fields (other than mapbase, iobase, mapsize and
+> irq) are used just as before.  Note
 
-His mark_lock_irq() looks like:
+Note what?
 
-static int
-mark_lock_irq(struct task_struct *curr, struct *held_lock *this,
-		enum lock_usage_bit new_bit)
-{
-	int excl_bit = exclusive_bit(new_bit);
+> +static int serial8250_probe_resources(struct platform_device *pdev,
+> +				      unsigned int num,
+> +				      struct plat_serial8250_port *p,
+> +				      struct uart_8250_port *uart)
+> +{
+> +	struct resource *r;
+> +	int irq;
+> +
+> +	switch (p->iotype) {
+> +	case UPIO_AU:
+> +	case UPIO_TSI:
+> +	case UPIO_MEM32:
+> +	case UPIO_MEM32BE:
+> +	case UPIO_MEM16:
+> +	case UPIO_MEM:
+> +		r = platform_get_resource(pdev, IORESOURCE_MEM, num);
+> +		if (!r)
+> +			return -ENODEV;
+> +		uart->port.mapbase = r->start;
+> +		uart->port.mapsize = resource_size(r);
+> +		uart->port.flags |= UPF_IOREMAP;
+> +		break;
+> +	case UPIO_HUB6:
+> +	case UPIO_PORT:
+> +		r = platform_get_resource(pdev, IORESOURCE_IO, num);
+> +		if (!r)
+> +			return -ENODEV;
+> +		uart->port.iobase = r->start;
+> +		uart->port.mapsize = resource_size(r);
+> +		break;
+> +	}
+> +
+> +	irq = platform_get_irq(pdev, num);
+> +	if (irq == -ENXIO)
+> +		uart->port.irq = 0; /* no interrupt -> use polling */
+> +	else if (irq < 0)
+> +		return irq;
+> +	uart->port.irq = irq;
+> +
+> +	return 0;
+> +}
 
-+       if (new_bit & 2) {
-+               /*
-+                * mark ENABLED has to look backwards -- to ensure no dependee
-+                * has USED_IN state, which, again, would allow recursion
-+                * deadlocks.
-+                */
-+               if (!check_usage_backwards(curr, this, new_bit, excl_bit))
-			return 0;
-+       } else {
-+               /*
-+                * mark USED_IN has to look forwards -- to ensure no dependency
-+                * has ENABLED state, which would allow recursion deadlocks.
-+                */
-+               if (!check_usage_forwards(curr, this, new_bit, excl_bit))
-			return 0;
-	}
+Hmm... Currently it's done inside individual port drivers, like 8250_dw.c.
+Each of the drivers can do it differently, for example 8250_lpss.c or
+8250_pnp.c.
 
-	return 1;
-}
+> +				if (!(port->flags & UPF_DEV_RESOURCES))
+> +					release_mem_region(port->mapbase, size);
 
-Where '& 2' would read '& LOCK_USAGE_DIR_MASK' in the current code.
+This is again same issue. The parent should not request resource it doesn't use.
 
-Now, I'm thinking you're proposing to replace the backward search for
-USED_IN/safe with your reachable-safe state, which, if done on his
-'strong' links, should still work.
+I think I understand what is a confusion here.
 
-That is; I _think_ the two patch-sets are not in conceptual conflict.
+For the IO resources we have two operations:
+- mapping / re-mapping (may be shared)
+- requesting (exclusive)
 
-Of course; I could have missed something; I've just read both patchsets
-again, and it's a bit much :-)
+In the parenthesis I put a level of access to it. While many device drivers can
+*share* same resource (mapped or unmapped), the only one can actually request
+it.
+
+So, the parent can take an slice resources as it would be appropriated, but not
+requesting them.
+
+OTOH, it's possible to have a (weird) MFD case where parent *requested*
+resources, and *all* of its children are aware of that.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
