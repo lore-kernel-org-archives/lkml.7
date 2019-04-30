@@ -4,51 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43D6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88701C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD2721670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58FDE21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625258;
-	bh=sSz3YWg6ZqSDJ7IxTSRpTLrK3Rw0qZCXM/y7vDBgX5w=;
+	s=default; t=1556625276;
+	bh=qbLCJNg0D11LxC1eJ3fp26o5Cig2xtZy+vtQ0WHfRbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HxbGUQKrPezF4VEFMxTQiiUjfM+xdA63tteCPpmkq6Im2MvNJGdKCPBXL2SYnWXPl
-	 NQ4jzzFai7hbToOYbmN+fZjjj1z3pUByMWyvChxlEcT7Mv0JT1Q/fz5aNa8FcYdHch
-	 VsSBDoyMILSQyvztNRQ1tmAkgW2ej5c+/GdDRh+Q=
+	b=v2Uk7HpZWDe/3PuaTbf0U06xeVqeZUbQnxb7HFroZlnRsBlgIgoBYu1iAnbnDFyI2
+	 TxZXL2xxKuhOZYg4tYTmeZLj+Sd6joAQmb22967leuyuA6C2djGisuW4bW9JaqzRxK
+	 ZFGZRT8zuJj244tBJJ4BpkTGNHRHx+iusEmPtSPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbfD3LyR (ORCPT
+        id S1731130AbfD3LuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37238 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731171AbfD3LuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:50:17 -0400
+        id S1731117AbfD3LuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D37272054F;
-        Tue, 30 Apr 2019 11:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3419221707;
+        Tue, 30 Apr 2019 11:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625017;
-        bh=sSz3YWg6ZqSDJ7IxTSRpTLrK3Rw0qZCXM/y7vDBgX5w=;
+        s=default; t=1556625001;
+        bh=qbLCJNg0D11LxC1eJ3fp26o5Cig2xtZy+vtQ0WHfRbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jpsWQKf7F58Zl+03V7UEi0XwRql2moih51uhV6m3AgRiOvVVv4/TqFTZrQdOxVyaK
-         ClSTwGxWr+zBi4J7e9FLCtu0OSh0bUV+5MM1Z3PklXnPXZeV3t0DKESe6Fqzu+iDL7
-         9wiZ31o6Hn1TW9geGLBuEMnHeIOy1wtnvSBwev6k=
+        b=kFL7VuMIMVOcY2Df4X8qBixtIJmoZGAL7UgkeT7oYjuoaqS0UjKtV2OVX7WbTJd6R
+         h/4eZONrdSjPgUnhF8QgFEdfGrAul4RRaL4v7Mn/FyXvhIoh0UFGBsHfelA3x3JvE1
+         diRmbgv3n1uCzdpmC15qlg4+1Y/C7DIwUlKI3710=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+de00a87b8644a582ae79@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 60/89] tipc: check link name with right length in tipc_nl_compat_link_set
-Date:   Tue, 30 Apr 2019 13:38:51 +0200
-Message-Id: <20190430113612.502268974@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.0 19/89] trace: Fix preempt_enable_no_resched() abuse
+Date:   Tue, 30 Apr 2019 13:38:10 +0200
+Message-Id: <20190430113610.964519574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -61,41 +71,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 8c63bf9ab4be8b83bd8c34aacfd2f1d2c8901c8a upstream.
+commit d6097c9e4454adf1f8f2c9547c2fa6060d55d952 upstream.
 
-A similar issue as fixed by Patch "tipc: check bearer name with right
-length in tipc_nl_compat_bearer_enable" was also found by syzbot in
-tipc_nl_compat_link_set().
+Unless the very next line is schedule(), or implies it, one must not use
+preempt_enable_no_resched(). It can cause a preemption to go missing and
+thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
 
-The length to check with should be 'TLV_GET_DATA_LEN(msg->req) -
-offsetof(struct tipc_link_config, name)'.
+Link: http://lkml.kernel.org/r/20190423200318.GY14281@hirez.programming.kicks-ass.net
 
-Reported-by: syzbot+de00a87b8644a582ae79@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: the arch/x86 maintainers <x86@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: huang ying <huang.ying.caritas@gmail.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: stable@vger.kernel.org
+Fixes: 2c2d7329d8af ("tracing/ftrace: use preempt_enable_no_resched_notrace in ring_buffer_time_stamp()")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/tipc/netlink_compat.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/trace/ring_buffer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -777,7 +777,12 @@ static int tipc_nl_compat_link_set(struc
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -776,7 +776,7 @@ u64 ring_buffer_time_stamp(struct ring_b
  
- 	lc = (struct tipc_link_config *)TLV_DATA(msg->req);
+ 	preempt_disable_notrace();
+ 	time = rb_time_stamp(buffer);
+-	preempt_enable_no_resched_notrace();
++	preempt_enable_notrace();
  
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	len -= offsetof(struct tipc_link_config, name);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(lc->name, len))
- 		return -EINVAL;
- 
+ 	return time;
+ }
 
 
