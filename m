@@ -4,57 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386ADC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4ACC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A4D21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8122177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624710;
-	bh=3Tq88hR5hv0Ak6dU50bZT9K8PkyxvQU6ZbbPLIXGtXg=;
+	s=default; t=1556624713;
+	bh=1E80f6C6KKklPmtdQ4vXPcXRkfI+cNj4GBx96Yoj1oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eNVtVDbYfoEgJPelWbVijw3/4tTTEPJNlv0RUPrHfQCqtbRm48kDjuadEP12bqM/l
-	 x+Y7qEAJSNhvAQsLjv1hNPEfRO9ECcLhVgq3hWRVgvt8nAOmcQdRppBtvCSRfi0wRd
-	 tAVTUWX7Y5HZ90WuKG0tjQIxlp0fnrXTJEMF0TmA=
+	b=ypMBHViHvKU2iOruJAyNOItZddnGGcVix8zTeldowUGTvRqhBxEmgXRqm2QXK0fAi
+	 Q5WjC9jL7YZaNLcuv7u+C0PIAAEJ4fsXp8o1x8BdbD1PPrTdGnOSJazwOY1Vpq8xrW
+	 yiK5+cZ9deWJ5Jq4QTFV9y/eFoSFGreZL5wTxXn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbfD3LpJ (ORCPT
+        id S1730356AbfD3LpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57082 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbfD3LpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:06 -0400
+        id S1730342AbfD3LpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1668921670;
-        Tue, 30 Apr 2019 11:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 976AB21707;
+        Tue, 30 Apr 2019 11:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624705;
-        bh=3Tq88hR5hv0Ak6dU50bZT9K8PkyxvQU6ZbbPLIXGtXg=;
+        s=default; t=1556624708;
+        bh=1E80f6C6KKklPmtdQ4vXPcXRkfI+cNj4GBx96Yoj1oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PxGDzFW5kJzikREv3aVuKWr4mluFGhdD6FbxxHOdQCCuPXTVk4EElg/IMHzg7ZswA
-         lxHbYvYNtwBFOwBhgcRVj3PVaZqMJnNAuJinslth8qcxxvKA28ArtSZexM0OpSZsCB
-         mDGeuvDEhlQZBulMGRy+CBMELhinOWF+vN5ym2ew=
+        b=oxk1fR9TqOAhS2Sp2NpM+bq7jTajS3hj+anlS4QwyN3l4V+z3JdWEnjA9eam7+E9Z
+         FFvNgYxIBKN4t9WHYWZOiJOQYhVxUsVy1uNWZe4N9VZoqSwf1kRQfcLB1sWMKuWRiJ
+         8gJr6vZcgkLUbjb3JzStKMNvMk7UsKLtAivnELs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harry Pan <harry.pan@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, gs0622@gmail.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 040/100] perf/x86/intel: Update KBL Package C-state events to also include PC8/PC9/PC10 counters
-Date:   Tue, 30 Apr 2019 13:38:09 +0200
-Message-Id: <20190430113611.050594851@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 041/100] Input: synaptics-rmi4 - write config register values to the right offset
+Date:   Tue, 30 Apr 2019 13:38:10 +0200
+Message-Id: <20190430113611.080959564@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -67,70 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harry Pan <harry.pan@intel.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-commit 82c99f7a81f28f8c1be5f701c8377d14c4075b10 upstream.
+commit 3a349763cf11e63534b8f2d302f2d0c790566497 upstream.
 
-Kaby Lake (and Coffee Lake) has PC8/PC9/PC10 residency counters.
+Currently any changed config register values don't take effect, as the
+function to write them back is called with the wrong register offset.
 
-This patch updates the list of Kaby/Coffee Lake PMU event counters
-from the snb_cstates[] list of events to the hswult_cstates[]
-list of events, which keeps all previously supported events and
-also adds the PKG_C8, PKG_C9 and PKG_C10 residency counters.
-
-This allows user space tools to profile them through the perf interface.
-
-Signed-off-by: Harry Pan <harry.pan@intel.com>
-Cc: <stable@vger.kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: gs0622@gmail.com
-Link: http://lkml.kernel.org/r/20190424145033.1924-1-harry.pan@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: ff8f83708b3e (Input: synaptics-rmi4 - add support for 2D
+                     sensors and F11)
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/intel/cstate.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/input/rmi4/rmi_f11.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -76,15 +76,15 @@
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C8_RESIDENCY:  Package C8 Residency Counter.
-  *			       perf code: 0x04
-- *			       Available model: HSW ULT,CNL
-+ *			       Available model: HSW ULT,KBL,CNL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C9_RESIDENCY:  Package C9 Residency Counter.
-  *			       perf code: 0x05
-- *			       Available model: HSW ULT,CNL
-+ *			       Available model: HSW ULT,KBL,CNL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
-  *			       perf code: 0x06
-- *			       Available model: HSW ULT,GLM,CNL
-+ *			       Available model: HSW ULT,KBL,GLM,CNL
-  *			       Scope: Package (physical package)
-  *
-  */
-@@ -572,8 +572,8 @@ static const struct x86_cpu_id intel_cst
- 	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_DESKTOP, snb_cstates),
- 	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X, snb_cstates),
+--- a/drivers/input/rmi4/rmi_f11.c
++++ b/drivers/input/rmi4/rmi_f11.c
+@@ -1230,7 +1230,7 @@ static int rmi_f11_initialize(struct rmi
+ 	}
  
--	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE,  snb_cstates),
--	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_DESKTOP, snb_cstates),
-+	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE,  hswult_cstates),
-+	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_DESKTOP, hswult_cstates),
- 
- 	X86_CSTATES_MODEL(INTEL_FAM6_CANNONLAKE_MOBILE, cnl_cstates),
+ 	rc = f11_write_control_regs(fn, &f11->sens_query,
+-			   &f11->dev_controls, fn->fd.query_base_addr);
++			   &f11->dev_controls, fn->fd.control_base_addr);
+ 	if (rc)
+ 		dev_warn(&fn->dev, "Failed to write control registers\n");
  
 
 
