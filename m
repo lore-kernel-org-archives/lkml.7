@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7AEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA96C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC1E21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C8521707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfD3OgI (ORCPT
+        id S1727330AbfD3OgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:36:08 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:51696 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD3OgH (ORCPT
+        Tue, 30 Apr 2019 10:36:09 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:46336 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfD3OgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:36:07 -0400
-Received: by mail-it1-f198.google.com with SMTP id f196so2515100itf.1
+        Tue, 30 Apr 2019 10:36:08 -0400
+Received: by mail-io1-f69.google.com with SMTP id i84so11532717iof.13
         for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 07:36:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VMgx+6iCouIm6T5SwvF74+0r6jbRUy69gSjvtJBIKSQ=;
-        b=O+Hx8olv5WFCjqS0w6CDqo7GcXIep5FO4QHL7RfviTiVF2CNeuJELKHhSN52BuZ3Ny
-         emL8dNOQ2XLADqRyl3nH+iQQVTE7ERnL5O4YUnXo1bxjNv8ZeLj1JvC7UQWKdzCuCgzT
-         qc88QG7p46/VC12rMgTP/PcZUMesS0yEUM5DEw4+FUYRLJcYzJgxXVCHDty8M5/fIFAS
-         cGXV7YF4ejUZXiHnNSDQ3q8j0rP1a4TMaq0FgBN1Q/DYNVGzyyf4MXvnpBZKGPuRvbdO
-         ww0Z9Cax8YacXWUj7/LfRORU6dnASgIqq6WpPCrM4X3GuZYnu6hZfHoMcYIplFi/0AiY
-         EJcA==
-X-Gm-Message-State: APjAAAXdAgDrskC7Cmcu8Xa70uOxj8OYFsMiUzZmetViHaRaChbM8bDi
-        8PosLBBpRy2CbA+cjwDWgH6Kk/CWoO9VzW1WyBrLih8eJqss
-X-Google-Smtp-Source: APXvYqww/ewYXb9i3zqf03E6NoKS0d1c1UmjiyQxO4HoOQO7SuLXd192xFmZI/8UqdLnSUPSIFEXRwaZjXMr0X+UDcLq/KkO++/U
+        bh=+ObM0ZbbX8Ar/PY4hTa2EHRmMAyzn4hENSqLrm5v8YI=;
+        b=ldxxAew2YxV7ddEh/7GtdTOqF4uKjkyhctgnycDTEn8booucM+hiq5pX5FtPvVtuFF
+         zc3DUbEnWVkRZzUipXtmWyBYGQTl1xKc8GL+OR6nBqt1Upxt/lPqOCMPPgANChPKpMYd
+         VFPk3U973jj6x94xKxvG6UhRBGdXrJYj7XlKEibkp5h1qGEucaT/1sUOElhA47yG3437
+         h9zrLgFoKkjFq/njfuB5VeO4EYO2c43YeDRWthw1viU1BL1S8Wc460magm8ILNROb+lN
+         TZEibv4Hrd5+PCCnDDHJdPo619F+yPWQCi0uh34AzKG6rXtz90G0MpPLTQ6xDJtUXJAs
+         xLIg==
+X-Gm-Message-State: APjAAAW3X/rNSgGJt6ewh/oaz2pSBeyaT3Vew2dB+IhMljKdDAYOkRPu
+        7ld0VFgJuTLFwiAtzrdD6VO8M1Q6Ow81E4ZxNY49e2tVE1hY
+X-Google-Smtp-Source: APXvYqx+6xtWkB+45OmZD4MPGF7/9kcaqRkmsnDQdmsowkLlSmod3wncUp7EV+maJYO1BWdp8stDflu+PXy3Pn4BO8VBeZoRFLvR
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:9c2:: with SMTP id i2mr3941634itl.80.1556634967014;
+X-Received: by 2002:a24:6fc4:: with SMTP id x187mr4035363itb.122.1556634967514;
  Tue, 30 Apr 2019 07:36:07 -0700 (PDT)
 Date:   Tue, 30 Apr 2019 07:36:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004101370587c052fb@google.com>
-Subject: WARNING: Support for this device (Terratec Grabster AV400) is experimental.
-From:   syzbot <syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com>
+Message-ID: <00000000000048aa750587c052ef@google.com>
+Subject: WARNING: Detected a wedged cx25840 chip; the device will not work.
+From:   syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
 To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
@@ -58,28 +58,31 @@ syzbot found the following crash on:
 
 HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=141ca62d200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12df67c3200000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=af8f8d2ac0d39b0ed3a0
+dashboard link: https://syzkaller.appspot.com/bug?extid=170a86bf206dd2c6217e
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1405bedd200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ce3bbb200000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108a28f3200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145d8a2d200000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
+Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
 
-usb 1-1: New USB device found, idVendor=0ccd, idProduct=0039, bcdDevice=  
-d.3c
 usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-pvrusb2: Hardware description: Terratec Grabster AV400
-pvrusb2: **********
-pvrusb2: WARNING: Support for this device (Terratec Grabster AV400) is  
-experimental.
-pvrusb2: Important functionality might not be entirely working.
-pvrusb2: Please consider contacting the driver author to help with further  
-stabilization of the driver.
-pvrusb2: **********
+pvrusb2: Hardware description: Gotview USB 2.0 DVD 2
+pvrusb2: Invalid write control endpoint
+usb 1-1: USB disconnect, device number 2
+pvrusb2: Invalid write control endpoint
+pvrusb2: WARNING: Detected a wedged cx25840 chip; the device will not work.
+pvrusb2: WARNING: Try power cycling the pvrusb2 device.
+pvrusb2: WARNING: Disabling further access to the device to prevent other  
+foul-ups.
+pvrusb2: Device being rendered inoperable
+cx25840 0-0044: Unable to detect h/w, assuming cx23887
+cx25840 0-0044: cx23887 A/V decoder found @ 0x88 (pvrusb2_a)
+pvrusb2: Attached sub-driver cx25840
+pvrusb2: Attempted to execute control transfer when device not ok
+pvrusb2: Attempted to execute control transfer when device not ok
 
 
 ---
