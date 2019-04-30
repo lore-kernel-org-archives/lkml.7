@@ -2,108 +2,109 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC77C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C825C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B900521707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C1C21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PsDooYhY"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="lKJI4XL0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfD3KOu (ORCPT
+        id S1727093AbfD3KQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:14:50 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57014 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfD3KOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:14:49 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UAE9LQ010243;
-        Tue, 30 Apr 2019 05:14:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556619249;
-        bh=eIoEDjTeKYsgA/SaW4oqLId+V2Mf5KkOSQteCjwn3nc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PsDooYhYWU0+h4oaYmQ2fIjGdO57I1gyWbVuH6FmR2qXRiw0OAqYv0E6dBIj4VM0R
-         QWqNr2v/ptpVTla/bLuVllcY5hrK/B86NgVjmdIZGWte2xkQbNjg9WNBcFQokLyEH6
-         HmRamBP1QUg1pdQlmpBv+CNebiwRBp/2AjoizAbU=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UAE9Kj022760
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 05:14:09 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 05:14:09 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 05:14:09 -0500
-Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0YG085082;
-        Tue, 30 Apr 2019 05:14:05 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>
-CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
-        <linus.walleij@linaro.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH v8 14/14] arm64: arch_k3: Enable interrupt controller drivers
-Date:   Tue, 30 Apr 2019 15:42:30 +0530
-Message-ID: <20190430101230.21794-15-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
-References: <20190430101230.21794-1-lokeshvutla@ti.com>
+        Tue, 30 Apr 2019 06:16:15 -0400
+Received: from mail-eopbgr50047.outbound.protection.outlook.com ([40.107.5.47]:63987
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726145AbfD3KQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 06:16:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qVBYl4adfJw9avAY7gAeEW3zKUJvaL6L7QfhAggpSOY=;
+ b=lKJI4XL0Vi8uSs+HXV6XTjqSqb5BQEAosh1M6a2ID1B+MI9lZ7DjN7g8PqLP7RHHJSStIQl01E6+1Mu5GMC8TXxhcTNdpTmuuBE63f3vM3Is6Pdn/4ea3X15tmrxVn/SvNgIwLdCuUwBvEZVGuVR0YWzA1u4Wzr/RqkhZzQ3Ims=
+Received: from AM0PR05MB6497.eurprd05.prod.outlook.com (20.179.34.15) by
+ AM0PR05MB5668.eurprd05.prod.outlook.com (20.178.116.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Tue, 30 Apr 2019 10:16:10 +0000
+Received: from AM0PR05MB6497.eurprd05.prod.outlook.com
+ ([fe80::151:4fc5:f798:6ef1]) by AM0PR05MB6497.eurprd05.prod.outlook.com
+ ([fe80::151:4fc5:f798:6ef1%5]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
+ 10:16:10 +0000
+From:   Ido Schimmel <idosch@mellanox.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] mlxsw: Remove obsolete dependency on THERMAL=m
+Thread-Topic: [PATCH -next] mlxsw: Remove obsolete dependency on THERMAL=m
+Thread-Index: AQHU/zcWbVmtSGdyfka9Vz2WRuHnz6ZUfQUA
+Date:   Tue, 30 Apr 2019 10:16:10 +0000
+Message-ID: <20190430101608.GB6343@splinter>
+References: <20190430092832.7376-1-geert+renesas@glider.be>
+In-Reply-To: <20190430092832.7376-1-geert+renesas@glider.be>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM4PR07CA0026.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::39) To AM0PR05MB6497.eurprd05.prod.outlook.com
+ (2603:10a6:208:13f::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=idosch@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9633eb7e-cd1b-4f15-d57e-08d6cd54dde1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5668;
+x-ms-traffictypediagnostic: AM0PR05MB5668:
+x-microsoft-antispam-prvs: <AM0PR05MB5668EFFDF1B6CF8DCBAD0B42BF3A0@AM0PR05MB5668.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 00235A1EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(366004)(136003)(396003)(376002)(346002)(39860400002)(199004)(189003)(6116002)(11346002)(66066001)(66446008)(6486002)(66946007)(102836004)(476003)(86362001)(3846002)(256004)(26005)(6506007)(186003)(71200400001)(73956011)(71190400001)(446003)(14444005)(64756008)(1076003)(386003)(33716001)(4744005)(486006)(66556008)(68736007)(66476007)(229853002)(5660300002)(8676002)(6436002)(305945005)(6246003)(33656002)(8936002)(6512007)(53936002)(81166006)(81156014)(76176011)(97736004)(25786009)(9686003)(7736002)(4326008)(478600001)(54906003)(52116002)(316002)(2906002)(14454004)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5668;H:AM0PR05MB6497.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Pu5JHGbshK5Ff5dvh79QdFNfjpqLiF3JH6cLxfr0Ss9FJ5yQqWNJEcgMxzfBdBLWL38HkFvq04Seg8K290ZS2N6gzjpbg7WcxMAn3rFIKjk0oqAhGlIwYH41CYLZvGdcCRLOyPT400Mhy6pSkLJpxNlBdlBKMEaRotp2/cEpkFCwLee2l+XFuyuL8cDlNtuNk3/oGfnIB6ps1gC/AxaWgu70rqmRh4iir1A90kJpho/ed7xk0R5EOBy6p2LkVo91Hh0/0hi+PN1M1Ix0piQbQC19KXAZO4Ri4wF2VtYbJG5+1jhuN9caqH7/I6/9EGe2ycyJ3sy3vYdX1oDLMxYmmsQAlDnoHoP0YhNcCjbt+faHhKrnb1vBTVoxmacd4mEqIier2X+aXKIoxRdKZ9GNW7IKWZnufZEHnZTFTGpsOxI=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <323BFEDD0C772C4F9395BE241D4B9385@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9633eb7e-cd1b-4f15-d57e-08d6cd54dde1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 10:16:10.6353
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5668
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Select the TISCI Interrupt Router, Aggregator drivers and all its
-dependencies for TI's SoCs based on K3 architecture.
+On Tue, Apr 30, 2019 at 11:28:32AM +0200, Geert Uytterhoeven wrote:
+> The THERMAL configuration option was changed from tristate to bool, but
+> a dependency on THERMAL=3Dm was forgotten, leading to a warning when
+> running "make savedefconfig":
+>=20
+>     boolean symbol THERMAL tested for 'm'? test forced to 'n'
+>=20
+> Fixes: be33e4fbbea581ea ("thermal/drivers/core: Remove the module Kconfig=
+'s option")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
-Changes since v7:
--None
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
 
- arch/arm64/Kconfig.platforms | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index b5ca9c50876d..ab9cac8235b3 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -82,6 +82,11 @@ config ARCH_EXYNOS
- config ARCH_K3
- 	bool "Texas Instruments Inc. K3 multicore SoC architecture"
- 	select PM_GENERIC_DOMAINS if PM
-+	select MAILBOX
-+	select TI_MESSAGE_MANAGER
-+	select TI_SCI_PROTOCOL
-+	select TI_SCI_INTR_IRQCHIP
-+	select TI_SCI_INTA_IRQCHIP
- 	help
- 	  This enables support for Texas Instruments' K3 multicore SoC
- 	  architecture.
--- 
-2.21.0
-
+I assume this will be applied to the thermal tree?
