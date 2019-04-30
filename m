@@ -2,110 +2,121 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9854C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECECC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16AA20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556612854;
-	bh=qpWhxfKdvK06OPgNuI0PmE1gknQDuPHSD6Ow6PnrCtQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XJAE3iKhsRVD87GYx4dkFGNGQPcrDIAhOiX0+vRTe6iBPrfTrRr/sz9XBYdctXRsx
-	 HtOhJs4mqj8pVLFssJbbk1Hfdb052zRTJY9Fvj27neONa9np6u+y+lJwYadZS85Ifg
-	 7Mpk8Pf5FeXyKGsBh4drypUfAvmw1Hz+WVmjo82I=
+	by mail.kernel.org (Postfix) with ESMTP id 1C69E20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:28:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sVSA9x2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfD3I1d (ORCPT
+        id S1726648AbfD3I2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfD3I1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:27:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 946472080C;
-        Tue, 30 Apr 2019 08:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556612852;
-        bh=qpWhxfKdvK06OPgNuI0PmE1gknQDuPHSD6Ow6PnrCtQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UCs9O3r1c1XINbUYUolN9sjlVVFUkTBPi/L2CvIGQfYsivM41zEEB+oBYCs/GKh8j
-         i/zt3TpNVX8BTAzhHB1d8epMursSTZD9R0CNKr/fZpN9qe7NAKNR61/ITtegl3pFJd
-         uQPQLeGsPQH5OiLPYDTTzWstOhtUYKQpSpkqWFVY=
-Date:   Tue, 30 Apr 2019 10:27:28 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marek Behun <marek.behun@nic.cz>
-Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: sysfs attrs for HW ECDSA signature
-Message-ID: <20190430082728.GE8245@kroah.com>
-References: <20190429234752.171b4f2b@nic.cz>
+        Tue, 30 Apr 2019 04:28:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59914 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfD3I2S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:28:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ztnwMSHtedoT9Gv7PEZNypm2kmS00QDMZIphrledsXY=; b=sVSA9x2lnTx39ltHEPZtds4dz
+        YiEJNhm1B4JWAiJA5kIIQke8QAp+P/wvO+MpBgMwf/WxjFPOs6jG2rak9aVm/M3/ZdBxZWQ8Eq0M/
+        ppL6ZO2RZepBB8jhJQrqnBf+2+TlFCa5wiCDSdV9mUx2Bqi4zaHrvr8IGK76jyx6gZ3OCEqffBoNx
+        +2UCQ8lh0ZVLit+1SZaRrM7rwNKZRcSpx7EHI2aacowq6goEHq2RGVSazG9OVR/uInVVLQoIZsrI7
+        +vDBej0JLuz1/PGPwdXuziIx5UaGdIyy/HNLAzXTGbvd3z56RtJFYqjc7l5pAqPfKlQvpwWrcgQwL
+        RuMaM33Dw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLO7b-00018M-Rz; Tue, 30 Apr 2019 08:28:16 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 60AFC29D2D6D8; Tue, 30 Apr 2019 10:28:14 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 10:28:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 5/5] IB/hfi1: Fix improper uses of smp_mb__before_atomic()
+Message-ID: <20190430082814.GC2677@hirez.programming.kicks-ass.net>
+References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <1556568902-12464-6-git-send-email-andrea.parri@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429234752.171b4f2b@nic.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1556568902-12464-6-git-send-email-andrea.parri@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 11:47:52PM +0200, Marek Behun wrote:
-> Hi Greg and Tejun,
+On Mon, Apr 29, 2019 at 10:15:01PM +0200, Andrea Parri wrote:
+> This barrier only applies to the read-modify-write operations; in
+> particular, it does not apply to the atomic_read() primitive.
 > 
-> is it acceptable for a driver to expose sysfs attr files for ECDSA
-> signature generation?
-
-What is "ECDSA signature generation"?  Is it a crypto thing?  If so, why
-not use the crypto api?  If not, what exactly is it?
-
-> The thing is that
->   1. AFAIK there isn't another API for userspace to do this.
->      There were attempts in 2015 to expose akcipher via netlink to
->      userspace, but the patchseries were not accepted.
-
-Pointers to that patchset?  Why was it not accepted?
-
->   2. even if it was possible, that specific device for which I am
->      writing this driver does not provide the ability to set the
->      private key to sign with - the private key is just burned during
->      manufacturing and cannot be read, only signed with.
-
-Why does this matter?
-
-> The current version of my driver exposes do_sign file in
-> /sys/firmware/turris_mox directory.
+> Replace the barrier with an smp_mb().
 > 
-> Userspace should write message to sign and then can read the signature
-> from this do_sign file.
-
-How big are messages and signatures?  Why does this have to be a sysfs
-api?
-
-> According to the one attr = one file principle, it would be better to
-> have two files: ecdsa_msg_to_sign (write-only) and ecdsa_signature
-> (read-only).
-> Would this be acceptable in the kernel for this driver?
-
-Why not use the crypto api, and if that doesn't work, why not just a
-char device to read/write?
-
-> I have also another question, if you would not mind:
+> Fixes: 856cc4c237add ("IB/hfi1: Add the capability for reserved operations")
+> Cc: stable@vger.kernel.org
+> Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Reported-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
+> Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+> Cc: Doug Ledford <dledford@redhat.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: linux-rdma@vger.kernel.org
+> ---
+>  drivers/infiniband/sw/rdmavt/qp.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> This driver is dependant on a mailbox driver I have also written
-> ("mailbox: Add support for Armada 37xx rWTM mailbox"), but I have not
-> received any review for this driver from the mailbox subsystem
-> maintainer, and I have already sent three versions (on 12/17/2018,
-> 03/01/2019 and 03/15/2019).
-> What should I do in this case?
+> diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+> index a34b9a2a32b60..b64fd151d31fb 100644
+> --- a/drivers/infiniband/sw/rdmavt/qp.c
+> +++ b/drivers/infiniband/sw/rdmavt/qp.c
+> @@ -1863,11 +1863,11 @@ static inline int rvt_qp_is_avail(
+>  	u32 reserved_used;
+>  
+>  	/* see rvt_qp_wqe_unreserve() */
 
-Poke the maintainer again :)
+I see a completely bogus comment in rvf_op_wqe_unreserve(), referring to
+bogus comments makes this barrier bogus too.
 
-thanks,
+> -	smp_mb__before_atomic();
+> +	smp_mb();
+>  	reserved_used = atomic_read(&qp->s_reserved_used);
+>  	if (unlikely(reserved_op)) {
+>  		/* see rvt_qp_wqe_unreserve() */
+> -		smp_mb__before_atomic();
 
-greg k-h
+This was before, but there is nothing _after_ this. Which means this
+barrier was complete garbage anyway.
+
+> +		smp_mb();
+>  		if (reserved_used >= rdi->dparms.reserved_operations)
+>  			return -ENOMEM;
+>  		return 0;
+> @@ -1882,7 +1882,7 @@ static inline int rvt_qp_is_avail(
+>  		avail = slast - qp->s_head;
+>  
+>  	/* see rvt_qp_wqe_unreserve() */
+> -	smp_mb__before_atomic();
+> +	smp_mb();
+
+Same as the first.
+
+>  	reserved_used = atomic_read(&qp->s_reserved_used);
+>  	avail =  avail - 1 -
+>  		(rdi->dparms.reserved_operations - reserved_used);
