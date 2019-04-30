@@ -2,83 +2,96 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596A8C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB50C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7882147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 779942147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbfD3Olj (ORCPT
+        id S1727541AbfD3OnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:41:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7149 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726073AbfD3Olj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:41:39 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B43494593EFE64FF1F6E;
-        Tue, 30 Apr 2019 22:41:36 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Apr 2019
- 22:41:29 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <ericvh@gmail.com>, <lucho@ionkov.net>,
-        <asmadeus@codewreck.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <v9fs-developer@lists.sourceforge.net>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] 9p/xen: Add cleanup path in p9_trans_xen_init
-Date:   Tue, 30 Apr 2019 22:39:33 +0800
-Message-ID: <20190430143933.19368-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 30 Apr 2019 10:43:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58198 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfD3OnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:43:01 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B217C05E770;
+        Tue, 30 Apr 2019 14:43:01 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id ACEA17B9D7;
+        Tue, 30 Apr 2019 14:42:55 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 30 Apr 2019 16:42:59 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 16:42:53 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>, jack@suse.com
+Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
+ current) with fsfreeze (4.19.25-rt16)
+Message-ID: <20190430144252.GF23020@redhat.com>
+References: <20190326093421.GA29508@localhost.localdomain>
+ <20190419085627.GI4742@localhost.localdomain>
+ <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
+ <20190430132811.GB2589@hirez.programming.kicks-ass.net>
+ <20190430141500.GE23020@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430141500.GE23020@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 30 Apr 2019 14:43:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If xenbus_register_frontend() fails in p9_trans_xen_init,
-we should call v9fs_unregister_trans() to do cleanup.
+I have cloned linux-rt-devel.git
 
-Fixes: 868eb122739a ("xen/9pfs: introduce Xen 9pfs transport driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/9p/trans_xen.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+If I understand correctly, in rt rw_semaphore is actually defined in rwsem_rt.h
+so percpu_rwsem_acquire() should probably do
 
-diff --git a/net/9p/trans_xen.c b/net/9p/trans_xen.c
-index 29420eb..3963eb1 100644
---- a/net/9p/trans_xen.c
-+++ b/net/9p/trans_xen.c
-@@ -530,13 +530,19 @@ static struct xenbus_driver xen_9pfs_front_driver = {
- 
- static int p9_trans_xen_init(void)
- {
-+	int rc;
-+
- 	if (!xen_domain())
- 		return -ENODEV;
- 
- 	pr_info("Initialising Xen transport for 9pfs\n");
- 
- 	v9fs_register_trans(&p9_xen_trans);
--	return xenbus_register_frontend(&xen_9pfs_front_driver);
-+	rc = xenbus_register_frontend(&xen_9pfs_front_driver);
-+	if (rc)
-+		v9fs_unregister_trans(&p9_xen_trans);
-+
-+	return rc;
- }
- module_init(p9_trans_xen_init);
- 
--- 
-2.7.0
+	sem->rw_sem.rtmutex.owner = current;
 
+?
+
+
+On 04/30, Oleg Nesterov wrote:
+>
+> Sorry, I don't understand...
+> 
+> On 04/30, Peter Zijlstra wrote:
+> >
+> > Thaw then does the reverse, frobs lockdep
+> 
+> Yes, in particular it does
+> 
+> 	lockdep_sb_freeze_acquire()
+> 		percpu_rwsem_acquire()
+> 			sem->rw_sem.owner = current;
+> 
+> 	
+> > and then does: percpu_up_write().
+> >
+> > percpu_up_write() on up_write(). And note how __up_write() has:
+> >
+> > 	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
+> 
+> and everything looks correct, sem->owner == current by the time
+> thaw_super_locked() does percpu_up_write/up_write.
+> 
+> Oleg.
 
