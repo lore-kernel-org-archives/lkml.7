@@ -2,136 +2,178 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548ACC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E676C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB9121734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499242080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:17:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ki/yNoV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfD3LQe (ORCPT
+        id S1727669AbfD3LRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:16:34 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44734 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbfD3LQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:16:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C20380D;
-        Tue, 30 Apr 2019 04:16:32 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E981E3F5C1;
-        Tue, 30 Apr 2019 04:16:27 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 12:16:25 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v13 16/20] IB/mlx4, arm64: untag user pointers in
- mlx4_get_umem_mr
-Message-ID: <20190430111625.GD29799@arrakis.emea.arm.com>
-References: <cover.1553093420.git.andreyknvl@google.com>
- <1e2824fd77e8eeb351c6c6246f384d0d89fd2d58.1553093421.git.andreyknvl@google.com>
- <20190429180915.GZ6705@mtr-leonro.mtl.com>
+        Tue, 30 Apr 2019 07:17:11 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49717 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfD3LRK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:17:10 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBGavh1346716
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Apr 2019 04:16:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBGavh1346716
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556622997;
+        bh=PWl7pxRpmZ4dL+XaeosBXcqK53avqKxDFfAff4vSNNI=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Ki/yNoV24eKhYZHoKpgzCL+Ekh0ThWTqnnPdDYkVkzNcAZEGSOffwZ6FpMxMHMExr
+         iDHhGzzmqSNDAvGXHXWdKg+v8r/NzVe36W//0lCAGjEDmAV7pvZRNSIM1AG5lem67p
+         cnCZYW1qTSL08g7gwwbQIqB4kaoyupiahRQjTFL9im2GysVUp4Ma5MFjD0PuS9CGvp
+         ZuJFkasAShtfS698HsdbY0shsyMsBJ0uWuLJ+Kx+qxWy5VMcuPTXx9CNNKbPPVFz5Q
+         ux9XmTVVLPC9doEEzoEb2RCWzay3XmCF6VsFiH+jz6a8trtvvGIZYwGMQIWTwg6RYq
+         LSo9P6jYP+nHg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBGaGV1346710;
+        Tue, 30 Apr 2019 04:16:36 -0700
+Date:   Tue, 30 Apr 2019 04:16:36 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andy Lutomirski <tipbot@zytor.com>
+Message-ID: <tip-cefa929c034eb5d9c15c50088235a0093a219687@git.kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        will.deacon@arm.com, mhiramat@kernel.org, hpa@zytor.com,
+        torvalds@linux-foundation.org, peterz@infradead.org,
+        mingo@kernel.org, kernel-hardening@lists.openwall.com,
+        dave.hansen@intel.com, kristen@linux.intel.com, riel@surriel.com,
+        linux_dti@icloud.com, namit@vmware.com, ard.biesheuvel@linaro.org,
+        luto@kernel.org, keescook@chromium.org, rick.p.edgecombe@intel.com,
+        bp@alien8.de, akpm@linux-foundation.org, deneen.t.dock@intel.com
+Reply-To: torvalds@linux-foundation.org, hpa@zytor.com,
+          mhiramat@kernel.org, will.deacon@arm.com,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          dave.hansen@intel.com, kernel-hardening@lists.openwall.com,
+          mingo@kernel.org, peterz@infradead.org, luto@kernel.org,
+          ard.biesheuvel@linaro.org, namit@vmware.com,
+          linux_dti@icloud.com, riel@surriel.com, kristen@linux.intel.com,
+          akpm@linux-foundation.org, deneen.t.dock@intel.com, bp@alien8.de,
+          rick.p.edgecombe@intel.com, keescook@chromium.org
+In-Reply-To: <20190426001143.4983-4-namit@vmware.com>
+References: <20190426001143.4983-4-namit@vmware.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/mm] x86/mm: Introduce temporary mm structs
+Git-Commit-ID: cefa929c034eb5d9c15c50088235a0093a219687
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190429180915.GZ6705@mtr-leonro.mtl.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(trimmed down the cc list slightly as the message bounces)
+Commit-ID:  cefa929c034eb5d9c15c50088235a0093a219687
+Gitweb:     https://git.kernel.org/tip/cefa929c034eb5d9c15c50088235a0093a219687
+Author:     Andy Lutomirski <luto@kernel.org>
+AuthorDate: Thu, 25 Apr 2019 17:11:23 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 30 Apr 2019 12:37:50 +0200
 
-On Mon, Apr 29, 2019 at 09:09:15PM +0300, Leon Romanovsky wrote:
-> On Wed, Mar 20, 2019 at 03:51:30PM +0100, Andrey Konovalov wrote:
-> > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > pass tagged user pointers (with the top byte set to something else other
-> > than 0x00) as syscall arguments.
-> >
-> > mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
-> > only by done with untagged pointers.
-> >
-> > Untag user pointers in this function.
-> >
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
-> >  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/infiniband/hw/mlx4/mr.c b/drivers/infiniband/hw/mlx4/mr.c
-> > index 395379a480cb..9a35ed2c6a6f 100644
-> > --- a/drivers/infiniband/hw/mlx4/mr.c
-> > +++ b/drivers/infiniband/hw/mlx4/mr.c
-> > @@ -378,6 +378,7 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
-> >  	 * again
-> >  	 */
-> >  	if (!ib_access_writable(access_flags)) {
-> > +		unsigned long untagged_start = untagged_addr(start);
-> >  		struct vm_area_struct *vma;
-> >
-> >  		down_read(&current->mm->mmap_sem);
-> > @@ -386,9 +387,9 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
-> >  		 * cover the memory, but for now it requires a single vma to
-> >  		 * entirely cover the MR to support RO mappings.
-> >  		 */
-> > -		vma = find_vma(current->mm, start);
-> > -		if (vma && vma->vm_end >= start + length &&
-> > -		    vma->vm_start <= start) {
-> > +		vma = find_vma(current->mm, untagged_start);
-> > +		if (vma && vma->vm_end >= untagged_start + length &&
-> > +		    vma->vm_start <= untagged_start) {
-> >  			if (vma->vm_flags & VM_WRITE)
-> >  				access_flags |= IB_ACCESS_LOCAL_WRITE;
-> >  		} else {
-> > --
-> 
-> Thanks,
-> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+x86/mm: Introduce temporary mm structs
 
-Thanks for the review.
+Using a dedicated page-table for temporary PTEs prevents other cores
+from using - even speculatively - these PTEs, thereby providing two
+benefits:
 
-> Interesting, the followup question is why mlx4 is only one driver in IB which
-> needs such code in umem_mr. I'll take a look on it.
+(1) Security hardening: an attacker that gains kernel memory writing
+    abilities cannot easily overwrite sensitive data.
 
-I don't know. Just using the light heuristics of find_vma() shows some
-other places. For example, ib_umem_odp_get() gets the umem->address via
-ib_umem_start(). This was previously set in ib_umem_get() as called from
-mlx4_get_umem_mr(). Should the above patch have just untagged "start" on
-entry?
+(2) Avoiding TLB shootdowns: the PTEs do not need to be flushed in
+    remote page-tables.
 
-BTW, what's the provenience of such "start" address here? Is it
-something that the user would have malloc()'ed? We try to impose some
-restrictions one what is allowed to be tagged in user so that we don't
-have to untag the addresses in the kernel. For example, if it was the
-result of an mmap() on the device file, we don't allow tagging.
+To do so a temporary mm_struct can be used. Mappings which are private
+for this mm can be set in the userspace part of the address-space.
+During the whole time in which the temporary mm is loaded, interrupts
+must be disabled.
 
-Thanks.
+The first use-case for temporary mm struct, which will follow, is for
+poking the kernel text.
 
--- 
-Catalin
+[ Commit message was written by Nadav Amit ]
+
+Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: <akpm@linux-foundation.org>
+Cc: <ard.biesheuvel@linaro.org>
+Cc: <deneen.t.dock@intel.com>
+Cc: <kernel-hardening@lists.openwall.com>
+Cc: <kristen@linux.intel.com>
+Cc: <linux_dti@icloud.com>
+Cc: <will.deacon@arm.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190426001143.4983-4-namit@vmware.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/include/asm/mmu_context.h | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 19d18fae6ec6..24dc3b810970 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -356,4 +356,37 @@ static inline unsigned long __get_current_cr3_fast(void)
+ 	return cr3;
+ }
+ 
++typedef struct {
++	struct mm_struct *mm;
++} temp_mm_state_t;
++
++/*
++ * Using a temporary mm allows to set temporary mappings that are not accessible
++ * by other CPUs. Such mappings are needed to perform sensitive memory writes
++ * that override the kernel memory protections (e.g., W^X), without exposing the
++ * temporary page-table mappings that are required for these write operations to
++ * other CPUs. Using a temporary mm also allows to avoid TLB shootdowns when the
++ * mapping is torn down.
++ *
++ * Context: The temporary mm needs to be used exclusively by a single core. To
++ *          harden security IRQs must be disabled while the temporary mm is
++ *          loaded, thereby preventing interrupt handler bugs from overriding
++ *          the kernel memory protection.
++ */
++static inline temp_mm_state_t use_temporary_mm(struct mm_struct *mm)
++{
++	temp_mm_state_t temp_state;
++
++	lockdep_assert_irqs_disabled();
++	temp_state.mm = this_cpu_read(cpu_tlbstate.loaded_mm);
++	switch_mm_irqs_off(NULL, mm, current);
++	return temp_state;
++}
++
++static inline void unuse_temporary_mm(temp_mm_state_t prev_state)
++{
++	lockdep_assert_irqs_disabled();
++	switch_mm_irqs_off(NULL, prev_state.mm, current);
++}
++
+ #endif /* _ASM_X86_MMU_CONTEXT_H */
