@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4695C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F813C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793592075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069612075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625875;
-	bh=zkB8se4ixRqLV7j9UHr1XpeCeaXH7VbOs8OCBmIF66I=;
+	s=default; t=1556625885;
+	bh=MAfJJ0fkkrHOMc0koxXGYQDilkSV0Igey4Ef/k/QcAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b/bdeIpWwMEbqnTko4ipr2DSgzoPKLz4i7vwNxLKMR+0WaplB3kLD/rvPu8/c13FT
-	 IwkTOr8xNIZ0qmWBpOgAgPsTdinpeLLgoam6HPk29Ib35+zzfa/eBPvyelfc+uIX1/
-	 Y6HrzzQ0Xg99N01AVzY0/PcBxrolyOVT2Zj/rwGE=
+	b=2vZHIKmCOZIzwGPeWVeVa8XYq64IM5cXW5wMaPnJosePzYImLT4OqPIMVdk7UcU3u
+	 AP2Te3wtc9Aded2Dik2U8TXgBjAsLpGFfXlZhKgHFZXJwhj2Dmx6veykgomyXwPg/u
+	 D71y3t6Ih3gcFjdFaKTx+PdVs6HGoY2RMvcWrN6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbfD3Lmo (ORCPT
+        id S1729410AbfD3Lmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729394AbfD3Lmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Apr 2019 07:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729391AbfD3Lmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:42:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB0D217D9;
-        Tue, 30 Apr 2019 11:42:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 105AD21734;
+        Tue, 30 Apr 2019 11:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624559;
-        bh=zkB8se4ixRqLV7j9UHr1XpeCeaXH7VbOs8OCBmIF66I=;
+        s=default; t=1556624554;
+        bh=MAfJJ0fkkrHOMc0koxXGYQDilkSV0Igey4Ef/k/QcAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r3+AcEz+QfeVejQWGMD/0/OUxrzSFhqGBnHwZykNyPhb4qeICEZjvnMZWEhm9oGrA
-         8OzF0Chr4RpObbSvTqXpdY4T4Qk/iKoEnyTDVqSy7zX6W/z7Di95M94+wbdQc+QPwD
-         Gqo9NrXQ/7tc2MSbijR2NoTY2cSG9E3R9yMiLBXI=
+        b=YLKKjGFqQbdtpsU9G2h6Schnj10G92Xb+qOyyzH0/n/QMVrndI7CgcFBamzeOIqo2
+         xk+4WX8LkzRQeGO0VYmGgPzWtB3/MUSxCKjUYI28YaKR9RwlOpdEzsQcsQDUMYgRW1
+         wJS4HPEDO2ASb5oqexMH/BvZnVXIlPclPu0bVg8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        syzbot+55de1eb4975dec156d8f@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 32/53] binder: fix handling of misaligned binder object
-Date:   Tue, 30 Apr 2019 13:38:39 +0200
-Message-Id: <20190430113556.841929903@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Josh Collier <josh.d.collier@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 09/53] IB/rdmavt: Fix frwr memory registration
+Date:   Tue, 30 Apr 2019 13:38:16 +0200
+Message-Id: <20190430113552.264085668@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -60,58 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Josh Collier <josh.d.collier@intel.com>
 
-commit 26528be6720bb40bc8844e97ee73a37e530e9c5e upstream.
+commit 7c39f7f671d2acc0a1f39ebbbee4303ad499bbfa upstream.
 
-Fixes crash found by syzbot:
-kernel BUG at drivers/android/binder_alloc.c:LINE! (2)
+Current implementation was not properly handling frwr memory
+registrations. This was uncovered by commit 27f26cec761das ("xprtrdma:
+Plant XID in on-the-wire RDMA offset (FRWR)") in which xprtrdma, which is
+used for NFS over RDMA, started failing as it was the first ULP to modify
+the ib_mr iova resulting in the NFS server getting REMOTE ACCESS ERROR
+when attempting to perform RDMA Writes to the client.
 
-Reported-and-tested-by: syzbot+55de1eb4975dec156d8f@syzkaller.appspotmail.com
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: stable <stable@vger.kernel.org> # 5.0, 4.19, 4.14
+The fix is to properly capture the true iova, offset, and length in the
+call to ib_map_mr_sg, and then update the iova when processing the
+IB_WR_REG_MEM on the send queue.
+
+Fixes: a41081aa5936 ("IB/rdmavt: Add support for ib_map_mr_sg")
+Cc: stable@vger.kernel.org
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Josh Collier <josh.d.collier@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder_alloc.c |   18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/infiniband/sw/rdmavt/mr.c |   17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -945,14 +945,13 @@ enum lru_status binder_alloc_free_page(s
+--- a/drivers/infiniband/sw/rdmavt/mr.c
++++ b/drivers/infiniband/sw/rdmavt/mr.c
+@@ -611,11 +611,6 @@ static int rvt_set_page(struct ib_mr *ib
+ 	if (unlikely(mapped_segs == mr->mr.max_segs))
+ 		return -ENOMEM;
  
- 	index = page - alloc->pages;
- 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
-+
-+	mm = alloc->vma_vm_mm;
-+	if (!mmget_not_zero(mm))
-+		goto err_mmget;
-+	if (!down_write_trylock(&mm->mmap_sem))
-+		goto err_down_write_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
--	if (vma) {
--		if (!mmget_not_zero(alloc->vma_vm_mm))
--			goto err_mmget;
--		mm = alloc->vma_vm_mm;
--		if (!down_write_trylock(&mm->mmap_sem))
--			goto err_down_write_mmap_sem_failed;
+-	if (mr->mr.length == 0) {
+-		mr->mr.user_base = addr;
+-		mr->mr.iova = addr;
 -	}
- 
- 	list_lru_isolate(lru, item);
- 	spin_unlock(lock);
-@@ -965,10 +964,9 @@ enum lru_status binder_alloc_free_page(s
- 			       PAGE_SIZE);
- 
- 		trace_binder_unmap_user_end(alloc, index);
 -
--		up_write(&mm->mmap_sem);
--		mmput(mm);
- 	}
-+	up_write(&mm->mmap_sem);
-+	mmput(mm);
+ 	m = mapped_segs / RVT_SEGSZ;
+ 	n = mapped_segs % RVT_SEGSZ;
+ 	mr->mr.map[m]->segs[n].vaddr = (void *)addr;
+@@ -633,17 +628,24 @@ static int rvt_set_page(struct ib_mr *ib
+  * @sg_nents: number of entries in sg
+  * @sg_offset: offset in bytes into sg
+  *
++ * Overwrite rvt_mr length with mr length calculated by ib_sg_to_pages.
++ *
+  * Return: number of sg elements mapped to the memory region
+  */
+ int rvt_map_mr_sg(struct ib_mr *ibmr, struct scatterlist *sg,
+ 		  int sg_nents, unsigned int *sg_offset)
+ {
+ 	struct rvt_mr *mr = to_imr(ibmr);
++	int ret;
  
- 	trace_binder_unmap_kernel_start(alloc, index);
+ 	mr->mr.length = 0;
+ 	mr->mr.page_shift = PAGE_SHIFT;
+-	return ib_sg_to_pages(ibmr, sg, sg_nents, sg_offset,
+-			      rvt_set_page);
++	ret = ib_sg_to_pages(ibmr, sg, sg_nents, sg_offset, rvt_set_page);
++	mr->mr.user_base = ibmr->iova;
++	mr->mr.iova = ibmr->iova;
++	mr->mr.offset = ibmr->iova - (u64)mr->mr.map[0]->segs[0].vaddr;
++	mr->mr.length = (size_t)ibmr->length;
++	return ret;
+ }
  
+ /**
+@@ -674,6 +676,7 @@ int rvt_fast_reg_mr(struct rvt_qp *qp, s
+ 	ibmr->rkey = key;
+ 	mr->mr.lkey = key;
+ 	mr->mr.access_flags = access;
++	mr->mr.iova = ibmr->iova;
+ 	atomic_set(&mr->mr.lkey_invalid, 0);
+ 
+ 	return 0;
 
 
