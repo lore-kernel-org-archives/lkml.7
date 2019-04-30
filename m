@@ -2,119 +2,101 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A583C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB16C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC04120854
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:14:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WPBSwm2V"
+	by mail.kernel.org (Postfix) with ESMTP id 5504121734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556648211;
+	bh=KUP9To48LBrL/wSVFz97QuNsX4v6nv2LPPjDnJTFTzs=;
+	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
+	b=GUOB0lhOfkaKYWxkDVpEBg7DXirs/xSvGr/dRG47a9wpN+zvYinDwNIFXb7khwiHa
+	 8laRGVqO48VEH73W4j1/YPC9CkS4om0lsZk7InGqU8r0N4tTvPcD3mwnKYMc2QaPbY
+	 bhFUyzKXJxOvC8V5mxL9dMbOY+9yo/rgXfYNTZLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfD3SOh (ORCPT
+        id S1726731AbfD3SQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 14:14:37 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:33866 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfD3SOf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:14:35 -0400
-Received: by mail-yw1-f65.google.com with SMTP id u14so6622480ywe.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:14:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bse4S0Z7lUf/SmcUVMhmxnkZgM+H7sFlIuWL16fY2hs=;
-        b=WPBSwm2V0oeuI+bplyqdGWE4RLVzulE0noF0etJZsE7TZccsrAjKH1+fPUa8IBFj1/
-         3RZeVujhrkl2FmoxDwgroiXOjcRApCnE+Uuqqt7EOlLxPbIkJOWvOF8rWeR6XIPlKW9g
-         eckn6b7lehgVJ0wG5jRpqcZ8GWsxzBmROvb8E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bse4S0Z7lUf/SmcUVMhmxnkZgM+H7sFlIuWL16fY2hs=;
-        b=FEo7Q7RyAdTBMXMAmp2GeinjjAe9iokJfStrB/wSmjULz/Xji+Vo2t3TCZuCWyeNZn
-         fOQlc2ZDoLTVIJr4o+Km7r0KMAZbCm8DMufMGV7svLN4jcAnElBf8XqBaorvH/LLF+AN
-         7vUGL712XUzaX+DZmCqfNPa08fs9Ut1SPXWDKJimdfTzgYZ2xKxyDuZmQ2hgS0c78ZM8
-         elQHylhkOAWyIagr/wiCu2oBw2GToz0z3MU33lo3u8Dd19DnKpRT3BvV0vKbWp8ymUBJ
-         +ThLxj8cyB+H5Gwtaj7tXU70X32m1wlSy2QYdD0mfMl7ZAWxy2JDQA2ZdU7GpdDtL3w2
-         gtww==
-X-Gm-Message-State: APjAAAVXYUF5LPX/vPSYku78G6kTVWr4cU4cBIfG9RGc2P0+11gZ265V
-        pQjT95pRkpQ/8iMdR0oHf060PurZ3LE=
-X-Google-Smtp-Source: APXvYqy5Y6qNysychzSqFM+aYK+Y7gPSjjTwazT+mxW6TKCDtFyzELTZGe/fSoGz0Tzm8BQaaUrTWA==
-X-Received: by 2002:a25:e757:: with SMTP id e84mr54721906ybh.259.1556648074623;
-        Tue, 30 Apr 2019 11:14:34 -0700 (PDT)
-Received: from mail-yw1-f54.google.com (mail-yw1-f54.google.com. [209.85.161.54])
-        by smtp.gmail.com with ESMTPSA id a67sm20126953ywh.36.2019.04.30.11.14.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 11:14:33 -0700 (PDT)
-Received: by mail-yw1-f54.google.com with SMTP id q11so6627901ywb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:14:33 -0700 (PDT)
-X-Received: by 2002:a81:2e08:: with SMTP id u8mr52020872ywu.55.1556648072989;
- Tue, 30 Apr 2019 11:14:32 -0700 (PDT)
+        Tue, 30 Apr 2019 14:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbfD3SQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:16:49 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAC4020854;
+        Tue, 30 Apr 2019 18:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556648209;
+        bh=KUP9To48LBrL/wSVFz97QuNsX4v6nv2LPPjDnJTFTzs=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=RfQo/QhbXFzOkMCGW4mgeoJJ9DWbf6F9XwqhCTWMsjWOf8pNLcXWWgD4iJwX7UGsU
+         9zZ88Iiz+XS/r2ZYMvemxxajdMosAmc40YHvq6AEnpoCRpN3lxYzUgo1BfrT/c5u40
+         6Sz3plrXV89dJ/2NRKfMCWBbeuDZPORX7av8ZeEU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190430180111.10688-1-mcroce@redhat.com>
-In-Reply-To: <20190430180111.10688-1-mcroce@redhat.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 30 Apr 2019 11:14:20 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJG1D6YvTaSY3hpB8_APmwe=rGn8FkyAfCGuQZ3O2j1Yg@mail.gmail.com>
-Message-ID: <CAGXu5jJG1D6YvTaSY3hpB8_APmwe=rGn8FkyAfCGuQZ3O2j1Yg@mail.gmail.com>
-Subject: Re: [PATCH v5] proc/sysctl: add shared variables for range check
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1556589033-6080-1-git-send-email-Anson.Huang@nxp.com>
+References: <1556589033-6080-1-git-send-email-Anson.Huang@nxp.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: imx: pllv3: Fix fall through build warning
+To:     "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+Message-ID: <155664820799.168659.12393223246835475198@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Tue, 30 Apr 2019 11:16:47 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:01 AM Matteo Croce <mcroce@redhat.com> wrote:
->
-> In the sysctl code the proc_dointvec_minmax() function is often used to
-> validate the user supplied value between an allowed range. This function
-> uses the extra1 and extra2 members from struct ctl_table as minimum and
-> maximum allowed value.
->
-> On sysctl handler declaration, in every source file there are some readonly
-> variables containing just an integer which address is assigned to the
-> extra1 and extra2 members, so the sysctl range is enforced.
->
-> The special values 0, 1 and INT_MAX are very often used as range boundary,
-> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
-> different source files:
->
->     $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
->     248
->
-> Add a const int array containing the most commonly used values,
-> some macros to refer more easily to the correct array member,
-> and use them instead of creating a local one for every object file.
->
-> This is the bloat-o-meter output comparing the old and new binary
-> compiled with the default Fedora config:
->
->     # scripts/bloat-o-meter -d vmlinux.o.old vmlinux.o
->     add/remove: 2/2 grow/shrink: 0/2 up/down: 24/-188 (-164)
->     Data                                         old     new   delta
->     sysctl_vals                                    -      12     +12
->     __kstrtab_sysctl_vals                          -      12     +12
->     max                                           14      10      -4
->     int_max                                       16       -     -16
->     one                                           68       -     -68
->     zero                                         128      28    -100
->     Total: Before=20583249, After=20583085, chg -0.00%
->
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Quoting Anson Huang (2019-04-29 18:55:18)
+> Fix below fall through build warning:
+>=20
+> drivers/clk/imx/clk-pllv3.c:453:21: warning:
+> this statement may fall through [-Wimplicit-fallthrough=3D]
+>=20
+>    pll->denom_offset =3D PLL_IMX7_DENOM_OFFSET;
+>                      ^
+> drivers/clk/imx/clk-pllv3.c:454:2: note: here
+>   case IMX_PLLV3_AV:
+>   ^~~~
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Gustavo says there are two warnings. Please compile test with the right
+options, add Reported-by tags when you get bug reports from someone, and
+add a Fixes tag and then resend.
 
--- 
-Kees Cook
+>  drivers/clk/imx/clk-pllv3.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/clk/imx/clk-pllv3.c b/drivers/clk/imx/clk-pllv3.c
+> index e892b9a..fbe4fe0 100644
+> --- a/drivers/clk/imx/clk-pllv3.c
+> +++ b/drivers/clk/imx/clk-pllv3.c
+> @@ -451,6 +451,7 @@ struct clk *imx_clk_pllv3(enum imx_pllv3_type type, c=
+onst char *name,
+>         case IMX_PLLV3_AV_IMX7:
+>                 pll->num_offset =3D PLL_IMX7_NUM_OFFSET;
+>                 pll->denom_offset =3D PLL_IMX7_DENOM_OFFSET;
+> +               /* fall through */
+>         case IMX_PLLV3_AV:
+>                 ops =3D &clk_pllv3_av_ops;
+>                 break;
