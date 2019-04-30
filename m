@@ -2,98 +2,97 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24266C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DBAC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B532080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6522080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfD3Uhx (ORCPT
+        id S1727094AbfD3Uh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 16:37:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44294 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726015AbfD3Uhx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 16:37:53 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UKb6kk031876
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 16:37:52 -0400
-Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6uqqcur0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 16:37:51 -0400
-Received: from localhost
-        by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tyreld@linux.vnet.ibm.com>;
-        Tue, 30 Apr 2019 21:37:51 +0100
-Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
-        by e36.co.us.ibm.com (192.168.1.136) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 21:37:47 +0100
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UKbkTI52625520
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 20:37:46 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F79B6A04D;
-        Tue, 30 Apr 2019 20:37:46 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0BB646A04F;
-        Tue, 30 Apr 2019 20:37:44 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.85.196.56])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Apr 2019 20:37:44 +0000 (GMT)
-Subject: Re: [PATCH] powerpc: Fix kobject memleak
-To:     "Tobin C. Harding" <tobin@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190430010923.17092-1-tobin@kernel.org>
-From:   Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Date:   Tue, 30 Apr 2019 13:37:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 30 Apr 2019 16:37:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39358 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbfD3Uh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 16:37:58 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AF71A30A3AFE;
+        Tue, 30 Apr 2019 20:37:57 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E1E406299C;
+        Tue, 30 Apr 2019 20:37:55 +0000 (UTC)
+Subject: Re: [PATCH] iommu/vt-d: Fix intel_pasid_max_id
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     eric.auger.pro@gmail.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org
+References: <20190430072940.10467-1-eric.auger@redhat.com>
+ <20190430110108.7c751195@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <1f71902d-28c6-4e63-b4b8-dafbb8881694@redhat.com>
+Date:   Tue, 30 Apr 2019 22:37:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190430010923.17092-1-tobin@kernel.org>
+In-Reply-To: <20190430110108.7c751195@jacob-builder>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19043020-0020-0000-0000-00000EDEC793
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011024; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01196706; UDB=6.00627605; IPR=6.00977555;
- MB=3.00026672; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-30 20:37:50
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043020-0021-0000-0000-000065A00A14
-Message-Id: <2cf94d15-1e41-dd03-7b35-d69907dbb8b2@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=830 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300122
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 30 Apr 2019 20:37:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/29/2019 06:09 PM, Tobin C. Harding wrote:
-> Currently error return from kobject_init_and_add() is not followed by a
-> call to kobject_put().  This means there is a memory leak.
-> 
-> Add call to kobject_put() in error path of kobject_init_and_add().
-> 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> ---
+Hi Jacob,
 
-Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+On 4/30/19 8:01 PM, Jacob Pan wrote:
+> On Tue, 30 Apr 2019 09:29:40 +0200
+> Eric Auger <eric.auger@redhat.com> wrote:
+> 
+>> Extended Capability Register PSS field (PASID Size Supported)
+>> corresponds to the PASID bit size -1.
+>>
+>> "A value of N in this field indicates hardware supports PASID
+>> field of N+1 bits (For example, value of 7 in this field,
+>> indicates 8-bit PASIDs are supported)".
+>>
+>> Fix the computation of intel_pasid_max_id accordingly.
+>>
+>> Fixes: 562831747f62 ("iommu/vt-d: Global PASID name space")
+>>
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>> ---
+>>  drivers/iommu/intel-iommu.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> index 28cb713d728c..c3f1bfc81d2e 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -3331,7 +3331,7 @@ static int __init init_dmars(void)
+>>  		 * than the smallest supported.
+>>  		 */
+>>  		if (pasid_supported(iommu)) {
+>> -			u32 temp = 2 << ecap_pss(iommu->ecap);
+>> +			u32 temp = 2 << (ecap_pss(iommu->ecap) + 1);
+> here it is "2 << bits" not "1 << bits", so the original code is correct.
+> 
+> But I agree it would be more clear to the spec. if we do:
+> 1 << (ecap_pss(iommu->ecap) + 1);
+Oups OK, my eyes. Forget it :-(
 
+Thanks
+
+Eric
+>>  
+>>  			intel_pasid_max_id = min_t(u32, temp,
+>>  						   intel_pasid_max_id);
+> 
