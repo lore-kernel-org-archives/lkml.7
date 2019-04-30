@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3C3C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D38C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F149321707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DF421743
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:53:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="umlyifbb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ajTEcnLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfD3Kxe (ORCPT
+        id S1728006AbfD3Kxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:53:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37098 "EHLO
+        Tue, 30 Apr 2019 06:53:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37602 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfD3Kxb (ORCPT
+        with ESMTP id S1726915AbfD3Kxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:53:31 -0400
+        Tue, 30 Apr 2019 06:53:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=W5OFZ0nXVCnRaKqTLxQ4iF6nubxh208Z3vdp8U1R4sM=; b=umlyifbbPBa2ph4J+SwIR/D2Xv
-        mDs2Rsf7FRfW6vKBpTG3mzu3XK0kijknlAdJFEdtM1e1AhlJj4Awo2zobz9q5r9klVuT8OqjZH8UI
-        +RwTFcofpN2htm0ofZtpwadnmGEH9leEUUP+uykwEyxhDK/NYOSGJEBwTXRgIM+AReSW5NDLEVZEL
-        LslRbVR3J5LuxYcBZTC0C/LgiblrNkU0gU+vYqEpXDCtfplfumxNsnoovC+scgb3JSQxbLc+Gdkvk
-        A2Ci8N/AkWyu4YaxF6B8w14fj9jigIessA6RjeuSQ6ehWFo28/7KpJoey3H4V0amlkiwCL3GVzqIv
-        HlXDlzoA==;
+        bh=XDQ3xaFvzsU/gC2voj0FwKPfnsCdpMn/daQuOoGOLhQ=; b=ajTEcnLi6tWnyVZSpLjgaF0cft
+        jo7ei5nrRbeBLPIH3ymZ0TkekzSYjW8h5iI2SQQXcOnPYR2fDEUvc/K2XTZDtlJJ1rQUnPYT3qec4
+        TloKrMozJNOy4Prpw2zrFp03fVZue+h1TAj9/9qBytSJWR9xo+sD2wXRAZsaCd2mUmvSp1a5G2ti1
+        RqgAJZB78ayQGP9xyeTKYM3c8NQFOwnlU25qDReVRSs8ymJXXRYljCiVesMMhmwNy3LkWLj9yQndL
+        0LX6m1HdSQO5S8au1Y3FRH+aLT4V1xAIBV6UESEauxmui0YdMZ5O/xekkXEZvno6RM/J+X98IrgTv
+        UV/Ag1fQ==;
 Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLQO4-00086S-Dr; Tue, 30 Apr 2019 10:53:24 +0000
+        id 1hLQO7-0008BJ-QD; Tue, 30 Apr 2019 10:53:28 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Robin Murphy <robin.murphy@arm.com>
 Cc:     Joerg Roedel <joro@8bytes.org>,
@@ -46,9 +46,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 21/25] iommu/dma: Refactor iommu_dma_mmap
-Date:   Tue, 30 Apr 2019 06:52:10 -0400
-Message-Id: <20190430105214.24628-22-hch@lst.de>
+Subject: [PATCH 23/25] iommu/dma: Switch copyright boilerplace to SPDX
+Date:   Tue, 30 Apr 2019 06:52:12 -0400
+Message-Id: <20190430105214.24628-24-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190430105214.24628-1-hch@lst.de>
 References: <20190430105214.24628-1-hch@lst.de>
@@ -60,88 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Inline __iommu_dma_mmap_pfn into the main function, and use the
-fact that __iommu_dma_get_pages return NULL for remapped contigous
-allocations to simplify the code flow a bit.
-
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/iommu/dma-iommu.c | 46 ++++++++++-----------------------------
- 1 file changed, 11 insertions(+), 35 deletions(-)
+ drivers/iommu/dma-iommu.c | 13 +------------
+ include/linux/dma-iommu.h | 13 +------------
+ 2 files changed, 2 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 5d4013ffd068..9ace9ad73e10 100644
+index bbd475be567a..58c35bab7626 100644
 --- a/drivers/iommu/dma-iommu.c
 +++ b/drivers/iommu/dma-iommu.c
-@@ -1023,31 +1023,12 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
- 	return cpu_addr;
- }
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * A fairly generic DMA-API to IOMMU-API glue layer.
+  *
+@@ -5,18 +6,6 @@
+  *
+  * based in part on arch/arm/mm/dma-mapping.c:
+  * Copyright (C) 2000-2004 Russell King
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
  
--static int __iommu_dma_mmap_pfn(struct vm_area_struct *vma,
--			      unsigned long pfn, size_t size)
--{
--	int ret = -ENXIO;
--	unsigned long nr_vma_pages = vma_pages(vma);
--	unsigned long nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
--	unsigned long off = vma->vm_pgoff;
--
--	if (off < nr_pages && nr_vma_pages <= (nr_pages - off)) {
--		ret = remap_pfn_range(vma, vma->vm_start,
--				      pfn + off,
--				      vma->vm_end - vma->vm_start,
--				      vma->vm_page_prot);
--	}
--
--	return ret;
--}
--
- static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
- 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
- 		unsigned long attrs)
- {
- 	unsigned long nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
--	unsigned long off = vma->vm_pgoff;
--	struct page **pages;
-+	unsigned long pfn, off = vma->vm_pgoff;
- 	int ret;
- 
- 	vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
-@@ -1058,24 +1039,19 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
- 	if (off >= nr_pages || vma_pages(vma) > nr_pages - off)
- 		return -ENXIO;
- 
--	if (!is_vmalloc_addr(cpu_addr)) {
--		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
--		return __iommu_dma_mmap_pfn(vma, pfn, size);
--	}
-+	if (is_vmalloc_addr(cpu_addr)) {
-+		struct page **pages = __iommu_dma_get_pages(cpu_addr);
- 
--	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
--		/*
--		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
--		 * hence in the vmalloc space.
--		 */
--		unsigned long pfn = vmalloc_to_pfn(cpu_addr);
--		return __iommu_dma_mmap_pfn(vma, pfn, size);
-+		if (pages)
-+			return __iommu_dma_mmap(pages, size, vma);
-+		pfn = vmalloc_to_pfn(cpu_addr);
-+	} else {
-+		pfn = page_to_pfn(virt_to_page(cpu_addr));
- 	}
- 
--	pages = __iommu_dma_get_pages(cpu_addr);
--	if (!pages)
--		return -ENXIO;
--	return __iommu_dma_mmap(pages, size, vma);
-+	return remap_pfn_range(vma, vma->vm_start, pfn + off,
-+			       vma->vm_end - vma->vm_start,
-+			       vma->vm_page_prot);
- }
- 
- static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
+ #include <linux/acpi_iort.h>
+diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
+index dadf4383f555..3fc76918e9bf 100644
+--- a/include/linux/dma-iommu.h
++++ b/include/linux/dma-iommu.h
+@@ -1,17 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2014-2015 ARM Ltd.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ #ifndef __DMA_IOMMU_H
+ #define __DMA_IOMMU_H
 -- 
 2.20.1
 
