@@ -2,39 +2,44 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8DCC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430F4C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434E9205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A488205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfD3NOV (ORCPT
+        id S1727858AbfD3NOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:14:21 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46832 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbfD3NOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:14:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A11D80D;
-        Tue, 30 Apr 2019 06:14:20 -0700 (PDT)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A73E03F5AF;
-        Tue, 30 Apr 2019 06:14:18 -0700 (PDT)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clocksource/arm_arch_timer: extract elf_hwcap use to arch-helper
-Date:   Tue, 30 Apr 2019 14:14:13 +0100
-Message-Id: <20190430131413.10017-1-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 30 Apr 2019 09:14:39 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:50035 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfD3NOj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:14:39 -0400
+X-Originating-IP: 90.88.149.145
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 2F8581BF20C;
+        Tue, 30 Apr 2019 13:14:34 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
+        mw@semihalf.com, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH net-next 0/4] net: mvpp2: cls: Add classification
+Date:   Tue, 30 Apr 2019 15:14:25 +0200
+Message-Id: <20190430131429.19361-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,112 +47,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different mechanisms are used to test and set elf_hwcaps between ARM
-and ARM64, this results in the use of #ifdef's in this file when
-setting/testing for the EVTSTRM hwcap.
+Hi everyone,
 
-Let's improve readability by extracting this to an arch helper.
+This series is a rework of the previously standalone patch adding
+classification support for mvpp2 :
 
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
----
- arch/arm/include/asm/arch_timer.h    | 13 +++++++++++++
- arch/arm64/include/asm/arch_timer.h  | 13 +++++++++++++
- drivers/clocksource/arm_arch_timer.c | 15 ++-------------
- 3 files changed, 28 insertions(+), 13 deletions(-)
+https://lore.kernel.org/netdev/20190423075031.26074-1-maxime.chevallier@bootlin.com/
 
-diff --git a/arch/arm/include/asm/arch_timer.h b/arch/arm/include/asm/arch_timer.h
-index 0a8d7bba2cb0..f21e038dc9f3 100644
---- a/arch/arm/include/asm/arch_timer.h
-+++ b/arch/arm/include/asm/arch_timer.h
-@@ -4,6 +4,7 @@
- 
- #include <asm/barrier.h>
- #include <asm/errno.h>
-+#include <asm/hwcap.h>
- #include <linux/clocksource.h>
- #include <linux/init.h>
- #include <linux/types.h>
-@@ -110,6 +111,18 @@ static inline void arch_timer_set_cntkctl(u32 cntkctl)
- 	isb();
- }
- 
-+static inline bool arch_timer_set_evtstrm_feature(void)
-+{
-+	elf_hwcap |= HWCAP_EVTSTRM;
-+#ifdef CONFIG_COMPAT
-+	compat_elf_hwcap |= COMPAT_HWCAP_EVTSTRM;
-+#endif
-+}
-+
-+static inline bool arch_timer_have_evtstrm_feature(void)
-+{
-+	return elf_hwcap & HWCAP_EVTSTRM;
-+}
- #endif
- 
- #endif
-diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-index f2a234d6516c..f371d4a94f06 100644
---- a/arch/arm64/include/asm/arch_timer.h
-+++ b/arch/arm64/include/asm/arch_timer.h
-@@ -20,6 +20,7 @@
- #define __ASM_ARCH_TIMER_H
- 
- #include <asm/barrier.h>
-+#include <asm/hwcap.h>
- #include <asm/sysreg.h>
- 
- #include <linux/bug.h>
-@@ -165,4 +166,16 @@ static inline int arch_timer_arch_init(void)
- 	return 0;
- }
- 
-+static inline void arch_timer_set_evtstrm_feature(void)
-+{
-+	cpu_set_named_feature(EVTSTRM);
-+#ifdef CONFIG_COMPAT
-+	compat_elf_hwcap |= COMPAT_HWCAP_EVTSTRM;
-+#endif
-+}
-+
-+static inline bool arch_timer_have_evtstrm_feature(void)
-+{
-+	return cpu_have_named_feature(EVTSTRM);
-+}
- #endif
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 6cc8aff83805..5e507e81515f 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -833,14 +833,7 @@ static void arch_timer_evtstrm_enable(int divider)
- 	cntkctl |= (divider << ARCH_TIMER_EVT_TRIGGER_SHIFT)
- 			| ARCH_TIMER_VIRT_EVT_EN;
- 	arch_timer_set_cntkctl(cntkctl);
--#ifdef CONFIG_ARM64
--	cpu_set_named_feature(EVTSTRM);
--#else
--	elf_hwcap |= HWCAP_EVTSTRM;
--#endif
--#ifdef CONFIG_COMPAT
--	compat_elf_hwcap |= COMPAT_HWCAP_EVTSTRM;
--#endif
-+	arch_timer_set_evtstrm_feature();
- 	cpumask_set_cpu(smp_processor_id(), &evtstrm_available);
- }
- 
-@@ -1059,11 +1052,7 @@ static int arch_timer_cpu_pm_notify(struct notifier_block *self,
- 	} else if (action == CPU_PM_ENTER_FAILED || action == CPU_PM_EXIT) {
- 		arch_timer_set_cntkctl(__this_cpu_read(saved_cntkctl));
- 
--#ifdef CONFIG_ARM64
--		if (cpu_have_named_feature(EVTSTRM))
--#else
--		if (elf_hwcap & HWCAP_EVTSTRM)
--#endif
-+		if (arch_timer_have_evtstrm_feature())
- 			cpumask_set_cpu(smp_processor_id(), &evtstrm_available);
- 	}
- 	return NOTIFY_OK;
+This patch has been reworked according to Saeed's review, to make sure
+that the location of the rule is always respected and serves as a way to
+prioritize rules between each other. This the 3rd iteration of this
+submission, but since it's now a series, I reset the revision numbering.
+
+This series implements that in a limited configuration for now, since we
+limit the total number of rules per port to 4.
+
+The main factors for this limitation are that :
+ - We share the classification tables between all ports (4 max, although
+   one is only used for internal loopback), hence we have to perform a
+   logical separation between rules, which is done today by dedicated
+   ranges for each port in each table
+
+ - The "Flow table", which dictates which lookups operations are
+   performed for an ingress packet, in subdivided into 22 "sub flows",
+   each corresponding to a traffic type based on the L3 proto, L4
+   proto, the presence or not of a VLAN tag and the L3 fragmentation.
+
+   This makes so that when adding a rule, it has to be added into each
+   of these subflows, introducing duplications of entries and limiting
+   our max number of entries.
+
+These limitations can be overcomed in several ways, but for readability
+sake, I'd rather submit basic classification offload support for now,
+and improve it gradually.
+
+This series also adds a small cosmetic cleanup patch (1), and also adds
+support for the "Drop" action compared to the first submission of this
+feature. It is simple enough to be added with this basic support.
+
+Compared to the first submissions, the NETIF_F_NTUPLE flag was also
+removed, following Saeed's comment.
+
+Thanks,
+
+Maxime
+
+Maxime Chevallier (4):
+  net: mvpp2: cls: Remove extra whitespace in mvpp2_cls_flow_write
+  net: mvpp2: cls: Use a bitfield to represent the flow_type
+  net: mvpp2: cls: Add Classification offload support
+  net: mvpp2: cls: Allow dropping packets with classification offload
+
+ drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  42 ++
+ .../net/ethernet/marvell/mvpp2/mvpp2_cls.c    | 497 +++++++++++++++---
+ .../net/ethernet/marvell/mvpp2/mvpp2_cls.h    |  70 ++-
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   |  20 +-
+ 4 files changed, 545 insertions(+), 84 deletions(-)
+
 -- 
-2.21.0
+2.20.1
 
