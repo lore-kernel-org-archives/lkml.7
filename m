@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0310C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9D4C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D78621670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498F921670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625364;
-	bh=UcgxxCxCfU2Luzk54hHPdAqm58Z5E8Ua2EOC7ZSKn0E=;
+	s=default; t=1556625369;
+	bh=XZj4mr16NFVkMu39V8QqgpX0TDjBG2kL9Yj3vw4Dj2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0uJ1dui/Sqtl2wBuDvVnUWWObzv4P/ZRrlHBN47UPfr82r2N61osfQfEzrGARLKpH
-	 83TWa+m0xVqmzvwovSCKvsgurK1jPoV8j+EH4g3s0AYf/KT9F0GV6KvjbU7ANNxfus
-	 s2nxdI3IsEJ3om51DSLfqX7vKdBXk7+DyFxDA3Q4=
+	b=q7ydML/ElsXuRgwKVnQzUpNEYPmBzEUd6shTezuZucvv1W6zhlin1rQmjXOC1Is6m
+	 QLIQEfZlnLEmIq2+0jaGrMSkTk4HPY2mWl9TtdXZLfJidiuYLMRgdDj02P+h0IhnMG
+	 WDccFHoLW/w0jRfIjaX3BOfA95Nelj9gkiBGsmgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730940AbfD3LtG (ORCPT
+        id S1727001AbfD3L4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35356 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:56:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730927AbfD3LtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:00 -0400
+        id S1730216AbfD3LtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3D12054F;
-        Tue, 30 Apr 2019 11:48:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58BDC20449;
+        Tue, 30 Apr 2019 11:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624939;
-        bh=UcgxxCxCfU2Luzk54hHPdAqm58Z5E8Ua2EOC7ZSKn0E=;
+        s=default; t=1556624941;
+        bh=XZj4mr16NFVkMu39V8QqgpX0TDjBG2kL9Yj3vw4Dj2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Y/UwG5NP7yNTLemLQ9HlrUDvvIhmvg0jGZu7Xl/CP5TNoBb7O5HLYcrzw+Mr4kjk
-         Xl2ANTRoubAK+oTHB80be3jBnPBwr6oIZ56U9U6EqoxNHb0v8O0OLw04DPDjrGmlaE
-         UVU40kbAGOMWTtdjrjinY0SmKGtsPYzAfwuvu2J0=
+        b=CqiLbPE0HnYkN3iFjpv2ePvNY/kAjFejJQXrAEnhrTlrneiePLIefqjj57+f/N5qO
+         LOPGzXvG6fPD7XaqoUBJp/p+qBjuL48IyUfC6MN7GeF++/1iv39kBOVnLoCn2vrSYE
+         eF/1fE49N0GzbUMkOrPfA41K770ZngBqvl0NUNuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.0 12/89] tracing: Fix buffer_ref pipe ops
-Date:   Tue, 30 Apr 2019 13:38:03 +0200
-Message-Id: <20190430113610.309054125@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 5.0 30/89] nfsd: Dont release the callback slot unless it was actually held
+Date:   Tue, 30 Apr 2019 13:38:21 +0200
+Message-Id: <20190430113611.349597939@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -62,140 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit b987222654f84f7b4ca95b3a55eca784cb30235b upstream.
+commit e6abc8caa6deb14be2a206253f7e1c5e37e9515b upstream.
 
-This fixes multiple issues in buffer_pipe_buf_ops:
+If there are multiple callbacks queued, waiting for the callback
+slot when the callback gets shut down, then they all currently
+end up acting as if they hold the slot, and call
+nfsd4_cb_sequence_done() resulting in interesting side-effects.
 
- - The ->steal() handler must not return zero unless the pipe buffer has
-   the only reference to the page. But generic_pipe_buf_steal() assumes
-   that every reference to the pipe is tracked by the page's refcount,
-   which isn't true for these buffers - buffer_pipe_buf_get(), which
-   duplicates a buffer, doesn't touch the page's refcount.
-   Fix it by using generic_pipe_buf_nosteal(), which refuses every
-   attempted theft. It should be easy to actually support ->steal, but the
-   only current users of pipe_buf_steal() are the virtio console and FUSE,
-   and they also only use it as an optimization. So it's probably not worth
-   the effort.
- - The ->get() and ->release() handlers can be invoked concurrently on pipe
-   buffers backed by the same struct buffer_ref. Make them safe against
-   concurrency by using refcount_t.
- - The pointers stored in ->private were only zeroed out when the last
-   reference to the buffer_ref was dropped. As far as I know, this
-   shouldn't be necessary anyway, but if we do it, let's always do it.
+In addition, the 'retry_nowait' path in nfsd4_cb_sequence_done()
+causes a loop back to nfsd4_cb_prepare() without first freeing the
+slot, which causes a deadlock when nfsd41_cb_get_slot() gets called
+a second time.
 
-Link: http://lkml.kernel.org/r/20190404215925.253531-1-jannh@google.com
+This patch therefore adds a boolean to track whether or not the
+callback did pick up the slot, so that it can do the right thing
+in these 2 cases.
 
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: stable@vger.kernel.org
-Fixes: 73a757e63114d ("ring-buffer: Return reader page back into existing ring buffer")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/splice.c               |    4 ++--
- include/linux/pipe_fs_i.h |    1 +
- kernel/trace/trace.c      |   28 ++++++++++++++--------------
- 3 files changed, 17 insertions(+), 16 deletions(-)
+ fs/nfsd/nfs4callback.c |    8 +++++++-
+ fs/nfsd/state.h        |    1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -333,8 +333,8 @@ const struct pipe_buf_operations default
- 	.get = generic_pipe_buf_get,
- };
- 
--static int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
--				    struct pipe_buffer *buf)
-+int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
-+			     struct pipe_buffer *buf)
- {
- 	return 1;
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1023,8 +1023,9 @@ static void nfsd4_cb_prepare(struct rpc_
+ 	cb->cb_seq_status = 1;
+ 	cb->cb_status = 0;
+ 	if (minorversion) {
+-		if (!nfsd41_cb_get_slot(clp, task))
++		if (!cb->cb_holds_slot && !nfsd41_cb_get_slot(clp, task))
+ 			return;
++		cb->cb_holds_slot = true;
+ 	}
+ 	rpc_call_start(task);
  }
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -181,6 +181,7 @@ void free_pipe_info(struct pipe_inode_in
- void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
-+int generic_pipe_buf_nosteal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
- void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
+@@ -1051,6 +1052,9 @@ static bool nfsd4_cb_sequence_done(struc
+ 		return true;
+ 	}
  
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6823,19 +6823,23 @@ struct buffer_ref {
- 	struct ring_buffer	*buffer;
- 	void			*page;
- 	int			cpu;
--	int			ref;
-+	refcount_t		refcount;
- };
- 
-+static void buffer_ref_release(struct buffer_ref *ref)
-+{
-+	if (!refcount_dec_and_test(&ref->refcount))
-+		return;
-+	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
-+	kfree(ref);
-+}
++	if (!cb->cb_holds_slot)
++		goto need_restart;
 +
- static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
- 				    struct pipe_buffer *buf)
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 	switch (cb->cb_seq_status) {
+ 	case 0:
+ 		/*
+@@ -1089,6 +1093,7 @@ static bool nfsd4_cb_sequence_done(struc
+ 			cb->cb_seq_status);
+ 	}
  
--	if (--ref->ref)
--		return;
--
--	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
--	kfree(ref);
-+	buffer_ref_release(ref);
- 	buf->private = 0;
++	cb->cb_holds_slot = false;
+ 	clear_bit(0, &clp->cl_cb_slot_busy);
+ 	rpc_wake_up_next(&clp->cl_cb_waitq);
+ 	dprintk("%s: freed slot, new seqid=%d\n", __func__,
+@@ -1296,6 +1301,7 @@ void nfsd4_init_cb(struct nfsd4_callback
+ 	cb->cb_seq_status = 1;
+ 	cb->cb_status = 0;
+ 	cb->cb_need_restart = false;
++	cb->cb_holds_slot = false;
  }
  
-@@ -6844,7 +6848,7 @@ static void buffer_pipe_buf_get(struct p
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
--	ref->ref++;
-+	refcount_inc(&ref->refcount);
- }
- 
- /* Pipe buffer operations for a buffer. */
-@@ -6852,7 +6856,7 @@ static const struct pipe_buf_operations
- 	.can_merge		= 0,
- 	.confirm		= generic_pipe_buf_confirm,
- 	.release		= buffer_pipe_buf_release,
--	.steal			= generic_pipe_buf_steal,
-+	.steal			= generic_pipe_buf_nosteal,
- 	.get			= buffer_pipe_buf_get,
+ void nfsd4_run_cb(struct nfsd4_callback *cb)
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -70,6 +70,7 @@ struct nfsd4_callback {
+ 	int cb_seq_status;
+ 	int cb_status;
+ 	bool cb_need_restart;
++	bool cb_holds_slot;
  };
  
-@@ -6865,11 +6869,7 @@ static void buffer_spd_release(struct sp
- 	struct buffer_ref *ref =
- 		(struct buffer_ref *)spd->partial[i].private;
- 
--	if (--ref->ref)
--		return;
--
--	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
--	kfree(ref);
-+	buffer_ref_release(ref);
- 	spd->partial[i].private = 0;
- }
- 
-@@ -6924,7 +6924,7 @@ tracing_buffers_splice_read(struct file
- 			break;
- 		}
- 
--		ref->ref = 1;
-+		refcount_set(&ref->refcount, 1);
- 		ref->buffer = iter->trace_buffer->buffer;
- 		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
- 		if (IS_ERR(ref->page)) {
+ struct nfsd4_callback_ops {
 
 
