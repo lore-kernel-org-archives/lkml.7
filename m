@@ -2,95 +2,90 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA96C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48EDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C8521707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39A621734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfD3OgJ (ORCPT
+        id S1727598AbfD3Ogg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:36:09 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:46336 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfD3OgI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:36:08 -0400
-Received: by mail-io1-f69.google.com with SMTP id i84so11532717iof.13
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 07:36:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=+ObM0ZbbX8Ar/PY4hTa2EHRmMAyzn4hENSqLrm5v8YI=;
-        b=ldxxAew2YxV7ddEh/7GtdTOqF4uKjkyhctgnycDTEn8booucM+hiq5pX5FtPvVtuFF
-         zc3DUbEnWVkRZzUipXtmWyBYGQTl1xKc8GL+OR6nBqt1Upxt/lPqOCMPPgANChPKpMYd
-         VFPk3U973jj6x94xKxvG6UhRBGdXrJYj7XlKEibkp5h1qGEucaT/1sUOElhA47yG3437
-         h9zrLgFoKkjFq/njfuB5VeO4EYO2c43YeDRWthw1viU1BL1S8Wc460magm8ILNROb+lN
-         TZEibv4Hrd5+PCCnDDHJdPo619F+yPWQCi0uh34AzKG6rXtz90G0MpPLTQ6xDJtUXJAs
-         xLIg==
-X-Gm-Message-State: APjAAAW3X/rNSgGJt6ewh/oaz2pSBeyaT3Vew2dB+IhMljKdDAYOkRPu
-        7ld0VFgJuTLFwiAtzrdD6VO8M1Q6Ow81E4ZxNY49e2tVE1hY
-X-Google-Smtp-Source: APXvYqx+6xtWkB+45OmZD4MPGF7/9kcaqRkmsnDQdmsowkLlSmod3wncUp7EV+maJYO1BWdp8stDflu+PXy3Pn4BO8VBeZoRFLvR
+        Tue, 30 Apr 2019 10:36:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbfD3Ogg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:36:36 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E360220835;
+        Tue, 30 Apr 2019 14:36:32 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 10:36:29 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+Message-ID: <20190430103629.0899b3a8@gandalf.local.home>
+In-Reply-To: <20190430142047.GF2589@hirez.programming.kicks-ass.net>
+References: <20190427100639.15074-1-nstange@suse.de>
+        <20190427100639.15074-4-nstange@suse.de>
+        <20190427102657.GF2623@hirez.programming.kicks-ass.net>
+        <20190428133826.3e142cfd@oasis.local.home>
+        <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+        <20190429145250.1a5da6ed@gandalf.local.home>
+        <20190430104648.GR2623@hirez.programming.kicks-ass.net>
+        <20190430094445.13e61f41@gandalf.local.home>
+        <20190430142047.GF2589@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Received: by 2002:a24:6fc4:: with SMTP id x187mr4035363itb.122.1556634967514;
- Tue, 30 Apr 2019 07:36:07 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 07:36:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000048aa750587c052ef@google.com>
-Subject: WARNING: Detected a wedged cx25840 chip; the device will not work.
-From:   syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, 30 Apr 2019 16:20:47 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-syzbot found the following crash on:
+> > 
+> > Sure, but that's a completely different issue. We would need to solve
+> > the 'emulate' call for batch mode first.  
+> 
+> I don't see a problem there; when INT3 happens; you bsearch() the batch
+> array to find the one you hit, you frob that into the percpu variables
+> and do the thing. Or am I loosing the plot again?
 
-HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=12df67c3200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=170a86bf206dd2c6217e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108a28f3200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145d8a2d200000
+I may need to tweak Linus's patch slightly, but I may be able to get it
+to work with the batch mode.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
-
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-pvrusb2: Hardware description: Gotview USB 2.0 DVD 2
-pvrusb2: Invalid write control endpoint
-usb 1-1: USB disconnect, device number 2
-pvrusb2: Invalid write control endpoint
-pvrusb2: WARNING: Detected a wedged cx25840 chip; the device will not work.
-pvrusb2: WARNING: Try power cycling the pvrusb2 device.
-pvrusb2: WARNING: Disabling further access to the device to prevent other  
-foul-ups.
-pvrusb2: Device being rendered inoperable
-cx25840 0-0044: Unable to detect h/w, assuming cx23887
-cx25840 0-0044: cx23887 A/V decoder found @ 0x88 (pvrusb2_a)
-pvrusb2: Attached sub-driver cx25840
-pvrusb2: Attempted to execute control transfer when device not ok
-pvrusb2: Attempted to execute control transfer when device not ok
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- Steve
