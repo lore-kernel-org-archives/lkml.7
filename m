@@ -2,104 +2,169 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51421C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B711C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2112D20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:33:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="uqHv+v7H"
+	by mail.kernel.org (Postfix) with ESMTP id 2B98220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556642049;
+	bh=+7m+vDUlDtrlaNOzQneMzscMBhl0wuy482hLt99Pw24=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TLajvevuAY7+TuvaUkHxQDxBEEUwW3G5vyleyXxZQdvAduQgb/N+cmHrwY8SWmQu2
+	 jMoIkhqr1Ykdwt08wz5mRtVsPIW48BMrN9qBna62kCZ0ea//jsk82ukl5DsfalyFtY
+	 1+I6AN93q5lFK6Ou2q7ciOS96Zi2ccbz6/vaFnyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfD3QdY (ORCPT
+        id S1726512AbfD3QeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:33:24 -0400
-Received: from mail-io1-f49.google.com ([209.85.166.49]:33631 "EHLO
-        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfD3QdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:33:24 -0400
-Received: by mail-io1-f49.google.com with SMTP id u12so12813580iop.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=av5VSNqJe7ZdTw4nzRuXBSgojWB4gnNiSMsj6Rn7YDc=;
-        b=uqHv+v7HqQD21A02DUEi0TR9EDNnqSAh+65SBAPqzIAwTrsXlla7pqKSpini2DuqBH
-         MZ5wnArL0hWFtEw6QvwH1+wal5Puz2vhMQ6jAdKCw+1QU83TWeTRMJX+jTlvKqBBAGa2
-         VesFY/GgBYduoB2sNrCPdO1kIrVl5O4+BiUeTHlxxvYwZAF/YPltSMdb60i7WZzDejMD
-         tu+NpOFTYvLCce4TnnEJLSs02L4nketpCF51AGmRsmbpx3P2gUIucB8YJY5cxr+UetWE
-         6p6/BYexB/U7z6Ik8iXqktx95i39UNFE9jIfF+5DCoIEqCAknFXgry44Hr0MwGGLL8Ox
-         dpMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=av5VSNqJe7ZdTw4nzRuXBSgojWB4gnNiSMsj6Rn7YDc=;
-        b=OniCPHY53IgGk7sELyoTUWWd0N4bRMzOjgf+Tn2hqVvDB7qMPYVo8doUalk9LdeVbI
-         0vTqRn1o8gYU+m1Iz2BX5nvnktXq+BzL4GgpADF8vmAdw9s4i89FCCDY2EhBtUXj8TZK
-         QtpidWvgGxE768iw8Qg2G77UeryhtAbpUqLKqcxlH5OyMjbcfjZ9ptnq7ls18ZZdy4VL
-         H7/DciAlkZlyXrcVXPcfDS4IITOQru66KC3I0xwuOl5fR0HALBeDaQsVgCypJ/SMDXuS
-         s037sQjm4+HSTeK9OirvR+BMVcfFP95Is2pb4cEsa4l2NcT/rNskfsfCeNnLfmp+1wWJ
-         GtaQ==
-X-Gm-Message-State: APjAAAWdsUVUYEz8YNhJQyxykX0WN2FIn88oqUno91ovS0AITubYzw5M
-        st+NIDQrHsLcLa+EEI7g1hOsMg==
-X-Google-Smtp-Source: APXvYqy114OccaZET0DAxPq1oVIV3uf8pOzkEUP8Ovs6BXAvr+d7OrRPRhaSDVAJ6t12mnKQFzqa9g==
-X-Received: by 2002:a5d:89c1:: with SMTP id a1mr15751044iot.214.1556642003525;
-        Tue, 30 Apr 2019 09:33:23 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id h8sm14286582iof.36.2019.04.30.09.33.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 09:33:22 -0700 (PDT)
-Subject: Re: [PATCHv2] io_uring: free allocated io_memory once
-To:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20190430163021.54711-1-mark.rutland@arm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b31d4f2e-8756-02ef-9c0b-55c7e755c097@kernel.dk>
-Date:   Tue, 30 Apr 2019 10:33:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 12:34:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfD3QeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:34:07 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 566482184B
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 16:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556642046;
+        bh=+7m+vDUlDtrlaNOzQneMzscMBhl0wuy482hLt99Pw24=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SQ3WD6JGj2rfpj1pZpQt9iBLCEw3KJUoQ0o0OruuyIpbQgwpRt1MXShYRRcRy0Usp
+         gAeC1aF/3cUrFIIdAyRkO3dlJb8Ys5+aLXJk9/34BsSDYhvXqPhUjGKyfYAxejyYl/
+         nCyI8zJ0pmp/laRF1qEXhGhS5UUwT3twrheTvF+o=
+Received: by mail-wr1-f48.google.com with SMTP id v16so19363183wrp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:34:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAUZc8d0HP0iwg3VymzGX8F5rKTeuKz8heukrhngx/psZBfDQM7N
+        QzonAUGVipQDSfy16AjKClM4Dtm8/Rcp8J1NurJmKw==
+X-Google-Smtp-Source: APXvYqw/JUfSK40rBP/CjGQtWaZs/dUObYS+HMalp4FiLimIf58D0PzjA0iOWcIZ4E+bI9N8YBmphCEO5sC4OrJN4os=
+X-Received: by 2002:a5d:4b0c:: with SMTP id v12mr30170120wrq.330.1556642043097;
+ Tue, 30 Apr 2019 09:34:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190430163021.54711-1-mark.rutland@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190428133826.3e142cfd@oasis.local.home> <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
+ <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+ <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+ <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
+ <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
+ <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
+ <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
+ <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
+ <20190430135602.GD2589@hirez.programming.kicks-ass.net> <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
+In-Reply-To: <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 30 Apr 2019 09:33:51 -0700
+X-Gmail-Original-Message-ID: <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
+Message-ID: <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 10:30 AM, Mark Rutland wrote:
-> If io_allocate_scq_urings() fails to allocate an sq_* region, it will
-> call io_mem_free() for any previously allocated regions, but leave
-> dangling pointers to these regions in the ctx. Any regions which have
-> not yet been allocated are left NULL. Note that when returning
-> -EOVERFLOW, the previously allocated sq_ring is not freed, which appears
-> to be an unintentional leak.
-> 
-> When io_allocate_scq_urings() fails, io_uring_create() will call
-> io_ring_ctx_wait_and_kill(), which calls io_mem_free() on all the sq_*
-> regions, assuming the pointers are valid and not NULL.
-> 
-> This can result in pages being freed multiple times, which has been
-> observed to corrupt the page state, leading to subsequent fun. This can
-> also result in virt_to_page() on NULL, resulting in the use of bogus
-> page addresses, and yet more subsequent fun. The latter can be detected
-> with CONFIG_DEBUG_VIRTUAL on arm64.
-> 
-> Adding a cleanup path to io_allocate_scq_urings() complicates the logic,
-> so let's leave it to io_ring_ctx_free() to consistently free these
-> pointers, and simplify the io_allocate_scq_urings() error paths.
+On Tue, Apr 30, 2019 at 9:06 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, Apr 30, 2019 at 6:56 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+>
+> Realistically, I don't think you can hit the problem in practice. The
+> only way to hit that incredibly small race of "one instruction, *both*
+> NMI and interrupts" is to have a lot of interrupts going all at the
+> same time, but that will also then solve the latency problem, so the
+> very act of triggering it will also fix it.
+>
+> I don't see any case where it's really bad. The "sti sysexit" race is
+> similar, just about latency of user space signal reporting (and
+> perhaps any pending TIF_WORK_xyz flags).
 
-Looks good - applied, thanks.
+In the worst case, it actually kills the machine.  Last time I tracked
+a bug like this down, I think the issue was that we got preempted
+after the last TIF_ check, entered a VM, exited, context switched
+back, and switched to user mode without noticing that there was a
+ending KVM user return notifier.  This left us with bogus CPU state
+and the machine exploded.
 
--- 
-Jens Axboe
+Linus, can I ask you to reconsider your opposition to Josh's other
+approach of just shifting the stack on int3 entry?  I agree that it's
+ugly, but the ugliness is easily manageable and fairly self-contained.
+We add a little bit of complication to the entry asm (but it's not
+like it's unprecedented -- the entry asm does all kinds of stack
+rearrangement due to IST and PTI crap already), and we add an
+int3_emulate_call(struct pt_regs *regs, unsigned long target) helper
+that has appropriate assertions that the stack is okay and emulates
+the call.  And that's it.
 
+In contrast, your approach involves multiple asm trampolines, hash
+tables, batching complications, and sti shadows.
+
+As an additional argument, with the stack-shifting approach, it runs
+on *every int3 from kernel mode*.  This means that we can do something
+like this:
+
+static bool int3_emulate_call_okay(struct pt_regs *regs)
+{
+    unsigned long available_stack = regs->sp - (unsigned long);
+    return available_stack >= sizeof(long);
+}
+
+void do_int3(...) {
+{
+  WARN_ON_ONCE(!user_mode(regs) && !int3_emulate_call_okay(regs));
+  ...;
+}
+
+static void int3_emulate_call(struct pt_regs *regs, unsigned long target)
+{
+  BUG_ON(user_mode(regs) || !int3_emulate_call_okey(regs));
+  regs->sp -= sizeof(unsigned long);
+  *(unsigned long *)regs->sp = target;
+  /* CET SHSTK fixup goes here */
+}
+
+Obviously the CET SHSTK fixup might be rather nasty, but I suspect
+it's a solvable problem.
+
+A major benefit of this is that the entry asm nastiness will get
+exercised all the time, and, if we screw it up, the warning will fire.
+This is the basic principle behind why the entry stuff *works* these
+days.  I've put a lot of effort into making sure that running kernels
+with CONFIG_DEBUG_ENTRY and running the selftests actually exercises
+the nasty cases.
+
+--Andy
