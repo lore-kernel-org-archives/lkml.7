@@ -2,278 +2,111 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4C0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF69C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2380721670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D814D2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfD3REF (ORCPT
+        id S1726864AbfD3RER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:04:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfD3REF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:04:05 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 613032075E;
-        Tue, 30 Apr 2019 17:04:01 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 13:03:59 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-Message-ID: <20190430130359.330e895b@gandalf.local.home>
-In-Reply-To: <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
-References: <20190428133826.3e142cfd@oasis.local.home>
-        <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
-        <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
-        <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
-        <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
-        <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
-        <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
-        <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
-        <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
-        <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
-        <20190430135602.GD2589@hirez.programming.kicks-ass.net>
-        <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
-        <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Apr 2019 13:04:17 -0400
+Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:32848 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfD3RER (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:04:17 -0400
+Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
+        id 1hLWAm-0000Av-00; Tue, 30 Apr 2019 17:04:04 +0000
+Date:   Tue, 30 Apr 2019 13:04:04 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        "devel@uclibc-ng.org" <devel@uclibc-ng.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: Detecting libc in perf (was Re: perf tools build broken after
+ v5.1-rc1)
+Message-ID: <20190430170404.GX23599@brightrain.aerifal.cx>
+References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
+ <20190422152027.GB11750@kernel.org>
+ <20190425214800.GC21829@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
+ <20190430011818.GE7857@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A250601B@us01wembx1.internal.synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A250601B@us01wembx1.internal.synopsys.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 09:33:51 -0700
-Andy Lutomirski <luto@kernel.org> wrote:
+On Tue, Apr 30, 2019 at 03:53:18PM +0000, Vineet Gupta wrote:
+> On 4/29/19 6:18 PM, Arnaldo Carvalho de Melo wrote:
+> >>> Auto-detecting system features:
+> >>> ...                         dwarf: [ OFF ]
+> >>> ...            dwarf_getlocations: [ OFF ]
+> >>> ...                         glibc: [ on  ]
+> >> Not related to current issue, this run uses a uClibc toolchain and yet it is
+> >> detecting glibc - doesn't seem right to me.
+> > Ok, I'll improve that, I think it just tries to detect a libc, yeah,
+> > see:
+> >
+> > [acme@quaco linux]$ cat tools/build/feature/test-glibc.c
+> > // SPDX-License-Identifier: GPL-2.0
+> > #include <stdlib.h>
+> >
+> > #if !defined(__UCLIBC__)
+> > #include <gnu/libc-version.h>
+> > #else
+> > #define XSTR(s) STR(s)
+> > #define STR(s) #s
+> > #endif
+> >
+> > int main(void)
+> > {
+> > #if !defined(__UCLIBC__)
+> > 	const char *version = gnu_get_libc_version();
+> > #else
+> > 	const char *version = XSTR(__GLIBC__) "." XSTR(__GLIBC_MINOR__);
+> > #endif
+> >
+> > 	return (long)version;
+> > }
+> > [acme@quaco linux]$
+> >
+> > [perfbuilder@59ca4b424ded /]$ grep __GLIBC__ /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/*.h
+> > /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:   The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
+> > /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:#define	__GLIBC__	2
+> > /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
+> > [perfbuilder@59ca4b424ded /]$
+> >
+> > Isn't that part of uClibc?
+> 
+> Right you are. Per the big fat comment right above that code, this gross hack in
+> uclibc is unavoidable as applications tend to rely on that define.
+> So a better fix would be to check for various !GLIBC libs explicitly.
+> 
+> #ifdef __UCLIBC__
+> 
+> #elseif defined __MUSL__
+> 
+> ....
+> 
+> Not pretty from app usage pov, but that seems to be the only sane way of doing it.
 
+What are you trying to achieve? I was just CC'd and I'm missing the
+context.
 
-> Linus, can I ask you to reconsider your opposition to Josh's other
-> approach of just shifting the stack on int3 entry?  I agree that it's
-> ugly, but the ugliness is easily manageable and fairly self-contained.
-> We add a little bit of complication to the entry asm (but it's not
-> like it's unprecedented -- the entry asm does all kinds of stack
-> rearrangement due to IST and PTI crap already), and we add an
-> int3_emulate_call(struct pt_regs *regs, unsigned long target) helper
-> that has appropriate assertions that the stack is okay and emulates
-> the call.  And that's it.
-
-I also prefer Josh's stack shift solution, as I personally believe
-that's a cleaner solution. But I went ahead and implemented Linus's
-version to get it working for ftrace. Here's the code, and it survived
-some preliminary tests.
-
-There's three places that use the update code. One is the start of
-every function call (yes, I counted that as one, and that case is
-determined by: ftrace_location(ip)). The other is the trampoline itself
-has an update. That could also be converted to a text poke, but for now
-its here as it was written before text poke existed. The third place is
-actually a jump (to the function graph code). But that can be safely
-skipped if we are converting it, as it only goes from jump to nop, or
-nop to jump.
-
-The trampolines reflect this. Also, as NMI code is traced by ftrace, I
-had to duplicate the trampolines for the nmi case (but only for the
-interrupts disabled case as NMIs don't have interrupts enabled).
-
--- Steve
-
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index ef49517f6bb2..bf320bf791dd 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -17,6 +17,7 @@
- #include <linux/uaccess.h>
- #include <linux/ftrace.h>
- #include <linux/percpu.h>
-+#include <linux/frame.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
- #include <linux/init.h>
-@@ -232,6 +233,9 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
- 
- static unsigned long ftrace_update_func;
- 
-+/* Used within inline asm below */
-+unsigned long ftrace_update_func_call;
-+
- static int update_ftrace_func(unsigned long ip, void *new)
- {
- 	unsigned char old[MCOUNT_INSN_SIZE];
-@@ -259,6 +263,8 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
- 	unsigned char *new;
- 	int ret;
- 
-+	ftrace_update_func_call = (unsigned long)func;
-+
- 	new = ftrace_call_replace(ip, (unsigned long)func);
- 	ret = update_ftrace_func(ip, new);
- 
-@@ -280,6 +286,70 @@ static nokprobe_inline int is_ftrace_caller(unsigned long ip)
- 	return 0;
- }
- 
-+extern asmlinkage void ftrace_emulate_call_irqon(void);
-+extern asmlinkage void ftrace_emulate_call_irqoff(void);
-+extern asmlinkage void ftrace_emulate_call_nmi(void);
-+extern asmlinkage void ftrace_emulate_call_update_irqoff(void);
-+extern asmlinkage void ftrace_emulate_call_update_irqon(void);
-+extern asmlinkage void ftrace_emulate_call_update_nmi(void);
-+
-+static DEFINE_PER_CPU(void *, ftrace_bp_call_return);
-+static DEFINE_PER_CPU(void *, ftrace_bp_call_nmi_return);
-+
-+asm(
-+	".text\n"
-+	".global ftrace_emulate_call_irqoff\n"
-+	".type ftrace_emulate_call_irqoff, @function\n"
-+	"ftrace_emulate_call_irqoff:\n\t"
-+		"push %gs:ftrace_bp_call_return\n\t"
-+		"sti\n\t"
-+		"jmp ftrace_caller\n"
-+	".size ftrace_emulate_call_irqoff, .-ftrace_emulate_call_irqoff\n"
-+
-+	".global ftrace_emulate_call_irqon\n"
-+	".type ftrace_emulate_call_irqon, @function\n"
-+	"ftrace_emulate_call_irqon:\n\t"
-+		"push %gs:ftrace_bp_call_return\n\t"
-+		"jmp ftrace_caller\n"
-+	".size ftrace_emulate_call_irqon, .-ftrace_emulate_call_irqon\n"
-+
-+	".global ftrace_emulate_call_nmi\n"
-+	".type ftrace_emulate_call_nmi, @function\n"
-+	"ftrace_emulate_call_nmi:\n\t"
-+		"push %gs:ftrace_bp_call_nmi_return\n\t"
-+		"jmp ftrace_caller\n"
-+	".size ftrace_emulate_call_nmi, .-ftrace_emulate_call_nmi\n"
-+
-+	".global ftrace_emulate_call_update_irqoff\n"
-+	".type ftrace_emulate_call_update_irqoff, @function\n"
-+	"ftrace_emulate_call_update_irqoff:\n\t"
-+		"push %gs:ftrace_bp_call_return\n\t"
-+		"sti\n\t"
-+		"jmp *ftrace_update_func_call\n"
-+	".size ftrace_emulate_call_update_irqoff, .-ftrace_emulate_call_update_irqoff\n"
-+
-+	".global ftrace_emulate_call_update_irqon\n"
-+	".type ftrace_emulate_call_update_irqon, @function\n"
-+	"ftrace_emulate_call_update_irqon:\n\t"
-+		"push %gs:ftrace_bp_call_return\n\t"
-+		"jmp *ftrace_update_func_call\n"
-+	".size ftrace_emulate_call_update_irqon, .-ftrace_emulate_call_update_irqon\n"
-+
-+	".global ftrace_emulate_call_update_nmi\n"
-+	".type ftrace_emulate_call_update_nmi, @function\n"
-+	"ftrace_emulate_call_update_nmi:\n\t"
-+		"push %gs:ftrace_bp_call_nmi_return\n\t"
-+		"jmp *ftrace_update_func_call\n"
-+	".size ftrace_emulate_call_update_nmi, .-ftrace_emulate_call_update_nmi\n"
-+	".previous\n");
-+
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_irqoff);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_irqon);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_nmi);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_irqoff);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_irqon);
-+STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_nmi);
-+
- /*
-  * A breakpoint was added to the code address we are about to
-  * modify, and this is the handle that will just skip over it.
-@@ -295,10 +365,40 @@ int ftrace_int3_handler(struct pt_regs *regs)
- 		return 0;
- 
- 	ip = regs->ip - 1;
--	if (!ftrace_location(ip) && !is_ftrace_caller(ip))
-+	if (ftrace_location(ip)) {
-+		if (in_nmi()) {
-+			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
-+			regs->ip = (unsigned long) ftrace_emulate_call_nmi;
-+			return 1;
-+		}
-+		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
-+		if (regs->flags & X86_EFLAGS_IF) {
-+			regs->flags &= ~X86_EFLAGS_IF;
-+			regs->ip = (unsigned long) ftrace_emulate_call_irqoff;
-+		} else {
-+			regs->ip = (unsigned long) ftrace_emulate_call_irqon;
-+		}
-+	} else if (is_ftrace_caller(ip)) {
-+		/* If it's a jump, just need to skip it */
-+		if (!ftrace_update_func_call) {
-+			regs->ip += MCOUNT_INSN_SIZE -1;
-+			return 1;
-+		}
-+		if (in_nmi()) {
-+			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
-+			regs->ip = (unsigned long) ftrace_emulate_call_update_nmi;
-+			return 1;
-+		}
-+		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
-+		if (regs->flags & X86_EFLAGS_IF) {
-+			regs->flags &= ~X86_EFLAGS_IF;
-+			regs->ip = (unsigned long) ftrace_emulate_call_update_irqoff;
-+		} else {
-+			regs->ip = (unsigned long) ftrace_emulate_call_update_irqon;
-+		}
-+	} else {
- 		return 0;
--
--	regs->ip += MCOUNT_INSN_SIZE - 1;
-+	}
- 
- 	return 1;
- }
-@@ -859,6 +959,8 @@ void arch_ftrace_update_trampoline(struct ftrace_ops *ops)
- 
- 	func = ftrace_ops_get_func(ops);
- 
-+	ftrace_update_func_call = (unsigned long)func;
-+
- 	/* Do a safe modify in case the trampoline is executing */
- 	new = ftrace_call_replace(ip, (unsigned long)func);
- 	ret = update_ftrace_func(ip, new);
-@@ -960,6 +1062,7 @@ static int ftrace_mod_jmp(unsigned long ip, void *func)
- {
- 	unsigned char *new;
- 
-+	ftrace_update_func_call = 0;
- 	new = ftrace_jmp_replace(ip, (unsigned long)func);
- 
- 	return update_ftrace_func(ip, new);
-
+Rich
