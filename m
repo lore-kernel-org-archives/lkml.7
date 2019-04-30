@@ -2,322 +2,110 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB35FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218B7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7665B20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5672147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HucAEhzR"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m8zNQMgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbfD3B5U (ORCPT
+        id S1729894AbfD3B50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:57:20 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40417 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbfD3B5U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:57:20 -0400
-Received: by mail-io1-f66.google.com with SMTP id m9so4420169iok.7;
-        Mon, 29 Apr 2019 18:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4eDQEWWW3C1zHEw+XhHMcdX5N8JmPC7I6tUL4buhW3Q=;
-        b=HucAEhzRRcPrs4HGlAiJWZVNWZ9dP7Fizb+b5xI/BKueiljvrIsi0fGHmTXV28YvDJ
-         J/6LPjfZu7rcx2IJp3SwF3Mj7HPF/2EmdrwUFshiwYp2X6e3TXZGKztw9jgmnPXNuUm3
-         6BDTd8j2GDUhn5VeUD0LdeNr+prfPKZHVuPtxJqwMgCd4jRk1nc+kuJPBVm2xW/Xmrmo
-         nDaWZJE31ZTHv8ha5pby+m8/FNGNYz4oewXs0XrRuAn+eQO042B7PoRs0EPi90kZGd16
-         lt59QtBqXkiJeYhdgw9qOBwDoqe7G5g4AlvZqTWM8NOcoW3plzeBw4rsGkQJevP4PKGS
-         450A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4eDQEWWW3C1zHEw+XhHMcdX5N8JmPC7I6tUL4buhW3Q=;
-        b=mSudIrO4GXhJNUc1aw/7vdD56XgDUi78VkcDZAJ7mlswsKLfuwdOoArdcC0nV52l3q
-         aNJINm01ToFX5harPa1Elxgtoy2FzbuszgUN9oqqcubsBuhvHeIdPO8o5FCz+ywO5uxd
-         +VBKT6mHhzTlmkih7TI9k3tRTvw6HgqwmZZPGeq+ocfhc1ciepqTo5F2iiChcWQIFs5z
-         PEzQg0U+k17Ii+JgwDpxaNLvIz3TyTh620Xiz2ORzrgeKaLH65FxcZy6iXs1K3gZXiKG
-         Y5O8PbbOWf9IA3ALLehsht+S68EZN2Hi39Ga33103ZThVsqFFkUUpHmBVYCLst0wTuoX
-         fxcQ==
-X-Gm-Message-State: APjAAAXFsky3Wcfb0xaFcwzUoamUNnyLw1eltqin0IYTpTTE/oLrFze0
-        kGIAztjEE0hrIOfbfmxTGYrzFGyY9rNOPptP/qI=
-X-Google-Smtp-Source: APXvYqzTYLmncM9hFrR7+JKfYHkyJnb1pDKKIgIA/5OJs/6SE3fXAtIMGuxODLRA7mWnL38flgbmT9FGaqxqGNvoLro=
-X-Received: by 2002:a6b:410e:: with SMTP id n14mr38489961ioa.141.1556589438730;
- Mon, 29 Apr 2019 18:57:18 -0700 (PDT)
+        Mon, 29 Apr 2019 21:57:26 -0400
+Received: from mail-eopbgr20044.outbound.protection.outlook.com ([40.107.2.44]:28027
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729238AbfD3B50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 21:57:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yfff3VUuI7FcOhQjulztNG48leP+fI44AuIkflJgl58=;
+ b=m8zNQMgmesbA5Qvqbu73itjk8fopxZ2wxo/NZp5eUir5WEd7SnUlPnJAucEl3j09Xnyde8W0/lYs1khktAFJ+oS/Wl2JR6Ly9V/vnT0JYy6tL9tqsdo/SM5CmbGtf3AQoHGHy0qrIFuoYOMVf8o0mjk1CobjmnoP9NE78TjDH4o=
+Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com (52.133.30.10) by
+ AM6PR0402MB3829.eurprd04.prod.outlook.com (52.133.29.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Tue, 30 Apr 2019 01:55:18 +0000
+Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com
+ ([fe80::55cc:4406:327:9259]) by AM6PR0402MB3911.eurprd04.prod.outlook.com
+ ([fe80::55cc:4406:327:9259%3]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
+ 01:55:18 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] clk: imx: pllv3: Fix fall through build warning
+Thread-Topic: [PATCH] clk: imx: pllv3: Fix fall through build warning
+Thread-Index: AQHU/vfDJ+hnJuSvCk6GSL1CreUf2Q==
+Date:   Tue, 30 Apr 2019 01:55:18 +0000
+Message-ID: <1556589033-6080-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR01CA0063.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::27) To AM6PR0402MB3911.eurprd04.prod.outlook.com
+ (2603:10a6:209:1c::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68c6c806-fef6-46d2-40f5-08d6cd0ee578
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR0402MB3829;
+x-ms-traffictypediagnostic: AM6PR0402MB3829:
+x-microsoft-antispam-prvs: <AM6PR0402MB382940A6A3A42D3A816F67AAF53A0@AM6PR0402MB3829.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:331;
+x-forefront-prvs: 00235A1EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(366004)(396003)(376002)(136003)(189003)(199004)(86362001)(4326008)(2501003)(2201001)(6436002)(81166006)(8936002)(6486002)(66066001)(52116002)(7736002)(66446008)(81156014)(110136005)(64756008)(73956011)(66476007)(66556008)(305945005)(99286004)(50226002)(316002)(25786009)(8676002)(6512007)(53936002)(256004)(14454004)(4744005)(66946007)(186003)(3846002)(6116002)(14444005)(26005)(2906002)(386003)(68736007)(71190400001)(97736004)(478600001)(476003)(486006)(5660300002)(6506007)(2616005)(71200400001)(36756003)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3829;H:AM6PR0402MB3911.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: um4Cp4BkeckDFY5Y5DLx3bezGZvre+JlN93QVKB+XsfrzCraQGIqgnMK4mLAqpassiMGSuJpW+AvZA9DXftPvH71t+bQ9JhPbeZMobX2yJ0SUi+GYVLS5jdapUU5ZSbBFLCHJHIsHS0JupB8dcdVf/vR5GCNffOC9NXjpDJ8iGj4cqKRXOja3XURtnPX+RDCpYpABNFT+j+j89n6WAPS585vpYqWd5W6N3JZgjeFMBUN7ctOk07Lsluoo1GF6QSWivOEW7W+iWjKosPelKohnz2PgjNhCn1VcNu0dCzhRuQMezYQ3smQIvcZ2nh43z8HBJXTcmb53N9ETZLUPtjugnkyZKQgiEtpXNRhvodt781BMQyUBluGkFYIeYLMROpkGN7C7RIjJ4Qb0YTAFFVZtnEgKj05V5nDx0Aybu9UVJA=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190208025828.30901-1-andrew.smirnov@gmail.com> <D53F2ED9-E0E6-4290-9E3E-864D2AF43572@holtmann.org>
-In-Reply-To: <D53F2ED9-E0E6-4290-9E3E-864D2AF43572@holtmann.org>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 29 Apr 2019 18:57:06 -0700
-Message-ID: <CAHQ1cqH=fRWBxd_SyeNmnnj-RqzU-M-PjvyE1P+HD-RtoUEzxA@mail.gmail.com>
-Subject: Re: [RFC] Bluetooth: Retry configure request if result is L2CAP_CONF_UNKNOWN
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-bluetooth@vger.kernel.org,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Florian Dollinger <dollinger.florian@gmx.de>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68c6c806-fef6-46d2-40f5-08d6cd0ee578
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 01:55:18.7396
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3829
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 1:08 PM Marcel Holtmann <marcel@holtmann.org> wrote=
-:
->
-> Hi Andrey,
->
-> > Due to:
-> >
-> > - current implementation of l2cap_config_rsp() dropping BT
-> >   connection if sender of configuration response replied with unknown
-> >   option failure (Result=3D0x0003/L2CAP_CONF_UNKNOWN)
-> >
-> > - current implementation of l2cap_build_conf_req() adding
-> >   L2CAP_CONF_RFC(0x04) option to initial configure request sent by
-> >   the Linux host.
-> >
-> > devices that do no recongninze L2CAP_CONF_RFC, such as Xbox One S
-> > controllers, will get stuck in endless connect -> configure ->
-> > disconnect loop, never connect and be generaly unusable.
-> >
-> > To avoid this problem add code to do the following:
-> >
-> > 1. Store a mask of supported conf option types per connection
-> >
-> > 2. Parse the body of response L2CAP_CONF_UNKNOWN and adjust
-> >    connection's supported conf option types mask
-> >
-> > 3. Retry configuration step the same way it's done for
-> >    L2CAP_CONF_UNACCEPT
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> > Cc: Florian Dollinger <dollinger.florian@gmx.de>
-> > Cc: Marcel Holtmann <marcel@holtmann.org>
-> > Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> > Cc: linux-bluetooth@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >
-> > Everyone:
-> >
-> > I marked this as an RFC, since I don't have a lot of experience with
-> > Bluetooth subsystem and don't have hight degree of confidence about
-> > choices made in this patch. I do, however, thins is is good enough to
-> > start a discussion about the problem.
-> >
-> > Thanks,
-> > Andrey Smirnov
->
-> so it seems that the remote side claims to support Streaming Mode and tha=
-t is why we are trying to set it up.
->
-> > ACL Data RX: Handle 12 flags 0x02 dlen 16
->       L2CAP: Information Response (0x0b) ident 1 len 8
->         Type: Extended features supported (0x0002)
->         Result: Success (0x0000)
->         Features: 0x00000010
->           Streaming Mode
->
-> And that is why we do this.
->
-> < ACL Data TX: Handle 12 flags 0x00 dlen 23
->       L2CAP: Configure Request (0x04) ident 2 len 15
->         Destination CID: 64
->         Flags: 0x0000
->         Option: Retransmission and Flow Control (0x04) [mandatory]
->           Mode: Basic (0x00)
->           TX window size: 0
->           Max transmit: 0
->           Retransmission timeout: 0
->           Monitor timeout: 0
->           Maximum PDU size: 0
->
-> > ACL Data RX: Handle 12 flags 0x02 dlen 15
->       L2CAP: Configure Response (0x05) ident 2 len 7
->         Source CID: 64
->         Flags: 0x0000
->         Result: Failure - unknown options (0x0003)
->         04
->
-> So btmon needs a patch to decide the failed option octet here. We really =
-want do provide a human description of the failed option.
->
-
-I'll see if that's an easy thing to add. Can't promise anything though.
-
-> >
-> > include/net/bluetooth/l2cap.h |  1 +
-> > net/bluetooth/l2cap_core.c    | 58 ++++++++++++++++++++++++++++++-----
-> > 2 files changed, 51 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/include/net/bluetooth/l2cap.h b/include/net/bluetooth/l2ca=
-p.h
-> > index 093aedebdf0c..6898bba5d9a8 100644
-> > --- a/include/net/bluetooth/l2cap.h
-> > +++ b/include/net/bluetooth/l2cap.h
-> > @@ -632,6 +632,7 @@ struct l2cap_conn {
-> >       unsigned int            mtu;
-> >
-> >       __u32                   feat_mask;
-> > +     __u32                   known_options;
-> >       __u8                    remote_fixed_chan;
-> >       __u8                    local_fixed_chan;
-> >
-> > diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-> > index f17e393b43b4..49be98b6de72 100644
-> > --- a/net/bluetooth/l2cap_core.c
-> > +++ b/net/bluetooth/l2cap_core.c
-> > @@ -3243,8 +3243,10 @@ static int l2cap_build_conf_req(struct l2cap_cha=
-n *chan, void *data, size_t data
-> >               rfc.monitor_timeout =3D 0;
-> >               rfc.max_pdu_size    =3D 0;
-> >
-> > -             l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> > -                                (unsigned long) &rfc, endptr - ptr);
-> > +             if (chan->conn->known_options & BIT(L2CAP_CONF_RFC)) {
-> > +                     l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(r=
-fc),
-> > +                                        (unsigned long)&rfc, endptr - =
-ptr);
-> > +             }
-> >               break;
-> >
-> >       case L2CAP_MODE_ERTM:
-> > @@ -3263,8 +3265,10 @@ static int l2cap_build_conf_req(struct l2cap_cha=
-n *chan, void *data, size_t data
-> >               rfc.txwin_size =3D min_t(u16, chan->tx_win,
-> >                                      L2CAP_DEFAULT_TX_WINDOW);
-> >
-> > -             l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> > -                                (unsigned long) &rfc, endptr - ptr);
-> > +             if (chan->conn->known_options & BIT(L2CAP_CONF_RFC)) {
-> > +                     l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(r=
-fc),
-> > +                                        (unsigned long)&rfc, endptr - =
-ptr);
-> > +             }
-> >
-> >               if (test_bit(FLAG_EFS_ENABLE, &chan->flags))
-> >                       l2cap_add_opt_efs(&ptr, chan, endptr - ptr);
-> > @@ -3295,8 +3299,10 @@ static int l2cap_build_conf_req(struct l2cap_cha=
-n *chan, void *data, size_t data
-> >                            L2CAP_FCS_SIZE);
-> >               rfc.max_pdu_size =3D cpu_to_le16(size);
-> >
-> > -             l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> > -                                (unsigned long) &rfc, endptr - ptr);
-> > +             if (chan->conn->known_options & BIT(L2CAP_CONF_RFC)) {
-> > +                     l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(r=
-fc),
-> > +                                        (unsigned long)&rfc, endptr - =
-ptr);
-> > +             }
-> >
-> >               if (test_bit(FLAG_EFS_ENABLE, &chan->flags))
-> >                       l2cap_add_opt_efs(&ptr, chan, endptr - ptr);
-> > @@ -3550,11 +3556,47 @@ static int l2cap_parse_conf_rsp(struct l2cap_ch=
-an *chan, void *rsp, int len,
-> >       void *endptr =3D data + size;
-> >       int type, olen;
-> >       unsigned long val;
-> > +     const bool unknown_options =3D *result =3D=3D L2CAP_CONF_UNKNOWN;
-> >       struct l2cap_conf_rfc rfc =3D { .mode =3D L2CAP_MODE_BASIC };
-> >       struct l2cap_conf_efs efs;
-> >
-> >       BT_DBG("chan %p, rsp %p, len %d, req %p", chan, rsp, len, data);
-> >
-> > +     /* throw out any old stored conf requests */
-> > +     *result =3D L2CAP_CONF_SUCCESS;
-> > +
-> > +     if (unknown_options) {
-> > +             const u8 *option_type =3D rsp;
-> > +
-> > +             if (!len) {
-> > +                     /* If no list of unknown option types is
-> > +                      * provided there's nothing for us to do
-> > +                      */
-> > +                     return -ECONNREFUSED;
-> > +             }
-> > +
-> > +             while (len--) {
-> > +                     BT_DBG("chan %p, unknown option type: %u", chan,
-> > +                            *option_type);
-> > +                     /* "...Hints shall not be included in the
-> > +                      * Response and shall not be the sole cause
-> > +                      * for rejecting the Request.."
-> > +                      */
-> > +                     if (*option_type & L2CAP_CONF_HINT)
-> > +                             return -ECONNREFUSED;
-> > +                     /* Make sure option type is one of the types
-> > +                      * supported/used in configure requests
-> > +                      */
-> > +                     if (*option_type < L2CAP_CONF_MTU ||
-> > +                         *option_type > L2CAP_CONF_EWS)
-> > +                             return -ECONNREFUSED;
-> > +
-> > +                     chan->conn->known_options &=3D ~BIT(*option_type+=
-+);
-> > +             }
-> > +
-> > +             return l2cap_build_conf_req(chan, data, size);
-> > +     }
-> > +
-> >       while (len >=3D L2CAP_CONF_OPT_SIZE) {
-> >               len -=3D l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-> >               if (len < 0)
-> > @@ -4240,6 +4282,7 @@ static inline int l2cap_config_rsp(struct l2cap_c=
-onn *conn,
-> >               }
-> >               goto done;
-> >
-> > +     case L2CAP_CONF_UNKNOWN:
-> >       case L2CAP_CONF_UNACCEPT:
-> >               if (chan->num_conf_rsp <=3D L2CAP_CONF_MAX_CONF_RSP) {
-> >                       char req[64];
-> > @@ -4249,8 +4292,6 @@ static inline int l2cap_config_rsp(struct l2cap_c=
-onn *conn,
-> >                               goto done;
-> >                       }
-> >
-> > -                     /* throw out any old stored conf requests */
-> > -                     result =3D L2CAP_CONF_SUCCESS;
-> >                       len =3D l2cap_parse_conf_rsp(chan, rsp->data, len=
-,
-> >                                                  req, sizeof(req), &res=
-ult);
-> >                       if (len < 0) {
->
-> So I really wonder if we want to combine CONF_UNKNOWN and CONF_UNACCEPT a=
-ctually here. It might be better to do them as separate handlers.
-
-I just wanted to minimize all of the surrounding boilerplate code
-duplication. Will change v2 to have a separate handler.
-
->
-> Frankly it might be enough if the option code 0x04 is marked as not suppo=
-rted, then just clear
->
->         conn->feat_mask &=3D ~(L2CAP_FEAT_ERTM | L2CAP_FEAT_STREAMING);
->
-> There is really no point for us known about all unsupported / unknown opt=
-ions. Unless we understand them, then don=E2=80=99t bother. Just keep it si=
-mple.
->
-
-OK, sure, I think that should work. I'll give it a try and report back in v=
-2.
-
-Thanks,
-Andrey Smirnov
+Rml4IGJlbG93IGZhbGwgdGhyb3VnaCBidWlsZCB3YXJuaW5nOg0KDQpkcml2ZXJzL2Nsay9pbXgv
+Y2xrLXBsbHYzLmM6NDUzOjIxOiB3YXJuaW5nOg0KdGhpcyBzdGF0ZW1lbnQgbWF5IGZhbGwgdGhy
+b3VnaCBbLVdpbXBsaWNpdC1mYWxsdGhyb3VnaD1dDQoNCiAgIHBsbC0+ZGVub21fb2Zmc2V0ID0g
+UExMX0lNWDdfREVOT01fT0ZGU0VUOw0KICAgICAgICAgICAgICAgICAgICAgXg0KZHJpdmVycy9j
+bGsvaW14L2Nsay1wbGx2My5jOjQ1NDoyOiBub3RlOiBoZXJlDQogIGNhc2UgSU1YX1BMTFYzX0FW
+Og0KICBefn5+DQoNClNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAu
+Y29tPg0KLS0tDQogZHJpdmVycy9jbGsvaW14L2Nsay1wbGx2My5jIHwgMSArDQogMSBmaWxlIGNo
+YW5nZWQsIDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xr
+LXBsbHYzLmMgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLXBsbHYzLmMNCmluZGV4IGU4OTJiOWEuLmZi
+ZTRmZTAgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLXBsbHYzLmMNCisrKyBiL2Ry
+aXZlcnMvY2xrL2lteC9jbGstcGxsdjMuYw0KQEAgLTQ1MSw2ICs0NTEsNyBAQCBzdHJ1Y3QgY2xr
+ICppbXhfY2xrX3BsbHYzKGVudW0gaW14X3BsbHYzX3R5cGUgdHlwZSwgY29uc3QgY2hhciAqbmFt
+ZSwNCiAJY2FzZSBJTVhfUExMVjNfQVZfSU1YNzoNCiAJCXBsbC0+bnVtX29mZnNldCA9IFBMTF9J
+TVg3X05VTV9PRkZTRVQ7DQogCQlwbGwtPmRlbm9tX29mZnNldCA9IFBMTF9JTVg3X0RFTk9NX09G
+RlNFVDsNCisJCS8qIGZhbGwgdGhyb3VnaCAqLw0KIAljYXNlIElNWF9QTExWM19BVjoNCiAJCW9w
+cyA9ICZjbGtfcGxsdjNfYXZfb3BzOw0KIAkJYnJlYWs7DQotLSANCjIuNy40DQoNCg==
