@@ -2,70 +2,153 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A0DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A07C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D1621734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4321A21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556624372;
+	bh=4CLCUF53Z45JpjieCHtCn6m3aYIBDfhyKJr/JTnb8DQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=b2koBTZRIu39d6H5z7O2yFlAHt4WpPny6EqzHNlomzdsS9fvCHXMmU52MknKsfFri
+	 pseVuH1lZkzA1XrYLVGnImjgnqH+P9EPtu6wuhvUGHHMC/QUyluLAHeUGr3m3YYMzu
+	 AWRIKxuCRgC4L0ZCmXmYkVOdfb+RrVkg0fCX0H94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbfD3LiX (ORCPT
+        id S1727799AbfD3Ljb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:38:23 -0400
-Received: from foss.arm.com ([217.140.101.70]:45200 "EHLO foss.arm.com"
+        Tue, 30 Apr 2019 07:39:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbfD3LiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:38:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C47080D;
-        Tue, 30 Apr 2019 04:38:22 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 164F23F5C1;
-        Tue, 30 Apr 2019 04:38:20 -0700 (PDT)
-Subject: Re: [PATCH 02/26] arm64/iommu: improve mmap bounds checking
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190422175942.18788-1-hch@lst.de>
- <20190422175942.18788-3-hch@lst.de>
- <306b7a19-4eb5-d1d8-5250-40f3ba9bca16@arm.com> <20190429190120.GA5637@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a96caa67-ac59-9ce8-aabc-2601c9a10203@arm.com>
-Date:   Tue, 30 Apr 2019 12:38:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726648AbfD3Lja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:39:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A911321670;
+        Tue, 30 Apr 2019 11:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556624369;
+        bh=4CLCUF53Z45JpjieCHtCn6m3aYIBDfhyKJr/JTnb8DQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fPLT/bmA4/4Ptftpe6XhPsT7UfIqdawwgnKhhcdxen+tKakmmgNR9y330J7FsIiXY
+         K7QQcR8pGI7Vgeoj6msV4ZDEFhirPPFSYAXVvZiyMMmYVK99ggRsv1XrG6ZOoOIs2W
+         IHSZ+tbfgk7ISqkYziPLR0LLfLOYYPAagWLUYX7I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 4.9 01/41] kbuild: simplify ld-option implementation
+Date:   Tue, 30 Apr 2019 13:38:12 +0200
+Message-Id: <20190430113524.762604112@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
+References: <20190430113524.451237916@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190429190120.GA5637@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 20:01, Christoph Hellwig wrote:
-> On Mon, Apr 29, 2019 at 01:35:46PM +0100, Robin Murphy wrote:
->> On 22/04/2019 18:59, Christoph Hellwig wrote:
->>> The nr_pages checks should be done for all mmap requests, not just those
->>> using remap_pfn_range.
->>
->> I think it probably makes sense now to just squash this with #22 one way or
->> the other, but if you really really still want to keep it as a separate
->> patch with a misleading commit message then I'm willing to keep my
->> complaints to myself :)
-> 
-> Well, I split this out in response to your earlier comments, so if you
-> prefer it squasheѕ back in I can do that..
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-AFAICS I only ever suggested splitting the original "fix and refactor" 
-commit into the fix (patch #1) and the refactor - I think we've just 
-ended up adding more "refactor" on top in the evolution of the series :)
+commit 0294e6f4a0006856e1f36b8cd8fa088d9e499e98 upstream.
 
-Robin.
+Currently, linker options are tested by the coordination of $(CC) and
+$(LD) because $(LD) needs some object to link.
+
+As commit 86a9df597cdd ("kbuild: fix linker feature test macros when
+cross compiling with Clang") addressed, we need to make sure $(CC)
+and $(LD) agree the underlying architecture of the passed object.
+
+This could be a bit complex when we combine tools from different groups.
+For example, we can use clang for $(CC), but we still need to rely on
+GCC toolchain for $(LD).
+
+So, I was searching for a way of standalone testing of linker options.
+A trick I found is to use '-v'; this not only prints the version string,
+but also tests if the given option is recognized.
+
+If a given option is supported,
+
+  $ aarch64-linux-gnu-ld -v --fix-cortex-a53-843419
+  GNU ld (Linaro_Binutils-2017.11) 2.28.2.20170706
+  $ echo $?
+  0
+
+If unsupported,
+
+  $ aarch64-linux-gnu-ld -v --fix-cortex-a53-843419
+  GNU ld (crosstool-NG linaro-1.13.1-4.7-2013.04-20130415 - Linaro GCC 2013.04) 2.23.1
+  aarch64-linux-gnu-ld: unrecognized option '--fix-cortex-a53-843419'
+  aarch64-linux-gnu-ld: use the --help option for usage information
+  $ echo $?
+  1
+
+Gold works likewise.
+
+  $ aarch64-linux-gnu-ld.gold -v --fix-cortex-a53-843419
+  GNU gold (Linaro_Binutils-2017.11 2.28.2.20170706) 1.14
+  masahiro@pug:~/ref/linux$ echo $?
+  0
+  $ aarch64-linux-gnu-ld.gold -v --fix-cortex-a53-999999
+  GNU gold (Linaro_Binutils-2017.11 2.28.2.20170706) 1.14
+  aarch64-linux-gnu-ld.gold: --fix-cortex-a53-999999: unknown option
+  aarch64-linux-gnu-ld.gold: use the --help option for usage information
+  $ echo $?
+  1
+
+LLD too.
+
+  $ ld.lld -v --gc-sections
+  LLD 7.0.0 (http://llvm.org/git/lld.git 4a0e4190e74cea19f8a8dc625ccaebdf8b5d1585) (compatible with GNU linkers)
+  $ echo $?
+  0
+  $ ld.lld -v --fix-cortex-a53-843419
+  LLD 7.0.0 (http://llvm.org/git/lld.git 4a0e4190e74cea19f8a8dc625ccaebdf8b5d1585) (compatible with GNU linkers)
+  $ echo $?
+  0
+  $ ld.lld -v --fix-cortex-a53-999999
+  ld.lld: error: unknown argument: --fix-cortex-a53-999999
+  LLD 7.0.0 (http://llvm.org/git/lld.git 4a0e4190e74cea19f8a8dc625ccaebdf8b5d1585) (compatible with GNU linkers)
+  $ echo $?
+  1
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+[nc: try-run-cached was added later, just use try-run, which is the
+     current mainline state]
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ scripts/Kbuild.include |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -166,9 +166,7 @@ cc-ldoption = $(call try-run,\
+ 
+ # ld-option
+ # Usage: LDFLAGS += $(call ld-option, -X)
+-ld-option = $(call try-run,\
+-	$(CC) $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -x c /dev/null -c -o "$$TMPO"; \
+-	$(LD) $(LDFLAGS) $(1) "$$TMPO" -o "$$TMP",$(1),$(2))
++ld-option = $(call try-run, $(LD) $(LDFLAGS) $(1) -v,$(1),$(2))
+ 
+ # ar-option
+ # Usage: KBUILD_ARFLAGS := $(call ar-option,D)
+
+
