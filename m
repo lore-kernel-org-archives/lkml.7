@@ -2,52 +2,51 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5C3C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78B1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539B021670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A974A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625183;
-	bh=bMIyDFSNMZbDV9mwlps5UzDDiVznRcO1GZN9HpcM6iQ=;
+	s=default; t=1556625195;
+	bh=5YCjkaI2QIXlBzK3QcJgY4n7zbzF292tiykPg2mKO6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgdI8GGOtPL0lTIQtprSQ1zVFyic1WhSzfqzcjGQzTuT+KodwOfKxaCyiqSc6Qqdw
-	 6VGytCKErqM1M5AjwoC8R9t+k39LYC//v7ah1zqpZGVQSRHPfebnfn8/SbBV7ESbb2
-	 OJA8vzK45kW4CNY/myw+lZQ7iH43i2C3Q7EzmJwk=
+	b=gPWngd8c6A8ViuVZwPI6mHUWv02bZizL+Gwr2YSDVUeOnbfDgQf8PXRpPLQ+YjEC2
+	 QCa+ll2alehJ+3MoMyDvlmBvFYaQAZeI+RFTdt+QyUy9K+T4I43nsQxlU7nGHyO/40
+	 U76htKTrG+mCQlxr0yd9jro8nTG/xMTuUDknv/4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbfD3LvL (ORCPT
+        id S1731295AbfD3Lu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38590 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:50:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731327AbfD3LvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:08 -0400
+        id S1730609AbfD3Luy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 055D92054F;
-        Tue, 30 Apr 2019 11:51:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE3620449;
+        Tue, 30 Apr 2019 11:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625066;
-        bh=bMIyDFSNMZbDV9mwlps5UzDDiVznRcO1GZN9HpcM6iQ=;
+        s=default; t=1556625053;
+        bh=5YCjkaI2QIXlBzK3QcJgY4n7zbzF292tiykPg2mKO6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ertf1ouU6aM652E+EiIV25uUXgHywPn20IYuv9Z8GHs7jvIbksoOjWjlUnFwXG+OW
-         u2WxwNSFEJvqKZQDB3zq5JA/8xmzvm8O+d6pR5cjwIJzuU+l302mm6yspPiCu991Z6
-         tYK4EPMpFty3lB3QAfWRLXlUS2gVEsXbLwLxF1aE=
+        b=Dar5zj/mSnogihdPiqPGxystD3ZFq6mJb1fEheMW6ZE9CtLavw+42Ct+v5E024Y86
+         KCC6gliupvPnJ0OEWod+gPXFTscRUbkisI08UgQ+oa8RCMQyGcoSxqTCfIoOD3c38Q
+         JGhjhq/Ww58NQ0xPDRRSDorpmq/53ViTrs7Jhl/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 77/89] net/rose: fix unbound loop in rose_loopback_timer()
-Date:   Tue, 30 Apr 2019 13:39:08 +0200
-Message-Id: <20190430113613.371560372@linuxfoundation.org>
+Subject: [PATCH 5.0 73/89] ipv4: set the tcp_min_rtt_wlen range from 0 to one day
+Date:   Tue, 30 Apr 2019 13:39:04 +0200
+Message-Id: <20190430113613.171700620@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -60,161 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit 0453c682459583910d611a96de928f4442205493 ]
+[ Upstream commit 19fad20d15a6494f47f85d869f00b11343ee5c78 ]
 
-This patch adds a limit on the number of skbs that fuzzers can queue
-into loopback_queue. 1000 packets for rose loopback seems more than enough.
-
-Then, since we now have multiple cpus in most linux hosts,
-we also need to limit the number of skbs rose_loopback_timer()
-can dequeue at each round.
-
-rose_loopback_queue() can be drop-monitor friendly, calling
-consume_skb() or kfree_skb() appropriately.
-
-Finally, use mod_timer() instead of del_timer() + add_timer()
-
-syzbot report was :
-
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu:    0-...!: (10499 ticks this GP) idle=536/1/0x4000000000000002 softirq=103291/103291 fqs=34
-rcu:     (t=10500 jiffies g=140321 q=323)
-rcu: rcu_preempt kthread starved for 10426 jiffies! g140321 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=1
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     I29168    10      2 0x80000000
-Call Trace:
- context_switch kernel/sched/core.c:2877 [inline]
- __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
- schedule+0x92/0x180 kernel/sched/core.c:3562
- schedule_timeout+0x4db/0xfd0 kernel/time/timer.c:1803
- rcu_gp_fqs_loop kernel/rcu/tree.c:1971 [inline]
- rcu_gp_kthread+0x962/0x17b0 kernel/rcu/tree.c:2128
- kthread+0x357/0x430 kernel/kthread.c:253
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-NMI backtrace for cpu 0
-CPU: 0 PID: 7632 Comm: kworker/0:4 Not tainted 5.1.0-rc5+ #172
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events iterate_cleanup_work
+There is a UBSAN report as below:
+UBSAN: Undefined behaviour in net/ipv4/tcp_input.c:2877:56
+signed integer overflow:
+2147483647 * 1000 cannot be represented in type 'int'
+CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.1.0-rc4-00058-g582549e #1
 Call Trace:
  <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
- arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
- trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
- rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree.c:1223
- print_cpu_stall kernel/rcu/tree.c:1360 [inline]
- check_cpu_stall kernel/rcu/tree.c:1434 [inline]
- rcu_pending kernel/rcu/tree.c:3103 [inline]
- rcu_sched_clock_irq.cold+0x500/0xa4a kernel/rcu/tree.c:2544
- update_process_times+0x32/0x80 kernel/time/timer.c:1635
- tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:161
- tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1271
- __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
- __hrtimer_run_queues+0x33e/0xde0 kernel/time/hrtimer.c:1451
- hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1035 [inline]
- smp_apic_timer_interrupt+0x120/0x570 arch/x86/kernel/apic/apic.c:1060
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
-RIP: 0010:__sanitizer_cov_trace_pc+0x0/0x50 kernel/kcov.c:95
-Code: 89 25 b4 6e ec 08 41 bc f4 ff ff ff e8 cd 5d ea ff 48 c7 05 9e 6e ec 08 00 00 00 00 e9 a4 e9 ff ff 90 90 90 90 90 90 90 90 90 <55> 48 89 e5 48 8b 75 08 65 48 8b 04 25 00 ee 01 00 65 8b 15 c8 60
-RSP: 0018:ffff8880ae807ce0 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: ffff88806fd40640 RBX: dffffc0000000000 RCX: ffffffff863fbc56
-RDX: 0000000000000100 RSI: ffffffff863fbc1d RDI: ffff88808cf94228
-RBP: ffff8880ae807d10 R08: ffff88806fd40640 R09: ffffed1015d00f8b
-R10: ffffed1015d00f8a R11: 0000000000000003 R12: ffff88808cf941c0
-R13: 00000000fffff034 R14: ffff8882166cd840 R15: 0000000000000000
- rose_loopback_timer+0x30d/0x3f0 net/rose/rose_loopback.c:91
- call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
- expire_timers kernel/time/timer.c:1362 [inline]
- __run_timers kernel/time/timer.c:1681 [inline]
- __run_timers kernel/time/timer.c:1649 [inline]
- run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
- __do_softirq+0x266/0x95a kernel/softirq.c:293
- do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1027
+ dump_stack+0x8c/0xba
+ ubsan_epilogue+0x11/0x60
+ handle_overflow+0x12d/0x170
+ ? ttwu_do_wakeup+0x21/0x320
+ __ubsan_handle_mul_overflow+0x12/0x20
+ tcp_ack_update_rtt+0x76c/0x780
+ tcp_clean_rtx_queue+0x499/0x14d0
+ tcp_ack+0x69e/0x1240
+ ? __wake_up_sync_key+0x2c/0x50
+ ? update_group_capacity+0x50/0x680
+ tcp_rcv_established+0x4e2/0xe10
+ tcp_v4_do_rcv+0x22b/0x420
+ tcp_v4_rcv+0xfe8/0x1190
+ ip_protocol_deliver_rcu+0x36/0x180
+ ip_local_deliver+0x15b/0x1a0
+ ip_rcv+0xac/0xd0
+ __netif_receive_skb_one_core+0x7f/0xb0
+ __netif_receive_skb+0x33/0xc0
+ netif_receive_skb_internal+0x84/0x1c0
+ napi_gro_receive+0x2a0/0x300
+ receive_buf+0x3d4/0x2350
+ ? detach_buf_split+0x159/0x390
+ virtnet_poll+0x198/0x840
+ ? reweight_entity+0x243/0x4b0
+ net_rx_action+0x25c/0x770
+ __do_softirq+0x19b/0x66d
+ irq_exit+0x1eb/0x230
+ do_IRQ+0x7a/0x150
+ common_interrupt+0xf/0xf
+ </IRQ>
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+It can be reproduced by:
+  echo 2147483647 > /proc/sys/net/ipv4/tcp_min_rtt_wlen
+
+Fixes: f672258391b42 ("tcp: track min RTT using windowed min-filter")
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rose/rose_loopback.c |   27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ Documentation/networking/ip-sysctl.txt |    1 +
+ net/ipv4/sysctl_net_ipv4.c             |    5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/rose/rose_loopback.c
-+++ b/net/rose/rose_loopback.c
-@@ -16,6 +16,7 @@
- #include <linux/init.h>
+--- a/Documentation/networking/ip-sysctl.txt
++++ b/Documentation/networking/ip-sysctl.txt
+@@ -422,6 +422,7 @@ tcp_min_rtt_wlen - INTEGER
+ 	minimum RTT when it is moved to a longer path (e.g., due to traffic
+ 	engineering). A longer window makes the filter more resistant to RTT
+ 	inflations such as transient congestion. The unit is seconds.
++	Possible values: 0 - 86400 (1 day)
+ 	Default: 300
  
- static struct sk_buff_head loopback_queue;
-+#define ROSE_LOOPBACK_LIMIT 1000
- static struct timer_list loopback_timer;
+ tcp_moderate_rcvbuf - BOOLEAN
+--- a/net/ipv4/sysctl_net_ipv4.c
++++ b/net/ipv4/sysctl_net_ipv4.c
+@@ -49,6 +49,7 @@ static int ip_ping_group_range_min[] = {
+ static int ip_ping_group_range_max[] = { GID_T_MAX, GID_T_MAX };
+ static int comp_sack_nr_max = 255;
+ static u32 u32_max_div_HZ = UINT_MAX / HZ;
++static int one_day_secs = 24 * 3600;
  
- static void rose_set_loopback_timer(void);
-@@ -35,29 +36,27 @@ static int rose_loopback_running(void)
- 
- int rose_loopback_queue(struct sk_buff *skb, struct rose_neigh *neigh)
- {
--	struct sk_buff *skbn;
-+	struct sk_buff *skbn = NULL;
- 
--	skbn = skb_clone(skb, GFP_ATOMIC);
-+	if (skb_queue_len(&loopback_queue) < ROSE_LOOPBACK_LIMIT)
-+		skbn = skb_clone(skb, GFP_ATOMIC);
- 
--	kfree_skb(skb);
--
--	if (skbn != NULL) {
-+	if (skbn) {
-+		consume_skb(skb);
- 		skb_queue_tail(&loopback_queue, skbn);
- 
- 		if (!rose_loopback_running())
- 			rose_set_loopback_timer();
-+	} else {
-+		kfree_skb(skb);
- 	}
- 
- 	return 1;
- }
- 
--
- static void rose_set_loopback_timer(void)
- {
--	del_timer(&loopback_timer);
--
--	loopback_timer.expires  = jiffies + 10;
--	add_timer(&loopback_timer);
-+	mod_timer(&loopback_timer, jiffies + 10);
- }
- 
- static void rose_loopback_timer(struct timer_list *unused)
-@@ -68,8 +67,12 @@ static void rose_loopback_timer(struct t
- 	struct sock *sk;
- 	unsigned short frametype;
- 	unsigned int lci_i, lci_o;
-+	int count;
- 
--	while ((skb = skb_dequeue(&loopback_queue)) != NULL) {
-+	for (count = 0; count < ROSE_LOOPBACK_LIMIT; count++) {
-+		skb = skb_dequeue(&loopback_queue);
-+		if (!skb)
-+			return;
- 		if (skb->len < ROSE_MIN_LEN) {
- 			kfree_skb(skb);
- 			continue;
-@@ -106,6 +109,8 @@ static void rose_loopback_timer(struct t
- 			kfree_skb(skb);
- 		}
- 	}
-+	if (!skb_queue_empty(&loopback_queue))
-+		mod_timer(&loopback_timer, jiffies + 1);
- }
- 
- void __exit rose_loopback_clear(void)
+ /* obsolete */
+ static int sysctl_tcp_low_latency __read_mostly;
+@@ -1151,7 +1152,9 @@ static struct ctl_table ipv4_net_table[]
+ 		.data		= &init_net.ipv4.sysctl_tcp_min_rtt_wlen,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= &zero,
++		.extra2		= &one_day_secs
+ 	},
+ 	{
+ 		.procname	= "tcp_autocorking",
 
 
