@@ -2,121 +2,127 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC376C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B6C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC527217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0ECF21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="M7/9voiO"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="UlrB1v2Q";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vZ8aI4Dw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfD3IMr (ORCPT
+        id S1726549AbfD3INu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:12:47 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33806 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfD3IMq (ORCPT
+        Tue, 30 Apr 2019 04:13:50 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:59451 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725790AbfD3INu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:12:46 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h5so10154094lfm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 01:12:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9ozURogrBkqi6N/9N92/2fxrEWVZwyBMFji8R7JKkYU=;
-        b=M7/9voiOZsA0i1tciJ1pUBbgPG/0StQIPxDKbDg1g11ZPSQamC313AwO8BFToT/wgy
-         jG5v7Jaa1HuDkspbMSzWg4k/0BPxqnWvC7d0HkRJXvOE+JgIfSQ/HrDd2aKFR8RoBjyw
-         hc10L4REu9iSGrekmG8BkHY/7uXuiagFhqAR4tpIikdIw026IAXARahgOqOjL8SJLwYe
-         cajE7QCavHx+j0JgCM7Yj7oy9Tit01jlFZIBFKrIWEF6Viw+CYaGg6488w6erNBKtIQh
-         dRqHKyhDfAXQ7K43g2i74TUI40bO0jJXM8JkJmXXkgbOS9whCTc2J9jGj1ybM6iLdH7c
-         Aviw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9ozURogrBkqi6N/9N92/2fxrEWVZwyBMFji8R7JKkYU=;
-        b=nHInheWnCB0pDWt10qnMGRgB1wgI4xINxF/T3QyFg3ED/Ar7uV0DfDDy0E/7g8Hmwk
-         QPVRL9Tmv6ZCE2bbv8zSuaq0XetaH8k1+qQOOngFj5J7TkeZiXD9EPMLEt2LBMoh4K/8
-         8/gQEiq7ip4TwX7Eye2fWx/gUt0jyMPvjtX4jLjiEjjV8sRv7E6UszKTgdSujO2DzPhM
-         fUDQWC16VYm2I9HdgchhvFJUNSqVZRh8n07vuObjpqeEnirZYD78ZNyaFDXrIpaxw11U
-         anAjGKSk13MFgUo1cyWJWMPQ1A+oljU3repVPmXGXythiJg/Nfc+8liRESZAnJCvx6HK
-         ipEw==
-X-Gm-Message-State: APjAAAWxH1VE2GODjkt1YPMYeuq3vzqNsYQsk1vbjDPqxoVW2iLbmJt0
-        gjva/2b9g3/fc7h1bLqEDXrJ+A6mJ78=
-X-Google-Smtp-Source: APXvYqyi6TzPSwc+vP/6cCmv5b05hWr4xC/ARTHKOTUqoAS7o4TuMr/9HAqCRgURLMrWPpVgpHblvA==
-X-Received: by 2002:a19:f801:: with SMTP id a1mr36540071lff.150.1556611964646;
-        Tue, 30 Apr 2019 01:12:44 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.80.195])
-        by smtp.gmail.com with ESMTPSA id h21sm3290136ljf.16.2019.04.30.01.12.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 01:12:43 -0700 (PDT)
-Subject: Re: [PATCH 2/5] irqchip/renesas-irqc: Remove
- devm_kzalloc()/ioremap_nocache() error printing
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190429152006.22593-1-geert+renesas@glider.be>
- <20190429152006.22593-3-geert+renesas@glider.be>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <3ecf87e2-4e70-9159-a364-d41f1b744f7b@cogentembedded.com>
-Date:   Tue, 30 Apr 2019 11:12:38 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 04:13:50 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id BDC5A551;
+        Tue, 30 Apr 2019 04:13:48 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 30 Apr 2019 04:13:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=cdFeCbmF2JOlSkSFgqVW8iAZ49D
+        tq1g4z3meNqi1GVo=; b=UlrB1v2Q3cwjJ8IAYZejQxZWX1sbREPN2GcHRsifs0h
+        LFvNTmfkLyA1KdNmQlv3rp7lXJ6X1EY/PWHZMOY08SyEn8F7PDxBQ/E/+YgSxDvm
+        fJ53qbszRgEds7FLzeCJN3T4U78nN+3y1MHBkIRMZiD/9YN9r5xRvvNp7IDukPcs
+        Ik3RevOjyRzNetQHE4nG3LabqQ8ctoCZzjl0lARPUk+ysOzu5vO6Fqp1FUNkFfVk
+        DPUSA/TloU66UhNl1Sw43McKEOMB0pAInN8QvNjaGrbdEvv1IsoqCTkzDWkroa4i
+        4IxBEpQqT++fK3fz6ar4DsNGex4VjPcieZA2qI0jS9g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=cdFeCb
+        mF2JOlSkSFgqVW8iAZ49Dtq1g4z3meNqi1GVo=; b=vZ8aI4DwwcJ/dMT52JJz1E
+        C3hnYGiEnQWCvQxRzRgKK3d2X8j/7ei+kTGhLvZiP8dXwS2Kmw2GBQDxgTbsjCHn
+        JfzXBx/jJ1qKlkZYpY7LydG5G8UU+6i9UweqcinL+hGtA2UZPZseAC4LYPN4zqq8
+        UqLJSjSv9ytAazdXoZjOkI2nGJaLa+icu0RXSRJwa9Ez7EjbFPAEsc+3a456Xwg4
+        IlAeAMZNZurYyfnpTXufFw+c+Vg/+O+hnwc5HH2aeQF6qd55OxkQGmuiXWEPIQYZ
+        iP2KHtGDAiuhlsExWJN20BBMklJo4eDQbGlssCDYqVI/7Y0DTZMyaursPeOTmYfA
+        ==
+X-ME-Sender: <xms:uwPIXKxzsm3xg9i_FKfh0E9gbxnTvTqiR6JgYSDqcOpd3M-3UQnYSA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieeggddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:uwPIXFRHf6kgV_Oqoy0QC7zbuMjFSyigoMf0hLg0cpqFc-FpbSwx_g>
+    <xmx:uwPIXMe2Esg0a3UftFbBMkaBgEpznnuGlRc_Atn6XAPYfAzr0sfJJw>
+    <xmx:uwPIXC6EMYCFcWDrdyWmtd2fs4mPLY7uSNp-o-T6YGa5tt5SfyiQPA>
+    <xmx:vAPIXCfd96gSLzYED7Me7lT2a_1JMbfDeR5oOZcJlVgP5BYQanggfA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B9E0EE44B6;
+        Tue, 30 Apr 2019 04:13:46 -0400 (EDT)
+Date:   Tue, 30 Apr 2019 10:13:44 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: Re: linux-next: manual merge of the staging tree with the pm tree
+Message-ID: <20190430081344.GA8245@kroah.com>
+References: <20190430174829.4f33e8b0@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190429152006.22593-3-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430174829.4f33e8b0@canb.auug.org.au>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 29.04.2019 18:20, Geert Uytterhoeven wrote:
-
-> There is no need to print a message if devm_kzalloc() or
-
-    Just kzalloc() in this case.
-
-> ioremap_nocache() fails, as the memory allocation core already takes
-> care of that.
+On Tue, Apr 30, 2019 at 05:48:29PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->   drivers/irqchip/irq-renesas-irqc.c | 2 --
->   1 file changed, 2 deletions(-)
+> Today's linux-next merge of the staging tree got a conflict in:
 > 
-> diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
-> index 438a063c76156d98..0955ffe12b32eb36 100644
-> --- a/drivers/irqchip/irq-renesas-irqc.c
-> +++ b/drivers/irqchip/irq-renesas-irqc.c
-> @@ -133,7 +133,6 @@ static int irqc_probe(struct platform_device *pdev)
->   
->   	p = kzalloc(sizeof(*p), GFP_KERNEL);
->   	if (!p) {
-> -		dev_err(&pdev->dev, "failed to allocate driver data\n");
->   		ret = -ENOMEM;
->   		goto err0;
->   	}
-> @@ -173,7 +172,6 @@ static int irqc_probe(struct platform_device *pdev)
->   	/* ioremap IOMEM and setup read/write callbacks */
->   	p->iomem = ioremap_nocache(io->start, resource_size(io));
->   	if (!p->iomem) {
-> -		dev_err(&pdev->dev, "failed to remap IOMEM\n");
->   		ret = -ENXIO;
+>   Documentation/driver-api/index.rst
+> 
+> between commit:
+> 
+>   680e6ffa1510 ("Documentation: add Linux ACPI to Sphinx TOC tree")
+> 
+> from the pm tree and commit:
+> 
+>   09e7d4ed8991 ("docs: Add Generic Counter interface documentation")
+> 
+> from the staging tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc Documentation/driver-api/index.rst
+> index aa87075c7846,201247b7c1e8..000000000000
+> --- a/Documentation/driver-api/index.rst
+> +++ b/Documentation/driver-api/index.rst
+> @@@ -56,7 -56,7 +56,8 @@@ available subsections can be seen below
+>      slimbus
+>      soundwire/index
+>      fpga/index
+>  +   acpi/index
+> +    generic-counter
 
-    -ENOMEM?
+Looks good to me, thanks!
 
-[...]
-
-MBR, Sergei
+greg k-h
