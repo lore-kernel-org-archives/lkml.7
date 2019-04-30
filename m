@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EA9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3EDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2630621670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB85021670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624606;
-	bh=DQAPoA1vmz5pLFoA53smvGOgqPbkDEWjxB/23Uq+0Uo=;
+	s=default; t=1556624608;
+	bh=LGZmmeHB8SzFsXOlkPJ5Ap3bq0hhjA0B+TpJ666UMQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=za3kIUv6tXVasfJ/JwJxlk5OE0S9kIod0XmTJMPbCZiyRFom1tzJvx+H6x5Oh6EPh
-	 FjibsYi8C3t28eE4YeFMl6vRRTOi8bh6WbUZSkBv8wsUEmRHBn8M48odKvizrNhxRJ
-	 htlJYXDv/+1SxEA225Aj6uYQFhWayZDnad14VZU8=
+	b=Im4YOYXmppSg/K6J0PS12Lult4SyYITLWPLsyuA/3cHG/uMr31cBr0TJmsMl1FbTg
+	 QuIPPQYlxFmRGigSw+GRTtzdwIboonO6khO8BFALsduur5lunLofv/BOG6gnvhCz8r
+	 yn83e/wKBUow/ecNyuFw3jH5jjWHFEAhIiu4k0HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbfD3LnY (ORCPT
+        id S1729932AbfD3Ln1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:43:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:43:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729874AbfD3LnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:43:21 -0400
+        id S1728908AbfD3LnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:43:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B63521734;
-        Tue, 30 Apr 2019 11:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 694E821707;
+        Tue, 30 Apr 2019 11:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624601;
-        bh=DQAPoA1vmz5pLFoA53smvGOgqPbkDEWjxB/23Uq+0Uo=;
+        s=default; t=1556624603;
+        bh=LGZmmeHB8SzFsXOlkPJ5Ap3bq0hhjA0B+TpJ666UMQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wh0YyozLsGTZZf6wdGytBUIJRy59LPEFSUkMKWqLuzEpBlcwIRYfyGAaSgY0Taumv
-         NldJHOeWztaq+afhHNh9SzkJBLChZrncG4iS4OIbRpGMnKZPR/b2FNoqokHy9nEoQG
-         3q+Dj9zm0yrhJ90aAqcxAPPkz6fqlD1VIdtF2aN0=
+        b=gUNYqevHPgghCx180Byb6EBoipMNbJYSiEcRAIR/UbP0a5EdoAaLycXVxDxfo0sqo
+         n4tCUGR4S3duyTcSCpinabMEY2vXuuGnyjWNZHxj646lDmvqhGv+7LdPLOQvyBUtLE
+         MeFsEuPoKWunzST8njwcrHAmH3Wm1+d0ghKOYfrY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.14 35/53] netfilter: ebtables: CONFIG_COMPAT: drop a bogus WARN_ON
-Date:   Tue, 30 Apr 2019 13:38:42 +0200
-Message-Id: <20190430113557.415213926@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Yue Haibing <yuehaibing@huawei.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.14 36/53] fm10k: Fix a potential NULL pointer dereference
+Date:   Tue, 30 Apr 2019 13:38:43 +0200
+Message-Id: <20190430113557.603844512@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -61,34 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Yue Haibing <yuehaibing@huawei.com>
 
-commit 7caa56f006e9d712b44f27b32520c66420d5cbc6 upstream.
+commit 01ca667133d019edc9f0a1f70a272447c84ec41f upstream.
 
-It means userspace gave us a ruleset where there is some other
-data after the ebtables target but before the beginning of the next rule.
+Syzkaller report this:
 
-Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
-Reported-by: syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+CPU: 0 PID: 4378 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+RIP: 0010:__lock_acquire+0x95b/0x3200 kernel/locking/lockdep.c:3573
+Code: 00 0f 85 28 1e 00 00 48 81 c4 08 01 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 24 00 00 49 81 7d 00 e0 de 03 a6 41 bc 00 00
+RSP: 0018:ffff8881e3c07a40 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000010 RSI: 0000000000000000 RDI: 0000000000000080
+RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+R10: ffff8881e3c07d98 R11: ffff8881c7f21f80 R12: 0000000000000001
+R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007fce2252e700(0000) GS:ffff8881f2400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fffc7eb0228 CR3: 00000001e5bea002 CR4: 00000000007606f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ lock_acquire+0xff/0x2c0 kernel/locking/lockdep.c:4211
+ __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+ __mutex_lock+0xdf/0x1050 kernel/locking/mutex.c:1072
+ drain_workqueue+0x24/0x3f0 kernel/workqueue.c:2934
+ destroy_workqueue+0x23/0x630 kernel/workqueue.c:4319
+ __do_sys_delete_module kernel/module.c:1018 [inline]
+ __se_sys_delete_module kernel/module.c:961 [inline]
+ __x64_sys_delete_module+0x30c/0x480 kernel/module.c:961
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fce2252dc58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000140
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce2252e6bc
+R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
+
+If alloc_workqueue fails, it should return -ENOMEM, otherwise may
+trigger this NULL pointer dereference while unloading drivers.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 0a38c17a21a0 ("fm10k: Remove create_workqueue")
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bridge/netfilter/ebtables.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/fm10k/fm10k_main.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2030,7 +2030,8 @@ static int ebt_size_mwt(struct compat_eb
- 		if (match_kern)
- 			match_kern->match_size = ret;
+--- a/drivers/net/ethernet/intel/fm10k/fm10k_main.c
++++ b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
+@@ -58,6 +58,8 @@ static int __init fm10k_init_module(void
+ 	/* create driver workqueue */
+ 	fm10k_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
+ 					  fm10k_driver_name);
++	if (!fm10k_workqueue)
++		return -ENOMEM;
  
--		if (WARN_ON(type == EBT_COMPAT_TARGET && size_left))
-+		/* rule should have no remaining data after target */
-+		if (type == EBT_COMPAT_TARGET && size_left)
- 			return -EINVAL;
+ 	fm10k_dbg_init();
  
- 		match32 = (struct compat_ebt_entry_mwt *) buf;
 
 
