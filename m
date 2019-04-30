@@ -2,97 +2,90 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADED3C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C7DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8C3217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556614637;
-	bh=2BAjUOkeV2diCEDyebE/TAVgpUaOzNFKZGF/5eYK40s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=adqtfunT/oYUrukDeF7oV9ZTCxkt3B9tqb84nsDYpCxL8VvHVc6sQEno+WxuBdMbi
-	 81aG68u2/2TbEcSyWMMPzZjFHl2r2BkH9EJkTu/wM64SD8LsgT4bUpuJV4S0xtfUJO
-	 Z3ZxoR1kvyUX6PDDGAlyEYT/iC0Qg6XAe0b4rjpQ=
+	by mail.kernel.org (Postfix) with ESMTP id 06C1B21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfD3I5Q (ORCPT
+        id S1726644AbfD3I6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfD3I5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:57:15 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ECE821670;
-        Tue, 30 Apr 2019 08:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556614635;
-        bh=2BAjUOkeV2diCEDyebE/TAVgpUaOzNFKZGF/5eYK40s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xCuWfKMeRms1wFCnCmz5hAdzhGJsrmYV5u8orcjtfHWWq9qrl1XiduiZGj1zP1s09
-         m1cxKLEezealaJdpIkZ7JYntnVQn7SLdcZijX/Zy8dqeWAFoiJEJKzE5rnukRxXuHM
-         mLf5ZVaUnyNQZheL1SvT8qsn4wYgHmp7lI/+yC8M=
-Date:   Tue, 30 Apr 2019 14:27:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [PATCH v3 2/5] soundwire: fix style issues
-Message-ID: <20190430085705.GT3845@vkoul-mobl.Dlink>
-References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
- <20190411031701.5926-3-pierre-louis.bossart@linux.intel.com>
- <20190414095839.GG28103@vkoul-mobl>
- <08ea1442-361a-ecfc-ca26-d3bd8a0ec37b@linux.intel.com>
- <37c5af39-a1e4-adc3-e8a9-bcada8e3b35b@linux.intel.com>
+        Tue, 30 Apr 2019 04:58:51 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:33818 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725790AbfD3I6v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:58:51 -0400
+X-UUID: 5a55ebb6ad7941189c0f2739cd5def45-20190430
+X-UUID: 5a55ebb6ad7941189c0f2739cd5def45-20190430
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 64381693; Tue, 30 Apr 2019 16:58:45 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 30 Apr
+ 2019 16:58:44 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 30 Apr 2019 16:58:43 +0800
+Message-ID: <1556614723.24897.33.camel@mhfsdcap03>
+Subject: RE: [PATCH 2/2] net-next: stmmac: add mdio clause 45 access from
+ mac device for dwmac4
+From:   biao huang <biao.huang@mediatek.com>
+To:     "Ong, Boon Leong" <boon.leong.ong@intel.com>
+CC:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
+        "Voon, Weifeng" <weifeng.voon@intel.com>
+Date:   Tue, 30 Apr 2019 16:58:43 +0800
+In-Reply-To: <AF233D1473C1364ABD51D28909A1B1B75C0C2849@pgsmsx114.gar.corp.intel.com>
+References: <1556519724-1576-1-git-send-email-biao.huang@mediatek.com>
+         <1556519724-1576-3-git-send-email-biao.huang@mediatek.com>
+         <AF233D1473C1364ABD51D28909A1B1B75C0C27ED@pgsmsx114.gar.corp.intel.com>
+         <78EB27739596EE489E55E81C33FEC33A0B46E5B4@DE02WEMBXB.internal.synopsys.com>
+         <AF233D1473C1364ABD51D28909A1B1B75C0C2849@pgsmsx114.gar.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <37c5af39-a1e4-adc3-e8a9-bcada8e3b35b@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-04-19, 12:14, Pierre-Louis Bossart wrote:
+On Mon, 2019-04-29 at 15:23 +0000, Ong, Boon Leong wrote:
+> >> What is the preference of the driver maintainer here?
+> >
+> >Your implementation doesn't need the mdelay() so I think we should follow
+> >your way once you also address the review comments from Andrew and me.
+> >
+> >Maybe you can coordinate with Biao and submit a C45 implementation that
+> >can be tested by both ?
 > 
-> > > >   enum sdw_command_response
-> > > >   cdns_xfer_msg_defer(struct sdw_bus *bus,
-> > > > -        struct sdw_msg *msg, struct sdw_defer *defer)
-> > > > +            struct sdw_msg *msg, struct sdw_defer *defer)
-> > > 
-> > > this one too..
-> > > 
-> > > >   static int cdns_port_params(struct sdw_bus *bus,
-> > > > -        struct sdw_port_params *p_params, unsigned int bank)
-> > > > +                struct sdw_port_params *p_params, unsigned int bank)
-> > > 
-> > > here as well.. (and giving up on rest)
-> > 
-> > Please check for yourself that this is a diff illusion w/ tab space.
-> 
-> Vinod, can you please double-check, the alignment issues you reported don't
-> exist, see e.g. below what the code looks like after merge.
-> 
-> 
-> int sdw_transfer_defer(struct sdw_bus *bus, struct sdw_msg *msg,
->                        struct sdw_defer *defer)
-> 
-> int sdw_fill_msg(struct sdw_msg *msg, struct sdw_slave *slave,
->                  u32 addr, size_t count, u16 dev_num, u8 flags, u8 *buf)
+> Ok. We will address the review comments for that patch-series and resend the
+> v3 patch-series soonest and for Biao to test. 
+>  
+I'll test it when your patch is ready. Please cc me, thanks.
+> Thanks
 
-Sure, please split up as requested and I shall test apply and check
-alignment before reporting...
 
--- 
-~Vinod
