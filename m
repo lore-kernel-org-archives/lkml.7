@@ -6,74 +6,74 @@ X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6B6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E15C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD752080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7612080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556598184;
-	bh=hvglgYfJFbUCAo8WiocF8DRMw/+HfUp58YE0E+kHb1k=;
+	s=default; t=1556598288;
+	bh=YU28RkopbRaMt3cG6MbmxhwUTMY1xkAUDd2+tGnOoqM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lDOrLKE6D6v7t1bOk4lZhJCFhsGLzEAB4E0Amn/WyurdEbLgQKxNJbYz4831eedp4
-	 EFDoaWajSyZWI5hqkr3/RBfviKlw+gKM5LtaG6QKjynFwrYfUougu4FVCM7iirK8Vd
-	 QUEgJ6PHdmqEtahrYvPru1xnI/tvnTosdrG79+qQ=
+	b=2Z6dRIM8IC0lUcqWUixQWzNWQM98GEdBbnuFDtFPQVFCX5L39irmHDLFsG+G/LLN9
+	 QTOCDt4MUnm6eGzt5oxJ4CcolvZHIxz+c88RvasDapmHnTzb/gZ/cpcB3+FBWrvwRN
+	 e67++kPHMcgVxAa9EHfsMWIltnEdvpFZDeHm0yKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbfD3EXC (ORCPT
+        id S1726012AbfD3EYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 00:23:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37753 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfD3EXC (ORCPT
+        Tue, 30 Apr 2019 00:24:47 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:33606 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfD3EYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 00:23:02 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r6so19218995wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 21:23:01 -0700 (PDT)
+        Tue, 30 Apr 2019 00:24:47 -0400
+Received: by mail-wr1-f49.google.com with SMTP id s18so19278576wrp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 21:24:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=4rU18cp7Phgu2DDw4oFlvhQGG9Aj9IkSQjep7ze+eh0=;
-        b=TrvoZ0z3LuDkKGrGl7AlprvGf18faJdloN6WEkmN4rO5v6+F3nn+PS/U4wyqe3fsPd
-         XYGFmClOXJCaqvSioHk99nlSpxSs+i12gv9wHXgKiYMXwctNoPLiXkcnoj+u+wRZg1Eo
-         e612rawSl+XEO38fGw0k2pUnmD0t9g7e2ICk4nk8t7e1duhQOzeRcAN+C69UFVrp4376
-         6stQYFl0CbINFfUB+toDbdIgfitk29EvkGPa6IMBfXPiGvkGXDTRlkTrq/3K625/BdEt
-         aR9FLrzbGs0H6bCezR5oGgrdcxFJmnlPIflyKK+kMlCvM0dQW2kbKyfl0KVnGLBTZGci
-         FgRA==
+        bh=DVA6yR4Sxy2an9BXJ5NALuY+dTspWhcDf3najxAmkPA=;
+        b=nPeKKzZz5rmrdYvcZ5h29hW2YotW09hET0wvOByGsm56wjtEjm4bayirmeENjxYtBb
+         UTaT113i/tWVOp3O6cAMgYhpBqLUPRWstymJK9/mnfktUb3yKrP/BAXxn5COPN41zb7O
+         jqTK2ZNke3uY5NT9jo93w7NM9ih5y7GCLzT8/JpEqwP/66gfpziYpgZSHZ0rk5EXxKNy
+         f9qDvug6ejJ97DGfpU7GL/ErBsO3mXFTzPrI+IKBK8R4wM4cUTqrWyCXPXne06lJrxeP
+         arjKv7tD0dsBUzPS9KCNjY9Vwkw7hVw2hMTfBKFYjXd3fxAUcsLWB0IO72ZMJhLB68z4
+         oMfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4rU18cp7Phgu2DDw4oFlvhQGG9Aj9IkSQjep7ze+eh0=;
-        b=gLcvQBNPd5vS4FwvsdtfQvspqrliEIuP8D98I+sB/SiF8gWscMpjOnEpDXKUawQTg6
-         6UoNiatGoRj9b3W9BtAKbQgOUbnKjvg4bjoI1yChd9cmceqPHnDpfatetcyHGBMKjYfG
-         qC9S4lzd78fNUKCJKwLEiIhkQJYVMii1MPpnebsQ6r6zIi7Xw6XsjKpEt6BPqBWNrBp3
-         z1XyTE6togE5zyPh8oInakycDpamXvLKzSt63obH7FsPT4cSjqp64jvFkjk4/JXHgdbe
-         H83HKNqRYk/E3Q9gnMMtBetoX8D1Z8t5VEUwyjMr3Vsi+36CiguzlfAkmcBFj73kzfnS
-         qDCg==
-X-Gm-Message-State: APjAAAX4vkm/IVFasJ9jC/WDFEEMq934ycz2mfKOLhwb7J3QBvrxeT4G
-        eo+vKVkWCOVrLbtJHZYjdk4=
-X-Google-Smtp-Source: APXvYqwR4+8OOvHEBqFxBnlQJwiE5lLugDjQuGwU5VEcTj0gk3Scy5KZxxMlzNk9m1IWaG0HR2nkaw==
-X-Received: by 2002:adf:dd12:: with SMTP id a18mr22078817wrm.188.1556598181204;
-        Mon, 29 Apr 2019 21:23:01 -0700 (PDT)
+        bh=DVA6yR4Sxy2an9BXJ5NALuY+dTspWhcDf3najxAmkPA=;
+        b=Eo37bzUIG3l1n0Ba3/GTiX3BsexKmQAYPi0QYpiRYOjtpFB/Drhmd+c/K2mP3g+QQd
+         EHek01hNjBMMXpUBStTePLONTxsf22fMt8XYpBxamTGXTn0yJf81zhNs9yWNFnCsdslY
+         EcBx3kou6mvhsguyXrYBZx7Az0RbQh8roG/kEF4iy+/K7reFmmt1aMFM0pVQIwVI/rex
+         rdrqC/RsgJy+fQWd/Ail4ifaXde8IT7C4uZQC/63qTCVnrg3cl2AwxrPmT24yMi6cc+9
+         SS92vAD0I0feSGvMZVzi3y9xZqaTbDso5LhoP5jC/wKRILOSwPTmZz3MmRJCzXeW2XB6
+         D9ug==
+X-Gm-Message-State: APjAAAVaP7LwXO4eTY0/IleADF2p/7Da2bZCjve0UgKptfKVgzWcsufJ
+        zAq/4TDivRmJG8u+3PMAMTw=
+X-Google-Smtp-Source: APXvYqxum5eQFtaTLaKo9hs0cIRwpQrCzktMQnT+4KdMyx3teIJoJCVvBTQiKi3Mkq8OkLsYmMEmHg==
+X-Received: by 2002:adf:f6ca:: with SMTP id y10mr16153091wrp.241.1556598285871;
+        Mon, 29 Apr 2019 21:24:45 -0700 (PDT)
 Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id o5sm1221259wmc.16.2019.04.29.21.22.59
+        by smtp.gmail.com with ESMTPSA id u11sm188077wrg.35.2019.04.29.21.24.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 21:23:00 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 06:22:57 +0200
+        Mon, 29 Apr 2019 21:24:45 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 06:24:43 +0200
 From:   Ingo Molnar <mingo@kernel.org>
 To:     "Tobin C. Harding" <tobin@kernel.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/cpufreq: Fix kobject memleak
-Message-ID: <20190430042257.GA73609@gmail.com>
-References: <20190430001144.24890-1-tobin@kernel.org>
+Subject: Re: [PATCH RESEND] sched/cpufreq: Fix kobject memleak
+Message-ID: <20190430042443.GB73609@gmail.com>
+References: <20190430001717.26533-1-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430001144.24890-1-tobin@kernel.org>
+In-Reply-To: <20190430001717.26533-1-tobin@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -87,15 +87,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 > call to kobject_put().  This means there is a memory leak.
 > 
 > Add call to kobject_put() in error path of kobject_init_and_add().
+> 
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 > ---
->  kernel/sched/cpufreq_schedutil.c | 1 +
->  1 file changed, 1 insertion(+)
+> 
+> Resend with SOB tag.
 
-I've added your:
-
-   Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-
-Which I suppose you intended to include?
+Please ignore my previous mail :-)
 
 Thanks,
 
