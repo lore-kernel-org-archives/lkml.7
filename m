@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABD6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F63EC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD1F21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E8D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624645;
-	bh=dP600AC7DQo3gguDMXyCcfzqzmM9zOck6aKvK/6AkbI=;
+	s=default; t=1556624648;
+	bh=o73o91nK6HFmFQRvr2MVp5X3kjueFwls8uyScdEDHVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o3R0IBcTS2xQyFsMx0OTdtI4lNehmQ522pQSkhhMY2E2S2IaDtmuQvV7ly+HcyIc+
-	 2BWqgYvFmR7H4X5vVoqxcCjkDxcqmnCwtk9A3TAwCaHatQiBRfdm+WAn4fgMqrH3sr
-	 Ev91r1+cIv7URgyh63WxCYinZlyzuapjtKvjL/rQ=
+	b=UJJSa8Ji0lQHQfiZAd8+S06aFkxiFWjfXxu4zIN7KsIMjMLiQXNWjZK2SCbCmW1qD
+	 TDilMN/tEM1ufKQT79j32ns4koMHlWt3gUEtXNqxh0AHD64Qvqd2+OfhPn5tPDg2ew
+	 eBFv10aiYm8nM7useF9g/1B+fm/zrRixMq4bdErQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbfD3LoE (ORCPT
+        id S1730086AbfD3LoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:44:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54744 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730060AbfD3Ln7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:43:59 -0400
+        id S1729119AbfD3LoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77AB920449;
-        Tue, 30 Apr 2019 11:43:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A69D921734;
+        Tue, 30 Apr 2019 11:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624638;
-        bh=dP600AC7DQo3gguDMXyCcfzqzmM9zOck6aKvK/6AkbI=;
+        s=default; t=1556624643;
+        bh=o73o91nK6HFmFQRvr2MVp5X3kjueFwls8uyScdEDHVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fFmkB+YUxHAc44udbClQpzV8zuPb/XkkEFnHZUyN8T6HhoW9Knhbc8q9IoVBFgXRl
-         05QZlzTGYKUSLICATZfsuN3fV5FSFePfeicXbypVeaGVr0rIHwPgeYLSjGnfG7Xvj8
-         pT1gj57PBwGeoDtV1X2rjvU2YUSOLyInBWhZgOns=
+        b=TVvFR1+ovfkAloJMgnfE1nfP0bg7frT5MgqoWw+HVZ2lbH3J0CDH1GuVmDyg2cdzI
+         nj4lPCmk7B3cFG6xWavwHTsr+C1mizFvQhJRwLF9txHoy//OuUjY85vOYRjoxQEWm2
+         al7RU8Er666kphyW5dxNTF/g0ZXtsC87BMK0/S4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Alexandru Herghelegiu <aherghelegiu@bitdefender.com>,
+        =?UTF-8?q?Adalbert=20Laz=C4=83r?= <alazar@bitdefender.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 008/100] netfilter: nft_compat: use .release_ops and remove list of extension
-Date:   Tue, 30 Apr 2019 13:37:37 +0200
-Message-Id: <20190430113609.023900571@linuxfoundation.org>
+Subject: [PATCH 4.19 018/100] vsock/virtio: fix kernel panic from virtio_transport_reset_no_sock
+Date:   Tue, 30 Apr 2019 13:37:47 +0200
+Message-Id: <20190430113609.562107849@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -59,535 +64,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b8e204006340b7aaf32bd2b9806c692f6e0cb38a ]
+[ Upstream commit 4c404ce23358d5d8fbdeb7a6021a9b33d3c3c167 ]
 
-Add .release_ops, that is called in case of error at a later stage in
-the expression initialization path, ie. .select_ops() has been already
-set up operations and that needs to be undone. This allows us to unwind
-.select_ops from the error path, ie. release the dynamic operations for
-this extension.
+Previous to commit 22b5c0b63f32 ("vsock/virtio: fix kernel panic
+after device hot-unplug"), vsock_core_init() was called from
+virtio_vsock_probe(). Now, virtio_transport_reset_no_sock() can be called
+before vsock_core_init() has the chance to run.
 
-Moreover, allocate one single operation instead of recycling them, this
-comes at the cost of consuming a bit more memory per rule, but it
-simplifies the infrastructure.
+[Wed Feb 27 14:17:09 2019] BUG: unable to handle kernel NULL pointer dereference at 0000000000000110
+[Wed Feb 27 14:17:09 2019] #PF error: [normal kernel read fault]
+[Wed Feb 27 14:17:09 2019] PGD 0 P4D 0
+[Wed Feb 27 14:17:09 2019] Oops: 0000 [#1] SMP PTI
+[Wed Feb 27 14:17:09 2019] CPU: 3 PID: 59 Comm: kworker/3:1 Not tainted 5.0.0-rc7-390-generic-hvi #390
+[Wed Feb 27 14:17:09 2019] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+[Wed Feb 27 14:17:09 2019] Workqueue: virtio_vsock virtio_transport_rx_work [vmw_vsock_virtio_transport]
+[Wed Feb 27 14:17:09 2019] RIP: 0010:virtio_transport_reset_no_sock+0x8c/0xc0 [vmw_vsock_virtio_transport_common]
+[Wed Feb 27 14:17:09 2019] Code: 35 8b 4f 14 48 8b 57 08 31 f6 44 8b 4f 10 44 8b 07 48 8d 7d c8 e8 84 f8 ff ff 48 85 c0 48 89 c3 74 2a e8 f7 31 03 00 48 89 df <48> 8b 80 10 01 00 00 e8 68 fb 69 ed 48 8b 75 f0 65 48 33 34 25 28
+[Wed Feb 27 14:17:09 2019] RSP: 0018:ffffb42701ab7d40 EFLAGS: 00010282
+[Wed Feb 27 14:17:09 2019] RAX: 0000000000000000 RBX: ffff9d79637ee080 RCX: 0000000000000003
+[Wed Feb 27 14:17:09 2019] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffff9d79637ee080
+[Wed Feb 27 14:17:09 2019] RBP: ffffb42701ab7d78 R08: ffff9d796fae70e0 R09: ffff9d796f403500
+[Wed Feb 27 14:17:09 2019] R10: ffffb42701ab7d90 R11: 0000000000000000 R12: ffff9d7969d09240
+[Wed Feb 27 14:17:09 2019] R13: ffff9d79624e6840 R14: ffff9d7969d09318 R15: ffff9d796d48ff80
+[Wed Feb 27 14:17:09 2019] FS:  0000000000000000(0000) GS:ffff9d796fac0000(0000) knlGS:0000000000000000
+[Wed Feb 27 14:17:09 2019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[Wed Feb 27 14:17:09 2019] CR2: 0000000000000110 CR3: 0000000427f22000 CR4: 00000000000006e0
+[Wed Feb 27 14:17:09 2019] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[Wed Feb 27 14:17:09 2019] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[Wed Feb 27 14:17:09 2019] Call Trace:
+[Wed Feb 27 14:17:09 2019]  virtio_transport_recv_pkt+0x63/0x820 [vmw_vsock_virtio_transport_common]
+[Wed Feb 27 14:17:09 2019]  ? kfree+0x17e/0x190
+[Wed Feb 27 14:17:09 2019]  ? detach_buf_split+0x145/0x160
+[Wed Feb 27 14:17:09 2019]  ? __switch_to_asm+0x40/0x70
+[Wed Feb 27 14:17:09 2019]  virtio_transport_rx_work+0xa0/0x106 [vmw_vsock_virtio_transport]
+[Wed Feb 27 14:17:09 2019] NET: Registered protocol family 40
+[Wed Feb 27 14:17:09 2019]  process_one_work+0x167/0x410
+[Wed Feb 27 14:17:09 2019]  worker_thread+0x4d/0x460
+[Wed Feb 27 14:17:09 2019]  kthread+0x105/0x140
+[Wed Feb 27 14:17:09 2019]  ? rescuer_thread+0x360/0x360
+[Wed Feb 27 14:17:09 2019]  ? kthread_destroy_worker+0x50/0x50
+[Wed Feb 27 14:17:09 2019]  ret_from_fork+0x35/0x40
+[Wed Feb 27 14:17:09 2019] Modules linked in: vmw_vsock_virtio_transport vmw_vsock_virtio_transport_common input_leds vsock serio_raw i2c_piix4 mac_hid qemu_fw_cfg autofs4 cirrus ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops virtio_net psmouse drm net_failover pata_acpi virtio_blk failover floppy
 
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug")
+Reported-by: Alexandru Herghelegiu <aherghelegiu@bitdefender.com>
+Signed-off-by: Adalbert Lazăr <alazar@bitdefender.com>
+Co-developed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/netfilter/nf_tables.h |   3 +
- net/netfilter/nf_tables_api.c     |   7 +-
- net/netfilter/nft_compat.c        | 281 ++++++------------------------
- 3 files changed, 64 insertions(+), 227 deletions(-)
+ net/vmw_vsock/virtio_transport_common.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
-index 50c101e0286a..f66bb406004b 100644
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -690,10 +690,12 @@ static inline void nft_set_gc_batch_add(struct nft_set_gc_batch *gcb,
- 	gcb->elems[gcb->head.cnt++] = elem;
- }
- 
-+struct nft_expr_ops;
- /**
-  *	struct nft_expr_type - nf_tables expression type
-  *
-  *	@select_ops: function to select nft_expr_ops
-+ *	@release_ops: release nft_expr_ops
-  *	@ops: default ops, used when no select_ops functions is present
-  *	@list: used internally
-  *	@name: Identifier
-@@ -706,6 +708,7 @@ static inline void nft_set_gc_batch_add(struct nft_set_gc_batch *gcb,
- struct nft_expr_type {
- 	const struct nft_expr_ops	*(*select_ops)(const struct nft_ctx *,
- 						       const struct nlattr * const tb[]);
-+	void				(*release_ops)(const struct nft_expr_ops *ops);
- 	const struct nft_expr_ops	*ops;
- 	struct list_head		list;
- 	const char			*name;
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 9f4d37b794eb..de5908d51758 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -2123,6 +2123,7 @@ struct nft_expr *nft_expr_init(const struct nft_ctx *ctx,
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 3ae3a33da70b..602715fc9a75 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -662,6 +662,8 @@ static int virtio_transport_reset(struct vsock_sock *vsk,
+  */
+ static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
  {
- 	struct nft_expr_info info;
- 	struct nft_expr *expr;
-+	struct module *owner;
- 	int err;
++	const struct virtio_transport *t;
++	struct virtio_vsock_pkt *reply;
+ 	struct virtio_vsock_pkt_info info = {
+ 		.op = VIRTIO_VSOCK_OP_RST,
+ 		.type = le16_to_cpu(pkt->hdr.type),
+@@ -672,15 +674,21 @@ static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+ 	if (le16_to_cpu(pkt->hdr.op) == VIRTIO_VSOCK_OP_RST)
+ 		return 0;
  
- 	err = nf_tables_expr_parse(ctx, nla, &info);
-@@ -2142,7 +2143,11 @@ struct nft_expr *nft_expr_init(const struct nft_ctx *ctx,
- err3:
- 	kfree(expr);
- err2:
--	module_put(info.ops->type->owner);
-+	owner = info.ops->type->owner;
-+	if (info.ops->type->release_ops)
-+		info.ops->type->release_ops(info.ops);
+-	pkt = virtio_transport_alloc_pkt(&info, 0,
+-					 le64_to_cpu(pkt->hdr.dst_cid),
+-					 le32_to_cpu(pkt->hdr.dst_port),
+-					 le64_to_cpu(pkt->hdr.src_cid),
+-					 le32_to_cpu(pkt->hdr.src_port));
+-	if (!pkt)
++	reply = virtio_transport_alloc_pkt(&info, 0,
++					   le64_to_cpu(pkt->hdr.dst_cid),
++					   le32_to_cpu(pkt->hdr.dst_port),
++					   le64_to_cpu(pkt->hdr.src_cid),
++					   le32_to_cpu(pkt->hdr.src_port));
++	if (!reply)
+ 		return -ENOMEM;
+ 
+-	return virtio_transport_get_ops()->send_pkt(pkt);
++	t = virtio_transport_get_ops();
++	if (!t) {
++		virtio_transport_free_pkt(reply);
++		return -ENOTCONN;
++	}
 +
-+	module_put(owner);
- err1:
- 	return ERR_PTR(err);
- }
-diff --git a/net/netfilter/nft_compat.c b/net/netfilter/nft_compat.c
-index 859eb3e12ddf..1245e02239d9 100644
---- a/net/netfilter/nft_compat.c
-+++ b/net/netfilter/nft_compat.c
-@@ -22,23 +22,6 @@
- #include <linux/netfilter_bridge/ebtables.h>
- #include <linux/netfilter_arp/arp_tables.h>
- #include <net/netfilter/nf_tables.h>
--#include <net/netns/generic.h>
--
--struct nft_xt {
--	struct list_head	head;
--	struct nft_expr_ops	ops;
--	refcount_t		refcnt;
--
--	/* used only when transaction mutex is locked */
--	unsigned int		listcnt;
--
--	/* Unlike other expressions, ops doesn't have static storage duration.
--	 * nft core assumes they do.  We use kfree_rcu so that nft core can
--	 * can check expr->ops->size even after nft_compat->destroy() frees
--	 * the nft_xt struct that holds the ops structure.
--	 */
--	struct rcu_head		rcu_head;
--};
- 
- /* Used for matches where *info is larger than X byte */
- #define NFT_MATCH_LARGE_THRESH	192
-@@ -47,46 +30,6 @@ struct nft_xt_match_priv {
- 	void *info;
- };
- 
--struct nft_compat_net {
--	struct list_head nft_target_list;
--	struct list_head nft_match_list;
--};
--
--static unsigned int nft_compat_net_id __read_mostly;
--static struct nft_expr_type nft_match_type;
--static struct nft_expr_type nft_target_type;
--
--static struct nft_compat_net *nft_compat_pernet(struct net *net)
--{
--	return net_generic(net, nft_compat_net_id);
--}
--
--static void nft_xt_get(struct nft_xt *xt)
--{
--	/* refcount_inc() warns on 0 -> 1 transition, but we can't
--	 * init the reference count to 1 in .select_ops -- we can't
--	 * undo such an increase when another expression inside the same
--	 * rule fails afterwards.
--	 */
--	if (xt->listcnt == 0)
--		refcount_set(&xt->refcnt, 1);
--	else
--		refcount_inc(&xt->refcnt);
--
--	xt->listcnt++;
--}
--
--static bool nft_xt_put(struct nft_xt *xt)
--{
--	if (refcount_dec_and_test(&xt->refcnt)) {
--		WARN_ON_ONCE(!list_empty(&xt->head));
--		kfree_rcu(xt, rcu_head);
--		return true;
--	}
--
--	return false;
--}
--
- static int nft_compat_chain_validate_dependency(const struct nft_ctx *ctx,
- 						const char *tablename)
- {
-@@ -281,7 +224,6 @@ nft_target_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	struct xt_target *target = expr->ops->data;
- 	struct xt_tgchk_param par;
- 	size_t size = XT_ALIGN(nla_len(tb[NFTA_TARGET_INFO]));
--	struct nft_xt *nft_xt;
- 	u16 proto = 0;
- 	bool inv = false;
- 	union nft_entry e = {};
-@@ -305,8 +247,6 @@ nft_target_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (!target->target)
- 		return -EINVAL;
- 
--	nft_xt = container_of(expr->ops, struct nft_xt, ops);
--	nft_xt_get(nft_xt);
- 	return 0;
++	return t->send_pkt(reply);
  }
  
-@@ -325,8 +265,8 @@ nft_target_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
- 	if (par.target->destroy != NULL)
- 		par.target->destroy(&par);
- 
--	if (nft_xt_put(container_of(expr->ops, struct nft_xt, ops)))
--		module_put(me);
-+	module_put(me);
-+	kfree(expr->ops);
- }
- 
- static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
-@@ -480,7 +420,6 @@ __nft_match_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	struct xt_match *match = expr->ops->data;
- 	struct xt_mtchk_param par;
- 	size_t size = XT_ALIGN(nla_len(tb[NFTA_MATCH_INFO]));
--	struct nft_xt *nft_xt;
- 	u16 proto = 0;
- 	bool inv = false;
- 	union nft_entry e = {};
-@@ -496,13 +435,7 @@ __nft_match_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 
- 	nft_match_set_mtchk_param(&par, ctx, match, info, &e, proto, inv);
- 
--	ret = xt_check_match(&par, size, proto, inv);
--	if (ret < 0)
--		return ret;
--
--	nft_xt = container_of(expr->ops, struct nft_xt, ops);
--	nft_xt_get(nft_xt);
--	return 0;
-+	return xt_check_match(&par, size, proto, inv);
- }
- 
- static int
-@@ -545,8 +478,8 @@ __nft_match_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (par.match->destroy != NULL)
- 		par.match->destroy(&par);
- 
--	if (nft_xt_put(container_of(expr->ops, struct nft_xt, ops)))
--		module_put(me);
-+	module_put(me);
-+	kfree(expr->ops);
- }
- 
- static void
-@@ -555,18 +488,6 @@ nft_match_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
- 	__nft_match_destroy(ctx, expr, nft_expr_priv(expr));
- }
- 
--static void nft_compat_deactivate(const struct nft_ctx *ctx,
--				  const struct nft_expr *expr,
--				  enum nft_trans_phase phase)
--{
--	struct nft_xt *xt = container_of(expr->ops, struct nft_xt, ops);
--
--	if (phase == NFT_TRANS_ABORT || phase == NFT_TRANS_COMMIT) {
--		if (--xt->listcnt == 0)
--			list_del_init(&xt->head);
--	}
--}
--
- static void
- nft_match_large_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
- {
-@@ -760,19 +681,13 @@ static const struct nfnetlink_subsystem nfnl_compat_subsys = {
- 	.cb		= nfnl_nft_compat_cb,
- };
- 
--static bool nft_match_cmp(const struct xt_match *match,
--			  const char *name, u32 rev, u32 family)
--{
--	return strcmp(match->name, name) == 0 && match->revision == rev &&
--	       (match->family == NFPROTO_UNSPEC || match->family == family);
--}
-+static struct nft_expr_type nft_match_type;
- 
- static const struct nft_expr_ops *
- nft_match_select_ops(const struct nft_ctx *ctx,
- 		     const struct nlattr * const tb[])
- {
--	struct nft_compat_net *cn;
--	struct nft_xt *nft_match;
-+	struct nft_expr_ops *ops;
- 	struct xt_match *match;
- 	unsigned int matchsize;
- 	char *mt_name;
-@@ -788,16 +703,6 @@ nft_match_select_ops(const struct nft_ctx *ctx,
- 	rev = ntohl(nla_get_be32(tb[NFTA_MATCH_REV]));
- 	family = ctx->family;
- 
--	cn = nft_compat_pernet(ctx->net);
--
--	/* Re-use the existing match if it's already loaded. */
--	list_for_each_entry(nft_match, &cn->nft_match_list, head) {
--		struct xt_match *match = nft_match->ops.data;
--
--		if (nft_match_cmp(match, mt_name, rev, family))
--			return &nft_match->ops;
--	}
--
- 	match = xt_request_find_match(family, mt_name, rev);
- 	if (IS_ERR(match))
- 		return ERR_PTR(-ENOENT);
-@@ -807,65 +712,62 @@ nft_match_select_ops(const struct nft_ctx *ctx,
- 		goto err;
- 	}
- 
--	/* This is the first time we use this match, allocate operations */
--	nft_match = kzalloc(sizeof(struct nft_xt), GFP_KERNEL);
--	if (nft_match == NULL) {
-+	ops = kzalloc(sizeof(struct nft_expr_ops), GFP_KERNEL);
-+	if (!ops) {
- 		err = -ENOMEM;
- 		goto err;
- 	}
- 
--	refcount_set(&nft_match->refcnt, 0);
--	nft_match->ops.type = &nft_match_type;
--	nft_match->ops.eval = nft_match_eval;
--	nft_match->ops.init = nft_match_init;
--	nft_match->ops.destroy = nft_match_destroy;
--	nft_match->ops.deactivate = nft_compat_deactivate;
--	nft_match->ops.dump = nft_match_dump;
--	nft_match->ops.validate = nft_match_validate;
--	nft_match->ops.data = match;
-+	ops->type = &nft_match_type;
-+	ops->eval = nft_match_eval;
-+	ops->init = nft_match_init;
-+	ops->destroy = nft_match_destroy;
-+	ops->dump = nft_match_dump;
-+	ops->validate = nft_match_validate;
-+	ops->data = match;
- 
- 	matchsize = NFT_EXPR_SIZE(XT_ALIGN(match->matchsize));
- 	if (matchsize > NFT_MATCH_LARGE_THRESH) {
- 		matchsize = NFT_EXPR_SIZE(sizeof(struct nft_xt_match_priv));
- 
--		nft_match->ops.eval = nft_match_large_eval;
--		nft_match->ops.init = nft_match_large_init;
--		nft_match->ops.destroy = nft_match_large_destroy;
--		nft_match->ops.dump = nft_match_large_dump;
-+		ops->eval = nft_match_large_eval;
-+		ops->init = nft_match_large_init;
-+		ops->destroy = nft_match_large_destroy;
-+		ops->dump = nft_match_large_dump;
- 	}
- 
--	nft_match->ops.size = matchsize;
-+	ops->size = matchsize;
- 
--	nft_match->listcnt = 0;
--	list_add(&nft_match->head, &cn->nft_match_list);
--
--	return &nft_match->ops;
-+	return ops;
- err:
- 	module_put(match->me);
- 	return ERR_PTR(err);
- }
- 
-+static void nft_match_release_ops(const struct nft_expr_ops *ops)
-+{
-+	struct xt_match *match = ops->data;
-+
-+	module_put(match->me);
-+	kfree(ops);
-+}
-+
- static struct nft_expr_type nft_match_type __read_mostly = {
- 	.name		= "match",
- 	.select_ops	= nft_match_select_ops,
-+	.release_ops	= nft_match_release_ops,
- 	.policy		= nft_match_policy,
- 	.maxattr	= NFTA_MATCH_MAX,
- 	.owner		= THIS_MODULE,
- };
- 
--static bool nft_target_cmp(const struct xt_target *tg,
--			   const char *name, u32 rev, u32 family)
--{
--	return strcmp(tg->name, name) == 0 && tg->revision == rev &&
--	       (tg->family == NFPROTO_UNSPEC || tg->family == family);
--}
-+static struct nft_expr_type nft_target_type;
- 
- static const struct nft_expr_ops *
- nft_target_select_ops(const struct nft_ctx *ctx,
- 		      const struct nlattr * const tb[])
- {
--	struct nft_compat_net *cn;
--	struct nft_xt *nft_target;
-+	struct nft_expr_ops *ops;
- 	struct xt_target *target;
- 	char *tg_name;
- 	u32 rev, family;
-@@ -885,18 +787,6 @@ nft_target_select_ops(const struct nft_ctx *ctx,
- 	    strcmp(tg_name, "standard") == 0)
- 		return ERR_PTR(-EINVAL);
- 
--	cn = nft_compat_pernet(ctx->net);
--	/* Re-use the existing target if it's already loaded. */
--	list_for_each_entry(nft_target, &cn->nft_target_list, head) {
--		struct xt_target *target = nft_target->ops.data;
--
--		if (!target->target)
--			continue;
--
--		if (nft_target_cmp(target, tg_name, rev, family))
--			return &nft_target->ops;
--	}
--
- 	target = xt_request_find_target(family, tg_name, rev);
- 	if (IS_ERR(target))
- 		return ERR_PTR(-ENOENT);
-@@ -911,113 +801,55 @@ nft_target_select_ops(const struct nft_ctx *ctx,
- 		goto err;
- 	}
- 
--	/* This is the first time we use this target, allocate operations */
--	nft_target = kzalloc(sizeof(struct nft_xt), GFP_KERNEL);
--	if (nft_target == NULL) {
-+	ops = kzalloc(sizeof(struct nft_expr_ops), GFP_KERNEL);
-+	if (!ops) {
- 		err = -ENOMEM;
- 		goto err;
- 	}
- 
--	refcount_set(&nft_target->refcnt, 0);
--	nft_target->ops.type = &nft_target_type;
--	nft_target->ops.size = NFT_EXPR_SIZE(XT_ALIGN(target->targetsize));
--	nft_target->ops.init = nft_target_init;
--	nft_target->ops.destroy = nft_target_destroy;
--	nft_target->ops.deactivate = nft_compat_deactivate;
--	nft_target->ops.dump = nft_target_dump;
--	nft_target->ops.validate = nft_target_validate;
--	nft_target->ops.data = target;
-+	ops->type = &nft_target_type;
-+	ops->size = NFT_EXPR_SIZE(XT_ALIGN(target->targetsize));
-+	ops->init = nft_target_init;
-+	ops->destroy = nft_target_destroy;
-+	ops->dump = nft_target_dump;
-+	ops->validate = nft_target_validate;
-+	ops->data = target;
- 
- 	if (family == NFPROTO_BRIDGE)
--		nft_target->ops.eval = nft_target_eval_bridge;
-+		ops->eval = nft_target_eval_bridge;
- 	else
--		nft_target->ops.eval = nft_target_eval_xt;
--
--	nft_target->listcnt = 0;
--	list_add(&nft_target->head, &cn->nft_target_list);
-+		ops->eval = nft_target_eval_xt;
- 
--	return &nft_target->ops;
-+	return ops;
- err:
- 	module_put(target->me);
- 	return ERR_PTR(err);
- }
- 
-+static void nft_target_release_ops(const struct nft_expr_ops *ops)
-+{
-+	struct xt_target *target = ops->data;
-+
-+	module_put(target->me);
-+	kfree(ops);
-+}
-+
- static struct nft_expr_type nft_target_type __read_mostly = {
- 	.name		= "target",
- 	.select_ops	= nft_target_select_ops,
-+	.release_ops	= nft_target_release_ops,
- 	.policy		= nft_target_policy,
- 	.maxattr	= NFTA_TARGET_MAX,
- 	.owner		= THIS_MODULE,
- };
- 
--static int __net_init nft_compat_init_net(struct net *net)
--{
--	struct nft_compat_net *cn = nft_compat_pernet(net);
--
--	INIT_LIST_HEAD(&cn->nft_target_list);
--	INIT_LIST_HEAD(&cn->nft_match_list);
--
--	return 0;
--}
--
--static void __net_exit nft_compat_exit_net(struct net *net)
--{
--	struct nft_compat_net *cn = nft_compat_pernet(net);
--	struct nft_xt *xt, *next;
--
--	if (list_empty(&cn->nft_match_list) &&
--	    list_empty(&cn->nft_target_list))
--		return;
--
--	/* If there was an error that caused nft_xt expr to not be initialized
--	 * fully and noone else requested the same expression later, the lists
--	 * contain 0-refcount entries that still hold module reference.
--	 *
--	 * Clean them here.
--	 */
--	mutex_lock(&net->nft.commit_mutex);
--	list_for_each_entry_safe(xt, next, &cn->nft_target_list, head) {
--		struct xt_target *target = xt->ops.data;
--
--		list_del_init(&xt->head);
--
--		if (refcount_read(&xt->refcnt))
--			continue;
--		module_put(target->me);
--		kfree(xt);
--	}
--
--	list_for_each_entry_safe(xt, next, &cn->nft_match_list, head) {
--		struct xt_match *match = xt->ops.data;
--
--		list_del_init(&xt->head);
--
--		if (refcount_read(&xt->refcnt))
--			continue;
--		module_put(match->me);
--		kfree(xt);
--	}
--	mutex_unlock(&net->nft.commit_mutex);
--}
--
--static struct pernet_operations nft_compat_net_ops = {
--	.init	= nft_compat_init_net,
--	.exit	= nft_compat_exit_net,
--	.id	= &nft_compat_net_id,
--	.size	= sizeof(struct nft_compat_net),
--};
--
- static int __init nft_compat_module_init(void)
- {
- 	int ret;
- 
--	ret = register_pernet_subsys(&nft_compat_net_ops);
--	if (ret < 0)
--		goto err_target;
--
- 	ret = nft_register_expr(&nft_match_type);
- 	if (ret < 0)
--		goto err_pernet;
-+		return ret;
- 
- 	ret = nft_register_expr(&nft_target_type);
- 	if (ret < 0)
-@@ -1034,8 +866,6 @@ err_target:
- 	nft_unregister_expr(&nft_target_type);
- err_match:
- 	nft_unregister_expr(&nft_match_type);
--err_pernet:
--	unregister_pernet_subsys(&nft_compat_net_ops);
- 	return ret;
- }
- 
-@@ -1044,7 +874,6 @@ static void __exit nft_compat_module_exit(void)
- 	nfnetlink_subsys_unregister(&nfnl_compat_subsys);
- 	nft_unregister_expr(&nft_target_type);
- 	nft_unregister_expr(&nft_match_type);
--	unregister_pernet_subsys(&nft_compat_net_ops);
- }
- 
- MODULE_ALIAS_NFNL_SUBSYS(NFNL_SUBSYS_NFT_COMPAT);
+ static void virtio_transport_wait_close(struct sock *sk, long timeout)
 -- 
 2.19.1
 
