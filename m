@@ -2,157 +2,84 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7A2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8E5C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 384222147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahOWMx3q"
+	by mail.kernel.org (Postfix) with ESMTP id EB03F2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556587033;
+	bh=qcLOSpoPyCzrOcUvwV/UdsuD1K8+igi0fkupszgChG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nbGkuGGMTrrCp5ys1m0G9W/vtC6AXrthK6ZBmrogEoOLnaqdSR4z7dEobhdvXKmIG
+	 KrDBE7Ur7ZQEU8+C/bKArwaM1R3jEw1qAMArKa3eIUN30taSZOmzFrR+hZDy2SiXmv
+	 JPdzHoc2fZJeGqH9fpa1JEOdbXRwD2S3wige6D3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfD3BQc (ORCPT
+        id S1729821AbfD3BRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:16:32 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43495 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728997AbfD3BQb (ORCPT
+        Mon, 29 Apr 2019 21:17:11 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43308 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728997AbfD3BRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:16:31 -0400
-Received: by mail-io1-f65.google.com with SMTP id v9so10701212iol.10;
-        Mon, 29 Apr 2019 18:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SfPqE6niR3NEIdogH38IJwz4sYLWIqWXqo9y3JeTJmY=;
-        b=ahOWMx3qNBkWzwTs8zaTaZxnpSuv2c+pVuPd8bP+It6iHdPv4s7MZlZhN206R7LUiy
-         pzS7QMl2xdkdSnT5q5XTrofVEcDnTj9vsM3Vh8/pDSKWxEjENfa8JVPl3KDsWfh6aCl6
-         vhhWTJOWcGm8ig0/Xcq7VMq/Q969g0tlmJp/i7av74kef/xOBFiCSkm79igbMvPd9eZB
-         zvewngiWtZrafR1Neq9JeWl13YE6q6dv1EzFTzVtibl59o0XCODty1oe7kju/soaxG+7
-         N0bpwZwxJpMZzg4Q4o5nlhetQGXGg01KsorkVQmJvAvMMr+WVg6azWyvS1vJrpo7l8ET
-         6EBA==
+        Mon, 29 Apr 2019 21:17:11 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t81so9926858oig.10;
+        Mon, 29 Apr 2019 18:17:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SfPqE6niR3NEIdogH38IJwz4sYLWIqWXqo9y3JeTJmY=;
-        b=Xej3GTl8E6AeBl1ySqwGIeMxNzvqrhOrDirLVljvX3GUamcYbJUzYjloEiCyM5XM1z
-         vHRiiYCYGV4+2Eeo9tZY0mVqWbGIdRLIsTsZdrq2C3ZuthyY5WAcID0Y9IVbn/ge3z2J
-         /fyHb71h1OZe8JkoajuJpABElItvbOCNjyw+KOZp5jiMoSnDZoAdZxC9sYGll8ykvkPK
-         Ya6/StC/+K9qC292iqBKvMxMrAfQXMTYWPZbUv0W9y6vhBJ8TkRNqc+HqyYgyJDDEm29
-         rXq5UywJFwpdqBn14j2gftjry9GHJI7ij6ZgM+DkiAdyi53/x6gqO7LYzHclfz7NjlYN
-         92Ig==
-X-Gm-Message-State: APjAAAW/ZjcuCAYPoEHCm8x1Pv4PXbMj40eklEVS/rd0KwrmA2OCcc+p
-        M6vvpjwN16/RdploieuO+U/OrUr5W4doMosVDQU=
-X-Google-Smtp-Source: APXvYqyKgv7CSN7Z+Yu0SNze1uUShe+UhbzvK1b7yzjIKnAzHUB4FaH4bAsq5DSo4VxO3GN7D8Dim/BABQpvPXdEwfE=
-X-Received: by 2002:a5d:8b97:: with SMTP id p23mr388150iol.83.1556586990899;
- Mon, 29 Apr 2019 18:16:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xaOdfxdw1hMtS7qaFsh00GiMGk+CxCyglGrKYxmtdsI=;
+        b=gzddVTImpUmKqYtwZiF3ohNm6dIRWs6kJ/zmPfjU9LZMZp1kHvu7MCmupZuLApp/D8
+         6TeDGY/VR434qdrWTPSub7jSaO4XQH/f952LqGiyseIbZSK37MM6LFbCLad7CHqmLOyc
+         H0+dxU5k2U5CKrYgUm9QVmouBP0UbKHRNmoNF9mbSBO37lIQ6N8UNJnOY5ioQiYpx1fE
+         98iA9mIBFI1jpTj8cRP/J4HOrQCxU7fkewXymp+72skm9t+Z7w2qsswGJgrB1eEfYHxL
+         TmXhcN5JtAR69nf2hUtKfCzvl4+DOkrByfdB/akkP8Uh8Xi0tppPLO4GtpA3dKnZ/Er3
+         oWCQ==
+X-Gm-Message-State: APjAAAVba51vhU04CETnYVbpZ0/PhHsbsvRz9J7sRl2/wX5iL3Z6oiE8
+        GiSthYwI9usxrDRxY2fAMw==
+X-Google-Smtp-Source: APXvYqw6ntRhc/wbwykwNmMjNvveQySGSHN3ekx1kQx8S+cMQcTxyL7XbYzZewnuRIN19hQXVUioAw==
+X-Received: by 2002:aca:ba82:: with SMTP id k124mr1493234oif.110.1556587030763;
+        Mon, 29 Apr 2019 18:17:10 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e23sm13995060otl.61.2019.04.29.18.17.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 18:17:10 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 20:17:09 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Florent TOMASIN <tomasin.florent@gmail.com>
+Cc:     tomasin.florent@gmail.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: Add CDTech S050WV43-CT5 panel bindings
+Message-ID: <20190430011709.GA25451@bogus>
+References: <20190417233846.11880-1-tomasin.florent@gmail.com>
 MIME-Version: 1.0
-References: <20190429195349.20335-1-andrew.smirnov@gmail.com>
- <20190429195349.20335-3-andrew.smirnov@gmail.com> <20190429203601.GA22613@roeck-us.net>
-In-Reply-To: <20190429203601.GA22613@roeck-us.net>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 29 Apr 2019 18:16:19 -0700
-Message-ID: <CAHQ1cqGnvyWxrqA2Bq92UEpo+OR-HSo-hwp6sh8P9x-YbTZZWQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] power: supply: Add driver for Microchip UCS1002
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417233846.11880-1-tomasin.florent@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 1:36 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Mon, Apr 29, 2019 at 12:53:48PM -0700, Andrey Smirnov wrote:
-> > Add driver for Microchip UCS1002 Programmable USB Port Power
-> > Controller with Charger Emulation. The driver exposed a power supply
-> > device to control/monitor various parameter of the device as well as a
-> > regulator to allow controlling VBUS line.
-> >
-> > Signed-off-by: Enric Balletbo Serra <enric.balletbo@collabora.com>
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Cc: Sebastian Reichel <sre@kernel.org>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-pm@vger.kernel.org
-> > ---
-> >  drivers/power/supply/Kconfig         |   9 +
-> >  drivers/power/supply/Makefile        |   1 +
-> >  drivers/power/supply/ucs1002_power.c | 646 +++++++++++++++++++++++++++
-> >  3 files changed, 656 insertions(+)
-> >  create mode 100644 drivers/power/supply/ucs1002_power.c
-> >
-> > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> > index e901b9879e7e..c614c8a196f3 100644
-> > --- a/drivers/power/supply/Kconfig
-> > +++ b/drivers/power/supply/Kconfig
-> > @@ -660,4 +660,13 @@ config FUEL_GAUGE_SC27XX
-> >        Say Y here to enable support for fuel gauge with SC27XX
-> >        PMIC chips.
-> >
-> > +config CHARGER_UCS1002
-> > +        tristate "Microchip UCS1002 USB Port Power Controller"
-> > +     depends on I2C
-> > +     depends on OF
-> > +     select REGMAP_I2C
-> > +     help
-> > +       Say Y to enable support for Microchip UCS1002 Programmable
-> > +       USB Port Power Controller with Charger Emulation.
-> > +
-> >  endif # POWER_SUPPLY
-> > diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> > index b731c2a9b695..c56803a9e4fe 100644
-> > --- a/drivers/power/supply/Makefile
-> > +++ b/drivers/power/supply/Makefile
-> > @@ -87,3 +87,4 @@ obj-$(CONFIG_AXP288_CHARGER)        += axp288_charger.o
-> >  obj-$(CONFIG_CHARGER_CROS_USBPD)     += cros_usbpd-charger.o
-> >  obj-$(CONFIG_CHARGER_SC2731) += sc2731_charger.o
-> >  obj-$(CONFIG_FUEL_GAUGE_SC27XX)      += sc27xx_fuel_gauge.o
-> > +obj-$(CONFIG_CHARGER_UCS1002)        += ucs1002_power.o
-> > diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/ucs1002_power.c
-> > new file mode 100644
-> > index 000000000000..677f20a4d76f
-> > --- /dev/null
-> > +++ b/drivers/power/supply/ucs1002_power.c
-> > @@ -0,0 +1,646 @@
-> ...
-> > +
-> > +static enum power_supply_usb_type ucs1002_usb_types[] = {
-> > +     POWER_SUPPLY_USB_TYPE_PD,
-> > +     POWER_SUPPLY_USB_TYPE_SDP,
-> > +     POWER_SUPPLY_USB_TYPE_DCP,
-> > +     POWER_SUPPLY_USB_TYPE_CDP,
-> > +     POWER_SUPPLY_USB_TYPE_UNKNOWN,
-> > +};
-> > +
-> > +static int ucs1002_set_usb_type(struct ucs1002_info *info, int val)
-> > +{
-> > +     unsigned int mode;
-> > +
-> > +     if (val >= ARRAY_SIZE(ucs1002_usb_types))
-> > +             return -EINVAL;
-> > +
-> I hate to bring it up that late, but I don't see a check
-> against val being negative anywhere in the calling code.
->
+On Thu, 18 Apr 2019 00:38:44 +0100, Florent TOMASIN wrote:
+> Add documentation for S050WV43-CT5 panel
+> 
+> Signed-off-by: Florent TOMASIN <tomasin.florent@gmail.com>
+> ---
+>  .../bindings/display/panel/cdtech,s050wv43-ct5.txt   | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/cdtech,s050wv43-ct5.txt
+> 
 
-Sure, I'll add it in v4
-
-Thanks,
-Andrey Smirnov
+Reviewed-by: Rob Herring <robh@kernel.org>
