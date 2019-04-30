@@ -2,134 +2,170 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4001C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48AFC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711E52087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:39:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIvXEuVL"
+	by mail.kernel.org (Postfix) with ESMTP id 821EF2087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfD3WjN (ORCPT
+        id S1727546AbfD3Wj0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:39:13 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37874 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfD3WjM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:39:12 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g3so7782205pfi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 15:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=BH4bZIoYFh+BZeuStnVh4oqr1cPMGw3OERKeRDVWU08=;
-        b=OIvXEuVL9Uv69bTytaoqWmRftzsJ4wBG0LYBtrjl6WnOblUu05EIVX+NHm/lpilCno
-         b8WwUWIF6x5Y5G/SSCjGEMqDKPGlKEZMGXBBBF80JQyvCTKr8gQzEQZB2W+FcfO52KvM
-         L+DuKuA9cl2LR6x7m6FHyKYx+V4h8AroJ0Ujg0oTX0Kkw6QS8Xv03E87GIYi+y9oD5IF
-         qrmZcI3U9V0KNFOki8GtqaWJf4h9sBQftWmZoOmpXF4xSfBaq13Seoh3hKAvA2fkr4Ok
-         nKIqrp/xeB9s/o9e3lQYdu3KJuP3kwAHvJ7sGZnxhUefsNaSl0uKEikSsP5Fnvzs04qy
-         PV4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BH4bZIoYFh+BZeuStnVh4oqr1cPMGw3OERKeRDVWU08=;
-        b=U6sjPLTWxN5FEsrKl3+Zyx4wxGgYgBJCDgyjMIpbjLM+vLOK39+ZKTzCpL62ofBmdJ
-         RyLDMeUGmRP1i1IpUwMH+00EJWVE2U462VHGPjRLHTmJJVBxW727dBPrGO7QFmS8iHD1
-         JDGY/YK3Wh+SusMQmmObiunemAic8Zf/sSQWHYy5Sjy9xMRwTqAngs9Q5saXdenoGMKL
-         gvCwCCM7tqVofAyTWIU5qpNdxrOgVuHh6Q1l8ycIETmMtVNoI+H//GomEIsP07N9U2vo
-         YqAEiDVPvytovoTux/iWBJL7jv64tOiPmFy3nI5j119x4Gt6hFILZBGzOJ7NKXOrdZSt
-         WHaw==
-X-Gm-Message-State: APjAAAVuEWvc8EQXRiYOe+EUjgPgE3gh4Tz/elNuLFQpxAChSBkrK3/M
-        TfD9NhbpKxLWFOthvApHqNY=
-X-Google-Smtp-Source: APXvYqzWZUGXQC0CYwvVzbYHuPdpj3mWL11+509Lnrq/yd2kilWOvzRF3C9VoPDJB+A8UsYHCaEfIA==
-X-Received: by 2002:a63:4c1a:: with SMTP id z26mr53118353pga.324.1556663951853;
-        Tue, 30 Apr 2019 15:39:11 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id c28sm27788476pgm.42.2019.04.30.15.39.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 15:39:10 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     rmk+kernel@armlinux.org.uk,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: Demote boot and shutdown messages to pr_debug
-Date:   Tue, 30 Apr 2019 15:38:31 -0700
-Message-Id: <20190430223835.23513-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 30 Apr 2019 18:39:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58638 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbfD3WjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 18:39:25 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 237C2308A9E2;
+        Tue, 30 Apr 2019 22:39:25 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 669F317244;
+        Tue, 30 Apr 2019 22:39:21 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     jmorris@namei.org
+cc:     dhowells@redhat.com, dwalsh@redhat.com, vgoyal@redhat.com,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [GIT PULL] keys: Namespacing
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <560.1556663960.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Tue, 30 Apr 2019 23:39:20 +0100
+Message-ID: <561.1556663960@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 30 Apr 2019 22:39:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to commits c68b0274fb3cf ("ARM: reduce "Booted secondary
-processor" message to debug level") and 035e787543de7 ("ARM: 8644/1: Reduce "CPU:
-shutdown" message to debug level"), demote the secondary_start_kernel()
-and __cpu_die() messages from info, respectively notice to debug. While
-we are at it, also do this for cpu_psci_cpu_kill() which is redundant
-with __cpu_die().
+Hi James,
 
-This helps improve the amount of possible hotplug cycles by around +50%
-on ARCH_BRCMSTB.
+Can you pull this set of patches into the security tree and pass them along
+to Linus in the next merge window?  The primary thrust is to add
+namespacing to keyrings.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+One miscellaneous and four prerequisite patches start:
+
+ (1) Use invalidation to kill off request_key authentication tokens more
+     quickly than revoking them.
+
+ (2) Remove request_key_async{,_with_auxdata} - I would need to add extra
+     arguments, but they're not currently used.
+
+ (3), (4) Simplify the key description management and cache the hash value
+     to avoid the need for constant recalculation during a search.  This
+     makes it easier to add namespace info to a key's index key.
+
+ (5) Make it possible for keyring_search() to do searches that don't
+     recurse down into and search keyrings linked to from the starting
+     keyring.
+
+Then the rest are about namespacing:
+
+ (6) Replace the global list of keyring names with per-user_namespace lists
+     and exclude certain internal keyrings from being added to the lists.
+
+ (7) Move the user and user-session keyrings from the user_struct, and
+     store them instead in a "user keyring register" in the user_namespace.
+     This prevents KEY_SPEC_* specifiers from picking keyrings from the
+     wrong namespace.  Note that it also means that uids that share a
+     user_struct will not see the same user keyrings inside and outside a
+     user_namespace.
+
+     This has been tested by Dan Walsh in a Fedora environment, though the
+     patch was modified from the one here.
+
+ (8) Provide the ability to add a domain tag to a key's index key, so that
+     a keyring can hold keys of the same type and description, but
+     different target namespace/domain.
+
+ (9) Make the garbage collector remove keys for which the target domain tag
+     has been removed.
+
+(10) Provide a domain tag for each network namespace.
+
+(11) Tag DNS resolver keys and rxrpc/afs keys so that keys for different
+     domains can coexist in the same keyrings.
+
+In the future, hopefully, it will be possible to use the domain tags in
+ACLs to grant permissions to namespaces for containerisation.
+
+David
 ---
- arch/arm64/kernel/psci.c | 2 +-
- arch/arm64/kernel/smp.c  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+The following changes since commit 6beff00b79ca0b5caf0ce6fb8e11f57311bd95f8:
 
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index 8cdaf25e99cd..a78581046c80 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -96,7 +96,7 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
- 	for (i = 0; i < 10; i++) {
- 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
- 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
--			pr_info("CPU%d killed.\n", cpu);
-+			pr_debug("CPU%d killed.\n", cpu);
- 			return 0;
- 		}
- 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 824de7038967..71fd2b5a3f0e 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -259,7 +259,7 @@ asmlinkage notrace void secondary_start_kernel(void)
- 	 * the CPU migration code to notice that the CPU is online
- 	 * before we continue.
- 	 */
--	pr_info("CPU%u: Booted secondary processor 0x%010lx [0x%08x]\n",
-+	pr_debug("CPU%u: Booted secondary processor 0x%010lx [0x%08x]\n",
- 					 cpu, (unsigned long)mpidr,
- 					 read_cpuid_id());
- 	update_cpu_boot_status(CPU_BOOT_SUCCESS);
-@@ -348,7 +348,7 @@ void __cpu_die(unsigned int cpu)
- 		pr_crit("CPU%u: cpu didn't die\n", cpu);
- 		return;
- 	}
--	pr_notice("CPU%u: shutdown\n", cpu);
-+	pr_debug("CPU%u: shutdown\n", cpu);
- 
- 	/*
- 	 * Now that the dying CPU is beyond the point of no return w.r.t.
--- 
-2.17.1
+  seccomp: fix up grammar in comment (2019-04-23 16:21:12 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-namespace-20190430
+
+for you to fetch changes up to ccedc142360bd68fdaf444671d67d42fa306398b:
+
+  keys: Pass the network namespace into request_key mechanism (2019-04-25 13:10:25 +0100)
+
+----------------------------------------------------------------
+Keyrings namespacing
+
+----------------------------------------------------------------
+David Howells (11):
+      keys: Invalidate used request_key authentication keys
+      keys: Kill off request_key_async{,_with_auxdata}
+      keys: Simplify key description management
+      keys: Cache the hash value to avoid lots of recalculation
+      keys: Add a 'recurse' flag for keyring searches
+      keys: Namespace keyring names
+      keys: Move the user and user-session keyrings to the user_namespace
+      keys: Include target namespace in match criteria
+      keys: Garbage collect keys for which the domain has been removed
+      keys: Network namespace domain tag
+      keys: Pass the network namespace into request_key mechanism
+
+ Documentation/security/keys/core.rst     |  10 +-
+ certs/blacklist.c                        |   2 +-
+ crypto/asymmetric_keys/asymmetric_type.c |   2 +-
+ fs/afs/addr_list.c                       |   4 +-
+ fs/afs/dynroot.c                         |   7 +-
+ fs/cifs/dns_resolve.c                    |   3 +-
+ fs/nfs/dns_resolve.c                     |   2 +-
+ include/linux/dns_resolver.h             |   3 +-
+ include/linux/key-type.h                 |   3 +
+ include/linux/key.h                      |  50 ++++--
+ include/linux/sched/user.h               |  14 --
+ include/linux/user_namespace.h           |  12 +-
+ include/net/net_namespace.h              |   4 +
+ kernel/user.c                            |  10 +-
+ kernel/user_namespace.c                  |   9 +-
+ lib/digsig.c                             |   2 +-
+ net/ceph/messenger.c                     |   3 +-
+ net/core/net_namespace.c                 |  19 +++
+ net/dns_resolver/dns_key.c               |   1 +
+ net/dns_resolver/dns_query.c             |   6 +-
+ net/rxrpc/key.c                          |   6 +-
+ net/rxrpc/security.c                     |   2 +-
+ security/integrity/digsig_asymmetric.c   |   4 +-
+ security/keys/gc.c                       |   2 +-
+ security/keys/internal.h                 |  10 +-
+ security/keys/key.c                      |   9 +-
+ security/keys/keyctl.c                   |   4 +-
+ security/keys/keyring.c                  | 263 +++++++++++++++++--------------
+ security/keys/persistent.c               |  10 +-
+ security/keys/proc.c                     |   3 +-
+ security/keys/process_keys.c             | 252 ++++++++++++++++++-----------
+ security/keys/request_key.c              | 113 ++++++-------
+ security/keys/request_key_auth.c         |   3 +-
+ 33 files changed, 508 insertions(+), 339 deletions(-)
