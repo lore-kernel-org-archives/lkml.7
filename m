@@ -2,129 +2,82 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AFFC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84BDC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7741A2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:25:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pHAUFUPI"
+	by mail.kernel.org (Postfix) with ESMTP id 8160B21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfD3NZk (ORCPT
+        id S1728433AbfD3NZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:25:40 -0400
-Received: from mail-ua1-f74.google.com ([209.85.222.74]:46729 "EHLO
-        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbfD3NZh (ORCPT
+        Tue, 30 Apr 2019 09:25:45 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44028 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728302AbfD3NZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:25:37 -0400
-Received: by mail-ua1-f74.google.com with SMTP id i4so800933uap.13
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:25:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=CVV6psz/Vns5azsm7jZt0BKocrzPfr2CsD5f51mITmQ=;
-        b=pHAUFUPIK00HUvs8fYzbfMDhOtYuRZOYj18jl6SUOemiz8hMuVoEwpyBcBFZsdPfRy
-         CP69mD/DWkxSBrhRr7+Ao/OQBLtynTBk0B9gn31tW8yWHjU69Q7PB4ZDpgvtdnhUTEzK
-         8CbwpHg2uux/P91ru8mr0G2/NpJ+DVwloVARu7ft7n27vA6hkWJDGMY1mugB3YmYuyhT
-         OwmXeDxT9woV4yHQlsAA+KWTEq0dG80iCwsoH+0J1dhKu1C33LiknxZR75he7h2J78XE
-         ZKdvpYjQpomJrWqZzF9raVXk6z/lSdaqbAYdD0YzglrS0vRmztdJidedrkfiqCqRVd3N
-         hnSw==
+        Tue, 30 Apr 2019 09:25:40 -0400
+Received: by mail-qt1-f195.google.com with SMTP id g4so15999380qtq.10;
+        Tue, 30 Apr 2019 06:25:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=CVV6psz/Vns5azsm7jZt0BKocrzPfr2CsD5f51mITmQ=;
-        b=Hr2II6WwgYYhgwK81bAWVF4LtczQpA55sFGKoy/UeW2ID6/hCI0krWeM3u41N20qbg
-         9MbFc6LRvWvYQCvD5G6T8VMviJDmiy55xaO10i4TOPUa+s7LTDTJOywk977B3hajwPrv
-         8xiYqv955KMkDZGqun8miM/jJnE39reCTUzK7gQsb1zFHCTDHzSLL8gdu4Gmq6y6MOzH
-         cY2soUjaP74leXAjI7UPl72ei1LQqzetbuoi3/WwAXZjpq4bdO7H9fBSAPaBgdaJvaXm
-         T2VJ2pNXBCR6mzO10koPrpncurS57oQvROCk/4mJQu20LYL2/WCUMjaPGF26dOu/NY/C
-         +CyQ==
-X-Gm-Message-State: APjAAAW0Cegi9RqUU2G6Uef1x6hcBKc7hhDJg/G9lIPQykzT39XDbQev
-        aW5lvyADnhyBM+B/kvtOYOq8tjXwq9DUOSGM
-X-Google-Smtp-Source: APXvYqxbH0hW8IUGPJRsH+MKg4I9yJOI2DrUXBayHbDSUEVQsqLwVaAkxsd+/0KcP5RvItcIqz2adgVjyHXkB8kF
-X-Received: by 2002:a67:dd01:: with SMTP id y1mr18718014vsj.39.1556630736057;
- Tue, 30 Apr 2019 06:25:36 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 15:25:02 +0200
-In-Reply-To: <cover.1556630205.git.andreyknvl@google.com>
-Message-Id: <80f7d6a2f68adb1c41ef5baf8973537380c681b0.1556630205.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1556630205.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH v14 06/17] mm: untag user pointers in do_pages_move
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>, Kuehling@google.com,
-        Felix <Felix.Kuehling@amd.com>, Deucher@google.com,
-        Alexander <Alexander.Deucher@amd.com>, Koenig@google.com,
-        Christian <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bsjY1DmhUhB9DtBTlNGVuJNSnH75cc+kYQnpfUCErno=;
+        b=nEXaelipnSNjl18ud7hweMuSiRlTDhwtjK6591mx7kIbpu4NzmYATgUohq3AKIk61r
+         elwjqBZjah3x9W2qXA7bYCLvzkzl4QyADiwjXf5sgaC1kmHPnuB7RVP+LrmbAtHfJs/Q
+         Bc3GXtKNlXRZVah56xbD2wvMItrFd98ygoFkQpYMSwNTWOMQL+928pqk940RHfLEfgu7
+         GRUIBHr6ncmMfn+uZqy+GtbtoY9bWbZUdYkC1uSYP4LtKxRl9IaFRgX55ukGp4bAySXH
+         FtQovYU49Sl/D9kBYihaN35EFQMu5bkLXm1OPGYg6gr99UBxxxxMT4qUyLNT3JgcZvw7
+         2jyg==
+X-Gm-Message-State: APjAAAUNbtiWYIpP2MxL2z/K4yQ3MISJ3l4nrSa6DTilpJxN+YhvqbLM
+        H5jzKVQsuCgy1Gljbs1f1SzLWwO62/mEAONq6ETtZe1H
+X-Google-Smtp-Source: APXvYqybjaI1IwCBTFJUaMgt5CyjzbFifgqt09o7eG704nNEEpC7JPV9jSbZdWGCoQgFFeSJV62/CpkGkHL9lFIfoJw=
+X-Received: by 2002:ac8:2692:: with SMTP id 18mr54601227qto.343.1556630738805;
+ Tue, 30 Apr 2019 06:25:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
+ <20190402161256.11044-3-daniel.lezcano@linaro.org> <1555922585.26198.19.camel@intel.com>
+ <fb45157c-38c4-7940-3252-af459d446323@linaro.org> <1555999165.26198.39.camel@intel.com>
+ <2c0bc40d-328a-fc96-73da-9d65fee253fb@linaro.org>
+In-Reply-To: <2c0bc40d-328a-fc96-73da-9d65fee253fb@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 30 Apr 2019 15:25:21 +0200
+Message-ID: <CAK8P3a2LAZnBKigo9v0qzaa-WAYkuoueF_jyJtaFrMeLXnDDow@mail.gmail.com>
+Subject: Re: [PATCH 3/7] thermal/drivers/core: Add init section table for self-encapsulation
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
+        <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends arm64 kernel ABI to allow to
-pass tagged user pointers (with the top byte set to something else other
-than 0x00) as syscall arguments.
+On Mon, Apr 29, 2019 at 1:23 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 23/04/2019 07:59, Zhang Rui wrote:
+> > Hi, Daniel,
+> >
+> > thanks for clarifying.
+> > It is true that we need to make thermal framework ready as early as
+> > possible. And a static table works for me as long as vmlinux.lds.h is
+> > the proper place.
+> >
+> > Arnd,
+> > are you okay with this patch? if yes, I suppose I can take it through
+> > my tree, right?
+>
+> Arnd?
 
-do_pages_move() is used in the implementation of the move_pages syscall.
+Sorry for missing this earlier. I have no objections to this, or to merging
+it through the thermal tree.
 
-Untag user pointers in this function.
-
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- mm/migrate.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 663a5449367a..c014a07135f0 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1617,6 +1617,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 		if (get_user(node, nodes + i))
- 			goto out_flush;
- 		addr = (unsigned long)p;
-+		addr = untagged_addr(addr);
- 
- 		err = -ENODEV;
- 		if (node < 0 || node >= MAX_NUMNODES)
--- 
-2.21.0.593.g511ec345e18-goog
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
