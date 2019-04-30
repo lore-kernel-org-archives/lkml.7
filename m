@@ -2,135 +2,148 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BB8C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A17C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A855621670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556591485;
-	bh=qlUNAnzEhUbBYVne9QX7u6GsM/R46ts9rAkRjXjagJg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wJ/vFbA5udWzWzeGi86kwgcBsVMUs0bikvkuO/zuiByXUatqDIfBxmC378dAd34QY
-	 h1WC3QzgvDfPSRU+V+C/JpfWumtWK/7983SCuJc9D/DTcr6EuK66QsHWNbt7kXB2/I
-	 O2A2UnwxiaNBvlwlWGr7EbkzsPCrT5mIINA4pPRs=
+	by mail.kernel.org (Postfix) with ESMTP id 2E8E82147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbfD3CbY (ORCPT
+        id S1729941AbfD3Coi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 22:31:24 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33879 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729877AbfD3CbX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 22:31:23 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s7so8551758ljh.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 19:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7bXLV+X1SboPUgfWfwBzkogeRLHq9rIZ+BOOT2J1Fvk=;
-        b=NCQTeCycXmEyoLD3XSPWnZUF+hXdPskjwYAWiIQuU1WhztQQ6dqXbSCj4NSwXP8DWN
-         ZjcvtRAgsvdgAc/3KSLAFxaK4kcCHoNxoycA6JsPI8ky1/xJP5BClUWpKZT4TRT9XT4m
-         1DJsH/YCVSV0nucpo2++hoaf5DTQ5zm7Bsf9A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7bXLV+X1SboPUgfWfwBzkogeRLHq9rIZ+BOOT2J1Fvk=;
-        b=k68LUu2ps+mut+Sbxn4R3VfIyUi+WJslW5Tytb5i2Z5H/Ry/gMbM/8JP6ZGltCTym8
-         wOWmCFhEi9kzEj6vqsSRPbTlFQE+lVRwLydO1JZWhE9SWZ1AKIUUS7qdpg1oBII4Nzqr
-         5PW8SlsWONZgVp2cWUa5hPRZamEhSP5Nc7sWsHcPqc+lK0TcWr27L2y+6MI3WlGApyC1
-         BwjnHCTGigDMtM46VgfUpFlLbB2uSKrAaRpr6kre3vZEFf8wSNyglQd3Kbf0cFf9Uzfp
-         MjjJ1QxWQpfxy2V0BNLtIbRF+PjQfmPdWBtUNY041i9i3hACVSE4SEwpU+oVBXZA4VNe
-         VGYw==
-X-Gm-Message-State: APjAAAWte75G7W9X12HCHhNdWaM5mwNVd4ukFklN6i+rr3dOS/O5sMYq
-        q8qNvIJ4pkVa2UcnSI11rxj8LfhFeXM=
-X-Google-Smtp-Source: APXvYqzX4LIrn9Lmm39zgQZZIL72HkotBiUDOa5hEvDGjKyEEmCYpJ8w2Jtdomo+3DCkQ4WilN3WnA==
-X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr35261295lje.22.1556591481343;
-        Mon, 29 Apr 2019 19:31:21 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id j6sm8591285ljc.0.2019.04.29.19.31.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 19:31:20 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id h126so9587379lfh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 19:31:20 -0700 (PDT)
-X-Received: by 2002:a19:ca02:: with SMTP id a2mr33690036lfg.88.1556591178970;
- Mon, 29 Apr 2019 19:26:18 -0700 (PDT)
+        Mon, 29 Apr 2019 22:44:38 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7144 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729803AbfD3Coi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 22:44:38 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3CE534D3676DD916A242;
+        Tue, 30 Apr 2019 10:44:36 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Apr 2019
+ 10:44:27 +0800
+Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Jason Wang <jasowang@redhat.com>
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+ <20190428030539.17776-1-yuehaibing@huawei.com>
+ <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
+ <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com>
+ <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
+ <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com>
+ <CAM_iQpUfpruaFowbiTOY7aH4Ts-xcY4JACGLOT3CUjLqpg_zXw@mail.gmail.com>
+ <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
+ <CAM_iQpXNp4h-ZAf4S+OH_1kVE_qk_eb+r6=ZUsK1t2=3aQOOtw@mail.gmail.com>
+CC:     "weiyongjun (A)" <weiyongjun1@huawei.com>,
+        David Miller <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jesper Dangaard Brouer" <brouer@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Li,Rongqing" <lirongqing@baidu.com>,
+        nicolas dichtel <nicolas.dichtel@6wind.com>,
+        Chas Williams <3chas3@gmail.com>, <wangli39@baidu.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
+        Peter Xu <peterx@redhat.com>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <89f38a2b-c416-f838-ee85-356bffed5bdb@huawei.com>
+Date:   Tue, 30 Apr 2019 10:44:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
- <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
- <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
- <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
- <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
- <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com>
- <20190429220814.GF31379@linux.intel.com> <CAHk-=whpq2=f2LdB-nc52Rd=iZkUH-N-r8OTqEfo+4UaJc7piA@mail.gmail.com>
- <20190430000846.GG31379@linux.intel.com> <20190430004504.GH31379@linux.intel.com>
-In-Reply-To: <20190430004504.GH31379@linux.intel.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 19:26:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjXHfVkrO6ftk9FGtAbpCsaEBa+tGrC8qjV6RUJHu+pCg@mail.gmail.com>
-Message-ID: <CAHk-=wjXHfVkrO6ftk9FGtAbpCsaEBa+tGrC8qjV6RUJHu+pCg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andrew Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAM_iQpXNp4h-ZAf4S+OH_1kVE_qk_eb+r6=ZUsK1t2=3aQOOtw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 5:45 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Mon, Apr 29, 2019 at 05:08:46PM -0700, Sean Christopherson wrote:
-> >
-> > It's 486 based, but either way I suspect the answer is "yes".  IIRC,
-> > Knights Corner, a.k.a. Larrabee, also had funkiness around SMM and that
-> > was based on P54C, though I'm struggling to recall exactly what the
-> > Larrabee weirdness was.
->
-> Aha!  Found an ancient comment that explicitly states P5 does not block
-> NMI/SMI in the STI shadow, while P6 does block NMI/SMI.
 
-Ok, so the STI shadow really wouldn't be reliable on those machines. Scary.
 
-Of course, the good news is that hopefully nobody has them any more,
-and if they do, they presumably don't use fancy NMI profiling etc, so
-any actual NMI's are probably relegated purely to largely rare and
-effectively fatal errors anyway (ie memory parity errors).
+On 2019/4/30 0:38, Cong Wang wrote:
+> On Sun, Apr 28, 2019 at 7:23 PM Jason Wang <jasowang@redhat.com> wrote:
+>>
+>>
+>> On 2019/4/29 上午1:59, Cong Wang wrote:
+>>> On Sun, Apr 28, 2019 at 12:51 AM Jason Wang <jasowang@redhat.com> wrote:
+>>>>> tun_net_xmit() doesn't have the chance to
+>>>>> access the change because it holding the rcu_read_lock().
+>>>>
+>>>>
+>>>> The problem is the following codes:
+>>>>
+>>>>
+>>>>          --tun->numqueues;
+>>>>
+>>>>          ...
+>>>>
+>>>>          synchronize_net();
+>>>>
+>>>> We need make sure the decrement of tun->numqueues be visible to readers
+>>>> after synchronize_net(). And in tun_net_xmit():
+>>>
+>>> It doesn't matter at all. Readers are okay to read it even they still use the
+>>> stale tun->numqueues, as long as the tfile is not freed readers can read
+>>> whatever they want...
+>>
+>> This is only true if we set SOCK_RCU_FREE, isn't it?
+> 
+> 
+> Sure, this is how RCU is supposed to work.
+> 
+>>
+>>>
+>>> The decrement of tun->numqueues is just how we unpublish the old
+>>> tfile, it is still valid for readers to read it _after_ unpublish, we only need
+>>> to worry about free, not about unpublish. This is the whole spirit of RCU.
+>>>
+>>
+>> The point is we don't convert tun->numqueues to RCU but use
+>> synchronize_net().
+> 
+> Why tun->numqueues needs RCU? It is an integer, and reading a stale
+> value is _perfectly_ fine.
+> 
+> If you actually meant to say tun->tfiles[] itself, no, it is a fixed-size array,
+> it doesn't shrink or grow, so we don't need RCU for it. This is also why
+> a stale tun->numqueues is fine, as long as it never goes out-of-bound.
+> 
+> 
+>>
+>>> You need to rethink about my SOCK_RCU_FREE patch.
+>>
+>> The code is wrote before SOCK_RCU_FREE is introduced and assume no
+>> de-reference from device after synchronize_net(). It doesn't harm to
+>> figure out the root cause which may give us more confidence to the fix
+>> (e.g like SOCK_RCU_FREE).
+> 
+> I believe SOCK_RCU_FREE is the fix for the root cause, not just a
+> cover-up.
 
-                     Linus
+With SOCK_RCU_FREE tfile is ok ,
+
+but tfile->sk is freed by sock_put in __tun_detach, it will trgger
+
+use-after-free in tun_net_xmit if tun->numqueues check passed.
+
+> 
+> 
+>>
+>> I don't object to fix with SOCK_RCU_FREE, but then we should remove
+>> the redundant synchronize_net(). But I still prefer to synchronize
+>> everything explicitly like (completely untested):
+> 
+> I agree that synchronize_net() can be removed. However I don't
+> understand your untested patch at all, it looks like to fix a completely
+> different problem rather than this use-after-free.
+> 
+> Thanks.
+> 
+> .
+> 
+
