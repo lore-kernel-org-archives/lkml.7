@@ -6,139 +6,157 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F2EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A35C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C73572177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A9720652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NyNIDopx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pf+614SS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfD3Pyx (ORCPT
+        id S1726102AbfD3P57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:54:53 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:47044 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbfD3Pyx (ORCPT
+        Tue, 30 Apr 2019 11:57:59 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45266 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfD3P57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:54:53 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DB323C0039;
-        Tue, 30 Apr 2019 15:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556639694; bh=41EXEwITfkkbVpQOww8Wh+pmfeyi9sINjyuMxudAhdM=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=NyNIDopxUJ64Y4K4Kj0xA+908dHtBQZiqKANb8r0oov0Gx9OuKQQ8aNUclCLCaFof
-         5Xh7IPVPqEcvXu228CgoVE8BHfa89un35k1BJw0AnVq6UaYi+vth6cDGXQRwjZTeEl
-         YsgECfMlEX08eYRZOQMR9OtP9+eZNOGOaorfdvBu2y1QKThD03ae/hVXjFdpIvPsHA
-         O6LkuvcmhPbi9edZLF5LBx26d64RchnU2FrEj7ltQZzvAJzZ1B7cPiReNkCl5T/rdM
-         PrxEX4/Md3s4JiGXI611x5FFHpMXsxo1xJnU4nAuxrLvXbadc9kYZcfqykNkvriie0
-         NVzyPZ1xPGF9w==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 26259A006B;
-        Tue, 30 Apr 2019 15:54:48 +0000 (UTC)
-Received: from us01wembx1.internal.synopsys.com ([169.254.1.223]) by
- US01WEHTC2.internal.synopsys.com ([10.12.239.237]) with mapi id
- 14.03.0415.000; Tue, 30 Apr 2019 08:53:19 -0700
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-CC:     "devel@uclibc-ng.org" <devel@uclibc-ng.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Rich Felker <dalias@libc.org>
-Subject: Detecting libc in perf (was Re: perf tools build broken after
- v5.1-rc1)
-Thread-Topic: Detecting libc in perf (was Re: perf tools build broken after
- v5.1-rc1)
-Thread-Index: AQHU/2zU3RcD8vNEuk6uLp1+qNlGpA==
-Date:   Tue, 30 Apr 2019 15:53:18 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A250601B@us01wembx1.internal.synopsys.com>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org> <20190425214800.GC21829@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
- <20190430011818.GE7857@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.13.184.19]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Apr 2019 11:57:59 -0400
+Received: by mail-qt1-f195.google.com with SMTP id b3so16704361qtc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 08:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=gZc317wuD1wbgeY5vQ6WXA+XogYTxvSjh3WMAaMRQk8=;
+        b=pf+614SSRmJat7hai5KpQaUn2sVGsPaeD+fhpnLm6lyNigcq1xeziUrtKuGPrM7+Fd
+         L78npxYX6CHANhBM/eK0DdMvp7cznSNYQexe4PP9lr794B69yhdj+n11TBP4qVhGges7
+         6iv8Zje3k8Q2U9jCfeLCP1Zu+aqkxNbqJz0l6LJXLGfgH7/FEgrlCBRZbAHo7tX3yyK7
+         mVexbNkdPuSBpn6MdV4jWSuRyNIBJPHlkkVnHsCnhXgPlIAqrJRkmP23QVNO7OUG+zKf
+         CFM1ot3oZUz/LaKqQp473jLm57M04ps7xmem41uFIT7Y8ha+80HG4D+A5LyM92DDqim9
+         PCXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=gZc317wuD1wbgeY5vQ6WXA+XogYTxvSjh3WMAaMRQk8=;
+        b=b1E1tjSJ6iW5Odea8+wcIrSOsoOVtKDKFE72M7U6CvXZz5UXGMF64nPL4zbnDXoU2U
+         JG0xVlgFOaeiKcskjTQyAUr+mUZVfvfkMq0uJwYxsAS5HhsFKX3nAcwHcuSipPSjSuPq
+         pLFQdGHUp2fuWNS7XXrz74D8aGbbkDAXCSQJ3hq3JrBcVy8jqWBXGGli12gkfaDQ78pI
+         8M9hLlanQHEmj2FcSnlCyICX7YsEesFWmyaXaao4ZGTuuMbCYxJOtvTnuYbThJ4vLAuN
+         eRrbakQq2nA24AkRSKq1chjjbM2/raI/XvT16xGEX8omqMoVDFoYbFiiUCbIzvQ2FBGr
+         /dwQ==
+X-Gm-Message-State: APjAAAXempB7R+lC3OJarJClzNheuISmnP/Jmilvt1jPlHY/H8l1Uuto
+        OpgGqhD59S34tCm0hstVTKQ+JA==
+X-Google-Smtp-Source: APXvYqwPkBce/hpdy1KtdCnK+v57K+XfotmBTSekH6qYC2Er7OW/BVCEHDu3ttt2/MCm9mkgFTgU9A==
+X-Received: by 2002:a0c:8b6f:: with SMTP id d47mr53957863qvc.135.1556639877995;
+        Tue, 30 Apr 2019 08:57:57 -0700 (PDT)
+Received: from [192.168.1.169] (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
+        by smtp.gmail.com with ESMTPSA id j129sm18896076qkd.51.2019.04.30.08.57.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 08:57:56 -0700 (PDT)
+Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
+To:     Ionela Voinescu <ionela.voinescu@arm.com>, mingo@redhat.com,
+        peterz@infradead.org, rui.zhang@intel.com
+References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+ <8eed9601-8bbb-9f62-f786-f08bd4a72907@arm.com>
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        viresh.kumar@linaro.org, javi.merino@kernel.org,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
+        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5CC87082.20802@linaro.org>
+Date:   Tue, 30 Apr 2019 11:57:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
+In-Reply-To: <8eed9601-8bbb-9f62-f786-f08bd4a72907@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/19 6:18 PM, Arnaldo Carvalho de Melo wrote:=0A=
->>> Auto-detecting system features:=0A=
->>> ...                         dwarf: [ OFF ]=0A=
->>> ...            dwarf_getlocations: [ OFF ]=0A=
->>> ...                         glibc: [ on  ]=0A=
->> Not related to current issue, this run uses a uClibc toolchain and yet i=
-t is=0A=
->> detecting glibc - doesn't seem right to me.=0A=
-> Ok, I'll improve that, I think it just tries to detect a libc, yeah,=0A=
-> see:=0A=
->=0A=
-> [acme@quaco linux]$ cat tools/build/feature/test-glibc.c=0A=
-> // SPDX-License-Identifier: GPL-2.0=0A=
-> #include <stdlib.h>=0A=
->=0A=
-> #if !defined(__UCLIBC__)=0A=
-> #include <gnu/libc-version.h>=0A=
-> #else=0A=
-> #define XSTR(s) STR(s)=0A=
-> #define STR(s) #s=0A=
-> #endif=0A=
->=0A=
-> int main(void)=0A=
-> {=0A=
-> #if !defined(__UCLIBC__)=0A=
-> 	const char *version =3D gnu_get_libc_version();=0A=
-> #else=0A=
-> 	const char *version =3D XSTR(__GLIBC__) "." XSTR(__GLIBC_MINOR__);=0A=
-> #endif=0A=
->=0A=
-> 	return (long)version;=0A=
-> }=0A=
-> [acme@quaco linux]$=0A=
->=0A=
-> [perfbuilder@59ca4b424ded /]$ grep __GLIBC__ /arc_gnu_2017.09-rc2_prebuil=
-t_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/=
-*.h=0A=
-> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-lin=
-ux-uclibc/sysroot/usr/include/features.h:   The macros `__GNU_LIBRARY__', `=
-__GLIBC__', and `__GLIBC_MINOR__' are=0A=
-> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-lin=
-ux-uclibc/sysroot/usr/include/features.h:#define	__GLIBC__	2=0A=
-> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-lin=
-ux-uclibc/sysroot/usr/include/features.h:	((__GLIBC__ << 16) + __GLIBC_MINO=
-R__ >=3D ((maj) << 16) + (min))=0A=
-> [perfbuilder@59ca4b424ded /]$=0A=
->=0A=
-> Isn't that part of uClibc?=0A=
-=0A=
-Right you are. Per the big fat comment right above that code, this gross ha=
-ck in=0A=
-uclibc is unavoidable as applications tend to rely on that define.=0A=
-So a better fix would be to check for various !GLIBC libs explicitly.=0A=
-=0A=
-#ifdef __UCLIBC__=0A=
-=0A=
-#elseif defined __MUSL__=0A=
-=0A=
-...=0A=
-=0A=
-Not pretty from app usage pov, but that seems to be the only sane way of do=
-ing it.=0A=
-=0A=
--Vineet=0A=
+On 04/29/2019 09:29 AM, Ionela Voinescu wrote:
+> Hi Thara,
+> 
+>>
+>> 			Hackbench: (1 group , 30000 loops, 10 runs)
+>> 				Result            Standard Deviation
+>> 				(Time Secs)        (% of mean)
+>>
+>> No Thermal Pressure             10.21                   7.99%
+>>
+>> Instantaneous thermal pressure  10.16                   5.36%
+>>
+>> Thermal Pressure Averaging
+>> using PELT fmwk                 9.88                    3.94%
+>>
+>> Thermal Pressure Averaging
+>> non-PELT Algo. Decay : 500 ms   9.94                    4.59%
+>>
+>> Thermal Pressure Averaging
+>> non-PELT Algo. Decay : 250 ms   7.52                    5.42%
+>>
+>> Thermal Pressure Averaging
+>> non-PELT Algo. Decay : 125 ms   9.87                    3.94%
+>>
+>>
+> 
+> I'm trying your patches on my Hikey960 and I'm getting different results
+> than the ones here.
+> 
+> I'm running with the step-wise governor, enabled only on the big cores.
+> The decay period is set to 250ms.
+> 
+> The result for hackbench is:
+> 
+> # ./hackbench -g 1 -l 30000
+> Running in process mode with 1 groups using 40 file descriptors each (== 40 tasks)
+> Each sender will pass 30000 messages of 100 bytes
+> Time: 20.756
+> 
+> During the run I see the little cores running at maximum frequency
+> (1.84GHz) while the big cores run mostly at 1.8GHz, only sometimes capped
+> at 1.42GHz. There should not be any capacity inversion.
+> The temperature is kept around 75 degrees (73 to 77 degrees).
+> 
+> I don't have any kind of active cooling (no fans on the board), only a
+> heatsink on the SoC.
+> 
+> But as you see my results(~20s) are very far from the 7-10s in your
+> results.
+> 
+> Do you see anything wrong with this process? Can you give me more
+> details on your setup that I can use to test on my board? 
+
+Hi Ionela,
+
+I used the latest mainline kernel with sched/ tip merged in for my
+testing. My hikey960 did not have any fan or heat sink during testing. I
+disabled cpu cooling for little cores in the dts files.
+Also I have to warn you that I have managed to blow up my hikey960. So I
+no longer have a functional board for past two weeks or so.
+
+I don't have my test scripts to send you, but I have some of the results
+files downloaded which I can send you in a separate email.
+I did run the test 10 rounds.
+
+Also I think 20s is too much of variation for the test results. Like I
+mentioned in my previous emails I think the 7.52 is an anomaly but the
+results should be around the range of 8-9 s.
+
+Regards
+Thara
+
+> 
+> Thank you,
+> Ionela.
+> 
+
+
+-- 
+Regards
+Thara
