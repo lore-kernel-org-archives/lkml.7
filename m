@@ -2,107 +2,95 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60899C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07738C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CAD2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpvZIF17"
+	by mail.kernel.org (Postfix) with ESMTP id D12852147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbfD3Cqu (ORCPT
+        id S1729963AbfD3Ctm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 22:46:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35916 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729803AbfD3Cqt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 22:46:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w20so5405127plq.3;
-        Mon, 29 Apr 2019 19:46:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=ZpJQsgca0/LVXSQJRGMNekhujVFwpXEhIaVfT5sfHAQ=;
-        b=kpvZIF17L9G03YJq6KG5vubutPEqXMbRlH2u3ftH+O+AKf2OGcWUdaTlOlazuQl36C
-         T3YXt2hVzvcuh99ojGDB+1JXLF5u3RMsWoFk8UK3vWKWLRxhP85QZ7kQvaxE4q94m60X
-         44wOHbQ63X6mjvJxlsky7M9GOFR4Tig1feUjYeiVoPj9F7gOx8xSGLksb14lXxnn7HsF
-         qk6HxsKulWIihT8kN9ZUDmrDJRGFsrutS08zYZkGoTRuNDGSvzb1jhQCsuLv21wgUENE
-         i1LLb6rNnKp3tPGoQ9XSv5thHAWIJe290G7aDuUqHbmu7BQTTrkG0YQwSxZlYAZ22wXj
-         JksQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=ZpJQsgca0/LVXSQJRGMNekhujVFwpXEhIaVfT5sfHAQ=;
-        b=uB5tYcw4T6OLTRMNIEcm7J52yZLlsCIYFUGELLgsPl+rKrW4AYJnjCD8z22dO/eHQx
-         sNZZ3+IwtZFVZfvLN0as4aAbtI2WHfZ/SpNW//44d1RefLrryqY83e4XZFmPnyPsfuF6
-         UxrIPN8bkbasB0Bnps03L5f6EFlG68TC6KRPNQWuy2YbHq0y7jbU0X5M0KuG/FEoc6gB
-         J5WYsW5MlrqF0YRfNDP4rMNcJlKcvAlLyIrMqUHg8p10MVBigAVAdKcYrEiNBGh7lM3j
-         JGMCnQtgk5FsysL+9hS+XrKMpmLbQVek6GsurrQBZl64xHJ2gfda/sDx2K9RsdJ7s28V
-         ZKmg==
-X-Gm-Message-State: APjAAAVA2yFywBkBY+OV1PfCx5dHIZawZPPmhWZhE2fuKcDWtCr+tdM7
-        /V+1sHr7/xzc35B5fqX6mME=
-X-Google-Smtp-Source: APXvYqxJ3bN9p+xxhe52PIxCipNM8t93ISXM/JyGKmdLl5vcETLdScqbbeuA8ScDP+AwIhXCzD2n9w==
-X-Received: by 2002:a17:902:8c85:: with SMTP id t5mr7315616plo.23.1556592408950;
-        Mon, 29 Apr 2019 19:46:48 -0700 (PDT)
-Received: from localhost (60-240-193-213.tpgi.com.au. [60.240.193.213])
-        by smtp.gmail.com with ESMTPSA id 17sm66294013pfw.65.2019.04.29.19.46.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 19:46:46 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 12:46:40 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 0/5] Allow CPU0 to be nohz full
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190411033448.20842-1-npiggin@gmail.com>
-        <20190425120427.GS4038@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190425120427.GS4038@hirez.programming.kicks-ass.net>
+        Mon, 29 Apr 2019 22:49:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:61778 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729803AbfD3Ctm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 22:49:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 19:49:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,412,1549958400"; 
+   d="scan'208";a="341973650"
+Received: from kmsmsx151.gar.corp.intel.com ([172.21.73.86])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2019 19:49:40 -0700
+Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.111]) by
+ KMSMSX151.gar.corp.intel.com ([169.254.10.147]) with mapi id 14.03.0415.000;
+ Tue, 30 Apr 2019 10:49:17 +0800
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Andrew Lunn" <andrew@lunn.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>
+Subject: RE: [PATCH 3/7] net: stmmac: dma channel control register need to
+ be init first
+Thread-Topic: [PATCH 3/7] net: stmmac: dma channel control register need to
+ be init first
+Thread-Index: AQHU+n51zHATXbnSNU2iG6YzCcFjoaZMdYaggAX7OACAAZgcYA==
+Date:   Tue, 30 Apr 2019 02:49:16 +0000
+Message-ID: <D6759987A7968C4889FDA6FA91D5CBC8146F0B78@PGSMSX103.gar.corp.intel.com>
+References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
+ <1556126241-2774-4-git-send-email-weifeng.voon@intel.com>
+ <D6759987A7968C4889FDA6FA91D5CBC8146EF098@PGSMSX103.gar.corp.intel.com>
+ <78EB27739596EE489E55E81C33FEC33A0B46E022@DE02WEMBXB.internal.synopsys.com>
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B46E022@DE02WEMBXB.internal.synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjhlMzk2MzgtYWVhNy00MmI5LWE4NDEtODg2MzM2ZDJmNTFmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicFZzRmNRTlBaamlxMEk1c2dMZjNQNmhLRGNiVEFpT1p0eHpHUk1ZTnZmdXJDZU53UGtSXC9IcnlRZXZKTVJ5U2sifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.206]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1556592099.38esq4uhhz.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra's on April 25, 2019 10:04 pm:
-> On Thu, Apr 11, 2019 at 01:34:43PM +1000, Nicholas Piggin wrote:
->> Since last time, I added a compile time option to opt-out of this
->> if the platform does not support suspend on non-zero, and tried to
->> improve legibility of changelogs and explain the justification
->> better.
->>=20
->> I have been testing this on powerpc/pseries and it seems to work
->> fine (the firmware call to suspend can be called on any CPU and
->> resumes where it left off), but not included here because the
->> code has some bitrot unrelated to this series which I hacked to
->> fix. I will discuss it and either send an acked patch to go with
->> this series if it is small, or fix it in powerpc tree.
->>=20
->=20
-> Rafael, Frederic, any comments?
->=20
+> From: Voon, Weifeng <weifeng.voon@intel.com>
+> Date: Thu, Apr 25, 2019 at 08:06:08
+> 
+> > > stmmac_init_chan() needs to be called before stmmac_init_rx_chan()
+> > > and stmmac_init_tx_chan(). This is because if PBLx8 is to be used,
+> > > "DMA_CH(#i)_Control.PBLx8" needs to be set before programming
+> > > "DMA_CH(#i)_TX_Control.TxPBL" and "DMA_CH(#i)_RX_Control.RxPBL".
+> > >
+> > > Reviewed-by: Zhang, Baoli <baoli.zhang@intel.com>
+> > > Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
+> > > Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+> 
+> This is a fix so it should belong to -net tree and it should have the
+> "Fixes: " tag.
+> 
+> Thanks,
+> Jose Miguel Abreu
 
-Sorry to ping again, I guess people are probably busy after vacation.
-Any chance we could get this in next merge window? Peter are you okay
-with the config option as it is, then we can look at adapting it to
-what x86 needs as a follow up (e.g., allow nohz CPU0 for
-cpu0_hotpluggable case)?
+Noted. I will add the "Fixes" tag and re-submit to -net tree. 
 
-Thanks,
-Nick
-
-=
+Regards,
+Weifeng
