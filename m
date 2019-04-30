@@ -2,239 +2,59 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4002C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB28C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78ACF2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625788;
-	bh=gXLdoaAcPWLTUVmzvOUrQ4bL46PcIJ0n9kh5CiHo3PA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FZ1rQDaGBvd1QPfJEO2PkJFS9Q9GKvfCxNAJLYYNfNVh1dk1Wkg3dZ+ndr9lmQmsV
-	 bPiv5CUljduzqC9CnQBQ+3AGeJS8JconEEYKSFteDFL59fqdcc7eWJB58LqEH59fCE
-	 IOsVmqIYkeQrxb04hHLtbcdM3n6DHyyWoYyPhv94=
+	by mail.kernel.org (Postfix) with ESMTP id 1C2FC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aUTZ9ARH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfD3MDG (ORCPT
+        id S1728424AbfD3Lna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:03:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729938AbfD3Lng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:43:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E18921670;
-        Tue, 30 Apr 2019 11:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624614;
-        bh=gXLdoaAcPWLTUVmzvOUrQ4bL46PcIJ0n9kh5CiHo3PA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aH5UEdkNGRn/RJtVoJQ5nwiL/+dhdloi1FnhlwDP2GaaHLjPIwlkC7oCVKz8zmNhf
-         SZyx4aLI58M2Yfqt5H9D3bH1j3E4rEUAmdDLb2GyVopDYFo472K/iJ979Y4YGNRht4
-         Bk8IckUKamW4N4eCU9DEdEiWNMILQu6Cshud9+cw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 4.14 40/53] x86, retpolines: Raise limit for generating indirect calls from switch-case
-Date:   Tue, 30 Apr 2019 13:38:47 +0200
-Message-Id: <20190430113558.059074259@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
-References: <20190430113549.400132183@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 30 Apr 2019 07:43:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44976 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729902AbfD3Ln0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:43:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=c4e/nTvtQGyaW5Djk9MygY1aHxVTJJByJwYRDeIZNMg=; b=aUTZ9ARHMuIHgk7JMGKcAsU8V
+        dOhiiyl3m5nLsfJJwXXDr1mi6pPqBRqNnH0WCj2SzVwxWsTCmEl7J449q2rQSSTNiCqPjt/J30rU5
+        jyi7W54hKpBz5yMhHPgv1s4WoEEw8Pw8Wb/jhyh/Xh+lqvz96ioZ9prEv0a6PDzfyqiO7mjcob0gx
+        XZcZaYfejPRMk5JsjjPVK16nH4FgN5Y0umtIFzozFQH1ouPr5rnz2gjxqGoU1glX+vSZUHQAuWoGT
+        zrh9geTYeQtTJiK5wisUNzaqGODb0W0SpnOe4Uv8mXo3JId5lnPsO5cxhXJ6HhpXo6YxOkNWREQ2W
+        lttonOT5w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLRAP-0002g8-VK; Tue, 30 Apr 2019 11:43:21 +0000
+Date:   Tue, 30 Apr 2019 04:43:21 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] rds: ib: force endiannes annotation
+Message-ID: <20190430114321.GA9813@infradead.org>
+References: <1556593977-15828-1-git-send-email-hofrat@osadl.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556593977-15828-1-git-send-email-hofrat@osadl.org>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
-
-commit ce02ef06fcf7a399a6276adb83f37373d10cbbe1 upstream.
-
->From networking side, there are numerous attempts to get rid of indirect
-calls in fast-path wherever feasible in order to avoid the cost of
-retpolines, for example, just to name a few:
-
-  * 283c16a2dfd3 ("indirect call wrappers: helpers to speed-up indirect calls of builtin")
-  * aaa5d90b395a ("net: use indirect call wrappers at GRO network layer")
-  * 028e0a476684 ("net: use indirect call wrappers at GRO transport layer")
-  * 356da6d0cde3 ("dma-mapping: bypass indirect calls for dma-direct")
-  * 09772d92cd5a ("bpf: avoid retpoline for lookup/update/delete calls on maps")
-  * 10870dd89e95 ("netfilter: nf_tables: add direct calls for all builtin expressions")
-  [...]
-
-Recent work on XDP from Björn and Magnus additionally found that manually
-transforming the XDP return code switch statement with more than 5 cases
-into if-else combination would result in a considerable speedup in XDP
-layer due to avoidance of indirect calls in CONFIG_RETPOLINE enabled
-builds. On i40e driver with XDP prog attached, a 20-26% speedup has been
-observed [0]. Aside from XDP, there are many other places later in the
-networking stack's critical path with similar switch-case
-processing. Rather than fixing every XDP-enabled driver and locations in
-stack by hand, it would be good to instead raise the limit where gcc would
-emit expensive indirect calls from the switch under retpolines and stick
-with the default as-is in case of !retpoline configured kernels. This would
-also have the advantage that for archs where this is not necessary, we let
-compiler select the underlying target optimization for these constructs and
-avoid potential slow-downs by if-else hand-rewrite.
-
-In case of gcc, this setting is controlled by case-values-threshold which
-has an architecture global default that selects 4 or 5 (latter if target
-does not have a case insn that compares the bounds) where some arch back
-ends like arm64 or s390 override it with their own target hooks, for
-example, in gcc commit db7a90aa0de5 ("S/390: Disable prediction of indirect
-branches") the threshold pretty much disables jump tables by limit of 20
-under retpoline builds.  Comparing gcc's and clang's default code
-generation on x86-64 under O2 level with retpoline build results in the
-following outcome for 5 switch cases:
-
-* gcc with -mindirect-branch=thunk-inline -mindirect-branch-register:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400be0 <+0>:     cmp    $0x4,%edi
-   0x0000000000400be3 <+3>:     ja     0x400c35 <dispatch+85>
-   0x0000000000400be5 <+5>:     lea    0x915f8(%rip),%rdx        # 0x4921e4
-   0x0000000000400bec <+12>:    mov    %edi,%edi
-   0x0000000000400bee <+14>:    movslq (%rdx,%rdi,4),%rax
-   0x0000000000400bf2 <+18>:    add    %rdx,%rax
-   0x0000000000400bf5 <+21>:    callq  0x400c01 <dispatch+33>
-   0x0000000000400bfa <+26>:    pause
-   0x0000000000400bfc <+28>:    lfence
-   0x0000000000400bff <+31>:    jmp    0x400bfa <dispatch+26>
-   0x0000000000400c01 <+33>:    mov    %rax,(%rsp)
-   0x0000000000400c05 <+37>:    retq
-   0x0000000000400c06 <+38>:    nopw   %cs:0x0(%rax,%rax,1)
-   0x0000000000400c10 <+48>:    jmpq   0x400c90 <fn_3>
-   0x0000000000400c15 <+53>:    nopl   (%rax)
-   0x0000000000400c18 <+56>:    jmpq   0x400c70 <fn_2>
-   0x0000000000400c1d <+61>:    nopl   (%rax)
-   0x0000000000400c20 <+64>:    jmpq   0x400c50 <fn_1>
-   0x0000000000400c25 <+69>:    nopl   (%rax)
-   0x0000000000400c28 <+72>:    jmpq   0x400c40 <fn_0>
-   0x0000000000400c2d <+77>:    nopl   (%rax)
-   0x0000000000400c30 <+80>:    jmpq   0x400cb0 <fn_4>
-   0x0000000000400c35 <+85>:    push   %rax
-   0x0000000000400c36 <+86>:    callq  0x40dd80 <abort>
-  End of assembler dump.
-
-* clang with -mretpoline emitting search tree:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400b30 <+0>:     cmp    $0x1,%edi
-   0x0000000000400b33 <+3>:     jle    0x400b44 <dispatch+20>
-   0x0000000000400b35 <+5>:     cmp    $0x2,%edi
-   0x0000000000400b38 <+8>:     je     0x400b4d <dispatch+29>
-   0x0000000000400b3a <+10>:    cmp    $0x3,%edi
-   0x0000000000400b3d <+13>:    jne    0x400b52 <dispatch+34>
-   0x0000000000400b3f <+15>:    jmpq   0x400c50 <fn_3>
-   0x0000000000400b44 <+20>:    test   %edi,%edi
-   0x0000000000400b46 <+22>:    jne    0x400b5c <dispatch+44>
-   0x0000000000400b48 <+24>:    jmpq   0x400c20 <fn_0>
-   0x0000000000400b4d <+29>:    jmpq   0x400c40 <fn_2>
-   0x0000000000400b52 <+34>:    cmp    $0x4,%edi
-   0x0000000000400b55 <+37>:    jne    0x400b66 <dispatch+54>
-   0x0000000000400b57 <+39>:    jmpq   0x400c60 <fn_4>
-   0x0000000000400b5c <+44>:    cmp    $0x1,%edi
-   0x0000000000400b5f <+47>:    jne    0x400b66 <dispatch+54>
-   0x0000000000400b61 <+49>:    jmpq   0x400c30 <fn_1>
-   0x0000000000400b66 <+54>:    push   %rax
-   0x0000000000400b67 <+55>:    callq  0x40dd20 <abort>
-  End of assembler dump.
-
-  For sake of comparison, clang without -mretpoline:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400b30 <+0>:	cmp    $0x4,%edi
-   0x0000000000400b33 <+3>:	ja     0x400b57 <dispatch+39>
-   0x0000000000400b35 <+5>:	mov    %edi,%eax
-   0x0000000000400b37 <+7>:	jmpq   *0x492148(,%rax,8)
-   0x0000000000400b3e <+14>:	jmpq   0x400bf0 <fn_0>
-   0x0000000000400b43 <+19>:	jmpq   0x400c30 <fn_4>
-   0x0000000000400b48 <+24>:	jmpq   0x400c10 <fn_2>
-   0x0000000000400b4d <+29>:	jmpq   0x400c20 <fn_3>
-   0x0000000000400b52 <+34>:	jmpq   0x400c00 <fn_1>
-   0x0000000000400b57 <+39>:	push   %rax
-   0x0000000000400b58 <+40>:	callq  0x40dcf0 <abort>
-  End of assembler dump.
-
-Raising the cases to a high number (e.g. 100) will still result in similar
-code generation pattern with clang and gcc as above, in other words clang
-generally turns off jump table emission by having an extra expansion pass
-under retpoline build to turn indirectbr instructions from their IR into
-switch instructions as a built-in -mno-jump-table lowering of a switch (in
-this case, even if IR input already contained an indirect branch).
-
-For gcc, adding --param=case-values-threshold=20 as in similar fashion as
-s390 in order to raise the limit for x86 retpoline enabled builds results
-in a small vmlinux size increase of only 0.13% (before=18,027,528
-after=18,051,192). For clang this option is ignored due to i) not being
-needed as mentioned and ii) not having above cmdline
-parameter. Non-retpoline-enabled builds with gcc continue to use the
-default case-values-threshold setting, so nothing changes here.
-
-[0] https://lore.kernel.org/netdev/20190129095754.9390-1-bjorn.topel@gmail.com/
-    and "The Path to DPDK Speeds for AF_XDP", LPC 2018, networking track:
-  - http://vger.kernel.org/lpc_net2018_talks/lpc18_pres_af_xdp_perf-v3.pdf
-  - http://vger.kernel.org/lpc_net2018_talks/lpc18_paper_af_xdp_perf-v2.pdf
-
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: netdev@vger.kernel.org
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Link: https://lkml.kernel.org/r/20190221221941.29358-1-daniel@iogearbox.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/Makefile |    5 +++++
- 1 file changed, 5 insertions(+)
-
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -242,6 +242,11 @@ KBUILD_CFLAGS += -fno-asynchronous-unwin
- # Avoid indirect branches in kernel to deal with Spectre
- ifdef CONFIG_RETPOLINE
-   KBUILD_CFLAGS += $(RETPOLINE_CFLAGS)
-+  # Additionally, avoid generating expensive indirect jumps which
-+  # are subject to retpolines for small number of switch cases.
-+  # clang turns off jump table generation by default when under
-+  # retpoline builds, however, gcc does not for x86.
-+  KBUILD_CFLAGS += $(call cc-option,--param=case-values-threshold=20)
- endif
- 
- archscripts: scripts_basic
-
-
+The patch looks good, but the force in the subject sounds weird now.
