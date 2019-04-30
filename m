@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5700C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB263C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961E62173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A18621670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624460;
-	bh=ajN8JtMnQlPa1YlO/4u54AdoCGo5ukZNwYAQwujZ7f0=;
+	s=default; t=1556624464;
+	bh=LGZmmeHB8SzFsXOlkPJ5Ap3bq0hhjA0B+TpJ666UMQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVxulKIpK2J0qDa90NBGuJNTnq6rxS3f1yZhzqNSW6OZoLUDyZ+XPZ0oDFl6mterW
-	 r6MkqnPiCg5cCeVRE2VlCO1/2CIAMhoHF8cuF18lu6AQH/nIMdh2BB0UvNTOLs9V6m
-	 noaJ7rsxWD0+Xrkg3P11FzIh1unKwP0dxOX2rIlU=
+	b=Tvc5UhWZ2tnFIXjrVvgBTptbenQXxslqV8NqzhfxFpYdL8+OG3b/vz9UY5iD+WYKN
+	 TSHXf/EGx1ofDKKha7sI6DtDzllwT/HXcRcog07eNmxuqty/XdwDHXiZnuK+O1T8xl
+	 UnAYs2X76Qx5s4a4+mEV7LYsA6eAQG18/aSgdWG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfD3Lk7 (ORCPT
+        id S1728748AbfD3LlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:40:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47740 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:41:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbfD3Lky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:40:54 -0400
+        id S1728701AbfD3Lk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:40:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 247EF21734;
-        Tue, 30 Apr 2019 11:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8247D21670;
+        Tue, 30 Apr 2019 11:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624452;
-        bh=ajN8JtMnQlPa1YlO/4u54AdoCGo5ukZNwYAQwujZ7f0=;
+        s=default; t=1556624458;
+        bh=LGZmmeHB8SzFsXOlkPJ5Ap3bq0hhjA0B+TpJ666UMQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g3t6qEOJQGIF+xzuR5RiiZMBFQ4FjbqL9gKSoP7xXyx9kl/1Fhtuyretdu67Irp2D
-         MxDOGOpdifXGXfMXtScvOep6IjrZyxWz6HnNLKQKib7wtVYeST2lp73BMopS+1APCp
-         7z2Wsy1IXjMEP0lt/BDwVGasnJ5QzkFpLcVSkITM=
+        b=TOu/9mKpdV7s1oNY91FhpRfkPiLksfgKtY5oRsst3DoP+kllgcHCeGrX5mpM5DB4U
+         bAyCS0exX8L4DWHR2hUDfQzpPggNxP2vnvJVVhdIpJNpHyZVOrGzlg2Rr8dEEfOJxN
+         1sy07Xzbu27gIECQCU3aM6aYuQxkeF9a5lnVxmQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Oskolkov <posk@google.com>,
-        Tom Herbert <tom@herbertland.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 41/41] net: IP6 defrag: use rbtrees in nf_conntrack_reasm.c
-Date:   Tue, 30 Apr 2019 13:38:52 +0200
-Message-Id: <20190430113535.261302059@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Yue Haibing <yuehaibing@huawei.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.9 26/41] fm10k: Fix a potential NULL pointer dereference
+Date:   Tue, 30 Apr 2019 13:38:37 +0200
+Message-Id: <20190430113531.039305915@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -62,393 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Oskolkov <posk@google.com>
+From: Yue Haibing <yuehaibing@huawei.com>
 
-[ Upstream commit 997dd96471641e147cb2c33ad54284000d0f5e35 ]
+commit 01ca667133d019edc9f0a1f70a272447c84ec41f upstream.
 
-Currently, IPv6 defragmentation code drops non-last fragments that
-are smaller than 1280 bytes: see
-commit 0ed4229b08c1 ("ipv6: defrag: drop non-last frags smaller than min mtu")
+Syzkaller report this:
 
-This behavior is not specified in IPv6 RFCs and appears to break
-compatibility with some IPv6 implemenations, as reported here:
-https://www.spinics.net/lists/netdev/msg543846.html
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+CPU: 0 PID: 4378 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+RIP: 0010:__lock_acquire+0x95b/0x3200 kernel/locking/lockdep.c:3573
+Code: 00 0f 85 28 1e 00 00 48 81 c4 08 01 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 24 00 00 49 81 7d 00 e0 de 03 a6 41 bc 00 00
+RSP: 0018:ffff8881e3c07a40 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000010 RSI: 0000000000000000 RDI: 0000000000000080
+RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+R10: ffff8881e3c07d98 R11: ffff8881c7f21f80 R12: 0000000000000001
+R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007fce2252e700(0000) GS:ffff8881f2400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fffc7eb0228 CR3: 00000001e5bea002 CR4: 00000000007606f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ lock_acquire+0xff/0x2c0 kernel/locking/lockdep.c:4211
+ __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+ __mutex_lock+0xdf/0x1050 kernel/locking/mutex.c:1072
+ drain_workqueue+0x24/0x3f0 kernel/workqueue.c:2934
+ destroy_workqueue+0x23/0x630 kernel/workqueue.c:4319
+ __do_sys_delete_module kernel/module.c:1018 [inline]
+ __se_sys_delete_module kernel/module.c:961 [inline]
+ __x64_sys_delete_module+0x30c/0x480 kernel/module.c:961
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fce2252dc58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000140
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce2252e6bc
+R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
 
-This patch re-uses common IP defragmentation queueing and reassembly
-code in IP6 defragmentation in nf_conntrack, removing the 1280 byte
-restriction.
+If alloc_workqueue fails, it should return -ENOMEM, otherwise may
+trigger this NULL pointer dereference while unloading drivers.
 
-Signed-off-by: Peter Oskolkov <posk@google.com>
-Reported-by: Tom Herbert <tom@herbertland.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 0a38c17a21a0 ("fm10k: Remove create_workqueue")
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/netfilter/nf_conntrack_reasm.c |  260 +++++++++-----------------------
- 1 file changed, 74 insertions(+), 186 deletions(-)
 
---- a/net/ipv6/netfilter/nf_conntrack_reasm.c
-+++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -51,14 +51,6 @@
+---
+ drivers/net/ethernet/intel/fm10k/fm10k_main.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/net/ethernet/intel/fm10k/fm10k_main.c
++++ b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
+@@ -58,6 +58,8 @@ static int __init fm10k_init_module(void
+ 	/* create driver workqueue */
+ 	fm10k_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
+ 					  fm10k_driver_name);
++	if (!fm10k_workqueue)
++		return -ENOMEM;
  
- static const char nf_frags_cache_name[] = "nf-frags";
+ 	fm10k_dbg_init();
  
--struct nf_ct_frag6_skb_cb
--{
--	struct inet6_skb_parm	h;
--	int			offset;
--};
--
--#define NFCT_FRAG6_CB(skb)	((struct nf_ct_frag6_skb_cb *)((skb)->cb))
--
- static struct inet_frags nf_frags;
- 
- #ifdef CONFIG_SYSCTL
-@@ -144,6 +136,9 @@ static void __net_exit nf_ct_frags6_sysc
- }
- #endif
- 
-+static int nf_ct_frag6_reasm(struct frag_queue *fq, struct sk_buff *skb,
-+			     struct sk_buff *prev_tail, struct net_device *dev);
-+
- static inline u8 ip6_frag_ecn(const struct ipv6hdr *ipv6h)
- {
- 	return 1 << (ipv6_get_dsfield(ipv6h) & INET_ECN_MASK);
-@@ -184,9 +179,10 @@ static struct frag_queue *fq_find(struct
- static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
- 			     const struct frag_hdr *fhdr, int nhoff)
- {
--	struct sk_buff *prev, *next;
- 	unsigned int payload_len;
--	int offset, end;
-+	struct net_device *dev;
-+	struct sk_buff *prev;
-+	int offset, end, err;
- 	u8 ecn;
- 
- 	if (fq->q.flags & INET_FRAG_COMPLETE) {
-@@ -261,55 +257,19 @@ static int nf_ct_frag6_queue(struct frag
- 		goto err;
- 	}
- 
--	/* Find out which fragments are in front and at the back of us
--	 * in the chain of fragments so far.  We must know where to put
--	 * this fragment, right?
--	 */
-+	/* Note : skb->rbnode and skb->dev share the same location. */
-+	dev = skb->dev;
-+	/* Makes sure compiler wont do silly aliasing games */
-+	barrier();
-+
- 	prev = fq->q.fragments_tail;
--	if (!prev || NFCT_FRAG6_CB(prev)->offset < offset) {
--		next = NULL;
--		goto found;
--	}
--	prev = NULL;
--	for (next = fq->q.fragments; next != NULL; next = next->next) {
--		if (NFCT_FRAG6_CB(next)->offset >= offset)
--			break;	/* bingo! */
--		prev = next;
--	}
--
--found:
--	/* RFC5722, Section 4:
--	 *                                  When reassembling an IPv6 datagram, if
--	 *   one or more its constituent fragments is determined to be an
--	 *   overlapping fragment, the entire datagram (and any constituent
--	 *   fragments, including those not yet received) MUST be silently
--	 *   discarded.
--	 */
-+	err = inet_frag_queue_insert(&fq->q, skb, offset, end);
-+	if (err)
-+		goto insert_error;
-+
-+	if (dev)
-+		fq->iif = dev->ifindex;
- 
--	/* Check for overlap with preceding fragment. */
--	if (prev &&
--	    (NFCT_FRAG6_CB(prev)->offset + prev->len) > offset)
--		goto discard_fq;
--
--	/* Look for overlap with succeeding segment. */
--	if (next && NFCT_FRAG6_CB(next)->offset < end)
--		goto discard_fq;
--
--	NFCT_FRAG6_CB(skb)->offset = offset;
--
--	/* Insert this fragment in the chain of fragments. */
--	skb->next = next;
--	if (!next)
--		fq->q.fragments_tail = skb;
--	if (prev)
--		prev->next = skb;
--	else
--		fq->q.fragments = skb;
--
--	if (skb->dev) {
--		fq->iif = skb->dev->ifindex;
--		skb->dev = NULL;
--	}
- 	fq->q.stamp = skb->tstamp;
- 	fq->q.meat += skb->len;
- 	fq->ecn |= ecn;
-@@ -325,11 +285,25 @@ found:
- 		fq->q.flags |= INET_FRAG_FIRST_IN;
- 	}
- 
--	return 0;
-+	if (fq->q.flags == (INET_FRAG_FIRST_IN | INET_FRAG_LAST_IN) &&
-+	    fq->q.meat == fq->q.len) {
-+		unsigned long orefdst = skb->_skb_refdst;
-+
-+		skb->_skb_refdst = 0UL;
-+		err = nf_ct_frag6_reasm(fq, skb, prev, dev);
-+		skb->_skb_refdst = orefdst;
-+		return err;
-+	}
-+
-+	skb_dst_drop(skb);
-+	return -EINPROGRESS;
- 
--discard_fq:
-+insert_error:
-+	if (err == IPFRAG_DUP)
-+		goto err;
- 	inet_frag_kill(&fq->q);
- err:
-+	skb_dst_drop(skb);
- 	return -EINVAL;
- }
- 
-@@ -339,141 +313,67 @@ err:
-  *	It is called with locked fq, and caller must check that
-  *	queue is eligible for reassembly i.e. it is not COMPLETE,
-  *	the last and the first frames arrived and all the bits are here.
-- *
-- *	returns true if *prev skb has been transformed into the reassembled
-- *	skb, false otherwise.
-  */
--static bool
--nf_ct_frag6_reasm(struct frag_queue *fq, struct sk_buff *prev,  struct net_device *dev)
-+static int nf_ct_frag6_reasm(struct frag_queue *fq, struct sk_buff *skb,
-+			     struct sk_buff *prev_tail, struct net_device *dev)
- {
--	struct sk_buff *fp, *head = fq->q.fragments;
--	int    payload_len;
-+	void *reasm_data;
-+	int payload_len;
- 	u8 ecn;
- 
- 	inet_frag_kill(&fq->q);
- 
--	WARN_ON(head == NULL);
--	WARN_ON(NFCT_FRAG6_CB(head)->offset != 0);
--
- 	ecn = ip_frag_ecn_table[fq->ecn];
- 	if (unlikely(ecn == 0xff))
--		return false;
-+		goto err;
-+
-+	reasm_data = inet_frag_reasm_prepare(&fq->q, skb, prev_tail);
-+	if (!reasm_data)
-+		goto err;
- 
--	/* Unfragmented part is taken from the first segment. */
--	payload_len = ((head->data - skb_network_header(head)) -
-+	payload_len = ((skb->data - skb_network_header(skb)) -
- 		       sizeof(struct ipv6hdr) + fq->q.len -
- 		       sizeof(struct frag_hdr));
- 	if (payload_len > IPV6_MAXPLEN) {
- 		net_dbg_ratelimited("nf_ct_frag6_reasm: payload len = %d\n",
- 				    payload_len);
--		return false;
--	}
--
--	/* Head of list must not be cloned. */
--	if (skb_unclone(head, GFP_ATOMIC))
--		return false;
--
--	/* If the first fragment is fragmented itself, we split
--	 * it to two chunks: the first with data and paged part
--	 * and the second, holding only fragments. */
--	if (skb_has_frag_list(head)) {
--		struct sk_buff *clone;
--		int i, plen = 0;
--
--		clone = alloc_skb(0, GFP_ATOMIC);
--		if (clone == NULL)
--			return false;
--
--		clone->next = head->next;
--		head->next = clone;
--		skb_shinfo(clone)->frag_list = skb_shinfo(head)->frag_list;
--		skb_frag_list_init(head);
--		for (i = 0; i < skb_shinfo(head)->nr_frags; i++)
--			plen += skb_frag_size(&skb_shinfo(head)->frags[i]);
--		clone->len = clone->data_len = head->data_len - plen;
--		head->data_len -= clone->len;
--		head->len -= clone->len;
--		clone->csum = 0;
--		clone->ip_summed = head->ip_summed;
--
--		add_frag_mem_limit(fq->q.net, clone->truesize);
--	}
--
--	/* morph head into last received skb: prev.
--	 *
--	 * This allows callers of ipv6 conntrack defrag to continue
--	 * to use the last skb(frag) passed into the reasm engine.
--	 * The last skb frag 'silently' turns into the full reassembled skb.
--	 *
--	 * Since prev is also part of q->fragments we have to clone it first.
--	 */
--	if (head != prev) {
--		struct sk_buff *iter;
--
--		fp = skb_clone(prev, GFP_ATOMIC);
--		if (!fp)
--			return false;
--
--		fp->next = prev->next;
--
--		iter = head;
--		while (iter) {
--			if (iter->next == prev) {
--				iter->next = fp;
--				break;
--			}
--			iter = iter->next;
--		}
--
--		skb_morph(prev, head);
--		prev->next = head->next;
--		consume_skb(head);
--		head = prev;
-+		goto err;
- 	}
- 
- 	/* We have to remove fragment header from datagram and to relocate
- 	 * header in order to calculate ICV correctly. */
--	skb_network_header(head)[fq->nhoffset] = skb_transport_header(head)[0];
--	memmove(head->head + sizeof(struct frag_hdr), head->head,
--		(head->data - head->head) - sizeof(struct frag_hdr));
--	head->mac_header += sizeof(struct frag_hdr);
--	head->network_header += sizeof(struct frag_hdr);
--
--	skb_shinfo(head)->frag_list = head->next;
--	skb_reset_transport_header(head);
--	skb_push(head, head->data - skb_network_header(head));
--
--	for (fp = head->next; fp; fp = fp->next) {
--		head->data_len += fp->len;
--		head->len += fp->len;
--		if (head->ip_summed != fp->ip_summed)
--			head->ip_summed = CHECKSUM_NONE;
--		else if (head->ip_summed == CHECKSUM_COMPLETE)
--			head->csum = csum_add(head->csum, fp->csum);
--		head->truesize += fp->truesize;
--		fp->sk = NULL;
--	}
--	sub_frag_mem_limit(fq->q.net, head->truesize);
--
--	head->ignore_df = 1;
--	head->next = NULL;
--	head->dev = dev;
--	head->tstamp = fq->q.stamp;
--	ipv6_hdr(head)->payload_len = htons(payload_len);
--	ipv6_change_dsfield(ipv6_hdr(head), 0xff, ecn);
--	IP6CB(head)->frag_max_size = sizeof(struct ipv6hdr) + fq->q.max_size;
-+	skb_network_header(skb)[fq->nhoffset] = skb_transport_header(skb)[0];
-+	memmove(skb->head + sizeof(struct frag_hdr), skb->head,
-+		(skb->data - skb->head) - sizeof(struct frag_hdr));
-+	skb->mac_header += sizeof(struct frag_hdr);
-+	skb->network_header += sizeof(struct frag_hdr);
-+
-+	skb_reset_transport_header(skb);
-+
-+	inet_frag_reasm_finish(&fq->q, skb, reasm_data);
-+
-+	skb->ignore_df = 1;
-+	skb->dev = dev;
-+	ipv6_hdr(skb)->payload_len = htons(payload_len);
-+	ipv6_change_dsfield(ipv6_hdr(skb), 0xff, ecn);
-+	IP6CB(skb)->frag_max_size = sizeof(struct ipv6hdr) + fq->q.max_size;
- 
- 	/* Yes, and fold redundant checksum back. 8) */
--	if (head->ip_summed == CHECKSUM_COMPLETE)
--		head->csum = csum_partial(skb_network_header(head),
--					  skb_network_header_len(head),
--					  head->csum);
-+	if (skb->ip_summed == CHECKSUM_COMPLETE)
-+		skb->csum = csum_partial(skb_network_header(skb),
-+					 skb_network_header_len(skb),
-+					 skb->csum);
- 
- 	fq->q.fragments = NULL;
- 	fq->q.rb_fragments = RB_ROOT;
- 	fq->q.fragments_tail = NULL;
-+	fq->q.last_run_head = NULL;
-+
-+	return 0;
- 
--	return true;
-+err:
-+	inet_frag_kill(&fq->q);
-+	return -EINVAL;
- }
- 
- /*
-@@ -542,7 +442,6 @@ find_prev_fhdr(struct sk_buff *skb, u8 *
- int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user)
- {
- 	u16 savethdr = skb->transport_header;
--	struct net_device *dev = skb->dev;
- 	int fhoff, nhoff, ret;
- 	struct frag_hdr *fhdr;
- 	struct frag_queue *fq;
-@@ -565,10 +464,6 @@ int nf_ct_frag6_gather(struct net *net,
- 	hdr = ipv6_hdr(skb);
- 	fhdr = (struct frag_hdr *)skb_transport_header(skb);
- 
--	if (skb->len - skb_network_offset(skb) < IPV6_MIN_MTU &&
--	    fhdr->frag_off & htons(IP6_MF))
--		return -EINVAL;
--
- 	skb_orphan(skb);
- 	fq = fq_find(net, fhdr->identification, user, hdr,
- 		     skb->dev ? skb->dev->ifindex : 0);
-@@ -580,24 +475,17 @@ int nf_ct_frag6_gather(struct net *net,
- 	spin_lock_bh(&fq->q.lock);
- 
- 	ret = nf_ct_frag6_queue(fq, skb, fhdr, nhoff);
--	if (ret < 0) {
--		if (ret == -EPROTO) {
--			skb->transport_header = savethdr;
--			ret = 0;
--		}
--		goto out_unlock;
-+	if (ret == -EPROTO) {
-+		skb->transport_header = savethdr;
-+		ret = 0;
- 	}
- 
- 	/* after queue has assumed skb ownership, only 0 or -EINPROGRESS
- 	 * must be returned.
- 	 */
--	ret = -EINPROGRESS;
--	if (fq->q.flags == (INET_FRAG_FIRST_IN | INET_FRAG_LAST_IN) &&
--	    fq->q.meat == fq->q.len &&
--	    nf_ct_frag6_reasm(fq, skb, dev))
--		ret = 0;
-+	if (ret)
-+		ret = -EINPROGRESS;
- 
--out_unlock:
- 	spin_unlock_bh(&fq->q.lock);
- 	inet_frag_put(&fq->q);
- 	return ret;
 
 
