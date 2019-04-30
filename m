@@ -2,406 +2,147 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F35C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2792BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B18205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:21:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="dXZuiMii"
+	by mail.kernel.org (Postfix) with ESMTP id E8FA22063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfD3TVE (ORCPT
+        id S1726150AbfD3TXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:21:04 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42086 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfD3TVD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:21:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id l25so13274106eda.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LCKlak7FYJZjHkPSI2bbY7nJMWKoi5EZ2NHkq7EYp70=;
-        b=dXZuiMiiQ1YMov/LL6PvqoHhbYAEkbFRRTdKzHCifnKtNK49fwX4yNeXShQCtXqBOq
-         yEQRlwiAeEJw7VuTA8jnSMvlQl2Xoc3cvXkBaOlZhRyoq28JoPA1jywWiFdjdtxmfFAR
-         RM0uhHa/Gyftu5bXDoR0R36KiYhF9Kb5ap+b9IHYd2BWafL05z3dhBw/T34+TPxV/Jr+
-         wRYvCOWsuko9wIIKhUvRCDj6p6AqrBLtb879xe5QfxEoMWA0oOP2AwXEqBkl56B94VY7
-         RVkJRfzKUJgTd8eOv00cyyC84J2r7ru7ucAdfhi147L2rrXQJkb66WRlfrHwubi2WwoX
-         IvWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LCKlak7FYJZjHkPSI2bbY7nJMWKoi5EZ2NHkq7EYp70=;
-        b=eN4XQXlHul7oHjJ0/HWgqe8exPpKgx19VnV8myIl9+JRF9RSOPKcOAAlujDdOlzHle
-         CDn6O2JGaP9Ap2UQSZJ6u/xWXEVEdFOPo7pPrwDEhQo7l0bObLRSz7gHhjx3gHcQn8sO
-         n/RsBy8iFOy+1p4yrzBuJDbnbeCKoJgBjP9ERG2bdnQJa2aB4iEtGH4AiuXf0A5epvBu
-         wDenYHq1/M7Ih+ajAo0OaOIeXVrX03dKbejq4nKnuDzve69bCiqYgx1O+0HryboBThYx
-         fnW5qgNp25BlwLwbMXFC0RvcFj0UGX3uGr0dLpBr3iL6EonYQ5V0hEyVd27oIuc2Cy1g
-         dDrg==
-X-Gm-Message-State: APjAAAXGmRbBhW/cO5KdfCXhn3G6/x8oZVJYKceuE6f/HciX2DWqmOA7
-        BVtG3klWY4TDDeTdqXU4NqsFsw==
-X-Google-Smtp-Source: APXvYqwDoqoVx9/kf4i17lKyFZP6mfr/4+nawYEcxbpCJgPlhw7TcpaW3Q7lps7JmWOn03CRFGAzQw==
-X-Received: by 2002:a17:906:69d6:: with SMTP id g22mr2631702ejs.124.1556652061112;
-        Tue, 30 Apr 2019 12:21:01 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id 44sm1386526eds.90.2019.04.30.12.20.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Apr 2019 12:21:00 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 21:20:59 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Daniel Colascione <dancol@google.com>,
-        David Howells <dhowells@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        KJ Tsanaktsidis <ktsanaktsidis@zendesk.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Oleg Nesterov <oleg@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Murray <timmurray@google.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH v2 2/2] Add selftests for pidfd polling
-Message-ID: <20190430192057.ocevexvebfq2we3d@brauner.io>
-References: <20190430162154.61314-1-joel@joelfernandes.org>
- <20190430162154.61314-2-joel@joelfernandes.org>
+        Tue, 30 Apr 2019 15:23:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38048 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbfD3TXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 15:23:32 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 00A8B30842A1;
+        Tue, 30 Apr 2019 19:23:32 +0000 (UTC)
+Received: from [10.36.112.20] (ovpn-112-20.ams2.redhat.com [10.36.112.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6A33D1001DC8;
+        Tue, 30 Apr 2019 19:23:30 +0000 (UTC)
+Subject: Re: [PATCH] KVM: selftests: make hyperv_cpuid test pass on AMD
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <20190426132711.26710-1-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <94b42cba-0bc2-01b5-a0b8-d793b518b743@redhat.com>
+Date:   Tue, 30 Apr 2019 21:23:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190426132711.26710-1-vkuznets@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190430162154.61314-2-joel@joelfernandes.org>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 30 Apr 2019 19:23:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:21:54PM -0400, Joel Fernandes (Google) wrote:
-> Other than verifying pidfd based polling, the tests make sure that
-> wait semantics are preserved with the pidfd poll. Notably the 2 cases:
-> 1. If a thread group leader exits while threads still there, then no
->    pidfd poll notifcation should happen.
-> 2. If a non-thread group leader does an execve, then the thread group
->    leader is signaled to exit and is replaced with the execing thread
->    as the new leader, however the parent is not notified in this case.
+On 26/04/19 15:27, Vitaly Kuznetsov wrote:
+> Enlightened VMCS is only supported on Intel CPUs but the test shouldn't
+> fail completely.
 > 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  tools/testing/selftests/pidfd/Makefile     |   2 +-
->  tools/testing/selftests/pidfd/pidfd_test.c | 210 +++++++++++++++++++++
->  2 files changed, 211 insertions(+), 1 deletion(-)
+>  tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
-> index deaf8073bc06..4b31c14f273c 100644
-> --- a/tools/testing/selftests/pidfd/Makefile
-> +++ b/tools/testing/selftests/pidfd/Makefile
-> @@ -1,4 +1,4 @@
-> -CFLAGS += -g -I../../../../usr/include/
-> +CFLAGS += -g -I../../../../usr/include/ -lpthread
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> index 264425f75806..9a21e912097c 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> @@ -141,7 +141,13 @@ int main(int argc, char *argv[])
 >  
->  TEST_GEN_PROGS := pidfd_test
+>  	free(hv_cpuid_entries);
 >  
-> diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
-> index d59378a93782..8b404ccbc4ff 100644
-> --- a/tools/testing/selftests/pidfd/pidfd_test.c
-> +++ b/tools/testing/selftests/pidfd/pidfd_test.c
-> @@ -4,18 +4,47 @@
->  #include <errno.h>
->  #include <fcntl.h>
->  #include <linux/types.h>
-> +#include <pthread.h>
->  #include <sched.h>
->  #include <signal.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <string.h>
->  #include <syscall.h>
-> +#include <sys/epoll.h>
-> +#include <sys/mman.h>
->  #include <sys/mount.h>
->  #include <sys/wait.h>
-> +#include <time.h>
->  #include <unistd.h>
+> -	vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
+> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
+> +
+> +	if (rv) {
+> +		fprintf(stderr,
+> +			"Enlightened VMCS is unsupported, skip related test\n");
+> +		goto vm_free;
+> +	}
 >  
->  #include "../kselftest.h"
+>  	hv_cpuid_entries = kvm_get_supported_hv_cpuid(vm);
+>  	if (!hv_cpuid_entries)
+> @@ -151,6 +157,7 @@ int main(int argc, char *argv[])
 >  
-> +#define str(s) _str(s)
-> +#define _str(s) #s
-> +#define CHILD_THREAD_MIN_WAIT 3 /* seconds */
-> +
-> +#define MAX_EVENTS 5
-> +#ifndef __NR_pidfd_send_signal
-> +#define __NR_pidfd_send_signal 424
-> +#endif
-> +
-> +#ifndef CLONE_PIDFD
-> +#define CLONE_PIDFD 0x00001000
-> +#endif
-> +
-> +static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
-> +{
-> +	size_t stack_size = 1024;
-> +	char *stack[1024] = { 0 };
-> +
-> +#ifdef __ia64__
-> +	return __clone2(fn, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
-> +#else
-> +	return clone(fn, stack + stack_size, flags | SIGCHLD, NULL, pidfd);
-> +#endif
-> +}
-> +
->  static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
->  					unsigned int flags)
->  {
-> @@ -368,10 +397,191 @@ static int test_pidfd_send_signal_syscall_support(void)
+>  	free(hv_cpuid_entries);
+>  
+> +vm_free:
+>  	kvm_vm_free(vm);
+>  
 >  	return 0;
->  }
->  
-> +static void *test_pidfd_poll_exec_thread(void *priv)
-> +{
-> +	ksft_print_msg("Child Thread: starting. pid %d tid %d ; and sleeping\n",
-> +			getpid(), syscall(SYS_gettid));
-> +	ksft_print_msg("Child Thread: doing exec of sleep\n");
-> +
-> +	execl("/bin/sleep", "sleep", str(CHILD_THREAD_MIN_WAIT), (char *)NULL);
-> +
-> +	ksft_print_msg("Child Thread: DONE. pid %d tid %d\n",
-> +			getpid(), syscall(SYS_gettid));
-> +	return NULL;
-> +}
-> +
-> +static void poll_pidfd(const char *test_name, int pidfd)
-> +{
-> +	int c;
-> +	int epoll_fd = epoll_create1(EPOLL_CLOEXEC);
-> +	struct epoll_event event, events[MAX_EVENTS];
-> +
-> +	if (epoll_fd == -1)
-> +		ksft_exit_fail_msg("%s test: Failed to create epoll file descriptor "
-> +				   "(errno %d)\n",
-> +				   test_name, errno);
-> +
-> +	event.events = EPOLLIN;
-> +	event.data.fd = pidfd;
-> +
-> +	if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, pidfd, &event)) {
-> +		ksft_exit_fail_msg("%s test: Failed to add epoll file descriptor "
-> +				   "(errno %d)\n",
-> +				   test_name, errno);
-> +	}
-> +
-> +	c = epoll_wait(epoll_fd, events, MAX_EVENTS, 5000);
-> +	if (c != 1 || !(events[0].events & EPOLLIN))
-> +		ksft_exit_fail_msg("%s test: Unexpected epoll_wait result (c=%d, events=%x) ",
-> +				   "(errno %d)\n",
-> +				   test_name, c, events[0].events, errno);
-> +
-> +	close(epoll_fd);
-> +	return;
-
-nit: Function with void usually do not do an explicit return at the end. :)
-
-> +
-> +}
-> +
-> +static int child_poll_exec_test(void *args)
-> +{
-> +	pthread_t t1;
-> +
-> +	ksft_print_msg("Child (pidfd): starting. pid %d tid %d\n", getpid(),
-> +			syscall(SYS_gettid));
-> +	pthread_create(&t1, NULL, test_pidfd_poll_exec_thread, NULL);
-> +	/*
-> +	 * Exec in the non-leader thread will destroy the leader immediately.
-> +	 * If the wait in the parent returns too soon, the test fails.
-> +	 */
-> +	while (1)
-> +		sleep(1);
-> +}
-> +
-> +static int test_pidfd_poll_exec(int use_waitpid)
-
-Please make int use_waitpid a proper bool and make the function void as
-it's return value is never checked in main.
-
-(I know the other ones in the test file here do the same thing and I
-should switch them to void soon at some point.)
-
-> +{
-> +	int pid, pidfd = 0;
-> +	int status, ret;
-> +	pthread_t t1;
-> +	time_t prog_start = time(NULL);
-> +	const char *test_name = "pidfd_poll check for premature notification on child thread exec";
-> +
-> +	ksft_print_msg("Parent: pid: %d\n", getpid());
-> +	pid = pidfd_clone(CLONE_PIDFD, &pidfd, child_poll_exec_test);
-> +	if (pid < 0)
-> +		ksft_exit_fail_msg("%s test: pidfd_clone failed (ret %d, errno %d)\n",
-> +				   test_name, pid, errno);
-> +
-> +	ksft_print_msg("Parent: Waiting for Child (%d) to complete.\n", pid);
-> +
-> +	if (use_waitpid) {
-> +		ret = waitpid(pid, &status, 0);
-> +		if (ret == -1)
-> +			ksft_print_msg("Parent: error\n");
-> +
-> +		if (ret == pid)
-> +			ksft_print_msg("Parent: Child process waited for.\n");
-> +	} else {
-> +		poll_pidfd(test_name, pidfd);
-> +	}
-> +
-> +	time_t prog_time = time(NULL) - prog_start;
-> +
-> +	ksft_print_msg("Time waited for child: %lu\n", prog_time);
-> +
-> +	close(pidfd);
-> +
-> +	if (prog_time < CHILD_THREAD_MIN_WAIT || prog_time > CHILD_THREAD_MIN_WAIT + 2)
-
-I'm sorry, can you please either briefly explain or comment where
-this +2 comes from? Why is that the cut-off?
-
-> +		ksft_exit_fail_msg("%s test: Failed\n", test_name);
-> +	else
-> +		ksft_test_result_pass("%s test: Passed\n", test_name);
-> +}
-> +
-> +static void *test_pidfd_poll_leader_exit_thread(void *priv)
-> +{
-> +	ksft_print_msg("Child Thread: starting. pid %d tid %d ; and sleeping\n",
-> +			getpid(), syscall(SYS_gettid));
-> +	sleep(CHILD_THREAD_MIN_WAIT);
-> +	ksft_print_msg("Child Thread: DONE. pid %d tid %d\n", getpid(), syscall(SYS_gettid));
-> +	return NULL;
-> +}
-> +
-> +static time_t *child_exit_secs;
-> +static int child_poll_leader_exit_test(void *args)
-> +{
-> +	pthread_t t1, t2;
-> +
-> +	ksft_print_msg("Child: starting. pid %d tid %d\n", getpid(), syscall(SYS_gettid));
-> +	pthread_create(&t1, NULL, test_pidfd_poll_leader_exit_thread, NULL);
-> +	pthread_create(&t2, NULL, test_pidfd_poll_leader_exit_thread, NULL);
-> +
-> +	/*
-> +	 * glibc exit calls exit_group syscall, so explicity call exit only
-> +	 * so that only the group leader exits, leaving the threads alone.
-> +	 */
-> +	*child_exit_secs = time(NULL);
-
-Why is child_exit_secs a pointer?
-
-
-> +	syscall(SYS_exit, 0);
-> +}
-> +
-> +static int test_pidfd_poll_leader_exit(int use_waitpid)
-
-Should be void as it's return value isn't checked at all.
-
-(I know the other ones in the test file here do the same thing and I
-should switch them to void soon at some point.)
-
-> +{
-> +	int pid, pidfd = 0;
-> +	int status, ret;
-> +	time_t prog_start = time(NULL);
-> +	const char *test_name = "pidfd_poll check for premature notification on non-empty"
-> +				"group leader exit";
-> +
-> +	child_exit_secs = mmap(NULL, sizeof *child_exit_secs, PROT_READ | PROT_WRITE,
-> +			MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-> +
-> +	if (child_exit_secs == MAP_FAILED)
-> +		ksft_exit_fail_msg("%s test: mmap failed (errno %d)\n",
-> +				   test_name, errno);
-> +
-> +	ksft_print_msg("Parent: pid: %d\n", getpid());
-> +	pid = pidfd_clone(CLONE_PIDFD, &pidfd, child_poll_leader_exit_test);
-> +	if (pid < 0)
-> +		ksft_exit_fail_msg("%s test: pidfd_clone failed (ret %d, errno %d)\n",
-> +				   test_name, pid, errno);
-> +
-> +	ksft_print_msg("Parent: Waiting for Child (%d) to complete.\n", pid);
-> +
-> +	if (use_waitpid) {
-> +		ret = waitpid(pid, &status, 0);
-> +		if (ret == -1)
-> +			ksft_print_msg("Parent: error\n");
-> +	} else {
-> +		/*
-> +		 * This sleep tests for the case where if the child exits, and is in
-> +		 * EXIT_ZOMBIE, but the thread group leader is non-empty, then the poll
-> +		 * doesn't prematurely return even though there are active threads
-> +		 */
-> +		sleep(1);
-> +		poll_pidfd(test_name, pidfd);
-> +	}
-> +
-> +	if (ret == pid)
-> +		ksft_print_msg("Parent: Child process waited for.\n");
-> +
-> +	time_t since_child_exit = time(NULL) - *child_exit_secs;
-> +
-> +	ksft_print_msg("Time since child exit: %lu\n", since_child_exit);
-> +
-> +	close(pidfd);
-> +
-> +	if (since_child_exit < CHILD_THREAD_MIN_WAIT ||
-> +			since_child_exit > CHILD_THREAD_MIN_WAIT + 2)
-
-Same question as above.
-
-> +		ksft_exit_fail_msg("%s test: Failed\n", test_name);
-> +	else
-> +		ksft_test_result_pass("%s test: Passed\n", test_name);
-> +}
-> +
->  int main(int argc, char **argv)
->  {
->  	ksft_print_header();
->  
-> +	test_pidfd_poll_exec(0);
-
-test_pidfd_poll_exec(false);
-
-> +	test_pidfd_poll_exec(1);
-
-test_pidfd_poll_exec(true);
-
-> +	test_pidfd_poll_leader_exit(0);
-
-test_pidfd_poll_leader_exit(false);
-
-> +	test_pidfd_poll_leader_exit(1);
-
-test_pidfd_poll_leader_exit(true);
-
->  	test_pidfd_send_signal_syscall_support();
->  	test_pidfd_send_signal_simple_success();
->  	test_pidfd_send_signal_exited_fail();
-> -- 
-> 2.21.0.593.g511ec345e18-goog
 > 
+
+Queued, thanks.
+
+Paolo
