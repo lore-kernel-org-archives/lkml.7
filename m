@@ -2,103 +2,114 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65843C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C48C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B8A20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F6420652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="n6zv1Zny";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mXTj1/NT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GuHH2NYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfD3GeI (ORCPT
+        id S1726503AbfD3GiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:34:08 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:42243 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725554AbfD3GeH (ORCPT
+        Tue, 30 Apr 2019 02:38:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45783 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfD3GiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:34:07 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 86A42220E2;
-        Tue, 30 Apr 2019 02:34:06 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Tue, 30 Apr 2019 02:34:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=5NmjIawd5LxDhUXwBKjmfIeG6PW
-        W2x4Hz4B05t/pcXM=; b=n6zv1ZnynAx2mPLBWm1rFfyGP6eVJD+Gsl61VXgmFXR
-        f1OyxNprq9uSujnzXlwfXJPMdKIHE/zV/KlsBIph8YJ/HkSdhVp0CJ2GABCMxN9s
-        k3SgKbtv/LsYOFfRfF6LxC7RpnsXK0dggkq8OyyWSrfyc33rN+8wC0oYvjFFlwGF
-        mydA7FJknk5CCaxeEkub3bfc7jrhT6ftpXIqCiWTQdYb7GBU9zoQlmanXEXxzsfc
-        nmEAMJQoYQy+KqcVloXAIOsASc0H9M4twUIl3Sq1OgO0T5b6+oeQECdWdzmaDf9N
-        omLvE5XhnpycjYTiCghUbjKb9XNqIvABmx+P7Sy3k2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=5NmjIa
-        wd5LxDhUXwBKjmfIeG6PWW2x4Hz4B05t/pcXM=; b=mXTj1/NTxqd5Wt/OQm/B/7
-        ctR+eUWatN1GFJwwdZHej6ps4xGLmu5az1x0rtEGdwaW+pwG3O+1gRMujDg+WxEw
-        nnk6Jl0MsnR9nJ015+Y6NvtN5hq/gQ2HCYYYi2Vwg6pkAiyD5n3MJPkQ2xrMfp8q
-        g93wLsekAMg6VHsSMQPOVzlpvutTOya2fj8JYTL9G42HettSe7aXHPo8uZAO7uo7
-        zPDdbYBBC1zTHrp5WldSWB8LL/IodGLKxN8ODDQLp1XfEVwZrqQMqQMWHCX9tFUN
-        4GbW72i4gB7VcYbK8QXmkZXkBdMwSuJL/wAMuHlSiTCb4cjNKSTpSk2E8zbuJ0OQ
-        ==
-X-ME-Sender: <xms:XuzHXPz_HxUts5e5Gk-1J2woYEpUs0vI7k5vCPLITlgjgX7AbBaw0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdduudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
-    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
-    gsihhnrdgttgeqnecukfhppeduvddurdeggedrvdeftddrudekkeenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:XuzHXC-fkrY1_FSs62YQEm7WZp48nBLGxQgPA2gSBvL5hTzPrL8K4g>
-    <xmx:XuzHXFwCOymmfo08tM2xgSzogVxdvvbVP27N8FLn8vfBxioWnk6TGQ>
-    <xmx:XuzHXCqBLOOkR5k-LaW9Qf3-b8TAKNtfpuM3ZoC1G5K9TdcRyHUCsA>
-    <xmx:XuzHXLmOA2EEb-aqg0-UIPjmsqUISTw8qdDcWFofLrZpDJuLcnQEjg>
-Received: from localhost (ppp121-44-230-188.bras2.syd2.internode.on.net [121.44.230.188])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3A4F2103CD;
-        Tue, 30 Apr 2019 02:34:04 -0400 (EDT)
-Date:   Tue, 30 Apr 2019 16:33:26 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, tobin@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: Fix kobject memleak
-Message-ID: <20190430063326.GC32393@eros.localdomain>
-References: <815f7c7cea02e05c90d5bf678ea8717f01cc9f63.1556604312.git.viresh.kumar@linaro.org>
+        Tue, 30 Apr 2019 02:38:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s15so19536086wra.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 23:38:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=mBIgwbzYmkgbhsO4N+I7kDrPR3sJoh79fVIbgSnCeDQ=;
+        b=GuHH2NYJhfjGJwyv3eKUmddbs+NwlVoPBUQ6g4XbNyTIfA7LV44lPasCoVmrbOc1lA
+         o0CP5Gg1GPuDRv1Kyt0PwgLvzmDt17MGVfznJfK2JgfG/EdNOkfqIMzvsdxdu6OfV4Ul
+         H4jvi7EXAeTor5vxhMQ/DXmNZftZ1+n6Nm2VhMIpeBQx5reXVXjdSFIjZniX8mydQjjc
+         q0FSCtLlqLaxg11dtdXIb+9IG8zKXRS/bTgZ7bSqrgAZWzQvczK0mXKWtFiJYV5UO6jh
+         B0Ka2xDx/iBeit8A+aB8qkC5uBfJ3mqD5Whu8znjK2JBTHbY1e6XEO+GD0Y/BDlvESoK
+         x+5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=mBIgwbzYmkgbhsO4N+I7kDrPR3sJoh79fVIbgSnCeDQ=;
+        b=J+/rAZFdqaVvpdM9KmfxBDqkGnbRxHIMxXxGpoYvZF+QrtkXjy7v/TWQyB3kgrfboN
+         ePk9FPxz6fjMLheyi2GWxP5V5SLB7MVd7yXzZnm/XSE7uz7rm2yt9Et949sINj2x6erA
+         LfLfMK2QwJUPjnpxPtjuNnfIMxiAtjP50N7kOiRDJIMjluPOAk19l5KYu4BNIgmAcLRH
+         TwJLlCr7uuSCxY7NIcZzjHvvxnP+SLtV3Srx36dicQs/zM+py85sUNAi9EyFnu6XXqW/
+         UT0nqvS6/tF1kymEBlE2Gu39BP330vn1rwKrlHLBoSzbsCJ5Dc/uC0EMCRq8YKr6FKge
+         eWbQ==
+X-Gm-Message-State: APjAAAVvfuK0wqU8ksV+mhKFVVu6gm6GDFkDwi8iBorneXYJaKavMp+w
+        MfwdRE8OQ12Y1SRcRhls1+91ew==
+X-Google-Smtp-Source: APXvYqymYeEIEuBhAecoonvSwahyY44dv52RVC/Ac3Z8WNPqSu59fUyK/xQvi6hQJ1QB9v2pITNduQ==
+X-Received: by 2002:adf:db0c:: with SMTP id s12mr4222632wri.184.1556606287158;
+        Mon, 29 Apr 2019 23:38:07 -0700 (PDT)
+Received: from ?IPv6:2a01:cb1d:379:8b00:1910:6694:7019:d3a? ([2a01:cb1d:379:8b00:1910:6694:7019:d3a])
+        by smtp.gmail.com with ESMTPSA id j13sm30419810wrd.88.2019.04.29.23.38.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 23:38:06 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] dt-bindings: pinctrl: meson: Add drive-strength-uA
+ property
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        khilman@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190418124758.24022-1-glaroque@baylibre.com>
+ <20190418124758.24022-4-glaroque@baylibre.com>
+ <CAFBinCD_qJw6-_zsnKFhsVHUHd2K2wJ3S9EsXGrPPxZ1SWn=uA@mail.gmail.com>
+From:   guillaume La Roque <glaroque@baylibre.com>
+Message-ID: <7608f385-d412-f8be-d11b-9023f9702ec3@baylibre.com>
+Date:   Tue, 30 Apr 2019 08:38:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <815f7c7cea02e05c90d5bf678ea8717f01cc9f63.1556604312.git.viresh.kumar@linaro.org>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAFBinCD_qJw6-_zsnKFhsVHUHd2K2wJ3S9EsXGrPPxZ1SWn=uA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:35:52AM +0530, Viresh Kumar wrote:
-> Currently the error return path from kobject_init_and_add() is not
-> followed by a call to kobject_put() - which means we are leaking the
-> kobject.
-> 
-> Fix it by adding a call to kobject_put() in the error path of
-> kobject_init_and_add().
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> Tobin fixed this for schedutil already.
+Hi Martin,
 
-For what its worth:
+On 4/27/19 9:21 PM, Martin Blumenstingl wrote:
+> Hi Guillaume,
+>
+> On Thu, Apr 18, 2019 at 2:48 PM Guillaume La Roque
+> <glaroque@baylibre.com> wrote:
+>> Add optional drive-strength-uA property
+>>
+>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+>> ---
+>>  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> index a47dd990a8d3..b3e4be696ddc 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> @@ -51,6 +51,9 @@ Configuration nodes support the generic properties "bias-disable",
+>>  "bias-pull-up" and "bias-pull-down", described in file
+>>  pinctrl-bindings.txt
+>>
+>> +Optional properties :
+>> + - drive-strength-uA: Drive strength for the specified pins in uA.
+> if you have to re-send this series for whatever reason then please
+> mention that drive-strength-uA is only valid for G12A and newer
 
- Reviewed-by: Tobin C. Harding <tobin@kernel.org>
+thanks for your review, i will do if i send new series.
 
-Thanks Viresh, one less for me to do!
 
-	Tobin
+> otherwise:
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
