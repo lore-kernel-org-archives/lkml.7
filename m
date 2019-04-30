@@ -2,98 +2,114 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0D0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA339C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D65E2087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:01:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h7UQQnn1"
+	by mail.kernel.org (Postfix) with ESMTP id 9B50E2087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfD3WBy (ORCPT
+        id S1726412AbfD3WFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:01:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:38681 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfD3WBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:01:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44twV72Frxz9sNd;
-        Wed,  1 May 2019 08:01:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556661711;
-        bh=5xzSzJd6P+awFz45jW2IFDLAXiVYATqaN0Pky21fDdM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=h7UQQnn1QRDMOuvQHgZiuIq5AOKry0AfxxtHJJDmi+uyER+DGnrfS7uMQGOYHlHM+
-         4RlnFQNzX15lKj9mzqmJIP5gTZf/A18NAVRhTMRNAqJwVFcD0C/2M/bFKbqFKn9PNm
-         ncwXVs8uJVBpf5oJBvRtjodfTxsgUJRNpUCG/0uSuBx6Pc9H9k3ldWEeA8LvsIiDP1
-         nrXvEXUB9Uu9H6KpOn1pqi4euRkU2pK3TZzvrQ0zt0RtN9b3EBhZosKueuqnceeEDX
-         TJTt7UXSHP/C0DZwu8nvceOghqGKYruax8db9YausxDNtcUYVBBv4QwcTSxV6rt7Wp
-         Wmr/u8Io0Ggpg==
-Date:   Wed, 1 May 2019 08:01:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the kvm-fixes tree
-Message-ID: <20190501080144.639ed144@canb.auug.org.au>
+        Tue, 30 Apr 2019 18:05:30 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54339 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfD3WFa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 18:05:30 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 883F6802FE; Wed,  1 May 2019 00:05:18 +0200 (CEST)
+Date:   Wed, 1 May 2019 00:05:27 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 5/7] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+Message-ID: <20190430220527.GC20410@amd>
+References: <20190430191730.19450-1-dmurphy@ti.com>
+ <20190430191730.19450-6-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/aZ/E_6A3AqwvrrjhIZx4R.0"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
+Content-Disposition: inline
+In-Reply-To: <20190430191730.19450-6-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aZ/E_6A3AqwvrrjhIZx4R.0
-Content-Type: text/plain; charset=US-ASCII
+
+--7qSK/uQB79J36Y4o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Tue 2019-04-30 14:17:28, Dan Murphy wrote:
+> The LM3697 is a single function LED driver. The single function LED
+> driver needs to reside in the LED directory as a dedicated LED driver
+> and not as a MFD device.  The device does have common brightness and ramp
+> features and those can be accomodated by a TI LMU framework.
+>=20
+> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicat=
+ed
+> LED dt binding needs to be added.  The new LM3697 LED dt binding will then
+> reside in the Documentation/devicetree/bindings/leds directory and follow=
+ the
+> current LED and general bindings guidelines.
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>=20
+> v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchwork=
+/patch/1058762/
+>=20
+> v2 - Made changes to reference ti,brightness-resolution to the ti-lmu.txt=
+ -
+> https://lore.kernel.org/patchwork/patch/1054501/
+>=20
+>  .../devicetree/bindings/leds/leds-lm3697.txt  | 73 +++++++++++++++++++
+>  .../devicetree/bindings/mfd/ti-lmu.txt        | 27 +------
+>  2 files changed, 74 insertions(+), 26 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Doc=
+umentation/devicetree/bindings/leds/leds-lm3697.txt
+> new file mode 100644
+> index 000000000000..02378f33c9ab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> @@ -0,0 +1,73 @@
+> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
+> +
+> +The LM3697 11-bit LED driver provides high-
+> +performance backlight dimming for 1, 2, or 3 series
+> +LED strings while delivering up to 90% efficiency.
+> +
+> +This device is suitable for display and keypad Lighting
 
-In commit
-
-  76d58e0f07ec ("KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned=
- size")
-
-Fixes tag
-
-  Fixes: 98938aa8edd6 ("KVM: validate userspace input in kvm_clear_dirty_lo=
-g_protect()", 2019-01-02)
-
-has these problem(s):
-
-  - The trailing date ine the fixes tag is unexpected
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
+"lightning."
+									Pavel
 --=20
-Cheers,
-Stephen Rothwell
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
---Sig_/aZ/E_6A3AqwvrrjhIZx4R.0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--7qSK/uQB79J36Y4o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzIxcgACgkQAVBC80lX
-0Gz04gf+OOlOZJQ0JfEk03Rm/muVUhLvu5k7kUeDkdbeAl4krsvvg+XghkAm/s+q
-qP66SXi9c3ANrFgBhZ2lycwWyGW9vStBAsCJRN0OvfB2Bj0F4ebEJNTYKl5tc+ja
-8qWpNdPkOUlnJR+TIoIW8+c2wV2olI6w4lb1Dm4r3HIK+tmAWmXx/12boXKSLwiH
-iz6G3nC4VGD3mbuY7lww4S8DD2AsFllTa1IzGm14RvSGgjn4/peMWkEE2vU64Jz4
-Yi1xF7RJUbUg24tGRwve8vmR7Dv20Uqv4G1apd+E+jqnF7FQKbeQx8rwlq8WHDoR
-WfntJQ/wmnWfzCtTw+frXNt2F95uyA==
-=pFs9
+iEYEARECAAYFAlzIxqcACgkQMOfwapXb+vINZQCfQmpVTdPQHXb97Gc7qaf68H19
+2+YAnidEX+z480WDvj0tuj61J/oiRamI
+=JIXb
 -----END PGP SIGNATURE-----
 
---Sig_/aZ/E_6A3AqwvrrjhIZx4R.0--
+--7qSK/uQB79J36Y4o--
