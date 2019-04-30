@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB984C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E0BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A877F21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30EE21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624577;
-	bh=AA/ezfwnN75aWAfPNZjA1OF7FxN3hdmIpnqpwiSVqM4=;
+	s=default; t=1556624581;
+	bh=6jCE/LR6S7PqdS6et0GPFxE6fo1xtZ44ydYFUFAAU+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fXOv3MLxyS39vsZZ76UxABHtf9PqQNTzDMUpkr2kaxDLvxDsRTnEf0CVKJd2rSimZ
-	 QLGOysPqH506YCFJC25HTqVOgJZRpijvMianYJeUZQeIQd5GXAXPvrRcxT1PLMB3wV
-	 2jduWpxGb1VpCb4p9gfJbaYOgcBaKQLuDFr2bbyU=
+	b=DHpqNNlaiwPxv4ATRZqs7YQtG8vSh/8e1yULCBXVfuUPU2dOlmrmg/JotbMxolU6w
+	 iwCdP/95fwmT0RQWAlEYx4TkyIZhWiFijeYpXp2MlK0TwnyBJFtXi7tATYwEUVUiUn
+	 KzrDaDLjffeztydSoo+4tDgZaFnYNV7+nFwrBVsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbfD3Lm4 (ORCPT
+        id S1729716AbfD3Lm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:42:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52506 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:42:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbfD3Lmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:42:53 -0400
+        id S1729646AbfD3Lm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:42:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4101121734;
-        Tue, 30 Apr 2019 11:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D076120449;
+        Tue, 30 Apr 2019 11:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624572;
-        bh=AA/ezfwnN75aWAfPNZjA1OF7FxN3hdmIpnqpwiSVqM4=;
+        s=default; t=1556624575;
+        bh=6jCE/LR6S7PqdS6et0GPFxE6fo1xtZ44ydYFUFAAU+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOXp1/VFOinEpSI8Ntez9+kSICCG7VVYfrN6SGA5Mcec4/CidIdAqrNRCFjC4jP4/
-         fCOYmjC3H/Vm/5XHoBH7Ea83fRL3jqxPHr39dInJXdkUespqVX+oHIFCYNfYbjnS/e
-         e3a3uHs/nSGyA9BrOtSRN3V2C4gBQrTgQ7edhmM8=
+        b=O8DOhaN6APZCTliv/nEtO2jbcHm04p1R5Aa8fs/2e4BwGHNZUhNQtgdj/B63oDhp+
+         z7gJDsGyX7zk4CDHZsr7UcoPfzTF0dPF88nzyPh2y3LHcwexmnAmlgEdb09rNcUkuF
+         PH9l+8uh7FzUZEWPItJh2RgNvlfaogRPIFzyAQpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Cohen <amitc@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 45/53] mlxsw: spectrum: Fix autoneg status in ethtool
-Date:   Tue, 30 Apr 2019 13:38:52 +0200
-Message-Id: <20190430113558.669947083@linuxfoundation.org>
+        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.14 46/53] net/mlx5e: ethtool, Remove unsupported SFP EEPROM high pages query
+Date:   Tue, 30 Apr 2019 13:38:53 +0200
+Message-Id: <20190430113558.788242317@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -61,44 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Cohen <amitc@mellanox.com>
+From: Erez Alfasi <ereza@mellanox.com>
 
-[ Upstream commit 151f0dddbbfe4c35c9c5b64873115aafd436af9d ]
+[ Upstream commit ace329f4ab3ba434be2adf618073c752d083b524 ]
 
-If link is down and autoneg is set to on/off, the status in ethtool does
-not change.
+Querying EEPROM high pages data for SFP module is currently
+not supported by our driver and yet queried, resulting in
+invalid FW queries.
 
-The reason is when the link is down the function returns with zero
-before changing autoneg value.
+Set the EEPROM ethtool data length to 256 for SFP module will
+limit the reading for page 0 only and prevent invalid FW queries.
 
-Move the checking of link state (up/down) to be performed after setting
-autoneg value, in order to be sure that autoneg will change in any case.
-
-Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
-Signed-off-by: Amit Cohen <amitc@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bb64143eee8c ("net/mlx5e: Add ethtool support for dump module EEPROM")
+Signed-off-by: Erez Alfasi <ereza@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/port.c       |    4 ----
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -2521,11 +2521,11 @@ mlxsw_sp_port_set_link_ksettings(struct
- 	if (err)
- 		return err;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1622,7 +1622,7 @@ static int mlx5e_get_module_info(struct
+ 		break;
+ 	case MLX5_MODULE_ID_SFP:
+ 		modinfo->type       = ETH_MODULE_SFF_8472;
+-		modinfo->eeprom_len = ETH_MODULE_SFF_8472_LEN;
++		modinfo->eeprom_len = MLX5_EEPROM_PAGE_LENGTH;
+ 		break;
+ 	default:
+ 		netdev_err(priv->netdev, "%s: cable type not recognized:0x%x\n",
+--- a/drivers/net/ethernet/mellanox/mlx5/core/port.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/port.c
+@@ -392,10 +392,6 @@ int mlx5_query_module_eeprom(struct mlx5
+ 		size -= offset + size - MLX5_EEPROM_PAGE_LENGTH;
  
-+	mlxsw_sp_port->link.autoneg = autoneg;
-+
- 	if (!netif_running(dev))
- 		return 0;
+ 	i2c_addr = MLX5_I2C_ADDR_LOW;
+-	if (offset >= MLX5_EEPROM_PAGE_LENGTH) {
+-		i2c_addr = MLX5_I2C_ADDR_HIGH;
+-		offset -= MLX5_EEPROM_PAGE_LENGTH;
+-	}
  
--	mlxsw_sp_port->link.autoneg = autoneg;
--
- 	mlxsw_sp_port_admin_status_set(mlxsw_sp_port, false);
- 	mlxsw_sp_port_admin_status_set(mlxsw_sp_port, true);
- 
+ 	MLX5_SET(mcia_reg, in, l, 0);
+ 	MLX5_SET(mcia_reg, in, module, module_num);
 
 
