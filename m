@@ -2,223 +2,273 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5013C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F6DC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A332087B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02BA2087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:05:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="XN4FjTyX"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="OA3m6lvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfD3OEV (ORCPT
+        id S1728007AbfD3OFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:04:21 -0400
-Received: from first.geanix.com ([116.203.34.67]:57656 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbfD3OEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:04:21 -0400
-Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id 66BC2308E86;
-        Tue, 30 Apr 2019 14:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1556633050; bh=Y2VPQSPuz/HYW2F4Zh+SwcM7NRCP5eYmV/nturgNG+w=;
-        h=From:To:Cc:Subject:Date;
-        b=XN4FjTyXs41/MiI4Cypba0gV+bP/hNqXIrh3S2ZwW8TEsnOfWL3ZwEc56Sm0PxpCw
-         jWvJcfpCxFbi17eZnMnlDn9jbhuGxe5YicJFQMkLI5Wk+YbIJinGFLfUlu1zLLpFcW
-         NfvbXxg7mIXkLhMNU2MOvyxqfq99AsZ2gdQoaluf7QM17b3kdquevzVYY43YtoIGnz
-         O+IyMCrJyrEAIAXCxpd5xW4CrDK2nCjrQsweannBiD3Hhy+RpP9jwhYU8ZgyZLjxrb
-         tLCNNGRkLsHNpbYDVymJKD/py50MUdWOCx3iHplEJXrfffii/ZqF0/m6DoyuwS7IOB
-         H42EIDyu1ZaJg==
-From:   Esben Haabendal <esben@geanix.com>
-To:     linux-serial@vger.kernel.org
-Cc:     Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] serial: 8250: Add support for using platform_device resources
-Date:   Tue, 30 Apr 2019 16:04:13 +0200
-Message-Id: <20190430140416.4707-1-esben@geanix.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 30 Apr 2019 10:05:10 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44477 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727427AbfD3OFJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:05:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c5so21157421wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 07:05:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k/9wOkFYEcdfe2lDE3RgJ9XrcROImtihW8mQBU1smko=;
+        b=OA3m6lvCcq8/juhLoSHA7zp4SBEq74FDRp+bt82WW/O1qduxhlEYloq+dn0azMWtnA
+         n3FZy37ln/zhGjGYyzx4onZAxbedE4a+MxlD6pitCmdT7Qh5ChbdLOjK2Bn9FP4P5VXQ
+         dJhFXGVFYLTssM/QMhCQE1/HM/y+K1REM05WF4TLZCbLuuWebi+Rja1ORa7yawLDbgJU
+         koESfJzTV4QtR5aNCXd9h+a+gQITKLTutgfRGuuZmyf4GInAAfsh1u4xKWmHrPT3gX86
+         xnxk0DqFSjm4Xc2yxxXOlvMd78yWIrqoGSZE85ey4WzTI9UAm1clSklJF/uA3/XrN3eX
+         ePkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k/9wOkFYEcdfe2lDE3RgJ9XrcROImtihW8mQBU1smko=;
+        b=X8XZX5bJVMmkyXqffFxOHHu3mB1ozGVxllVhnpG82qHgEDbsDCO3/OteB7PMgbEjNa
+         lf0P+mXv6097jJo37yuoHH2uKZv/B+i0kaDeRORvsRLVIHld1N1UaffQrWgLEKg2YCsf
+         c3ziCLKxZ088D+P8HW/DbzagB53mzbE1PazAq7NvbgHvZ9I5KqJxmSAvn5FcL9EbBk4m
+         ncvEsI90BSn0WDD8VxdTBcbi16X1UmWzmqbyAQsn7PCktx1G0K66uuoDfyoQrILvjUFZ
+         bqK/zd/5G2WQeI8fASKWWhBINVeXipAPrvS7IsCmCHk44ewPhVyR5HRYJ1OV0bd/nX7J
+         j1pQ==
+X-Gm-Message-State: APjAAAX+Fml6gO3ct/+v7YGKlAm8SonZFIl6KM9lbsVRwIZpgYm/Lpif
+        wLGeX7a5KWGz3rlUerqtLe5Z4ijHME2gMzu9Zr0CaQ==
+X-Google-Smtp-Source: APXvYqzzIdbUrD0qcyluPgpdlTsVev3ygvx2lD9BOg8bHhMuXmms+vYEjLzdr+qc3EOfM4jIlT0RLX6uxvBgRC84Zvg=
+X-Received: by 2002:adf:b68d:: with SMTP id j13mr48305854wre.50.1556633106943;
+ Tue, 30 Apr 2019 07:05:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190430002952.18909-1-tmurphy@arista.com> <20190430002952.18909-3-tmurphy@arista.com>
+ <2750fa37-a59c-3074-6545-b19046ce3699@arm.com>
+In-Reply-To: <2750fa37-a59c-3074-6545-b19046ce3699@arm.com>
+From:   Tom Murphy <tmurphy@arista.com>
+Date:   Tue, 30 Apr 2019 15:04:55 +0100
+Message-ID: <CAPL0++4UeWczgmSa+X0L2_27Xr5tsXTU4k_B1JB33Tm=vQAa8Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] iommu/dma-iommu: Handle deferred devices
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     iommu@lists.linux-foundation.org, Tom Murphy <murphyt7@tcd.ie>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow getting memory resource (mapbase or iobase) as well as irq from
-platform_device resources.
+On Tue, Apr 30, 2019 at 2:42 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 30/04/2019 01:29, Tom Murphy wrote:
+> > Handle devices which defer their attach to the iommu in the dma-iommu api
+>
+> I've just spent a while trying to understand what this is about...
+>
+> AFAICS it's a kdump thing where the regular default domain attachment
+> may lead to ongoing DMA traffic from the crashed kernel raising a fault
+> storm, so we put off the "real" attach of a given device until we know
+> it's been reset and brought into a sane state, but the only way to
+> reliably detect that is to wait until the kdump kernel driver starts
+> making new DMA mappings. Is that about right?
 
-The UPF_DEV_RESOURCES flag must be set for devices where platform_device
-resources are to be used.  When not set, driver behaves as before.
+That's the impression I got too. The many iterations of the patch
+series which contributed this code makes it hard to figure out exactly
+why it's doing what it's doing but AFAIK it works how you described
+it.
 
-This allows use of the serial8250 driver together with devices with
-resources added by platform_device_add_resources(), such as mfd child
-devices added with mfd_add_devices().
+>
+> (I note that for SMMUv3 we now handle that situation with the slightly
+> more heavy-handed approach of just turning off reporting and letting the
+> 'rogue' devices fault silently, but I appreciate that not all IOMMUs may
+> have that option)
+>
+> > Signed-off-by: Tom Murphy <tmurphy@arista.com>
+> > ---
+> >   drivers/iommu/dma-iommu.c | 30 ++++++++++++++++++++++++++++++
+> >   1 file changed, 30 insertions(+)
+> >
+> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > index 7a96c2c8f56b..c18f74ad1e8b 100644
+> > --- a/drivers/iommu/dma-iommu.c
+> > +++ b/drivers/iommu/dma-iommu.c
+> > @@ -322,6 +322,17 @@ static int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
+> >       return iova_reserve_iommu_regions(dev, domain);
+> >   }
+> >
+> > +static int handle_deferred_device(struct device *dev)
+> > +{
+> > +     struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+>
+> We don't want iommu_get_domain_for_dev() in fast-paths, as the
+> contention on the group refcount has proven to have a surprisingly high
+> overhead on some large systems. That's what iommu_get_dma_domain()
+> solves, but ideally, can this be wrapped in is_kdump_kernel() such as to
+> have no impact at all on the general case?
 
-Remaining platform_data fields (other than mapbase, iobase, mapsize and
-irq) are used just as before.  Note
+will do.
 
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/tty/serial/8250/8250_core.c | 56 +++++++++++++++++++++++++++++++++----
- drivers/tty/serial/8250/8250_port.c | 15 ++++++----
- include/linux/serial_core.h         |  1 +
- 3 files changed, 62 insertions(+), 10 deletions(-)
+>
+> > +     const struct iommu_ops *ops = domain->ops;
+> > +
+> > +     if (ops->is_attach_deferred && ops->is_attach_deferred(domain, dev))
+> > +             return iommu_attach_device(domain, dev);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >   /**
+> >    * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
+> >    *                    page flags.
+> > @@ -835,6 +846,8 @@ static dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+> >       bool coherent = dev_is_dma_coherent(dev);
+> >       dma_addr_t dma_handle;
+> >
+> > +     handle_deferred_device(dev);
+> > +
+> >       dma_handle =__iommu_dma_map(dev, phys, size,
+> >                       dma_info_to_prot(dir, coherent, attrs),
+> >                       iommu_get_dma_domain(dev));
+> > @@ -849,6 +862,8 @@ static void iommu_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
+> >   {
+> >       struct iommu_domain *domain = iommu_get_dma_domain(dev);
+> >
+> > +     handle_deferred_device(dev);
+>
+> You don't need this - it's completely bogus to make an unmap call
+> without having already called the corresponding map function, so we can
+> assume it's already been dealt with.
+>
+> > +
+> >       if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC)) {
+> >               phys_addr_t phys = iommu_iova_to_phys(domain, dma_handle);
+> >
+> > @@ -873,6 +888,8 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
+> >       unsigned int cur_len = 0, max_len = dma_get_max_seg_size(dev);
+> >       int i, count = 0;
+> >
+> > +     handle_deferred_device(dev);
+>
+> Hmm, this should be in iommu_dma_map_sg() - that's the guy that needs a
+> valid domain, and it's impossible to get to __finalise_sg() without
+> having been through there anyway.
+>
+> > +
+> >       for_each_sg(sg, s, nents, i) {
+> >               /* Restore this segment's original unaligned fields first */
+> >               unsigned int s_iova_off = sg_dma_address(s);
+> > @@ -1022,6 +1039,8 @@ static void iommu_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
+> >       struct scatterlist *tmp;
+> >       int i;
+> >
+> > +     handle_deferred_device(dev);
+>
+> Again, not necessary.
+>
+> > +
+> >       if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+> >               iommu_dma_sync_sg_for_cpu(dev, sg, nents, dir);
+> >
+> > @@ -1042,6 +1061,8 @@ static void iommu_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
+> >   static dma_addr_t iommu_dma_map_resource(struct device *dev, phys_addr_t phys,
+> >               size_t size, enum dma_data_direction dir, unsigned long attrs)
+> >   {
+> > +     handle_deferred_device(dev);
+>
+> Ditto.
+>
+> > +
+> >       return __iommu_dma_map(dev, phys, size,
+> >                       dma_info_to_prot(dir, false, attrs) | IOMMU_MMIO,
+> >                       iommu_get_dma_domain(dev));
+> > @@ -1050,12 +1071,15 @@ static dma_addr_t iommu_dma_map_resource(struct device *dev, phys_addr_t phys,
+> >   static void iommu_dma_unmap_resource(struct device *dev, dma_addr_t handle,
+> >               size_t size, enum dma_data_direction dir, unsigned long attrs)
+> >   {
+> > +     handle_deferred_device(dev);
+>
+> Ditto.
+>
+> > +
+> >       __iommu_dma_unmap(iommu_get_dma_domain(dev), handle, size);
+> >   }
+> >
+> >   static void *iommu_dma_alloc(struct device *dev, size_t size,
+> >               dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+> >   {
+> > +     handle_deferred_device(dev);
+> >       gfp |= __GFP_ZERO;
+> >
+> >   #ifdef CONFIG_DMA_DIRECT_REMAP
+> > @@ -1076,6 +1100,8 @@ static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
+> >   {
+> >       struct page *page;
+> >
+> > +     handle_deferred_device(dev);
+>
+> Similarly, you can't free anything that hasn't already come from a
+> successful call to iommu_dma_alloc()...
+>
+> > +
+> >       /*
+> >        * cpu_addr can be one of 4 things depending on how it was allocated:
+> >        *
+> > @@ -1115,6 +1141,8 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+> >       unsigned long pfn;
+> >       int ret;
+> >
+> > +     handle_deferred_device(dev);
+>
+> ...nor can you mmap() it...
+>
+> > +
+> >       vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
+> >
+> >       if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+> > @@ -1143,6 +1171,8 @@ static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
+> >       struct page *page;
+> >       int ret;
+> >
+> > +     handle_deferred_device(dev);
+>
+> ...nor attempt to export it.
 
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index e441221..9df6a98 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -788,6 +788,48 @@ void serial8250_resume_port(int line)
- }
- EXPORT_SYMBOL(serial8250_resume_port);
- 
-+static int serial8250_probe_resources(struct platform_device *pdev,
-+				      unsigned int num,
-+				      struct plat_serial8250_port *p,
-+				      struct uart_8250_port *uart)
-+{
-+	struct resource *r;
-+	int irq;
-+
-+	switch (p->iotype) {
-+	case UPIO_AU:
-+	case UPIO_TSI:
-+	case UPIO_MEM32:
-+	case UPIO_MEM32BE:
-+	case UPIO_MEM16:
-+	case UPIO_MEM:
-+		r = platform_get_resource(pdev, IORESOURCE_MEM, num);
-+		if (!r)
-+			return -ENODEV;
-+		uart->port.mapbase = r->start;
-+		uart->port.mapsize = resource_size(r);
-+		uart->port.flags |= UPF_IOREMAP;
-+		break;
-+	case UPIO_HUB6:
-+	case UPIO_PORT:
-+		r = platform_get_resource(pdev, IORESOURCE_IO, num);
-+		if (!r)
-+			return -ENODEV;
-+		uart->port.iobase = r->start;
-+		uart->port.mapsize = resource_size(r);
-+		break;
-+	}
-+
-+	irq = platform_get_irq(pdev, num);
-+	if (irq == -ENXIO)
-+		uart->port.irq = 0; /* no interrupt -> use polling */
-+	else if (irq < 0)
-+		return irq;
-+	uart->port.irq = irq;
-+
-+	return 0;
-+}
-+
- /*
-  * Register a set of serial devices attached to a platform device.  The
-  * list is terminated with a zero flags entry, which means we expect
-@@ -805,15 +847,19 @@ static int serial8250_probe(struct platform_device *dev)
- 		irqflag = IRQF_SHARED;
- 
- 	for (i = 0; p && p->flags != 0; p++, i++) {
--		uart.port.iobase	= p->iobase;
--		uart.port.membase	= p->membase;
--		uart.port.irq		= p->irq;
-+		uart.port.flags		= p->flags;
-+		if (p->flags & UPF_DEV_RESOURCES) {
-+			serial8250_probe_resources(dev, i, p, &uart);
-+		} else {
-+			uart.port.iobase	= p->iobase;
-+			uart.port.mapbase	= p->mapbase;
-+			uart.port.membase	= p->membase;
-+			uart.port.irq		= p->irq;
-+		}
- 		uart.port.irqflags	= p->irqflags;
- 		uart.port.uartclk	= p->uartclk;
- 		uart.port.regshift	= p->regshift;
- 		uart.port.iotype	= p->iotype;
--		uart.port.flags		= p->flags;
--		uart.port.mapbase	= p->mapbase;
- 		uart.port.hub6		= p->hub6;
- 		uart.port.private_data	= p->private_data;
- 		uart.port.type		= p->type;
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index d2f3310..7fa1e49 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -2863,7 +2863,8 @@ static int serial8250_request_std_resource(struct uart_8250_port *up)
- 		if (!port->mapbase)
- 			break;
- 
--		if (!request_mem_region(port->mapbase, size, "serial")) {
-+		if (!(port->flags & UPF_DEV_RESOURCES) &&
-+		    !request_mem_region(port->mapbase, size, "serial")) {
- 			ret = -EBUSY;
- 			break;
- 		}
-@@ -2871,7 +2872,8 @@ static int serial8250_request_std_resource(struct uart_8250_port *up)
- 		if (port->flags & UPF_IOREMAP) {
- 			port->membase = ioremap_nocache(port->mapbase, size);
- 			if (!port->membase) {
--				release_mem_region(port->mapbase, size);
-+				if (!(port->flags & UPF_DEV_RESOURCES))
-+					release_mem_region(port->mapbase, size);
- 				ret = -ENOMEM;
- 			}
- 		}
-@@ -2879,7 +2881,8 @@ static int serial8250_request_std_resource(struct uart_8250_port *up)
- 
- 	case UPIO_HUB6:
- 	case UPIO_PORT:
--		if (!request_region(port->iobase, size, "serial"))
-+		if (!(port->flags & UPF_DEV_RESOURCES) &&
-+		    !request_region(port->iobase, size, "serial"))
- 			ret = -EBUSY;
- 		break;
- 	}
-@@ -2906,12 +2909,14 @@ static void serial8250_release_std_resource(struct uart_8250_port *up)
- 			port->membase = NULL;
- 		}
- 
--		release_mem_region(port->mapbase, size);
-+		if (!(port->flags & UPF_DEV_RESOURCES))
-+			release_mem_region(port->mapbase, size);
- 		break;
- 
- 	case UPIO_HUB6:
- 	case UPIO_PORT:
--		release_region(port->iobase, size);
-+		if (!(port->flags & UPF_DEV_RESOURCES))
-+			release_region(port->iobase, size);
- 		break;
- 	}
- }
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 5fe2b03..87b4ed3 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -207,6 +207,7 @@ struct uart_port {
- #define UPF_BUGGY_UART		((__force upf_t) ASYNC_BUGGY_UART     /* 14 */ )
- #define UPF_MAGIC_MULTIPLIER	((__force upf_t) ASYNC_MAGIC_MULTIPLIER /* 16 */ )
- 
-+#define UPF_DEV_RESOURCES	((__force upf_t) (1 << 18))
- #define UPF_NO_THRE_TEST	((__force upf_t) (1 << 19))
- /* Port has hardware-assisted h/w flow control */
- #define UPF_AUTO_CTS		((__force upf_t) (1 << 20))
--- 
-2.4.11
+That all makes sense. Will fix.
 
+>
+> Robin.
+>
+> > +
+> >   #ifdef CONFIG_DMA_DIRECT_REMAP
+> >       if (is_vmalloc_addr(cpu_addr)) {
+> >               if (!(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
+> >
