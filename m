@@ -4,34 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EB3C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5A2C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C74420835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3740321707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfD3JdJ (ORCPT
+        id S1727119AbfD3JdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:33:09 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:41999 "EHLO
+        Tue, 30 Apr 2019 05:33:13 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:43483 "EHLO
         relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbfD3JdI (ORCPT
+        with ESMTP id S1726309AbfD3JdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:33:08 -0400
+        Tue, 30 Apr 2019 05:33:11 -0400
 Received: from localhost (alyon-652-1-31-175.w109-213.abo.wanadoo.fr [109.213.14.175])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4B2EF10001A;
-        Tue, 30 Apr 2019 09:33:06 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id E4D74100016;
+        Tue, 30 Apr 2019 09:33:08 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 1/4] rtc: pcap: set range
-Date:   Tue, 30 Apr 2019 11:32:59 +0200
-Message-Id: <20190430093302.28648-1-alexandre.belloni@bootlin.com>
+Subject: [PATCH 3/4] rtc: pcap: use .set_time
+Date:   Tue, 30 Apr 2019 11:33:01 +0200
+Message-Id: <20190430093302.28648-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190430093302.28648-1-alexandre.belloni@bootlin.com>
+References: <20190430093302.28648-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -39,48 +41,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While PCAP_RTC_DAY_MASK is set to 0x3ffff, it is very unlikely to be
-correct as this ends in june 1992, before the product even existed. It is
-more likely to be a 14-bit day counter. The next product in the family (the
-mc13xxx) has a 15-bit day counter.
-
-The same issue is seen with PCAP_RTC_TOD_MASK which only has 65535 seconds
-and falls short of the necessary 86400 seconds.
+Use .set_time instead of the deprecated .set_mmss.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcap.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-pcap.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/rtc/rtc-pcap.c b/drivers/rtc/rtc-pcap.c
-index f176cb9d0dbc..976240853260 100644
+index be2678042fcc..d424339f7abb 100644
 --- a/drivers/rtc/rtc-pcap.c
 +++ b/drivers/rtc/rtc-pcap.c
-@@ -149,11 +149,13 @@ static int __init pcap_rtc_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, pcap_rtc);
- 
--	pcap_rtc->rtc = devm_rtc_device_register(&pdev->dev, "pcap",
--					&pcap_rtc_ops, THIS_MODULE);
-+	pcap_rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(pcap_rtc->rtc))
- 		return PTR_ERR(pcap_rtc->rtc);
- 
-+	pcap_rtc->rtc->ops = &pcap_rtc_ops;
-+	pcap_rtc->rtc->range_max = (1 << 14) * 86400ULL - 1;
-+
- 	timer_irq = pcap_to_irq(pcap_rtc->pcap, PCAP_IRQ_1HZ);
- 	alarm_irq = pcap_to_irq(pcap_rtc->pcap, PCAP_IRQ_TODA);
- 
-@@ -167,7 +169,7 @@ static int __init pcap_rtc_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
--	return 0;
-+	return rtc_register_device(pcap_rtc->rtc);
+@@ -92,9 +92,10 @@ static int pcap_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 	return 0;
  }
  
- static int __exit pcap_rtc_remove(struct platform_device *pdev)
+-static int pcap_rtc_set_mmss(struct device *dev, unsigned long secs)
++static int pcap_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ {
+ 	struct pcap_rtc *pcap_rtc = dev_get_drvdata(dev);
++	unsigned long secs = rtc_tm_to_time64(tm);
+ 	u32 tod, days;
+ 
+ 	tod = secs % SEC_PER_DAY;
+@@ -125,9 +126,9 @@ static int pcap_rtc_alarm_irq_enable(struct device *dev, unsigned int en)
+ 
+ static const struct rtc_class_ops pcap_rtc_ops = {
+ 	.read_time = pcap_rtc_read_time,
++	.set_time = pcap_rtc_set_time,
+ 	.read_alarm = pcap_rtc_read_alarm,
+ 	.set_alarm = pcap_rtc_set_alarm,
+-	.set_mmss = pcap_rtc_set_mmss,
+ 	.alarm_irq_enable = pcap_rtc_alarm_irq_enable,
+ };
+ 
 -- 
 2.20.1
 
