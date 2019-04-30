@@ -2,87 +2,93 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC29FC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ED7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B071021743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80EEC20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556663624;
-	bh=9wSYxXkx+CfgvotWRGp+O1nbG34pPkl4kUFqqIWcr28=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=uLmuWPR9V3+xBOvd3hnpLg+WmyDxShfFyfRfw5tBm1wHJUPuTyyZdOoB4ZNOyjHtz
-	 Qntf91X7rMeKW0Uco+I8dcfQiRl8dKEr3VkuRPq76ZIYK8UTjyBbPStH33nPQ+1xQ1
-	 sesmT77LMez0HJ2TsGkmQo0s57qf8N+OrzS0PxHM=
+	s=default; t=1556663643;
+	bh=mFVRodh5fRxfHDDQ68nVSo9QUUh/915GVdA9yWmcaXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z5T2hZnEpc+b2KjeXOyml44/30lQl2Fp9Wd1ewEx7QOvvcGv4c1vGO7Ge/IsxEohC
+	 HfWI8L5utGRzMLI/4WpDSCmCoJm//lA5BmzQUrtkYR9fxLJOm2rCXj2aNjvy1dUIYi
+	 iSu6v0qKl5vQCr8h/KRsgM/j1iNF4BIjDCFj3+Xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfD3Wdo (ORCPT
+        id S1727516AbfD3WeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:33:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfD3Wdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:33:43 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B6C520854;
-        Tue, 30 Apr 2019 22:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556663623;
-        bh=9wSYxXkx+CfgvotWRGp+O1nbG34pPkl4kUFqqIWcr28=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hMkRMiVbhBv6SAGi9tEUs1i9rGXBaa4O683aUwX8DWo3vo9ff0t9BgUzQWFtJWZLJ
-         S1z5XwI2RjWmsSxQZZ6R5svGuEKm3BfGZQO239j2JHgrp64gkXotEWjPm68kCbbMMp
-         uzbseN/8RpSwv3OacwsWyKGNSHY/k7gS+LgyVXWM=
-Subject: Re: [PATCH 5.0 00/89] 5.0.11-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190430113609.741196396@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <cc6e90a5-8d67-62cf-8720-fd5cf5af45e2@kernel.org>
-Date:   Tue, 30 Apr 2019 16:33:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 18:34:02 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46974 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfD3WeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 18:34:01 -0400
+Received: by mail-oi1-f195.google.com with SMTP id d62so6769759oib.13;
+        Tue, 30 Apr 2019 15:34:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cZTqCa3AIXQb20rc9OGWF2QrGei4mNnBxlrSSYSx/To=;
+        b=GJuoz4GfJapIMVmfjXBooL0yBT2XxPJYKyvFZhcAhe2xS+WWQgYI8ERQgXJCY1Xi/N
+         8jIqzj7BfYxl9yYI7ChYQbTaiyrb42LpyDxuy0bYqwbhM39ag28MHTvd6EA3ymIy0g+K
+         0zjGCuVhyFV9jl5nbN6yLcZFAYu4E3ekDmuse2OKE55goJmAbFXBae+QwvirYhVbTrbJ
+         Xfa7bQLrDapB8ojnk/SW5sgkX69KDPygBoY0pcUpg8QO3kl5q/jRL8YHxNcZ9X6fEvpq
+         XtUkycY3VTfwnXIUgtAJ2DGpZJZda0Ct8B+VPUHtI3G2Y+oUAKud4CZOgZvg7iGoO350
+         eKUQ==
+X-Gm-Message-State: APjAAAW6UekNVB7xUtAs1BOY3TFTBzJpE/pmHbiVrcF91px1ocL1dd/0
+        VR1f6bIzLRVgRxEz4y2ICQ==
+X-Google-Smtp-Source: APXvYqyCsbTEtIZQBiuIBxBRvjzb3/jJTAiiTp7TDtDYWThj1hacxlTQvWm+ptlnPK+51osCgOUQAg==
+X-Received: by 2002:aca:da43:: with SMTP id r64mr4612883oig.11.1556663640104;
+        Tue, 30 Apr 2019 15:34:00 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 38sm10782188otg.10.2019.04.30.15.33.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 15:33:59 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 17:33:58 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
+        krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, kgene@kernel.org,
+        l.luba@partner.samsung.com, willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v3 1/4] include: dt-bindings: add Performance Monitoring
+  Unit for Exynos
+Message-ID: <20190430223358.GA22052@bogus>
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190419134820eucas1p154e839769af0e1b8bae17ce3efa0ba93@eucas1p1.samsung.com>
+ <1555681688-19643-2-git-send-email-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555681688-19643-2-git-send-email-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 5:37 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.11 release.
-> There are 89 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, 19 Apr 2019 15:48:05 +0200, Lukasz Luba wrote:
+> This patch add support of a new feature which can be used in DT:
+> Performance Monitoring Unit with defined event data type.
+> In this patch the event data types are defined for Exynos PPMU.
+> The patch also updates the MAINTAINERS file accordingly and
+> adds the header file to devfreq event subsystem.
 > 
-> Responses should be made by Thu 02 May 2019 11:35:03 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.11-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  MAINTAINERS                           |  1 +
+>  include/dt-bindings/pmu/exynos_ppmu.h | 26 ++++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+>  create mode 100644 include/dt-bindings/pmu/exynos_ppmu.h
 > 
 
-Compiled and booted on my test system. No dmesg regressions.
-
-thanks,
--- Shuah
-
+Reviewed-by: Rob Herring <robh@kernel.org>
