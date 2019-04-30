@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E6BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21B9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B5521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E2021670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfD3J2f (ORCPT
+        id S1727068AbfD3J2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:28:35 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:46069 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbfD3J2c (ORCPT
+        Tue, 30 Apr 2019 05:28:39 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:46617 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfD3J2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:28:32 -0400
+        Tue, 30 Apr 2019 05:28:35 -0400
+X-Originating-IP: 109.213.14.175
 Received: from localhost (alyon-652-1-31-175.w109-213.abo.wanadoo.fr [109.213.14.175])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id B0AE710001C;
-        Tue, 30 Apr 2019 09:28:29 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 899642000C;
+        Tue, 30 Apr 2019 09:28:32 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     Paul Cercueil <paul@crapouillou.net>,
         Mathieu Malaterre <malat@debian.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 5/7] rtc: jz4740: use dev_pm_set_wake_irq() to simplify code
-Date:   Tue, 30 Apr 2019 11:28:19 +0200
-Message-Id: <20190430092821.27963-5-alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 7/7] rtc: jz4740: convert to SPDX identifier
+Date:   Tue, 30 Apr 2019 11:28:21 +0200
+Message-Id: <20190430092821.27963-7-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190430092821.27963-1-alexandre.belloni@bootlin.com>
 References: <20190430092821.27963-1-alexandre.belloni@bootlin.com>
@@ -43,84 +44,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use dev_pm_set_wake_irq() to set the RTC as a wakeup source for suspend.
-This allows to remove the whole dev_pm_ops structure.
+Use SPDX-License-Identifier instead of a verbose license text.
 
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-jz4740.c | 37 +++++++------------------------------
- 1 file changed, 7 insertions(+), 30 deletions(-)
+ drivers/rtc/rtc-jz4740.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
 diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index 077670ffde01..32e6b6270efd 100644
+index 6dd00b654f93..9e7b3a04debc 100644
 --- a/drivers/rtc/rtc-jz4740.c
 +++ b/drivers/rtc/rtc-jz4740.c
-@@ -20,6 +20,7 @@
- #include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
- #include <linux/reboot.h>
- #include <linux/rtc.h>
- #include <linux/slab.h>
-@@ -346,6 +347,12 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
+@@ -1,17 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
+  *  Copyright (C) 2010, Paul Cercueil <paul@crapouillou.net>
+  *	 JZ4740 SoC RTC driver
+- *
+- *  This program is free software; you can redistribute it and/or modify it
+- *  under  the terms of  the GNU General Public License as published by the
+- *  Free Software Foundation;  either version 2 of the License, or (at your
+- *  option) any later version.
+- *
+- *  You should have received a copy of the GNU General Public License along
+- *  with this program; if not, write to the Free Software Foundation, Inc.,
+- *  675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+  */
  
- 	device_init_wakeup(&pdev->dev, 1);
- 
-+	ret = dev_pm_set_wake_irq(&pdev->dev, rtc->irq);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to set wake irq: %d\n", ret);
-+		return ret;
-+	}
-+
- 	rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(rtc->rtc)) {
- 		ret = PTR_ERR(rtc->rtc);
-@@ -403,35 +410,6 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int jz4740_rtc_suspend(struct device *dev)
--{
--	struct jz4740_rtc *rtc = dev_get_drvdata(dev);
--
--	if (device_may_wakeup(dev))
--		enable_irq_wake(rtc->irq);
--	return 0;
--}
--
--static int jz4740_rtc_resume(struct device *dev)
--{
--	struct jz4740_rtc *rtc = dev_get_drvdata(dev);
--
--	if (device_may_wakeup(dev))
--		disable_irq_wake(rtc->irq);
--	return 0;
--}
--
--static const struct dev_pm_ops jz4740_pm_ops = {
--	.suspend = jz4740_rtc_suspend,
--	.resume  = jz4740_rtc_resume,
--};
--#define JZ4740_RTC_PM_OPS (&jz4740_pm_ops)
--
--#else
--#define JZ4740_RTC_PM_OPS NULL
--#endif  /* CONFIG_PM */
--
- static const struct platform_device_id jz4740_rtc_ids[] = {
- 	{ "jz4740-rtc", ID_JZ4740 },
- 	{ "jz4780-rtc", ID_JZ4780 },
-@@ -443,7 +421,6 @@ static struct platform_driver jz4740_rtc_driver = {
- 	.probe	 = jz4740_rtc_probe,
- 	.driver	 = {
- 		.name  = "jz4740-rtc",
--		.pm    = JZ4740_RTC_PM_OPS,
- 		.of_match_table = of_match_ptr(jz4740_rtc_of_match),
- 	},
- 	.id_table = jz4740_rtc_ids,
+ #include <linux/clk.h>
 -- 
 2.20.1
 
