@@ -2,79 +2,130 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB21C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9270BC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C872173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6407921670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556640716;
+	bh=KyJDGavjSpp4AuaU07L+2c6XypQvQiHt5+bPye/hGks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vyol9dD54xj81PMZkL+sM1hq9qPWATAQNRwBspNWKemozPP2ew3EzhegAr9Mjiosz
+	 rNkZ6fn3Hu1mk/Qx/pMtX2U3yz1tKX9ezvCLgQlMY3D9iJa5b2RZlzOPzEE4+1WS/3
+	 QWIIxAmUOtnQllhHapxOVV/TdigPwmX/HMQxc72k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbfD3QLa (ORCPT
+        id S1726595AbfD3QLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:11:30 -0400
-Received: from mga03.intel.com ([134.134.136.65]:10625 "EHLO mga03.intel.com"
+        Tue, 30 Apr 2019 12:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3QL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:11:29 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:11:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="138757946"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga008.jf.intel.com with ESMTP; 30 Apr 2019 09:11:25 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hLVLo-0007fS-1f; Tue, 30 Apr 2019 19:11:24 +0300
-Date:   Tue, 30 Apr 2019 19:11:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Wang Hai <wanghai26@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] net-sysfs: Fix error path for kobject_init_and_add()
-Message-ID: <20190430161124.GM9224@smile.fi.intel.com>
-References: <20190430002817.10785-1-tobin@kernel.org>
- <20190430002817.10785-4-tobin@kernel.org>
+        id S1725942AbfD3QLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:11:54 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D126820835;
+        Tue, 30 Apr 2019 16:11:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556640713;
+        bh=KyJDGavjSpp4AuaU07L+2c6XypQvQiHt5+bPye/hGks=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bqsZ5BoME8haEyekKzM65WyuYHNiOijsLhfWQkt+MUOiL/MqQ1H0yg94wEIj5ekmB
+         +iSYf1rtA4JbjPbspm9HA7YRmWpOl3alprs/1Kzpe/o6LeT8wwzN/2ZgGu/FPJRuJL
+         HdNv22y9V1h1RcGzVYFi67ja4OxASysmlk4fa1n0=
+Date:   Tue, 30 Apr 2019 11:11:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex G <mr.nuke.me@gmail.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
+ bandwidth notification"
+Message-ID: <20190430161151.GB145057@google.com>
+References: <20190429185611.121751-1-helgaas@kernel.org>
+ <20190429185611.121751-2-helgaas@kernel.org>
+ <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430002817.10785-4-tobin@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 10:28:17AM +1000, Tobin C. Harding wrote:
-> Currently error return from kobject_init_and_add() is not followed by a
-> call to kobject_put().  This means there is a memory leak.
+On Mon, Apr 29, 2019 at 08:07:53PM -0500, Alex G wrote:
+> On 4/29/19 1:56 PM, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > This reverts commit e8303bb7a75c113388badcc49b2a84b4121c1b3e.
+> > 
+> > e8303bb7a75c added logging whenever a link changed speed or width to a
+> > state that is considered degraded.  Unfortunately, it cannot differentiate
+> > signal integrity-related link changes from those intentionally initiated by
+> > an endpoint driver, including drivers that may live in userspace or VMs
+> > when making use of vfio-pci.  Some GPU drivers actively manage the link
+> > state to save power, which generates a stream of messages like this:
+> > 
+> >    vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5 GT/s x16 link)
+> > 
+> > We really *do* want to be alerted when the link bandwidth is reduced
+> > because of hardware failures, but degradation by intentional link state
+> > management is probably far more common, so the signal-to-noise ratio is
+> > currently low.
+> > 
+> > Until we figure out a way to identify the real problems or silence the
+> > intentional situations, revert the following commits, which include the
+> > initial implementation (e8303bb7a75c) and subsequent fixes:
 > 
-> Add call to kobject_put() in error path of kobject_init_and_add().
+> I think we're overreacting to a bit of perceived verbosity in the system
+> log. Intentional degradation does not seem to me to be as common as
+> advertised. I have not observed this with either radeon, nouveau, or amdgpu,
+> and the proper mechanism to save power at the link level is ASPM. I stand to
+> be corrected and we have on CC some very knowledgeable fellows that I am
+> certain will jump at the opportunity to do so.
 
-It's not obvious to me if this will help to fix what is stated in the
-(reverted) commit 6b70fc94afd1 ("net-sysfs: Fix memory leak in
-netdev_register_kobject")?
+I can't quantify how common it is, but the verbosity is definitely
+*there*, and it seems unlikely to me that a hardware failure is more
+common than any intentional driver-driven degradation.
 
-If so, perhaps we need to tell syzkaller guys about this.
+If we can reliably distinguish hardware failures from benign changes,
+we should certainly log the failures.  But in this case even the
+failures are fully functional, albeit at lower performance, so if the
+messages end up being 99% false positives, I think it'll just be
+confusing for users.
 
+> What it seems like to me is that a proprietary driver running in a VM is
+> initiating these changes. And if that is the case then it seems this is a
+> virtualization problem. A quick glance over GPU drivers in linux did not
+> reveal any obvious places where we intentionally downgrade a link.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm not 100% on board with the idea of drivers directly manipulating
+the link because it seems like the PCI core might need to be at least
+aware of this.  But some drivers certainly do manipulate it today for
+ASPM, gen2/gen3 retraining, etc.
 
+If we treat this as a virtualization problem, I guess you're
+suggesting the host kernel should prevent that sort of link
+manipulation?  We could have a conversation about that, but it
+doesn't seem like the immediate solution to this problem.
 
+> I'm not convinced a revert is the best call.
+
+I have very limited options at this stage of the release, but I'd be
+glad to hear suggestions.  My concern is that if we release v5.1
+as-is, we'll spend a lot of energy on those false positives.
+
+Bjorn
