@@ -2,138 +2,123 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0310BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BFFC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD9F20645
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556664455;
-	bh=yjS0BemEeH9IZwtLqeBWo8//hK1v07II4MKL5ksoeHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O8QK5kjHFeP7n/lMhQJspiPrizmlDQR6HVxi8WFLyZNaZUmWNRxlFOj9JWVd1t0Wa
-	 jaXeHourTxWQoM5LzhsQ+Z9IwDd1Apz+FQHBxsQ3jfZ8E30R7IexKi3QE4etXZPj+A
-	 AHpSom/8eSWdyFjHMz9OFFevHGkTT6z6dMCHYnOo=
+	by mail.kernel.org (Postfix) with ESMTP id 74AD121743
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfD3Wrf (ORCPT
+        id S1727447AbfD3Wto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:47:35 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43381 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfD3Wre (ORCPT
+        Tue, 30 Apr 2019 18:49:44 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:45847 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726086AbfD3Wtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:47:34 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t81so12647826oig.10;
-        Tue, 30 Apr 2019 15:47:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zc49vgyaf9Osgfs8bngxx3hqZVIwFkS67qrO5tobMu8=;
-        b=Kh2EjRvWganiGjsA99znT7hqTil54qLx7Wlxqd5TGOyHhWVdL32qMI0R+dYt3UNQjB
-         t3oRqMWcFB0P1SXvg5VZBk1PK4Jpqs685+OT88A4W546F7d+8AXEEqeffOYfDyCjlok8
-         Tf+pFuC6PiB+Crta6Y7YUAPRrqipm/v7eIXXYicWCyTuvbeEqjWHkCX5yIuCrXeXB1oA
-         g2/QXwkjQaQr8nz56yvFaGeiUtml49B0aEOL4UBmuwL/aU+0C9aJCaBpt/sNHube6aR0
-         Oi9aDEwC9B1bf/d8bkx9EQZesrfGIM/Bfs3EGa2mE+Zmy4QsJ8DYdUouX84L+ZaARkuQ
-         /PAA==
-X-Gm-Message-State: APjAAAVASC+c6kKGVGPgqWaNyMzbTXm4sxFXXMZmsnVMQr85ugxJcYsQ
-        +HzpfMG78jKCInJl6Z79GzX38EY=
-X-Google-Smtp-Source: APXvYqxRBfZe+g/1V1bsotp53DMeISnhsnzhoDAMbomw9KTHuXHnSxTIZlWNWwVV6xiZl/kLflPebQ==
-X-Received: by 2002:aca:378a:: with SMTP id e132mr4349653oia.171.1556664453373;
-        Tue, 30 Apr 2019 15:47:33 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u11sm15635046otb.66.2019.04.30.15.47.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 15:47:32 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 17:47:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Han Nandor <nandor.han@vaisala.com>
-Cc:     "sre@kernel.org" <sre@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: power: reset: add document for NVMEM
- based reboot-mode
-Message-ID: <20190430224731.GA31760@bogus>
-References: <fc60b885f1b447ce55950184c7921cfc1c96ade6>
- <20190421190913.1478-3-nandor.han@vaisala.com>
+        Tue, 30 Apr 2019 18:49:43 -0400
+Received: from Internal Mail-Server by MTLPINE2 (envelope-from parav@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 1 May 2019 01:49:40 +0300
+Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x3UMncnU009688;
+        Wed, 1 May 2019 01:49:39 +0300
+From:   Parav Pandit <parav@mellanox.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com, alex.williamson@redhat.com
+Cc:     cjia@nvidia.com, parav@mellanox.com
+Subject: [PATCHv2 00/10] vfio/mdev: Improve vfio/mdev core module
+Date:   Tue, 30 Apr 2019 17:49:27 -0500
+Message-Id: <20190430224937.57156-1-parav@mellanox.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190421190913.1478-3-nandor.han@vaisala.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 07:09:30PM +0000, Han Nandor wrote:
-> Add the device tree bindings document for the NVMEM based reboot-mode
-> driver.
-> 
-> Signed-off-by: Nandor Han <nandor.han@vaisala.com>
-> ---
->  .../power/reset/nvmem-reboot-mode.txt         | 32 +++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt
-> new file mode 100644
-> index 000000000000..2e1b86c31cb3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt
-> @@ -0,0 +1,32 @@
-> +NVMEM reboot mode driver
-> +
-> +This driver gets reboot mode magic value from reboot-mode driver
-> +and stores it in a NVMEM cell named "reboot-mode". Then the bootloader
-> +can read it and take different action according to the magic
-> +value stored.
+As we would like to use mdev subsystem for wider use case as
+discussed in [1], [2] apart from an offline discussion.
+This use case is also discussed with wider forum in [4] in track
+'Lightweight NIC HW functions for container offload use cases'.
 
-This is also assuming the nvmem is writeable which is more often not the 
-case.
+This series is prep-work and improves vfio/mdev module in following ways.
 
-Is your usecase a platform that supports pstore? Adding on to that 
-binding might be a better fit.
+Patch-1 Fixes releasing parent dev reference during error unwinding
+        mdev parent registration.
+Patch-2 Simplifies mdev device for unused kref.
+Patch-3 Drops redundant extern prefix of exported symbols.
+Patch-4 Returns right error code from vendor driver.
+Patch-5 Fixes to use right sysfs remove sequence.
+Patch-6 Fixes removing all child devices if one of them fails.
+Patch-7 Remove unnecessary inline
+Patch-8 Improve the mdev create/remove sequence to match Linux
+        bus, device model
+Patch-9 Avoid recreating remove file on stale device to
+        eliminate call trace
+Patch-10 Fix race conditions of create/remove with parent removal
+This is improved version than using srcu as srcu can take
+seconds to minutes.
 
-> +
-> +This DT node should be represented as a sub-node of a "simple-mfd"
-> +node.
-> +
-> +Required properties:
-> +- compatible: should be "nvmem-reboot-mode".
-> +- nvmem-cells: A phandle to the reboot mode provided by a nvmem device.
-> +- nvmem-cell-names: Should be "reboot-mode".
-> +
-> +The rest of the properties should follow the generic reboot-mode description
-> +found in reboot-mode.txt
-> +
-> +Example:
-> +	reboot-mode-nvmem@0 {
+This series is tested using
+(a) mtty with VM using vfio_mdev driver for positive tests and
+device removal while device in use by VM using vfio_mdev driver
 
-What's this node for?
+(b) mlx5 core driver using RFC patches [3] and internal patches.
+Internal patches are large and cannot be combined with this
+prep-work patches. It will posted once prep-work completes.
 
-> +		compatible = "simple-mfd";
+[1] https://www.spinics.net/lists/netdev/msg556978.html
+[2] https://lkml.org/lkml/2019/3/7/696
+[3] https://lkml.org/lkml/2019/3/8/819
+[4] https://netdevconf.org/0x13/session.html?workshop-hardware-offload
 
-I only see 1 function.
+---
+Changelog:
+---
+v1->v2:
+ - Addressed comments from Alex
+ - Rebased
+ - Inserted the device checking loop in Patch-6 as original code
+ - Added patch 7 to 10
+ - Added fixes for race condition in create/remove with parent removal
+   Patch-10 uses simplified refcount and completion, instead of srcu
+   which might take seconds to minutes on busy system.
+ - Added fix for device create/remove sequence to match
+   Linux device, bus model
+v0->v1:
+ - Dropped device placement on bus sequence patch for this series
+ - Addressed below comments from Alex, Kirti, Maxim.
+ - Added Review-by tag for already reviewed patches.
+ - Dropped incorrect patch of put_device().
+ - Corrected Fixes commit tag for sysfs remove sequence fix
+ - Split last 8th patch to smaller refactor and fixes patch
+ - Following coding style commenting format
+ - Fixed accidental delete of mutex_lock in mdev_unregister_device
+ - Renamed remove helped to mdev_device_remove_common().
+ - Rebased for uuid/guid change
 
-> +		reboot-mode {
-> +			compatible = "nvmem-reboot-mode";
-> +			nvmem-cells = <&reboot_mode>;
-> +			nvmem-cell-names = "reboot-mode";
-> +
-> +			mode-normal     = <0xAAAA5501>;
-> +			mode-bootloader = <0xBBBB5500>;
-> +			mode-recovery   = <0xCCCC5502>;
-> +			mode-test       = <0xDDDD5503>;
-> +		};
-> +	};
-> -- 
-> 2.17.2
-> 
+Parav Pandit (10):
+  vfio/mdev: Avoid release parent reference during error path
+  vfio/mdev: Removed unused kref
+  vfio/mdev: Drop redundant extern for exported symbols
+  vfio/mdev: Avoid masking error code to EBUSY
+  vfio/mdev: Follow correct remove sequence
+  vfio/mdev: Fix aborting mdev child device removal if one fails
+  vfio/mdev: Avoid inline get and put parent helpers
+  vfio/mdev: Improve the create/remove sequence
+  vfio/mdev: Avoid creating sysfs remove file on stale device removal
+  vfio/mdev: Synchronize device create/remove with parent removal
+
+ drivers/vfio/mdev/mdev_core.c    | 162 +++++++++++++------------------
+ drivers/vfio/mdev/mdev_private.h |   9 +-
+ drivers/vfio/mdev/mdev_sysfs.c   |   8 +-
+ include/linux/mdev.h             |  21 ++--
+ 4 files changed, 89 insertions(+), 111 deletions(-)
+
+-- 
+2.19.2
+
