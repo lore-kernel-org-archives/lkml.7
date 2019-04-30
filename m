@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99012C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA5AC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651DF2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6042C21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625311;
-	bh=zNlQdbz+/oj7s2o7hZ2cj9AEuIuBVrfX/tbNdqzqbDs=;
+	s=default; t=1556625324;
+	bh=mtP6FXwC+gbYIeehYgsHw94R8YvjVniVqPG3sgvr41s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8m6UwrG86sl3U2gMavC0gaCk08fbSngz+jFhMbSyjzgX8TxEWCXO24R3mBWkgKjy
-	 P60NjVjrO2hCBYL/VABY8PbtJ68j/z1+lgrHAddTGkI7UxZ3KBBrs1Tl1sr9WYTOSk
-	 j2cTgPUD2ApMKVVK1ERWu7ySckVWaEs38HsNJLYQ=
+	b=b2htJq4LZe8Tk4WLdBuZkk0je+ezFGVXvjzuDS8C7ne3cNyyg/ZsFMDWl2Aya+0r1
+	 VIUmIiFbJyr3l3FdFJaWOBd04LaMu9qwcp9RTWfOW5+EWU+CRUMzFkPv7hO4Jw2UyG
+	 to7fuE3lu8HlqqhsNV4FyOttOiDwkDOOD8DgIUAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731029AbfD3Ltk (ORCPT
+        id S1727914AbfD3LzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36142 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730671AbfD3Lte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:34 -0400
+        id S1731027AbfD3Ltk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E504D20449;
-        Tue, 30 Apr 2019 11:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F46020449;
+        Tue, 30 Apr 2019 11:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624973;
-        bh=zNlQdbz+/oj7s2o7hZ2cj9AEuIuBVrfX/tbNdqzqbDs=;
+        s=default; t=1556624978;
+        bh=mtP6FXwC+gbYIeehYgsHw94R8YvjVniVqPG3sgvr41s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J6hgt1E77TRi5aayr13iqcb3T65XCP0+p2HYVeso1XW1mOW9Psvdw/+6ohsBvRWE1
-         0m/2CsaaeVTTAWjIDPjvUiw9XmtsPhbhsWEwZH+km2EYP7UTjVR8mUu8/jgtZfoY6f
-         CRFPld13v2vf8H89KwID8pm8lpo9GwYMuTyprAD0=
+        b=mrNhbeu119OMEKharebKJe4l+0DlPoZGXIy1Y8dDV9uTs7sUPYYUWpdtbTpJPboeo
+         VonxRbGA/FjluuwYuP/OZyjEEtc+QB+gnUtelkWqW229R/EoW+wLeTA4fduGKPhzkL
+         2JF43FGx8/f704X4q1BCkmE+8xOk2PGJUyZQfXyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 41/89] powerpc/mm/radix: Make Radix require HUGETLB_PAGE
-Date:   Tue, 30 Apr 2019 13:38:32 +0200
-Message-Id: <20190430113611.717806595@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.0 43/89] drm/ttm: fix re-init of global structures
+Date:   Tue, 30 Apr 2019 13:38:34 +0200
+Message-Id: <20190430113611.784740880@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,99 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Christian König <christian.koenig@amd.com>
 
-commit 8adddf349fda0d3de2f6bb41ddf838cbf36a8ad2 upstream.
+commit bd4264112f93045704731850c5e4d85db981cd85 upstream.
 
-Joel reported weird crashes using skiroot_defconfig, in his case we
-jumped into an NX page:
+When a driver unloads without unloading TTM we don't correctly
+clear the global structures leading to errors on re-init.
 
-  kernel tried to execute exec-protected page (c000000002bff4f0) - exploit attempt? (uid: 0)
-  BUG: Unable to handle kernel instruction fetch
-  Faulting instruction address: 0xc000000002bff4f0
+Next step should probably be to remove the global structures and
+kobjs all together, but this is tricky since we need to maintain
+backward compatibility.
 
-Looking at the disassembly, we had simply branched to that address:
-
-  c000000000c001bc  49fff335    bl     c000000002bff4f0
-
-But that didn't match the original kernel image:
-
-  c000000000c001bc  4bfff335    bl     c000000000bff4f0 <kobject_get+0x8>
-
-When STRICT_KERNEL_RWX is enabled, and we're using the radix MMU, we
-call radix__change_memory_range() late in boot to change page
-protections. We do that both to mark rodata read only and also to mark
-init text no-execute. That involves walking the kernel page tables,
-and clearing _PAGE_WRITE or _PAGE_EXEC respectively.
-
-With radix we may use hugepages for the linear mapping, so the code in
-radix__change_memory_range() uses eg. pmd_huge() to test if it has
-found a huge mapping, and if so it stops the page table walk and
-changes the PMD permissions.
-
-However if the kernel is built without HUGETLBFS support, pmd_huge()
-is just a #define that always returns 0. That causes the code in
-radix__change_memory_range() to incorrectly interpret the PMD value as
-a pointer to a PTE page rather than as a PTE at the PMD level.
-
-We can see this using `dv` in xmon which also uses pmd_huge():
-
-  0:mon> dv c000000000000000
-  pgd  @ 0xc000000001740000
-  pgdp @ 0xc000000001740000 = 0x80000000ffffb009
-  pudp @ 0xc0000000ffffb000 = 0x80000000ffffa009
-  pmdp @ 0xc0000000ffffa000 = 0xc00000000000018f   <- this is a PTE
-  ptep @ 0xc000000000000100 = 0xa64bb17da64ab07d   <- kernel text
-
-The end result is we treat the value at 0xc000000000000100 as a PTE
-and clear _PAGE_WRITE or _PAGE_EXEC, potentially corrupting the code
-at that address.
-
-In Joel's specific case we cleared the sign bit in the offset of the
-branch, causing a backward branch to turn into a forward branch which
-caused us to branch into a non-executable page. However the exact
-nature of the crash depends on kernel version, compiler version, and
-other factors.
-
-We need to fix radix__change_memory_range() to not use accessors that
-depend on HUGETLBFS, but we also have radix memory hotplug code that
-uses pmd_huge() etc that will also need fixing. So for now just
-disallow the broken combination of Radix with HUGETLBFS disabled.
-
-The only defconfig we have that is affected is skiroot_defconfig, so
-turn on HUGETLBFS there so that it still gets Radix.
-
-Fixes: 566ca99af026 ("powerpc/mm/radix: Add dummy radix_enabled()")
-Cc: stable@vger.kernel.org # v4.7+
-Reported-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Karol Herbst <kherbst@redhat.com>
+Tested-by: Karol Herbst <kherbst@redhat.com>
+CC: stable@vger.kernel.org # 5.0.x
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/configs/skiroot_defconfig |    1 +
- arch/powerpc/platforms/Kconfig.cputype |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/ttm/ttm_bo.c     |   10 +++++-----
+ drivers/gpu/drm/ttm/ttm_memory.c |    5 +++--
+ include/drm/ttm/ttm_bo_driver.h  |    1 -
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
---- a/arch/powerpc/configs/skiroot_defconfig
-+++ b/arch/powerpc/configs/skiroot_defconfig
-@@ -260,6 +260,7 @@ CONFIG_UDF_FS=m
- CONFIG_MSDOS_FS=m
- CONFIG_VFAT_FS=m
- CONFIG_PROC_KCORE=y
-+CONFIG_HUGETLBFS=y
- # CONFIG_MISC_FILESYSTEMS is not set
- # CONFIG_NETWORK_FILESYSTEMS is not set
- CONFIG_NLS=y
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -318,7 +318,7 @@ config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -49,9 +49,8 @@ static void ttm_bo_global_kobj_release(s
+  * ttm_global_mutex - protecting the global BO state
+  */
+ DEFINE_MUTEX(ttm_global_mutex);
+-struct ttm_bo_global ttm_bo_glob = {
+-	.use_count = 0
+-};
++unsigned ttm_bo_glob_use_count;
++struct ttm_bo_global ttm_bo_glob;
  
- config PPC_RADIX_MMU
- 	bool "Radix MMU Support"
--	depends on PPC_BOOK3S_64
-+	depends on PPC_BOOK3S_64 && HUGETLB_PAGE
- 	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
- 	default y
- 	help
+ static struct attribute ttm_bo_count = {
+ 	.name = "bo_count",
+@@ -1535,12 +1534,13 @@ static void ttm_bo_global_release(void)
+ 	struct ttm_bo_global *glob = &ttm_bo_glob;
+ 
+ 	mutex_lock(&ttm_global_mutex);
+-	if (--glob->use_count > 0)
++	if (--ttm_bo_glob_use_count > 0)
+ 		goto out;
+ 
+ 	kobject_del(&glob->kobj);
+ 	kobject_put(&glob->kobj);
+ 	ttm_mem_global_release(&ttm_mem_glob);
++	memset(glob, 0, sizeof(*glob));
+ out:
+ 	mutex_unlock(&ttm_global_mutex);
+ }
+@@ -1552,7 +1552,7 @@ static int ttm_bo_global_init(void)
+ 	unsigned i;
+ 
+ 	mutex_lock(&ttm_global_mutex);
+-	if (++glob->use_count > 1)
++	if (++ttm_bo_glob_use_count > 1)
+ 		goto out;
+ 
+ 	ret = ttm_mem_global_init(&ttm_mem_glob);
+--- a/drivers/gpu/drm/ttm/ttm_memory.c
++++ b/drivers/gpu/drm/ttm/ttm_memory.c
+@@ -461,8 +461,8 @@ out_no_zone:
+ 
+ void ttm_mem_global_release(struct ttm_mem_global *glob)
+ {
+-	unsigned int i;
+ 	struct ttm_mem_zone *zone;
++	unsigned int i;
+ 
+ 	/* let the page allocator first stop the shrink work. */
+ 	ttm_page_alloc_fini();
+@@ -475,9 +475,10 @@ void ttm_mem_global_release(struct ttm_m
+ 		zone = glob->zones[i];
+ 		kobject_del(&zone->kobj);
+ 		kobject_put(&zone->kobj);
+-			}
++	}
+ 	kobject_del(&glob->kobj);
+ 	kobject_put(&glob->kobj);
++	memset(glob, 0, sizeof(*glob));
+ }
+ 
+ static void ttm_check_swapping(struct ttm_mem_global *glob)
+--- a/include/drm/ttm/ttm_bo_driver.h
++++ b/include/drm/ttm/ttm_bo_driver.h
+@@ -411,7 +411,6 @@ extern struct ttm_bo_global {
+ 	/**
+ 	 * Protected by ttm_global_mutex.
+ 	 */
+-	unsigned int use_count;
+ 	struct list_head device_list;
+ 
+ 	/**
 
 
