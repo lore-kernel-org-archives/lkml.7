@@ -2,156 +2,113 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77935C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E5CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DBA2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:17:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="meG/Gu/l"
+	by mail.kernel.org (Postfix) with ESMTP id CE9E521707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556623070;
+	bh=PtfulNUaJLLywP5xlpcAi2iOzN+sMQGoYXae126xyEw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mYzKrPnZhge0CLGzEE2k+kIKYE3JTQhqOPzEiKGNPg1+iKAzrxrgOaHl2s7zegc2y
+	 IE44XH51QYU4avTbt8BqFxJ21tIMZQE8Lq/t/0mPYgJiQukhFk6h9M/Qs0VuXr8oML
+	 yEEUZXPpg4u2hNmFlC3o+b8YS3TkNEhg3xtmFqJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfD3LRP (ORCPT
+        id S1727724AbfD3LRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:17:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43595 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfD3LRN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:17:13 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBFEt41346558
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Apr 2019 04:15:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBFEt41346558
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556622915;
-        bh=XYgoeYjtRGBWmjtJBHBeUqBDcK5YVuAc6FWnDPx/HOQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=meG/Gu/lXrE/l4zwnMvymYjspiqwDdqz2joU3PT6uH4A2tbGM0Kp19RZ9sy1zpBPm
-         RWPrXo6Au3IbIoO4hl8ZkDqsUp9VDf3DR/3MStW8/THufv3M1DVqZFKLtVaqy5wke3
-         CPmqpseDkBX28BMoP7DyYIMAoiQYnyS2L43sOdgJr5er8rfy+PmFG9ApKXUhvBTsTG
-         ShgEpo3uKPxRdqP9PX7Rtzu9LtUM0eZbaYvUDe+c8gNUI3q7rALn8/oyGkr1aSVj99
-         TUNgfHxLtUymbYQQwr+RG2Ni+Xfsa+y3gdQ/AUFAPCiWAGMJIZV1QELrMOVwxXc9r3
-         /74FII+qqoScA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBFDKG1346555;
-        Tue, 30 Apr 2019 04:15:13 -0700
-Date:   Tue, 30 Apr 2019 04:15:13 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nadav Amit <tipbot@zytor.com>
-Message-ID: <tip-c7b6f29b6257532792fc722b68fcc0e00b5a856c@git.kernel.org>
-Cc:     luto@kernel.org, namit@vmware.com, linux_dti@icloud.com,
-        ard.biesheuvel@linaro.org, will.deacon@arm.com, jannh@google.com,
-        riel@surriel.com, rick.p.edgecombe@intel.com,
-        kernel-hardening@lists.openwall.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, daniel@iogearbox.net,
-        deneen.t.dock@intel.com, tglx@linutronix.de, ast@kernel.org,
-        akpm@linux-foundation.org, mingo@kernel.org,
-        kristen@linux.intel.com, peterz@infradead.org, bp@alien8.de,
-        hpa@zytor.com, dave.hansen@linux.intel.com
-Reply-To: deneen.t.dock@intel.com, tglx@linutronix.de, ast@kernel.org,
-          mingo@kernel.org, akpm@linux-foundation.org, namit@vmware.com,
-          luto@kernel.org, ard.biesheuvel@linaro.org, linux_dti@icloud.com,
-          will.deacon@arm.com, jannh@google.com, riel@surriel.com,
-          rick.p.edgecombe@intel.com, kernel-hardening@lists.openwall.com,
-          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          daniel@iogearbox.net, bp@alien8.de, hpa@zytor.com,
-          dave.hansen@linux.intel.com, kristen@linux.intel.com,
-          peterz@infradead.org
-In-Reply-To: <20190426001143.4983-24-namit@vmware.com>
-References: <20190426001143.4983-24-namit@vmware.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] bpf: Fail bpf_probe_write_user() while mm is switched
-Git-Commit-ID: c7b6f29b6257532792fc722b68fcc0e00b5a856c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Apr 2019 07:17:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbfD3LRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:17:49 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2480D20835;
+        Tue, 30 Apr 2019 11:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556623067;
+        bh=PtfulNUaJLLywP5xlpcAi2iOzN+sMQGoYXae126xyEw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=UJu/qALr2X37S4uSnhUW2YPTSJGbDsV0ehhgOoNB0/7P4D/qpnZCF8zNn7TkwcW4G
+         Z9E0U4pz6pFJ3VyNAleHSgmj5LGoVQ3G7RyZzF1Hsc19X7p/SjB3s2JLrDCM3z+V+Y
+         b/MfW1beOXMcCaxTcr5uW75TzV5lbwzhE6pt2AQU=
+Date:   Tue, 30 Apr 2019 13:17:40 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+In-Reply-To: <CAHk-=wjXHfVkrO6ftk9FGtAbpCsaEBa+tGrC8qjV6RUJHu+pCg@mail.gmail.com>
+Message-ID: <nycvar.YFH.7.76.1904301312080.9803@cbobk.fhfr.pm>
+References: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com> <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com> <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com> <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+ <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com> <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com> <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com> <20190429220814.GF31379@linux.intel.com>
+ <CAHk-=whpq2=f2LdB-nc52Rd=iZkUH-N-r8OTqEfo+4UaJc7piA@mail.gmail.com> <20190430000846.GG31379@linux.intel.com> <20190430004504.GH31379@linux.intel.com> <CAHk-=wjXHfVkrO6ftk9FGtAbpCsaEBa+tGrC8qjV6RUJHu+pCg@mail.gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c7b6f29b6257532792fc722b68fcc0e00b5a856c
-Gitweb:     https://git.kernel.org/tip/c7b6f29b6257532792fc722b68fcc0e00b5a856c
-Author:     Nadav Amit <namit@vmware.com>
-AuthorDate: Thu, 25 Apr 2019 17:11:43 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 30 Apr 2019 12:37:48 +0200
+On Mon, 29 Apr 2019, Linus Torvalds wrote:
 
-bpf: Fail bpf_probe_write_user() while mm is switched
+> > > It's 486 based, but either way I suspect the answer is "yes".  IIRC,
+> > > Knights Corner, a.k.a. Larrabee, also had funkiness around SMM and that
+> > > was based on P54C, though I'm struggling to recall exactly what the
+> > > Larrabee weirdness was.
+> >
+> > Aha!  Found an ancient comment that explicitly states P5 does not block
+> > NMI/SMI in the STI shadow, while P6 does block NMI/SMI.
+> 
+> Ok, so the STI shadow really wouldn't be reliable on those machines. Scary.
+> 
+> Of course, the good news is that hopefully nobody has them any more, and 
+> if they do, they presumably don't use fancy NMI profiling etc, so any 
+> actual NMI's are probably relegated purely to largely rare and 
+> effectively fatal errors anyway (ie memory parity errors).
 
-When using a temporary mm, bpf_probe_write_user() should not be able to
-write to user memory, since user memory addresses may be used to map
-kernel memory.  Detect these cases and fail bpf_probe_write_user() in
-such cases.
+FWIW, if that thing has local apic (I have no idea, I've never seen Quark 
+myself), then NMIs are used to trigger all-cpu backtrace as well. Which 
+still can be done in situations where the kernel is then expected to 
+continue running undisrupted (softlockup, sysrq, hung task detector, ...).
 
-Suggested-by: Jann Horn <jannh@google.com>
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <akpm@linux-foundation.org>
-Cc: <ard.biesheuvel@linaro.org>
-Cc: <deneen.t.dock@intel.com>
-Cc: <kernel-hardening@lists.openwall.com>
-Cc: <kristen@linux.intel.com>
-Cc: <linux_dti@icloud.com>
-Cc: <will.deacon@arm.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190426001143.4983-24-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/trace/bpf_trace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Nothing to really worry about in the particular case of this HW perhaps, 
+sure.
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index d64c00afceb5..94b0e37d90ef 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -14,6 +14,8 @@
- #include <linux/syscalls.h>
- #include <linux/error-injection.h>
- 
-+#include <asm/tlb.h>
-+
- #include "trace_probe.h"
- #include "trace.h"
- 
-@@ -163,6 +165,10 @@ BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
- 	 * access_ok() should prevent writing to non-user memory, but in
- 	 * some situations (nommu, temporary switch, etc) access_ok() does
- 	 * not provide enough validation, hence the check on KERNEL_DS.
-+	 *
-+	 * nmi_uaccess_okay() ensures the probe is not run in an interim
-+	 * state, when the task or mm are switched. This is specifically
-+	 * required to prevent the use of temporary mm.
- 	 */
- 
- 	if (unlikely(in_interrupt() ||
-@@ -170,6 +176,8 @@ BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
- 		return -EPERM;
- 	if (unlikely(uaccess_kernel()))
- 		return -EPERM;
-+	if (unlikely(!nmi_uaccess_okay()))
-+		return -EPERM;
- 	if (!access_ok(unsafe_ptr, size))
- 		return -EPERM;
- 
+-- 
+Jiri Kosina
+SUSE Labs
+
