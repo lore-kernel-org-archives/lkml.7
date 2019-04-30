@@ -2,159 +2,125 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB06C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC53C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B76221744
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17CE421734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="obZOjzk6"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="h0lrshcc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="6qvv9l87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfD3Pt1 (ORCPT
+        id S1726448AbfD3PuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:49:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41963 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfD3PtZ (ORCPT
+        Tue, 30 Apr 2019 11:50:12 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:56469 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726061AbfD3PuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:49:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so7251253pfd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 08:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ah7OC5skPsoE6RCcUpTOKboXwH/ADgkzZH3P4SrcC1Y=;
-        b=obZOjzk6FnDYA2dTzwPkHb/HsAn/gL3Be7hzAQGlgvdW0rEL+GY/aeYTLr7fUtru1F
-         DEb76d4ClMFrmM0dAcMwzKbb3H541DhXuqRkSeyYrmpVLlZWJRM2A5H6TIE8nzgn1BUB
-         8BAnZpwEtxn2OOicE1LlRcEc5v4ylz/c7fCTI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ah7OC5skPsoE6RCcUpTOKboXwH/ADgkzZH3P4SrcC1Y=;
-        b=X4nN7nXXAIeJT5FncmDZ/J+s6Qg4vUQsg8mn86We+czIyj8lDlpw8wTAtwqzoVEnTD
-         U70Cvz30jty0ekkdssTTzR1QtvkBvXsSd6eMIIjLzfHAuEMESvK2ceVFKHSJGo4Ul293
-         Vo6+jb4y4kMGX+fndyvEczFs/HZ0QcPaoX3JdYOTvVb7RfI7Gz0M1VAndlXbCL6CZp4z
-         cYA6BR61WJrmF5An3n4FD2Vy3TiaR5Y47WgWZy/tP/JMGk0zkzi4iL186Sxgj13M0Kzj
-         TRYjzmj2kIG1MqdA2H1TrkMTJ+NkayPzcbtYeTPUByroP0LJjVSCA5Cpq8R0wqA9pzuj
-         OT/w==
-X-Gm-Message-State: APjAAAVicskV0NGeVnDhz/ImAOepEGve8ByTDImeMHQ+YszxxVYQxZLm
-        BEQMWsLHu760SqDb1YMDXkVJ5Q==
-X-Google-Smtp-Source: APXvYqyTV7uct7zm+TXCL/AlMhz+vIwHlNrqHVuIog9kEr1nZ/RnMmXN5o1PGgzF3dEsXmSMCFsU9g==
-X-Received: by 2002:a63:541d:: with SMTP id i29mr38553959pgb.174.1556639364354;
-        Tue, 30 Apr 2019 08:49:24 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d38sm43687027pgd.40.2019.04.30.08.49.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 08:49:23 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 11:49:21 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
-        jannh@google.com, surenb@google.com, timmurray@google.com,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        torvalds@linux-foundation.org, kernel-team@android.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, viro@zeniv.linux.org.uk,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
-Message-ID: <20190430154507.GA792@google.com>
-References: <20190425190010.46489-1-joel@joelfernandes.org>
- <20190425222359.sqhboc4x4daznr6r@brauner.io>
- <20190428162405.GA6757@redhat.com>
- <20190429140245.GB233442@google.com>
- <20190429142030.GA17715@redhat.com>
- <20190429163259.GA201155@google.com>
- <20190430115332.GB23020@redhat.com>
+        Tue, 30 Apr 2019 11:50:11 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 7F833581;
+        Tue, 30 Apr 2019 11:50:10 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 30 Apr 2019 11:50:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=Ka2lC0fzN77DodlXYYV3lz1zRFB
+        CP1FnsPu7ZLb1emw=; b=h0lrshccUp92VOV8cTUkafQlL3gF8O+uFxhkNin14U8
+        kgWPQY/jLWIHIoH9OV6wPrMBhCqU0AGHYMbOeOwQd8cJrinXL9SKcHSgQTyy3tjA
+        eyTR1en+rM6XTwMUnE5YbFdr81bynNZjGpAALBl9TxnDDkRXRbzQXuj2P4Lz7bJb
+        HHKEOVo54MR3HDvTA6t2JMqxQDOA3pLz0yU8QmiTfqQgZpFN3Gi+Ob/dDqX/aP7a
+        HS+gH3YPMRyeNehcaRp+cHFofxyXptAIsNATFAXjJ+RbnlDK5L6KBiOxxxE7N8af
+        Kq7Jf8zX0+hw91BxdcmACf21mWmthbdEbwy5EpYa+ig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Ka2lC0
+        fzN77DodlXYYV3lz1zRFBCP1FnsPu7ZLb1emw=; b=6qvv9l877BSmrp9CzTh+zm
+        bwKQRdTA2lIcid9jldDfpkVZBRRT+F1GBbLqqM3EGwP71RP3dTDjB4s85LhuvG+z
+        bZDWAt9LJAV/RavMaKUUKdUQiCStVuBh5ftOhtuHbmjXheGd7K64ZqVTBp05j9t9
+        tdyJpxJpoOHU5DGPWOqK2YohzGnqtiGNFLoDhK07F5/Bq4Ka5ED7Y7XSWiOB6WnD
+        zsyUTbcpWoPzYPgeOt48134qlXDZcT7n6JuTXEbHGCT9gN/L71ZyOU49RwvA+DIs
+        ip91tmjfbE8jKXhfJJDj71jQ7PwTrc/9UoKumkWxTx2jm5AZr2N1rKh/iZK0Jkbg
+        ==
+X-ME-Sender: <xms:sW7IXBM7KWn--CbJGVmvuGkOLW1Gjxu_8yfC1WtR1Sc3-3nwUKn3LQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieehgdefgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrd
+    gtohhmpdgrphhpshhpohhtrdgtohhmnecukfhppeekfedrkeeirdekledruddtjeenucfr
+    rghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsth
+    gvrhfuihiivgeptd
+X-ME-Proxy: <xmx:sW7IXCO_nSNF7nF79r7uguB0814e-1XHl3IH10oy7s-4BE-3oWkp6w>
+    <xmx:sW7IXJkXdmmdmtVxJldsF88-dkiLNfeQRFI8yKpeXgN2zxE0ebT9BQ>
+    <xmx:sW7IXAtVbGbkCss6KgdXl7AOQQ-3yyNS76NqzSBwxcu9oxGcw4NpTw>
+    <xmx:sm7IXCGsNoL07s4DpeiE-FwB5hHWypCo8kY6MFPAawpPYpLYD6I4WA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F0F58E48A7;
+        Tue, 30 Apr 2019 11:50:08 -0400 (EDT)
+Date:   Tue, 30 Apr 2019 17:50:05 +0200
+From:   Greg KH <greg@kroah.com>
+To:     syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING: Detected a wedged cx25840 chip; the device will not
+ work.
+Message-ID: <20190430155005.GA20649@kroah.com>
+References: <00000000000048aa750587c052ef@google.com>
+ <20190430153516.GA23459@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430115332.GB23020@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190430153516.GA23459@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 01:53:33PM +0200, Oleg Nesterov wrote:
-> On 04/29, Joel Fernandes wrote:
-> >
-> > On Mon, Apr 29, 2019 at 04:20:30PM +0200, Oleg Nesterov wrote:
-> > > On 04/29, Joel Fernandes wrote:
-> > > >
-> > > > However, in your code above, it is avoided because we get:
-> > > >
-> > > > Task A (poller)		Task B (exiting task being polled)
-> > > > ------------            ----------------
-> > > > poll() called
-> > > > add_wait_queue()
-> > > > 			exit_state is set to non-zero
-> > > > read exit_state
-> > > > remove_wait_queue()
-> > > > 			wake_up_all()
-> > >
-> > > just to clarify... No, sys_poll() path doesn't do remove_wait_queue() until
-> > > it returns to user mode, and that is why we can't race with set-exit_code +
-> > > wake_up().
-> >
-> > I didn't follow what you mean, the removal from the waitqueue happens in
-> > free_poll_entry() called from poll_freewait() which happens from
-> > do_sys_poll() which is before the syscall returns to user mode. Could you
-> > explain more?
+On Tue, Apr 30, 2019 at 05:35:16PM +0200, Greg KH wrote:
+> On Tue, Apr 30, 2019 at 07:36:07AM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=12df67c3200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=170a86bf206dd2c6217e
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108a28f3200000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145d8a2d200000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
+> > 
+> > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> > pvrusb2: Hardware description: Gotview USB 2.0 DVD 2
+> > pvrusb2: Invalid write control endpoint
+> > usb 1-1: USB disconnect, device number 2
+> > pvrusb2: Invalid write control endpoint
+> > pvrusb2: WARNING: Detected a wedged cx25840 chip; the device will not work.
+> > pvrusb2: WARNING: Try power cycling the pvrusb2 device.
+> > pvrusb2: WARNING: Disabling further access to the device to prevent other
+> > foul-ups.
+> > pvrusb2: Device being rendered inoperable
+> > cx25840 0-0044: Unable to detect h/w, assuming cx23887
+> > cx25840 0-0044: cx23887 A/V decoder found @ 0x88 (pvrusb2_a)
+> > pvrusb2: Attached sub-driver cx25840
+> > pvrusb2: Attempted to execute control transfer when device not ok
+> > pvrusb2: Attempted to execute control transfer when device not ok
 > 
-> Hmm. I do not really understand the question... Sure, do_sys_poll() does
-> poll_freewait() before sysret or even before return from syscall, but why
-> does this matter? This is the exit path, it frees the memory, does fput(),
-> etc, f_op->poll() won't be call after that.
-
-Ok, we are on the same page on this.
-
-> > > pidfd_poll() can race with the exiting task, miss exit_code != 0, and return
-> > > zero. However, do_poll() won't block after that and pidfd_poll() will be called
-> > > again.
-> >
-> > Here also I didn't follow what you mean. If exit_code is read as 0 in
-> > pidfd_poll(), then in do_poll() the count will be 0 and it will block in
-> > poll_schedule_timeout(). Right?
+> As the driver said, power cycle your device, it crashed :)
 > 
-> No. Please note the pwq->triggered check and please read __pollwake().
-> 
-> But if you want to understand this you can forget about poll/select. It is
-> a bit complicated, in particular because it has to do set_current_state()
-> right  before schedule() and thus it plays games with pwq->triggered. But in
-> essence this doesn't differ too much from the plain wait_event-like code
-> (although you can also look at wait_woken/woken_wake_function).
-> 
-> If remove_wait_queue() could happem before wake_up_all() (like in your pseudo-
-> code above), then pidfd_poll() or any other ->poll() method could miss _both_
-> the condition and wakeup. But sys_poll() doesn't do this, so it is fine to miss
-> the condition and rely on wake_up_all() which ensures we won't block and the
-> next iteration must see condition == T.
+> Seriously, I think your script detection failed here, sorry.
 
-Agreed. In my pseudo-code above, I meant removal from waitqueue only once we
-are not going to be blocking in poll and returning to userspace. I may have
-messed the sequence of events, but my point was to show the race I had in
-mind (missing a wake up due to adding to the waitqueue too late inside
-pidfd_poll()).  Anyway, I will repost with your suggested change and send it
-soon. Thanks for the discussions.
-
-thanks,
-
- - Joel
-
+Ah, same issue as the other "WARNING" message, sorry for the noise.
