@@ -2,105 +2,128 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FE2C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1818CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6E921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E382320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfD3N6U (ORCPT
+        id S1727598AbfD3OAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:58:20 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:43680 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726105AbfD3N6U (ORCPT
+        Tue, 30 Apr 2019 10:00:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46326 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725938AbfD3OAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:58:20 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3787D634C7B;
-        Tue, 30 Apr 2019 16:58:10 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hLTGr-0000hd-Rk; Tue, 30 Apr 2019 16:58:09 +0300
-Date:   Tue, 30 Apr 2019 16:58:09 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 03/14] media: ov6650: Fix unverified arguments used in
- .set_fmt()
-Message-ID: <20190430135809.5mgf4govbqj3cxph@valkosipuli.retiisi.org.uk>
-References: <20190408214242.9603-1-jmkrzyszt@gmail.com>
- <20190408214242.9603-4-jmkrzyszt@gmail.com>
+        Tue, 30 Apr 2019 10:00:43 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UDwEMC068496
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:00:42 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6paxvqu9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 10:00:40 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 30 Apr 2019 15:00:37 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Apr 2019 15:00:35 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UE0Xbo53870652
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 14:00:33 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BF1311C04C;
+        Tue, 30 Apr 2019 14:00:33 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1997511C066;
+        Tue, 30 Apr 2019 14:00:33 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.116])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Apr 2019 14:00:33 +0000 (GMT)
+Date:   Tue, 30 Apr 2019 16:00:31 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+In-Reply-To: <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+        <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408214242.9603-4-jmkrzyszt@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19043014-0012-0000-0000-00000316E352
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19043014-0013-0000-0000-0000214F4C9E
+Message-Id: <20190430160031.198b83c1.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Janusz,
+On Fri, 26 Apr 2019 15:01:27 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-On Mon, Apr 08, 2019 at 11:42:31PM +0200, Janusz Krzysztofik wrote:
-> Commit 717fd5b4907ad ("[media] v4l2: replace try_mbus_fmt by set_fmt")
-> converted a former ov6650_try_fmt() video operation callback to an
-> ov6650_set_fmt() pad operation callback.  However, the function does not
-> verify correctness of user provided format->which flag and pad config
-> pointer arguments.  Fix it.
-> 
-> Fixes: 717fd5b4907ad ("[media] v4l2: replace try_mbus_fmt by set_fmt")
-> Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/media/i2c/ov6650.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-> index 007f0ca24913..3062c9a6c57b 100644
-> --- a/drivers/media/i2c/ov6650.c
-> +++ b/drivers/media/i2c/ov6650.c
-> @@ -679,6 +679,17 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
->  	if (format->pad)
->  		return -EINVAL;
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index 18dcc4d..7cc02ff 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -4,6 +4,7 @@
+>   *
+>   * Author(s): Tony Krowiak <akrowiak@linux.ibm.com>
+>   *	      Halil Pasic <pasic@linux.ibm.com>
+> + *	      Pierre Morel <pmorel@linux.ibm.com>
+>   *
+>   * Copyright IBM Corp. 2018
+>   */
+> @@ -90,4 +91,14 @@ struct ap_matrix_mdev {
+>  extern int vfio_ap_mdev_register(void);
+>  extern void vfio_ap_mdev_unregister(void);
 >  
-> +	switch (format->which) {
-> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
-> +		break;
-> +	case V4L2_SUBDEV_FORMAT_TRY:
-> +		if (cfg)
-> +			break;
-> +		/* fall through */
-> +	default:
-> +		return -EINVAL;
-> +	}
+> +struct vfio_ap_queue {
+> +	struct ap_matrix_mdev *matrix_mdev;
+> +	unsigned long a_nib;
+> +	unsigned long a_pfn;
+> +	unsigned long p_pfn;
+> +	int	apqn;
+> +#define VFIO_AP_ISC_INVALID 0xff
 
-For this to return an error, there would need to be a problem on the
-caller's side. In other words, this isn't supposed to happen.
+How about -1?
 
-Instead of adding such checks to all drivers, I think they instead should
-be added to the caller's side. The checks already exist for uAPI, but not
-for other drivers.
+> +	unsigned char a_isc;
+> +	unsigned char p_isc;
+> +};
+>  #endif /* _VFIO_AP_PRIVATE_H_ */
 
-The same applies to patches until 7th (including).
+I assume a_ and p_ are for argument and private, or? Anyway it would be
+nice to have nicer names for these.
 
-> +
->  	if (is_unscaled_ok(mf->width, mf->height, &priv->rect))
->  		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
->  				&mf->height, 2, H_CIF, 1, 0);
+If the a_ members are really just arguments, we could probably live
+without the. I'm fine either way.
 
--- 
-Kind regards,
+Regards,
+Halil
 
-Sakari Ailus
