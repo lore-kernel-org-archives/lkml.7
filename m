@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72750C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB59C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEF32075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573D02075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625683;
-	bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
+	s=default; t=1556625693;
+	bh=dvAnglenaAPPEDdrNg0L+1ChK2siq9KNAMIzym/7tvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kQIGdnfrqwrkbNXTvZXuuh1yK3//oSMRbbWVyk1QGwT+cIqW3ghfLqVOL0E9eHRsP
-	 U0kFHlcYQA+dOejyJVMqRMqgeW92zwKOCEdsa7HHUyfp0fhRoRSea2KOrjUI0g86rU
-	 d2Q2by4LwqqLDyRBcQ8g4i+/J5uHvuA3QtxVrlZ4=
+	b=Npaj/AI5n3jbriC9ygtjU6MLIZ3DmyPJkuziPf7qslEfK0de0kzol2F926Rft+Bge
+	 pDwuz2wm9BQ2OXZXc9VZE/mMO4LoM4bGLeFNZiuYqQFeB+vgzYNYIHiRPmwi3cEyq4
+	 0nPPqyHu8v90OaOYxBSwDHP7l7qrj9kegqO1+RwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfD3LpH (ORCPT
+        id S1730305AbfD3Lo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57024 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730321AbfD3LpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:03 -0400
+        id S1730275AbfD3Lox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91C8921707;
-        Tue, 30 Apr 2019 11:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FD2120449;
+        Tue, 30 Apr 2019 11:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624703;
-        bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
+        s=default; t=1556624692;
+        bh=dvAnglenaAPPEDdrNg0L+1ChK2siq9KNAMIzym/7tvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A461ZaOA/STGDbhOq6sx+P1W6HCW3g+K52Wj6iknSwoC+XZLO5udwfoCL5tEwyG40
-         6FbXSpChjFao7T36EivTuFUQ4psvhaifb+8TSZOiISdgt1sP+LfllEdtK5XDxLuYrq
-         V2QRuQT0JA/kceUGmaqdFXvhY3+pdL6VWiZ1Pv/o=
+        b=iOnjKpPGVgajtMUk8jUpnIQyJAXKPIMWG/V4xvjnkBfwF7OMrmuD6XLGmNNwy5JTX
+         kqCrBIOdoNAQZ9PSgXX1BWKZ/QHlbyYltvwcOsMpjP52XrLE0LUDU58OqM+8LfU+Uc
+         ZxpvAUqMLh/3duAvM0R1n5w+I+boqGWad5jV57ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
-Subject: [PATCH 4.19 039/100] sunrpc: dont mark uninitialised items as VALID.
-Date:   Tue, 30 Apr 2019 13:38:08 +0200
-Message-Id: <20190430113611.017772742@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 4.19 036/100] ceph: ensure d_name stability in ceph_dentry_hash()
+Date:   Tue, 30 Apr 2019 13:38:05 +0200
+Message-Id: <20190430113610.454821626@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -59,57 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit d58431eacb226222430940134d97bfd72f292fcd upstream.
+commit 76a495d666e5043ffc315695f8241f5e94a98849 upstream.
 
-A recent commit added a call to cache_fresh_locked()
-when an expired item was found.
-The call sets the CACHE_VALID flag, so it is important
-that the item actually is valid.
-There are two ways it could be valid:
-1/ If ->update has been called to fill in relevant content
-2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
+Take the d_lock here to ensure that d_name doesn't change.
 
-An expired item that is waiting for an update will be neither.
-Setting CACHE_VALID will mean that a subsequent call to cache_put()
-will be likely to dereference uninitialised pointers.
-
-So we must make sure the item is valid, and we already have code to do
-that in try_to_negate_entry().  This takes the hash lock and so cannot
-be used directly, so take out the two lines that we need and use them.
-
-Now cache_fresh_locked() is certain to be called only on
-a valid item.
-
-Cc: stable@kernel.org # 2.6.35
-Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/cache.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/ceph/dir.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -54,6 +54,7 @@ static void cache_init(struct cache_head
- 	h->last_refresh = now;
+--- a/fs/ceph/dir.c
++++ b/fs/ceph/dir.c
+@@ -1470,6 +1470,7 @@ void ceph_dentry_lru_del(struct dentry *
+ unsigned ceph_dentry_hash(struct inode *dir, struct dentry *dn)
+ {
+ 	struct ceph_inode_info *dci = ceph_inode(dir);
++	unsigned hash;
+ 
+ 	switch (dci->i_dir_layout.dl_dir_hash) {
+ 	case 0:	/* for backward compat */
+@@ -1477,8 +1478,11 @@ unsigned ceph_dentry_hash(struct inode *
+ 		return dn->d_name.hash;
+ 
+ 	default:
+-		return ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
++		spin_lock(&dn->d_lock);
++		hash = ceph_str_hash(dci->i_dir_layout.dl_dir_hash,
+ 				     dn->d_name.name, dn->d_name.len);
++		spin_unlock(&dn->d_lock);
++		return hash;
+ 	}
  }
  
-+static inline int cache_is_valid(struct cache_head *h);
- static void cache_fresh_locked(struct cache_head *head, time_t expiry,
- 				struct cache_detail *detail);
- static void cache_fresh_unlocked(struct cache_head *head,
-@@ -100,6 +101,8 @@ struct cache_head *sunrpc_cache_lookup(s
- 			if (cache_is_expired(detail, tmp)) {
- 				hlist_del_init(&tmp->cache_list);
- 				detail->entries --;
-+				if (cache_is_valid(tmp) == -EAGAIN)
-+					set_bit(CACHE_NEGATIVE, &tmp->flags);
- 				cache_fresh_locked(tmp, 0, detail);
- 				freeme = tmp;
- 				break;
 
 
