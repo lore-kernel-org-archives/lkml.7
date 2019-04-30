@@ -2,116 +2,366 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F63C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BDBC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4438120652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ba/dhODp"
+	by mail.kernel.org (Postfix) with ESMTP id E617D20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556615682;
+	bh=vnFOmZtJqO9DZmhijWrn7z2KUgtvlFQJRKir6PkMgyY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cTJ+ZxO6jHi1RhRVGK5xjreXBDT1aJeYVNixgvN0+ypGRrjUKaCG1FuJS47QwKQFi
+	 5JqfERemzhIXAFbQmvFeG9+IjgrFkeSFq6ixmZHs5O6QDphcapsH2cGs82pUPAJ9lV
+	 MIpLWNqCamZRSmnW+zoock5qOyWiAfE3ZDExx930=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbfD3JND (ORCPT
+        id S1726862AbfD3JOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:13:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51214 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfD3JNC (ORCPT
+        Tue, 30 Apr 2019 05:14:40 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40028 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfD3JOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:13:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3U99T2M012438;
-        Tue, 30 Apr 2019 09:12:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=D85Wq90jjObkLFFLUB4CImCULz5ARyZY4RoZ0C5wI1k=;
- b=ba/dhODp+oU3cXtVngVom0CQnh3Z7k6fuG8XTcNi1HCfnpfjWJjMEZmlvVGXlVIoNGhQ
- PAIv33FRbLaSKVWc3cg6jJ9Kfjg3xhht1+zHCK28D00mYtBeTbMsfWnBJQfGMEFtn0lK
- 1JodDE/8Hcs5+66vRLIt68LYu7o8cQJ0dTpEgLg7BS3jsRplIxqid8VVPQ+UbPzSx3Gc
- ceK38GctkOMRP79SznizKPVYRUwqIQ4EhXA6BfEyRuCKVpU5MWyGVWSZw/lXFY1k+5de
- p7aj7maJEBMPIoMrsgDN+VpIdIIXJItSm4HwLeZbEXXI1/LIdzGRsx5rgdkflQ/MUbeH oA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2s4fqq38b4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 09:12:53 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3U9CfsD143563;
-        Tue, 30 Apr 2019 09:12:52 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2s4d4adfvh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 09:12:52 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3U9CquC018369;
-        Tue, 30 Apr 2019 09:12:52 GMT
-Received: from kadam (/196.97.65.153)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 30 Apr 2019 02:12:51 -0700
-Date:   Tue, 30 Apr 2019 12:12:42 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: kpc2000: Use memset to initialize resources
-Message-ID: <20190430091242.GA2269@kadam>
-References: <20190424185742.7797-1-natechancellor@gmail.com>
+        Tue, 30 Apr 2019 05:14:40 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y64so5121716oia.7;
+        Tue, 30 Apr 2019 02:14:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I19k6Zfc0yOJNpO9v/mNOopQmlaGLL8YidDt8xM6Fo4=;
+        b=t2FIAn7ZQ68W2VbC46i3b7K9bOeu/uXaJkSITYMercAYBe61OOBx37iysOLP0/MYRZ
+         h6oljBORZSJGnWenvjBt3d+2nxGkrcc4QtDdDH+Bklsou7eO6/x4ecSWVUwkNubKPleb
+         gX0IIAdSZEDtNo5MHlZA3KBhPamXOTetL+Gb3eo32+bDivkCz8uX/Madv2R4jAersel1
+         UXGcuNqQEwjSRgnNJ6Jse7sEo6G9014INqUQ4BvNfHSqAG60MxLJTVLqoyUH4UCRO9sB
+         +fv2f+VqLYpYl32nsVVnH6o6Ff4EErP65EnToCs/is4D0rSyZBcDrOOzmCB2oV5BBi5A
+         eghQ==
+X-Gm-Message-State: APjAAAXjt04PeYxT2OM+H0pUGdcgEWPZmh+tM6hFORlty+Y3KofoDkGp
+        xzZxd/6Xxlqrbu0V3he9kj97lvU/9smlXXT5lfw=
+X-Google-Smtp-Source: APXvYqyoCR3hIwYBo26IELJJFav7CtZOI7IgbH/puSp9m9F/dXEilLS5XWjJDUtHx/w06Ywomnf5TchAw52r4SQOVQE=
+X-Received: by 2002:aca:4a8a:: with SMTP id x132mr2176368oia.68.1556615678851;
+ Tue, 30 Apr 2019 02:14:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424185742.7797-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904300061
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904300061
+References: <dffefa5bee3d0a751dcf2d12c1d4cd6f166c23af.1556529864.git.viresh.kumar@linaro.org>
+In-Reply-To: <dffefa5bee3d0a751dcf2d12c1d4cd6f166c23af.1556529864.git.viresh.kumar@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Apr 2019 11:14:27 +0200
+Message-ID: <CAJZ5v0gjbdb1RgZuszMgadhvqGFoQYFYRmaM8RWifuiCq_9nSw@mail.gmail.com>
+Subject: Re: [PATCH V4] cpufreq: Call transition notifier only once for each policy
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        sparclinux@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 11:57:43AM -0700, Nathan Chancellor wrote:
-> diff --git a/drivers/staging/kpc2000/kpc2000/cell_probe.c b/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> index ad2cc0a3bfa1..13f544f3c0b9 100644
-> --- a/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> +++ b/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> @@ -93,8 +93,8 @@ void parse_core_table_entry(struct core_table_entry *cte, const u64 read_val, co
->  int  probe_core_basic(unsigned int core_num, struct kp2000_device *pcard, char *name, const struct core_table_entry cte)
+On Mon, Apr 29, 2019 at 11:34 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> Currently the notifiers are called once for each CPU of the policy->cpus
+> cpumask. It would be more optimal if the notifier can be called only
+> once and all the relevant information be provided to it.
+
+IMO this also is a matter of I/F clarity, at least for policies with
+more than one CPU, because some actions may only be applicable to the
+policy CPU in principle and the notifiers are only passed a CPU
+number, so they may need to get to the policy and find the policy CPU
+in it which is pointless.
+
+> Out of the 23 drivers that register for the transition notifiers today, only 4 of them
+> do per-cpu updates and the callback for the rest can be called only once
+> for the policy without any impact.
+>
+> This would also avoid multiple function calls to the notifier callbacks
+> and reduce multiple iterations of notifier core's code (which does
+> locking as well).
+>
+> This patch adds pointer to the cpufreq policy to the struct
+> cpufreq_freqs, so the notifier callback has all the information
+> available to it with a single call. The five drivers which perform
+> per-cpu updates are updated to use the cpufreq policy. The freqs->cpu
+> field is redundant now and is removed.
+>
+> Acked-by: David S. Miller <davem@davemloft.net> (sparc)
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+I'm going to queue up this one unless there are concerns and/or
+objections from arch or KVM maintainers.
+
+> ---
+> V3->V4:
+> - rebased over pm/linux-next
+> - tsc.c's diff has changed due to rafael's patch present in
+>   pm/linux-next.
+> - Minor update in commit-log.
+>
+>  arch/arm/kernel/smp.c       | 24 +++++++++++++++---------
+>  arch/sparc/kernel/time_64.c | 28 ++++++++++++++++------------
+>  arch/x86/kernel/tsc.c       |  2 +-
+>  arch/x86/kvm/x86.c          | 31 ++++++++++++++++++++-----------
+>  drivers/cpufreq/cpufreq.c   | 19 ++++++++++---------
+>  include/linux/cpufreq.h     | 14 +++++++-------
+>  6 files changed, 69 insertions(+), 49 deletions(-)
+>
+> diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+> index facd4240ca02..c6d37563610a 100644
+> --- a/arch/arm/kernel/smp.c
+> +++ b/arch/arm/kernel/smp.c
+> @@ -754,15 +754,20 @@ static int cpufreq_callback(struct notifier_block *nb,
+>                                         unsigned long val, void *data)
 >  {
->      struct mfd_cell  cell = {0};
-> -    struct resource  resources[2] = {0};
-> -    
-> +    struct resource  resources[2];
+>         struct cpufreq_freqs *freq = data;
+> -       int cpu = freq->cpu;
+> +       struct cpumask *cpus = freq->policy->cpus;
+> +       int cpu, first = cpumask_first(cpus);
+> +       unsigned int lpj;
+>
+>         if (freq->flags & CPUFREQ_CONST_LOOPS)
+>                 return NOTIFY_OK;
+>
+> -       if (!per_cpu(l_p_j_ref, cpu)) {
+> -               per_cpu(l_p_j_ref, cpu) =
+> -                       per_cpu(cpu_data, cpu).loops_per_jiffy;
+> -               per_cpu(l_p_j_ref_freq, cpu) = freq->old;
+> +       if (!per_cpu(l_p_j_ref, first)) {
+> +               for_each_cpu(cpu, cpus) {
+> +                       per_cpu(l_p_j_ref, cpu) =
+> +                               per_cpu(cpu_data, cpu).loops_per_jiffy;
+> +                       per_cpu(l_p_j_ref_freq, cpu) = freq->old;
+> +               }
 > +
->      struct kpc_core_device_platdata  core_pdata = {
-
-Greg already applied this and that's cool but I would have probably
-gone with "struct resource resources[2] = {};".  memset() is only
-required if we want to clear out the struct holes because we're going to
-copy the whole struct to userspace.  (Some compilers will change
-foo = {} into "foo.a = 0; foo.b = 0;" when it's faster than doing a
-memset, so the struct holes don't always get cleared).
-
-Also it was risky from a process perspective to delete the stray tab
-from the next line because some one could have argued that it was
-unrelated or that the whole line should be removed instead.  You would
-have had to redo the patch for something silly... #YOLO #LivingOnTheEdge
-
-But in this case, it's already applied so everything worked out. :)
-
-regards,
-dan carpenter
-
+>                 if (!global_l_p_j_ref) {
+>                         global_l_p_j_ref = loops_per_jiffy;
+>                         global_l_p_j_ref_freq = freq->old;
+> @@ -774,10 +779,11 @@ static int cpufreq_callback(struct notifier_block *nb,
+>                 loops_per_jiffy = cpufreq_scale(global_l_p_j_ref,
+>                                                 global_l_p_j_ref_freq,
+>                                                 freq->new);
+> -               per_cpu(cpu_data, cpu).loops_per_jiffy =
+> -                       cpufreq_scale(per_cpu(l_p_j_ref, cpu),
+> -                                       per_cpu(l_p_j_ref_freq, cpu),
+> -                                       freq->new);
+> +
+> +               lpj = cpufreq_scale(per_cpu(l_p_j_ref, first),
+> +                                   per_cpu(l_p_j_ref_freq, first), freq->new);
+> +               for_each_cpu(cpu, cpus)
+> +                       per_cpu(cpu_data, cpu).loops_per_jiffy = lpj;
+>         }
+>         return NOTIFY_OK;
+>  }
+> diff --git a/arch/sparc/kernel/time_64.c b/arch/sparc/kernel/time_64.c
+> index 3eb77943ce12..89fb05f90609 100644
+> --- a/arch/sparc/kernel/time_64.c
+> +++ b/arch/sparc/kernel/time_64.c
+> @@ -653,19 +653,23 @@ static int sparc64_cpufreq_notifier(struct notifier_block *nb, unsigned long val
+>                                     void *data)
+>  {
+>         struct cpufreq_freqs *freq = data;
+> -       unsigned int cpu = freq->cpu;
+> -       struct freq_table *ft = &per_cpu(sparc64_freq_table, cpu);
+> +       unsigned int cpu;
+> +       struct freq_table *ft;
+>
+> -       if (!ft->ref_freq) {
+> -               ft->ref_freq = freq->old;
+> -               ft->clock_tick_ref = cpu_data(cpu).clock_tick;
+> -       }
+> -       if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+> -           (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+> -               cpu_data(cpu).clock_tick =
+> -                       cpufreq_scale(ft->clock_tick_ref,
+> -                                     ft->ref_freq,
+> -                                     freq->new);
+> +       for_each_cpu(cpu, freq->policy->cpus) {
+> +               ft = &per_cpu(sparc64_freq_table, cpu);
+> +
+> +               if (!ft->ref_freq) {
+> +                       ft->ref_freq = freq->old;
+> +                       ft->clock_tick_ref = cpu_data(cpu).clock_tick;
+> +               }
+> +
+> +               if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+> +                   (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+> +                       cpu_data(cpu).clock_tick =
+> +                               cpufreq_scale(ft->clock_tick_ref, ft->ref_freq,
+> +                                             freq->new);
+> +               }
+>         }
+>
+>         return 0;
+> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> index cc6df5c6d7b3..650fafa6a4d0 100644
+> --- a/arch/x86/kernel/tsc.c
+> +++ b/arch/x86/kernel/tsc.c
+> @@ -976,7 +976,7 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+>                 if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+>                         mark_tsc_unstable("cpufreq changes");
+>
+> -               set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
+> +               set_cyc2ns_scale(tsc_khz, freq->policy->cpu, rdtsc());
+>         }
+>
+>         return 0;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index a0d1fc80ac5a..55efbc1b0a56 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6677,10 +6677,8 @@ static void kvm_hyperv_tsc_notifier(void)
+>  }
+>  #endif
+>
+> -static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+> -                                    void *data)
+> +static void __kvmclock_cpufreq_notifier(struct cpufreq_freqs *freq, int cpu)
+>  {
+> -       struct cpufreq_freqs *freq = data;
+>         struct kvm *kvm;
+>         struct kvm_vcpu *vcpu;
+>         int i, send_ipi = 0;
+> @@ -6724,17 +6722,12 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
+>          *
+>          */
+>
+> -       if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
+> -               return 0;
+> -       if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
+> -               return 0;
+> -
+> -       smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
+> +       smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
+>
+>         spin_lock(&kvm_lock);
+>         list_for_each_entry(kvm, &vm_list, vm_list) {
+>                 kvm_for_each_vcpu(i, vcpu, kvm) {
+> -                       if (vcpu->cpu != freq->cpu)
+> +                       if (vcpu->cpu != cpu)
+>                                 continue;
+>                         kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
+>                         if (vcpu->cpu != smp_processor_id())
+> @@ -6756,8 +6749,24 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
+>                  * guest context is entered kvmclock will be updated,
+>                  * so the guest will not see stale values.
+>                  */
+> -               smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
+> +               smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
+>         }
+> +}
+> +
+> +static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+> +                                    void *data)
+> +{
+> +       struct cpufreq_freqs *freq = data;
+> +       int cpu;
+> +
+> +       if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
+> +               return 0;
+> +       if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
+> +               return 0;
+> +
+> +       for_each_cpu(cpu, freq->policy->cpus)
+> +               __kvmclock_cpufreq_notifier(freq, cpu);
+> +
+>         return 0;
+>  }
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 92604afdeec4..3681ec8d19f2 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -340,11 +340,14 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+>                                       struct cpufreq_freqs *freqs,
+>                                       unsigned int state)
+>  {
+> +       int cpu;
+> +
+>         BUG_ON(irqs_disabled());
+>
+>         if (cpufreq_disabled())
+>                 return;
+>
+> +       freqs->policy = policy;
+>         freqs->flags = cpufreq_driver->flags;
+>         pr_debug("notification %u of frequency transition to %u kHz\n",
+>                  state, freqs->new);
+> @@ -364,10 +367,8 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+>                         }
+>                 }
+>
+> -               for_each_cpu(freqs->cpu, policy->cpus) {
+> -                       srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+> -                                                CPUFREQ_PRECHANGE, freqs);
+> -               }
+> +               srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+> +                                        CPUFREQ_PRECHANGE, freqs);
+>
+>                 adjust_jiffies(CPUFREQ_PRECHANGE, freqs);
+>                 break;
+> @@ -377,11 +378,11 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+>                 pr_debug("FREQ: %u - CPUs: %*pbl\n", freqs->new,
+>                          cpumask_pr_args(policy->cpus));
+>
+> -               for_each_cpu(freqs->cpu, policy->cpus) {
+> -                       trace_cpu_frequency(freqs->new, freqs->cpu);
+> -                       srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+> -                                                CPUFREQ_POSTCHANGE, freqs);
+> -               }
+> +               for_each_cpu(cpu, policy->cpus)
+> +                       trace_cpu_frequency(freqs->new, cpu);
+> +
+> +               srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+> +                                        CPUFREQ_POSTCHANGE, freqs);
+>
+>                 cpufreq_stats_record_transition(policy, freqs->new);
+>                 policy->cur = freqs->new;
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index 684caf067003..d01a74fbc4db 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -42,13 +42,6 @@ enum cpufreq_table_sorting {
+>         CPUFREQ_TABLE_SORTED_DESCENDING
+>  };
+>
+> -struct cpufreq_freqs {
+> -       unsigned int cpu;       /* cpu nr */
+> -       unsigned int old;
+> -       unsigned int new;
+> -       u8 flags;               /* flags of cpufreq_driver, see below. */
+> -};
+> -
+>  struct cpufreq_cpuinfo {
+>         unsigned int            max_freq;
+>         unsigned int            min_freq;
+> @@ -156,6 +149,13 @@ struct cpufreq_policy {
+>         struct thermal_cooling_device *cdev;
+>  };
+>
+> +struct cpufreq_freqs {
+> +       struct cpufreq_policy *policy;
+> +       unsigned int old;
+> +       unsigned int new;
+> +       u8 flags;               /* flags of cpufreq_driver, see below. */
+> +};
+> +
+>  /* Only for ACPI */
+>  #define CPUFREQ_SHARED_TYPE_NONE (0) /* None */
+>  #define CPUFREQ_SHARED_TYPE_HW  (1) /* HW does needed coordination */
+> --
+> 2.21.0.rc0.269.g1a574e7a288b
+>
