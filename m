@@ -2,392 +2,119 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91213C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C048C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E962147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FAD21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slcjQ1Y2"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IBgG/Yb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfD3BIh (ORCPT
+        id S1729799AbfD3BJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:08:37 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37118 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbfD3BIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:08:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r20so9309711otg.4;
-        Mon, 29 Apr 2019 18:08:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=T0l0shW2CEoQr7Z7vWVDBcFZhoAdA1XnXRcGtE/SkwM=;
-        b=slcjQ1Y2nLZT9pJsqakCjjk0fPImZZsWb5e9BJ7RPiwP/SUmq2A2+KeYR4eSlIewrG
-         ZXguSFbm4IgLE7moymAkqmqPnmr0LcUrjFogeHIAMtn8Hmyy0dZxUE3NNA/YQL33amBt
-         tpCio4bfawprMyBqA4a3w43kGGqv2IjvrbEOmijMvlarYpfXFIkD/F+CnOPvgxFr/2Ya
-         Jlh7LDyjdWOLysYQdvQP3i8mQxntowBneGFZAraqREFo/91ukx/xrJ0GZScJHmFt3q9e
-         8k6INvyXMVjn/U2O6EItJqD4QeNVUvwaoz8JZTCCETQLIugoqt/Tf6/UYjSqWwEtBl9Q
-         1QCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=T0l0shW2CEoQr7Z7vWVDBcFZhoAdA1XnXRcGtE/SkwM=;
-        b=A8ic4ouYQMaVRD+qXVI8BOWqlfWSCIxEbYMwdeeJ+UzKul2MDf3A4LLOAFTsSOuX+5
-         iO1FTM8F7+6U8j0jtd6novXyK+aECP+r8KGac+wYW1DzBa8qih+sK8H6wpYvSIxsQxUZ
-         HJG1ADKD/o80dWe9Du1QdkX6Ioo8LYH6sRr4DZF1xNTfuaJlcohJWpMGJNq7/6GW25d6
-         rdM7Vw1d7gAaaINCEKIjugiMv2kJdSn0eH/Yp5IWY7p2IgfSELoUntMw4jQdBbXkEDPR
-         nLvUFHUitPZBpr8BRuK4gL/TH4TiMgcNEsvqo8uIkRhKRZfOY9vxWCWEl8nnfkPbLJYB
-         1fnA==
-X-Gm-Message-State: APjAAAWGhe1JEA5gkk8fhyDnjPfLMNIRiSnFT0rwwKyS/0jMQOO1+63Y
-        FL86M2d0C8Ios+LPqkoYXEM=
-X-Google-Smtp-Source: APXvYqwVnQRp/+n+2skQhgkVczWgf0iWVjJKYxfEhk971y+sLN09OnaW2k9ZnnF7dvNF9PZfbhL49w==
-X-Received: by 2002:a9d:468:: with SMTP id 95mr37998178otc.240.1556586515540;
-        Mon, 29 Apr 2019 18:08:35 -0700 (PDT)
-Received: from nukespec.gtech (rrcs-24-153-222-227.sw.biz.rr.com. [24.153.222.227])
-        by smtp.gmail.com with ESMTPSA id 64sm6372835oth.47.2019.04.29.18.07.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 18:08:34 -0700 (PDT)
-Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
- bandwidth notification"
-To:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>
-References: <20190429185611.121751-1-helgaas@kernel.org>
- <20190429185611.121751-2-helgaas@kernel.org>
-From:   Alex G <mr.nuke.me@gmail.com>
-Message-ID: <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
-Date:   Mon, 29 Apr 2019 20:07:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190429185611.121751-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 29 Apr 2019 21:09:44 -0400
+Received: from mail-eopbgr40057.outbound.protection.outlook.com ([40.107.4.57]:50661
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729238AbfD3BJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 21:09:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l2kuCRhfZsaGfO/ETmSAWP3/xuWp6nHY/GKB42yoH8o=;
+ b=IBgG/Yb+Nlnj8hkdQvDfPWENAnHlL32000iTrg08dyaQJcrcRBwyAah7aJK93hlNhr4JH1BHX8HN2jLIcNAGw6GNMZUZT0geuCH2ewTyhNcQRxbXU1JTVQSxZFfSmwMQf6sfj5ji9xgxaP5W3UR1+JpPJgGLdA44sltdDpATd8I=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3660.eurprd04.prod.outlook.com (52.134.70.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.15; Tue, 30 Apr 2019 01:09:39 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
+ 01:09:39 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Trent Piepho <tpiepho@impinj.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] rtc: snvs: Use __maybe_unused instead of #if
+ CONFIG_PM_SLEEP
+Thread-Topic: [PATCH] rtc: snvs: Use __maybe_unused instead of #if
+ CONFIG_PM_SLEEP
+Thread-Index: AQHU/lmEml9HNTGs9Ea7jhPERyCyyKZTYMSAgACEl+A=
+Date:   Tue, 30 Apr 2019 01:09:39 +0000
+Message-ID: <DB3PR0402MB3916EAD5ACF48F9FB1159444F53A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1556521071-8981-1-git-send-email-Anson.Huang@nxp.com>
+ <1556557953.31309.4.camel@impinj.com>
+In-Reply-To: <1556557953.31309.4.camel@impinj.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6db5452f-1a3e-43ed-7d1f-08d6cd0884d5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3660;
+x-ms-traffictypediagnostic: DB3PR0402MB3660:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DB3PR0402MB3660D1DCDEF5460AAF53E3CAF53A0@DB3PR0402MB3660.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 00235A1EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(366004)(136003)(396003)(189003)(199004)(13464003)(8936002)(99286004)(6506007)(6306002)(71190400001)(71200400001)(76176011)(6246003)(966005)(97736004)(4326008)(9686003)(2906002)(2201001)(86362001)(316002)(52536014)(7696005)(110136005)(229853002)(186003)(53546011)(66066001)(53936002)(25786009)(33656002)(5660300002)(45080400002)(74316002)(44832011)(55016002)(2501003)(14454004)(66476007)(81166006)(66556008)(66946007)(73956011)(3846002)(66446008)(26005)(6116002)(76116006)(14444005)(256004)(64756008)(7736002)(68736007)(81156014)(8676002)(486006)(446003)(476003)(478600001)(305945005)(6436002)(102836004)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3660;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: uvt5BcGuLuDPckyVwQ8OIY3WZBaC5Sk7teaECPtr7Sqn54TP5+fkAXApXRnT/gt3VX2lqbnt7cxcWtzR5m2iL08R3lY3sfDv7LOgkS6LFGLNSk8P/TPrdCKLhYKprI9ehi4O3ZMrvZxFcNynsReeLbPOfia7VLs+tYdQS1ABGrW2m/1AbHTT0um6tJunFUEgb6HSmCVo2w986L0WFRW34zsip/15B1Xm8xe2G14hGSC8rUXhQH06CS1RkpZO0HyTbwtHoGG8fD1t5WjRHWoGYRNJ1YlNM4BxJTyKZYiNdw3SkDPIvm+iL7oU1zsyxQ3SDmOUsYGr4Ha2c5DtqGVPueaJN/+qqX5i4laxOYEWXnOK/Fp60Y43pz0msS31+bHh4qzJEMUfX3T3GoZxSTTh8aRhHkvqCDlvthCLOSDVTqo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6db5452f-1a3e-43ed-7d1f-08d6cd0884d5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 01:09:39.0579
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3660
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/19 1:56 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> This reverts commit e8303bb7a75c113388badcc49b2a84b4121c1b3e.
-> 
-> e8303bb7a75c added logging whenever a link changed speed or width to a
-> state that is considered degraded.  Unfortunately, it cannot differentiate
-> signal integrity-related link changes from those intentionally initiated by
-> an endpoint driver, including drivers that may live in userspace or VMs
-> when making use of vfio-pci.  Some GPU drivers actively manage the link
-> state to save power, which generates a stream of messages like this:
-> 
->    vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5 GT/s x16 link)
-> 
-> We really *do* want to be alerted when the link bandwidth is reduced
-> because of hardware failures, but degradation by intentional link state
-> management is probably far more common, so the signal-to-noise ratio is
-> currently low.
-> 
-> Until we figure out a way to identify the real problems or silence the
-> intentional situations, revert the following commits, which include the
-> initial implementation (e8303bb7a75c) and subsequent fixes:
-
-I think we're overreacting to a bit of perceived verbosity in the system 
-log. Intentional degradation does not seem to me to be as common as 
-advertised. I have not observed this with either radeon, nouveau, or 
-amdgpu, and the proper mechanism to save power at the link level is 
-ASPM. I stand to be corrected and we have on CC some very knowledgeable 
-fellows that I am certain will jump at the opportunity to do so.
-
-What it seems like to me is that a proprietary driver running in a VM is 
-initiating these changes. And if that is the case then it seems this is 
-a virtualization problem. A quick glance over GPU drivers in linux did 
-not reveal any obvious places where we intentionally downgrade a link.
-
-I'm not convinced a revert is the best call.
-
-Alex
-
->      e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
->      3e82a7f9031f ("PCI/LINK: Supply IRQ handler so level-triggered IRQs are acked")
->      55397ce8df48 ("PCI/LINK: Clear bandwidth notification interrupt before enabling it")
->      0fa635aec9ab ("PCI/LINK: Deduplicate bandwidth reports for multi-function devices")
-> 
-> Link: https://lore.kernel.org/lkml/155597243666.19387.1205950870601742062.stgit@gimli.home
-> Link: https://lore.kernel.org/lkml/155605909349.3575.13433421148215616375.stgit@gimli.home
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> CC: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> CC: Lukas Wunner <lukas@wunner.de>
-> CC: Alex Williamson <alex.williamson@redhat.com>
-> ---
->   drivers/pci/pci.h                  |   1 -
->   drivers/pci/pcie/Makefile          |   1 -
->   drivers/pci/pcie/bw_notification.c | 121 -----------------------------
->   drivers/pci/pcie/portdrv.h         |   6 +-
->   drivers/pci/pcie/portdrv_core.c    |  17 ++--
->   drivers/pci/pcie/portdrv_pci.c     |   1 -
->   drivers/pci/probe.c                |   2 +-
->   7 files changed, 7 insertions(+), 142 deletions(-)
->   delete mode 100644 drivers/pci/pcie/bw_notification.c
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index d994839a3e24..224d88634115 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -273,7 +273,6 @@ enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
->   u32 pcie_bandwidth_capable(struct pci_dev *dev, enum pci_bus_speed *speed,
->   			   enum pcie_link_width *width);
->   void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
-> -void pcie_report_downtraining(struct pci_dev *dev);
->   
->   /* Single Root I/O Virtualization */
->   struct pci_sriov {
-> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> index f1d7bc1e5efa..ab514083d5d4 100644
-> --- a/drivers/pci/pcie/Makefile
-> +++ b/drivers/pci/pcie/Makefile
-> @@ -3,7 +3,6 @@
->   # Makefile for PCI Express features and port driver
->   
->   pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
-> -pcieportdrv-y			+= bw_notification.o
->   
->   obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
->   
-> diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
-> deleted file mode 100644
-> index 4fa9e3523ee1..000000000000
-> --- a/drivers/pci/pcie/bw_notification.c
-> +++ /dev/null
-> @@ -1,121 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> -/*
-> - * PCI Express Link Bandwidth Notification services driver
-> - * Author: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> - *
-> - * Copyright (C) 2019, Dell Inc
-> - *
-> - * The PCIe Link Bandwidth Notification provides a way to notify the
-> - * operating system when the link width or data rate changes.  This
-> - * capability is required for all root ports and downstream ports
-> - * supporting links wider than x1 and/or multiple link speeds.
-> - *
-> - * This service port driver hooks into the bandwidth notification interrupt
-> - * and warns when links become degraded in operation.
-> - */
-> -
-> -#include "../pci.h"
-> -#include "portdrv.h"
-> -
-> -static bool pcie_link_bandwidth_notification_supported(struct pci_dev *dev)
-> -{
-> -	int ret;
-> -	u32 lnk_cap;
-> -
-> -	ret = pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnk_cap);
-> -	return (ret == PCIBIOS_SUCCESSFUL) && (lnk_cap & PCI_EXP_LNKCAP_LBNC);
-> -}
-> -
-> -static void pcie_enable_link_bandwidth_notification(struct pci_dev *dev)
-> -{
-> -	u16 lnk_ctl;
-> -
-> -	pcie_capability_write_word(dev, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA_LBMS);
-> -
-> -	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnk_ctl);
-> -	lnk_ctl |= PCI_EXP_LNKCTL_LBMIE;
-> -	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
-> -}
-> -
-> -static void pcie_disable_link_bandwidth_notification(struct pci_dev *dev)
-> -{
-> -	u16 lnk_ctl;
-> -
-> -	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnk_ctl);
-> -	lnk_ctl &= ~PCI_EXP_LNKCTL_LBMIE;
-> -	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
-> -}
-> -
-> -static irqreturn_t pcie_bw_notification_irq(int irq, void *context)
-> -{
-> -	struct pcie_device *srv = context;
-> -	struct pci_dev *port = srv->port;
-> -	u16 link_status, events;
-> -	int ret;
-> -
-> -	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
-> -	events = link_status & PCI_EXP_LNKSTA_LBMS;
-> -
-> -	if (ret != PCIBIOS_SUCCESSFUL || !events)
-> -		return IRQ_NONE;
-> -
-> -	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
-> -	pcie_update_link_speed(port->subordinate, link_status);
-> -	return IRQ_WAKE_THREAD;
-> -}
-> -
-> -static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
-> -{
-> -	struct pcie_device *srv = context;
-> -	struct pci_dev *port = srv->port;
-> -	struct pci_dev *dev;
-> -
-> -	/*
-> -	 * Print status from downstream devices, not this root port or
-> -	 * downstream switch port.
-> -	 */
-> -	down_read(&pci_bus_sem);
-> -	list_for_each_entry(dev, &port->subordinate->devices, bus_list)
-> -		pcie_report_downtraining(dev);
-> -	up_read(&pci_bus_sem);
-> -
-> -	return IRQ_HANDLED;
-> -}
-> -
-> -static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
-> -{
-> -	int ret;
-> -
-> -	/* Single-width or single-speed ports do not have to support this. */
-> -	if (!pcie_link_bandwidth_notification_supported(srv->port))
-> -		return -ENODEV;
-> -
-> -	ret = request_threaded_irq(srv->irq, pcie_bw_notification_irq,
-> -				   pcie_bw_notification_handler,
-> -				   IRQF_SHARED, "PCIe BW notif", srv);
-> -	if (ret)
-> -		return ret;
-> -
-> -	pcie_enable_link_bandwidth_notification(srv->port);
-> -
-> -	return 0;
-> -}
-> -
-> -static void pcie_bandwidth_notification_remove(struct pcie_device *srv)
-> -{
-> -	pcie_disable_link_bandwidth_notification(srv->port);
-> -	free_irq(srv->irq, srv);
-> -}
-> -
-> -static struct pcie_port_service_driver pcie_bandwidth_notification_driver = {
-> -	.name		= "pcie_bw_notification",
-> -	.port_type	= PCIE_ANY_PORT,
-> -	.service	= PCIE_PORT_SERVICE_BWNOTIF,
-> -	.probe		= pcie_bandwidth_notification_probe,
-> -	.remove		= pcie_bandwidth_notification_remove,
-> -};
-> -
-> -int __init pcie_bandwidth_notification_init(void)
-> -{
-> -	return pcie_port_service_register(&pcie_bandwidth_notification_driver);
-> -}
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index 1d50dc58ac40..fbbf00b0992e 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -20,10 +20,8 @@
->   #define PCIE_PORT_SERVICE_HP		(1 << PCIE_PORT_SERVICE_HP_SHIFT)
->   #define PCIE_PORT_SERVICE_DPC_SHIFT	3	/* Downstream Port Containment */
->   #define PCIE_PORT_SERVICE_DPC		(1 << PCIE_PORT_SERVICE_DPC_SHIFT)
-> -#define PCIE_PORT_SERVICE_BWNOTIF_SHIFT	4	/* Bandwidth notification */
-> -#define PCIE_PORT_SERVICE_BWNOTIF	(1 << PCIE_PORT_SERVICE_BWNOTIF_SHIFT)
->   
-> -#define PCIE_PORT_DEVICE_MAXSERVICES   5
-> +#define PCIE_PORT_DEVICE_MAXSERVICES   4
->   
->   #ifdef CONFIG_PCIEAER
->   int pcie_aer_init(void);
-> @@ -49,8 +47,6 @@ int pcie_dpc_init(void);
->   static inline int pcie_dpc_init(void) { return 0; }
->   #endif
->   
-> -int pcie_bandwidth_notification_init(void);
-> -
->   /* Port Type */
->   #define PCIE_ANY_PORT			(~0)
->   
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 7d04f9d087a6..f458ac9cb70c 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -99,7 +99,7 @@ static int pcie_message_numbers(struct pci_dev *dev, int mask,
->    */
->   static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
->   {
-> -	int nr_entries, nvec, pcie_irq;
-> +	int nr_entries, nvec;
->   	u32 pme = 0, aer = 0, dpc = 0;
->   
->   	/* Allocate the maximum possible number of MSI/MSI-X vectors */
-> @@ -135,13 +135,10 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
->   			return nr_entries;
->   	}
->   
-> -	/* PME, hotplug and bandwidth notification share an MSI/MSI-X vector */
-> -	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP |
-> -		    PCIE_PORT_SERVICE_BWNOTIF)) {
-> -		pcie_irq = pci_irq_vector(dev, pme);
-> -		irqs[PCIE_PORT_SERVICE_PME_SHIFT] = pcie_irq;
-> -		irqs[PCIE_PORT_SERVICE_HP_SHIFT] = pcie_irq;
-> -		irqs[PCIE_PORT_SERVICE_BWNOTIF_SHIFT] = pcie_irq;
-> +	/* PME and hotplug share an MSI/MSI-X vector */
-> +	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP)) {
-> +		irqs[PCIE_PORT_SERVICE_PME_SHIFT] = pci_irq_vector(dev, pme);
-> +		irqs[PCIE_PORT_SERVICE_HP_SHIFT] = pci_irq_vector(dev, pme);
->   	}
->   
->   	if (mask & PCIE_PORT_SERVICE_AER)
-> @@ -253,10 +250,6 @@ static int get_port_device_capability(struct pci_dev *dev)
->   	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
->   		services |= PCIE_PORT_SERVICE_DPC;
->   
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> -	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-> -		services |= PCIE_PORT_SERVICE_BWNOTIF;
-> -
->   	return services;
->   }
->   
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 0a87091a0800..99d2abe88d0b 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -240,7 +240,6 @@ static void __init pcie_init_services(void)
->   	pcie_pme_init();
->   	pcie_dpc_init();
->   	pcie_hp_init();
-> -	pcie_bandwidth_notification_init();
->   }
->   
->   static int __init pcie_portdrv_init(void)
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 7e12d0163863..2ec0df04e0dc 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2388,7 +2388,7 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
->   	return dev;
->   }
->   
-> -void pcie_report_downtraining(struct pci_dev *dev)
-> +static void pcie_report_downtraining(struct pci_dev *dev)
->   {
->   	if (!pci_is_pcie(dev))
->   		return;
-> 
+SGksIFRyZW50DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVHJlbnQg
+UGllcGhvIFttYWlsdG86dHBpZXBob0BpbXBpbmouY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBBcHJp
+bCAzMCwgMjAxOSAxOjEzIEFNDQo+IFRvOiBsaW51eC1ydGNAdmdlci5rZXJuZWwub3JnOyBBbnNv
+biBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47DQo+IGEuenVtbW9AdG93ZXJ0ZWNoLml0OyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBhbGV4YW5kcmUuYmVsbG9uaUBib290bGlu
+LmNvbQ0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDog
+UmU6IFtQQVRDSF0gcnRjOiBzbnZzOiBVc2UgX19tYXliZV91bnVzZWQgaW5zdGVhZCBvZiAjaWYN
+Cj4gQ09ORklHX1BNX1NMRUVQDQo+IA0KPiBPbiBNb24sIDIwMTktMDQtMjkgYXQgMDc6MDIgKzAw
+MDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IFVzZSBfX21heWJlX3VudXNlZCBmb3IgcG93ZXIg
+bWFuYWdlbWVudCByZWxhdGVkIGZ1bmN0aW9ucyBpbnN0ZWFkIG9mDQo+ID4gI2lmIENPTkZJR19Q
+TV9TTEVFUCB0byBzaW1wbHkgdGhlIGNvZGUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNv
+biBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IFRoaXMgd2lsbCByZXN1bHQgaW4g
+dGhlIGZ1bmN0aW9ucyBhbHdheXMgYmVpbmcgaW5jbHVkZWQsIGV2ZW4gaWYgUE1fU0xFRVAgaXMN
+Cj4gb2ZmLi4uDQo+IA0KPiA+DQo+ID4gQEAgLTM4NywxNCArMzg1LDYgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBkZXZfcG1fb3BzIHNudnNfcnRjX3BtX29wcw0KPiA9IHsNCj4gPiAgCS5yZXN1bWVf
+bm9pcnEgPSBzbnZzX3J0Y19yZXN1bWVfbm9pcnEsICB9Ow0KPiANCj4gLi4uYmVjYXVzZSB0aGV5
+IHdpbGwgYWx3YXlzIGJlIHVzZWQgYnkgdGhlIGRlZmluaXRpb24gb2Ygc252c19ydGNfcG1fb3Bz
+DQo+IGhlcmUuDQoNCllvdSBhcmUgcmlnaHQsIEkgbWlzc2VkIHRoaXMgcGFydCwgaGF2ZSBzZW50
+IG91dCBWMiBwYXRjaCB3aXRoIA0KU0VUX05PSVJRX1NZU1RFTV9TTEVFUF9QTV9PUFMoKSB1c2Vk
+IHRvIGRlZmluZSB0aGUgb3BzLCBwbGVhc2UgaGVscCByZXZpZXcuDQoNClRoYW5rcywNCkFuc29u
+Lg0KDQo+IA0KPiBJbiBvcmRlciBmb3IgdGhpcyB0byB3b3JrLCBTSU1QTEVfREVWX1BNX09QUygp
+IG5lZWRzIHRvIGJlIHVzZWQsIHNvIHRoYXQNCj4gdGhlIGRldl9wbV9vcHMgc3RydWN0IGlzIGVt
+cHR5IHdoZW4gUE0gaXMgb2ZmIGFuZCB0aGUgZnVuY3Rpb25zIGRvbid0IGdldA0KPiByZWZlcmVu
+Y2VkLiBTZWU6DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5j
+b20vP3VybD1odHRwcyUzQSUyRiUyRmxrbWwubw0KPiByZyUyRmxrbWwlMkYyMDE5JTJGMSUyRjE3
+JTJGMzc2JmFtcDtkYXRhPTAyJTdDMDElN0NhbnNvbi5odWFuDQo+IGclNDBueHAuY29tJTdDNWI1
+YWVhOGQyNzZkNGEzZTE5NTAwOGQ2Y2NjNWUxYjUlN0M2ODZlYTFkM2JjMmI0DQo+IGM2ZmE5MmNk
+OTljNWMzMDE2MzUlN0MwJTdDMSU3QzYzNjkyMTU0NzU5OTc4NzYxNyZhbXA7c2RhdGE9Szhqdg0K
+PiBLWFRDSVB3NElEZ3g4YUEyTm4lMkZzNjRGaVNwbWY3R1Z1enVYdWxiSSUzRCZhbXA7cmVzZXJ2
+ZWQ9MA0K
