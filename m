@@ -2,106 +2,59 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D70C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B5DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34AC221707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556637013;
-	bh=zBYVD89Ga502t2W3oixEvvE+fgpD1hl8GQQvPTyVRkk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CecGRWrcGXdiK2xnMHRa6kD/b/q+llCAH0YHy5DCvqtZRmbRFHi5r64QC0bgv/7k2
-	 f1MK2q0+KAFB3Gql5aGF57qElenytoM/dBaUq2WKOsUQtE8BPe1sVWIx8DXQhPORa5
-	 Eb9vGbFRxmifJfQ9CRw6IIKqPtM/0UmmpMB2+KYo=
+	by mail.kernel.org (Postfix) with ESMTP id 29E272173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfD3PKL (ORCPT
+        id S1726451AbfD3PK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfD3PKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:10:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EB4B20835;
-        Tue, 30 Apr 2019 15:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556637008;
-        bh=zBYVD89Ga502t2W3oixEvvE+fgpD1hl8GQQvPTyVRkk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zUDdEa0JtLy8WrOxbx7BBxtDmXrNIiFICLg7H2xTTiXms64PfZ/Fh2KB2DlmrgE15
-         PoBF/xyJoecS5srDBmHfzTeR3mF1gUPR1qAZopw9g30sRcF7VkpokPRdXvjhnkOHwl
-         lFO5RSMStrU0KCVjf8jTztwFQ6lS5ridnVz7vHYk=
-Date:   Tue, 30 Apr 2019 17:10:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] livepatch: Fix kobject memleak
-Message-ID: <20190430151005.GA20916@kroah.com>
-References: <20190430001534.26246-1-tobin@kernel.org>
- <20190430001534.26246-2-tobin@kernel.org>
- <20190430145613.7tokgyqjsuxlyh2g@pathway.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430145613.7tokgyqjsuxlyh2g@pathway.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 30 Apr 2019 11:10:26 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:44020 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfD3PKY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:10:24 -0400
+Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 64C1D14076EFF;
+        Tue, 30 Apr 2019 08:10:23 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 11:10:22 -0400 (EDT)
+Message-Id: <20190430.111022.800749031141886400.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] appletalk: Set error code if register_snap_client
+ failed
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190430113408.30572-1-yuehaibing@huawei.com>
+References: <20190430113408.30572-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Apr 2019 08:10:24 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 04:56:13PM +0200, Petr Mladek wrote:
-> On Tue 2019-04-30 10:15:33, Tobin C. Harding wrote:
-> > Currently error return from kobject_init_and_add() is not followed by a
-> > call to kobject_put().  This means there is a memory leak.
-> 
-> I see, the ref count is always initialized to 1 via:
-> 
->   + kobject_init_and_add()
->     + kobject_init()
->       + kobject_init_internal()
-> 	+ kref_init()
-> 
-> 
-> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > ---
-> >  kernel/livepatch/core.c | 12 +++++++++---
-> >  1 file changed, 9 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> > index eb0ee10a1981..98a7bec41faa 100644
-> > --- a/kernel/livepatch/core.c
-> > +++ b/kernel/livepatch/core.c
-> > @@ -727,7 +727,9 @@ static int klp_init_func(struct klp_object *obj, struct klp_func *func)
-> >  	ret = kobject_init_and_add(&func->kobj, &klp_ktype_func,
-> >  				   &obj->kobj, "%s,%lu", func->old_name,
-> >  				   func->old_sympos ? func->old_sympos : 1);
-> > -	if (!ret)
-> > +	if (ret)
-> > +		kobject_put(&func->kobj);
-> > +	else
-> >  		func->kobj_added = true;
-> 
-> We could actually get rid of the custom kobj_added. Intead, we could
-> check for kobj->state_initialized in the various klp_free* functions.
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Tue, 30 Apr 2019 19:34:08 +0800
 
-Why do you need to care about this at all anyway?  The kobject can
-handle it's own lifetime just fine (that's what it is there for), why do
-you need to also track it?
+> If register_snap_client fails in atalk_init,
+> error code should be set, otherwise it will
+> triggers NULL pointer dereference while unloading
+> module.
+> 
+> Fixes: 9804501fa122 ("appletalk: Fix potential NULL pointer dereference in unregister_snap_client")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-thanks,
-
-greg k-h
+Applied, thanks.
