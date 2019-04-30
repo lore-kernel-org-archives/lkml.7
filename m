@@ -2,90 +2,102 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB246C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CDEC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF29205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556626095;
-	bh=YgvIXG6EbYT9zA84oNKUL2APiik8/DsVpRSHkNPcQak=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OJ1umordU4ou2jQmqZCH9D3EzzhomjUslQ3ay/vTa+dezNulQxwzLzeAsTPhVQQvf
-	 yGfutJpG9MrHQ0k0zrPmgw2xvitpHiW0XL4BPFYm7dOQELCedDnGiq5PFg2B/HymyB
-	 YuYOy0DOKsmNBxl3DSD41ehXsDUtl1jbRILsZM7o=
+	by mail.kernel.org (Postfix) with ESMTP id 2ECB3205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfD3LkL (ORCPT
+        id S1727722AbfD3MIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:40:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46030 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:08:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55442 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbfD3LkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:40:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727341AbfD3MIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 08:08:14 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370D721734;
-        Tue, 30 Apr 2019 11:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624405;
-        bh=YgvIXG6EbYT9zA84oNKUL2APiik8/DsVpRSHkNPcQak=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rhk+UZRJnKbVvz3flR5NN3qOfqfWFuGiq3BhP6J9b7Vta77exXaqMW64HTNUz3EFj
-         qKxDi/e87YNqqNV2/pQFb2tXVdmZtvqHnJt7pdK5Hgowgab+tm4rOj5XJkSizoYF45
-         jgTwt1gHuCJQ8Ut3LLjLvn0B+wXffzyMR3OnzNGc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.9 22/41] intel_th: gth: Fix an off-by-one in output unassigning
-Date:   Tue, 30 Apr 2019 13:38:33 +0200
-Message-Id: <20190430113530.299621071@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
-References: <20190430113524.451237916@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 6704930018C2;
+        Tue, 30 Apr 2019 12:08:13 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 1FDDE78DEC;
+        Tue, 30 Apr 2019 12:08:01 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 30 Apr 2019 14:08:11 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 14:07:59 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
+        jannh@google.com, surenb@google.com, timmurray@google.com,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        torvalds@linux-foundation.org, kernel-team@android.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, viro@zeniv.linux.org.uk,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
+Message-ID: <20190430120759.GC23020@redhat.com>
+References: <20190425190010.46489-1-joel@joelfernandes.org>
+ <20190425222359.sqhboc4x4daznr6r@brauner.io>
+ <20190428162405.GA6757@redhat.com>
+ <20190429140245.GB233442@google.com>
+ <20190429142030.GA17715@redhat.com>
+ <20190429163259.GA201155@google.com>
+ <20190430115332.GB23020@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430115332.GB23020@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 30 Apr 2019 12:08:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+On 04/30, Oleg Nesterov wrote:
+>
+> > > pidfd_poll() can race with the exiting task, miss exit_code != 0, and return
+> > > zero. However, do_poll() won't block after that and pidfd_poll() will be called
+> > > again.
+> >
+> > Here also I didn't follow what you mean. If exit_code is read as 0 in
+> > pidfd_poll(), then in do_poll() the count will be 0 and it will block in
+> > poll_schedule_timeout(). Right?
+>
+> No. Please note the pwq->triggered check and please read __pollwake().
+>
+> But if you want to understand this you can forget about poll/select. It is
+> a bit complicated, in particular because it has to do set_current_state()
+> right  before schedule() and thus it plays games with pwq->triggered. But in
+> essence this doesn't differ too much from the plain wait_event-like code
+> (although you can also look at wait_woken/woken_wake_function).
+>
+> If remove_wait_queue() could happem before wake_up_all() (like in your pseudo-
+> code above), then pidfd_poll() or any other ->poll() method could miss _both_
+> the condition and wakeup. But sys_poll() doesn't do this, so it is fine to miss
+> the condition and rely on wake_up_all() which ensures we won't block and the
+> next iteration must see condition == T.
 
-commit 91d3f8a629849968dc91d6ce54f2d46abf4feb7f upstream.
+Oh, just in case... If it is not clear, of course I am talking about the case
+when wake_up_call() was already called when we check the condition. Otherwise
+everything is simple.
 
-Commit 9ed3f22223c3 ("intel_th: Don't reference unassigned outputs")
-fixes a NULL dereference for all masters except the last one ("256+"),
-which keeps the stale pointer after the output driver had been unassigned.
-
-Fix the off-by-one.
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 9ed3f22223c3 ("intel_th: Don't reference unassigned outputs")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/hwtracing/intel_th/gth.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/hwtracing/intel_th/gth.c
-+++ b/drivers/hwtracing/intel_th/gth.c
-@@ -605,7 +605,7 @@ static void intel_th_gth_unassign(struct
- 	othdev->output.port = -1;
- 	othdev->output.active = false;
- 	gth->output[port].output = NULL;
--	for (master = 0; master < TH_CONFIGURABLE_MASTERS; master++)
-+	for (master = 0; master <= TH_CONFIGURABLE_MASTERS; master++)
- 		if (gth->master[master] == port)
- 			gth->master[master] = -1;
- 	spin_unlock(&gth->gth_lock);
-
+Oleg.
 
