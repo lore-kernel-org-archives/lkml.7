@@ -2,88 +2,114 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D6DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F802C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C384220835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:22:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCrcJ8Gq"
+	by mail.kernel.org (Postfix) with ESMTP id 33EBE20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfD3OWz (ORCPT
+        id S1727599AbfD3OYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:22:55 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41762 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfD3OWy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:22:54 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g8so11053006otl.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 07:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GhLbsCh+7+3dT0yeAZbUcY/AwuBdniC8c1Doy2RANbs=;
-        b=LCrcJ8GqxP81DA7QCA7VLz3LgfcMmrt5jZfwdg6KQT5IJtjVfMjw8a5ENUnbY4V2ij
-         6n0+9c5ovtEZgIcDXqUDnatVZpQqCl2uNf41zOQjbrEDfTemi+w71bQA++j963lMO8G1
-         /6X4cFT7Hi5vA4h9u+M4cyw421qbK6HJwDRx1yx1G+socY34I4ae0YFrQB1vu8IhzM0/
-         ep8BmjeQFWT1KBmWQrnlCYaEaGsc2co7YFHaA1F4HFd/gzt+YKvoadVwDxK92vDT8TLG
-         GN9DsHIsYcAqcNHkxChgwBu7b1xt7ZpmPccxx4i82KUfzpYQO957H9K8oae6sGtEA5L5
-         3P/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GhLbsCh+7+3dT0yeAZbUcY/AwuBdniC8c1Doy2RANbs=;
-        b=Rm4DlBPL5V/5Oj/NqestCRXreZR/06qLLlLz6saPd8lsq3fFqQxdTazXuUJ3MYAYak
-         c8aFJyXVrBgOlgpInGxPvicByRVNlJQVriEyCWjg8pX24/4NkkVGTmmud4XdyClzGRQc
-         TILFyUmJ1MLkQWmUTz63lS+eApmUNYz1iGhTet1ffx4VWnOp2uD/zrUduKx2Y2nN/bkk
-         AkRGwJRsdP6Fkive0FePsnrSt30/E8t+qy8KVeSOtYJehjBMFVM1jjvZs0Z4+4bFFCrh
-         OKe10SHUWgpNJRIiSIolrJiSp5BwWv6vf//s/YKOihw0dMdSLNjqbfxirjeSTj4R4TMN
-         Q3ww==
-X-Gm-Message-State: APjAAAWPJZrOkXPixGD6IkYf4d7P34UCmvJ/sMA16o3Ao/1vyvX0VwKt
-        QbIQIkiQuGuhf2JYi41wcgl6posLh6yGOu5/mZW08A==
-X-Google-Smtp-Source: APXvYqyEHmAehKZR1imvGsb8Kcy0DWzhy/Ln6QcqM8WmdKbxc6yx1si6SIMEV9sm/IfM6bunmGW7SK5AOOSBXMRPo2M=
-X-Received: by 2002:a9d:6318:: with SMTP id q24mr2794428otk.95.1556634173787;
- Tue, 30 Apr 2019 07:22:53 -0700 (PDT)
+        Tue, 30 Apr 2019 10:24:00 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48224 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbfD3OYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:24:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AC2280D;
+        Tue, 30 Apr 2019 07:23:59 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB2183F719;
+        Tue, 30 Apr 2019 07:23:57 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 15:23:55 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>, linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH 1/7] ARM: vdso: Remove dependency with the arch_timer
+ driver internals
+Message-ID: <20190430142355.GF17870@fuggles.cambridge.arm.com>
+References: <20190408154907.223536-1-marc.zyngier@arm.com>
+ <20190408154907.223536-2-marc.zyngier@arm.com>
 MIME-Version: 1.0
-References: <1556517940-13725-1-git-send-email-hofrat@osadl.org>
- <CAGngYiVDFL1fm2oKALXORNziX6pdcBBNtp7rSnj_FBdr6u4j5w@mail.gmail.com>
- <20190430022238.GA22593@osadl.at> <20190430030223.GE23075@ZenIV.linux.org.uk>
- <20190430033310.GB23144@osadl.at> <20190430041934.GI23075@ZenIV.linux.org.uk>
- <CAGngYiVSg86X+jD+hgwwrOYX82Fu3OWSLygwGFzyc9wYq6AesQ@mail.gmail.com> <20190430140339.GA18986@kroah.com>
-In-Reply-To: <20190430140339.GA18986@kroah.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 30 Apr 2019 10:22:42 -0400
-Message-ID: <CAGngYiXbSBuce2HmbHH4kUbe2ShgheML=bp+AJ-3O+FE+37ZRw@mail.gmail.com>
-Subject: Re: [PATCH V2] staging: fieldbus: anybus-s: force endiannes annotation
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, devel@driverdev.osuosl.org,
-        Nicholas Mc Guire <der.herr@hofr.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190408154907.223536-2-marc.zyngier@arm.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 10:03 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> Keep it bus-endian, as that's the "normal" way bus structures work (like
-> PCI and USB for example), and that should be in a documented, and
-> consistent, form, right?
->
-> Then do the conversion when you access the field from within the kernel.
+Hi Marc,
 
-Ah ok, it's like a standard way of implementing a bus. Sounds good, I'll
-spin a patch to conform to it. And while I'm at it, I'll rename fieldbus_type
-because it can be confused with another fieldbus_type within the
-fieldbus_dev core.
+On Mon, Apr 08, 2019 at 04:49:01PM +0100, Marc Zyngier wrote:
+> THe VDSO code uses the kernel helper that was originally designed
+> to abstract the access between 32 and 64bit systems. It worked so
+> far because this function is declared as 'inline'.
+> 
+> As we're about to revamp that part of the code, the VDSO would
+> break. Let's fix it by doing what should have been done from
+> the start, a proper system register access.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  arch/arm/include/asm/cp15.h   | 2 ++
+>  arch/arm/vdso/vgettimeofday.c | 5 +++--
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+
+This looks ok to me and I'd like to take the series via arm64, but I
+could do with an Ack from Russell on these 32-bit ARM parts first.
+
+Will
+
+> diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
+> index 07e27f212dc7..d2453e2d3f1f 100644
+> --- a/arch/arm/include/asm/cp15.h
+> +++ b/arch/arm/include/asm/cp15.h
+> @@ -68,6 +68,8 @@
+>  #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
+>  #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
+>  
+> +#define CNTVCT				__ACCESS_CP15_64(1, c14)
+> +
+>  extern unsigned long cr_alignment;	/* defined in entry-armv.S */
+>  
+>  static inline unsigned long get_cr(void)
+> diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
+> index a9dd619c6c29..7bdbf5d5c47d 100644
+> --- a/arch/arm/vdso/vgettimeofday.c
+> +++ b/arch/arm/vdso/vgettimeofday.c
+> @@ -18,9 +18,9 @@
+>  #include <linux/compiler.h>
+>  #include <linux/hrtimer.h>
+>  #include <linux/time.h>
+> -#include <asm/arch_timer.h>
+>  #include <asm/barrier.h>
+>  #include <asm/bug.h>
+> +#include <asm/cp15.h>
+>  #include <asm/page.h>
+>  #include <asm/unistd.h>
+>  #include <asm/vdso_datapage.h>
+> @@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
+>  	u64 cycle_now;
+>  	u64 nsec;
+>  
+> -	cycle_now = arch_counter_get_cntvct();
+> +	isb();
+> +	cycle_now = read_sysreg(CNTVCT);
+>  
+>  	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
+>  
+> -- 
+> 2.20.1
+> 
