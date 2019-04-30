@@ -3,98 +3,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CA9C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CC7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8C321670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060A021670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfD3I4C (ORCPT
+        id S1726735AbfD3I4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:56:02 -0400
-Received: from relay.sw.ru ([185.231.240.75]:38312 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfD3I4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:56:01 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hLOYF-0007NC-34; Tue, 30 Apr 2019 11:55:47 +0300
-Subject: Re: [PATCH 3/3] prctl_set_mm: downgrade mmap_sem to read lock
-To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        gorcunov@gmail.com
-Cc:     akpm@linux-foundation.org, arunks@codeaurora.org, brgl@bgdev.pl,
-        geert+renesas@glider.be, ldufour@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mguzik@redhat.com, mhocko@kernel.org, rppt@linux.ibm.com,
-        vbabka@suse.cz
-References: <20190418182321.GJ3040@uranus.lan>
- <20190430081844.22597-1-mkoutny@suse.com>
- <20190430081844.22597-4-mkoutny@suse.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <af8f7958-06aa-7134-c750-b7a994368e89@virtuozzo.com>
-Date:   Tue, 30 Apr 2019 11:55:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 04:56:09 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:24483 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725790AbfD3I4I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:56:08 -0400
+X-UUID: 660ccab875084f589928a94b3a8c365e-20190430
+X-UUID: 660ccab875084f589928a94b3a8c365e-20190430
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 562232972; Tue, 30 Apr 2019 16:56:02 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 30 Apr
+ 2019 16:56:01 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 30 Apr 2019 16:56:00 +0800
+Message-ID: <1556614560.24897.31.camel@mhfsdcap03>
+Subject: RE: [PATCH 1/4] net: stmmac: update rx tail pointer register to fix
+ rx dma hang issue.
+From:   biao huang <biao.huang@mediatek.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>
+Date:   Tue, 30 Apr 2019 16:56:00 +0800
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B46DDF0@DE02WEMBXB.internal.synopsys.com>
+References: <1556518556-32464-1-git-send-email-biao.huang@mediatek.com>
+         <1556518556-32464-2-git-send-email-biao.huang@mediatek.com>
+         <78EB27739596EE489E55E81C33FEC33A0B46DDF0@DE02WEMBXB.internal.synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-In-Reply-To: <20190430081844.22597-4-mkoutny@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.04.2019 11:18, Michal Koutný wrote:
-> Since commit 88aa7cc688d4 ("mm: introduce arg_lock to protect
-> arg_start|end and env_start|end in mm_struct") we use arg_lock for
-> boundaries modifications. Synchronize prctl_set_mm with this lock and
-> keep mmap_sem for reading only (analogous to what we already do in
-> prctl_set_mm_map).
+On Mon, 2019-04-29 at 08:51 +0000, Jose Abreu wrote:
+> From: Biao Huang <biao.huang@mediatek.com>
+> Date: Mon, Apr 29, 2019 at 07:15:53
 > 
-> v2: call find_vma without arg_lock held
+> > Currently we will not update the receive descriptor tail pointer in
+> > stmmac_rx_refill. Rx dma will think no available descriptors and stop
+> > once received packets exceed DMA_RX_SIZE, so that the rx only test will fail.
+> > 
+> > Update the receive tail pointer in stmmac_rx_refill to add more descriptors
+> > to the rx channel, so packets can be received continually
+> > 
+> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> > ---
+> >  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > index 97c5e1a..818ad88 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > @@ -3336,6 +3336,9 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+> >  		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
+> >  	}
+> >  	rx_q->dirty_rx = entry;
+> > +	stmmac_set_rx_tail_ptr(priv, priv->ioaddr,
+> > +			       rx_q->dma_rx_phy + (entry * sizeof(struct dma_desc)),
 > 
-> CC: Cyrill Gorcunov <gorcunov@gmail.com>
-> CC: Laurent Dufour <ldufour@linux.ibm.com>
-> Signed-off-by: Michal Koutný <mkoutny@suse.com>
-> ---
->  kernel/sys.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> I think you can just use the "rx_q->rx_tail_addr" here. It'll always 
+> trigger a poll demand for the channel.
+Yes, will use rx_q->rx_tail_addr here.
 > 
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index e1acb444d7b0..641fda756575 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2123,9 +2123,14 @@ static int prctl_set_mm(int opt, unsigned long addr,
->  
->  	error = -EINVAL;
->  
-> -	down_write(&mm->mmap_sem);
-> +	/*
-> +	 * arg_lock protects concurent updates of arg boundaries, we need mmap_sem for
-> +	 * a) concurrent sys_brk, b) finding VMA for addr validation.
-> +	 */
-> +	down_read(&mm->mmap_sem);
->  	vma = find_vma(mm, addr);
->  
-> +	spin_lock(&mm->arg_lock);
->  	prctl_map.start_code	= mm->start_code;
->  	prctl_map.end_code	= mm->end_code;
->  	prctl_map.start_data	= mm->start_data;
-> @@ -2213,7 +2218,8 @@ static int prctl_set_mm(int opt, unsigned long addr,
->  
->  	error = 0;
->  out:
-> -	up_write(&mm->mmap_sem);
-> +	spin_unlock(&mm->arg_lock);
-> +	up_read(&mm->mmap_sem);
->  	return error;
+> Thanks,
+> Jose Miguel Abreu
 
-Hm, shouldn't spin_lock()/spin_unlock() pair go as a fixup to existing code
-in a separate patch? 
 
-Without them, the existing code has a problem at least in get_mm_cmdline().
