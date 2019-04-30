@@ -2,55 +2,54 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F7BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D833CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA94C21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94EBD21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625442;
-	bh=17cVRuU6W8q7VjDf23UMfIcNffAFqd8hJoMrPf6lOa0=;
+	s=default; t=1556625449;
+	bh=A4XMC9p/3HF6St1IjCxVuL4dvn3duw+BucvGvAO14To=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCYPxAwedcDwqaMW3s5cL6W0Yq95NhVLTkUTw1umNhwnXoh1n8qm6KL3Ztz7Es6ty
-	 VOORElkZnlAyB3XBvVvXr1iF6l9PGxIsjswAkKTSUo3Sk7qoMnF7/zvX1+aqoiDOlb
-	 dgeKqMZIv7FyWDGpnam0IZFQqz49iyQ4hAdfKgsI=
+	b=gGRPS2ADiRbgBPr0FwoBrx7PmkNen5qJEBmS3DRH9x2yWjlWSJhyZYmt45wQe0g7R
+	 5YI+qo5t8aRzjzgFFM3Z1A+m4Aq2yyz5fdQpyrCkAAD6csPYy6Lp6EUvAvmmrDzDJR
+	 G7zUxP41qsbMAP3wAav4mcxhORz4po/hchDifcXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfD3L5W (ORCPT
+        id S1727590AbfD3L52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:57:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:57:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728926AbfD3LsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:07 -0400
+        id S1730782AbfD3Lr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1B0C2054F;
-        Tue, 30 Apr 2019 11:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C91B221670;
+        Tue, 30 Apr 2019 11:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624886;
-        bh=17cVRuU6W8q7VjDf23UMfIcNffAFqd8hJoMrPf6lOa0=;
+        s=default; t=1556624878;
+        bh=A4XMC9p/3HF6St1IjCxVuL4dvn3duw+BucvGvAO14To=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUOtV+tXxNPfWTaJdWPuhe7xr8vABRP+ix5D2MhZ3heD0WHhZDfoYuWzzTB8Y1lVl
-         TDbphLE+vgNihQmBlk2IBnbXN/6sKtMJThrXdAVyftA/wZzI24qQU/tvZ6F9vOP6tY
-         YHEVPmynbUiA9KGK8qGS7NoH4hZujciiGPQkgvxc=
+        b=K7emmPBbpZHOHWDgHOhhi+g0c4wdT3sSm5AnlB/Cag5SqeSAxu8GGiP7xS5yqJ7p1
+         x+lZpDBOhfsACmBKTgNXRzwd351mCpIxATjgzN/b78PO/LT4OVSNdQyzdKwyXYhA6N
+         614aXFqij1PZ0gA2Lw5JLOx/US5P3YFGizchooPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Garcia <nevola@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 02/89] netfilter: nf_tables: bogus EBUSY in helper removal from transaction
-Date:   Tue, 30 Apr 2019 13:37:53 +0200
-Message-Id: <20190430113609.924618319@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 095/100] mlxsw: pci: Reincrease PCI reset timeout
+Date:   Tue, 30 Apr 2019 13:39:04 +0200
+Message-Id: <20190430113613.315782422@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
-References: <20190430113609.741196396@linuxfoundation.org>
+In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
+References: <20190430113608.616903219@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,63 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ffcd32f64633926163cdd07a7d295c500a947d1 ]
+From: Ido Schimmel <idosch@mellanox.com>
 
-Proper use counter updates when activating and deactivating the object,
-otherwise, this hits bogus EBUSY error.
+[ Upstream commit 1ab3030193d25878b3b1409060e1e0a879800c95 ]
 
-Fixes: cd5125d8f518 ("netfilter: nf_tables: split set destruction in deactivate and destroy phase")
-Reported-by: Laura Garcia <nevola@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+During driver initialization the driver sends a reset to the device and
+waits for the firmware to signal that it is ready to continue.
+
+Commit d2f372ba0914 ("mlxsw: pci: Increase PCI SW reset timeout")
+increased the timeout to 13 seconds due to longer PHY calibration in
+Spectrum-2 compared to Spectrum-1.
+
+Recently it became apparent that this timeout is too short and therefore
+this patch increases it again to a safer limit that will be reduced in
+the future.
+
+Fixes: c3ab435466d5 ("mlxsw: spectrum: Extend to support Spectrum-2 ASIC")
+Fixes: d2f372ba0914 ("mlxsw: pci: Increase PCI SW reset timeout")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netfilter/nft_objref.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/pci_hw.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_objref.c b/net/netfilter/nft_objref.c
-index d8737c115257..bf92a40dd1b2 100644
---- a/net/netfilter/nft_objref.c
-+++ b/net/netfilter/nft_objref.c
-@@ -64,21 +64,34 @@ nla_put_failure:
- 	return -1;
- }
+--- a/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
+@@ -27,7 +27,7 @@
  
--static void nft_objref_destroy(const struct nft_ctx *ctx,
--			       const struct nft_expr *expr)
-+static void nft_objref_deactivate(const struct nft_ctx *ctx,
-+				  const struct nft_expr *expr,
-+				  enum nft_trans_phase phase)
- {
- 	struct nft_object *obj = nft_objref_priv(expr);
- 
-+	if (phase == NFT_TRANS_COMMIT)
-+		return;
-+
- 	obj->use--;
- }
- 
-+static void nft_objref_activate(const struct nft_ctx *ctx,
-+				const struct nft_expr *expr)
-+{
-+	struct nft_object *obj = nft_objref_priv(expr);
-+
-+	obj->use++;
-+}
-+
- static struct nft_expr_type nft_objref_type;
- static const struct nft_expr_ops nft_objref_ops = {
- 	.type		= &nft_objref_type,
- 	.size		= NFT_EXPR_SIZE(sizeof(struct nft_object *)),
- 	.eval		= nft_objref_eval,
- 	.init		= nft_objref_init,
--	.destroy	= nft_objref_destroy,
-+	.activate	= nft_objref_activate,
-+	.deactivate	= nft_objref_deactivate,
- 	.dump		= nft_objref_dump,
- };
- 
--- 
-2.19.1
-
+ #define MLXSW_PCI_SW_RESET			0xF0010
+ #define MLXSW_PCI_SW_RESET_RST_BIT		BIT(0)
+-#define MLXSW_PCI_SW_RESET_TIMEOUT_MSECS	13000
++#define MLXSW_PCI_SW_RESET_TIMEOUT_MSECS	20000
+ #define MLXSW_PCI_SW_RESET_WAIT_MSECS		100
+ #define MLXSW_PCI_FW_READY			0xA1844
+ #define MLXSW_PCI_FW_READY_MASK			0xFFFF
 
 
