@@ -2,130 +2,96 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450EEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E345C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C73120835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86CF20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:10:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ubxln9Z3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfD3WI5 (ORCPT
+        id S1727230AbfD3WK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:08:57 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54569 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfD3WI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:08:57 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id DDF6C8085B; Wed,  1 May 2019 00:08:46 +0200 (CEST)
-Date:   Wed, 1 May 2019 00:08:56 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Message-ID: <20190430220855.GD20410@amd>
-References: <20190430191730.19450-1-dmurphy@ti.com>
- <20190430191730.19450-6-dmurphy@ti.com>
- <20190430220527.GC20410@amd>
- <34f72f44-9385-a42a-4e44-94ae6a04fe98@ti.com>
+        Tue, 30 Apr 2019 18:10:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:54593 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbfD3WK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 18:10:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44twhc40XGz9s9y;
+        Wed,  1 May 2019 08:10:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556662256;
+        bh=JVSi/0QAeAy1mh+/x23zjs8K7C915sL09yAKKHVvmUo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ubxln9Z3X5z8qsy8SfwhfEBLlQyGh5qtlj33oqlBRnUZCP1SgMwI8ssWxVzweM8vU
+         KTcaas0Ip2bxI75sCHAqu/ArY0dyC0eFaFvUMcrJoklKkOmVrLdEpFDNNGk3eNT+bc
+         ojLgGyXtH8ivM+p/2LXL87Sw4EsNmmvcyPeDMBFEbScNiOgbLUpaDw9pKWE2ySigk0
+         OE5lNcsa43H6cWTvob2qgNlNkoKioqkiIUyOZIWY4vKUtWbLNt7dMaHT/aYyl0RhMt
+         GPVcUN9sr0zqASh3JMysVII6IqcquXWvrmsU0OQzVpT6lRPFnE01yRcQl5Mgok5VPf
+         GOuPXV7dSABwA==
+Date:   Wed, 1 May 2019 08:10:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prarit Bhargava <prarit@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the modules tree
+Message-ID: <20190501081054.387820b2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
-Content-Disposition: inline
-In-Reply-To: <34f72f44-9385-a42a-4e44-94ae6a04fe98@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Q=rOSKQXD5Xm/TG7tZop55S"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---6Nae48J/T25AfBN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/Q=rOSKQXD5Xm/TG7tZop55S
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue 2019-04-30 17:07:32, Dan Murphy wrote:
->=20
->=20
-> On 4/30/19 5:05 PM, Pavel Machek wrote:
-> > On Tue 2019-04-30 14:17:28, Dan Murphy wrote:
-> >> The LM3697 is a single function LED driver. The single function LED
-> >> driver needs to reside in the LED directory as a dedicated LED driver
-> >> and not as a MFD device.  The device does have common brightness and r=
-amp
-> >> features and those can be accomodated by a TI LMU framework.
-> >>
-> >> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedi=
-cated
-> >> LED dt binding needs to be added.  The new LM3697 LED dt binding will =
-then
-> >> reside in the Documentation/devicetree/bindings/leds directory and fol=
-low the
-> >> current LED and general bindings guidelines.
-> >>
-> >> Reviewed-by: Rob Herring <robh@kernel.org>
-> >> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> >> ---
-> >>
-> >> v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchw=
-ork/patch/1058762/
-> >>
-> >> v2 - Made changes to reference ti,brightness-resolution to the ti-lmu.=
-txt -
-> >> https://lore.kernel.org/patchwork/patch/1054501/
-> >>
-> >>  .../devicetree/bindings/leds/leds-lm3697.txt  | 73 +++++++++++++++++++
-> >>  .../devicetree/bindings/mfd/ti-lmu.txt        | 27 +------
-> >>  2 files changed, 74 insertions(+), 26 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697=
-=2Etxt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/=
-Documentation/devicetree/bindings/leds/leds-lm3697.txt
-> >> new file mode 100644
-> >> index 000000000000..02378f33c9ab
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
-> >> @@ -0,0 +1,73 @@
-> >> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
-> >> +
-> >> +The LM3697 11-bit LED driver provides high-
-> >> +performance backlight dimming for 1, 2, or 3 series
-> >> +LED strings while delivering up to 90% efficiency.
-> >> +
-> >> +This device is suitable for display and keypad Lighting
-> >=20
-> > "lightning."
->=20
-> Heh.  Don't think you meant lightning but I get what you are saying
->=20
-> s/Lighting/lighting
+Hi all,
 
-Yep. Sorry :-). Plus I'd add a dot (".") at the end of sentence.
+In commit
 
-									Pavel
+  7e470ea99bcd ("kernel/module: Reschedule while waiting for modules to fin=
+ish loading")
+
+Fixes tag
+
+  Fixes: linux-next commit f9a75c1d717f ("modules: Only return -EEXIST for =
+modules that have finished loading")
+
+has these problem(s):
+
+  - the "linux-next commit" is unexpected (and not really meaningful
+    once this is merged into Linus' tree)
+
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Cheers,
+Stephen Rothwell
 
---6Nae48J/T25AfBN4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--Sig_/Q=rOSKQXD5Xm/TG7tZop55S
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlzIx3cACgkQMOfwapXb+vIXwACgojs3hh1JSW3TwopZNKqVtCfI
-Pb4Anj8CVBzVheWZyoaalsSvGtnILLTd
-=tNRY
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzIx+4ACgkQAVBC80lX
+0GwXIwgAoZ1nAGUCkVKR7DlCwgC3a0AI0gysq9HFiSmMTfjuMP/IsZrmh16vQ98j
+U8klRm/O2eF8evd98zkV3cuwt84Ug2B5nJ195hgTsKOShtgprx/0kqdTHmAD8/Yj
+fwg37JlUUFKTRQ0XUuUrjs0a4zwKCEIVhxWoa4YR3qOVP/vK8oM3iUI3E2SALSRZ
+Y06LDZB/7PWq4ZE9su7TqRelsXD9C+8pTXVTaDywmK6MniHDCOlrp/Csb/KQ2yrJ
+WNgzqv3gJlz62MwFqK1zdc9MLcG/tSPDlgFfkqSryrqO5FPEeXn8o9AzL7p2kFGA
+8dMHoi2YAu+rQ+xZansvdVbh5PmgVQ==
+=9xru
 -----END PGP SIGNATURE-----
 
---6Nae48J/T25AfBN4--
+--Sig_/Q=rOSKQXD5Xm/TG7tZop55S--
