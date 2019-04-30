@@ -2,100 +2,112 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA925C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964DDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB83120835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6492E21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:15:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="c1sgpEK0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NGszjabW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfD3POz (ORCPT
+        id S1726328AbfD3PPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:14:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52827 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD3POz (ORCPT
+        Tue, 30 Apr 2019 11:15:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46256 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD3PPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:14:55 -0400
-Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=lindsey)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1hLUSx-00068L-0T; Tue, 30 Apr 2019 15:14:43 +0000
-Date:   Tue, 30 Apr 2019 10:14:37 -0500
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
+        Tue, 30 Apr 2019 11:15:01 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 69801608CC; Tue, 30 Apr 2019 15:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556637300;
+        bh=kDESwusWoNlcpai8Hhzx6F56ctP3yrdln4AYiKvAfV8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=c1sgpEK08p4Viz1h4LYj6Cao84cdjI9PfQEvvyfI2gC39lQMqATS6Vkz71eAMRVk3
+         zyt5lnrSlAjG7+XHdk43lmCcVZDoZb1OcSMoeZQdD6E9XJtgTDSglUbvKlaR2HlK9t
+         cT9RuN6onAqG5g2PjoKlCBgXH5v8KybDokVHBUMg=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16EA8608CC;
+        Tue, 30 Apr 2019 15:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556637299;
+        bh=kDESwusWoNlcpai8Hhzx6F56ctP3yrdln4AYiKvAfV8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NGszjabWnBd3WE0yIF9zNcz+MIBW+FGB93qE1XbqQJ+DH2UPbDykJ+hFrUPjmcATt
+         r3bgvbM+XpxTGm3mQL3GjIbKdnp1NetdzGhwtEs1avU4Px9/GQo15OcXqLiwOTDXc/
+         yDsyxNQk2xgEu2pFXBa4Zk8JSiPwXwJhNUlR6zpM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 16EA8608CC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] firmware_loader: Fix a typo ("syfs" -> "sysfs")
+To:     =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Wang Hai <wanghai26@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] bridge: Fix error path for kobject_init_and_add()
-Message-ID: <20190430151437.GA13709@lindsey>
-References: <20190430002817.10785-1-tobin@kernel.org>
- <20190430002817.10785-2-tobin@kernel.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20190430145610.1291-1-j.neuschaefer@gmx.net>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <a87e799e-73d3-6971-2df5-59ba34fb1446@codeaurora.org>
+Date:   Tue, 30 Apr 2019 20:44:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430002817.10785-2-tobin@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190430145610.1291-1-j.neuschaefer@gmx.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-30 10:28:15, Tobin C. Harding wrote:
-> Currently error return from kobject_init_and_add() is not followed by a
-> call to kobject_put().  This means there is a memory leak.
-> 
-> Add call to kobject_put() in error path of kobject_init_and_add().
-> 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+
+On 4/30/2019 8:26 PM, Jonathan Neuschäfer wrote:
+> "sysfs" was misspelled in a comment and a log message.
+>
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Cheers,
+-Mukesh
 > ---
->  net/bridge/br_if.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/bridge/br_if.c b/net/bridge/br_if.c
-> index 41f0a696a65f..e5c8c9941c51 100644
-> --- a/net/bridge/br_if.c
-> +++ b/net/bridge/br_if.c
-> @@ -607,8 +607,10 @@ int br_add_if(struct net_bridge *br, struct net_device *dev,
->  
->  	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
->  				   SYSFS_BRIDGE_PORT_ATTR);
-> -	if (err)
-> +	if (err) {
-> +		kobject_put(&p->kobj);
->  		goto err1;
-> +	}
-
-I think this is duplicating the code under the err2 label and doing so
-in a way that would introduce a double free.
-
-If the refcount hits 0 in the kobject_put(), release_nbp() is called
-which calls kfree() on the p pointer. However, the p pointer is never
-set to NULL like what's done under the err2 label. Once we're back in
-br_add_if(), kfree() is called on the p pointer again just before
-returning.
-
-I think it would be better if you just jumped to the err2 label instead
-of err1. err1 will no longer be used so, unfortunately, you'll have to
-refactor all the labels at the same time.
-
-Tyler
-
->  
->  	err = br_sysfs_addif(p);
->  	if (err)
-> -- 
-> 2.21.0
-> 
+>   drivers/base/firmware_loader/fallback.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+> index b5c865fe263b..f962488546b6 100644
+> --- a/drivers/base/firmware_loader/fallback.c
+> +++ b/drivers/base/firmware_loader/fallback.c
+> @@ -674,8 +674,8 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
+>    *
+>    * This function is called if direct lookup for the firmware failed, it enables
+>    * a fallback mechanism through userspace by exposing a sysfs loading
+> - * interface. Userspace is in charge of loading the firmware through the syfs
+> - * loading interface. This syfs fallback mechanism may be disabled completely
+> + * interface. Userspace is in charge of loading the firmware through the sysfs
+> + * loading interface. This sysfs fallback mechanism may be disabled completely
+>    * on a system by setting the proc sysctl value ignore_sysfs_fallback to true.
+>    * If this false we check if the internal API caller set the @FW_OPT_NOFALLBACK
+>    * flag, if so it would also disable the fallback mechanism. A system may want
+> @@ -693,7 +693,7 @@ int firmware_fallback_sysfs(struct firmware *fw, const char *name,
+>   		return ret;
+>
+>   	if (!(opt_flags & FW_OPT_NO_WARN))
+> -		dev_warn(device, "Falling back to syfs fallback for: %s\n",
+> +		dev_warn(device, "Falling back to sysfs fallback for: %s\n",
+>   				 name);
+>   	else
+>   		dev_dbg(device, "Falling back to sysfs fallback for: %s\n",
+> --
+> 2.20.1
+>
