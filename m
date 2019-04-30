@@ -2,63 +2,101 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401D6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127C9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F59D2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD972075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbfD3DRs (ORCPT
+        id S1730059AbfD3DTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 23:17:48 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35224 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729949AbfD3DRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 23:17:47 -0400
-Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CD5EA133FCD5C;
-        Mon, 29 Apr 2019 20:17:45 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 23:17:44 -0400 (EDT)
-Message-Id: <20190429.231744.1945723582423201194.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, nicolas.ferre@microchip.com,
-        ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com
-Subject: Re: [PATCH net-next] net: phy: micrel: make sure the factory test
- bit is cleared
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190426164123.26735-1-antoine.tenart@bootlin.com>
-References: <20190426164123.26735-1-antoine.tenart@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Apr 2019 20:17:47 -0700 (PDT)
+        Mon, 29 Apr 2019 23:19:01 -0400
+Received: from www.osadl.org ([62.245.132.105]:53929 "EHLO www.osadl.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729931AbfD3DTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 23:19:01 -0400
+Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
+        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3U3IZKT005484;
+        Tue, 30 Apr 2019 05:18:35 +0200
+From:   Nicholas Mc Guire <hofrat@osadl.org>
+To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>
+Subject: [PATCH V2] rds: ib: force endiannes annotation
+Date:   Tue, 30 Apr 2019 05:12:57 +0200
+Message-Id: <1556593977-15828-1-git-send-email-hofrat@osadl.org>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Fri, 26 Apr 2019 18:41:23 +0200
+While the endiannes is being handled correctly as indicated by the comment
+above the offending line - sparse was unhappy with the missing annotation
+as be64_to_cpu() expects a __be64 argument. To mitigate this annotation
+all involved variables are changed to a consistent __le64 and the
+ conversion to uint64_t delayed to the call to rds_cong_map_updated().
 
-> The KSZ8081 PHY has a factory test mode which is set at the de-assertion
-> of the reset line based on the RXER (KSZ8081RNA/RND) or TXC
-> (KSZ8081MNX/RNB) pin. If a pull-down is missing, or if the pin has a
-> pull-up, the factory test mode should be cleared by manually writing a 0
-> (according to the datasheet). This patch makes sure this factory test
-> bit is cleared in config_init().
-> 
-> Tested-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+---
 
-Applied.
+Problem located by an experimental coccinelle script to locate
+patters that make sparse unhappy (false positives):
+net/rds/ib_recv.c:827:23: warning: cast to restricted __le64
+
+V2: Edward Cree <ecree@solarflare.com> rejected the need for using __force
+    here - instead solve the sparse issue by updating all of the involved
+    variables - which results in an identical binary as well without using
+    the __force "solution" to the sparse warning. Thanks !
+
+Patch was compile-tested with: x86_64_defconfig + INFINIBAND=m, RDS_RDMA=m
+
+Patch was verified not to change the binary by diffing the
+generated object code before and after applying the patch.
+
+Patch is against 5.1-rc6 (localversion-next is 20190429)
+
+ net/rds/ib_recv.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/net/rds/ib_recv.c b/net/rds/ib_recv.c
+index 7055985..8946c89 100644
+--- a/net/rds/ib_recv.c
++++ b/net/rds/ib_recv.c
+@@ -772,7 +772,7 @@ static void rds_ib_cong_recv(struct rds_connection *conn,
+ 	unsigned long frag_off;
+ 	unsigned long to_copy;
+ 	unsigned long copied;
+-	uint64_t uncongested = 0;
++	__le64 uncongested = 0;
+ 	void *addr;
+ 
+ 	/* catch completely corrupt packets */
+@@ -789,7 +789,7 @@ static void rds_ib_cong_recv(struct rds_connection *conn,
+ 	copied = 0;
+ 
+ 	while (copied < RDS_CONG_MAP_BYTES) {
+-		uint64_t *src, *dst;
++		__le64 *src, *dst;
+ 		unsigned int k;
+ 
+ 		to_copy = min(RDS_FRAG_SIZE - frag_off, PAGE_SIZE - map_off);
+@@ -824,9 +824,7 @@ static void rds_ib_cong_recv(struct rds_connection *conn,
+ 	}
+ 
+ 	/* the congestion map is in little endian order */
+-	uncongested = le64_to_cpu(uncongested);
+-
+-	rds_cong_map_updated(map, uncongested);
++	rds_cong_map_updated(map, le64_to_cpu(uncongested));
+ }
+ 
+ static void rds_ib_process_recv(struct rds_connection *conn,
+-- 
+2.1.4
+
