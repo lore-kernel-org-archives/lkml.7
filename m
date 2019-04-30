@@ -4,64 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A44C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636ACC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA1D21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CDED20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FhsXw04C"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="vF73Xtcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfD3LTi (ORCPT
+        id S1727447AbfD3LUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:19:38 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53029 "EHLO
+        Tue, 30 Apr 2019 07:20:41 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53887 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfD3LTh (ORCPT
+        with ESMTP id S1726129AbfD3LUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:19:37 -0400
+        Tue, 30 Apr 2019 07:20:41 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBJLnK1347253
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3UBK24T1347402
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Apr 2019 04:19:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBJLnK1347253
+        Tue, 30 Apr 2019 04:20:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3UBK24T1347402
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556623161;
-        bh=qiyHdKUGyo4ls/qfu27xDCczeiXrhi8+4MhiF9kebk4=;
+        s=2019041745; t=1556623203;
+        bh=lcIqU8A5KOahzmd/io1oC+2K+Q39XY1YJ8FyUQkjU8g=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=FhsXw04CvFmgdJbKYjuMMhDaeq2dkRrTsBx+HcbX9ffS28NR8kZ8RtgtjSvUcAuoQ
-         0zLn9S5dyqwSq5ZVYW7msfSbj1DtH3kg1soE60TOwo7Dp75sNEaCXEH2ln9Dw0koqp
-         PGriqj9dy3miShxrp0GjyCwbf5pUPa11QGt0HkX+n5CbCZ0XbDxKGXzuptv7/KDOI2
-         LG6N5ckkuEoXXJHzNH2OHZMe8VlJlP8oiVuFuB+rTFg8Ou3ZELPGyKwAbe9oWG6N+0
-         DUnPhWssxQPli4+ZBDVVRgH+oWtKs8eebreyL2+dbZyZ3QyIXHd3pajcW1WPN9ABZv
-         rErAzjlAC1ugg==
+        b=vF73XtcwN6O9MqlLGbfUvCJRMPCe9j3xIIF68UEmSbYhg8p+OMjm6qaKok5hE76GB
+         nDbPoaI9E1IJarxEQsAcJGR9vBOXCpuqRH6CfHhFkoTT/AMl+baCfs0NUwDNl7EdU4
+         l7ceerQRd7oAVeE7/wYogAhOsy7t3x191jTNkILBvHtk2wpysJzA2czEETeSxrOYpQ
+         aITPSjcv130Sh6vR9uoRjEricTlnTt+uYRapveTw5kGwUgcjJDrAIK+1k/GSz1xbvO
+         EtoyXz0e+obfThy4VtaM++NBGNvP85TBGlI/O2EfYs3Op8IKKswVxk0FZhbOO2VYfr
+         EleHlsDDIS6fw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBJKPQ1347249;
-        Tue, 30 Apr 2019 04:19:20 -0700
-Date:   Tue, 30 Apr 2019 04:19:20 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3UBK2fl1347386;
+        Tue, 30 Apr 2019 04:20:02 -0700
+Date:   Tue, 30 Apr 2019 04:20:02 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Nadav Amit <tipbot@zytor.com>
-Message-ID: <tip-4fc19708b165c1c152fa1f12f6600e66184b7786@git.kernel.org>
-Cc:     namit@vmware.com, torvalds@linux-foundation.org, hpa@zytor.com,
-        mhiramat@kernel.org, riel@surriel.com, peterz@infradead.org,
-        tglx@linutronix.de, bp@alien8.de, luto@kernel.org,
-        keescook@chromium.org, dave.hansen@intel.com,
-        rick.p.edgecombe@intel.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: dave.hansen@intel.com, namit@vmware.com,
-          torvalds@linux-foundation.org, keescook@chromium.org,
-          riel@surriel.com, peterz@infradead.org, hpa@zytor.com,
-          mhiramat@kernel.org, mingo@kernel.org, tglx@linutronix.de,
-          rick.p.edgecombe@intel.com, linux-kernel@vger.kernel.org,
-          luto@kernel.org, bp@alien8.de
-In-Reply-To: <20190426232303.28381-8-nadav.amit@gmail.com>
-References: <20190426232303.28381-8-nadav.amit@gmail.com>
+Message-ID: <tip-b3fd8e83ada0d51b71a84297480187e2d40e5ded@git.kernel.org>
+Cc:     kernel-hardening@lists.openwall.com, ard.biesheuvel@linaro.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        mingo@kernel.org, linux-kernel@vger.kernel.org, riel@surriel.com,
+        namit@vmware.com, linux_dti@icloud.com, keescook@chromium.org,
+        bp@alien8.de, hpa@zytor.com, mhiramat@kernel.org,
+        kristen@linux.intel.com, dave.hansen@intel.com, luto@kernel.org,
+        deneen.t.dock@intel.com, peterz@infradead.org, tglx@linutronix.de,
+        rick.p.edgecombe@intel.com, will.deacon@arm.com
+Reply-To: linux_dti@icloud.com, riel@surriel.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, namit@vmware.com,
+          akpm@linux-foundation.org, torvalds@linux-foundation.org,
+          ard.biesheuvel@linaro.org, kernel-hardening@lists.openwall.com,
+          tglx@linutronix.de, will.deacon@arm.com,
+          rick.p.edgecombe@intel.com, deneen.t.dock@intel.com,
+          peterz@infradead.org, dave.hansen@intel.com, mhiramat@kernel.org,
+          kristen@linux.intel.com, luto@kernel.org, bp@alien8.de,
+          keescook@chromium.org, hpa@zytor.com
+In-Reply-To: <20190426001143.4983-8-namit@vmware.com>
+References: <20190426001143.4983-8-namit@vmware.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] x86/alternatives: Initialize temporary mm for patching
-Git-Commit-ID: 4fc19708b165c1c152fa1f12f6600e66184b7786
+Subject: [tip:x86/mm] x86/alternatives: Use temporary mm for text poking
+Git-Commit-ID: b3fd8e83ada0d51b71a84297480187e2d40e5ded
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,177 +80,219 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  4fc19708b165c1c152fa1f12f6600e66184b7786
-Gitweb:     https://git.kernel.org/tip/4fc19708b165c1c152fa1f12f6600e66184b7786
+Commit-ID:  b3fd8e83ada0d51b71a84297480187e2d40e5ded
+Gitweb:     https://git.kernel.org/tip/b3fd8e83ada0d51b71a84297480187e2d40e5ded
 Author:     Nadav Amit <namit@vmware.com>
-AuthorDate: Fri, 26 Apr 2019 16:22:46 -0700
+AuthorDate: Thu, 25 Apr 2019 17:11:27 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Tue, 30 Apr 2019 12:37:52 +0200
 
-x86/alternatives: Initialize temporary mm for patching
+x86/alternatives: Use temporary mm for text poking
 
-To prevent improper use of the PTEs that are used for text patching, the
-next patches will use a temporary mm struct. Initailize it by copying
-the init mm.
+text_poke() can potentially compromise security as it sets temporary
+PTEs in the fixmap. These PTEs might be used to rewrite the kernel code
+from other cores accidentally or maliciously, if an attacker gains the
+ability to write onto kernel memory.
 
-The address that will be used for patching is taken from the lower area
-that is usually used for the task memory. Doing so prevents the need to
-frequently synchronize the temporary-mm (e.g., when BPF programs are
-installed), since different PGDs are used for the task memory.
+Moreover, since remote TLBs are not flushed after the temporary PTEs are
+removed, the time-window in which the code is writable is not limited if
+the fixmap PTEs - maliciously or accidentally - are cached in the TLB.
+To address these potential security hazards, use a temporary mm for
+patching the code.
 
-Finally, randomize the address of the PTEs to harden against exploits
-that use these PTEs.
+Finally, text_poke() is also not conservative enough when mapping pages,
+as it always tries to map 2 pages, even when a single one is sufficient.
+So try to be more conservative, and do not map more than needed.
 
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: <akpm@linux-foundation.org>
+Cc: <ard.biesheuvel@linaro.org>
+Cc: <deneen.t.dock@intel.com>
+Cc: <kernel-hardening@lists.openwall.com>
+Cc: <kristen@linux.intel.com>
+Cc: <linux_dti@icloud.com>
+Cc: <will.deacon@arm.com>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: akpm@linux-foundation.org
-Cc: ard.biesheuvel@linaro.org
-Cc: deneen.t.dock@intel.com
-Cc: kernel-hardening@lists.openwall.com
-Cc: kristen@linux.intel.com
-Cc: linux_dti@icloud.com
-Cc: will.deacon@arm.com
-Link: https://lkml.kernel.org/r/20190426232303.28381-8-nadav.amit@gmail.com
+Link: https://lkml.kernel.org/r/20190426001143.4983-8-namit@vmware.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/include/asm/pgtable.h       |  3 +++
- arch/x86/include/asm/text-patching.h |  2 ++
- arch/x86/kernel/alternative.c        |  3 +++
- arch/x86/mm/init.c                   | 37 ++++++++++++++++++++++++++++++++++++
- init/main.c                          |  3 +++
- 5 files changed, 48 insertions(+)
+ arch/x86/include/asm/fixmap.h |   2 -
+ arch/x86/kernel/alternative.c | 108 +++++++++++++++++++++++++++++++++---------
+ arch/x86/xen/mmu_pv.c         |   2 -
+ 3 files changed, 86 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 2779ace16d23..702db5904753 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -1021,6 +1021,9 @@ static inline void __meminit init_trampoline_default(void)
- 	/* Default trampoline pgd value */
- 	trampoline_pgd_entry = init_top_pgt[pgd_index(__PAGE_OFFSET)];
- }
-+
-+void __init poking_init(void);
-+
- # ifdef CONFIG_RANDOMIZE_MEMORY
- void __meminit init_trampoline(void);
- # else
-diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index f8fc8e86cf01..a75eed841eed 100644
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -39,5 +39,7 @@ extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
- extern int poke_int3_handler(struct pt_regs *regs);
- extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
- extern int after_bootmem;
-+extern __ro_after_init struct mm_struct *poking_mm;
-+extern __ro_after_init unsigned long poking_addr;
- 
- #endif /* _ASM_X86_TEXT_PATCHING_H */
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index 50ba74a34a37..9da8cccdf3fb 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -103,8 +103,6 @@ enum fixed_addresses {
+ #ifdef CONFIG_PARAVIRT
+ 	FIX_PARAVIRT_BOOTMAP,
+ #endif
+-	FIX_TEXT_POKE1,	/* reserve 2 pages for text_poke() */
+-	FIX_TEXT_POKE0, /* first page is last, because allocation is backward */
+ #ifdef	CONFIG_X86_INTEL_MID
+ 	FIX_LNW_VRTC,
+ #endif
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 0a814d73547a..11d5c710a94f 100644
+index 11d5c710a94f..599203876c32 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -679,6 +679,9 @@ void *__init_or_module text_poke_early(void *addr, const void *opcode,
- 	return addr;
- }
+@@ -12,6 +12,7 @@
+ #include <linux/slab.h>
+ #include <linux/kdebug.h>
+ #include <linux/kprobes.h>
++#include <linux/mmu_context.h>
+ #include <asm/text-patching.h>
+ #include <asm/alternative.h>
+ #include <asm/sections.h>
+@@ -684,41 +685,104 @@ __ro_after_init unsigned long poking_addr;
  
-+__ro_after_init struct mm_struct *poking_mm;
-+__ro_after_init unsigned long poking_addr;
-+
  static void *__text_poke(void *addr, const void *opcode, size_t len)
  {
++	bool cross_page_boundary = offset_in_page(addr) + len > PAGE_SIZE;
++	struct page *pages[2] = {NULL};
++	temp_mm_state_t prev;
  	unsigned long flags;
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 8dacdb96899e..fd10d91a6115 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -6,6 +6,7 @@
- #include <linux/swapfile.h>
- #include <linux/swapops.h>
- #include <linux/kmemleak.h>
-+#include <linux/sched/task.h>
- 
- #include <asm/set_memory.h>
- #include <asm/e820/api.h>
-@@ -23,6 +24,7 @@
- #include <asm/hypervisor.h>
- #include <asm/cpufeature.h>
- #include <asm/pti.h>
-+#include <asm/text-patching.h>
- 
- /*
-  * We need to define the tracepoints somewhere, and tlb.c
-@@ -701,6 +703,41 @@ void __init init_mem_mapping(void)
- 	early_memtest(0, max_pfn_mapped << PAGE_SHIFT);
- }
- 
-+/*
-+ * Initialize an mm_struct to be used during poking and a pointer to be used
-+ * during patching.
-+ */
-+void __init poking_init(void)
-+{
+-	char *vaddr;
+-	struct page *pages[2];
+-	int i;
++	pte_t pte, *ptep;
 +	spinlock_t *ptl;
-+	pte_t *ptep;
-+
-+	poking_mm = copy_init_mm();
-+	BUG_ON(!poking_mm);
-+
++	pgprot_t pgprot;
+ 
+ 	/*
+-	 * While boot memory allocator is runnig we cannot use struct
+-	 * pages as they are not yet initialized.
++	 * While boot memory allocator is running we cannot use struct pages as
++	 * they are not yet initialized. There is no way to recover.
+ 	 */
+ 	BUG_ON(!after_bootmem);
+ 
+ 	if (!core_kernel_text((unsigned long)addr)) {
+ 		pages[0] = vmalloc_to_page(addr);
+-		pages[1] = vmalloc_to_page(addr + PAGE_SIZE);
++		if (cross_page_boundary)
++			pages[1] = vmalloc_to_page(addr + PAGE_SIZE);
+ 	} else {
+ 		pages[0] = virt_to_page(addr);
+ 		WARN_ON(!PageReserved(pages[0]));
+-		pages[1] = virt_to_page(addr + PAGE_SIZE);
++		if (cross_page_boundary)
++			pages[1] = virt_to_page(addr + PAGE_SIZE);
+ 	}
+-	BUG_ON(!pages[0]);
 +	/*
-+	 * Randomize the poking address, but make sure that the following page
-+	 * will be mapped at the same PMD. We need 2 pages, so find space for 3,
-+	 * and adjust the address if the PMD ends after the first one.
++	 * If something went wrong, crash and burn since recovery paths are not
++	 * implemented.
 +	 */
-+	poking_addr = TASK_UNMAPPED_BASE;
-+	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
-+		poking_addr += (kaslr_get_random_long("Poking") & PAGE_MASK) %
-+			(TASK_SIZE - TASK_UNMAPPED_BASE - 3 * PAGE_SIZE);
++	BUG_ON(!pages[0] || (cross_page_boundary && !pages[1]));
 +
-+	if (((poking_addr + PAGE_SIZE) & ~PMD_MASK) == 0)
-+		poking_addr += PAGE_SIZE;
+ 	local_irq_save(flags);
+-	set_fixmap(FIX_TEXT_POKE0, page_to_phys(pages[0]));
+-	if (pages[1])
+-		set_fixmap(FIX_TEXT_POKE1, page_to_phys(pages[1]));
+-	vaddr = (char *)fix_to_virt(FIX_TEXT_POKE0);
+-	memcpy(&vaddr[(unsigned long)addr & ~PAGE_MASK], opcode, len);
+-	clear_fixmap(FIX_TEXT_POKE0);
+-	if (pages[1])
+-		clear_fixmap(FIX_TEXT_POKE1);
+-	local_flush_tlb();
+-	sync_core();
+-	/* Could also do a CLFLUSH here to speed up CPU recovery; but
+-	   that causes hangs on some VIA CPUs. */
+-	for (i = 0; i < len; i++)
+-		BUG_ON(((char *)addr)[i] != ((char *)opcode)[i]);
 +
 +	/*
-+	 * We need to trigger the allocation of the page-tables that will be
-+	 * needed for poking now. Later, poking may be performed in an atomic
-+	 * section, which might cause allocation to fail.
++	 * Map the page without the global bit, as TLB flushing is done with
++	 * flush_tlb_mm_range(), which is intended for non-global PTEs.
++	 */
++	pgprot = __pgprot(pgprot_val(PAGE_KERNEL) & ~_PAGE_GLOBAL);
++
++	/*
++	 * The lock is not really needed, but this allows to avoid open-coding.
 +	 */
 +	ptep = get_locked_pte(poking_mm, poking_addr, &ptl);
-+	BUG_ON(!ptep);
++
++	/*
++	 * This must not fail; preallocated in poking_init().
++	 */
++	VM_BUG_ON(!ptep);
++
++	pte = mk_pte(pages[0], pgprot);
++	set_pte_at(poking_mm, poking_addr, ptep, pte);
++
++	if (cross_page_boundary) {
++		pte = mk_pte(pages[1], pgprot);
++		set_pte_at(poking_mm, poking_addr + PAGE_SIZE, ptep + 1, pte);
++	}
++
++	/*
++	 * Loading the temporary mm behaves as a compiler barrier, which
++	 * guarantees that the PTE will be set at the time memcpy() is done.
++	 */
++	prev = use_temporary_mm(poking_mm);
++
++	kasan_disable_current();
++	memcpy((u8 *)poking_addr + offset_in_page(addr), opcode, len);
++	kasan_enable_current();
++
++	/*
++	 * Ensure that the PTE is only cleared after the instructions of memcpy
++	 * were issued by using a compiler barrier.
++	 */
++	barrier();
++
++	pte_clear(poking_mm, poking_addr, ptep);
++	if (cross_page_boundary)
++		pte_clear(poking_mm, poking_addr + PAGE_SIZE, ptep + 1);
++
++	/*
++	 * Loading the previous page-table hierarchy requires a serializing
++	 * instruction that already allows the core to see the updated version.
++	 * Xen-PV is assumed to serialize execution in a similar manner.
++	 */
++	unuse_temporary_mm(prev);
++
++	/*
++	 * Flushing the TLB might involve IPIs, which would require enabled
++	 * IRQs, but not if the mm is not used, as it is in this point.
++	 */
++	flush_tlb_mm_range(poking_mm, poking_addr, poking_addr +
++			   (cross_page_boundary ? 2 : 1) * PAGE_SIZE,
++			   PAGE_SHIFT, false);
++
++	/*
++	 * If the text does not match what we just wrote then something is
++	 * fundamentally screwy; there's nothing we can really do about that.
++	 */
++	BUG_ON(memcmp(addr, opcode, len));
++
 +	pte_unmap_unlock(ptep, ptl);
-+}
-+
- /*
-  * devmem_is_allowed() checks to see if /dev/mem access to a certain address
-  * is valid. The argument is a physical page number.
-diff --git a/init/main.c b/init/main.c
-index 7d4025d665eb..95dd9406ee31 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -504,6 +504,8 @@ void __init __weak thread_stack_cache_init(void)
- 
- void __init __weak mem_encrypt_init(void) { }
- 
-+void __init __weak poking_init(void) { }
-+
- bool initcall_debug;
- core_param(initcall_debug, initcall_debug, bool, 0644);
- 
-@@ -737,6 +739,7 @@ asmlinkage __visible void __init start_kernel(void)
- 	taskstats_init_early();
- 	delayacct_init();
- 
-+	poking_init();
- 	check_bugs();
- 
- 	acpi_subsystem_init();
+ 	local_irq_restore(flags);
+ 	return addr;
+ }
+diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+index a21e1734fc1f..beb44e22afdf 100644
+--- a/arch/x86/xen/mmu_pv.c
++++ b/arch/x86/xen/mmu_pv.c
+@@ -2318,8 +2318,6 @@ static void xen_set_fixmap(unsigned idx, phys_addr_t phys, pgprot_t prot)
+ #elif defined(CONFIG_X86_VSYSCALL_EMULATION)
+ 	case VSYSCALL_PAGE:
+ #endif
+-	case FIX_TEXT_POKE0:
+-	case FIX_TEXT_POKE1:
+ 		/* All local page mappings */
+ 		pte = pfn_pte(phys, prot);
+ 		break;
