@@ -2,125 +2,163 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6ECC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046E7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F8C2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62C120835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556625243;
+	bh=pBKdUghoiDyQBtMsgMbl27pwT5kKa9bcaBhf+wduELg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bUHg9DSvdandaQHHz1icSVB9MPRo/hgIrvO8kUnKrY1C5y0N2/hCMvxy9ejHeK3eX
+	 hnNCKuVZZniavDWDsEz2ftrwGHxoPkCmhZkEKwfuzp1t+tWYe5TdNVQAtegbaMYJL7
+	 GMzbzu2uNEnlkfvQHK/EAe6DhFDMuwhI543J4/n4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731074AbfD3Lxv (ORCPT
+        id S1731122AbfD3LyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:53:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50050 "EHLO mx1.redhat.com"
+        Tue, 30 Apr 2019 07:54:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730755AbfD3Lxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:53:43 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730312AbfD3Lue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 76888859FB;
-        Tue, 30 Apr 2019 11:53:42 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A86E22B3B5;
-        Tue, 30 Apr 2019 11:53:35 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 30 Apr 2019 13:53:40 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 13:53:33 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
-        jannh@google.com, surenb@google.com, timmurray@google.com,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        torvalds@linux-foundation.org, kernel-team@android.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, viro@zeniv.linux.org.uk,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
-Message-ID: <20190430115332.GB23020@redhat.com>
-References: <20190425190010.46489-1-joel@joelfernandes.org>
- <20190425222359.sqhboc4x4daznr6r@brauner.io>
- <20190428162405.GA6757@redhat.com>
- <20190429140245.GB233442@google.com>
- <20190429142030.GA17715@redhat.com>
- <20190429163259.GA201155@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E5621707;
+        Tue, 30 Apr 2019 11:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556625033;
+        bh=pBKdUghoiDyQBtMsgMbl27pwT5kKa9bcaBhf+wduELg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xe/zMZNqh/pQ0EPmQiPJPE+THgn6g1cGHUjvpZLWcFzZVcK/HxM1/V0rHy6vgce2w
+         k1hytEAC/Bsg6k9A58sBW9IiQ3ytwb19hXKk2PDQbWNPKe5Jstegf4pjOfWCnzJrjo
+         RKkbWEi5XZzR++EsuWuwad0l+Oib5ACe6TDSydgM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.0 66/89] aio: keep io_event in aio_kiocb
+Date:   Tue, 30 Apr 2019 13:38:57 +0200
+Message-Id: <20190430113612.819949878@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
+References: <20190430113609.741196396@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190429163259.GA201155@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 30 Apr 2019 11:53:43 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/29, Joel Fernandes wrote:
->
-> On Mon, Apr 29, 2019 at 04:20:30PM +0200, Oleg Nesterov wrote:
-> > On 04/29, Joel Fernandes wrote:
-> > >
-> > > However, in your code above, it is avoided because we get:
-> > >
-> > > Task A (poller)		Task B (exiting task being polled)
-> > > ------------            ----------------
-> > > poll() called
-> > > add_wait_queue()
-> > > 			exit_state is set to non-zero
-> > > read exit_state
-> > > remove_wait_queue()
-> > > 			wake_up_all()
-> >
-> > just to clarify... No, sys_poll() path doesn't do remove_wait_queue() until
-> > it returns to user mode, and that is why we can't race with set-exit_code +
-> > wake_up().
->
-> I didn't follow what you mean, the removal from the waitqueue happens in
-> free_poll_entry() called from poll_freewait() which happens from
-> do_sys_poll() which is before the syscall returns to user mode. Could you
-> explain more?
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-Hmm. I do not really understand the question... Sure, do_sys_poll() does
-poll_freewait() before sysret or even before return from syscall, but why
-does this matter? This is the exit path, it frees the memory, does fput(),
-etc, f_op->poll() won't be call after that.
+commit a9339b7855094ba11a97e8822ae038135e879e79 upstream.
 
-> > pidfd_poll() can race with the exiting task, miss exit_code != 0, and return
-> > zero. However, do_poll() won't block after that and pidfd_poll() will be called
-> > again.
->
-> Here also I didn't follow what you mean. If exit_code is read as 0 in
-> pidfd_poll(), then in do_poll() the count will be 0 and it will block in
-> poll_schedule_timeout(). Right?
+We want to separate forming the resulting io_event from putting it
+into the ring buffer.
 
-No. Please note the pwq->triggered check and please read __pollwake().
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-But if you want to understand this you can forget about poll/select. It is
-a bit complicated, in particular because it has to do set_current_state()
-right  before schedule() and thus it plays games with pwq->triggered. But in
-essence this doesn't differ too much from the plain wait_event-like code
-(although you can also look at wait_woken/woken_wake_function).
+---
+ fs/aio.c |   31 +++++++++++++------------------
+ 1 file changed, 13 insertions(+), 18 deletions(-)
 
-If remove_wait_queue() could happem before wake_up_all() (like in your pseudo-
-code above), then pidfd_poll() or any other ->poll() method could miss _both_
-the condition and wakeup. But sys_poll() doesn't do this, so it is fine to miss
-the condition and rely on wake_up_all() which ensures we won't block and the
-next iteration must see condition == T.
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -204,8 +204,7 @@ struct aio_kiocb {
+ 	struct kioctx		*ki_ctx;
+ 	kiocb_cancel_fn		*ki_cancel;
+ 
+-	struct iocb __user	*ki_user_iocb;	/* user's aiocb */
+-	__u64			ki_user_data;	/* user's data for completion */
++	struct io_event		ki_res;
+ 
+ 	struct list_head	ki_list;	/* the aio core uses this
+ 						 * for cancellation */
+@@ -1084,15 +1083,6 @@ static inline void iocb_put(struct aio_k
+ 		iocb_destroy(iocb);
+ }
+ 
+-static void aio_fill_event(struct io_event *ev, struct aio_kiocb *iocb,
+-			   long res, long res2)
+-{
+-	ev->obj = (u64)(unsigned long)iocb->ki_user_iocb;
+-	ev->data = iocb->ki_user_data;
+-	ev->res = res;
+-	ev->res2 = res2;
+-}
+-
+ /* aio_complete
+  *	Called when the io request on the given iocb is complete.
+  */
+@@ -1104,6 +1094,8 @@ static void aio_complete(struct aio_kioc
+ 	unsigned tail, pos, head;
+ 	unsigned long	flags;
+ 
++	iocb->ki_res.res = res;
++	iocb->ki_res.res2 = res2;
+ 	/*
+ 	 * Add a completion event to the ring buffer. Must be done holding
+ 	 * ctx->completion_lock to prevent other code from messing with the tail
+@@ -1120,14 +1112,14 @@ static void aio_complete(struct aio_kioc
+ 	ev_page = kmap_atomic(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
+ 	event = ev_page + pos % AIO_EVENTS_PER_PAGE;
+ 
+-	aio_fill_event(event, iocb, res, res2);
++	*event = iocb->ki_res;
+ 
+ 	kunmap_atomic(ev_page);
+ 	flush_dcache_page(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
+ 
+-	pr_debug("%p[%u]: %p: %p %Lx %lx %lx\n",
+-		 ctx, tail, iocb, iocb->ki_user_iocb, iocb->ki_user_data,
+-		 res, res2);
++	pr_debug("%p[%u]: %p: %p %Lx %Lx %Lx\n", ctx, tail, iocb,
++		 (void __user *)(unsigned long)iocb->ki_res.obj,
++		 iocb->ki_res.data, iocb->ki_res.res, iocb->ki_res.res2);
+ 
+ 	/* after flagging the request as done, we
+ 	 * must never even look at it again
+@@ -1844,8 +1836,10 @@ static int __io_submit_one(struct kioctx
+ 		goto out_put_req;
+ 	}
+ 
+-	req->ki_user_iocb = user_iocb;
+-	req->ki_user_data = iocb->aio_data;
++	req->ki_res.obj = (u64)(unsigned long)user_iocb;
++	req->ki_res.data = iocb->aio_data;
++	req->ki_res.res = 0;
++	req->ki_res.res2 = 0;
+ 
+ 	switch (iocb->aio_lio_opcode) {
+ 	case IOCB_CMD_PREAD:
+@@ -2019,6 +2013,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
+ 	struct aio_kiocb *kiocb;
+ 	int ret = -EINVAL;
+ 	u32 key;
++	u64 obj = (u64)(unsigned long)iocb;
+ 
+ 	if (unlikely(get_user(key, &iocb->aio_key)))
+ 		return -EFAULT;
+@@ -2032,7 +2027,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
+ 	spin_lock_irq(&ctx->ctx_lock);
+ 	/* TODO: use a hash or array, this sucks. */
+ 	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
+-		if (kiocb->ki_user_iocb == iocb) {
++		if (kiocb->ki_res.obj == obj) {
+ 			ret = kiocb->ki_cancel(&kiocb->rw);
+ 			list_del_init(&kiocb->ki_list);
+ 			break;
 
-Oleg.
 
