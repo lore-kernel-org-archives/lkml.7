@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89BBC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AFFC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FAF21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7741A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dpVTwFKb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pHAUFUPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfD3NZe (ORCPT
+        id S1728357AbfD3NZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:25:34 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:43799 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbfD3NZ2 (ORCPT
+        Tue, 30 Apr 2019 09:25:40 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:46729 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728217AbfD3NZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:25:28 -0400
-Received: by mail-vk1-f202.google.com with SMTP id h7so2612691vkf.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:25:27 -0700 (PDT)
+        Tue, 30 Apr 2019 09:25:37 -0400
+Received: by mail-ua1-f74.google.com with SMTP id i4so800933uap.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=BvUTfQkQM7uCDeEtImKKI/2Hme2ZprNLcMmbkGV4djo=;
-        b=dpVTwFKbchbVkkb84ng8BnoHNS2SM91wquNJtuly6Sbp7lXj1bPrbJBiP3SyhTU0xP
-         LuA/DNrbjhKI/dHi3IXFK1lS8O09Sk1+qA/R7rjDLupO2W7Szy3T1dELXK4hEpZqkwPw
-         qD0yKLxb8ZjzpYALNjI1z0dDf4TB8V0IRIOptCx1gDVu9+jOblt+XzKkwvlPuV63pqHj
-         wnFsYt5mNXo/Rj6N9Lo9JMQODsljOWPF/MJrAcRLfdznXkGZCgNmaSrk7MrXtOUREZGb
-         X2QTJ1/W011vEIe5OofpK81AMWPuQy4lXPQltspauNse0OruElYuf2mJ90h6FolZJ8lL
-         VpnA==
+        bh=CVV6psz/Vns5azsm7jZt0BKocrzPfr2CsD5f51mITmQ=;
+        b=pHAUFUPIK00HUvs8fYzbfMDhOtYuRZOYj18jl6SUOemiz8hMuVoEwpyBcBFZsdPfRy
+         CP69mD/DWkxSBrhRr7+Ao/OQBLtynTBk0B9gn31tW8yWHjU69Q7PB4ZDpgvtdnhUTEzK
+         8CbwpHg2uux/P91ru8mr0G2/NpJ+DVwloVARu7ft7n27vA6hkWJDGMY1mugB3YmYuyhT
+         OwmXeDxT9woV4yHQlsAA+KWTEq0dG80iCwsoH+0J1dhKu1C33LiknxZR75he7h2J78XE
+         ZKdvpYjQpomJrWqZzF9raVXk6z/lSdaqbAYdD0YzglrS0vRmztdJidedrkfiqCqRVd3N
+         hnSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=BvUTfQkQM7uCDeEtImKKI/2Hme2ZprNLcMmbkGV4djo=;
-        b=mbxJNn+a58PueIozb635dJH4i9bJZklW0AHRQ6ih7BRcHLjbwT+ItZVbuyKttmCacW
-         nA3LwUOF5veRis4g1YCF/SHsfP+ZccsUpY5S2Fq5zu6sKphgl1wm2voBQfDBubD10pBv
-         WXKZsp6WzudbFx+rkAvX33WyhfvGoA1XODPRr236WLpGcN+8xyrzotzh7r4qyTdSFPLI
-         /LlsuUa3pbrtF0bkCx15SfH092e4JDerUBBQAmhx+eZ/4i6fHd2uEaf76fFgR4q+fRow
-         ZGiIvokqGYbIzRFOv2Tzl7uZYwXaBiu6zwFVW8YFqzX+vHwf0IVKQbHC9IeIlLT1pNBC
-         wjjg==
-X-Gm-Message-State: APjAAAU2+dNSMFmnjC9NfgUI6l9uMTWjrbE/78RP59k4/TqUHDW3GAgM
-        dtvrHc/+wss6THSHOiU1E7dDXhNAgpQ4WHp5
-X-Google-Smtp-Source: APXvYqyRA/Qu4LKAWcvJoaQQlsyyIllouYjqkXgAFh5vrZ+95OMG6R4QdBb3NSzDXJSn7wdUrbj4M88LAp+D5Hqp
-X-Received: by 2002:a67:ea83:: with SMTP id f3mr2107513vso.59.1556630726654;
- Tue, 30 Apr 2019 06:25:26 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 15:24:59 +0200
+        bh=CVV6psz/Vns5azsm7jZt0BKocrzPfr2CsD5f51mITmQ=;
+        b=Hr2II6WwgYYhgwK81bAWVF4LtczQpA55sFGKoy/UeW2ID6/hCI0krWeM3u41N20qbg
+         9MbFc6LRvWvYQCvD5G6T8VMviJDmiy55xaO10i4TOPUa+s7LTDTJOywk977B3hajwPrv
+         8xiYqv955KMkDZGqun8miM/jJnE39reCTUzK7gQsb1zFHCTDHzSLL8gdu4Gmq6y6MOzH
+         cY2soUjaP74leXAjI7UPl72ei1LQqzetbuoi3/WwAXZjpq4bdO7H9fBSAPaBgdaJvaXm
+         T2VJ2pNXBCR6mzO10koPrpncurS57oQvROCk/4mJQu20LYL2/WCUMjaPGF26dOu/NY/C
+         +CyQ==
+X-Gm-Message-State: APjAAAW0Cegi9RqUU2G6Uef1x6hcBKc7hhDJg/G9lIPQykzT39XDbQev
+        aW5lvyADnhyBM+B/kvtOYOq8tjXwq9DUOSGM
+X-Google-Smtp-Source: APXvYqxbH0hW8IUGPJRsH+MKg4I9yJOI2DrUXBayHbDSUEVQsqLwVaAkxsd+/0KcP5RvItcIqz2adgVjyHXkB8kF
+X-Received: by 2002:a67:dd01:: with SMTP id y1mr18718014vsj.39.1556630736057;
+ Tue, 30 Apr 2019 06:25:36 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 15:25:02 +0200
 In-Reply-To: <cover.1556630205.git.andreyknvl@google.com>
-Message-Id: <6f38f610cc22dca9aef05d53a5a94b24763cc628.1556630205.git.andreyknvl@google.com>
+Message-Id: <80f7d6a2f68adb1c41ef5baf8973537380c681b0.1556630205.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1556630205.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH v14 03/17] lib, arm64: untag user pointers in strn*_user
+Subject: [PATCH v14 06/17] mm: untag user pointers in do_pages_move
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -104,63 +104,27 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-strncpy_from_user and strnlen_user accept user addresses as arguments, and
-do not go through the same path as copy_from_user and others, so here we
-need to handle the case of tagged user addresses separately.
+do_pages_move() is used in the implementation of the move_pages syscall.
 
-Untag user pointers passed to these functions.
-
-Note, that this patch only temporarily untags the pointers to perform
-validity checks, but then uses them as is to perform user memory accesses.
+Untag user pointers in this function.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- lib/strncpy_from_user.c | 3 ++-
- lib/strnlen_user.c      | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ mm/migrate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index 58eacd41526c..6209bb9507c7 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -6,6 +6,7 @@
- #include <linux/uaccess.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
-+#include <linux/mm.h>
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 663a5449367a..c014a07135f0 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1617,6 +1617,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+ 		if (get_user(node, nodes + i))
+ 			goto out_flush;
+ 		addr = (unsigned long)p;
++		addr = untagged_addr(addr);
  
- #include <asm/byteorder.h>
- #include <asm/word-at-a-time.h>
-@@ -107,7 +108,7 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
- 		return 0;
- 
- 	max_addr = user_addr_max();
--	src_addr = (unsigned long)src;
-+	src_addr = (unsigned long)untagged_addr(src);
- 	if (likely(src_addr < max_addr)) {
- 		unsigned long max = max_addr - src_addr;
- 		long retval;
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 1c1a1b0e38a5..8ca3d2ac32ec 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -2,6 +2,7 @@
- #include <linux/kernel.h>
- #include <linux/export.h>
- #include <linux/uaccess.h>
-+#include <linux/mm.h>
- 
- #include <asm/word-at-a-time.h>
- 
-@@ -109,7 +110,7 @@ long strnlen_user(const char __user *str, long count)
- 		return 0;
- 
- 	max_addr = user_addr_max();
--	src_addr = (unsigned long)str;
-+	src_addr = (unsigned long)untagged_addr(str);
- 	if (likely(src_addr < max_addr)) {
- 		unsigned long max = max_addr - src_addr;
- 		long retval;
+ 		err = -ENODEV;
+ 		if (node < 0 || node >= MAX_NUMNODES)
 -- 
 2.21.0.593.g511ec345e18-goog
 
