@@ -7,58 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B535C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40A1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00C12182B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5122177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624684;
-	bh=vcfxo2TFke0cuyMwibf/eIW/V6zVHCpZXvsgz4Sm4gY=;
+	s=default; t=1556624689;
+	bh=imL9mDrXO2IU4GhsA/xFI5+efFxUzAHmJGbxiNa3XXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0X1zU22+zpfQiK9bnLNViJBIqQWo/8uy9uTzc8rGwzzezi1FbWJn6guh9Mn8pfImn
-	 ZWbxzz44FAu/IozWj2uHyubRAW4zKDbQessg1VEivNmqZSD2tem0TH5HAaBHmckr3R
-	 uBRdjXO1YqM/ZvD8TN8itHUYUvRj37+WshoHYyUs=
+	b=DEEB3ZrAy8pYSlW0WvFaTepsdvuVj1gJrphTf1gQkKbVb4GhOXhu4fRPf4giiGXj6
+	 6S4Kmsh5lJA7KC47t9jS+fPtoNn/EX7631kQMbWl8bKR80FqHuI5bHnGaILgjqo3rO
+	 KwrBFUBl38XK8BvHYcIL8y1mXxDMFVPptzJvrOi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbfD3Lon (ORCPT
+        id S1730266AbfD3Los (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729295AbfD3Lok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:44:40 -0400
+        id S1729295AbfD3Lop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD71721670;
-        Tue, 30 Apr 2019 11:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64BDC217D6;
+        Tue, 30 Apr 2019 11:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624679;
-        bh=vcfxo2TFke0cuyMwibf/eIW/V6zVHCpZXvsgz4Sm4gY=;
+        s=default; t=1556624684;
+        bh=imL9mDrXO2IU4GhsA/xFI5+efFxUzAHmJGbxiNa3XXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vnizXFoWTI0oZuP9hsB6DJ1iJT0SlfA/RzaAUvCNwtmT+NWroPx8kN7u/H/Sqr1vc
-         PYBuquELVtyvF2v4+Dl/2uf39ppHQ0WdKph9wysgk6vT011Vh84jscxOb2kAxguPuy
-         JMFxN61szIFjEz4+9l8Lv2YQoB9VYRfX0RfAaeKg=
+        b=1xFEG8oQ9xFcOfQENV6TQtsddmKCOjKOUr3hXHKB/yC2jYTxlVzdcOttWE9ixPV4q
+         RQw16u46m+eFOdvWkAsEkmFIgwvxEpQtv43B+8Gtd22Ze4BERwVVdP+5zOVVhp9loG
+         qXvBavvo0/C4IN6l3TrIrCopn3sq0W6zNsDbQIhs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 031/100] trace: Fix preempt_enable_no_resched() abuse
-Date:   Tue, 30 Apr 2019 13:38:00 +0200
-Message-Id: <20190430113610.291111512@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        Haggai Eran <haggaie@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: [PATCH 4.19 033/100] RDMA/mlx5: Do not allow the user to write to the clock page
+Date:   Tue, 30 Apr 2019 13:38:02 +0200
+Message-Id: <20190430113610.355843314@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -71,48 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit d6097c9e4454adf1f8f2c9547c2fa6060d55d952 upstream.
+commit c660133c339f9ab684fdf568c0d51b9ae5e86002 upstream.
 
-Unless the very next line is schedule(), or implies it, one must not use
-preempt_enable_no_resched(). It can cause a preemption to go missing and
-thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+The intent of this VMA was to be read-only from user space, but the
+VM_MAYWRITE masking was missed, so mprotect could make it writable.
 
-Link: http://lkml.kernel.org/r/20190423200318.GY14281@hirez.programming.kicks-ass.net
-
-Cc: Waiman Long <longman@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: the arch/x86 maintainers <x86@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: huang ying <huang.ying.caritas@gmail.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: stable@vger.kernel.org
-Fixes: 2c2d7329d8af ("tracing/ftrace: use preempt_enable_no_resched_notrace in ring_buffer_time_stamp()")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 5c99eaecb1fc ("IB/mlx5: Mmap the HCA's clock info to user-space")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Haggai Eran <haggaie@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ring_buffer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/main.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -730,7 +730,7 @@ u64 ring_buffer_time_stamp(struct ring_b
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -2014,6 +2014,7 @@ static int mlx5_ib_mmap_clock_info_page(
  
- 	preempt_disable_notrace();
- 	time = rb_time_stamp(buffer);
--	preempt_enable_no_resched_notrace();
-+	preempt_enable_notrace();
+ 	if (vma->vm_flags & VM_WRITE)
+ 		return -EPERM;
++	vma->vm_flags &= ~VM_MAYWRITE;
  
- 	return time;
- }
+ 	if (!dev->mdev->clock_info_page)
+ 		return -EOPNOTSUPP;
+@@ -2197,6 +2198,7 @@ static int mlx5_ib_mmap(struct ib_uconte
+ 
+ 		if (vma->vm_flags & VM_WRITE)
+ 			return -EPERM;
++		vma->vm_flags &= ~VM_MAYWRITE;
+ 
+ 		/* Don't expose to user-space information it shouldn't have */
+ 		if (PAGE_SIZE > 4096)
 
 
