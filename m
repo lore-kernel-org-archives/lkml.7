@@ -2,128 +2,116 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D3EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B583C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1218521734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF0B20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E6X+aRgl";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JjTv4Or/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H8XTc5j2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfD3N4F (ORCPT
+        id S1727739AbfD3N4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:56:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38258 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfD3N4E (ORCPT
+        Tue, 30 Apr 2019 09:56:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53398 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfD3N4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:56:04 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6FE0660247; Tue, 30 Apr 2019 13:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556632563;
-        bh=V74Xn+4Xecuy8X76IYwMZ5DL3OaMc8SDcfUZGzNca7Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=E6X+aRglJUsJVbGzBifTMnPRqeKI7HJochINZKgypPMQJwwqiTHQXXE9OGUxOMBXC
-         SyGk2Jcrvg1vkWIa+Kw8K0aU8TKoAhhkLpn1vTPZzec9KUjN6A/d7Frji1u6d3s0JG
-         Lr7IyX0Z2zKSbpSEGWppEI7GCkq0D2uwmnmPBOF4=
-Received: from prsood-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: prsood@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D44360247;
-        Tue, 30 Apr 2019 13:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556632562;
-        bh=V74Xn+4Xecuy8X76IYwMZ5DL3OaMc8SDcfUZGzNca7Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JjTv4Or/8PdZiHbNn1HIJXS4YfXdaOZwWvx4MakDXa09Ye6adoak74p6FPzrzUMgO
-         Zqyb62K0guI1yigEVqRzcjNXRJ2Fwjo8X9Rwt2dalh8LBoGHSCfD294htWSx3/y6YK
-         Y0UZzE5bX6rxmNCjvBcypEwv0lzvByKaau/Eqjtg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D44360247
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
-From:   Prateek Sood <prsood@codeaurora.org>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org
-Cc:     sramana@codeaurora.org, prsood@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers: core: Remove glue dirs early only when refcount is 1
-Date:   Tue, 30 Apr 2019 19:25:40 +0530
-Message-Id: <1556632540-17382-1-git-send-email-prsood@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 30 Apr 2019 09:56:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NS87uwDQqCa5ycxzBLjKsw5By0nZC4LG/TYFnxCupVk=; b=H8XTc5j2ZI2Vzp8lcHgyTWodr
+        mwzl5LQi5LGfHTMv1K3gjDJxbBwKoNDshvjXn8jdOx/xQ7Yuq+UkY0po0Jlxv8EVlFQ8E1eY/3Db8
+        MPKfIuYD3O2UisrYjZ/S5sQBaKs5MtFOK3X2sHwLEmur/IyAGe8Lm0+I3RV2nOJlAzRG1TVFYWT2h
+        FUFPC3mnB7yh5aFabW6f7AkR28Qp2qMdPzb2leUPJ6Rc9OvX4LtNnU1tSzN1nwkY59fny3YqvU+wl
+        EvOwqe01uzxNZOZVYguRNTgUT1QVxdggMAwU6kjk2bmwqwtC3vtmOD1kN5iusaETy5+He6OVsw0KK
+        V1QKStQSg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLTEq-00059H-1m; Tue, 30 Apr 2019 13:56:04 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8A4A529B2FDBD; Tue, 30 Apr 2019 15:56:02 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 15:56:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+Message-ID: <20190430135602.GD2589@hirez.programming.kicks-ass.net>
+References: <20190428133826.3e142cfd@oasis.local.home>
+ <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
+ <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+ <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+ <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
+ <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
+ <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
+ <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
+ <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While loading firmware blobs parallely in different threads, it is possible
-to free sysfs node of glue_dirs in device_del() from a thread while another
-thread is trying to add subdir from device_add() in glue_dirs sysfs node.
+On Mon, Apr 29, 2019 at 01:07:33PM -0700, Linus Torvalds wrote:
+> On Mon, Apr 29, 2019 at 12:24 PM Andy Lutomirski <luto@kernel.org> wrote:
+> > > Side note: we *already* depend on sti shadow working in other parts of the kernel, namely sti->iret.
+> >
+> > Where?  STI; IRET would be nuts.
+> 
+> Sorry, not 'sti;iret' but 'sti;sysexit'
+> 
+> > before commit 4214a16b02971c60960afd675d03544e109e0d75
+> >     x86/asm/entry/64/compat: Use SYSRETL to return from compat mode SYSENTER
+> >
+> > we did sti; sysxit, but, when we discussed this, I don't recall anyone
+> > speaking up in favor of the safely of the old code.
+> 
+> We still have that sti sysexit in the 32-bit code.
 
-    CPU1                                           CPU2
-_request_firmware_load()
-  device_add()
-    get_device_parent()
-      class_dir_create_and_add()
-        kobject_add_internal()
-          create_dir() // glue_dir
+We also have both: "STI; HLT" and "STI; MWAIT" where we rely on the STI
+shadow. Getting an NMI in between shouldn't hurt too much, but if that
+in turn can lead to an actual interrupt happening, we're up some creek
+without no paddle.
 
-                                           _request_firmware_load()
-                                             device_add()
-                                               get_device_parent()
-                                                 kobject_get() //glue_dir
-
-  device_del()
-    cleanup_glue_dir()
-      kobject_del()
-
-                                               kobject_add()
-                                                 kobject_add_internal()
-                                                   create_dir() // in glue_dir
-                                                     kernfs_create_dir_ns()
-
-       sysfs_remove_dir() //glue_dir->sd=NULL
-       sysfs_put() // free glue_dir->sd
-
-                                                       kernfs_new_node()
-                                                         kernfs_get(glue_dir)
-
-Fix this race by making sure that kernfs_node for glue_dir is released only
-when refcount for glue_dir kobj is 1.
-
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
----
- drivers/base/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4aeaa0c..3955d07 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1820,12 +1820,15 @@ static inline struct kobject *get_glue_dir(struct device *dev)
-  */
- static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
- {
-+	unsigned int refcount;
-+
- 	/* see if we live in a "glue" directory */
- 	if (!live_in_glue_dir(glue_dir, dev))
- 		return;
- 
- 	mutex_lock(&gdp_mutex);
--	if (!kobject_has_children(glue_dir))
-+	refcount = kref_read(&glue_dir->kref);
-+	if (!kobject_has_children(glue_dir) && !--refcount)
- 		kobject_del(glue_dir);
- 	kobject_put(glue_dir);
- 	mutex_unlock(&gdp_mutex);
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Most moden systems don't use either anymore though. As
+mwait_idle_with_hints() relies on MWAIT ECX[0]=1 to allow MWAIT to wake
+from pending interrupts.
