@@ -2,145 +2,86 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2D6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B96AC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172C92080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1E320835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qn8YUxP+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yyawsRFS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfD3Ieb (ORCPT
+        id S1726751AbfD3Ief (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:34:31 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42151 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfD3Ieb (ORCPT
+        Tue, 30 Apr 2019 04:34:35 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34154 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfD3Iec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:34:31 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f23so11143198otl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 01:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UZ329GyIEsSH86qncBprYdF1JcDUL5kLIJqmaDT3rzQ=;
-        b=Qn8YUxP+ZhVtL4H5Tg01cFzY9lparaT1kR+QUgl1M+fY2c3Na9oA71UHk7SH6X81lk
-         WMBfwdbngo5K3dulsT2G5YBhIWc1F/IOG+IkuWiBsZeidf1YRjXwOki5CzGCqhGoOANV
-         kJYjj365IUVuV/qo/q1sJKnFcqxxBePkiQIQ6CTKxHIwX88V+wc7z0m3N2id7ookKqn8
-         W1FPpD+mn3bPaLeQDtvXu34k/H/d6SVy5W2K6UeiTlwGHNne4qQSlcXOnak2TtrcYOSj
-         DYStGb2IOn3YmrOdBFS0yjlZByw0WODQpJEmVa7XjUMAhMC/NSji9ZPXDbbeJAsBYkIK
-         +xXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UZ329GyIEsSH86qncBprYdF1JcDUL5kLIJqmaDT3rzQ=;
-        b=UNHMI98CkTgRNB7x5Ava8WtYptmo4iXyEWQzw4EbiuDsZfwj7oBmyj9ghn1n40GYOd
-         qlhXgZKEa8CSrJIu0uZg3MC3TC6ci6x0rhOsgXTa4JkdU/+H4YAteH7vZ5qAsSJ9oe/a
-         IYLzcj7tdrjlRgnRay0N2FCmGzoSLKVQHPkXCFP1IEudZR/nF+hzkk8BaaDveqfZ4SBd
-         1cD8plSi0F58TrRktjsdnBHA7QTt/JIC++0wOrMWfy7rGgt2cut4ggcJfPBJEYOepn+J
-         8bI6bhi9StkwxpbkFX/irOjgwkg4iNs7UU/JBZknkflUvRTmyH0yqJOtRY7TpjryPhj1
-         yY6g==
-X-Gm-Message-State: APjAAAUdS6pqvOGpZrDUtrXriFjN5fTlP0MMSbbIkP3+kogNlzInZjSG
-        R6HiLtFLJ1jXmnNGoyb5tDZuySPSoSBk1rx5cfJMUw==
-X-Google-Smtp-Source: APXvYqzAwGuvpY0OewsWG1dkLqIGd+Tc58MRSBtZighPw0ersur6lRSJW+A711S7FlNoQiQULcmiDkKzKG8KYQCIaP4=
-X-Received: by 2002:a9d:7399:: with SMTP id j25mr13905907otk.277.1556613270536;
- Tue, 30 Apr 2019 01:34:30 -0700 (PDT)
+        Tue, 30 Apr 2019 04:34:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=V1cm2gZOz8Lo0b6Ns70mAemkxqG1bfPxARMsSFPCS1g=; b=yyawsRFSctGJbp5kerTV0THbV
+        hgDUOIPI6GZCmUnowsm0OxIOr0+iYwProTLc4IzyicgxqZcJbMCsVSndTZwimpj6xDrZO71dPcFcc
+        xPQPnTCuw7OvOWaJsRgaarhmAL/eDq2sx9UcdTW3TpIBa9pQxMZ552jeP96SCWsqRtJxNnI5VyYCD
+        iSHj5ogukm+xo7h3qAFQxd/ZkKQJmdfahuer5JDRpWeF9vBATiPbWG76BCIlWzxn80Z80PWjOiB/J
+        uaa9WMvq/JQLyMv5+9DosCkMUkx/B4YpHFL9SyxHFyMZ9VDVE1bu4Fion/TKPMdWRGobXfUhokbXm
+        1+OzT5X7g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLODK-0007XM-I8; Tue, 30 Apr 2019 08:34:10 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5182E29D2D6D8; Tue, 30 Apr 2019 10:34:09 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 10:34:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 0/5] Fix improper uses of smp_mb__{before,after}_atomic()
+Message-ID: <20190430083409.GD2677@hirez.programming.kicks-ass.net>
+References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
 MIME-Version: 1.0
-References: <cover.1555330115.git.baolin.wang@linaro.org> <d77dca51a14087873627d735a17adcfde5517398.1555330115.git.baolin.wang@linaro.org>
- <20190429115723.GK3845@vkoul-mobl.Dlink> <CAMz4kuLf4wgr4Js3xH1aQVc4c2XK1Oq2TnsUq=NSowQUq5ZN5g@mail.gmail.com>
- <20190429140537.GN3845@vkoul-mobl.Dlink> <CAMz4ku+ctQrcR+6t1ouakeG3dbgL3qR8fz-Hft4s9FnxtFL1ng@mail.gmail.com>
- <20190430082954.GQ3845@vkoul-mobl.Dlink>
-In-Reply-To: <20190430082954.GQ3845@vkoul-mobl.Dlink>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 30 Apr 2019 16:34:19 +0800
-Message-ID: <CAMz4kuKV3J+aw9sic=QOhmcnr+H_pZ-pmq4pRbLX1R+XAR=phA@mail.gmail.com>
-Subject: Re: [PATCH 4/7] dmaengine: sprd: Add device validation to support
- multiple controllers
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 at 16:30, Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 30-04-19, 13:30, Baolin Wang wrote:
-> > On Mon, 29 Apr 2019 at 22:05, Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > On 29-04-19, 20:20, Baolin Wang wrote:
-> > > > On Mon, 29 Apr 2019 at 19:57, Vinod Koul <vkoul@kernel.org> wrote:
-> > > > >
-> > > > > On 15-04-19, 20:14, Baolin Wang wrote:
-> > > > > > From: Eric Long <eric.long@unisoc.com>
-> > > > > >
-> > > > > > Since we can support multiple DMA engine controllers, we should add
-> > > > > > device validation in filter function to check if the correct controller
-> > > > > > to be requested.
-> > > > > >
-> > > > > > Signed-off-by: Eric Long <eric.long@unisoc.com>
-> > > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > > > > > ---
-> > > > > >  drivers/dma/sprd-dma.c |    5 +++++
-> > > > > >  1 file changed, 5 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-> > > > > > index 0f92e60..9f99d4b 100644
-> > > > > > --- a/drivers/dma/sprd-dma.c
-> > > > > > +++ b/drivers/dma/sprd-dma.c
-> > > > > > @@ -1020,8 +1020,13 @@ static void sprd_dma_free_desc(struct virt_dma_desc *vd)
-> > > > > >  static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param)
-> > > > > >  {
-> > > > > >       struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
-> > > > > > +     struct of_phandle_args *dma_spec =
-> > > > > > +             container_of(param, struct of_phandle_args, args[0]);
-> > > > > >       u32 slave_id = *(u32 *)param;
-> > > > > >
-> > > > > > +     if (chan->device->dev->of_node != dma_spec->np)
-> > > > >
-> > > > > Are you not using of_dma_find_controller() that does this, so this would
-> > > > > be useless!
-> > > >
-> > > > Yes, we can use of_dma_find_controller(), but that will be a little
-> > > > complicated than current solution. Since we need introduce one
-> > > > structure to save the node to validate in the filter function like
-> > > > below, which seems make things complicated. But if you still like to
-> > > > use of_dma_find_controller(), I can change to use it in next version.
-> > >
-> > > Sorry I should have clarified more..
-> > >
-> > > of_dma_find_controller() is called by xlate, so you already run this
-> > > check, so why use this :)
-> >
-> > The of_dma_find_controller() can save the requested device node into
-> > dma_spec, and in the of_dma_simple_xlate() function, it will call
-> > dma_request_channel() to request one channel, but it did not validate
-> > the device node to find the corresponding dma device in
-> > dma_request_channel(). So we should in our filter function to validate
-> > the device node with the device node specified by the dma_spec. Hope I
-> > make things clear.
->
-> But dma_request_channel() calls of_dma_request_slave_channel() which
-> invokes of_dma_find_controller() why is it broken for you if that is the
-> case..
+On Mon, Apr 29, 2019 at 10:14:56PM +0200, Andrea Parri wrote:
+> Hello!
+> 
+> A relatively common misuse of these barriers is to apply these to
+> operations which are not read-modify-write operations, such as
+> atomic_set() and atomic_read(); examples were discussed in [1].
+> 
+> This series attempts to fix those uses by (conservatively) replacing
+> the smp_mb__{before,after}_atomic() barriers with full memory barriers.
 
-No,the calling process should be:
-dma_request_slave_channel()
---->dma_request_chan()--->of_dma_request_slave_channel()---->of_dma_simple_xlate()
-----> dma_request_channel().
+I don't think blindly doing this replacement makes the code any better;
+much of the code you found is just straight up dodgy to begin with.
 
--- 
-Baolin Wang
-Best Regards
+I think the people should mostly just consider this a bug report.
+
+Also, remember a memory barrier without a coherent comment is most
+likely a bug anyway.
