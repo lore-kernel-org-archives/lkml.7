@@ -2,128 +2,77 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF45C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4074DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F086216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556613005;
-	bh=L44o5mnTaulGd8/A/x404M3tsCXjrGsZL4cOq+2J79A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kXNvjxHDsPz69Vrbuvrr1nWZtK8CyTPARu4KsifUO2AKi+92NVVpLsgzJKb256FUl
-	 iMUk5FjespGrc3Adb10XOD7Dxt4zRJQTp3l4UvziNyPt4Oee1ctA6fzY2KdYaanLMv
-	 MJBp8FmoT7LhztoOnYP0KuvkN6dMI0NrS+V4te5g=
+	by mail.kernel.org (Postfix) with ESMTP id 143A82080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfD3IaF (ORCPT
+        id S1726564AbfD3IbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:30:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53528 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 04:31:06 -0400
+Received: from mga09.intel.com ([134.134.136.24]:22719 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfD3IaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:30:04 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0212080C;
-        Tue, 30 Apr 2019 08:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556613003;
-        bh=L44o5mnTaulGd8/A/x404M3tsCXjrGsZL4cOq+2J79A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a19ABJwBx7uM7bDncmxkYDjL+4cW9Ip/BQrprS8FSfQXXRboeP3bVIE7U/mJ7wvQH
-         LSOn92WOL65zOTtCmoez8V+TLqEfF7jttCeJsLxHHQ4H94Vy5XrzNSf5NV4yuwfyAA
-         bcyUr4NhvaYKPTR0QXQWeLm61SIpN7FfUmFvhlw4=
-Date:   Tue, 30 Apr 2019 13:59:54 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] dmaengine: sprd: Add device validation to support
- multiple controllers
-Message-ID: <20190430082954.GQ3845@vkoul-mobl.Dlink>
-References: <cover.1555330115.git.baolin.wang@linaro.org>
- <d77dca51a14087873627d735a17adcfde5517398.1555330115.git.baolin.wang@linaro.org>
- <20190429115723.GK3845@vkoul-mobl.Dlink>
- <CAMz4kuLf4wgr4Js3xH1aQVc4c2XK1Oq2TnsUq=NSowQUq5ZN5g@mail.gmail.com>
- <20190429140537.GN3845@vkoul-mobl.Dlink>
- <CAMz4ku+ctQrcR+6t1ouakeG3dbgL3qR8fz-Hft4s9FnxtFL1ng@mail.gmail.com>
+        id S1725769AbfD3IbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:31:06 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 01:31:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,413,1549958400"; 
+   d="scan'208";a="144800557"
+Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Apr 2019 01:31:03 -0700
+Date:   Tue, 30 Apr 2019 16:35:05 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eric W Biederman <ebiederm@xmission.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ying Huang <ying.huang@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] latencytop lock usage improvement
+Message-ID: <20190430083505.n5mozwybbnwydo3z@shbuild888>
+References: <1556525011-28022-1-git-send-email-feng.tang@intel.com>
+ <20190430080910.GI2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMz4ku+ctQrcR+6t1ouakeG3dbgL3qR8fz-Hft4s9FnxtFL1ng@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190430080910.GI2623@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-04-19, 13:30, Baolin Wang wrote:
-> On Mon, 29 Apr 2019 at 22:05, Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 29-04-19, 20:20, Baolin Wang wrote:
-> > > On Mon, 29 Apr 2019 at 19:57, Vinod Koul <vkoul@kernel.org> wrote:
-> > > >
-> > > > On 15-04-19, 20:14, Baolin Wang wrote:
-> > > > > From: Eric Long <eric.long@unisoc.com>
-> > > > >
-> > > > > Since we can support multiple DMA engine controllers, we should add
-> > > > > device validation in filter function to check if the correct controller
-> > > > > to be requested.
-> > > > >
-> > > > > Signed-off-by: Eric Long <eric.long@unisoc.com>
-> > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > > > > ---
-> > > > >  drivers/dma/sprd-dma.c |    5 +++++
-> > > > >  1 file changed, 5 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-> > > > > index 0f92e60..9f99d4b 100644
-> > > > > --- a/drivers/dma/sprd-dma.c
-> > > > > +++ b/drivers/dma/sprd-dma.c
-> > > > > @@ -1020,8 +1020,13 @@ static void sprd_dma_free_desc(struct virt_dma_desc *vd)
-> > > > >  static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param)
-> > > > >  {
-> > > > >       struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
-> > > > > +     struct of_phandle_args *dma_spec =
-> > > > > +             container_of(param, struct of_phandle_args, args[0]);
-> > > > >       u32 slave_id = *(u32 *)param;
-> > > > >
-> > > > > +     if (chan->device->dev->of_node != dma_spec->np)
-> > > >
-> > > > Are you not using of_dma_find_controller() that does this, so this would
-> > > > be useless!
-> > >
-> > > Yes, we can use of_dma_find_controller(), but that will be a little
-> > > complicated than current solution. Since we need introduce one
-> > > structure to save the node to validate in the filter function like
-> > > below, which seems make things complicated. But if you still like to
-> > > use of_dma_find_controller(), I can change to use it in next version.
-> >
-> > Sorry I should have clarified more..
-> >
-> > of_dma_find_controller() is called by xlate, so you already run this
-> > check, so why use this :)
+Hi Peter,
+
+On Tue, Apr 30, 2019 at 10:09:10AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 29, 2019 at 04:03:28PM +0800, Feng Tang wrote:
+> > Hi All,
+> > 
+> > latencytop is a very nice tool for tracing system latency hotspots, and
+> > we heavily use it in our LKP test suites.
 > 
-> The of_dma_find_controller() can save the requested device node into
-> dma_spec, and in the of_dma_simple_xlate() function, it will call
-> dma_request_channel() to request one channel, but it did not validate
-> the device node to find the corresponding dma device in
-> dma_request_channel(). So we should in our filter function to validate
-> the device node with the device node specified by the dma_spec. Hope I
-> make things clear.
+> What data does latency-top give that perf cannot give you? Ideally we'd
+> remove latencytop entirely.
 
-But dma_request_channel() calls of_dma_request_slave_channel() which
-invokes of_dma_find_controller() why is it broken for you if that is the
-case..
+Thanks for the review. In 0day/LKP test service, we have many tools for
+monitoring and analyzing the test results, perf is the most important
+one, which has the most parts in our auto-generated comparing results.   
+For example to identify spinlock contentions and system hotspots.
 
--- 
-~Vinod
+latencytop is another tool we used to find why systems go idle, like why
+workload chose to sleep or waiting for something. 
+
+Thanks,
+Feng
