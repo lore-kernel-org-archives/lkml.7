@@ -2,156 +2,191 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C129EC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FC1C46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8341B20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8064D20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R5DDCnbS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k7Kw5N91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfD3AJN (ORCPT
+        id S1729543AbfD3AKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 20:09:13 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59110 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbfD3AJM (ORCPT
+        Mon, 29 Apr 2019 20:10:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33534 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729063AbfD3AKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 20:09:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YhVP9MG9DJcdzGD91TC6nP6i6fbqfQnNoTJxzHuSEVQ=; b=R5DDCnbScxAs+RgHCsPWiH7YV0
-        sS/9NhCutJ2c6qtebRD/63+Z4ZWNIvx6gAK0VuilY2ZZ2wBGtKG0wlo4M3Ks69sufJcDH2W7VQ4HD
-        p6yBMjRwfKfbnlJFNUg6f6TJ7mBDVftHvjDOleb+yiwx6XOhFw78dldWVOyD5pYSw+uPuCjLRUaA/
-        Ry+jB3/ftMTjLP1xVrzmAmLa1P7MRGaGbLThMBv9rpNbbZASx73/IsLAtfjPuY6bSojhOyPkamWBp
-        Ad3vUGIlTXCPtA710T9mmdyHhoRQaMBeW95ChfLU9Oim77SsT25766Gf8lZsvN5zajUgDzOgzAdDR
-        7qVOVWcQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLGK6-0004aT-P5; Tue, 30 Apr 2019 00:08:39 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [RFC] [PATCH] oops: add "begin trace" + oops_id to match "end trace"
- + oops_id
-Message-ID: <9b8a2852-60ec-4519-fac8-4e1aa2763970@infradead.org>
-Date:   Mon, 29 Apr 2019 17:08:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 20:10:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y3so5018314plp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 17:10:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y8Pf9UXyzPjlpRjHiYMPtrNDJ8/3UQU5riBkZSYp9gs=;
+        b=k7Kw5N91Pxko0ghZG+tFO44IQLSLmLpxnt3s2C4Ka8pDBJI7mim2Lk2dlUKF8ZLNot
+         RfLDsDUUUc+VFe0qPlwHOA5zqLJvvxwtOGg/7Hb0GR8p7ebNzp7Us5YVQoeiIhu9Ltwr
+         Ao2kyZGey9qZR1awyZuwdaSkWY17AaOxzyawc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y8Pf9UXyzPjlpRjHiYMPtrNDJ8/3UQU5riBkZSYp9gs=;
+        b=dtWs8lVhzL91RpNFnOvE3gntpRk9MEeHrhrSWJro6wdoxaHJjLhm561+fqdOflTgvS
+         nUTg6rpqCLKNcshtR6ExaT6MXUt/zhNWZjVEmny3Eonx9FC2i3mNpFUfUVlhUTsSkh1P
+         wmOggFqUGqy4dHvvmsb9lU43uEEJWkFVRDd7eMZdtkK5f4PVnEOhYkTRZG0qM7eHkeYT
+         /vRjRrqzPS310j7iz2lz5BG4EuIRKtTmcFoOzNjsbEVZiKjK10yK03T7cPqvdKR9Rzcp
+         2ZqkUazPVk6eFm9pJ/zPsZDXY+L22Bu/4BtUDyAW+hTz3CelM+zJKcd05ypFrtI23rt8
+         /HRw==
+X-Gm-Message-State: APjAAAXoTqmqSUSGJoa3rRyJ8Kft3H6Mo8yuHqOJnk2LC6l4+HPkONyU
+        NOpvdEJ42eV1Vnq/In75fjc3BQ==
+X-Google-Smtp-Source: APXvYqxXWqn4PyYBhaEXrbFBPXd88+0a2CteVhsZB0uDiFIMSkAjoNlIJlfk7AESXUSA6LYf/viT6Q==
+X-Received: by 2002:a17:902:7b8e:: with SMTP id w14mr48845254pll.202.1556583029384;
+        Mon, 29 Apr 2019 17:10:29 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id n65sm59063555pga.92.2019.04.29.17.10.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 17:10:28 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v8] Bluetooth: btqca: inject command complete event during fw download
+Date:   Mon, 29 Apr 2019 17:10:24 -0700
+Message-Id: <20190430001024.209688-1-mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 
-Print a "begin trace" + oops ID number to match the current
-"end trace" + oops ID number.
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 
-Example:
-[  193.314027] ---[ begin trace cf01af0ff0925003 ]---
-[  193.314032] general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-[  193.314046] CPU: 2 PID: 2884 Comm: bash Tainted: G           O      5.1.0-rc6mod #1
-[  193.314048] Hardware name: TOSHIBA PORTEGE R835/Portable PC, BIOS Version 4.10   01/08/2013
-[  193.314058] RIP: 0010:proc_dump_test+0x7c/0x13b [dump_test]
-[  193.314062] Code: 5c 41 5d 5d c3 be 27 00 00 00 48 c7 c7 60 10 d9 c1 e8 58 b2 85 c6 4c 89 e0 e8 40 41 3f c8 85 c0 41 89 c5 75 39 80 fa 6f 75 3c <a0> 00 00 00 00 00 fc ff df 84 c0 74 04 84 c0 7e 12 c6 04 25 00 00
-[  193.314065] RSP: 0018:ffff88811ea4fce0 EFLAGS: 00010246
-[  193.314069] RAX: 0000000000000000 RBX: ffff88811ea4fd48 RCX: 0000000000000015
-[  193.314072] RDX: 000000000000006f RSI: 0000000000000027 RDI: ffff888117df0064
-[  193.314075] RBP: ffff88811ea4fcf8 R08: ffff88811ea4fe88 R09: fffffbfff1661c71
-[  193.314077] R10: 0000000000000001 R11: fffffbfff1661c70 R12: 000056103bd643f0
-[  193.314080] R13: 0000000000000000 R14: ffff888117c58b48 R15: ffffffffc1d920a0
-[  193.314083] FS:  00007ff067886b80(0000) GS:ffff88811f200000(0000) knlGS:0000000000000000
-[  193.314086] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  193.314089] CR2: 000056103bd643f0 CR3: 0000000117ae4005 CR4: 00000000000606e0
-[  193.314090] Call Trace:
-{lines deleted for brevity}
-[  193.314187] RIP: 0033:0x7ff066f64c14
-[  193.314190] Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 80 00 00 00 00 8b 05 1a fc 2c 00 48 63 ff 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 55 53 48 89 d5 48 89 f3 48 83
-[  193.314193] RSP: 002b:00007fffaf5eaa08 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  193.314197] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007ff066f64c14
-[  193.314199] RDX: 0000000000000002 RSI: 000056103bd643f0 RDI: 0000000000000001
-[  193.314202] RBP: 000056103bd643f0 R08: 000000000000000a R09: 0000000000000000
-[  193.314204] R10: 000000000000000a R11: 0000000000000246 R12: 0000000000000002
-[  193.314206] R13: 0000000000000001 R14: 00007ff067230720 R15: 0000000000000002
-[  193.314215] Modules linked in: dump_test(O) fuse xt_tcpudp ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack af_packet ip_set nfnetlink ebtable_nat ebtable_broute bridge stp llc ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_raw iptable_security ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter ip_tables x_tables bpfilter uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 hid_generic usbkbd usbmouse videobuf2_common btrfs usbhid videodev hid coretemp hwmon media intel_rapl msr x86_pkg_temp_thermal intel_powerclamp kvm_intel xor mei_hdcp kvm zstd_compress irqbypass raid6_pq arc4 crct10dif_pclmul iTCO_wdt iwldvm libcrc32c crc32_pclmul iTCO_vendor_support crc32c_intel zstd_decompress ghash_clmulni_intel snd_hda_codec_hdmi mac80211 snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_hda_codec aesni_intel
-[  193.314293]  aes_x86_64 crypto_simd snd_hda_core iwlwifi cryptd snd_hwdep glue_helper sdhci_pci intel_cstate toshiba_acpi sparse_keymap cqhci snd_pcm intel_uncore sr_mod joydev sdhci cdrom intel_rapl_perf wmi input_leds cfg80211 snd_timer mmc_core uio_pdrv_genirq mousedev uio serio_raw pcspkr mei_me rtc_cmos toshiba_haps led_class e1000e thermal snd rfkill evdev industrialio mac_hid mei soundcore lpc_ich pcc_cpufreq battery ac sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua autofs4
-[  193.314358] ---[ end trace cf01af0ff0925003 ]---
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Latest qualcomm chips are not sending an command complete event for
+every firmware packet sent to chip. They only respond with a vendor
+specific event for the last firmware packet. This optimization will
+decrease the BT ON time. Due to this we are seeing a timeout error
+message logs on the console during firmware download. Now we are
+injecting a command complete event once we receive an vendor specific
+event for the last RAM firmware packet.
+
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
-Can the "begin trace" event happen multiple times before "end trace"?
-If so, this code won't handle that situation and the output would be
-confusing, like this:
-  begin trace 000dead
-  begin trace 000deae
-  end trace 00deae
-  end trace 00deae
-That would be very bad and this patch should go away.
+Changes in v8:
+- renamed QCA_HCI_CC_SUCCESS to QCA_HCI_CC_OPCODE
+- use 0xFC00 as opcode of the injected event instead of 0
+- added Matthias' tags from the v7 review
+---
+ drivers/bluetooth/btqca.c | 39 ++++++++++++++++++++++++++++++++++++++-
+ drivers/bluetooth/btqca.h |  3 +++
+ 2 files changed, 41 insertions(+), 1 deletion(-)
 
- kernel/panic.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
---- lnx-51-rc6.orig/kernel/panic.c
-+++ lnx-51-rc6/kernel/panic.c
-@@ -57,6 +57,8 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index cc12eecd9e4d..ef765ea881b8 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -144,6 +144,7 @@ static void qca_tlv_check_data(struct rome_config *config,
+ 		 * In case VSE is skipped, only the last segment is acked.
+ 		 */
+ 		config->dnld_mode = tlv_patch->download_mode;
++		config->dnld_type = config->dnld_mode;
  
- EXPORT_SYMBOL(panic_notifier_list);
+ 		BT_DBG("Total Length           : %d bytes",
+ 		       le32_to_cpu(tlv_patch->total_size));
+@@ -264,6 +265,31 @@ static int qca_tlv_send_segment(struct hci_dev *hdev, int seg_size,
+ 	return err;
+ }
  
-+void print_oops_begin_marker(void);
++static int qca_inject_cmd_complete_event(struct hci_dev *hdev)
++{
++	struct hci_event_hdr *hdr;
++	struct hci_ev_cmd_complete *evt;
++	struct sk_buff *skb;
 +
- static long no_blink(int state)
- {
- 	return 0;
-@@ -501,6 +503,7 @@ void oops_enter(void)
- 	/* can't trust the integrity of the kernel anymore: */
- 	debug_locks_off();
- 	do_oops_enter_exit();
-+	print_oops_begin_marker();
- }
- 
- /*
-@@ -519,9 +522,14 @@ static int init_oops_id(void)
- }
- late_initcall(init_oops_id);
- 
--void print_oops_end_marker(void)
-+void print_oops_begin_marker(void)
- {
- 	init_oops_id();
-+	pr_warn("---[ begin trace %016llx ]---\n", (unsigned long long)oops_id);
++	skb = bt_skb_alloc(sizeof(*hdr) + sizeof(*evt) + 1, GFP_KERNEL);
++	if (!skb)
++		return -ENOMEM;
++
++	hdr = skb_put(skb, sizeof(*hdr));
++	hdr->evt = HCI_EV_CMD_COMPLETE;
++	hdr->plen = sizeof(*evt) + 1;
++
++	evt = skb_put(skb, sizeof(*evt));
++	evt->ncmd = 1;
++	evt->opcode = HCI_OP_NOP;
++
++	skb_put_u8(skb, QCA_HCI_CC_SUCCESS);
++
++	hci_skb_pkt_type(skb) = HCI_EVENT_PKT;
++
++	return hci_recv_frame(hdev, skb);
 +}
 +
-+void print_oops_end_marker(void)
-+{
- 	pr_warn("---[ end trace %016llx ]---\n", (unsigned long long)oops_id);
- }
- 
-@@ -546,8 +554,10 @@ void __warn(const char *file, int line,
+ static int qca_download_firmware(struct hci_dev *hdev,
+ 				  struct rome_config *config)
  {
- 	disable_trace_on_warning();
+@@ -297,11 +323,22 @@ static int qca_download_firmware(struct hci_dev *hdev,
+ 		ret = qca_tlv_send_segment(hdev, segsize, segment,
+ 					    config->dnld_mode);
+ 		if (ret)
+-			break;
++			goto out;
  
--	if (args)
-+	if (args) {
- 		pr_warn(CUT_HERE);
-+		print_oops_begin_marker();
-+	}
+ 		segment += segsize;
+ 	}
  
- 	if (file)
- 		pr_warn("WARNING: CPU: %d PID: %d at %s:%d %pS\n",
-
++	/* Latest qualcomm chipsets are not sending a command complete event
++	 * for every fw packet sent. They only respond with a vendor specific
++	 * event for the last packet. This optimization in the chip will
++	 * decrease the BT in initialization time. Here we will inject a command
++	 * complete event to avoid a command timeout error message.
++	 */
++	if ((config->dnld_type == ROME_SKIP_EVT_VSE_CC ||
++	    config->dnld_type == ROME_SKIP_EVT_VSE))
++		return qca_inject_cmd_complete_event(hdev);
++
++out:
+ 	release_firmware(fw);
+ 
+ 	return ret;
+diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+index 4c4fe2b5b7b7..595abcdaed2d 100644
+--- a/drivers/bluetooth/btqca.h
++++ b/drivers/bluetooth/btqca.h
+@@ -41,6 +41,8 @@
+ #define QCA_WCN3990_POWERON_PULSE	0xFC
+ #define QCA_WCN3990_POWEROFF_PULSE	0xC0
+ 
++#define QCA_HCI_CC_OPCODE		0xFC00
++
+ enum qca_baudrate {
+ 	QCA_BAUDRATE_115200 	= 0,
+ 	QCA_BAUDRATE_57600,
+@@ -82,6 +84,7 @@ struct rome_config {
+ 	char fwname[64];
+ 	uint8_t user_baud_rate;
+ 	enum rome_tlv_dnld_mode dnld_mode;
++	enum rome_tlv_dnld_mode dnld_type;
+ };
+ 
+ struct edl_event_hdr {
+-- 
+2.21.0.593.g511ec345e18-goog
 
