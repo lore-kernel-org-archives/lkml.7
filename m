@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D67C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1102EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D672054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7932921670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625065;
-	bh=S+Iykvg4Xa0Snio24a4EY6114LsbjfA2HXGzUv8Pbh4=;
+	s=default; t=1556625069;
+	bh=Wb9v6+JfhmpyAoywsRFXiLGKnv7wZi6IPZiBNKCeCaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XoKAxd7NCBkILDdLv8o4tbbWnKeodCg02JnPfgrr2uFvdsBNmmpSxe0KvAnCVwJTA
-	 3DDmn7ANMnPHOxkGx+CSQNMVqI1iNjp2adseh1ArxBukRX8PaS+uvKnuCZ4tc8panz
-	 FrS54/XBTg6WWwO5HfSxi+Z0wP9J6gz2Ef+lVl9g=
+	b=v335qbQ3wt0CtX+eybi5NPh1H0D+qI58RDKw4X9S0/pdeHQwjvodCZVwLx1yNqH4F
+	 3Ud+YNu9W7yQBa3sYfZ+9WI7ZjGxZBgV9J0ck1YvP5zDH5FAGaZj1HIsZjhxP2fSqJ
+	 0SOw012SRvVfX+IlqhgAPcsHPygjSg/Cr0eRehHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731324AbfD3LvD (ORCPT
+        id S1731338AbfD3LvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:51:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731313AbfD3LvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:51:02 -0400
+        id S1731325AbfD3LvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3AC521707;
-        Tue, 30 Apr 2019 11:51:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB9820449;
+        Tue, 30 Apr 2019 11:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625061;
-        bh=S+Iykvg4Xa0Snio24a4EY6114LsbjfA2HXGzUv8Pbh4=;
+        s=default; t=1556625063;
+        bh=Wb9v6+JfhmpyAoywsRFXiLGKnv7wZi6IPZiBNKCeCaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmQDIa10BFjHFC77wCMOI946bzBsJJAWQW37lS8i7xvd0qPRo4XxnPXmcyNaPEMqd
-         25Qh80ifLPkyp6tEtSOZ7ZpPBasE/EiFEDvfOB3vKx5x5pjEBOdZXzKEm5bmxA8HS+
-         phm6aQJ9w88W063OeLEYK1SzWx/CKRfwhq5WYu+8=
+        b=1u4PGz9kkHgLlXzpZoih99AlXc/GZYZp1kfP1tf00HakK1RMzy7lk3KsN3ltp/cyp
+         C2Ef1UfW9/Q8V8hzIgp7CgBzARHXVT7sFRVv1M6zIwWl+viMxoQESYGRd1fp0McQVX
+         Yq6mhDqpsqy2d2mDvivw+7weDiMgxrG0yq2ao40s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        stable@vger.kernel.org,
+        syzbot+3ce8520484b0d4e260a5@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 76/89] net: rds: exchange of 8K and 1M pool
-Date:   Tue, 30 Apr 2019 13:39:07 +0200
-Message-Id: <20190430113613.324259262@linuxfoundation.org>
+Subject: [PATCH 5.0 50/89] tipc: handle the err returned from cmd header function
+Date:   Tue, 30 Apr 2019 13:38:41 +0200
+Message-Id: <20190430113612.040475975@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,80 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 4b9fc7146249a6e0e3175d0acc033fdcd2bfcb17 ]
+commit 2ac695d1d602ce00b12170242f58c3d3a8e36d04 upstream.
 
-Before the commit 490ea5967b0d ("RDS: IB: move FMR code to its own file"),
-when the dirty_count is greater than 9/10 of max_items of 8K pool,
-1M pool is used, Vice versa. After the commit 490ea5967b0d ("RDS: IB: move
-FMR code to its own file"), the above is removed. When we make the
-following tests.
+Syzbot found a crash:
 
-Server:
-  rds-stress -r 1.1.1.16 -D 1M
+  BUG: KMSAN: uninit-value in tipc_nl_compat_name_table_dump+0x54f/0xcd0 net/tipc/netlink_compat.c:872
+  Call Trace:
+    tipc_nl_compat_name_table_dump+0x54f/0xcd0 net/tipc/netlink_compat.c:872
+    __tipc_nl_compat_dumpit+0x59e/0xda0 net/tipc/netlink_compat.c:215
+    tipc_nl_compat_dumpit+0x63a/0x820 net/tipc/netlink_compat.c:280
+    tipc_nl_compat_handle net/tipc/netlink_compat.c:1226 [inline]
+    tipc_nl_compat_recv+0x1b5f/0x2750 net/tipc/netlink_compat.c:1265
+    genl_family_rcv_msg net/netlink/genetlink.c:601 [inline]
+    genl_rcv_msg+0x185f/0x1a60 net/netlink/genetlink.c:626
+    netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
+    genl_rcv+0x63/0x80 net/netlink/genetlink.c:637
+    netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+    netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1336
+    netlink_sendmsg+0x127f/0x1300 net/netlink/af_netlink.c:1917
+    sock_sendmsg_nosec net/socket.c:622 [inline]
+    sock_sendmsg net/socket.c:632 [inline]
 
-Client:
-  rds-stress -r 1.1.1.14 -s 1.1.1.16 -D 1M
+  Uninit was created at:
+    __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
+    alloc_skb include/linux/skbuff.h:1012 [inline]
+    netlink_alloc_large_skb net/netlink/af_netlink.c:1182 [inline]
+    netlink_sendmsg+0xb82/0x1300 net/netlink/af_netlink.c:1892
+    sock_sendmsg_nosec net/socket.c:622 [inline]
+    sock_sendmsg net/socket.c:632 [inline]
 
-The following will appear.
-"
-connecting to 1.1.1.16:4000
-negotiated options, tasks will start in 2 seconds
-Starting up..header from 1.1.1.166:4001 to id 4001 bogus
-..
-tsks  tx/s  rx/s tx+rx K/s  mbi K/s  mbo K/s tx us/c  rtt us
-cpu %
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
-...
-"
-So this exchange between 8K and 1M pool is added back.
+It was supposed to be fixed on commit 974cb0e3e7c9 ("tipc: fix uninit-value
+in tipc_nl_compat_name_table_dump") by checking TLV_GET_DATA_LEN(msg->req)
+in cmd->header()/tipc_nl_compat_name_table_dump_header(), which is called
+ahead of tipc_nl_compat_name_table_dump().
 
-Fixes: commit 490ea5967b0d ("RDS: IB: move FMR code to its own file")
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+However, tipc_nl_compat_dumpit() doesn't handle the error returned from cmd
+header function. It means even when the check added in that fix fails, it
+won't stop calling tipc_nl_compat_name_table_dump(), and the issue will be
+triggered again.
+
+So this patch is to add the process for the err returned from cmd header
+function in tipc_nl_compat_dumpit().
+
+Reported-by: syzbot+3ce8520484b0d4e260a5@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rds/ib_fmr.c  |   11 +++++++++++
- net/rds/ib_rdma.c |    3 ---
- 2 files changed, 11 insertions(+), 3 deletions(-)
 
---- a/net/rds/ib_fmr.c
-+++ b/net/rds/ib_fmr.c
-@@ -44,6 +44,17 @@ struct rds_ib_mr *rds_ib_alloc_fmr(struc
- 	else
- 		pool = rds_ibdev->mr_1m_pool;
+---
+ net/tipc/netlink_compat.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -267,8 +267,14 @@ static int tipc_nl_compat_dumpit(struct
+ 	if (msg->rep_type)
+ 		tipc_tlv_init(msg->rep, msg->rep_type);
  
-+	if (atomic_read(&pool->dirty_count) >= pool->max_items / 10)
-+		queue_delayed_work(rds_ib_mr_wq, &pool->flush_worker, 10);
-+
-+	/* Switch pools if one of the pool is reaching upper limit */
-+	if (atomic_read(&pool->dirty_count) >=  pool->max_items * 9 / 10) {
-+		if (pool->pool_type == RDS_IB_MR_8K_POOL)
-+			pool = rds_ibdev->mr_1m_pool;
-+		else
-+			pool = rds_ibdev->mr_8k_pool;
+-	if (cmd->header)
+-		(*cmd->header)(msg);
++	if (cmd->header) {
++		err = (*cmd->header)(msg);
++		if (err) {
++			kfree_skb(msg->rep);
++			msg->rep = NULL;
++			return err;
++		}
 +	}
-+
- 	ibmr = rds_ib_try_reuse_ibmr(pool);
- 	if (ibmr)
- 		return ibmr;
---- a/net/rds/ib_rdma.c
-+++ b/net/rds/ib_rdma.c
-@@ -454,9 +454,6 @@ struct rds_ib_mr *rds_ib_try_reuse_ibmr(
- 	struct rds_ib_mr *ibmr = NULL;
- 	int iter = 0;
  
--	if (atomic_read(&pool->dirty_count) >= pool->max_items_soft / 10)
--		queue_delayed_work(rds_ib_mr_wq, &pool->flush_worker, 10);
--
- 	while (1) {
- 		ibmr = rds_ib_reuse_mr(pool);
- 		if (ibmr)
+ 	arg = nlmsg_new(0, GFP_KERNEL);
+ 	if (!arg) {
 
 
