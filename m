@@ -2,119 +2,117 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A743C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E40BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1AFF20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8AF21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 06:27:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="fNC/GDfl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dxRN55Fm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfD3GXz (ORCPT
+        id S1726295AbfD3G1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 02:23:55 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7145 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725799AbfD3GXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 02:23:55 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 69C8A5508477262F9133;
-        Tue, 30 Apr 2019 14:23:51 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Apr 2019
- 14:23:46 +0800
-Subject: Re: [PATCH] vti4: Fix error path in vti_init and vti_fini
-To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>
-References: <20190430033630.27240-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <a846f1ce-f975-8b8a-5c69-0b3af1b1f0f1@huawei.com>
-Date:   Tue, 30 Apr 2019 14:23:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 30 Apr 2019 02:27:50 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:45611 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725790AbfD3G1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 02:27:49 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 9B30214B4A;
+        Tue, 30 Apr 2019 02:27:48 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Tue, 30 Apr 2019 02:27:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=nqXHKA2oP67rdKxFEU3hjeuptSc
+        9ac+htnMbvzAybNA=; b=fNC/GDflRY2oHYhiIFEhSQewdOoq4IAmGg/M9hIMW3K
+        gEJ4ITLhf3QkVhW1L1NLn58svhLYQmY/v4Y3eS8iNibY7d6LUe1GlfunT7uhCA25
+        aH4X9h4mbJAcNDw4xnhiZhzM3hPG3eTDy3VmULIgYh+e/egc35JnsMyNn+MssCJz
+        lZXtgJrih2y91ulyO5yrFRkjI5EoDYryw43wAtT96QPTTE2KpfYtJ4s6+Aq0jO/C
+        LVYFzJoYnZPdw3bdxoC00L/ey0/nodY7541KEiHqCrKizhgCZhahDOawNdKUwNuu
+        JizAdc9g8wU+bJ7L9pVfhOUG1JcqylJ5LvQsqG6v5rQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=nqXHKA
+        2oP67rdKxFEU3hjeuptSc9ac+htnMbvzAybNA=; b=dxRN55FmToPitLiF4SnpS2
+        dF9DodvNC9TbtCX7I84eragBnbwNsj4Bp38wpjDTvR8MLQ/p0BUlqi8CePbaCeZ3
+        LLRlpGej+KG1C71KuRI/xjcmWStUlEQa0pC4qJ414+Q1J8mb1CwdbpNeYLMGiLD3
+        ed5Ycw7Q8GNcpzP41S9E7YDmZZeTVCzNmTNYbxvZDs1xy00tGVK3SWYTigPI0jaA
+        hrR+t7QDmticJo40Gh5z++RAzVlcwbR33NRwxpRZP2xHpF5vWgLoKRygUo60yu46
+        x8ul5LyNWmFLv++Ty9YnwjFd6LI6vrqPbJrCk3Id4aZ7IBdLXP7sPGvDxVeKSmUw
+        ==
+X-ME-Sender: <xms:4-rHXF4e4sfEPb0pSmxmNgFxECLyOtXpUIDXJv2WrHMyM8BkD8vQTw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdduuddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvuddr
+    geegrddvfedtrddukeeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinh
+    drtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:4-rHXNIU99E5OeejVO0TsNem4G7mny2uJvOwtj6IRmUIKBK7N9_fJg>
+    <xmx:4-rHXB4lqU3uff_uF41PhhJvkhG2ympeuLt01hCgXG_gIhwqFpim2Q>
+    <xmx:4-rHXEbhpI5yu-K5DoNuZ_-00FONs7K9ipTliZVXHSpk3V_BDqTMyw>
+    <xmx:5OrHXNNAca7AdfXJlbzob6CuxmXmwMgsAbN6ZPfElG3e1ZDG4DMsPg>
+Received: from localhost (ppp121-44-230-188.bras2.syd2.internode.on.net [121.44.230.188])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E59F1E44A1;
+        Tue, 30 Apr 2019 02:27:45 -0400 (EDT)
+Date:   Tue, 30 Apr 2019 16:27:07 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
+        gregkh@linuxfoundation.org, hpa@zytor.com, tglx@linutronix.de,
+        vincent.guittot@linaro.org, peterz@infradead.org,
+        rafael.j.wysocki@intel.com, tobin@kernel.org,
+        linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:sched/urgent] sched/cpufreq: Fix kobject memleak
+Message-ID: <20190430062707.GB32393@eros.localdomain>
+References: <20190430001144.24890-1-tobin@kernel.org>
+ <tip-8bf7ab9c79f3d1a5f02ebac369f656de9ec0aca8@git.kernel.org>
+ <20190430055627.oukh3dq6tk74q3wm@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <20190430033630.27240-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430055627.oukh3dq6tk74q3wm@vireshk-i7>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Well, there has a same fix in ipsec tree, Pls ignore this.
+On Tue, Apr 30, 2019 at 11:26:27AM +0530, Viresh Kumar wrote:
+> On 29-04-19, 22:52, tip-bot for Tobin C. Harding wrote:
+> > Commit-ID:  8bf7ab9c79f3d1a5f02ebac369f656de9ec0aca8
+> > Gitweb:     https://git.kernel.org/tip/8bf7ab9c79f3d1a5f02ebac369f656de9ec0aca8
+> > Author:     Tobin C. Harding <tobin@kernel.org>
+> > AuthorDate: Tue, 30 Apr 2019 10:11:44 +1000
+> > Committer:  Ingo Molnar <mingo@kernel.org>
+> > CommitDate: Tue, 30 Apr 2019 06:24:09 +0200
+> > 
+> > sched/cpufreq: Fix kobject memleak
+> > 
+> > Currently the error return path from kobject_init_and_add() is not
+> > followed by a call to kobject_put() - which means we are leaking
+> > the kobject.
+> > 
+> > Fix it by adding a call to kobject_put() in the error path of
+> > kobject_init_and_add().
+> > 
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > Add call to kobject_put() in error path of kobject_init_and_add().
+> 
+> This should have been present before the signed-off ?
 
-On 2019/4/30 11:36, YueHaibing wrote:
-> KASAN report this:
-> 
-> BUG: unable to handle kernel paging request at fffffbfff8280cc7
-> PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1ebfd0067 PTE 0
-> Oops: 0000 [#1] SMP KASAN PTI
-> CPU: 0 PID: 8156 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> RIP: 0010:xfrm4_tunnel_register+0xb3/0x1f0 [tunnel4]
-> Code: e8 03 42 80 3c 28 00 0f 85 25 01 00 00 48 8b 5d 00 48 85 db 0f 84 a8 00 00 00 e8 08 cd b3 f3 48 8d 7b 18 48 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 74 08 3c 03 0f 8e 04 01 00 00 44 8b 63 18 45
-> RSP: 0018:ffff8881b65bf9a0 EFLAGS: 00010a02
-> RAX: 1ffffffff8280cc7 RBX: ffffffffc1406620 RCX: ffffffff8d8880a8
-> RDX: 0000000000031712 RSI: ffffc900014bf000 RDI: ffffffffc1406638
-> RBP: ffffffffc108a4a0 R08: fffffbfff8211401 R09: fffffbfff8211401
-> R10: ffff8881b65bf9a0 R11: fffffbfff8211400 R12: ffffffffc1c08000
-> R13: dffffc0000000000 R14: 0000000000000000 R15: ffffffffc1bfe620
-> FS:  00007f5f07be3700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: fffffbfff8280cc7 CR3: 00000001e8d00004 CR4: 00000000007606f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  ? 0xffffffffc1c08000
->  vti_init+0x9d/0x1000 [ip_vti]
->  do_one_initcall+0xbc/0x47d init/main.c:901
->  do_init_module+0x1b5/0x547 kernel/module.c:3456
->  load_module+0x6405/0x8c10 kernel/module.c:3804
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
->  do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> commit dd9ee3444014 ("vti4: Fix a ipip packet processing bug
-> in 'IPCOMP' virtual tunnel") misplace xfrm4_tunnel_deregister in
-> vti_init and forgot to add cleanup in vti_fini.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: dd9ee3444014 ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  net/ipv4/ip_vti.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-> index 68a21bf..b6235ca 100644
-> --- a/net/ipv4/ip_vti.c
-> +++ b/net/ipv4/ip_vti.c
-> @@ -659,9 +659,9 @@ static int __init vti_init(void)
->  	return err;
->  
->  rtnl_link_failed:
-> -	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
-> -xfrm_tunnel_failed:
->  	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
-> +xfrm_tunnel_failed:
-> +	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
->  xfrm_proto_comp_failed:
->  	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
->  xfrm_proto_ah_failed:
-> @@ -676,6 +676,7 @@ static int __init vti_init(void)
->  static void __exit vti_fini(void)
->  {
->  	rtnl_link_unregister(&vti_link_ops);
-> +	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
->  	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
->  	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
->  	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
-> 
+Thanks.  Some face palm fails on this patch.  Its hard to get good help
+:)
 
+	Tobin
