@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20D1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72750C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10092075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEF32075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625677;
-	bh=fKUg6+PahRM8TTj2fQmK27sq0Nz0V/wzQ4NWA34HGVU=;
+	s=default; t=1556625683;
+	bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BV5fC8deK87X3isArEn7LRauUhm0A7yjIyUV3pCIag9CCrLYnxKrkcQcE/J2wXBCP
-	 GVd0kvspD95gBYSWUTBov7u8Ha1gqayLfcWpCApDR4mjZvr62zOtTGtgbIlR/SgE7I
-	 l8fvS5OxFSyn4+R2o68kq7xNUoMPdphYU1PulBKk=
+	b=kQIGdnfrqwrkbNXTvZXuuh1yK3//oSMRbbWVyk1QGwT+cIqW3ghfLqVOL0E9eHRsP
+	 U0kFHlcYQA+dOejyJVMqRMqgeW92zwKOCEdsa7HHUyfp0fhRoRSea2KOrjUI0g86rU
+	 d2Q2by4LwqqLDyRBcQ8g4i+/J5uHvuA3QtxVrlZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfD3MBQ (ORCPT
+        id S1730335AbfD3LpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:01:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57228 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbfD3LpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:11 -0400
+        id S1730321AbfD3LpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AA1D21734;
-        Tue, 30 Apr 2019 11:45:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91C8921707;
+        Tue, 30 Apr 2019 11:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624710;
-        bh=fKUg6+PahRM8TTj2fQmK27sq0Nz0V/wzQ4NWA34HGVU=;
+        s=default; t=1556624703;
+        bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GggnxONasf7XXf9gvJDOcX3Bchi2xJdUlvcDJlmyK2CD5fznbFvJfvhaffGC0Scgt
-         Pbog8Qt9rAEf4jHMjILaFEbnHI9spQpK2cc9l3BLRQ7awLjKwQkYrLy5nWJuJwJJJo
-         mRyU7JlJ8NO72d4PMR0TYEx7VKEFFdNSvbPpWzEc=
+        b=A461ZaOA/STGDbhOq6sx+P1W6HCW3g+K52Wj6iknSwoC+XZLO5udwfoCL5tEwyG40
+         6FbXSpChjFao7T36EivTuFUQ4psvhaifb+8TSZOiISdgt1sP+LfllEdtK5XDxLuYrq
+         V2QRuQT0JA/kceUGmaqdFXvhY3+pdL6VWiZ1Pv/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH 4.19 042/100] vfio/type1: Limit DMA mappings per container
-Date:   Tue, 30 Apr 2019 13:38:11 +0200
-Message-Id: <20190430113611.111136512@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
+        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
+Subject: [PATCH 4.19 039/100] sunrpc: dont mark uninitialised items as VALID.
+Date:   Tue, 30 Apr 2019 13:38:08 +0200
+Message-Id: <20190430113611.017772742@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,94 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: NeilBrown <neilb@suse.com>
 
-commit 492855939bdb59c6f947b0b5b44af9ad82b7e38c upstream.
+commit d58431eacb226222430940134d97bfd72f292fcd upstream.
 
-Memory backed DMA mappings are accounted against a user's locked
-memory limit, including multiple mappings of the same memory.  This
-accounting bounds the number of such mappings that a user can create.
-However, DMA mappings that are not backed by memory, such as DMA
-mappings of device MMIO via mmaps, do not make use of page pinning
-and therefore do not count against the user's locked memory limit.
-These mappings still consume memory, but the memory is not well
-associated to the process for the purpose of oom killing a task.
+A recent commit added a call to cache_fresh_locked()
+when an expired item was found.
+The call sets the CACHE_VALID flag, so it is important
+that the item actually is valid.
+There are two ways it could be valid:
+1/ If ->update has been called to fill in relevant content
+2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
 
-To add bounding on this use case, we introduce a limit to the total
-number of concurrent DMA mappings that a user is allowed to create.
-This limit is exposed as a tunable module option where the default
-value of 64K is expected to be well in excess of any reasonable use
-case (a large virtual machine configuration would typically only make
-use of tens of concurrent mappings).
+An expired item that is waiting for an update will be neither.
+Setting CACHE_VALID will mean that a subsequent call to cache_put()
+will be likely to dereference uninitialised pointers.
 
-This fixes CVE-2019-3882.
+So we must make sure the item is valid, and we already have code to do
+that in try_to_negate_entry().  This takes the hash lock and so cannot
+be used directly, so take out the two lines that we need and use them.
 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Tested-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Now cache_fresh_locked() is certain to be called only on
+a valid item.
+
+Cc: stable@kernel.org # 2.6.35
+Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vfio/vfio_iommu_type1.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ net/sunrpc/cache.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -58,12 +58,18 @@ module_param_named(disable_hugepages,
- MODULE_PARM_DESC(disable_hugepages,
- 		 "Disable VFIO IOMMU support for IOMMU hugepages.");
- 
-+static unsigned int dma_entry_limit __read_mostly = U16_MAX;
-+module_param_named(dma_entry_limit, dma_entry_limit, uint, 0644);
-+MODULE_PARM_DESC(dma_entry_limit,
-+		 "Maximum number of user DMA mappings per container (65535).");
-+
- struct vfio_iommu {
- 	struct list_head	domain_list;
- 	struct vfio_domain	*external_domain; /* domain for external user */
- 	struct mutex		lock;
- 	struct rb_root		dma_list;
- 	struct blocking_notifier_head notifier;
-+	unsigned int		dma_avail;
- 	bool			v2;
- 	bool			nesting;
- };
-@@ -836,6 +842,7 @@ static void vfio_remove_dma(struct vfio_
- 	vfio_unlink_dma(iommu, dma);
- 	put_task_struct(dma->task);
- 	kfree(dma);
-+	iommu->dma_avail++;
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -54,6 +54,7 @@ static void cache_init(struct cache_head
+ 	h->last_refresh = now;
  }
  
- static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
-@@ -1110,12 +1117,18 @@ static int vfio_dma_do_map(struct vfio_i
- 		goto out_unlock;
- 	}
- 
-+	if (!iommu->dma_avail) {
-+		ret = -ENOSPC;
-+		goto out_unlock;
-+	}
-+
- 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
- 	if (!dma) {
- 		ret = -ENOMEM;
- 		goto out_unlock;
- 	}
- 
-+	iommu->dma_avail--;
- 	dma->iova = iova;
- 	dma->vaddr = vaddr;
- 	dma->prot = prot;
-@@ -1612,6 +1625,7 @@ static void *vfio_iommu_type1_open(unsig
- 
- 	INIT_LIST_HEAD(&iommu->domain_list);
- 	iommu->dma_list = RB_ROOT;
-+	iommu->dma_avail = dma_entry_limit;
- 	mutex_init(&iommu->lock);
- 	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
- 
++static inline int cache_is_valid(struct cache_head *h);
+ static void cache_fresh_locked(struct cache_head *head, time_t expiry,
+ 				struct cache_detail *detail);
+ static void cache_fresh_unlocked(struct cache_head *head,
+@@ -100,6 +101,8 @@ struct cache_head *sunrpc_cache_lookup(s
+ 			if (cache_is_expired(detail, tmp)) {
+ 				hlist_del_init(&tmp->cache_list);
+ 				detail->entries --;
++				if (cache_is_valid(tmp) == -EAGAIN)
++					set_bit(CACHE_NEGATIVE, &tmp->flags);
+ 				cache_fresh_locked(tmp, 0, detail);
+ 				freeme = tmp;
+ 				break;
 
 
