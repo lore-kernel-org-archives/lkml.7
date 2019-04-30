@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ABAC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C46C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376C82177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB1621670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625011;
-	bh=xbKEgOhDb/KeV2EQJ1W78kNHva9NY2Y2U0+Mturycfg=;
+	s=default; t=1556625014;
+	bh=svM+Y2HiuFAb1M0zwD6TQiM/t3vsxtuu5mCdUUihXhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LkVPPTiHnwX5UKkqw0ym7bsaQujU1EyyXNnu5KuDNlm98AHa6MiI37aMMTvDLg97u
-	 VL2av5uL2U4KK12jobXljuNicXAK68BvZ/6xq40kO9u/QrzH5RKwKTmpFNFI1R2QY6
-	 GD/AeE/LDlJqa6sd0tpj9l7cGMrL7y2imVgO2vsE=
+	b=Xsw64mDo+/oVVW50+BbAkAFawt1a8xyPohQQ4m7wmhRdL04+MEV4oWfPIkBIPDkWh
+	 8wVvyvkRupJRCaf99ysvsMPKyO14Xs9cZtTqPlBzvVjnt3gzbWLai8JeMBtc8hO8UQ
+	 RS29zB0OaOIK6QmvXjuINL35YMAwXYywg4A50d1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbfD3LuK (ORCPT
+        id S1731158AbfD3LuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36972 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:50:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731122AbfD3LuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:50:07 -0400
+        id S1728859AbfD3LuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6958121783;
-        Tue, 30 Apr 2019 11:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06AA72054F;
+        Tue, 30 Apr 2019 11:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625006;
-        bh=xbKEgOhDb/KeV2EQJ1W78kNHva9NY2Y2U0+Mturycfg=;
+        s=default; t=1556625009;
+        bh=svM+Y2HiuFAb1M0zwD6TQiM/t3vsxtuu5mCdUUihXhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNXcJY/Gs0z2Lhg9Zymz0JLTZ9Lc1xdKdckpNwAU9D8lZ3/oNU0sq8icHK6T7UvJV
-         eWjLOztLw+HNSFJEjC/FzZh3q5yU6jhLRl0OiUsAqeVurqEHqe/FukvmPn9Guw5D/R
-         1mrg5pjWTIy0PvZIuV28MJYW6zw4C1rONwpo3q5c=
+        b=TLif8p8oyMyMn38IqNlYyvouqqbIhUTtfuk19wsqqFP6V/6yii4vi4mLtyt6YcORd
+         A09mS64y5llNO3hoX1Qwo23502H+nl7yjF7kVMRT3Dsya1BDUiqrZDgzMuW3PscK0m
+         98yR715e0QsNYbZQ7zwWP+pl6lRxcIs9/46JrGw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.0 48/89] ext4: fix some error pointer dereferences
-Date:   Tue, 30 Apr 2019 13:38:39 +0200
-Message-Id: <20190430113611.965705103@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.0 57/89] netfilter: ebtables: CONFIG_COMPAT: drop a bogus WARN_ON
+Date:   Tue, 30 Apr 2019 13:38:48 +0200
+Message-Id: <20190430113612.352497344@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,47 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 7159a986b4202343f6cca3bb8079ecace5816fd6 upstream.
+commit 7caa56f006e9d712b44f27b32520c66420d5cbc6 upstream.
 
-We can't pass error pointers to brelse().
+It means userspace gave us a ruleset where there is some other
+data after the ebtables target but before the beginning of the next rule.
 
-Fixes: fb265c9cb49e ("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
+Reported-by: syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/xattr.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/bridge/netfilter/ebtables.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -829,6 +829,7 @@ int ext4_get_inode_usage(struct inode *i
- 		bh = ext4_sb_bread(inode->i_sb, EXT4_I(inode)->i_file_acl, REQ_PRIO);
- 		if (IS_ERR(bh)) {
- 			ret = PTR_ERR(bh);
-+			bh = NULL;
- 			goto out;
- 		}
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2032,7 +2032,8 @@ static int ebt_size_mwt(struct compat_eb
+ 		if (match_kern)
+ 			match_kern->match_size = ret;
  
-@@ -2903,6 +2904,7 @@ int ext4_xattr_delete_inode(handle_t *ha
- 			if (error == -EIO)
- 				EXT4_ERROR_INODE(inode, "block %llu read error",
- 						 EXT4_I(inode)->i_file_acl);
-+			bh = NULL;
- 			goto cleanup;
- 		}
- 		error = ext4_xattr_check_block(inode, bh);
-@@ -3059,6 +3061,7 @@ ext4_xattr_block_cache_find(struct inode
- 		if (IS_ERR(bh)) {
- 			if (PTR_ERR(bh) == -ENOMEM)
- 				return NULL;
-+			bh = NULL;
- 			EXT4_ERROR_INODE(inode, "block %lu read error",
- 					 (unsigned long)ce->e_value);
- 		} else if (ext4_xattr_cmp(header, BHDR(bh)) == 0) {
+-		if (WARN_ON(type == EBT_COMPAT_TARGET && size_left))
++		/* rule should have no remaining data after target */
++		if (type == EBT_COMPAT_TARGET && size_left)
+ 			return -EINVAL;
+ 
+ 		match32 = (struct compat_ebt_entry_mwt *) buf;
 
 
