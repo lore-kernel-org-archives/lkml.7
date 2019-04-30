@@ -2,104 +2,129 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419E9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4A5C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1770921744
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7440921707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:01:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfD3LAH (ORCPT
+        id S1727437AbfD3LBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:00:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60260 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726294AbfD3LAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:00:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E174CAE63;
-        Tue, 30 Apr 2019 11:00:05 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 13:00:05 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] livepatch: Use correct kobject cleanup function
-In-Reply-To: <20190430001534.26246-3-tobin@kernel.org>
-Message-ID: <alpine.LSU.2.21.1904301256550.8507@pobox.suse.cz>
-References: <20190430001534.26246-1-tobin@kernel.org> <20190430001534.26246-3-tobin@kernel.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 30 Apr 2019 07:01:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39838 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726294AbfD3LBE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:01:04 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UAv6KU109766
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 07:01:03 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6jxmdxjr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 07:01:02 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 30 Apr 2019 12:01:01 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Apr 2019 12:00:58 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UB0uuh39911646
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 11:00:56 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 882ED11C06C;
+        Tue, 30 Apr 2019 11:00:56 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0333111C054;
+        Tue, 30 Apr 2019 11:00:56 +0000 (GMT)
+Received: from [9.152.222.31] (unknown [9.152.222.31])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Apr 2019 11:00:55 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+ <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+ <20190429185002.6041eecc.pasic@linux.ibm.com>
+ <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
+ <efa8840b-35b1-2823-697f-ab56d4898854@linux.ibm.com>
+ <20190430113718.426392f0.pasic@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 30 Apr 2019 13:00:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190430113718.426392f0.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19043011-0020-0000-0000-00000337D102
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19043011-0021-0000-0000-0000218A4F4D
+Message-Id: <e000d0b8-c5fa-bdc1-10f3-2bebae7ccdfe@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=840 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019, Tobin C. Harding wrote:
-
-> The correct cleanup function after a call to kobject_init_and_add() has
-> succeeded is kobject_del() _not_ kobject_put().  kobject_del() calls
-> kobject_put().
+On 30/04/2019 11:37, Halil Pasic wrote:
+> On Tue, 30 Apr 2019 10:32:52 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
 > 
-> Use correct cleanup function when removing a kobject.
+>>>>> +    aqic_gisa.gisa = gisa->next_alert >> 4;
+>>>>
+>>>> Why gisa->next_alert? Isn't this supposed to get set to gisa origin
+>>>> (without some bits on the left)?
 > 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> ---
->  kernel/livepatch/core.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+> s/left/right/
 > 
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index 98a7bec41faa..4cce6bb6e073 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -589,9 +589,8 @@ static void __klp_free_funcs(struct klp_object *obj, bool nops_only)
->  
->  		list_del(&func->node);
->  
-> -		/* Might be called from klp_init_patch() error path. */
+>>>
+>>> Someone already asked this question.
+> 
+> It must have been in some previous iteration... Can you give me a
+> pointer?
+> 
+>>> The answer is: look at the ap_qirq_ctrl structure, you will see that the
+>>> gisa field is 27 bits wide.
+> 
+> My question was not about the width, but about gisa->next_alert being
+> used.
+> 
+> Regards,
+> Halil
+> 
 
-Could you leave the comment as is? If I am not mistaken, it is still 
-valid. func->kobj_added check is here exactly because the function may be 
-called as mentioned.
+Ah, OK, I understand.
+it is inherited from the time I allocated the GISA myself, before the 
+Mimu GISA/GIB patches.
 
-One could argue that the comment is not so important, but the change does 
-not belong to the patch anyway in my opinion.
+So now indeed I must use the GISA origin for the case next_alert is used 
+by GIB alert queue.
 
->  		if (func->kobj_added) {
-> -			kobject_put(&func->kobj);
-> +			kobject_del(&func->kobj);
->  		} else if (func->nop) {
->  			klp_free_func_nop(func);
->  		}
-> @@ -625,9 +624,8 @@ static void __klp_free_objects(struct klp_patch *patch, bool nops_only)
->  
->  		list_del(&obj->node);
->  
-> -		/* Might be called from klp_init_patch() error path. */
 
-Same here.
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
->  		if (obj->kobj_added) {
-> -			kobject_put(&obj->kobj);
-> +			kobject_del(&obj->kobj);
->  		} else if (obj->dynamic) {
->  			klp_free_object_dynamic(obj);
->  		}
-> @@ -676,7 +674,7 @@ static void klp_free_patch_finish(struct klp_patch *patch)
->  	 * cannot get enabled again.
->  	 */
->  	if (patch->kobj_added) {
-> -		kobject_put(&patch->kobj);
-> +		kobject_del(&patch->kobj);
->  		wait_for_completion(&patch->finish);
->  	}
-
-Miroslav
