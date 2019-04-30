@@ -2,52 +2,52 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC620C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB68C04AA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC9D21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D225C21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KukPfzdd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ghBDnafw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfD3KNc (ORCPT
+        id S1727163AbfD3KNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:13:32 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47070 "EHLO
+        Tue, 30 Apr 2019 06:13:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47068 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfD3KNc (ORCPT
+        with ESMTP id S1726129AbfD3KNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Apr 2019 06:13:32 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD54w034208;
-        Tue, 30 Apr 2019 05:13:05 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UADAZs034220;
+        Tue, 30 Apr 2019 05:13:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556619185;
-        bh=lj99c65Da/Jf+z2EsozGwmYf331/fL+O/DEZJe0EDl8=;
-        h=From:To:CC:Subject:Date;
-        b=KukPfzddVddOfei1kbcr8zMnCnlx6u2y3+qHJbq1yZes63ujcBRmsgU8+RjOS1WLr
-         rjlNosR6+3zt82TXZtRK2irNT0WzgnBVoObG4BfyHHftJcKknxTXmoWc1WVoShKu6s
-         Hi3r9kN7zMq50XK4i8JDAWblPhyT23gtTCvG5e/M=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UAD5mq125571
+        s=ti-com-17Q1; t=1556619190;
+        bh=mNJKAjGOaxa+Yhdi6RCf9/abMTMDVh3bubOiYOf/CS4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ghBDnafwzLFxbh53Dzv78nSVeW8jkyUhgHEU8WQBX0+XLHbjE2hLVGofUvW4fUQF4
+         Z3dN37sWFKNMOyzsKsW0ZYBeWl4cY/3SKyaOif4Ux3oxLY+WZGDDCEX0bwFRw25NRy
+         VGaCu8tFdrGlpwnUZqX0BniqOhOi/POIYbFPQO2o=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UADA1q106653
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 05:13:05 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 30 Apr 2019 05:13:10 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 05:13:05 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 05:13:09 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 05:13:05 -0500
+ Frontend Transport; Tue, 30 Apr 2019 05:13:09 -0500
 Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0Y2085082;
-        Tue, 30 Apr 2019 05:13:01 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0Y3085082;
+        Tue, 30 Apr 2019 05:13:05 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <marc.zyngier@arm.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
@@ -60,10 +60,12 @@ CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Lokesh Vutla <lokeshvutla@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>
-Subject: [PATCH v8 00/14] Add support for TISCI Interrupt controller drivers
-Date:   Tue, 30 Apr 2019 15:42:16 +0530
-Message-ID: <20190430101230.21794-1-lokeshvutla@ti.com>
+Subject: [PATCH v8 01/14] firmware: ti_sci: Add support to get TISCI handle using of_phandle
+Date:   Tue, 30 Apr 2019 15:42:17 +0530
+Message-ID: <20190430101230.21794-2-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
+References: <20190430101230.21794-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -73,131 +75,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TI AM65x SoC based on K3 architecture introduced support for Events
-which are message based interrupts with minimal latency. These events
-are not compatible with regular interrupts and are valid only through
-an event transport lane. An Interrupt Aggregator(INTA) is introduced
-to convert these events to interrupts. INTA can also group 64 events
-into a single interrupt. Now the SoC has many peripherals and a large
-number of event sources (time sync or DMA), the use of events is
-completely dependent on a user's specific application, which drives a
-need for maximum flexibility in which event sources are used in the
-system. It is also completely up to software control as to how the
-events are serviced.
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Because of the huge flexibility there are certain standard peripherals
-(like GPIO etc)where all interrupts cannot be directly corrected to host
-interrupt controller. For this purpose, Interrupt Router(INTR) is
-introduced in the SoC. INTR just does a classic interrupt redirection.
+TISCI has been updated to have support for Resource management(like
+interrupts etc..). And there can be multiple device instances of a
+resource type in a SoC. So every driver corresponding to a resource type
+should get a TISCI handle so that it can make TISCI calls. And each
+DT node corresponding to a device should exist under its corresponding
+bus node as per the SoC architecture.
 
-So the SoC has 3 types of interrupt controllers:
-- GIC500
-- Interrupt Router
-- Interrupt Aggregator
+But existing apis in TISCI library assumes that all TISCI users are
+child nodes of TISCI. Which is not true in the above case. So introduce
+(devm_)ti_sci_get_by_phandle() apis that can be used by TISCI users
+to get TISCI handle using of phandle property.
 
-Below is a diagrammatic view of how SoC integration of these interrupt
-controllers:(https://pastebin.ubuntu.com/p/9ngV3jdGj2/)
-
-Device Index-x               Device Index-y
-           |                         |
-           |                         |
-                      ....
-            \                       /
-             \                     /
-              \  (global events)  /
-          +---------------------------+   +---------+
-          |                           |   |         |
-          |             INTA          |   |  GPIO   |
-          |                           |   |         |
-          +---------------------------+   +---------+
-                         |   (vint)            |
-                         |                     |
-                        \|/                    |
-          +---------------------------+        |
-          |                           |<-------+
-          |           INTR            |
-          |                           |
-          +---------------------------+
-                         |
-                         |
-                        \|/ (gic irq)
-          +---------------------------+
-          |                           |
-          |             GIC           |
-          |                           |
-          +---------------------------+
-
-While at it, TISCI abstracts the handling of all above IRQ routes where
-interrupt sources are not directly connected to host interrupt controller.
-That would be configuration of Interrupt Aggregator and Interrupt Router.
-
-This series adds support for:
-- TISCI commands needed for IRQ configuration
-- Interrupt Router(INTR) driver.
-- Interrupt Aggregator(INTA) driver.
-- Interrupt Aggregator MSI bus layer.
-
-Marc,
-	As discussed offline, the firmware changes are going to come within
-	a day or so. These changes are tested against local binary which is
-	bound to release.
-
-Boot Log: https://pastebin.ubuntu.com/p/YwprMKXdg4/
-
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
 Changes since v7:
-- Rebased on top of latest master.
-- Each patch has respective changes mentioned.
+- None
 
-Grygorii Strashko (1):
-  firmware: ti_sci: Add support to get TISCI handle using of_phandle
+ drivers/firmware/ti_sci.c              | 83 ++++++++++++++++++++++++++
+ include/linux/soc/ti/ti_sci_protocol.h | 17 ++++++
+ 2 files changed, 100 insertions(+)
 
-Lokesh Vutla (12):
-  firmware: ti_sci: Add support for RM core ops
-  firmware: ti_sci: Add support for IRQ management
-  firmware: ti_sci: Add helper apis to manage resources
-  genirq: Introduce irq_chip_{request,release}_resource_parent() apis
-  gpio: thunderx: Use the default parent apis for
-    {request,release}_resources
-  dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
-  irqchip: ti-sci-intr: Add support for Interrupt Router driver
-  dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
-  irqchip: ti-sci-inta: Add support for Interrupt Aggregator driver
-  soc: ti: Add MSI domain bus support for Interrupt Aggregator
-  irqchip: ti-sci-inta: Add msi domain support
-  arm64: arch_k3: Enable interrupt controller drivers
-
-Peter Ujfalusi (1):
-  firmware: ti_sci: Add RM mapping table for am654
-
- .../bindings/arm/keystone/ti,sci.txt          |   3 +-
- .../interrupt-controller/ti,sci-inta.txt      |  66 ++
- .../interrupt-controller/ti,sci-intr.txt      |  82 +++
- MAINTAINERS                                   |   6 +
- arch/arm64/Kconfig.platforms                  |   5 +
- drivers/firmware/ti_sci.c                     | 651 ++++++++++++++++++
- drivers/firmware/ti_sci.h                     | 102 +++
- drivers/gpio/gpio-thunderx.c                  |  16 +-
- drivers/irqchip/Kconfig                       |  23 +
- drivers/irqchip/Makefile                      |   2 +
- drivers/irqchip/irq-ti-sci-inta.c             | 615 +++++++++++++++++
- drivers/irqchip/irq-ti-sci-intr.c             | 275 ++++++++
- drivers/soc/ti/Kconfig                        |   6 +
- drivers/soc/ti/Makefile                       |   1 +
- drivers/soc/ti/ti_sci_inta_msi.c              | 146 ++++
- include/linux/irq.h                           |   2 +
- include/linux/irqdomain.h                     |   1 +
- include/linux/msi.h                           |  10 +
- include/linux/soc/ti/ti_sci_inta_msi.h        |  23 +
- include/linux/soc/ti/ti_sci_protocol.h        | 124 ++++
- kernel/irq/chip.c                             |  27 +
- 21 files changed, 2173 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
- create mode 100644 drivers/irqchip/irq-ti-sci-inta.c
- create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
- create mode 100644 drivers/soc/ti/ti_sci_inta_msi.c
- create mode 100644 include/linux/soc/ti/ti_sci_inta_msi.h
-
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 3fbbb61012c4..852043531233 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -1764,6 +1764,89 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(devm_ti_sci_get_handle);
+ 
++/**
++ * ti_sci_get_by_phandle() - Get the TI SCI handle using DT phandle
++ * @np:		device node
++ * @property:	property name containing phandle on TISCI node
++ *
++ * NOTE: The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ * ti_sci_put_handle must be balanced with successful ti_sci_get_by_phandle
++ * Return: pointer to handle if successful, else:
++ * -EPROBE_DEFER if the instance is not ready
++ * -ENODEV if the required node handler is missing
++ * -EINVAL if invalid conditions are encountered.
++ */
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	struct ti_sci_handle *handle = NULL;
++	struct device_node *ti_sci_np;
++	struct ti_sci_info *info;
++	struct list_head *p;
++
++	if (!np) {
++		pr_err("I need a device pointer\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	ti_sci_np = of_parse_phandle(np, property, 0);
++	if (!ti_sci_np)
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&ti_sci_list_mutex);
++	list_for_each(p, &ti_sci_list) {
++		info = list_entry(p, struct ti_sci_info, node);
++		if (ti_sci_np == info->dev->of_node) {
++			handle = &info->handle;
++			info->users++;
++			break;
++		}
++	}
++	mutex_unlock(&ti_sci_list_mutex);
++	of_node_put(ti_sci_np);
++
++	if (!handle)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(ti_sci_get_by_phandle);
++
++/**
++ * devm_ti_sci_get_by_phandle() - Managed get handle using phandle
++ * @dev:	Device pointer requesting TISCI handle
++ * @property:	property name containing phandle on TISCI node
++ *
++ * NOTE: This releases the handle once the device resources are
++ * no longer needed. MUST NOT BE released with ti_sci_put_handle.
++ * The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ *
++ * Return: 0 if all went fine, else corresponding error.
++ */
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	const struct ti_sci_handle *handle;
++	const struct ti_sci_handle **ptr;
++
++	ptr = devres_alloc(devm_ti_sci_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++	handle = ti_sci_get_by_phandle(dev_of_node(dev), property);
++
++	if (!IS_ERR(handle)) {
++		*ptr = handle;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
++
+ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
+ 				void *cmd)
+ {
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 18435e5c6364..515587e9d373 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -217,6 +217,10 @@ struct ti_sci_handle {
+ const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
+ int ti_sci_put_handle(const struct ti_sci_handle *handle);
+ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev);
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property);
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property);
+ 
+ #else	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+@@ -236,6 +240,19 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static inline
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++static inline
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
+ #endif	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+ #endif	/* __TISCI_PROTOCOL_H */
 -- 
 2.21.0
 
