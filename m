@@ -2,120 +2,113 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7430DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA99C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4900E20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D416E20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:25:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="tifufPuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfD3JYb (ORCPT
+        id S1726900AbfD3JZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:24:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38526 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726119AbfD3JYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:24:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5D9C7AC52;
-        Tue, 30 Apr 2019 09:24:27 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch\/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list\:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip fops invocation
-References: <20190427100639.15074-1-nstange@suse.de>
-        <20190427100639.15074-4-nstange@suse.de>
-        <20190427102657.GF2623@hirez.programming.kicks-ass.net>
-        <20190428133826.3e142cfd@oasis.local.home>
-        <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
-        <20190429145250.1a5da6ed@gandalf.local.home>
-        <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
-        <20190429150724.6e501d27@gandalf.local.home>
-        <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
-        <20190429163043.535f4272@gandalf.local.home>
-        <CAHk-=wjGquN7-kQCoa+LHCuiVTjefkk38qwaysd4wLLtoSZhpg@mail.gmail.com>
-        <20190429180733.3f25d8b9@gandalf.local.home>
-Date:   Tue, 30 Apr 2019 11:24:23 +0200
-In-Reply-To: <20190429180733.3f25d8b9@gandalf.local.home> (Steven Rostedt's
-        message of "Mon, 29 Apr 2019 18:07:33 -0400")
-Message-ID: <87imuv977c.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Tue, 30 Apr 2019 05:25:00 -0400
+Received: from nbd.name ([46.4.11.11]:40568 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbfD3JZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 05:25:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=07t/B0FBgWimtwCFIC57NK6vofmRzKUYAo6LUAADlIY=; b=tifufPuE/GBd81btMxf/j6om1M
+        Bh6s6MSQRU2f2c4TY8YWdKEJCv/aJxJRnWRFCn5ObL4y8O39EkkpjJCcW5d0e2EOVe6+QTM5iNK3B
+        2BRNL+Ae7BWpZdOZW90+VMBkeVerUcSBHI0/haxL2Op+iaFevUVQpqASuP/l/v6KVktA=;
+Received: from p4ff135f1.dip0.t-ipconnect.de ([79.241.53.241] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1hLP0S-0007XK-Ix; Tue, 30 Apr 2019 11:24:56 +0200
+Subject: Re: [PATCH v2] mt76: mt7615: add TX/RX antenna pattern capabilities
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <4f7160cb9f52335ce15fccac087fec25e7650884.1556255852.git.ryder.lee@mediatek.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <c3f6e202-8c2f-a103-a104-e0d1cde8147b@nbd.name>
+Date:   Tue, 30 Apr 2019 11:24:55 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <4f7160cb9f52335ce15fccac087fec25e7650884.1556255852.git.ryder.lee@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
-
-> On Mon, 29 Apr 2019 14:38:35 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
->> On Mon, Apr 29, 2019 at 1:30 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->> >
->> > The update from "call custom_trampoline" to "call iterator_trampoline"
->> > is where we have an issue.  
->> 
->> So it has never worked. Just tell people that they have two chocies:
->
-> The custom call to iterator translation never worked. One option is to
-> always call the iterator, and just take the hit. There's another
-> solution to to make permanent updates that would handle the live
-> patching case, but not for the tracing case. It is more critical for
-> live patching than tracing (missed traced function is not as critical
-> as running buggy code unexpectedly). I could look to work on that
-> instead.
-
-Making the live patching case permanent would disable tracing of live
-patched functions though?
-
-For unconditionally calling the iterator: I don't have numbers, but
-would expect that always searching through something like 50-70 live
-patching ftrace_ops from some hot path will be noticeable.
-
-
-> If Nicolai has time, perhaps he can try out the method you suggest and
-> see if we can move this forward.
-
-You mean making ftrace handle call->call transitions one by one in
-non-batch mode, right? Sure, I can do that.
-
-Another question though: is there anything that prevents us from calling
-ftrace_ops_list_func() directly from ftrace_int3_handler()? We don't
-have parent_ip, but if that is used for reporting only, maybe setting it
-to some ftrace_is_in_int3_and_doesnt_now_the_parent() will work?
-Graph tracing entries would still be lost, but well...
+On 2019-04-26 07:23, Ryder Lee wrote:
+> Announce antenna pattern cap to adapt PHY and baseband settings.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+> Changes since v2:
+> - Add a prefix mt76 in the title.
+> ---
+>  drivers/net/wireless/mediatek/mt76/mt7615/init.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> index 3ab3ff553ef2..122f7a565540 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+> @@ -190,6 +190,8 @@ int mt7615_register_device(struct mt7615_dev *dev)
+>  			IEEE80211_VHT_CAP_SHORT_GI_160 |
+>  			IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_11454 |
+>  			IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK |
+> +			IEEE80211_VHT_CAP_RX_ANTENNA_PATTERN |
+> +			IEEE80211_VHT_CAP_TX_ANTENNA_PATTERN |
+If I read the standard correctly, these flags indicate that the rx/tx
+antenna pattern does NOT change during association.
+Doesn't that mean that we should set it in mac80211.c instead, so that
+it also applies to MT76x2?
 
 Thanks,
 
-Nicolai
+- Felix
