@@ -2,177 +2,108 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83321C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436D7C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A4920652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1313B2081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:04:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ExyuglBx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V17+lfAq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfD3QCw (ORCPT
+        id S1726424AbfD3QEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:02:52 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38881 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbfD3QCv (ORCPT
+        Tue, 30 Apr 2019 12:04:09 -0400
+Received: from mail-qt1-f171.google.com ([209.85.160.171]:40096 "EHLO
+        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfD3QEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:02:51 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g141so4139107qke.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:02:51 -0700 (PDT)
+        Tue, 30 Apr 2019 12:04:09 -0400
+Received: by mail-qt1-f171.google.com with SMTP id y49so11061522qta.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=ezqvuyySuVN6m5VwGIJh5/6RSwYzMFBP4XCNlDB2i9w=;
-        b=ExyuglBx07ayvs8K+2rA3LnL125PJvRT4xWAFDaf1OtiN0NXa4ZklDMDWB3JmGabqp
-         VgD0SM4tOHSYQO/asNY9/VyqHlebifc2obujTXqcCFiFeqPpbzK/DTMV3cJmNKnJCT3r
-         BhVCjyJofIDE7jgb8rjRwY+LV6fK+jQQCXQ7w5JIhLFyvSCjHguZVGErBnN8ptAqujeL
-         +fHaLIGXf0mYns3xoO432UZNFN5yCEqQ4SqF3wjMP1ISfV054H869fkz+I4IH+SsNVJR
-         747hy5w3LKbp7cmUimn7z9Qi4xINv61rb9K1dF+tgNzfxCO7fyQ3L9J41HJoRjAmjkAi
-         uNKw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7C/H9ZzSU0qP8UYq2NJoxOTSjxthMtozx8jthqagPTo=;
+        b=V17+lfAqUPk01IFJXUO56hClBUX2HDbxSbQULpTYSKkdi7HyAd33jfH5SIR8cXdcvE
+         hw/F9aMeFlPeuK5f4rBww/6N/Xmuv3823rpt63eVEiC0Qan/UjihZuDkm9RygVdZFQS+
+         uDXcBV7siz7kiet+/qLVaIcLptgJ9iivk9KSHlfQPKEm/K6sK09PpdfaQ642KUtpoLIG
+         Ei/9gzhfAHqdmqH0fjfZyrt7AVGrIzU5C9CHggarLYx36WwDp5F8075K02Wntqlwb84c
+         HpvByXvkJ7w/RAav80V4R5dscpV10nEf8hg1TH2pyWT4QZjAgYqwSCLSFK5QFiXIrs9J
+         nWbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=ezqvuyySuVN6m5VwGIJh5/6RSwYzMFBP4XCNlDB2i9w=;
-        b=bJg21/LltvN0e97s7mXniFtVFCil5ZmiCjaENrgUF+gsPpC/yKBMmiC101RIQZJmuX
-         Omsw8QmqPHI8d30kKLw5egUNrm1TFfA0tCeqQkyOSJaguIRUTEhfGDOSBWANYIipxl+Y
-         vuT1WoykN6so1JWyOiEPik/65Mf/KM9EMN0btVBn+41IEGR6RF2ajonK18P8SVHArGuL
-         u3ke/d2/xORAAgeh9WCkzaeVKFq3n6LZcKUAYDjOXfdKImzGSk3rbiArVWW1owDhDR8T
-         sCHyvbm4gJMJ+FUELgFGrbbjJ3DcoCcARwZdDdlNqizBfdzWdL33IQBwx/CdoSFGA51m
-         Y3wg==
-X-Gm-Message-State: APjAAAUlGMTJnA6U1jsXixNVZmEeDfdbcVKIVqAVIeYxGwhg67pC+PDh
-        fIEaD/6Xa2EsRRnBdL0MZ0JWSg==
-X-Google-Smtp-Source: APXvYqwNnDFMF9qrbZtx7tmcz0fdYS/paleONLcjoK3M+/eUNPtlLYE3iPnEHNoc8WXzf3iH1YYOQQ==
-X-Received: by 2002:a37:8544:: with SMTP id h65mr38916234qkd.84.1556640170555;
-        Tue, 30 Apr 2019 09:02:50 -0700 (PDT)
-Received: from [192.168.1.169] (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
-        by smtp.gmail.com with ESMTPSA id o10sm6222624qtg.5.2019.04.30.09.02.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 09:02:49 -0700 (PDT)
-Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
-To:     Ionela Voinescu <ionela.voinescu@arm.com>, mingo@redhat.com,
-        peterz@infradead.org, rui.zhang@intel.com
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <8eed9601-8bbb-9f62-f786-f08bd4a72907@arm.com> <5CC87082.20802@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5CC871A7.1060102@linaro.org>
-Date:   Tue, 30 Apr 2019 12:02:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7C/H9ZzSU0qP8UYq2NJoxOTSjxthMtozx8jthqagPTo=;
+        b=B1DGvD2UK4CmOkOKftRBS00Dies+ozhvSf6Sv97GU02f5icBm2Au09D8LJiAg3+RYE
+         TkZz1/VttKXrQgVb7kfy//4aQ1ErDdthC3/8S8qUhIlGVYZ2VWsqx0hJ774f+AVPk9st
+         TaGPBSkXPVqrn4g/Q23aitv7wk/bBROWeKr+OM2k87ZtAwIKuWzShkxkMHAFJu2eTQXV
+         5GXzDmaKmARXkClNGg1a9rc+58G/x0GictKHuHpVFB9FoFOF1Xp2phZowZruXPvJx349
+         08fP7L7/8a2013ZVG9H6BNZSqfCgptehNgzme+V33UcIuhb/0jSwcpQxoMAF5GMJOCX4
+         GQtg==
+X-Gm-Message-State: APjAAAVGhG4Xd2rT2UatU+tEkKv2NONcWwhEeOhZ17Z1jVW+ITIKepyD
+        U1P8vjh/Nh+zrWusA+bSyA8lOI7vCVUODI61YRhK
+X-Google-Smtp-Source: APXvYqwcvQfk6RKX1YA+CEknGA6KPVffr8HcdjX65JCcNo0SBSztv0+v1lrmNaDd0LojAXwHvRQTc8ngINVBxL3bMxI=
+X-Received: by 2002:a0c:ae17:: with SMTP id y23mr31197725qvc.199.1556640247675;
+ Tue, 30 Apr 2019 09:04:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5CC87082.20802@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <20190425200012.GA6391@redhat.com> <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
+ <503ba1f9-ad78-561a-9614-1dcb139439a6@suse.cz> <yq1v9yx2inc.fsf@oracle.com>
+ <1556537518.3119.6.camel@HansenPartnership.com> <yq1zho911sg.fsf@oracle.com>
+In-Reply-To: <yq1zho911sg.fsf@oracle.com>
+From:   Jonathan Adams <jwadams@google.com>
+Date:   Tue, 30 Apr 2019 12:03:31 -0400
+Message-ID: <CA+VK+GP2R=6+GQJHX9+d6jnMWgK8i1_H5FiHdeUe3CGZZ5-86g@mail.gmail.com>
+Subject: Re: [Lsf] [LSF/MM] Preliminary agenda ? Anyone ... anyone ? Bueller ?
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        lsf@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, lsf-pc@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/30/2019 11:57 AM, Thara Gopinath wrote:
-> On 04/29/2019 09:29 AM, Ionela Voinescu wrote:
->> Hi Thara,
->>
->>>
->>> 			Hackbench: (1 group , 30000 loops, 10 runs)
->>> 				Result            Standard Deviation
->>> 				(Time Secs)        (% of mean)
->>>
->>> No Thermal Pressure             10.21                   7.99%
->>>
->>> Instantaneous thermal pressure  10.16                   5.36%
->>>
->>> Thermal Pressure Averaging
->>> using PELT fmwk                 9.88                    3.94%
->>>
->>> Thermal Pressure Averaging
->>> non-PELT Algo. Decay : 500 ms   9.94                    4.59%
->>>
->>> Thermal Pressure Averaging
->>> non-PELT Algo. Decay : 250 ms   7.52                    5.42%
->>>
->>> Thermal Pressure Averaging
->>> non-PELT Algo. Decay : 125 ms   9.87                    3.94%
->>>
->>>
->>
->> I'm trying your patches on my Hikey960 and I'm getting different results
->> than the ones here.
->>
->> I'm running with the step-wise governor, enabled only on the big cores.
->> The decay period is set to 250ms.
->>
->> The result for hackbench is:
->>
->> # ./hackbench -g 1 -l 30000
->> Running in process mode with 1 groups using 40 file descriptors each (== 40 tasks)
->> Each sender will pass 30000 messages of 100 bytes
->> Time: 20.756
->>
->> During the run I see the little cores running at maximum frequency
->> (1.84GHz) while the big cores run mostly at 1.8GHz, only sometimes capped
->> at 1.42GHz. There should not be any capacity inversion.
->> The temperature is kept around 75 degrees (73 to 77 degrees).
->>
->> I don't have any kind of active cooling (no fans on the board), only a
->> heatsink on the SoC.
->>
->> But as you see my results(~20s) are very far from the 7-10s in your
->> results.
->>
->> Do you see anything wrong with this process? Can you give me more
->> details on your setup that I can use to test on my board? 
-> 
-> Hi Ionela,
-> 
-> I used the latest mainline kernel with sched/ tip merged in for my
-> testing. My hikey960 did not have any fan or heat sink during testing. I
-> disabled cpu cooling for little cores in the dts files.
-> Also I have to warn you that I have managed to blow up my hikey960. So I
-> no longer have a functional board for past two weeks or so.
-> 
-> I don't have my test scripts to send you, but I have some of the results
-> files downloaded which I can send you in a separate email.
-> I did run the test 10 rounds.
+On Mon, Apr 29, 2019 at 7:36 AM Martin K. Petersen
+<martin.petersen@oracle.com> wrote:
+>
+>
+> James,
+>
+> > Next year, simply expand the blurb to "sponsors, partners and
+> > attendees" to make it more clear ... or better yet separate them so
+> > people can opt out of partner spam and still be on the attendee list.
+>
+> We already made a note that we need an "opt-in to be on the attendee
+> list" as part of the registration process next year. That's how other
+> conferences go about it...
 
-Hi Ionela,
+But there was an explicit checkbox to being on the attendance list in
+the registration form, on the second page:
 
-I failed to mention that I drop the first run for averaging.
+By submitting this registration you consent to The Linux=E2=80=99s
+Foundation=E2=80=99s communication with you with respect to the event or
+services to which this registration pertains.
+* The Linux Foundation Communications ...
+* Sponsor Communications    ...
+* Attendee Directory
+     By checking here, you opt-in to being listed in the event=E2=80=99s
+online attendee directory. Some of your registration data will be made
+available to other event attendees in the directory (name, title,
+company name only)
 
-> 
-> Also I think 20s is too much of variation for the test results. Like I
-> mentioned in my previous emails I think the 7.52 is an anomaly but the
-> results should be around the range of 8-9 s.
+Why isn't that sufficient?
 
-Also since we are more interested in comparison rather than absolute
-numbers did you run tests in a system with no thermal pressure( to see
-if there are any improvements)?
-
-Regards
-Thara
-
-> 
-> Regards
-> Thara
-> 
->>
->> Thank you,
->> Ionela.
->>
-> 
-> 
-
-
--- 
-Regards
-Thara
+Cheers,
+- jonathan
