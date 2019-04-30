@@ -2,132 +2,132 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DB3C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1A7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321FE21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E2C21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAjeYmvA"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GWc0dEtE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbfD3Be0 (ORCPT
+        id S1729834AbfD3BpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:34:26 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39596 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729758AbfD3BeZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:34:25 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d12so9496748lfk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 18:34:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Px2HDvlpr9ZJs28KIEGLc/qo2W8gInuIIUp/QPqQLO0=;
-        b=MAjeYmvAsjsesDrTfwF1D1uaWMmvkfK6xjwZvcj0e70ZlUrcLacS0rVZejX0cAVT8I
-         C8vLGWq0fzGlf6zkPvxOqkiyCJU+DEYOVScOtRMzXxtXGHZM35Z8m8jY1el08zgZb0BC
-         la6Y9ukyQLZRMPwQLttmyDWejfJgmWH+KHXNWAYj9g7ZGEoqcE42svz1bfwlCba078ac
-         f5s++PXFhtWjA7KPsRice6+9nVzsXT7BK7N5qSeToU3MTJoyku/PKFQRHwBZlZHJrapb
-         7Dqb9U3l2Rpc/1+4O8ixTgiDPIHGU1MD3Jqao6X71CtY2TouZK2d/GXBWXki2tIhNLoK
-         cCYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Px2HDvlpr9ZJs28KIEGLc/qo2W8gInuIIUp/QPqQLO0=;
-        b=B+9Y2JsR4eSVSTrKbLl1Csu7OsvzSaWoPYqntpUiidhSd/WWhx+9V5NTr9qoTfMIVN
-         kWYFZnMVF17jwQjlgfuFSbCTqnIagOzg8T1tqu5+gYmJ7cODbBvDXsMbdj9OjQQkpvKf
-         V/mIw/yYYjvGujAXInfXxIzghRHGekeOkWK/CdflFp978ykGZXIXZxfD191m4GHwKK+h
-         L4gbVPV2kJP+3FMBIz3Oh4OaxvdpSRvDMicZOmCYh2UVPWqUKUaKZNkl/Ws9Sy6UIehX
-         s8rqGdWISmZr2uK53gGINUcOSTmaVtVQVaPMActUC60JVoz3n8XRcG23AhKNzuOHfKpo
-         62Cw==
-X-Gm-Message-State: APjAAAVgXXYlaKwmQiWWnmOkBprZR1+5Au+bpfxXhi8/Rld8S38HDWhn
-        7yLgR6S1QJ+owGKL9A2xMAJqQels/c4aJjWpTSs=
-X-Google-Smtp-Source: APXvYqx7k9pMGidKchV/CLoBTzzFrA03TvtFpXl/GnvWUqvyLQoWqG2XLyvDHcFta8zLqp8KbUi0uOWWpIcMPLUlCjs=
-X-Received: by 2002:a19:6a06:: with SMTP id u6mr35537795lfu.26.1556588063599;
- Mon, 29 Apr 2019 18:34:23 -0700 (PDT)
+        Mon, 29 Apr 2019 21:45:04 -0400
+Received: from mail-eopbgr40078.outbound.protection.outlook.com ([40.107.4.78]:10816
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729238AbfD3BpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 21:45:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pr/9iXhE0xFHe64EPQfqjQMQ3omKvCH1XiAsXkPYBok=;
+ b=GWc0dEtEp7hvHIY4LWxG159EmxvyNUL8RPFRi5wJCqrTGJwXizbMSwcYss6BSx0jMgWlfcOIJwUQaepHUf3QYgY26+eS2e28pxKIsrj8fwbA2dG2WnN7Lm7L050+/JIgEW1u4jRzg5IC71XFQOAM0CWctryC0K400gV6uAkN9TI=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3772.eurprd04.prod.outlook.com (52.134.71.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Tue, 30 Apr 2019 01:44:58 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
+ 01:44:58 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: RE: linux-next: build warning after merge of the clk tree
+Thread-Topic: linux-next: build warning after merge of the clk tree
+Thread-Index: AQHU/upr9yUn43McwUSQoMyNM4mZ0KZT7lcA
+Date:   Tue, 30 Apr 2019 01:44:58 +0000
+Message-ID: <DB3PR0402MB3916B4CE00494BE730C07047F53A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190430101939.76dc077c@canb.auug.org.au>
+In-Reply-To: <20190430101939.76dc077c@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2e601f39-0d58-4adf-bf21-08d6cd0d7402
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3772;
+x-ms-traffictypediagnostic: DB3PR0402MB3772:
+x-microsoft-antispam-prvs: <DB3PR0402MB377235D065C9D7884B8A90DCF53A0@DB3PR0402MB3772.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:23;
+x-forefront-prvs: 00235A1EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(366004)(136003)(346002)(376002)(189003)(199004)(53754006)(13464003)(26005)(486006)(305945005)(2906002)(7736002)(14444005)(53936002)(53546011)(6506007)(71200400001)(71190400001)(256004)(186003)(11346002)(446003)(478600001)(44832011)(25786009)(14454004)(4326008)(74316002)(6246003)(476003)(102836004)(8676002)(76176011)(316002)(7696005)(81166006)(66066001)(81156014)(5660300002)(6436002)(229853002)(33656002)(3846002)(97736004)(99286004)(52536014)(54906003)(68736007)(73956011)(86362001)(110136005)(66946007)(66446008)(6116002)(66476007)(64756008)(9686003)(8936002)(66556008)(76116006)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3772;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0Ne6XSmIAwIcncJTQ2mYNm9zcZp60ix+KAEWTNNv5vXkfUz6Q2cm1ROD2kEEAHm/E+WMZ5DNFdSmiTFnUnzTguTcnWLFS7G/NfMIyXKnFcdlzCtq61tD6lX4t/NGaSSW+cHsrhWeYFfmqDmiIaxAPQPbdn8OkBnr7x3bGnbjv8jxAijjc8Qe4GVGskQu8ct+hQMpSCK9/Be8PAqofrEctGzK55Yn4KWk8qrX1qNx1TEJoNqzmo9eblzd5t1V2XYFH97Ld51PBmaM04PwKPyOYj9Bqdzos4m/Q1quET2RAEohFg75uAajcIrJ9SKkRtOgbvdxCgkz1/NmOG8bVt/AJRc0yS+dd/vTSKUjZX5ji/VBliDBQhbf9s+kbLzN2aTOe0h+saJ4AvTigSG7yZplWj83pegu1gaRdDjMq4lChpA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190427091716.GC99668@gmail.com> <CAERHkruEAVBsh6FphMKqgR2+HjsVVegxjnpOFRNfbrfZDNpc9w@mail.gmail.com>
- <20190427142137.GA72051@gmail.com> <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
- <20190428093304.GA7393@gmail.com> <CAERHkrvaSSR1wRECF1AcLOhpmCAH0ecvFEL5MOFjK05F0xSuzA@mail.gmail.com>
- <20190428121721.GA121434@gmail.com> <db7c3e51-d013-b3d9-7bce-c247aa2e7144@linux.intel.com>
- <20190429061422.GA20939@gmail.com> <24bca399-5370-c4b5-725f-979db06bfc29@linux.intel.com>
- <20190429160058.GA82935@gmail.com>
-In-Reply-To: <20190429160058.GA82935@gmail.com>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Tue, 30 Apr 2019 09:34:12 +0800
-Message-ID: <CAERHkrvhggb8nkGOx1GHUftGhh5b0qLvq4HvuHJreNrRC1RXow@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e601f39-0d58-4adf-bf21-08d6cd0d7402
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 01:44:58.3339
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3772
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:01 AM Ingo Molnar <mingo@kernel.org> wrote:
-> * Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->
-> > > I.e. showing the approximate CPU thread-load figure column would be
-> > > very useful too, where '50%' shows half-loaded, '100%' fully-loaded,
-> > > '200%' over-saturated, etc. - for each row?
-> >
-> > See below, hope this helps.
-> > .--------------------------------------------------------------------------------------------------------------------------------------.
-> > |NA/AVX vanilla-SMT     [std% / sem%]     cpu% |coresched-SMT   [std% / sem%]     +/-     cpu% |  no-SMT [std% / sem%]   +/-      cpu% |
-> > |--------------------------------------------------------------------------------------------------------------------------------------|
-> > |  1/1        508.5     [ 0.2%/ 0.0%]     2.1% |        504.7   [ 1.1%/ 0.1%]    -0.8%    2.1% |   509.0 [ 0.2%/ 0.0%]   0.1%     4.3% |
-> > |  2/2       1000.2     [ 1.4%/ 0.1%]     4.1% |       1004.1   [ 1.6%/ 0.2%]     0.4%    4.1% |   997.6 [ 1.2%/ 0.1%]  -0.3%     8.1% |
-> > |  4/4       1912.1     [ 1.0%/ 0.1%]     7.9% |       1904.2   [ 1.1%/ 0.1%]    -0.4%    7.9% |  1914.9 [ 1.3%/ 0.1%]   0.1%    15.1% |
-> > |  8/8       3753.5     [ 0.3%/ 0.0%]    14.9% |       3748.2   [ 0.3%/ 0.0%]    -0.1%   14.9% |  3751.3 [ 0.4%/ 0.0%]  -0.1%    30.5% |
-> > | 16/16      7139.3     [ 2.4%/ 0.2%]    30.3% |       7137.9   [ 1.8%/ 0.2%]    -0.0%   30.3% |  7049.2 [ 2.4%/ 0.2%]  -1.3%    60.4% |
-> > | 32/32     10899.0     [ 4.2%/ 0.4%]    60.3% |      10780.3   [ 4.4%/ 0.4%]    -1.1%   55.9% | 10339.2 [ 9.6%/ 0.9%]  -5.1%    97.7% |
-> > | 64/64     15086.1     [11.5%/ 1.2%]    97.7% |      14262.0   [ 8.2%/ 0.8%]    -5.5%   82.0% | 11168.7 [22.2%/ 1.7%] -26.0%   100.0% |
-> > |128/128    15371.9     [22.0%/ 2.2%]   100.0% |      14675.8   [14.4%/ 1.4%]    -4.5%   82.8% | 10963.9 [18.5%/ 1.4%] -28.7%   100.0% |
-> > |256/256    15990.8     [22.0%/ 2.2%]   100.0% |      12227.9   [10.3%/ 1.0%]   -23.5%   73.2% | 10469.9 [19.6%/ 1.7%] -34.5%   100.0% |
-> > '--------------------------------------------------------------------------------------------------------------------------------------'
->
-> Very nice, thank you!
->
-> What's interesting is how in the over-saturated case (the last three
-> rows: 128, 256 and 512 total threads) coresched-SMT leaves 20-30% CPU
-> performance on the floor according to the load figures.
+Hi, Stephen
+	Thanks for notice.
+	As it is intentional, I will send out a patch to add "/* fall through */" =
+to avoid this build warning,
 
-Yeah, I found the next focus.
+Anson.
 
->
-> Is this true idle time (which shows up as 'id' during 'top'), or some
-> load average artifact?
->
-
-vmstat periodically reported intermediate CPU utilization in one second, it was
-running simultaneously when the benchmarks run. The cpu% is computed by
-the average of (100-idle) series.
-
-Thanks,
--Aubrey
+> -----Original Message-----
+> From: Stephen Rothwell [mailto:sfr@canb.auug.org.au]
+> Sent: Tuesday, April 30, 2019 8:20 AM
+> To: Mike Turquette <mturquette@baylibre.com>; Stephen Boyd
+> <sboyd@kernel.org>
+> Cc: Linux Next Mailing List <linux-next@vger.kernel.org>; Linux Kernel Ma=
+iling
+> List <linux-kernel@vger.kernel.org>; Anson Huang <anson.huang@nxp.com>;
+> Gustavo A. R. Silva <gustavo@embeddedor.com>; Kees Cook
+> <keescook@chromium.org>
+> Subject: linux-next: build warning after merge of the clk tree
+>=20
+> Hi all,
+>=20
+> After merging the clk tree, today's linux-next build (arm
+> multi_v7_defconfig) produced this warning:
+>=20
+> drivers/clk/imx/clk-pllv3.c:453:21: warning: this statement may fall thro=
+ugh [-
+> Wimplicit-fallthrough=3D]
+>    pll->denom_offset =3D PLL_IMX7_DENOM_OFFSET;
+>                      ^
+> drivers/clk/imx/clk-pllv3.c:454:2: note: here
+>   case IMX_PLLV3_AV:
+>   ^~~~
+>=20
+> Introduced by commit
+>=20
+>   01d0a541ff4b ("clk: imx: correct i.MX7D AV PLL num/denom offset")
+>=20
+> I get this warning because I am building with -Wimplicit-fallthrough in
+> attempt to catch new additions early.  The gcc warning can be turned off =
+by
+> adding a /* fall through */ comment at the point the fall through happens
+> (assuming that the fall through is intentional).
+>=20
+> --
+> Cheers,
+> Stephen Rothwell
