@@ -2,112 +2,131 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15A8C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF10C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86EAE21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B983321707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfD3NiG (ORCPT
+        id S1727307AbfD3Nit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:38:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:29308 "EHLO mga04.intel.com"
+        Tue, 30 Apr 2019 09:38:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48660 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbfD3NiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:38:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 06:38:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,413,1549958400"; 
-   d="scan'208";a="140102964"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2019 06:38:04 -0700
-Received: from brettjgr-mobl1.ger.corp.intel.com (unknown [10.254.180.216])
-        by linux.intel.com (Postfix) with ESMTP id 1804A580372;
-        Tue, 30 Apr 2019 06:38:03 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH v3 2/5] soundwire: fix style issues
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
-        srinivas.kandagatla@linaro.org,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
- <20190411031701.5926-3-pierre-louis.bossart@linux.intel.com>
- <20190414095839.GG28103@vkoul-mobl>
- <08ea1442-361a-ecfc-ca26-d3bd8a0ec37b@linux.intel.com>
- <20190430085153.GS3845@vkoul-mobl.Dlink>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <9866ac8c-103d-22cd-a639-a71c39a685c2@linux.intel.com>
-Date:   Tue, 30 Apr 2019 08:38:01 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1726105AbfD3Nis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:38:48 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C80F3091783;
+        Tue, 30 Apr 2019 13:38:48 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E9BE75290;
+        Tue, 30 Apr 2019 13:38:45 +0000 (UTC)
+Subject: Re: [PATCH v2 7/7] iommu/dma-iommu: Remove iommu_dma_map_msi_msg()
+To:     Julien Grall <julien.grall@arm.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     jason@lakedaemon.net, douliyangs@gmail.com, marc.zyngier@arm.com,
+        robin.murphy@arm.com, miquel.raynal@bootlin.com,
+        tglx@linutronix.de, logang@deltatee.com, bigeasy@linutronix.de,
+        linux-rt-users@vger.kernel.org
+References: <20190429144428.29254-1-julien.grall@arm.com>
+ <20190429144428.29254-8-julien.grall@arm.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <6bd88d63-2e8a-77fb-f4e5-250e8d0c5eff@redhat.com>
+Date:   Tue, 30 Apr 2019 15:38:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190430085153.GS3845@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190429144428.29254-8-julien.grall@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 30 Apr 2019 13:38:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 3:51 AM, Vinod Koul wrote:
-> On 15-04-19, 08:09, Pierre-Louis Bossart wrote:
->>
->>>>
->>>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>>> ---
->>>>    drivers/soundwire/Kconfig          |   2 +-
->>>>    drivers/soundwire/bus.c            |  87 ++++++++--------
->>>>    drivers/soundwire/bus.h            |  16 +--
->>>>    drivers/soundwire/bus_type.c       |   4 +-
->>>>    drivers/soundwire/cadence_master.c |  87 ++++++++--------
->>>>    drivers/soundwire/cadence_master.h |  22 ++--
->>>>    drivers/soundwire/intel.c          |  87 ++++++++--------
->>>>    drivers/soundwire/intel.h          |   4 +-
->>>>    drivers/soundwire/intel_init.c     |  12 +--
->>>>    drivers/soundwire/mipi_disco.c     | 116 +++++++++++----------
->>>>    drivers/soundwire/slave.c          |  10 +-
->>>>    drivers/soundwire/stream.c         | 161 +++++++++++++++--------------
->>>
->>> I would prefer this to be a patch per module. It doesnt help to have a
->>> single patch for all the files!
->>>
->>> It would be great to have cleanup done per logical group, for example
->>> typos in a patch, aligns in another etc...
->>
->> You've got to be kidding. I've never seen people ask for this sort of
->> detail.
-> 
-> Nope this is the way it should be. A patch is patch and which
-> should do one thing! Even if it is a cleanup one.
-> 
-> I dislike a patch which touches everything, core, modules, so please
-> split up. As a said in review it takes guesswork to find why a change
-> was done, was it whitespace fix, indentation or not, so please split up
-> based on type of fixes.
+Hi Julien,
 
-With all due respect, you are not helping here but rather slowing things 
-down. I've done dozens of cleanups in the ALSA tree and I didn't go in 
-this sort of details. The fact that the series was tagged as Reviewed by 
-Takashi on April 11 and we are still discussing trivial changes tells me 
-the integration model is broken. It's not just me, the patches related 
-to runtime-pm from your own Linaro colleagues posted on March 28 went 
-nowhere either.
+On 4/29/19 4:44 PM, Julien Grall wrote:
+> A recent change split iommu_dma_map_msi_msg() in two new functions. The
+> function was still implemented to avoid modifying all the callers at
+> once.
+> 
+> Now that all the callers have been reworked, iommu_dma_map_msi_msg() can
+> be removed.
+> 
+> Signed-off-by: Julien Grall <julien.grall@arm.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Moving forward, I suggest we merge SoundWire-related patches through the 
-sound tree. There will be dependencies in the coming weeks between SOF 
-and SoundWire and it makes no sense to have separate maintainers and 
-make the life of early adopters more complicated than it needs to be. If 
-we have 3-week delays for trivial stuff, I can't imagine what the pace 
-will be when I publish the next 20-odd patches I am still working on, 
-and the code needed for the SoundWire audio device class being 
-standardized as we speak. Things were fine up to now since no one was 
-actually using the code, we are in a different model now.
+Thanks
+
+Eric
+> 
+> ---
+>     Changes in v2:
+>         - Rework the commit message
+> ---
+>  drivers/iommu/dma-iommu.c | 20 --------------------
+>  include/linux/dma-iommu.h |  5 -----
+>  2 files changed, 25 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 2309f59cefa4..12f4464828a4 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -936,23 +936,3 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+>  	msg->address_lo &= cookie_msi_granule(domain->iova_cookie) - 1;
+>  	msg->address_lo += lower_32_bits(msi_page->iova);
+>  }
+> -
+> -void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
+> -{
+> -	struct msi_desc *desc = irq_get_msi_desc(irq);
+> -	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
+> -
+> -	if (WARN_ON(iommu_dma_prepare_msi(desc, msi_addr))) {
+> -		/*
+> -		 * We're called from a void callback, so the best we can do is
+> -		 * 'fail' by filling the message with obviously bogus values.
+> -		 * Since we got this far due to an IOMMU being present, it's
+> -		 * not like the existing address would have worked anyway...
+> -		 */
+> -		msg->address_hi = ~0U;
+> -		msg->address_lo = ~0U;
+> -		msg->data = ~0U;
+> -	} else {
+> -		iommu_dma_compose_msi_msg(desc, msg);
+> -	}
+> -}
+> diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
+> index 3fc48fbd6f63..ddd217c197df 100644
+> --- a/include/linux/dma-iommu.h
+> +++ b/include/linux/dma-iommu.h
+> @@ -82,7 +82,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr);
+>  void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+>  			       struct msi_msg *msg);
+>  
+> -void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
+>  void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
+>  
+>  #else
+> @@ -122,10 +121,6 @@ static inline void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+>  {
+>  }
+>  
+> -static inline void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
+> -{
+> -}
+> -
+>  static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
+>  {
+>  }
+> 
