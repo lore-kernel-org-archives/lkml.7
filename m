@@ -2,112 +2,103 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD484C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED16C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB5E821670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3CB21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:52:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoSzjyAF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dcKSxgNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfD3Kwk (ORCPT
+        id S1727561AbfD3Kw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:52:40 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34110 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbfD3Kwi (ORCPT
+        Tue, 30 Apr 2019 06:52:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33142 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbfD3Kw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:52:38 -0400
-Received: by mail-qk1-f195.google.com with SMTP id n68so7836653qka.1;
-        Tue, 30 Apr 2019 03:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LnKYy8jFj+JVpVc0C/UzgZXSpL4E0hdFTQaCn24mwco=;
-        b=ZoSzjyAFUIkT/IJEHAragzsBdlhhXZzJTUJVioDNkVtECy/vvUL0m8oBhzUu+irnqG
-         OkN4BD3T9QdnGO7JhpIvWx3ufxUQST4hhDUljQiTj5W9n7aM+a1ZaQx35XSwQneiwz9R
-         ZfwuvPcaSOEcH9oMkTtq2YbB/0hWzmP4qAlKhF/2HhOqniJRShrkgJboNt0yK+0vks48
-         /lNukNAOpB241V+d0DDTcM5aQBXRfvAEhWgnET/BS4JvN9iodjsmHIUeMD0G9fzbPJPe
-         ddROflj3IUdU+gmVAYmnEsg6sfmsePB1ZPudkwyMJvJQojxZpIOuKbYdozVTLoCqlae5
-         5LxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LnKYy8jFj+JVpVc0C/UzgZXSpL4E0hdFTQaCn24mwco=;
-        b=iPwAt18yxPHA9pA3RfCyeIvsrbhNfV7zUAJ47XwNVAM5CyxEsjVNFWswzGJZFz/rXW
-         pjtwog6Fj+yKcW2yOTDlm5lj/o1TqVvG1uPOBVDOne1Wn4G8EfGyVeP1PEQtOjvIZF0T
-         6oNSuxhO4fkZmiBMF5oENyG/TSg/uMATdNV9cM+UMekENMZ8taXaoB7Jhz/ZFC8s8sw6
-         /bqURkwgCqM/bpZ/fwlsfWB3EzUBLEla6+p1UDuFOB3PcVQwszzY26FpUQzU1d9GsC1s
-         aQGjWl8v3ue1K/YYhIKyNhwIJHj2LCinw8vPJlUnlhZzFoD5O6db4v5xAqOYAGsseuiH
-         Hvbg==
-X-Gm-Message-State: APjAAAWzjpHd41ZVkAFbVuLgyjZCwDcH2waWobXUbT2+xEhvNgvq7P6N
-        lOlTRY6IW8JjAnLcDiVR2H0=
-X-Google-Smtp-Source: APXvYqyEp/ZdUavjs8KgOwRCEG3lYrIV4mo1aOsdTDyV2iNrHd2FUdrlCSxBq31I546BoDKGayR3PQ==
-X-Received: by 2002:a37:2c06:: with SMTP id s6mr48810567qkh.142.1556621557170;
-        Tue, 30 Apr 2019 03:52:37 -0700 (PDT)
-Received: from laptop (189.26.185.89.dynamic.adsl.gvt.net.br. [189.26.185.89])
-        by smtp.gmail.com with ESMTPSA id w58sm19627363qtw.93.2019.04.30.03.52.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 03:52:35 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 07:52:15 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Greg Edwards <gedwards@ddn.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] blkdev.h: Introduce size_to_sectors hlper function
-Message-ID: <20190430105212.GA1642767@laptop>
-References: <20190430013205.1561708-1-marcos.souza.org@gmail.com>
- <20190430013205.1561708-2-marcos.souza.org@gmail.com>
- <yq1bm0ow6iv.fsf@oracle.com>
+        Tue, 30 Apr 2019 06:52:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jHO4QKebr4nW7rEKUksDM8kg9jAX/dS0i99h/BNfNOQ=; b=dcKSxgNtvGttkJo9UKNMw2A3OM
+        ubJj9v//Tjc+Aa4Q8zlSm/hUgnOLGiEW3LT40WGRboHRNwnlg7iC1lYNHuw81S1mqokAZ3VKEvOaU
+        NocRGzY3s6QobDmvphSbHNpEyIveTeCHr8C5meI8KZCe6+1y/dXMagcIqHbwgiuGwOgGesOI7uH/r
+        z6WW0Z1ubLGeSbpNGme1NsvpZLvdHTuhb6vv2Wm3uudMtsGPGuauq4ifW4k9goc482uuQhMQlDG1s
+        h9CqAeqqvMv16u8VIeu72PmAeC1amYO/9IVeEGWwu7HLSalRVZ3TSCg20LtUKgkc6+GqakQ2JLaAq
+        aMpc2eLA==;
+Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLQNZ-0007Jb-GU; Tue, 30 Apr 2019 10:52:53 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/25] arm64/iommu: handle non-remapped addresses in ->mmap and ->get_sgtable
+Date:   Tue, 30 Apr 2019 06:51:50 -0400
+Message-Id: <20190430105214.24628-2-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190430105214.24628-1-hch@lst.de>
+References: <20190430105214.24628-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1bm0ow6iv.fsf@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:50:32PM -0400, Martin K. Petersen wrote:
-> 
-> Hi Marco,
-> 
-> > +static inline sector_t size_to_sectors(long long size)
-> > +{
-> > +	return size >> SECTOR_SHIFT;
-> > +}
-> > +
-> 
-> FWIW, in SCSI we have:
-> 
-> 	logical_to_sectors()
->         logical_to_bytes()
->         bytes_to_logical()
->         sectors_to_logical()
-> 
-> I'm not attached to "bytes" in any way but it would be nice to be
-> consistent.
-> 
+DMA allocations that can't sleep may return non-remapped addresses, but
+we do not properly handle them in the mmap and get_sgtable methods.
+Resolve non-vmalloc addresses using virt_to_page to handle this corner
+case.
 
-Thanks for the suggestion. I will send a new version using "bytes_to_sectors"
-instead.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+---
+ arch/arm64/mm/dma-mapping.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
-
+diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
+index 78c0a72f822c..674860e3e478 100644
+--- a/arch/arm64/mm/dma-mapping.c
++++ b/arch/arm64/mm/dma-mapping.c
+@@ -249,6 +249,11 @@ static int __iommu_mmap_attrs(struct device *dev, struct vm_area_struct *vma,
+ 	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+ 		return ret;
+ 
++	if (!is_vmalloc_addr(cpu_addr)) {
++		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
++		return __swiotlb_mmap_pfn(vma, pfn, size);
++	}
++
+ 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+ 		/*
+ 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
+@@ -272,6 +277,11 @@ static int __iommu_get_sgtable(struct device *dev, struct sg_table *sgt,
+ 	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 	struct vm_struct *area = find_vm_area(cpu_addr);
+ 
++	if (!is_vmalloc_addr(cpu_addr)) {
++		struct page *page = virt_to_page(cpu_addr);
++		return __swiotlb_get_sgtable_page(sgt, page, size);
++	}
++
+ 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+ 		/*
+ 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
 -- 
-Thanks,
-Marcos
+2.20.1
+
