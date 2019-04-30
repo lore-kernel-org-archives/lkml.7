@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21FEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE94C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F3C21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7A721707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624961;
-	bh=65QYBn1E8A27I3Z0rF4vIT4t9x+i+K9NqwwrzcVi2HI=;
+	s=default; t=1556624966;
+	bh=z4ydPLtY8MXkZKPPSyu9HaRyKC1lHY5AqFb3OYwMQOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jr2CX79RI4xCFCt4gcoowV3RJ5Vyj+7EoUT9SbWN+Rio5397NboBA3ooMQgevFsVv
-	 zr9opTCMa1xuxuy1v/DnC4dMnO4+wGLI0OWF/Expvig1BXlL0nN5txfuJEtLWZXvB3
-	 uAwiu64SbCIAuFs8vVBvkE69wwToyehCIDrByE+A=
+	b=O3i8BW/57AlrUNeSpUv5nxMLq5Kkv6wg1hkeqwEC64LXkjy1CUKy4WG8SSPUb8+XF
+	 8h7PiEp8xTffA+5erclts5+lGhuf/vLPE9LqYXBk+4zkt7Zgom8K8IaxgZD4VOav6a
+	 yQ0zLNGPTc6F5w4+l2bol9JDFn8b2e3FdiBFanz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbfD3LtU (ORCPT
+        id S1730992AbfD3LtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35764 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730278AbfD3LtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:18 -0400
+        id S1730981AbfD3LtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ED422054F;
-        Tue, 30 Apr 2019 11:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F9F62054F;
+        Tue, 30 Apr 2019 11:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624957;
-        bh=65QYBn1E8A27I3Z0rF4vIT4t9x+i+K9NqwwrzcVi2HI=;
+        s=default; t=1556624960;
+        bh=z4ydPLtY8MXkZKPPSyu9HaRyKC1lHY5AqFb3OYwMQOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2i6KBEitIGlR/ZHMnuVE5hMsF16LwTwNzw99Kc0YwlNWShhKTsYUOpwmq0xUvwB3R
-         7WdH8Nfv8/ynOJD2DdVOcZwUBp4bAQtTgb/RKGR+3zQv2oOeWzjeNa2kbcQOi5JecB
-         1qhDWBQ31xy1TzcoLnN0mo/bPK7yy/o28G2q94zY=
+        b=H1mvM+qUYs7TFwWq1iSsIYjKZNyJs+8Okb3DCUITQXUD12mOWwQKT3yitQRPsB39N
+         PPDEfMTeCWGKPSItemA8D7TH8HFr/Nzdl2qP0O2LjOIa++Ph50Zf5jK1xPDZsljmTK
+         xiimN6EhtmT8h0KTM2MeyW/+Lq9auJK28TVmw8zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH 5.0 36/89] vfio/type1: Limit DMA mappings per container
-Date:   Tue, 30 Apr 2019 13:38:27 +0200
-Message-Id: <20190430113611.547423041@linuxfoundation.org>
+        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
+        Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>,
+        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
+        Yao Lihua <ylhuajnu@outlook.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.0 37/89] dmaengine: sh: rcar-dmac: With cyclic DMA residue 0 is valid
+Date:   Tue, 30 Apr 2019 13:38:28 +0200
+Message-Id: <20190430113611.581847201@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -61,94 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
 
-commit 492855939bdb59c6f947b0b5b44af9ad82b7e38c upstream.
+commit 907bd68a2edc491849e2fdcfe52c4596627bca94 upstream.
 
-Memory backed DMA mappings are accounted against a user's locked
-memory limit, including multiple mappings of the same memory.  This
-accounting bounds the number of such mappings that a user can create.
-However, DMA mappings that are not backed by memory, such as DMA
-mappings of device MMIO via mmaps, do not make use of page pinning
-and therefore do not count against the user's locked memory limit.
-These mappings still consume memory, but the memory is not well
-associated to the process for the purpose of oom killing a task.
+Having a cyclic DMA, a residue 0 is not an indication of a completed
+DMA. In case of cyclic DMA make sure that dma_set_residue() is called
+and with this a residue of 0 is forwarded correctly to the caller.
 
-To add bounding on this use case, we introduce a limit to the total
-number of concurrent DMA mappings that a user is allowed to create.
-This limit is exposed as a tunable module option where the default
-value of 64K is expected to be well in excess of any reasonable use
-case (a large virtual machine configuration would typically only make
-use of tens of concurrent mappings).
-
-This fixes CVE-2019-3882.
-
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Tested-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: 3544d2878817 ("dmaengine: rcar-dmac: use result of updated get_residue in tx_status")
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
+Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+Signed-off-by: Yao Lihua <ylhuajnu@outlook.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: <stable@vger.kernel.org> # v4.8+
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vfio/vfio_iommu_type1.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/dma/sh/rcar-dmac.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -58,12 +58,18 @@ module_param_named(disable_hugepages,
- MODULE_PARM_DESC(disable_hugepages,
- 		 "Disable VFIO IOMMU support for IOMMU hugepages.");
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1368,6 +1368,7 @@ static enum dma_status rcar_dmac_tx_stat
+ 	enum dma_status status;
+ 	unsigned long flags;
+ 	unsigned int residue;
++	bool cyclic;
  
-+static unsigned int dma_entry_limit __read_mostly = U16_MAX;
-+module_param_named(dma_entry_limit, dma_entry_limit, uint, 0644);
-+MODULE_PARM_DESC(dma_entry_limit,
-+		 "Maximum number of user DMA mappings per container (65535).");
-+
- struct vfio_iommu {
- 	struct list_head	domain_list;
- 	struct vfio_domain	*external_domain; /* domain for external user */
- 	struct mutex		lock;
- 	struct rb_root		dma_list;
- 	struct blocking_notifier_head notifier;
-+	unsigned int		dma_avail;
- 	bool			v2;
- 	bool			nesting;
- };
-@@ -836,6 +842,7 @@ static void vfio_remove_dma(struct vfio_
- 	vfio_unlink_dma(iommu, dma);
- 	put_task_struct(dma->task);
- 	kfree(dma);
-+	iommu->dma_avail++;
- }
+ 	status = dma_cookie_status(chan, cookie, txstate);
+ 	if (status == DMA_COMPLETE || !txstate)
+@@ -1375,10 +1376,11 @@ static enum dma_status rcar_dmac_tx_stat
  
- static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
-@@ -1081,12 +1088,18 @@ static int vfio_dma_do_map(struct vfio_i
- 		goto out_unlock;
- 	}
+ 	spin_lock_irqsave(&rchan->lock, flags);
+ 	residue = rcar_dmac_chan_get_residue(rchan, cookie);
++	cyclic = rchan->desc.running ? rchan->desc.running->cyclic : false;
+ 	spin_unlock_irqrestore(&rchan->lock, flags);
  
-+	if (!iommu->dma_avail) {
-+		ret = -ENOSPC;
-+		goto out_unlock;
-+	}
-+
- 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
- 	if (!dma) {
- 		ret = -ENOMEM;
- 		goto out_unlock;
- 	}
+ 	/* if there's no residue, the cookie is complete */
+-	if (!residue)
++	if (!residue && !cyclic)
+ 		return DMA_COMPLETE;
  
-+	iommu->dma_avail--;
- 	dma->iova = iova;
- 	dma->vaddr = vaddr;
- 	dma->prot = prot;
-@@ -1583,6 +1596,7 @@ static void *vfio_iommu_type1_open(unsig
- 
- 	INIT_LIST_HEAD(&iommu->domain_list);
- 	iommu->dma_list = RB_ROOT;
-+	iommu->dma_avail = dma_entry_limit;
- 	mutex_init(&iommu->lock);
- 	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
- 
+ 	dma_set_residue(txstate, residue);
 
 
