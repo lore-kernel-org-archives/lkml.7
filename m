@@ -6,67 +6,68 @@ X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FCBC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD067C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7353020652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7831C20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556657797;
-	bh=ygipzWeQ1byKWB/YPZTgoJrIBgR3UXCrn0SjxPKqC9o=;
+	s=default; t=1556657801;
+	bh=/LvNSlIz8up6JSQaJpK+BUSx9jTdLZu6yKTkBvNeEU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
 	 From;
-	b=BBoVT8aT2wvBIUIM1BglY51HG0jx+NfworcBkaxNRM1gHcDeBpn18nw/QcbtugAIm
-	 HsAaRyiTHSfsOqzMYZFdMW+EBRX8ftxRo+r8rI1fK7mp6ejp+8Ui36pXbtnyc2MlYQ
-	 2zQ+ybwfBCITqHPmq9ZEiv9pbScRRWV4x7AdmUk0=
+	b=CJ5cXGWW2pJHmIfLEkae3iOJWMlmt+gJgUjp5kezzKCN34z/zMSYOz8aJo1nUJkAl
+	 2D2d43QjgNq0mDeW0tnW8fiJgM+Z51pm/fny5Ue2Rmwg4PJGTYRjZ776Pua+awELhO
+	 l8WnkQi4Gg4OCgUFAZ/eKYqTwgI9lgdYNX4QqozM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfD3U4g (ORCPT
+        id S1727421AbfD3U4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 16:56:36 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:37393 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfD3U4b (ORCPT
+        Tue, 30 Apr 2019 16:56:34 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44865 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfD3U42 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 16:56:31 -0400
-Received: by mail-it1-f195.google.com with SMTP id r85so7094257itc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 13:56:31 -0700 (PDT)
+        Tue, 30 Apr 2019 16:56:28 -0400
+Received: by mail-io1-f66.google.com with SMTP id r71so13416946iod.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 13:56:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :reply-to:organization;
-        bh=UOf8CohNJSfUCbdQ2Jk27KrUJ13p865bPg08L86Q5ss=;
-        b=QXhmghZp4duMsA72NmE28Nr3/Uo2HSprB4WUckxpb4SwVlxghe9II35ZHvI0cIBFX9
-         NZzU5n/+NPKnIdAjP9veXNT8i/NCDhWiTf2VfPxKtST2u40ha4hJ87KUDfJ6Ig9vVdCO
-         w7AXBRuWULPnYKT+WyBtTF5OCUFHJzyMvQMx7WmEPW5DirOPD2mHaZdP240EK69JAK4Q
-         IOja35PSKJmXh3Q0hFGYDGazRTsAsS0Lnm4JTF7Qso+4tB9EZWIDT16OBKK6EdQaa7T8
-         PmCNHzpL2BoaOkpwKkIrvpyH2xxvTdcCuAuPGIgxZ321WxGNZUgfxikQ/cnfD/DIbyjO
-         Q7gQ==
+        bh=b/Kzn17Vf6dzrUo0Ue4UVG8xwRuP07tjAkgwmkdmxSM=;
+        b=l2Ngkm3udG5DyEeOtAZ6oGOA4KVZFxOuU8B0Eh/mhP/bJhBtNOJ3THAVMUUOf2adi6
+         twyrG8mco4dS9wuz/9nT/P5/Axw/6yzp90UW052mZYeGiDVTybOex8vALV93D8ezIys5
+         NhJ6JQGiYyw+SklgO2z+4+4MCMJ9akazv3+X9gh4BuRMbfGIvnC6PRyxv0wAPuqC7gzr
+         Mj3Nb1haakcj6ZSmSh+WgfED0+Vwi5suzzrRVyhjMYe9r8rAE/mg6sp4Qq0N6zlWKIgG
+         TUGE5E/wStrgmQ266qa/ony2I83HWhu1g56K71ikeIg3WBRsJzdq+16snOwQgmAX6Yhy
+         1NMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:reply-to:organization;
-        bh=UOf8CohNJSfUCbdQ2Jk27KrUJ13p865bPg08L86Q5ss=;
-        b=t03/ZtVLNWhJ9CcqlP7vCcV/6haiZAysONtl6FS/gJdY9B8UuwjeKYRVSnR/D6AcYo
-         3s+VqEvM3ZfLyS1Y6x4sov/nn23SjjUj/D7EgHDycAhdZEOw0uXcGb8Le0zsIxH5dRwA
-         xIFLvCi4bytA+I64NeOwYCscE97VgoJjd9PE1GYkVjYWE4CwOwM2G4h52n+0sMLlIF0x
-         fKFhRuP3ugq11v3O13FbJI8u6a3PmZ439/CqNKvXsx6PXjxpvEZortf9o6AZUBrmdWUH
-         vXPn1DyB63D3bWX7jUZSJ2PoGkAbEy64c5WGUVB1Oullq+CrHXLLLZWCf8k16bDWcApm
-         p7VQ==
-X-Gm-Message-State: APjAAAXo1WtRDkU6WupCxYJarZxrGYrg/ptOngXUQ5nXbfAEIW4ewS4P
-        ZSCFt0PX4aMGTK34/CYhZyA=
-X-Google-Smtp-Source: APXvYqzz5FZkFajayX+OjZkRFayMsUtYjyFqCAtvasn+ieDWwlmPRTnechSXjjsveYNMj6ZwdeKyBA==
-X-Received: by 2002:a05:660c:288:: with SMTP id s8mr5224409itl.36.1556657790929;
-        Tue, 30 Apr 2019 13:56:30 -0700 (PDT)
+        bh=b/Kzn17Vf6dzrUo0Ue4UVG8xwRuP07tjAkgwmkdmxSM=;
+        b=ObuCxE/uEWpr3ItdIvK0AIwoDmFFEGaPtc2n7m6OsxlMCeuaYdiQcNubXeGdN+cj8R
+         MWm79Na1c902pKhDrjGj05aLW4gTkedpNoLzjCo+x4bgT47RWzms0E9QwKUyQM/ixdlc
+         Pxcb++JHbH3SvATTYUiOBGyurdes7Wno2j26CErVK32HJuqH6rC4yTJZsV3pZVh+rbSc
+         C3Xs9Y4viQjgei60QC5l9LpVISHVrjazgYvsoRKMGvGnW9CFcCXX8fyPyovQmoZEeWDL
+         CjrAPmJ2lm/nxPCu9BtoqXML6NYBN0VFXADG9V97wGmNZhTjuRHhMxerGg9LU6F/YWve
+         2qgQ==
+X-Gm-Message-State: APjAAAXDbmLkWju86zFtONneP63p/O9Ekvliz7+w2me+Iu9x996LjuEK
+        2m5mxd6elOLQcP2emrCULUX9wZXS
+X-Google-Smtp-Source: APXvYqwncIigHMiJETH+4ro6ueyZkUOSyaVwYxmnrWJXJ36KfDE/YcqKqBbEQO+xFqQ5sYzZ4dvx2A==
+X-Received: by 2002:a5e:8f09:: with SMTP id c9mr5900530iok.62.1556657787203;
+        Tue, 30 Apr 2019 13:56:27 -0700 (PDT)
 Received: from nuc8.lan (h69-131-112-51.cntcnh.dsl.dynamic.tds.net. [69.131.112.51])
-        by smtp.gmail.com with ESMTPSA id s7sm9799349ioo.17.2019.04.30.13.56.29
+        by smtp.gmail.com with ESMTPSA id s7sm9799349ioo.17.2019.04.30.13.56.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 13:56:30 -0700 (PDT)
+        Tue, 30 Apr 2019 13:56:26 -0700 (PDT)
 From:   Len Brown <lenb@kernel.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>
-Subject: [PATCH 13/14] topology: Create package_threads sysfs attribute
-Date:   Tue, 30 Apr 2019 16:55:58 -0400
-Message-Id: <ac7179ecead6c8619859a727f75b645723a9bade.1553624867.git.len.brown@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Len Brown <len.brown@intel.com>
+Subject: [PATCH 10/14] thermal/x86_pkg_temp_thermal: Support multi-die/package
+Date:   Tue, 30 Apr 2019 16:55:55 -0400
+Message-Id: <feda86927b54526ffc2b9d244d33e73cf0ca3e74.1553624867.git.len.brown@intel.com>
 X-Mailer: git-send-email 2.18.0-rc0
 In-Reply-To: <75386dff62ee869eb7357dff1e60dfd9b3e68023.1553624867.git.len.brown@intel.com>
 References: <75386dff62ee869eb7357dff1e60dfd9b3e68023.1553624867.git.len.brown@intel.com>
@@ -77,80 +78,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+From: Zhang Rui <rui.zhang@intel.com>
 
-The sysfs cpu/topology/core_siblings (and core_siblings_list)
-attributes are documented, implemented, and used by programs to
-represent set of logical CPU threads sharing the same package.
+On the new dual-die/package systems, the package temperature MSR becomes
+die-scope. Thus instead of one thermal zone device per physical package,
+now there should be one thermal_zone for each die on these systems.
 
-This makes sense if the next topology level above a core
-is always a package.  But on systems where there is a die
-topology level between a core and a package, the name
-no longer makese sense.
+This patch introduces x86_pkg_temp_thermal support for new
+dual-die/package systems.
 
-So without changing its function, add a name for this map
-that describes what it actually is -- package threads --
-the set of logical CPU threads that share the same package.
+On the hardwares that do not have multi-die, topology_logical_die_id()
+equals topology_physical_package_id(), thus there is no functional change.
 
-This new name will be immune to changes in topology, since
-it describes threads at the current level, not siblings
-at a contained level.
-
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Len Brown <len.brown@intel.com>
-Suggested-by: Brice Goglin <Brice.Goglin@inria.fr>
 ---
- Documentation/cputopology.txt | 8 ++++----
- drivers/base/topology.c       | 6 ++++++
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/thermal/intel/x86_pkg_temp_thermal.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/cputopology.txt b/Documentation/cputopology.txt
-index 2ff8a1e9a2db..a500e25476f4 100644
---- a/Documentation/cputopology.txt
-+++ b/Documentation/cputopology.txt
-@@ -46,15 +46,15 @@ thread_siblings_list:
- 	human-readable list of cpuX's hardware threads within the same
- 	core as cpuX.
+diff --git a/drivers/thermal/intel/x86_pkg_temp_thermal.c b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+index 1ef937d799e4..1b03ab3ee20c 100644
+--- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
++++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+@@ -122,7 +122,7 @@ static int pkg_temp_debugfs_init(void)
+  */
+ static struct pkg_device *pkg_temp_thermal_get_dev(unsigned int cpu)
+ {
+-	int pkgid = topology_logical_package_id(cpu);
++	int pkgid = topology_logical_die_id(cpu);
  
--core_siblings:
-+package_threads:
+ 	if (pkgid >= 0 && pkgid < max_packages)
+ 		return packages[pkgid];
+@@ -353,7 +353,7 @@ static int pkg_thermal_notify(u64 msr_val)
  
- 	internal kernel map of cpuX's hardware threads within the same
--	physical_package_id.
-+	physical_package_id. (deprecated name: "core_siblings")
+ static int pkg_temp_thermal_device_add(unsigned int cpu)
+ {
+-	int pkgid = topology_logical_package_id(cpu);
++	int pkgid = topology_logical_die_id(cpu);
+ 	u32 tj_max, eax, ebx, ecx, edx;
+ 	struct pkg_device *pkgdev;
+ 	int thres_count, err;
+@@ -449,7 +449,7 @@ static int pkg_thermal_cpu_offline(unsigned int cpu)
+ 	 * worker will see the package anymore.
+ 	 */
+ 	if (lastcpu) {
+-		packages[topology_logical_package_id(cpu)] = NULL;
++		packages[topology_logical_die_id(cpu)] = NULL;
+ 		/* After this point nothing touches the MSR anymore. */
+ 		wrmsr(MSR_IA32_PACKAGE_THERM_INTERRUPT,
+ 		      pkgdev->msr_pkg_therm_low, pkgdev->msr_pkg_therm_high);
+@@ -511,11 +511,12 @@ MODULE_DEVICE_TABLE(x86cpu, pkg_temp_thermal_ids);
+ static int __init pkg_temp_thermal_init(void)
+ {
+ 	int ret;
++	struct cpuinfo_x86 *c = &cpu_data(0);
  
--core_siblings_list:
-+package_threads_list:
+ 	if (!x86_match_cpu(pkg_temp_thermal_ids))
+ 		return -ENODEV;
  
- 	human-readable list of cpuX's hardware threads within the same
--	physical_package_id.
-+	physical_package_id. (deprecated name: "core_siblings_list")
- 
- book_siblings:
- 
-diff --git a/drivers/base/topology.c b/drivers/base/topology.c
-index 50352cf96f85..5f4405a08c6e 100644
---- a/drivers/base/topology.c
-+++ b/drivers/base/topology.c
-@@ -57,6 +57,10 @@ define_siblings_show_func(core_siblings, core_cpumask);
- static DEVICE_ATTR_RO(core_siblings);
- static DEVICE_ATTR_RO(core_siblings_list);
- 
-+define_siblings_show_func(package_threads, core_cpumask);
-+static DEVICE_ATTR_RO(package_threads);
-+static DEVICE_ATTR_RO(package_threads_list);
-+
- #ifdef CONFIG_SCHED_BOOK
- define_id_show_func(book_id);
- static DEVICE_ATTR_RO(book_id);
-@@ -81,6 +85,8 @@ static struct attribute *default_attrs[] = {
- 	&dev_attr_thread_siblings_list.attr,
- 	&dev_attr_core_siblings.attr,
- 	&dev_attr_core_siblings_list.attr,
-+	&dev_attr_package_threads.attr,
-+	&dev_attr_package_threads_list.attr,
- #ifdef CONFIG_SCHED_BOOK
- 	&dev_attr_book_id.attr,
- 	&dev_attr_book_siblings.attr,
+-	max_packages = topology_max_packages();
++	max_packages = topology_max_packages() * c->x86_max_dies;
+ 	packages = kcalloc(max_packages, sizeof(struct pkg_device *),
+ 			   GFP_KERNEL);
+ 	if (!packages)
 -- 
 2.18.0-rc0
 
