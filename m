@@ -2,86 +2,142 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1549FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97467C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A5921743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6D320854
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556663536;
-	bh=XRVMa04kudlHTq2z7N3HsIVwyLgTj7ZVz8OS2PVDtX4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=u1DbQmZvFzmelUnCXZiRzQ0cD0UphHWrZA7+gLIE7yKTQu58uWFeQbnjzaPdwy9vl
-	 YazJ6/Bf9WE4lHhK+bGndZOMgAKs0PF3h4gjVo/BcA/tsyAhmu+XDvOaZ7H4kDY4eV
-	 X38zk1qaH6LG52qcJedUaQgM9kS+X0mSxW883kPg=
+	s=default; t=1556663561;
+	bh=5RXEW0TnG2Pbi3j/QB7dGQr0kw61uvFIz/KXMg+GlwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1Mo5D6wOM6DIrZNJqRDtfsU9nDF8BhD01f01XuVsjyhIBK0lDeGURVvqsjX2aBdtU
+	 OeZ/XnfSBhxA+TKBcmQ/c95XvVeqZLJxBewpi0qjyM3GuQoTLxhhL33hu0O8+ZJkQc
+	 QSrdSAtIQPnu4sk9S6/bI+Os3tYWyXIgp6aEoyQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfD3WcP (ORCPT
+        id S1727502AbfD3Wck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfD3WcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:32:14 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3A4720854;
-        Tue, 30 Apr 2019 22:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556663533;
-        bh=XRVMa04kudlHTq2z7N3HsIVwyLgTj7ZVz8OS2PVDtX4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UCSRWUfbjl6cuajEsqZVQJHL4EtO2TdNKLBhxLvrEpQdF7NrQGDZ4/XjSoNd98Vh8
-         nf5hALAw3NTPm5E5kJuXNd80ZEo/alVbYMZsJtmVIYXQM3HZsG8CdHXaua0HjGT4PJ
-         OVBnorCDoFJqTFdXrsxXMUa6RKJftY++VDlriyNw=
-Subject: Re: [PATCH 4.19 000/100] 4.19.38-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tue, 30 Apr 2019 18:32:40 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40717 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfD3Wck (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 18:32:40 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y64so7100743oia.7;
+        Tue, 30 Apr 2019 15:32:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TAGKPLLmuM7M+yddHmL2VZU0kSXEXyUPE5K9476P65c=;
+        b=ZLPkKV9Sd56C8NpzfKv8upcwpl22jMNAUPoV+bDoQYA40eu3K+k7xvLDaufECxPpG7
+         ZmtozL7C1fFxOuFyVx8P3c9eUgDcaQOsV9tcm5ITxx/kGMIV5bGWVX8k0uxxGq7+enrg
+         /py6/aUuS3ejmVJ5JZuajTTsUQrjxlbfBRXa1Y33dBKgD2Xwr7j+FuQDeglJHQMaNQbq
+         JdSgyZfJ+mqqbjUbUhhA30LcnZ8wKXsx4Ad1pc5XyIWjCCtdNkS4wlN0Pm47eN3912nt
+         mbfUrOjHd5yC2F7Z8/Dtqs6AE8TVq+30rYILmvP4RG4Yn6JQAtgPPF1HAE51IDjlF8Rz
+         exRQ==
+X-Gm-Message-State: APjAAAVP10obKPV057XP64vAXyF8EF4DnW08HdP8TldToVFjhnDCxUEM
+        DkAw9sfvoAV1DnkUdFX5eg==
+X-Google-Smtp-Source: APXvYqwjn/okpaWBrRAU8O/dYyclhRAHEd7w9vrJ4+KZwEMgTIbfNh3wLZDJhAaiRAmjgsYxGuCX4A==
+X-Received: by 2002:aca:4857:: with SMTP id v84mr1864424oia.131.1556663558678;
+        Tue, 30 Apr 2019 15:32:38 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z90sm9693323otb.9.2019.04.30.15.32.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 15:32:37 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 17:32:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-pm@vger.kernel.org,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190430113608.616903219@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <505d050a-6d02-9e62-fbb8-fa13129744c7@kernel.org>
-Date:   Tue, 30 Apr 2019 16:32:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Subject: Re: [PATCH v4 3/3] dt-bindings: power: supply: Add bindings for
+ Microchip UCS1002
+Message-ID: <20190430223236.GA10236@bogus>
+References: <20190430064557.28469-1-andrew.smirnov@gmail.com>
+ <20190430064557.28469-4-andrew.smirnov@gmail.com>
+ <20190430161542.GB731@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430161542.GB731@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 5:37 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.38 release.
-> There are 100 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu 02 May 2019 11:34:55 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.38-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Tue, Apr 30, 2019 at 09:15:42AM -0700, Guenter Roeck wrote:
+> On Mon, Apr 29, 2019 at 11:45:57PM -0700, Andrey Smirnov wrote:
+> > Add bindings for Microchip UCS1002 Programmable USB Port Power
+> > Controller with Charger Emulation.
+> > 
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Sebastian Reichel <sre@kernel.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > ---
+> >  .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> > new file mode 100644
+> > index 000000000000..021fd7aba75e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> > @@ -0,0 +1,27 @@
+> > +Microchip UCS1002 USB Port Power Controller
+> > +
+> > +Required properties:
+> > +- compatible		: Should be "microchip,ucs1002";
+> > +- reg			: I2C slave address
+> > +
+> > +Optional properties:
+> > +- interrupts-extended	: A list of interrupts lines present (could be either
+> > +			  corresponding to A_DET# pin, ALERT# pin, or both)
 
-Compiled and booted on my test system. No dmesg regressions.
+Just make this 'interrupts'. Support for 'interrupts-extended' is 
+implied.
 
-thanks,
--- Shuah
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> > +- interrupt-names	: A list of interrupt names. Should contain (if
+> > +			  present):
+> > +			  - "a_det" for line connected to A_DET# pin
+> > +			  - "alert" for line connected to ALERT# pin
+> > +			  Both are expected to be IRQ_TYPE_EDGE_BOTH
+> > +Example:
+> > +
+> > +&i2c3 {
+> > +	charger@32 {
+> > +		compatible = "microchip,ucs1002";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_ucs1002_pins>;
+> 
+> Document the above ? Or is that optional ?
+
+I would have said to document this, but recently we had some discussion 
+about allowing this to be implied when there's only a 'default' entry. 
+We'll add it automatically for schemas.
+
+Rob
