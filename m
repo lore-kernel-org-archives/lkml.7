@@ -2,102 +2,136 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CDEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED43C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECB3205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C17205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556626107;
+	bh=yNF5fBcZBeHofcbFX4RGA8qq7oiAsCqYqoSBSysuYh8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OZBZ4iaNe74lHaJhggPReSQTPR1p/EgzsowB78yEf6OHwCk4G9HNcXiv44yZiDEB6
+	 1Y1KcKdwfxIY5JzbSS5WVvSc7Y09uoiMloz9nAudIHtQLacBccc3gHlizv2tfJdp4H
+	 SzmBjG2LxxTw4E6sbxE+ydQ1Ne5pP6zKOVnOmRBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfD3MIR (ORCPT
+        id S1728256AbfD3LkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:08:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55442 "EHLO mx1.redhat.com"
+        Tue, 30 Apr 2019 07:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727341AbfD3MIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:08:14 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728212AbfD3LkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:40:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6704930018C2;
-        Tue, 30 Apr 2019 12:08:13 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1FDDE78DEC;
-        Tue, 30 Apr 2019 12:08:01 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 30 Apr 2019 14:08:11 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 14:07:59 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
-        jannh@google.com, surenb@google.com, timmurray@google.com,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        torvalds@linux-foundation.org, kernel-team@android.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, viro@zeniv.linux.org.uk,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
-Message-ID: <20190430120759.GC23020@redhat.com>
-References: <20190425190010.46489-1-joel@joelfernandes.org>
- <20190425222359.sqhboc4x4daznr6r@brauner.io>
- <20190428162405.GA6757@redhat.com>
- <20190429140245.GB233442@google.com>
- <20190429142030.GA17715@redhat.com>
- <20190429163259.GA201155@google.com>
- <20190430115332.GB23020@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 06A9E21670;
+        Tue, 30 Apr 2019 11:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556624400;
+        bh=yNF5fBcZBeHofcbFX4RGA8qq7oiAsCqYqoSBSysuYh8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PgJadybxojFFNxuQzjxWGgxiT0D5a+392W6nrvnMdPbEu0LoZTNyAv8Acxx37dgKm
+         rzLQo53wn2BIrJJG38+pJvk/Cn4jCcZ29L3cjnRKZTgQGTmC9Tgbx4LB/N15d7GTFl
+         wIHgIGysCiOoNX4s2uodkYdOx6hkjLr2soqK8zAQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+3ce8520484b0d4e260a5@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 20/41] tipc: handle the err returned from cmd header function
+Date:   Tue, 30 Apr 2019 13:38:31 +0200
+Message-Id: <20190430113530.005872610@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
+References: <20190430113524.451237916@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430115332.GB23020@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 30 Apr 2019 12:08:14 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/30, Oleg Nesterov wrote:
->
-> > > pidfd_poll() can race with the exiting task, miss exit_code != 0, and return
-> > > zero. However, do_poll() won't block after that and pidfd_poll() will be called
-> > > again.
-> >
-> > Here also I didn't follow what you mean. If exit_code is read as 0 in
-> > pidfd_poll(), then in do_poll() the count will be 0 and it will block in
-> > poll_schedule_timeout(). Right?
->
-> No. Please note the pwq->triggered check and please read __pollwake().
->
-> But if you want to understand this you can forget about poll/select. It is
-> a bit complicated, in particular because it has to do set_current_state()
-> right  before schedule() and thus it plays games with pwq->triggered. But in
-> essence this doesn't differ too much from the plain wait_event-like code
-> (although you can also look at wait_woken/woken_wake_function).
->
-> If remove_wait_queue() could happem before wake_up_all() (like in your pseudo-
-> code above), then pidfd_poll() or any other ->poll() method could miss _both_
-> the condition and wakeup. But sys_poll() doesn't do this, so it is fine to miss
-> the condition and rely on wake_up_all() which ensures we won't block and the
-> next iteration must see condition == T.
+From: Xin Long <lucien.xin@gmail.com>
 
-Oh, just in case... If it is not clear, of course I am talking about the case
-when wake_up_call() was already called when we check the condition. Otherwise
-everything is simple.
+commit 2ac695d1d602ce00b12170242f58c3d3a8e36d04 upstream.
 
-Oleg.
+Syzbot found a crash:
+
+  BUG: KMSAN: uninit-value in tipc_nl_compat_name_table_dump+0x54f/0xcd0 net/tipc/netlink_compat.c:872
+  Call Trace:
+    tipc_nl_compat_name_table_dump+0x54f/0xcd0 net/tipc/netlink_compat.c:872
+    __tipc_nl_compat_dumpit+0x59e/0xda0 net/tipc/netlink_compat.c:215
+    tipc_nl_compat_dumpit+0x63a/0x820 net/tipc/netlink_compat.c:280
+    tipc_nl_compat_handle net/tipc/netlink_compat.c:1226 [inline]
+    tipc_nl_compat_recv+0x1b5f/0x2750 net/tipc/netlink_compat.c:1265
+    genl_family_rcv_msg net/netlink/genetlink.c:601 [inline]
+    genl_rcv_msg+0x185f/0x1a60 net/netlink/genetlink.c:626
+    netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
+    genl_rcv+0x63/0x80 net/netlink/genetlink.c:637
+    netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+    netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1336
+    netlink_sendmsg+0x127f/0x1300 net/netlink/af_netlink.c:1917
+    sock_sendmsg_nosec net/socket.c:622 [inline]
+    sock_sendmsg net/socket.c:632 [inline]
+
+  Uninit was created at:
+    __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
+    alloc_skb include/linux/skbuff.h:1012 [inline]
+    netlink_alloc_large_skb net/netlink/af_netlink.c:1182 [inline]
+    netlink_sendmsg+0xb82/0x1300 net/netlink/af_netlink.c:1892
+    sock_sendmsg_nosec net/socket.c:622 [inline]
+    sock_sendmsg net/socket.c:632 [inline]
+
+It was supposed to be fixed on commit 974cb0e3e7c9 ("tipc: fix uninit-value
+in tipc_nl_compat_name_table_dump") by checking TLV_GET_DATA_LEN(msg->req)
+in cmd->header()/tipc_nl_compat_name_table_dump_header(), which is called
+ahead of tipc_nl_compat_name_table_dump().
+
+However, tipc_nl_compat_dumpit() doesn't handle the error returned from cmd
+header function. It means even when the check added in that fix fails, it
+won't stop calling tipc_nl_compat_name_table_dump(), and the issue will be
+triggered again.
+
+So this patch is to add the process for the err returned from cmd header
+function in tipc_nl_compat_dumpit().
+
+Reported-by: syzbot+3ce8520484b0d4e260a5@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ net/tipc/netlink_compat.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -262,8 +262,14 @@ static int tipc_nl_compat_dumpit(struct
+ 	if (msg->rep_type)
+ 		tipc_tlv_init(msg->rep, msg->rep_type);
+ 
+-	if (cmd->header)
+-		(*cmd->header)(msg);
++	if (cmd->header) {
++		err = (*cmd->header)(msg);
++		if (err) {
++			kfree_skb(msg->rep);
++			msg->rep = NULL;
++			return err;
++		}
++	}
+ 
+ 	arg = nlmsg_new(0, GFP_KERNEL);
+ 	if (!arg) {
+
 
