@@ -2,126 +2,144 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09838C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB92C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01BA21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E822147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fx/u46ZY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRuJvOfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbfD3BHO (ORCPT
+        id S1729768AbfD3BHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:07:14 -0400
-Received: from mail-eopbgr20047.outbound.protection.outlook.com ([40.107.2.47]:26371
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729238AbfD3BHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:07:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f/1PCMfXEn+Nurn/lmS0nR77BP/Q6XGjj1TLePFj+Qg=;
- b=fx/u46ZYCHAxb9PlpS/zfdj2a1QkLPQDoiNOaTh8egCKbY+zaQCCmmfWJQC7iuJirlCpHOO16aQ9IzQfiw/uGtweq6aXkLda5BLh4wvSAsViDQo1sUE8Fa71BbR200Wj+6/h+K41FXrwErrDSbTnEDIXhsL49F6BxwzGekGF/bM=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3866.eurprd04.prod.outlook.com (52.134.71.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 01:07:09 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
- 01:07:08 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH V2] rtc: snvs: Use __maybe_unused instead of #if
- CONFIG_PM_SLEEP
-Thread-Topic: [PATCH V2] rtc: snvs: Use __maybe_unused instead of #if
- CONFIG_PM_SLEEP
-Thread-Index: AQHU/vEI6nnEEqbXYkOGPkXKkx7aOA==
-Date:   Tue, 30 Apr 2019 01:07:08 +0000
-Message-ID: <1556586144-7070-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR03CA0007.apcprd03.prod.outlook.com
- (2603:1096:203:2e::19) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4a48f8be-7c3b-4802-9c9b-08d6cd082b1f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3866;
-x-ms-traffictypediagnostic: DB3PR0402MB3866:
-x-microsoft-antispam-prvs: <DB3PR0402MB3866C9F757E4AE88167C5266F53A0@DB3PR0402MB3866.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(136003)(376002)(366004)(189003)(199004)(8676002)(7736002)(305945005)(66946007)(50226002)(71200400001)(73956011)(25786009)(71190400001)(4326008)(2906002)(66556008)(256004)(66446008)(99286004)(2616005)(486006)(476003)(14444005)(97736004)(52116002)(14454004)(64756008)(81156014)(81166006)(66476007)(478600001)(68736007)(6486002)(86362001)(102836004)(3846002)(6116002)(5660300002)(386003)(2201001)(316002)(6436002)(53936002)(6512007)(8936002)(66066001)(26005)(110136005)(36756003)(2501003)(6506007)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3866;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4UawIbJ+ZhjF7WPJixFQa74+CnLPJwLKvS1ScNmqkpv10mIx9r1iTSEanRshKhaeYiHZKxGhz+viVCtszNOZlthD5kVyoAvZfTUKbbvrTvJpsiiK0ay0oHdxZr7h8K6rD9VqT6lkLAu0R3OyFzD1wyJhXOV3oTQdU1RHKI5EMRzA8HU5a3hbNUI7nxkw2XFuW8kCp1bI+3JcetRHZSkCedeHvIWHB8ho7/arcw28mE2k+ctYqiJHW3WxU03P7piYxySqF06hOAl/2kepD1wheUCQkrog/IhikalVbEAAqQlWLKjl1OU5OloVfpsAXkNlwsLYsL+sK14AIqyDWYsemM9vMgelHrUW4f7UYr3TZivvX7n6MrQvZUMWD5MhqW3TmLIPvACaiHRYJlQOxkUrfGjI8VxARHALe7NzF41vXXg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 29 Apr 2019 21:07:46 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:34871 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbfD3BHp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 21:07:45 -0400
+Received: by mail-yw1-f67.google.com with SMTP id n188so2114864ywe.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 18:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ii5I8j9JBuiHdsFz4/aqjjOUNbjy8Zm8aunVEplypu0=;
+        b=lRuJvOfXBmlqyKzC+YU6LdcihtX/VukOFtrX/XxNSvN8jB66ULMjIHrrU48WK4b6yp
+         Zc9EtVBB3WdryrYCq8OQ5iyEy7WaVma8eQ8G+vu7s6VkGbep5ZOajC34s9mpM6yizVS9
+         l95U/kl8uEDvieUoPU0h2UlibECMknJpC9dyxWJyp9VPNTp6ejvFKfY5us82Z7eh0A2M
+         QPR+sFmFWT/gKdXTzIIU4veQAmGFZlaOr6WFlvMnQjtEXICnlL2R9l24HN2KO5huJlEy
+         IICKtHuf5O+oUKgx7soqJTErkI32pWtu2xq+gNZ8B0pbuX9O/ZiqwUPdmt0zFTwDLwF4
+         FGNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ii5I8j9JBuiHdsFz4/aqjjOUNbjy8Zm8aunVEplypu0=;
+        b=ryj5V0MhD6ofxr0v1U3PCgrqoOj8XNe4wLy60LaNVEV/Xgfp/+LmLDZre78FvGmAJF
+         ZXknhR27KAal1LcPYnQ8j62Wx8HkEFAKuywfnGXvdE1ALUciuRjXPCWdb+6OJohI+wk0
+         6c/6FEp5ouO31LVUjLzjN52lXQ/ETUKsnYH7DwqzsIXD5VzfmLlf1lB9/vteDnDNH8K5
+         k8tAhSWYwr3u9at2Y6915on9nZkfWdkUWJ+3DAx/usxvXvj/kjq7r7Jr4CQQtsj/K7CB
+         cGz75BTrIJcmi4qJzyKZ+xmF/nOtqWN5KnzeQC9YxB43aNKUQqb/6ufK83/9pewjBrZA
+         yUhw==
+X-Gm-Message-State: APjAAAUOdi4+jE4t0eo5zq83zksGXk9yEaa6gwfNDID88JmgdTEFa7c4
+        r/z2lU/1th0b8s55kRoqnbSXIyU0
+X-Google-Smtp-Source: APXvYqz4zg+voT11rsRed8BcaxDuR7U6rJC49t27bTwsIo8dgVs9KB40BI7cwPllz9d0IFiExsXz9Q==
+X-Received: by 2002:a0d:c9c7:: with SMTP id l190mr54943974ywd.181.1556586464548;
+        Mon, 29 Apr 2019 18:07:44 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
+        by smtp.gmail.com with ESMTPSA id 205sm3988886ywm.98.2019.04.29.18.07.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 18:07:43 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 36DC44111F; Mon, 29 Apr 2019 21:07:42 -0400 (EDT)
+Date:   Mon, 29 Apr 2019 21:07:42 -0400
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Robert Walker <robert.walker@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf cs-etm: Always allocate memory for
+ cs_etm_queue::prev_packet
+Message-ID: <20190430010742.GD7857@kernel.org>
+References: <20190428083228.20246-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a48f8be-7c3b-4802-9c9b-08d6cd082b1f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 01:07:08.9160
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3866
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190428083228.20246-1-leo.yan@linaro.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VXNlIF9fbWF5YmVfdW51c2VkIGZvciBwb3dlciBtYW5hZ2VtZW50IHJlbGF0ZWQgZnVuY3Rpb25z
-DQppbnN0ZWFkIG9mICNpZiBDT05GSUdfUE1fU0xFRVAgdG8gc2ltcGx5IHRoZSBjb2RlLg0KDQpT
-aWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NClJldmlld2Vk
-LWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KLS0tDQpDaGFuZ2VzIHNp
-bmNlIFYxOg0KCS0gdXNlIFNFVF9OT0lSUV9TWVNURU1fU0xFRVBfUE1fT1BTKCkgdG8gbWFrZSBz
-dXJlIHNudnNfcnRjX3BtX29wcyBpcyBlbXB0eSB3aGVuIFBNIGlzIG9mZi4NCi0tLQ0KIGRyaXZl
-cnMvcnRjL3J0Yy1zbnZzLmMgfCAxOSArKysrLS0tLS0tLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5n
-ZWQsIDQgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL3J0Yy9ydGMtc252cy5jIGIvZHJpdmVycy9ydGMvcnRjLXNudnMuYw0KaW5kZXggZTBlZGQ1
-OTQuLjdlZTY3M2EyIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ydGMvcnRjLXNudnMuYw0KKysrIGIv
-ZHJpdmVycy9ydGMvcnRjLXNudnMuYw0KQEAgLTM2MCw5ICszNjAsNyBAQCBzdGF0aWMgaW50IHNu
-dnNfcnRjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCXJldHVybiByZXQ7
-DQogfQ0KIA0KLSNpZmRlZiBDT05GSUdfUE1fU0xFRVANCi0NCi1zdGF0aWMgaW50IHNudnNfcnRj
-X3N1c3BlbmRfbm9pcnEoc3RydWN0IGRldmljZSAqZGV2KQ0KK3N0YXRpYyBpbnQgX19tYXliZV91
-bnVzZWQgc252c19ydGNfc3VzcGVuZF9ub2lycShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogew0KIAlz
-dHJ1Y3Qgc252c19ydGNfZGF0YSAqZGF0YSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KIA0KQEAg
-LTM3Miw3ICszNzAsNyBAQCBzdGF0aWMgaW50IHNudnNfcnRjX3N1c3BlbmRfbm9pcnEoc3RydWN0
-IGRldmljZSAqZGV2KQ0KIAlyZXR1cm4gMDsNCiB9DQogDQotc3RhdGljIGludCBzbnZzX3J0Y19y
-ZXN1bWVfbm9pcnEoc3RydWN0IGRldmljZSAqZGV2KQ0KK3N0YXRpYyBpbnQgX19tYXliZV91bnVz
-ZWQgc252c19ydGNfcmVzdW1lX25vaXJxKHN0cnVjdCBkZXZpY2UgKmRldikNCiB7DQogCXN0cnVj
-dCBzbnZzX3J0Y19kYXRhICpkYXRhID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQogDQpAQCAtMzgz
-LDE4ICszODEsOSBAQCBzdGF0aWMgaW50IHNudnNfcnRjX3Jlc3VtZV9ub2lycShzdHJ1Y3QgZGV2
-aWNlICpkZXYpDQogfQ0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBzbnZzX3J0
-Y19wbV9vcHMgPSB7DQotCS5zdXNwZW5kX25vaXJxID0gc252c19ydGNfc3VzcGVuZF9ub2lycSwN
-Ci0JLnJlc3VtZV9ub2lycSA9IHNudnNfcnRjX3Jlc3VtZV9ub2lycSwNCisJU0VUX05PSVJRX1NZ
-U1RFTV9TTEVFUF9QTV9PUFMoc252c19ydGNfc3VzcGVuZF9ub2lycSwgc252c19ydGNfcmVzdW1l
-X25vaXJxKQ0KIH07DQogDQotI2RlZmluZSBTTlZTX1JUQ19QTV9PUFMJKCZzbnZzX3J0Y19wbV9v
-cHMpDQotDQotI2Vsc2UNCi0NCi0jZGVmaW5lIFNOVlNfUlRDX1BNX09QUwlOVUxMDQotDQotI2Vu
-ZGlmDQotDQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgc252c19kdF9pZHNbXSA9
-IHsNCiAJeyAuY29tcGF0aWJsZSA9ICJmc2wsc2VjLXY0LjAtbW9uLXJ0Yy1scCIsIH0sDQogCXsg
-Lyogc2VudGluZWwgKi8gfQ0KQEAgLTQwNCw3ICszOTMsNyBAQCBNT0RVTEVfREVWSUNFX1RBQkxF
-KG9mLCBzbnZzX2R0X2lkcyk7DQogc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgc252c19y
-dGNfZHJpdmVyID0gew0KIAkuZHJpdmVyID0gew0KIAkJLm5hbWUJPSAic252c19ydGMiLA0KLQkJ
-LnBtCT0gU05WU19SVENfUE1fT1BTLA0KKwkJLnBtCT0gJnNudnNfcnRjX3BtX29wcywNCiAJCS5v
-Zl9tYXRjaF90YWJsZSA9IHNudnNfZHRfaWRzLA0KIAl9LA0KIAkucHJvYmUJCT0gc252c19ydGNf
-cHJvYmUsDQotLSANCjIuNy40DQoNCg==
+Em Sun, Apr 28, 2019 at 04:32:27PM +0800, Leo Yan escreveu:
+> Robert Walker reported a segmentation fault is observed when process
+> CoreSight trace data; this issue can be easily reproduced by the
+> command 'perf report --itrace=i1000i' for decoding tracing data.
+> 
+> If neither the 'b' flag (synthesize branches events) nor 'l' flag
+> (synthesize last branch entries) are specified to option '--itrace',
+> cs_etm_queue::prev_packet will not been initialised.  After merging
+> the code to support exception packets and sample flags, there
+> introduced a number of uses of cs_etm_queue::prev_packet without
+> checking whether it is valid, for these cases any accessing to
+> uninitialised prev_packet will cause crash.
+> 
+> As cs_etm_queue::prev_packet is used more widely now and it's already
+> hard to follow which functions have been called in a context where the
+> validity of cs_etm_queue::prev_packet has been checked, this patch
+> always allocates memory for cs_etm_queue::prev_packet.
+> 
+> Reported-by: Robert Walker <robert.walker@arm.com>
+> Suggested-by: Robert Walker <robert.walker@arm.com>
+> Fixes: 7100b12cf474 ("perf cs-etm: Generate branch sample for exception packet")
+
+Thanks, applied both to perf/urgent, testing them now in the containers.
+
+- Arnaldo
+
+> Fixes: 24fff5eb2b93 ("perf cs-etm: Avoid stale branch samples when flush packet")
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/cs-etm.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 110804936fc3..054b480aab04 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -422,11 +422,9 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
+>  	if (!etmq->packet)
+>  		goto out_free;
+>  
+> -	if (etm->synth_opts.last_branch || etm->sample_branches) {
+> -		etmq->prev_packet = zalloc(szp);
+> -		if (!etmq->prev_packet)
+> -			goto out_free;
+> -	}
+> +	etmq->prev_packet = zalloc(szp);
+> +	if (!etmq->prev_packet)
+> +		goto out_free;
+>  
+>  	if (etm->synth_opts.last_branch) {
+>  		size_t sz = sizeof(struct branch_stack);
+> -- 
+> 2.17.1
+
+-- 
+
+- Arnaldo
