@@ -2,143 +2,130 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34DDC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EA3C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AFD21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549452147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:28:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=animalcreek.com header.i=@animalcreek.com header.b="KLGl4dDW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Xse+7eu6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbfD3P1t (ORCPT
+        id S1726245AbfD3P2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:27:49 -0400
-Received: from foss.arm.com ([217.140.101.70]:49180 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3P1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:27:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0BE6374;
-        Tue, 30 Apr 2019 08:27:48 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECEC73F719;
-        Tue, 30 Apr 2019 08:27:46 -0700 (PDT)
-Subject: Re: [PATCH 7/7] clocksource/arm_arch_timer: Use
- arch_timer_read_counter to access stable counters
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Russell King <linux@arm.linux.org.uk>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Valentin Schneider <valentin.schneider@arm.com>
-References: <20190408154907.223536-1-marc.zyngier@arm.com>
- <20190408154907.223536-8-marc.zyngier@arm.com>
- <2a60a031-1eab-2d5e-89ff-b5d516545eeb@linaro.org>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <bbe9b8c1-132f-bbfa-e3d0-ad10c4165ad7@arm.com>
-Date:   Tue, 30 Apr 2019 16:27:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 11:28:22 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53583 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726017AbfD3P2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:28:21 -0400
+X-Greylist: delayed 527 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Apr 2019 11:28:21 EDT
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 95B2013CFD;
+        Tue, 30 Apr 2019 11:19:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 30 Apr 2019 11:19:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=animalcreek.com;
+         h=date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=mesmtp; bh=PqdKVmAegcUY+01jWk7gCCUC
+        FnxdsWffSKcoSAyZrz0=; b=KLGl4dDWcypYzghgDsD+u5AdKCTJx0WYYG32QPOk
+        VRAEAvLki/saXIZ+FELVvNyd7eBf2kY+a+Lgyt+d3XlYyd/rIlyohecS7+qW6g9e
+        49Kp6aYvS5jv3QcTTDrFEKcl8zesN2nSOQEpftwDoDcraREJhwRM6FjNQ+gVfrfv
+        Jjw=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=PqdKVm
+        AegcUY+01jWk7gCCUCFnxdsWffSKcoSAyZrz0=; b=Xse+7eu6e+7sB7A3vfrfLJ
+        UXqM/IAhrTe87qCpxc0Z7GbAFLTuYr2KNo6haKf5T+UOy8kVtyq4PXYpW5yNVK6h
+        tovKSlKwUijGrJcrcjgs+6dMZpjU/TzEpkUDKrnJa2mmM5n0FMiyF3Fww+QCXSk2
+        +SpHuaGG3oOxg3Q+kL+kLvM/hMwRbY+V02tQSy67kRTkJvM8UR+wtjzWbnWwcZvm
+        2JV+oTolMHJRr8Ppt4S1smYPPmgbKu5x+U/EAsjMHD6XWfVJHkmAjZyq2nOZCkp0
+        9TNee8DAGrr1WC+slp8v5rMuPfuKYq/SGRd00fLPVakamG5VrYplpN6T01bv1v8g
+        ==
+X-ME-Sender: <xms:gmfIXNIp3cgHm5z8P87KAp4zfzY5ZS_E_R4aKo-nfR_eV_Zx6humzQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieehgddvkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujghofgesthdtredttdervdenucfhrhhomhepofgrrhhk
+    ucfirhgvvghruceomhhgrhgvvghrsegrnhhimhgrlhgtrhgvvghkrdgtohhmqeenucfkph
+    epieekrddvrdekjedrleehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmghhrvggvrhes
+    rghnihhmrghltghrvggvkhdrtghomhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:gmfIXAMRsaPLqfhQUsdfwSRIsOaWifswxzpnBY04sYzPHfRHrKLaUQ>
+    <xmx:gmfIXNYROxrkfHO9y3_UupmN1f78ui2nxLhrcW1JjYak2qzBoYvOWA>
+    <xmx:gmfIXEyQgwzU5MKiqAZNI3cZSNthcGfmFgflccqtzXSqTEtRkpX6yA>
+    <xmx:hGfIXOtcc0O3WEiGO4HvZqWv4cKhud4QyMiawWAcTNunwmyh_u1ZBQ>
+Received: from blue.animalcreek.com (ip68-2-87-95.ph.ph.cox.net [68.2.87.95])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 84A6B103CC;
+        Tue, 30 Apr 2019 11:19:30 -0400 (EDT)
+Received: by blue.animalcreek.com (Postfix, from userid 1000)
+        id DEAC8A21364; Tue, 30 Apr 2019 08:19:28 -0700 (MST)
+Date:   Tue, 30 Apr 2019 08:19:28 -0700
+From:   Mark Greer <mgreer@animalcreek.com>
+To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Cc:     Kangjie Lu <kjlu@umn.edu>, pakki001@umn.edu,
+        Mark Greer <mgreer@animalcreek.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] greybus: audio_manager: fix a missing check of
+ ida_simple_get
+Message-ID: <20190430151928.GA1854@animalcreek.com>
+References: <20190314064525.15756-1-kjlu@umn.edu>
+ <CAAs364_6MpywkbsFdZrT5TEdrD8+u1eTmg-8_KY0dypy_PgMxQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <2a60a031-1eab-2d5e-89ff-b5d516545eeb@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAs364_6MpywkbsFdZrT5TEdrD8+u1eTmg-8_KY0dypy_PgMxQ@mail.gmail.com>
+Organization: Animal Creek Technologies, Inc.
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/04/2019 13:16, Daniel Lezcano wrote:
-> On 08/04/2019 17:49, Marc Zyngier wrote:
->> Instead of always going via arch_counter_get_cntvct_stable to
->> access the counter workaround, let's have arch_timer_read_counter
->> to point to the right method.
->>
->> For that, we need to track whether any CPU in the system has a
->> workaround for the counter. This is done by having an atomic
->> variable tracking this.
->>
->> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
->> ---
+On Fri, Mar 15, 2019 at 10:49:46AM +0530, Vaibhav Agarwal wrote:
+> On Thu, Mar 14, 2019 at 12:15 PM Kangjie Lu <kjlu@umn.edu> wrote:
+> >
+> > ida_simple_get could fail. The fix inserts a check for its
+> > return value.
+> >
+> > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> > ---
+> >  drivers/staging/greybus/audio_manager.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/staging/greybus/audio_manager.c b/drivers/staging/greybus/audio_manager.c
+> > index d44b070d8862..c2a4af4c1d06 100644
+> > --- a/drivers/staging/greybus/audio_manager.c
+> > +++ b/drivers/staging/greybus/audio_manager.c
+> > @@ -45,6 +45,9 @@ int gb_audio_manager_add(struct gb_audio_manager_module_descriptor *desc)
+> >         int err;
+> >
+> >         id = ida_simple_get(&module_id, 0, 0, GFP_KERNEL);
+> > +       if (id < 0)
+> > +               return id;
+> > +
+> >         err = gb_audio_manager_module_create(&module, manager_kset,
+> >                                              id, desc);
+> >         if (err) {
 > 
-> [ ... ]
-> 
->> +
->>  /*
->>   * Default to cp15 based access because arm64 uses this function for
->>   * sched_clock() before DT is probed and the cp15 method is guaranteed
->> @@ -372,6 +392,7 @@ static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
->>  DEFINE_PER_CPU(const struct arch_timer_erratum_workaround *, timer_unstable_counter_workaround);
->>  EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
->>  
->> +static atomic_t timer_unstable_counter_workaround_in_use = ATOMIC_INIT(0);
-> 
-> Wouldn't make sense to READ_ONCE / WRITE_ONCE instead of using an atomic?
+> Reviewed-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
 
-I don't think *_ONCE says anything about the atomicity of the access. It
-only instruct the compiler that this should only be accessed once, and
-not reloaded/rewritten. In this case, WRITE_ONCE() would work just as
-well, but I feel that setting the expectations do matter.
+I am sorry for not responding until now.  For some strange reason, email
+from this list are being delayed.  I just got this today (April 30).
 
-I also had a vague idea to use this as a refcount to drop the
-workarounds as CPUs get hotplugged off, in which case we'd need the RMW
-operations to be atomic.
+Thanks for the patch, Kangjie, and thanks for the review, Vaibhav.
 
-Anyway, I'm not hell bent on this. If you fundamentally disagree with me
-I'll change it.
+And FWIW,
 
-Thanks,
+Reviewed-by: Mark Greer <mgreer@animalcreek.com>
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Mark
+--
