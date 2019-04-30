@@ -2,201 +2,289 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5018FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCD6C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C0221670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F27E21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:15:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h+UKf1or"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sYTEx7as"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfD3AOm (ORCPT
+        id S1729598AbfD3APA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 20:14:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44265 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729083AbfD3AOm (ORCPT
+        Mon, 29 Apr 2019 20:15:00 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:28042 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729083AbfD3AO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 20:14:42 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z16so5949913pgv.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 17:14:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GDA8JMfknGP5KG93UbG+emkmgs24343xkd/w8E3YJLw=;
-        b=h+UKf1ortX1xrnwMUJiBiYOCr3dazOocpvzYYTc6KHUIYfW2hdzO7qqKdLB8HfNXt5
-         U4mcrMQ6Nszp7STqkmkdeFTIPTzeketUoYBdn84yWe55jkgOkGZhE/vd3bIAWWHvZ3IH
-         DHm0WggJAhN2BSBSy4Z3uq9eyhdFGEdfZVYGY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GDA8JMfknGP5KG93UbG+emkmgs24343xkd/w8E3YJLw=;
-        b=qVxK71d9aJjnbv8fYVjoALjkkhg49TTFyQFqz3+AuXkYMW3jq1Z6KNQnLSVHfXqjWm
-         3sGkhinZFEzsfzcSdZ5fsED4rLaSezNEb52aFYItHbhDs5dYBcJ5diW6EPl7kEdaSeWy
-         5aT2PQovWhUOspH88oXYZwzKO3dR6rpS6hahC/SeVbaudG+W424557KG4+oKH7CLO492
-         Kvjd9htaVczPlGytZUnQhkY2Z4neVCpFbfUGGXSeyNG1A1ykWdhrQImMqYpDkru17t+R
-         f23NeHD2nMNnf5OaT3fwDxPUFxwnQOjtTAUALL6Gap38VyD+ou0IzpQS9W3uOMUh7v2n
-         fEEw==
-X-Gm-Message-State: APjAAAWcfVP9FqAWW8CVErucpQlKYc3mINmrjvKB8wAuPuSPDeOJAYoR
-        3ODVo4z0+oi3wlC4eH00LGgzxg==
-X-Google-Smtp-Source: APXvYqwJ+AOqteyvwSZtMfTutc2GNkRtgv4UK++fQvpq/07AZP0jWUtejIEUk4aAUnVFNxCmnuYHCg==
-X-Received: by 2002:a65:534b:: with SMTP id w11mr3970072pgr.210.1556583281498;
-        Mon, 29 Apr 2019 17:14:41 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id 6sm11989984pfd.85.2019.04.29.17.14.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 17:14:41 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 17:14:40 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>
-Subject: Re: [PATCH v8] Bluetooth: btqca: inject command complete event
- during fw download
-Message-ID: <20190430001440.GI112750@google.com>
-References: <20190430001024.209688-1-mka@chromium.org>
+        Mon, 29 Apr 2019 20:14:59 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190430001455epoutp03c1ca58c177d2372977ff66ac5dda0d75~aGEJ7KT2v0353803538epoutp03Y
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 00:14:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190430001455epoutp03c1ca58c177d2372977ff66ac5dda0d75~aGEJ7KT2v0353803538epoutp03Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556583295;
+        bh=jgEiupZLaSbXRwWtJ4Jq3fVFlSGwme7HIaHJF92vfGM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=sYTEx7asANW+hxQ2MomNRkyfx6+u+P4nKqfYPdzpLfKODwVbAa/f83Xx/M9EEi7pj
+         qzRcML2F/Fa0eF96WYQfcOQu2/q6MysF5daZNlAb2c/2PbVYNr65Kdj1bgTJejKY9i
+         0dBRNRRtija9aXSK0A2MHuh9KV/pW/fV01VxMbYY=
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190430001451epcas1p427287f496b2816b9646bf4da504f3f8a~aGEGuRDSq2911229112epcas1p4s;
+        Tue, 30 Apr 2019 00:14:51 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        ED.88.04142.87397CC5; Tue, 30 Apr 2019 09:14:48 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190430001448epcas1p34fdfdf740532dfaf9697ec7fc3acbe16~aGEDZpNzC1158011580epcas1p3E;
+        Tue, 30 Apr 2019 00:14:48 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190430001448epsmtrp21bd6ecdb47ecf38cde5e74711bbcd49e~aGEDYu4x70555605556epsmtrp2R;
+        Tue, 30 Apr 2019 00:14:48 +0000 (GMT)
+X-AuditID: b6c32a36-cf9ff7000000102e-09-5cc793784af0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        35.42.03692.77397CC5; Tue, 30 Apr 2019 09:14:47 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190430001447epsmtip1acbc8dc5c14fdc78ca20c217bbdf2f62~aGEDMUIka2618226182epsmtip1E;
+        Tue, 30 Apr 2019 00:14:47 +0000 (GMT)
+Subject: Re: [PATCH v3 08/16] PM / devfreq: tegra: Clean up driver's probe /
+ remove
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <236a553b-ccb5-f8fd-d404-af78f04d6985@samsung.com>
+Date:   Tue, 30 Apr 2019 09:16:03 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190430001024.209688-1-mka@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190417222925.5815-9-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTURDHfT22BS0uVWBERVhjTDFIFyiuKOJBtFE/YIR4pLGudFOQXukW
+        BP2ClKhVURQ0Ws8gnkhAqAbrgSJKNMGgRDQoUaGJhuASbjBGbbsx8u333vxn/jPvjVQor8LC
+        pdkmG2M10QYCCxTde6aIjckva9Eor4+GUVUDPYgqdlaIqNaiPgnV7j6PUUMlzYhyDDsx6uP+
+        Gxg14b4ooo5Vv8VWBqgbuiqR+r6zS6IusXOY+pjrFlIP1UWkibfnLM9iaB1jjWRMmWZdtkmf
+        TGzYrF2jVSUqyRhyKbWEiDTRRiaZSN2YFrM22+BtiIjMow253qs0mmWJ2BXLreZcGxOZZWZt
+        yQRj0RksSy2LWdrI5pr0izPNxiRSqYxTeYU7c7Ied9RjFo8i/6lnWSHyRB1GAVLAE6C7+Szm
+        YznegMDOzT6MAr08iGDi/R3EB0YRlF7e+y+hvKtbwIseITjt4SS8qB/BSM0cH8/AM2DAfRLz
+        iWbivxEMus+IfQEhvg1Gnl4V+hjDo6Hx+we/9XQ8Ct6N9/jdZPgK6LMP+4uK8AXwsGNQ4OMQ
+        fCt8flEr5jXB8PKsR+TjAFwFz7ifEr5+GHR6Lgl4ngf2u+eEviYA/4OBq/eBNyD1HlKh800w
+        P80M6G1xSXgOhyHuEcbzPrj5shnjcw8hcDW2iflAPDReLfPXEeIKqHHH8l5BwI0cFfPlZXDo
+        gJxXz4f2L10CnmfBlYMOjJeoYexrSimKck4axjlpAOekAZz/vS4j0S0UylhYo55hSUvc5J+u
+        Q/5FjU5sQBWvNzYhXIqIaTI190IjF9N5bIGxCYFUSMyUqVuea+QyHV2wl7GatdZcA8M2IZX3
+        rU8Iw0Myzd61N9m0pCouPj6eSiATVSRJhMlqVq7RyHE9bWNyGMbCWP/lCaQB4YUoqadaeWpV
+        a/HCOM21lPGyLeP9r28XRtgS5ioy3pSOfd6xqOjTfl2lw3hkir2uOtUVq29rYB0O3PUjuDf0
+        wa+8xOH0oO6p3zhn+dbsV5tCGwsrzuh1uy9ot60u1rfXl1mT5le2htS2adPPdyqenLKt/5Wx
+        p+jIrrt/uOMbDqwriNk8SojYLJqMFlpZ+i/D+C8JvgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSnG755OMxBtcOm1us/viY0aJl1iIW
+        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
+        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBl7Lu2ma3giWbFwSfWDYxPFLsYOTkkBEwkptx9
+        xNTFyMUhJLCbUWJl5zlGiISkxLSLR5m7GDmAbGGJw4eLIWreMkqcWfqbDaRGWCBU4uOuSWwg
+        CRGBJiaJzw9bmEASzAKREv2PulkhOjYzSixa+wYswSagJbH/xQ2wbn4BRYmrPx6DbeMVsJN4
+        0/yFHcRmEVCV2HPtE1i9qECExJn3K1ggagQlTs58AmZzCphKHH73ix1imbrEn3mXmCFscYlb
+        T+ZDHSEv0bx1NvMERuFZSNpnIWmZhaRlFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS
+        9ZLzczcxgmNMS3MH4+Ul8YcYBTgYlXh4Pd4dixFiTSwrrsw9xCjBwawkwutx/GiMEG9KYmVV
+        alF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NTC1KLYLJMHJxSDYwOR3o9tx4z/sv0Zd+m
+        tb+7zx/Z9c14w3W/DdMEpqSxul+YGlvZmO27SP/1tywV1n1xLeHfz2pUea3au1/9FnPIEW2f
+        S+UBPVtcFxryTC/7/WzLns1rdn7nvHJw+kse76gtT/9d3nxdcWJ/1fxrhS9S9EPVJ1lcWr/A
+        cnH9Y+bM0PhNq53qPP2TlFiKMxINtZiLihMB3CI7Ja0CAAA=
+X-CMS-MailID: 20190430001448epcas1p34fdfdf740532dfaf9697ec7fc3acbe16
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190417224114epcas4p14b20e269f10a3e3bfea4c8ec4c3300b3
+References: <20190417222925.5815-1-digetx@gmail.com>
+        <CGME20190417224114epcas4p14b20e269f10a3e3bfea4c8ec4c3300b3@epcas4p1.samsung.com>
+        <20190417222925.5815-9-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 05:10:24PM -0700, Matthias Kaehlcke wrote:
-> From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Hi,
+
+On 19. 4. 18. 오전 7:29, Dmitry Osipenko wrote:
+> Reset hardware, disable ACTMON clock, release OPP's and handle all
+> possible error cases correctly, maintaining the correct tear down
+> order. Also use devm_platform_ioremap_resource() which is now available
+> in the kernel.
 > 
-> From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> 
-> Latest qualcomm chips are not sending an command complete event for
-> every firmware packet sent to chip. They only respond with a vendor
-> specific event for the last firmware packet. This optimization will
-> decrease the BT ON time. Due to this we are seeing a timeout error
-> message logs on the console during firmware download. Now we are
-> injecting a command complete event once we receive an vendor specific
-> event for the last RAM firmware packet.
-> 
-> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
-> Changes in v8:
-> - renamed QCA_HCI_CC_SUCCESS to QCA_HCI_CC_OPCODE
-> - use 0xFC00 as opcode of the injected event instead of 0
-> - added Matthias' tags from the v7 review
-> ---
->  drivers/bluetooth/btqca.c | 39 ++++++++++++++++++++++++++++++++++++++-
->  drivers/bluetooth/btqca.h |  3 +++
->  2 files changed, 41 insertions(+), 1 deletion(-)
+>  drivers/devfreq/tegra-devfreq.c | 83 +++++++++++++++++++--------------
+>  1 file changed, 47 insertions(+), 36 deletions(-)
 > 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index cc12eecd9e4d..ef765ea881b8 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -144,6 +144,7 @@ static void qca_tlv_check_data(struct rome_config *config,
->  		 * In case VSE is skipped, only the last segment is acked.
->  		 */
->  		config->dnld_mode = tlv_patch->download_mode;
-> +		config->dnld_type = config->dnld_mode;
->  
->  		BT_DBG("Total Length           : %d bytes",
->  		       le32_to_cpu(tlv_patch->total_size));
-> @@ -264,6 +265,31 @@ static int qca_tlv_send_segment(struct hci_dev *hdev, int seg_size,
->  	return err;
->  }
->  
-> +static int qca_inject_cmd_complete_event(struct hci_dev *hdev)
-> +{
-> +	struct hci_event_hdr *hdr;
-> +	struct hci_ev_cmd_complete *evt;
-> +	struct sk_buff *skb;
-> +
-> +	skb = bt_skb_alloc(sizeof(*hdr) + sizeof(*evt) + 1, GFP_KERNEL);
-> +	if (!skb)
-> +		return -ENOMEM;
-> +
-> +	hdr = skb_put(skb, sizeof(*hdr));
-> +	hdr->evt = HCI_EV_CMD_COMPLETE;
-> +	hdr->plen = sizeof(*evt) + 1;
-> +
-> +	evt = skb_put(skb, sizeof(*evt));
-> +	evt->ncmd = 1;
-> +	evt->opcode = HCI_OP_NOP;
-> +
-> +	skb_put_u8(skb, QCA_HCI_CC_SUCCESS);
-> +
-> +	hci_skb_pkt_type(skb) = HCI_EVENT_PKT;
-> +
-> +	return hci_recv_frame(hdev, skb);
-> +}
-> +
->  static int qca_download_firmware(struct hci_dev *hdev,
->  				  struct rome_config *config)
+> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
+> index ce1eb97a2090..70946e432d3c 100644
+> --- a/drivers/devfreq/tegra-devfreq.c
+> +++ b/drivers/devfreq/tegra-devfreq.c
+> @@ -610,7 +610,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
 >  {
-> @@ -297,11 +323,22 @@ static int qca_download_firmware(struct hci_dev *hdev,
->  		ret = qca_tlv_send_segment(hdev, segsize, segment,
->  					    config->dnld_mode);
->  		if (ret)
-> -			break;
-> +			goto out;
+>  	struct tegra_devfreq *tegra;
+>  	struct tegra_devfreq_device *dev;
+> -	struct resource *res;
+>  	unsigned int i;
+>  	unsigned long rate;
+>  	int err;
+> @@ -619,9 +618,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  	if (!tegra)
+>  		return -ENOMEM;
 >  
->  		segment += segsize;
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -
+> -	tegra->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	tegra->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(tegra->regs))
+>  		return PTR_ERR(tegra->regs);
+>  
+> @@ -643,11 +640,10 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  		return PTR_ERR(tegra->emc_clock);
 >  	}
 >  
-> +	/* Latest qualcomm chipsets are not sending a command complete event
-> +	 * for every fw packet sent. They only respond with a vendor specific
-> +	 * event for the last packet. This optimization in the chip will
-> +	 * decrease the BT in initialization time. Here we will inject a command
-> +	 * complete event to avoid a command timeout error message.
-> +	 */
-> +	if ((config->dnld_type == ROME_SKIP_EVT_VSE_CC ||
-> +	    config->dnld_type == ROME_SKIP_EVT_VSE))
-> +		return qca_inject_cmd_complete_event(hdev);
+> -	tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
+> -	err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
+> -	if (err) {
+> -		dev_err(&pdev->dev,
+> -			"Failed to register rate change notifier\n");
+> +	tegra->irq = platform_get_irq(pdev, 0);
+> +	if (tegra->irq < 0) {
+> +		err = tegra->irq;
+> +		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
+>  		return err;
+>  	}
+>  
+> @@ -678,54 +674,69 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  
+>  	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
+>  		rate = clk_round_rate(tegra->emc_clock, rate);
+> -		dev_pm_opp_add(&pdev->dev, rate, 0);
+> -	}
+>  
+> -	tegra->irq = platform_get_irq(pdev, 0);
+> -	if (tegra->irq < 0) {
+> -		err = tegra->irq;
+> -		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
+> -		return err;
+> +		err = dev_pm_opp_add(&pdev->dev, rate, 0);
+> +		if (err) {
+> +			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
+> +			goto remove_opps;
+> +		}
+>  	}
+>  
+>  	platform_set_drvdata(pdev, tegra);
+>  
+> +	tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
+> +	err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
+> +	if (err) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to register rate change notifier\n");
+> +		goto remove_opps;
+> +	}
 > +
-> +out:
->  	release_firmware(fw);
->  
->  	return ret;
-> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-> index 4c4fe2b5b7b7..595abcdaed2d 100644
-> --- a/drivers/bluetooth/btqca.h
-> +++ b/drivers/bluetooth/btqca.h
-> @@ -41,6 +41,8 @@
->  #define QCA_WCN3990_POWERON_PULSE	0xFC
->  #define QCA_WCN3990_POWEROFF_PULSE	0xC0
->  
-> +#define QCA_HCI_CC_OPCODE		0xFC00
+> +	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
+> +	tegra->devfreq = devfreq_add_device(&pdev->dev,
+> +					    &tegra_devfreq_profile,
+> +					    "tegra_actmon",
+> +					    NULL);
+> +	if (IS_ERR(tegra->devfreq)) {
+> +		err = PTR_ERR(tegra->devfreq);
+> +		goto unreg_notifier;
+> +	}
 > +
->  enum qca_baudrate {
->  	QCA_BAUDRATE_115200 	= 0,
->  	QCA_BAUDRATE_57600,
-> @@ -82,6 +84,7 @@ struct rome_config {
->  	char fwname[64];
->  	uint8_t user_baud_rate;
->  	enum rome_tlv_dnld_mode dnld_mode;
-> +	enum rome_tlv_dnld_mode dnld_type;
->  };
+>  	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
+>  					actmon_thread_isr, IRQF_ONESHOT,
+>  					"tegra-devfreq", tegra);
+>  	if (err) {
+> -		dev_err(&pdev->dev, "Interrupt request failed\n");
+> -		return err;
+> +		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
+> +		goto remove_devfreq;
+>  	}
 >  
->  struct edl_event_hdr {
+> -	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
+> -	tegra->devfreq = devm_devfreq_add_device(&pdev->dev,
+> -						 &tegra_devfreq_profile,
+> -						 "tegra_actmon",
+> -						 NULL);
+> -
+>  	return 0;
+> +
+> +remove_devfreq:
+> +	devfreq_remove_device(tegra->devfreq);
+> +
+> +unreg_notifier:
+> +	clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
+> +
+> +remove_opps:
+> +	dev_pm_opp_remove_all_dynamic(&pdev->dev);
+> +
+> +	reset_control_reset(tegra->reset);
+> +	clk_disable_unprepare(tegra->clock);
+> +
+> +	return err;
+>  }
+>  
+>  static int tegra_devfreq_remove(struct platform_device *pdev)
+>  {
+>  	struct tegra_devfreq *tegra = platform_get_drvdata(pdev);
+> -	int irq = platform_get_irq(pdev, 0);
+> -	u32 val;
+> -	unsigned int i;
+> -
+> -	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
+> -		val = device_readl(&tegra->devices[i], ACTMON_DEV_CTRL);
+> -		val &= ~ACTMON_DEV_CTRL_ENB;
+> -		device_writel(&tegra->devices[i], val, ACTMON_DEV_CTRL);
+> -	}
+> -
+> -	actmon_write_barrier(tegra);
+>  
+> -	devm_free_irq(&pdev->dev, irq, tegra);
+> +	devfreq_remove_device(tegra->devfreq);
+> +	dev_pm_opp_remove_all_dynamic(&pdev->dev);
+>  
+>  	clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
 
-In the v7 review (https://lore.kernel.org/patchwork/patch/1028118/) 3
-months ago Marcel said he isn't convinced that this solution is
-needed, but didn't follow up on the discussion, so this is the best we
-have at the moment. Let's please drive it towards a solution.
+nitpick: the probe function  has following call sequence if error case,
+First, clk_notifier_unregister()
+Second, dev_pm_opp_remove_all_dynamic()
 
-Thanks
+If possible, you better to keep the same sequence
+in the tegra_devfreq_remove(). But, it is just opinion.
+If you think that it doesn't break the routine of device removal,
+jut keep this code.
 
-Matthias
+>  
+> +	reset_control_reset(tegra->reset);
+>  	clk_disable_unprepare(tegra->clock);
+>  
+>  	return 0;
+> 
+
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
