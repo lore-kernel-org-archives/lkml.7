@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD80C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBB7C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CBE21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E2E217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625038;
-	bh=62l78q4y2l6657LqOMaKarUovQIFpRJTX+xk06Kx7aI=;
+	s=default; t=1556625044;
+	bh=aQ1rL1k9S06B0KOKHQbHGPsnAnrmOYzAs+UycxW6/1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZ+m4ZSYUMgkNV+2MREFMhHkq9P5ITRPiCPo46HoOeTCsC3lVpWr+UXxAwmHhS1t9
-	 QJIePJIQVXR7Gl1Xbq8xukY8tAWQJ80i6Qnqnzm64T/ygvl8xUt9BhpFTlRZy9f1Sh
-	 U9mDXmU+5rKNypgcQ/5U5bGCte7ccpzF2CNehDq4=
+	b=nYppd9smIkr67Dx99Tg7QN02eUiEGp/SLFDWmUmUQmWemcB1qtHmZej3scfkczOx7
+	 5oT3hcnWR6Jk2a5xxNWpIU+kKB+SNKuP0aQ02fUu3wESdfQV1Bteg2zbEltRK6/FRP
+	 hN7SiZmm77DwSQvnB688Cepd/LdoekYL/PV76sbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbfD3Luh (ORCPT
+        id S1731229AbfD3Lum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:50:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731206AbfD3Lub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:50:31 -0400
+        id S1730873AbfD3Lug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB1FF2054F;
-        Tue, 30 Apr 2019 11:50:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 343AC21734;
+        Tue, 30 Apr 2019 11:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625030;
-        bh=62l78q4y2l6657LqOMaKarUovQIFpRJTX+xk06Kx7aI=;
+        s=default; t=1556625035;
+        bh=aQ1rL1k9S06B0KOKHQbHGPsnAnrmOYzAs+UycxW6/1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lVtO0hhCgBu1Pd1x5t50S48CcHZEHXHFa1+podDSthnpYu/Xx1d8y8qEI5lxYIVpl
-         pJY+XOfRA26GlHgC0BFgEYbLI8J93HpOyC6CJBUUQfJx/FZEHy3BHcH0xSwv2QJ0FW
-         mbeyzSIVYFC21sxOUlyok34beELh8/1arkuW8AvI=
+        b=Aqyk8UcU7448x19Yk5Dc38WX/OnGWdYs9bC+p+TLL1Zv1DGLIUba7BY1N+6/p/Q7W
+         SfU+3LQeQCZNlmSL2ZN2fcoONxQiZOCPCgvMlHTjxvIUwuJRYIEzqq6ri2/uzh/9vi
+         4m4Spg5z8vtrRO4BoHBqOsZlu3z+iYtD1rKvg73o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.0 65/89] aio: fold lookup_kiocb() into its sole caller
-Date:   Tue, 30 Apr 2019 13:38:56 +0200
-Message-Id: <20190430113612.765500173@linuxfoundation.org>
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.0 49/89] loop: do not print warn message if partition scan is successful
+Date:   Tue, 30 Apr 2019 13:38:40 +0200
+Message-Id: <20190430113611.999291753@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,62 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-commit 833f4154ed560232120bc475935ee1d6a20e159f upstream.
+commit 40853d6fc619a6fd3d3177c3973a2eac9b598a80 upstream.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Do not print warn message when the partition scan returns 0.
+
+Fixes: d57f3374ba48 ("loop: Move special partition reread handling in loop_clr_fd()")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |   29 +++++++----------------------
- 1 file changed, 7 insertions(+), 22 deletions(-)
+ drivers/block/loop.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -2002,24 +2002,6 @@ COMPAT_SYSCALL_DEFINE3(io_submit, compat
- }
- #endif
- 
--/* lookup_kiocb
-- *	Finds a given iocb for cancellation.
-- */
--static struct aio_kiocb *
--lookup_kiocb(struct kioctx *ctx, struct iocb __user *iocb)
--{
--	struct aio_kiocb *kiocb;
--
--	assert_spin_locked(&ctx->ctx_lock);
--
--	/* TODO: use a hash or array, this sucks. */
--	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
--		if (kiocb->ki_user_iocb == iocb)
--			return kiocb;
--	}
--	return NULL;
--}
--
- /* sys_io_cancel:
-  *	Attempts to cancel an iocb previously passed to io_submit.  If
-  *	the operation is successfully cancelled, the resulting event is
-@@ -2048,10 +2030,13 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
- 		return -EINVAL;
- 
- 	spin_lock_irq(&ctx->ctx_lock);
--	kiocb = lookup_kiocb(ctx, iocb);
--	if (kiocb) {
--		ret = kiocb->ki_cancel(&kiocb->rw);
--		list_del_init(&kiocb->ki_list);
-+	/* TODO: use a hash or array, this sucks. */
-+	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
-+		if (kiocb->ki_user_iocb == iocb) {
-+			ret = kiocb->ki_cancel(&kiocb->rw);
-+			list_del_init(&kiocb->ki_list);
-+			break;
-+		}
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1111,8 +1111,9 @@ out_unlock:
+ 			err = __blkdev_reread_part(bdev);
+ 		else
+ 			err = blkdev_reread_part(bdev);
+-		pr_warn("%s: partition scan of loop%d failed (rc=%d)\n",
+-			__func__, lo_number, err);
++		if (err)
++			pr_warn("%s: partition scan of loop%d failed (rc=%d)\n",
++				__func__, lo_number, err);
+ 		/* Device is gone, no point in returning error */
+ 		err = 0;
  	}
- 	spin_unlock_irq(&ctx->ctx_lock);
- 
 
 
