@@ -2,114 +2,215 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6640FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ABCC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9E821655
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jsqMSj9X"
+	by mail.kernel.org (Postfix) with ESMTP id D9AF720578
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 02:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfD3CzF (ORCPT
+        id S1729985AbfD3CzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 22:55:05 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46040 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729803AbfD3CzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 22:55:04 -0400
-Received: by mail-ot1-f65.google.com with SMTP id a10so1788297otl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 19:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bt+90qKJU51hc2zj+wyErRDhxM+YorzWX9KYuojMxOI=;
-        b=jsqMSj9X3fRj0YFL5jSMd0EkQP21EHUJHAXMgNHmoL+P90pUJ5Sx5iIkYBdG9IbkdK
-         N/lC8T5N51Scf9+lteOZqHg11GKw1Zw1YYZkwUh0XE6gQntOv49m/ZOnjnkjEK+RW4Qp
-         tnmIetz6h7k7KLL9Wdf5/HtGtxljTzrhtdbO7E2Qr9Mg1BxBU+jVuNPahRgP/m8xLeCc
-         2KlGk+efpxRx1HbWHj89P8m4xoTFNguyNsVSdGBmDnwIYot26G9zwYgYD2XnarsXbOib
-         CPSFjAi1ahzmuZ8yTK+aPPgJIA5DsJa5OdrdOO+TDiwjuJ/0C8poIZNt+ZFf1l7Jiszz
-         rgag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bt+90qKJU51hc2zj+wyErRDhxM+YorzWX9KYuojMxOI=;
-        b=Lr+VYLrmHPvSAwbK+XfAfH8/+UAqc1Ng/U715Tn4V3x0xMTLgmT2zz0drI9Du8BABG
-         Ypmvmc6i4rQei00Ui5/PGsGzI3x/39hjU7XUkZIwHbc8IEun+XcjPEcVtJpFvphE570l
-         +RSFPBpMt+Pqeiuhimeoe8lSMEvJe13/AOj8TL2GUa34u+imU+d/o2MauR5A7pJOD+YZ
-         OWwjwvxzEShsmQQya5t5i7u2ETAJb+7a3H0t+vQBu+3FwgNKt8qkUBrcLSX8uboaO4O9
-         1mQwpSzhC8ytr2Nc+QxcgidCOV/Z8KWCQgPxFVZwTtZUSMo3EzBv0JYa/szOfGURDrfg
-         MNfg==
-X-Gm-Message-State: APjAAAVY8t/MqrLhqJfp0Ied33o60OQPvqGvAh5qRhdVBxbPGQYluvzU
-        KgyuXKe2Xt4ty2OfNje2aeO+CWErar5czT77b6mlPA==
-X-Google-Smtp-Source: APXvYqza1fSMSoBvnt0Jo4oJAm75w947jdC8tfEOFgO4J39P16MQxMTnMDONNOU7uqQ8ZQ2JCrF+Y/d3FabU0N0gWDE=
-X-Received: by 2002:a05:6830:b:: with SMTP id c11mr10056069otp.281.1556592903791;
- Mon, 29 Apr 2019 19:55:03 -0700 (PDT)
+        Mon, 29 Apr 2019 22:55:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34186 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729803AbfD3CzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 22:55:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DFE52ACBC;
+        Tue, 30 Apr 2019 02:55:04 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 81BE81E3BEC; Tue, 30 Apr 2019 04:55:01 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 04:55:01 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>,
+        axboe@kernel.dk, dvyukov@google.com, jack@suse.cz,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        penguin-kernel@i-love.sakura.ne.jp, syzkaller-bugs@googlegroups.com
+Subject: Re: INFO: task hung in __get_super
+Message-ID: <20190430025501.GB6740@quack2.suse.cz>
+References: <001a113ed5540f411c0568cc8418@google.com>
+ <0000000000002cd22305879b22c4@google.com>
+ <20190428185109.GD23075@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20190429122512.59242-1-weiyongjun1@huawei.com>
-In-Reply-To: <20190429122512.59242-1-weiyongjun1@huawei.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 30 Apr 2019 10:54:51 +0800
-Message-ID: <CAMz4kuJtMAyjbPR0Yf_FN1fhDwSi5=0WAgD_BNEuTB5GhcTYxQ@mail.gmail.com>
-Subject: Re: [PATCH -next] ASoC: sprd: Fix return value check in sprd_mcdt_probe()
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190428185109.GD23075@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 at 20:15, Wei Yongjun <weiyongjun1@huawei.com> wrote:
->
-> In case of error, the function devm_ioremap_resource() returns ERR_PTR()
-> and never returns NULL. The NULL test in the return value check should
-> be replaced with IS_ERR().
->
-> Fixes: d7bff893e04f ("ASoC: sprd: Add Spreadtrum multi-channel data transfer support")
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+On Sun 28-04-19 19:51:09, Al Viro wrote:
+> On Sun, Apr 28, 2019 at 11:14:06AM -0700, syzbot wrote:
+> >  down_read+0x49/0x90 kernel/locking/rwsem.c:26
+> >  __get_super.part.0+0x203/0x2e0 fs/super.c:788
+> >  __get_super include/linux/spinlock.h:329 [inline]
+> >  get_super+0x2e/0x50 fs/super.c:817
+> >  fsync_bdev+0x19/0xd0 fs/block_dev.c:525
+> >  invalidate_partition+0x36/0x60 block/genhd.c:1581
+> >  drop_partitions block/partition-generic.c:443 [inline]
+> >  rescan_partitions+0xef/0xa20 block/partition-generic.c:516
+> >  __blkdev_reread_part+0x1a2/0x230 block/ioctl.c:173
+> >  blkdev_reread_part+0x27/0x40 block/ioctl.c:193
+> >  loop_reread_partitions+0x1c/0x40 drivers/block/loop.c:633
+> >  loop_set_status+0xe57/0x1380 drivers/block/loop.c:1296
+> >  loop_set_status64+0xc2/0x120 drivers/block/loop.c:1416
+> >  lo_ioctl+0x8fc/0x2150 drivers/block/loop.c:1559
+> >  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
+> >  blkdev_ioctl+0x6f2/0x1d10 block/ioctl.c:605
+> >  block_ioctl+0xee/0x130 fs/block_dev.c:1933
+> >  vfs_ioctl fs/ioctl.c:46 [inline]
+> >  file_ioctl fs/ioctl.c:509 [inline]
+> >  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+> >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+> >  __do_sys_ioctl fs/ioctl.c:720 [inline]
+> >  __se_sys_ioctl fs/ioctl.c:718 [inline]
+> >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+> >  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> ioctl(..., BLKRRPART) blocked on ->s_umount in __get_super().
+> The trouble is, the only things holding ->s_umount appears to be
+> these:
+> 
+> > 2 locks held by syz-executor274/11716:
+> >  #0: 00000000a19e2025 (&type->s_umount_key#38/1){+.+.}, at:
+> > alloc_super+0x158/0x890 fs/super.c:228
+> >  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl
+> > drivers/block/loop.c:1514 [inline]
+> >  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150
+> > drivers/block/loop.c:1572
+> 
+> > 2 locks held by syz-executor274/11717:
+> >  #0: 00000000e185c083 (&type->s_umount_key#38/1){+.+.}, at:
+> > alloc_super+0x158/0x890 fs/super.c:228
+> >  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl
+> > drivers/block/loop.c:1514 [inline]
+> >  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150
+> > drivers/block/loop.c:1572
+> 
+> ... and that's bollocks.  ->s_umount held there is that on freshly allocated
+> superblock.  It *MUST* be in mount(2); no other syscall should be able to
+> call alloc_super() in the first place.  So what the hell is that doing
+> trying to call lo_ioctl() inside mount(2)?  Something like isofs attempting
+> cdrom ioctls on the underlying device?
 
-Thanks for fixing my mistake.
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Actually UDF also calls CDROMMULTISESSION ioctl during mount. So I could
+see how we get to lo_simple_ioctl() and indeed that would acquire
+loop_ctl_mutex under s_umount which is the other way around than in
+BLKRRPART ioctl. 
 
-> ---
->  sound/soc/sprd/sprd-mcdt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/sound/soc/sprd/sprd-mcdt.c b/sound/soc/sprd/sprd-mcdt.c
-> index 28f5e649733d..e9318d7a4810 100644
-> --- a/sound/soc/sprd/sprd-mcdt.c
-> +++ b/sound/soc/sprd/sprd-mcdt.c
-> @@ -951,8 +951,8 @@ static int sprd_mcdt_probe(struct platform_device *pdev)
->
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         mcdt->base = devm_ioremap_resource(&pdev->dev, res);
-> -       if (!mcdt->base)
-> -               return -ENOMEM;
-> +       if (IS_ERR(mcdt->base))
-> +               return PTR_ERR(mcdt->base);
->
->         mcdt->dev = &pdev->dev;
->         spin_lock_init(&mcdt->lock);
->
->
->
+> Why do we have loop_func_table->ioctl(), BTW?  All in-tree instances are
+> either NULL or return -EINVAL unconditionally.  Considering that the
+> caller is
+>                 err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
+> we could bloody well just get rid of cryptoloop_ioctl() (the only
+> non-NULL instance) and get rid of calling lo_simple_ioctl() in
+> lo_ioctl() switch's default.
 
+Yeah, you're right. And if we push the patch a bit further to not take
+loop_ctl_mutex for invalid ioctl number, that would fix the problem. I
+can send a fix.
 
+								Honza
+
+> 
+> Something like this:
+> 
+> diff --git a/drivers/block/cryptoloop.c b/drivers/block/cryptoloop.c
+> index 254ee7d54e91..f16468a562f5 100644
+> --- a/drivers/block/cryptoloop.c
+> +++ b/drivers/block/cryptoloop.c
+> @@ -167,12 +167,6 @@ cryptoloop_transfer(struct loop_device *lo, int cmd,
+>  }
+>  
+>  static int
+> -cryptoloop_ioctl(struct loop_device *lo, int cmd, unsigned long arg)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+> -static int
+>  cryptoloop_release(struct loop_device *lo)
+>  {
+>  	struct crypto_sync_skcipher *tfm = lo->key_data;
+> @@ -188,7 +182,6 @@ cryptoloop_release(struct loop_device *lo)
+>  static struct loop_func_table cryptoloop_funcs = {
+>  	.number = LO_CRYPT_CRYPTOAPI,
+>  	.init = cryptoloop_init,
+> -	.ioctl = cryptoloop_ioctl,
+>  	.transfer = cryptoloop_transfer,
+>  	.release = cryptoloop_release,
+>  	.owner = THIS_MODULE
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index bf1c61cab8eb..2ec162b80562 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -955,7 +955,6 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+>  	lo->lo_flags = lo_flags;
+>  	lo->lo_backing_file = file;
+>  	lo->transfer = NULL;
+> -	lo->ioctl = NULL;
+>  	lo->lo_sizelimit = 0;
+>  	lo->old_gfp_mask = mapping_gfp_mask(mapping);
+>  	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
+> @@ -1064,7 +1063,6 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+>  
+>  	loop_release_xfer(lo);
+>  	lo->transfer = NULL;
+> -	lo->ioctl = NULL;
+>  	lo->lo_device = NULL;
+>  	lo->lo_encryption = NULL;
+>  	lo->lo_offset = 0;
+> @@ -1262,7 +1260,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  	if (!xfer)
+>  		xfer = &none_funcs;
+>  	lo->transfer = xfer->transfer;
+> -	lo->ioctl = xfer->ioctl;
+>  
+>  	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
+>  	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
+> @@ -1525,7 +1522,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
+>  		err = loop_set_block_size(lo, arg);
+>  		break;
+>  	default:
+> -		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
+> +		err = -EINVAL;
+>  	}
+>  	mutex_unlock(&loop_ctl_mutex);
+>  	return err;
+> @@ -1567,10 +1564,9 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+>  	case LOOP_SET_BLOCK_SIZE:
+>  		if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
+>  			return -EPERM;
+> -		/* Fall through */
+> +		return lo_simple_ioctl(lo, cmd, arg);
+>  	default:
+> -		err = lo_simple_ioctl(lo, cmd, arg);
+> -		break;
+> +		return -EINVAL;
+>  	}
+>  
+>  	return err;
+> diff --git a/drivers/block/loop.h b/drivers/block/loop.h
+> index af75a5ee4094..56a9a0c161d7 100644
+> --- a/drivers/block/loop.h
+> +++ b/drivers/block/loop.h
+> @@ -84,7 +84,6 @@ struct loop_func_table {
+>  	int (*init)(struct loop_device *, const struct loop_info64 *); 
+>  	/* release is called from loop_unregister_transfer or clr_fd */
+>  	int (*release)(struct loop_device *); 
+> -	int (*ioctl)(struct loop_device *, int cmd, unsigned long arg);
+>  	struct module *owner;
+>  }; 
+>  
 -- 
-Baolin Wang
-Best Regards
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
