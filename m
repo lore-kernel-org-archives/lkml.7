@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FD0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B56C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BB321744
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7417A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624809;
-	bh=hl6y8IpcADeWZh/TJFJvpqeR6jds7Xsld/cDqmw6QaI=;
+	s=default; t=1556624814;
+	bh=7Y1eJJsMscOudnHihgQjekD0aMOHcc1Kjqxix0XwBZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJYBAvhTCQMUp7j5lPZLsZWYTQb0ysIqXxEsHwk1TpItZtcC5ZZlySzCJTvwpiYLE
-	 5BOb8FZX2wcvsYyYIV6+kXK4l3J2FSEAyoYh13+YKPirDpOwbQwpsF9TpaKeRlOlOK
-	 KT6rZim9A06wCvcxvav8E9sPkhayzSLnCuvCLU+g=
+	b=VnKBhGxwuX/IxhsByB3wgl8106SZXHSH5Iifj5VlEp8g8yZZJTCqJJHpNxhjvI0K0
+	 l2GW7B9oIpYwBnYV8ly7KMQdAkucy4pTENSeEAHdlxsQ+OUFALe9jrRL6kBFulPOLF
+	 iaO9SsHK9Q3gRoH+N0yehkiBiKcjQv4fZJsSPmtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbfD3Lqs (ORCPT
+        id S1730622AbfD3Lqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:46:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59780 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:46:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730588AbfD3Lqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:44 -0400
+        id S1727873AbfD3Lqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD34F21670;
-        Tue, 30 Apr 2019 11:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 656DE21707;
+        Tue, 30 Apr 2019 11:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624803;
-        bh=hl6y8IpcADeWZh/TJFJvpqeR6jds7Xsld/cDqmw6QaI=;
+        s=default; t=1556624805;
+        bh=7Y1eJJsMscOudnHihgQjekD0aMOHcc1Kjqxix0XwBZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JVN1CFS27vjxlEVZO9qVv6qjBbfHLGSlpmp9lxpzAj01fIrOXnXJitc53RUx9jvci
-         obfGorEM2Sm6M0EKMEE7Ks8ychKlcpgHFRdLw7p90SX3p9/v6xF5D8Hur+9g/p0f70
-         s977+IHQd9G1zbg7iW49+Vd+DDz7COf8r8+1MdU0=
+        b=Vb784qi1Z+P2OIhtv2nQsmZFSSD2ddiVPU+tcjk7n3K7yS/Ms5WAWIRqjQjqZVEWh
+         yp/lDwy1vxoeWMBg0mho4A/VMwuZaN+klui2nt5fVQHfSlR/NSlEQsKf53iQCyTAZ5
+         Noaqv0vO2Jcznc16N+JZmozy1rTQRYExktqwzVMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 077/100] aio: keep io_event in aio_kiocb
-Date:   Tue, 30 Apr 2019 13:38:46 +0200
-Message-Id: <20190430113612.367079427@linuxfoundation.org>
+Subject: [PATCH 4.19 078/100] aio: store event at final iocb_put()
+Date:   Tue, 30 Apr 2019 13:38:47 +0200
+Message-Id: <20190430113612.424843050@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,104 +61,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit a9339b7855094ba11a97e8822ae038135e879e79 upstream.
+commit 2bb874c0d873d13bd9b9b9c6d7b7c4edab18c8b4 upstream.
 
-We want to separate forming the resulting io_event from putting it
-into the ring buffer.
+Instead of having aio_complete() set ->ki_res.{res,res2}, do that
+explicitly in its callers, drop the reference (as aio_complete()
+used to do) and delay the rest until the final iocb_put().
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |   31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+ fs/aio.c |   33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
 --- a/fs/aio.c
 +++ b/fs/aio.c
-@@ -198,8 +198,7 @@ struct aio_kiocb {
- 	struct kioctx		*ki_ctx;
- 	kiocb_cancel_fn		*ki_cancel;
- 
--	struct iocb __user	*ki_user_iocb;	/* user's aiocb */
--	__u64			ki_user_data;	/* user's data for completion */
-+	struct io_event		ki_res;
- 
- 	struct list_head	ki_list;	/* the aio core uses this
- 						 * for cancellation */
-@@ -1078,15 +1077,6 @@ static inline void iocb_put(struct aio_k
- 		iocb_destroy(iocb);
+@@ -1071,16 +1071,10 @@ static inline void iocb_destroy(struct a
+ 	kmem_cache_free(kiocb_cachep, iocb);
  }
  
--static void aio_fill_event(struct io_event *ev, struct aio_kiocb *iocb,
--			   long res, long res2)
+-static inline void iocb_put(struct aio_kiocb *iocb)
 -{
--	ev->obj = (u64)(unsigned long)iocb->ki_user_iocb;
--	ev->data = iocb->ki_user_data;
--	ev->res = res;
--	ev->res2 = res2;
+-	if (refcount_dec_and_test(&iocb->ki_refcnt))
+-		iocb_destroy(iocb);
 -}
 -
  /* aio_complete
   *	Called when the io request on the given iocb is complete.
   */
-@@ -1098,6 +1088,8 @@ static void aio_complete(struct aio_kioc
+-static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
++static void aio_complete(struct aio_kiocb *iocb)
+ {
+ 	struct kioctx	*ctx = iocb->ki_ctx;
+ 	struct aio_ring	*ring;
+@@ -1088,8 +1082,6 @@ static void aio_complete(struct aio_kioc
  	unsigned tail, pos, head;
  	unsigned long	flags;
  
-+	iocb->ki_res.res = res;
-+	iocb->ki_res.res2 = res2;
+-	iocb->ki_res.res = res;
+-	iocb->ki_res.res2 = res2;
  	/*
  	 * Add a completion event to the ring buffer. Must be done holding
  	 * ctx->completion_lock to prevent other code from messing with the tail
-@@ -1114,14 +1106,14 @@ static void aio_complete(struct aio_kioc
- 	ev_page = kmap_atomic(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
- 	event = ev_page + pos % AIO_EVENTS_PER_PAGE;
+@@ -1155,7 +1147,14 @@ static void aio_complete(struct aio_kioc
  
--	aio_fill_event(event, iocb, res, res2);
-+	*event = iocb->ki_res;
+ 	if (waitqueue_active(&ctx->wait))
+ 		wake_up(&ctx->wait);
+-	iocb_put(iocb);
++}
++
++static inline void iocb_put(struct aio_kiocb *iocb)
++{
++	if (refcount_dec_and_test(&iocb->ki_refcnt)) {
++		aio_complete(iocb);
++		iocb_destroy(iocb);
++	}
+ }
  
- 	kunmap_atomic(ev_page);
- 	flush_dcache_page(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
- 
--	pr_debug("%p[%u]: %p: %p %Lx %lx %lx\n",
--		 ctx, tail, iocb, iocb->ki_user_iocb, iocb->ki_user_data,
--		 res, res2);
-+	pr_debug("%p[%u]: %p: %p %Lx %Lx %Lx\n", ctx, tail, iocb,
-+		 (void __user *)(unsigned long)iocb->ki_res.obj,
-+		 iocb->ki_res.data, iocb->ki_res.res, iocb->ki_res.res2);
- 
- 	/* after flagging the request as done, we
- 	 * must never even look at it again
-@@ -1838,8 +1830,10 @@ static int __io_submit_one(struct kioctx
- 		goto out_put_req;
+ /* aio_read_events_ring
+@@ -1429,7 +1428,9 @@ static void aio_complete_rw(struct kiocb
+ 		file_end_write(kiocb->ki_filp);
  	}
  
--	req->ki_user_iocb = user_iocb;
--	req->ki_user_data = iocb->aio_data;
-+	req->ki_res.obj = (u64)(unsigned long)user_iocb;
-+	req->ki_res.data = iocb->aio_data;
-+	req->ki_res.res = 0;
-+	req->ki_res.res2 = 0;
+-	aio_complete(iocb, res, res2);
++	iocb->ki_res.res = res;
++	iocb->ki_res.res2 = res2;
++	iocb_put(iocb);
+ }
  
- 	switch (iocb->aio_lio_opcode) {
- 	case IOCB_CMD_PREAD:
-@@ -2009,6 +2003,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
- 	struct aio_kiocb *kiocb;
- 	int ret = -EINVAL;
- 	u32 key;
-+	u64 obj = (u64)(unsigned long)iocb;
+ static int aio_prep_rw(struct kiocb *req, const struct iocb *iocb)
+@@ -1577,11 +1578,10 @@ static ssize_t aio_write(struct kiocb *r
  
- 	if (unlikely(get_user(key, &iocb->aio_key)))
- 		return -EFAULT;
-@@ -2022,7 +2017,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
- 	spin_lock_irq(&ctx->ctx_lock);
- 	/* TODO: use a hash or array, this sucks. */
- 	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
--		if (kiocb->ki_user_iocb == iocb) {
-+		if (kiocb->ki_res.obj == obj) {
- 			ret = kiocb->ki_cancel(&kiocb->rw);
- 			list_del_init(&kiocb->ki_list);
- 			break;
+ static void aio_fsync_work(struct work_struct *work)
+ {
+-	struct fsync_iocb *req = container_of(work, struct fsync_iocb, work);
+-	int ret;
++	struct aio_kiocb *iocb = container_of(work, struct aio_kiocb, fsync.work);
+ 
+-	ret = vfs_fsync(req->file, req->datasync);
+-	aio_complete(container_of(req, struct aio_kiocb, fsync), ret, 0);
++	iocb->ki_res.res = vfs_fsync(iocb->fsync.file, iocb->fsync.datasync);
++	iocb_put(iocb);
+ }
+ 
+ static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+@@ -1602,7 +1602,8 @@ static int aio_fsync(struct fsync_iocb *
+ 
+ static inline void aio_poll_complete(struct aio_kiocb *iocb, __poll_t mask)
+ {
+-	aio_complete(iocb, mangle_poll(mask), 0);
++	iocb->ki_res.res = mangle_poll(mask);
++	iocb_put(iocb);
+ }
+ 
+ static void aio_poll_complete_work(struct work_struct *work)
 
 
