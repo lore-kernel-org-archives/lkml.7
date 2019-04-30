@@ -2,80 +2,121 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8107C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFC4C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F0C20651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B3120652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:58:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMo4Nruz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfD3O50 (ORCPT
+        id S1726579AbfD3O6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:57:26 -0400
-Received: from mga14.intel.com ([192.55.52.115]:53087 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfD3O50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:57:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 07:57:25 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga002.jf.intel.com with ESMTP; 30 Apr 2019 07:57:24 -0700
-Date:   Tue, 30 Apr 2019 07:57:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Perr Zhang <strongbox8@zoho.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, tglx@linutronix.de, stable@vger.kernel.org,
-        mingo@redhat.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: revert the order of calls in kvm_fast_pio()
-Message-ID: <20190430145724.GA32170@linux.intel.com>
-References: <20190430142423.3393-1-strongbox8@zoho.com>
- <20190430143201.GH2589@hirez.programming.kicks-ass.net>
+        Tue, 30 Apr 2019 10:58:43 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44265 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfD3O6n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:58:43 -0400
+Received: by mail-pl1-f196.google.com with SMTP id l2so4083089plt.11;
+        Tue, 30 Apr 2019 07:58:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TlQh7TuHnwgDKn+cKJqDNJnLA4TH+HrHgME+WMuJCQ8=;
+        b=iMo4NruzSXdZLDvRy1SULFuYbkHUqToq3CpWLKDDse9ce/N5xyHJZhwIPl4yQ6mnOu
+         qtPuzvt37+rccDpw+GQydZUw0AbPAexMeq9GMuqHyayFij3ZsMZCKDCgLt3v3c9MaupF
+         /7h6FfaMqNym/DxVuNWSaY/yQoA4BrKfzIcU35EewLwI9rrRZcXah2pq4Yp6IAEDBDBr
+         mfb30ztiAjmMEn/4Dj77V6X/17nkbEg4OyJIiLLrs6m+toLCuTD/UQik9kTUSz9S86yt
+         Ny7SlWtFQHunplzgc/Eyil0TfeE6hBDMvCGCKCGIwyZkykCTK5pFM5Lme/6Cvi1VSFQE
+         HKWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TlQh7TuHnwgDKn+cKJqDNJnLA4TH+HrHgME+WMuJCQ8=;
+        b=D9nGUUIqs11of3OAbArrjr6rCdZxKQFxQ0Ye/+m8knxWTbH0Maz5j/OTESmFiSmiTU
+         0MJXeZuh4CQpl2vnoVP12oqVUWhIq8On4dEN186+JE7/2QMi+OKML4lRUqs+zlN+/aJf
+         NFKcWaO28SI19+uI5UvHf241Hr17mczBy2kRX0lVN36kOYHQi/mA7y3Gxdh4ZANGlC9d
+         fb854wUIZ0nFrtwyk1S9XR0NHiApnSZeGEQuJc0KmoPa4PqJ50t3m/B+mI2H4zsvS+BE
+         rQeUcQitBdjupn9S3mSIUjarkUvFPwKOhzWyMthD2g6m4E6aV7JR0+7HXD6Ceu2XfTre
+         VyRA==
+X-Gm-Message-State: APjAAAWRx1lDd7wH4JlkRW3TDBUEWdmqwB6BlcqU4PMVJSlS5l7Pr7WE
+        +F/kcqNoPBLvi7EK43R64LKcC2KEFRUWDQ==
+X-Google-Smtp-Source: APXvYqzClbZ318/jZlabqQbsSCtg10ds86Zfqg1MOh3hs10FHdjl8t6O0NBWwfMiUHTsv2gmGRMRHQ==
+X-Received: by 2002:a17:902:b948:: with SMTP id h8mr70229857pls.39.1556636322642;
+        Tue, 30 Apr 2019 07:58:42 -0700 (PDT)
+Received: from debian.net.fpt ([42.114.18.133])
+        by smtp.gmail.com with ESMTPSA id n67sm4570723pfn.22.2019.04.30.07.58.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 07:58:41 -0700 (PDT)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     robh+dt@kernel.org, frowand.list@gmail.com,
+        pantelis.antoniou@konsulko.com
+Cc:     David.Laight@ACULAB.COM, hch@infradead.org,
+        ndesaulniers@google.com, natechancellor@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH V2] of: fix clang -Wunsequenced for be32_to_cpu()
+Date:   Tue, 30 Apr 2019 21:56:24 +0700
+Message-Id: <20190430145624.30470-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <46b3e8edf27e4c8f98697f9e7f2117d6@AcuMS.aculab.com>
+References: <46b3e8edf27e4c8f98697f9e7f2117d6@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430143201.GH2589@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 04:32:01PM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 30, 2019 at 10:24:23PM +0800, Perr Zhang wrote:
-> > In commit 45def77ebf79, the order of function calls in kvm_fast_pio()
-> > was changed. This causes that the vm(XP,and also XP's iso img) failed
-> > to boot. This doesn't happen with win10 or ubuntu.
-> > 
-> > After revert the order, the vm(XP) succeedes to boot. In addition, the
-> > change of calls's order of kvm_fast_pio() in commit 45def77ebf79 has no
-> > obvious reason.
+Now, make the loop explicit to avoid clang warning.
 
-There are three reasons explicitly listed in the changelog:
+./include/linux/of.h:238:37: warning: multiple unsequenced modifications
+to 'cell' [-Wunsequenced]
+                r = (r << 32) | be32_to_cpu(*(cell++));
+                                                  ^~
+./include/linux/byteorder/generic.h:95:21: note: expanded from macro
+'be32_to_cpu'
+                    ^
+./include/uapi/linux/byteorder/little_endian.h:40:59: note: expanded
+from macro '__be32_to_cpu'
+                                                          ^
+./include/uapi/linux/swab.h:118:21: note: expanded from macro '__swab32'
+        ___constant_swab32(x) :                 \
+                           ^
+./include/uapi/linux/swab.h:18:12: note: expanded from macro
+'___constant_swab32'
+        (((__u32)(x) & (__u32)0x000000ffUL) << 24) |            \
+                  ^
 
-    Updating %rip prior to executing to userspace has several drawbacks:
-    
-      - Userspace sees the wrong %rip on the exit, e.g. if PIO emulation
-        fails it will likely yell about the wrong address.
-      - Single step exits to userspace for are effectively dropped as
-        KVM_EXIT_DEBUG is overwritten with KVM_EXIT_IO.
-      - Behavior of PIO emulation is different depending on whether it
-        goes down the fast path or the slow path.
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+---
+ include/linux/of.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> This Changelog fails to explain why the order is important and equally
-> fails to inform the future reader of that code. So this very same thing
-> will happen again in 6 months time or thereabout.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index e240992e5cb6..71ca25ac01f6 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -234,8 +234,8 @@ extern struct device_node *of_find_all_nodes(struct device_node *prev);
+ static inline u64 of_read_number(const __be32 *cell, int size)
+ {
+ 	u64 r = 0;
+-	while (size--)
+-		r = (r << 32) | be32_to_cpu(*(cell++));
++	for(; size--; cell++)
++		r = (r << 32) | be32_to_cpu(*cell);
+ 	return r;
+ }
+ 
+-- 
+2.21.0
 
-There's a more precise fix submitted for this bug[1].  In theory v2
-already went out, but I still don't see it posted to the KVM list.
-Either the KVM list or my mail client is being weird.
-
-[1] https://patchwork.kernel.org/patch/10919849/
