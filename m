@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D302C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71529C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB41B20449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3682521670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624567;
-	bh=AgE5NMk3KoqOl3px5GL8ybRBHG4Sc6dAno+ZR3osuAo=;
+	s=default; t=1556624572;
+	bh=9VG826kIq7rBLo7qqOLamDLfS1qpQgl0cL8diUkFHEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1N0lXEL66wRoFSk/qVOzUWLTPg8spTAPQEHjDqoPqdD4/uHzdXbAu7LUFh57eEfz
-	 +9peJeueThHWEjEQzDahHj75dBvv3k6vCIaaG7y+5cjGctUgN8oiLoDYYGIaWWCC51
-	 Fp4SWoNRM5bC83+yRC1dtWYSeHcki47WXKB/3z08=
+	b=Un+15o0xQadrGAULjvFkDVeC/z3H44BgFTqyEylwt1KQEOzyJlqWokH7OUnDwlg5G
+	 oNxQMmn+xwj5+7Lj5BhTqzay1ObXYq8ANlp/CHXfTWphFz6HCOnR0hTgd3oUj2bOmz
+	 EXPqRr3J74Oxk0tZE+wTVIGXC4h43mSUUhTo95TU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbfD3Lmq (ORCPT
+        id S1729569AbfD3Lmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52078 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729443AbfD3Lmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:42:43 -0400
+        id S1728610AbfD3Lms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:42:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EF052173E;
-        Tue, 30 Apr 2019 11:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA75121670;
+        Tue, 30 Apr 2019 11:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624562;
-        bh=AgE5NMk3KoqOl3px5GL8ybRBHG4Sc6dAno+ZR3osuAo=;
+        s=default; t=1556624567;
+        bh=9VG826kIq7rBLo7qqOLamDLfS1qpQgl0cL8diUkFHEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jD3hDSFfu4wXqVD7Mujz287sSspHZRh2TcdNd/wCfZDDJMhQ1PbUfUy7UunvLL5we
-         A03/QcgUUkoOzQrxZIEjn53jGCSNv+46EOSb34uTAVJ6BQxZCEexIvASid2nMGHkdA
-         Kc/zEh4vO64xmvQmtQ28wpjJgt5kR0TjrpQg8GQY=
+        b=F5S62vBxA5BJ8R0tpXo0exwdgA+FfLQpYSqXQXHRMDIWMe+N5sgyp//Nz6Nan30RL
+         0JTJXMP2/XMsUn/G+TwxRTg7S6hu4MDTOb7/3xBpCs4KhtzwIL7lwrLiuuT16H86Cx
+         rATi6m+hNw3TmQfrzMXdWySdt/rJ1ZxuwN7/1id0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Liska <mliska@suse.cz>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 41/53] x86/retpolines: Disable switch jump tables when retpolines are enabled
-Date:   Tue, 30 Apr 2019 13:38:48 +0200
-Message-Id: <20190430113558.190448835@linuxfoundation.org>
+        stable@vger.kernel.org, Salvatore Bonaccorso <carnil@debian.org>,
+        Jan Kara <jack@suse.cz>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 43/53] Revert "block/loop: Use global lock for ioctl() operation."
+Date:   Tue, 30 Apr 2019 13:38:50 +0200
+Message-Id: <20190430113558.423604801@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -68,67 +61,248 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit a9d57ef15cbe327fe54416dd194ee0ea66ae53a4 upstream.
+This reverts commit 57da9a9742200f391d1cf93fea389f7ddc25ec9a which is
+commit 310ca162d779efee8a2dc3731439680f3e9c1e86 upstream.
 
-Commit ce02ef06fcf7 ("x86, retpolines: Raise limit for generating indirect
-calls from switch-case") raised the limit under retpolines to 20 switch
-cases where gcc would only then start to emit jump tables, and therefore
-effectively disabling the emission of slow indirect calls in this area.
+Jan Kara has reported seeing problems with this patch applied, as has
+Salvatore Bonaccorso, so let's drop it for now.
 
-After this has been brought to attention to gcc folks [0], Martin Liska
-has then fixed gcc to align with clang by avoiding to generate switch jump
-tables entirely under retpolines. This is taking effect in gcc starting
-from stable version 8.4.0. Given kernel supports compilation with older
-versions of gcc where the fix is not being available or backported anymore,
-we need to keep the extra KBUILD_CFLAGS around for some time and generally
-set the -fno-jump-tables to align with what more recent gcc is doing
-automatically today.
-
-More than 20 switch cases are not expected to be fast-path critical, but
-it would still be good to align with gcc behavior for versions < 8.4.0 in
-order to have consistency across supported gcc versions. vmlinux size is
-slightly growing by 0.27% for older gcc. This flag is only set to work
-around affected gcc, no change for clang.
-
-  [0] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86952
-
-Suggested-by: Martin Liska <mliska@suse.cz>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jesper Dangaard Brouer <brouer@redhat.com>
-Cc: Björn Töpel<bjorn.topel@intel.com>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: H.J. Lu <hjl.tools@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: David S. Miller <davem@davemloft.net>
-Link: https://lkml.kernel.org/r/20190325135620.14882-1-daniel@iogearbox.net
+Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+Reported-by: Jan Kara <jack@suse.cz>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/Makefile |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/block/loop.c |   58 +++++++++++++++++++++++++--------------------------
+ drivers/block/loop.h |    1 
+ 2 files changed, 30 insertions(+), 29 deletions(-)
 
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -245,8 +245,12 @@ ifdef CONFIG_RETPOLINE
-   # Additionally, avoid generating expensive indirect jumps which
-   # are subject to retpolines for small number of switch cases.
-   # clang turns off jump table generation by default when under
--  # retpoline builds, however, gcc does not for x86.
--  KBUILD_CFLAGS += $(call cc-option,--param=case-values-threshold=20)
-+  # retpoline builds, however, gcc does not for x86. This has
-+  # only been fixed starting from gcc stable version 8.4.0 and
-+  # onwards, but not for older ones. See gcc bug #86952.
-+  ifndef CONFIG_CC_IS_CLANG
-+    KBUILD_CFLAGS += $(call cc-option,-fno-jump-tables)
-+  endif
- endif
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -82,7 +82,6 @@
  
- archscripts: scripts_basic
+ static DEFINE_IDR(loop_index_idr);
+ static DEFINE_MUTEX(loop_index_mutex);
+-static DEFINE_MUTEX(loop_ctl_mutex);
+ 
+ static int max_part;
+ static int part_shift;
+@@ -1019,7 +1018,7 @@ static int loop_clr_fd(struct loop_devic
+ 	 */
+ 	if (atomic_read(&lo->lo_refcnt) > 1) {
+ 		lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
+-		mutex_unlock(&loop_ctl_mutex);
++		mutex_unlock(&lo->lo_ctl_mutex);
+ 		return 0;
+ 	}
+ 
+@@ -1071,12 +1070,12 @@ static int loop_clr_fd(struct loop_devic
+ 	if (!part_shift)
+ 		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
+ 	loop_unprepare_queue(lo);
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&lo->lo_ctl_mutex);
+ 	/*
+-	 * Need not hold loop_ctl_mutex to fput backing file.
+-	 * Calling fput holding loop_ctl_mutex triggers a circular
++	 * Need not hold lo_ctl_mutex to fput backing file.
++	 * Calling fput holding lo_ctl_mutex triggers a circular
+ 	 * lock dependency possibility warning as fput can take
+-	 * bd_mutex which is usually taken before loop_ctl_mutex.
++	 * bd_mutex which is usually taken before lo_ctl_mutex.
+ 	 */
+ 	fput(filp);
+ 	return 0;
+@@ -1195,7 +1194,7 @@ loop_get_status(struct loop_device *lo,
+ 	int ret;
+ 
+ 	if (lo->lo_state != Lo_bound) {
+-		mutex_unlock(&loop_ctl_mutex);
++		mutex_unlock(&lo->lo_ctl_mutex);
+ 		return -ENXIO;
+ 	}
+ 
+@@ -1214,10 +1213,10 @@ loop_get_status(struct loop_device *lo,
+ 		       lo->lo_encrypt_key_size);
+ 	}
+ 
+-	/* Drop loop_ctl_mutex while we call into the filesystem. */
++	/* Drop lo_ctl_mutex while we call into the filesystem. */
+ 	path = lo->lo_backing_file->f_path;
+ 	path_get(&path);
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&lo->lo_ctl_mutex);
+ 	ret = vfs_getattr(&path, &stat, STATX_INO, AT_STATX_SYNC_AS_STAT);
+ 	if (!ret) {
+ 		info->lo_device = huge_encode_dev(stat.dev);
+@@ -1309,7 +1308,7 @@ loop_get_status_old(struct loop_device *
+ 	int err;
+ 
+ 	if (!arg) {
+-		mutex_unlock(&loop_ctl_mutex);
++		mutex_unlock(&lo->lo_ctl_mutex);
+ 		return -EINVAL;
+ 	}
+ 	err = loop_get_status(lo, &info64);
+@@ -1327,7 +1326,7 @@ loop_get_status64(struct loop_device *lo
+ 	int err;
+ 
+ 	if (!arg) {
+-		mutex_unlock(&loop_ctl_mutex);
++		mutex_unlock(&lo->lo_ctl_mutex);
+ 		return -EINVAL;
+ 	}
+ 	err = loop_get_status(lo, &info64);
+@@ -1402,7 +1401,7 @@ static int lo_ioctl(struct block_device
+ 	struct loop_device *lo = bdev->bd_disk->private_data;
+ 	int err;
+ 
+-	mutex_lock_nested(&loop_ctl_mutex, 1);
++	mutex_lock_nested(&lo->lo_ctl_mutex, 1);
+ 	switch (cmd) {
+ 	case LOOP_SET_FD:
+ 		err = loop_set_fd(lo, mode, bdev, arg);
+@@ -1411,7 +1410,7 @@ static int lo_ioctl(struct block_device
+ 		err = loop_change_fd(lo, bdev, arg);
+ 		break;
+ 	case LOOP_CLR_FD:
+-		/* loop_clr_fd would have unlocked loop_ctl_mutex on success */
++		/* loop_clr_fd would have unlocked lo_ctl_mutex on success */
+ 		err = loop_clr_fd(lo);
+ 		if (!err)
+ 			goto out_unlocked;
+@@ -1424,7 +1423,7 @@ static int lo_ioctl(struct block_device
+ 		break;
+ 	case LOOP_GET_STATUS:
+ 		err = loop_get_status_old(lo, (struct loop_info __user *) arg);
+-		/* loop_get_status() unlocks loop_ctl_mutex */
++		/* loop_get_status() unlocks lo_ctl_mutex */
+ 		goto out_unlocked;
+ 	case LOOP_SET_STATUS64:
+ 		err = -EPERM;
+@@ -1434,7 +1433,7 @@ static int lo_ioctl(struct block_device
+ 		break;
+ 	case LOOP_GET_STATUS64:
+ 		err = loop_get_status64(lo, (struct loop_info64 __user *) arg);
+-		/* loop_get_status() unlocks loop_ctl_mutex */
++		/* loop_get_status() unlocks lo_ctl_mutex */
+ 		goto out_unlocked;
+ 	case LOOP_SET_CAPACITY:
+ 		err = -EPERM;
+@@ -1454,7 +1453,7 @@ static int lo_ioctl(struct block_device
+ 	default:
+ 		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
+ 	}
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&lo->lo_ctl_mutex);
+ 
+ out_unlocked:
+ 	return err;
+@@ -1571,7 +1570,7 @@ loop_get_status_compat(struct loop_devic
+ 	int err;
+ 
+ 	if (!arg) {
+-		mutex_unlock(&loop_ctl_mutex);
++		mutex_unlock(&lo->lo_ctl_mutex);
+ 		return -EINVAL;
+ 	}
+ 	err = loop_get_status(lo, &info64);
+@@ -1588,16 +1587,16 @@ static int lo_compat_ioctl(struct block_
+ 
+ 	switch(cmd) {
+ 	case LOOP_SET_STATUS:
+-		mutex_lock(&loop_ctl_mutex);
++		mutex_lock(&lo->lo_ctl_mutex);
+ 		err = loop_set_status_compat(
+ 			lo, (const struct compat_loop_info __user *) arg);
+-		mutex_unlock(&loop_ctl_mutex);
++		mutex_unlock(&lo->lo_ctl_mutex);
+ 		break;
+ 	case LOOP_GET_STATUS:
+-		mutex_lock(&loop_ctl_mutex);
++		mutex_lock(&lo->lo_ctl_mutex);
+ 		err = loop_get_status_compat(
+ 			lo, (struct compat_loop_info __user *) arg);
+-		/* loop_get_status() unlocks loop_ctl_mutex */
++		/* loop_get_status() unlocks lo_ctl_mutex */
+ 		break;
+ 	case LOOP_SET_CAPACITY:
+ 	case LOOP_CLR_FD:
+@@ -1641,7 +1640,7 @@ static void __lo_release(struct loop_dev
+ 	if (atomic_dec_return(&lo->lo_refcnt))
+ 		return;
+ 
+-	mutex_lock(&loop_ctl_mutex);
++	mutex_lock(&lo->lo_ctl_mutex);
+ 	if (lo->lo_flags & LO_FLAGS_AUTOCLEAR) {
+ 		/*
+ 		 * In autoclear mode, stop the loop thread
+@@ -1659,7 +1658,7 @@ static void __lo_release(struct loop_dev
+ 		blk_mq_unfreeze_queue(lo->lo_queue);
+ 	}
+ 
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&lo->lo_ctl_mutex);
+ }
+ 
+ static void lo_release(struct gendisk *disk, fmode_t mode)
+@@ -1705,10 +1704,10 @@ static int unregister_transfer_cb(int id
+ 	struct loop_device *lo = ptr;
+ 	struct loop_func_table *xfer = data;
+ 
+-	mutex_lock(&loop_ctl_mutex);
++	mutex_lock(&lo->lo_ctl_mutex);
+ 	if (lo->lo_encryption == xfer)
+ 		loop_release_xfer(lo);
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&lo->lo_ctl_mutex);
+ 	return 0;
+ }
+ 
+@@ -1881,6 +1880,7 @@ static int loop_add(struct loop_device *
+ 	if (!part_shift)
+ 		disk->flags |= GENHD_FL_NO_PART_SCAN;
+ 	disk->flags |= GENHD_FL_EXT_DEVT;
++	mutex_init(&lo->lo_ctl_mutex);
+ 	atomic_set(&lo->lo_refcnt, 0);
+ 	lo->lo_number		= i;
+ 	spin_lock_init(&lo->lo_lock);
+@@ -1993,19 +1993,19 @@ static long loop_control_ioctl(struct fi
+ 		ret = loop_lookup(&lo, parm);
+ 		if (ret < 0)
+ 			break;
+-		mutex_lock(&loop_ctl_mutex);
++		mutex_lock(&lo->lo_ctl_mutex);
+ 		if (lo->lo_state != Lo_unbound) {
+ 			ret = -EBUSY;
+-			mutex_unlock(&loop_ctl_mutex);
++			mutex_unlock(&lo->lo_ctl_mutex);
+ 			break;
+ 		}
+ 		if (atomic_read(&lo->lo_refcnt) > 0) {
+ 			ret = -EBUSY;
+-			mutex_unlock(&loop_ctl_mutex);
++			mutex_unlock(&lo->lo_ctl_mutex);
+ 			break;
+ 		}
+ 		lo->lo_disk->private_data = NULL;
+-		mutex_unlock(&loop_ctl_mutex);
++		mutex_unlock(&lo->lo_ctl_mutex);
+ 		idr_remove(&loop_index_idr, lo->lo_number);
+ 		loop_remove(lo);
+ 		break;
+--- a/drivers/block/loop.h
++++ b/drivers/block/loop.h
+@@ -54,6 +54,7 @@ struct loop_device {
+ 
+ 	spinlock_t		lo_lock;
+ 	int			lo_state;
++	struct mutex		lo_ctl_mutex;
+ 	struct kthread_worker	worker;
+ 	struct task_struct	*worker_task;
+ 	bool			use_dio;
 
 
