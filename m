@@ -2,62 +2,79 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66304C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBEFC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFE420644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37ECF20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Y+BPCfFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfD3RJ4 (ORCPT
+        id S1726603AbfD3RMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:09:56 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50578 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3RJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:09:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B845374;
-        Tue, 30 Apr 2019 10:09:55 -0700 (PDT)
-Received: from [10.1.196.42] (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66A103F5C1;
-        Tue, 30 Apr 2019 10:09:52 -0700 (PDT)
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, X86 ML <x86@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Jeff Dike <jdike@addtoit.com>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
- ptrace_syscall_enter hook
-To:     Andy Lutomirski <luto@kernel.org>
-References: <20190318104925.16600-1-sudeep.holla@arm.com>
- <20190318104925.16600-4-sudeep.holla@arm.com>
- <CALCETrXEebRqX0W8MuS0SeaMDpEO5KdS3k7id279hZgHrmc8yA@mail.gmail.com>
-From:   Sudeep Holla <sudeep.holla@arm.com>
-Organization: ARM
-Message-ID: <a1de9e18-95f6-c9a4-0d60-9f61b5a2f108@arm.com>
-Date:   Tue, 30 Apr 2019 18:09:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 30 Apr 2019 13:12:18 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:52035 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbfD3RMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:12:17 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44tp3y58RLz9v1k9;
+        Tue, 30 Apr 2019 19:12:14 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Y+BPCfFl; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 7IpCUdIa0TSw; Tue, 30 Apr 2019 19:12:14 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44tp3y3rYfz9v1k7;
+        Tue, 30 Apr 2019 19:12:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556644334; bh=I6U/WMxuM/ZK7tYarUOuYY237DpcVURiegr1EP4PwhY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Y+BPCfFlQth4Q3F4g09mhVDLltZ5p3Mj2+f6vObRBwtp83X+EBMQ7W/cEJ9lu+7PJ
+         U7Lu6rlIhX1oP9BOJN7JC4H6TcF0fBF1sJ++alaqcd2Ea2lR9anAaYMuuATjNakepe
+         ONOZwv+6heJPV/00barKCBVJyByRCJfQFYHYnV1Q=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3EE138B8F1;
+        Tue, 30 Apr 2019 19:12:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id IvLfQpKYtXoV; Tue, 30 Apr 2019 19:12:16 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 94E648B8DF;
+        Tue, 30 Apr 2019 19:12:15 +0200 (CEST)
+Subject: Re: [PATCH 2/5] soc/fsl/qe: qe.c: reduce static memory footprint by
+ 1.7K
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     Valentin Longchamp <valentin.longchamp@keymile.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+ <20190430133615.25721-3-rasmus.villemoes@prevas.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <51b00425-58a7-089a-67a9-61cd315d5097@c-s.fr>
+Date:   Tue, 30 Apr 2019 19:12:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CALCETrXEebRqX0W8MuS0SeaMDpEO5KdS3k7id279hZgHrmc8yA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190430133615.25721-3-rasmus.villemoes@prevas.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,30 +82,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 30/04/2019 17:46, Andy Lutomirski wrote:
-> On Mon, Mar 18, 2019 at 3:49 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->>
->> Now that we have a new hook ptrace_syscall_enter that can be called from
->> syscall entry code and it handles PTRACE_SYSEMU in generic code, we
->> can do some cleanup using the same in syscall_trace_enter.
->>
->> Further the extra logic to find single stepping PTRACE_SYSEMU_SINGLESTEP
->> in syscall_slow_exit_work seems unnecessary. Let's remove the same.
->>
+Le 30/04/2019 à 15:36, Rasmus Villemoes a écrit :
+> The current array of struct qe_snum use 256*4 bytes for just keeping
+> track of the free/used state of each index, and the struct layout
+> means there's another 768 bytes of padding. If we just unzip that
+> structure, the array of snum values just use 256 bytes, while the
+> free/inuse state can be tracked in a 32 byte bitmap.
 > 
-> Unless the patch set contains a selftest that exercises all the
-> interesting cases here, NAK.  To be clear, there needs to be a test
-> that passes on an unmodified kernel and still passes on a patched
-> kernel.  And that test case needs to *fail* if, for example, you force
-> "emulated" to either true or false rather than reading out the actual
-> value.
+> So this reduces the .data footprint by 1760 bytes. It also serves as
+> preparation for introducing another DT binding for specifying the snum
+> values.
 > 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> ---
+>   drivers/soc/fsl/qe/qe.c | 37 ++++++++++++-------------------------
+>   1 file changed, 12 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+> index 855373deb746..d0393f83145c 100644
+> --- a/drivers/soc/fsl/qe/qe.c
+> +++ b/drivers/soc/fsl/qe/qe.c
+> @@ -14,6 +14,7 @@
+>    * Free Software Foundation;  either version 2 of the  License, or (at your
+>    * option) any later version.
+>    */
+> +#include <linux/bitmap.h>
+>   #include <linux/errno.h>
+>   #include <linux/sched.h>
+>   #include <linux/kernel.h>
+> @@ -43,25 +44,14 @@ static DEFINE_SPINLOCK(qe_lock);
+>   DEFINE_SPINLOCK(cmxgcr_lock);
+>   EXPORT_SYMBOL(cmxgcr_lock);
+>   
+> -/* QE snum state */
+> -enum qe_snum_state {
+> -	QE_SNUM_STATE_USED,
+> -	QE_SNUM_STATE_FREE
+> -};
+> -
+> -/* QE snum */
+> -struct qe_snum {
+> -	u8 num;
+> -	enum qe_snum_state state;
+> -};
+> -
+>   /* We allocate this here because it is used almost exclusively for
+>    * the communication processor devices.
+>    */
+>   struct qe_immap __iomem *qe_immr;
+>   EXPORT_SYMBOL(qe_immr);
+>   
+> -static struct qe_snum snums[QE_NUM_OF_SNUM];	/* Dynamically allocated SNUMs */
+> +static u8 snums[QE_NUM_OF_SNUM];	/* Dynamically allocated SNUMs */
+> +static DECLARE_BITMAP(snum_state, QE_NUM_OF_SNUM);
+>   static unsigned int qe_num_of_snum;
+>   
+>   static phys_addr_t qebase = -1;
+> @@ -308,6 +298,7 @@ static void qe_snums_init(void)
+>   	};
+>   	const u8 *snum_init;
+>   
+> +	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
 
-Tested using tools/testing/selftests/x86/ptrace_syscall.c
+Doesn't make much importance, but wouldn't it be more logical to add 
+this line where the setting of .state = QE_SNUM_STATE_FREE was done 
+previously, ie around the for() loop below ?
 
-Also v3 doesn't change any logic or additional call to new function as
-in v2. It's just simple cleanup as suggested by Oleg.
+>   	qe_num_of_snum = qe_get_num_of_snums();
+>   
+>   	if (qe_num_of_snum == 76)
+> @@ -315,10 +306,8 @@ static void qe_snums_init(void)
+>   	else
+>   		snum_init = snum_init_46;
+>   
+> -	for (i = 0; i < qe_num_of_snum; i++) {
+> -		snums[i].num = snum_init[i];
+> -		snums[i].state = QE_SNUM_STATE_FREE;
+> -	}
+> +	for (i = 0; i < qe_num_of_snum; i++)
+> +		snums[i] = snum_init[i];
 
--- 
-Regards,
-Sudeep
+Could use memcpy() instead ?
+
+>   }
+>   
+>   int qe_get_snum(void)
+> @@ -328,12 +317,10 @@ int qe_get_snum(void)
+>   	int i;
+>   
+>   	spin_lock_irqsave(&qe_lock, flags);
+> -	for (i = 0; i < qe_num_of_snum; i++) {
+> -		if (snums[i].state == QE_SNUM_STATE_FREE) {
+> -			snums[i].state = QE_SNUM_STATE_USED;
+> -			snum = snums[i].num;
+> -			break;
+> -		}
+> +	i = find_first_zero_bit(snum_state, qe_num_of_snum);
+> +	if (i < qe_num_of_snum) {
+> +		set_bit(i, snum_state);
+> +		snum = snums[i];
+>   	}
+>   	spin_unlock_irqrestore(&qe_lock, flags);
+>   
+> @@ -346,8 +333,8 @@ void qe_put_snum(u8 snum)
+>   	int i;
+>   
+>   	for (i = 0; i < qe_num_of_snum; i++) {
+> -		if (snums[i].num == snum) {
+> -			snums[i].state = QE_SNUM_STATE_FREE;
+> +		if (snums[i] == snum) {
+> +			clear_bit(i, snum_state);
+>   			break;
+>   		}
+>   	}
+
+Can we replace this loop by memchr() ?
+
+Christophe
+
