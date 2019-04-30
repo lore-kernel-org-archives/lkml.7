@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A120CC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E8FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7124F20449
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A9921783
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624924;
-	bh=MAfJJ0fkkrHOMc0koxXGYQDilkSV0Igey4Ef/k/QcAc=;
+	s=default; t=1556624929;
+	bh=QxCnPLDxI3vzo4dtboAXHm8v6VZkQ2zXc8lzd9GYQDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LE+HzwwMQI5xRmGQ/g/mMplLME/dgeVBCb5K6DD+SVOyM9apqu+JuJJLg/rlu+/Uq
-	 3vJNwxWqNXsNcarWWfDwruqCOyIx3aP+hzulyPYjZ9H+u9UeCBm8HsXWANX7o+xVvW
-	 kUu/uEegQosy7pZvU/NXHEtYRIqxn5TN2wtkhaRQ=
+	b=oG0gi/qHktAdNRdkGIAJ4UBxi18XoSV27r2reH6ptKqLeIHtmrUdgm2KYy7ljO6Qw
+	 OpAqAPeqb8gf/9KkaqDVSf029ZLdzA3iH2gwo7fk6mJ+gLxeCBZm5N5rfOi0r83Y8i
+	 oCkh+8pUL+6vcHm8iy8yNZUJqWqWcveXla9oQsgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbfD3Lsn (ORCPT
+        id S1728748AbfD3Lss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:48:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:48:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730882AbfD3Lsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:48:39 -0400
+        id S1730882AbfD3Lso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:48:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D732054F;
-        Tue, 30 Apr 2019 11:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB282054F;
+        Tue, 30 Apr 2019 11:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624918;
-        bh=MAfJJ0fkkrHOMc0koxXGYQDilkSV0Igey4Ef/k/QcAc=;
+        s=default; t=1556624923;
+        bh=QxCnPLDxI3vzo4dtboAXHm8v6VZkQ2zXc8lzd9GYQDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rTdE47bFYEvYkWIWb3WK0sEirwATm6aIPP01DUogYvitW/SrHvntY6buYE+oPv9k7
-         igDzQtZ0mPRYMFldVvHF+pBCGSvGbdMDDZM0ZfJvlo7jnwCaXBmFOgwvQZU9GHceFJ
-         yMB7xVQykdhJcuBkPtFJxxcKQZET5/uo4PoNJFxM=
+        b=L2OqMQr7bZIAOU8/vWnyNnSWt3N3lrEijKrJmVqvRHCiiXODJrbrFWJ6OPGkd+J7Y
+         QpjyYLj2DfDKS/ewNa85P8BiKg9duOPgFqF3QpgIGvCR5OHpVjiaOuOpTbqywot9cJ
+         wNadJZQlL743ApUrj9tFcm1lv5L8riDdpN9/n7/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Josh Collier <josh.d.collier@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.0 22/89] IB/rdmavt: Fix frwr memory registration
-Date:   Tue, 30 Apr 2019 13:38:13 +0200
-Message-Id: <20190430113611.094943161@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        Haggai Eran <haggaie@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: [PATCH 5.0 24/89] RDMA/mlx5: Use rdma_user_map_io for mapping BAR pages
+Date:   Tue, 30 Apr 2019 13:38:15 +0200
+Message-Id: <20190430113611.159345140@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -63,83 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Collier <josh.d.collier@intel.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 7c39f7f671d2acc0a1f39ebbbee4303ad499bbfa upstream.
+commit d5e560d3f72382ac4e3bfe4e0f0420e6a220b039 upstream.
 
-Current implementation was not properly handling frwr memory
-registrations. This was uncovered by commit 27f26cec761das ("xprtrdma:
-Plant XID in on-the-wire RDMA offset (FRWR)") in which xprtrdma, which is
-used for NFS over RDMA, started failing as it was the first ULP to modify
-the ib_mr iova resulting in the NFS server getting REMOTE ACCESS ERROR
-when attempting to perform RDMA Writes to the client.
+Since mlx5 supports device disassociate it must use this API for all
+BAR page mmaps, otherwise the pages can remain mapped after the device
+is unplugged causing a system crash.
 
-The fix is to properly capture the true iova, offset, and length in the
-call to ib_map_mr_sg, and then update the iova when processing the
-IB_WR_REG_MEM on the send queue.
-
-Fixes: a41081aa5936 ("IB/rdmavt: Add support for ib_map_mr_sg")
 Cc: stable@vger.kernel.org
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Josh Collier <josh.d.collier@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Fixes: 5f9794dc94f5 ("RDMA/ucontext: Add a core API for mmaping driver IO memory")
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Haggai Eran <haggaie@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/sw/rdmavt/mr.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/mlx5/main.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/infiniband/sw/rdmavt/mr.c
-+++ b/drivers/infiniband/sw/rdmavt/mr.c
-@@ -611,11 +611,6 @@ static int rvt_set_page(struct ib_mr *ib
- 	if (unlikely(mapped_segs == mr->mr.max_segs))
- 		return -ENOMEM;
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -2154,14 +2154,12 @@ static int mlx5_ib_mmap(struct ib_uconte
+ 		if (PAGE_SIZE > 4096)
+ 			return -EOPNOTSUPP;
  
--	if (mr->mr.length == 0) {
--		mr->mr.user_base = addr;
--		mr->mr.iova = addr;
--	}
--
- 	m = mapped_segs / RVT_SEGSZ;
- 	n = mapped_segs % RVT_SEGSZ;
- 	mr->mr.map[m]->segs[n].vaddr = (void *)addr;
-@@ -633,17 +628,24 @@ static int rvt_set_page(struct ib_mr *ib
-  * @sg_nents: number of entries in sg
-  * @sg_offset: offset in bytes into sg
-  *
-+ * Overwrite rvt_mr length with mr length calculated by ib_sg_to_pages.
-+ *
-  * Return: number of sg elements mapped to the memory region
-  */
- int rvt_map_mr_sg(struct ib_mr *ibmr, struct scatterlist *sg,
- 		  int sg_nents, unsigned int *sg_offset)
- {
- 	struct rvt_mr *mr = to_imr(ibmr);
-+	int ret;
+-		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+ 		pfn = (dev->mdev->iseg_base +
+ 		       offsetof(struct mlx5_init_seg, internal_timer_h)) >>
+ 			PAGE_SHIFT;
+-		if (io_remap_pfn_range(vma, vma->vm_start, pfn,
+-				       PAGE_SIZE, vma->vm_page_prot))
+-			return -EAGAIN;
+-		break;
++		return rdma_user_mmap_io(&context->ibucontext, vma, pfn,
++					 PAGE_SIZE,
++					 pgprot_noncached(vma->vm_page_prot));
+ 	case MLX5_IB_MMAP_CLOCK_INFO:
+ 		return mlx5_ib_mmap_clock_info_page(dev, vma, context);
  
- 	mr->mr.length = 0;
- 	mr->mr.page_shift = PAGE_SHIFT;
--	return ib_sg_to_pages(ibmr, sg, sg_nents, sg_offset,
--			      rvt_set_page);
-+	ret = ib_sg_to_pages(ibmr, sg, sg_nents, sg_offset, rvt_set_page);
-+	mr->mr.user_base = ibmr->iova;
-+	mr->mr.iova = ibmr->iova;
-+	mr->mr.offset = ibmr->iova - (u64)mr->mr.map[0]->segs[0].vaddr;
-+	mr->mr.length = (size_t)ibmr->length;
-+	return ret;
- }
- 
- /**
-@@ -674,6 +676,7 @@ int rvt_fast_reg_mr(struct rvt_qp *qp, s
- 	ibmr->rkey = key;
- 	mr->mr.lkey = key;
- 	mr->mr.access_flags = access;
-+	mr->mr.iova = ibmr->iova;
- 	atomic_set(&mr->mr.lkey_invalid, 0);
- 
- 	return 0;
 
 
