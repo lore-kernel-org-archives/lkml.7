@@ -2,170 +2,91 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C800BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68471C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6487E20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:12:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eDN5GMSx"
+	by mail.kernel.org (Postfix) with ESMTP id 3F1BB20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfD3QMC (ORCPT
+        id S1726664AbfD3QMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:12:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:46148 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3QMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:12:01 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44tmkQ2KjPz9v9PT;
-        Tue, 30 Apr 2019 18:11:58 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=eDN5GMSx; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id MaxABZu7I_Cm; Tue, 30 Apr 2019 18:11:58 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44tmkQ0zj6z9tykx;
-        Tue, 30 Apr 2019 18:11:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556640718; bh=WThvMg35+cMW5Y7q2WlLGNaSdHo7IteuweRcj0Q4fHw=;
-        h=From:Subject:To:Cc:Date:From;
-        b=eDN5GMSxe5O4145L0Q12Qaw5uC1yFI+UUZBqjOzReLM6UDTAZKPKUjeGI2xukh+gw
-         DboDWAsGrsEfsIdFgbKrJIxKfHDPf/PSfmMm+FrVnklzOkO8neLAV0o4ILu+pONvlw
-         0vgWG1KYG0WmnbwgiHLlAcEm8YNmdjX1d+Ur1N7k=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BDDF88B8F1;
-        Tue, 30 Apr 2019 18:11:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 5pFLDNQb9zEw; Tue, 30 Apr 2019 18:11:59 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7C7908B8DF;
-        Tue, 30 Apr 2019 18:11:59 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 3E7A767271; Tue, 30 Apr 2019 16:11:59 +0000 (UTC)
-Message-Id: <09733bd9d90f2ab9dfee9838442e0bea01df194d.1556640535.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/32s: fix BATs setting with
- CONFIG_STRICT_KERNEL_RWX
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Serge Belyshev <belyshev@depni.sinp.msu.ru>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 30 Apr 2019 16:11:59 +0000 (UTC)
+        Tue, 30 Apr 2019 12:12:54 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33388 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfD3QMy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:12:54 -0400
+Received: by mail-qk1-f193.google.com with SMTP id k189so8526092qkc.0;
+        Tue, 30 Apr 2019 09:12:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Dw1Sc4DgzUhOMvuweilLKv0I/kx7THnj4Gu6G9qc/A=;
+        b=V9njuefs8h5r7nWTByHu/7skJsBICOSgC+t3zv2Lv5auS+F4kG9z5ftuxNisuUm9KW
+         NpI16KFGqbJrGixjVc4QzMhYTJOTLwx4vIv+D/hKq7KDYpAvAd6wvyE4fvo2ovk4pCjI
+         A8jpqgG/oQfS/R0shXbk5tDxWslVMeHdmFM/MoVtkqaeTpUKeq9hRWUeC66oQFtsOHHq
+         TQVL8zzAIN68XYKGaFGedRhmrWaidq9Gj+7dyIBugHggM2MyklgXmgbeqo3CPrOMMXlZ
+         s69n9vuQzuauq0P8muU/Uv+WB8S1ozQjvltUrcQssXxqiMQ/zBUg5rNeLeJws+IdKO4t
+         YCwg==
+X-Gm-Message-State: APjAAAXlqgx0NWZ6oULx/Gw45MnVyRMkoK5RKdi3w55P4ERODdlD0vOv
+        nI5F1MDP0PSXUyJjmu7FTOg/xCej8pSV6ekwFx4=
+X-Google-Smtp-Source: APXvYqxZ18tw9VclTG8jiPtQwPA/q6phtCiYjGxgL4Pu5OHC2RhANvcUJKMdOjp8gwPa9BT1lygkiVrzaDoTFNwqSCg=
+X-Received: by 2002:a37:b802:: with SMTP id i2mr48165405qkf.343.1556640772741;
+ Tue, 30 Apr 2019 09:12:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
+ <20190422152027.GB11750@kernel.org> <C2D7FE5348E1B147BCA15975FBA2307501A250584C@us01wembx1.internal.synopsys.com>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A250584C@us01wembx1.internal.synopsys.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 30 Apr 2019 18:12:35 +0200
+Message-ID: <CAK8P3a2JrAApXDws+t=q8AnKFkHJZSox7gsgwW-xEJTfs_mdzw@mail.gmail.com>
+Subject: Re: perf tools build broken after v5.1-rc1
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Serge reported some crashes with CONFIG_STRICT_KERNEL_RWX enabled
-on a book3s32 machine.
+On Mon, Apr 29, 2019 at 7:17 PM Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
+>
+> On 4/22/19 8:31 AM, Arnaldo Carvalho de Melo wrote:
+> >> A quick fix for ARC will be to create our own version but I presume all existing
+> >> arches using generic syscall abi are affected. Thoughts ? In lack of ideas I'll
+> >> send out a patch for ARC.
+> >>
+> >> P.S. Why do we need the unistd.h duplication in tools directory, given it could
+> >> have used the in-tree unistd headers directly ?
+> > I have to write down the explanation and have it in a file, but we can't
+> > use anything in the kernel from outside tools/ to avoid adding a burden
+> > to kernel developers that would then have to make sure that the changes
+> > that they make outside tools/ don't break things living there.
+>
+> That is a sound guiding principle in general but I don't agree here. unistd is
+> backbone of kernel user interface it has to work and can't possibly be broken even
+> when kernel devs add a new syscall is added or condition-alize existing one. So
+> adding a copy - and deferring the propagation of in-kernel unistd to usersapce
+> won't necessarily help with anything and it just adds the burden of keeping them
+> in sync. Granted we won't necessarily need all the bleeding edge (new syscall
+> updates) into that header, its still more work.
 
-Analysis shows two issues:
-- BATs addresses and sizes are not properly aligned.
-- There is a gap between the last address covered by BATs and the
-first address covered by pages.
+I think more importantly, it seems completely broken to sync a file from
+asm-generic but not the arch specific file that includes it.
 
-Memory mapped with DBATs:
-0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
-1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
-2: 0xc0c00000-0xc13fffff 0x00c00000 Kernel RW coherent
-3: 0xc1400000-0xc23fffff 0x01400000 Kernel RW coherent
-4: 0xc2400000-0xc43fffff 0x02400000 Kernel RW coherent
-5: 0xc4400000-0xc83fffff 0x04400000 Kernel RW coherent
-6: 0xc8400000-0xd03fffff 0x08400000 Kernel RW coherent
-7: 0xd0400000-0xe03fffff 0x10400000 Kernel RW coherent
+The 1a787fc5ba18ac7 commit copied over the changes for arm64, but
+missed all the other architectures changed in c8ce48f06503 and the
+related commits.
 
-Memory mapped with pages:
-0xe1000000-0xefffffff  0x21000000       240M        rw       present           dirty  accessed
-
-This patch fixes both issues. With the patch, we get the following
-which is as expected:
-
-Memory mapped with DBATs:
-0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
-1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
-2: 0xc0c00000-0xc0ffffff 0x00c00000 Kernel RW coherent
-3: 0xc1000000-0xc1ffffff 0x01000000 Kernel RW coherent
-4: 0xc2000000-0xc3ffffff 0x02000000 Kernel RW coherent
-5: 0xc4000000-0xc7ffffff 0x04000000 Kernel RW coherent
-6: 0xc8000000-0xcfffffff 0x08000000 Kernel RW coherent
-7: 0xd0000000-0xdfffffff 0x10000000 Kernel RW coherent
-
-Memory mapped with pages:
-0xe0000000-0xefffffff  0x20000000       256M        rw       present           dirty  accessed
-
-Reported-by: Serge Belyshev <belyshev@depni.sinp.msu.ru>
-Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
-Cc: stable@vger.kernel.org
-Acked-by: Segher Boessenkool <segher@kernel.crashing.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- v2: Added comment to explain block_size() function as recommended by Segher.
-
- arch/powerpc/mm/ppc_mmu_32.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
-index bf1de3ca39bc..afd8dcb11432 100644
---- a/arch/powerpc/mm/ppc_mmu_32.c
-+++ b/arch/powerpc/mm/ppc_mmu_32.c
-@@ -98,10 +98,20 @@ static int find_free_bat(void)
- 	return -1;
- }
- 
-+/*
-+ * This function calculates the size of the larger block usable to map the
-+ * beginning of an area based on the start address and size of that area:
-+ * - max block size is 8M on 601 and 256 on other 6xx.
-+ * - base address must be aligned to the block size. So the maximum block size
-+ *   is identified by the lowest bit set to 1 in the base address (for instance
-+ *   if base is 0x16000000, max size is 0x02000000).
-+ * - block size has to be a power of two. This is calculated by finding the
-+ *   highest bit set to 1.
-+ */
- static unsigned int block_size(unsigned long base, unsigned long top)
- {
- 	unsigned int max_size = (cpu_has_feature(CPU_FTR_601) ? 8 : 256) << 20;
--	unsigned int base_shift = (fls(base) - 1) & 31;
-+	unsigned int base_shift = (ffs(base) - 1) & 31;
- 	unsigned int block_shift = (fls(top - base) - 1) & 31;
- 
- 	return min3(max_size, 1U << base_shift, 1U << block_shift);
-@@ -157,7 +167,7 @@ static unsigned long __init __mmu_mapin_ram(unsigned long base, unsigned long to
- 
- unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- {
--	int done;
-+	unsigned long done;
- 	unsigned long border = (unsigned long)__init_begin - PAGE_OFFSET;
- 
- 	if (__map_without_bats) {
-@@ -169,10 +179,10 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 		return __mmu_mapin_ram(base, top);
- 
- 	done = __mmu_mapin_ram(base, border);
--	if (done != border - base)
-+	if (done != border)
- 		return done;
- 
--	return done + __mmu_mapin_ram(border, top);
-+	return __mmu_mapin_ram(border, top);
- }
- 
- void mmu_mark_initmem_nx(void)
--- 
-2.13.3
-
+      Arnd
