@@ -2,85 +2,145 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57122C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E098C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EF320835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBF320835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfD3Rhs (ORCPT
+        id S1726963AbfD3RiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:37:48 -0400
-Received: from sauhun.de ([88.99.104.3]:36246 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbfD3Rhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:37:47 -0400
-Received: from localhost (p5486CE82.dip0.t-ipconnect.de [84.134.206.130])
-        by pokefinder.org (Postfix) with ESMTPSA id 385022C3720;
-        Tue, 30 Apr 2019 19:37:45 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 19:37:44 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: I2C delay due to maintainer illness
-Message-ID: <20190430173744.GA22352@kunai>
+        Tue, 30 Apr 2019 13:38:19 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.94]:41555 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726733AbfD3RiT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:38:19 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id CFFB426038
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:38:17 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id LWhthCkFe2qH7LWhthVzdS; Tue, 30 Apr 2019 12:38:17 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=59632 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLWht-003A8s-DK; Tue, 30 Apr 2019 12:38:17 -0500
+Subject: Re: [PATCH] usbip: vhci_hcd: Mark expected switch fall-through
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20190429143957.GA6725@embeddedor>
+ <1daec8c8929e4d18b2059ab1dfbfdf4a@AcuMS.aculab.com>
+ <287c8504-eafa-ebbb-aa39-babb86fdeb94@embeddedor.com>
+ <20190430154444.GA4224@kroah.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <c8dbf905-d51d-40c9-04e2-f4b94cd629fa@embeddedor.com>
+Date:   Tue, 30 Apr 2019 12:38:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190430154444.GA4224@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLWht-003A8s-DK
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:59632
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Hi people,
+On 4/30/19 10:44 AM, Greg Kroah-Hartman wrote:
 
-sadly, I have been tied to bed for a few days now, not in a condition to
-really work on I2C, and this will not change until the weekend. I will
-try hard to send out another pull request for 5.1, to get things fixed
-properly, but only super trivial patches will be applied on top of my
-current for-next (5.2). All this assuming there won't be another rc.
+>>
+>> this error message is what makes me think the fall-through is
+>> intentional; otherwise I think it would look like this instead:
+>>
+>> 	if (hcd->speed != HCD_USB3) {
+>> 		pr_err("USB_PORT_FEAT_U2_TIMEOUT req not "
+>> 		       "supported for USB 2.0 roothub\n");
+>> 		goto error;
+>> 	}
+> 
+> I think you are right, that's horrid, but correct :(
+> 
 
-I think it is annoying, sure, but no catastrophe. However, it shows that
-I am the single-point-of-failure for I2C patches, what I don't like.
-Like I said before, I am open to group maintainership. If you think you
-are a reliable candidate, please get in touch with me.
+Yep. :/
 
-So much for now, I hope you all are in good health!
+> Will go queue this up, thanks.
+> 
 
-Happy hacking,
-
-   Wolfram
-
-
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzIh+MACgkQFA3kzBSg
-KbbR7xAAmcwlIAXsgt5HQGQH9KBD+AyyubmSecTho85M/o/s3tLj4lTD7ejsop3a
-70WSZfkcYtDZQHFLBewAWIomRWEmmvFEcrcRxVL1zPLFSTwNQtddY/6rjs6G+Ylz
-GRHq9KWxOKCzUvP6stS6733CVFv08R0E8yMh+8dXAJWjZ1i4PKl+Wo33/I5/IXTa
-KQNVtnNNnM6SjaYAz48qDRhVBTSlWGSYapKyAe06OGBW3nXwAJr7sjnXGeTQJqtk
-okWbu5Ylx1XnhXwa7JASS7tda73gNacE8z38TgbCD7XqCqcMLa1jsO5FJQ4jU3vN
-8SrIuSUqSiDOv+jvxlzpp2AcYQppz6jL7kq9FqavVthlU7D7G3ghmkeOiyVbLsrh
-7z7NKE9FvJyWUmYgRIqdLPSrIVyDvj1R0EEphAYXgBkpWJlRVIVKIYkVzEzOg7oE
-tHhSW69n1ScQQLRK5T8Rp271UjaIKOBwbT2GKn16k66XZG9YKdc3zp+zt/tYXEuh
-5/pm/Vp9zXfOP8NaYBf3dsvyFGqjoePkuLEIrXSCjYEQYOht4ysGw0j4L4AccAUx
-1WfEcGVCPhWMNA/noo8KdECQwtvp5X3Jni+Rn2F2ypOvx9puTKN1Yq55GnKWNTZC
-Rw8VR1oFF4ne+JsW5CrWQOmtC8qNv5loOzh1IkJSMc2cjGf8IFE=
-=P27L
------END PGP SIGNATURE-----
-
---zYM0uCDKw75PZbzx--
+Thanks, Greg.
+--
+Gustavo
