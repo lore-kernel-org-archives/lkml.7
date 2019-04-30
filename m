@@ -2,136 +2,121 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDD7C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2972FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639472173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED10821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:06:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="dA77n0o4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfD3TAS (ORCPT
+        id S1727096AbfD3TGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbfD3TAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:00:17 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C7820854;
-        Tue, 30 Apr 2019 19:00:14 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 15:00:12 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC][PATCH] ftrace/x86: Emulate call function while updating
- in breakpoint handler
-Message-ID: <20190430150012.58ed382b@gandalf.local.home>
-In-Reply-To: <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
-References: <20190428133826.3e142cfd@oasis.local.home>
-        <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
-        <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
-        <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
-        <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
-        <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
-        <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
-        <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
-        <20190430135602.GD2589@hirez.programming.kicks-ass.net>
-        <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
-        <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
-        <20190430130359.330e895b@gandalf.local.home>
-        <20190430132024.0f03f5b8@gandalf.local.home>
-        <20190430134913.4e29ce72@gandalf.local.home>
-        <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Apr 2019 15:06:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36418 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfD3TGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 15:06:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h18so4981876wml.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=KOC8am+a2nOdN4WYbe81JkusFOlmT/wzWfYRV8sMIdI=;
+        b=dA77n0o4NI7x0ELsgdO84aeigRfoPwJWFy/n3ps5vN073G36EzZ2IeYl+A6sMoFipO
+         Fsc+S9P8Gs+L0lV4r8pwSINtqa7v7nRJd8L8/YBKWhLyZT88ibGqymtZK8E9llzoBLJ6
+         uX8M1FLKLse1nkwI1Jb6XiA+5mic+TR1b23auVFTo7YIRAukm8+GuLo8y1PkaTHFcZVS
+         jHJ2dEhmBNHp+a2F/4n+IdPlVeq1Qd4QnUeaETle04u+pufWKrV2qV4v5+QNLmmkhBlN
+         i/m9RQXk+oC6MnApOb3SwbJo5/d5Z4tP53j7sYoT02prd+VpF9Uo04jsh7b10DqtvLvF
+         J+oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=KOC8am+a2nOdN4WYbe81JkusFOlmT/wzWfYRV8sMIdI=;
+        b=JsdGiBoCCq6Ae1kbk43yubKdyEPNB2Evd9Zbo46EOgLMMVtU1O3/id0xOWBw/8+jRK
+         w+R7qlUY38wzZQ6hJkxWuK4bcnV5s+tW+vCUxWNebBLj4N00WQfyW6znqTlyxcXGPY8T
+         MfJ1SS2le/mGT2NDYTLawMA3x7fIL5fgVli3n307Awt3w6D2aI/n8fY5E2qgAz6c3CNx
+         gyiZ+A+dDF2oen0L/ciuYX/ITEVUWqAC1X8LRug1mD5VIMKt/T55Y5cummbI481SpOLg
+         Pb7FVNGnTJy75uK9XPL7Y54FSDSs+vTjJYCgtE+k7BW5JFESdUq7DgMyBBYhU7UfN79+
+         vsgg==
+X-Gm-Message-State: APjAAAX1d6Te+Yx3UOm+hucM2WZbuzWNu2f9tgB00ITOwBZbsD8iSMGx
+        xe9NXhL2RuORGOVROt2QZLQp3A==
+X-Google-Smtp-Source: APXvYqwia6Lw063G9SsVeUFKAAF2IsKPay8Vla9rRHmKjKeNMQ18PPPNQRAxPSeU0Ws+QemR94OAPg==
+X-Received: by 2002:a1c:a753:: with SMTP id q80mr4207784wme.120.1556651179630;
+        Tue, 30 Apr 2019 12:06:19 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id b11sm6088605wmh.29.2019.04.30.12.06.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 12:06:19 -0700 (PDT)
+Message-ID: <5cc89cab.1c69fb81.4a233.21d9@mx.google.com>
+Date:   Tue, 30 Apr 2019 12:06:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.14.114-54-gdb44a158d937
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-4.14.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
+References: <20190430113549.400132183@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 00/53] 4.14.115-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 11:33:21 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+stable-rc/linux-4.14.y boot: 117 boots: 2 failed, 114 passed with 1 untried=
+/unknown (v4.14.114-54-gdb44a158d937)
 
-> On Tue, Apr 30, 2019 at 10:49 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > +
-> > +asm(
-> > +       ".text\n"
-> > +
-> > +       /* Trampoline for function update with interrupts enabled */
-> > +       ".global ftrace_emulate_call_irqoff\n"
-> > +       ".type ftrace_emulate_call_irqoff, @function\n"
-> > +       "ftrace_emulate_call_irqoff:\n\t"
-> > +               "push %gs:ftrace_bp_call_return\n\t"  
-> 
-> Well, as mentioned in my original suggestion, this won't work on
-> 32-bit, or on UP. They have different models for per-cpu data (32-bti
-> uses %fs, and UP doesn't use a segment override at all).
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.114-54-gdb44a158d937/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.114-54-gdb44a158d937/
 
-Ah, yeah, I forgot about 32-bit. I could easily make this use fs as
-well, and for UP, just use a static variable.
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.114-54-gdb44a158d937
+Git Commit: db44a158d937ed88d91fa55f1df54c11490a5b57
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 66 unique boards, 24 SoC families, 14 builds out of 201
 
-> 
-> Maybe we just don't care about UP at all for this code, of course.
-> 
-> And maybe we can make the decision to also make 32-bit just not use
-> this either - so maybe the code is ok per se, just needs to make sure
-> it never triggers for the cases that it's not written for..
-> 
-> > +       "ftrace_emulate_call_update_irqoff:\n\t"
-> > +               "push %gs:ftrace_bp_call_return\n\t"
-> > +               "sti\n\t"
-> > +               "jmp *ftrace_update_func_call\n"  
-> 
-> .. and this should then use the "push push sti ret" model instead.
-> 
-> Plus get updated for objtool complaints.
+Boot Regressions Detected:
 
-Yeah, I see that now. Somehow it disappeared when I looked for it after
-making some other changes. I can update it.
+arm:
 
-> 
-> Anyway, since Andy really likes the entry code change, can we have
-> that patch in parallel and judge the difference that way? Iirc, that
-> was x86-64 specific too.
+    multi_v7_defconfig:
+        gcc-7:
+          stih410-b2120:
+              lab-baylibre-seattle: new failure (last pass: v4.14.114-44-g8=
+da3ae647284)
 
-Note, I don't think live kernel patching supports 32 bit anyway, so
-that may not be an issue.
+Boot Failures Detected:
 
-Josh,
+arm:
+    multi_v7_defconfig:
+        gcc-7:
+            stih410-b2120: 1 failed lab
 
-When you come back to the office, can you look into that method?
+arm64:
+    defconfig:
+        gcc-7:
+            rk3399-firefly: 1 failed lab
 
--- Steve
+---
+For more info write to <info@kernelci.org>
