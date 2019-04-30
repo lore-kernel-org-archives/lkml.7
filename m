@@ -2,27 +2,27 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CA2C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ED2C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4E12177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CEB20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfD3JKy (ORCPT
+        id S1726914AbfD3JK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:10:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36454 "EHLO mx1.suse.de"
+        Tue, 30 Apr 2019 05:10:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36476 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726129AbfD3JKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:10:53 -0400
+        id S1726129AbfD3JK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 05:10:56 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6C397AC57;
-        Tue, 30 Apr 2019 09:10:52 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id D1FC6AE64;
+        Tue, 30 Apr 2019 09:10:54 +0000 (UTC)
 From:   Petr Mladek <pmladek@suse.com>
 To:     Jiri Kosina <jikos@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -31,29 +31,50 @@ Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
         Petr Mladek <pmladek@suse.com>
-Subject: [PATCH v2 0/2] livepatch: Clean up of reliable stacktrace warnings
-Date:   Tue, 30 Apr 2019 11:10:47 +0200
-Message-Id: <20190430091049.30413-1-pmladek@suse.com>
+Subject: [PATCH v2 2/2] livepatch: Use static buffer for debugging messages under rq lock
+Date:   Tue, 30 Apr 2019 11:10:49 +0200
+Message-Id: <20190430091049.30413-3-pmladek@suse.com>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190430091049.30413-1-pmladek@suse.com>
+References: <20190430091049.30413-1-pmladek@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the remaining piece from the original patchset[1]. It is
-a simplification and split of the 3rd patch.
+klp_try_switch_task() is called under klp_mutex. The buffer for
+debugging messages might be static.
 
-[1] https://lkml.kernel.org/r/20190424085550.29612-1-pmladek@suse.com
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ kernel/livepatch/transition.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-
-Petr Mladek (2):
-  livepatch: Remove duplicate warning about missing reliable stacktrace
-    support
-  livepatch: Use static buffer for debugging messages under rq lock
-
- kernel/livepatch/transition.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
+diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+index 8e0274075e75..d66086fd6d75 100644
+--- a/kernel/livepatch/transition.c
++++ b/kernel/livepatch/transition.c
+@@ -304,11 +304,11 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
+  */
+ static bool klp_try_switch_task(struct task_struct *task)
+ {
++	static char err_buf[STACK_ERR_BUF_SIZE];
+ 	struct rq *rq;
+ 	struct rq_flags flags;
+ 	int ret;
+ 	bool success = false;
+-	char err_buf[STACK_ERR_BUF_SIZE];
+ 
+ 	err_buf[0] = '\0';
+ 
+@@ -351,7 +351,6 @@ static bool klp_try_switch_task(struct task_struct *task)
+ 		pr_debug("%s", err_buf);
+ 
+ 	return success;
+-
+ }
+ 
+ /*
 -- 
 2.16.4
 
