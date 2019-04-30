@@ -2,124 +2,112 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407D1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5051C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1405120652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF7D2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:44:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="JywicDci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfD3Qlz (ORCPT
+        id S1726401AbfD3QoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:41:55 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28899 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbfD3Qly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:41:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:41:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="153624424"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Apr 2019 09:41:53 -0700
-Received: from brettjgr-mobl1.ger.corp.intel.com (unknown [10.254.180.216])
-        by linux.intel.com (Postfix) with ESMTP id 6D07E5803DA;
-        Tue, 30 Apr 2019 09:41:52 -0700 (PDT)
-Subject: Re: [PATCH] ACPI / property: fix handling of data_nodes in
- acpi_get_next_subnode()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-acpi@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
- <20190430163041.GN9224@smile.fi.intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <ba56e822-92ee-7a75-5c62-45f3a572ccde@linux.intel.com>
-Date:   Tue, 30 Apr 2019 11:41:50 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Tue, 30 Apr 2019 12:44:15 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33115 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfD3QoO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:44:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s18so21891794wrp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6a++kp7rZSqO56147GgKvyNl/WmQw5p2F4HTj/YvBwo=;
+        b=JywicDcin0PEkXHlmOEx44gGwJpwcMFiLKCQpuSba8BdnyTjTAX37whDXyUIhYNhGT
+         kj2wkan4ypqehPT7qsZYHXCn0+XciKhB28IqcMs/HskCH+WmFvuXj9yszN5TPu6JnYKL
+         KV1EAiv9jORb17I8fAFZGUTxDD7rtPMeqQXyk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6a++kp7rZSqO56147GgKvyNl/WmQw5p2F4HTj/YvBwo=;
+        b=DxMgQJasgG7cvEwJv/lmYdYAY7ZY51nB08wTBB7HAapUTmPhCm48QKlJGA4pNe0MCG
+         u3IR3cX+z1Ea6oxBrCkQNgtbgIiTSE6Bk/oozTceOqnJC6BRi9JcT//DBxMGJ5BhKiwp
+         SD6EBbhtK5notv5i+L1eZATTtprl0sSJleyxS4eQuZ3MerLDKGkOQNAhfO+Zt5F+Mofc
+         XAIBTXRkJ5IexwLaJttHkkKtaUrobydC9om5DE01eW4eGCMGULnq2uKq5olT8qvAHR6s
+         k9e78j2hzpEuyTvHRAnLO39Dm9kzHyNgmIxhaTwCjU+3DE+N43zkO8eRnB0BcaRXPQWV
+         CXCg==
+X-Gm-Message-State: APjAAAUfu/wXlzDs9PGyez2+7OTMsvvx9HMFzkQTjuju7UGw2RyFKkzE
+        gtGAXRjXlrV+CbmNbEb36BhqfA==
+X-Google-Smtp-Source: APXvYqzZbd2cX5Tr5rnUMve5xnVuO9DAJcSN7xGBIxQ6aP1xQ+hevgOaENY/AI/qdh9k1nYV3ndV7A==
+X-Received: by 2002:a5d:408e:: with SMTP id o14mr12597110wrp.318.1556642652888;
+        Tue, 30 Apr 2019 09:44:12 -0700 (PDT)
+Received: from andrea ([37.227.24.188])
+        by smtp.gmail.com with ESMTPSA id z15sm26391666wrv.80.2019.04.30.09.44.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 09:44:11 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 18:44:04 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 0/5] Fix improper uses of smp_mb__{before,after}_atomic()
+Message-ID: <20190430164404.GA2874@andrea>
+References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <20190430083409.GD2677@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190430163041.GN9224@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430083409.GD2677@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 11:30 AM, Andy Shevchenko wrote:
-> On Tue, Apr 30, 2019 at 10:52:29AM -0500, Pierre-Louis Bossart wrote:
->> When the DSDT tables expose devices with subdevices and a set of
->> hierarchical _DSD properties, the data returned by
->> acpi_get_next_subnode() is incorrect, with the results suggesting a bad
->> pointer assignment. The parser works fine with device_nodes or
->> data_nodes, but not with a combination of the two.
->>
->> The problem is traced to an invalid pointer used when jumping from
->> handling device_nodes to data nodes. The existing code looks for data
->> nodes below the last subdevice found instead of the common root. Fix
->> by forcing the acpi_device pointer to be derived from the same fwnode
->> for the two types of subnodes.
->>
->> This same problem of handling device and data nodes was already fixed
->> in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
->> node parsing in acpi_get_next_subnode()")' but broken later by 'commit
->> 34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
->> this should probably go to linux-stable all the way to 4.12
+On Tue, Apr 30, 2019 at 10:34:09AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 29, 2019 at 10:14:56PM +0200, Andrea Parri wrote:
+> > Hello!
+> > 
+> > A relatively common misuse of these barriers is to apply these to
+> > operations which are not read-modify-write operations, such as
+> > atomic_set() and atomic_read(); examples were discussed in [1].
+> > 
+> > This series attempts to fix those uses by (conservatively) replacing
+> > the smp_mb__{before,after}_atomic() barriers with full memory barriers.
 > 
-> Period is missed in above sentence.
+> I don't think blindly doing this replacement makes the code any better;
+> much of the code you found is just straight up dodgy to begin with.
 > 
-> I think it make sense to add Fixes: tag.
+> I think the people should mostly just consider this a bug report.
 
-Thanks Andy for the review. I hesitated to add a fixes tag. The line 
-about resetting the adev pointer was indeed removed in the latter 
-commit, but there were a slew of other changes done later by Sakari on 
-hierarchical _DSD so it's quite complicated to say when this was last 
-fully functional.
+Bug, misuse, patch, and rfc seem all appropriate to me in this context.
 
-> 
-> Nevertheless,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Thank you for fixing this interesting issue!
-> 
->>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> ---
->>   drivers/acpi/property.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
->> index 5815356ea6ad..efc74f912f39 100644
->> --- a/drivers/acpi/property.c
->> +++ b/drivers/acpi/property.c
->> @@ -943,6 +943,16 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
->>   		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
->>   		struct acpi_data_node *dn;
->>   
->> +		/*
->> +		 * We can have a combination of device and data nodes,
->> +		 * e.g. with hierarchical _DSD properties. Make sure
->> +		 * the adev pointer is restored before going through
->> +		 * data nodes, otherwise we will be looking for
->> +		 * data_nodes below the last device found instead of
->> +		 * the common fwnode shared by device_nodes and
->> +		 * data_nodes
->> +		 */
->> +		adev = to_acpi_device_node(fwnode);
->>   		if (adev)
->>   			head = &adev->data.subnodes;
->>   		else if (data)
->> -- 
->> 2.17.1
->>
-> 
 
+> Also, remember a memory barrier without a coherent comment is most
+> likely a bug anyway.
+
+Right.  Hopefully, the people in Cc: will want to shed some light about
+this: I know what these smp_mb__{before,after}_atomic() can not do, but
+I can only guess (I won't!) what they are supposed to accomplish (e.g.,
+which mem. accesses are being ordered, what are the matching barriers);
+maybe this can also justify the "conservative" approach presented here.
+
+  Andrea
