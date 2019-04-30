@@ -2,113 +2,137 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB42C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B489EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90012080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E11E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNvxekfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfD3Jh3 convert rfc822-to-8bit (ORCPT
+        id S1726964AbfD3Jhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:37:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54450 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726309AbfD3Jh2 (ORCPT
+        Tue, 30 Apr 2019 05:37:54 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38642 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfD3Jhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:37:28 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3U9SbQB032616
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 05:37:26 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6hjdx5km-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 05:37:26 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 30 Apr 2019 10:37:24 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 10:37:22 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3U9bKEm32702580
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 09:37:20 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5CC394204F;
-        Tue, 30 Apr 2019 09:37:20 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CAEF342042;
-        Tue, 30 Apr 2019 09:37:19 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.116])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Apr 2019 09:37:19 +0000 (GMT)
-Date:   Tue, 30 Apr 2019 11:37:18 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-In-Reply-To: <efa8840b-35b1-2823-697f-ab56d4898854@linux.ibm.com>
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
-        <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
-        <20190429185002.6041eecc.pasic@linux.ibm.com>
-        <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
-        <efa8840b-35b1-2823-697f-ab56d4898854@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Tue, 30 Apr 2019 05:37:53 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w11so4958085edl.5;
+        Tue, 30 Apr 2019 02:37:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=drPZ7KoEDZSmxCF+WsAn2EdRoQpZ9ONUXMxh/61qnOY=;
+        b=aNvxekfqNqjBjZximPsvLr2kRZDfj/FaSXo2W0BuDi4PI/n49Kro/yAVpAiSkjA/FZ
+         A9a+2mgS4KR9OzuZ4iXOvlxEo6SIj6bzEhvj/D5/H7k5vHAVzl1xhrf4Q19MKJWUDLLJ
+         5zeQXrWaF+EriPjmiSI+gUwvpmVyLTyvaeM82WVoxD8gcxFHZIhwLXjnHKvynrYddBmk
+         B/K0BAM5Ab38A8OJxcjoRVnLjmgJ693xcuH0pV5M7o6n7AScB2Koq6b7gpwCczJ6rAWF
+         LLJAJop8kY82YlMTv+xkXrl2tlnqBT2iWYl7Y5s/pNF3OoF8wnPZITJMgfAD+cml01Wb
+         nOww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=drPZ7KoEDZSmxCF+WsAn2EdRoQpZ9ONUXMxh/61qnOY=;
+        b=OOv4RKndLkrFvJpe6Kc9v7bklElA8x5EmNW1C6xuduN9cWlmYETCmgq9zlKvP9gKMV
+         kpSAqGWLKhVTGtQoMWPkr1E80qxbTOehz/8Od9+t4fTdgNC0L9OAWqLY1cfHcoLnaiyL
+         8jo5FEN1FNgO9j8ZDOay/mbqdjORWVuKpnXvdiTR0Ra0ZxfnV5fd2i1ZWmMz6RTXjo4Q
+         Y+lh5/MkYoc4moxTs7LkpXMeNFY7ciYEGZpsF0JbGoo3pD3JSIy7TeUpzzefM7+ogf8N
+         /48N1Wq2hUjXRLKmCOvBomYibIp2EdRXxiRnW/c2gh4u3UoPmTXn/QI28KavSeCAFFqw
+         hS2Q==
+X-Gm-Message-State: APjAAAU4ckIAlXOUqWvEnmTjELmHZq2olPG1mKMQMtzxHSbk78lqLe4+
+        YP4pT2qL3uQuq+7e1FPP/oc=
+X-Google-Smtp-Source: APXvYqzCLE+57MgejEVLrV4lXRIfrhIdN91f5tmUH6A98tC/stesp++PZAFiDzr4K2t7wXcpwZKXlw==
+X-Received: by 2002:a17:906:3e91:: with SMTP id a17mr33572986ejj.73.1556617071923;
+        Tue, 30 Apr 2019 02:37:51 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id o62sm8745742eda.42.2019.04.30.02.37.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Apr 2019 02:37:50 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 02:37:49 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     robh+dt@kernel.org, frowand.list@gmail.com,
+        pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] of: replace be32_to_cpu to be32_to_cpup
+Message-ID: <20190430093749.GA29126@archlinux-i9>
+References: <20190430090044.16345-1-tranmanphong@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19043009-4275-0000-0000-0000032FDA31
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043009-4276-0000-0000-0000383F323E
-Message-Id: <20190430113718.426392f0.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=634 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430090044.16345-1-tranmanphong@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 10:32:52 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
++ Nick and the list
 
-> >>> +    aqic_gisa.gisa = gisa->next_alert >> 4;  
-> >>
-> >> Why gisa->next_alert? Isn't this supposed to get set to gisa origin
-> >> (without some bits on the left)?  
+On Tue, Apr 30, 2019 at 04:00:44PM +0700, Phong Tran wrote:
+> The cell is a pointer to __be32.
+> with the be32_to_cpu a lot of clang warning show that:
+> 
+> ./include/linux/of.h:238:37: warning: multiple unsequenced modifications
+> to 'cell' [-Wunsequenced]
+>                 r = (r << 32) | be32_to_cpu(*(cell++));
+>                                                   ^~
+> ./include/linux/byteorder/generic.h:95:21: note: expanded from macro
+> 'be32_to_cpu'
+>                     ^
+> ./include/uapi/linux/byteorder/little_endian.h:40:59: note: expanded
+> from macro '__be32_to_cpu'
+>                                                           ^
+> ./include/uapi/linux/swab.h:118:21: note: expanded from macro '__swab32'
+>         ___constant_swab32(x) :                 \
+>                            ^
+> ./include/uapi/linux/swab.h:18:12: note: expanded from macro
+> '___constant_swab32'
+>         (((__u32)(x) & (__u32)0x000000ffUL) << 24) |            \
+>                   ^
+> 
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>  include/linux/of.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index e240992e5cb6..1c35fc8f19b0 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -235,7 +235,7 @@ static inline u64 of_read_number(const __be32 *cell, int size)
+>  {
+>  	u64 r = 0;
+>  	while (size--)
+> -		r = (r << 32) | be32_to_cpu(*(cell++));
+> +		r = (r << 32) | be32_to_cpup(cell++);
+>  	return r;
+>  }
+>  
+> -- 
+> 2.21.0
+> 
 
-s/left/right/
+While the patch does remove the warning, I am not convinced that this
+isn't a clang bug based on my brief analysis here:
 
-> > 
-> > Someone already asked this question.
+https://github.com/ClangBuiltLinux/linux/issues/460#issuecomment-487808008
 
-It must have been in some previous iteration... Can you give me a
-pointer?
+However, I'm waiting for people smarter than I am to comment on whether
+that sounds correct or not.
 
-> > The answer is: look at the ap_qirq_ctrl structure, you will see that the 
-> > gisa field is 27 bits wide.
+I am not familiar with the various different big/little endian functions
+enough to review this but thank you for the patch!
 
-My question was not about the width, but about gisa->next_alert being
-used.
-
-Regards,
-Halil
-
+Nathan
