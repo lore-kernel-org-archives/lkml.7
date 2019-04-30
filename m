@@ -2,178 +2,213 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879D1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50130C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EADE2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TgxO+DVI"
+	by mail.kernel.org (Postfix) with ESMTP id 085D121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 03:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556593724;
+	bh=MUW4hNjaV3W8Qqb72aUeSYkwwsPdGVKEMqWFyJR67SU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1wIU5Kd9SjAraDGxjDXQoaLlBBrTED0A6L+FWhZ6FFTwEzkzWV/WuL9WpwcqhXx4l
+	 oehBcv6/D5o6tr8y/+Df3O+dIo5/RwMtPke9or3+Q2xCFZs83Bccza+H59NdPrEVPy
+	 82LzCCJKL0+Mbbf5yaRq4lFshRKHEb5Gm3HrpFbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbfD3DHz (ORCPT
+        id S1729997AbfD3DIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 23:07:55 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3707 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729883AbfD3DHz (ORCPT
+        Mon, 29 Apr 2019 23:08:42 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:54251 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729883AbfD3DIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 23:07:55 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cc7bc050002>; Mon, 29 Apr 2019 20:07:49 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 29 Apr 2019 20:07:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 29 Apr 2019 20:07:53 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Apr
- 2019 03:07:52 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Apr
- 2019 03:07:47 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 30 Apr 2019 03:07:47 +0000
-Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.158]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cc7bc020001>; Mon, 29 Apr 2019 20:07:47 -0700
-From:   Jim Lin <jilin@nvidia.com>
-To:     <mathias.nyman@intel.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jim Lin <jilin@nvidia.com>
-Subject: [PATCH v3 1/1] usb: xhci: Add Clear_TT_Buffer
-Date:   Tue, 30 Apr 2019 11:06:32 +0800
-Message-ID: <1556593592-3078-1-git-send-email-jilin@nvidia.com>
-X-Mailer: git-send-email 2.1.4
+        Mon, 29 Apr 2019 23:08:42 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C90185286;
+        Mon, 29 Apr 2019 23:08:40 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 29 Apr 2019 23:08:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=7ZjSg1VNx7gjXl0+m
+        rA9pDXnHVsQsem51MPfG6t0rRU=; b=t64AZFUCeiB3BcAGjwP5+9A45B/1VVLSp
+        j7Cy8t4Up7fen9CTDvtRGuhxrneh3AtiYuk5c+1H1OVWZU4RDJqeADhx/SB3X5lu
+        s36i+EMEYqYk1L6HVlnyZO+YRs2dJBfuSjE6jOadoCJc/4ELtUegS1SjXMfvoVrY
+        cMOAS8hmyuxdvQScuW192hULgF4sQHey94cuV4FhrVno+/kX7OTR95m2KPSDi9hz
+        +Dv7b40hOgrOE0TTgN5BDLvvL8lm83DRNO1d7BREf1vjK+qFidVEyxUhoVWelcFQ
+        KLI7Uq2w4VlmoSVuM9R+ipexxy3efhDiAY8bjpsAVo1zkaydgnuyQ==
+X-ME-Sender: <xms:NrzHXF7BIDeD-jSMI20ye9UHeYpHcdfAmAdQ0vyncTZXeb3iH0LK_g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdeikecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucffohhmrg
+    hinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvddurdeggedrvdeftddrudekkeenucfr
+    rghrrghmpehmrghilhhfrhhomhepthhosghinheskhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:NrzHXNzSJxudlMFy9eD1bPa1fzTRy9os8DmPfMmCvi-EQYN5pK0uYg>
+    <xmx:NrzHXEQwZeWw4m5ZcLREUjqR5JS9H8kOL3uj_44_NwpneGt7dHvkgw>
+    <xmx:NrzHXMWyDHp327PV71QdztchNwJ00TlGRFWekXYWaSyUOYROiaRYXA>
+    <xmx:OLzHXGJ06uxdmfNFU25_gEWeN0UxiELGOrl4z8DGDmKxvIrKbBDPDg>
+Received: from eros.localdomain (ppp121-44-230-188.bras2.syd2.internode.on.net [121.44.230.188])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D315D103CA;
+        Mon, 29 Apr 2019 23:08:30 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        "Theodore Ts'o" <tytso@mit.edu>, Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v4 00/15] Slab Movable Objects (SMO)
+Date:   Tue, 30 Apr 2019 13:07:31 +1000
+Message-Id: <20190430030746.26102-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556593669; bh=FwjnhXjjHjZ2pU++sQhaTIujmWXVbwgbV8T8yW0hDX8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=TgxO+DVI0IboqaJ1eINjvKFypxcyNhPz7yDd7JZ6hrgpIHngLsRySlpJ23pP0SPNE
-         h0O4tva/9C+uzIyo9YaTXIbltGP1eIpE6YLS7jJR+zRG/F8Csv92fCmZNkcubzwKkS
-         Ogs7ysa7JAjqRDcd7Rs2EB+/gmdmOJ7385y81i/rgvoLaGQ6uBZw6+GHd+FYek03Ny
-         UFgDvokuZ+bQSvnB7Qo8uNArUf+GFwM1W4AQ4Vqnb3Q3PCT0D58R1Pl428lvCzu9HW
-         FTp+HrDTuYeY9EwICm9/691xgNVjlYbBFQSXwhPk2XVVzJ/TQ9/4T3CC7W2cncRust
-         /XO0QwvZm4wAQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-processing for full-/low-speed endpoints connected via a TT, the host
-software must use the Clear_TT_Buffer request to the TT to ensure
-that the buffer is not in the busy state".
+Hi,
 
-In our case, a full-speed speaker (ConferenceCam) is behind a high-
-speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-request we may continue to get STALL with the folllowing requests,
-like Set_Interface.
+Another iteration of the SMO patch set, updates to this version are
+restricted to the dcache patch #14.
 
-Here we add Clear_TT_Buffer for the following Set_Interface requests
-to get ACK successfully.
+Applies on top of Linus' tree (tag: v5.1-rc6).
 
-Signed-off-by: Jim Lin <jilin@nvidia.com>
----
-v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
-    , remove its claiming in xhci.h
-v3: Add description for clearing_tt (xhci.h)
+This is a patch set implementing movable objects within the SLUB
+allocator.  This is work based on Christopher Lameter's patch set:
 
- drivers/usb/host/xhci-ring.c | 28 ++++++++++++++++++++++++++++
- drivers/usb/host/xhci.c      |  7 +++++++
- drivers/usb/host/xhci.h      |  2 ++
- 3 files changed, 37 insertions(+)
+ https://lore.kernel.org/patchwork/project/lkml/list/?series=377335
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 9215a28dad40..02b1ebad81e7 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1786,6 +1786,33 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
- 	return NULL;
- }
- 
-+static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci,
-+	unsigned int slot_id, struct xhci_td *td)
-+{
-+	struct xhci_virt_device *dev;
-+	struct xhci_slot_ctx *slot_ctx;
-+	int saved_devnum;
-+
-+	/*
-+	 * As part of low/full-speed endpoint-halt processing
-+	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
-+	 */
-+	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
-+	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub) &&
-+	    !xhci->clearing_tt) {
-+		xhci->clearing_tt = 1;
-+		dev = xhci->devs[slot_id];
-+		slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
-+		/* Update devnum temporarily for usb_hub_clear_tt_buffer */
-+		saved_devnum = td->urb->dev->devnum;
-+		td->urb->dev->devnum = (int) le32_to_cpu(slot_ctx->dev_state) &
-+			DEV_ADDR_MASK;
-+		if (usb_hub_clear_tt_buffer(td->urb))
-+			xhci->clearing_tt = 0;
-+		td->urb->dev->devnum = saved_devnum;
-+	}
-+}
-+
- static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 		unsigned int slot_id, unsigned int ep_index,
- 		unsigned int stream_id, struct xhci_td *td,
-@@ -1804,6 +1831,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 	if (reset_type == EP_HARD_RESET) {
- 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
- 		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
-+		xhci_clear_hub_tt_buffer(xhci, slot_id, td);
- 	}
- 	xhci_ring_cmd_db(xhci);
- }
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 7fa58c99f126..4890c3518aa3 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -5132,6 +5132,12 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
- }
- EXPORT_SYMBOL_GPL(xhci_gen_setup);
- 
-+static void xhci_clear_tt_buffer_complete(struct usb_hcd *hcd,
-+		struct usb_host_endpoint *ep)
-+{
-+	hcd_to_xhci(hcd)->clearing_tt = 0;
-+}
-+
- static const struct hc_driver xhci_hc_driver = {
- 	.description =		"xhci-hcd",
- 	.product_desc =		"xHCI Host Controller",
-@@ -5192,6 +5198,7 @@ static const struct hc_driver xhci_hc_driver = {
- 	.enable_usb3_lpm_timeout =	xhci_enable_usb3_lpm_timeout,
- 	.disable_usb3_lpm_timeout =	xhci_disable_usb3_lpm_timeout,
- 	.find_raw_port_number =	xhci_find_raw_port_number,
-+	.clear_tt_buffer_complete = xhci_clear_tt_buffer_complete,
- };
- 
- void xhci_init_driver(struct hc_driver *drv,
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 9334cdee382a..dab1476e5bdf 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1864,6 +1864,8 @@ struct xhci_hcd {
- 	unsigned		hw_lpm_support:1;
- 	/* Broken Suspend flag for SNPS Suspend resume issue */
- 	unsigned		broken_suspend:1;
-+	/* Clear_TT_Buffer in progress */
-+	unsigned		clearing_tt:1;
- 	/* cached usb2 extened protocol capabilites */
- 	u32                     *ext_caps;
- 	unsigned int            num_ext_caps;
+The original code logic is from that set and implemented by Christopher.
+Clean up, refactoring, documentation, and additional features by myself.
+Responsibility for any bugs remaining falls solely with myself.
+
+Changes to this version:
+
+Re-write the dcache Slab Movable Objects isolate/migrate functions.
+Based on review/suggestions by Alexander on the last version.
+
+In this version the isolate function loops over the object vector and
+builds a shrink list for all objects that have refcount==0 AND are NOT
+on anyone else's shrink list.  A pointer to this list is returned from
+the isolate function and passed to the migrate function (by the SMO
+infrastructure).  The dentry migration function d_partial_shrink()
+simply calls shrink_dentry_list() on the received shrink list pointer
+and frees the memory associated with the list_head.
+
+Hopefully if this is all ok I can move on to violating the inode
+slab cache :)
+
+FWIW testing on a VM in Qemu brings this mild benefit to the dentry slab
+cache with no _apparent_ negatives.
+
+CONFIG_SLUB_DEBUG=y
+CONFIG_SLUB=y
+CONFIG_SLUB_CPU_PARTIAL=y
+CONFIG_SLUB_DEBUG_ON=y
+CONFIG_SLUB_STATS=y
+CONFIG_SMO_NODE=y
+CONFIG_DCACHE_SMO=y
+
+[root@vm ~]# slabinfo  dentry -r | head -n 13
+
+Slabcache: dentry           Aliases:  0 Order :  1 Objects: 38585
+** Reclaim accounting active
+** Defragmentation at 30%
+
+Sizes (bytes)     Slabs              Debug                Memory
+------------------------------------------------------------------------
+Object :     192  Total  :    2582   Sanity Checks : On   Total: 21151744
+SlabObj:     528  Full   :    2547   Redzoning     : On   Used : 7408320
+SlabSiz:    8192  Partial:      35   Poisoning     : On   Loss : 13743424
+Loss   :     336  CpuSlab:       0   Tracking      : On   Lalig: 12964560
+Align  :       8  Objects:      15   Tracing       : Off  Lpadd:  702304
+
+[root@vm ~]# slabinfo  dentry --shrink
+[root@vm ~]# slabinfo  dentry -r | head -n 13
+
+Slabcache: dentry           Aliases:  0 Order :  1 Objects: 38426
+** Reclaim accounting active
+** Defragmentation at 30%
+
+Sizes (bytes)     Slabs              Debug                Memory
+------------------------------------------------------------------------
+Object :     192  Total  :    2578   Sanity Checks : On   Total: 21118976
+SlabObj:     528  Full   :    2547   Redzoning     : On   Used : 7377792
+SlabSiz:    8192  Partial:      31   Poisoning     : On   Loss : 13741184
+Loss   :     336  CpuSlab:       0   Tracking      : On   Lalig: 12911136
+Align  :       8  Objects:      15   Tracing       : Off  Lpadd:  701216
+
+
+Please note, this dentry shrink implementation is 'best effort', results
+vary.  This is as is expected.  We are trying to unobtrusively shrink
+the dentry cache.
+
+thanks,
+Tobin.
+
+
+Tobin C. Harding (15):
+  slub: Add isolate() and migrate() methods
+  tools/vm/slabinfo: Add support for -C and -M options
+  slub: Sort slab cache list
+  slub: Slab defrag core
+  tools/vm/slabinfo: Add remote node defrag ratio output
+  tools/vm/slabinfo: Add defrag_used_ratio output
+  tools/testing/slab: Add object migration test module
+  tools/testing/slab: Add object migration test suite
+  xarray: Implement migration function for objects
+  tools/testing/slab: Add XArray movable objects tests
+  slub: Enable moving objects to/from specific nodes
+  slub: Enable balancing slabs across nodes
+  dcache: Provide a dentry constructor
+  dcache: Implement partial shrink via Slab Movable Objects
+  dcache: Add CONFIG_DCACHE_SMO
+
+ Documentation/ABI/testing/sysfs-kernel-slab |  14 +
+ fs/dcache.c                                 | 110 ++-
+ include/linux/slab.h                        |  71 ++
+ include/linux/slub_def.h                    |  10 +
+ lib/radix-tree.c                            |  13 +
+ lib/xarray.c                                |  49 ++
+ mm/Kconfig                                  |  14 +
+ mm/slab_common.c                            |   2 +-
+ mm/slub.c                                   | 819 ++++++++++++++++++--
+ tools/testing/slab/Makefile                 |  10 +
+ tools/testing/slab/slub_defrag.c            | 567 ++++++++++++++
+ tools/testing/slab/slub_defrag.py           | 451 +++++++++++
+ tools/testing/slab/slub_defrag_xarray.c     | 211 +++++
+ tools/vm/slabinfo.c                         |  51 +-
+ 14 files changed, 2299 insertions(+), 93 deletions(-)
+ create mode 100644 tools/testing/slab/Makefile
+ create mode 100644 tools/testing/slab/slub_defrag.c
+ create mode 100755 tools/testing/slab/slub_defrag.py
+ create mode 100644 tools/testing/slab/slub_defrag_xarray.c
+
 -- 
-2.1.4
+2.21.0
 
