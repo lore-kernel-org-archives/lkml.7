@@ -2,107 +2,179 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1C0C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA6CC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5B021783
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6552721670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ev4b3NcI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfD3NFr (ORCPT
+        id S1728105AbfD3NGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:05:47 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42883 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfD3NFr (ORCPT
+        Tue, 30 Apr 2019 09:06:40 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46053 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfD3NGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:05:47 -0400
-X-Originating-IP: 109.213.14.175
-Received: from localhost (alyon-652-1-31-175.w109-213.abo.wanadoo.fr [109.213.14.175])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 97BEC60006;
-        Tue, 30 Apr 2019 13:05:44 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 15:05:44 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] rtc: digicolor: set range
-Message-ID: <20190430130544.GF11339@piout.net>
-References: <20190430093212.28425-1-alexandre.belloni@bootlin.com>
- <20190430093212.28425-2-alexandre.belloni@bootlin.com>
- <877ebbu3lz.fsf@tarshish>
- <20190430114702.GD11339@piout.net>
- <875zqvu1l3.fsf@tarshish>
+        Tue, 30 Apr 2019 09:06:39 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d5so8026237qko.12
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xu0LbkXWbh0BXLoqCriBqfNKRC7SgaoGIdiOs9kTAIo=;
+        b=ev4b3NcIoN2LtjZoczNWMJkObSXi5rJhv1tREV7FIHhWII/JH7EGK4uRr1pK0U9/e7
+         YHxtZa02o0T/Y4UbH9x6lMlIYwIhCmu0g1HhicTIxPlw0Cip/edX1KilUNZxQnPb61t5
+         NI+/EF/qCRvJc6ONyf5+EjfBZYNlCqUnmQjVJ+0BP5qzMrTW9ncWyC4Qiwmr/37we1NG
+         WMIwW7gRL5U+oOQULoFL4dZ2YatA80ngCq/4sVaDCUrfFrToGkM1xtJrB1ilCvb0TaC/
+         pD3lOncUjvkRHwsKqoNf0OGRimEPiC0fv6YwnXR9hr9MrHcPJ8SCyY5G6Jr0Iu2kP2xi
+         N7aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xu0LbkXWbh0BXLoqCriBqfNKRC7SgaoGIdiOs9kTAIo=;
+        b=OWZKGhi0PrjTGEj/40AdIdqM7pfMTzyKuig42KAO2WTWNhlC95SJJKElP72AKUbMNv
+         TTHZinPf62fyg/JE+zcgCwuC9oVCtbIApJC+vhLfYtVnMQxa7UuVu/+kd9RYtToFOLka
+         yiWBVOVijrQA/dtJqFONUByHPQCrc4BqrbdLMGbviPGOL9LDIWDTDT3W4JrlxwYcn9Fc
+         dBIhnKY9UPFgzfOKg+9rlmU0OeGG+FZE28R/FZEsFd8HuJcN0NZ53/2XZ2NYllhmreEt
+         CE9ROJ+5pxmh+cj2I8h9csaCnt3TLj8SIcze8ugCjqCPG5k8mkrH/DyvF91biejzlLmA
+         th2g==
+X-Gm-Message-State: APjAAAXfBwlbkz97Ff+7FOMA7kAj+WXrJskyM6p0BD8Hn5BDclnX7+sn
+        /vu3xfy+6mPcZK9ctR0ANFdpsvlSRQ5Ut0W3bcI=
+X-Google-Smtp-Source: APXvYqw50i+EEJTKCYk/63q9X6/A1x4vxEa299K+pSOX3Ai9Z0fZPQoCSnH4o4lLDcLLXqsDxi3BJmxrTMrYj9jnfas=
+X-Received: by 2002:a37:a514:: with SMTP id o20mr19369286qke.41.1556629598835;
+ Tue, 30 Apr 2019 06:06:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zqvu1l3.fsf@tarshish>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org> <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
+In-Reply-To: <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 30 Apr 2019 06:06:26 -0700
+Message-ID: <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
+Subject: Re: perf build broken in 5.1-rc7
+To:     Thomas Backlund <tmb@mageia.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2019 15:20:08+0300, Baruch Siach wrote:
-> Hi Alexandre,
-> 
-> On Tue, Apr 30 2019, Alexandre Belloni wrote:
-> > On 30/04/2019 14:36:24+0300, Baruch Siach wrote:
-> >> Hi Alexandre,
-> >>
-> >> On Tue, Apr 30 2019, Alexandre Belloni wrote:
-> >>
-> >> > While the range of REFERENCE + TIME is actually 33 bits, the counter
-> >> > itself (TIME) is a 32-bits seconds counter.
-> >> >
-> >> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> >> > ---
-> >> >  drivers/rtc/rtc-digicolor.c | 1 +
-> >> >  1 file changed, 1 insertion(+)
-> >> >
-> >> > diff --git a/drivers/rtc/rtc-digicolor.c b/drivers/rtc/rtc-digicolor.c
-> >> > index 5bb14c56bc9a..e6e16aaac254 100644
-> >> > --- a/drivers/rtc/rtc-digicolor.c
-> >> > +++ b/drivers/rtc/rtc-digicolor.c
-> >> > @@ -206,6 +206,7 @@ static int __init dc_rtc_probe(struct platform_device *pdev)
-> >> >  	platform_set_drvdata(pdev, rtc);
-> >> >
-> >> >  	rtc->rtc_dev->ops = &dc_rtc_ops;
-> >> > +	rtc->rtc_dev->range_max = U32_MAX;
-> >>
-> >> Where can I find documentation on the meaning and usage of the range_max
-> >> value? I could not find anything in the kernel source.
+On Tue, Apr 30, 2019 at 12:55 AM Thomas Backlund <tmb@mageia.org> wrote:
+>
+> Den 30-04-2019 kl. 10:26, skrev Thomas Backlund:
 > >
-> > It should be set to the maximum UNIX timestamp the RTC can be set to
-> > while keeping range_min to range_max contiguous.
+> > Building perf in 5.1-rc5/6/7 fails:
 > >
-> > In the digicolor case, you could go up to 8589934590 (Wed Mar 16
-> > 12:56:30 UTC 2242) but the driver only writes DC_RTC_REFERENCE and I'm
-> > not sure it can also update DC_RTC_TIME safely.
-> 
-> DC_RTC_TIME resets to zero whenever dc_rtc_write writes CMD_RESET to the
-> DC_RTC_CONTROL register. DC_RTC_REFERENCE keeps the value that
-> dc_rtc_write stores there. So the driver will return values larger than
-> U32_MAX if you happen to cross this point in time between dc_rtc_write
-> and dc_rtc_read. But you can't store a value larger than U32_MAX in
-> DC_RTC_REFERENCE.
-> 
-> Will the core RTC code handle the U32_MAX cross correctly?
-> 
+> >
+> > Build start:
+> >
+> >
+> >   make -s -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1
+> > WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1
+> > NO_BIONIC=1 NO_JVMTI=1 prefix=/usr lib=lib64 all
+> >    BUILD:   Doing 'make -j32' parallel build
+> >    HOSTCC   fixdep.o
+> >    HOSTLD   fixdep-in.o
+> >    LINK     fixdep
+> > Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h'
+> > differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
+> > diff -u tools/arch/x86/include/uapi/asm/vmx.h
+> > arch/x86/include/uapi/asm/vmx.h
+> >
+> > Auto-detecting system features:
+> > ...                         dwarf: [ on  ]
+> > ...            dwarf_getlocations: [ on  ]
+> > ...                         glibc: [ on  ]
+> > ...                          gtk2: [ on  ]
+> > ...                      libaudit: [ on  ]
+> > ...                        libbfd: [ on  ]
+> > ...                        libelf: [ on  ]
+> > ...                       libnuma: [ on  ]
+> > ...        numa_num_possible_cpus: [ on  ]
+> > ...                       libperl: [ on  ]
+> > ...                     libpython: [ on  ]
+> > ...                      libslang: [ on  ]
+> > ...                     libcrypto: [ on  ]
+> > ...                     libunwind: [ on  ]
+> > ...            libdw-dwarf-unwind: [ on  ]
+> > ...                          zlib: [ on  ]
+> > ...                          lzma: [ on  ]
+> > ...                     get_cpuid: [ on  ]
+> > ...                           bpf: [ on  ]
+> > ...                        libaio: [ on  ]
+> > ...        disassembler-four-args: [ OFF ]
+> >
+> > Makefile.config:473: No sys/sdt.h found, no SDT events are defined,
+> > please install systemtap-sdt-devel or systemtap-sdt-dev
+> > Makefile.config:853: No libbabeltrace found, disables 'perf data' CTF
+> > format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+> >
+> >
+> > And breaks with:
+> >
+> >
+> > CC       ui/setup.o
+> > util/annotate.c: In function 'symbol__disassemble_bpf':
+> > util/annotate.c:1767:29: error: incompatible type for argument 1 of
+> > 'disassembler'
+> >    disassemble = disassembler(bfdf);
+> >                               ^~~~
+> > In file included from util/annotate.c:1689:
+> > /usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture'
+> > but argument is of type 'bfd *' {aka 'struct bfd *'}
+> >   extern disassembler_ftype disassembler (enum bfd_architecture arc,
+> >                                           ~~~~~~~~~~~~~~~~~~~~~~^~~
+> > util/annotate.c:1767:16: error: too few arguments to function
+> > 'disassembler'
+> >    disassemble = disassembler(bfdf);
+> >                  ^~~~~~~~~~~~
+> > In file included from util/annotate.c:1689:
+> > /usr/include/dis-asm.h:325:27: note: declared here
+> >   extern disassembler_ftype disassembler (enum bfd_architecture arc,
+> >                             ^~~~~~~~~~~~
+> >    CC       arch/x86/util/header.o
+> >    CC       arch/x86/util/tsc.o
+> >    CC       arch/x86/util/pmu.o
+> > mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
+> >    CC       bench/futex-requeue.o
+> >    CC       arch/x86/util/kvm-stat.o
+> > make[4]: ***
+> > [/work/rpmbuild/BUILD/kernel-x86_64/linux-5.0/tools/build/Makefile.build:97:
+> > util/annotate.o] Error 1
+> > make[4]: *** Waiting for unfinished jobs....
+> >    CC       util/build-id.o
+> >
+> >
+> >
+>
+>
+> And I forgot...
+>
+> Reverting:
+>  From 6987561c9e86eace45f2dbb0c564964a63f4150a Mon Sep 17 00:00:00 2001
+> From: Song Liu <songliubraving@fb.com>
+> Date: Mon, 11 Mar 2019 22:30:48 -0700
+> Subject: perf annotate: Enable annotation of BPF programs
+>
+> Makes it build again.
+>
+> --
+> Thomas
+>
 
-Yes, this is ok to return a valid value that is higher than range_max.
-However, at that time, you will not be able to set any alarms anymore as
-the core doesn't allow to set alarms after range_max.
+Hi Thomas,
 
-I would think that this is fine because this will happen in 2106 and we
-have a way to offset the time (the whole goal of setting the range)
-using device tree.
+Which system are you running this test on? I would like to repro it in a VM.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Song
