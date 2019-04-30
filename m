@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFC4C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A8EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091A52075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785AB2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625841;
-	bh=qmySqOgGAWXl1qA4wBmbdzy9gaa7gjJVIfqEMiXeztg=;
+	s=default; t=1556625845;
+	bh=zahjVONL+SoIgGXoI24dcfsL/kyaVCK7bCylvHnBa4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IuEIp+7kTn8qNNTket19ijT2p0WylPM6j2Y1hR1KPdtBARV0cYFpI5n4FNdsRmhpv
-	 8GclpQM/ERIruCS+0fq1y9IteX2V4BNggvjrrHVFsWEYNDoxcLLp/3UHfucUBoJ66v
-	 VMyTqq84Ba4TVmgYhwvdNaJrPNmf66TDDpNJrDQ8=
+	b=q2b5vcJpdjj3jKl+BNwFLa7JLxJP9oyEd4CGK/XDkvLPGPP2o+kP4dQ5Dv4nhWHdO
+	 7awMLq7nP4yRJyCDb0SvzzqxiENkp8kf4Ds5dllPqbNRDTamGpSutXLn/eXvGU8H/t
+	 5CH49xEUh5qy2d3CVhlMKcFyvzifhvPLOWRQ20nA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbfD3LnL (ORCPT
+        id S1729761AbfD3LnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:43:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52870 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:43:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729728AbfD3LnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:43:03 -0400
+        id S1728487AbfD3LnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:43:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6922921670;
-        Tue, 30 Apr 2019 11:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB1BB20449;
+        Tue, 30 Apr 2019 11:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624582;
-        bh=qmySqOgGAWXl1qA4wBmbdzy9gaa7gjJVIfqEMiXeztg=;
+        s=default; t=1556624580;
+        bh=zahjVONL+SoIgGXoI24dcfsL/kyaVCK7bCylvHnBa4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iO8rGcVE+SNufRozShs9/ejlcFkVmNHAyw4KZpSyf38vB2n2rU+VjWACbOhxztRg9
-         FlU6KLup4i9xY9tAwNFdlN27D7ivbTdpRsj8nM8J5+BU27fqy4H0K34F+ManQVtLVK
-         6XxBIgwH18ld45iSbLFhG1vvC6kAizriKS7AZdAQ=
+        b=fp8AoPfaoHUvlINzpuDJLwejRo5GsnyiA9c4fD73Mq16XqQksXGmFe1TRC7uZ7Vtd
+         QWQdHUKJ9anHyta2DB+d4xSnbNaqiUV3pzIX8OLLmuN6TpmEvGNHofW6S1yzYn4suh
+         4tHs2FCoV2525XPMbk65laJlp2DhAnDDTlPS5Tlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Su Bao Cheng <baocheng.su@siemens.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
+        stable@vger.kernel.org, Xiaofei Shen <xiaofeis@codeaurora.org>,
+        Sneh Shah <snehshah@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 49/53] stmmac: pci: Adjust IOT2000 matching
-Date:   Tue, 30 Apr 2019 13:38:56 +0200
-Message-Id: <20190430113559.236031545@linuxfoundation.org>
+Subject: [PATCH 4.14 48/53] net: stmmac: move stmmac_check_ether_addr() to driver probe
+Date:   Tue, 30 Apr 2019 13:38:55 +0200
+Message-Id: <20190430113559.116747710@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -60,52 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Su Bao Cheng <baocheng.su@siemens.com>
+From: Vinod Koul <vkoul@kernel.org>
 
-[ Upstream commit e0c1d14a1a3211dccf0540a6703ffbd5d2a75bdb ]
+[ Upstream commit b561af36b1841088552464cdc3f6371d92f17710 ]
 
-Since there are more IOT2040 variants with identical hardware but
-different asset tags, the asset tag matching should be adjusted to
-support them.
+stmmac_check_ether_addr() checks the MAC address and assigns one in
+driver open(). In many cases when we create slave netdevice, the dev
+addr is inherited from master but the master dev addr maybe NULL at
+that time, so move this call to driver probe so that address is
+always valid.
 
-For the board name "SIMATIC IOT2000", currently there are 2 types of
-hardware, IOT2020 and IOT2040. The IOT2020 is identified by its unique
-asset tag. Match on it first. If we then match on the board name only,
-we will catch all IOT2040 variants. In the future there will be no other
-devices with the "SIMATIC IOT2000" DMI board name but different
-hardware.
-
-Signed-off-by: Su Bao Cheng <baocheng.su@siemens.com>
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Signed-off-by: Xiaofei Shen <xiaofeis@codeaurora.org>
+Tested-by: Xiaofei Shen <xiaofeis@codeaurora.org>
+Signed-off-by: Sneh Shah <snehshah@codeaurora.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -159,6 +159,12 @@ static const struct dmi_system_id quark_
- 		},
- 		.driver_data = (void *)&galileo_stmmac_dmi_data,
- 	},
-+	/*
-+	 * There are 2 types of SIMATIC IOT2000: IOT20202 and IOT2040.
-+	 * The asset tag "6ES7647-0AA00-0YA2" is only for IOT2020 which
-+	 * has only one pci network device while other asset tags are
-+	 * for IOT2040 which has two.
-+	 */
- 	{
- 		.matches = {
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
-@@ -170,8 +176,6 @@ static const struct dmi_system_id quark_
- 	{
- 		.matches = {
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
--			DMI_EXACT_MATCH(DMI_BOARD_ASSET_TAG,
--					"6ES7647-0AA00-1YA2"),
- 		},
- 		.driver_data = (void *)&iot2040_stmmac_dmi_data,
- 	},
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2582,8 +2582,6 @@ static int stmmac_open(struct net_device
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 	int ret;
+ 
+-	stmmac_check_ether_addr(priv);
+-
+ 	if (priv->hw->pcs != STMMAC_PCS_RGMII &&
+ 	    priv->hw->pcs != STMMAC_PCS_TBI &&
+ 	    priv->hw->pcs != STMMAC_PCS_RTBI) {
+@@ -4213,6 +4211,8 @@ int stmmac_dvr_probe(struct device *devi
+ 	if (ret)
+ 		goto error_hw_init;
+ 
++	stmmac_check_ether_addr(priv);
++
+ 	/* Configure real RX and TX queues */
+ 	netif_set_real_num_rx_queues(ndev, priv->plat->rx_queues_to_use);
+ 	netif_set_real_num_tx_queues(ndev, priv->plat->tx_queues_to_use);
 
 
