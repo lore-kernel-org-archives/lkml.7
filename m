@@ -2,173 +2,112 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F321FC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15A8C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51C521734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:37:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="bPUQCFYZ"
+	by mail.kernel.org (Postfix) with ESMTP id 86EAE21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfD3NhA (ORCPT
+        id S1727368AbfD3NiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:37:00 -0400
-Received: from mail-eopbgr80102.outbound.protection.outlook.com ([40.107.8.102]:31555
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727728AbfD3Ng5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:36:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2NOQxN47T6FsbpolumeF5W6vP2DKEHqMWsBgLFRA0aI=;
- b=bPUQCFYZ3aUpXEvnppd1ZIJ9ZmTASMXo4+VO8jV6/cfS4iGtafBzguV/g7HtJoDpxlWSD2HA9asy+d1ddxKwusmZ0QLeHR3+38jgaXzCyOsOiHOCWlJYRXCMzRWYjH3ZeEis0Dvue4kmzXVaohlAdyt/alG6OuUKCQ1aBcNCZWY=
-Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
- VI1PR10MB0735.EURPRD10.PROD.OUTLOOK.COM (10.167.203.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 13:36:34 +0000
-Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::48b8:9cff:182:f3d8]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::48b8:9cff:182:f3d8%2]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
- 13:36:34 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Valentin Longchamp <valentin.longchamp@keymile.com>,
-        Scott Wood <oss@buserror.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-Subject: [PATCH 5/5] soc/fsl/qe: qe.c: fold qe_get_num_of_snums into
- qe_snums_init
-Thread-Topic: [PATCH 5/5] soc/fsl/qe: qe.c: fold qe_get_num_of_snums into
- qe_snums_init
-Thread-Index: AQHU/1m6D8VAO09VR06t84TvSK4Mww==
-Date:   Tue, 30 Apr 2019 13:36:34 +0000
-Message-ID: <20190430133615.25721-6-rasmus.villemoes@prevas.dk>
-References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
-In-Reply-To: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1P18901CA0005.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:3:8b::15) To VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:e3::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [5.186.118.63]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 72bbfeae-6636-4c74-e405-08d6cd70dcd2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR10MB0735;
-x-ms-traffictypediagnostic: VI1PR10MB0735:
-x-microsoft-antispam-prvs: <VI1PR10MB07353B1C89623EE6AFA151068A3A0@VI1PR10MB0735.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39850400004)(366004)(376002)(346002)(199004)(189003)(81156014)(36756003)(8676002)(6436002)(478600001)(81166006)(107886003)(50226002)(52116002)(8976002)(8936002)(74482002)(72206003)(4326008)(7736002)(6486002)(6506007)(386003)(25786009)(1076003)(53936002)(54906003)(76176011)(305945005)(110136005)(316002)(99286004)(14454004)(6512007)(476003)(11346002)(446003)(5660300002)(44832011)(66446008)(26005)(73956011)(42882007)(2616005)(6116002)(2906002)(71200400001)(66556008)(66476007)(64756008)(66066001)(97736004)(66946007)(3846002)(256004)(68736007)(71446004)(186003)(486006)(102836004)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB0735;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xRkTiuj/aGBwatyIuWkwJOoy+4oNvWxN7jNH2YXkf5yFZVkNWuguWJbSrbyW/R48XwV45OdBJ44BIg9NB6pfPiA86qIpE2+JPSu4rOuSVbTSUZmoxDRVslQM3l0yypgZq3aDXPi4vVgI+U10E9DvIj4ai+ToVfNkgJizgB8HQ3lIcdyjTeja2XSUquTjDu/WlVR2ElFyupHIq1F9KLvpQe/xkFmX+Gc6ICIKguTm8olpjF4ABAli/85bHseM2VXf5B8604KqKaRu9RKRSVfsFbUixC1Sk+74TdRGLMBIkq87R9ZUNiMVW5MCvaYVBuT03bDhmaxe/rJ44+GM2aA7h+KYPoWSMyBVdPYEfPeJ6ytaM9BzLf8FaXQc2OKLSgQWZtmBXcoAFqcoRQNJl8FVGiDZJPm17kT2eFMHt8FSbig=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 30 Apr 2019 09:38:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:29308 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbfD3NiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:38:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 06:38:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,413,1549958400"; 
+   d="scan'208";a="140102964"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2019 06:38:04 -0700
+Received: from brettjgr-mobl1.ger.corp.intel.com (unknown [10.254.180.216])
+        by linux.intel.com (Postfix) with ESMTP id 1804A580372;
+        Tue, 30 Apr 2019 06:38:03 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH v3 2/5] soundwire: fix style issues
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
+ <20190411031701.5926-3-pierre-louis.bossart@linux.intel.com>
+ <20190414095839.GG28103@vkoul-mobl>
+ <08ea1442-361a-ecfc-ca26-d3bd8a0ec37b@linux.intel.com>
+ <20190430085153.GS3845@vkoul-mobl.Dlink>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9866ac8c-103d-22cd-a639-a71c39a685c2@linux.intel.com>
+Date:   Tue, 30 Apr 2019 08:38:01 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72bbfeae-6636-4c74-e405-08d6cd70dcd2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 13:36:34.6955
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB0735
+In-Reply-To: <20190430085153.GS3845@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIGNvbW1lbnQgIk5vIFFFIGV2ZXIgaGFzIGZld2VyIHRoYW4gMjggU05VTXMiIGlzIGZhbHNl
-OyBlLmcuIHRoZQ0KTVBDODMwOSBoYXMgMTQuIFRoZSBjb2RlIHBhdGggcmV0dXJuaW5nIC1FSU5W
-QUwgaXMgYWxzbyBhIHJlY2lwZSBmb3INCmluc3RhbnQgZGlzYXN0ZXIsIHNpbmNlIHRoZSBjYWxs
-ZXIgKHFlX3NudW1zX2luaXQpIHVuY3JpdGljYWxseQ0KYXNzaWducyB0aGUgcmV0dXJuIHZhbHVl
-IHRvIHRoZSB1bnNpZ25lZCBxZV9udW1fb2Zfc251bSwgYW5kIHdvdWxkDQp0aHVzIHByb2NlZWQg
-dG8gYXR0ZW1wdCB0byBjb3B5IDRHQiBmcm9tIHNudW1faW5pdF80NltdIHRvIHRoZSBzbnVtW10N
-CmFycmF5Lg0KDQpTbyBmb2xkIHRoZSBoYW5kbGluZyBvZiB0aGUgbGVnYWN5IGZzbCxxZS1udW0t
-c251bXMgaW50bw0KcWVfc251bXNfaW5pdCwgYW5kIG1ha2Ugc3VyZSB3ZSBkbyBub3QgZW5kIHVw
-IHVzaW5nIHRoZSBzbnVtX2luaXRfNDYNCmFycmF5IGluIGNhc2VzIG90aGVyIHRoYW4gdGhlIHR3
-byB3aGVyZSB3ZSBrbm93IGl0IG1ha2VzIHNlbnNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBSYXNtdXMg
-VmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCi0tLQ0KIGRyaXZlcnMvbmV0
-L2V0aGVybmV0L2ZyZWVzY2FsZS91Y2NfZ2V0aC5jIHwgIDIgKy0NCiBkcml2ZXJzL3NvYy9mc2wv
-cWUvcWUuYyAgICAgICAgICAgICAgICAgICB8IDU0ICsrKysrKystLS0tLS0tLS0tLS0tLS0tDQog
-aW5jbHVkZS9zb2MvZnNsL3FlL3FlLmggICAgICAgICAgICAgICAgICAgfCAgMiArLQ0KIDMgZmls
-ZXMgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMzkgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvdWNjX2dldGguYyBiL2RyaXZlcnMv
-bmV0L2V0aGVybmV0L2ZyZWVzY2FsZS91Y2NfZ2V0aC5jDQppbmRleCBlYjNlNjVlODg2OGYuLjU3
-NDhlYjg0NjRkMCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS91
-Y2NfZ2V0aC5jDQorKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvdWNjX2dldGgu
-Yw0KQEAgLTM4MzcsNyArMzgzNyw3IEBAIHN0YXRpYyBpbnQgdWNjX2dldGhfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSogb2ZkZXYpDQogCQl9DQogDQogCWlmIChtYXhfc3BlZWQgPT0gU1BF
-RURfMTAwMCkgew0KLQkJdW5zaWduZWQgaW50IHNudW1zID0gcWVfZ2V0X251bV9vZl9zbnVtcygp
-Ow0KKwkJdW5zaWduZWQgaW50IHNudW1zID0gcWVfbnVtX29mX3NudW07DQogDQogCQkvKiBjb25m
-aWd1cmUgbXVyYW0gRklGT3MgZm9yIGdpZ2FiaXQgb3BlcmF0aW9uICovDQogCQl1Z19pbmZvLT51
-Zl9pbmZvLnVyZnMgPSBVQ0NfR0VUSF9VUkZTX0dJR0FfSU5JVDsNCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL3NvYy9mc2wvcWUvcWUuYyBiL2RyaXZlcnMvc29jL2ZzbC9xZS9xZS5jDQppbmRleCBhZjNj
-MmIyYjI2OGYuLjhjM2IzYzYyZDgxYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL2ZzbC9xZS9x
-ZS5jDQorKysgYi9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYw0KQEAgLTUyLDcgKzUyLDggQEAgRVhQ
-T1JUX1NZTUJPTChxZV9pbW1yKTsNCiANCiBzdGF0aWMgdTggc251bXNbUUVfTlVNX09GX1NOVU1d
-OwkvKiBEeW5hbWljYWxseSBhbGxvY2F0ZWQgU05VTXMgKi8NCiBzdGF0aWMgREVDTEFSRV9CSVRN
-QVAoc251bV9zdGF0ZSwgUUVfTlVNX09GX1NOVU0pOw0KLXN0YXRpYyB1bnNpZ25lZCBpbnQgcWVf
-bnVtX29mX3NudW07DQordW5zaWduZWQgaW50IHFlX251bV9vZl9zbnVtOw0KK0VYUE9SVF9TWU1C
-T0wocWVfbnVtX29mX3NudW0pOw0KIA0KIHN0YXRpYyBwaHlzX2FkZHJfdCBxZWJhc2UgPSAtMTsN
-CiANCkBAIC0zMDgsMjYgKzMwOSwzNCBAQCBzdGF0aWMgdm9pZCBxZV9zbnVtc19pbml0KHZvaWQp
-DQogCWludCBpOw0KIA0KIAliaXRtYXBfemVybyhzbnVtX3N0YXRlLCBRRV9OVU1fT0ZfU05VTSk7
-DQorCXFlX251bV9vZl9zbnVtID0gMjg7IC8qIFRoZSBkZWZhdWx0IG51bWJlciBvZiBzbnVtIGZv
-ciB0aHJlYWRzIGlzIDI4ICovDQogCXFlID0gcWVfZ2V0X2RldmljZV9ub2RlKCk7DQogCWlmIChx
-ZSkgew0KIAkJaSA9IG9mX3Byb3BlcnR5X3JlYWRfdmFyaWFibGVfdThfYXJyYXkocWUsICJmc2ws
-cWUtc251bXMiLA0KIAkJCQkJCSAgICAgICBzbnVtcywgMSwgUUVfTlVNX09GX1NOVU0pOw0KLQkJ
-b2Zfbm9kZV9wdXQocWUpOw0KIAkJaWYgKGkgPiAwKSB7DQorCQkJb2Zfbm9kZV9wdXQocWUpOw0K
-IAkJCXFlX251bV9vZl9zbnVtID0gaTsNCiAJCQlyZXR1cm47DQogCQl9DQorCQkvKg0KKwkJICog
-RmFsbCBiYWNrIHRvIGxlZ2FjeSBiaW5kaW5nIG9mIHVzaW5nIHRoZSB2YWx1ZSBvZg0KKwkJICog
-ZnNsLHFlLW51bS1zbnVtcyB0byBjaG9vc2Ugb25lIG9mIHRoZSBzdGF0aWMgYXJyYXlzDQorCQkg
-KiBhYm92ZS4NCisJCSAqLw0KKwkJb2ZfcHJvcGVydHlfcmVhZF91MzIocWUsICJmc2wscWUtbnVt
-LXNudW1zIiwgJnFlX251bV9vZl9zbnVtKTsNCisJCW9mX25vZGVfcHV0KHFlKTsNCiAJfQ0KIA0K
-LQlxZV9udW1fb2Zfc251bSA9IHFlX2dldF9udW1fb2Zfc251bXMoKTsNCi0NCiAJaWYgKHFlX251
-bV9vZl9zbnVtID09IDc2KQ0KIAkJc251bV9pbml0ID0gc251bV9pbml0Xzc2Ow0KLQllbHNlDQor
-CWVsc2UgaWYgKHFlX251bV9vZl9zbnVtID09IDI4IHx8IHFlX251bV9vZl9zbnVtID09IDQ2KQ0K
-IAkJc251bV9pbml0ID0gc251bV9pbml0XzQ2Ow0KLQ0KLQlmb3IgKGkgPSAwOyBpIDwgcWVfbnVt
-X29mX3NudW07IGkrKykNCi0JCXNudW1zW2ldID0gc251bV9pbml0W2ldOw0KKwllbHNlIHsNCisJ
-CXByX2VycigiUUU6IHVuc3VwcG9ydGVkIHZhbHVlIG9mIGZzbCxxZS1udW0tc251bXM6ICV1XG4i
-LCBxZV9udW1fb2Zfc251bSk7DQorCQlyZXR1cm47DQorCX0NCisJbWVtY3B5KHNudW1zLCBzbnVt
-X2luaXQsIHFlX251bV9vZl9zbnVtKTsNCiB9DQogDQogaW50IHFlX2dldF9zbnVtKHZvaWQpDQpA
-QCAtNjQ1LDM1ICs2NTQsNiBAQCB1bnNpZ25lZCBpbnQgcWVfZ2V0X251bV9vZl9yaXNjKHZvaWQp
-DQogfQ0KIEVYUE9SVF9TWU1CT0wocWVfZ2V0X251bV9vZl9yaXNjKTsNCiANCi11bnNpZ25lZCBp
-bnQgcWVfZ2V0X251bV9vZl9zbnVtcyh2b2lkKQ0KLXsNCi0Jc3RydWN0IGRldmljZV9ub2RlICpx
-ZTsNCi0JaW50IHNpemU7DQotCXVuc2lnbmVkIGludCBudW1fb2Zfc251bXM7DQotCWNvbnN0IHUz
-MiAqcHJvcDsNCi0NCi0JbnVtX29mX3NudW1zID0gMjg7IC8qIFRoZSBkZWZhdWx0IG51bWJlciBv
-ZiBzbnVtIGZvciB0aHJlYWRzIGlzIDI4ICovDQotCXFlID0gcWVfZ2V0X2RldmljZV9ub2RlKCk7
-DQotCWlmICghcWUpDQotCQlyZXR1cm4gbnVtX29mX3NudW1zOw0KLQ0KLQlwcm9wID0gb2ZfZ2V0
-X3Byb3BlcnR5KHFlLCAiZnNsLHFlLW51bS1zbnVtcyIsICZzaXplKTsNCi0JaWYgKHByb3AgJiYg
-c2l6ZSA9PSBzaXplb2YoKnByb3ApKSB7DQotCQludW1fb2Zfc251bXMgPSAqcHJvcDsNCi0JCWlm
-ICgobnVtX29mX3NudW1zIDwgMjgpIHx8IChudW1fb2Zfc251bXMgPiBRRV9OVU1fT0ZfU05VTSkp
-IHsNCi0JCQkvKiBObyBRRSBldmVyIGhhcyBmZXdlciB0aGFuIDI4IFNOVU1zICovDQotCQkJcHJf
-ZXJyKCJRRTogbnVtYmVyIG9mIHNudW0gaXMgaW52YWxpZFxuIik7DQotCQkJb2Zfbm9kZV9wdXQo
-cWUpOw0KLQkJCXJldHVybiAtRUlOVkFMOw0KLQkJfQ0KLQl9DQotDQotCW9mX25vZGVfcHV0KHFl
-KTsNCi0NCi0JcmV0dXJuIG51bV9vZl9zbnVtczsNCi19DQotRVhQT1JUX1NZTUJPTChxZV9nZXRf
-bnVtX29mX3NudW1zKTsNCi0NCiBzdGF0aWMgaW50IF9faW5pdCBxZV9pbml0KHZvaWQpDQogew0K
-IAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wOw0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvc29jL2ZzbC9x
-ZS9xZS5oIGIvaW5jbHVkZS9zb2MvZnNsL3FlL3FlLmgNCmluZGV4IGIzZDFhZmY1ZThhZC4uYWY1
-NzM5ODUwYmY0IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9zb2MvZnNsL3FlL3FlLmgNCisrKyBiL2lu
-Y2x1ZGUvc29jL2ZzbC9xZS9xZS5oDQpAQCAtMjEyLDcgKzIxMiw3IEBAIGludCBxZV9zZXRicmco
-ZW51bSBxZV9jbG9jayBicmcsIHVuc2lnbmVkIGludCByYXRlLCB1bnNpZ25lZCBpbnQgbXVsdGlw
-bGllcik7DQogaW50IHFlX2dldF9zbnVtKHZvaWQpOw0KIHZvaWQgcWVfcHV0X3NudW0odTggc251
-bSk7DQogdW5zaWduZWQgaW50IHFlX2dldF9udW1fb2ZfcmlzYyh2b2lkKTsNCi11bnNpZ25lZCBp
-bnQgcWVfZ2V0X251bV9vZl9zbnVtcyh2b2lkKTsNCitleHRlcm4gdW5zaWduZWQgaW50IHFlX251
-bV9vZl9zbnVtOw0KIA0KIHN0YXRpYyBpbmxpbmUgaW50IHFlX2FsaXZlX2R1cmluZ19zbGVlcCh2
-b2lkKQ0KIHsNCi0tIA0KMi4yMC4xDQoNCg==
+On 4/30/19 3:51 AM, Vinod Koul wrote:
+> On 15-04-19, 08:09, Pierre-Louis Bossart wrote:
+>>
+>>>>
+>>>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>>>> ---
+>>>>    drivers/soundwire/Kconfig          |   2 +-
+>>>>    drivers/soundwire/bus.c            |  87 ++++++++--------
+>>>>    drivers/soundwire/bus.h            |  16 +--
+>>>>    drivers/soundwire/bus_type.c       |   4 +-
+>>>>    drivers/soundwire/cadence_master.c |  87 ++++++++--------
+>>>>    drivers/soundwire/cadence_master.h |  22 ++--
+>>>>    drivers/soundwire/intel.c          |  87 ++++++++--------
+>>>>    drivers/soundwire/intel.h          |   4 +-
+>>>>    drivers/soundwire/intel_init.c     |  12 +--
+>>>>    drivers/soundwire/mipi_disco.c     | 116 +++++++++++----------
+>>>>    drivers/soundwire/slave.c          |  10 +-
+>>>>    drivers/soundwire/stream.c         | 161 +++++++++++++++--------------
+>>>
+>>> I would prefer this to be a patch per module. It doesnt help to have a
+>>> single patch for all the files!
+>>>
+>>> It would be great to have cleanup done per logical group, for example
+>>> typos in a patch, aligns in another etc...
+>>
+>> You've got to be kidding. I've never seen people ask for this sort of
+>> detail.
+> 
+> Nope this is the way it should be. A patch is patch and which
+> should do one thing! Even if it is a cleanup one.
+> 
+> I dislike a patch which touches everything, core, modules, so please
+> split up. As a said in review it takes guesswork to find why a change
+> was done, was it whitespace fix, indentation or not, so please split up
+> based on type of fixes.
+
+With all due respect, you are not helping here but rather slowing things 
+down. I've done dozens of cleanups in the ALSA tree and I didn't go in 
+this sort of details. The fact that the series was tagged as Reviewed by 
+Takashi on April 11 and we are still discussing trivial changes tells me 
+the integration model is broken. It's not just me, the patches related 
+to runtime-pm from your own Linaro colleagues posted on March 28 went 
+nowhere either.
+
+Moving forward, I suggest we merge SoundWire-related patches through the 
+sound tree. There will be dependencies in the coming weeks between SOF 
+and SoundWire and it makes no sense to have separate maintainers and 
+make the life of early adopters more complicated than it needs to be. If 
+we have 3-week delays for trivial stuff, I can't imagine what the pace 
+will be when I publish the next 20-odd patches I am still working on, 
+and the code needed for the SoundWire audio device class being 
+standardized as we speak. Things were fine up to now since no one was 
+actually using the code, we are in a different model now.
