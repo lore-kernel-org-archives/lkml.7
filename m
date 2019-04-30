@@ -2,204 +2,132 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8C1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D0C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413622075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284D92075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="nO/HIlKt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQeS2G8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfD3F0Y (ORCPT
+        id S1726144AbfD3F3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 01:26:24 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39641 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfD3F0X (ORCPT
+        Tue, 30 Apr 2019 01:29:53 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36742 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfD3F3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 01:26:23 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l18so6287987pgj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 22:26:22 -0700 (PDT)
+        Tue, 30 Apr 2019 01:29:52 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o4so7454536wra.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 22:29:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=Bpxrrn0nhxg0QxbDmzcOwQzwDv1LTHTm0Bu1+pUS7w8=;
-        b=nO/HIlKtfAK2/1SkYjs9tvdr0hQBtMHhY7aKlt/T59XLtvScCsjGuvSdoWwODP1Fnk
-         g+y27oy0qEq3YmJhkAIzcoBj/FDGUGg1OmHRCyoHMXEvj7I1Ehr1BE63S0t5LbQ+FnP3
-         ZuUmJmrlvmbkugShZo1RZv89Qy4f3wYp4XSTSej/hfm1wGpp9O5ibgr41I7rHXulXmnV
-         9LmhdIyHB/TZbUkIkXJzL67/kmpRHd2uz03LuwTmfXQKOsWPx/Dw1O6NgYtADHgpe2Re
-         2UQYk4/EjLTNVNm6BJLTbZjpJD2gjapyhvzuDPBtxBxL74BbueTzkv9OREFXIcwG+a3I
-         R9GQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gByLVW4J/Gu3P/aWPaRVqL5VGCmvIntSLMMQS5bvR/w=;
+        b=kQeS2G8TyW2r1LQJAVwbM6r1oO0BT3kSyYw8aA2eTK9poPfUdZFbFMzz668WyBNt+M
+         CSfnuNTrhVLdqFtkNDdbNjsa+oHd32lgKj4BptLYlqKaivRSmidaRr59N5PwxRfyKCf7
+         YJgZPSCjLWoJyhEDAVQeWZEGj4M3b35Ss1HgL/WZn7L/TFfOq19LzTUUENkPgI9RrDIm
+         m7T8lK3LS0K5vwmtO8iZj+U28Te89zefsXd78eEW5v/Qcn7ZBuDzwcHGLqRi5tRglGyD
+         JDX3HBO3ElGVeE3m0JWSmiI6DR+4YxGfbnJxQv4KybHKktec06iQz4gdk8oOWleNNyaq
+         eIOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=Bpxrrn0nhxg0QxbDmzcOwQzwDv1LTHTm0Bu1+pUS7w8=;
-        b=mDOG9MLJxx1Rb91HFmV1slUh7Tjmcq7Vl7dh6cLf+Xux10VrIdT0MWmDUvrUttvf3d
-         vEjqktyNo3jwk+zHB5+M5rvmocBpNm3jArxI9HA54uKUycHUh6+E/s1b1Rlq8ZLdjP14
-         SBkJ49awGjad06WPcFheBHPA9KDwhmI8kbjd8j1aJQp71+7Rp474ulcIamnuF1ar3Vhr
-         3kbzg4bCyUuU88y/vAQqqv0X+rdoDvRaA5+QBHGmh7SC9e1//DyLuUdYnKJwh2TNdqgd
-         5br+tgXDA5mpEXRU7VquHFvH/9H+zR+E7jh9AJLjH50gvhf6u1u9kfxnidfYJVoOf5Ay
-         6TYg==
-X-Gm-Message-State: APjAAAV9f78cH699sS2dFEx8dJ4DGhGkabdQlA6GFMnDRhOoO6xkp5ib
-        Tge4spQpcQVt5u/SsVBgwE/twog36do=
-X-Google-Smtp-Source: APXvYqw9y61EBVVqfdNsoj2n24fD1cpqlHi4M+njFWS/yRijvHvuAm+WHa/NpkTB4ca9k7JEsq0fcg==
-X-Received: by 2002:a62:4852:: with SMTP id v79mr68254296pfa.72.1556601982356;
-        Mon, 29 Apr 2019 22:26:22 -0700 (PDT)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id m8sm54492464pgn.59.2019.04.29.22.26.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 22:26:21 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <D81FA0ED-7F7D-4B57-BE9A-26C5941D8FFE@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_E49322AE-A695-47B8-8F15-BAD54F0C2D97";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [RFC][PATCHSET] sorting out RCU-delayed stuff in
- ->destroy_inode()
-Date:   Mon, 29 Apr 2019 23:26:15 -0600
-In-Reply-To: <20190430042623.GJ23075@ZenIV.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-References: <20190416174900.GT2217@ZenIV.linux.org.uk>
- <CAHk-=wh6cSEztastk6-A0HUSLtJT=9W38xMN5ht-OOAnL80jxg@mail.gmail.com>
- <20190430030914.GF23075@ZenIV.linux.org.uk>
- <F01D238D-8A6C-4629-ABC5-4A8BAC25951F@dilger.ca>
- <20190430042623.GJ23075@ZenIV.linux.org.uk>
-X-Mailer: Apple Mail (2.3273)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gByLVW4J/Gu3P/aWPaRVqL5VGCmvIntSLMMQS5bvR/w=;
+        b=cTdcmRMfOb5frm1YR5rfZxIKfeKOXFqwzp+t/MmQg1Jv1oTY0dilhNB0hDVEgD9Sdc
+         lhlA7Ysl1ecAoFu9zyghZjIeOfygVtyuiiI1Xvu97EnIyTWDD/aADRgfkv0E5249vC3t
+         bDSIsq98OeUwpEbjWaRWzi5tm4C4j3Pi6zFwYQpXhhKbuFNWAc8urHuRp91+LIZ8t4Tv
+         1lJ2hOZES/Z4IWOqYIax/JpuO9C/2d/livPAJgPOQRToqykIworAE7IU5hU0M8Ihe1Jf
+         svZ7ELl1g9ouvBe7nPulSIfbwlDXec3+KEfRszcISyIviDpETdJhh5mpYroX6Q4fOakY
+         UTyA==
+X-Gm-Message-State: APjAAAU1w1J4+j57x8NOh4ZnCMybXwZTld1OcW4Ue0n5C8YAwdyZUkGB
+        P1m5RIHvXDLAxiXIdxYMtxE=
+X-Google-Smtp-Source: APXvYqxCzOAfccd51g7qJ+E+tcZuFi8r8qK6qWwGhtWdR5CP7DtWiUNH49Ovcr4coAFqd27ZkNwJwg==
+X-Received: by 2002:a5d:6101:: with SMTP id v1mr42875577wrt.222.1556602190899;
+        Mon, 29 Apr 2019 22:29:50 -0700 (PDT)
+Received: from localhost ([91.93.129.62])
+        by smtp.gmail.com with ESMTPSA id v17sm1138477wmc.30.2019.04.29.22.29.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 22:29:49 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Tue, 30 Apr 2019 15:27:51 +0900
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v4] panic: add an option to replay all the printk message
+ in buffer
+Message-ID: <20190430062751.GA399@tigerII.localdomain>
+References: <1556199137-14163-1-git-send-email-feng.tang@intel.com>
+ <20190426074934.seje2tn5p6fsuwaq@pathway.suse.cz>
+ <20190426135316.GA505@tigerII.localdomain>
+ <20190426141426.h7hpvhr3rqp7umbk@pathway.suse.cz>
+ <20190426164302.GA26127@tigerII.localdomain>
+ <20190426171640.GA7413@tigerII.localdomain>
+ <20190429114423.yr7hbmfrfbravgsv@pathway.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429114423.yr7hbmfrfbravgsv@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (04/29/19 13:44), Petr Mladek wrote:
+> On Sat 2019-04-27 02:16:40, Sergey Senozhatsky wrote:
+> > On (04/27/19 01:43), Sergey Senozhatsky wrote:
+> > [..]
+> > > > The console waiter logic is effective but it does not always
+> > > > work. The current console owner must be calling the console
+> > > > drivers.
+> > > >
+> > > > >   Hmm, we might have a bit of a problem here, maybe.
+> > > >
+> > > > Hmm, the printk() might wait forever when NMI stopped
+> > > > the current console owner in the console driver code
+> > > > or with the logbuf_lock taken.
+> > > 
+> > > I guess this is why we re-init logbuf lock from panic,
+> > > however, we don't do anything with the console_owner.
+> 
+> > > > The console waiter logic might get solved by clearing
+> > > > the console_owner in console_flush_on_panic(). It can't
+> > > > be much worse, we already ignore console_lock() there, ...
+> > 
+> > Hmm, or maybe we are fine... console_waiter logic should work
+> > before we send out stop IPI/NMI from panic CPU. When we call
+> > flush_on_panic() console_unlock() clears console_owner, so
+> > panic_print_sys_info() should not deadlock on console_owner.
+> 
+> Good point!
+> 
+> > It's probably only problematic if we kill a console_owner
+> > CPU and then try to printk() (from smp_send_stop()) before
+> > we do flush_on_panic()->console_unlock().
+> 
+> Yup. There are called several functions between smp_send_stop()
+> and console_flush_on_panic().
+> 
+> The question is if it is worth a code complication. We could
+> never 100% guarantee that printk() would work in panic().
+> I more and more understand what Peter Zijlstra means
+> by the duct taping.
 
---Apple-Mail=_E49322AE-A695-47B8-8F15-BAD54F0C2D97
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+Agreed.
 
-
-> On Apr 29, 2019, at 10:26 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
->=20
-> On Mon, Apr 29, 2019 at 10:18:04PM -0600, Andreas Dilger wrote:
->>>=20
->>> 	void			*i_private; /* fs or device private =
-pointer */
->>> +	void (*free_inode)(struct inode *);
->>=20
->> It seems like a waste to increase the size of every struct inode just =
-to access
->> a static pointer.  Is this the only place that ->free_inode() is =
-called?  Why
->> not move the ->free_inode() pointer into inode->i_fop->free_inode() =
-so that it
->> is still directly accessible at this point.
->=20
-> i_op, surely?
-
-Yes, i_op is what I was thinking.
-
-> In any case, increasing sizeof(struct inode) is not a problem -
-
-> if anything, I'd turn ->i_fop into an anon union with that.  As in,
->=20
-> diff --git a/fs/inode.c b/fs/inode.c
-> index fb45590d284e..627e1766503a 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -211,8 +211,8 @@ EXPORT_SYMBOL(free_inode_nonrcu);
-> static void i_callback(struct rcu_head *head)
-> {
-> 	struct inode *inode =3D container_of(head, struct inode, i_rcu);
-> -	if (inode->i_sb->s_op->free_inode)
-> -		inode->i_sb->s_op->free_inode(inode);
-> +	if (inode->free_inode)
-> +		inode->free_inode(inode);
-> 	else
-> 		free_inode_nonrcu(inode);
-> }
-> @@ -236,6 +236,7 @@ static struct inode *alloc_inode(struct =
-super_block *sb)
-> 			if (!ops->free_inode)
-> 				return NULL;
-> 		}
-> +		inode->free_inode =3D ops->free_inode;
-> 		i_callback(&inode->i_rcu);
-> 		return NULL;
-> 	}
-
-> @@ -276,6 +277,7 @@ static void destroy_inode(struct inode *inode)
-> 		if (!ops->free_inode)
-> 			return;
-> 	}
-> +	inode->free_inode =3D ops->free_inode;
-> 	call_rcu(&inode->i_rcu, i_callback);
-> }
-
-This seems like kind of a hack.  I guess your goal is to have =
-->free_inode
-accessible regardless of whether the filesystem has installed its own =
-->i_op
-methods or not, and i_fop is no longer used by this point.
-
-That said, this seems better than increasing the size of struct inode.
-
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 2e9b9f87caca..92732286b748 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -694,7 +694,10 @@ struct inode {
-> #ifdef CONFIG_IMA
-> 	atomic_t		i_readcount; /* struct files open RO */
-> #endif
-> -	const struct file_operations	*i_fop;	/* former =
-->i_op->default_file_ops */
-> +	union {
-> +		const struct file_operations	*i_fop;	/* former =
-->i_op->default_file_ops */
-> +		void (*free_inode)(struct inode *);
-> +	};
-
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_E49322AE-A695-47B8-8F15-BAD54F0C2D97
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAlzH3HgACgkQcqXauRfM
-H+B8Uw/+Pe3e89BpYfhV3O4jATQofqb9PH/+i8TAZmKTVOC09IO5ole1zpaWHGV+
-8FQmrVvHUrUZLvz3GZJYAA7djWqJHIN58yPUllps35f6SGqfj54rEwwq3QAFSqFR
-kOiDHHtWpASu0oVRDG1Lw0xijx8wrTmfmdWOTTYSL0o58uFCFhcuBdU9oaBi/Wrs
-9RHwrQb4pffl6aCMP6FTVp+DdqVtIRMQ4UNOKrJiwa8SLuJSCw1Nwj7tzwOIXu7e
-z2R9sFUQHOVx1r7cOgCrP+zpIZTNmOI7lsJnPUwgod5i4lLJqBylrGmz9B/lWbln
-2PPtaUkFbB1VVnhxnz4K06Fp2AEE3S8DEzAwEyitCnb+FKvV9fCdRC/m/mx1pFhj
-Icc/L+2F8xuYcw1EqB/Nyc2UAVs7VgpUEnedUUwBWjg+Md5zT+BeZY6qOxzwGhXq
-vp3O2hSlRhNjgsGVpkWt7awa6JlUbvw1F76ktl2tiqiWl45X75FOS2RyjLxFt8Yw
-FIqp29O8HauMdaEQb1CXvgemvnzM3f6om8NCN6q+zAz8RUjwK6N1x+z0f95iHEq9
-ZXxY4KYHW3cjhlhKyZpiowqlMq+1I43NWhJFhMi2AVrEzDBBleBSdH617/R6hNbd
-XJMyvjDo67gvOJ1UJeX+wAISpQz5M6l6EEZqoe/GcZTEtR9UNfw=
-=a4F4
------END PGP SIGNATURE-----
-
---Apple-Mail=_E49322AE-A695-47B8-8F15-BAD54F0C2D97--
+	-ss
