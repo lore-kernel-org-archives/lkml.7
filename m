@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FB9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9C1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3224521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C59621707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624949;
-	bh=pshKlxxplvR1pLAnd9ve0f3N039W3du/cqrQvApkfX0=;
+	s=default; t=1556624953;
+	bh=+T1F1qSVXdecpRNVPxr8tVprDNtm46AYHKTyhyYoIOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBhgVVKxnyl4j/1SZicvc8TmfFrGoYXXR7xDtF1JJHmWPi1jAqbesR3tg4yNuOYp7
-	 DGbDdGz8OgKaIe1gwEEHCpLcSyGEkE/ZZFqsSHPP0UFEURvUbN4hLV414q+mX+iIU5
-	 8WgX0/R3x3fjciC8L1ANLvME1Gmk6yvjzdO4mvEo=
+	b=dLmSHr9kA11BY5YNZ7zDTtwNzJEzNQ4UDL+hPXaSleegftuueWOSK5zdu8nK4mDVW
+	 w/PZodWUtPi0AJtjB4XFqUJ2K+iufew1YMW5QxwVRhZK5gp+OHNRRiMgIDTkynB1op
+	 Y4uQYLhfhlQq+3cil9mXMnWUR+scPaE/ihhBRI3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbfD3LtI (ORCPT
+        id S1730959AbfD3LtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730934AbfD3LtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:05 -0400
+        id S1730949AbfD3LtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE31D20449;
-        Tue, 30 Apr 2019 11:49:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91A2220449;
+        Tue, 30 Apr 2019 11:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624944;
-        bh=pshKlxxplvR1pLAnd9ve0f3N039W3du/cqrQvApkfX0=;
+        s=default; t=1556624947;
+        bh=+T1F1qSVXdecpRNVPxr8tVprDNtm46AYHKTyhyYoIOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2PTzaOEDoHO9Iv9Ufa+moWLRGaICiFtZxhsJGcBYYTwVXYcsGRedO04sEaV2i365
-         sQn6J9LRnnIvPK6YWjsBmoQHXLmNgPmeRb0pO+fJZGug34kzM3lh+RfWeRlGkruUxt
-         4+sZrfFCYrNJlxABm5gS8Pq8kPAgCTbdQidx6UIg=
+        b=f55pOvF3+tlCSMX1w6qGR13VcLD0BpzbqlNdM+u4fXQ+GmveX8ykcp6dsHd+jjJrN
+         pMspOrJXDMkeGhXrB98yZI1OzaqhPJJJoXOQO1z+M5HaVIH6Qw3RzgPlrjU5X3TL50
+         Zx8zYwNYOKvZSs65NP+MfEbRQZdIXLiQgxUq5BbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Slawomir Pryczek <slawek1211@gmail.com>,
         Neil Brown <neilb@suse.com>, Jeff Layton <jlayton@kernel.org>,
         "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.0 31/89] nfsd: wake waiters blocked on file_lock before deleting it
-Date:   Tue, 30 Apr 2019 13:38:22 +0200
-Message-Id: <20190430113611.383864519@linuxfoundation.org>
+Subject: [PATCH 5.0 32/89] nfsd: wake blocked file lock waiters before sending callback
+Date:   Tue, 30 Apr 2019 13:38:23 +0200
+Message-Id: <20190430113611.416526562@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -62,17 +62,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jeff Layton <jlayton@kernel.org>
 
-commit 6aaafc43a4ecc5bc8a3f6a2811d5eddc996a97f3 upstream.
+commit f456458e4d25a8962d0946891617c76cc3ff5fb9 upstream.
 
-After a blocked nfsd file_lock request is deleted, knfsd will send a
-callback to the client and then free the request. Commit 16306a61d3b7
-("fs/locks: always delete_block after waiting.") changed it such that
-locks_delete_block is always called on a request after it is awoken,
-but that patch missed fixing up blocked nfsd request handling.
+When a blocked NFS lock is "awoken" we send a callback to the server and
+then wake any hosts waiting on it. If a client attempts to get a lock
+and then drops off the net, we could end up waiting for a long time
+until we end up waking locks blocked on that request.
 
-Call locks_delete_block on the block to wake up any locks still blocked
-on the nfsd lock request before freeing it. Some of its callers already
-do this however, so just remove those calls.
+So, wake any other waiting lock requests before sending the callback.
+Do this by calling locks_delete_block in a new "prepare" phase for
+CB_NOTIFY_LOCK callbacks.
 
 URL: https://bugzilla.kernel.org/show_bug.cgi?id=203363
 Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
@@ -84,34 +83,33 @@ Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfsd/nfs4state.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -265,6 +265,7 @@ find_or_allocate_block(struct nfs4_locko
- static void
- free_blocked_lock(struct nfsd4_blocked_lock *nbl)
- {
+@@ -298,6 +298,14 @@ remove_blocked_locks(struct nfs4_lockown
+ 	}
+ }
+ 
++static void
++nfsd4_cb_notify_lock_prepare(struct nfsd4_callback *cb)
++{
++	struct nfsd4_blocked_lock	*nbl = container_of(cb,
++						struct nfsd4_blocked_lock, nbl_cb);
 +	locks_delete_block(&nbl->nbl_lock);
- 	locks_release_private(&nbl->nbl_lock);
- 	kfree(nbl);
++}
++
+ static int
+ nfsd4_cb_notify_lock_done(struct nfsd4_callback *cb, struct rpc_task *task)
+ {
+@@ -325,6 +333,7 @@ nfsd4_cb_notify_lock_release(struct nfsd
  }
-@@ -293,7 +294,6 @@ remove_blocked_locks(struct nfs4_lockown
- 		nbl = list_first_entry(&reaplist, struct nfsd4_blocked_lock,
- 					nbl_lru);
- 		list_del_init(&nbl->nbl_lru);
--		locks_delete_block(&nbl->nbl_lock);
- 		free_blocked_lock(nbl);
- 	}
- }
-@@ -4863,7 +4863,6 @@ nfs4_laundromat(struct nfsd_net *nn)
- 		nbl = list_first_entry(&reaplist,
- 					struct nfsd4_blocked_lock, nbl_lru);
- 		list_del_init(&nbl->nbl_lru);
--		locks_delete_block(&nbl->nbl_lock);
- 		free_blocked_lock(nbl);
- 	}
- out:
+ 
+ static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops = {
++	.prepare	= nfsd4_cb_notify_lock_prepare,
+ 	.done		= nfsd4_cb_notify_lock_done,
+ 	.release	= nfsd4_cb_notify_lock_release,
+ };
 
 
