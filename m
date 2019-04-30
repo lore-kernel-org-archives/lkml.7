@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB60DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF32C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9017C21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D2021734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624516;
-	bh=5SHsypmo8pe7K626t53+E/hpSpGB6teWcfIps7w6rIs=;
+	s=default; t=1556624520;
+	bh=dfcChI+EQWkdxdZ5HqmcxSwY/717RRoy4vDGdSijDEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/qfnR5WlzX1wJRys3dtFr8/GbICW5PDBN4pUFDchQuPM7vz82/unDNk7xqvO8+nj
-	 3WqcjE2kxcvJIExWA7QxXQve+LjdYqXqk61HmQU+XkyWrg1x5GdLWlVZgUwuRqzx6S
-	 dw2lJOhArsOiByugx9aGi54Ae3mD28XRMqtlNNVA=
+	b=DK7yIJ7if3q/WcNosBYfZ6ZiDMVPMH+uVy3Ly5DKvNT/uO+1d515RVq7I8lmW82nk
+	 EAbHJhHQwuBkHw1dRNr2gQuL3igjbErvSvwgo/CFnpCIJPehpbo7UNZeS+q9GX4Ujw
+	 2HkLYYNFQx1GEysIA7QvZeBrZEPm2WclQOxkUg1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbfD3Llz (ORCPT
+        id S1728346AbfD3Ll7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49956 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729036AbfD3Lls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:48 -0400
+        id S1729104AbfD3Ll4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29B1121670;
-        Tue, 30 Apr 2019 11:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D928621670;
+        Tue, 30 Apr 2019 11:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624507;
-        bh=5SHsypmo8pe7K626t53+E/hpSpGB6teWcfIps7w6rIs=;
+        s=default; t=1556624515;
+        bh=dfcChI+EQWkdxdZ5HqmcxSwY/717RRoy4vDGdSijDEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqg8WQDiu4YTFPDe3w71ewj2VlBmfSMNJw5FK+XytJF8xZdxHaSndHJh/hP8Ee1rW
-         qEopSnJw7F41nxCRH23WC1vUQ943KtNVhZ8PsEDWfC9XTrPypzsx4DURoq8euHDFCZ
-         m5BSyDl+RKj1TSIWRrvfAfaXsVVvvV4GvMc5EtZk=
+        b=WgAxw3S7MPZEmtr5R1HN3eHSTPimY/9YDUoNtYtfJBqsAlDC8xmv2tMaoQjgqojwF
+         HiOU/mIDgQPjdEUxmRdyJugJlZhtsL0iHAro6yCKm7oY54GXFZCU2oD/lOfD4xdUEz
+         HRMsShgBDlbl3upL/a6KI75AaxXX7iAGMR2elhqc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.14 02/53] cifs: do not attempt cifs operation on smb2+ rename error
-Date:   Tue, 30 Apr 2019 13:38:09 +0200
-Message-Id: <20190430113549.852405340@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Eric Anholt <eric@anholt.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 4.14 22/53] drm/vc4: Fix compilation error reported by kbuild test bot
+Date:   Tue, 30 Apr 2019 13:38:29 +0200
+Message-Id: <20190430113555.134060137@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -60,38 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 
-commit 652727bbe1b17993636346716ae5867627793647 upstream.
+commit 462ce5d963f18b71c63f6b7730a35a2ee5273540 upstream.
 
-A path-based rename returning EBUSY will incorrectly try opening
-the file with a cifs (NT Create AndX) operation on an smb2+ mount,
-which causes the server to force a session close.
+A pointer to crtc was missing, resulting in the following build error:
+drivers/gpu/drm/vc4/vc4_crtc.c:1045:44: sparse: sparse: incorrect type in argument 1 (different base types)
+drivers/gpu/drm/vc4/vc4_crtc.c:1045:44: sparse:    expected struct drm_crtc *crtc
+drivers/gpu/drm/vc4/vc4_crtc.c:1045:44: sparse:    got struct drm_crtc_state *state
+drivers/gpu/drm/vc4/vc4_crtc.c:1045:39: sparse: sparse: not enough arguments for function vc4_crtc_destroy_state
 
-If the mount is smb2+, skip the fallback.
-
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: Eric Anholt <eric@anholt.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/2b6ed5e6-81b0-4276-8860-870b54ca3262@linux.intel.com
+Fixes: d08106796a78 ("drm/vc4: Fix memory leak during gpu reset.")
+Cc: <stable@vger.kernel.org> # v4.6+
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/vc4/vc4_crtc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1730,6 +1730,10 @@ cifs_do_rename(const unsigned int xid, s
- 	if (rc == 0 || rc != -EBUSY)
- 		goto do_rename_exit;
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -867,7 +867,7 @@ static void
+ vc4_crtc_reset(struct drm_crtc *crtc)
+ {
+ 	if (crtc->state)
+-		vc4_crtc_destroy_state(crtc->state);
++		vc4_crtc_destroy_state(crtc, crtc->state);
  
-+	/* Don't fall back to using SMB on SMB 2+ mount */
-+	if (server->vals->protocol_id != 0)
-+		goto do_rename_exit;
-+
- 	/* open-file renames don't work across directories */
- 	if (to_dentry->d_parent != from_dentry->d_parent)
- 		goto do_rename_exit;
+ 	crtc->state = kzalloc(sizeof(struct vc4_crtc_state), GFP_KERNEL);
+ 	if (crtc->state)
 
 
