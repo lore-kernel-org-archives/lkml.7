@@ -2,124 +2,130 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BFBC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450EEC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF3920652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YYYJMqJp"
+	by mail.kernel.org (Postfix) with ESMTP id 1C73120835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfD3WHf (ORCPT
+        id S1727268AbfD3WI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:07:35 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42136 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfD3WHe (ORCPT
+        Tue, 30 Apr 2019 18:08:57 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54569 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfD3WI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:07:34 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UM7Ta5067873;
-        Tue, 30 Apr 2019 17:07:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556662049;
-        bh=mwbS/adT545mom+gOLUqux+4lUqX0AcC/k+8N/4142k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YYYJMqJpXzh+HcRr2G4U7J46/+Uw1Joo1VViTA53a3jdQL6vVmxUcGXjQlgbdDRuP
-         iDyMLDDvdPVddzbWbI8+wGUGrCfPHRHKeMaj6zIMdxosg+MmYOt3AneqiJrM/gWLI3
-         EOdK87DRDcbygPOGxIKyXun/6Rhn27ziL+kg66J0=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UM7TBu072741
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 17:07:29 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 17:07:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 17:07:29 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UM7SOr028915;
-        Tue, 30 Apr 2019 17:07:28 -0500
+        Tue, 30 Apr 2019 18:08:57 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id DDF6C8085B; Wed,  1 May 2019 00:08:46 +0200 (CEST)
+Date:   Wed, 1 May 2019 00:08:56 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH v3 5/7] dt-bindings: ti-lmu: Modify dt bindings for the
  LM3697
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Message-ID: <20190430220855.GD20410@amd>
 References: <20190430191730.19450-1-dmurphy@ti.com>
- <20190430191730.19450-6-dmurphy@ti.com> <20190430220527.GC20410@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <34f72f44-9385-a42a-4e44-94ae6a04fe98@ti.com>
-Date:   Tue, 30 Apr 2019 17:07:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ <20190430191730.19450-6-dmurphy@ti.com>
+ <20190430220527.GC20410@amd>
+ <34f72f44-9385-a42a-4e44-94ae6a04fe98@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190430220527.GC20410@amd>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
+Content-Disposition: inline
+In-Reply-To: <34f72f44-9385-a42a-4e44-94ae6a04fe98@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--6Nae48J/T25AfBN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/30/19 5:05 PM, Pavel Machek wrote:
-> On Tue 2019-04-30 14:17:28, Dan Murphy wrote:
->> The LM3697 is a single function LED driver. The single function LED
->> driver needs to reside in the LED directory as a dedicated LED driver
->> and not as a MFD device.  The device does have common brightness and ramp
->> features and those can be accomodated by a TI LMU framework.
->>
->> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicated
->> LED dt binding needs to be added.  The new LM3697 LED dt binding will then
->> reside in the Documentation/devicetree/bindings/leds directory and follow the
->> current LED and general bindings guidelines.
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>
->> v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchwork/patch/1058762/
->>
->> v2 - Made changes to reference ti,brightness-resolution to the ti-lmu.txt -
->> https://lore.kernel.org/patchwork/patch/1054501/
->>
->>  .../devicetree/bindings/leds/leds-lm3697.txt  | 73 +++++++++++++++++++
->>  .../devicetree/bindings/mfd/ti-lmu.txt        | 27 +------
->>  2 files changed, 74 insertions(+), 26 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
->> new file mode 100644
->> index 000000000000..02378f33c9ab
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
->> @@ -0,0 +1,73 @@
->> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
->> +
->> +The LM3697 11-bit LED driver provides high-
->> +performance backlight dimming for 1, 2, or 3 series
->> +LED strings while delivering up to 90% efficiency.
->> +
->> +This device is suitable for display and keypad Lighting
-> 
-> "lightning."
+On Tue 2019-04-30 17:07:32, Dan Murphy wrote:
+>=20
+>=20
+> On 4/30/19 5:05 PM, Pavel Machek wrote:
+> > On Tue 2019-04-30 14:17:28, Dan Murphy wrote:
+> >> The LM3697 is a single function LED driver. The single function LED
+> >> driver needs to reside in the LED directory as a dedicated LED driver
+> >> and not as a MFD device.  The device does have common brightness and r=
+amp
+> >> features and those can be accomodated by a TI LMU framework.
+> >>
+> >> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedi=
+cated
+> >> LED dt binding needs to be added.  The new LM3697 LED dt binding will =
+then
+> >> reside in the Documentation/devicetree/bindings/leds directory and fol=
+low the
+> >> current LED and general bindings guidelines.
+> >>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> >> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >> ---
+> >>
+> >> v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchw=
+ork/patch/1058762/
+> >>
+> >> v2 - Made changes to reference ti,brightness-resolution to the ti-lmu.=
+txt -
+> >> https://lore.kernel.org/patchwork/patch/1054501/
+> >>
+> >>  .../devicetree/bindings/leds/leds-lm3697.txt  | 73 +++++++++++++++++++
+> >>  .../devicetree/bindings/mfd/ti-lmu.txt        | 27 +------
+> >>  2 files changed, 74 insertions(+), 26 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697=
+=2Etxt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/=
+Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> >> new file mode 100644
+> >> index 000000000000..02378f33c9ab
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> >> @@ -0,0 +1,73 @@
+> >> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
+> >> +
+> >> +The LM3697 11-bit LED driver provides high-
+> >> +performance backlight dimming for 1, 2, or 3 series
+> >> +LED strings while delivering up to 90% efficiency.
+> >> +
+> >> +This device is suitable for display and keypad Lighting
+> >=20
+> > "lightning."
+>=20
+> Heh.  Don't think you meant lightning but I get what you are saying
+>=20
+> s/Lighting/lighting
 
-Heh.  Don't think you meant lightning but I get what you are saying
+Yep. Sorry :-). Plus I'd add a dot (".") at the end of sentence.
 
-s/Lighting/lighting
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Dan
+--6Nae48J/T25AfBN4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 									Pavel
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzIx3cACgkQMOfwapXb+vIXwACgojs3hh1JSW3TwopZNKqVtCfI
+Pb4Anj8CVBzVheWZyoaalsSvGtnILLTd
+=tNRY
+-----END PGP SIGNATURE-----
+
+--6Nae48J/T25AfBN4--
