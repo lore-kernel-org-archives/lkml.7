@@ -2,149 +2,123 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE4DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45A9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A4721655
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9218821655
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 01:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVDBEcYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfD3Bbx (ORCPT
+        id S1729854AbfD3Bcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 21:31:53 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:48640 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729626AbfD3Bbx (ORCPT
+        Mon, 29 Apr 2019 21:32:32 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44895 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbfD3Bcb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 21:31:53 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TQafK3A_1556587909;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TQafK3A_1556587909)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 30 Apr 2019 09:31:50 +0800
-Subject: Re: [PATCH] fs: ocfs: fix spelling mistake "hearbeating" ->
- "heartbeat"
-To:     ChenGang <cg.chen@huawei.com>, mark@fasheh.com, jlbec@evilplan.org,
-        jiangqi903@gmail.com
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        ocfs2-devel@oss.oracle.com
-References: <1556541700-35237-1-git-send-email-cg.chen@huawei.com>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <27ff3446-8f17-6acc-808c-56f26a9d66e2@linux.alibaba.com>
-Date:   Tue, 30 Apr 2019 09:31:49 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556541700-35237-1-git-send-email-cg.chen@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 29 Apr 2019 21:32:31 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s10so14340628qtc.11;
+        Mon, 29 Apr 2019 18:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=3lBPGifk0g/Ym5DzrymiWRCw58/24lXuhpA4w8u758o=;
+        b=VVDBEcYKiveCHRGrj0VI42vziUd60oDkEsa//wmOyIo1CiYGSHRg7tQj6hQDIa167l
+         BjmnulNGrqMlsJqJ9NMDDv4fokOAspNSHzqakJsLuiuEv/M4C0vKexL/rV59HXjsDZGC
+         V9CA/IcVDM/p6Vrx5fBXlc8opKZfV66X+YRfCebj/OJJZhT44PHJ0u8AuhKlgM9+pxN5
+         lbinGxS5tgeYtym9I3bYG46IsPvSXrFnR7hUTRvTMWOjaB0Tt2zFqplLEewiuyoQ0eMf
+         aNUwi5gH7twMVJ2XQrUebwxMQAu4WTLakuucRXhUFwygIhGh6U51gI3l073tq4+Da1XZ
+         wyIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=3lBPGifk0g/Ym5DzrymiWRCw58/24lXuhpA4w8u758o=;
+        b=Qzd3TatspWE+7wXX6Yq71Fd+vDb6s1jO6UcV2Hi6oFxRkVi6UlPBJmcTKk7HtF7v1u
+         KVNgEXcY160ab4KIj3I4hTf8BKNq9vH/tnjLZY0YPpsXBqXGBsCsQvMZsUQwN/fnB0sw
+         wZM1bhT3Mew1JlhNCZfVcZyMjGl8RPlSTWEmwc79KvCsISh/VXVA7ggPWUfY+aN+lZOw
+         5gcV6k30n+3ubpVaHnZ984k2rim5L4E0K4hB9pkW079sYsgCx+kWMKkvZlqZfaHWz6dq
+         Bixv/qrM+s0ip5ONezZAKh/xUGvkdhcWUPTHFMK/QePda2FQIHV+vXJznI1OlWFn3adk
+         994g==
+X-Gm-Message-State: APjAAAWmEpJOjOaBDLFRBGltL2bCdbXkE9OCnholUgJdw7Ibd5FJVll9
+        SpOqwNfrq2lYFTVtAn1VSfSbABeo
+X-Google-Smtp-Source: APXvYqzxITbuuxn8ug7+GUYHKrHT6635+MSesPFyFH2L7G4OTw+rfAuViCami29mdFcTcpEN3iM4CQ==
+X-Received: by 2002:aed:35fa:: with SMTP id d55mr27349020qte.169.1556587950213;
+        Mon, 29 Apr 2019 18:32:30 -0700 (PDT)
+Received: from laptop.suse.cz ([179.185.223.166])
+        by smtp.gmail.com with ESMTPSA id v57sm5127019qtc.10.2019.04.29.18.32.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 18:32:29 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-block@vger.kernel.org
+Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Greg Edwards <gedwards@ddn.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] blkdev.h: Introduce size_to_sectors hlper function
+Date:   Mon, 29 Apr 2019 22:32:04 -0300
+Message-Id: <20190430013205.1561708-2-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190430013205.1561708-1-marcos.souza.org@gmail.com>
+References: <20190430013205.1561708-1-marcos.souza.org@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This function takes an argument to specify the size of a block device,
+in bytes, and return the number of sectors of 512 bytes.
 
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+---
 
-On 19/4/29 20:41, ChenGang wrote:
-> Hi Joseph,
-> Thanks for your advice, and I folded the four patches into one.
-> 
+ Changes from v1:
+ Reworked the documentation of size_to_sectors by removing a sentence that was
+ explaining the size -> sectors math, which wasn't necessary given the
+ description prior to the example. (suggested by Chaitanya)
 
-Please resend an official version for conveniently track and then pick.
-Thanks.
+ include/linux/blkdev.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-> On 19/4/28 20:22, Joseph Qi wrote:
->> Hi ChenGang,
->> Could you please fold these four patches into one?
-> 
->> Thanks,
->> Joseph
-> 
->> On 19/4/27 20:22, ChenGang wrote:
->>> There is a spelling mistake in o2hb_do_disk_heartbeat debug message.Fix it.
->>>
->>> Signed-off-by: ChenGang <cg.chen@huawei.com>
->>> ---
->>>  fs/ocfs2/cluster/heartbeat.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/fs/ocfs2/cluster/heartbeat.c 
->>> b/fs/ocfs2/cluster/heartbeat.c index f3c20b2..e4e7df1 100644
->>> --- a/fs/ocfs2/cluster/heartbeat.c
->>> +++ b/fs/ocfs2/cluster/heartbeat.c
->>> @@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
->>>  	if (atomic_read(&reg->hr_steady_iterations) != 0) {
->>>  		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
->>>  			printk(KERN_NOTICE "o2hb: Unable to stabilize "
->>> -			       "heartbeart on region %s (%s)\n",
->>> +			       "heartbeat on region %s (%s)\n",
->>>  			       config_item_name(&reg->hr_item),
->>>  			       reg->hr_dev_name);
->>> 			atomic_set(&reg->hr_steady_iterations, 0);
->>>
-> 
-> 
-> Signed-off-by: ChenGang <cg.chen@huawei.com>
-> ---
->  fs/ocfs2/cluster/heartbeat.c | 2 +-
->  fs/ocfs2/cluster/quorum.c    | 2 +-
->  fs/ocfs2/cluster/tcp.c       | 2 +-
->  fs/ocfs2/dlm/dlmmaster.c     | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/ocfs2/cluster/heartbeat.c b/fs/ocfs2/cluster/heartbeat.c
-> index f3c20b2..e4e7df1 100644
-> --- a/fs/ocfs2/cluster/heartbeat.c
-> +++ b/fs/ocfs2/cluster/heartbeat.c
-> @@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
->  	if (atomic_read(&reg->hr_steady_iterations) != 0) {
->  		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
->  			printk(KERN_NOTICE "o2hb: Unable to stabilize "
-> -			       "heartbeart on region %s (%s)\n",
-> +			       "heartbeat on region %s (%s)\n",
->  			       config_item_name(&reg->hr_item),
->  			       reg->hr_dev_name);
->  			atomic_set(&reg->hr_steady_iterations, 0);
-> diff --git a/fs/ocfs2/cluster/quorum.c b/fs/ocfs2/cluster/quorum.c
-> index af2e747..792132f 100644
-> --- a/fs/ocfs2/cluster/quorum.c
-> +++ b/fs/ocfs2/cluster/quorum.c
-> @@ -89,7 +89,7 @@ static void o2quo_fence_self(void)
->  	};
->  }
->  
-> -/* Indicate that a timeout occurred on a hearbeat region write. The
-> +/* Indicate that a timeout occurred on a heartbeat region write. The
->   * other nodes in the cluster may consider us dead at that time so we
->   * want to "fence" ourselves so that we don't scribble on the disk
->   * after they think they've recovered us. This can't solve all
-> diff --git a/fs/ocfs2/cluster/tcp.c b/fs/ocfs2/cluster/tcp.c
-> index e9f236a..7a43c04 100644
-> --- a/fs/ocfs2/cluster/tcp.c
-> +++ b/fs/ocfs2/cluster/tcp.c
-> @@ -1776,7 +1776,7 @@ static void o2net_hb_node_up_cb(struct o2nm_node *node, int node_num,
->  		(msecs_to_jiffies(o2net_reconnect_delay()) + 1);
->  
->  	if (node_num != o2nm_this_node()) {
-> -		/* believe it or not, accept and node hearbeating testing
-> +		/* believe it or not, accept and node heartbeating testing
->  		 * can succeed for this node before we got here.. so
->  		 * only use set_nn_state to clear the persistent error
->  		 * if that hasn't already happened */
-> diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
-> index 826f056..41b80d5 100644
-> --- a/fs/ocfs2/dlm/dlmmaster.c
-> +++ b/fs/ocfs2/dlm/dlmmaster.c
-> @@ -2176,7 +2176,7 @@ static void dlm_assert_master_worker(struct dlm_work_item *item, void *data)
->   * think that $RECOVERY is currently mastered by a dead node.  If so,
->   * we wait a short time to allow that node to get notified by its own
->   * heartbeat stack, then check again.  All $RECOVERY lock resources
-> - * mastered by dead nodes are purged when the hearbeat callback is
-> + * mastered by dead nodes are purged when the heartbeat callback is
->   * fired, so we can know for sure that it is safe to continue once
->   * the node returns a live node or no node.  */
->  static int dlm_pre_master_reco_lockres(struct dlm_ctxt *dlm,
-> 
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 317ab30d2904..f6cfe6970756 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -871,6 +871,23 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+ #define SECTOR_SIZE (1 << SECTOR_SHIFT)
+ #endif
+ 
++/**
++ * size_to_sectors - Convert size in bytes to number of sectors of 512 bytes
++ * @size: size in bytes to be converted to sectors
++ *
++ * Description:
++ * Kernel I/O operations are always made in "sectors". In order to set the
++ * correct number of sectors for a given number of bytes, we need to group the
++ * number of bytes in "sectors of 512 bytes" by shifting the size value by 9,
++ * which is the same than dividing the size by 512.
++ *
++ * Returns the number of sectors by the given number of bytes.
++ */
++static inline sector_t size_to_sectors(long long size)
++{
++	return size >> SECTOR_SHIFT;
++}
++
+ /*
+  * blk_rq_pos()			: the current sector
+  * blk_rq_bytes()		: bytes left in the entire request
+-- 
+2.16.4
+
