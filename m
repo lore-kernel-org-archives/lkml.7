@@ -2,146 +2,108 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1785C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0049C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3442147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6324121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="hDMWL/Jz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Po303dIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbfD3FQR (ORCPT
+        id S1726224AbfD3FQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 01:16:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35724 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbfD3FQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 01:16:16 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 41F1630715CA;
-        Tue, 30 Apr 2019 05:16:16 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AEB5E1001284;
-        Tue, 30 Apr 2019 05:15:50 +0000 (UTC)
-Subject: Re: [PATCH v2 17/19] iommu: Add max num of cache and granu types
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-18-git-send-email-jacob.jun.pan@linux.intel.com>
- <a9f2c804-24a8-03fb-96ac-0c4661870dd5@redhat.com>
- <20190429091723.5970e967@jacob-builder>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <fe189810-aa25-2a67-0608-fbeef5b07d92@redhat.com>
-Date:   Tue, 30 Apr 2019 07:15:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 30 Apr 2019 01:16:31 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:42487 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725446AbfD3FQa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 01:16:30 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7862B27CE8;
+        Tue, 30 Apr 2019 01:16:29 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 30 Apr 2019 01:16:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=DUYD7xRlE61Rnxv7xoYW7Ssfsx5
+        LnGk2D3PkL/WJ8Ik=; b=hDMWL/JzlkFybHuKb0MoXkqVAJkasMpnqEirHt4VObt
+        kwYj3tWdgRv9P+roD9UIUfrr3j0xSICayLEk8e73AuaiVaWFVA2E5kCqnwE3INpE
+        zYxQpz3t58Y/Kkir7XVcQ4+XzhSiaZKiUtL0ZeBmwIQV0Hvkh0AgLm/1rPSf9YEq
+        K3bkgHyJVWT6+FXAlluCe4cVJfVAd0b98xsHk+FxO/enJNHO4ud88akbM0KMliJ2
+        kE7/KpQIjUz5KfqpRk5az+OJJcW1q3bsv2FZi3GIzYZmZNLF2TsSH+a0BmNSC9cd
+        IVQOO/XVnwAXiPanEKkWWPdwmkwot5xejveBH0CYp6A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DUYD7x
+        RlE61Rnxv7xoYW7Ssfsx5LnGk2D3PkL/WJ8Ik=; b=Po303dIKhLf++y10KwKR2b
+        19s96KvZ5tCil9B5fdw/n/y8LO2K1zQyJ4RMkz7wLAOSiEW+ZmNzW+IJZSd7Gaej
+        oy/XBRfzJtTer3IPaREI7Sinu7Fwx3qyX0gEIQI/SFYWc/cdQJvP+gQJyfK8cebx
+        jVA5dne+aZ9v+45RYs4E5LyVkJtAMW4dB4dt/8wqGbS5TT0PPe8RXhK3Ywv3zFsK
+        MgcdGZJjeUUSYqSsQ7sWui3xvYhKWw4HnLP2L+F5/U+Prj2kZd2NRFu3QB5G05yQ
+        zFIXZliIR7jwRpRyf2/Ys0RFA9QWrJXgpybcPYpPxqkhGyHVCZgHbJOjUAZm7fNA
+        ==
+X-ME-Sender: <xms:LdrHXGAaqcq5iB83EdllyF12agGKTFb5imHvkLiGJOJkbijMd51Ysw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdelhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddvuddrgeegrddvfedtrddukeeknecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:LdrHXOFWdrPJ4yvRdKW6uHuf5rAAZJ7_-rIVUn9GvttwI0xs7AV2BA>
+    <xmx:LdrHXACSjH8_Z847B-_1zJ6MDT3_yFrx2aqqEtkaxamuI1j33qJ60A>
+    <xmx:LdrHXGX-unkxBBH-f0pmQiK9_qqq75mRId0BY8FmU919GCWbn_wQ4A>
+    <xmx:LdrHXBerXOvl2QnclXWXjhjHTiOOIxLtKQQGYiHUsUIcVnb5BnSFgA>
+Received: from localhost (ppp121-44-230-188.bras2.syd2.internode.on.net [121.44.230.188])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 539E7103C9;
+        Tue, 30 Apr 2019 01:16:28 -0400 (EDT)
+Date:   Tue, 30 Apr 2019 15:15:45 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] sched/cpufreq: Fix kobject memleak
+Message-ID: <20190430051545.GB30100@eros.localdomain>
+References: <20190430001717.26533-1-tobin@kernel.org>
+ <20190430042443.GB73609@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190429091723.5970e967@jacob-builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 30 Apr 2019 05:16:16 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430042443.GB73609@gmail.com>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-
-On 4/29/19 6:17 PM, Jacob Pan wrote:
-> On Fri, 26 Apr 2019 18:22:46 +0200
-> Auger Eric <eric.auger@redhat.com> wrote:
+On Tue, Apr 30, 2019 at 06:24:43AM +0200, Ingo Molnar wrote:
 > 
->> Hi Jacob,
->>
->> On 4/24/19 1:31 AM, Jacob Pan wrote:
->>> To convert to/from cache types and granularities between generic and
->>> VT-d specific counterparts, a 2D arrary is used. Introduce the
->>> limits  
->> array
->>> to help define the converstion array size.  
->> conversion
->>>
-> will fix, thanks
->>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> ---
->>>  include/uapi/linux/iommu.h | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
->>> index 5c95905..2d8fac8 100644
->>> --- a/include/uapi/linux/iommu.h
->>> +++ b/include/uapi/linux/iommu.h
->>> @@ -197,6 +197,7 @@ struct iommu_inv_addr_info {
->>>  	__u64	granule_size;
->>>  	__u64	nb_granules;
->>>  };
->>> +#define NR_IOMMU_CACHE_INVAL_GRANU	(3)
->>>  
->>>  /**
->>>   * First level/stage invalidation information
->>> @@ -235,6 +236,7 @@ struct iommu_cache_invalidate_info {
->>>  		struct iommu_inv_addr_info addr_info;
->>>  	};
->>>  };
->>> +#define NR_IOMMU_CACHE_TYPE		(3)
->>>  /**
->>>   * struct gpasid_bind_data - Information about device and guest
->>> PASID binding
->>>   * @gcr3:	Guest CR3 value from guest mm
->>>   
->> Is it really something that needs to be exposed in the uapi?
->>
-> I put it in uapi since the related definitions for granularity and
-> cache type are in the same file.
-> Maybe putting them close together like this? I was thinking you can just
-> fold it into your next series as one patch for introducing cache
-> invalidation.
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index 2d8fac8..4ff6929 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -164,6 +164,7 @@ enum iommu_inv_granularity {
->         IOMMU_INV_GRANU_DOMAIN, /* domain-selective invalidation */
->         IOMMU_INV_GRANU_PASID,  /* pasid-selective invalidation */
->         IOMMU_INV_GRANU_ADDR,   /* page-selective invalidation */
-> +       NR_IOMMU_INVAL_GRANU,   /* number of invalidation granularities
-> */ };
->  
->  /**
-> @@ -228,6 +229,7 @@ struct iommu_cache_invalidate_info {
->  #define IOMMU_CACHE_INV_TYPE_IOTLB     (1 << 0) /* IOMMU IOTLB */
->  #define IOMMU_CACHE_INV_TYPE_DEV_IOTLB (1 << 1) /* Device IOTLB */
->  #define IOMMU_CACHE_INV_TYPE_PASID     (1 << 2) /* PASID cache */
-> +#define NR_IOMMU_CACHE_TYPE            (3)
-
-OK I will add this.
-
-Thanks
-
-Eric
->         __u8    cache;
->         __u8    granularity;
+> * Tobin C. Harding <tobin@kernel.org> wrote:
 > 
->> Thanks
->>
->> Eric
+> > Currently error return from kobject_init_and_add() is not followed by a
+> > call to kobject_put().  This means there is a memory leak.
+> > 
+> > Add call to kobject_put() in error path of kobject_init_and_add().
+> > 
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> > 
+> > Resend with SOB tag.
 > 
-> [Jacob Pan]
-> 
+> Please ignore my previous mail :-)
+
+Cheers Ingo, caught myself not checkpatching :(
+
+thanks,
+Tobin.
+
