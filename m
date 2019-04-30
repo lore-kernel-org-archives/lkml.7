@@ -2,126 +2,72 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED7CC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BE8C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8018920854
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:08:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J6jpwCXS"
+	by mail.kernel.org (Postfix) with ESMTP id 62A1E21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556647860;
+	bh=AlLWzxVgOxob6FaZQx28rtzg152XAquJeStSSCpM/do=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XzFXcwlCNHqJ7KPDotyw4zBZa9ij9yFj4WIB1snjlj21IRxICe8CDrGHBOFjr6vg5
+	 HQghUqztM1kBxfSYMr6lFAzeIsCmgulhWaiFblex63PWYPj4qiizziVpeMF+E20gBV
+	 pVl0ogs+7EFqaIzkopq9etnHAqKz+GGddhKmDoV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfD3SIk (ORCPT
+        id S1726681AbfD3SK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 14:08:40 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:46295 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfD3SIj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:08:39 -0400
-Received: by mail-yw1-f67.google.com with SMTP id v15so6574198ywe.13
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xil5v019vbM3B6LNJ5oLx5ybK/sELLOgqiNDryj/WS4=;
-        b=J6jpwCXSoU7Eq7a4v/BuGEqdgrF69IaBpqOL12T9GDVAPMr4fSnfDWEJUjRPxcE/aa
-         fNigHE4KOEqlZyENgRu+3RjUamg6DPnkPsUqo+KyKPP54eT63vbbvE3+J28zY2d6CAuk
-         qfCM428MXxMWIy/qHQJK5PMe+FU2XDaiA2WYI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xil5v019vbM3B6LNJ5oLx5ybK/sELLOgqiNDryj/WS4=;
-        b=mGoNk/6KEJJZap9QPmCGuv9aW3nCEBAzlqH3PdSiKSrkfdadCSJGfi8tvRw3q9aWAY
-         G2TlCNlUP3b038xCuW851ZgnjhBJV/O1e+Rf/sTmaHhhXZqpX9ufmjy5C1WvbaA1NlPs
-         2nSN5nZoBVQlcbhs3xFAKXbOcWMETXPeUB9ax4fVqS0GH04Na30cx56ku6OR59t6RR15
-         2i92eK1JXWqeIYFqwO+ZeVqmWYzHcySik9kccQnMTOE2rF99BIByYpSylQjTeiNYBk/2
-         LQgDaekRmEOySTc5RAzpTEfkf3eUgk8C0sF9bK54PfeYPmor34GzlZqlcb899PloLcjV
-         9hAQ==
-X-Gm-Message-State: APjAAAWhm8ci6F2DUZM/pUGtwwbg8h+w6LINnHi7jmtG9toF43eVZ2v0
-        BUK4gTzHIObCKnrriMVvirwvAIA4ixw=
-X-Google-Smtp-Source: APXvYqxU9mcJFyKwOfBosH1NiQkfPb3h+w2S6k3K8xDZHSBd3g/2iG7cDh810tyt7VVjJQCMpFirhQ==
-X-Received: by 2002:a25:1f02:: with SMTP id f2mr57714160ybf.111.1556647717956;
-        Tue, 30 Apr 2019 11:08:37 -0700 (PDT)
-Received: from mail-yw1-f42.google.com (mail-yw1-f42.google.com. [209.85.161.42])
-        by smtp.gmail.com with ESMTPSA id g187sm9582801ywa.4.2019.04.30.11.08.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 11:08:37 -0700 (PDT)
-Received: by mail-yw1-f42.google.com with SMTP id j4so6585712ywk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 11:08:36 -0700 (PDT)
-X-Received: by 2002:a25:d488:: with SMTP id m130mr15451236ybf.172.1556647716425;
- Tue, 30 Apr 2019 11:08:36 -0700 (PDT)
+        Tue, 30 Apr 2019 14:10:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:46938 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbfD3SK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:10:59 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:10:58 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga002.jf.intel.com with ESMTP; 30 Apr 2019 11:10:57 -0700
+Date:   Tue, 30 Apr 2019 12:05:09 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alex G <mr.nuke.me@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
+ bandwidth notification"
+Message-ID: <20190430180508.GB25654@localhost.localdomain>
+References: <20190429185611.121751-1-helgaas@kernel.org>
+ <20190429185611.121751-2-helgaas@kernel.org>
+ <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
+ <20190430161151.GB145057@google.com>
 MIME-Version: 1.0
-References: <20190429222613.13345-1-mcroce@redhat.com> <CAGnkfhzkju6LXwHAVCHxCmMvAa1MLQGRY1czE1Boqz2OcEq39Q@mail.gmail.com>
- <CAGXu5j+qejH0c9fG=TwmSyK0FkaiNidgqYZrqgKPf4D_=u2k8A@mail.gmail.com>
- <20190430160813.GI13796@bombadil.infradead.org> <CAGnkfhxhZ7WELD-w_KA+yKogyyJ=y_=8w+HdpYoiWDbCsQi+zw@mail.gmail.com>
-In-Reply-To: <CAGnkfhxhZ7WELD-w_KA+yKogyyJ=y_=8w+HdpYoiWDbCsQi+zw@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 30 Apr 2019 11:08:22 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jLvwT4qQSP5GH=MdNoW4XtEQRbeyA_=MrEAHhgBSXfJTQ@mail.gmail.com>
-Message-ID: <CAGXu5jLvwT4qQSP5GH=MdNoW4XtEQRbeyA_=MrEAHhgBSXfJTQ@mail.gmail.com>
-Subject: Re: [PATCH v4] proc/sysctl: add shared variables for range check
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430161151.GB145057@google.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 9:30 AM Matteo Croce <mcroce@redhat.com> wrote:
->
-> On Tue, Apr 30, 2019 at 6:08 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Tue, Apr 30, 2019 at 08:42:42AM -0700, Kees Cook wrote:
-> > > On Tue, Apr 30, 2019 at 3:47 AM Matteo Croce <mcroce@redhat.com> wrote:
-> > > > On Tue, Apr 30, 2019 at 12:26 AM Matteo Croce <mcroce@redhat.com> wrote:
-> > > > >
-> > > > > Add a const int array containing the most commonly used values,
-> > > > > some macros to refer more easily to the correct array member,
-> > > > > and use them instead of creating a local one for every object file.
-> > > > >
-> > > >
-> > > > Ok it seems that this simply can't be done, because there are at least
-> > > > two points where extra1,2 are set to a non const struct:
-> > > > in ip_vs_control_net_init_sysctl() it's assigned to struct netns_ipvs,
-> > > > while in mpls_dev_sysctl_register() it's assigned to a struct mpls_dev
-> > > > and a struct net.
-> > >
-> > > Why can't these be converted to const also? I don't see the pointer
-> > > changing anywhere. They're created in one place and never changed.
-> >
-> > That's not true; I thought the same thing, but you need to see how
-> > they're used in the functions they're called.
-> >
-> > proc_do_defense_mode(struct ctl_table *table, int write,
-> >         struct netns_ipvs *ipvs = table->extra2;
-> >                         update_defense_level(ipvs);
-> > static void update_defense_level(struct netns_ipvs *ipvs)
-> >         spin_lock(&ipvs->dropentry_lock);
->
-> Indeed. I followed the same code path until I found this:
->
->  167                        ipvs->drop_rate = 0;
->  168                        ipvs->sysctl_drop_packet = 1;
->
-> so I think that this can't be done like this.
+On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
+> > I'm not convinced a revert is the best call.
+> 
+> I have very limited options at this stage of the release, but I'd be
+> glad to hear suggestions.  My concern is that if we release v5.1
+> as-is, we'll spend a lot of energy on those false positives.
 
-Ah, dang. Yeah, I missed that too.
-
-> Mind if I send a v5 without the const qualifier? At least to know the
-> kbuildbot opinion.
-
-Yeah, I think that's likely best.
-
--- 
-Kees Cook
+May be too late now if the revert is queued up, but I think this feature
+should have been a default 'false' Kconfig bool rather than always on.
