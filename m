@@ -2,83 +2,124 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37088C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B15C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE9B21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56B620835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfD3J3D (ORCPT
+        id S1727126AbfD3J3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:29:03 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56427 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfD3J2a (ORCPT
+        Tue, 30 Apr 2019 05:29:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43662 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726165AbfD3J3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:28:30 -0400
-X-Originating-IP: 109.213.14.175
-Received: from localhost (alyon-652-1-31-175.w109-213.abo.wanadoo.fr [109.213.14.175])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1DA5F1BF20F;
-        Tue, 30 Apr 2019 09:28:27 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 4/7] rtc: jz4740: use .set_time
-Date:   Tue, 30 Apr 2019 11:28:18 +0200
-Message-Id: <20190430092821.27963-4-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190430092821.27963-1-alexandre.belloni@bootlin.com>
-References: <20190430092821.27963-1-alexandre.belloni@bootlin.com>
+        Tue, 30 Apr 2019 05:29:31 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3U9SNjv071612
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 05:29:30 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s6kf9gt0w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 05:29:30 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 30 Apr 2019 10:29:27 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Apr 2019 10:29:25 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3U9TOWF54460628
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 09:29:24 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A0A64C040;
+        Tue, 30 Apr 2019 09:29:24 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8ABC54C046;
+        Tue, 30 Apr 2019 09:29:23 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.116])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Apr 2019 09:29:23 +0000 (GMT)
+Date:   Tue, 30 Apr 2019 11:29:22 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v7 2/4] vfio: ap: register IOMMU VFIO notifier
+In-Reply-To: <b1577203-78c7-24f3-9357-42159feb08ae@linux.ibm.com>
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+        <1556283688-556-3-git-send-email-pmorel@linux.ibm.com>
+        <20190429180702.641c9110.pasic@linux.ibm.com>
+        <b1577203-78c7-24f3-9357-42159feb08ae@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19043009-0028-0000-0000-00000368CAF3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19043009-0029-0000-0000-000024282F4E
+Message-Id: <20190430112922.0b0b90c5.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=803 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use .set_time instead of the deprecated .set_mmss.
+On Tue, 30 Apr 2019 09:59:51 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/rtc/rtc-jz4740.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> On 29/04/2019 18:07, Halil Pasic wrote:
+> > On Fri, 26 Apr 2019 15:01:26 +0200
+> > Pierre Morel <pmorel@linux.ibm.com> wrote:
+> > 
+> >> @@ -858,7 +887,17 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+> >>   		return ret;
+> >>   	}
+> >>   
+> >> -	return 0;
+> >> +	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
+> >> +	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+> >> +	ret = vfio_register_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+> >> +				     &events, &matrix_mdev->iommu_notifier);
+> >> +	if (!ret)
+> >> +		return ret;
+> >> +
+> >> +	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
+> >> +				 &matrix_mdev->group_notifier);
+> >> +	module_put(THIS_MODULE);
+> > 
+> > Can you please explain this module_put() here? I don't see anything in
+> > the cover letter.
+> 
+> May be you should have a look at the sources or the original patch 
+> series of Tony, there is a try_module_get() at the beginning of open to 
+> make sure that the module is not taken away while in use by the guest.
+> 
+> In the case we failed to open the mediated device we let fall the reference.
+> 
 
-diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index f2b8d6541c9e..077670ffde01 100644
---- a/drivers/rtc/rtc-jz4740.c
-+++ b/drivers/rtc/rtc-jz4740.c
-@@ -176,11 +176,11 @@ static int jz4740_rtc_read_time(struct device *dev, struct rtc_time *time)
- 	return 0;
- }
- 
--static int jz4740_rtc_set_mmss(struct device *dev, unsigned long secs)
-+static int jz4740_rtc_set_time(struct device *dev, struct rtc_time *time)
- {
- 	struct jz4740_rtc *rtc = dev_get_drvdata(dev);
- 
--	return jz4740_rtc_reg_write(rtc, JZ_REG_RTC_SEC, secs);
-+	return jz4740_rtc_reg_write(rtc, JZ_REG_RTC_SEC, rtc_tm_to_time64(time));
- }
- 
- static int jz4740_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-@@ -223,7 +223,7 @@ static int jz4740_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
- 
- static const struct rtc_class_ops jz4740_rtc_ops = {
- 	.read_time	= jz4740_rtc_read_time,
--	.set_mmss	= jz4740_rtc_set_mmss,
-+	.set_time	= jz4740_rtc_set_time,
- 	.read_alarm	= jz4740_rtc_read_alarm,
- 	.set_alarm	= jz4740_rtc_set_alarm,
- 	.alarm_irq_enable = jz4740_rtc_alarm_irq_enable,
--- 
-2.20.1
+Right, my bad. I did not notice we were on the error recovery path.
+
+Regards,
+Halil
 
