@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79837C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE34C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FED21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C060221707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624599;
-	bh=FwTXVwUlLkPBeoK7HJHIEaIo0YinC2yeHPbzsgAwtkw=;
+	s=default; t=1556624602;
+	bh=r2UVRYgI6zFKWaIlg6Ntrk3OKtj+wxjvf66JG/ZofmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUYiDjUxBy4W6sIfx37QmnoElulMTIFce98VtfRwsA9L+ZV4Kkgdn0lFhVzUslIPE
-	 +I1qc5iVmCkHEk5DLRMTdMnAHeWobe2SVXIspW4y0MLdTtVNma5S+B3FCp8V+sxDu9
-	 Rb4S5WmlqHTD4GbEqQfeJH1C2cck3RhZnQQia6FI=
+	b=LWmg8QEdxNeAUFziCnxUbvDSDNTvuzy39MoLX5aG8mkC5ZrNBm4bEYAfCr5FlrfoP
+	 QDrfyKWWXfVyMMD5+6oF1NyiLgGxi0Mm8j0k0Shol9iAJ53M+ar79FA/n8DevXt9c2
+	 yExU2tbvicHHts6ehvVOjw+0Hnn+yJ+sGvwhBnGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbfD3LnS (ORCPT
+        id S1728894AbfD3LnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:43:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53250 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729830AbfD3LnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:43:17 -0400
+        id S1729830AbfD3LnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:43:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B23F21744;
-        Tue, 30 Apr 2019 11:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E456221707;
+        Tue, 30 Apr 2019 11:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624595;
-        bh=FwTXVwUlLkPBeoK7HJHIEaIo0YinC2yeHPbzsgAwtkw=;
+        s=default; t=1556624598;
+        bh=r2UVRYgI6zFKWaIlg6Ntrk3OKtj+wxjvf66JG/ZofmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fU3J2uonv5QREZbfrDE0ZDlIoX1F1ipzUGYNiD4Z+yFn/y1LhOdwFfN5CVmbIxZE3
-         b/BUvZmgWAvbEWRTRjQu4+hNgp3DFUAGlstzzY05nVXXbLQC9YLqZ53ezZ9giSR2LX
-         sVDliID5jIYh1wsZpVRgB1FuCDpo+fnohkHmsUUM=
+        b=0etMVobYchz5+tnPLtzOxkCMMhsd24P9++6VyKZwMVqXgGdQVhjUG0qfIBBUF4wGO
+         4uLyaK2azAIBS5sIKQrwP5yO3IWRPlP1mrmTnwusGU0r5MH22g7xkHpRKBVfbNNLLc
+         OztDHVgJusOPFsi61UQTFMHTvF/+wKuOcMgphnrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 53/53] ipv4: set the tcp_min_rtt_wlen range from 0 to one day
-Date:   Tue, 30 Apr 2019 13:39:00 +0200
-Message-Id: <20190430113559.919851789@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.14 34/53] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
+Date:   Tue, 30 Apr 2019 13:38:41 +0200
+Message-Id: <20190430113557.320151368@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -58,90 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 19fad20d15a6494f47f85d869f00b11343ee5c78 ]
+commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 upstream.
 
-There is a UBSAN report as below:
-UBSAN: Undefined behaviour in net/ipv4/tcp_input.c:2877:56
-signed integer overflow:
-2147483647 * 1000 cannot be represented in type 'int'
-CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.1.0-rc4-00058-g582549e #1
-Call Trace:
- <IRQ>
- dump_stack+0x8c/0xba
- ubsan_epilogue+0x11/0x60
- handle_overflow+0x12d/0x170
- ? ttwu_do_wakeup+0x21/0x320
- __ubsan_handle_mul_overflow+0x12/0x20
- tcp_ack_update_rtt+0x76c/0x780
- tcp_clean_rtx_queue+0x499/0x14d0
- tcp_ack+0x69e/0x1240
- ? __wake_up_sync_key+0x2c/0x50
- ? update_group_capacity+0x50/0x680
- tcp_rcv_established+0x4e2/0xe10
- tcp_v4_do_rcv+0x22b/0x420
- tcp_v4_rcv+0xfe8/0x1190
- ip_protocol_deliver_rcu+0x36/0x180
- ip_local_deliver+0x15b/0x1a0
- ip_rcv+0xac/0xd0
- __netif_receive_skb_one_core+0x7f/0xb0
- __netif_receive_skb+0x33/0xc0
- netif_receive_skb_internal+0x84/0x1c0
- napi_gro_receive+0x2a0/0x300
- receive_buf+0x3d4/0x2350
- ? detach_buf_split+0x159/0x390
- virtnet_poll+0x198/0x840
- ? reweight_entity+0x243/0x4b0
- net_rx_action+0x25c/0x770
- __do_softirq+0x19b/0x66d
- irq_exit+0x1eb/0x230
- do_IRQ+0x7a/0x150
- common_interrupt+0xf/0xf
- </IRQ>
+syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
+is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
+(which is embedded into user-visible "struct nfs_mount_data" structure)
+despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
+bytes of AF_INET6 address to rpc_sockaddr2uaddr().
 
-It can be reproduced by:
-  echo 2147483647 > /proc/sys/net/ipv4/tcp_min_rtt_wlen
+Since "struct nfs_mount_data" structure is user-visible, we can't change
+"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
+assuming that everybody is using AF_INET family when passing address via
+"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
 
-Fixes: f672258391b42 ("tcp: track min RTT using windowed min-filter")
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
+
+Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/networking/ip-sysctl.txt |    1 +
- net/ipv4/sysctl_net_ipv4.c             |    5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/Documentation/networking/ip-sysctl.txt
-+++ b/Documentation/networking/ip-sysctl.txt
-@@ -402,6 +402,7 @@ tcp_min_rtt_wlen - INTEGER
- 	minimum RTT when it is moved to a longer path (e.g., due to traffic
- 	engineering). A longer window makes the filter more resistant to RTT
- 	inflations such as transient congestion. The unit is seconds.
-+	Possible values: 0 - 86400 (1 day)
- 	Default: 300
+---
+ fs/nfs/super.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2044,7 +2044,8 @@ static int nfs23_validate_mount_data(voi
+ 		memcpy(sap, &data->addr, sizeof(data->addr));
+ 		args->nfs_server.addrlen = sizeof(data->addr);
+ 		args->nfs_server.port = ntohs(data->addr.sin_port);
+-		if (!nfs_verify_server_address(sap))
++		if (sap->sa_family != AF_INET ||
++		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
  
- tcp_moderate_rcvbuf - BOOLEAN
---- a/net/ipv4/sysctl_net_ipv4.c
-+++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -45,6 +45,7 @@ static int tcp_syn_retries_min = 1;
- static int tcp_syn_retries_max = MAX_TCP_SYNCNT;
- static int ip_ping_group_range_min[] = { 0, 0 };
- static int ip_ping_group_range_max[] = { GID_T_MAX, GID_T_MAX };
-+static int one_day_secs = 24 * 3600;
- 
- /* obsolete */
- static int sysctl_tcp_low_latency __read_mostly;
-@@ -552,7 +553,9 @@ static struct ctl_table ipv4_table[] = {
- 		.data		= &sysctl_tcp_min_rtt_wlen,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= &zero,
-+		.extra2		= &one_day_secs
- 	},
- 	{
- 		.procname	= "tcp_low_latency",
+ 		if (!(data->flags & NFS_MOUNT_TCP))
 
 
