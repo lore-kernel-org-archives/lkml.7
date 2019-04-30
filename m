@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68777C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A664C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3993321670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C612075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625969;
-	bh=Jkia0DhnlgV+tnqkEGrP8yfiK0rLeNFUaEhwZ9zKfNI=;
+	s=default; t=1556625977;
+	bh=qRmKrYYbqkg1FwSL1lD95/YIPLn4v7ox5OG63TAr2ZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E49j/8dUZ7J1bc5W8Wh+lKLF3n5DzREzDBhAMxnk0eVyvGz47IZUn/dfcX1G7N7Ar
-	 KZ5Rg51lMHV7UpzRaCS0XM6CwhRu2UOzj81kR2c7huqWoEEwO0T4Ub1YRAfvtNi2KA
-	 c3lC3A0O/tUuEhkxafVKsLNpw6dQWt5inY169hEs=
+	b=WyUd0Qzep7REq1KUMjUtMyJ5CGMDdyT1AzWP65R+Zk3DmvmShsMeZoSUb4ANecWD1
+	 lWOemcrqnW1dhTGfCyiYZ5HId2qJccGYNZKdQLkPlvBnK/khSFEIMxmgAvZVcO57j2
+	 N57qbQTISYqG887wMdV4/7b7QCKg0gVkNCNnTITk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbfD3MGH (ORCPT
+        id S1729260AbfD3MGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49294 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728929AbfD3Llc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:32 -0400
+        id S1727992AbfD3LlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6879821707;
-        Tue, 30 Apr 2019 11:41:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C14E921670;
+        Tue, 30 Apr 2019 11:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624491;
-        bh=Jkia0DhnlgV+tnqkEGrP8yfiK0rLeNFUaEhwZ9zKfNI=;
+        s=default; t=1556624481;
+        bh=qRmKrYYbqkg1FwSL1lD95/YIPLn4v7ox5OG63TAr2ZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNf2kA0DKKpwPMV/dxs3EZqrSWdODS/zq5SZgjayivLUyfUv3USLEl6WTO0R/BRU6
-         mtbb/WRIZfokYPEjW21LbIB6R6w80EjA9FjwT/FlgQFHFXEB6nDbBUdVrhKgwHD1Kd
-         JuAU6DqcR7t07XimvSlhIaxA3S7oMB/0ZjpyySUA=
+        b=Ig2rSMqPuAGDv0kQchaR05pqMQ0PzekHV/DzUArNf9LRxfVOzbxKYtnQnw2jYutH0
+         k4ETFoSpe3vX3R3HZgkJE3QF9vTv3E6mGenaR7k9zUX0SxHqJdWaejJSBrY/zKr0Pe
+         WF+dzj3qJauwOZoo9QTVq8uxxlkP+b5FKqllpNqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.14 14/53] nfsd: Dont release the callback slot unless it was actually held
-Date:   Tue, 30 Apr 2019 13:38:21 +0200
-Message-Id: <20190430113552.971683338@linuxfoundation.org>
+        stable@vger.kernel.org, Xie XiuQi <xiexiuqi@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, cj.chengjian@huawei.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 10/53] sched/numa: Fix a possible divide-by-zero
+Date:   Tue, 30 Apr 2019 13:38:17 +0200
+Message-Id: <20190430113552.326734493@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -59,82 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-commit e6abc8caa6deb14be2a206253f7e1c5e37e9515b upstream.
+commit a860fa7b96e1a1c974556327aa1aee852d434c21 upstream.
 
-If there are multiple callbacks queued, waiting for the callback
-slot when the callback gets shut down, then they all currently
-end up acting as if they hold the slot, and call
-nfsd4_cb_sequence_done() resulting in interesting side-effects.
+sched_clock_cpu() may not be consistent between CPUs. If a task
+migrates to another CPU, then se.exec_start is set to that CPU's
+rq_clock_task() by update_stats_curr_start(). Specifically, the new
+value might be before the old value due to clock skew.
 
-In addition, the 'retry_nowait' path in nfsd4_cb_sequence_done()
-causes a loop back to nfsd4_cb_prepare() without first freeing the
-slot, which causes a deadlock when nfsd41_cb_get_slot() gets called
-a second time.
+So then if in numa_get_avg_runtime() the expression:
 
-This patch therefore adds a boolean to track whether or not the
-callback did pick up the slot, so that it can do the right thing
-in these 2 cases.
+  'now - p->last_task_numa_placement'
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+ends up as -1, then the divider '*period + 1' in task_numa_placement()
+is 0 and things go bang. Similar to update_curr(), check if time goes
+backwards to avoid this.
+
+[ peterz: Wrote new changelog. ]
+[ mingo: Tweaked the code comment. ]
+
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: cj.chengjian@huawei.com
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20190425080016.GX11158@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4callback.c |    8 +++++++-
- fs/nfsd/state.h        |    1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -939,8 +939,9 @@ static void nfsd4_cb_prepare(struct rpc_
- 	cb->cb_seq_status = 1;
- 	cb->cb_status = 0;
- 	if (minorversion) {
--		if (!nfsd41_cb_get_slot(clp, task))
-+		if (!cb->cb_holds_slot && !nfsd41_cb_get_slot(clp, task))
- 			return;
-+		cb->cb_holds_slot = true;
- 	}
- 	rpc_call_start(task);
- }
-@@ -967,6 +968,9 @@ static bool nfsd4_cb_sequence_done(struc
- 		return true;
- 	}
- 
-+	if (!cb->cb_holds_slot)
-+		goto need_restart;
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2026,6 +2026,10 @@ static u64 numa_get_avg_runtime(struct t
+ 	if (p->last_task_numa_placement) {
+ 		delta = runtime - p->last_sum_exec_runtime;
+ 		*period = now - p->last_task_numa_placement;
 +
- 	switch (cb->cb_seq_status) {
- 	case 0:
- 		/*
-@@ -1004,6 +1008,7 @@ static bool nfsd4_cb_sequence_done(struc
- 			cb->cb_seq_status);
- 	}
- 
-+	cb->cb_holds_slot = false;
- 	clear_bit(0, &clp->cl_cb_slot_busy);
- 	rpc_wake_up_next(&clp->cl_cb_waitq);
- 	dprintk("%s: freed slot, new seqid=%d\n", __func__,
-@@ -1211,6 +1216,7 @@ void nfsd4_init_cb(struct nfsd4_callback
- 	cb->cb_seq_status = 1;
- 	cb->cb_status = 0;
- 	cb->cb_need_restart = false;
-+	cb->cb_holds_slot = false;
- }
- 
- void nfsd4_run_cb(struct nfsd4_callback *cb)
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -69,6 +69,7 @@ struct nfsd4_callback {
- 	int cb_seq_status;
- 	int cb_status;
- 	bool cb_need_restart;
-+	bool cb_holds_slot;
- };
- 
- struct nfsd4_callback_ops {
++		/* Avoid time going backwards, prevent potential divide error: */
++		if (unlikely((s64)*period < 0))
++			*period = 0;
+ 	} else {
+ 		delta = p->se.avg.load_sum / p->se.load.weight;
+ 		*period = LOAD_AVG_MAX;
 
 
