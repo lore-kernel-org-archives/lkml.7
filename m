@@ -2,163 +2,79 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6F2C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00053C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4BBD21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00A521670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556619086;
+	bh=o1wMCDHFwGgVwrps+DSjmA5A0wEtpqb0cJ+nZ5axszI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DdV1jbf6UWSQzgF5qU5Mwy8Fna/JfpLfdL1iroPHugOhIod+lZptO4z9AB8uJMK9m
+	 yp+AStt6C/VJmWWxOkqysWRQQ1lQA5P4lMH6YhFnpYH/PhE3M4bdeDOnMfr31TZnkP
+	 x6jgDuCT3IauWfM36pfjmVRhVnwWJwk24o9Nz1jE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfD3KKJ (ORCPT
+        id S1727094AbfD3KLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:10:09 -0400
-Received: from regular1.263xmail.com ([211.150.70.195]:38008 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfD3KJ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:09:56 -0400
-Received: from zhangqing?rock-chips.com (unknown [192.168.167.190])
-        by regular1.263xmail.com (Postfix) with ESMTP id EF68396B;
-        Tue, 30 Apr 2019 18:09:49 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P7395T139736951809792S1556618984950678_;
-        Tue, 30 Apr 2019 18:09:49 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <1a219faec73236b1307ac64632798b14>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Elaine Zhang <zhangqing@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
-        Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl setting error
-Date:   Tue, 30 Apr 2019 18:09:44 +0800
-Message-Id: <1556618986-18923-2-git-send-email-zhangqing@rock-chips.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com>
-References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com>
+        Tue, 30 Apr 2019 06:11:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49236 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726539AbfD3KLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 06:11:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B4ED0AF56;
+        Tue, 30 Apr 2019 10:11:23 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 06:11:20 -0400
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jerome Glisse <jglisse@redhat.com>,
+        lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Scheduling conflicts
+Message-ID: <20190430101120.GD3715@dhcp22.suse.cz>
+References: <20190425200012.GA6391@redhat.com>
+ <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
+ <20190429235440.GA13796@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429235440.GA13796@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly use the pinctrl to set/unset the right mode
-instead of relying on the pinctrl init mode.
-And it requires setting the tshut polarity before select pinctrl.
+On Mon 29-04-19 16:54:41, Matthew Wilcox wrote:
+> On Thu, Apr 25, 2019 at 02:03:34PM -0600, Jens Axboe wrote:
+> > On 4/25/19 2:00 PM, Jerome Glisse wrote:
+> > > Did i miss preliminary agenda somewhere ? In previous year i think
+> > > there use to be one by now :)
+> > 
+> > You should have received an email from LF this morning with a subject
+> > of:
+> > 
+> > LSFMM 2019: 8 Things to Know Before You Arrive!
+> > 
+> > which also includes a link to the schedule. Here it is:
+> > 
+> > https://docs.google.com/spreadsheets/d/1Z1pDL-XeUT1ZwMWrBL8T8q3vtSqZpLPgF3Bzu_jejfk
+> 
+> The schedule continues to evolve ... I would very much like to have
+> Christoph Hellwig in the room for the Eliminating Tail Pages discussion,
+> but he's now scheduled to speak in a session at the same time (16:00
+> Tuesday).  I assume there'll be time for agenda-bashing at 9am tomorrow?
 
-When the temperature sensor mode is set to 0, it will automatically
-reset the board via the Clock-Reset-Unit (CRU) if the over temperature
-threshold is reached. However, when the pinctrl initializes, it does a
-transition to "otp_out" which may lead the SoC restart all the time.
+I have swapped slots at 16:00 and 16:30 so there shouldn't be any
+conflict now. Let me know if that doesn't fit.
 
-"otp_out" IO may be connected to the RESET circuit on the hardware.
-If the IO is in the wrong state, it will trigger RESET.
-(similar to the effect of pressing the RESET button)
-which will cause the soc to restart all the time.
-
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- drivers/thermal/rockchip_thermal.c | 36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-index 9c7643d62ed7..6dc7fc516abf 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -172,6 +172,9 @@ struct rockchip_thermal_data {
- 	int tshut_temp;
- 	enum tshut_mode tshut_mode;
- 	enum tshut_polarity tshut_polarity;
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *gpio_state;
-+	struct pinctrl_state *otp_state;
- };
- 
- /**
-@@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
-+	thermal->chip->control(thermal->regs, false);
-+
- 	error = clk_prepare_enable(thermal->clk);
- 	if (error) {
- 		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
-@@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
- 	thermal->chip->initialize(thermal->grf, thermal->regs,
- 				  thermal->tshut_polarity);
- 
-+	if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
-+		thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
-+		if (IS_ERR(thermal->pinctrl)) {
-+			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
-+			return PTR_ERR(thermal->pinctrl);
-+		}
-+
-+		thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
-+							   "gpio");
-+		if (IS_ERR_OR_NULL(thermal->gpio_state)) {
-+			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
-+			return -EINVAL;
-+		}
-+
-+		thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
-+							  "otpout");
-+		if (IS_ERR_OR_NULL(thermal->otp_state)) {
-+			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
-+			return -EINVAL;
-+		}
-+
-+		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
-+	}
-+
- 	for (i = 0; i < thermal->chip->chn_num; i++) {
- 		error = rockchip_thermal_register_sensor(pdev, thermal,
- 						&thermal->sensors[i],
-@@ -1337,8 +1366,8 @@ static int __maybe_unused rockchip_thermal_suspend(struct device *dev)
- 
- 	clk_disable(thermal->pclk);
- 	clk_disable(thermal->clk);
--
--	pinctrl_pm_select_sleep_state(dev);
-+	if (thermal->tshut_mode == TSHUT_MODE_GPIO)
-+		pinctrl_select_state(thermal->pinctrl, thermal->gpio_state);
- 
- 	return 0;
- }
-@@ -1383,7 +1412,8 @@ static int __maybe_unused rockchip_thermal_resume(struct device *dev)
- 	for (i = 0; i < thermal->chip->chn_num; i++)
- 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
- 
--	pinctrl_pm_select_default_state(dev);
-+	if (thermal->tshut_mode == TSHUT_MODE_GPIO)
-+		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
- 
- 	return 0;
- }
 -- 
-1.9.1
-
-
-
+Michal Hocko
+SUSE Labs
