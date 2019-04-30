@@ -2,121 +2,79 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40F7C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40BAC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B6920675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556621203;
-	bh=D3sfDG7uxYtxPW02ApZZJFjnsJg3kMpIBjXi36/qpno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0DKAGnbLZonWa73wd+8Xp2ptdqdFEQk+qJjwjS9Z0PEEFmhUipNZFnGrKH3Kbadi9
-	 T0uaT9q85THw/BrFuFjUG9gxuqDvBNTat3oNnATSXsbefXZFgusqSQGQMxt+dXGkYL
-	 kzFyP/RiA0AgKt7JBv4T3lpio5tTRMOpKQSrkR7I=
+	by mail.kernel.org (Postfix) with ESMTP id C18C720675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfD3Kqm (ORCPT
+        id S1727300AbfD3KrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfD3Kql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:46:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C048E20675;
-        Tue, 30 Apr 2019 10:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556621201;
-        bh=D3sfDG7uxYtxPW02ApZZJFjnsJg3kMpIBjXi36/qpno=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ChJUZQJwe1XcML0+wkCvqsopVCkLe5hjyK/1ECif/g6SLfTtVah03jseseraLfs+I
-         16ipOq+lLYd/SruQpfU1YH04tKiAz1KJsCIySGy8dfEPU+YkIuR7OZoi/D2V1obGMD
-         yHBwa6YyFXLg4bVfE+x1nfz9vectIJs3tW0CwtS4=
-Date:   Tue, 30 Apr 2019 12:46:38 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] livepatch: Fix kobject memleak
-Message-ID: <20190430104638.GA8137@kroah.com>
-References: <20190430001534.26246-1-tobin@kernel.org>
- <20190430001534.26246-2-tobin@kernel.org>
- <20190430084254.GB11737@kroah.com>
- <alpine.LSU.2.21.1904301235450.8507@pobox.suse.cz>
+        Tue, 30 Apr 2019 06:47:12 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44969 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfD3KrK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 06:47:10 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h18so10315545lfj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 03:47:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VmpVtnJXoZD7hpcFvy3KfMWpWjz8E7iIMZMr/p/hx08=;
+        b=Mzsigt0Iay9a1zb9TTpjkIZGvp44KL5sd4n3bRpVTXs+YFe5oxFZKqLrFBq5Ra5Etj
+         Z+WCSxLm1WWRD4B7opQN2po8AX5JkGNNQgyJs7SQibqzIgxuEJvGEJl9xzj6hjZjmkxh
+         bP+Khy4pRmJ2HK+e8A/sNg/XFgZQpL9Fk12eXq+wzrtIBVHGobfsGXGkmePJIixpx5TM
+         TSdL7cIB8FrWX8C+naV+yI354mdLIJnCc4au81gAopTghmzzk4nkZ9Qcrgf03nFp2YaM
+         I6mCH4c5tEMdp/GOXLLnvXjmOwq6eZTLEUFoBt3VoCVEkfG3pTZKCy6ToPhl+wwrGXwJ
+         yQFg==
+X-Gm-Message-State: APjAAAWSnR6ZzKFkpBJfxU5rXVa3EWKszyhgexDSeLSLTMmFWOaQsZeY
+        H4ISwjmDxE75jSiQSl5Xa7jK5jGP+XOMZDumczcoVTA/
+X-Google-Smtp-Source: APXvYqwQw358S3PMpr7zTHIOWFDZ2GZkPL/RkKarMWKmXIh0nGsO6gwvqzyuRx+/utLNMRV4qHESkYTIoNTKFCQ2AY0=
+X-Received: by 2002:a19:a417:: with SMTP id q23mr34990275lfc.110.1556621228264;
+ Tue, 30 Apr 2019 03:47:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1904301235450.8507@pobox.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190429222613.13345-1-mcroce@redhat.com>
+In-Reply-To: <20190429222613.13345-1-mcroce@redhat.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Tue, 30 Apr 2019 12:46:31 +0200
+Message-ID: <CAGnkfhzkju6LXwHAVCHxCmMvAa1MLQGRY1czE1Boqz2OcEq39Q@mail.gmail.com>
+Subject: Re: [PATCH v4] proc/sysctl: add shared variables for range check
+To:     LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:44:55PM +0200, Miroslav Benes wrote:
-> On Tue, 30 Apr 2019, Greg Kroah-Hartman wrote:
-> 
-> > On Tue, Apr 30, 2019 at 10:15:33AM +1000, Tobin C. Harding wrote:
-> > > Currently error return from kobject_init_and_add() is not followed by a
-> > > call to kobject_put().  This means there is a memory leak.
-> > > 
-> > > Add call to kobject_put() in error path of kobject_init_and_add().
-> > > 
-> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > 
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Well, it does not even compile...
+On Tue, Apr 30, 2019 at 12:26 AM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> Add a const int array containing the most commonly used values,
+> some macros to refer more easily to the correct array member,
+> and use them instead of creating a local one for every object file.
+>
 
-The idea is correct :)
+Ok it seems that this simply can't be done, because there are at least
+two points where extra1,2 are set to a non const struct:
+in ip_vs_control_net_init_sysctl() it's assigned to struct netns_ipvs,
+while in mpls_dev_sysctl_register() it's assigned to a struct mpls_dev
+and a struct net.
 
-> On Tue, 30 Apr 2019, Tobin C. Harding wrote:
-> 
-> > Currently error return from kobject_init_and_add() is not followed by a
-> > call to kobject_put().  This means there is a memory leak.
-> > 
-> > Add call to kobject_put() in error path of kobject_init_and_add().
-> > 
-> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > ---
-> >  kernel/livepatch/core.c | 12 +++++++++---
-> >  1 file changed, 9 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> > index eb0ee10a1981..98a7bec41faa 100644
-> > --- a/kernel/livepatch/core.c
-> > +++ b/kernel/livepatch/core.c
-> > @@ -727,7 +727,9 @@ static int klp_init_func(struct klp_object *obj, struct klp_func *func)
-> >  	ret = kobject_init_and_add(&func->kobj, &klp_ktype_func,
-> >  				   &obj->kobj, "%s,%lu", func->old_name,
-> >  				   func->old_sympos ? func->old_sympos : 1);
-> > -	if (!ret)
-> > +	if (ret)
-> > +		kobject_put(&func->kobj);
-> > +	else
-> >  		func->kobj_added = true;
-> >  
-> >  	return ret;
-> > @@ -803,8 +805,10 @@ static int klp_init_object(struct klp_patch *patch, struct klp_object *obj)
-> >  	name = klp_is_module(obj) ? obj->name : "vmlinux";
-> >  	ret = kobject_init_and_add(&obj->kobj, &klp_ktype_object,
-> >  				   &patch->kobj, "%s", name);
-> > -	if (ret)
-> > +	if (ret) {
-> > +		kobject_put(&func->kobj);
-> 
-> kobject_put(&obj->kobj); I suppose.
+So, sadly making extra1,2 const is a no-go :(
 
-Yeah, that makes it better, sorry for not catching that in the review :(
+Andrew, I'm thinking to add the "sad and lame" cast in the macro, to
+have a single point where hide it
 
-greg k-h
+
+Regards,
+--
+Matteo Croce
+per aspera ad upstream
