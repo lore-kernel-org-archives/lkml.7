@@ -2,54 +2,53 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631EEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14212C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A1D21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23C021670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624722;
-	bh=LnAasITKAP8GikVDz7pSmI6wzBOPW/7N4PyDs08spG0=;
+	s=default; t=1556624727;
+	bh=S53BebHbGSeIxthhUe6WhoXyIFqrlIj9nmyLSVbw1UI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l5jDyasej1BHx9l+TULajd0lJfZkdh7TuEiIXnzKiZ3Lx1wfJNWtAEanc+N2S6EPe
-	 eovR7ItBR2jWxA3yMQP/qkaRuLeB6qQxJrXeKM6jrnoxd286Uh61661raCUoLfgwL/
-	 brv7ZsaPRwoVJ0spvpUnNEBwNXjTMbtOs/z1ckjY=
+	b=H5fvkCl0VWcR+qklCB+xz/FGIpned1fcSOmW+Snr5b9/+TBGiIo0JZ68c3dIsFY8Q
+	 CgmwYKqNda1SqH64EcVRsDYTRm6+04nIvoLq5ZsMJ2c08cKuJvAaJ0vMTsl29VUtc5
+	 Ly5UHaWJ+k1v21ipkCWAIkIZb78xwzPZOeUsU3UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbfD3LpU (ORCPT
+        id S1730396AbfD3Lp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730366AbfD3LpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:16 -0400
+        id S1730381AbfD3LpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86A9421670;
-        Tue, 30 Apr 2019 11:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70D7021670;
+        Tue, 30 Apr 2019 11:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624716;
-        bh=LnAasITKAP8GikVDz7pSmI6wzBOPW/7N4PyDs08spG0=;
+        s=default; t=1556624723;
+        bh=S53BebHbGSeIxthhUe6WhoXyIFqrlIj9nmyLSVbw1UI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mp5LdIG+nlKvPqaoptQbV0iH23cMYoLHe4Cy8RyA+Fpq6GFaJnszmhqAD20s5K+BK
-         AM3ro9run50iga6dSKRWKWfBkOxAYdgi7d9dr1ctLl6jvPAhm1dQqpY5az1T/TUEOF
-         LYDph5IUymMrbpdxJj205G2Mc0oBkMKRnPv8FbOY=
+        b=YNaHGGhG6IlKRZT9JBKK7ZZhFwmLynruoymVJErSR0yAtLQTbuhSu6bMsAa3Y50z1
+         ULv4ZD1t0YrWFbORPdhMb2/MDBFS6C2cKWoMbP2DbX9fWf0YrXrcvEoR3qIa23FgcE
+         Jq7QsWNu3CVFmkA/uJyirn1Utcl2RGJrG4yF6l0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.19 044/100] dmaengine: sh: rcar-dmac: Fix glitch in dmaengine_tx_status
-Date:   Tue, 30 Apr 2019 13:38:13 +0200
-Message-Id: <20190430113611.180037970@linuxfoundation.org>
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 013/100] net: mvpp2: fix validate for PPv2.1
+Date:   Tue, 30 Apr 2019 13:37:42 +0200
+Message-Id: <20190430113609.226045703@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -62,82 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
+[ Upstream commit 8b318f30ab4ef9bbc1241e6f8c1db366dbd347f2 ]
 
-commit 6e7da74775348d96e2d7efaf3f91410e18c481ef upstream.
+The Phylink validate function is the Marvell PPv2 driver makes a check
+on the GoP id. This is valid an has to be done when using PPv2.2 engines
+but makes no sense when using PPv2.1. The check done when using an RGMII
+interface makes sure the GoP id is not 0, but this breaks PPv2.1. Fixes
+it.
 
-The tx_status poll in the rcar_dmac driver reads the status register
-which indicates which chunk is busy (DMACHCRB). Afterwards the point
-inside the chunk is read from DMATCRB. It is possible that the chunk
-has changed between the two reads. The result is a non-monotonous
-increase of the residue. Fix this by introducing a 'safe read' logic.
-
-Fixes: 73a47bd0da66 ("dmaengine: rcar-dmac: use TCRB instead of TCR for residue")
-Signed-off-by: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: <stable@vger.kernel.org> # v4.16+
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 0fb628f0f250 ("net: mvpp2: fix phylink handling of invalid PHY modes")
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/rcar-dmac.c |   26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1281,6 +1281,9 @@ static unsigned int rcar_dmac_chan_get_r
- 	enum dma_status status;
- 	unsigned int residue = 0;
- 	unsigned int dptr = 0;
-+	unsigned int chcrb;
-+	unsigned int tcrb;
-+	unsigned int i;
- 
- 	if (!desc)
- 		return 0;
-@@ -1329,14 +1332,31 @@ static unsigned int rcar_dmac_chan_get_r
- 	}
- 
- 	/*
-+	 * We need to read two registers.
-+	 * Make sure the control register does not skip to next chunk
-+	 * while reading the counter.
-+	 * Trying it 3 times should be enough: Initial read, retry, retry
-+	 * for the paranoid.
-+	 */
-+	for (i = 0; i < 3; i++) {
-+		chcrb = rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
-+					    RCAR_DMACHCRB_DPTR_MASK;
-+		tcrb = rcar_dmac_chan_read(chan, RCAR_DMATCRB);
-+		/* Still the same? */
-+		if (chcrb == (rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
-+			      RCAR_DMACHCRB_DPTR_MASK))
-+			break;
-+	}
-+	WARN_ONCE(i >= 3, "residue might be not continuous!");
-+
-+	/*
- 	 * In descriptor mode the descriptor running pointer is not maintained
- 	 * by the interrupt handler, find the running descriptor from the
- 	 * descriptor pointer field in the CHCRB register. In non-descriptor
- 	 * mode just use the running descriptor pointer.
- 	 */
- 	if (desc->hwdescs.use) {
--		dptr = (rcar_dmac_chan_read(chan, RCAR_DMACHCRB) &
--			RCAR_DMACHCRB_DPTR_MASK) >> RCAR_DMACHCRB_DPTR_SHIFT;
-+		dptr = chcrb >> RCAR_DMACHCRB_DPTR_SHIFT;
- 		if (dptr == 0)
- 			dptr = desc->nchunks;
- 		dptr--;
-@@ -1354,7 +1374,7 @@ static unsigned int rcar_dmac_chan_get_r
- 	}
- 
- 	/* Add the residue for the current chunk. */
--	residue += rcar_dmac_chan_read(chan, RCAR_DMATCRB) << desc->xfer_shift;
-+	residue += tcrb << desc->xfer_shift;
- 
- 	return residue;
- }
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 9988c89ed9fd..9b10abb604cb 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -4272,7 +4272,7 @@ static void mvpp2_phylink_validate(struct net_device *dev,
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
+ 	case PHY_INTERFACE_MODE_RGMII_RXID:
+ 	case PHY_INTERFACE_MODE_RGMII_TXID:
+-		if (port->gop_id == 0)
++		if (port->priv->hw_version == MVPP22 && port->gop_id == 0)
+ 			goto empty_set;
+ 		break;
+ 	default:
+-- 
+2.19.1
+
 
 
