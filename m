@@ -2,54 +2,50 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C35AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32784C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C830217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043C321734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624740;
-	bh=WEoNykjKP16+wiqfjPVOtjKo0wE9nl74bTXa3RVoVpk=;
+	s=default; t=1556624745;
+	bh=RYVBOl4dF5N7cYz9JQXh+7Rte06wh1iSxOrHYNLIrl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gwlvpg+vpk1iF9MvWgo9g0kTB3ToviBzLafF1B8vSwZWtYzZ6JWMYve1s80cnxXwS
-	 PvfopqZ8e4XtqLKdHCySpTWwwGT6GzWzG/F93gKnxnxSePRp3LbU6s6klCI/lADTO4
-	 TsLr5QTFBH+D9WT9Sfsw46qAHkl4dkF6aNe/zgK8=
+	b=B1u+c9F1aSGemxoUyD5s1A0+L4NJEjsHXZOmoVsViAvKO0Vsn2i1k8wLZH1D/bZ4i
+	 sPbajBqY2MzsPJ2IkisGvINhEEqwVc4hY/NWMis6HoCaUnjsthw8ZkbX1E+/wi2ISo
+	 ypvZR05sBa0eQwSm/WakUrVrmXSf2TFtb+q3rbw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbfD3Lpj (ORCPT
+        id S1730436AbfD3Lpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57918 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729861AbfD3Lpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:35 -0400
+        id S1729422AbfD3Lpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3701921734;
-        Tue, 30 Apr 2019 11:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE18620449;
+        Tue, 30 Apr 2019 11:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624734;
-        bh=WEoNykjKP16+wiqfjPVOtjKo0wE9nl74bTXa3RVoVpk=;
+        s=default; t=1556624737;
+        bh=RYVBOl4dF5N7cYz9JQXh+7Rte06wh1iSxOrHYNLIrl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sOwT5GQ416FWOvxTjqfS0r86P+AGj/0dTbUVmtBCM3BfTOOMbEpNcNFFONHJAE7w9
-         r2e5eR0ipNB5/rMHKlBNrns185t20hMsFRnbawHobg+6CEVx/qPr2SOf1c/mFp/iTj
-         hz0GicQqJGYSM+ER9dFLWU09zaLc2Lf4roVRo4fU=
+        b=iao0WXJ+hOPgQb3QMyfnN3wVAKrH/92U08P53KIunL0GuOBLQxN5j3t7JvADp+2Nl
+         gaEgaHlln0QQ6d+1v0gRnuiu4Ohc7/IVfLl9QKc7+qEAdDoRgcI8ZRpxhT95AsY9+6
+         Y93DTJk0fT56SVx0hBzZPJLVhO7geTSL2cXW1pHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jordan Glover <Golden_Miller83@protonmail.ch>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 007/100] netfilter: nft_compat: dont use refcount_inc on newly allocated entry
-Date:   Tue, 30 Apr 2019 13:37:36 +0200
-Message-Id: <20190430113608.981840724@linuxfoundation.org>
+        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 046/100] powerpc/mm/radix: Make Radix require HUGETLB_PAGE
+Date:   Tue, 30 Apr 2019 13:38:15 +0200
+Message-Id: <20190430113611.245596136@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -62,163 +58,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 947e492c0fc2132ae5fca081a9c2952ccaab0404 ]
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-When I moved the refcount to refcount_t type I missed the fact that
-refcount_inc() will result in use-after-free warning with
-CONFIG_REFCOUNT_FULL=y builds.
+commit 8adddf349fda0d3de2f6bb41ddf838cbf36a8ad2 upstream.
 
-The correct fix would be to init the reference count to 1 at allocation
-time, but, unfortunately we cannot do this, as we can't undo that
-in case something else fails later in the batch.
+Joel reported weird crashes using skiroot_defconfig, in his case we
+jumped into an NX page:
 
-So only solution I see is to special-case the 'new entry' condition
-and replace refcount_inc() with a "delayed" refcount_set(1) in this case,
-as done here.
+  kernel tried to execute exec-protected page (c000000002bff4f0) - exploit attempt? (uid: 0)
+  BUG: Unable to handle kernel instruction fetch
+  Faulting instruction address: 0xc000000002bff4f0
 
-The .activate callback can be removed to simplify things, we only
-need to make sure that deactivate() decrements/unlinks the entry
-from the list at end of transaction phase (commit or abort).
+Looking at the disassembly, we had simply branched to that address:
 
-Fixes: 12c44aba6618 ("netfilter: nft_compat: use refcnt_t type for nft_xt reference count")
-Reported-by: Jordan Glover <Golden_Miller83@protonmail.ch>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  c000000000c001bc  49fff335    bl     c000000002bff4f0
+
+But that didn't match the original kernel image:
+
+  c000000000c001bc  4bfff335    bl     c000000000bff4f0 <kobject_get+0x8>
+
+When STRICT_KERNEL_RWX is enabled, and we're using the radix MMU, we
+call radix__change_memory_range() late in boot to change page
+protections. We do that both to mark rodata read only and also to mark
+init text no-execute. That involves walking the kernel page tables,
+and clearing _PAGE_WRITE or _PAGE_EXEC respectively.
+
+With radix we may use hugepages for the linear mapping, so the code in
+radix__change_memory_range() uses eg. pmd_huge() to test if it has
+found a huge mapping, and if so it stops the page table walk and
+changes the PMD permissions.
+
+However if the kernel is built without HUGETLBFS support, pmd_huge()
+is just a #define that always returns 0. That causes the code in
+radix__change_memory_range() to incorrectly interpret the PMD value as
+a pointer to a PTE page rather than as a PTE at the PMD level.
+
+We can see this using `dv` in xmon which also uses pmd_huge():
+
+  0:mon> dv c000000000000000
+  pgd  @ 0xc000000001740000
+  pgdp @ 0xc000000001740000 = 0x80000000ffffb009
+  pudp @ 0xc0000000ffffb000 = 0x80000000ffffa009
+  pmdp @ 0xc0000000ffffa000 = 0xc00000000000018f   <- this is a PTE
+  ptep @ 0xc000000000000100 = 0xa64bb17da64ab07d   <- kernel text
+
+The end result is we treat the value at 0xc000000000000100 as a PTE
+and clear _PAGE_WRITE or _PAGE_EXEC, potentially corrupting the code
+at that address.
+
+In Joel's specific case we cleared the sign bit in the offset of the
+branch, causing a backward branch to turn into a forward branch which
+caused us to branch into a non-executable page. However the exact
+nature of the crash depends on kernel version, compiler version, and
+other factors.
+
+We need to fix radix__change_memory_range() to not use accessors that
+depend on HUGETLBFS, but we also have radix memory hotplug code that
+uses pmd_huge() etc that will also need fixing. So for now just
+disallow the broken combination of Radix with HUGETLBFS disabled.
+
+The only defconfig we have that is affected is skiroot_defconfig, so
+turn on HUGETLBFS there so that it still gets Radix.
+
+Fixes: 566ca99af026 ("powerpc/mm/radix: Add dummy radix_enabled()")
+Cc: stable@vger.kernel.org # v4.7+
+Reported-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/netfilter/nft_compat.c | 62 ++++++++++++++------------------------
- 1 file changed, 23 insertions(+), 39 deletions(-)
+ arch/powerpc/configs/skiroot_defconfig |    1 +
+ arch/powerpc/platforms/Kconfig.cputype |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_compat.c b/net/netfilter/nft_compat.c
-index 12a95eec9565..859eb3e12ddf 100644
---- a/net/netfilter/nft_compat.c
-+++ b/net/netfilter/nft_compat.c
-@@ -61,6 +61,21 @@ static struct nft_compat_net *nft_compat_pernet(struct net *net)
- 	return net_generic(net, nft_compat_net_id);
- }
+--- a/arch/powerpc/configs/skiroot_defconfig
++++ b/arch/powerpc/configs/skiroot_defconfig
+@@ -195,6 +195,7 @@ CONFIG_UDF_FS=m
+ CONFIG_MSDOS_FS=m
+ CONFIG_VFAT_FS=m
+ CONFIG_PROC_KCORE=y
++CONFIG_HUGETLBFS=y
+ CONFIG_TMPFS=y
+ CONFIG_TMPFS_POSIX_ACL=y
+ # CONFIG_MISC_FILESYSTEMS is not set
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -330,7 +330,7 @@ config ARCH_ENABLE_SPLIT_PMD_PTLOCK
  
-+static void nft_xt_get(struct nft_xt *xt)
-+{
-+	/* refcount_inc() warns on 0 -> 1 transition, but we can't
-+	 * init the reference count to 1 in .select_ops -- we can't
-+	 * undo such an increase when another expression inside the same
-+	 * rule fails afterwards.
-+	 */
-+	if (xt->listcnt == 0)
-+		refcount_set(&xt->refcnt, 1);
-+	else
-+		refcount_inc(&xt->refcnt);
-+
-+	xt->listcnt++;
-+}
-+
- static bool nft_xt_put(struct nft_xt *xt)
- {
- 	if (refcount_dec_and_test(&xt->refcnt)) {
-@@ -291,7 +306,7 @@ nft_target_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		return -EINVAL;
- 
- 	nft_xt = container_of(expr->ops, struct nft_xt, ops);
--	refcount_inc(&nft_xt->refcnt);
-+	nft_xt_get(nft_xt);
- 	return 0;
- }
- 
-@@ -486,7 +501,7 @@ __nft_match_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		return ret;
- 
- 	nft_xt = container_of(expr->ops, struct nft_xt, ops);
--	refcount_inc(&nft_xt->refcnt);
-+	nft_xt_get(nft_xt);
- 	return 0;
- }
- 
-@@ -540,45 +555,16 @@ nft_match_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
- 	__nft_match_destroy(ctx, expr, nft_expr_priv(expr));
- }
- 
--static void nft_compat_activate(const struct nft_ctx *ctx,
--				const struct nft_expr *expr,
--				struct list_head *h)
--{
--	struct nft_xt *xt = container_of(expr->ops, struct nft_xt, ops);
--
--	if (xt->listcnt == 0)
--		list_add(&xt->head, h);
--
--	xt->listcnt++;
--}
--
--static void nft_compat_activate_mt(const struct nft_ctx *ctx,
--				   const struct nft_expr *expr)
--{
--	struct nft_compat_net *cn = nft_compat_pernet(ctx->net);
--
--	nft_compat_activate(ctx, expr, &cn->nft_match_list);
--}
--
--static void nft_compat_activate_tg(const struct nft_ctx *ctx,
--				   const struct nft_expr *expr)
--{
--	struct nft_compat_net *cn = nft_compat_pernet(ctx->net);
--
--	nft_compat_activate(ctx, expr, &cn->nft_target_list);
--}
--
- static void nft_compat_deactivate(const struct nft_ctx *ctx,
- 				  const struct nft_expr *expr,
- 				  enum nft_trans_phase phase)
- {
- 	struct nft_xt *xt = container_of(expr->ops, struct nft_xt, ops);
- 
--	if (phase == NFT_TRANS_COMMIT)
--		return;
--
--	if (--xt->listcnt == 0)
--		list_del_init(&xt->head);
-+	if (phase == NFT_TRANS_ABORT || phase == NFT_TRANS_COMMIT) {
-+		if (--xt->listcnt == 0)
-+			list_del_init(&xt->head);
-+	}
- }
- 
- static void
-@@ -833,7 +819,6 @@ nft_match_select_ops(const struct nft_ctx *ctx,
- 	nft_match->ops.eval = nft_match_eval;
- 	nft_match->ops.init = nft_match_init;
- 	nft_match->ops.destroy = nft_match_destroy;
--	nft_match->ops.activate = nft_compat_activate_mt;
- 	nft_match->ops.deactivate = nft_compat_deactivate;
- 	nft_match->ops.dump = nft_match_dump;
- 	nft_match->ops.validate = nft_match_validate;
-@@ -851,7 +836,7 @@ nft_match_select_ops(const struct nft_ctx *ctx,
- 
- 	nft_match->ops.size = matchsize;
- 
--	nft_match->listcnt = 1;
-+	nft_match->listcnt = 0;
- 	list_add(&nft_match->head, &cn->nft_match_list);
- 
- 	return &nft_match->ops;
-@@ -938,7 +923,6 @@ nft_target_select_ops(const struct nft_ctx *ctx,
- 	nft_target->ops.size = NFT_EXPR_SIZE(XT_ALIGN(target->targetsize));
- 	nft_target->ops.init = nft_target_init;
- 	nft_target->ops.destroy = nft_target_destroy;
--	nft_target->ops.activate = nft_compat_activate_tg;
- 	nft_target->ops.deactivate = nft_compat_deactivate;
- 	nft_target->ops.dump = nft_target_dump;
- 	nft_target->ops.validate = nft_target_validate;
-@@ -949,7 +933,7 @@ nft_target_select_ops(const struct nft_ctx *ctx,
- 	else
- 		nft_target->ops.eval = nft_target_eval_xt;
- 
--	nft_target->listcnt = 1;
-+	nft_target->listcnt = 0;
- 	list_add(&nft_target->head, &cn->nft_target_list);
- 
- 	return &nft_target->ops;
--- 
-2.19.1
-
+ config PPC_RADIX_MMU
+ 	bool "Radix MMU Support"
+-	depends on PPC_BOOK3S_64
++	depends on PPC_BOOK3S_64 && HUGETLB_PAGE
+ 	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
+ 	default y
+ 	help
 
 
