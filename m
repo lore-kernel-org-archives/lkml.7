@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38D2C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04017C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3BC21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B7D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624383;
-	bh=8W/ehXQACVYoYHOEBk7VSWUI8SF3BqYrJa0YNOBXKRo=;
+	s=default; t=1556624391;
+	bh=KQK1Ilc5RkTobybJT2jptxjBvhi4nuiyISMPJhDGCp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yXD1kcwlz0Jsmg4ZWkVDxzuDu9hLqEnFBJKrkXbO+VRYhzlKgeCNCAbrZcgIaplwn
-	 T63rPBqV47C9WWRRWY+Eh1eUXt80LpQKritYXnwvg8BGqfy5fR8Cu/YqjKQidDc6SY
-	 3iqPuvohrCBijPg9IjsaBPkOUFIPMHrqznHlQXjA=
+	b=cm3XvmQTFJm8BfSlz2kJe3NRDPIlOIIQInAcHRJO66EpQ2b4q51wswZaBoRiSbjg+
+	 09/IV7buFzWyBbs1rwvFPIpuYcdkx05+jQfLRxrIuGhLeKeVIGZuNwTrDj5Yf5d0Ff
+	 PkjuO7fTKSljXpWQNTuR/U3BX3PEeMPeltJj6KaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbfD3Ljl (ORCPT
+        id S1728064AbfD3Lju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:39:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45132 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:39:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbfD3Ljk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:39:40 -0400
+        id S1727993AbfD3Ljp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:39:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 051CD21734;
-        Tue, 30 Apr 2019 11:39:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 470D021670;
+        Tue, 30 Apr 2019 11:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624379;
-        bh=8W/ehXQACVYoYHOEBk7VSWUI8SF3BqYrJa0YNOBXKRo=;
+        s=default; t=1556624384;
+        bh=KQK1Ilc5RkTobybJT2jptxjBvhi4nuiyISMPJhDGCp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1z0nfUeD3hluBS/zJtR34SSYeOM3ax5aXXZ9CEv8et7QSXk2gHQdyJlIIdAsG0cLk
-         pmwgGR6xL3/sMgFqPN51TwgU0OW3leUzHSUwef+GeGRlyiTL5fTv0ZvuuSZ7s1TcQi
-         Jdllq9/OdwMV75m3h7x2AwCag+yTYvkIV+ur39v4=
+        b=EJuDNyV8z+pvhJxADlutFzQ3UGUhTja9rIa4EACQGmBu25UqVtZDkdR0R2nTYd5jV
+         F9VKCdaDbwbE485OcWbWtjbSE6Ctb/5JI22pu0Sr4x3OCZLKZ/zko+FL4q0HVcEMtm
+         wyZXQqr70+6wnObOlJCJL6X+h3UyU0/w2CA/BBg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
-        Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>,
-        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
-        Yao Lihua <ylhuajnu@outlook.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.9 13/41] dmaengine: sh: rcar-dmac: With cyclic DMA residue 0 is valid
-Date:   Tue, 30 Apr 2019 13:38:24 +0200
-Message-Id: <20190430113528.091286225@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Subject: [PATCH 4.9 15/41] drm/vc4: Fix memory leak during gpu reset.
+Date:   Tue, 30 Apr 2019 13:38:26 +0200
+Message-Id: <20190430113528.646217552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113524.451237916@linuxfoundation.org>
 References: <20190430113524.451237916@linuxfoundation.org>
@@ -64,51 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dirk Behme <dirk.behme@de.bosch.com>
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 
-commit 907bd68a2edc491849e2fdcfe52c4596627bca94 upstream.
+commit d08106796a78a4273e39e1bbdf538dc4334b2635 upstream.
 
-Having a cyclic DMA, a residue 0 is not an indication of a completed
-DMA. In case of cyclic DMA make sure that dma_set_residue() is called
-and with this a residue of 0 is forwarded correctly to the caller.
+__drm_atomic_helper_crtc_destroy_state does not free memory, it only
+cleans it up. Fix this by calling the functions own destroy function.
 
-Fixes: 3544d2878817 ("dmaengine: rcar-dmac: use result of updated get_residue in tx_status")
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Achim Dahlhoff <Achim.Dahlhoff@de.bosch.com>
-Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Signed-off-by: Yao Lihua <ylhuajnu@outlook.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 6d6e50039187 ("drm/vc4: Allocate the right amount of space for boot-time CRTC state.")
+Cc: Eric Anholt <eric@anholt.net>
+Cc: <stable@vger.kernel.org> # v4.6+
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190301125627.7285-2-maarten.lankhorst@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/sh/rcar-dmac.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1311,6 +1311,7 @@ static enum dma_status rcar_dmac_tx_stat
- 	enum dma_status status;
- 	unsigned long flags;
- 	unsigned int residue;
-+	bool cyclic;
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -846,7 +846,7 @@ static void
+ vc4_crtc_reset(struct drm_crtc *crtc)
+ {
+ 	if (crtc->state)
+-		__drm_atomic_helper_crtc_destroy_state(crtc->state);
++		vc4_crtc_destroy_state(crtc->state);
  
- 	status = dma_cookie_status(chan, cookie, txstate);
- 	if (status == DMA_COMPLETE || !txstate)
-@@ -1318,10 +1319,11 @@ static enum dma_status rcar_dmac_tx_stat
- 
- 	spin_lock_irqsave(&rchan->lock, flags);
- 	residue = rcar_dmac_chan_get_residue(rchan, cookie);
-+	cyclic = rchan->desc.running ? rchan->desc.running->cyclic : false;
- 	spin_unlock_irqrestore(&rchan->lock, flags);
- 
- 	/* if there's no residue, the cookie is complete */
--	if (!residue)
-+	if (!residue && !cyclic)
- 		return DMA_COMPLETE;
- 
- 	dma_set_residue(txstate, residue);
+ 	crtc->state = kzalloc(sizeof(struct vc4_crtc_state), GFP_KERNEL);
+ 	if (crtc->state)
 
 
