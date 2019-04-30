@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBEEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A81C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCE621744
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A71C21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624748;
-	bh=7uCSJO1BBT+F8A40pDYcZ/El2I5jL9KAAxdyytmTg3U=;
+	s=default; t=1556624752;
+	bh=RlH34TrqR6+L8TPt7VcRdcG/xgNAd0vIlgQsh/n2KoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kRBd9fq4k0K75NvaQfMva0SUEsPItmA4JAGdk8LpBHW1T8m/YkgaEyXQLAyiliUS6
-	 VhP8FLqm3d6qblTSCRp1Z9cBMpHuIROhscOJNhkoh8agrvfao90wS6nCFc4matJZoN
-	 WartyAv5MeWzegxiV13g3zShJB6WdWKFxTf+3MmY=
+	b=QaRjgOr9/sqyn1UaQdb/uBtZlJy7TO0c9DqQus4XKXxPSn1GzWsGh5diiaz1fVhdi
+	 D8rb96rKpY3z6tlgBgs09SlMK60L/RAka7HCSSLYklYOau0UO25V0Vy+0mPP1B1mrq
+	 xf8dFQOw1cr8fupPOUYEQosHUmRBVeBONxLroOJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbfD3Lpr (ORCPT
+        id S1729733AbfD3Lpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:45:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:45:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730432AbfD3Lpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:43 -0400
+        id S1728466AbfD3Lpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FDB321744;
-        Tue, 30 Apr 2019 11:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9BA721670;
+        Tue, 30 Apr 2019 11:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624742;
-        bh=7uCSJO1BBT+F8A40pDYcZ/El2I5jL9KAAxdyytmTg3U=;
+        s=default; t=1556624745;
+        bh=RlH34TrqR6+L8TPt7VcRdcG/xgNAd0vIlgQsh/n2KoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d4tlkYsS8L1L/x5skiOXssmTLiwAyI7x/c2JeGBEqPWJwYFU5h4RIxRh5Hg33Mj6A
-         xrpvJZ0Jv8gtn+am7/Kzg7cDEDgvhmA4KPZl67N+kZz1aNVIP9P0Z8uPqZf62QADG2
-         B0FFtDnSKhZds72evVZy4MT8geACpGdYyeRrG+8g=
+        b=QtSk443S92XvA6VtsAVYMgRq7fKR5Vurg7MBWyt9fZG0MiwE1ak371eUvKzhyVArC
+         93d8FdMwZIHcHd4AWFNABOnkLEItaO8FVugU/bd1Ta9c0FVUTYT9kFs0ceCXiyMK4M
+         znG13gzkGoPRwo9jYLLsVS7TQYuM+hJSvfC0IDEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        syzbot+55de1eb4975dec156d8f@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 056/100] binder: fix handling of misaligned binder object
-Date:   Tue, 30 Apr 2019 13:38:25 +0200
-Message-Id: <20190430113611.575125000@linuxfoundation.org>
+        stable@vger.kernel.org, luca abeni <luca.abeni@santannapisa.it>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 057/100] sched/deadline: Correctly handle active 0-lag timers
+Date:   Tue, 30 Apr 2019 13:38:26 +0200
+Message-Id: <20190430113611.612094906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,58 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: luca abeni <luca.abeni@santannapisa.it>
 
-commit 26528be6720bb40bc8844e97ee73a37e530e9c5e upstream.
+commit 1b02cd6a2d7f3e2a6a5262887d2cb2912083e42f upstream.
 
-Fixes crash found by syzbot:
-kernel BUG at drivers/android/binder_alloc.c:LINE! (2)
+syzbot reported the following warning:
 
-Reported-and-tested-by: syzbot+55de1eb4975dec156d8f@syzkaller.appspotmail.com
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: stable <stable@vger.kernel.org> # 5.0, 4.19, 4.14
+   [ ] WARNING: CPU: 4 PID: 17089 at kernel/sched/deadline.c:255 task_non_contending+0xae0/0x1950
+
+line 255 of deadline.c is:
+
+	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+
+in task_non_contending().
+
+Unfortunately, in some cases (for example, a deadline task
+continuosly blocking and waking immediately) it can happen that
+a task blocks (and task_non_contending() is called) while the
+0-lag timer is still active.
+
+In this case, the safest thing to do is to immediately decrease
+the running bandwidth of the task, without trying to re-arm the 0-lag timer.
+
+Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: chengjian (D) <cj.chengjian@huawei.com>
+Link: https://lkml.kernel.org/r/20190325131530.34706-1-luca.abeni@santannapisa.it
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder_alloc.c |   18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ kernel/sched/deadline.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -958,14 +958,13 @@ enum lru_status binder_alloc_free_page(s
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -252,7 +252,6 @@ static void task_non_contending(struct t
+ 	if (dl_entity_is_special(dl_se))
+ 		return;
  
- 	index = page - alloc->pages;
- 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
-+
-+	mm = alloc->vma_vm_mm;
-+	if (!mmget_not_zero(mm))
-+		goto err_mmget;
-+	if (!down_write_trylock(&mm->mmap_sem))
-+		goto err_down_write_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
--	if (vma) {
--		if (!mmget_not_zero(alloc->vma_vm_mm))
--			goto err_mmget;
--		mm = alloc->vma_vm_mm;
--		if (!down_write_trylock(&mm->mmap_sem))
--			goto err_down_write_mmap_sem_failed;
--	}
+-	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+ 	WARN_ON(dl_se->dl_non_contending);
  
- 	list_lru_isolate(lru, item);
- 	spin_unlock(lock);
-@@ -978,10 +977,9 @@ enum lru_status binder_alloc_free_page(s
- 			       PAGE_SIZE);
- 
- 		trace_binder_unmap_user_end(alloc, index);
--
--		up_write(&mm->mmap_sem);
--		mmput(mm);
- 	}
-+	up_write(&mm->mmap_sem);
-+	mmput(mm);
- 
- 	trace_binder_unmap_kernel_start(alloc, index);
- 
+ 	zerolag_time = dl_se->deadline -
+@@ -269,7 +268,7 @@ static void task_non_contending(struct t
+ 	 * If the "0-lag time" already passed, decrease the active
+ 	 * utilization now, instead of starting a timer
+ 	 */
+-	if (zerolag_time < 0) {
++	if ((zerolag_time < 0) || hrtimer_active(&dl_se->inactive_timer)) {
+ 		if (dl_task(p))
+ 			sub_running_bw(dl_se, dl_rq);
+ 		if (!dl_task(p) || p->state == TASK_DEAD) {
 
 
