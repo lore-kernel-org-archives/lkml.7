@@ -2,104 +2,65 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7772AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC15C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527DF21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6702220835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 14:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfD3O1q (ORCPT
+        id S1728055AbfD3O2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 10:27:46 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45800 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD3O1q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 10:27:46 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hLTjJ-0003ij-4f; Tue, 30 Apr 2019 14:27:33 +0000
-Date:   Tue, 30 Apr 2019 15:27:33 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Nicholas Mc Guire <der.herr@hofr.at>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2] staging: fieldbus: anybus-s: force endiannes
- annotation
-Message-ID: <20190430142733.GL23075@ZenIV.linux.org.uk>
-References: <1556517940-13725-1-git-send-email-hofrat@osadl.org>
- <CAGngYiVDFL1fm2oKALXORNziX6pdcBBNtp7rSnj_FBdr6u4j5w@mail.gmail.com>
- <20190430022238.GA22593@osadl.at>
- <20190430030223.GE23075@ZenIV.linux.org.uk>
- <20190430033310.GB23144@osadl.at>
- <20190430041934.GI23075@ZenIV.linux.org.uk>
- <CAGngYiVSg86X+jD+hgwwrOYX82Fu3OWSLygwGFzyc9wYq6AesQ@mail.gmail.com>
+        Tue, 30 Apr 2019 10:28:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33474 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725942AbfD3O2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 10:28:22 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C0A3FBD7A962FC3D7C33;
+        Tue, 30 Apr 2019 22:28:19 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Apr 2019
+ 22:28:15 +0800
+Subject: Re: [PATCH] 9p/virtio: Add cleanup path in p9_virtio_init
+To:     Dominique Martinet <asmadeus@codewreck.org>
+References: <20190430115942.41840-1-yuehaibing@huawei.com>
+ <20190430140907.GA19422@nautica>
+CC:     <davem@davemloft.net>, <ericvh@gmail.com>, <lucho@ionkov.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <v9fs-developer@lists.sourceforge.net>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <a22ebdaa-0dcd-8ed0-44e8-2d1218708eb0@huawei.com>
+Date:   Tue, 30 Apr 2019 22:28:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGngYiVSg86X+jD+hgwwrOYX82Fu3OWSLygwGFzyc9wYq6AesQ@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190430140907.GA19422@nautica>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 09:32:20AM -0400, Sven Van Asbroeck wrote:
-> On Tue, Apr 30, 2019 at 12:19 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > ... not that there's much sense keeping ->fieldbus_type in host-endian,
-> > while we are at it.
+On 2019/4/30 22:09, Dominique Martinet wrote:
+> YueHaibing wrote on Tue, Apr 30, 2019:
+>> KASAN report this:
 > 
-> Interesting! Suppose we make device->fieldbus_type bus-endian.
-> Then the endinan-ness conversion either needs to happen in
-> bus_match() (and we'd have to convert endianness each time
-> this function is called).
-> Or, we make driver->fieldbus_type bus-endian also, then there
-> is no need for conversion... but the driver writer has to remember
-> to specify this in bus endianness:
+> That's not KASAN, but fair enough - fix looks good. I'll queue this for
+> 5.2 unless you absolutely want this in 5.1
+
+Yes, this is not KASAN, just FAULT INJECTION.
+
 > 
-> static struct anybuss_client_driver profinet_driver = {
->         .probe = ...,
->         .fieldbus_type = endian convert?? (0x0089),
-> };
+> If you're feeling nice p9_trans_xen_init has the exact same problem and
+> could use the same fix :)
+
+ok, I can fix it in another patch, thanks!
+
 > 
-> Which pushes bus implementation details onto the
-> client driver writer? Also, how to convert a constant
-> to a specific endianness in a static initializer?
 
-cpu_to_be16() or htons() - either will be fine there.
-On little-endian you'll get
-	htons(0x0089) =>
-	___htons(0x0089) =>
-	__cpu_to_be16(0x0089) =>
-	((__force __be16)__swab16((0x0089))) =>
-	((__be16)(__builtin_constant_p((__u16)((0x0089))) ?
-		___constant_swab16((0x0089)) : __fswab16((0x0089))) =>
-	((__be16)(__builtin_constant_p((__u16)((0x0089))) ?
-		((__u16)((((__u16)((0x0089)) & (__u16)0x00ffU) << 8) |
-			 (((__u16)((0x0089)) & (__u16)0xff00U) >> 8))) :
-		__fswab16((0x0089)))
-and once the preprocessor has produced that, from compiler POV we have
-a constant expression as argument of __builtin_constant_p(), so it
-evaluates as true, reducing the whole thing to
-	((__be16)(((__u16)((((__u16)((0x0089)) & (__u16)0x00ffU) << 8) |
-			 (((__u16)((0x0089)) & (__u16)0xff00U) >> 8))) )
-i.e. (__be16)0x8900.  On big-endian expansion will be different,
-resulting in (__be16)0x0089...
-
-IOW, you can use endianness convertors in static initializers; things
-like
-struct sockaddr_in addr = {.sin_addr.s_addr = htonl(0x7f000001),
-			 .sin_port = htons(25),
-			 .sin_family = AF_INET};
-are fine kernel-side (from the compiler POV, that is - something
-trying to speak SMTP in the kernel code would obviously be a bad sign).
-
-As for having to remember - sparse will complain about endianness mismatches
-in initializer...
