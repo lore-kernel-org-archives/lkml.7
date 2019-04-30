@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D29DC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F52C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D50D2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AF121707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624653;
-	bh=vF4ZPpClpAQB+QotrzfB5epJk5/WOVDi92RBsgX1WyM=;
+	s=default; t=1556624655;
+	bh=mY0sJyJHdhhOT3Ehwup/Tba7f1JcdM1DTG0ELVsBdBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fMTWNozvaKAuSv+RImQaO34Tk1J+90AWOM5v4XMDOKOOpF2Q3XMZAgJVLaJ7CoDh3
-	 nbnpj3hRkVifs3pMhAogaQ401gRXXoQzWcPuSp304cnrH+EK1ROQnoFO8wZ4du30UB
-	 OMQBAB5mimMo9mUakoCODSnAt0MQjS4jZUjQbw3w=
+	b=pUJH0KaDvTcToOeTgHIHmcazRWIl8+mI+lXKuWyUdTOwgF5Cc2guN9BmIkv4wwkGh
+	 vwqMg2z6+6R5OOgP/OlUvn47aV/kql2mF8ZQXWxO+gX8vqEvwcJgfwZFHQi++j/v9u
+	 OL4qCo/sKhwss7wrM8uLijLXjwNmpSaq2yjp0q9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbfD3LoL (ORCPT
+        id S1730132AbfD3LoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730079AbfD3LoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:44:06 -0400
+        id S1730110AbfD3LoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E825217D7;
-        Tue, 30 Apr 2019 11:44:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 845B321734;
+        Tue, 30 Apr 2019 11:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624645;
-        bh=vF4ZPpClpAQB+QotrzfB5epJk5/WOVDi92RBsgX1WyM=;
+        s=default; t=1556624651;
+        bh=mY0sJyJHdhhOT3Ehwup/Tba7f1JcdM1DTG0ELVsBdBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=caOJVb0DkSnIqTRRIva9GHepAlFwyXQZLz1MkH9t2ES+9rnv3JchWC1sCs682l3rI
-         GEpjOF14cvw64mQjcPh2Kqi255UlWD5NskQ2JjB06Ib47HZUWW/5Urv1YM3CfXAzXH
-         jc9hxiFLuprJrbBIXeGsyZCdmNlT9BDnAqjUdbFM=
+        b=ihcQFwBgcsVnfocXL2Mm6IK/bf031BYtDvPPjkunMR77EOf701nuM1L2BmjwLHgz9
+         HpkVZESvH1xTewZeJD0UGXseFVJYnWy2on3+XbVuuOBLrcdUmYhoxk+qKvmPjKp4Nd
+         iq6CuR6sNOTZI5OyK9T9WB+AbcMAxxAkuG6Ec/b0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Brivio <sbrivio@redhat.com>,
-        Andrea Claudi <aclaudi@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 019/100] ipvs: fix warning on unused variable
-Date:   Tue, 30 Apr 2019 13:37:48 +0200
-Message-Id: <20190430113609.738750490@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 021/100] ALSA: hda/ca0132 - Fix build error without CONFIG_PCI
+Date:   Tue, 30 Apr 2019 13:37:50 +0200
+Message-Id: <20190430113609.903057754@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,48 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c93a49b9769e435990c82297aa0baa31e1538790 ]
+[ Upstream commit c97617a81a7616d49bc3700959e08c6c6f447093 ]
 
-When CONFIG_IP_VS_IPV6 is not defined, build produced this warning:
+A call of pci_iounmap() call without CONFIG_PCI leads to a build error
+on some architectures.  We tried to address this and add a check of
+IS_ENABLED(CONFIG_PCI), but this still doesn't seem enough for sh.
+Ideally we should fix it globally, it's really a corner case, so let's
+paper over it with a simpler ifdef.
 
-net/netfilter/ipvs/ip_vs_ctl.c:899:6: warning: unused variable ‘ret’ [-Wunused-variable]
-  int ret = 0;
-      ^~~
-
-Fix this by moving the declaration of 'ret' in the CONFIG_IP_VS_IPV6
-section in the same function.
-
-While at it, drop its unneeded initialisation.
-
-Fixes: 098e13f5b21d ("ipvs: fix dependency on nf_defrag_ipv6")
-Reported-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Andrea Claudi <aclaudi@redhat.com>
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 1e73359a24fa ("ALSA: hda/ca0132 - make pci_iounmap() call conditional")
+Reported-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_ctl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_ca0132.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 8fd8d06454d6..2d4e048762f6 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -896,12 +896,13 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest,
- {
- 	struct ip_vs_dest *dest;
- 	unsigned int atype, i;
--	int ret = 0;
+diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+index 80f73810b21b..0436789e7cd8 100644
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -7394,8 +7394,10 @@ static void ca0132_free(struct hda_codec *codec)
+ 	ca0132_exit_chip(codec);
  
- 	EnterFunction(2);
- 
- #ifdef CONFIG_IP_VS_IPV6
- 	if (udest->af == AF_INET6) {
-+		int ret;
-+
- 		atype = ipv6_addr_type(&udest->addr.in6);
- 		if ((!(atype & IPV6_ADDR_UNICAST) ||
- 			atype & IPV6_ADDR_LINKLOCAL) &&
+ 	snd_hda_power_down(codec);
+-	if (IS_ENABLED(CONFIG_PCI) && spec->mem_base)
++#ifdef CONFIG_PCI
++	if (spec->mem_base)
+ 		pci_iounmap(codec->bus->pci, spec->mem_base);
++#endif
+ 	kfree(spec->spec_init_verbs);
+ 	kfree(codec->spec);
+ }
 -- 
 2.19.1
 
