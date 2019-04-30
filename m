@@ -2,95 +2,148 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244B2C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8614C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6DE2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:28:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="brJxBtdY"
+	by mail.kernel.org (Postfix) with ESMTP id 8941221707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556584148;
+	bh=nEvyMTSNVlewPBfpr4Mc0qU5yCy9pA/2RjiwhQ6zLOw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KNwyjVT8PVVwSV8WkZWwJ40Z8yj575LSXB7aYskUrpM6hPwk7wGFrhQd2dOe2pK8k
+	 niefSrBf8HKWI9txsqzdsodvz1N6RyIlMLioHzYolqjHF21Y+IhvvVqx98/2qMDbQC
+	 0ykQiRZJ8gmVfYRlB6Zj6qB2rsUhR61SIP05a1vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfD3A2S (ORCPT
+        id S1729693AbfD3A3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 20:28:18 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40075 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729214AbfD3A2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 20:28:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44tMnW0vF3z9s9y;
-        Tue, 30 Apr 2019 10:28:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556584095;
-        bh=jxeomaEGDj9jCiG96b0VM67znI2L+mGjbFhnESNETM4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=brJxBtdYMRHVALu8PXFocfLMPDZ3tsuZp7FEDNu+RazGxYN06hjHyeP5KSWC+S/Um
-         6qUKslKeTIC3hy9M3Xog0jnzLq7gVhbkhz9SMXh6DMJy3xGB4KLkdbZN+8ApTK1w+t
-         /TVbi3yIXqCatEaRjL1OTXWKRfkpp6Wulw7S7G9n3ccA2uyGRM7OeBZR2ZzA61GX0v
-         PXiQlIxFH+0t/jqVH4lcFcX2nABGZCCj4If6yKXYURX43MjWqcqN2aZcfebzrUCL3T
-         aM4p3aMvXa9218IySs6+helsPVCzW3leyIE0WkND2KRwO3Ng3tfhrx114Vu1nfuU5c
-         MhhvYffVPmhgA==
+        Mon, 29 Apr 2019 20:29:07 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:38795 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729214AbfD3A3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 20:29:06 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 718091079D;
+        Mon, 29 Apr 2019 20:29:05 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 29 Apr 2019 20:29:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=PUfwhBqQiuelCDdVE
+        fv1BguoRsrTQ+mCQVYuoDSCS/I=; b=lxwwlA6SG7R/O2xZawf2WLhFjylXN+iYM
+        fd3qbehO+26oL7RxMDCJ19NFuatJz5fJ2xiUS8auEqqOo6gcix7tQ9L4QZ2PKjeR
+        8YRYxQTwQX03ix+DGYYzXCnHPDThVh6lx0qZo+RX1JxqUwF/8/PcdeTxaAHfupaX
+        VfurUS+f3Ddl5k7gEpdWi+cw5f94TRZ4qM8wBboOCdVfet4wu62jJV+cAzySrBpg
+        qyJkCtuQR28anNWYNnsjBF7UPOgnSxm8F0Mbem3lqYnKILCcOrHrIwVN/y9jbwwo
+        YJDoqCTYixFXwe4p7lR2wf0JvRSeR7doqxtaD71YmXbNtEqqD/9pQ==
+X-ME-Sender: <xms:0JbHXHKhd0a6iIuIHN4ifelH0_hBCUUxHtL9fhranWmF28sMfaS3nQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdefhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
+    dvuddrgeegrddvfedtrddukeeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
+    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:0JbHXNNF-E4vRHRUisgWo0WoKr1Mzpj9jxYzpD6BhFS4OTX5cZcnhw>
+    <xmx:0JbHXAMCl9GErnEVgTXknHPGPTdb7ebuCl2u7zdzpiJSYSMEe2ZXFg>
+    <xmx:0JbHXFJADdgU1W8hMCP5rxBOMOvPYsKl6uI3rQZJe3ohmw7jhYMJZw>
+    <xmx:0ZbHXAJ6VU_4ypOuuDLympybyocUe4CGfGmUKs0dqUu-lHiG2J3DlA>
+Received: from eros.localdomain (ppp121-44-230-188.bras2.syd2.internode.on.net [121.44.230.188])
+        by mail.messagingengine.com (Postfix) with ESMTPA id ECE061037C;
+        Mon, 29 Apr 2019 20:28:59 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Fix error path for kobject_init_and_add()
 Date:   Tue, 30 Apr 2019 10:28:14 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: linux-next: manual merge of the rdma-fixes tree with Linus'
- tree
-Message-ID: <20190430102814.73f213e1@canb.auug.org.au>
-In-Reply-To: <16bb268f0b5b62d71cc65204bccea856333b87d8.camel@redhat.com>
-References: <20190430081346.3196b60f@canb.auug.org.au>
-        <16bb268f0b5b62d71cc65204bccea856333b87d8.camel@redhat.com>
+Message-Id: <20190430002817.10785-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/mSbVZQh6/BdOyK84lieBwgo"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/mSbVZQh6/BdOyK84lieBwgo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Dave,
 
-Hi Doug,
+There are a few places in net/ that are not correctly handling the error
+path after calls to kobject_init_and_add().  This set fixes all of these
+for net/
 
-On Mon, 29 Apr 2019 18:21:32 -0400 Doug Ledford <dledford@redhat.com> wrote:
->
-> Sorry, I forgot to back that head commit out.  Once Linus committed his
-> fix the one in the rdma tree was superfluous (and wrong anyway).
+This corrects a memory leak if kobject_init() is not followed by a call
+to kobject_put()
 
-No worries - I even managed to choose the correct one by chance! :-)
+This set is part of an effort to check/fix all of these mem leaks across
+the kernel tree.
 
---=20
-Cheers,
-Stephen Rothwell
+For reference this is the behaviour that we are trying to achieve
 
---Sig_/mSbVZQh6/BdOyK84lieBwgo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+void fn(void)
+{
+	int ret;
 
------BEGIN PGP SIGNATURE-----
+	ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
+	if (ret) {
+		kobject_put(kobj);
+		return ret;
+	}
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzHlp4ACgkQAVBC80lX
-0GzPhQf/aQox6wP+TJarWwq9a2oRtjQLg9FWKpjkODFhbBh9J2V4+Rk6V/PBFcRZ
-03DiD+8goxY7hX8drMtGPfjFSesYbmyQKz6ikM7lfxODpyzZiesHg7cHLLGJYIeb
-KcLDJnQWpQIaLLvr6hqZ+IPWYQyWzFKs1l70h+eLPfTRdR3niZ3d2hrDEgmYYCLv
-+VWiphd6VYExwO42Ei7DNuHt2MsA7m+pnATtCWaWS1uj9ay1CSwBq4CCL/h9DJNK
-rsnOc4VfU4E5AWplyGqQlkO2a8nnwTiAm8ZErvUHKrwFOGlICPjriYgt6SNaHgf6
-EcmtTS6tgz74zPlJVa4XnYujb/X/YA==
-=1DgZ
------END PGP SIGNATURE-----
+	ret = some_init_fn();
+	if (ret)
+		goto err;
 
---Sig_/mSbVZQh6/BdOyK84lieBwgo--
+	ret = some_other_init_fn();
+	if (ret)
+		goto other_err;
+
+	kobject_uevent(kobj, KOBJ_ADD);
+	return 0;
+
+other_err:
+	other_clean_up_fn();
+err:
+	kobject_del(kobj);
+	return ret;
+}
+
+
+Testing: No testing done, built with config options
+
+CONFIG_NET=y
+CONFIG_SYSFS=y
+CONFIG_BRIDGE=y
+
+
+thanks,
+Tobin.
+
+Tobin C. Harding (3):
+  bridge: Fix error path for kobject_init_and_add()
+  bridge: Use correct cleanup function
+  net-sysfs: Fix error path for kobject_init_and_add()
+
+ net/bridge/br_if.c   | 6 ++++--
+ net/core/net-sysfs.c | 8 ++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+-- 
+2.21.0
+
