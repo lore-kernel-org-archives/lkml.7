@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EC8C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F81DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F0B2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EC021734
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624874;
-	bh=Dia8khkyeXuEmFqIkVPKZLv0GPdGtKJpyK5QhaOS6nA=;
+	s=default; t=1556624881;
+	bh=yge4E7KebFg2Quye//YHCc98uYDAOoFCwRnlY9Uh2dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QSkWUsdcirrZy7VSMlqex09jZwlQjrWus7ONqrSgST2ZDdUj72DPgUcGQKDfz7VCI
-	 9DjN9uTLnSFVxymlwkE4Uj0iwVhLErLxFUN9TUGfybNl+5Ra6RcSjXUMPpYkUcOG0A
-	 ZmrOwmoC7tibHA1bdHApPfSmacv+MCIQB36BHjAU=
+	b=oKKidspIrBD7/4YqWdSsj0qt99vzwAFefCASvt9e5u/PFP0GW2eE+CJDwBLuLEF+b
+	 x3CxI3Z2SbF5e1lDhK/Q/CWPebFNkRCnibEa13Jg6lPG/Tsjrvc5Oc2vopnxOKCYiV
+	 uSEBAoza2nzZUeXYkfkh1+uK65nE6WPMNGEGNnrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730771AbfD3Lrw (ORCPT
+        id S1730781AbfD3LsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33512 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:48:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbfD3Lrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:48 -0400
+        id S1730772AbfD3Lr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5430721670;
-        Tue, 30 Apr 2019 11:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2510E2054F;
+        Tue, 30 Apr 2019 11:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624867;
-        bh=Dia8khkyeXuEmFqIkVPKZLv0GPdGtKJpyK5QhaOS6nA=;
+        s=default; t=1556624875;
+        bh=yge4E7KebFg2Quye//YHCc98uYDAOoFCwRnlY9Uh2dw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QBLgO0vDr0+N+42xPLuhSbooE0bkQj7JcQQdI62++uSeAruYK2g/C1KPSgnKJ0sgl
-         SCHWFnpvXeann4duGp2aRttroBTn9fTvvZPO3aEHm/wNlWFXoFVs9KX2Inm1BeLPx+
-         ouGfjxed5wT4S57MgOidxW+AnXO8Sag2ZmjITFCs=
+        b=htdQ6KY5tN52tz+9B6MQ2wb61xNYIqiZz+uxWAb7Vz3a1+fvndfEPrLAaZyH0YnMr
+         opofe0DO+Y1onQO/yEvG86jj8tYGZgLXUNLODMh4MOey3gy5niCJ3HNkWk50V4qDfz
+         rlFknkB9FxrZtRDdbKzweHonLTbmp9zREr3Zy/MA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 091/100] net/tls: fix refcount adjustment in fallback
-Date:   Tue, 30 Apr 2019 13:39:00 +0200
-Message-Id: <20190430113613.108683352@linuxfoundation.org>
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Jun Xiao <xiaojun2@hisilicon.com>
+Subject: [PATCH 4.19 094/100] net: hns: Fix WARNING when hns modules installed
+Date:   Tue, 30 Apr 2019 13:39:03 +0200
+Message-Id: <20190430113613.268465382@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,69 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Jun Xiao <xiaojun2@hisilicon.com>
 
-[ Upstream commit 9188d5ca454fd665145904267e726e9e8d122f5c ]
+Commit dfdf26babc98 upstream
 
-Unlike atomic_add(), refcount_add() does not deal well
-with a negative argument.  TLS fallback code reallocates
-the skb and is very likely to shrink the truesize, leading to:
+this patch need merge to 4.19.y stable kernel
 
-[  189.513254] WARNING: CPU: 5 PID: 0 at lib/refcount.c:81 refcount_add_not_zero_checked+0x15c/0x180
- Call Trace:
-  refcount_add_checked+0x6/0x40
-  tls_enc_skb+0xb93/0x13e0 [tls]
+Fix Conflict:already fixed the confilct dfdf26babc98 with Yonglong Liu
 
-Once wmem_allocated count saturates the application can no longer
-send data on the socket.  This is similar to Eric's fixes for GSO,
-TCP:
-commit 7ec318feeed1 ("tcp: gso: avoid refcount_t warning from tcp_gso_segment()")
-and UDP:
-commit 575b65bc5bff ("udp: avoid refcount_t saturation in __udp_gso_segment()").
+stable candidate:user cannot connect to the internet via hns dev
+by default setting without this patch
 
-Unlike the GSO case, for TLS fallback it's likely that the skb has
-shrunk, so the "likely" annotation is the other way around (likely
-branch being "sub").
+we have already verified this patch on kunpeng916 platform,
+and it works well.
 
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: John Hurley <john.hurley@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Jun Xiao <xiaojun2@hisilicon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_device_fallback.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c |   15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
---- a/net/tls/tls_device_fallback.c
-+++ b/net/tls/tls_device_fallback.c
-@@ -193,6 +193,9 @@ static void update_chksum(struct sk_buff
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -1169,6 +1169,12 @@ int hns_nic_init_phy(struct net_device *
+ 	if (!h->phy_dev)
+ 		return 0;
  
- static void complete_skb(struct sk_buff *nskb, struct sk_buff *skb, int headln)
- {
-+	struct sock *sk = skb->sk;
-+	int delta;
++	phy_dev->supported &= h->if_support;
++	phy_dev->advertising = phy_dev->supported;
 +
- 	skb_copy_header(nskb, skb);
- 
- 	skb_put(nskb, skb->len);
-@@ -200,11 +203,15 @@ static void complete_skb(struct sk_buff
- 	update_chksum(nskb, headln);
- 
- 	nskb->destructor = skb->destructor;
--	nskb->sk = skb->sk;
-+	nskb->sk = sk;
- 	skb->destructor = NULL;
- 	skb->sk = NULL;
--	refcount_add(nskb->truesize - skb->truesize,
--		     &nskb->sk->sk_wmem_alloc);
++	if (h->phy_if == PHY_INTERFACE_MODE_XGMII)
++		phy_dev->autoneg = false;
 +
-+	delta = nskb->truesize - skb->truesize;
-+	if (likely(delta < 0))
-+		WARN_ON_ONCE(refcount_sub_and_test(-delta, &sk->sk_wmem_alloc));
-+	else if (delta)
-+		refcount_add(delta, &sk->sk_wmem_alloc);
+ 	if (h->phy_if != PHY_INTERFACE_MODE_XGMII) {
+ 		phy_dev->dev_flags = 0;
+ 
+@@ -1180,15 +1186,6 @@ int hns_nic_init_phy(struct net_device *
+ 	if (unlikely(ret))
+ 		return -ENODEV;
+ 
+-	phy_dev->supported &= h->if_support;
+-	phy_dev->advertising = phy_dev->supported;
+-
+-	if (h->phy_if == PHY_INTERFACE_MODE_XGMII)
+-		phy_dev->autoneg = false;
+-
+-	if (h->phy_if == PHY_INTERFACE_MODE_SGMII)
+-		phy_stop(phy_dev);
+-
+ 	return 0;
  }
  
- /* This function may be called after the user socket is already
 
 
