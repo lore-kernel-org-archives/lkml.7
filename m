@@ -2,126 +2,188 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD40C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2930C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7547B2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81CE2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 07:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfD3H0s (ORCPT
+        id S1726415AbfD3H2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 03:26:48 -0400
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:23219 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfD3H0s (ORCPT
+        Tue, 30 Apr 2019 03:28:31 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:54925 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725906AbfD3H2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 03:26:48 -0400
-From:   Thomas Backlund <tmb@mageia.org>
-Subject: perf build broken in 5.1-rc7
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>
-Message-ID: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
-Date:   Tue, 30 Apr 2019 10:26:43 +0300
+        Tue, 30 Apr 2019 03:28:31 -0400
+Received: from [192.168.2.10] ([46.9.232.72])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id LNBfhiXQLNExlLNBihg6L5; Tue, 30 Apr 2019 09:28:28 +0200
+Subject: Re: vidioc_g_edid: BUG: Unable to handle kernel NULL pointer
+ dereference at virtual address 00000716
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     samitolvanen@google.com, paul.kocialkowski@bootlin.com,
+        ezequiel@collabora.com, treding@nvidia.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        sakari.ailus@linux.intel.com,
+        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
+        lkft-triage@lists.linaro.org
+References: <CA+G9fYuZhS+QfgM0HrNm4B8Yb+0kwScxaURJDYXKPY-ML_L0cQ@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <35ebc45a-5894-e2ab-3a97-2ce3f7efda44@xs4all.nl>
+Date:   Tue, 30 Apr 2019 09:28:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYuZhS+QfgM0HrNm4B8Yb+0kwScxaURJDYXKPY-ML_L0cQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-WatchGuard-Spam-ID: str=0001.0A0C0204.5CC7F8B6.00C0,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.195
-X-WatchGuard-Mail-From: tmb@mageia.org
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNcaqkc+M5ISByQuxrsmDIIoiFR5tHgVJM3vxMNh5gDKvc1kKh24BCS0XZIBa12jxfAbQLfRxjDW1yiojiCegam3vO2avyYAcEZn8JVKwaZR1ZQkjLyt
+ ImxL4/U6xg1mm6fkb/iJdqFFVWf5ubri/ZW+hWM697t/TpaWmzPZF5nhl+322415Daeef710VYKoc8frfm2WTJrcuVD7P09bSMas5BntZrL6PaiBHB9CiMUW
+ DlpCZHTONQsWmnsrrpGDGA9GwCrxtV0Kj2E8sgJWIV84AwHo3Yss1rrbwwT6FFD+e8zvCOCffAtcJ+QdseNJ6x81p4xEWRCkCzFiQRgvXiKK7agy0Kw7OcQh
+ uHqxZUx9uwhPh+QoJXf6BwPe7jQL9jtUE5BmyTrxrziUrL7qFGxY6AOAWaSsV5dJtG/igAZ7uj5ioy4D+wCTtPjzUN4mwQKNoS4MQG+IbmVB+y7RJva2zdll
+ f2dMaqDYCgakBKItdLuSJmF5t7xkqdVdzPV34ux9ml09yYDYvJnnc/IP8rf7KcApw0u8881yuUtvJ39niigplSsyPomLJ2SNRjlNNRDjLTO2l0jbeHWJO5CW
+ sDjyLKYFpbb1HELhmrbfrj49
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/30/19 9:10 AM, Naresh Kamboju wrote:
+> v4l2-compliance test running on linux stable 4.9 reported kernel bug.
+> The crash is pointing to kernel module "vivid.ko" which was loaded by
+> test case. (  modprobe vivid.ko)
+> 
+> Test passes on 4.4, 4.14, 4.19 and 5.0.
+> steps to reproduce:
+> 
+>        # boot 4.9 kernel on x86_64 / Juno / hikey /  device
+>        #  install v4l-utils package
+>        # modprobe vivid.ko no_error_inj=1
+>        # v4l2-compliance -v -d /dev/video0
+>        # you will get BUG: Unable to handle kernel NULL pointer dereference
+> 
+> arm64 juno-r2 test output log,
+> ----------------------------------------
+> INFO: Running v4l2-compliance device test...
+> [   48.574093] vivid-000: =================  START STATUS  =================
+> [   48.580866] vivid-000: Test Pattern: 75% Colorbar
+> ...
+> [   48.730569] tpg RGB range: 0/2
+> [   48.733592] vivid-000: ==================  END STATUS  ==================
+> [   48.753649] BUG: Unable to handle kernel NULL pointer dereference
+> at virtual address 00000716
+> [   48.761689] pgd = ffff80094d113000
+> [   48.765097] [00000716] *pgd=00000009f4300003,
+> *pud=00000009f513c003, *pmd=0000000000000000
+> [   48.773666] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+> [   48.779186] Modules linked in: vivid videobuf2_vmalloc
+> videobuf2_memops v4l2_tpg videobuf2_v4l2 videobuf2_core fuse
+> [   48.789574] CPU: 5 PID: 2278 Comm: v4l2-compliance Not tainted 4.9.169-rc1 #1
+> [   48.796637] Hardware name: ARM Juno development board (r2) (DT)
+> [   48.802496] task: ffff8009741e5800 task.stack: ffff80096ec9c000
+> [   48.808405] PC is at vidioc_g_edid+0xb8/0x150 [vivid]
+> [   48.813445] LR is at vidioc_g_edid+0xb4/0x150 [vivid]
+> [   48.818444] pc : [<ffff000000bffc80>] lr : [<ffff000000bffc7c>]
+> pstate: 40000145
+> [   48.825764] sp : ffff80096ec9fbc0
+> [   48.829043] x29: ffff80096ec9fbc0 x28: 0000000000000000
+> [   48.834311] x27: ffff800972fd0590 x26: 0000000000000028
+> [   48.839580] x25: 0000000000000000 x24: ffff000009289eb0
+> [   48.844849] x23: ffff80096ec9fd10 x22: ffff80096ec9fd10
+> [   48.850118] x21: 0000000000000000 x20: ffff800972fd0000
+> [   48.855387] x19: ffff80096ec9fd10 x18: 0000ffffc63f1d4f
+> [   48.860656] x17: 0000ffffb0186910 x16: ffff0000082c9840
+> [   48.865924] x15: 000000000000000a x14: 2700000000000000
+> [   48.871193] x13: 0000001c0000321c x12: c000358040201cd0
+> [   48.876461] x11: 5180001d1a1a0000 x10: 321cc00035203040
+> [   48.881730] x9 : 1f3870a080361a1e x8 : 0000321cc0003520
+> [   48.886998] x7 : 30803e70f0a000d0 x6 : ffff800972dbdc00
+> [   48.892267] x5 : ffff800972ca0000 x4 : 0000000000000000
+> [   48.897534] x3 : 0000000000000002 x2 : ffffffffffffffc0
+> [   48.902803] x1 : ffff00000ba83100 x0 : ffff800972dbdb00
+> [   48.908069]
+> [   48.909543] Process v4l2-compliance (pid: 2278, stack limit =
+> 0xffff80096ec9c020)
+> [   48.916951] Stack: (0xffff80096ec9fbc0 to 0xffff80096eca0000)
+> [   48.922642] fbc0: ffff80096ec9fbf0 ffff000008900194
+> 00000000c0285628 ffff80097537aa80
+> ...
+> ...
+> ...
+> [   49.272633] [<ffff000000bffc80>] vidioc_g_edid+0xb8/0x150 [vivid]
+> [   49.278672] [<ffff000008900194>] __video_do_ioctl+0x204/0x2f8
+> [   49.284362] [<ffff0000088ff990>] video_usercopy+0x230/0x7e0
+> [   49.289879] [<ffff0000088fff7c>] video_ioctl2+0x3c/0x50
+> [   49.295052] [<ffff0000088fa394>] v4l2_ioctl+0x8c/0x128
+> [   49.300143] [<ffff0000082c9060>] do_vfs_ioctl+0xb0/0x890
+> [   49.305404] [<ffff0000082c98cc>] SyS_ioctl+0x8c/0xa8
+> [   49.310321] [<ffff0000080841dc>] __sys_trace_return+0x0/0x4
+> [   49.315841] Code: 53196042 f9401260 95e37502 f9401260 (794e2ea2)
+> [   49.321877] ---[ end trace 2f24332f5b488208 ]---
+> 
+> 
+> Full test log,
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.168-78-g6ecae2ce7b5a/testrun/680319/log
+> 
+> Linux kernel version,
+> Linux version 4.9.169-rc1 (oe-user@oe-host) (gcc version 7.3.0 (GCC) )
+> #1 SMP Tue Apr 16 18:34:31 UTC 2019
+> 
+> Code snippet:
+> long video_ioctl2(struct file *file,
+>       unsigned int cmd, unsigned long arg)
+> {
+> return video_usercopy(file, cmd, arg, __video_do_ioctl);
+> }
+> EXPORT_SYMBOL(video_ioctl2);
+> 
+> 
+> Test logs from each device,
+> Juno-r2: arm64
+> https://lkft.validation.linaro.org/scheduler/job/680319#L1389
+> 
+> X86_64:
+> https://lkft.validation.linaro.org/scheduler/job/680361#L1143
+> 
+> Hikey: arm64
+> https://lkft.validation.linaro.org/scheduler/job/680287#L1564
+> 
+> BeagleBoard-x15: arm32
+> https://lkft.validation.linaro.org/scheduler/job/680377#L1540
+> 
+> Best regards
+> Naresh Kamboju
+> 
 
-Building perf in 5.1-rc5/6/7 fails:
+It's a CEC related bug, this vivid patch should fix it. It's a backport of
+commit ed356f110403 ("media: vivid: check if the cec_adapter is valid"). This
+commit was only backported to 4.12 and up since it didn't apply to older kernels.
 
+Feel free to post this patch (after testing!) to the stable mailinglist for
+inclusion into 4.9.
 
-Build start:
+Regards,
 
+	Hans
 
-  make -s -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 
-WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 
-NO_BIONIC=1 NO_JVMTI=1 prefix=/usr lib=lib64 all
-   BUILD:   Doing 'make -j32' parallel build
-   HOSTCC   fixdep.o
-   HOSTLD   fixdep-in.o
-   LINK     fixdep
-Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h' 
-differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
-diff -u tools/arch/x86/include/uapi/asm/vmx.h 
-arch/x86/include/uapi/asm/vmx.h
-
-Auto-detecting system features:
-...                         dwarf: [ on  ]
-...            dwarf_getlocations: [ on  ]
-...                         glibc: [ on  ]
-...                          gtk2: [ on  ]
-...                      libaudit: [ on  ]
-...                        libbfd: [ on  ]
-...                        libelf: [ on  ]
-...                       libnuma: [ on  ]
-...        numa_num_possible_cpus: [ on  ]
-...                       libperl: [ on  ]
-...                     libpython: [ on  ]
-...                      libslang: [ on  ]
-...                     libcrypto: [ on  ]
-...                     libunwind: [ on  ]
-...            libdw-dwarf-unwind: [ on  ]
-...                          zlib: [ on  ]
-...                          lzma: [ on  ]
-...                     get_cpuid: [ on  ]
-...                           bpf: [ on  ]
-...                        libaio: [ on  ]
-...        disassembler-four-args: [ OFF ]
-
-Makefile.config:473: No sys/sdt.h found, no SDT events are defined, 
-please install systemtap-sdt-devel or systemtap-sdt-dev
-Makefile.config:853: No libbabeltrace found, disables 'perf data' CTF 
-format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-
-
-And breaks with:
-
-
-CC       ui/setup.o
-util/annotate.c: In function 'symbol__disassemble_bpf':
-util/annotate.c:1767:29: error: incompatible type for argument 1 of 
-'disassembler'
-   disassemble = disassembler(bfdf);
-                              ^~~~
-In file included from util/annotate.c:1689:
-/usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture' 
-but argument is of type 'bfd *' {aka 'struct bfd *'}
-  extern disassembler_ftype disassembler (enum bfd_architecture arc,
-                                          ~~~~~~~~~~~~~~~~~~~~~~^~~
-util/annotate.c:1767:16: error: too few arguments to function 'disassembler'
-   disassemble = disassembler(bfdf);
-                 ^~~~~~~~~~~~
-In file included from util/annotate.c:1689:
-/usr/include/dis-asm.h:325:27: note: declared here
-  extern disassembler_ftype disassembler (enum bfd_architecture arc,
-                            ^~~~~~~~~~~~
-   CC       arch/x86/util/header.o
-   CC       arch/x86/util/tsc.o
-   CC       arch/x86/util/pmu.o
-mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
-   CC       bench/futex-requeue.o
-   CC       arch/x86/util/kvm-stat.o
-make[4]: *** 
-[/work/rpmbuild/BUILD/kernel-x86_64/linux-5.0/tools/build/Makefile.build:97: 
-util/annotate.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-   CC       util/build-id.o
-
-
---
-
-Thomas
-
-
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+---
+--- a/drivers/media/platform/vivid/vivid-vid-common.c	2019-04-30 09:23:37.296797292 +0200
++++ b/drivers/media/platform/vivid/vivid-vid-common.c	2019-04-30 09:24:09.581261759 +0200
+@@ -841,6 +841,7 @@
+ 	if (edid->start_block + edid->blocks > dev->edid_blocks)
+ 		edid->blocks = dev->edid_blocks - edid->start_block;
+ 	memcpy(edid->edid, dev->edid, edid->blocks * 128);
+-	cec_set_edid_phys_addr(edid->edid, edid->blocks * 128, adap->phys_addr);
++	if (adap)
++		cec_set_edid_phys_addr(edid->edid, edid->blocks * 128, adap->phys_addr);
+ 	return 0;
+ }
