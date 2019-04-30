@@ -2,93 +2,95 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D69C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC22C04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33BE21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t8/xdPkL"
+	by mail.kernel.org (Postfix) with ESMTP id E09A921670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 10:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfD3KzC (ORCPT
+        id S1727332AbfD3K4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 06:55:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33178 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfD3Kw6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 06:52:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NSdqCv71ScTLfp+L8DoOcIv8z0/qhRPKt5mb1BYMk/s=; b=t8/xdPkLuMODEclDwrkXgZG6i
-        jd28Y4ll3XEIXyENP0Lp2V5CG7LB9jmVnVkEoKIPanOxnfZM9jwqXX6+f19EeyA4Sz6mGmxSNc9XJ
-        J9UaH9G3JTHE0uM+6NldNrZsEFQLPzhMIUmeN+TTejqv3LWCWB1ck9wu3A6GvvhzGr28uQG4v9PVR
-        qlPQ8Dn3UHCaW6mFhdgtUfQwZ3dafOYshE1x45BCFMjMUQGgrL6b2YmV/sgqYqXOwf6bGe5LT8lu7
-        trbe57rg26xkdVh3HyL5QcVRRZfpUQaZ2stm0RyEnb8M9taCl5uS2z/EDhuMbnTbXDH3j/+uhcnCU
-        qDTA0Otvg==;
-Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLQNX-0007JR-UQ; Tue, 30 Apr 2019 10:52:52 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: implement generic dma_map_ops for IOMMUs v4
-Date:   Tue, 30 Apr 2019 06:51:49 -0400
-Message-Id: <20190430105214.24628-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Tue, 30 Apr 2019 06:56:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58740 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726877AbfD3K4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 06:56:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F2264AD12;
+        Tue, 30 Apr 2019 10:56:13 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 12:56:10 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Cyrill Gorcunov <gorcunov@gmail.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, brgl@bgdev.pl,
+        arunks@codeaurora.org, geert+renesas@glider.be, mhocko@kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        ldufour@linux.ibm.com, rppt@linux.ibm.com, mguzik@redhat.com,
+        mkoutny@suse.cz, vbabka@suse.cz, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm: get_cmdline use arg_lock instead of mmap_sem
+Message-ID: <20190430105609.GA23779@blackbody.suse.cz>
+References: <20190418182321.GJ3040@uranus.lan>
+ <20190430081844.22597-1-mkoutny@suse.com>
+ <20190430081844.22597-2-mkoutny@suse.com>
+ <4c79fb09-c310-4426-68f7-8b268100359a@virtuozzo.com>
+ <20190430093808.GD2673@uranus.lan>
+ <1a7265fa-610b-1f2a-e55f-b3a307a39bf2@virtuozzo.com>
+ <20190430104517.GF2673@uranus.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
+Content-Disposition: inline
+In-Reply-To: <20190430104517.GF2673@uranus.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
 
-please take a look at this series, which implements a completely generic
-set of dma_map_ops for IOMMU drivers.  This is done by taking the
-existing arm64 code, moving it to drivers/iommu and then massaging it
-so that it can also work for architectures with DMA remapping.  This
-should help future ports to support IOMMUs more easily, and also allow
-to remove various custom IOMMU dma_map_ops implementations, like Tom
-was planning to for the AMD one.
+--GvXjxJ+pjyke8COw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-A git tree is also available at:
+On Tue, Apr 30, 2019 at 01:45:17PM +0300, Cyrill Gorcunov <gorcunov@gmail.com> wrote:
+> It setups these parameters unconditionally. I need to revisit
+> this moment. Technically (if only I'm not missing something
+> obvious) we might have a race here with prctl setting up new
+> params, but this should be harmless since most of them (except
+> stack setup) are purely informative data.
+FTR, when I reviewed that usage, I noticed it was missing the
+synchronization. My understanding was that the mm_struct isn't yet
+shared at this moment. I can see some of the operations take place after
+flush_old_exec (where current->mm = mm_struct), so potentially it is
+shared since then. OTOH, I guess there aren't concurrent parties that
+could access the field at this stage of exec.
 
-    git://git.infradead.org/users/hch/misc.git dma-iommu-ops.3
+My 2 cents,
+Michal
 
-Gitweb:
+--GvXjxJ+pjyke8COw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-iommu-ops.3
+-----BEGIN PGP SIGNATURE-----
 
-Changes since v3:
- - fold the separate patch to refactor mmap bounds checking
- - don't warn on not finding a vm_area
- - improve a commit log
- - refactor __dma_iommu_free a little differently
- - remove a minor MSI map cleanup to avoid a conflict with the
-   "Split iommu_dma_map_msi_msg" series
+iQIzBAEBCAAdFiEE+amhwRV4jZeXdUhoK2l36XSZ9y4FAlzIKcMACgkQK2l36XSZ
+9y43Zw//ShZK7DYk6l3lLVR4pXSaBs8MdnbIYo7kKlPHwKewLyueV6qPL2+k7sD9
+M0bduFp4pZsGf/v2IG/1k6qStCpTYRFhLwiq9fiNee3j7pUhmxLTbTB6bIHtcU3p
+96TrUAJK0J9Ll3vPRHvi3t6pGARq3M/3I7mVs/oWFGYT8wWy5yKoP1B+BHHbKcky
+4xx3EaFJlwDeBZA8FgxxyrfbMvzLFJ1PgdSuaifuG8VH0wKYZhhzRtVB0U6o2DYF
+MPce7LipyB4FG8NPWk0rWcrS/EjWDLV6zqRaOqYHKBryTYrLo2kyxp42QcbBSHsN
+vSOimjkHLc6wnGE2798Pfsmy53aNucWE1s+vfuoqaGd4hXflp8hYU9MuM8MrV52C
+OHkjozbWRkW0y6E0UGQ3H//7lYU2CTXOatHB0wRn3XeVhDynWaOXwZdcbG4WuzmM
+wM04m8KsDFkLoY/uxSOeDKPPJUdwx/CGfzMvI7or47ic/BkN7GOtbsz4ktNiDg66
+c6hgOEp8jUi+PPsAcEfzIRX7NKpWhpi5MLLTqfY3KGg6UnszjSOb1us4/XTr1Ok+
+WRhUZy+lkVI6/sLy6JlDyCDPQGkM96ZmJC/yRsUqvQeiaUhG99DiU5tL2IZqmbN3
+XQSp5NcX0a7or597DEf0zJXfqO0vkHugAenNGardDU17d0iJH9w=
+=qs9v
+-----END PGP SIGNATURE-----
 
-Changes since v2:
- - address various review comments and include patches from Robin
-
-Changes since v1:
- - only include other headers in dma-iommu.h if CONFIG_DMA_IOMMU is enabled
- - keep using a scatterlist in iommu_dma_alloc
- - split out mmap/sgtable fixes and move them early in the series
- - updated a few commit logs
+--GvXjxJ+pjyke8COw--
