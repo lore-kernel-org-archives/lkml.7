@@ -2,133 +2,117 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0D9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2181CC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51FA20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A7B2087B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfD3TeP (ORCPT
+        id S1726264AbfD3TjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:34:15 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:36352 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726263AbfD3TeO (ORCPT
+        Tue, 30 Apr 2019 15:39:13 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:40683 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfD3TjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:34:14 -0400
-Received: (qmail 6906 invoked by uid 2102); 30 Apr 2019 15:34:12 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 30 Apr 2019 15:34:12 -0400
-Date:   Tue, 30 Apr 2019 15:34:12 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Mike Isely <isely@pobox.com>,
-        syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <linux-media@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: Detected a wedged cx25840 chip; the device will not
- work.
-In-Reply-To: <000000000000b7a84a0587c3f3e5@google.com>
-Message-ID: <Pine.LNX.4.44L0.1904301530070.1465-100000@iolanthe.rowland.org>
+        Tue, 30 Apr 2019 15:39:12 -0400
+X-Originating-IP: 90.66.53.80
+Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 2A0BE40002;
+        Tue, 30 Apr 2019 19:39:10 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] rtc: drop set_mms and set_mmss64
+Date:   Tue, 30 Apr 2019 21:39:08 +0200
+Message-Id: <20190430193908.8805-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019, syzbot wrote:
+There are no users of set_mms and set_mmss64 as they have all been
+converted to set_time and are handling the tm to time conversion on their
+own.
 
-> Hello,
-> 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> WARNING in sysfs_remove_group
-> 
-> pvrusb2: Attached sub-driver tuner
-> pvrusb2: ***WARNING*** pvrusb2 driver initialization failed due to the  
-> failure of one or more sub-device kernel modules.
-> pvrusb2: You need to resolve the failing condition before this driver can  
-> function.  There should be some earlier messages giving more information  
-> about the problem.
-> ------------[ cut here ]------------
-> sysfs group 'power' not found for kobject '0-0044'
-> WARNING: CPU: 1 PID: 586 at fs/sysfs/group.c:254 sysfs_remove_group  
-> fs/sysfs/group.c:254 [inline]
-> WARNING: CPU: 1 PID: 586 at fs/sysfs/group.c:254  
-> sysfs_remove_group+0x15a/0x1b0 fs/sysfs/group.c:245
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 586 Comm: pvrusb2-context Not tainted 5.1.0-rc3-g43151d6-dirty  
-> #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xe8/0x16e lib/dump_stack.c:113
->   panic+0x29d/0x5f2 kernel/panic.c:214
->   __warn.cold+0x20/0x48 kernel/panic.c:571
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-> RIP: 0010:sysfs_remove_group fs/sysfs/group.c:254 [inline]
-> RIP: 0010:sysfs_remove_group+0x15a/0x1b0 fs/sysfs/group.c:245
-> Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c  
-> 01 00 75 41 48 8b 33 48 c7 c7 a0 31 7a 8e e8 e6 c2 6e ff <0f> 0b eb 95 e8  
-> 0d de d3 ff e9 d2 fe ff ff 48 89 df e8 00 de d3 ff
-> RSP: 0018:ffff88809ced7b70 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: ffffffff8f037e80 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff815b2132 RDI: ffffed10139daf60
-> RBP: 0000000000000000 R08: ffff88809ce96200 R09: ffffed1015a23edb
-> R10: ffffed1015a23eda R11: ffff8880ad11f6d7 R12: ffff888218b8e630
-> R13: ffffffff8f038520 R14: 1ffff110139daf97 R15: ffff888218b8e628
->   dpm_sysfs_remove+0xa2/0xc0 drivers/base/power/sysfs.c:737
->   device_del+0x175/0xb90 drivers/base/core.c:2246
-> usb 4-1: new high-speed USB device number 3 using dummy_hcd
->   device_unregister+0x27/0xd0 drivers/base/core.c:2301
->   i2c_unregister_device drivers/i2c/i2c-core-base.c:814 [inline]
->   __unregister_client drivers/i2c/i2c-core-base.c:1422 [inline]
->   __unregister_client+0x7d/0x90 drivers/i2c/i2c-core-base.c:1418
->   device_for_each_child+0x100/0x170 drivers/base/core.c:2401
->   i2c_del_adapter drivers/i2c/i2c-core-base.c:1485 [inline]
->   i2c_del_adapter+0x35b/0x640 drivers/i2c/i2c-core-base.c:1447
->   pvr2_i2c_core_done+0x6e/0xbb  
-> drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c:662
->   pvr2_hdw_destroy+0x17e/0x380 drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2669
->   pvr2_context_destroy+0x89/0x240  
-> drivers/media/usb/pvrusb2/pvrusb2-context.c:79
->   pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:146 [inline]
->   pvr2_context_thread_func+0x65e/0x870  
-> drivers/media/usb/pvrusb2/pvrusb2-context.c:167
->   kthread+0x313/0x420 kernel/kthread.c:253
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> 
-> Tested on:
-> 
-> commit:         43151d6c usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15433634a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=274aad0cf966c3bc
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=13df3d24a00000
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/interface.c | 12 +++---------
+ drivers/rtc/systohc.c   |  6 +-----
+ include/linux/rtc.h     |  2 --
+ 3 files changed, 4 insertions(+), 16 deletions(-)
 
-It seems pretty clear that this problem is caused by the
-pvr2_context_thread trying to unregister the device before the main
-probe routine has finished registering it.
-
-I'm not familiar enough with this driver to want to fix the problem, 
-however.  Someone else who knows the code better should work on it.
-
-Alan Stern
+diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+index 56ed0c3a8c85..8903b932ce3c 100644
+--- a/drivers/rtc/interface.c
++++ b/drivers/rtc/interface.c
+@@ -143,17 +143,11 @@ int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
+ 
+ 	if (!rtc->ops)
+ 		err = -ENODEV;
+-	else if (rtc->ops->set_time)
+-		err = rtc->ops->set_time(rtc->dev.parent, tm);
+-	else if (rtc->ops->set_mmss64)
+-		err = rtc->ops->set_mmss64(rtc->dev.parent,
+-					   rtc_tm_to_time64(tm));
+-	else if (rtc->ops->set_mmss)
+-		err = rtc->ops->set_mmss(rtc->dev.parent,
+-					 rtc_tm_to_time64(tm));
+-	else
++	if (!rtc->ops->set_time)
+ 		err = -EINVAL;
+ 
++	err = rtc->ops->set_time(rtc->dev.parent, tm);
++
+ 	pm_stay_awake(rtc->dev.parent);
+ 	mutex_unlock(&rtc->ops_lock);
+ 	/* A timer might have just expired */
+diff --git a/drivers/rtc/systohc.c b/drivers/rtc/systohc.c
+index 8bf8e0c1e8fd..8b70f0520e13 100644
+--- a/drivers/rtc/systohc.c
++++ b/drivers/rtc/systohc.c
+@@ -30,8 +30,7 @@ int rtc_set_ntp_time(struct timespec64 now, unsigned long *target_nsec)
+ 	if (!rtc)
+ 		goto out_err;
+ 
+-	if (!rtc->ops || (!rtc->ops->set_time && !rtc->ops->set_mmss64 &&
+-			  !rtc->ops->set_mmss))
++	if (!rtc->ops || !rtc->ops->set_time)
+ 		goto out_close;
+ 
+ 	/* Compute the value of tv_nsec we require the caller to supply in
+@@ -53,9 +52,6 @@ int rtc_set_ntp_time(struct timespec64 now, unsigned long *target_nsec)
+ 
+ 	rtc_time64_to_tm(to_set.tv_sec, &tm);
+ 
+-	/* rtc_hctosys exclusively uses UTC, so we call set_time here, not
+-	 * set_mmss.
+-	 */
+ 	err = rtc_set_time(rtc, &tm);
+ 
+ out_close:
+diff --git a/include/linux/rtc.h b/include/linux/rtc.h
+index 48d3f8e0b64f..df666cf29ef1 100644
+--- a/include/linux/rtc.h
++++ b/include/linux/rtc.h
+@@ -79,8 +79,6 @@ struct rtc_class_ops {
+ 	int (*read_alarm)(struct device *, struct rtc_wkalrm *);
+ 	int (*set_alarm)(struct device *, struct rtc_wkalrm *);
+ 	int (*proc)(struct device *, struct seq_file *);
+-	int (*set_mmss64)(struct device *, time64_t secs);
+-	int (*set_mmss)(struct device *, unsigned long secs);
+ 	int (*alarm_irq_enable)(struct device *, unsigned int enabled);
+ 	int (*read_offset)(struct device *, long *offset);
+ 	int (*set_offset)(struct device *, long offset);
+-- 
+2.20.1
 
