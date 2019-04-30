@@ -2,52 +2,52 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2543C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20D1C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914D421670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10092075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625668;
-	bh=17cVRuU6W8q7VjDf23UMfIcNffAFqd8hJoMrPf6lOa0=;
+	s=default; t=1556625677;
+	bh=fKUg6+PahRM8TTj2fQmK27sq0Nz0V/wzQ4NWA34HGVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zv0IqJIY7jarXNjuEwuxda0rtjEU9J1yzqTd2K0M4Wuy7HbQ18/HXLSCCNy+jDshR
-	 DtmA3Q/q/KKo2CopITEFVpmefx4scuzcqgSgIzUOqQaOryQmSLtDDBU9XmYEG+YJwN
-	 bkq4KjBhzRGghzMiKR3E6AczKft1/iljUrizG6Sw=
+	b=BV5fC8deK87X3isArEn7LRauUhm0A7yjIyUV3pCIag9CCrLYnxKrkcQcE/J2wXBCP
+	 GVd0kvspD95gBYSWUTBov7u8Ha1gqayLfcWpCApDR4mjZvr62zOtTGtgbIlR/SgE7I
+	 l8fvS5OxFSyn4+R2o68kq7xNUoMPdphYU1PulBKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfD3MBH (ORCPT
+        id S1728756AbfD3MBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:01:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57430 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 08:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730369AbfD3LpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:45:19 -0400
+        id S1729535AbfD3LpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:45:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F85E21707;
-        Tue, 30 Apr 2019 11:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AA1D21734;
+        Tue, 30 Apr 2019 11:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624718;
-        bh=17cVRuU6W8q7VjDf23UMfIcNffAFqd8hJoMrPf6lOa0=;
+        s=default; t=1556624710;
+        bh=fKUg6+PahRM8TTj2fQmK27sq0Nz0V/wzQ4NWA34HGVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p6fUMvwQ32LEvWjSiG74XgcybN4jWrfDYC97bKjCQhMLQEO/AvraO7Zy3SfbGjWkK
-         n46R5U9ZOMJ2cXwC7PM4NksJmh50Esfws0kIHM5RlBw8vc6dIKaLVzxCqnOKJhl4S3
-         EkziAM5O4aGxR83kOZCi2+479P4FqomoH36KNhd4=
+        b=GggnxONasf7XXf9gvJDOcX3Bchi2xJdUlvcDJlmyK2CD5fznbFvJfvhaffGC0Scgt
+         Pbog8Qt9rAEf4jHMjILaFEbnHI9spQpK2cc9l3BLRQ7awLjKwQkYrLy5nWJuJwJJJo
+         mRyU7JlJ8NO72d4PMR0TYEx7VKEFFdNSvbPpWzEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Garcia <nevola@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/100] netfilter: nf_tables: bogus EBUSY in helper removal from transaction
-Date:   Tue, 30 Apr 2019 13:37:40 +0200
-Message-Id: <20190430113609.146837257@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 4.19 042/100] vfio/type1: Limit DMA mappings per container
+Date:   Tue, 30 Apr 2019 13:38:11 +0200
+Message-Id: <20190430113611.111136512@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,63 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ffcd32f64633926163cdd07a7d295c500a947d1 ]
+From: Alex Williamson <alex.williamson@redhat.com>
 
-Proper use counter updates when activating and deactivating the object,
-otherwise, this hits bogus EBUSY error.
+commit 492855939bdb59c6f947b0b5b44af9ad82b7e38c upstream.
 
-Fixes: cd5125d8f518 ("netfilter: nf_tables: split set destruction in deactivate and destroy phase")
-Reported-by: Laura Garcia <nevola@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Memory backed DMA mappings are accounted against a user's locked
+memory limit, including multiple mappings of the same memory.  This
+accounting bounds the number of such mappings that a user can create.
+However, DMA mappings that are not backed by memory, such as DMA
+mappings of device MMIO via mmaps, do not make use of page pinning
+and therefore do not count against the user's locked memory limit.
+These mappings still consume memory, but the memory is not well
+associated to the process for the purpose of oom killing a task.
+
+To add bounding on this use case, we introduce a limit to the total
+number of concurrent DMA mappings that a user is allowed to create.
+This limit is exposed as a tunable module option where the default
+value of 64K is expected to be well in excess of any reasonable use
+case (a large virtual machine configuration would typically only make
+use of tens of concurrent mappings).
+
+This fixes CVE-2019-3882.
+
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Tested-by: Eric Auger <eric.auger@redhat.com>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/netfilter/nft_objref.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/net/netfilter/nft_objref.c b/net/netfilter/nft_objref.c
-index d8737c115257..bf92a40dd1b2 100644
---- a/net/netfilter/nft_objref.c
-+++ b/net/netfilter/nft_objref.c
-@@ -64,21 +64,34 @@ nla_put_failure:
- 	return -1;
- }
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -58,12 +58,18 @@ module_param_named(disable_hugepages,
+ MODULE_PARM_DESC(disable_hugepages,
+ 		 "Disable VFIO IOMMU support for IOMMU hugepages.");
  
--static void nft_objref_destroy(const struct nft_ctx *ctx,
--			       const struct nft_expr *expr)
-+static void nft_objref_deactivate(const struct nft_ctx *ctx,
-+				  const struct nft_expr *expr,
-+				  enum nft_trans_phase phase)
- {
- 	struct nft_object *obj = nft_objref_priv(expr);
- 
-+	if (phase == NFT_TRANS_COMMIT)
-+		return;
++static unsigned int dma_entry_limit __read_mostly = U16_MAX;
++module_param_named(dma_entry_limit, dma_entry_limit, uint, 0644);
++MODULE_PARM_DESC(dma_entry_limit,
++		 "Maximum number of user DMA mappings per container (65535).");
 +
- 	obj->use--;
- }
- 
-+static void nft_objref_activate(const struct nft_ctx *ctx,
-+				const struct nft_expr *expr)
-+{
-+	struct nft_object *obj = nft_objref_priv(expr);
-+
-+	obj->use++;
-+}
-+
- static struct nft_expr_type nft_objref_type;
- static const struct nft_expr_ops nft_objref_ops = {
- 	.type		= &nft_objref_type,
- 	.size		= NFT_EXPR_SIZE(sizeof(struct nft_object *)),
- 	.eval		= nft_objref_eval,
- 	.init		= nft_objref_init,
--	.destroy	= nft_objref_destroy,
-+	.activate	= nft_objref_activate,
-+	.deactivate	= nft_objref_deactivate,
- 	.dump		= nft_objref_dump,
+ struct vfio_iommu {
+ 	struct list_head	domain_list;
+ 	struct vfio_domain	*external_domain; /* domain for external user */
+ 	struct mutex		lock;
+ 	struct rb_root		dma_list;
+ 	struct blocking_notifier_head notifier;
++	unsigned int		dma_avail;
+ 	bool			v2;
+ 	bool			nesting;
  };
+@@ -836,6 +842,7 @@ static void vfio_remove_dma(struct vfio_
+ 	vfio_unlink_dma(iommu, dma);
+ 	put_task_struct(dma->task);
+ 	kfree(dma);
++	iommu->dma_avail++;
+ }
  
--- 
-2.19.1
-
+ static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
+@@ -1110,12 +1117,18 @@ static int vfio_dma_do_map(struct vfio_i
+ 		goto out_unlock;
+ 	}
+ 
++	if (!iommu->dma_avail) {
++		ret = -ENOSPC;
++		goto out_unlock;
++	}
++
+ 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
+ 	if (!dma) {
+ 		ret = -ENOMEM;
+ 		goto out_unlock;
+ 	}
+ 
++	iommu->dma_avail--;
+ 	dma->iova = iova;
+ 	dma->vaddr = vaddr;
+ 	dma->prot = prot;
+@@ -1612,6 +1625,7 @@ static void *vfio_iommu_type1_open(unsig
+ 
+ 	INIT_LIST_HEAD(&iommu->domain_list);
+ 	iommu->dma_list = RB_ROOT;
++	iommu->dma_avail = dma_entry_limit;
+ 	mutex_init(&iommu->lock);
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
+ 
 
 
