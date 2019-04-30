@@ -2,103 +2,104 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22694C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF109C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EA421670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556583479;
-	bh=1G+jxR4PLqdGYgDj+ZrKrL5wMiH25t6wGTiLpYv9Itg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LZBxMC64UfAYN+iXNNGew6Mol/oteB2eUDu+yn0aWQFuJXwmF0Vs4BbXzdBAjpG3F
-	 Ozhnsn9+iMftRT0jFOSdnwneOeSZZ6DSASZHU2dqcq4Hj04ruJ1uwcga2wHFhgRrfJ
-	 UhgDRxr0driT2EfewCavOz4t7LCi+o19FOa9yitw=
+	by mail.kernel.org (Postfix) with ESMTP id 8687121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:19:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LSj/1n9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbfD3AR5 (ORCPT
+        id S1729570AbfD3ATo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 20:17:57 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:55515 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729083AbfD3AR5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 20:17:57 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 71FEE21B8C;
-        Mon, 29 Apr 2019 20:17:56 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 29 Apr 2019 20:17:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0NrpilVTqYAlFXUfv
-        3lQHBY+SzSFgtIB0ZPKg5MhGSI=; b=UrVU4Qr0X26MjMZLPdgo4LaLwOUlilbKE
-        555xsm1iXLM+nXxBq5wnalzaovcTuxUNFFxLOBHBhA9mFnggQfqzfCiJxxgvQJ1j
-        A6C7RlJoVfw1QM/YEBs6zwO1mfIXhfHclBWlB5z94HAK7Nof753+eew/5o96o3Wf
-        5hFS5/+q0KzVe87UhgY92pmjBcBog6IpSeUlNlYOUd94r+GzF/iS5ZqZ7vvCJGMQ
-        F100sOI8jiA0FoG/wJQ8ICjxXzZL8zaJxL1jnxd/NlF+dv8acIG1L6WHxx8W80rE
-        N+2Vj35r26GE3em2m8lUlct4KgX+cmudyZu/9n8er7WxmBkiYDq/Q==
-X-ME-Sender: <xms:NJTHXLOLwT3dFDsGaRb0BreZ7Shty2ONkmLcJ1oQbWmHC9cJoCmX5A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieefgdefgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
-    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
-    dvuddrgeegrddvfedtrddukeeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
-    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:NJTHXKzxomSrTYSj3ktdoEVfSCC0pAZkGJhlVM9mBmTYqX_2f6c4JA>
-    <xmx:NJTHXMS_-a9Xh0hVXUsjAkbfc_CJ19esDBfZD4xbRloeV1kKsL7xYw>
-    <xmx:NJTHXIynTcNEpJr3LunGVMqwzXVIuqynMPZB2fPE3HOaDvhUkuT5Eg>
-    <xmx:NJTHXKVaQU_4Dg8D0iq67Yzky9KNEUCWptdtr5nRjk7y1plD3eJQqA>
-Received: from eros.localdomain (ppp121-44-230-188.bras2.syd2.internode.on.net [121.44.230.188])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E0A2AE442F;
-        Mon, 29 Apr 2019 20:17:53 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] sched/cpufreq: Fix kobject memleak
-Date:   Tue, 30 Apr 2019 10:17:17 +1000
-Message-Id: <20190430001717.26533-1-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Mon, 29 Apr 2019 20:19:44 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54465 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729200AbfD3ATo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 20:19:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44tMbc5fnSz9sB8;
+        Tue, 30 Apr 2019 10:19:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556583581;
+        bh=NUwQVYBQE22YW6CGZJVo3bT2J7uENgCqt+bTSOs1sGc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LSj/1n9LG7hEvcnKBiuH3JddMCQD9YlmWJEr5QnT/hHtxA4uAbXpP0fIcigEe7/Kt
+         31wOJC41n6rhXbsb7zj4nO4cGkfIkD6kzrIpGp4HkX4pF4+g0JYlQDdPx4Gl7HbGCl
+         gbT1rg1b6hUn+fC5iCG7d9Q6JAcrZwIXVCco2mHMHiPhHx16gwQnUiCS/qfqtQJNbV
+         kl3nxlZVptHNo7TfzimghpdUWOnlcMEB6UxdI5Skd7JNFD3QW0+IIDWfK0sq6fJN3S
+         wVTVZYS8vpT/AfdmOIL/UeeZxsYUl9Q/ibP9xYyffIADDIh4ny0vOI3+9LDgLO0pM2
+         +lPQw+fVHsH6g==
+Date:   Tue, 30 Apr 2019 10:19:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: linux-next: build warning after merge of the clk tree
+Message-ID: <20190430101939.76dc077c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/O_CCSv_ik.J=.msdHR8HWg8"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently error return from kobject_init_and_add() is not followed by a
-call to kobject_put().  This means there is a memory leak.
+--Sig_/O_CCSv_ik.J=.msdHR8HWg8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Add call to kobject_put() in error path of kobject_init_and_add().
+Hi all,
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
+After merging the clk tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-Resend with SOB tag.
+drivers/clk/imx/clk-pllv3.c:453:21: warning: this statement may fall throug=
+h [-Wimplicit-fallthrough=3D]
+   pll->denom_offset =3D PLL_IMX7_DENOM_OFFSET;
+                     ^
+drivers/clk/imx/clk-pllv3.c:454:2: note: here
+  case IMX_PLLV3_AV:
+  ^~~~
 
- kernel/sched/cpufreq_schedutil.c | 1 +
- 1 file changed, 1 insertion(+)
+Introduced by commit
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 5c41ea367422..3638d2377e3c 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -771,6 +771,7 @@ static int sugov_init(struct cpufreq_policy *policy)
- 	return 0;
- 
- fail:
-+	kobject_put(&tunables->attr_set.kobj);
- 	policy->governor_data = NULL;
- 	sugov_tunables_free(tunables);
- 
--- 
-2.21.0
+  01d0a541ff4b ("clk: imx: correct i.MX7D AV PLL num/denom offset")
 
+I get this warning because I am building with -Wimplicit-fallthrough
+in attempt to catch new additions early.  The gcc warning can be turned
+off by adding a /* fall through */ comment at the point the fall through
+happens (assuming that the fall through is intentional).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/O_CCSv_ik.J=.msdHR8HWg8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzHlJsACgkQAVBC80lX
+0GwcmQf8DQm/+a+825CRo/z9YbTfzFrH7k1fA68yg/EKjTDMMsXeZcdPfpLEZQrT
+/t+OF0ZCKTT/WEESDmmJHaViC7wGbqUzpKGKj9Z4JNC6mGBQbhGNXRt3aIUWUCBr
+NpA8DebUbaUciq1iu+j3w1jrUYzmsqEB7tDfeetdPE75kCy6NZVHKNvSoINtOzE/
+j/lpMl5Uv4UYQLgXmchiYgSO41iRz3xUSOZwRnuLvx0Be1i2PWBf/+SyMu9Qw9kw
+WsqSKhqldIpG9EeHb4MrSYQYSeUlXqaOUvwb3HuXYyKir7qoqtAu33U1p2KUXRHn
+rVOI5AteR8+bnJoo8sByoKStI6Ptsw==
+=Dwx1
+-----END PGP SIGNATURE-----
+
+--Sig_/O_CCSv_ik.J=.msdHR8HWg8--
