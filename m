@@ -2,147 +2,108 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7E4C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FF2C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC5621655
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:47:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="lUhDjsVD"
+	by mail.kernel.org (Postfix) with ESMTP id C4A3621670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556585640;
+	bh=pwOPf7JE3qQ83diIA8kkBNtmBZ74DTjDv4ET8TBgYa0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ql/1W1QlP6jlBq8iAaBnHPX5io/iSLJ0AIJoxYgpymoDPJLV3EUZDV+hlXCBAVAyN
+	 US9YVJzNNm69oqKPmluIjIzL1ZQSjPRXvJQerh+oX4d+6zIN+NOeK7LUeMsnHam+Nn
+	 8UM1ZjU568gafT9Xukk6n/+/U0K6jVqxoaLZENiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfD3Ar3 (ORCPT
+        id S1729678AbfD3Ax7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 20:47:29 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35360 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbfD3Ar3 (ORCPT
+        Mon, 29 Apr 2019 20:53:59 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38248 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728997AbfD3Ax7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 20:47:29 -0400
-Received: by mail-qt1-f195.google.com with SMTP id e5so7369584qtq.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 17:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=JsAzde18G844oUFsP84w7alrwOBHCnuavwt/AS7sS2k=;
-        b=lUhDjsVD1HvmTZzSlmnmNS8+KHK7lhpF4/MdTE1Sll4f4/Abxpr9EZf43vY3nUv4gc
-         SByYo4fESpwSj2ehkg5CBnkPoMig7wo7c3MER30cWOsyZa3X18dZ4H5sK3vFWmHAcLHQ
-         DFc22NY0N8ybP2uMrhr1x1d8eXorCas+FecmuHqxCft2nD3aprG04jfX3EMKbOPBu95b
-         xL1dCW9l8KBp+333PBmln1HIjhsfpEuyhbI7MHMD+ZS04jijenSMAeJUEHqvtxMygai4
-         EDp7AXbiLhODKY2dC2v1KhUw2AbeCzyLub3PH5P0Asj5RCVj8r8ESN7yBQ3Mx+g8xirX
-         85zg==
+        Mon, 29 Apr 2019 20:53:59 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t70so4356392oif.5;
+        Mon, 29 Apr 2019 17:53:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=JsAzde18G844oUFsP84w7alrwOBHCnuavwt/AS7sS2k=;
-        b=JEDwLaoRg0V7mCj2fQ30+SanRYzh2QFlB1CSOLYMByoj2Ftib2jQOwj5mCYsTZUEsF
-         6Gt+Ly08cyUuBYspR1UkQfTBQGGvBypLI6K6Wz/u6kPpY9osH2ZdlMWecpaT1RSsfBQH
-         9okrmDHVO9Pf6XMkzju9/ckcXbGYmWv35WDpoD7BeQFS7mRWREggLkS0Oj4qwtVgxnDM
-         K1KsyTr7PgNWwT3XsWfJGNT91coxxOcR0/a0mSejTnlh+XXJgre9q0AIyKTMJiF2rxvE
-         tZ3O2QpoIvxb6snghWHJtHSqnmIKiblb0UfSXAAeVGLhy1p6d5DA2DPTV4DwsU0hPlw+
-         WE8Q==
-X-Gm-Message-State: APjAAAWn8J4i+MREjqA3/X5amkH59QADa0qU1FMunBV+oM0sj32KNzpm
-        gdEn3zzvKEYzEMCW9nmNMcOJ/Q==
-X-Google-Smtp-Source: APXvYqwJSGNUVuDa2FUM0o3OME5qMP0cGWBbqP2LXOcKpqiPUnnprVDe23XmndJihocMHghRo62FSA==
-X-Received: by 2002:aed:2196:: with SMTP id l22mr52293656qtc.226.1556585247694;
-        Mon, 29 Apr 2019 17:47:27 -0700 (PDT)
-Received: from skullcanyon ([2002:c0de:c115:0:481e:e17e:2f68:43f8])
-        by smtp.gmail.com with ESMTPSA id 46sm22813618qtz.87.2019.04.29.17.47.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Apr 2019 17:47:26 -0700 (PDT)
-Message-ID: <8bfacddaf6c8a94bccbae5c6a83688d42bbf63a9.camel@ndufresne.ca>
-Subject: Re: [PATCH v4] media: docs-rst: Document m2m stateless video
- decoder interface
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Dafna Hirschfeld <dafna3@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        kernel mailing list <kernel@lists.collabora.co.uk>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thierry Reding <thierry.reding@gmail.com>
-Date:   Mon, 29 Apr 2019 20:47:23 -0400
-In-Reply-To: <0c8d534cf1ad262ab790f4ccfe9c2900e8a50aba.camel@bootlin.com>
-References: <20190306080019.159676-1-acourbot@chromium.org>
-         <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
-         <da5aa9ab957923a72e30b169a3c242c4fe6260f1.camel@bootlin.com>
-         <c07703459c7e48904bd7fd83be1e675c70eee83c.camel@ndufresne.ca>
-         <d81d0112b99feba0a1899f3722077a4aeec9860c.camel@bootlin.com>
-         <439b7f57aa3ba2b2ed5b043f961ef87cb83912af.camel@ndufresne.ca>
-         <59e23c5ca5bfbadf9441ea06da2e9b9b5898c6d7.camel@bootlin.com>
-         <0b495143bb260cf9f8927ee541e7f001842ac5c3.camel@ndufresne.ca>
-         <CAPBb6MVG+3jQcw3AuhYDYCZ0YJ0aX=TmEuM5izh12GLw9V6B8Q@mail.gmail.com>
-         <793af82c-6b37-6f69-648e-2cd2a2e87645@xs4all.nl>
-         <f30f69af184cc80d5c56853b517943f45c90d9d9.camel@ndufresne.ca>
-         <0a39c613-440d-c7a9-a078-b4688874f9e6@xs4all.nl>
-         <16a3a61fe354dc545e99aef36aa58c7d4943de26.camel@bootlin.com>
-         <d656119e73d491fe307045639ccc2102cb8a8722.camel@ndufresne.ca>
-         <0c8d534cf1ad262ab790f4ccfe9c2900e8a50aba.camel@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BmBzz+2LL/ow3G/3LbP1CmQvVguBPHTWsbFfuW3VYi4=;
+        b=aE6RrbJWoVfrrbRwtznuEfH3zLmPNbN607ZT1GNKb5rYuY8Nn55xPB27Y+j3IHvJ9Y
+         6Fqv+bnBkRKYIsQwBOJqCkgUEYwOi6qQUaKEUcCCg9SBuYLdwPpWFdgwBxsBoFKWoDwf
+         BT3IHHA/PV3tbCvBl226Sm24uG/xjoDtZBDI1/Nkut5H55+3JzYcXxJ45ZnqS1ZNusAt
+         THpmdTlTGKhXTuBkwjFjYHSssGU9hKjcSbYVyH7J9+VljKEhkF4yecn0TMvfslN/8zg4
+         TfeRUnEPDKmJ7mO7IK6wSHX1pwsRTOL4QUyAWQOS1mi6P1QhKSFOgblT5YFHp/n0mpJS
+         cT+w==
+X-Gm-Message-State: APjAAAUfjNt4QS8jUtEUWENZJQlMJg81a3b3mHrAZxnFeSRYCx1QvhyH
+        oU1o+eTrSW7xRSoLmeeloTDknCU=
+X-Google-Smtp-Source: APXvYqwW2Rhfv2aIAH2xrUFX3CT2pOl/jA3haakgGQC0mYloHqU/cAV20Ao2z2vhfN4cRxPrwiFV9g==
+X-Received: by 2002:aca:580a:: with SMTP id m10mr1383442oib.16.1556585638536;
+        Mon, 29 Apr 2019 17:53:58 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s2sm3284079otq.28.2019.04.29.17.53.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 17:53:57 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 19:53:57 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        amstan@chromium.org, linux-rockchip@lists.infradead.org,
+        linux-usb@vger.kernel.org, Randy Li <ayaka@soulik.info>,
+        mka@chromium.org, ryandcase@chromium.org, jwerner@chromium.org,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: usb: dwc2: Document quirk to reset
+ PHY upon wakeup
+Message-ID: <20190430005357.GA13695@bogus>
+References: <20190416215351.242246-1-dianders@chromium.org>
+ <20190416215351.242246-2-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416215351.242246-2-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lundi 29 avril 2019 à 22:32 +0200, Paul Kocialkowski a écrit :
-> > Adding Boris in CC. Boris, do you think that could possibly fit into
-> > your todo while working on the H264 accelerator on RK ? If needed I can
-> > generate test streams, there is couple of lines of code to remove / add
-> > in FFMPEG backend if you want to test this properly, though I'm not
-> > able to run this code atm (it requires a working DRM, and I'm having
-> > issues with my board in this regard).
+On Tue, Apr 16, 2019 at 02:53:48PM -0700, Douglas Anderson wrote:
+> On Rockchip rk3288 there's a hardware quirk where we need to assert
+> the reset signal to the PHY when we get a remote wakeup on one of the
+> two ports.  Document this quirk in the bindings.
 > 
-> Well, that seems like a task that requires in-depth knowledge about how
-> the v4l2 m2m core and the request API work and some familiary with
-> it. My feeling is that Boris is pretty new to all of this, so perhaps
-> it would be best for him to focus on the rockchip driver alone, which
-> is already a significant piece of work on its own.
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
 > 
-> It looks like Hans has proposed to come up with something soon, so
-> things are looking good for us. Once we have that, I think the next
-> area we need to look into is how we need to rework and refine the
-> controls. I think it would be good to define common guidelines for
-> adapting bitstream descriptions into controls with what the hardware
-> needs to know about precisely.
+> Changes in v2: None
 > 
-> In spite of that, I would be very interested in knowing what the
-> rockchip MPEG-2 and H.264 decoders expect precisely. I'm also
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index 6dc3c4a34483..f70f3aee4bfc 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -37,6 +37,8 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
+>  - g-rx-fifo-size: size of rx fifo size in gadget mode.
+>  - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+>  - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
+> +- snps,reset-phy-on-wake: If present indicates that we need to reset the PHY when
+> +                          we detect a wakeup.  This is due to a hardware errata.
 
-We are still working on that. For now, we believe that the list (and
-traces from real stream matches) are according to the standard
-"Initialization process" section 8.2.4.2. But they run both P and B
-initialization regardless of the type, hence the 3 lists. But the
-modification (section 8.4.2.3) are not applied. They also program the 3
-lists regardless of the current picture type. This is quite strange.
-Tomorrow I'll mark all b0/b1 value as invalid on P slice and the
-opposite for B slice to see if that still decodes fine. If that was the
-case, it would mean that the current list are complete, but not in the
-expected order.
+Synopsys or Rockchip errata?
 
-What I'm wondering is if it would be fine to add more information to
-the DPB entry so that we could simply implement 8.2.4.2 to re-create
-the pre-modification order. It's more doable then trying to reverse the
-modifications and would offer a better uAPI in exchange for a very
-small overhead.
+Ideally, this should be implied by the controller or phy compatible.
 
-> interested in learning about Tegra decoders and there are also docs
-> about the Hantro G1 (MPEG-2 to H.264) and Hantro G2 (H.265) which are
-> well documented in the i.MX8M docs. It's also used on some Atmel
-> platforms apparently. So feedback regarding the current controls that
-> Maxime and I came up with would be welcome.
-
+Rob
