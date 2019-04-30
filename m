@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D247C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4289C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CF921707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB772075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625454;
-	bh=kNLEkDNqDIPHFOrHu1Pv3oTZu0+9OW87EzZ8XsfrTgA=;
+	s=default; t=1556625460;
+	bh=qmySqOgGAWXl1qA4wBmbdzy9gaa7gjJVIfqEMiXeztg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wm4p2ndqQl/AkMpu+ooHXZ0wo5EO/DRhl1RI1/pj/x0azTtb0ip5KDVgL0czAmuC6
-	 x6ybC75P9i1EbyjSd1PHTq0Yjo3ZpVdp30DTSeAthhYesn1UKrU3KiWWsp2CBAUirv
-	 xIqFRBtK0EcQgDiXSb6NYBeU42bEfI5/93bcFg8s=
+	b=dqDh4Fh/zXyyNMuWh8H8rkmlnyfarju0qX4uOCUyMC5eLRPTui3tovmr2Lirx7xgm
+	 sXDXGxDUGWE7UXrYdUTbBbyuTRiBa24a9ucVpwAnTlPEH9HmCanywXnOW9ZO8TjU2o
+	 w9Rqmea9kE9nxZzAbZHj2O+cSzxN6I7VeirXdWCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbfD3Lr6 (ORCPT
+        id S1727704AbfD3L5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:47:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:57:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbfD3Lrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:53 -0400
+        id S1730759AbfD3Lrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C4A421670;
-        Tue, 30 Apr 2019 11:47:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA65D2054F;
+        Tue, 30 Apr 2019 11:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624873;
-        bh=kNLEkDNqDIPHFOrHu1Pv3oTZu0+9OW87EzZ8XsfrTgA=;
+        s=default; t=1556624870;
+        bh=qmySqOgGAWXl1qA4wBmbdzy9gaa7gjJVIfqEMiXeztg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=an/p+eJih/7XNA35kTHAUn2E4khQ9k/VKNSpUQLgtkT/e7PK2U6wF4YfpqvnfyOJD
-         9tTV997/0CfbQgJgkAP9zFVqpl3XoT0xuMUEdi9aBvMcK7eD39s1QNHJI6n5uOkGoK
-         zP2NsfyhXtCCYK2omjBIqoE6fvZZFeXWF0BWe/yA=
+        b=C4drx8EEJuAR6mxNPTVCDGci/OyicRBUF+10QRcnBHX8dJAPCEPeYh6uwhQzdjnMs
+         vhnyTkGzWf5YpWXAlqRomt7EQvt769eceWczvTBHpYZcBWm9X0tmk021XC+gFNfi4Y
+         M6DvMrtxra8AiNWo4+VmVrj1jyO4L8dx6vzJGkUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
+        stable@vger.kernel.org, Su Bao Cheng <baocheng.su@siemens.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 093/100] team: fix possible recursive locking when add slaves
-Date:   Tue, 30 Apr 2019 13:39:02 +0200
-Message-Id: <20190430113613.211637903@linuxfoundation.org>
+Subject: [PATCH 4.19 092/100] stmmac: pci: Adjust IOT2000 matching
+Date:   Tue, 30 Apr 2019 13:39:01 +0200
+Message-Id: <20190430113613.159496689@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -60,53 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Su Bao Cheng <baocheng.su@siemens.com>
 
-[ Upstream commit 925b0c841e066b488cc3a60272472b2c56300704 ]
+[ Upstream commit e0c1d14a1a3211dccf0540a6703ffbd5d2a75bdb ]
 
-If we add a bond device which is already the master of the team interface,
-we will hold the team->lock in team_add_slave() first and then request the
-lock in team_set_mac_address() again. The functions are called like:
+Since there are more IOT2040 variants with identical hardware but
+different asset tags, the asset tag matching should be adjusted to
+support them.
 
-- team_add_slave()
- - team_port_add()
-   - team_port_enter()
-     - team_modeop_port_enter()
-       - __set_port_dev_addr()
-         - dev_set_mac_address()
-           - bond_set_mac_address()
-             - dev_set_mac_address()
-  	       - team_set_mac_address
+For the board name "SIMATIC IOT2000", currently there are 2 types of
+hardware, IOT2020 and IOT2040. The IOT2020 is identified by its unique
+asset tag. Match on it first. If we then match on the board name only,
+we will catch all IOT2040 variants. In the future there will be no other
+devices with the "SIMATIC IOT2000" DMI board name but different
+hardware.
 
-Although team_upper_dev_link() would check the upper devices but it is
-called too late. Fix it by adding a checking before processing the slave.
-
-v2: Do not split the string in netdev_err()
-
-Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Su Bao Cheng <baocheng.su@siemens.com>
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/team/team.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -1160,6 +1160,13 @@ static int team_port_add(struct team *te
- 		return -EINVAL;
- 	}
- 
-+	if (netdev_has_upper_dev(dev, port_dev)) {
-+		NL_SET_ERR_MSG(extack, "Device is already an upper device of the team interface");
-+		netdev_err(dev, "Device %s is already an upper device of the team interface\n",
-+			   portname);
-+		return -EBUSY;
-+	}
-+
- 	if (port_dev->features & NETIF_F_VLAN_CHALLENGED &&
- 	    vlan_uses_dev(dev)) {
- 		NL_SET_ERR_MSG(extack, "Device is VLAN challenged and team device has VLAN set up");
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+@@ -159,6 +159,12 @@ static const struct dmi_system_id quark_
+ 		},
+ 		.driver_data = (void *)&galileo_stmmac_dmi_data,
+ 	},
++	/*
++	 * There are 2 types of SIMATIC IOT2000: IOT20202 and IOT2040.
++	 * The asset tag "6ES7647-0AA00-0YA2" is only for IOT2020 which
++	 * has only one pci network device while other asset tags are
++	 * for IOT2040 which has two.
++	 */
+ 	{
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
+@@ -170,8 +176,6 @@ static const struct dmi_system_id quark_
+ 	{
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
+-			DMI_EXACT_MATCH(DMI_BOARD_ASSET_TAG,
+-					"6ES7647-0AA00-1YA2"),
+ 		},
+ 		.driver_data = (void *)&iot2040_stmmac_dmi_data,
+ 	},
 
 
