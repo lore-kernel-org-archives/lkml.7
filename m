@@ -2,292 +2,148 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11D1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5A2C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899DB20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="HRw7WojW"
+	by mail.kernel.org (Postfix) with ESMTP id BE41B20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfD3TH6 (ORCPT
+        id S1727200AbfD3TJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:07:58 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:47066 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfD3TH6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:07:58 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d1so13218012edd.13
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 12:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=24AjdVeorZwTFjcHq4izaVEveVUnIHNKgUQspSKXzvI=;
-        b=HRw7WojWySMAv4b8YL4a2LOaFT9fYBpKx09Bebq1ppJnm0xY9XE2+fvoFmxFyLBgvs
-         cXSHmuyuCo1DZ1DSSgtKhJwb2Q0oHBHL6n5r7g/viMBsT5Ng3qU6CMH6HM5awf844U5J
-         VnpuwRI9NyLJ3XPIvuYY5j2H7WDDrlHypMZEanmISO7U9yeqMqkRKlI1+pEEEKL+0rMT
-         4myjp6ARtxZ8stXu85b+pDGo2//UBg32SB/qdvPGooFW1RoaBhMwU1Sc5tDnrObEgc/C
-         1bAHlqDViUiO0KIVHZHi1idryUSF0YDQI7GJs2wxolSlDcRX4h2ghqqxFKj7lTJbEuup
-         CCaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=24AjdVeorZwTFjcHq4izaVEveVUnIHNKgUQspSKXzvI=;
-        b=lygxWQYe2YCoHFwk4x5YBDYSy/vzBFC6GKSX0dg79gl2KjvIX9qMa2JIe5MNgf2Fbx
-         SU1hBuD3mrp9jhWP6cJ8yqYk4zE8/JGr+JNbWyf6HAAWktp13s+DWk34lrZyrosVRqNm
-         YeYCUgcsC0cNRI2P232PP0h45CWkUxv93CODl3+FKxt15RDxJLRTGr8KMIOosOoZCzAd
-         NK8yJeTcCWnTzNMOEyYJHiH+h7/y8Qd3QoDYd4ZGRC5DQKahz7BMxO+RSEWPjmG0DKtB
-         xllkm0BDUSdL00f0+QP9/7zcmaWeGV+S6pEelmVWSanGP9Jyale3EW+h3xbms4YJXgg2
-         MTMw==
-X-Gm-Message-State: APjAAAUryzjUZn1Chu3BlhZ+otkITn6KyeF/EF+2kZYXMnxtqRGBdWxX
-        eBNSahXQJmlw4ziYZArzBTu2xA==
-X-Google-Smtp-Source: APXvYqzXZ50xr285y4ircRfLpCQLCoyu7pRVhllBkfGMDPkxzy45F/LNQfiCBNuBHZ3qU7yK6jaV6g==
-X-Received: by 2002:a50:ba13:: with SMTP id g19mr4363528edc.236.1556651275646;
-        Tue, 30 Apr 2019 12:07:55 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id p12sm4953528ejr.18.2019.04.30.12.07.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Apr 2019 12:07:54 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 21:07:53 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, kernel-team@android.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        KJ Tsanaktsidis <ktsanaktsidis@zendesk.com>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH v2 1/2] Add polling support to pidfd
-Message-ID: <20190430190752.vwtq4kky6wdprm2d@brauner.io>
-References: <20190430162154.61314-1-joel@joelfernandes.org>
+        Tue, 30 Apr 2019 15:09:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56776 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfD3TJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 15:09:55 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D76A533027E;
+        Tue, 30 Apr 2019 19:09:54 +0000 (UTC)
+Received: from [10.36.112.20] (ovpn-112-20.ams2.redhat.com [10.36.112.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E262F4D5;
+        Tue, 30 Apr 2019 19:09:52 +0000 (UTC)
+Subject: Re: [PATCH v2] kvm_main: fix some comments
+To:     Jiang Biao <benbjiang@tencent.com>, rkrcmar@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com
+References: <20190423114030.75631-1-benbjiang@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <fe0b88fe-d716-48ff-70b4-d5640e4c4ffa@redhat.com>
+Date:   Tue, 30 Apr 2019 21:09:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190423114030.75631-1-benbjiang@tencent.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190430162154.61314-1-joel@joelfernandes.org>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 30 Apr 2019 19:09:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:21:53PM -0400, Joel Fernandes (Google) wrote:
-> Android low memory killer (LMK) needs to know when a process dies once
-> it is sent the kill signal. It does so by checking for the existence of
-> /proc/pid which is both racy and slow. For example, if a PID is reused
-> between when LMK sends a kill signal and checks for existence of the
-> PID, since the wrong PID is now possibly checked for existence.
+On 23/04/19 13:40, Jiang Biao wrote:
+> is_dirty has been renamed to flush, but the comment for it is
+> outdated. And the description about @flush parameter for
+> kvm_clear_dirty_log_protect() is missing, add it in this patch
+> as well.
 > 
-> This patch adds polling support to pidfd. Using the polling support, LMK
-> will be able to get notified when a process exists in race-free and fast
-> way, and allows the LMK to do other things (such as by polling on other
-> fds) while awaiting the process being killed to die.
-> 
-> For notification to polling processes, we follow the same existing
-> mechanism in the kernel used when the parent of the task group is to be
-> notified of a child's death (do_notify_parent).  This is precisely when
-> the tasks waiting on a poll of pidfd are also awakened in this patch.
-> 
-> We have decided to include the waitqueue in struct pid for the following
-> reasons:
-> 1. The wait queue has to survive for the lifetime of the poll. Including
-> it in task_struct would not be option in this case because the task can
-> be reaped and destroyed before the poll returns.
-> 
-> 2. By including the struct pid for the waitqueue means that during
-> de_thread(), the new thread group leader automatically gets the new
-> waitqueue/pid even though its task_struct is different.
-> 
-> Appropriate test cases are added in the second patch to provide coverage
-> of all the cases the patch is handling.
-> 
-> Andy had a similar patch [1] in the past which was a good reference
-> however this patch tries to handle different situations properly related
-> to thread group existence, and how/where it notifies. And also solves
-> other bugs (waitqueue lifetime).  Daniel had a similar patch [2]
-> recently which this patch supercedes.
-> 
-> [1] https://lore.kernel.org/patchwork/patch/345098/
-> [2] https://lore.kernel.org/lkml/20181029175322.189042-1-dancol@google.com/
-> 
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Daniel Colascione <dancol@google.com>
-> Cc: Christian Brauner <christian@brauner.io>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Tim Murray <timmurray@google.com>
-> Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: kernel-team@android.com
-> (Oleg improved the code by showing how to avoid tasklist_lock)
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> Co-developed-by: Daniel Colascione <dancol@google.com>
-> Signed-off-by: Daniel Colascione <dancol@google.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-This looks good to me. Once Oleg has given his Ack/Review I'm going to
-move this into pidfd for-next and as mentioned before schedule it for
-5.3 after CLONE_PIDFD has been merged.
-
-Reviewed-by: Christian Brauner <christian@brauner.io>
-
-> 
+> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
 > ---
+>  virt/kvm/kvm_main.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> v1 -> v2:
-> * Restructure poll code to avoid tasklist_lock (Oleg)
-> * use task_pid instead of get_pid_task in notify_pidfd (Oleg)
-> * Added comments to code, commit message nits (Christian)
-> * Test case nits/improvements (Christian)
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index dc8edc97ba85..6cf7e99e6003 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1134,11 +1134,11 @@ EXPORT_SYMBOL_GPL(kvm_get_dirty_log);
+>  
+>  #ifdef CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT
+>  /**
+> - * kvm_get_dirty_log_protect - get a snapshot of dirty pages, and if any pages
+> + * kvm_get_dirty_log_protect - get a snapshot of dirty pages
+>   *	and reenable dirty page tracking for the corresponding pages.
+>   * @kvm:	pointer to kvm instance
+>   * @log:	slot id and address to which we copy the log
+> - * @is_dirty:	flag set if any page is dirty
+> + * @flush:	true if TLB flush is needed by caller
+>   *
+>   * We need to keep it in mind that VCPU threads can write to the bitmap
+>   * concurrently. So, to avoid losing track of dirty pages we keep the
+> @@ -1223,6 +1223,7 @@ EXPORT_SYMBOL_GPL(kvm_get_dirty_log_protect);
+>   *	and reenable dirty page tracking for the corresponding pages.
+>   * @kvm:	pointer to kvm instance
+>   * @log:	slot id and address from which to fetch the bitmap of dirty pages
+> + * @flush:	true if TLB flush is needed by caller
+>   */
+>  int kvm_clear_dirty_log_protect(struct kvm *kvm,
+>  				struct kvm_clear_dirty_log *log, bool *flush)
 > 
-> RFC -> v1:
-> * Based on CLONE_PIDFD patches: https://lwn.net/Articles/786244/
-> * Updated selftests.
-> * Renamed poll wake function to do_notify_pidfd.
-> * Removed depending on EXIT flags
-> * Removed POLLERR flag since semantics are controversial and
->   we don't have usecases for it right now (later we can add if there's
->   a need for it).
-> 
->  include/linux/pid.h |  3 +++
->  kernel/fork.c       | 29 +++++++++++++++++++++++++++++
->  kernel/pid.c        |  2 ++
->  kernel/signal.c     | 11 +++++++++++
->  4 files changed, 45 insertions(+)
-> 
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 3c8ef5a199ca..1484db6ca8d1 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -3,6 +3,7 @@
->  #define _LINUX_PID_H
->  
->  #include <linux/rculist.h>
-> +#include <linux/wait.h>
->  
->  enum pid_type
->  {
-> @@ -60,6 +61,8 @@ struct pid
->  	unsigned int level;
->  	/* lists of tasks that use this pid */
->  	struct hlist_head tasks[PIDTYPE_MAX];
-> +	/* wait queue for pidfd notifications */
-> +	wait_queue_head_t wait_pidfd;
->  	struct rcu_head rcu;
->  	struct upid numbers[1];
->  };
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 5525837ed80e..721f8c9d2921 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1685,8 +1685,37 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
->  }
->  #endif
->  
-> +/*
-> + * Poll support for process exit notification.
-> + */
-> +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
-> +{
-> +	struct task_struct *task;
-> +	struct pid *pid = file->private_data;
-> +	int poll_flags = 0;
-> +
-> +	poll_wait(file, &pid->wait_pidfd, pts);
-> +
-> +	rcu_read_lock();
-> +	task = pid_task(pid, PIDTYPE_PID);
-> +	WARN_ON_ONCE(task && !thread_group_leader(task));
-> +
-> +	/*
-> +	 * Inform pollers only when the whole thread group exits, if thread
-> +	 * group leader exits before all other threads in the group, then
-> +	 * poll(2) should block, similar to the wait(2) family.
-> +	 */
-> +	if (!task || (task->exit_state && thread_group_empty(task)))
-> +		poll_flags = POLLIN | POLLRDNORM;
-> +	rcu_read_unlock();
-> +
-> +	return poll_flags;
-> +}
-> +
-> +
->  const struct file_operations pidfd_fops = {
->  	.release = pidfd_release,
-> +	.poll = pidfd_poll,
->  #ifdef CONFIG_PROC_FS
->  	.show_fdinfo = pidfd_show_fdinfo,
->  #endif
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 20881598bdfa..5c90c239242f 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -214,6 +214,8 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  	for (type = 0; type < PIDTYPE_MAX; ++type)
->  		INIT_HLIST_HEAD(&pid->tasks[type]);
->  
-> +	init_waitqueue_head(&pid->wait_pidfd);
-> +
->  	upid = pid->numbers + ns->level;
->  	spin_lock_irq(&pidmap_lock);
->  	if (!(ns->pid_allocated & PIDNS_ADDING))
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 1581140f2d99..a17fff073c3d 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1800,6 +1800,14 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
->  	return ret;
->  }
->  
-> +static void do_notify_pidfd(struct task_struct *task)
-> +{
-> +	struct pid *pid;
-> +
-> +	pid = task_pid(task);
-> +	wake_up_all(&pid->wait_pidfd);
-> +}
-> +
->  /*
->   * Let a parent know about the death of a child.
->   * For a stopped/continued status change, use do_notify_parent_cldstop instead.
-> @@ -1823,6 +1831,9 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
->  	BUG_ON(!tsk->ptrace &&
->  	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
->  
-> +	/* Wake up all pidfd waiters */
-> +	do_notify_pidfd(tsk);
-> +
->  	if (sig != SIGCHLD) {
->  		/*
->  		 * This is only possible if parent == real_parent.
-> -- 
-> 2.21.0.593.g511ec345e18-goog
+
+Queued, thanks.
+
+Paolo
