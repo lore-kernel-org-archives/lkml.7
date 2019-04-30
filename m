@@ -2,84 +2,82 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D962DC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4074DC04AA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A653421707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1207920652
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfD3PAR (ORCPT
+        id S1726197AbfD3PB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:00:17 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:35622 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726069AbfD3PAO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:00:14 -0400
-Received: (qmail 3262 invoked by uid 2102); 30 Apr 2019 11:00:13 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 30 Apr 2019 11:00:13 -0400
-Date:   Tue, 30 Apr 2019 11:00:13 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: Support for this device (Terratec Grabster AV400) is
- experimental.
-In-Reply-To: <0000000000004101370587c052fb@google.com>
-Message-ID: <Pine.LNX.4.44L0.1904301058150.1465-100000@iolanthe.rowland.org>
+        Tue, 30 Apr 2019 11:01:56 -0400
+Received: from foss.arm.com ([217.140.101.70]:48710 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfD3PBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:01:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68A1D374;
+        Tue, 30 Apr 2019 08:01:55 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D236B3F719;
+        Tue, 30 Apr 2019 08:01:53 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 16:01:48 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: iproc: Enable iProc config read for PAXBv2
+Message-ID: <20190430150148.GA6616@e121166-lin.cambridge.arm.com>
+References: <1556270404-27058-1-git-send-email-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556270404-27058-1-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019, syzbot wrote:
-
-> Hello,
+On Fri, Apr 26, 2019 at 02:50:04PM +0530, Srinath Mannam wrote:
+> iProc config read flag has to enable for PAXBv2 instead of PAXB.
 > 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=141ca62d200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> dashboard link: https://syzkaller.appspot.com/bug?extid=af8f8d2ac0d39b0ed3a0
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1405bedd200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ce3bbb200000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
-> 
-> usb 1-1: New USB device found, idVendor=0ccd, idProduct=0039, bcdDevice=  
-> d.3c
-> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> usb 1-1: config 0 descriptor??
-> pvrusb2: Hardware description: Terratec Grabster AV400
-> pvrusb2: **********
-> pvrusb2: WARNING: Support for this device (Terratec Grabster AV400) is  
-> experimental.
-> pvrusb2: Important functionality might not be entirely working.
-> pvrusb2: Please consider contacting the driver author to help with further  
-> stabilization of the driver.
-> pvrusb2: **********
-> 
-> 
+> Fixes: f78e60a29d4ff ("PCI: iproc: Reject unconfigured physical functions from PAXC")
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>  drivers/pci/controller/pcie-iproc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-This does seem like a bug in syzbot.  Why does it think this pr_info() 
-output indicates a crash?  Is it fooled by the capitalized "WARNING" at 
-the start of one of the lines?
+Applied to pci/iproc, thank you.
 
-Alan Stern
+Lorenzo
 
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index c20fd6b..9d5cbc7 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -1347,7 +1347,6 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
+>  		break;
+>  	case IPROC_PCIE_PAXB:
+>  		regs = iproc_pcie_reg_paxb;
+> -		pcie->iproc_cfg_read = true;
+>  		pcie->has_apb_err_disable = true;
+>  		if (pcie->need_ob_cfg) {
+>  			pcie->ob_map = paxb_ob_map;
+> @@ -1356,6 +1355,7 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
+>  		break;
+>  	case IPROC_PCIE_PAXB_V2:
+>  		regs = iproc_pcie_reg_paxb_v2;
+> +		pcie->iproc_cfg_read = true;
+>  		pcie->has_apb_err_disable = true;
+>  		if (pcie->need_ob_cfg) {
+>  			pcie->ob_map = paxb_v2_ob_map;
+> -- 
+> 2.7.4
+> 
