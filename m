@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB25C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD9EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBF62075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6CA2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 13:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wJdQ1UGK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DQlymDAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfD3N1J (ORCPT
+        id S1728522AbfD3N1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 09:27:09 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:36496 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728319AbfD3NZq (ORCPT
+        Tue, 30 Apr 2019 09:27:06 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:57283 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbfD3NZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:25:46 -0400
-Received: by mail-qk1-f201.google.com with SMTP id a12so11848105qkb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:25:45 -0700 (PDT)
+        Tue, 30 Apr 2019 09:25:49 -0400
+Received: by mail-qt1-f202.google.com with SMTP id j20so13300023qta.23
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 06:25:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=XhTfun6kQ0RRzRGxeYV1Lxl9M9fvGqRUvmzO5QW1/Iw=;
-        b=wJdQ1UGK5yN+4uNr4h/B5QAZg4CL5PwyVx/Pw0wXlRL/1oGZsU8xxjXpZhWnko4SRI
-         fd58gicIFCILzVPy4t7gpYBYkZYkBR3FmblDk49rQtqjc+3RWgZP2PESfhPKYuSabBw/
-         B0hXw+/teu1vbGfMkq/9KC8ilccnVzEvxDboYdIBbHp/DJQFCI0D5tDe+o/VISE54DyV
-         St7L+ZfiWURBvKb49SaxC44tIWiHtqDmkV/TM32oplri8v6dnEdHN+6rXyhwe32Swezt
-         x0OHZZDCsWZFgoiC74TFCi6OtAop9i/h8/+cUKSH3r+foqub7XosNX+XNvDEf+4uDkZz
-         /4Vg==
+        bh=pQaENO1QgY/e9MwQ0ENVfJipTlkpkaPmrD1twTVYLJ0=;
+        b=DQlymDAakXGN/s4aLv8FvnKDxFM3vFWe0ntwkbEht00uRZJyqzxLv2z+v+0YWcHIgB
+         sKEjfbgI8NGPishfLFVkzFtit1j8To4k9tOzAqlClb7eaOmN2puCzEFRoWDOow3x6abM
+         kF5rtq7WeiaNC1bvr93O8cSv4wiLQYr7p1i1gibkW3E+uyrFOpeeQawgxMfeq7+k8NA+
+         lhqPJjcIYupZYzc0GZblGzb4ejeI2t/6j/U8CyZxFUtArO4WewVdwtuEJHeP7D/0QDFm
+         3J0WxXCQ6Yi/AJW67UTm3sBwIOkc0wcf7BPZUgJdkZ1LyiC4qY/JaOc6zgNq+gGsc78b
+         WDtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=XhTfun6kQ0RRzRGxeYV1Lxl9M9fvGqRUvmzO5QW1/Iw=;
-        b=sy9QUkLRnrpK3fFn2mz7fmXz3MHgg0coxxhg7+D3RuZkS9sLCDE0XCilnhRWmh9nQK
-         3NJl6HVj+CMkSoW1KMNCGX1I8sTWE0x/RQnrGtPWdr0Xoz0o0El+/cOY9U7vRQbDP415
-         yHgru9B5SrQ9qTQ5GoxXcwDGrFiMD73cks0qFwptlylsDAVJUVRHXPZZj0clkz1pZJWU
-         KLr4yBIusiLa8lQRP+ZSl+GK5C+dGfX253U0XVUAxk0VOYvdnXANiGgY+wThhocyPlzO
-         dMeTfgQv8sIHclZUMJUWEa4nZnoDZbWA8Jykafty1CDF4ysk8x9A7OT4ZtZDH2+b2mqI
-         b13Q==
-X-Gm-Message-State: APjAAAWCGoWluAVzXZ+IjOrrLDSG8/WiIH0bNXsEyw3typWcTNYe9MRG
-        +NvAR0IB3L1w+cczxx8sQvf6CF7XJz9Omett
-X-Google-Smtp-Source: APXvYqznoxmsWRf0TRsMetoUzYzE4dAnT0nzUuom4UB8P1UAcmj3+/tm6hiTUWLYkHc/SM6nPM/1vvtkZ4BWAaOU
-X-Received: by 2002:a37:b683:: with SMTP id g125mr147309qkf.249.1556630745179;
- Tue, 30 Apr 2019 06:25:45 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 15:25:05 +0200
+        bh=pQaENO1QgY/e9MwQ0ENVfJipTlkpkaPmrD1twTVYLJ0=;
+        b=tCOrscTpOEFdE8tepafaHT/HpcvkJvxGIrhSVh+xw0zQxN9NILKeLozpfP2m+/JPIT
+         F6BdLfb4tvcS4SUk5PpggMCi3HUpOJDyBYt3xbYrC/WAOp3TIN/TMuvvavge9aYoDZev
+         5VZTeiisXY6D+wv8KBUeeRNuDjNqKkoAiCHCLYFbwlsfLpVxileblGf89TtSfOE4rc06
+         sZBKiu7tESXJ7llp9LCJgd9EHbdGgCzl2w/EQZlY0tmYjbYBGj2zK2VkI+wb+e7Uydgd
+         K5n0Ggi2mk98GVS8N6skyyPyhIs4cKttgu0Hos3K4x2ah/D5bVlegtA/v+2pS7aEwSO1
+         6aWA==
+X-Gm-Message-State: APjAAAVtTDTI+Zk0FWHMKBuTeXDWeAfgvsvdm+tKy5yid2a+1f5ADM//
+        MWfdyKE74jwiNU3A5uwYTVthhScL/9WXlGfE
+X-Google-Smtp-Source: APXvYqzXVakUsCoJZt28GHuUY2fVSxrYrmmdkh7uTay5rLBg9HnfxGjKEfUnDj0v5eIkWQX2umWuPHIlib2dmYL6
+X-Received: by 2002:aed:2a0c:: with SMTP id c12mr9957100qtd.232.1556630748252;
+ Tue, 30 Apr 2019 06:25:48 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 15:25:06 +0200
 In-Reply-To: <cover.1556630205.git.andreyknvl@google.com>
-Message-Id: <f7a89f69f95e471f161e4000d0e13f57364bc90d.1556630205.git.andreyknvl@google.com>
+Message-Id: <7d3b28689d47c0fa1b80628f248dbf78548da25f.1556630205.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1556630205.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH v14 09/17] fs, arm64: untag user pointers in copy_mount_options
+Subject: [PATCH v14 10/17] fs, arm64: untag user pointers in fs/userfaultfd.c
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -104,32 +104,39 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-In copy_mount_options a user address is being subtracted from TASK_SIZE.
-If the address is lower than TASK_SIZE, the size is calculated to not
-allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
-However if the address is tagged, then the size will be calculated
-incorrectly.
+userfaultfd_register() and userfaultfd_unregister() use provided user
+pointers for vma lookups, which can only by done with untagged pointers.
 
-Untag the address before subtracting.
+Untag user pointers in these functions.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- fs/namespace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/userfaultfd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index c9cab307fa77..c27e5713bf04 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2825,7 +2825,7 @@ void *copy_mount_options(const void __user * data)
- 	 * the remainder of the page.
- 	 */
- 	/* copy_from_user cannot cross TASK_SIZE ! */
--	size = TASK_SIZE - (unsigned long)data;
-+	size = TASK_SIZE - (unsigned long)untagged_addr(data);
- 	if (size > PAGE_SIZE)
- 		size = PAGE_SIZE;
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index f5de1e726356..fdee0db0e847 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -1325,6 +1325,9 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+ 		goto out;
+ 	}
  
++	uffdio_register.range.start =
++		untagged_addr(uffdio_register.range.start);
++
+ 	ret = validate_range(mm, uffdio_register.range.start,
+ 			     uffdio_register.range.len);
+ 	if (ret)
+@@ -1514,6 +1517,8 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+ 	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
+ 		goto out;
+ 
++	uffdio_unregister.start = untagged_addr(uffdio_unregister.start);
++
+ 	ret = validate_range(mm, uffdio_unregister.start,
+ 			     uffdio_unregister.len);
+ 	if (ret)
 -- 
 2.21.0.593.g511ec345e18-goog
 
