@@ -3,89 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBDEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D019C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFB320675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C3F20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfD3L2G (ORCPT
+        id S1727936AbfD3L2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:28:06 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:7899 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726202AbfD3L2F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:28:05 -0400
-X-UUID: e03d9aa27c904b4fbb8476405ca204f3-20190430
-X-UUID: e03d9aa27c904b4fbb8476405ca204f3-20190430
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1463058352; Tue, 30 Apr 2019 19:27:59 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 30 Apr 2019 19:27:58 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 30 Apr 2019 19:27:58 +0800
-Message-ID: <1556623678.4496.1.camel@mtkswgap22>
-Subject: Re: [PATCH v2] mt76: mt7615: add TX/RX antenna pattern capabilities
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Felix Fietkau <nbd@nbd.name>
-CC:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Tue, 30 Apr 2019 19:27:58 +0800
-In-Reply-To: <c3f6e202-8c2f-a103-a104-e0d1cde8147b@nbd.name>
-References: <4f7160cb9f52335ce15fccac087fec25e7650884.1556255852.git.ryder.lee@mediatek.com>
-         <c3f6e202-8c2f-a103-a104-e0d1cde8147b@nbd.name>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 30 Apr 2019 07:28:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54337 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbfD3L2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:28:24 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7454A2D7F5;
+        Tue, 30 Apr 2019 11:28:24 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 101506F547;
+        Tue, 30 Apr 2019 11:28:23 +0000 (UTC)
+Subject: Re: [PATCH] kernel/module: Reschedule while waiting for modules to
+ finish loading
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+References: <20190429151751.15424-1-prarit@redhat.com>
+ <20190430075108.GA21092@linux-8ccs>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <49a246d0-3751-7d13-d7fd-01eac446b922@redhat.com>
+Date:   Tue, 30 Apr 2019 07:28:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <20190430075108.GA21092@linux-8ccs>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 30 Apr 2019 11:28:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-04-30 at 11:24 +0200, Felix Fietkau wrote:
-> On 2019-04-26 07:23, Ryder Lee wrote:
-> > Announce antenna pattern cap to adapt PHY and baseband settings.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> > Changes since v2:
-> > - Add a prefix mt76 in the title.
-> > ---
-> >  drivers/net/wireless/mediatek/mt76/mt7615/init.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-> > index 3ab3ff553ef2..122f7a565540 100644
-> > --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-> > +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-> > @@ -190,6 +190,8 @@ int mt7615_register_device(struct mt7615_dev *dev)
-> >  			IEEE80211_VHT_CAP_SHORT_GI_160 |
-> >  			IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_11454 |
-> >  			IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK |
-> > +			IEEE80211_VHT_CAP_RX_ANTENNA_PATTERN |
-> > +			IEEE80211_VHT_CAP_TX_ANTENNA_PATTERN |
-> If I read the standard correctly, these flags indicate that the rx/tx
-> antenna pattern does NOT change during association.
-> Doesn't that mean that we should set it in mac80211.c instead, so that
-> it also applies to MT76x2?
+
+
+On 4/30/19 3:51 AM, Jessica Yu wrote:
+> +++ Prarit Bhargava [29/04/19 11:17 -0400]:
+>> Heiko, do you want a Signed-off-by or a Reported-by?  Either one works
+>> for me.
+>>
+>> P.
 > 
-Right. I will add these flags in common code.
+> I think you forgot to CC Heiko :)
 
-Ryder
+#oops.
 
+I forgot that git-send-email doesn't pick up "Reported-by".
 
+P.
+
+> 
+>> ----8<----
+>>
+>> On a s390 z14 LAR with 2 cpus about stalls about 3% of the time while
+>> loading the s390_trng.ko module.
+>>
+>> Add a reschedule point to the loop that waits for modules to complete
+>> loading.
+>>
+>> Reported-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+>> Fixes: linux-next commit f9a75c1d717f ("modules: Only return -EEXIST for
+>> modules that have finished loading")
+>> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>> Cc: Jessica Yu <jeyu@kernel.org>
+>> ---
+>> kernel/module.c | 1 +
+>> 1 file changed, 1 insertion(+)
+>>
+>> diff --git a/kernel/module.c b/kernel/module.c
+>> index 410eeb7e4f1d..48748cfec991 100644
+>> --- a/kernel/module.c
+>> +++ b/kernel/module.c
+>> @@ -3585,6 +3585,7 @@ static int add_unformed_module(struct module *mod)
+>>                            finished_loading(mod->name));
+>>             if (err)
+>>                 goto out_unlocked;
+>> +            cond_resched();
+>>             goto again;
+>>         }
+>>         err = -EEXIST;
+>> -- 
+>> 2.18.1
+>>
