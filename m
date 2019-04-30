@@ -2,107 +2,101 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC0FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD77C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98632075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC2620835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:37:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="srrwKdo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbfD3Ffa (ORCPT
+        id S1726155AbfD3FhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 01:35:30 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:47030 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbfD3Ff3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 01:35:29 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 8CC0620257;
-        Tue, 30 Apr 2019 07:35:27 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id u-yucW2QBsC7; Tue, 30 Apr 2019 07:35:27 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 07EB7201E1;
-        Tue, 30 Apr 2019 07:35:27 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Apr 2019
- 07:35:26 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 8A2DD3180584;
- Tue, 30 Apr 2019 07:35:26 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 07:35:26 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: Re: [PATCH] vti4: Fix error path in vti_init and vti_fini
-Message-ID: <20190430053526.GG17989@gauss3.secunet.de>
-References: <20190430033630.27240-1-yuehaibing@huawei.com>
+        Tue, 30 Apr 2019 01:37:12 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42928 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfD3FhL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 01:37:11 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so7260005oig.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 22:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MJvFcVfqwgzIS1NBj3zREVCrtd868vw/Fv4Z5EAQunA=;
+        b=srrwKdo+8+Nl0Xj4jaF3DS5rdaY0nf2MjiA+86H3DvfVKYkeQzY/nVWWf5iUK7h1c1
+         inxR0Dmfk3NvKggZ6AWmXRkfDqtTe0D+SQo5Fs8rGj3CYHkyV3FU/3Wm2h1oY2K2Zv3B
+         KM2ilmDA/7l47VZamM+Huh8qUVy9cwwV8GKlymi2JEu3/ScTdjEqccs9a83Lxf+yeGvN
+         5GeQW656+mtkEMSrG84JmCfdX2t9i8hozKcbzmUp1TrGA7txCt6RudN7eXd4IXvEzUzQ
+         zDXOajM02kKVNw/gBGUxRdMrsm6l1WK2RBd2Lg0CvHlCy9L0fc2X4SoN+tZ0dE/S5bRU
+         gNsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MJvFcVfqwgzIS1NBj3zREVCrtd868vw/Fv4Z5EAQunA=;
+        b=DtNxs4wMMCGgb2l90zUCwtoT2MzAEYSB/P/Tq1f9cOCYg7SbpIzfxr1g37UD4fqTo0
+         0lHaZCckfpAp7aS3GiqVl1v1xGBTdVRS3US+pvfplAjtDyp0AyeYwaLsQukmvjfTCDC2
+         tlSmqZsvBy/8VmIsunnRQR29cNXoezVaA14B1Ke+jAYvJdhoSii4mv4YOousiuTnPfb/
+         IKQoeG7HT8u9dvx1dre8TknXKlLHZLEo6xxzW8ElwjWtsHonaCpkqzsfzzvwIjTCRVS/
+         X6KeBPvABqMuJNOAUAvuX85zlcgLpaijWNz+ns8V+mXYAJodu487GBaFBnjhux8U25cK
+         3tnw==
+X-Gm-Message-State: APjAAAVEeIcxUKB7YefF5m94g9I6Dsn56ZN9mRgLshgKRpNFdL7g1cjG
+        s+FgJMAIpB1x7A1eN7JyzPnVRKDkHdV5FX04ukt70Q==
+X-Google-Smtp-Source: APXvYqxV85nlYUiFaiqVW4I+2fGjsKRIMiGplegwOmEzvP7k+idaz1rr7N/BVvcysL3xxh6fOdtJZ1eFuGeHcJ1kku8=
+X-Received: by 2002:aca:ad82:: with SMTP id w124mr1927437oie.33.1556602631029;
+ Mon, 29 Apr 2019 22:37:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190430033630.27240-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-G-Data-MailSecurity-for-Exchange-State: 0
-X-G-Data-MailSecurity-for-Exchange-Error: 0
-X-G-Data-MailSecurity-for-Exchange-Sender: 23
-X-G-Data-MailSecurity-for-Exchange-Server: d65e63f7-5c15-413f-8f63-c0d707471c93
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-X-G-Data-MailSecurity-for-Exchange-Guid: 01763916-A510-404D-987A-D154CA99A683
-X-G-Data-MailSecurity-for-Exchange-ProcessedOnRouted: True
+References: <cover.1555330115.git.baolin.wang@linaro.org> <07c070b4397296a4500d04abe16dfd8a71a2f211.1555330115.git.baolin.wang@linaro.org>
+ <20190429120108.GL3845@vkoul-mobl.Dlink> <CAMz4kuJB2+6HziyDep4ctfmjFYpmZ-v_vrFQsJ9tHvwYzSJeKA@mail.gmail.com>
+ <20190429141009.GO3845@vkoul-mobl.Dlink>
+In-Reply-To: <20190429141009.GO3845@vkoul-mobl.Dlink>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 30 Apr 2019 13:37:00 +0800
+Message-ID: <CAMz4kuJ6EUbaHKCnQeYrJB+TjgaZGt=590C89t6i26meMdGsKA@mail.gmail.com>
+Subject: Re: [PATCH 7/7] dmaengine: sprd: Add interrupt support for 2-stage transfer
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:36:30AM +0800, YueHaibing wrote:
-> KASAN report this:
-> 
-> BUG: unable to handle kernel paging request at fffffbfff8280cc7
-> PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1ebfd0067 PTE 0
-> Oops: 0000 [#1] SMP KASAN PTI
-> CPU: 0 PID: 8156 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> RIP: 0010:xfrm4_tunnel_register+0xb3/0x1f0 [tunnel4]
-> Code: e8 03 42 80 3c 28 00 0f 85 25 01 00 00 48 8b 5d 00 48 85 db 0f 84 a8 00 00 00 e8 08 cd b3 f3 48 8d 7b 18 48 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 74 08 3c 03 0f 8e 04 01 00 00 44 8b 63 18 45
-> RSP: 0018:ffff8881b65bf9a0 EFLAGS: 00010a02
-> RAX: 1ffffffff8280cc7 RBX: ffffffffc1406620 RCX: ffffffff8d8880a8
-> RDX: 0000000000031712 RSI: ffffc900014bf000 RDI: ffffffffc1406638
-> RBP: ffffffffc108a4a0 R08: fffffbfff8211401 R09: fffffbfff8211401
-> R10: ffff8881b65bf9a0 R11: fffffbfff8211400 R12: ffffffffc1c08000
-> R13: dffffc0000000000 R14: 0000000000000000 R15: ffffffffc1bfe620
-> FS:  00007f5f07be3700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: fffffbfff8280cc7 CR3: 00000001e8d00004 CR4: 00000000007606f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  ? 0xffffffffc1c08000
->  vti_init+0x9d/0x1000 [ip_vti]
->  do_one_initcall+0xbc/0x47d init/main.c:901
->  do_init_module+0x1b5/0x547 kernel/module.c:3456
->  load_module+0x6405/0x8c10 kernel/module.c:3804
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
->  do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> commit dd9ee3444014 ("vti4: Fix a ipip packet processing bug
-> in 'IPCOMP' virtual tunnel") misplace xfrm4_tunnel_deregister in
-> vti_init and forgot to add cleanup in vti_fini.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: dd9ee3444014 ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Mon, 29 Apr 2019 at 22:10, Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 29-04-19, 20:11, Baolin Wang wrote:
+> > On Mon, 29 Apr 2019 at 20:01, Vinod Koul <vkoul@kernel.org> wrote:
+> > > On 15-04-19, 20:15, Baolin Wang wrote:
+>
+> > > > @@ -429,6 +433,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+> > > >               val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+> > > >               val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+> > > >               val |= SPRD_DMA_GLB_2STAGE_EN;
+> > > > +             if (schan->int_type != SPRD_DMA_NO_INT)
+> > >
+> > > Who configure int_type?
+> >
+> > The int_type is configured through the flags of
+> > sprd_dma_prep_slave_sg() by users, see:
+> > https://elixir.bootlin.com/linux/v5.1-rc6/source/include/linux/dma/sprd-dma.h#L9
+>
+> Please use DMA_PREP_INTERRUPT flag instead!
 
-This is already fixed in the ipsec tree by commit
-5483844c3fc1 ("vti4: ipip tunnel deregistration fixes.")
+We can not use DMA_PREP_INTERRUPT flag, since we have some Spreadtrum
+specific DMA interrupt flags configured by users, which I think we
+have made a consensus before. See:
+https://elixir.bootlin.com/linux/v5.1-rc6/source/include/linux/dma/sprd-dma.h#L105
 
-Thanks anyway!
+-- 
+Baolin Wang
+Best Regards
