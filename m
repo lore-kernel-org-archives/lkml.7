@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46314C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B2EC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1324921670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910F521670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625717;
-	bh=D7D3c28XvtlbFYGdMlPJRUn+QRGD4GJ2ROKUMmbZv5o=;
+	s=default; t=1556625719;
+	bh=TsZdpmCy1pcPB5gfC6C686aDfKiW4WLiHwcWOX4x58w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LixcyCnMgUjfyCfIdtlyg5yVU/+deCDaanHHuR4QyVupQcsu6+QblXvJ5K1oGJ1vN
-	 kslMp2btg+7UnKtCzdpnHHDdlnD+oujvUFnmATHM21Y10lhyq+nPYcRMYOOv7ePll3
-	 apb5aaClxDvejfkV/sJGBkZ8FBp1Ag1jusaupiV4=
+	b=VXHUC7odc6ZJS1MK2UZV/nF9qEoDiCPNbGTANYcVZV1YyqUhlpeMZ+CFBSLwaRkkH
+	 mY5cSmcCTJ9G5MBy1Alx6gZAFmL5cyaftGLGX3K21K6yj6isGkTQ0OAfxqwvVGvO1o
+	 F/lmrl7cVuWGhWBl+ngN5/nmcKHOOGsdidjnzeFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbfD3Lof (ORCPT
+        id S1728898AbfD3Loc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:44:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728710AbfD3Loc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Apr 2019 07:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728632AbfD3Lo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7444221783;
-        Tue, 30 Apr 2019 11:44:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAE962177B;
+        Tue, 30 Apr 2019 11:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624672;
-        bh=D7D3c28XvtlbFYGdMlPJRUn+QRGD4GJ2ROKUMmbZv5o=;
+        s=default; t=1556624669;
+        bh=TsZdpmCy1pcPB5gfC6C686aDfKiW4WLiHwcWOX4x58w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JuA9n5k2bnlfAtInz4Ab9oqdKJaTOsAQ9uLIwT63iia6TPHskEw2q8Ht3Qx9KULnk
-         rvbVGTENqTc5f5mPF9UFovkIOxgf3OEKvfv94yM0p80n00xe9fKbSNyMIflnNOGbPN
-         Og2i3fFcX1X51ITa4FeQkXh0NHLh9D2nvIeXKppM=
+        b=LOU+UOJp2HDKLNV0Sx/U5bhyNo4HEugxWPguMk4vTPz/S4Hv+4IXSlwvigs6MIfdo
+         BxL+kqdCUu1nr+/zC9Hd5BHhN9gkx/sz1QMAYD1mckgnDQUMt2s6/LGg18sZuiw3qk
+         30PlA7Q5zp7m/9zVbTonEukynIccN1DJMinc7BJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 028/100] zram: pass down the bvec we need to read into in the work struct
-Date:   Tue, 30 Apr 2019 13:37:57 +0200
-Message-Id: <20190430113610.177266356@linuxfoundation.org>
+        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.19 027/100] gpio: eic: sprd: Fix incorrect irq type setting for the sync EIC
+Date:   Tue, 30 Apr 2019 13:37:56 +0200
+Message-Id: <20190430113610.145108698@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -64,64 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-commit e153abc0739ff77bd89c9ba1688cdb963464af97 upstream.
+commit 102bbe34b31c9159e714432afd64458f6f3876d7 upstream.
 
-When scheduling work item to read page we need to pass down the proper
-bvec struct which points to the page to read into.  Before this patch it
-uses a randomly initialized bvec (only if PAGE_SIZE != 4096) which is
-wrong.
+When setting sync EIC as IRQ_TYPE_EDGE_BOTH type, we missed to set the
+SPRD_EIC_SYNC_INTMODE register to 0, which means detecting edge signals.
 
-Note that without this patch on arch/kernel where PAGE_SIZE != 4096
-userspace could read random memory through a zram block device (thought
-userspace probably would have no control on the address being read).
+Thus this patch fixes the issue.
 
-Link: http://lkml.kernel.org/r/20190408183219.26377-1-jglisse@redhat.com
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
-Cc: Nitin Gupta <ngupta@vflare.org>
+Fixes: 25518e024e3a ("gpio: Add Spreadtrum EIC driver support")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/zram/zram_drv.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-eic-sprd.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -515,18 +515,18 @@ struct zram_work {
- 	struct zram *zram;
- 	unsigned long entry;
- 	struct bio *bio;
-+	struct bio_vec bvec;
- };
- 
- #if PAGE_SIZE != 4096
- static void zram_sync_read(struct work_struct *work)
- {
--	struct bio_vec bvec;
- 	struct zram_work *zw = container_of(work, struct zram_work, work);
- 	struct zram *zram = zw->zram;
- 	unsigned long entry = zw->entry;
- 	struct bio *bio = zw->bio;
- 
--	read_from_bdev_async(zram, &bvec, entry, bio);
-+	read_from_bdev_async(zram, &zw->bvec, entry, bio);
- }
- 
- /*
-@@ -539,6 +539,7 @@ static int read_from_bdev_sync(struct zr
- {
- 	struct zram_work work;
- 
-+	work.bvec = *bvec;
- 	work.zram = zram;
- 	work.entry = entry;
- 	work.bio = bio;
+--- a/drivers/gpio/gpio-eic-sprd.c
++++ b/drivers/gpio/gpio-eic-sprd.c
+@@ -414,6 +414,7 @@ static int sprd_eic_irq_set_type(struct
+ 			irq_set_handler_locked(data, handle_edge_irq);
+ 			break;
+ 		case IRQ_TYPE_EDGE_BOTH:
++			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 1);
+ 			irq_set_handler_locked(data, handle_edge_irq);
+ 			break;
 
 
