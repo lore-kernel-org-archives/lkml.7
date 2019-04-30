@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC5FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3FDC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D49821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF1220449
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624615;
-	bh=o3Nsh5rtn77rJHGEWXlfTk4Uolxx2qRsk48vZef8uTI=;
+	s=default; t=1556624619;
+	bh=9pHvpcKgOX608CuYZV0lk0tPUwVrFtVe9H1Tma0SJGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z9tr1QKrXHl0s4gJrTABSnslmCKWtGAUFjNPY1UX2yq2EiIe43JJ8hM6nBqA2qoSf
-	 QbHWKxk1esDMzcfTg5WncslZk0K7WrYW5BWr8TSiXnTJlDq3c8fye4Qwoe1beg1gWq
-	 3I0OSrNR3pok9Y1u4CcWjlgPhHRTRBGb3PUaQesw=
+	b=YLuLaAHTySx4nCPQSa0G+fN/CEBEGkAl04kCktQydixnfZx4x4H90jeaKUAz85e/7
+	 ZpuSJuZ59/+adVK5VF9j2ENzbhJDhAqcvp9CWLfo2NKdjcb/QkmTaN95/Fp3BkeQJR
+	 qzZp2diPh/bA8bROka8kdORGxpnZIIA8OqDGH3h0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbfD3Lnd (ORCPT
+        id S1728154AbfD3Lnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53776 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:43:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729938AbfD3Lna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:43:30 -0400
+        id S1729953AbfD3Lnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:43:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C4AF21707;
-        Tue, 30 Apr 2019 11:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DA8521670;
+        Tue, 30 Apr 2019 11:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624609;
-        bh=o3Nsh5rtn77rJHGEWXlfTk4Uolxx2qRsk48vZef8uTI=;
+        s=default; t=1556624612;
+        bh=9pHvpcKgOX608CuYZV0lk0tPUwVrFtVe9H1Tma0SJGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=milMP3x8ab1Ewr61+rG2dbhXcjXskkyx6R5yDhPsUX0MjMNTr5+6OJL+c4QjXvRRY
-         X5xr/ug6jEeGW8lUK65aiOyoCQ43wjJx9rSJ6xuHghnwWT/ADimHKbBPNVBTMZy8Vw
-         GEovBaocybQmsIzkDXbRSASty2g3Y5wEDkXR+QNs=
+        b=vyko1YFOW0OPcx3Hwze3CU3kQ2BQcGjBMDWICgKM9ov5hONiwzeOolGG02GpiYzzm
+         hd6VKDd+OVioHMghCdELGmyKcoT+AR3KIJaELq5KqqbH1eV0nIo72JDSJE2o9bfOGq
+         /g9OhL2l9v9OJu+CgU6TPwkNhi3youLx1F7fv0XE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+de00a87b8644a582ae79@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 38/53] tipc: check link name with right length in tipc_nl_compat_link_set
-Date:   Tue, 30 Apr 2019 13:38:45 +0200
-Message-Id: <20190430113557.818399894@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 39/53] dm integrity: change memcmp to strncmp in dm_integrity_ctr
+Date:   Tue, 30 Apr 2019 13:38:46 +0200
+Message-Id: <20190430113557.982220951@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -61,41 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 8c63bf9ab4be8b83bd8c34aacfd2f1d2c8901c8a upstream.
+commit 0d74e6a3b6421d98eeafbed26f29156d469bc0b5 upstream.
 
-A similar issue as fixed by Patch "tipc: check bearer name with right
-length in tipc_nl_compat_bearer_enable" was also found by syzbot in
-tipc_nl_compat_link_set().
+If the string opt_string is small, the function memcmp can access bytes
+that are beyond the terminating nul character. In theory, it could cause
+segfault, if opt_string were located just below some unmapped memory.
 
-The length to check with should be 'TLV_GET_DATA_LEN(msg->req) -
-offsetof(struct tipc_link_config, name)'.
+Change from memcmp to strncmp so that we don't read bytes beyond the end
+of the string.
 
-Reported-by: syzbot+de00a87b8644a582ae79@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/tipc/netlink_compat.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/md/dm-integrity.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -768,7 +768,12 @@ static int tipc_nl_compat_link_set(struc
- 
- 	lc = (struct tipc_link_config *)TLV_DATA(msg->req);
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	len -= offsetof(struct tipc_link_config, name);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(lc->name, len))
- 		return -EINVAL;
- 
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -2917,17 +2917,17 @@ static int dm_integrity_ctr(struct dm_ta
+ 				goto bad;
+ 			}
+ 			ic->sectors_per_block = val >> SECTOR_SHIFT;
+-		} else if (!memcmp(opt_string, "internal_hash:", strlen("internal_hash:"))) {
++		} else if (!strncmp(opt_string, "internal_hash:", strlen("internal_hash:"))) {
+ 			r = get_alg_and_key(opt_string, &ic->internal_hash_alg, &ti->error,
+ 					    "Invalid internal_hash argument");
+ 			if (r)
+ 				goto bad;
+-		} else if (!memcmp(opt_string, "journal_crypt:", strlen("journal_crypt:"))) {
++		} else if (!strncmp(opt_string, "journal_crypt:", strlen("journal_crypt:"))) {
+ 			r = get_alg_and_key(opt_string, &ic->journal_crypt_alg, &ti->error,
+ 					    "Invalid journal_crypt argument");
+ 			if (r)
+ 				goto bad;
+-		} else if (!memcmp(opt_string, "journal_mac:", strlen("journal_mac:"))) {
++		} else if (!strncmp(opt_string, "journal_mac:", strlen("journal_mac:"))) {
+ 			r = get_alg_and_key(opt_string, &ic->journal_mac_alg,  &ti->error,
+ 					    "Invalid journal_mac argument");
+ 			if (r)
 
 
