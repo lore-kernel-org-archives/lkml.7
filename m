@@ -2,118 +2,132 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB85C04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CE6C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F1820644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2FB72173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556641855;
+	bh=IVL0FG5N84AtR0xG/w2ryqFP70hlsxpOfDN0HKJUnhE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Qt2p+hcPcaHlFLvgLD0mEqS62r4S1nFTl3UoNQAhTa6FCN3UZkgMbcpNPAigIGpE6
+	 eQPlbTYSUcOp0y6km0AyvYrXYUQwAmazWX4CFVzDeuUnu+MPhJKr48xM5jmF6VtohM
+	 JAoPcgT3hTYjWcTPaZ+44WzuFhEt8DRFeyo+UCCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfD3Qap (ORCPT
+        id S1726856AbfD3Qay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:30:45 -0400
-Received: from mga03.intel.com ([134.134.136.65]:11907 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbfD3Qao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:30:44 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:30:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="342198148"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Apr 2019 09:30:42 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hLVeT-0007p9-4i; Tue, 30 Apr 2019 19:30:41 +0300
-Date:   Tue, 30 Apr 2019 19:30:41 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     linux-acpi@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] ACPI / property: fix handling of data_nodes in
- acpi_get_next_subnode()
-Message-ID: <20190430163041.GN9224@smile.fi.intel.com>
-References: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
+        Tue, 30 Apr 2019 12:30:54 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41790 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfD3Qax (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:30:53 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t30so11232648lfd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zirBQvpMX9FN+xMGuy+YB2uuBWDRMNHlzh9gJjRPgVE=;
+        b=hs+MMq9iB+eslb+cGLIpGLGbIv6EJP2l9mo6ehrV020sNd1PwGxPBGOEt2lJlTs3aX
+         j5lQOg6lmmOjeQDX5ZISw6NeAcc9gXvyDHGfdKNNARf9UJs1P4nx3ChCR2owg+Zh2w30
+         nFun/lkPvWMpDLpdDrhOj9zXwOjyW/YZ8hGXM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zirBQvpMX9FN+xMGuy+YB2uuBWDRMNHlzh9gJjRPgVE=;
+        b=mtii655ngJhI1Gu0vQ34oSBubOWV9aY/za2LlhaQ5F67F0WTUIF8S5c0W+P8/qHEFS
+         lwMhpUNgSWoXrwksOV4zTLZfnAZolrXa4q1f+yD3v0ashUJ5jEqNkPfuya/Nf/foVhQL
+         jv74n6so2KlRds6D77BrDGCleZOpxgz6BoDDz1XfQm1HCALE2mDAGKaIlSOAGjB3ViS7
+         CEVEGcYgWp+tM8Ewa1EXHp3C0YvNXHSRQfedGkS5ldspbM9CXHK7DqGxq+3LlHnmTQjq
+         RoeY5wNUm/NSIWRD//EKqu0aG2/V1v1v3EddTC6GN0nFRgkf+DnGjTy6eO/QvMP7e2NS
+         vy0g==
+X-Gm-Message-State: APjAAAWRCPqWCNooXwuAvviFOvwvajQlzSTbNp2dHSmgslpd9NE0zezH
+        O7/DpTFd47KEGP6pZwX13qixzGoeCt4=
+X-Google-Smtp-Source: APXvYqy9pS/OUSVkQkGi09rUH79xuGpMTzbj0PsRZWGOar4I1InTRF46slpfOU/r5W5V5lXkPmVnjw==
+X-Received: by 2002:a19:384d:: with SMTP id d13mr16591722lfj.38.1556641851534;
+        Tue, 30 Apr 2019 09:30:51 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id b15sm4133838ljj.1.2019.04.30.09.30.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 09:30:51 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id t11so11222835lfl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:30:51 -0700 (PDT)
+X-Received: by 2002:ac2:4567:: with SMTP id k7mr36971631lfm.166.1556641462358;
+ Tue, 30 Apr 2019 09:24:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+ <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
+ <20190420071406.GA22257@ip-172-31-15-78> <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
+ <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
+ <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com> <20190430123901.GD23020@redhat.com>
+In-Reply-To: <20190430123901.GD23020@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 30 Apr 2019 09:24:06 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wit1f_eARfgHYBQwjU2ndd_75OuHQurXNmrEHuhjQViJA@mail.gmail.com>
+Message-ID: <CAHk-=wit1f_eARfgHYBQwjU2ndd_75OuHQurXNmrEHuhjQViJA@mail.gmail.com>
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Jann Horn <jannh@google.com>, Kevin Easton <kevin@guarana.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 10:52:29AM -0500, Pierre-Louis Bossart wrote:
-> When the DSDT tables expose devices with subdevices and a set of
-> hierarchical _DSD properties, the data returned by
-> acpi_get_next_subnode() is incorrect, with the results suggesting a bad
-> pointer assignment. The parser works fine with device_nodes or
-> data_nodes, but not with a combination of the two.
-> 
-> The problem is traced to an invalid pointer used when jumping from
-> handling device_nodes to data nodes. The existing code looks for data
-> nodes below the last subdevice found instead of the common root. Fix
-> by forcing the acpi_device pointer to be derived from the same fwnode
-> for the two types of subnodes.
-> 
-> This same problem of handling device and data nodes was already fixed
-> in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
-> node parsing in acpi_get_next_subnode()")' but broken later by 'commit
-> 34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
-> this should probably go to linux-stable all the way to 4.12
+On Tue, Apr 30, 2019 at 5:39 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> Yes, but I am wondering if man vfork should clarify what "child terminates"
+> actually means. I mean, the child can do clone(CLONE_THREAD) + sys_exit(),
+> this will wake the parent thread up before the child process exits or execs.
 
-Period is missed in above sentence.
+That falls solidly into the "give people rope" category.
 
-I think it make sense to add Fixes: tag.
+If the vfork() child wants to mess with the parent, it has many easier
+ways to do it than create more threads.
 
-Nevertheless,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+As mentioned, the real problem with vfork() tends to be that the child
+unintentionally messes with the parent because it just gets the stack
+sharing wrong. No need to add intention there.
 
-Thank you for fixing this interesting issue!
+> I see nothing wrong, but I was always curious whether it was designed this
+> way on purpose or not.
 
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/acpi/property.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index 5815356ea6ad..efc74f912f39 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -943,6 +943,16 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
->  		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
->  		struct acpi_data_node *dn;
->  
-> +		/*
-> +		 * We can have a combination of device and data nodes,
-> +		 * e.g. with hierarchical _DSD properties. Make sure
-> +		 * the adev pointer is restored before going through
-> +		 * data nodes, otherwise we will be looking for
-> +		 * data_nodes below the last device found instead of
-> +		 * the common fwnode shared by device_nodes and
-> +		 * data_nodes
-> +		 */
-> +		adev = to_acpi_device_node(fwnode);
->  		if (adev)
->  			head = &adev->data.subnodes;
->  		else if (data)
-> -- 
-> 2.17.1
-> 
+Oh, it's definitely on purpose. Trying to do some nested usage count
+would be horrendously complex, and even a trivial "don't allow any
+other clone() calls if we already have a vfork completion pending" is
+just unnecessary logic.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Because at least in *theory*, there's actually nothing horribly wrong
+with allowing a thread to be created during the vfork(). I don't see
+the _point_, but it's not conceptually something that couldn't work
+(you'd need a separate thread stack etc, but that's normal clone()).
 
+So no, there's no safety or bogus "you can't do that". If you want to
+play games after vfork(), go wild.
 
+                   Linus
