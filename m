@@ -2,99 +2,118 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E15C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1601FC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7612080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556598288;
-	bh=YU28RkopbRaMt3cG6MbmxhwUTMY1xkAUDd2+tGnOoqM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2Z6dRIM8IC0lUcqWUixQWzNWQM98GEdBbnuFDtFPQVFCX5L39irmHDLFsG+G/LLN9
-	 QTOCDt4MUnm6eGzt5oxJ4CcolvZHIxz+c88RvasDapmHnTzb/gZ/cpcB3+FBWrvwRN
-	 e67++kPHMcgVxAa9EHfsMWIltnEdvpFZDeHm0yKA=
+	by mail.kernel.org (Postfix) with ESMTP id D7D892080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 04:25:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jFYY8Y/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbfD3EYr (ORCPT
+        id S1726061AbfD3EZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 00:24:47 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:33606 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbfD3EYr (ORCPT
+        Tue, 30 Apr 2019 00:25:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50528 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfD3EZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 00:24:47 -0400
-Received: by mail-wr1-f49.google.com with SMTP id s18so19278576wrp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 21:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DVA6yR4Sxy2an9BXJ5NALuY+dTspWhcDf3najxAmkPA=;
-        b=nPeKKzZz5rmrdYvcZ5h29hW2YotW09hET0wvOByGsm56wjtEjm4bayirmeENjxYtBb
-         UTaT113i/tWVOp3O6cAMgYhpBqLUPRWstymJK9/mnfktUb3yKrP/BAXxn5COPN41zb7O
-         jqTK2ZNke3uY5NT9jo93w7NM9ih5y7GCLzT8/JpEqwP/66gfpziYpgZSHZ0rk5EXxKNy
-         f9qDvug6ejJ97DGfpU7GL/ErBsO3mXFTzPrI+IKBK8R4wM4cUTqrWyCXPXne06lJrxeP
-         arjKv7tD0dsBUzPS9KCNjY9Vwkw7hVw2hMTfBKFYjXd3fxAUcsLWB0IO72ZMJhLB68z4
-         oMfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DVA6yR4Sxy2an9BXJ5NALuY+dTspWhcDf3najxAmkPA=;
-        b=Eo37bzUIG3l1n0Ba3/GTiX3BsexKmQAYPi0QYpiRYOjtpFB/Drhmd+c/K2mP3g+QQd
-         EHek01hNjBMMXpUBStTePLONTxsf22fMt8XYpBxamTGXTn0yJf81zhNs9yWNFnCsdslY
-         EcBx3kou6mvhsguyXrYBZx7Az0RbQh8roG/kEF4iy+/K7reFmmt1aMFM0pVQIwVI/rex
-         rdrqC/RsgJy+fQWd/Ail4ifaXde8IT7C4uZQC/63qTCVnrg3cl2AwxrPmT24yMi6cc+9
-         SS92vAD0I0feSGvMZVzi3y9xZqaTbDso5LhoP5jC/wKRILOSwPTmZz3MmRJCzXeW2XB6
-         D9ug==
-X-Gm-Message-State: APjAAAVaP7LwXO4eTY0/IleADF2p/7Da2bZCjve0UgKptfKVgzWcsufJ
-        zAq/4TDivRmJG8u+3PMAMTw=
-X-Google-Smtp-Source: APXvYqxum5eQFtaTLaKo9hs0cIRwpQrCzktMQnT+4KdMyx3teIJoJCVvBTQiKi3Mkq8OkLsYmMEmHg==
-X-Received: by 2002:adf:f6ca:: with SMTP id y10mr16153091wrp.241.1556598285871;
-        Mon, 29 Apr 2019 21:24:45 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id u11sm188077wrg.35.2019.04.29.21.24.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 21:24:45 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 06:24:43 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tue, 30 Apr 2019 00:25:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3U4NsFP157497;
+        Tue, 30 Apr 2019 04:25:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=Mb9RbwxX8QI4dGkhYSLrdKoKKBHjSFyPMeVIBLchQcY=;
+ b=jFYY8Y/8e9/wt4ZH85LtuN0GVHQHb79s6zGFGMlBeOBnLeZozmQQZyjONSiD1F5An4Uh
+ BnnfoIc7w/mIBo2FurAdWEgOS8PIFA3Tu6aAesoedqpZYx983w8/i91q75DDYmrzv57w
+ wbYiBfPGzjIaaoxwWCPG5Gd5BTJpYxhMKm7MaOza5zZT4iJVaYNy8BdEzUKNimQtfB8o
+ txC2BuIyxdw3TOmcCwPv3zAfPQFedBMLc3VU3hgNaT+XIc56MdAuEpv/j7oxL7jEp+LL
+ SRbjbq4dekGRZdARhBfEqPqPgqTWTmBWNpMIXLu3f2mrgCRzWLKL5xJ2E3YvSS9k/Ykd fA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2s5j5txr0g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 04:25:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3U4NZeP092158;
+        Tue, 30 Apr 2019 04:25:25 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 2s4yy9aqxr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Apr 2019 04:25:25 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x3U4PPnM095590;
+        Tue, 30 Apr 2019 04:25:25 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2s4yy9aqxn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 04:25:25 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3U4PNL8006894;
+        Tue, 30 Apr 2019 04:25:24 GMT
+Received: from santoshs-mbp.lan (/69.181.241.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Apr 2019 21:25:23 -0700
+Subject: Re: [PATCH V2] rds: ib: force endiannes annotation
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] sched/cpufreq: Fix kobject memleak
-Message-ID: <20190430042443.GB73609@gmail.com>
-References: <20190430001717.26533-1-tobin@kernel.org>
+References: <1556593977-15828-1-git-send-email-hofrat@osadl.org>
+From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <5ba055e9-5221-bff2-fdd2-d4b837c95ce1@oracle.com>
+Date:   Mon, 29 Apr 2019 21:25:15 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430001717.26533-1-tobin@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556593977-15828-1-git-send-email-hofrat@osadl.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=984 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904300028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Tobin C. Harding <tobin@kernel.org> wrote:
 
-> Currently error return from kobject_init_and_add() is not followed by a
-> call to kobject_put().  This means there is a memory leak.
+On 4/29/19 8:12 PM, Nicholas Mc Guire wrote:
+> While the endiannes is being handled correctly as indicated by the comment
+> above the offending line - sparse was unhappy with the missing annotation
+> as be64_to_cpu() expects a __be64 argument. To mitigate this annotation
+> all involved variables are changed to a consistent __le64 and the
+>   conversion to uint64_t delayed to the call to rds_cong_map_updated().
 > 
-> Add call to kobject_put() in error path of kobject_init_and_add().
-> 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
 > ---
 > 
-> Resend with SOB tag.
+> Problem located by an experimental coccinelle script to locate
+> patters that make sparse unhappy (false positives):
+> net/rds/ib_recv.c:827:23: warning: cast to restricted __le64
+> 
+> V2: Edward Cree <ecree@solarflare.com> rejected the need for using __force
+>      here - instead solve the sparse issue by updating all of the involved
+>      variables - which results in an identical binary as well without using
+>      the __force "solution" to the sparse warning. Thanks !
+> 
+> Patch was compile-tested with: x86_64_defconfig + INFINIBAND=m, RDS_RDMA=m
+> 
+> Patch was verified not to change the binary by diffing the
+> generated object code before and after applying the patch.
+> 
+Thanks. I was worried about this macro magic o.w
 
-Please ignore my previous mail :-)
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
 
-Thanks,
-
-	Ingo
