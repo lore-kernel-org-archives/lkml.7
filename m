@@ -2,93 +2,90 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF8AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC3DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9592075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625350;
-	bh=1E80f6C6KKklPmtdQ4vXPcXRkfI+cNj4GBx96Yoj1oI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hx3EoFAIafmkvLLnFlscJGTPiwg2LITKI+DJe8LuYRcP2Q74nJrrQpaA34kVZNi3P
-	 gVsvOn+2Q+dOTMtK3vhTC8ypLSZcUDsRwWNd6RHtq+j0YPXddMjITu8rmo+bGunUyc
-	 KapVvKgi4y53xHUIEQL6xvTC7wBALm671dtGOxFg=
+	by mail.kernel.org (Postfix) with ESMTP id 3006421707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:55:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uifRx/IH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbfD3Lzt (ORCPT
+        id S1727668AbfD3Lz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbfD3LtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7844421707;
-        Tue, 30 Apr 2019 11:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624955;
-        bh=1E80f6C6KKklPmtdQ4vXPcXRkfI+cNj4GBx96Yoj1oI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fRtuQDYn6xfE49zUFpizY4Tii9N4784pnEDc+qogpjYAaZjlUg03iHvYFGqe1B/WL
-         zT3ITcbbAAbQgfOFAluXm0pe+5RGQSpuEk2v2UOhSq3qtp6T9mMc5m92Sud6yRJyoF
-         fx7l5CJvdMjuG55JHtItlN2tdmR/GMK+o+i5xfXo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.0 35/89] Input: synaptics-rmi4 - write config register values to the right offset
-Date:   Tue, 30 Apr 2019 13:38:26 +0200
-Message-Id: <20190430113611.514987684@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
-References: <20190430113609.741196396@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 30 Apr 2019 07:55:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49236 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727549AbfD3Lzy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:55:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1FRlbeq74rKv2BVig4MgSeofWTqiuNAZ7kl/vVWV7YQ=; b=uifRx/IHUn5YjaDIjS3gB7PtR
+        6o1P8LCjJUH8ZoSAFUqjkLns23nKJBnAr5zwqjWk0AQSpkCxHTdLgR6KA0mmac340IsQdi34n29Kk
+        WtTfSus8BLgzK/SiP5D7xzx+ma0Zmie4XDJGtjf2eBlKlYUtq0/HpSuSEP/hv3YkTeOZrV1WNX19w
+        KT1nl5Wk8Qa2Z2vNndUE/9mBMwFfyJRB+j0BoLqHV7jnYQDkOv0n5GjA49JcWrVtk9wv103/TDedy
+        I8KfwOdEO/GY139tcBYwMGyO8ZtPALn8U3f0SbZsZuNH/9MWbEcXrQoDEE3JrXxFjv0X91OB3WTox
+        f0y0zDjEg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLRMX-0000eR-K8; Tue, 30 Apr 2019 11:55:53 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A6A6F2139B636; Tue, 30 Apr 2019 13:55:51 +0200 (CEST)
+Date:   Tue, 30 Apr 2019 13:55:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, andrea.parri@amarulasolutions.com
+Subject: Re: Question about sched_setaffinity()
+Message-ID: <20190430115551.GT2623@hirez.programming.kicks-ass.net>
+References: <20190427180246.GA15502@linux.ibm.com>
+ <20190430100318.GP2623@hirez.programming.kicks-ass.net>
+ <20190430105129.GA3923@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430105129.GA3923@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+On Tue, Apr 30, 2019 at 03:51:30AM -0700, Paul E. McKenney wrote:
+> > Then I'm not entirely sure how we can return 0 and not run on the
+> > expected CPU. If we look at __set_cpus_allowed_ptr(), the only paths out
+> > to 0 are:
+> > 
+> >  - if the mask didn't change
+> >  - if we already run inside the new mask
+> >  - if we migrated ourself with the stop-task
+> >  - if we're not in fact running
+> > 
+> > That last case should never trigger in your circumstances, since @p ==
+> > current and current is obviously running. But for completeness, the
+> > wakeup of @p would do the task placement in that case.
+> 
+> Are there some diagnostics I could add that would help track this down,
+> be it my bug or yours?
 
-commit 3a349763cf11e63534b8f2d302f2d0c790566497 upstream.
+Maybe limited function trace combined with the scheduling tracepoints
+would give clue.
 
-Currently any changed config register values don't take effect, as the
-function to write them back is called with the wrong register offset.
+Trouble is, I forever forget how to set that up properly :/ Maybe
+something along these lines:
 
-Fixes: ff8f83708b3e (Input: synaptics-rmi4 - add support for 2D
-                     sensors and F11)
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+$ trace-cmd record -p function_graph -g sched_setaffinity -g migration_cpu_stop -e
+sched_migirate_task -e sched_switch -e sched_wakeup
 
----
- drivers/input/rmi4/rmi_f11.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also useful would be:
 
---- a/drivers/input/rmi4/rmi_f11.c
-+++ b/drivers/input/rmi4/rmi_f11.c
-@@ -1230,7 +1230,7 @@ static int rmi_f11_initialize(struct rmi
- 	}
- 
- 	rc = f11_write_control_regs(fn, &f11->sens_query,
--			   &f11->dev_controls, fn->fd.query_base_addr);
-+			   &f11->dev_controls, fn->fd.control_base_addr);
- 	if (rc)
- 		dev_warn(&fn->dev, "Failed to write control registers\n");
- 
+echo 1 > /proc/sys/kernel/traceoff_on_warning
 
-
+which ensures the trace stops the moment we find fail.
