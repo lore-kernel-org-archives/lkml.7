@@ -2,136 +2,120 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6348FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7430DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CAB2177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="r+A4QEPv"
+	by mail.kernel.org (Postfix) with ESMTP id 4900E20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfD3JYX (ORCPT
+        id S1726865AbfD3JYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:24:23 -0400
-Received: from mail.nic.cz ([217.31.204.67]:40526 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfD3JYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:24:23 -0400
-Received: from localhost (unknown [172.20.6.125])
-        by mail.nic.cz (Postfix) with ESMTPS id 0887E604CA;
-        Tue, 30 Apr 2019 11:23:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1556616260; bh=qndt+RdDJTdMmo4kMJYNIBsyzaZbZnZzTcgCBJFC1/0=;
-        h=Date:From:To;
-        b=r+A4QEPvZLnp4dsI4u+FkG0VS+5M6mgH1DKBCYx+w5iSUL1X21OPtRvtXulg83ghh
-         BC7r8aEGrdeTAzJrLft1cIM0NrPPwmASNG9DYiVpJLo0PCs/N2Nw70ldLnkzZ8EKwR
-         cbcIIqH9Q+5DmptMaJusWBd42O72q1+bam0j6gVo=
-Date:   Tue, 30 Apr 2019 11:23:19 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: sysfs attrs for HW ECDSA signature
-Message-ID: <20190430112319.6c4159f9@nic.cz>
-In-Reply-To: <20190430082728.GE8245@kroah.com>
-References: <20190429234752.171b4f2b@nic.cz>
-        <20190430082728.GE8245@kroah.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Apr 2019 05:24:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38526 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726119AbfD3JYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 05:24:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5D9C7AC52;
+        Tue, 30 Apr 2019 09:24:27 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch\/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip fops invocation
+References: <20190427100639.15074-1-nstange@suse.de>
+        <20190427100639.15074-4-nstange@suse.de>
+        <20190427102657.GF2623@hirez.programming.kicks-ass.net>
+        <20190428133826.3e142cfd@oasis.local.home>
+        <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+        <20190429145250.1a5da6ed@gandalf.local.home>
+        <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
+        <20190429150724.6e501d27@gandalf.local.home>
+        <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
+        <20190429163043.535f4272@gandalf.local.home>
+        <CAHk-=wjGquN7-kQCoa+LHCuiVTjefkk38qwaysd4wLLtoSZhpg@mail.gmail.com>
+        <20190429180733.3f25d8b9@gandalf.local.home>
+Date:   Tue, 30 Apr 2019 11:24:23 +0200
+In-Reply-To: <20190429180733.3f25d8b9@gandalf.local.home> (Steven Rostedt's
+        message of "Mon, 29 Apr 2019 18:07:33 -0400")
+Message-ID: <87imuv977c.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 10:27:28 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-> On Mon, Apr 29, 2019 at 11:47:52PM +0200, Marek Behun wrote:
-> > Hi Greg and Tejun,
-> > 
-> > is it acceptable for a driver to expose sysfs attr files for ECDSA
-> > signature generation?  
+> On Mon, 29 Apr 2019 14:38:35 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
 >
-> What is "ECDSA signature generation"?  Is it a crypto thing?  If so, why
-> not use the crypto api?  If not, what exactly is it?
+>> On Mon, Apr 29, 2019 at 1:30 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>> >
+>> > The update from "call custom_trampoline" to "call iterator_trampoline"
+>> > is where we have an issue.  
+>> 
+>> So it has never worked. Just tell people that they have two chocies:
+>
+> The custom call to iterator translation never worked. One option is to
+> always call the iterator, and just take the hit. There's another
+> solution to to make permanent updates that would handle the live
+> patching case, but not for the tracing case. It is more critical for
+> live patching than tracing (missed traced function is not as critical
+> as running buggy code unexpectedly). I could look to work on that
+> instead.
 
-Hi Greg,
-It is a crypto thing and it should be accessed via akcipher crypto API.
-But akcipher userspace crypto API is not implemented in kernel. See
-below.
+Making the live patching case permanent would disable tracing of live
+patched functions though?
 
-> > The thing is that
-> >   1. AFAIK there isn't another API for userspace to do this.
-> >      There were attempts in 2015 to expose akcipher via netlink to
-> >      userspace, but the patchseries were not accepted.  
-> 
-> Pointers to that patchset?  Why was it not accepted?
+For unconditionally calling the iterator: I don't have numbers, but
+would expect that always searching through something like 50-70 live
+patching ftrace_ops from some hot path will be noticeable.
 
-Here are the replies to the last attempt
-https://marc.info/?t=150234726200004&r=1&w=2
-This was back in 2017, apparently there were some problems and it was not
-merged even after 8 versions.
 
-> >   2. even if it was possible, that specific device for which I am
-> >      writing this driver does not provide the ability to set the
-> >      private key to sign with - the private key is just burned during
-> >      manufacturing and cannot be read, only signed with.  
-> 
-> Why does this matter?
+> If Nicolai has time, perhaps he can try out the method you suggest and
+> see if we can move this forward.
 
-If it was implemented via akcipher, the user would be unable to set
-private key, which is a method the akcipher implementation should
-implement. But this probably is not that big a problem.
+You mean making ftrace handle call->call transitions one by one in
+non-batch mode, right? Sure, I can do that.
 
-> > The current version of my driver exposes do_sign file in
-> > /sys/firmware/turris_mox directory.
-> > 
-> > Userspace should write message to sign and then can read the signature
-> > from this do_sign file.  
-> 
-> How big are messages and signatures?  Why does this have to be a sysfs
-> api?
+Another question though: is there anything that prevents us from calling
+ftrace_ops_list_func() directly from ftrace_int3_handler()? We don't
+have parent_ip, but if that is used for reporting only, maybe setting it
+to some ftrace_is_in_int3_and_doesnt_now_the_parent() will work?
+Graph tracing entries would still be lost, but well...
 
-Messages are 521 bits, I rounded them to 68 bytes. The idea is that a
-sha512 hash of the original message is to be signed.
-Signatures are 136 bytes.
+Thanks,
 
-> > According to the one attr = one file principle, it would be better to
-> > have two files: ecdsa_msg_to_sign (write-only) and ecdsa_signature
-> > (read-only).
-> > Would this be acceptable in the kernel for this driver?  
-> 
-> Why not use the crypto api, and if that doesn't work, why not just a
-> char device to read/write?
-
-Because the akcipher userspace crypto API is not merged and it probably
-will take a lot of time, if it ever will be merged. Till then I would
-like if this feature was supported on this one device somehow in
-mainline kernel. As soon as akcipher userspace crypto API is merged, I
-can rewrite the driver.
-
-A char device to read/write would be possible. The sysfs API
-seemed more strainthforward. Should I do the char device approach
-instead?
-
-> > I have also another question, if you would not mind:
-> > 
-> > This driver is dependant on a mailbox driver I have also written
-> > ("mailbox: Add support for Armada 37xx rWTM mailbox"), but I have not
-> > received any review for this driver from the mailbox subsystem
-> > maintainer, and I have already sent three versions (on 12/17/2018,
-> > 03/01/2019 and 03/15/2019).
-> > What should I do in this case?  
-> 
-> Poke the maintainer again :)
-
-I will,
-
-Thanks.
-
-Marek
+Nicolai
