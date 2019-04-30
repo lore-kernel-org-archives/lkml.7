@@ -2,72 +2,93 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25BAC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD25C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AB320652
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B7D2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 12:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfD3MST (ORCPT
+        id S1727434AbfD3MUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 08:18:19 -0400
-Received: from mail.us.es ([193.147.175.20]:42676 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726914AbfD3MST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:18:19 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 3066F11FBEE
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 14:18:17 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 1879CDA71A
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 14:18:17 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 0E1A8DA705; Tue, 30 Apr 2019 14:18:17 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id E7AD0DA705;
-        Tue, 30 Apr 2019 14:18:14 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Tue, 30 Apr 2019 14:18:14 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (129.166.216.87.static.jazztel.es [87.216.166.129])
+        Tue, 30 Apr 2019 08:20:11 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:58379 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfD3MUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 08:20:11 -0400
+Received: from tarshish (unknown [10.0.8.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id AF95F4265A32;
-        Tue, 30 Apr 2019 14:18:14 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 14:18:13 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfilter: connlabels: fix spelling mistake "trackling"
- -> "tracking"
-Message-ID: <20190430121813.37rqojcdzabtq5vp@salvia>
-References: <20190418170056.22486-1-colin.king@canonical.com>
+        by mx.tkos.co.il (Postfix) with ESMTPS id 3EF1744028D;
+        Tue, 30 Apr 2019 15:20:09 +0300 (IDT)
+References: <20190430093212.28425-1-alexandre.belloni@bootlin.com> <20190430093212.28425-2-alexandre.belloni@bootlin.com> <877ebbu3lz.fsf@tarshish> <20190430114702.GD11339@piout.net>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] rtc: digicolor: set range
+In-reply-to: <20190430114702.GD11339@piout.net>
+Date:   Tue, 30 Apr 2019 15:20:08 +0300
+Message-ID: <875zqvu1l3.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190418170056.22486-1-colin.king@canonical.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 06:00:56PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in the module description. Fix this.
+Hi Alexandre,
 
-Applied.
+On Tue, Apr 30 2019, Alexandre Belloni wrote:
+> On 30/04/2019 14:36:24+0300, Baruch Siach wrote:
+>> Hi Alexandre,
+>>
+>> On Tue, Apr 30 2019, Alexandre Belloni wrote:
+>>
+>> > While the range of REFERENCE + TIME is actually 33 bits, the counter
+>> > itself (TIME) is a 32-bits seconds counter.
+>> >
+>> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> > ---
+>> >  drivers/rtc/rtc-digicolor.c | 1 +
+>> >  1 file changed, 1 insertion(+)
+>> >
+>> > diff --git a/drivers/rtc/rtc-digicolor.c b/drivers/rtc/rtc-digicolor.c
+>> > index 5bb14c56bc9a..e6e16aaac254 100644
+>> > --- a/drivers/rtc/rtc-digicolor.c
+>> > +++ b/drivers/rtc/rtc-digicolor.c
+>> > @@ -206,6 +206,7 @@ static int __init dc_rtc_probe(struct platform_device *pdev)
+>> >  	platform_set_drvdata(pdev, rtc);
+>> >
+>> >  	rtc->rtc_dev->ops = &dc_rtc_ops;
+>> > +	rtc->rtc_dev->range_max = U32_MAX;
+>>
+>> Where can I find documentation on the meaning and usage of the range_max
+>> value? I could not find anything in the kernel source.
+>
+> It should be set to the maximum UNIX timestamp the RTC can be set to
+> while keeping range_min to range_max contiguous.
+>
+> In the digicolor case, you could go up to 8589934590 (Wed Mar 16
+> 12:56:30 UTC 2242) but the driver only writes DC_RTC_REFERENCE and I'm
+> not sure it can also update DC_RTC_TIME safely.
+
+DC_RTC_TIME resets to zero whenever dc_rtc_write writes CMD_RESET to the
+DC_RTC_CONTROL register. DC_RTC_REFERENCE keeps the value that
+dc_rtc_write stores there. So the driver will return values larger than
+U32_MAX if you happen to cross this point in time between dc_rtc_write
+and dc_rtc_read. But you can't store a value larger than U32_MAX in
+DC_RTC_REFERENCE.
+
+Will the core RTC code handle the U32_MAX cross correctly?
+
+baruch
+
+--
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
