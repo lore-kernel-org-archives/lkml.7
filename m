@@ -2,92 +2,106 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E90FC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE811C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F6C20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F44C21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 15:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaXTYEAz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfD3Pwi (ORCPT
+        id S1726424AbfD3Pwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 11:52:38 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39123 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfD3Pwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 11:52:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 08:52:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="342153836"
-Received: from cng16-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.252.205.95])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Apr 2019 08:52:36 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     linux-acpi@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
-Date:   Tue, 30 Apr 2019 10:52:29 -0500
-Message-Id: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 30 Apr 2019 11:52:43 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40202 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfD3Pwm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 11:52:42 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u17so3299403pfn.7;
+        Tue, 30 Apr 2019 08:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7/b+2duQICy1y+ecxJRYIc+INIY4RDrRkp1RL9mwtcs=;
+        b=FaXTYEAztMGyzcxjHiz2aPnGm4sAuLKKicQuYzXk0v05EhoYiEKo+sdhFqVWRgoH3o
+         O0c1lnUYx9fse5g6dXwhI13bGTY+1rmCJ7BrIpAeBWCxUNRCwklkyMKPUOQmm+v8ASw/
+         eHGXBUxcZjhoUuGeZr8PHqyWlhkqBuPscIh9NSgEfCMBUoDclNMY7CzSOjsqmDK68Rmc
+         yQoKhs46FhL2WsbOtM6qXO5mLC4rDc1HcSEAyGyNZoflvCR429gWfkhlhlvm6i7AxBNX
+         TdhRey7G1j6z9OeCIEueCaKI/C2DaUg5thAdP7OXwD0/qbX/60XchRFmBvuuxS5xyoZA
+         SITg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7/b+2duQICy1y+ecxJRYIc+INIY4RDrRkp1RL9mwtcs=;
+        b=oA9m+ad5Sgme+VslzwcN1bRi+xDWcw0ZEXpxdGpUZP5QVB922XRYUzmUkaS5JBHjfO
+         atWPg6gO684HDLn785zUgMdujXLJa8UxRkk12cGtN4QDMGQOp6CW/8SqBC+eP3+SC3rd
+         iYUCCk4D7i+lnPnJXbP/lmw/3zYBnsSIzXpsRW88AZ+9MTrVHn1v90M5aztAPRADQf1X
+         8CjR5M499CjN/2vHxQ1x32yXWAIYPqzQIRoFxozKo+QRmH0xwaU/ADxtpdslcluBpC5p
+         wS1JdR3fxjfacUWsMYb4vB1fAVCenHBi3QWmUO1HPiL7d5sIr4zD+BCNYMjpSCt94owW
+         VMSw==
+X-Gm-Message-State: APjAAAU9iYZR3aOAsCd1MKef1qy9pxFAsLIva3dMxc8/TzXAr2JkXGwj
+        PiEpHgafb+P+T1zrns7LBCwAfnt56JacQcIHY9g=
+X-Google-Smtp-Source: APXvYqx0JQ/FmaJMdOQR+31KTzap5cQmFU0vz61jMjQS3XY4+Rf+IqSkMyhO5MlPJ+ZvIhHNb3U3lm3I9GiN4kljCOc=
+X-Received: by 2002:a63:8e4b:: with SMTP id k72mr24604737pge.428.1556639561344;
+ Tue, 30 Apr 2019 08:52:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <59169e7b-d58c-8c7e-e644-f8a7c8f60188@siemens.com>
+In-Reply-To: <59169e7b-d58c-8c7e-e644-f8a7c8f60188@siemens.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 30 Apr 2019 18:52:30 +0300
+Message-ID: <CAHp75VexN0jBLun8s0MMOD3d5b+LsvuS9UFENyXLTeo0OFHHRQ@mail.gmail.com>
+Subject: Re: [PATCH] stmmac: pci: Fix typo in IOT2000 comment
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Su Bao Cheng <baocheng.su@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the DSDT tables expose devices with subdevices and a set of
-hierarchical _DSD properties, the data returned by
-acpi_get_next_subnode() is incorrect, with the results suggesting a bad
-pointer assignment. The parser works fine with device_nodes or
-data_nodes, but not with a combination of the two.
+On Mon, Apr 29, 2019 at 8:51 AM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+>
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+>
 
-The problem is traced to an invalid pointer used when jumping from
-handling device_nodes to data nodes. The existing code looks for data
-nodes below the last subdevice found instead of the common root. Fix
-by forcing the acpi_device pointer to be derived from the same fwnode
-for the two types of subnodes.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-This same problem of handling device and data nodes was already fixed
-in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
-node parsing in acpi_get_next_subnode()")' but broken later by 'commit
-34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
-this should probably go to linux-stable all the way to 4.12
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> index cc1e887e47b5..26db6aa002d1 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> @@ -160,7 +160,7 @@ static const struct dmi_system_id quark_pci_dmi[] = {
+>                 .driver_data = (void *)&galileo_stmmac_dmi_data,
+>         },
+>         /*
+> -        * There are 2 types of SIMATIC IOT2000: IOT20202 and IOT2040.
+> +        * There are 2 types of SIMATIC IOT2000: IOT2020 and IOT2040.
+>          * The asset tag "6ES7647-0AA00-0YA2" is only for IOT2020 which
+>          * has only one pci network device while other asset tags are
+>          * for IOT2040 which has two.
+> --
+> 2.16.4
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/acpi/property.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 5815356ea6ad..efc74f912f39 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -943,6 +943,16 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
- 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
- 		struct acpi_data_node *dn;
- 
-+		/*
-+		 * We can have a combination of device and data nodes,
-+		 * e.g. with hierarchical _DSD properties. Make sure
-+		 * the adev pointer is restored before going through
-+		 * data nodes, otherwise we will be looking for
-+		 * data_nodes below the last device found instead of
-+		 * the common fwnode shared by device_nodes and
-+		 * data_nodes
-+		 */
-+		adev = to_acpi_device_node(fwnode);
- 		if (adev)
- 			head = &adev->data.subnodes;
- 		else if (data)
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
