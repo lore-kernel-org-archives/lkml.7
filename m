@@ -2,89 +2,136 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B87C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7089AC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B75121670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556647508;
-	bh=B39rAXs2hA5NMD+MHibPmm2x4OPWNDSHHLCgPam4oSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RKkByxfpjBrG6wbqwKPezi6beUpNM3J/5VJBr0ynqyb8pN3Po6EXDgdj1EFFD+dZx
-	 KRaTNwiIK5siIK9iDeJr6lzO7jQOKvc3CT8031ugx9025C0z4UZQdwo6Dqhe0siHR/
-	 +9UTBQTiZsXwwnMQCZ3cjNUUbmRr15h+60B+U2T0=
+	by mail.kernel.org (Postfix) with ESMTP id 4CD4B21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 18:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfD3SFH (ORCPT
+        id S1726892AbfD3SFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 14:05:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49225 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbfD3SFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 14:05:07 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 11:05:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="138785887"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga008.jf.intel.com with ESMTP; 30 Apr 2019 11:05:05 -0700
-Date:   Tue, 30 Apr 2019 11:59:17 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Sinan Kaya <Okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        mr.nuke.me@gmail.com, linux-pci@vger.kernel.org,
-        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
-Message-ID: <20190430175917.GA25654@localhost.localdomain>
-References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
- <20190424175758.GC244134@google.com>
- <20190429085104.728aee75@x1.home>
- <76169da9-36cd-6754-41e7-47c8ef668648@kernel.org>
- <20190429105926.209d17d3@x1.home>
+        Tue, 30 Apr 2019 14:05:40 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60814 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfD3SFk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 14:05:40 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gportay)
+        with ESMTPSA id 60BAB281CB7
+From:   =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Lin Huang <hl@rock-chips.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        kernel@collabora.com
+Subject: [RFC 0/4] Add support for drm/rockchip to dynamically control  the DDR frequency within vblank for gru chromebooks.
+Date:   Tue, 30 Apr 2019 14:05:20 -0400
+Message-Id: <20190430180524.22710-1-gael.portay@collabora.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190429105926.209d17d3@x1.home>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:59:26AM -0600, Alex Williamson wrote:
-> On Mon, 29 Apr 2019 09:45:28 -0700
-> Sinan Kaya <Okaya@kernel.org> wrote:
-> 
-> > On 4/29/2019 10:51 AM, Alex Williamson wrote:
-> > > So where do we go from here?  I agree that dmesg is not necessarily a
-> > > great choice for these sorts of events and if they went somewhere else,
-> > > maybe I wouldn't have the same concerns about them generating user
-> > > confusion or contributing to DoS vectors from userspace drivers.  As it
-> > > is though, we have known cases where benign events generate confusing
-> > > logging messages, which seems like a regression.  Drivers didn't ask
-> > > for a link_change handler, but nor did they ask that the link state to
-> > > their device be monitored so closely.  Maybe this not only needs some
-> > > sort of change to the logging mechanism, but also an opt-in by the
-> > > driver if they don't expect runtime link changes.  Thanks,  
-> > 
-> > Is there anyway to detect autonomous hardware management support and
-> > not report link state changes in that situation?
-> > 
-> > I thought there were some capability bits for these.
-> 
-> Not that we can find, this doesn't trigger the separate autonomous
-> bandwidth notification interrupt.  Thanks,
+Dear all,
 
-I think the only control is to disable automomous lane and link rate
-changes. When set, any changes to either should only be in response to
-errors, so enabling those controls might be the right thing to do with
-this feature.
+The purpose of that RFC is to enable de DMC device for the Rockchip
+based GRU Chromebooks, and to add a mean of synchronization between the
+Rockchip DRM driver and that DMC devfreq driver.
+
+The DMC device is responsible for updating the DDR frequency according
+to the load of the DDR memory. Changing that clock rate within the
+display scanout leads to glitches. Thus, the devfreq framework needs a
+mean to synchronize the rate change with other devices.
+
+In that case, the DRM driver display has to synchronize a change rate
+within the VBLANK.
+
+The first patch adds a locking API to the devfreq framework. The users
+of a devfreq device can control the frequency change by locking and
+unlocking the devfreq device whenever they want. When a change rate is
+requested, and the device is locked, the drivers that hold a lock are
+called back, and the change will be applied as soon as the device is
+unlocked.
+
+The second patch adds the devfreq support in the Rockchip DRM drivers
+and uses the devfreq lock API to defer the change of the DDR frequency
+within the next VBLANK. The DRM driver locks the devfreq device and gets
+notified when a change is wanted then. Next, it enables the VBLANK
+interrupt, releases the lock on interrupt and starts a timer that
+relocks the devfreq device at the end of the vertical blanking interval.
+Also, the DRM driver disables the devfreq device if more than one CRTC
+becomes active.
+
+The third patch merges the Rockchip DDR clock code to the Rockchip DMC
+devfreq driver. These drivers both perform SMC calls to the
+Trusted-Firmware A to run SiP services that are related to the DDR
+memory. This merge puts the code at the same place. It avoids the
+contention in the Common Clock Framework that may cause to miss the
+deadline during which the rate can be changing without making glitches.
+
+The fourth patch tells display-subsystem to use the DMC devfreq device.
+
+I am waiting for your feedback.
+
+Note: This RFC needs patchset[1]. Its purpose is to addresses the review
+that was made in v1[2]. I dropped some patches in v2 to address things
+separately (in that RFC).
+
+[1]: https://patchwork.kernel.org/cover/10901577/
+[2]: https://lkml.org/lkml/fancy/2018/8/2/7
+
+Best regards,
+Gaël PORTAY (3):
+  PM / devfreq: add devfreq_lock/unlock() functions
+  drm: rockchip: Add DDR devfreq support.
+  clk: rockchip: merge clk-ddr in dmc devfreq driver
+  arm64: dts: rockchip: Set the display-subsystem devfreq
+
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi |   4 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi     |   2 +-
+ drivers/clk/rockchip/Makefile                |   1 -
+ drivers/clk/rockchip/clk-ddr.c               | 147 --------------
+ drivers/clk/rockchip/clk-rk3399.c            |   2 -
+ drivers/clk/rockchip/clk.c                   |   9 -
+ drivers/clk/rockchip/clk.h                   |  33 ---
+ drivers/devfreq/devfreq.c                    | 200 ++++++++++++++++++-
+ drivers/devfreq/rk3399_dmc.c                 |  42 ++--
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c  |  51 ++++-
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h  |   6 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c   | 177 +++++++++++++++-
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.h   |   3 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c  |  82 ++++++++
+ include/linux/devfreq.h                      |  64 ++++++
+ 15 files changed, 611 insertions(+), 212 deletions(-)
+ delete mode 100644 drivers/clk/rockchip/clk-ddr.c
+
+-- 
+2.21.0
+
