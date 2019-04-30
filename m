@@ -2,99 +2,72 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489CDC04AA6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF9BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E8520835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:12:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="f2pxPaEw"
+	by mail.kernel.org (Postfix) with ESMTP id 2624C20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 22:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfD3WMS (ORCPT
+        id S1727368AbfD3WNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 18:12:18 -0400
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:33372 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfD3WMR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 18:12:17 -0400
-Received: by mail-pf1-f176.google.com with SMTP id z28so2444564pfk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 15:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=t1A91VbqK3c3rmC3Vayr6AqXf4GJM9U1CcOpZO0SdRU=;
-        b=f2pxPaEwo1XMipVGAf0ROHaKcROWSBZu1hdWrOpwWIE/5PDwTGLFSvUWyEfZehzCoX
-         GnA8Ch5BM5Bst+5dc3QfzvFyNlnwVrc4ulkeQ959BtW7PXDDmWlIpOoPCC8weoUGDRYX
-         zYInoX9+2APh8P+1rzWbU9YRk6WQ2Io+8iTJe6KlKrYFry5og1VkYN7U303nsFx5xXyc
-         5rAZ+484o+BxJqjyPOM5Hj86JDh5JeBm6WXkWy7vrM44Et71o2uh6NaSlB+dMukh378l
-         578XRYyPRcxPd3ZcGn4dC+dKrOO10063m2D+k9BBpvG4rkXMWmjOqoELT2UwkEsiOFKF
-         Js0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=t1A91VbqK3c3rmC3Vayr6AqXf4GJM9U1CcOpZO0SdRU=;
-        b=YKkJH9yg6aPgJuUZlAnRZMwujwWgbD5Kd+5eFaJgy5DXxgxs1kD6wiLZJOhGb+UZ0M
-         AI48ZKoYTorRfnhAK4cLgGcH5pjd4yriyaBelLfJrjesFmUexrtQys3qwOtc5PWLeB0N
-         aCwVFrp/hy+6HFyVMTaN63AVAOEhBhOVYDkHccQ90chn7+3Rz5NLitx3jnf1Rz90kRS1
-         EJ/ecPFWDaVbDMcUa1Yaw0RmDtWd02+iu4iixDHBr4p6G3jJv1YGJ7XX6J8+raGhxvkg
-         ce9Gdpq48HqhFOYB1Bkpt+9NtTSmfMQErat6PQ/479RXSY4ETJrMuJwryXtBF0Pf5Joi
-         GWHQ==
-X-Gm-Message-State: APjAAAWdTeh9oXXew6SXRlpkK//59FilZGA1Q6rD8zo/FeQrztyYm2o/
-        VOnrN7Pe3R+UeuKnV9lDqY4VxroQ22EtLg==
-X-Google-Smtp-Source: APXvYqxAfmnvJ+NJgPRvSHpMMaJ1teBBvFl4KXdpLFc6lO5j7TDU7GYYOdkMrjYJZRQFX9cjNlADww==
-X-Received: by 2002:a62:1c13:: with SMTP id c19mr72524742pfc.11.1556662336230;
-        Tue, 30 Apr 2019 15:12:16 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id h65sm126756079pfd.108.2019.04.30.15.12.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 15:12:14 -0700 (PDT)
-Subject: Re: add SPDX tags to all block layer files
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Josef Bacik <jbacik@fb.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Fabio Checconi <fabio@gandalf.sssup.it>,
-        Nauman Rafique <nauman@google.com>,
-        Arianna Avanzini <avanzini.arianna@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190430184243.23436-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <251a6255-bed2-056d-86c8-918de8d6ca24@kernel.dk>
-Date:   Tue, 30 Apr 2019 16:12:12 -0600
+        Tue, 30 Apr 2019 18:13:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36168 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbfD3WNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 18:13:20 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A679A36887;
+        Tue, 30 Apr 2019 22:13:20 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38D6762661;
+        Tue, 30 Apr 2019 22:13:20 +0000 (UTC)
+Subject: Re: linux-next: Fixes tag needs some work in the modules tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190501081054.387820b2@canb.auug.org.au>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <fab23e00-5623-6fd0-18dd-f063dc1658ba@redhat.com>
+Date:   Tue, 30 Apr 2019 18:13:19 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190430184243.23436-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190501081054.387820b2@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 30 Apr 2019 22:13:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 12:42 PM, Christoph Hellwig wrote:
-> Hi Jens,
+
+
+On 4/30/19 6:10 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> this series adds SPDX tags to all block layer files that are still
-> missing them.  The last patch adds them to files that didn't have
-> any licensing, and I've cced everyone who is mentioned in the
-> Copyright notices for these files to make sure no one has any
-> disagreement with the fact that that they are per default under
-> the kernels GPLv2 license.
+> In commit
+> 
+>   7e470ea99bcd ("kernel/module: Reschedule while waiting for modules to finish loading")
+> 
+> Fixes tag
+> 
+>   Fixes: linux-next commit f9a75c1d717f ("modules: Only return -EEXIST for modules that have finished loading")
+> 
+> has these problem(s):
+> 
+>   - the "linux-next commit" is unexpected (and not really meaningful
+>     once this is merged into Linus' tree)
+> 
 
-Applied, thanks.
+Stephen, I will send out an updated patch now.
 
--- 
-Jens Axboe
-
+P.
