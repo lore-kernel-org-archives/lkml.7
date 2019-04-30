@@ -2,194 +2,145 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0076FC04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2D6C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CC92080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 172C92080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qn8YUxP+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfD3IdD (ORCPT
+        id S1726617AbfD3Ieb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:33:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49880 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726119AbfD3IdB (ORCPT
+        Tue, 30 Apr 2019 04:34:31 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42151 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfD3Ieb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:33:01 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3U8MKY1015277
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:33:00 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6hs0axtt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 04:32:59 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 30 Apr 2019 09:32:58 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 09:32:55 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3U8WrrL53608484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 08:32:53 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D2A1511C04C;
-        Tue, 30 Apr 2019 08:32:53 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0739C11C052;
-        Tue, 30 Apr 2019 08:32:53 +0000 (GMT)
-Received: from [9.152.222.31] (unknown [9.152.222.31])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Apr 2019 08:32:52 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
- <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
- <20190429185002.6041eecc.pasic@linux.ibm.com>
- <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
-Date:   Tue, 30 Apr 2019 10:32:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 04:34:31 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f23so11143198otl.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 01:34:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UZ329GyIEsSH86qncBprYdF1JcDUL5kLIJqmaDT3rzQ=;
+        b=Qn8YUxP+ZhVtL4H5Tg01cFzY9lparaT1kR+QUgl1M+fY2c3Na9oA71UHk7SH6X81lk
+         WMBfwdbngo5K3dulsT2G5YBhIWc1F/IOG+IkuWiBsZeidf1YRjXwOki5CzGCqhGoOANV
+         kJYjj365IUVuV/qo/q1sJKnFcqxxBePkiQIQ6CTKxHIwX88V+wc7z0m3N2id7ookKqn8
+         W1FPpD+mn3bPaLeQDtvXu34k/H/d6SVy5W2K6UeiTlwGHNne4qQSlcXOnak2TtrcYOSj
+         DYStGb2IOn3YmrOdBFS0yjlZByw0WODQpJEmVa7XjUMAhMC/NSji9ZPXDbbeJAsBYkIK
+         +xXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UZ329GyIEsSH86qncBprYdF1JcDUL5kLIJqmaDT3rzQ=;
+        b=UNHMI98CkTgRNB7x5Ava8WtYptmo4iXyEWQzw4EbiuDsZfwj7oBmyj9ghn1n40GYOd
+         qlhXgZKEa8CSrJIu0uZg3MC3TC6ci6x0rhOsgXTa4JkdU/+H4YAteH7vZ5qAsSJ9oe/a
+         IYLzcj7tdrjlRgnRay0N2FCmGzoSLKVQHPkXCFP1IEudZR/nF+hzkk8BaaDveqfZ4SBd
+         1cD8plSi0F58TrRktjsdnBHA7QTt/JIC++0wOrMWfy7rGgt2cut4ggcJfPBJEYOepn+J
+         8bI6bhi9StkwxpbkFX/irOjgwkg4iNs7UU/JBZknkflUvRTmyH0yqJOtRY7TpjryPhj1
+         yY6g==
+X-Gm-Message-State: APjAAAUdS6pqvOGpZrDUtrXriFjN5fTlP0MMSbbIkP3+kogNlzInZjSG
+        R6HiLtFLJ1jXmnNGoyb5tDZuySPSoSBk1rx5cfJMUw==
+X-Google-Smtp-Source: APXvYqzAwGuvpY0OewsWG1dkLqIGd+Tc58MRSBtZighPw0ersur6lRSJW+A711S7FlNoQiQULcmiDkKzKG8KYQCIaP4=
+X-Received: by 2002:a9d:7399:: with SMTP id j25mr13905907otk.277.1556613270536;
+ Tue, 30 Apr 2019 01:34:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19043008-4275-0000-0000-0000032FD3BF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043008-4276-0000-0000-0000383F2B89
-Message-Id: <efa8840b-35b1-2823-697f-ab56d4898854@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300057
+References: <cover.1555330115.git.baolin.wang@linaro.org> <d77dca51a14087873627d735a17adcfde5517398.1555330115.git.baolin.wang@linaro.org>
+ <20190429115723.GK3845@vkoul-mobl.Dlink> <CAMz4kuLf4wgr4Js3xH1aQVc4c2XK1Oq2TnsUq=NSowQUq5ZN5g@mail.gmail.com>
+ <20190429140537.GN3845@vkoul-mobl.Dlink> <CAMz4ku+ctQrcR+6t1ouakeG3dbgL3qR8fz-Hft4s9FnxtFL1ng@mail.gmail.com>
+ <20190430082954.GQ3845@vkoul-mobl.Dlink>
+In-Reply-To: <20190430082954.GQ3845@vkoul-mobl.Dlink>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 30 Apr 2019 16:34:19 +0800
+Message-ID: <CAMz4kuKV3J+aw9sic=QOhmcnr+H_pZ-pmq4pRbLX1R+XAR=phA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] dmaengine: sprd: Add device validation to support
+ multiple controllers
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2019 10:18, Pierre Morel wrote:
-> On 29/04/2019 18:50, Halil Pasic wrote:
->> On Fri, 26 Apr 2019 15:01:27 +0200
->> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>
->>> +static struct ap_queue_status vfio_ap_setirq(struct vfio_ap_queue *q)
->>> +{
->>> +    struct ap_qirq_ctrl aqic_gisa = {};
->>> +    struct ap_queue_status status = {};
->>> +    struct kvm_s390_gisa *gisa;
->>> +    struct kvm *kvm;
->>> +    unsigned long h_nib, h_pfn;
->>> +    int ret;
->>> +
->>> +    q->a_pfn = q->a_nib >> PAGE_SHIFT;
->>> +    ret = vfio_pin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1,
->>> +                 IOMMU_READ | IOMMU_WRITE, &h_pfn);
->>> +    switch (ret) {
->>> +    case 1:
->>> +        break;
->>> +    case -EINVAL:
->>> +    case -E2BIG:
->>> +        status.response_code = AP_RESPONSE_INVALID_ADDRESS;
->>> +        /* Fallthrough */
->>> +    default:
->>> +        return status;
->>
->> Can we actually hit the default label? AFICT you would return an
->> all-zero status, i.e. status.response_code == 0 'Normal completion'.
-> 
-> hum right, the setting of AP_INVALID_ADDRESS should be in the default 
-> and there is no need for the two error cases, they will match the default.
-> 
-> 
->>
->>> +    }
->>> +
->>> +    kvm = q->matrix_mdev->kvm;
->>> +    gisa = kvm->arch.gisa_int.origin;
->>> +
->>> +    h_nib = (h_pfn << PAGE_SHIFT) | (q->a_nib & ~PAGE_MASK);
->>> +    aqic_gisa.gisc = q->a_isc;
->>> +    aqic_gisa.isc = kvm_s390_gisc_register(kvm, q->a_isc);
->>> +    aqic_gisa.ir = 1;
->>> +    aqic_gisa.gisa = gisa->next_alert >> 4;
->>
->> Why gisa->next_alert? Isn't this supposed to get set to gisa origin
->> (without some bits on the left)?
-> 
-> Someone already asked this question.
-> The answer is: look at the ap_qirq_ctrl structure, you will see that the 
-> gisa field is 27 bits wide.
-> 
->>
->>> +
->>> +    status = ap_aqic(q->apqn, aqic_gisa, (void *)h_nib);
->>> +    switch (status.response_code) {
->>> +    case AP_RESPONSE_NORMAL:
->>> +        /* See if we did clear older IRQ configuration */
->>> +        if (q->p_pfn)
->>> +            vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
->>> +                     &q->p_pfn, 1);
->>> +        if (q->p_isc != VFIO_AP_ISC_INVALID)
->>> +            kvm_s390_gisc_unregister(kvm, q->p_isc);
->>> +        q->p_pfn = q->a_pfn;
->>> +        q->p_isc = q->a_isc;
->>> +        break;
->>> +    case AP_RESPONSE_OTHERWISE_CHANGED:
->>> +        /* We could not modify IRQ setings: clear new configuration */
->>> +        vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1);
->>> +        kvm_s390_gisc_unregister(kvm, q->a_isc);
->>
->> Hm, see below. Wouldn't you want to set a_isc to VFIO_AP_ISC_INVALID?
-> 
-> grrr!!! when did I insert these 3 lines, it was OK in previous series!
-> all 3 lines, vfio_unpin() / gisc_unregister / break must go away.
+On Tue, 30 Apr 2019 at 16:30, Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 30-04-19, 13:30, Baolin Wang wrote:
+> > On Mon, 29 Apr 2019 at 22:05, Vinod Koul <vkoul@kernel.org> wrote:
+> > >
+> > > On 29-04-19, 20:20, Baolin Wang wrote:
+> > > > On Mon, 29 Apr 2019 at 19:57, Vinod Koul <vkoul@kernel.org> wrote:
+> > > > >
+> > > > > On 15-04-19, 20:14, Baolin Wang wrote:
+> > > > > > From: Eric Long <eric.long@unisoc.com>
+> > > > > >
+> > > > > > Since we can support multiple DMA engine controllers, we should add
+> > > > > > device validation in filter function to check if the correct controller
+> > > > > > to be requested.
+> > > > > >
+> > > > > > Signed-off-by: Eric Long <eric.long@unisoc.com>
+> > > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > > > > ---
+> > > > > >  drivers/dma/sprd-dma.c |    5 +++++
+> > > > > >  1 file changed, 5 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> > > > > > index 0f92e60..9f99d4b 100644
+> > > > > > --- a/drivers/dma/sprd-dma.c
+> > > > > > +++ b/drivers/dma/sprd-dma.c
+> > > > > > @@ -1020,8 +1020,13 @@ static void sprd_dma_free_desc(struct virt_dma_desc *vd)
+> > > > > >  static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param)
+> > > > > >  {
+> > > > > >       struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
+> > > > > > +     struct of_phandle_args *dma_spec =
+> > > > > > +             container_of(param, struct of_phandle_args, args[0]);
+> > > > > >       u32 slave_id = *(u32 *)param;
+> > > > > >
+> > > > > > +     if (chan->device->dev->of_node != dma_spec->np)
+> > > > >
+> > > > > Are you not using of_dma_find_controller() that does this, so this would
+> > > > > be useless!
+> > > >
+> > > > Yes, we can use of_dma_find_controller(), but that will be a little
+> > > > complicated than current solution. Since we need introduce one
+> > > > structure to save the node to validate in the filter function like
+> > > > below, which seems make things complicated. But if you still like to
+> > > > use of_dma_find_controller(), I can change to use it in next version.
+> > >
+> > > Sorry I should have clarified more..
+> > >
+> > > of_dma_find_controller() is called by xlate, so you already run this
+> > > check, so why use this :)
+> >
+> > The of_dma_find_controller() can save the requested device node into
+> > dma_spec, and in the of_dma_simple_xlate() function, it will call
+> > dma_request_channel() to request one channel, but it did not validate
+> > the device node to find the corresponding dma device in
+> > dma_request_channel(). So we should in our filter function to validate
+> > the device node with the device node specified by the dma_spec. Hope I
+> > make things clear.
+>
+> But dma_request_channel() calls of_dma_request_slave_channel() which
+> invokes of_dma_find_controller() why is it broken for you if that is the
+> case..
 
-No it wasn't, I will correct this.
-
-> 
->>
->>> +        break;
->>> +    default:    /* Fall Through */
->>
->> Is it 'break' or is it 'Fall Through'?
-> 
-> it is a fall through
-> 
->>
->>> +        pr_warn("%s: apqn %04x: response: %02x\n", __func__, q->apqn,
->>> +            status.response_code);
->>> +        vfio_ap_free_irq_data(q);
->>> +        break;
->>> +    }
->>> +
->>> +    return status;
->>> +}
-> 
-> 
-
+No,the calling process should be:
+dma_request_slave_channel()
+--->dma_request_chan()--->of_dma_request_slave_channel()---->of_dma_simple_xlate()
+----> dma_request_channel().
 
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+Baolin Wang
+Best Regards
