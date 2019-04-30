@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4589AC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58618C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0545421670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC9521670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625476;
-	bh=xkRTa80tLR3PcUsxWpLitr24AxedZYy0UVzAqQLKAZo=;
+	s=default; t=1556625488;
+	bh=ez49DqDQcLXZ+8IQETI2Udki6MF5zImlUp4i58z9YZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yU9D8T/pIE6Lr8IiJ3zSG9g6S0qr9YQ6cLS6yEizQJB5DUDIJ3EEr8TAnkRHfT/j1
-	 gvMPcHSaEjCXi1SVA+gi7Tr2Lik4qjeel7n3QYim5lE8v7vsMZ63Z5cJ8ab6lPSQki
-	 5vhm9bjXcvZHNuxq4XUyjlHQ5JWTb9oAvDg3EG+g=
+	b=tKIh7PZZfNHwtWwZkiLgUnjc619+BTv+v9SuRh7h8mJyR1jVBrI9snkZeiClZLJOz
+	 +besNCIetNd3G+mmbPw3FY91rhoeBeMboo19ybDEiQbicSeWZgTIozS0EjNUkTv5Y0
+	 8Ikvk1QNWvY9xhN5Q7CabLmgE5QLxhA+lRiwtEzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbfD3L5z (ORCPT
+        id S1727947AbfD3L6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33164 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:58:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730734AbfD3Lri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:47:38 -0400
+        id S1730705AbfD3Lr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:47:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF85120449;
-        Tue, 30 Apr 2019 11:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50CCA2054F;
+        Tue, 30 Apr 2019 11:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624857;
-        bh=xkRTa80tLR3PcUsxWpLitr24AxedZYy0UVzAqQLKAZo=;
+        s=default; t=1556624846;
+        bh=ez49DqDQcLXZ+8IQETI2Udki6MF5zImlUp4i58z9YZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+lfJ6EU8XiudHseZ0RPSg6H6wx7mzXVKSzTor/Lhwtr18/Rdfm5smb5Za6OZ/27W
-         Y4oN8fjiatLwTUgDobOIMrCx/vnaqDi1JbC5VfT3cg8IMlr+lKrg5Q6VXpltfojMgI
-         l0PN7FQEo6nivRgaG0fS+Rb0NJajrli25jSXt8ic=
+        b=MiXu+8P0A5tTN4tnCPdG7py8k9UKjKRCExieyvXFq57JVq45USbt0+PabrfLxpE8p
+         rD4gHXE+4EpemNw5M6eyEzGCm3q5WhV9RhDLFTzKzTbgHLCoqWTEfpbgf8rhQFR6Y9
+         FVvg2plcE7SSeXOaNqmQqPbeB+I139wgzA9dRXpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 100/100] net/tls: dont leak IV and record seq when offload fails
-Date:   Tue, 30 Apr 2019 13:39:09 +0200
-Message-Id: <20190430113613.561524608@linuxfoundation.org>
+Subject: [PATCH 4.19 096/100] mlxsw: spectrum: Put MC TCs into DWRR mode
+Date:   Tue, 30 Apr 2019 13:39:05 +0200
+Message-Id: <20190430113613.363211020@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
 References: <20190430113608.616903219@linuxfoundation.org>
@@ -61,71 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 12c7686111326148b4b5db189130522a4ad1be4a ]
+[ Upstream commit f476b3f809fa02f47af6333ed63715058c3fc348 ]
 
-When device refuses the offload in tls_set_device_offload_rx()
-it calls tls_sw_free_resources_rx() to clean up software context
-state.
+Both Spectrum-1 and Spectrum-2 chips are currently configured such that
+pairs of TC n (which is used for UC traffic) and TC n+8 (which is used
+for MC traffic) are feeding into the same subgroup. Strict
+prioritization is configured between the two TCs, and by enabling
+MC-aware mode on the switch, the lower-numbered (UC) TCs are favored
+over the higher-numbered (MC) TCs.
 
-Unfortunately, tls_sw_free_resources_rx() does not free all
-the state tls_set_sw_offload() allocated - it leaks IV and
-sequence number buffers.  All other code paths which lead to
-tls_sw_release_resources_rx() (which tls_sw_free_resources_rx()
-calls) free those right before the call.
+On Spectrum-2 however, there is an issue in configuration of the
+MC-aware mode. As a result, MC traffic is prioritized over UC traffic.
+To work around the issue, configure the MC TCs with DWRR mode (while
+keeping the UC TCs in strict mode).
 
-Avoid the leak by moving freeing of iv and rec_seq into
-tls_sw_release_resources_rx().
+With this patch, the multicast-unicast arbitration results in the same
+behavior on both Spectrum-1 and Spectrum-2 chips.
 
-Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Fixes: 7b8195306694 ("mlxsw: spectrum: Configure MC-aware mode on mlxsw ports")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_device.c |    2 --
- net/tls/tls_main.c   |    5 +----
- net/tls/tls_sw.c     |    3 +++
- 3 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -911,8 +911,6 @@ void tls_device_offload_cleanup_rx(struc
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -2783,7 +2783,7 @@ static int mlxsw_sp_port_ets_init(struct
+ 		err = mlxsw_sp_port_ets_set(mlxsw_sp_port,
+ 					    MLXSW_REG_QEEC_HIERARCY_TC,
+ 					    i + 8, i,
+-					    false, 0);
++					    true, 100);
+ 		if (err)
+ 			return err;
  	}
- out:
- 	up_read(&device_offload_lock);
--	kfree(tls_ctx->rx.rec_seq);
--	kfree(tls_ctx->rx.iv);
- 	tls_sw_release_resources_rx(sk);
- }
- 
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -290,11 +290,8 @@ static void tls_sk_proto_close(struct so
- 		tls_sw_free_resources_tx(sk);
- 	}
- 
--	if (ctx->rx_conf == TLS_SW) {
--		kfree(ctx->rx.rec_seq);
--		kfree(ctx->rx.iv);
-+	if (ctx->rx_conf == TLS_SW)
- 		tls_sw_free_resources_rx(sk);
--	}
- 
- #ifdef CONFIG_TLS_DEVICE
- 	if (ctx->rx_conf == TLS_HW)
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -1118,6 +1118,9 @@ void tls_sw_release_resources_rx(struct
- 	struct tls_context *tls_ctx = tls_get_ctx(sk);
- 	struct tls_sw_context_rx *ctx = tls_sw_ctx_rx(tls_ctx);
- 
-+	kfree(tls_ctx->rx.rec_seq);
-+	kfree(tls_ctx->rx.iv);
-+
- 	if (ctx->aead_recv) {
- 		kfree_skb(ctx->recv_pkt);
- 		ctx->recv_pkt = NULL;
 
 
