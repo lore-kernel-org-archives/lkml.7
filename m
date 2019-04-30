@@ -2,369 +2,112 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14123C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64279C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E4E21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625567;
-	bh=JSJpkAVkNv/JX/+V1ccBGPwdbmTUhawtKjf0TRPSt0c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tS6m1CMD0RQi679zhfgEzLda4eKxAg6wRUz0/LwzkcAD/J9Lq8pzKfbItHdwDwSP8
-	 AwsKjuvwD+JyH68uWhjpheEDDr1W2bWiXwroHLG6UBvXXw/Id/1iQLQdPzlyZiou6V
-	 mAfwLp6M78a47IaK0CwmFsVlojcTwJ3rN1Brmn7c=
+	by mail.kernel.org (Postfix) with ESMTP id 34D0621670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:59:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sW33nvnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfD3L70 (ORCPT
+        id S1730557AbfD3Lq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730571AbfD3Lqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:46:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 549552182B;
-        Tue, 30 Apr 2019 11:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624792;
-        bh=JSJpkAVkNv/JX/+V1ccBGPwdbmTUhawtKjf0TRPSt0c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QxFYFupFUYiJAXcUkLZ6Ub1ypjfpN8Ouo9MLMAHmAOWwvkV2lpfK3O391N5AxhbFU
-         75TNcmM2zKtbHeK47L8hQOajBnz4DNY8h36LC+08hSCQg/p5CGZit23HmP5iJlm5P8
-         O8xTWaTJVNKzlKgseduzvQqJ+/9RGsIQhAI8uu18=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot+503d4cc169fcec1cb18c@syzkaller.appspotmail.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 074/100] aio: simplify - and fix - fget/fput for io_submit()
-Date:   Tue, 30 Apr 2019 13:38:43 +0200
-Message-Id: <20190430113612.228279107@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
-References: <20190430113608.616903219@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 30 Apr 2019 07:46:27 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56384 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728087AbfD3LqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:46:21 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UBk69L053322;
+        Tue, 30 Apr 2019 06:46:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556624766;
+        bh=MS/ebHHo25Z4rkEAJDu2R8iPbpujs41yXsTmY3TMBOA=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=sW33nvnrlbzw36Q4MkQmmsvf19y3+NPrU9FVMx7iRGTb7/LachkvqCEcAo6iDGxIJ
+         eU/E+o03rJW0lfKBTB4mvRocn4rxI0/7II7IB7gBxZggatIKDbbOrVIhKICm+Ic9Vn
+         B3rNp2bCx7SHRHlIPBlkx0ANi9AA68n3tI0SytWQ=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UBk60j120491
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Apr 2019 06:46:06 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
+ Apr 2019 06:46:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 30 Apr 2019 06:46:06 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UBk6BU042431;
+        Tue, 30 Apr 2019 06:46:06 -0500
+Date:   Tue, 30 Apr 2019 06:45:12 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Marc Zyngier <marc.zyngier@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
+        <linus.walleij@linaro.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v8 00/14] Add support for TISCI Interrupt controller
+ drivers
+Message-ID: <20190430114512.pde3uuh5e3qwve3m@kahuna>
+References: <20190430101230.21794-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+On 15:42-20190430, Lokesh Vutla wrote:
+[...]
+> Changes since v7:
+> - Rebased on top of latest master.
+> - Each patch has respective changes mentioned.
+> 
+> Grygorii Strashko (1):
+>   firmware: ti_sci: Add support to get TISCI handle using of_phandle
+> 
+> Lokesh Vutla (12):
+>   firmware: ti_sci: Add support for RM core ops
+>   firmware: ti_sci: Add support for IRQ management
+>   firmware: ti_sci: Add helper apis to manage resources
+>   genirq: Introduce irq_chip_{request,release}_resource_parent() apis
+>   gpio: thunderx: Use the default parent apis for
+>     {request,release}_resources
+>   dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
+>   irqchip: ti-sci-intr: Add support for Interrupt Router driver
+>   dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
+>   irqchip: ti-sci-inta: Add support for Interrupt Aggregator driver
+>   soc: ti: Add MSI domain bus support for Interrupt Aggregator
+>   irqchip: ti-sci-inta: Add msi domain support
+>   arm64: arch_k3: Enable interrupt controller drivers
+> 
+> Peter Ujfalusi (1):
+>   firmware: ti_sci: Add RM mapping table for am654
+> 
 
-commit 84c4e1f89fefe70554da0ab33be72c9be7994379 upstream.
+For patches 1..5 (Firmware patches):
 
-Al Viro root-caused a race where the IOCB_CMD_POLL handling of
-fget/fput() could cause us to access the file pointer after it had
-already been freed:
+Acked-by: Nishanth Menon <nm@ti.com>
 
- "In more details - normally IOCB_CMD_POLL handling looks so:
-
-   1) io_submit(2) allocates aio_kiocb instance and passes it to
-      aio_poll()
-
-   2) aio_poll() resolves the descriptor to struct file by req->file =
-      fget(iocb->aio_fildes)
-
-   3) aio_poll() sets ->woken to false and raises ->ki_refcnt of that
-      aio_kiocb to 2 (bumps by 1, that is).
-
-   4) aio_poll() calls vfs_poll(). After sanity checks (basically,
-      "poll_wait() had been called and only once") it locks the queue.
-      That's what the extra reference to iocb had been for - we know we
-      can safely access it.
-
-   5) With queue locked, we check if ->woken has already been set to
-      true (by aio_poll_wake()) and, if it had been, we unlock the
-      queue, drop a reference to aio_kiocb and bugger off - at that
-      point it's a responsibility to aio_poll_wake() and the stuff
-      called/scheduled by it. That code will drop the reference to file
-      in req->file, along with the other reference to our aio_kiocb.
-
-   6) otherwise, we see whether we need to wait. If we do, we unlock the
-      queue, drop one reference to aio_kiocb and go away - eventual
-      wakeup (or cancel) will deal with the reference to file and with
-      the other reference to aio_kiocb
-
-   7) otherwise we remove ourselves from waitqueue (still under the
-      queue lock), so that wakeup won't get us. No async activity will
-      be happening, so we can safely drop req->file and iocb ourselves.
-
-  If wakeup happens while we are in vfs_poll(), we are fine - aio_kiocb
-  won't get freed under us, so we can do all the checks and locking
-  safely. And we don't touch ->file if we detect that case.
-
-  However, vfs_poll() most certainly *does* touch the file it had been
-  given. So wakeup coming while we are still in ->poll() might end up
-  doing fput() on that file. That case is not too rare, and usually we
-  are saved by the still present reference from descriptor table - that
-  fput() is not the final one.
-
-  But if another thread closes that descriptor right after our fget()
-  and wakeup does happen before ->poll() returns, we are in trouble -
-  final fput() done while we are in the middle of a method:
-
-Al also wrote a patch to take an extra reference to the file descriptor
-to fix this, but I instead suggested we just streamline the whole file
-pointer handling by submit_io() so that the generic aio submission code
-simply keeps the file pointer around until the aio has completed.
-
-Fixes: bfe4037e722e ("aio: implement IOCB_CMD_POLL")
-Acked-by: Al Viro <viro@zeniv.linux.org.uk>
-Reported-by: syzbot+503d4cc169fcec1cb18c@syzkaller.appspotmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/aio.c           |   72 +++++++++++++++++++++--------------------------------
- include/linux/fs.h |    8 +++++
- 2 files changed, 36 insertions(+), 44 deletions(-)
-
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -161,9 +161,13 @@ struct kioctx {
- 	unsigned		id;
- };
- 
-+/*
-+ * First field must be the file pointer in all the
-+ * iocb unions! See also 'struct kiocb' in <linux/fs.h>
-+ */
- struct fsync_iocb {
--	struct work_struct	work;
- 	struct file		*file;
-+	struct work_struct	work;
- 	bool			datasync;
- };
- 
-@@ -177,8 +181,15 @@ struct poll_iocb {
- 	struct work_struct	work;
- };
- 
-+/*
-+ * NOTE! Each of the iocb union members has the file pointer
-+ * as the first entry in their struct definition. So you can
-+ * access the file pointer through any of the sub-structs,
-+ * or directly as just 'ki_filp' in this struct.
-+ */
- struct aio_kiocb {
- 	union {
-+		struct file		*ki_filp;
- 		struct kiocb		rw;
- 		struct fsync_iocb	fsync;
- 		struct poll_iocb	poll;
-@@ -1054,6 +1065,8 @@ static inline void iocb_put(struct aio_k
- {
- 	if (refcount_read(&iocb->ki_refcnt) == 0 ||
- 	    refcount_dec_and_test(&iocb->ki_refcnt)) {
-+		if (iocb->ki_filp)
-+			fput(iocb->ki_filp);
- 		percpu_ref_put(&iocb->ki_ctx->reqs);
- 		kmem_cache_free(kiocb_cachep, iocb);
- 	}
-@@ -1418,7 +1431,6 @@ static void aio_complete_rw(struct kiocb
- 		file_end_write(kiocb->ki_filp);
- 	}
- 
--	fput(kiocb->ki_filp);
- 	aio_complete(iocb, res, res2);
- }
- 
-@@ -1426,9 +1438,6 @@ static int aio_prep_rw(struct kiocb *req
- {
- 	int ret;
- 
--	req->ki_filp = fget(iocb->aio_fildes);
--	if (unlikely(!req->ki_filp))
--		return -EBADF;
- 	req->ki_complete = aio_complete_rw;
- 	req->private = NULL;
- 	req->ki_pos = iocb->aio_offset;
-@@ -1445,7 +1454,7 @@ static int aio_prep_rw(struct kiocb *req
- 		ret = ioprio_check_cap(iocb->aio_reqprio);
- 		if (ret) {
- 			pr_debug("aio ioprio check cap error: %d\n", ret);
--			goto out_fput;
-+			return ret;
- 		}
- 
- 		req->ki_ioprio = iocb->aio_reqprio;
-@@ -1454,14 +1463,10 @@ static int aio_prep_rw(struct kiocb *req
- 
- 	ret = kiocb_set_rw_flags(req, iocb->aio_rw_flags);
- 	if (unlikely(ret))
--		goto out_fput;
-+		return ret;
- 
- 	req->ki_flags &= ~IOCB_HIPRI; /* no one is going to poll for this I/O */
- 	return 0;
--
--out_fput:
--	fput(req->ki_filp);
--	return ret;
- }
- 
- static int aio_setup_rw(int rw, const struct iocb *iocb, struct iovec **iovec,
-@@ -1515,24 +1520,19 @@ static ssize_t aio_read(struct kiocb *re
- 	if (ret)
- 		return ret;
- 	file = req->ki_filp;
--
--	ret = -EBADF;
- 	if (unlikely(!(file->f_mode & FMODE_READ)))
--		goto out_fput;
-+		return -EBADF;
- 	ret = -EINVAL;
- 	if (unlikely(!file->f_op->read_iter))
--		goto out_fput;
-+		return -EINVAL;
- 
- 	ret = aio_setup_rw(READ, iocb, &iovec, vectored, compat, &iter);
- 	if (ret)
--		goto out_fput;
-+		return ret;
- 	ret = rw_verify_area(READ, file, &req->ki_pos, iov_iter_count(&iter));
- 	if (!ret)
- 		aio_rw_done(req, call_read_iter(file, req, &iter));
- 	kfree(iovec);
--out_fput:
--	if (unlikely(ret))
--		fput(file);
- 	return ret;
- }
- 
-@@ -1549,16 +1549,14 @@ static ssize_t aio_write(struct kiocb *r
- 		return ret;
- 	file = req->ki_filp;
- 
--	ret = -EBADF;
- 	if (unlikely(!(file->f_mode & FMODE_WRITE)))
--		goto out_fput;
--	ret = -EINVAL;
-+		return -EBADF;
- 	if (unlikely(!file->f_op->write_iter))
--		goto out_fput;
-+		return -EINVAL;
- 
- 	ret = aio_setup_rw(WRITE, iocb, &iovec, vectored, compat, &iter);
- 	if (ret)
--		goto out_fput;
-+		return ret;
- 	ret = rw_verify_area(WRITE, file, &req->ki_pos, iov_iter_count(&iter));
- 	if (!ret) {
- 		/*
-@@ -1576,9 +1574,6 @@ static ssize_t aio_write(struct kiocb *r
- 		aio_rw_done(req, call_write_iter(file, req, &iter));
- 	}
- 	kfree(iovec);
--out_fput:
--	if (unlikely(ret))
--		fput(file);
- 	return ret;
- }
- 
-@@ -1588,7 +1583,6 @@ static void aio_fsync_work(struct work_s
- 	int ret;
- 
- 	ret = vfs_fsync(req->file, req->datasync);
--	fput(req->file);
- 	aio_complete(container_of(req, struct aio_kiocb, fsync), ret, 0);
- }
- 
-@@ -1599,13 +1593,8 @@ static int aio_fsync(struct fsync_iocb *
- 			iocb->aio_rw_flags))
- 		return -EINVAL;
- 
--	req->file = fget(iocb->aio_fildes);
--	if (unlikely(!req->file))
--		return -EBADF;
--	if (unlikely(!req->file->f_op->fsync)) {
--		fput(req->file);
-+	if (unlikely(!req->file->f_op->fsync))
- 		return -EINVAL;
--	}
- 
- 	req->datasync = datasync;
- 	INIT_WORK(&req->work, aio_fsync_work);
-@@ -1615,10 +1604,7 @@ static int aio_fsync(struct fsync_iocb *
- 
- static inline void aio_poll_complete(struct aio_kiocb *iocb, __poll_t mask)
- {
--	struct file *file = iocb->poll.file;
--
- 	aio_complete(iocb, mangle_poll(mask), 0);
--	fput(file);
- }
- 
- static void aio_poll_complete_work(struct work_struct *work)
-@@ -1743,9 +1729,6 @@ static ssize_t aio_poll(struct aio_kiocb
- 
- 	INIT_WORK(&req->work, aio_poll_complete_work);
- 	req->events = demangle_poll(iocb->aio_buf) | EPOLLERR | EPOLLHUP;
--	req->file = fget(iocb->aio_fildes);
--	if (unlikely(!req->file))
--		return -EBADF;
- 
- 	req->head = NULL;
- 	req->woken = false;
-@@ -1788,10 +1771,8 @@ static ssize_t aio_poll(struct aio_kiocb
- 	spin_unlock_irq(&ctx->ctx_lock);
- 
- out:
--	if (unlikely(apt.error)) {
--		fput(req->file);
-+	if (unlikely(apt.error))
- 		return apt.error;
--	}
- 
- 	if (mask)
- 		aio_poll_complete(aiocb, mask);
-@@ -1829,6 +1810,11 @@ static int __io_submit_one(struct kioctx
- 	if (unlikely(!req))
- 		goto out_put_reqs_available;
- 
-+	req->ki_filp = fget(iocb->aio_fildes);
-+	ret = -EBADF;
-+	if (unlikely(!req->ki_filp))
-+		goto out_put_req;
-+
- 	if (iocb->aio_flags & IOCB_FLAG_RESFD) {
- 		/*
- 		 * If the IOCB_FLAG_RESFD flag of aio_flags is set, get an
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -304,13 +304,19 @@ enum rw_hint {
- 
- struct kiocb {
- 	struct file		*ki_filp;
-+
-+	/* The 'ki_filp' pointer is shared in a union for aio */
-+	randomized_struct_fields_start
-+
- 	loff_t			ki_pos;
- 	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
- 	void			*private;
- 	int			ki_flags;
- 	u16			ki_hint;
- 	u16			ki_ioprio; /* See linux/ioprio.h */
--} __randomize_layout;
-+
-+	randomized_struct_fields_end
-+};
- 
- static inline bool is_sync_kiocb(struct kiocb *kiocb)
- {
-
-
+-- 
+Regards,
+Nishanth Menon
