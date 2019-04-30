@@ -2,99 +2,121 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6CBC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC376C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF092080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC527217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 08:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Gw4OwmuD"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="M7/9voiO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfD3IK0 (ORCPT
+        id S1726543AbfD3IMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 04:10:26 -0400
-Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:44438
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725790AbfD3IKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 04:10:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AQJcd1V092CHp5ZYUf0tzBNQVT8V4YjiRfdDANKslUY=;
- b=Gw4OwmuDgkqtYmRAFeQCEGCPoDkdH5gc6lC6ZM/0+FBioI7lgELe3iOzqgy/c26QtcF73Hfl9msLGFMsmCk7liwLieTWvp4cIZ5H6viotjfdZ8GqJuEVkWaVDqES0aL6Xm3Q1Q81OdJrjMOHpdth04mFqZ3ODEC3z3V6wsKUXHE=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB6354.eurprd04.prod.outlook.com (10.255.182.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Tue, 30 Apr 2019 08:10:21 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::8cda:4e52:8e87:8f0e]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::8cda:4e52:8e87:8f0e%2]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
- 08:10:21 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] i2c: imx-lpi2c: Use __maybe_unused instead of #if
- CONFIG_PM_SLEEP
-Thread-Topic: [PATCH] i2c: imx-lpi2c: Use __maybe_unused instead of #if
- CONFIG_PM_SLEEP
-Thread-Index: AQHU/yJVTGic+X2v4ESo316NmJN4TKZUWBXw
-Date:   Tue, 30 Apr 2019 08:10:21 +0000
-Message-ID: <AM0PR04MB42114EDECD01526E128A323E803A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1556607314-32401-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1556607314-32401-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2cc87847-e464-47dd-8801-08d6cd434a48
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6354;
-x-ms-traffictypediagnostic: AM0PR04MB6354:
-x-microsoft-antispam-prvs: <AM0PR04MB6354723F0293EF858A80BC63803A0@AM0PR04MB6354.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 00235A1EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(376002)(39860400002)(366004)(136003)(199004)(189003)(52536014)(64756008)(2201001)(6436002)(99286004)(8676002)(71190400001)(7696005)(86362001)(486006)(229853002)(44832011)(71200400001)(8936002)(2906002)(26005)(9686003)(186003)(7736002)(68736007)(5660300002)(25786009)(74316002)(305945005)(66066001)(110136005)(66556008)(53546011)(256004)(55016002)(73956011)(6246003)(316002)(478600001)(66476007)(53936002)(102836004)(76176011)(4744005)(3846002)(4326008)(97736004)(6116002)(33656002)(2501003)(6506007)(11346002)(81166006)(14454004)(446003)(476003)(81156014)(66446008)(76116006)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6354;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: W0aCUfl0nWOamvaZJW8tWNNbLYPfyq54qqmBYgDQDt4hS/ursHVrQd4fMI2M9vEpBdtME6BOcZduD5oWiZvyeW+aj/JzKn3c6iOw6n2oC5WDCPGgJmO+AY7nhJrS3YYHEPSM0xIm3/8005x+wQ1EqmPockqETHEl04xbGSnEYT8CBND+xNJtuFzk+bCxEQMO2BXzdTmSuymqKmoK+cCwEk13kkEB1LvCoy29iUEKlVzJw9iwwtBglG0sVV83tD7aR0PIbFuxcCmfQ26yTesdNGYFpyOSl8D3nh9xnL4J/IOp9X39ypa6gJfhhfupLUmJcMiUFmW5KmJl4lYSs2GLM8nzoD0avC/czIxfMVP5s0122wQGmer4yioiX15tjmLHw3G163Jet+HXAm3hda7IfuFET7pONTppVzq2k8zROUk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 30 Apr 2019 04:12:47 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33806 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfD3IMq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 04:12:46 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h5so10154094lfm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 01:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9ozURogrBkqi6N/9N92/2fxrEWVZwyBMFji8R7JKkYU=;
+        b=M7/9voiOZsA0i1tciJ1pUBbgPG/0StQIPxDKbDg1g11ZPSQamC313AwO8BFToT/wgy
+         jG5v7Jaa1HuDkspbMSzWg4k/0BPxqnWvC7d0HkRJXvOE+JgIfSQ/HrDd2aKFR8RoBjyw
+         hc10L4REu9iSGrekmG8BkHY/7uXuiagFhqAR4tpIikdIw026IAXARahgOqOjL8SJLwYe
+         cajE7QCavHx+j0JgCM7Yj7oy9Tit01jlFZIBFKrIWEF6Viw+CYaGg6488w6erNBKtIQh
+         dRqHKyhDfAXQ7K43g2i74TUI40bO0jJXM8JkJmXXkgbOS9whCTc2J9jGj1ybM6iLdH7c
+         Aviw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9ozURogrBkqi6N/9N92/2fxrEWVZwyBMFji8R7JKkYU=;
+        b=nHInheWnCB0pDWt10qnMGRgB1wgI4xINxF/T3QyFg3ED/Ar7uV0DfDDy0E/7g8Hmwk
+         QPVRL9Tmv6ZCE2bbv8zSuaq0XetaH8k1+qQOOngFj5J7TkeZiXD9EPMLEt2LBMoh4K/8
+         8/gQEiq7ip4TwX7Eye2fWx/gUt0jyMPvjtX4jLjiEjjV8sRv7E6UszKTgdSujO2DzPhM
+         fUDQWC16VYm2I9HdgchhvFJUNSqVZRh8n07vuObjpqeEnirZYD78ZNyaFDXrIpaxw11U
+         anAjGKSk13MFgUo1cyWJWMPQ1A+oljU3repVPmXGXythiJg/Nfc+8liRESZAnJCvx6HK
+         ipEw==
+X-Gm-Message-State: APjAAAWxH1VE2GODjkt1YPMYeuq3vzqNsYQsk1vbjDPqxoVW2iLbmJt0
+        gjva/2b9g3/fc7h1bLqEDXrJ+A6mJ78=
+X-Google-Smtp-Source: APXvYqyi6TzPSwc+vP/6cCmv5b05hWr4xC/ARTHKOTUqoAS7o4TuMr/9HAqCRgURLMrWPpVgpHblvA==
+X-Received: by 2002:a19:f801:: with SMTP id a1mr36540071lff.150.1556611964646;
+        Tue, 30 Apr 2019 01:12:44 -0700 (PDT)
+Received: from [192.168.0.199] ([31.173.80.195])
+        by smtp.gmail.com with ESMTPSA id h21sm3290136ljf.16.2019.04.30.01.12.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 01:12:43 -0700 (PDT)
+Subject: Re: [PATCH 2/5] irqchip/renesas-irqc: Remove
+ devm_kzalloc()/ioremap_nocache() error printing
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190429152006.22593-1-geert+renesas@glider.be>
+ <20190429152006.22593-3-geert+renesas@glider.be>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <3ecf87e2-4e70-9159-a364-d41f1b744f7b@cogentembedded.com>
+Date:   Tue, 30 Apr 2019 11:12:38 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2cc87847-e464-47dd-8801-08d6cd434a48
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 08:10:21.1283
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6354
+In-Reply-To: <20190429152006.22593-3-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiBUdWVzZGF5LCBBcHJpbCAzMCwgMjAxOSAzOjAw
-IFBNDQo+IFN1YmplY3Q6IFtQQVRDSF0gaTJjOiBpbXgtbHBpMmM6IFVzZSBfX21heWJlX3VudXNl
-ZCBpbnN0ZWFkIG9mICNpZg0KPiBDT05GSUdfUE1fU0xFRVANCj4gDQo+IFVzZSBfX21heWJlX3Vu
-dXNlZCBmb3IgcG93ZXIgbWFuYWdlbWVudCByZWxhdGVkIGZ1bmN0aW9ucyBpbnN0ZWFkIG9mICNp
-Zg0KPiBDT05GSUdfUE1fU0xFRVAgdG8gc2ltcGx5IHRoZSBjb2RlLg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQoNCkFja2VkLWJ5OiBEb25n
-IEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcN
-Cg0K
+Hello!
+
+On 29.04.2019 18:20, Geert Uytterhoeven wrote:
+
+> There is no need to print a message if devm_kzalloc() or
+
+    Just kzalloc() in this case.
+
+> ioremap_nocache() fails, as the memory allocation core already takes
+> care of that.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>   drivers/irqchip/irq-renesas-irqc.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
+> index 438a063c76156d98..0955ffe12b32eb36 100644
+> --- a/drivers/irqchip/irq-renesas-irqc.c
+> +++ b/drivers/irqchip/irq-renesas-irqc.c
+> @@ -133,7 +133,6 @@ static int irqc_probe(struct platform_device *pdev)
+>   
+>   	p = kzalloc(sizeof(*p), GFP_KERNEL);
+>   	if (!p) {
+> -		dev_err(&pdev->dev, "failed to allocate driver data\n");
+>   		ret = -ENOMEM;
+>   		goto err0;
+>   	}
+> @@ -173,7 +172,6 @@ static int irqc_probe(struct platform_device *pdev)
+>   	/* ioremap IOMEM and setup read/write callbacks */
+>   	p->iomem = ioremap_nocache(io->start, resource_size(io));
+>   	if (!p->iomem) {
+> -		dev_err(&pdev->dev, "failed to remap IOMEM\n");
+>   		ret = -ENXIO;
+
+    -ENOMEM?
+
+[...]
+
+MBR, Sergei
