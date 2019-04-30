@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EF9C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7788BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A5B2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 464BA2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624973;
-	bh=BdQhIG9wILFo7eLEILQEvL3B4jrM0QzUfDXwLdG2Sgg=;
+	s=default; t=1556624977;
+	bh=9wjh8KhDFWxat4RFS8FnsuU4lCY2MRrx7waCkkCQFj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hCSHAWE900noPtxj4ZAfr7Vj3i0sw7rXkSvuYGlS2aFlgEdWL8N70CWsr8NgIqjwq
-	 1od8vRVqQVLiuy5ZVwDKEa+ZdIarfGoy6FbH5IE4o/CLDOW0b5fCEz2VR94QYiu3MG
-	 bcpzY9bUFsc1UE7W2V8H0oC6qc3rS4ULEFcJRMsc=
+	b=2bZZWN5u1vuTH1jJFF8ksv0BEmDIM5GDD0MKgSBEyMvMFDt+mbflez2bYe3f7YD4C
+	 A7wVI+1Nftiq/5Bamfrf6pzylPVo9jTL48r2YQw0GAIiNK12nOwf7y41VOKngtNXbW
+	 A8iAyHH5ZWwU9htVQAv+WjT432kNCAUfDLzwMMuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbfD3Lta (ORCPT
+        id S1731018AbfD3Ltf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35962 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730981AbfD3LtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:49:25 -0400
+        id S1730709AbfD3Ltb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:49:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 167A22054F;
-        Tue, 30 Apr 2019 11:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F84921734;
+        Tue, 30 Apr 2019 11:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624965;
-        bh=BdQhIG9wILFo7eLEILQEvL3B4jrM0QzUfDXwLdG2Sgg=;
+        s=default; t=1556624970;
+        bh=9wjh8KhDFWxat4RFS8FnsuU4lCY2MRrx7waCkkCQFj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xQf5uGBi4QkLZXS2VapUUTrwSgQrwKRmDDpNYxxNykRS79STCJqyLvBrAzNmmSx4J
-         utnFAyWhFh2OWIio85PRQ02LoN/mEWbs4dKlcN5pJtkKK4HEGTIXO30dD6ebICLzYI
-         JN5fL0/Vv2C8LxX0zx7Zw3x3IVtGQcmc5zhxJjiA=
+        b=ApLgYCaUFnLhuRsBl3zlGbpDChZLk2FFww1ChjRkBjFJiTy9tmiMtEWJ1dm/nfFfz
+         fJ3gFYYRChYK/PSRCKOF9jmbv9eJJcSeItrh+ygEUNqsfon+EUoiz1jGfA9HKFZtpp
+         OPh/8J9OqgV3Ap6Qh3loMKEw1/WD08CAwDQLUHLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shun-Chih Yu <shun-chih.yu@mediatek.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.0 39/89] dmaengine: mediatek-cqdma: fix wrong register usage in mtk_cqdma_start
-Date:   Tue, 30 Apr 2019 13:38:30 +0200
-Message-Id: <20190430113611.648834954@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 5.0 40/89] ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the cache
+Date:   Tue, 30 Apr 2019 13:38:31 +0200
+Message-Id: <20190430113611.689521185@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,33 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 5bb5c3a3ac102158b799bf5eda871223aa5e9c25 upstream.
+commit e17b1af96b2afc38e684aa2f1033387e2ed10029 upstream.
 
-This patch fixes wrong register usage in the mtk_cqdma_start. The
-destination register should be MTK_CQDMA_DST2 instead.
+The EFI stub is entered with the caches and MMU enabled by the
+firmware, and once the stub is ready to hand over to the decompressor,
+we clean and disable the caches.
 
-Fixes: b1f01e48df5a ("dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for MT6765 SoC")
-Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The cache clean routines use CP15 barrier instructions, which can be
+disabled via SCTLR. Normally, when using the provided cache handling
+routines to enable the caches and MMU, this bit is enabled as well.
+However, but since we entered the stub with the caches already enabled,
+this routine is not executed before we call the cache clean routines,
+resulting in undefined instruction exceptions if the firmware never
+enabled this bit.
+
+So set the bit explicitly in the EFI entry code, but do so in a way that
+guarantees that the resulting code can still run on v6 cores as well
+(which are guaranteed to have CP15 barriers enabled)
+
+Cc: <stable@vger.kernel.org> # v4.9+
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/mediatek/mtk-cqdma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/compressed/head.S |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -253,7 +253,7 @@ static void mtk_cqdma_start(struct mtk_c
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
- 	mtk_dma_set(pc, MTK_CQDMA_DST2, cvd->dest >> MTK_CQDMA_ADDR2_SHFIT);
- #else
--	mtk_dma_set(pc, MTK_CQDMA_SRC2, 0);
-+	mtk_dma_set(pc, MTK_CQDMA_DST2, 0);
- #endif
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -1438,7 +1438,21 @@ ENTRY(efi_stub_entry)
  
- 	/* setup the length */
+ 		@ Preserve return value of efi_entry() in r4
+ 		mov	r4, r0
+-		bl	cache_clean_flush
++
++		@ our cache maintenance code relies on CP15 barrier instructions
++		@ but since we arrived here with the MMU and caches configured
++		@ by UEFI, we must check that the CP15BEN bit is set in SCTLR.
++		@ Note that this bit is RAO/WI on v6 and earlier, so the ISB in
++		@ the enable path will be executed on v7+ only.
++		mrc	p15, 0, r1, c1, c0, 0	@ read SCTLR
++		tst	r1, #(1 << 5)		@ CP15BEN bit set?
++		bne	0f
++		orr	r1, r1, #(1 << 5)	@ CP15 barrier instructions
++		mcr	p15, 0, r1, c1, c0, 0	@ write SCTLR
++ ARM(		.inst	0xf57ff06f		@ v7+ isb	)
++ THUMB(		isb						)
++
++0:		bl	cache_clean_flush
+ 		bl	cache_off
+ 
+ 		@ Set parameters for booting zImage according to boot protocol
 
 
