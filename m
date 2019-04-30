@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD5BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D36C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2FD2177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740DE217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 09:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfD3Jp2 (ORCPT
+        id S1727354AbfD3JqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 05:45:28 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:21995 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726916AbfD3JpZ (ORCPT
+        Tue, 30 Apr 2019 05:46:09 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56534 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726977AbfD3Jp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 05:45:25 -0400
-X-UUID: 2192072eb8c44aa58c34d5405e3d58ff-20190430
-X-UUID: 2192072eb8c44aa58c34d5405e3d58ff-20190430
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        Tue, 30 Apr 2019 05:45:28 -0400
+X-UUID: 56453f2495454ba191e35d7edb3bba18-20190430
+X-UUID: 56453f2495454ba191e35d7edb3bba18-20190430
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
         (envelope-from <henryc.chen@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1186074969; Tue, 30 Apr 2019 17:45:20 +0800
+        with ESMTP id 764078573; Tue, 30 Apr 2019 17:45:21 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 30 Apr 2019 17:45:19 +0800
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 30 Apr 2019 17:45:20 +0800
 Received: from mtkslt205.mediatek.inc (10.21.15.75) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 30 Apr 2019 17:45:19 +0800
+ Transport; Tue, 30 Apr 2019 17:45:20 +0800
 From:   Henry Chen <henryc.chen@mediatek.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -45,10 +45,10 @@ CC:     Nicolas Boichat <drinkcat@google.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
-        "Henry Chen" <henryc.chen@mediatek.com>
-Subject: [RFC V2 05/11] soc: mediatek: add header for mediatek SIP interface
-Date:   Tue, 30 Apr 2019 16:50:59 +0800
-Message-ID: <1556614265-12745-6-git-send-email-henryc.chen@mediatek.com>
+        Henry Chen <henryc.chen@mediatek.com>
+Subject: [RFC V2 08/11] dt-bindings: interconnect: add MT8183 interconnect dt-bindings
+Date:   Tue, 30 Apr 2019 16:51:02 +0800
+Message-ID: <1556614265-12745-9-git-send-email-henryc.chen@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
 References: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
@@ -60,40 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a header to collect SIPs and add one SIP call to initialize power
-management hardware for the SIP interface defined to access the SPM
-handling vcore voltage and ddr rate changes on mt8183 (and most likely
-later socs).
+Add interconnect provider dt-bindings for MT8183.
 
 Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
 ---
- include/soc/mediatek/mtk_sip.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 include/soc/mediatek/mtk_sip.h
+ .../bindings/interconnect/mtk,mt8183.txt           | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/mtk,mt8183.txt
 
-diff --git a/include/soc/mediatek/mtk_sip.h b/include/soc/mediatek/mtk_sip.h
+diff --git a/Documentation/devicetree/bindings/interconnect/mtk,mt8183.txt b/Documentation/devicetree/bindings/interconnect/mtk,mt8183.txt
 new file mode 100644
-index 0000000..5394ff4
+index 0000000..1cf1841
 --- /dev/null
-+++ b/include/soc/mediatek/mtk_sip.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (c) 2018 MediaTek Inc.
-+ */
-+#ifndef __SOC_MTK_SIP_H
-+#define __SOC_MTK_SIP_H
++++ b/Documentation/devicetree/bindings/interconnect/mtk,mt8183.txt
+@@ -0,0 +1,24 @@
++Mediatek MT8183 interconnect binding
 +
-+#ifdef CONFIG_ARM64
-+#define MTK_SIP_SMC_AARCH_BIT		0x40000000
-+#else
-+#define MTK_SIP_SMC_AARCH_BIT		0x00000000
-+#endif
++MT8183 interconnect providers support dram bandwidth requirements. The provider
++is able to communicate with the DVFSRC and send the dram bandwidth to it.
++Provider nodes must reside within an DVFSRC device node.
 +
-+#define MTK_SIP_SPM			(0x82000220 | MTK_SIP_SMC_AARCH_BIT)
-+#define MTK_SIP_SPM_DVFSRC_INIT		0x00
++Required properties :
++- compatible : shall contain only one of the following:
++			"mediatek,mt8183-emi-icc"
++- #interconnect-cells : should contain 1
 +
-+#endif
++Examples:
++
++dvfsrc@10012000 {
++	compatible = "mediatek,mt8183-dvfsrc";
++	reg = <0 0x10012000 0 0x1000>;
++	clocks = <&infracfg CLK_INFRA_DVFSRC>;
++	clock-names = "dvfsrc";
++	ddr_emi: interconnect {
++		compatible = "mediatek,mt8183-emi-icc";
++		#interconnect-cells = <1>;
++	};
++};
++
 -- 
 1.9.1
 
