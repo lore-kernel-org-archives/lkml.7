@@ -2,233 +2,188 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9082C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F0DC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2C82080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA46C20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 20:07:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KISzi5OK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1NFbfGA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfD3UEj (ORCPT
+        id S1726431AbfD3UHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 16:04:39 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:60463 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfD3UEi (ORCPT
+        Tue, 30 Apr 2019 16:07:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34716 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfD3UHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 16:04:38 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190430200437euoutp01fa1779a8345ffed5a8f25ebed3efbce4~aWS5nfXVV1412914129euoutp01C
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 20:04:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190430200437euoutp01fa1779a8345ffed5a8f25ebed3efbce4~aWS5nfXVV1412914129euoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556654677;
-        bh=Gpy8BLya4g2MHxARJxwy2Jm4W95tw290iv7EKrZLDV8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=KISzi5OKkCl1BAoQPlogjigM3qKs+Rx1iQDG5cfcRiFtcP1TrWSIWrwyDhSb9WAox
-         6082RJpmA6YFkvXfAMDdRHct3+4arjl2zfFfVukkPddjKFmSLy5piT/wCKxoMJiIo7
-         D9BGx5TLRBdkvtnLzh+phnjjvvumIwV39cK7ON1w=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190430200435eucas1p15920c8ae72064a01a4a7225d354561c4~aWS4TUu_Q3239632396eucas1p1V;
-        Tue, 30 Apr 2019 20:04:35 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id AC.B4.04325.35AA8CC5; Tue, 30
-        Apr 2019 21:04:35 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190430200434eucas1p2efc6bb09f7af8ec07a7fdb55d0cb8f96~aWS22uWm12356923569eucas1p2_;
-        Tue, 30 Apr 2019 20:04:34 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190430200433eusmtrp1cad2d4fcd586e20f5eb8655faab30509~aWS2nE0Dj1284412844eusmtrp1Z;
-        Tue, 30 Apr 2019 20:04:33 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-3c-5cc8aa5331f7
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id AC.93.04146.15AA8CC5; Tue, 30
-        Apr 2019 21:04:33 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190430200432eusmtip14784aaba9aafcbbd8a66b7df6e497250~aWS1mADMd0208402084eusmtip1r;
-        Tue, 30 Apr 2019 20:04:32 +0000 (GMT)
-Subject: Re: [PATCH v6 04/10] Documentation: dt: device tree bindings for
- LPDDR3 memories
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <cb929f1d-409c-ad06-e9b2-83ce104664fd@partner.samsung.com>
-Date:   Tue, 30 Apr 2019 22:04:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJUNw_aDKjWf4TkJWQFhhLCrGYWbTtWpz5jkyeONRcpQw@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzHfe95nrun49rTVfqsWrjNpE1YxteyZDMemY1hMxqOnlXTVe5R
-        5MeUFEVlleiUq82PXIgkJ4ST7tJv+bXox2Rl6Th1FRVx92T67/V9f97fz+fz/u5LE/JvlDsd
-        HrmPU0cqIxRiKVle/bNx3kadKXjByFNnfPt8CYXfWnsorK1qoHDx9y6Es17ki3DdKRXO6PpC
-        4MbGWxJcf6xPglsq8sR4IK0K4fONlSJ8o6pNgt8nFInx+EO9BD/rO0Hhx6+C8PtRRzxk+ogC
-        ndmhwUySvRDfTLL3NW0StlSXImbTEr+K2fQyHWLv1B5iB0q91tNbpctCuIjwWE49P2CnNOzz
-        cD8Vfd/9QFLfEyIe6V1TkQMNzCJIuJZI2FjOFCHIMwalIulftiKwpNSIhcMAgg+dN6lURNtv
-        jFuWCvpVBMbmSxMmM4JU0whpa+XMbIPe9FeUjV2YWTCanEPZTAQzSEHy9Wxk6yRmfEGv22vz
-        yJhVYBnIta9BMrOhX9tu7+PKbIGO6luU4HGCmtxPdt2B2QDawkRkY4Jxg9ZPWpHAM+CeOY+w
-        zQLmMg3tD5IIIedKONtqRgI7Q6+xTCKwJ9RmnSYF5iE+rXDCcxi6MvInPP7wzNhsT08wc6Gk
-        Yr4gr4DW6iKx8CiO8M7sJKzgCJnl5whBlsHJZLng9oay000igafD1es5kjNIoZkUTDMpjGZS
-        GM3/uQWI1CE3LoZXhXK8XyS335dXqviYyFDf3VGqUvT3G9b+Ng7qUeXYLgNiaKSYJvNeYwqW
-        U8pYPk5lQEATChcZa3weLJeFKOMOcuqoHeqYCI43IA+aVLjJDk3p3CZnQpX7uD0cF82p/1VF
-        tIN7PPKO2O55JHv0wVdLce4c/6xYq2HBYa3qrL47p7c2M8Cn33p3+ErIY+vikqPH52xucdNX
-        eUnbwhreLLm5f8zv8ryxd931HzZ51K19WfCdf3RpXQCnbgpsMwSuKumo7M71nhk7WPG7MLDP
-        tKXHvPpX71Qf/a+O0pRlU73GXl+0/Fje86aoXEHyYcqFPoSaV/4BouTD24IDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42I5/e/4Xd3AVSdiDC71ylpsnLGe1eL6l+es
-        FvOPnGO1WP3xMaPF5FNzmSzOdOda9D9+zWxx/vwGdouzTW/YLS7vmsNm8bn3CKPFjPP7mCzW
-        HrnLbnG7cQWbxf89O9gtDr9pZ7XYf8XL4vZvPotvJx4xOgh7fPs6icVjdsNFFo+ds+6ye2xa
-        1cnm0dv8js2jb8sqRo/Np6s9Pm+SC+CI0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2
-        j7UyMlXSt7NJSc3JLEst0rdL0Mt48f0Ta8FOqYrWNweYGxh3iHYxcnBICJhI/P9g2cXIxSEk
-        sJRRYuaHTyxdjJxAcTGJSfu2s0PYwhJ/rnWxgdhCAq8ZJf7f4wOxhQWiJV71XWEFsUUEFCV+
-        t01jBRnELPCTVeLMoSZGiKktzBIn9r1mAdnGJqAnsWNVIUgDr4CbxIfPM5lBbBYBVYlP8++B
-        LRYViJA4834FC0SNoMTJmU/AbE6BQIn5C5sZQWxmATOJeZsfMkPY4hK3nsxngrDlJba/ncM8
-        gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzABLDt2M/NOxgv
-        bQw+xCjAwajEw3vB7USMEGtiWXFl7iFGCQ5mJRFej+NHY4R4UxIrq1KL8uOLSnNSiw8xmgI9
-        N5FZSjQ5H5ic8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MCqK
-        2M7d9uL+kf8/Fin9OPFcT47hq5Ho3PWZHz9pv5lgUxzVpnre/aXLMs4tj74+OKKpeC/dTFX/
-        HtdXyTrmSTwn86Y7nusO2Cz/TkL/HefRJLuyJbJBzqfVTX/uDJzz+HGq9Y6Dlg29z/mSJsye
-        0nVLPqxe7KKkxFr5ua7+vgUfYqfNdXjnLKzEUpyRaKjFXFScCACy877cFgMAAA==
-X-CMS-MailID: 20190430200434eucas1p2efc6bb09f7af8ec07a7fdb55d0cb8f96
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87@eucas1p1.samsung.com>
-        <1555683568-20882-5-git-send-email-l.luba@partner.samsung.com>
-        <20190425195156.GA31128@bogus>
-        <86715dda-c1b0-5354-17d2-419f8137cb91@partner.samsung.com>
-        <CAL_JsqJUNw_aDKjWf4TkJWQFhhLCrGYWbTtWpz5jkyeONRcpQw@mail.gmail.com>
+        Tue, 30 Apr 2019 16:07:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v16so20031970wrp.1;
+        Tue, 30 Apr 2019 13:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=Z/HFjTOh/3CdZ3UVE0ErCrPNNxCXH36/qLcmZTzyrJA=;
+        b=L1NFbfGAsbxtbEt7RARRI3NiyPhWAtmPbb79nFNnp+P2sgKTRICx5gAjw+QD66i26H
+         zRm2sSaYiqyaA/L/PF1ynt++JWw3SNOa9nrNsRgN3xrPDUnBe6Jdgn2YzKfo+vGcbwH4
+         aaQleggLkIMcvrwgygbjGi35w3QlOzW3y4g5xzU5Khgi/fbd2poFUwaL7+WU//g09sY4
+         v5XeSOZ0qIJGU1oJFhieBLdWSj1/jTOKyKVECQ7eDs7H/ar4/LcIRwsffwydpkqRusIO
+         Kz0ZHfgRQ6H8+sAeUKkC932AgwMh0bmiqR4Nrc/wenILFiqkvMP1pipv6L2pB0FOf47a
+         VfrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=Z/HFjTOh/3CdZ3UVE0ErCrPNNxCXH36/qLcmZTzyrJA=;
+        b=Al4koBcfdMedb/w0XnuBSoh1U2fy1AXuoFvLfyVSKzeFQezrSiM8eZ4T3FV4Sjpmno
+         cQ6DXmPbmcaBKBi3xsF3EOdPv4VZVADdfttjpBwZQF0aCJImVk1ivBX/H1HMT0JILcQQ
+         vDFeYuMOqW2wUOPcctGLPqn007gK7vSF9I6Q+KlCNr2iTQ7VnyJz833eI2P+mS0X2TDC
+         pqDoLk6Q5ZMReQPUDfu+VlURIMgz8chRhixXwQG1na+pCcCGeqoaA3faxpTF6FvtLwbG
+         NUBNe3tJNm4ArZFCTSvcsvb/mBq8SXJq9hGOAAdMMN99Jr1vinbfceAiRx06bVffO3Ab
+         aHAQ==
+X-Gm-Message-State: APjAAAW9n7z0TPpVMYKCsjTJ+AwAWEXHwsGHsiY6W4IsYIRcrN2qL31l
+        7jIRsb3EpFZ9ae+uFnGZwyf0iYcd
+X-Google-Smtp-Source: APXvYqzOGh6taErAAXoHR5RqMXHMedfz3ZqyEZ3yqe3YPV2yASfdOffPeWCKPJYM4HZSYppBnnGLcQ==
+X-Received: by 2002:a5d:45cc:: with SMTP id b12mr7021478wrs.142.1556654868383;
+        Tue, 30 Apr 2019 13:07:48 -0700 (PDT)
+Received: from 640k.localdomain ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id y133sm5022955wmd.2.2019.04.30.13.07.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 13:07:47 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH] KVM: x86: use direct accessors for RIP and RSP
+Date:   Tue, 30 Apr 2019 22:07:45 +0200
+Message-Id: <1556654865-45045-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Use specific inline functions for RIP and RSP instead of
+going through kvm_register_read and kvm_register_write,
+which are quite a mouthful.  kvm_rsp_read and kvm_rsp_write
+did not exist, so add them.
 
-On 4/29/19 6:36 PM, Rob Herring wrote:
-> On Mon, Apr 29, 2019 at 7:05 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> Hi Rob,
->>
->> On 4/25/19 9:51 PM, Rob Herring wrote:
->>> On Fri, Apr 19, 2019 at 04:19:22PM +0200, Lukasz Luba wrote:
->>>> The device tree bindings for LPDDR3 SDRAM memories.
->>>>
->>>> For specifying the AC timing parameters of the memory device
->>>> the 'lpddr3' binding uses binding 'lpddr2-timings'.
->>>>
->>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->>>> ---
->>>>    .../devicetree/bindings/lpddr3/lpddr3-timings.txt  | 57 +++++++++++++
->>>>    .../devicetree/bindings/lpddr3/lpddr3.txt          | 93 ++++++++++++++++++++++
->>>
->>> Please rename the lpddr2 directory to 'ddr' and add these to it.
->> OK, I will rename it in the nex patch set.
->>>
->>> Maybe whatever properties are common should be put in a common doc.
->> There are maybe a few common properties, but I would not dare to merge
->> lpddr2 and lpddr3 before consulting it with TI engineers who made
->> LPDDR2 support.
-> 
-> Why not. You aren't changing anything. Just rearranging.
-True.
-> 
->> Could we work on a common file after the patch set got merged?
-> 
-> Yes, but please still move everything to a common directory.
-OK, I am currently working on it and moving these lpddr* files into
-Documentation/devicetree/bindings/ddr/
-Then after acceptance I will find the common stuff and do the merge.
-> 
->>>
->>>>    2 files changed, 150 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
->>>>    create mode 100644 Documentation/devicetree/bindings/lpddr3/lpddr3.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt b/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
->>>> new file mode 100644
->>>> index 0000000..ebf3e00
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
->>>> @@ -0,0 +1,57 @@
->>>> +* AC timing parameters of LPDDR3 memories for a given speed-bin.
->>>> +* The structures are based on LPDDR2 and extended where needed.
->>>> +
->>>> +Required properties:
->>>> +- compatible : Should be "jedec,lpddr3-timings"
->>>> +- min-freq : minimum DDR clock frequency for the speed-bin. Type is <u32>
->>>> +- max-freq : maximum DDR clock frequency for the speed-bin. Type is <u32>
->>>> +
->>>> +Optional properties:
->>>> +
->>>> +The following properties represent AC timing parameters from the memory
->>>> +data-sheet of the device for a given speed-bin. All these properties are
->>>> +of type <u32> and the default unit is ps (pico seconds).
->>>> +- tRFC
->>>> +- tRRD
->>>> +- tRPab
->>>> +- tRPpb
->>>> +- tRCD
->>>> +- tRC
->>>> +- tRAS
->>>> +- tWTR
->>>> +- tWR
->>>> +- tRTP
->>>> +- tW2W-C2C
->>>> +- tR2R-C2C
->>>> +- tFAW
->>>> +- tXSR
->>>> +- tXP
->>>> +- tCKE
->>>> +- tCKESR
->>>> +- tMRD
->>>> +
->>>> +Example:
->>>> +
->>>> +timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@0 {
->>>
->>> Since the lpddr2 version was written, we've gotten stricter about
->>> allowing unit-address without reg property. Perhaps 'reg' should be the
->>> max-freq instead.
->> OK, so I will rename 'max-freq' to 'reg' and add a comment with:
->> '/* workaround: it shows max-freq */
->> Does it make sense?
-> 
-> Sure.
-OK. Thank you.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/kvm_cache_regs.h | 10 ++++++++++
+ arch/x86/kvm/svm.c            |  8 ++++----
+ arch/x86/kvm/vmx/nested.c     | 12 ++++++------
+ arch/x86/kvm/x86.c            |  4 ++--
+ 4 files changed, 22 insertions(+), 12 deletions(-)
 
-Regards,
-Lukasz
-> 
-> Rob
-> 
-> 
+diff --git a/arch/x86/kvm/kvm_cache_regs.h b/arch/x86/kvm/kvm_cache_regs.h
+index d179b7d7860d..1cc6c47dc77e 100644
+--- a/arch/x86/kvm/kvm_cache_regs.h
++++ b/arch/x86/kvm/kvm_cache_regs.h
+@@ -65,6 +65,16 @@ static inline void kvm_rip_write(struct kvm_vcpu *vcpu, unsigned long val)
+ 	kvm_register_write(vcpu, VCPU_REGS_RIP, val);
+ }
+ 
++static inline unsigned long kvm_rsp_read(struct kvm_vcpu *vcpu)
++{
++	return kvm_register_read(vcpu, VCPU_REGS_RSP);
++}
++
++static inline void kvm_rsp_write(struct kvm_vcpu *vcpu, unsigned long val)
++{
++	kvm_register_write(vcpu, VCPU_REGS_RSP, val);
++}
++
+ static inline u64 kvm_pdptr_read(struct kvm_vcpu *vcpu, int index)
+ {
+ 	might_sleep();  /* on svm */
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 38aef3439799..893686cb0044 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3389,8 +3389,8 @@ static int nested_svm_vmexit(struct vcpu_svm *svm)
+ 		(void)kvm_set_cr3(&svm->vcpu, hsave->save.cr3);
+ 	}
+ 	kvm_rax_write(&svm->vcpu, hsave->save.rax);
+-	kvm_register_write(&svm->vcpu, VCPU_REGS_RSP, hsave->save.rsp);
+-	kvm_register_write(&svm->vcpu, VCPU_REGS_RIP, hsave->save.rip);
++	kvm_rsp_write(&svm->vcpu, hsave->save.rsp);
++	kvm_rip_write(&svm->vcpu, hsave->save.rip);
+ 	svm->vmcb->save.dr7 = 0;
+ 	svm->vmcb->save.cpl = 0;
+ 	svm->vmcb->control.exit_int_info = 0;
+@@ -3497,8 +3497,8 @@ static void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+ 
+ 	svm->vmcb->save.cr2 = svm->vcpu.arch.cr2 = nested_vmcb->save.cr2;
+ 	kvm_rax_write(&svm->vcpu, nested_vmcb->save.rax);
+-	kvm_register_write(&svm->vcpu, VCPU_REGS_RSP, nested_vmcb->save.rsp);
+-	kvm_register_write(&svm->vcpu, VCPU_REGS_RIP, nested_vmcb->save.rip);
++	kvm_rsp_write(&svm->vcpu, nested_vmcb->save.rsp);
++	kvm_rip_write(&svm->vcpu, nested_vmcb->save.rip);
+ 
+ 	/* In case we don't even reach vcpu_run, the fields are not updated */
+ 	svm->vmcb->save.rax = nested_vmcb->save.rax;
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index d97dbea150ba..04b40a98f60b 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2372,8 +2372,8 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+ 	if (!enable_ept)
+ 		vcpu->arch.walk_mmu->inject_page_fault = vmx_inject_page_fault_nested;
+ 
+-	kvm_register_write(vcpu, VCPU_REGS_RSP, vmcs12->guest_rsp);
+-	kvm_register_write(vcpu, VCPU_REGS_RIP, vmcs12->guest_rip);
++	kvm_rsp_write(vcpu, vmcs12->guest_rsp);
++	kvm_rip_write(vcpu, vmcs12->guest_rip);
+ 	return 0;
+ }
+ 
+@@ -3401,8 +3401,8 @@ static void sync_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
+ 	vmcs12->guest_cr0 = vmcs12_guest_cr0(vcpu, vmcs12);
+ 	vmcs12->guest_cr4 = vmcs12_guest_cr4(vcpu, vmcs12);
+ 
+-	vmcs12->guest_rsp = kvm_register_read(vcpu, VCPU_REGS_RSP);
+-	vmcs12->guest_rip = kvm_register_read(vcpu, VCPU_REGS_RIP);
++	vmcs12->guest_rsp = kvm_rsp_read(vcpu);
++	vmcs12->guest_rip = kvm_rip_read(vcpu);
+ 	vmcs12->guest_rflags = vmcs_readl(GUEST_RFLAGS);
+ 
+ 	vmcs12->guest_es_selector = vmcs_read16(GUEST_ES_SELECTOR);
+@@ -3585,8 +3585,8 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
+ 		vcpu->arch.efer &= ~(EFER_LMA | EFER_LME);
+ 	vmx_set_efer(vcpu, vcpu->arch.efer);
+ 
+-	kvm_register_write(vcpu, VCPU_REGS_RSP, vmcs12->host_rsp);
+-	kvm_register_write(vcpu, VCPU_REGS_RIP, vmcs12->host_rip);
++	kvm_rsp_write(vcpu, vmcs12->host_rsp);
++	kvm_rip_write(vcpu, vmcs12->host_rip);
+ 	vmx_set_rflags(vcpu, X86_EFLAGS_FIXED);
+ 	vmx_set_interrupt_shadow(vcpu, 0);
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b352a7c137cd..dc621f73e96b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8290,7 +8290,7 @@ static void __get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ 	regs->rdx = kvm_rdx_read(vcpu);
+ 	regs->rsi = kvm_rsi_read(vcpu);
+ 	regs->rdi = kvm_rdi_read(vcpu);
+-	regs->rsp = kvm_register_read(vcpu, VCPU_REGS_RSP);
++	regs->rsp = kvm_rsp_read(vcpu);
+ 	regs->rbp = kvm_rbp_read(vcpu);
+ #ifdef CONFIG_X86_64
+ 	regs->r8 = kvm_r8_read(vcpu);
+@@ -8326,7 +8326,7 @@ static void __set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ 	kvm_rdx_write(vcpu, regs->rdx);
+ 	kvm_rsi_write(vcpu, regs->rsi);
+ 	kvm_rdi_write(vcpu, regs->rdi);
+-	kvm_register_write(vcpu, VCPU_REGS_RSP, regs->rsp);
++	kvm_rsp_write(vcpu, regs->rsp);
+ 	kvm_rbp_write(vcpu, regs->rbp);
+ #ifdef CONFIG_X86_64
+ 	kvm_r8_write(vcpu, regs->r8);
+-- 
+1.8.3.1
+
