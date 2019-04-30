@@ -2,212 +2,141 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0CFC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9AFC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE7221655
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I8rU/Pun"
+	by mail.kernel.org (Postfix) with ESMTP id C4BD320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 00:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbfD3AEh (ORCPT
+        id S1729364AbfD3AIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 20:04:37 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:45243 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbfD3AEg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 20:04:36 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190430000434epoutp0128c4bcb90ff58302e2d32021d106234c~aF7HkbSVB1932319323epoutp01Q
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 00:04:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190430000434epoutp0128c4bcb90ff58302e2d32021d106234c~aF7HkbSVB1932319323epoutp01Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556582674;
-        bh=+xtYg2MqUKhpLfHzCvo1anR6GJBqe6ObWJBn2wxm1Kg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=I8rU/PunU1HIa0P8qbAF8zOPUa4ztwI92rtmEad8zH+dkS3OlB+J1eaDEjOkHtU5y
-         +Mrz0mNabDLKZS4ktHNqSFIsjDJ21RRqr7yW4vmG2Ii6PE15xuNah3vmtcZuO7/hJY
-         oJgaNe2AxjQ/nmaroePnT2cNPyik7cUA8xY72OPo=
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190430000431epcas1p22a51007b76c0586bcc98b0287f75dcac~aF7FIQVbQ2608726087epcas1p2l;
-        Tue, 30 Apr 2019 00:04:31 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E9.E3.04142.F0197CC5; Tue, 30 Apr 2019 09:04:31 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190430000430epcas1p1fec76d40c7788ad0a24de4197db84a33~aF7EtGrZu1183911839epcas1p1K;
-        Tue, 30 Apr 2019 00:04:30 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190430000430epsmtrp1efef5ada5bba5bd9376bc6712c61b313~aF7EsSAur1024810248epsmtrp1d;
-        Tue, 30 Apr 2019 00:04:30 +0000 (GMT)
-X-AuditID: b6c32a36-cf9ff7000000102e-77-5cc7910f9a40
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        63.D1.03692.E0197CC5; Tue, 30 Apr 2019 09:04:30 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190430000430epsmtip169b5bc9bdb68fbce9e6a3812fb49a56f~aF7Efg71h1631616316epsmtip1X;
-        Tue, 30 Apr 2019 00:04:30 +0000 (GMT)
-Subject: Re: [PATCH v3 07/16] PM / devfreq: tegra: Properly disable
- interrupts
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <87b5a3df-a0c2-3a6e-7e93-f1c89b0a789e@samsung.com>
-Date:   Tue, 30 Apr 2019 09:05:45 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Mon, 29 Apr 2019 20:08:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:63094 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728844AbfD3AIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 20:08:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 17:08:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,411,1549958400"; 
+   d="scan'208";a="166213404"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Apr 2019 17:08:46 -0700
+Date:   Mon, 29 Apr 2019 17:08:46 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+Message-ID: <20190430000846.GG31379@linux.intel.com>
+References: <20190428133826.3e142cfd@oasis.local.home>
+ <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
+ <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+ <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+ <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
+ <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
+ <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com>
+ <20190429220814.GF31379@linux.intel.com>
+ <CAHk-=whpq2=f2LdB-nc52Rd=iZkUH-N-r8OTqEfo+4UaJc7piA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190417222925.5815-8-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAJsWRmVeSWpSXmKPExsWy7bCmni7/xOMxBicni1is/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
-        m0ffllWMHp83yQWwRmXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoq
-        ufgE6Lpl5gAdpKRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpsCzQK07MLS7NS9dL
-        zs+1MjQwMDIFKkzIzjgzK71gvXjFjq7/TA2Mz4W6GDk5JARMJH7u/sXUxcjFISSwg1Hi2JvL
-        UM4nRomb7X8ZIZxvjBJH/vaxwrTserGYHSKxl1Hi6KU5UC3vGSXWrHnFBlIlLBAgsX1GG1i7
-        iMA/RolPu2aAtTMLREp8PbiUGcRmE9CS2P/iBlgDv4CixNUfjxlBbF4BO4lrE3+A2SwCqhKH
-        D59lB7FFBSIk7h/bwApRIyhxcuYTFhCbU8BU4szD/SwQ88Ulbj2ZzwRhy0s0b53NDHKEhMBv
-        Nond518wQvzgIrHgQyszhC0s8er4FnYIW0riZX8blF0tsfLkETaI5g5GiS37L0ADwFhi/9LJ
-        QBs4gDZoSqzfpQ+xjE/i3dceVpCwhACvREcbNISVJS4/uMsEYUtKLG7vZIOwPSSebLvMNoFR
-        cRaSd2YheWEWkhdmISxbwMiyilEstaA4Nz212LDACDm6NzGCU6uW2Q7GRed8DjEKcDAq8fB6
-        vDsWI8SaWFZcmXuIUYKDWUmE1+P40Rgh3pTEyqrUovz4otKc1OJDjKbA0J7ILCWanA9M+3kl
-        8YamRsbGxhYmhmamhoZK4rzrHZxjhATSE0tSs1NTC1KLYPqYODilGhhtT1VN3yC7a0mWP2fS
-        tcbC5We8dqyw4bserupV9Kb04vYPqZq6j/PkxdnUC+uPfj3jKqkqPjnCJNhuiVmDZ1WwqPO6
-        me+dln6sv1R64Jt+0p6l6Q1r9Y+9SWI6+m7u/IXL95U2HyqP2pPk9VVQS6rY0nD5x+P3TV56
-        3D2Rac6tqHrR/dOpzFAlluKMREMt5qLiRABxEaI5wwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSnC7fxOMxBsc2GFus/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
-        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBlnJmVXrBevGJH13+mBsbnQl2MnBwSAiYSu14s
-        Zu9i5OIQEtjNKLHvwAUWiISkxLSLR5m7GDmAbGGJw4eLIWreMkocff2JGaRGWMBPYv+PTSwg
-        CRGBJiaJzw9bmEASzAKREv2PulkhOjYzSqyd9gCsg01AS2L/ixtsIDa/gKLE1R+PGUFsXgE7
-        iWsTf4DZLAKqQNvOsoPYogIREmfer2CBqBGUODnzCZjNKWAqcebhfhaIZeoSf+ZdYoawxSVu
-        PZkPdYS8RPPW2cwTGIVnIWmfhaRlFpKWWUhaFjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L
-        10vOz93ECI4xLc0djJeXxB9iFOBgVOLh9Xh3LEaINbGsuDL3EKMEB7OSCK/H8aMxQrwpiZVV
-        qUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTBW2NjIlxqUZGlp17EI
-        mtWq+cZ/nBD/bP26oM9bQk69jbfIfsvswlWn8OC014TlK9f6ujFqLbTTUv7y1ueipPpMXt50
-        Q47SRpfTdwI6y3xLUuZainxouKP8RTDQOHK/ypQY/cwWtaaJ5k7v3H/s3n6oYinD3Q17qnO2
-        n/D2X/nom/sJjbAVkkosxRmJhlrMRcWJAGuOKL6tAgAA
-X-CMS-MailID: 20190430000430epcas1p1fec76d40c7788ad0a24de4197db84a33
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190417224252epcas5p43248bf8dbebdf687c466d6985233c4e8
-References: <20190417222925.5815-1-digetx@gmail.com>
-        <CGME20190417224252epcas5p43248bf8dbebdf687c466d6985233c4e8@epcas5p4.samsung.com>
-        <20190417222925.5815-8-digetx@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whpq2=f2LdB-nc52Rd=iZkUH-N-r8OTqEfo+4UaJc7piA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 4. 18. 오전 7:29, Dmitry Osipenko wrote:
-> There is no guarantee that interrupt handling isn't running in parallel
-> with tegra_actmon_disable_interrupts(), hence it is necessary to protect
-> DEV_CTRL register accesses and clear IRQ status with ACTMON's IRQ being
-> disabled in the Interrupt Controller in order to ensure that device
-> interrupt is indeed being disabled.
+On Mon, Apr 29, 2019 at 03:22:09PM -0700, Linus Torvalds wrote:
+> On Mon, Apr 29, 2019 at 3:08 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > FWIW, Lakemont (Quark) doesn't block NMI/SMI in the STI shadow, but I'm
+> > not sure that counters the "horrible errata" statement ;-).  SMI+RSM saves
+> > and restores STI blocking in that case, but AFAICT NMI has no such
+> > protection and will effectively break the shadow on its IRET.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra-devfreq.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
+> Ugh. I can't say I care deeply about Quark (ie never seemed to go
+> anywhere), but it's odd. I thought it was based on a Pentium core (or
+> i486+?). Are you saying those didn't do it either?
+
+It's 486 based, but either way I suspect the answer is "yes".  IIRC,
+Knights Corner, a.k.a. Larrabee, also had funkiness around SMM and that
+was based on P54C, though I'm struggling to recall exactly what the
+Larrabee weirdness was.
+
+> I have this dim memory about talking about this with some (AMD?)
+> engineer, and having an alternative approach for the sti shadow wrt
+> NMI - basically not checking interrupts in the instruction you return
+> to with 'iret'. I don't think it was even conditional on the "iret
+> from NMI", I think it was basically any iret also did the sti shadow
+> thing.
 > 
-> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-> index b65313fe3c2e..ce1eb97a2090 100644
-> --- a/drivers/devfreq/tegra-devfreq.c
-> +++ b/drivers/devfreq/tegra-devfreq.c
-> @@ -171,6 +171,8 @@ struct tegra_devfreq {
->  	struct notifier_block	rate_change_nb;
->  
->  	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
-> +
-> +	int irq;
->  };
->  
->  struct tegra_actmon_emc_ratio {
-> @@ -417,6 +419,8 @@ static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
->  	u32 val;
->  	unsigned int i;
->  
-> +	disable_irq(tegra->irq);
-> +
->  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
->  		dev = &tegra->devices[i];
->  
-> @@ -427,9 +431,14 @@ static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
->  		val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->  
->  		device_writel(dev, val, ACTMON_DEV_CTRL);
-> +
-> +		device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
-> +			      ACTMON_DEV_INTR_STATUS);
->  	}
->  
->  	actmon_write_barrier(tegra);
-> +
-> +	enable_irq(tegra->irq);
->  }
->  
->  static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
-> @@ -604,7 +613,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  	struct resource *res;
->  	unsigned int i;
->  	unsigned long rate;
-> -	int irq;
->  	int err;
->  
->  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
-> @@ -673,15 +681,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  		dev_pm_opp_add(&pdev->dev, rate, 0);
->  	}
->  
-> -	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", irq);
-> -		return irq;
-> +	tegra->irq = platform_get_irq(pdev, 0);
-> +	if (tegra->irq < 0) {
-> +		err = tegra->irq;
-> +		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
-> +		return err;
->  	}
->  
->  	platform_set_drvdata(pdev, tegra);
->  
-> -	err = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
->  					actmon_thread_isr, IRQF_ONESHOT,
->  					"tegra-devfreq", tegra);
->  	if (err) {
+> But I can find no actual paper to back that up, so this may be me just
+> making sh*t up.
+
+If Intel CPUs ever did anything like that on IRET it's long gone.
+
+> > KVM is generally ok with respect to STI blocking, but ancient versions
+> > didn't migrate STI blocking and there's currently a hole where
+> > single-stepping a guest (from host userspace) could drop STI_BLOCKING
+> > if a different VM-Exit occurs between the single-step #DB VM-Exit and the
+> > instruction in the shadow.  Though "don't do that" may be a reasonable
+> > answer in that case.
 > 
+> I thought the sti shadow blocked the single-step exception too? I know
+> "mov->ss" does block debug interrupts too.
 
-It is ok to disable the hardware interrupt line
-before completing the some operation about registers
-in order to protect the interrupt occur.
+{MOV,POP}SS blocks #DBs, STI does not.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Or are you saying that it's some "single step by emulation" that just
+> miss setting the STI_BLOCKING flag?
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+This is the case I was talking about for KVM.  KVM supports single-stepping
+the guest from userpace and uses EFLAGS.TF to do so (since it works on both
+Intel and AMD).  VMX has a consistency check that fails VM-Entry if
+STI_BLOCKING=1, EFLAGS.TF==1, IA32_DEBUGCTL.BTF=0 and there isn't a pending
+single-step #DB, and so KVM clears STI_BLOCKING immediately before entering
+the guest when single-stepping the guest.  If a VM-Exit occurs immediately
+after VM-Entry, e.g. due to hardware interrupt, then KVM will see
+STI_BLOCKING=0 when processing guest events in its run loop and will inject
+any pending interrupts.
+
+I *think* the KVM behavior can be fixed, e.g. I'm not entirely sure why KVM
+takes this approach instead of setting PENDING_DBG.BS, but that's probably
+a moot point.
