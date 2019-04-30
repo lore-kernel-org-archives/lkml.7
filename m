@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EF1C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111BCC04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA87021707
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E0421707
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624498;
-	bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
+	s=default; t=1556624495;
+	bh=H3DFlUfLXaoZvOYd7ajIC+uXD9+xmxHAYRCDfN0nouw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J8FKSA08l6uNC7N0NDO5wLDOHzd65cugIu97LsT5yClp32ZCH2oZwOzckUj3h3a6V
-	 05PjN6WOHeUxeYFrISJK+6OO3LX5sYs984OQLS8m0ys8g5cW+T52KQZMN6FN/NUlsm
-	 KXaJnRj9tgGLzjRTVrufzd7j3if0gx8epY38Zj3w=
+	b=Qmb/uZlRTJE2wey+fcJSH9Kfs/1XvasDIWCLXy45HEXoGdtVemhHhn/jKQmUj92mV
+	 ss3tBihjpt8OWMP5yS8qU/E+JJPHicnjfphw9Rn1F+ZTP+NHhoLjl4BjtO8Ug9ps31
+	 jN546QxP8ajeY77POyDXiBf0HGA23dDSZlWTFVp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbfD3Llh (ORCPT
+        id S1727163AbfD3Lld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:41:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49378 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:41:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbfD3Llf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:41:35 -0400
+        id S1728925AbfD3Lla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:41:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E563D21670;
-        Tue, 30 Apr 2019 11:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C85B721670;
+        Tue, 30 Apr 2019 11:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624494;
-        bh=xTz0TplUvCuk3TISQVkGrsJzMSmpwDhzVRj928ZBAqQ=;
+        s=default; t=1556624489;
+        bh=H3DFlUfLXaoZvOYd7ajIC+uXD9+xmxHAYRCDfN0nouw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gzfATd7Sm6bI/sKyGQwoQ3UjOyG2KU8sbV5PnO9XJ5B6J1BqJ4JbilYsy1ev65xRk
-         xPGNVE5/dBvkHGgQY92lrLCUzpHE6bTwgenF0Rsq72Ob4iseLkYYz9ejx6zyY27klO
-         5TQQhwSCewDyJlx//nkOtTLzf0HHF6T8Sx8YmP64=
+        b=kcRSGqk9PJ6VN8kEht4L/z2Tc2sYVDxs9FNBNvo6bRNVZ1pcKuLJQq8cv1chRySpl
+         lme9HNJb0wcjKGBm5rpU3wL7Qn8Z6IXvRnDewbdVTGxQqfrKo96mO15sHsfHB8K7qG
+         R3yjUZqXQELtj//1ZIpC/lda0J1SKUZBfMGoe9eM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
-Subject: [PATCH 4.14 15/53] sunrpc: dont mark uninitialised items as VALID.
-Date:   Tue, 30 Apr 2019 13:38:22 +0200
-Message-Id: <20190430113553.091347032@linuxfoundation.org>
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH 4.14 13/53] ceph: fix ci->i_head_snapc leak
+Date:   Tue, 30 Apr 2019 13:38:20 +0200
+Message-Id: <20190430113552.790188489@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -59,57 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Yan, Zheng <zyan@redhat.com>
 
-commit d58431eacb226222430940134d97bfd72f292fcd upstream.
+commit 37659182bff1eeaaeadcfc8f853c6d2b6dbc3f47 upstream.
 
-A recent commit added a call to cache_fresh_locked()
-when an expired item was found.
-The call sets the CACHE_VALID flag, so it is important
-that the item actually is valid.
-There are two ways it could be valid:
-1/ If ->update has been called to fill in relevant content
-2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
+We missed two places that i_wrbuffer_ref_head, i_wr_ref, i_dirty_caps
+and i_flushing_caps may change. When they are all zeros, we should free
+i_head_snapc.
 
-An expired item that is waiting for an update will be neither.
-Setting CACHE_VALID will mean that a subsequent call to cache_put()
-will be likely to dereference uninitialised pointers.
-
-So we must make sure the item is valid, and we already have code to do
-that in try_to_negate_entry().  This takes the hash lock and so cannot
-be used directly, so take out the two lines that we need and use them.
-
-Now cache_fresh_locked() is certain to be called only on
-a valid item.
-
-Cc: stable@kernel.org # 2.6.35
-Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://tracker.ceph.com/issues/38224
+Reported-and-tested-by: Luis Henriques <lhenriques@suse.com>
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/cache.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/ceph/mds_client.c |    9 +++++++++
+ fs/ceph/snap.c       |    7 ++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -54,6 +54,7 @@ static void cache_init(struct cache_head
- 	h->last_refresh = now;
- }
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -1219,6 +1219,15 @@ static int remove_session_caps_cb(struct
+ 			list_add(&ci->i_prealloc_cap_flush->i_list, &to_remove);
+ 			ci->i_prealloc_cap_flush = NULL;
+ 		}
++
++               if (drop &&
++                  ci->i_wrbuffer_ref_head == 0 &&
++                  ci->i_wr_ref == 0 &&
++                  ci->i_dirty_caps == 0 &&
++                  ci->i_flushing_caps == 0) {
++                      ceph_put_snap_context(ci->i_head_snapc);
++                      ci->i_head_snapc = NULL;
++               }
+ 	}
+ 	spin_unlock(&ci->i_ceph_lock);
+ 	while (!list_empty(&to_remove)) {
+--- a/fs/ceph/snap.c
++++ b/fs/ceph/snap.c
+@@ -568,7 +568,12 @@ void ceph_queue_cap_snap(struct ceph_ino
+ 	old_snapc = NULL;
  
-+static inline int cache_is_valid(struct cache_head *h);
- static void cache_fresh_locked(struct cache_head *head, time_t expiry,
- 				struct cache_detail *detail);
- static void cache_fresh_unlocked(struct cache_head *head,
-@@ -100,6 +101,8 @@ struct cache_head *sunrpc_cache_lookup(s
- 			if (cache_is_expired(detail, tmp)) {
- 				hlist_del_init(&tmp->cache_list);
- 				detail->entries --;
-+				if (cache_is_valid(tmp) == -EAGAIN)
-+					set_bit(CACHE_NEGATIVE, &tmp->flags);
- 				cache_fresh_locked(tmp, 0, detail);
- 				freeme = tmp;
- 				break;
+ update_snapc:
+-	if (ci->i_head_snapc) {
++       if (ci->i_wrbuffer_ref_head == 0 &&
++           ci->i_wr_ref == 0 &&
++           ci->i_dirty_caps == 0 &&
++           ci->i_flushing_caps == 0) {
++               ci->i_head_snapc = NULL;
++       } else {
+ 		ci->i_head_snapc = ceph_get_snap_context(new_snapc);
+ 		dout(" new snapc is %p\n", new_snapc);
+ 	}
 
 
