@@ -2,125 +2,89 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61729C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA3BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374A52064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC9E21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556644748;
+	bh=Ak9XM+VjWlZMz6Xy1SwbxWJmWxB8F4HluG3X0ePJnYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ozt0yoIAYDPGJaQD73DLfBB7pWljf0dwaf20gsEEOG7JdmHOYtfVre0z2hy2OBqC1
+	 UVa/xGeuVZ+AUmqe7zR7Nj83RoM0dfGyaQ1PTUIm993HUIUegxGpUu47CoDIPpQzC0
+	 iwL9ey61x05+W3brXUCed4dYs+30u2Xi54vgXv/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfD3RRB (ORCPT
+        id S1726451AbfD3RTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:17:01 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:48971 "EHLO honk.sigxcpu.org"
+        Tue, 30 Apr 2019 13:19:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3RRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:17:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 66E3CFB03;
-        Tue, 30 Apr 2019 19:16:58 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mwgHcBd5cvLL; Tue, 30 Apr 2019 19:16:57 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 1B80D4027E; Tue, 30 Apr 2019 19:16:57 +0200 (CEST)
-Date:   Tue, 30 Apr 2019 19:16:57 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add a node for irqsteer
-Message-ID: <20190430171657.GA1513@bogon.m.sigxcpu.org>
-References: <a08a0a2fdd2090f4f42fe50d8ed70ee08b2fbcaf.1556631673.git.agx@sigxcpu.org>
- <1556632204.2560.20.camel@pengutronix.de>
+        id S1725942AbfD3RTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:19:06 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EEF320651;
+        Tue, 30 Apr 2019 17:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556644746;
+        bh=Ak9XM+VjWlZMz6Xy1SwbxWJmWxB8F4HluG3X0ePJnYA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZxZx9D2Lv1r5COFomGHS9i012OKoXiF2uZkaqgsaPoW3iM7g+piKuSSJJkJGuDgoz
+         fUZMRrKxDlAO8HmtU/OQqfSuagdNNvLW1ehGjCwxxgRgXfm2QVvKL1iL1D/agM7WgI
+         2lwJbWsP5bS4YljgCgmccCO9z7rgh5qzTqXTgoEc=
+Date:   Tue, 30 Apr 2019 22:48:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: stm32-dma: fix residue calculation in
+ stm32-dma
+Message-ID: <20190430171856.GW3845@vkoul-mobl.Dlink>
+References: <1553689316-6231-1-git-send-email-arnaud.pouliquen@st.com>
+ <20190426121751.GC28103@vkoul-mobl>
+ <6894b54e-651f-1caf-d363-79d1ef0eee14@st.com>
+ <20190429051310.GC3845@vkoul-mobl.Dlink>
+ <26fa7710-76cb-e202-a367-c2e2408b6808@st.com>
+ <20190430082255.GP3845@vkoul-mobl.Dlink>
+ <f7f28d56-a3e4-38a3-8580-b241fe0dcb49@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556632204.2560.20.camel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f7f28d56-a3e4-38a3-8580-b241fe0dcb49@st.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lucas,
-On Tue, Apr 30, 2019 at 03:50:04PM +0200, Lucas Stach wrote:
-> Am Dienstag, den 30.04.2019, 15:41 +0200 schrieb Guido Günther:
-> > Add a node for the irqsteer interrupt controller found on the iMX8MQ
-> > SoC.
+On 30-04-19, 16:58, Arnaud Pouliquen wrote:
+
+> >> Hope that will help to clarify.
 > > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
+> > Yes that helps, maybe we should add these bits in code and changelog..
+> > :)I will update the comments and commit message in a V2 in this way
 > > 
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > index 2cc939cfbd75..ce0e137ec8ee 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > @@ -798,6 +798,27 @@
-> >  			};
-> >  		};
-> >  
-> > +		bus@32c00000 { /* AIPS4 */
-> > +			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <1>;
-> > +			ranges = <0x32c00000 0x32c00000 0x400000>;
-> > +
-> > +			irqsteer: interrupt-controller@32e2d000 {
-> > +				compatible = "fsl,imx8m-irqsteer",
-> > +					     "fsl,imx-irqsteer";
+> > And how does this impact non cyclic case where N descriptors maybe
+> > issued. The driver seems to support non cyclic too...
 > 
-> This fits on a single line, right?
+> Correct it supports SG as well, but double buffer mode is not used in
+> such case. Hw is programmed under IT for every descriptors : no
+> automatic register reloaded as in cyclic mode. We won't end up in the
+> situation depicted below.
 
-It went past the 80 char limit but it seems the dts is not super picky
-about that so I changed that in v2.
+Okay sounds good then. Can you add a bit more of this in the code (this
+was very helpful) not as a fix but documentation so that people (or you
+down the line) will remember why this was done like this
 
-> 
-> > +				reg = <0x32e2d000 0x1000>;
-> > +				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-> > +				clock-names = "ipg";
-> > +				fsl,channel = <0>;
-> > +				fsl,num-irqs = <64>;
-> > +				interrupt-controller;
-> > +				interrupt-parent = <&gic>;
-> 
-> This is wrong, the irqsteer upstream IRQ is routed through the GPC like
-> all the other peripheral interrupts. You can just drop this property.
+Thanks
 
-Fixed in v2. Thanks,
- -- Guido
-
-> 
-> With this fixed:
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> 
-> Regards,
-> Lucas
-> 
-> > +				#interrupt-cells = <1>;
-> > +			};
-> > +		};
-> > +
-> >  		gpu: gpu@38000000 {
-> >  			compatible = "vivante,gc";
-> >  			reg = <0x38000000 0x40000>;
-> 
+-- 
+~Vinod
