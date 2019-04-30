@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E0BC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65472C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30EE21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BEB21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556624581;
-	bh=6jCE/LR6S7PqdS6et0GPFxE6fo1xtZ44ydYFUFAAU+8=;
+	s=default; t=1556624587;
+	bh=n6bEtCH5PYROpFtTrZGNY0HS5nQHHMu9jBCBwtahPa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DHpqNNlaiwPxv4ATRZqs7YQtG8vSh/8e1yULCBXVfuUPU2dOlmrmg/JotbMxolU6w
-	 iwCdP/95fwmT0RQWAlEYx4TkyIZhWiFijeYpXp2MlK0TwnyBJFtXi7tATYwEUVUiUn
-	 KzrDaDLjffeztydSoo+4tDgZaFnYNV7+nFwrBVsE=
+	b=KATPHfSu74TfqmBAB6umxVL6snbTm1WoLTyfvW7VjU5q7AWZjdnnnB/c5Nn2eOcGJ
+	 BoKbZuqWwptD0mD+Bw+hyVer8dIwRQAUVRRWaMr4yUZl7vdWwSiMxDSYAudmGV3kVd
+	 fyaR56G8MBThBrtDn46AK7dxCJFGBi9jyzppAKqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfD3Lm7 (ORCPT
+        id S1729740AbfD3LnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:42:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52594 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729646AbfD3Lm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:42:56 -0400
+        id S1729670AbfD3Lm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:42:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D076120449;
-        Tue, 30 Apr 2019 11:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F54721670;
+        Tue, 30 Apr 2019 11:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556624575;
-        bh=6jCE/LR6S7PqdS6et0GPFxE6fo1xtZ44ydYFUFAAU+8=;
+        s=default; t=1556624577;
+        bh=n6bEtCH5PYROpFtTrZGNY0HS5nQHHMu9jBCBwtahPa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8DOhaN6APZCTliv/nEtO2jbcHm04p1R5Aa8fs/2e4BwGHNZUhNQtgdj/B63oDhp+
-         z7gJDsGyX7zk4CDHZsr7UcoPfzTF0dPF88nzyPh2y3LHcwexmnAmlgEdb09rNcUkuF
-         PH9l+8uh7FzUZEWPItJh2RgNvlfaogRPIFzyAQpc=
+        b=scn/JYIRjfh4vpPPXyWkQP4LHMTd1p4loRP6idsdYFrE7TeYQurkjtPccrSZpRI5z
+         vlgbEvSW6oRF0R9v7ehW4eK+vZqnUiM+EgRXtArdDuQ1uTEkC3ZwKjnRHMaNm6UiVK
+         HiAP+m5YwbHebxNhkBgHMALijgRlUmaOB9WHkbf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.14 46/53] net/mlx5e: ethtool, Remove unsupported SFP EEPROM high pages query
-Date:   Tue, 30 Apr 2019 13:38:53 +0200
-Message-Id: <20190430113558.788242317@linuxfoundation.org>
+        stable@vger.kernel.org, Zhu Yanjun <yanjun.zhu@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 47/53] net: rds: exchange of 8K and 1M pool
+Date:   Tue, 30 Apr 2019 13:38:54 +0200
+Message-Id: <20190430113558.891950771@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
 References: <20190430113549.400132183@linuxfoundation.org>
@@ -59,49 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erez Alfasi <ereza@mellanox.com>
+From: Zhu Yanjun <yanjun.zhu@oracle.com>
 
-[ Upstream commit ace329f4ab3ba434be2adf618073c752d083b524 ]
+[ Upstream commit 4b9fc7146249a6e0e3175d0acc033fdcd2bfcb17 ]
 
-Querying EEPROM high pages data for SFP module is currently
-not supported by our driver and yet queried, resulting in
-invalid FW queries.
+Before the commit 490ea5967b0d ("RDS: IB: move FMR code to its own file"),
+when the dirty_count is greater than 9/10 of max_items of 8K pool,
+1M pool is used, Vice versa. After the commit 490ea5967b0d ("RDS: IB: move
+FMR code to its own file"), the above is removed. When we make the
+following tests.
 
-Set the EEPROM ethtool data length to 256 for SFP module will
-limit the reading for page 0 only and prevent invalid FW queries.
+Server:
+  rds-stress -r 1.1.1.16 -D 1M
 
-Fixes: bb64143eee8c ("net/mlx5e: Add ethtool support for dump module EEPROM")
-Signed-off-by: Erez Alfasi <ereza@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Client:
+  rds-stress -r 1.1.1.14 -s 1.1.1.16 -D 1M
+
+The following will appear.
+"
+connecting to 1.1.1.16:4000
+negotiated options, tasks will start in 2 seconds
+Starting up..header from 1.1.1.166:4001 to id 4001 bogus
+..
+tsks  tx/s  rx/s tx+rx K/s  mbi K/s  mbo K/s tx us/c  rtt us
+cpu %
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+   1    0    0     0.00     0.00     0.00    0.00 0.00 -1.00
+...
+"
+So this exchange between 8K and 1M pool is added back.
+
+Fixes: commit 490ea5967b0d ("RDS: IB: move FMR code to its own file")
+Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/port.c       |    4 ----
- 2 files changed, 1 insertion(+), 5 deletions(-)
+ net/rds/ib_fmr.c  |   11 +++++++++++
+ net/rds/ib_rdma.c |    3 ---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1622,7 +1622,7 @@ static int mlx5e_get_module_info(struct
- 		break;
- 	case MLX5_MODULE_ID_SFP:
- 		modinfo->type       = ETH_MODULE_SFF_8472;
--		modinfo->eeprom_len = ETH_MODULE_SFF_8472_LEN;
-+		modinfo->eeprom_len = MLX5_EEPROM_PAGE_LENGTH;
- 		break;
- 	default:
- 		netdev_err(priv->netdev, "%s: cable type not recognized:0x%x\n",
---- a/drivers/net/ethernet/mellanox/mlx5/core/port.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/port.c
-@@ -392,10 +392,6 @@ int mlx5_query_module_eeprom(struct mlx5
- 		size -= offset + size - MLX5_EEPROM_PAGE_LENGTH;
+--- a/net/rds/ib_fmr.c
++++ b/net/rds/ib_fmr.c
+@@ -44,6 +44,17 @@ struct rds_ib_mr *rds_ib_alloc_fmr(struc
+ 	else
+ 		pool = rds_ibdev->mr_1m_pool;
  
- 	i2c_addr = MLX5_I2C_ADDR_LOW;
--	if (offset >= MLX5_EEPROM_PAGE_LENGTH) {
--		i2c_addr = MLX5_I2C_ADDR_HIGH;
--		offset -= MLX5_EEPROM_PAGE_LENGTH;
--	}
++	if (atomic_read(&pool->dirty_count) >= pool->max_items / 10)
++		queue_delayed_work(rds_ib_mr_wq, &pool->flush_worker, 10);
++
++	/* Switch pools if one of the pool is reaching upper limit */
++	if (atomic_read(&pool->dirty_count) >=  pool->max_items * 9 / 10) {
++		if (pool->pool_type == RDS_IB_MR_8K_POOL)
++			pool = rds_ibdev->mr_1m_pool;
++		else
++			pool = rds_ibdev->mr_8k_pool;
++	}
++
+ 	ibmr = rds_ib_try_reuse_ibmr(pool);
+ 	if (ibmr)
+ 		return ibmr;
+--- a/net/rds/ib_rdma.c
++++ b/net/rds/ib_rdma.c
+@@ -442,9 +442,6 @@ struct rds_ib_mr *rds_ib_try_reuse_ibmr(
+ 	struct rds_ib_mr *ibmr = NULL;
+ 	int iter = 0;
  
- 	MLX5_SET(mcia_reg, in, l, 0);
- 	MLX5_SET(mcia_reg, in, module, module_num);
+-	if (atomic_read(&pool->dirty_count) >= pool->max_items_soft / 10)
+-		queue_delayed_work(rds_ib_mr_wq, &pool->flush_worker, 10);
+-
+ 	while (1) {
+ 		ibmr = rds_ib_reuse_mr(pool);
+ 		if (ibmr)
 
 
