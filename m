@@ -3,94 +3,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD66C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4158BC43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06282147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D242147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 05:57:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ATGVhV5p"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ov+Pp32o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbfD3F4n (ORCPT
+        id S1726300AbfD3F5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 01:56:43 -0400
-Received: from ozlabs.org ([203.11.71.1]:50537 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbfD3F4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 01:56:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44tW4Q5TQwz9s7T;
-        Tue, 30 Apr 2019 15:56:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556603800;
-        bh=fkf8dRO8Kf3XvHzimMslSrDHa/MBXd80K5eextIiTSs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ATGVhV5pNbt8yefmy2R31wGalmZBrPxxtBrklUaatUnzSirqNraBpUpDFsPO4+nMr
-         YvUmxjFWrLwACM4TJbp0wP/H+vxN+31vts1wjxifNoHgCldDXl7fRvohQ9q7g2EJu7
-         ZDKpx/QfTDCowysoPwIFcp2VjFlE5XZeKLApueTFx6mll6De7ZeG9qyByX4IgLX0N/
-         9mav3wzq0oaZVi+2fGh7JxhirNjpJzy7GkyMucUX4AU8ILIbW9XwDnXVofn9uuimIp
-         KDTkce8GM0VdKbw4jhBgRTxwTbmK4+Wt8gXS8PBCUs70MCEUZmKCu28rwIWSRwXySS
-         Ihxf1b7aPKI5Q==
-Date:   Tue, 30 Apr 2019 15:56:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: linux-next: build warning after merge of the clk tree
-Message-ID: <20190430155638.48e059f1@canb.auug.org.au>
-In-Reply-To: <DB3PR0402MB3916B4CE00494BE730C07047F53A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190430101939.76dc077c@canb.auug.org.au>
-        <DB3PR0402MB3916B4CE00494BE730C07047F53A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Tue, 30 Apr 2019 01:57:18 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37482 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfD3F5R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 01:57:17 -0400
+Received: by mail-io1-f68.google.com with SMTP id a23so11166124iot.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 22:57:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=hWKX2lq33x/bqH4d/le0jFr8W3N+Bkvqbw8w1QPkiFM=;
+        b=Ov+Pp32oKqWJj+v2leV694xGyb6S9up7lYYPQ7oPHjhx3oukgMTTT/m041MXK0SWuF
+         8jCINE18h1zeq+ydDj0F62gr20ryYRJ85Dm5sTjO6KyiirqCrKrdtYGIjQhM59z6EAhL
+         Wr1VtvCw1+jJAlFWtUgxPPCN51CN8gFH4tVTW/7mLD+fI1slgsPknuRb+Wb1gri/ycRv
+         cnrc/bLP3jqEHaGqNnt3532193nrUmQbCJHp2CDs8DGxqFZBZpzu8r6BBCIyizEuq2sG
+         B7P8TtttCHzh03mza9oh3/iZgqbqAEOa3zMUkHLnGB1p7+BxfihpKzCW4KeiWYkWqwO4
+         HT/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=hWKX2lq33x/bqH4d/le0jFr8W3N+Bkvqbw8w1QPkiFM=;
+        b=gVy9alA+GLge4ovMIAbFRR1Wyo5/ulk2giXeMmvgd7hBskyOAtdLQwyheT1XNpYZen
+         p7odoWcaEUQ0btzWJPvqVB2HDMu1mk8qLR+4x8pm+CCfnS/d+M7YqmjIcYxSVDNwQXnS
+         sCk20gGkHK7ilOg3hSy9vQeCJTsdpXnNCuavwBzpx5+70wRJ15hWMxDe9GO5dVbp4P8j
+         VdgrihH/NusoxZR+gxIYwn94wJuiD+FddhS48gkx+fdmo6XK3C0j6lO4VjtoB/iofRTj
+         n1sYn4AePuiMveHFI9ctb1ANakHKE1B+Ng68VDKS61NZCCeYsshpYufdNjFPxGvxpKH3
+         GBLQ==
+X-Gm-Message-State: APjAAAUJCJXVtAHo5UeYjHNYK5oNwaLeAA4S9pp28XtXaYtwb3zaUg4s
+        Gwt83Wt+LsGyauvQBvGQfnRl4A==
+X-Google-Smtp-Source: APXvYqzAC8eAlzqjeLLMoD/UHDZ5ijbGvpg1RDOoBrDKbcOzIOLLnUjbc9ho0YTyKwMXMw2TI+tDcg==
+X-Received: by 2002:a5e:d702:: with SMTP id v2mr3816669iom.236.1556603836719;
+        Mon, 29 Apr 2019 22:57:16 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id a124sm926073itc.18.2019.04.29.22.57.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 22:57:16 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 22:57:15 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Stephen Boyd <sboyd@kernel.org>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul@pwsan.com>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Megan Wachs <megan@sifive.com>
+Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
+In-Reply-To: <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com>
+Message-ID: <alpine.DEB.2.21.9999.1904292252120.7063@viisi.sifive.com>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com> <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
+ <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/K8vF_YX5vxvj4+T9qG7HvnH"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/K8vF_YX5vxvj4+T9qG7HvnH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 29 Apr 2019, Stephen Boyd wrote:
 
-Hi Anson,
+> Quoting Paul Walmsley (2019-04-29 12:42:07)
+> > On Fri, 26 Apr 2019, Paul Walmsley wrote:
+> > > On Fri, 26 Apr 2019, Stephen Boyd wrote:
+> > > 
+> > > > Quoting Paul Walmsley (2019-04-11 01:27:32)
+> > > > > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) IP
+> > > > > block, as implemented in TSMC CLN28HPC.
+> > > > 
+> > > > I haven't deeply reviewed at all, but I already get two problems when
+> > > > compile testing these patches. I can fix them up if nothing else needs
+> > > > fixing.
+> > > > 
+> > > > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn: should 'target_rate << divq' be a 64 bit type?
+> > > > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in void function
+> > > 
+> > > Hmm, that's odd.  I will definitely take a look and repost.
+> > 
+> > I'm not able to reproduce these problems.  The configs tried here were:
+> > 
+> > - 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built with 
+> >   crosstool-NG 1.24.0)
+> > 
+> > - 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with 
+> >   crosstool-NG 1.24.0)
+> > 
+> > - 32-bit i386 defconfig w/ PRCI driver enabled (gcc 
+> >   5.4.0-6ubuntu1~16.04.11)
+> > 
+> > Could you post the toolchain and kernel config you're using?
+> > 
+> 
+> I'm running sparse and smatch too.
 
-On Tue, 30 Apr 2019 01:44:58 +0000 Anson Huang <anson.huang@nxp.com> wrote:
->
-> 	Thanks for notice.
-> 	As it is intentional, I will send out a patch to add "/* fall through */=
-" to avoid this build warning,
+OK.  I was able to reproduce the __wrpll_calc_divq() warning.  It's been 
+resolved in the upcoming revision.  
 
-Excellent, thanks.
+But I don't see the second error with either sparse or smatch.  (This is 
+with sparse at commit 2b96cd804dc7 and smatch at commit f0092daff69d.)
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/K8vF_YX5vxvj4+T9qG7HvnH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzH45YACgkQAVBC80lX
-0GyzHQf+MDOwduTppkTMmqNBNvANKGSLzgM5SCQYLxUUEiwvgQ2F3OEdv28njdbG
-IWeahaQisDX/lHf+ovKat4PYMO6cPpTIL+SgwiJREeR/PT7gnXj+QwYFg1e84ZnB
-ao51Yd7t53GvmVJRwuHkJrdxAvTX2uAGFMmW0fnkVylwrQZrxuDfE57S5LsILw/u
-mmV5QF4H0+X1gWdEo552bvNPomKsDa0DOjBuyUTNqq2dSaWWTwlVAJ4XrNoEsITB
-GVwj8U1SXA6NRBpuwEB1i9V2WYhcapvxrKkOM40k4V6uqTPcV4r8BGAJ9cvy0qLA
-W4nPNDhm/TX2z135CPjACbqgyIzK0A==
-=qNhx
------END PGP SIGNATURE-----
-
---Sig_/K8vF_YX5vxvj4+T9qG7HvnH--
+- Paul
