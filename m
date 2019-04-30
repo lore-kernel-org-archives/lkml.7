@@ -2,153 +2,398 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA530C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5374C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBE121670
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990E420645
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="J/7lNJ2M";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KOVM2txM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfD3QsS (ORCPT
+        id S1726359AbfD3Qyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:48:18 -0400
-Received: from mga04.intel.com ([192.55.52.120]:43074 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD3QsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:48:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:48:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
-   d="scan'208";a="147045559"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga003.jf.intel.com with ESMTP; 30 Apr 2019 09:48:14 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hLVvR-0007yC-Ab; Tue, 30 Apr 2019 19:48:13 +0300
-Date:   Tue, 30 Apr 2019 19:48:13 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        hotwater438@tutanota.com, hdegoede@redhat.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pinctrl: intel: Clear interrupt status in mask/unmask
- callback
-Message-ID: <20190430164813.GP9224@smile.fi.intel.com>
-References: <20190430083753.18197-1-kai.heng.feng@canonical.com>
+        Tue, 30 Apr 2019 12:54:45 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50260 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725942AbfD3Qyo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:54:44 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UGsLrq030296;
+        Tue, 30 Apr 2019 09:54:23 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=ga/EWKOAn9UDB4/9v+JepbeJg373fEqSyzJw4liRsvE=;
+ b=J/7lNJ2MO3QohbtmP58ifNjlYxGhac1sL5Qv6kjNPdsSRqsxPLuC/zWpflFo7RfaDV/C
+ +avwcZOraofpifkwIPmvxuvtYmZqkwhfJCwj2PnKOmStwjuy/xDC6+NSd/lptRSvAFOh
+ p79jbqnfMgOa52UIVxc95dhmotdni6sOAQU= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s6h21ssch-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 30 Apr 2019 09:54:23 -0700
+Received: from prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 30 Apr 2019 09:54:21 -0700
+Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
+ prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 30 Apr 2019 09:54:21 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 30 Apr 2019 09:54:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ga/EWKOAn9UDB4/9v+JepbeJg373fEqSyzJw4liRsvE=;
+ b=KOVM2txMvQR230Okmd0uOBavvnacL3V91C5snYPoXu3pqeRweHszbCnetT6wo2tj0SZPgLgkeSSccg+FQbh2HDnxC9JKP3rE+WrT/Mp4KmEYUXWrlChLH9JVyzAnl5Eh7QcDZsgGniMq2Q0u/eBEOWbjn9/zwfbcAjBveNKqPqs=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1168.namprd15.prod.outlook.com (10.175.2.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Tue, 30 Apr 2019 16:54:18 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15%10]) with mapi id 15.20.1835.018; Tue, 30 Apr 2019
+ 16:54:18 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+CC:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Kernel Team <Kernel-team@fb.com>,
+        viresh kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+Thread-Topic: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+Thread-Index: AQHU7lSD68FtcB4UGUOYupgC9AfmOKY1TPCAgACBxACACo6VgIAIioaAgAkx7ACAARa2gIABKdKAgACqaACAAAlcAA==
+Date:   Tue, 30 Apr 2019 16:54:18 +0000
+Message-ID: <19AF6556-A2A2-435B-9358-CD22CF7BFD9F@fb.com>
+References: <20190408214539.2705660-1-songliubraving@fb.com>
+ <20190410115907.GE19434@e105550-lin.cambridge.arm.com>
+ <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
+ <CAKfTPtAFB3gSZYJN1BcjU_XoY=Pfu2xtea+2MEw7FkVc3mwTSA@mail.gmail.com>
+ <E97E73F4-CE8C-4CD7-B6B6-5F63A4E881B1@fb.com>
+ <F0A127DD-F9B6-4FBE-B9AD-8E8B00A7D676@fb.com>
+ <CAKfTPtA_ouYCes9LnYn0quAKm273mi3vP-++GTBtYcQn07xc6Q@mail.gmail.com>
+ <A62E5068-4A1E-44E3-99BB-02E98229C1E2@fb.com>
+ <CAKfTPtAG3v=37wyLjzkNNK_6HdoMK6WO7AMYfa+G24rq2iyAfg@mail.gmail.com>
+In-Reply-To: <CAKfTPtAG3v=37wyLjzkNNK_6HdoMK6WO7AMYfa+G24rq2iyAfg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c091:180::4110]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2a223e25-1f92-4375-9b58-08d6cd8c7c52
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1168;
+x-ms-traffictypediagnostic: MWHPR15MB1168:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR15MB116882E2AA6D1EDAF886B17CB33A0@MWHPR15MB1168.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00235A1EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(346002)(376002)(366004)(199004)(189003)(51914003)(54014002)(6116002)(68736007)(102836004)(2616005)(66556008)(64756008)(71190400001)(71200400001)(66476007)(476003)(66446008)(8676002)(73956011)(91956017)(76176011)(486006)(50226002)(99286004)(81166006)(83716004)(57306001)(76116006)(11346002)(14444005)(5660300002)(256004)(2906002)(81156014)(478600001)(86362001)(966005)(446003)(8936002)(6486002)(36756003)(186003)(561944003)(53936002)(6916009)(33656002)(305945005)(6512007)(14454004)(6436002)(229853002)(25786009)(7736002)(82746002)(54906003)(93886005)(6506007)(66946007)(316002)(53546011)(97736004)(4326008)(6306002)(46003)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1168;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WQsBD6pbCqOjJev96qbPB4VUbY8SURaVX2v93xFCO1/eD6HOF7VQmYE3ypzLxKErumxgkTf55N083CG4GeRbCbwuTXONRgYN9vPcSaxeWGEuEix8kaNnNfMUiYARvZuaaB7isyIomVe3hkm5wjrZCVbSxnR28g/trMxyIEES63cksU/5EGpq7blzMHpT/hBkaRatZOrnH0p1SUOptHxi0bUh0wVUvR6RfmFvXnIHn3llKMGI9CVWa+QqmdBpHI615fHpy/DvT1qbN2EzP13EUp6hcbYetVcL8LM4eVmg5xR6QLhqB7Q85dSLaGX3KWf7oNtrE+YX7dzUu3NlRTLRgV/S7nszcBK5fBzGPIFmBv2UVLLdfPY5wCAPidQ3QB2ibtGhcX645YCOHK72Kgsmyk4+D3Mejwby3H1Z9V8O16U=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D44450EECA858B4782EE638B5EF2A540@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430083753.18197-1-kai.heng.feng@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a223e25-1f92-4375-9b58-08d6cd8c7c52
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2019 16:54:18.2466
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1168
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_08:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 04:37:53PM +0800, Kai-Heng Feng wrote:
-> Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
-> added because clearing interrupt status bit is required to avoid
-> unexpected behavior.
-> 
-> Turns out the unmask callback also needs the fix, which can solve weird
-> IRQ triggering issues on I2C touchpad ELAN1200.
 
-Pushed to my review and testing queue, thanks!
 
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v2:
-> - Clear interrupt status for both mask/umask cases.
-> - Reduce calculation under irq spinlock.
-> 
->  drivers/pinctrl/intel/pinctrl-intel.c | 37 +++++----------------------
->  1 file changed, 6 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-> index 3b1818184207..717148d2818c 100644
-> --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> @@ -913,35 +913,6 @@ static void intel_gpio_irq_ack(struct irq_data *d)
->  	}
->  }
->  
-> -static void intel_gpio_irq_enable(struct irq_data *d)
-> -{
-> -	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> -	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
-> -	const struct intel_community *community;
-> -	const struct intel_padgroup *padgrp;
-> -	int pin;
-> -
-> -	pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), &community, &padgrp);
-> -	if (pin >= 0) {
-> -		unsigned int gpp, gpp_offset, is_offset;
-> -		unsigned long flags;
-> -		u32 value;
-> -
-> -		gpp = padgrp->reg_num;
-> -		gpp_offset = padgroup_offset(padgrp, pin);
-> -		is_offset = community->is_offset + gpp * 4;
-> -
-> -		raw_spin_lock_irqsave(&pctrl->lock, flags);
-> -		/* Clear interrupt status first to avoid unexpected interrupt */
-> -		writel(BIT(gpp_offset), community->regs + is_offset);
-> -
-> -		value = readl(community->regs + community->ie_offset + gpp * 4);
-> -		value |= BIT(gpp_offset);
-> -		writel(value, community->regs + community->ie_offset + gpp * 4);
-> -		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> -	}
-> -}
-> -
->  static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> @@ -954,15 +925,20 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
->  	if (pin >= 0) {
->  		unsigned int gpp, gpp_offset;
->  		unsigned long flags;
-> -		void __iomem *reg;
-> +		void __iomem *reg, *is;
->  		u32 value;
->  
->  		gpp = padgrp->reg_num;
->  		gpp_offset = padgroup_offset(padgrp, pin);
->  
->  		reg = community->regs + community->ie_offset + gpp * 4;
-> +		is = community->regs + community->is_offset + gpp * 4;
->  
->  		raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +
-> +		/* Clear interrupt status first to avoid unexpected interrupt */
-> +		writel(BIT(gpp_offset), is);
-> +
->  		value = readl(reg);
->  		if (mask)
->  			value &= ~BIT(gpp_offset);
-> @@ -1106,7 +1082,6 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
->  
->  static struct irq_chip intel_gpio_irqchip = {
->  	.name = "intel-gpio",
-> -	.irq_enable = intel_gpio_irq_enable,
->  	.irq_ack = intel_gpio_irq_ack,
->  	.irq_mask = intel_gpio_irq_mask,
->  	.irq_unmask = intel_gpio_irq_unmask,
-> -- 
-> 2.17.1
-> 
+> On Apr 30, 2019, at 12:20 PM, Vincent Guittot <vincent.guittot@linaro.org=
+> wrote:
+>=20
+> Hi Song,
+>=20
+> On Tue, 30 Apr 2019 at 08:11, Song Liu <songliubraving@fb.com> wrote:
+>>=20
+>>=20
+>>=20
+>>> On Apr 29, 2019, at 8:24 AM, Vincent Guittot <vincent.guittot@linaro.or=
+g> wrote:
+>>>=20
+>>> Hi Song,
+>>>=20
+>>> On Sun, 28 Apr 2019 at 21:47, Song Liu <songliubraving@fb.com> wrote:
+>>>>=20
+>>>> Hi Morten and Vincent,
+>>>>=20
+>>>>> On Apr 22, 2019, at 6:22 PM, Song Liu <songliubraving@fb.com> wrote:
+>>>>>=20
+>>>>> Hi Vincent,
+>>>>>=20
+>>>>>> On Apr 17, 2019, at 5:56 AM, Vincent Guittot <vincent.guittot@linaro=
+.org> wrote:
+>>>>>>=20
+>>>>>> On Wed, 10 Apr 2019 at 21:43, Song Liu <songliubraving@fb.com> wrote=
+:
+>>>>>>>=20
+>>>>>>> Hi Morten,
+>>>>>>>=20
+>>>>>>>> On Apr 10, 2019, at 4:59 AM, Morten Rasmussen <morten.rasmussen@ar=
+m.com> wrote:
+>>>>>>>>=20
+>>>>>>=20
+>>>>>>>>=20
+>>>>>>>> The bit that isn't clear to me, is _why_ adding idle cycles helps =
+your
+>>>>>>>> workload. I'm not convinced that adding headroom gives any latency
+>>>>>>>> improvements beyond watering down the impact of your side jobs. AF=
+AIK,
+>>>>>>>=20
+>>>>>>> We think the latency improvements actually come from watering down =
+the
+>>>>>>> impact of side jobs. It is not just statistically improving average
+>>>>>>> latency numbers, but also reduces resource contention caused by the=
+ side
+>>>>>>> workload. I don't know whether it is from reducing contention of AL=
+Us,
+>>>>>>> memory bandwidth, CPU caches, or something else, but we saw reduced
+>>>>>>> latencies when headroom is used.
+>>>>>>>=20
+>>>>>>>> the throttling mechanism effectively removes the throttled tasks f=
+rom
+>>>>>>>> the schedule according to a specific duty cycle. When the side job=
+ is
+>>>>>>>> not throttled the main workload is experiencing the same latency i=
+ssues
+>>>>>>>> as before, but by dynamically tuning the side job throttling you c=
+an
+>>>>>>>> achieve a better average latency. Am I missing something?
+>>>>>>>>=20
+>>>>>>>> Have you looked at your distribution of main job latency and tried=
+ to
+>>>>>>>> compare with when throttling is active/not active?
+>>>>>>>=20
+>>>>>>> cfs_bandwidth adjusts allowed runtime for each task_group each peri=
+od
+>>>>>>> (configurable, 100ms by default). cpu.headroom logic applies gentle
+>>>>>>> throttling, so that the side workload gets some runtime in every pe=
+riod.
+>>>>>>> Therefore, if we look at time window equal to or bigger than 100ms,=
+ we
+>>>>>>> don't really see "throttling active time" vs. "throttling inactive =
+time".
+>>>>>>>=20
+>>>>>>>>=20
+>>>>>>>> I'm wondering if the headroom solution is really the right solutio=
+n for
+>>>>>>>> your use-case or if what you are really after is something which i=
+s
+>>>>>>>> lower priority than just setting the weight to 1. Something that
+>>>>>>>=20
+>>>>>>> The experiments show that, cpu.weight does proper work for priority=
+: the
+>>>>>>> main workload gets priority to use the CPU; while the side workload=
+ only
+>>>>>>> fill the idle CPU. However, this is not sufficient, as the side wor=
+kload
+>>>>>>> creates big enough contention to impact the main workload.
+>>>>>>>=20
+>>>>>>>> (nearly) always gets pre-empted by your main job (SCHED_BATCH and
+>>>>>>>> SCHED_IDLE might not be enough). If your main job consist
+>>>>>>>> of lots of relatively short wake-ups things like the min_granulari=
+ty
+>>>>>>>> could have significant latency impact.
+>>>>>>>=20
+>>>>>>> cpu.headroom gives benefits in addition to optimizations in pre-emp=
+t
+>>>>>>> side. By maintaining some idle time, fewer pre-empt actions are
+>>>>>>> necessary, thus the main workload will get better latency.
+>>>>>>=20
+>>>>>> I agree with Morten's proposal, SCHED_IDLE should help your latency
+>>>>>> problem because side job will be directly preempted unlike normal cf=
+s
+>>>>>> task even lowest priority.
+>>>>>> In addition to min_granularity, sched_period also has an impact on t=
+he
+>>>>>> time that a task has to wait before preempting the running task. Als=
+o,
+>>>>>> some sched_feature like GENTLE_FAIR_SLEEPERS can also impact the
+>>>>>> latency of a task.
+>>>>>>=20
+>>>>>> It would be nice to know if the latency problem comes from contentio=
+n
+>>>>>> on cache resources or if it's mainly because you main load waits
+>>>>>> before running on a CPU
+>>>>>>=20
+>>>>>> Regards,
+>>>>>> Vincent
+>>>>>=20
+>>>>> Thanks for these suggestions. Here are some more tests to show the im=
+pact
+>>>>> of scheduler knobs and cpu.headroom.
+>>>>>=20
+>>>>> side-load | cpu.headroom | side/cpu.weight | min_gran | cpu-idle | ma=
+in/latency
+>>>>> ---------------------------------------------------------------------=
+-----------
+>>>>> none    |      0       |     n/a         |    1 ms  |  45.20%  |   1.=
+00
+>>>>> ffmpeg   |      0       |      1          |   10 ms  |   3.38%  |   1=
+.46
+>>>>> ffmpeg   |      0       |   SCHED_IDLE    |    1 ms  |   5.69%  |   1=
+.42
+>>>>> ffmpeg   |    20%       |   SCHED_IDLE    |    1 ms  |  19.00%  |   1=
+.13
+>>>>> ffmpeg   |    30%       |   SCHED_IDLE    |    1 ms  |  27.60%  |   1=
+.08
+>>>>>=20
+>>>>> In all these cases, the main workload is loaded with same level of
+>>>>> traffic (request per second). Main workload latency numbers are norma=
+lized
+>>>>> based on the baseline (first row).
+>>>>>=20
+>>>>> For the baseline, the main workload runs without any side workload, t=
+he
+>>>>> system has about 45.20% idle CPU.
+>>>>>=20
+>>>>> The next two rows compare the impact of scheduling knobs cpu.weight a=
+nd
+>>>>> sched_min_granularity. With cpu.weight of 1 and min_granularity of 10=
+ms,
+>>>>> we see a latency of 1.46; with SCHED_IDLE and min_granularity of 1ms,=
+ we
+>>>>> see a latency of 1.42. So SCHED_IDLE and min_granularity help protect=
+ing
+>>>>> the main workload. However, it is not sufficient, as the latency over=
+head
+>>>>> is high (>40%).
+>>>>>=20
+>>>>> The last two rows show the benefit of cpu.headroom. With 20% headroom=
+,
+>>>>> the latency is 1.13; while with 30% headroom, the latency is 1.08.
+>>>>>=20
+>>>>> We can also see a clear correlation between latency and global idle C=
+PU:
+>>>>> more idle CPU yields better lower latency.
+>>>>>=20
+>>>>> Over all, these results show that cpu.headroom provides effective
+>>>>> mechanism to control the latency impact of side workloads. Other knob=
+s
+>>>>> could also help the latency, but they are not as effective and flexib=
+le
+>>>>> as cpu.headroom.
+>>>>>=20
+>>>>> Does this analysis address your concern?
+>>>=20
+>>> So, you results show that sched_idle class doesn't provide the
+>>> intended behavior because it still delay the scheduling of sched_other
+>>> tasks. In fact, the wakeup path of the scheduler doesn't make any
+>>> difference between a cpu running a sched_other and a cpu running a
+>>> sched_idle when looking for the idlest cpu and it can create some
+>>> contentions between sched_other tasks whereas a cpu runs sched_idle
+>>> task.
+>>=20
+>> I don't think scheduling delay is the only (or dominating) factor of
+>> extra latency. Here are some data to show it.
+>>=20
+>> I measured IPC (instructions per cycle) of the main workload under
+>> different scenarios:
+>>=20
+>> side-load | cpu.headroom | side/cpu.weight  | IPC
+>> ----------------------------------------------------
+>> none     |     0%       |       N/A        | 0.66
+>> ffmpeg   |     0%       |    SCHED_IDLE    | 0.53
+>> ffmpeg   |    20%       |    SCHED_IDLE    | 0.58
+>> ffmpeg   |    30%       |    SCHED_IDLE    | 0.62
+>>=20
+>> These data show that the side workload has a negative impact on the
+>> main workload's IPC. And cpu.headroom could help reduce this impact.
+>>=20
+>> Therefore, while optimizations in the wakeup path should help the
+>> latency; cpu.headroom would add _significant_ benefit on top of that.
+>=20
+> It seems normal that side workload has a negative impact on IPC
+> because of resources sharing but your previous results showed a 42%
+> regression of latency with sched_idle which is can't be only linked to
+> resources access contention
 
--- 
-With Best Regards,
-Andy Shevchenko
+Agreed. I think both scheduling latency and resource contention=20
+contribute noticeable latency overhead to the main workload. The=20
+scheduler optimization by Viresh would help reduce the scheduling
+latency, but it won't help the resource contention. Hopefully, with=20
+optimizations in the scheduler, we can meet the latency target with=20
+smaller cpu.headroom. However, I don't think scheduler optimizations=20
+will eliminate the need of cpu.headroom, as the resource contention
+always exists, and the impact could be significant.=20
 
+Do you have further concerns with this patchset?
+
+Thanks,
+Song=20
+
+
+>>=20
+>> Does this assessment make sense?
+>>=20
+>>=20
+>>> Viresh (cced to this email) is working on improving such behavior at
+>>> wake up and has sent an patch related to the subject:
+>>> https://lkml.org/lkml/2019/4/25/251
+>>> I'm curious if this would improve the results.
+>>=20
+>> I could try it with our workload next week (I am at LSF/MM this
+>> week). Also, please keep in mind that this test sometimes takes
+>> multiple days to setup and run.
+>=20
+> Yes. I understand. That would be good to have a simpler setup to
+> reproduce the behavior of your setup in order to do preliminary tests
+> and analyse the behavior
+>=20
+>>=20
+>> Thanks,
+>> Song
+>>=20
+>>>=20
+>>> Regards,
+>>> Vincent
+>>>=20
+>>>>>=20
+>>>>> Thanks,
+>>>>> Song
+>>>>>=20
+>>>>=20
+>>>> Could you please share your comments and suggestions on this work? Did
+>>>> the results address your questions/concerns?
+>>>>=20
+>>>> Thanks again,
+>>>> Song
+>>>>=20
+>>>>>>=20
+>>>>>>>=20
+>>>>>>> Thanks,
+>>>>>>> Song
+>>>>>>>=20
+>>>>>>>>=20
+>>>>>>>> Morten
 
