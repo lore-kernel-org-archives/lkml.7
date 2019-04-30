@@ -2,111 +2,163 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A44C04AA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65390C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F071120644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="veTmN8Ya"
+	by mail.kernel.org (Postfix) with ESMTP id 3033E20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfD3Q3Z (ORCPT
+        id S1726681AbfD3Q3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:29:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36610 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfD3Q3Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:29:24 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v80so2724405pfa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:29:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M8CMI/W3q+BSC73DTflngmeta3WjHrDaqS1WHzzkYCk=;
-        b=veTmN8YaZ3bNLDr94/iiI2YhDH1dk7szUetYQ4x7FThsIr2WCCAOOppzZgcXwaTV1x
-         iaifTKBgUYNlpfmoUIQ58b5TLqg72BgDJLt+5rQEZ+yaJ/agYTsEaMsPgrYrg7mXcRSt
-         UQ7KeXvjLfA5h4yBMrCkQf8zUJ7mVQfqu6zVGrwheBEMBPP0CqYFcKDlqhYZ/DE/9b3Y
-         vQg63MCbKkW5Godw8bKTv6Eqacr8WJVry7H8vHiz2r0nGdoWnOdJ++kq8DWu3FnAAnno
-         4nEXdiZY0lRja41CnQ/cZFRGDg0Y6g3ltiq0mgXmdOAA7XUN+aKQYpM1RgYMk7d1CKSv
-         SiDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M8CMI/W3q+BSC73DTflngmeta3WjHrDaqS1WHzzkYCk=;
-        b=PJtzvz2nQmyEPc69pNdErvk1vsMi9q2ILh1AgC33+OPYQKjvoGHaXIt5rxOM1uljtl
-         lpTWf4WrpIafEYXE9aKYHJfCXk7jjm/+3EubpX0ob/8w7rQOVIYKvD164UXjbUsGn9BR
-         vw5GIjdiLQZiGUwvB9u1AGbo5oHKgrhhFW4eS36KQcVNsMEKteJTU+i6Lp51jMThlz5Y
-         qGo1LCECutmAhZ/kzZ9S29ju4tH7A8dpHls5pRB/ZYqZcmzkAY73oosS+O2uRupXd+7O
-         X4ILW+sAMfX3Th/LdQcZWKN3dwWmhgr0SG8DJcx+doDWMTUyPLeDtB3mlNd6enGrsEU9
-         R3UA==
-X-Gm-Message-State: APjAAAWs/fChdz3/h9QeKLIhJrbDHqusJxkZYU4CZJnFfECeYLiEvbel
-        F5elC7c0CoZY+fpKKnZ0C1WMzQ3P6QAWl559zoPA4Q==
-X-Google-Smtp-Source: APXvYqwAcVVfpquk09wow26pwxwIdNJqiUwANpR/06l/uFpJFmV2MWFMo4DRtnuE3eA8Sgq6jqSi8swP2KVzAKTVWF4=
-X-Received: by 2002:a63:cc48:: with SMTP id q8mr528012pgi.202.1556641763398;
- Tue, 30 Apr 2019 09:29:23 -0700 (PDT)
+        Tue, 30 Apr 2019 12:29:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:20323 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfD3Q33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:29:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:29:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="147139281"
+Received: from cng16-mobl.amr.corp.intel.com (HELO [10.252.205.95]) ([10.252.205.95])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Apr 2019 09:29:22 -0700
+Subject: Re: [alsa-devel] [PATCH v3 2/5] soundwire: fix style issues
+To:     =?UTF-8?Q?Vfi=06inod_Koul?= <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        liam.r.girdwood@linux.intel.com, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
+ <20190411031701.5926-3-pierre-louis.bossart@linux.intel.com>
+ <20190414095839.GG28103@vkoul-mobl>
+ <08ea1442-361a-ecfc-ca26-d3bd8a0ec37b@linux.intel.com>
+ <20190430085153.GS3845@vkoul-mobl.Dlink>
+ <9866ac8c-103d-22cd-a639-a71c39a685c2@linux.intel.com>
+ <20190430145444.GU3845@vkoul-mobl.Dlink>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <72ff2d4f-85a7-b117-3d51-229c5f421734@linux.intel.com>
+Date:   Tue, 30 Apr 2019 11:29:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <46b3e8edf27e4c8f98697f9e7f2117d6@AcuMS.aculab.com>
- <20190430145624.30470-1-tranmanphong@gmail.com> <CAKwvOdmvA4sO7UsXW4DapO_HKodeWFwA_5FsNe_wVjneZBYYdg@mail.gmail.com>
-In-Reply-To: <CAKwvOdmvA4sO7UsXW4DapO_HKodeWFwA_5FsNe_wVjneZBYYdg@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 30 Apr 2019 09:29:12 -0700
-Message-ID: <CAKwvOdntTmHBinCK0T_8OZ-2ksUHkQBvDyR8WrxZdW=+yu25dw@mail.gmail.com>
-Subject: Re: [PATCH V2] of: fix clang -Wunsequenced for be32_to_cpu()
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     robh+dt@kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        pantelis.antoniou@konsulko.com, David.Laight@aculab.com,
-        hch@infradead.org, Nathan Chancellor <natechancellor@gmail.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190430145444.GU3845@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 9:28 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Tue, Apr 30, 2019 at 7:58 AM Phong Tran <tranmanphong@gmail.com> wrote:
-> >
-> > Now, make the loop explicit to avoid clang warning.
-> >
-> > ./include/linux/of.h:238:37: warning: multiple unsequenced modifications
-> > to 'cell' [-Wunsequenced]
-> >                 r = (r << 32) | be32_to_cpu(*(cell++));
-> >                                                   ^~
-> > ./include/linux/byteorder/generic.h:95:21: note: expanded from macro
-> > 'be32_to_cpu'
-> >                     ^
-> > ./include/uapi/linux/byteorder/little_endian.h:40:59: note: expanded
-> > from macro '__be32_to_cpu'
-> >                                                           ^
-> > ./include/uapi/linux/swab.h:118:21: note: expanded from macro '__swab32'
-> >         ___constant_swab32(x) :                 \
-> >                            ^
-> > ./include/uapi/linux/swab.h:18:12: note: expanded from macro
-> > '___constant_swab32'
-> >         (((__u32)(x) & (__u32)0x000000ffUL) << 24) |            \
-> >                   ^
-> >
-> > Signed-off-by: Phong Tran <tranmanphong@gmail.com>
->
-> Thanks for the patch.
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/460
-> Suggested-by: David Laight <David.Laight@ACULAB.COM>
 
-sent too soon...
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
--- 
-Thanks,
-~Nick Desaulniers
+On 4/30/19 9:54 AM, Vfiinod Koul wrote:
+> On 30-04-19, 08:38, Pierre-Louis Bossart wrote:
+>> On 4/30/19 3:51 AM, Vinod Koul wrote:
+>>> On 15-04-19, 08:09, Pierre-Louis Bossart wrote:
+>>>>
+>>>>>>
+>>>>>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>>>>>> ---
+>>>>>>     drivers/soundwire/Kconfig          |   2 +-
+>>>>>>     drivers/soundwire/bus.c            |  87 ++++++++--------
+>>>>>>     drivers/soundwire/bus.h            |  16 +--
+>>>>>>     drivers/soundwire/bus_type.c       |   4 +-
+>>>>>>     drivers/soundwire/cadence_master.c |  87 ++++++++--------
+>>>>>>     drivers/soundwire/cadence_master.h |  22 ++--
+>>>>>>     drivers/soundwire/intel.c          |  87 ++++++++--------
+>>>>>>     drivers/soundwire/intel.h          |   4 +-
+>>>>>>     drivers/soundwire/intel_init.c     |  12 +--
+>>>>>>     drivers/soundwire/mipi_disco.c     | 116 +++++++++++----------
+>>>>>>     drivers/soundwire/slave.c          |  10 +-
+>>>>>>     drivers/soundwire/stream.c         | 161 +++++++++++++++--------------
+>>>>>
+>>>>> I would prefer this to be a patch per module. It doesnt help to have a
+>>>>> single patch for all the files!
+>>>>>
+>>>>> It would be great to have cleanup done per logical group, for example
+>>>>> typos in a patch, aligns in another etc...
+>>>>
+>>>> You've got to be kidding. I've never seen people ask for this sort of
+>>>> detail.
+>>>
+>>> Nope this is the way it should be. A patch is patch and which
+>>> should do one thing! Even if it is a cleanup one.
+>>>
+>>> I dislike a patch which touches everything, core, modules, so please
+>>> split up. As a said in review it takes guesswork to find why a change
+>>> was done, was it whitespace fix, indentation or not, so please split up
+>>> based on type of fixes.
+>>
+>> With all due respect, you are not helping here but rather slowing things
+>> down. I've done dozens of cleanups in the ALSA tree and I didn't go in this
+>> sort of details.
+> 
+> Thats fine, it is upto people, everyone has different views, mine is
+> different from Takashi's. We all know for example networking has
+> different stable and code style rule. That is how it is and I dont think
+> we would have one rule for all kernel.
+> 
+> All I ask is to be able to review and split up accordingly, I guess that
+> is a fair request
+> 
+>> The fact that the series was tagged as Reviewed by Takashi
+>> on April 11 and we are still discussing trivial changes tells me the
+>> integration model is broken.
+> 
+> Is it? you got feedback on 15th (that too after my 2 week conf/vacation
+> break) and I got called crazy for that, not helping!!
+> 
+> 
+>> It's not just me the patches related to
+>> runtime-pm from your own Linaro colleagues posted on March 28 went nowhere
+>> either.
+> 
+> Does it matter it was a Linaro colleague or not, a patch was posted,
+> feedback given (similar to cadence one) we agreed that the fix
+> is not correct and so patch was not applied. I don't think Srini cried
+> over it!
+> 
+>> Moving forward, I suggest we merge SoundWire-related patches through the
+>> sound tree. There will be dependencies in the coming weeks between SOF and
+>> SoundWire and it makes no sense to have separate maintainers and make the
+>> life of early adopters more complicated than it needs to be. If we have
+>> 3-week delays for trivial stuff, I can't imagine what the pace will be when
+>> I publish the next 20-odd patches I am still working on, and the code needed
+>> for the SoundWire audio device class being standardized as we speak. Things
+>> were fine up to now since no one was actually using the code, we are in a
+>> different model now.
+> 
+> I disagree and wont accept it. I dont think you understand that you are
+> not the most important person in the whole world, the 20 patches series
+> you are cooking would sure be greatest ever, but that is not the point.
+> The kernel has a process, you got a feedback, please fix that and post
+> v2 rather than cribbing, complaining and calling crazy. The energy would
+> have been better spent on fixing the feedback provided.
+> 
+> Dependencies are _always_ there in kernel development and we know how to
+> deal with it. Am sure Takashi, Mark and me can come to reasonable
+> agreement, I wouldn't worry about that!
+> 
+> What we dont do is create new model for your 20 patches.
+> 
+> And I guess I dont have anything more to say on this thread, so I wont
+> bother replying, please feel free to post v2 and I shall review.
+
+Friends have disagreements. We remain friends and I will provide a v2.
+
+I still believe it makes no sense to split the integration of 
+SoundWire-related patches in two different trees. The only rationale for 
+it might be that SoundWire is a 'bus' than could be used in other areas. 
+Except that for now and the foreseeable future (2022+) it's only for 
+audio as a replacement of HDaudio, so the pragmatic way of dealing with 
+SoundWire is to merge the code through the audio tree. And given that 
+the code is not in a usable state at the moment, dealing with the audio 
+tree would not have any negative impact on anyone.
