@@ -2,111 +2,92 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF69C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D638C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D814D2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56EF221670
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 17:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfD3RER (ORCPT
+        id S1726599AbfD3RF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 13:04:17 -0400
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:32848 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfD3RER (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 13:04:17 -0400
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1hLWAm-0000Av-00; Tue, 30 Apr 2019 17:04:04 +0000
-Date:   Tue, 30 Apr 2019 13:04:04 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        "devel@uclibc-ng.org" <devel@uclibc-ng.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Detecting libc in perf (was Re: perf tools build broken after
- v5.1-rc1)
-Message-ID: <20190430170404.GX23599@brightrain.aerifal.cx>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org>
- <20190425214800.GC21829@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
- <20190430011818.GE7857@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A250601B@us01wembx1.internal.synopsys.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A250601B@us01wembx1.internal.synopsys.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Tue, 30 Apr 2019 13:05:29 -0400
+Received: from foss.arm.com ([217.140.101.70]:50392 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfD3RF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 13:05:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4319374;
+        Tue, 30 Apr 2019 10:05:28 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8655C3F5C1;
+        Tue, 30 Apr 2019 10:05:26 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v3 0/4] ptrace: cleanup PTRACE_SYSEMU handling and add support for arm64
+Date:   Tue, 30 Apr 2019 18:05:16 +0100
+Message-Id: <20190430170520.29470-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 03:53:18PM +0000, Vineet Gupta wrote:
-> On 4/29/19 6:18 PM, Arnaldo Carvalho de Melo wrote:
-> >>> Auto-detecting system features:
-> >>> ...                         dwarf: [ OFF ]
-> >>> ...            dwarf_getlocations: [ OFF ]
-> >>> ...                         glibc: [ on  ]
-> >> Not related to current issue, this run uses a uClibc toolchain and yet it is
-> >> detecting glibc - doesn't seem right to me.
-> > Ok, I'll improve that, I think it just tries to detect a libc, yeah,
-> > see:
-> >
-> > [acme@quaco linux]$ cat tools/build/feature/test-glibc.c
-> > // SPDX-License-Identifier: GPL-2.0
-> > #include <stdlib.h>
-> >
-> > #if !defined(__UCLIBC__)
-> > #include <gnu/libc-version.h>
-> > #else
-> > #define XSTR(s) STR(s)
-> > #define STR(s) #s
-> > #endif
-> >
-> > int main(void)
-> > {
-> > #if !defined(__UCLIBC__)
-> > 	const char *version = gnu_get_libc_version();
-> > #else
-> > 	const char *version = XSTR(__GLIBC__) "." XSTR(__GLIBC_MINOR__);
-> > #endif
-> >
-> > 	return (long)version;
-> > }
-> > [acme@quaco linux]$
-> >
-> > [perfbuilder@59ca4b424ded /]$ grep __GLIBC__ /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/*.h
-> > /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:   The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
-> > /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:#define	__GLIBC__	2
-> > /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
-> > [perfbuilder@59ca4b424ded /]$
-> >
-> > Isn't that part of uClibc?
-> 
-> Right you are. Per the big fat comment right above that code, this gross hack in
-> uclibc is unavoidable as applications tend to rely on that define.
-> So a better fix would be to check for various !GLIBC libs explicitly.
-> 
-> #ifdef __UCLIBC__
-> 
-> #elseif defined __MUSL__
-> 
-> ....
-> 
-> Not pretty from app usage pov, but that seems to be the only sane way of doing it.
+Hi,
 
-What are you trying to achieve? I was just CC'd and I'm missing the
-context.
+This patchset evolved from the discussion in the thread[0][1]. When we
+wanted to add PTRACE_SYSEMU support to ARM64, we thought instead of
+duplicating what other architectures like x86 and powerpc have done,
+let consolidate the existing support and move it to the core as there's
+nothing arch specific in it.
 
-Rich
+v2->v3:
+	- moved clearing of TIF_SYSCALL_EMU to __ptrace_unlink as Oleg
+	  suggested
+	- x86 cleanup as per Oleg's suggestion and dropped adding new
+	  ptrace_syscall_enter for SYSEMU handling
+	  (tested using tools/testing/selftests/x86/ptrace_syscall.c)
+	- Updated arm64 handling accordingly
+
+v1->v2:
+	- added comment for empty statement after tracehook_report_syscall_entry
+	- dropped x86 change in syscall_slow_exit_work as I had ended
+	  up changing logic unintentionally
+	- removed spurious change in powerpc moving user_exit()
+
+Regards,
+Sudeep
+
+[0] https://patchwork.kernel.org/patch/10585505/
+[1] https://patchwork.kernel.org/patch/10675237/
+
+Sudeep Holla (4):
+  ptrace: move clearing of TIF_SYSCALL_EMU flag to core
+  x86: simplify _TIF_SYSCALL_EMU handling
+  arm64: add PTRACE_SYSEMU{,SINGLESTEP} definations to uapi headers
+  arm64: ptrace: add support for syscall emulation
+
+ arch/arm64/include/asm/thread_info.h |  5 ++++-
+ arch/arm64/include/uapi/asm/ptrace.h |  3 +++
+ arch/arm64/kernel/ptrace.c           |  6 +++++-
+ arch/powerpc/kernel/ptrace.c         |  1 -
+ arch/x86/entry/common.c              | 17 ++++++-----------
+ arch/x86/kernel/ptrace.c             |  3 ---
+ kernel/ptrace.c                      |  3 +++
+ 7 files changed, 21 insertions(+), 17 deletions(-)
+
+--
+2.17.1
+
