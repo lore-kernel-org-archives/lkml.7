@@ -2,280 +2,117 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B63C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E966C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A3020835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B719217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Plflcced"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="pmXYskxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfD3QVB (ORCPT
+        id S1726599AbfD3QVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:21:01 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34162 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfD3QVB (ORCPT
+        Tue, 30 Apr 2019 12:21:07 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42952 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfD3QVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:21:01 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r30so425317lfn.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:20:59 -0700 (PDT)
+        Tue, 30 Apr 2019 12:21:07 -0400
+Received: by mail-io1-f67.google.com with SMTP id m188so12703625ioa.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:21:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7LFX4m6Lt3Fkpbl5tbdO/OCAW/j54g5f6sgRiV7eIds=;
-        b=PlflccedOJwtsDcIZGqT2n6aDF1/5ZVOTQ2Xi1/qXc2hCdqTWY6ATSZn01TGmx3NYX
-         d9eYGo11mf3Fvgc+ryS5hZ2vdU2eh6hENLQXatdcLr3wkvNVhqF6ysiEZBdlS9S632Z2
-         ikpDdN57shcZTvPxpk175ctfhZ7f99+2fnhiBTIAMDy/ftfOY01E21PyBKbMn3m3/iSE
-         ICHn/tVb6l5PrQujWHs09VQJVmXKfeBWrPSTU06X85T7UUNILvnVblVeER7akFJlZAsP
-         6HSmrCjF6z/dkwXWXN0QAwQ85g4E/danUjkPNm6tE5mQGzS9YrRu4JOn2ISTioIk7ObY
-         1mDw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BJ/Szi3F8e7NtlTHUjW71joUshnEhSvTTq7CNPbfAFM=;
+        b=pmXYskxn//lXkmPtU0nKHsepkH35YTlpXRbi3z1GPYRPvLxbJy0szBBpr4wsdKWdqD
+         WzkQV3inBVHiv5/eCljE8Sy8Wp3igwctGaYx5A+tBS7L/3vNeOqopXFTpO++bQeTEZtp
+         fn46rDkxgYWOd969ztK/LXdMUveJ9dP6q9tQ+JzpBkYl3WjHP/TxLfwituIjjUBaVE/n
+         Q4WjNhxp5e84/fkOvc+r9tCrsI1rc79FRdw0qDWRE06QyQx/5TfnImsCxeErm0FUn5I+
+         8ETmxQ7uFqF0YEbtSXaePDNF9MomgkLLC8sPJ8CesbvKa2IywcVknjsL3Jmg7I+3LVLP
+         E2AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7LFX4m6Lt3Fkpbl5tbdO/OCAW/j54g5f6sgRiV7eIds=;
-        b=BJ2vBUcjG8GUjmOJ5gNtiWfZg/qnF+k/tdYehJKus21ttH0YP/J8mur5yyKFLG9VSv
-         O6us3w2C7bP7ob4pWddqzfmLfc++6TpIhf/qh6KWvc6lLksXlL+UY79o8oVqLKCNqPtS
-         GXmGZE54Nbdbbg5FbFT2EpdUOQwxZRDLvySd4zuEBAmo28Iz5Iy9DnGV8x9ewOJdYdcP
-         /rBayzlYGVnRshZKwN92LSK49PSVZz7AlOl8+BF2w00AsXzJWNAqkrAtKvZjoU/wOnKc
-         LrZUT6gr/Vm+b1srN+KXCQa56ap72fK7eMo4J+hLNJ/npjumbpnQyEKBnm7N2BKHK/e8
-         67zQ==
-X-Gm-Message-State: APjAAAW7w0s5xxUrEcYjyxw6+pldpKmWDIeNj5blwcd8XMCYoplYGjHI
-        QEdi00Ybd8g9uZaFWShplCJTjdSozs/uaC2dHZqIbA==
-X-Google-Smtp-Source: APXvYqwrbF5g3W+Lo2P1gvUFBtaVpkJNclSwI4AdhLaUElIUvqJDcP52COWBkS1vL/vehNKKQfMHhcZUeYaQTA6OXR4=
-X-Received: by 2002:a19:7005:: with SMTP id h5mr10850848lfc.143.1556641258150;
- Tue, 30 Apr 2019 09:20:58 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BJ/Szi3F8e7NtlTHUjW71joUshnEhSvTTq7CNPbfAFM=;
+        b=ew0CY71fBqqruAFqjrWHTU3fs/TLmJEHS0VaLzvWGY1iO7FR1rAia2vOYGNCYGiGKE
+         o+o4i643B7+CK4I2fCye5/04Vk7VEzusUQOc52+6Qs5HbKuR4p03FPjkeXjFfbhz2fld
+         AOf9VEWdPfArSxfUrVbdxkn33jKCxVFtQodNDqulDGgF4erZFY0HdrYfkRPpyCmiwQXj
+         ydPLv3cnITd5Ai9vE0gw3jmN2kqVvFqI0s6ZkUE8JzIThe6bhb0nXnUzyh5ySp0hNsmT
+         fIesowUTr32gh3Talau9CbHrKMJ+jYpRJENMY/ENi53GTG571r2Iz+Q6lveiUONyYI5k
+         yT9w==
+X-Gm-Message-State: APjAAAWGCQhDgSMnv+ZHObtHnh4PQ+AcZe2PY4+2N2WDDoELjxvF2rjH
+        vDerUzHblW3+3EO+RONPcyO74fh9qnCRxg==
+X-Google-Smtp-Source: APXvYqyHZi7/MmV4crDAK1sMzOh4W3n6P74pMbz7VcG+gVYbeLL54dIXcDiH7I1X1/zLjUqxJ1SdEw==
+X-Received: by 2002:a5e:d702:: with SMTP id v2mr5547885iom.236.1556641266170;
+        Tue, 30 Apr 2019 09:21:06 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id w81sm1602623itf.23.2019.04.30.09.21.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 09:21:04 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: avoid page allocation warnings
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
+References: <20190430132405.8268-1-mark.rutland@arm.com>
+ <20190430141810.GF13796@bombadil.infradead.org>
+ <20190430145938.GA8314@lakrids.cambridge.arm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a1af3017-6572-e828-dc8a-a5c8458e6b5a@kernel.dk>
+Date:   Tue, 30 Apr 2019 10:21:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190408214539.2705660-1-songliubraving@fb.com>
- <20190410115907.GE19434@e105550-lin.cambridge.arm.com> <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
- <CAKfTPtAFB3gSZYJN1BcjU_XoY=Pfu2xtea+2MEw7FkVc3mwTSA@mail.gmail.com>
- <E97E73F4-CE8C-4CD7-B6B6-5F63A4E881B1@fb.com> <F0A127DD-F9B6-4FBE-B9AD-8E8B00A7D676@fb.com>
- <CAKfTPtA_ouYCes9LnYn0quAKm273mi3vP-++GTBtYcQn07xc6Q@mail.gmail.com> <A62E5068-4A1E-44E3-99BB-02E98229C1E2@fb.com>
-In-Reply-To: <A62E5068-4A1E-44E3-99BB-02E98229C1E2@fb.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 30 Apr 2019 18:20:46 +0200
-Message-ID: <CAKfTPtAG3v=37wyLjzkNNK_6HdoMK6WO7AMYfa+G24rq2iyAfg@mail.gmail.com>
-Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Kernel Team <Kernel-team@fb.com>,
-        viresh kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190430145938.GA8314@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Song,
+On 4/30/19 8:59 AM, Mark Rutland wrote:
+> On Tue, Apr 30, 2019 at 07:18:10AM -0700, Matthew Wilcox wrote:
+>> On Tue, Apr 30, 2019 at 02:24:05PM +0100, Mark Rutland wrote:
+>>> In io_sqe_buffer_register() we allocate a number of arrays based on the
+>>> iov_len from the user-provided iov. While we limit iov_len to SZ_1G,
+>>> we can still attempt to allocate arrays exceeding MAX_ORDER.
+>>>
+>>> On a 64-bit system with 4KiB pages, for an iov where iov_base = 0x10 and
+>>> iov_len = SZ_1G, we'll calculate that nr_pages = 262145. When we try to
+>>> allocate a corresponding array of (16-byte) bio_vecs, requiring 4194320
+>>> bytes, which is greater than 4MiB. This results in SLUB warning that
+>>> we're trying to allocate greater than MAX_ORDER, and failing the
+>>> allocation.
+>>>
+>>> Avoid this by passing __GFP_NOWARN when allocating arrays for the
+>>> user-provided iov_len. We'll gracefully handle the failed allocation,
+>>> returning -ENOMEM to userspace.
+>>>
+>>> We should probably consider lowering the limit below SZ_1G, or reworking
+>>> the array allocations.
+>>
+>> I'd suggest that kvmalloc is probably our friend here ... we don't really
+>> want to return -ENOMEM to userspace for this case, I don't think.
+> 
+> Sure. I'll go verify that the uring code doesn't assume this memory is
+> physically contiguous.
+> 
+> I also guess we should be passing GFP_KERNEL_ACCOUNT rateh than a plain
+> GFP_KERNEL.
 
-On Tue, 30 Apr 2019 at 08:11, Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Apr 29, 2019, at 8:24 AM, Vincent Guittot <vincent.guittot@linaro.org> wrote:
-> >
-> > Hi Song,
-> >
-> > On Sun, 28 Apr 2019 at 21:47, Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >> Hi Morten and Vincent,
-> >>
-> >>> On Apr 22, 2019, at 6:22 PM, Song Liu <songliubraving@fb.com> wrote:
-> >>>
-> >>> Hi Vincent,
-> >>>
-> >>>> On Apr 17, 2019, at 5:56 AM, Vincent Guittot <vincent.guittot@linaro.org> wrote:
-> >>>>
-> >>>> On Wed, 10 Apr 2019 at 21:43, Song Liu <songliubraving@fb.com> wrote:
-> >>>>>
-> >>>>> Hi Morten,
-> >>>>>
-> >>>>>> On Apr 10, 2019, at 4:59 AM, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
-> >>>>>>
-> >>>>
-> >>>>>>
-> >>>>>> The bit that isn't clear to me, is _why_ adding idle cycles helps your
-> >>>>>> workload. I'm not convinced that adding headroom gives any latency
-> >>>>>> improvements beyond watering down the impact of your side jobs. AFAIK,
-> >>>>>
-> >>>>> We think the latency improvements actually come from watering down the
-> >>>>> impact of side jobs. It is not just statistically improving average
-> >>>>> latency numbers, but also reduces resource contention caused by the side
-> >>>>> workload. I don't know whether it is from reducing contention of ALUs,
-> >>>>> memory bandwidth, CPU caches, or something else, but we saw reduced
-> >>>>> latencies when headroom is used.
-> >>>>>
-> >>>>>> the throttling mechanism effectively removes the throttled tasks from
-> >>>>>> the schedule according to a specific duty cycle. When the side job is
-> >>>>>> not throttled the main workload is experiencing the same latency issues
-> >>>>>> as before, but by dynamically tuning the side job throttling you can
-> >>>>>> achieve a better average latency. Am I missing something?
-> >>>>>>
-> >>>>>> Have you looked at your distribution of main job latency and tried to
-> >>>>>> compare with when throttling is active/not active?
-> >>>>>
-> >>>>> cfs_bandwidth adjusts allowed runtime for each task_group each period
-> >>>>> (configurable, 100ms by default). cpu.headroom logic applies gentle
-> >>>>> throttling, so that the side workload gets some runtime in every period.
-> >>>>> Therefore, if we look at time window equal to or bigger than 100ms, we
-> >>>>> don't really see "throttling active time" vs. "throttling inactive time".
-> >>>>>
-> >>>>>>
-> >>>>>> I'm wondering if the headroom solution is really the right solution for
-> >>>>>> your use-case or if what you are really after is something which is
-> >>>>>> lower priority than just setting the weight to 1. Something that
-> >>>>>
-> >>>>> The experiments show that, cpu.weight does proper work for priority: the
-> >>>>> main workload gets priority to use the CPU; while the side workload only
-> >>>>> fill the idle CPU. However, this is not sufficient, as the side workload
-> >>>>> creates big enough contention to impact the main workload.
-> >>>>>
-> >>>>>> (nearly) always gets pre-empted by your main job (SCHED_BATCH and
-> >>>>>> SCHED_IDLE might not be enough). If your main job consist
-> >>>>>> of lots of relatively short wake-ups things like the min_granularity
-> >>>>>> could have significant latency impact.
-> >>>>>
-> >>>>> cpu.headroom gives benefits in addition to optimizations in pre-empt
-> >>>>> side. By maintaining some idle time, fewer pre-empt actions are
-> >>>>> necessary, thus the main workload will get better latency.
-> >>>>
-> >>>> I agree with Morten's proposal, SCHED_IDLE should help your latency
-> >>>> problem because side job will be directly preempted unlike normal cfs
-> >>>> task even lowest priority.
-> >>>> In addition to min_granularity, sched_period also has an impact on the
-> >>>> time that a task has to wait before preempting the running task. Also,
-> >>>> some sched_feature like GENTLE_FAIR_SLEEPERS can also impact the
-> >>>> latency of a task.
-> >>>>
-> >>>> It would be nice to know if the latency problem comes from contention
-> >>>> on cache resources or if it's mainly because you main load waits
-> >>>> before running on a CPU
-> >>>>
-> >>>> Regards,
-> >>>> Vincent
-> >>>
-> >>> Thanks for these suggestions. Here are some more tests to show the impact
-> >>> of scheduler knobs and cpu.headroom.
-> >>>
-> >>> side-load | cpu.headroom | side/cpu.weight | min_gran | cpu-idle | main/latency
-> >>> --------------------------------------------------------------------------------
-> >>> none    |      0       |     n/a         |    1 ms  |  45.20%  |   1.00
-> >>> ffmpeg   |      0       |      1          |   10 ms  |   3.38%  |   1.46
-> >>> ffmpeg   |      0       |   SCHED_IDLE    |    1 ms  |   5.69%  |   1.42
-> >>> ffmpeg   |    20%       |   SCHED_IDLE    |    1 ms  |  19.00%  |   1.13
-> >>> ffmpeg   |    30%       |   SCHED_IDLE    |    1 ms  |  27.60%  |   1.08
-> >>>
-> >>> In all these cases, the main workload is loaded with same level of
-> >>> traffic (request per second). Main workload latency numbers are normalized
-> >>> based on the baseline (first row).
-> >>>
-> >>> For the baseline, the main workload runs without any side workload, the
-> >>> system has about 45.20% idle CPU.
-> >>>
-> >>> The next two rows compare the impact of scheduling knobs cpu.weight and
-> >>> sched_min_granularity. With cpu.weight of 1 and min_granularity of 10ms,
-> >>> we see a latency of 1.46; with SCHED_IDLE and min_granularity of 1ms, we
-> >>> see a latency of 1.42. So SCHED_IDLE and min_granularity help protecting
-> >>> the main workload. However, it is not sufficient, as the latency overhead
-> >>> is high (>40%).
-> >>>
-> >>> The last two rows show the benefit of cpu.headroom. With 20% headroom,
-> >>> the latency is 1.13; while with 30% headroom, the latency is 1.08.
-> >>>
-> >>> We can also see a clear correlation between latency and global idle CPU:
-> >>> more idle CPU yields better lower latency.
-> >>>
-> >>> Over all, these results show that cpu.headroom provides effective
-> >>> mechanism to control the latency impact of side workloads. Other knobs
-> >>> could also help the latency, but they are not as effective and flexible
-> >>> as cpu.headroom.
-> >>>
-> >>> Does this analysis address your concern?
-> >
-> > So, you results show that sched_idle class doesn't provide the
-> > intended behavior because it still delay the scheduling of sched_other
-> > tasks. In fact, the wakeup path of the scheduler doesn't make any
-> > difference between a cpu running a sched_other and a cpu running a
-> > sched_idle when looking for the idlest cpu and it can create some
-> > contentions between sched_other tasks whereas a cpu runs sched_idle
-> > task.
->
-> I don't think scheduling delay is the only (or dominating) factor of
-> extra latency. Here are some data to show it.
->
-> I measured IPC (instructions per cycle) of the main workload under
-> different scenarios:
->
-> side-load | cpu.headroom | side/cpu.weight  | IPC
-> ----------------------------------------------------
->  none     |     0%       |       N/A        | 0.66
->  ffmpeg   |     0%       |    SCHED_IDLE    | 0.53
->  ffmpeg   |    20%       |    SCHED_IDLE    | 0.58
->  ffmpeg   |    30%       |    SCHED_IDLE    | 0.62
->
-> These data show that the side workload has a negative impact on the
-> main workload's IPC. And cpu.headroom could help reduce this impact.
->
-> Therefore, while optimizations in the wakeup path should help the
-> latency; cpu.headroom would add _significant_ benefit on top of that.
+kvmalloc() is fine, the io_uring code doesn't care about the layout of
+the memory, it just uses it as an index.
 
-It seems normal that side workload has a negative impact on IPC
-because of resources sharing but your previous results showed a 42%
-regression of latency with sched_idle which is can't be only linked to
-resources access contention
+-- 
+Jens Axboe
 
->
-> Does this assessment make sense?
->
->
-> > Viresh (cced to this email) is working on improving such behavior at
-> > wake up and has sent an patch related to the subject:
-> > https://lkml.org/lkml/2019/4/25/251
-> > I'm curious if this would improve the results.
->
-> I could try it with our workload next week (I am at LSF/MM this
-> week). Also, please keep in mind that this test sometimes takes
-> multiple days to setup and run.
-
-Yes. I understand. That would be good to have a simpler setup to
-reproduce the behavior of your setup in order to do preliminary tests
-and analyse the behavior
-
->
-> Thanks,
-> Song
->
-> >
-> > Regards,
-> > Vincent
-> >
-> >>>
-> >>> Thanks,
-> >>> Song
-> >>>
-> >>
-> >> Could you please share your comments and suggestions on this work? Did
-> >> the results address your questions/concerns?
-> >>
-> >> Thanks again,
-> >> Song
-> >>
-> >>>>
-> >>>>>
-> >>>>> Thanks,
-> >>>>> Song
-> >>>>>
-> >>>>>>
-> >>>>>> Morten
->
