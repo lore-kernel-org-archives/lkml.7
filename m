@@ -2,116 +2,133 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55BEC43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0D9C43219
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A57721743
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:34:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y2Y1hGGD"
+	by mail.kernel.org (Postfix) with ESMTP id B51FA20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 19:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbfD3TeL (ORCPT
+        id S1726744AbfD3TeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 15:34:11 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37562 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfD3TeL (ORCPT
+        Tue, 30 Apr 2019 15:34:15 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:36352 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726263AbfD3TeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 15:34:11 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UJY3Q3078109;
-        Tue, 30 Apr 2019 14:34:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556652844;
-        bh=MSsEh+EPJg7tDFm/S9r2DoTAe8wqark3f9ovJPXeQrQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=y2Y1hGGDcwrkPEaoY1LhR0fd51MCtMFzteQzd1wVO5v9OReMcgG7u2URjZ/wxajZ3
-         hWCZkCAbSah+CtisP9u+GA5PEAByX0LMeD6hFBsdfOQ6brOf5CSWPQxLzVDVFWXknC
-         c7TmOjrFQqWsw5+SYHwcAa8023Q3QJyndB9TP8Vc=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UJY3F1107063
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 14:34:03 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 14:34:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 14:34:03 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UJY2ut092224;
-        Tue, 30 Apr 2019 14:34:02 -0500
-Subject: Re: [PATCH v3 4/7] leds: TI LMU: Add common code for TI LMU devices
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190430191730.19450-1-dmurphy@ti.com>
- <20190430191730.19450-5-dmurphy@ti.com>
- <7d161cbc-d6bd-83aa-3790-6c45fdf9521f@infradead.org>
- <a953b7e9-ce80-641a-4d0e-f0b96828a732@ti.com>
- <98b7f0fd-6f94-b8a1-a367-77d8cae2a97e@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <39f7a9ad-5fe3-067b-14e0-d90d6fbb940d@ti.com>
-Date:   Tue, 30 Apr 2019 14:34:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 15:34:14 -0400
+Received: (qmail 6906 invoked by uid 2102); 30 Apr 2019 15:34:12 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 30 Apr 2019 15:34:12 -0400
+Date:   Tue, 30 Apr 2019 15:34:12 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Mike Isely <isely@pobox.com>,
+        syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <linux-media@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING: Detected a wedged cx25840 chip; the device will not
+ work.
+In-Reply-To: <000000000000b7a84a0587c3f3e5@google.com>
+Message-ID: <Pine.LNX.4.44L0.1904301530070.1465-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <98b7f0fd-6f94-b8a1-a367-77d8cae2a97e@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Tue, 30 Apr 2019, syzbot wrote:
 
-On 4/30/19 2:32 PM, Jacek Anaszewski wrote:
-> On 4/30/19 9:30 PM, Dan Murphy wrote:
->> Randy
->>
->> On 4/30/19 2:23 PM, Randy Dunlap wrote:
->>> On 4/30/19 12:17 PM, Dan Murphy wrote:
->>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->>>> index da00b9ed5a5c..3ae24eaf4cde 100644
->>>> --- a/drivers/leds/Kconfig
->>>> +++ b/drivers/leds/Kconfig
->>>> @@ -776,6 +776,14 @@ config LEDS_NIC78BX
->>>>         To compile this driver as a module, choose M here: the module
->>>>         will be called leds-nic78bx.
->>>>   +config LEDS_TI_LMU_COMMON
->>>> +    tristate "LED driver for TI LMU"
->>>
->>> what does LMU mean?
->>
->> Lighting management unit it is defined in the DT documentation
->>
->>>
->>>> +    depends on REGMAP
->>>> +    help
->>>> +          Say Y to enable the LED driver for TI LMU devices.
->>>> +          This supports common features between the TI LM3532, LM3631, LM3632,
->>>> +      LM3633, LM3695 and LM3697.
->>>
->>> Fix help indentation above to use tab + 2 spaces consistently.
->>>
->>
->> UGH I wish I had this comment 2 weeks ago.
->> But I can fix it
+> Hello,
 > 
-> I will amend this while merging, no need to resend.
+> syzbot has tested the proposed patch but the reproducer still triggered  
+> crash:
+> WARNING in sysfs_remove_group
 > 
+> pvrusb2: Attached sub-driver tuner
+> pvrusb2: ***WARNING*** pvrusb2 driver initialization failed due to the  
+> failure of one or more sub-device kernel modules.
+> pvrusb2: You need to resolve the failing condition before this driver can  
+> function.  There should be some earlier messages giving more information  
+> about the problem.
+> ------------[ cut here ]------------
+> sysfs group 'power' not found for kobject '0-0044'
+> WARNING: CPU: 1 PID: 586 at fs/sysfs/group.c:254 sysfs_remove_group  
+> fs/sysfs/group.c:254 [inline]
+> WARNING: CPU: 1 PID: 586 at fs/sysfs/group.c:254  
+> sysfs_remove_group+0x15a/0x1b0 fs/sysfs/group.c:245
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 586 Comm: pvrusb2-context Not tainted 5.1.0-rc3-g43151d6-dirty  
+> #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+>   panic+0x29d/0x5f2 kernel/panic.c:214
+>   __warn.cold+0x20/0x48 kernel/panic.c:571
+>   report_bug+0x262/0x2a0 lib/bug.c:186
+>   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+>   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+>   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+> RIP: 0010:sysfs_remove_group fs/sysfs/group.c:254 [inline]
+> RIP: 0010:sysfs_remove_group+0x15a/0x1b0 fs/sysfs/group.c:245
+> Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c  
+> 01 00 75 41 48 8b 33 48 c7 c7 a0 31 7a 8e e8 e6 c2 6e ff <0f> 0b eb 95 e8  
+> 0d de d3 ff e9 d2 fe ff ff 48 89 df e8 00 de d3 ff
+> RSP: 0018:ffff88809ced7b70 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: ffffffff8f037e80 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff815b2132 RDI: ffffed10139daf60
+> RBP: 0000000000000000 R08: ffff88809ce96200 R09: ffffed1015a23edb
+> R10: ffffed1015a23eda R11: ffff8880ad11f6d7 R12: ffff888218b8e630
+> R13: ffffffff8f038520 R14: 1ffff110139daf97 R15: ffff888218b8e628
+>   dpm_sysfs_remove+0xa2/0xc0 drivers/base/power/sysfs.c:737
+>   device_del+0x175/0xb90 drivers/base/core.c:2246
+> usb 4-1: new high-speed USB device number 3 using dummy_hcd
+>   device_unregister+0x27/0xd0 drivers/base/core.c:2301
+>   i2c_unregister_device drivers/i2c/i2c-core-base.c:814 [inline]
+>   __unregister_client drivers/i2c/i2c-core-base.c:1422 [inline]
+>   __unregister_client+0x7d/0x90 drivers/i2c/i2c-core-base.c:1418
+>   device_for_each_child+0x100/0x170 drivers/base/core.c:2401
+>   i2c_del_adapter drivers/i2c/i2c-core-base.c:1485 [inline]
+>   i2c_del_adapter+0x35b/0x640 drivers/i2c/i2c-core-base.c:1447
+>   pvr2_i2c_core_done+0x6e/0xbb  
+> drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c:662
+>   pvr2_hdw_destroy+0x17e/0x380 drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2669
+>   pvr2_context_destroy+0x89/0x240  
+> drivers/media/usb/pvrusb2/pvrusb2-context.c:79
+>   pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:146 [inline]
+>   pvr2_context_thread_func+0x65e/0x870  
+> drivers/media/usb/pvrusb2/pvrusb2-context.c:167
+>   kthread+0x313/0x420 kernel/kthread.c:253
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> Tested on:
+> 
+> commit:         43151d6c usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15433634a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=274aad0cf966c3bc
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=13df3d24a00000
 
-Thank you.  I will wait to rebase/repost the LM36274 patchset until after the this series is merged.
+It seems pretty clear that this problem is caused by the
+pvr2_context_thread trying to unregister the device before the main
+probe routine has finished registering it.
 
-Honestly the only change to the LM36274 patchset is adding Rob's RB to the dt patches and rebasing the Kconfig.
+I'm not familiar enough with this driver to want to fix the problem, 
+however.  Someone else who knows the code better should work on it.
 
-Dan
+Alan Stern
+
