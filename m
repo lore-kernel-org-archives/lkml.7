@@ -2,132 +2,104 @@ Return-Path: <SRS0=DLm5=TA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CE6C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51421C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FB72173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556641855;
-	bh=IVL0FG5N84AtR0xG/w2ryqFP70hlsxpOfDN0HKJUnhE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qt2p+hcPcaHlFLvgLD0mEqS62r4S1nFTl3UoNQAhTa6FCN3UZkgMbcpNPAigIGpE6
-	 eQPlbTYSUcOp0y6km0AyvYrXYUQwAmazWX4CFVzDeuUnu+MPhJKr48xM5jmF6VtohM
-	 JAoPcgT3hTYjWcTPaZ+44WzuFhEt8DRFeyo+UCCY=
+	by mail.kernel.org (Postfix) with ESMTP id 2112D20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 16:33:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="uqHv+v7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfD3Qay (ORCPT
+        id S1726405AbfD3QdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 12:30:54 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41790 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfD3Qax (ORCPT
+        Tue, 30 Apr 2019 12:33:24 -0400
+Received: from mail-io1-f49.google.com ([209.85.166.49]:33631 "EHLO
+        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfD3QdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 12:30:53 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t30so11232648lfd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:30:52 -0700 (PDT)
+        Tue, 30 Apr 2019 12:33:24 -0400
+Received: by mail-io1-f49.google.com with SMTP id u12so12813580iop.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zirBQvpMX9FN+xMGuy+YB2uuBWDRMNHlzh9gJjRPgVE=;
-        b=hs+MMq9iB+eslb+cGLIpGLGbIv6EJP2l9mo6ehrV020sNd1PwGxPBGOEt2lJlTs3aX
-         j5lQOg6lmmOjeQDX5ZISw6NeAcc9gXvyDHGfdKNNARf9UJs1P4nx3ChCR2owg+Zh2w30
-         nFun/lkPvWMpDLpdDrhOj9zXwOjyW/YZ8hGXM=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=av5VSNqJe7ZdTw4nzRuXBSgojWB4gnNiSMsj6Rn7YDc=;
+        b=uqHv+v7HqQD21A02DUEi0TR9EDNnqSAh+65SBAPqzIAwTrsXlla7pqKSpini2DuqBH
+         MZ5wnArL0hWFtEw6QvwH1+wal5Puz2vhMQ6jAdKCw+1QU83TWeTRMJX+jTlvKqBBAGa2
+         VesFY/GgBYduoB2sNrCPdO1kIrVl5O4+BiUeTHlxxvYwZAF/YPltSMdb60i7WZzDejMD
+         tu+NpOFTYvLCce4TnnEJLSs02L4nketpCF51AGmRsmbpx3P2gUIucB8YJY5cxr+UetWE
+         6p6/BYexB/U7z6Ik8iXqktx95i39UNFE9jIfF+5DCoIEqCAknFXgry44Hr0MwGGLL8Ox
+         dpMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zirBQvpMX9FN+xMGuy+YB2uuBWDRMNHlzh9gJjRPgVE=;
-        b=mtii655ngJhI1Gu0vQ34oSBubOWV9aY/za2LlhaQ5F67F0WTUIF8S5c0W+P8/qHEFS
-         lwMhpUNgSWoXrwksOV4zTLZfnAZolrXa4q1f+yD3v0ashUJ5jEqNkPfuya/Nf/foVhQL
-         jv74n6so2KlRds6D77BrDGCleZOpxgz6BoDDz1XfQm1HCALE2mDAGKaIlSOAGjB3ViS7
-         CEVEGcYgWp+tM8Ewa1EXHp3C0YvNXHSRQfedGkS5ldspbM9CXHK7DqGxq+3LlHnmTQjq
-         RoeY5wNUm/NSIWRD//EKqu0aG2/V1v1v3EddTC6GN0nFRgkf+DnGjTy6eO/QvMP7e2NS
-         vy0g==
-X-Gm-Message-State: APjAAAWRCPqWCNooXwuAvviFOvwvajQlzSTbNp2dHSmgslpd9NE0zezH
-        O7/DpTFd47KEGP6pZwX13qixzGoeCt4=
-X-Google-Smtp-Source: APXvYqy9pS/OUSVkQkGi09rUH79xuGpMTzbj0PsRZWGOar4I1InTRF46slpfOU/r5W5V5lXkPmVnjw==
-X-Received: by 2002:a19:384d:: with SMTP id d13mr16591722lfj.38.1556641851534;
-        Tue, 30 Apr 2019 09:30:51 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id b15sm4133838ljj.1.2019.04.30.09.30.51
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=av5VSNqJe7ZdTw4nzRuXBSgojWB4gnNiSMsj6Rn7YDc=;
+        b=OniCPHY53IgGk7sELyoTUWWd0N4bRMzOjgf+Tn2hqVvDB7qMPYVo8doUalk9LdeVbI
+         0vTqRn1o8gYU+m1Iz2BX5nvnktXq+BzL4GgpADF8vmAdw9s4i89FCCDY2EhBtUXj8TZK
+         QtpidWvgGxE768iw8Qg2G77UeryhtAbpUqLKqcxlH5OyMjbcfjZ9ptnq7ls18ZZdy4VL
+         H7/DciAlkZlyXrcVXPcfDS4IITOQru66KC3I0xwuOl5fR0HALBeDaQsVgCypJ/SMDXuS
+         s037sQjm4+HSTeK9OirvR+BMVcfFP95Is2pb4cEsa4l2NcT/rNskfsfCeNnLfmp+1wWJ
+         GtaQ==
+X-Gm-Message-State: APjAAAWdsUVUYEz8YNhJQyxykX0WN2FIn88oqUno91ovS0AITubYzw5M
+        st+NIDQrHsLcLa+EEI7g1hOsMg==
+X-Google-Smtp-Source: APXvYqy114OccaZET0DAxPq1oVIV3uf8pOzkEUP8Ovs6BXAvr+d7OrRPRhaSDVAJ6t12mnKQFzqa9g==
+X-Received: by 2002:a5d:89c1:: with SMTP id a1mr15751044iot.214.1556642003525;
+        Tue, 30 Apr 2019 09:33:23 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id h8sm14286582iof.36.2019.04.30.09.33.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 09:30:51 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id t11so11222835lfl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 09:30:51 -0700 (PDT)
-X-Received: by 2002:ac2:4567:: with SMTP id k7mr36971631lfm.166.1556641462358;
- Tue, 30 Apr 2019 09:24:22 -0700 (PDT)
+        Tue, 30 Apr 2019 09:33:22 -0700 (PDT)
+Subject: Re: [PATCHv2] io_uring: free allocated io_memory once
+To:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20190430163021.54711-1-mark.rutland@arm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b31d4f2e-8756-02ef-9c0b-55c7e755c097@kernel.dk>
+Date:   Tue, 30 Apr 2019 10:33:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
- <20190420071406.GA22257@ip-172-31-15-78> <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
- <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
- <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com> <20190430123901.GD23020@redhat.com>
-In-Reply-To: <20190430123901.GD23020@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 30 Apr 2019 09:24:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wit1f_eARfgHYBQwjU2ndd_75OuHQurXNmrEHuhjQViJA@mail.gmail.com>
-Message-ID: <CAHk-=wit1f_eARfgHYBQwjU2ndd_75OuHQurXNmrEHuhjQViJA@mail.gmail.com>
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Jann Horn <jannh@google.com>, Kevin Easton <kevin@guarana.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190430163021.54711-1-mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 5:39 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> Yes, but I am wondering if man vfork should clarify what "child terminates"
-> actually means. I mean, the child can do clone(CLONE_THREAD) + sys_exit(),
-> this will wake the parent thread up before the child process exits or execs.
+On 4/30/19 10:30 AM, Mark Rutland wrote:
+> If io_allocate_scq_urings() fails to allocate an sq_* region, it will
+> call io_mem_free() for any previously allocated regions, but leave
+> dangling pointers to these regions in the ctx. Any regions which have
+> not yet been allocated are left NULL. Note that when returning
+> -EOVERFLOW, the previously allocated sq_ring is not freed, which appears
+> to be an unintentional leak.
+> 
+> When io_allocate_scq_urings() fails, io_uring_create() will call
+> io_ring_ctx_wait_and_kill(), which calls io_mem_free() on all the sq_*
+> regions, assuming the pointers are valid and not NULL.
+> 
+> This can result in pages being freed multiple times, which has been
+> observed to corrupt the page state, leading to subsequent fun. This can
+> also result in virt_to_page() on NULL, resulting in the use of bogus
+> page addresses, and yet more subsequent fun. The latter can be detected
+> with CONFIG_DEBUG_VIRTUAL on arm64.
+> 
+> Adding a cleanup path to io_allocate_scq_urings() complicates the logic,
+> so let's leave it to io_ring_ctx_free() to consistently free these
+> pointers, and simplify the io_allocate_scq_urings() error paths.
 
-That falls solidly into the "give people rope" category.
+Looks good - applied, thanks.
 
-If the vfork() child wants to mess with the parent, it has many easier
-ways to do it than create more threads.
+-- 
+Jens Axboe
 
-As mentioned, the real problem with vfork() tends to be that the child
-unintentionally messes with the parent because it just gets the stack
-sharing wrong. No need to add intention there.
-
-> I see nothing wrong, but I was always curious whether it was designed this
-> way on purpose or not.
-
-Oh, it's definitely on purpose. Trying to do some nested usage count
-would be horrendously complex, and even a trivial "don't allow any
-other clone() calls if we already have a vfork completion pending" is
-just unnecessary logic.
-
-Because at least in *theory*, there's actually nothing horribly wrong
-with allowing a thread to be created during the vfork(). I don't see
-the _point_, but it's not conceptually something that couldn't work
-(you'd need a separate thread stack etc, but that's normal clone()).
-
-So no, there's no safety or bogus "you can't do that". If you want to
-play games after vfork(), go wild.
-
-                   Linus
