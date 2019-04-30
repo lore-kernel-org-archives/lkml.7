@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046E7C43219
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF29C04AA6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C62C120835
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBCC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Apr 2019 11:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556625243;
-	bh=pBKdUghoiDyQBtMsgMbl27pwT5kKa9bcaBhf+wduELg=;
+	s=default; t=1556625251;
+	bh=+ebOXy1Dc42e2ylzFgurqpriBg0nrITmuqCC5h/OTV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bUHg9DSvdandaQHHz1icSVB9MPRo/hgIrvO8kUnKrY1C5y0N2/hCMvxy9ejHeK3eX
-	 hnNCKuVZZniavDWDsEz2ftrwGHxoPkCmhZkEKwfuzp1t+tWYe5TdNVQAtegbaMYJL7
-	 GMzbzu2uNEnlkfvQHK/EAe6DhFDMuwhI543J4/n4=
+	b=Fk7V9vzQZ7sDBfrv1+Ma7CK3gYHHLlEZ3CKD8oFzxWeweUvwUVCgl24iAaFCXHPUN
+	 xPCh2afStQMp993rx35iZjXGu551H+mD2JOr+CrVoq8a5sWDOZAmhcALJHvmnknkVD
+	 O0uYe8jsS+lLvEGMtHdzdyVxMy5P5R5xtlX7BdLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731122AbfD3LyD (ORCPT
+        id S1731197AbfD3Lu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 07:54:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37652 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 07:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbfD3Lue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:50:34 -0400
+        id S1731182AbfD3LuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 07:50:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E5621707;
-        Tue, 30 Apr 2019 11:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1400821670;
+        Tue, 30 Apr 2019 11:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556625033;
-        bh=pBKdUghoiDyQBtMsgMbl27pwT5kKa9bcaBhf+wduELg=;
+        s=default; t=1556625022;
+        bh=+ebOXy1Dc42e2ylzFgurqpriBg0nrITmuqCC5h/OTV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xe/zMZNqh/pQ0EPmQiPJPE+THgn6g1cGHUjvpZLWcFzZVcK/HxM1/V0rHy6vgce2w
-         k1hytEAC/Bsg6k9A58sBW9IiQ3ytwb19hXKk2PDQbWNPKe5Jstegf4pjOfWCnzJrjo
-         RKkbWEi5XZzR++EsuWuwad0l+Oib5ACe6TDSydgM=
+        b=xDA1KWAVK8V86Z2Yi1mUr/3+TuNIsPPvA4XhMAt/ukDW0sODPyfEtUrT7bUJxvGBK
+         Vvjo8h5+RkkBEG6Gn3q1C8x1+Yrp4fLfIcWFBTDW9vj/F4ggasJo01ViSDiMB9LoVL
+         MPajDpGA3WtzcL6rJ7WHvDeC1kb/3ILNnTkPLG5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.0 66/89] aio: keep io_event in aio_kiocb
-Date:   Tue, 30 Apr 2019 13:38:57 +0200
-Message-Id: <20190430113612.819949878@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+0049bebbf3042dbd2e8f@syzkaller.appspotmail.com>,
+        syzbot <syzbot+915c9f99f3dbc4bd6cd1@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 62/89] net/rds: Check address length before reading address family
+Date:   Tue, 30 Apr 2019 13:38:53 +0200
+Message-Id: <20190430113612.606541047@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
 References: <20190430113609.741196396@linuxfoundation.org>
@@ -59,106 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit a9339b7855094ba11a97e8822ae038135e879e79 upstream.
+commit dd3ac9a684358b8c1d5c432ca8322aaf5e4f28ee upstream.
 
-We want to separate forming the resulting io_event from putting it
-into the ring buffer.
+syzbot is reporting uninitialized value at rds_connect() [1] and
+rds_bind() [2]. This is because syzbot is passing ulen == 0 whereas
+these functions expect that it is safe to access sockaddr->family field
+in order to determine minimal address length for validation.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Guenter Roeck <linux@roeck-us.net>
+[1] https://syzkaller.appspot.com/bug?id=f4e61c010416c1e6f0fa3ffe247561b60a50ad71
+[2] https://syzkaller.appspot.com/bug?id=a4bf9e41b7e055c3823fdcd83e8c58ca7270e38f
+
+Reported-by: syzbot <syzbot+0049bebbf3042dbd2e8f@syzkaller.appspotmail.com>
+Reported-by: syzbot <syzbot+915c9f99f3dbc4bd6cd1@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |   31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+ net/rds/af_rds.c |    3 +++
+ net/rds/bind.c   |    2 ++
+ 2 files changed, 5 insertions(+)
 
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -204,8 +204,7 @@ struct aio_kiocb {
- 	struct kioctx		*ki_ctx;
- 	kiocb_cancel_fn		*ki_cancel;
+--- a/net/rds/af_rds.c
++++ b/net/rds/af_rds.c
+@@ -506,6 +506,9 @@ static int rds_connect(struct socket *so
+ 	struct rds_sock *rs = rds_sk_to_rs(sk);
+ 	int ret = 0;
  
--	struct iocb __user	*ki_user_iocb;	/* user's aiocb */
--	__u64			ki_user_data;	/* user's data for completion */
-+	struct io_event		ki_res;
++	if (addr_len < offsetofend(struct sockaddr, sa_family))
++		return -EINVAL;
++
+ 	lock_sock(sk);
  
- 	struct list_head	ki_list;	/* the aio core uses this
- 						 * for cancellation */
-@@ -1084,15 +1083,6 @@ static inline void iocb_put(struct aio_k
- 		iocb_destroy(iocb);
- }
+ 	switch (uaddr->sa_family) {
+--- a/net/rds/bind.c
++++ b/net/rds/bind.c
+@@ -173,6 +173,8 @@ int rds_bind(struct socket *sock, struct
+ 	/* We allow an RDS socket to be bound to either IPv4 or IPv6
+ 	 * address.
+ 	 */
++	if (addr_len < offsetofend(struct sockaddr, sa_family))
++		return -EINVAL;
+ 	if (uaddr->sa_family == AF_INET) {
+ 		struct sockaddr_in *sin = (struct sockaddr_in *)uaddr;
  
--static void aio_fill_event(struct io_event *ev, struct aio_kiocb *iocb,
--			   long res, long res2)
--{
--	ev->obj = (u64)(unsigned long)iocb->ki_user_iocb;
--	ev->data = iocb->ki_user_data;
--	ev->res = res;
--	ev->res2 = res2;
--}
--
- /* aio_complete
-  *	Called when the io request on the given iocb is complete.
-  */
-@@ -1104,6 +1094,8 @@ static void aio_complete(struct aio_kioc
- 	unsigned tail, pos, head;
- 	unsigned long	flags;
- 
-+	iocb->ki_res.res = res;
-+	iocb->ki_res.res2 = res2;
- 	/*
- 	 * Add a completion event to the ring buffer. Must be done holding
- 	 * ctx->completion_lock to prevent other code from messing with the tail
-@@ -1120,14 +1112,14 @@ static void aio_complete(struct aio_kioc
- 	ev_page = kmap_atomic(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
- 	event = ev_page + pos % AIO_EVENTS_PER_PAGE;
- 
--	aio_fill_event(event, iocb, res, res2);
-+	*event = iocb->ki_res;
- 
- 	kunmap_atomic(ev_page);
- 	flush_dcache_page(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
- 
--	pr_debug("%p[%u]: %p: %p %Lx %lx %lx\n",
--		 ctx, tail, iocb, iocb->ki_user_iocb, iocb->ki_user_data,
--		 res, res2);
-+	pr_debug("%p[%u]: %p: %p %Lx %Lx %Lx\n", ctx, tail, iocb,
-+		 (void __user *)(unsigned long)iocb->ki_res.obj,
-+		 iocb->ki_res.data, iocb->ki_res.res, iocb->ki_res.res2);
- 
- 	/* after flagging the request as done, we
- 	 * must never even look at it again
-@@ -1844,8 +1836,10 @@ static int __io_submit_one(struct kioctx
- 		goto out_put_req;
- 	}
- 
--	req->ki_user_iocb = user_iocb;
--	req->ki_user_data = iocb->aio_data;
-+	req->ki_res.obj = (u64)(unsigned long)user_iocb;
-+	req->ki_res.data = iocb->aio_data;
-+	req->ki_res.res = 0;
-+	req->ki_res.res2 = 0;
- 
- 	switch (iocb->aio_lio_opcode) {
- 	case IOCB_CMD_PREAD:
-@@ -2019,6 +2013,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
- 	struct aio_kiocb *kiocb;
- 	int ret = -EINVAL;
- 	u32 key;
-+	u64 obj = (u64)(unsigned long)iocb;
- 
- 	if (unlikely(get_user(key, &iocb->aio_key)))
- 		return -EFAULT;
-@@ -2032,7 +2027,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t
- 	spin_lock_irq(&ctx->ctx_lock);
- 	/* TODO: use a hash or array, this sucks. */
- 	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
--		if (kiocb->ki_user_iocb == iocb) {
-+		if (kiocb->ki_res.obj == obj) {
- 			ret = kiocb->ki_cancel(&kiocb->rw);
- 			list_del_init(&kiocb->ki_list);
- 			break;
 
 
