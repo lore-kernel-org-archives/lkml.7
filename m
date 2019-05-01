@@ -2,78 +2,88 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D665C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C32C04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761A420866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE93B20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VE8QSTtL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfEAVoX (ORCPT
+        id S1726343AbfEAVpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:44:23 -0400
-Received: from www62.your-server.de ([213.133.104.62]:43006 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfEAVoW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:44:22 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hLx1R-0008PH-NM; Wed, 01 May 2019 23:44:13 +0200
-Received: from [173.228.226.134] (helo=localhost.localdomain)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hLx1R-000OV8-8R; Wed, 01 May 2019 23:44:13 +0200
-Subject: Re: [PATCH v2] bpf, x32: Fix bug for BPF_JMP | {BPF_JSGT, BPF_JSLE,
- BPF_JSLT, BPF_JSGE}
-To:     Wang YanQing <udknight@gmail.com>, ast@kernel.org,
-        davem@davemloft.net, kuznet@ms2.inr.ac.ru, tglx@linutronix.de,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190427082826.GA16311@udknight>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <aca27db2-5c16-6bf8-e601-be8b42678cd4@iogearbox.net>
-Date:   Wed, 1 May 2019 23:44:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Wed, 1 May 2019 17:45:25 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54131 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfEAVpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:45:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vX4d50ZSz9s9y;
+        Thu,  2 May 2019 07:45:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556747121;
+        bh=Bsw32OJ7r12VV192rzOnvs7PeeB1/zzU5dXXeD713Tg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VE8QSTtLwo11z1uTHWtHAsG17Q2avaxfn/NPETopH2DBAv8y6dJEQNcbITcUqQ9aH
+         hO2w9K25fsNiA8qRt09J9MZIFW0YhFtjDv+rPo6vTOY/r4ogRpMWPWDWlhynH8a+gu
+         0Q023GnGpB603n7a/f6Vihl7nmzT1e9OR7OHQmO1xEiqeAztwR/p8hsuFPqQKKaSLf
+         2AYiFE0EoNIIc9ZjtRugM/T1F3+5upCxqFWrXvOYgPaw416j0eRBi87NcbLcgZKAhC
+         c66Eesli0HSKUWMTAG37NGfiKuGUE91Je41yK5pNKN6yWu140Ek9ztUjKF66m19VRx
+         K3zmjfGCZaihw==
+Date:   Thu, 2 May 2019 07:45:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the parisc-hd tree
+Message-ID: <20190502074519.61272b42@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190427082826.GA16311@udknight>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25436/Wed May  1 09:58:19 2019)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/UxZFVieJsY9lj86GqzTCcoc"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/27/2019 10:28 AM, Wang YanQing wrote:
-> The current method to compare 64-bit numbers for conditional jump is:
-> 
-> 1) Compare the high 32-bit first.
-> 
-> 2) If the high 32-bit isn't the same, then goto step 4.
-> 
-> 3) Compare the low 32-bit.
-> 
-> 4) Check the desired condition.
-> 
-> This method is right for unsigned comparison, but it is buggy for signed
-> comparison, because it does signed comparison for low 32-bit too.
-> 
-> There is only one sign bit in 64-bit number, that is the MSB in the 64-bit
-> number, it is wrong to treat low 32-bit as signed number and do the signed
-> comparison for it.
-> 
-> This patch fixes the bug and adds a testcase in selftests/bpf for such bug.
-> 
-> Signed-off-by: Wang YanQing <udknight@gmail.com>
+--Sig_/UxZFVieJsY9lj86GqzTCcoc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+Hi all,
+
+Commit
+
+  2b731a920986 ("parisc: Update huge TLB page support to use per-pagetable =
+spinlock")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/UxZFVieJsY9lj86GqzTCcoc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKE28ACgkQAVBC80lX
+0GxRxwf8DHQTsHKRnH90QXbQDqi1m+thimy1aXVksY17/7RdZZU/tR8JSJ8yX1uc
+pEimJuBWfIbwieTRDx4wXHtehGKB39hK3WwxL7hfmWwR5nOK0iDgjA1MCD3c0K36
+USoqsNHAKuh971K0kG2i73sdVdlaur199k+VfjFL+4tX8hG4YrylluxjJAUgMjFU
+OB3X5dcMWyxuYrK6KX9WQkj1dvVR1YgF7ZMMnS/8XnP8retWcpcap0ZjKh9L/5Yf
+CHWYIST/jlNgrEDRZceSH5jwmyb6h5EzBFpjFhtqmRJHsva0yYoM+OZB5Fs+uLvQ
+ruDSMPCnBKSsnzYoTU+xO1lozVUk6g==
+=+BOR
+-----END PGP SIGNATURE-----
+
+--Sig_/UxZFVieJsY9lj86GqzTCcoc--
