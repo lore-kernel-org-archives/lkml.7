@@ -2,223 +2,131 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13073C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FB2C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4BD20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60E320866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:11:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7MUrTrv"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fz3LLeMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfEAAKB (ORCPT
+        id S1727179AbfEAAL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 20:10:01 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35321 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfEAAKB (ORCPT
+        Tue, 30 Apr 2019 20:11:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42527 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfEAAL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 20:10:01 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p26so266283edr.2;
-        Tue, 30 Apr 2019 17:09:59 -0700 (PDT)
+        Tue, 30 Apr 2019 20:11:29 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p6so7594253pgh.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 17:11:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=vDc2NAfwngSD2SBV9GqIkt/fZAL5j7gsnT/KZR7zH+U=;
-        b=T7MUrTrvSkrfy6W3lr/DfLoKSU/nZe+XIEbrzylw+PuQMY0jbTmnGqmSYZIcR1oT3r
-         Y6YpA8462Yksit22z4vEyrulpe0MHE890+LEh7YF1kuCB3Mu7RVRog2MaEZouC14DpQ1
-         AJWv1+LY7j86/QhF4K/nY5lmzNu/V+rMHE/VcGZVWmstS44orMC8vZQ1tPzgHmlCx1Hc
-         EyRfJsJPmoW7uV2bp9YG1xxolcR8XrPysEMe6+87928HfTwkrywI7MZRJ+6mbMa2yWd9
-         k/Vw9bUZibHRhZN2kLCNSXoKrKt8jth2BEjVQC/qvGP8WbKo5wlLO8S47iqwXGZF0Jwp
-         V8Jw==
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n90B8MYDWGqupHdVkvG3Sa9M/75lyqhQ0w6dVuFCRvQ=;
+        b=fz3LLeMXyIc9PDobBtlU4B9pqlr0EaTXxaCBg/lt6J4NWYK5WAuaD9QH8xyaLon1ox
+         l38C2RASV64lMgKvkO095dM6uV89n2zcJCHv9thNFJjvL7mAq8rHpYtugPzKXr/EMDs6
+         sqEpPqrqY20GvD33mNaSiJXIDJY38HjYrggp9aIHYOdR9QI1AbL/IPKdA/tl7salfe+G
+         9ocTqRTQXG/1e7AbXLPXZhgjMh8TlSMbXMJ/dV6GID2Y1oUaHDtGt78EMoOUO4RBIKWX
+         OwZDqEACwVvEMWIqOyq6Jo2MTW5Gk3dC1uRNTUkZ4b3gdL7U3sl90LWdkkKLlzOKILse
+         wz/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=vDc2NAfwngSD2SBV9GqIkt/fZAL5j7gsnT/KZR7zH+U=;
-        b=BrgRIPmrKvjJew2nGfR3GznfFOTA458/B26GvtvGnQ+NIDKxoBdcDj9UybLOznzjv6
-         exH68Y3ajvf9rM2ryX7Akpunm1MKQ4uQ9FW2vOYnVOIqcLDz2IKTa1+lU6wD0l6+KxDd
-         NR1CxohlKQp1npNn+6ng0bEkf7ZgT+opfV/mdCdR+RyHIUTk9vrZ++OuxPTY/T/+dq3w
-         He7jFNBjh1Ah1+bWyivVn6FJ3OiwgGG00jzBw8iP9vjyH6ZKwkC1IBvjL84xHBvte7VJ
-         P7iO8PegL0YzUA0Zs5VW5i4drjbYAXz7DNVaIUVRUVHVPaHzKbAjYyKd6USnwxPX0T9V
-         b0vQ==
-X-Gm-Message-State: APjAAAW+c8hY3GVmLPM92ci5jLZEh2I6/Io9FABbhAXIZ++Bi9u9mdrG
-        1FnxQNbztGg323gtW+F7DuqyOc31
-X-Google-Smtp-Source: APXvYqzQz8zKDAveFHkv4KDLg1PrXIAVJLYTUn6srJT1I+BtIKk7HmO1pJnc6k2AcQyyOxgzsB/CcA==
-X-Received: by 2002:a50:ca88:: with SMTP id x8mr44800906edh.139.1556669398309;
-        Tue, 30 Apr 2019 17:09:58 -0700 (PDT)
-Received: from [172.30.89.180] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id h2sm5434463ejj.61.2019.04.30.17.09.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 17:09:57 -0700 (PDT)
-Subject: Re: Questions regarding Documentation/media/uapi/v4l/field-order.rst
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        "Rodin, Michael (Ferchau; ADITG/ESM1)" <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Cc:     "Friedrich, Eugen (ADITG/ESM1)" <efriedrich@de.adit-jv.com>,
-        "Rosca, Eugeniu (ADITG/ESM1)" <erosca@de.adit-jv.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <AC35D0CFBC66A84AAA9DF4334B52828D13614162@HI2EXCH01.adit-jv.com>
- <187c237b-6b75-f408-ae41-6065baf5cd7f@xs4all.nl>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <4f57076c-9a41-dfe3-2d26-568be09b1637@gmail.com>
-Date:   Tue, 30 Apr 2019 17:09:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <187c237b-6b75-f408-ae41-6065baf5cd7f@xs4all.nl>
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=n90B8MYDWGqupHdVkvG3Sa9M/75lyqhQ0w6dVuFCRvQ=;
+        b=WF9aUXDVuGhUA+mnrNlRe2ImZIuhU6ATaPPkb8IcfPmZfG3bhNM4QYzUSgfhJ1AmB4
+         PNi/2h2/j/9aB3U6yFmfiy0BYmwszJhrIPwo5gNhjGWCalIvSrY0BFdET2kc6vRC3Aua
+         HnxZ7sWr4HnYTTur43D45xKOmh6KWIoZfn2YRb3kmHxUTQ3ZA9XTc91MJJpwOsPm0HyJ
+         Bo1UgN2dYiA2Bd/dc/XJpo1FvfR+HJCKVoBVDJSuZfL6zkMbOeJ0vTr4usLxEv16gdNy
+         8RQeT9zB47kCygrOqRiu4zhQMklF7+q9kqJ95fZN3M37IwOPbHGKIz5ZNikIf4oW7Qqa
+         NBDA==
+X-Gm-Message-State: APjAAAXjnRVLtBtk+6dBLoYm75Al4mjQc2wzOXhmdluFvEhPdLTNgQ44
+        nMxJeJEcc3Gyki92dW5O+5kkcg==
+X-Google-Smtp-Source: APXvYqyQJKCDVen4UiKbxaLdRXz5TcfXtBE/ILtaCQBt1hhXy3q9y4DPQBNpfL97OLTwcq7//696Gg==
+X-Received: by 2002:a62:e043:: with SMTP id f64mr17920095pfh.76.1556669488429;
+        Tue, 30 Apr 2019 17:11:28 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id x6sm17984783pfm.114.2019.04.30.17.11.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 17:11:27 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 17:11:27 -0700 (PDT)
+X-Google-Original-Date: Tue, 30 Apr 2019 17:06:59 PDT (-0700)
+Subject:     Re: [PATCH v6 0/3] Allow accessing CSR using CSR number
+In-Reply-To: <20190425083804.11991-1-anup.patel@wdc.com>
+CC:     aou@eecs.berkeley.edu, Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <Anup.Patel@wdc.com>
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Message-ID: <mhng-c3baf15e-decb-4b3f-91c3-87642f14c3e4@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+On Thu, 25 Apr 2019 01:38:24 PDT (-0700), Anup Patel wrote:
+> This patch series adds support to access CSR using both CSR name and
+> CSR numbers.
+> 
+> Also, we should prefer accessing CSRs using their CSR numbers because:
+> 1. It compiles fine with older toolchains.
+> 2. We can use latest CSR names in #define macro names of CSR numbers
+>    as-per RISC-V spec. (e.g. sptbr => CSR_SATP, sbadaddr => CSR_STVAL, etc.)
+> 3. We can access newly added CSRs even if toolchain does not recognize
+>    newly addes CSRs by name. (e.g. BSSTATUS, BSIE, SSIP, etc.)
+> 
+> The patchset can be found in riscv_csr_number_v6 branch of
+> https//github.com/avpatel/linux.git
+> 
+> Changes since v5:
+>  - Drop redundant INTERRUPT_CAUSE_FLAG from kernel/irq.c
+> 
+> Changes since v4:
+>  - Express SCAUSE_IRQ_FLAG in-terms of __riscv_xlen
+> 
+> Changes since v3:
+>  - Keep old INTERRUPT_xyz defines in kernel/irq.c for PATCH2
+> 
+> Changes since v2:
+>  - Dropped PATCH1 which added asm/encoding.h
+>  - Added new PATCH1 which beautifies asm/csr.h by using tabs to
+>    align macro values
+> 
+> Changes since v1:
+>  - Squash PATCH2 into cpatch3
+>  - Added new PATCH2 to add interrupt related SCAUSE defines
+>    in asm/encoding.h
+> 
+> Anup Patel (3):
+>   RISC-V: Use tabs to align macro values in asm/csr.h
+>   RISC-V: Add interrupt related SCAUSE defines in asm/csr.h
+>   RISC-V: Access CSRs using CSR numbers
+> 
+>  arch/riscv/include/asm/csr.h         | 123 +++++++++++++++++----------
+>  arch/riscv/include/asm/irqflags.h    |  10 +--
+>  arch/riscv/include/asm/mmu_context.h |   7 +-
+>  arch/riscv/kernel/entry.S            |  22 ++---
+>  arch/riscv/kernel/head.S             |  12 +--
+>  arch/riscv/kernel/irq.c              |  16 +---
+>  arch/riscv/kernel/perf_event.c       |   4 +-
+>  arch/riscv/kernel/smp.c              |   2 +-
+>  arch/riscv/kernel/traps.c            |   6 +-
+>  arch/riscv/mm/fault.c                |   6 +-
+>  10 files changed, 111 insertions(+), 97 deletions(-)
+> 
+> --
+> 2.17.1
 
-Thanks for the clarifications.
-
-I have one additional comment.
-
-The distinction between which field is _older_ (e.g. the field that was 
-recorded or captured first by the video camera) and which field is 
-_transmitted_ first needs to be more clear IMHO.
-
-Even if there is no distinction, that is, all video equipment transmit 
-fields in the same order they were recorded, I think this should be 
-clarified better. The doc is using both terminology (captured first vs. 
-transmitted first) so it would be helpful to clarify that they mean the 
-same thing.
-
-Steve
-
-
-On 4/23/19 7:05 AM, Hans Verkuil wrote:
-> On 4/16/19 3:54 PM, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
->> Hi,
->>
->> I would like to ask several questions regarding the documentation of the enum "v4l2_field" [1].
->> These questions came up during my investigations of issues with interaction between
->> the gstreamer plugin v4l2src and the rcar video input driver [2].
->>
->> The documentation [1] specifies that:
->> "All video capture and output devices must report the current field order.
->> Some drivers may permit the selection of a different order, to this end
->> applications initialize the field field of struct v4l2_pix_format before
->> calling the VIDIOC_S_FMT ioctl. If this is not desired it should have
->> the value V4L2_FIELD_ANY (0)."
->>
->> If I have understood these lines correctly, this means that if userspace sets "field" member of
->> the struct "v4l2_pix_format" to V4L2_FIELD_ANY and uses this as parameter for the VIDIOC_S_FMT ioctl,
->> then a driver should select/report the field order, which was previously set by media-ctl utility
->> in the next subdevice, which is connected to the /dev/videoX node
->> (From my understanding this would be equivalent to the "current field order").
->>
->> If the described behavior is correct, then the description in the table row for V4L2_FIELD_ANY in [1] is incomplete:
->> "Applications request this field order when any one of the V4L2_FIELD_NONE, V4L2_FIELD_TOP, V4L2_FIELD_BOTTOM, or V4L2_FIELD_INTERLACED formats is acceptable."
->> What if V4L2_FIELD_ALTERNATE or V4L2_FIELD_SEQ_TB or V4L2_FIELD_SEQ_BT are also acceptable for the application?
->> I think that the specification is either unprecise or my understanding of the specification is wrong.
-> The spec is a bit out of date: those missing field values were probably added after this
-> text was written. I'll make a patch fixing this.
->
->> Another potential issue, which I found in this documentation is that it does not distinguish between
->> multiple contexts in which enum v4l2_field can be used. I can think of at least two different contexts:
->> - When used to select the field order with VIDIOC_S_FMT ioctl.
->> - When used to report the field order in a buffer: for example application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl and then gets buffers, which have V4L2_FIELD_TOP/BOTTOM set.
-> IMHO the text is reasonably clear on that. But if you have suggestions to
-> improve it, then make a proposal.
->
->> Now with this in mind, when I read the description of V4L2_FIELD_NONE:
->> "The driver may also indicate this order when it cannot distinguish between V4L2_FIELD_TOP and V4L2_FIELD_BOTTOM."
-> Whoops, that makes no sense. There are no drivers that do this. I'll remove this
-> line. If a driver can't tell the difference, then it should just pick FIELD_TOP
-> or BOTTOM.
->
->> I see two possible meanings/interpretations:
->> - If application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl, report V4L2_FIELD_NONE back
->>     so the application knows that the driver can not provide any TOP/BOTTOM metadata in the buffers
->>     (which may be necessary for the application for example for deinterlacing) before it has got any buffer.
->> - If application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl, driver reports V4L2_FIELD_ALTERNATE back,
->>     even if it can not distinguish between TOP/BOTTOM. But when the application starts to read buffers,
->>     they have V4L2_FIELD_NONE set if it's not possible to distinguish between TOP/BOTTOM.
-> Actually, drivers cannot ever return NONE for a top or bottom field. FIELD_NONE
-> indicates that a full frame has arrived, and doing something else would break
-> userspace.
->
->> Also there is another ambiguity in the description of V4L2_FIELD_NONE:
->> "Images are in progressive format, not interlaced."
->> What does "interlaced" mean in this case? Does it mean the other possible enum values or just the V4L2_FIELD_INTERLACED?
-> It means that the source video transmitted full frames, not top and bottom
-> fields. I clarified the text a bit.
->
->> If this just means V4L2_FIELD_INTERLACED, then it would imply that for example V4L2_FIELD_SEQ_TB
->> and V4L2_FIELD_ALTERNATE are progressive formats, which is obviously not true.
->> And also generally, in which of described contexts should be V4L2_FIELD_NONE set or reported (buffer or VIDIOC_S_FMT ioctl)?
-> For video capture (that's what we are talking about here) it is returned by the
-> driver in v4l2_buffer, never by userspace. Userspace can try to request a specific
-> field value when calling S_FMT, but the driver can overwrite it.
->
-> The possible field values that a driver can support are dependent on the video
-> source (i.e. sensors are always FIELD_NONE) and the hardware capabilities.
->
->> Another point is that V4L2_FIELD_INTERLACED is also used by v4l2src to tell rcar-vin driver to combine the fields before giving them to application,
->> so basically it requests progressive signal. So the meanings of V4L2_FIELD_INTERLACED and V4L2_FIELD_NONE are basically the same in this case.
-> Certainly not. FIELD_INTERLACED combines two fields into a single buffer, but the
-> odd and even lines in the frame were captured at different times. Whereas for
-> FIELD_NONE all lines were captured at the same time.
->
-> So a FIELD_INTERLACED buffer may need to undergo additional deinterlacing.
->
-> If the hardware already does high-quality deinterlacing then that might be
-> a reason for the driver to return FIELD_NONE to avoid additional deinterlacing
-> in userspace.
->
-> In practice there are three main categories in the way the field is handled:
->
-> 1) The video source is a webcam: field is always FIELD_NONE, set by the driver.
->
-> 2) The video source is HDMI: if the video is progressive, then the field is always
->     FIELD_NONE. If the video is interlaced, then the field is always FIELD_ALTERNATE
->     in v4l2_format and alternating FIELD_TOP and BOTTOM in v4l2_buffer.
->
-> 3) The video source is SDTV (i.e. S-Video or composite): the video is always
->     interlaced, and it depends on the hardware which field values are supported,
->     except for FIELD_NONE, which is never returned as far as I am aware.
->
-> Regards,
->
-> 	Hans
->
->> Thank you in advance and sorry for the long mail!
->>
->> [1] Documentation/media/uapi/v4l/field-order.rst
->> [2] drivers/media/platform/rcar-vin
->>
->> Best regards
->>
->> Michael Rodin
->>
->> Advanced Driver Information Technology GmbH
->> Engineering Software Multimedia 1 (ADITG/ESM1)
->> Robert-Bosch-Str. 200
->> 31139 Hildesheim
->> Germany
->>
->> Tel. +49 5121 49 6936
->> Fax +49 5121 49 6999
->> mrodin@de.adit-jv.com
->> Web: www.adit-jv.com
->>
->> ADIT is a joint venture company of Robert Bosch GmbH/Robert Bosch Car Multimedia GmbH and DENSO Corporation
->> Sitz: Hildesheim, Registergericht: Amtsgericht Hildesheim HRB 3438
->> Geschaeftsfuehrung: Wilhelm Grabow, Ken Yaguchi
->>
-
+Thanks.  I've added these to for-next with a minor merge conflict, but I think
+I managed to avoid screwing it up!
