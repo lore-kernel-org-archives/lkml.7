@@ -2,124 +2,119 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6121C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DAFC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B942720578
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C9A20578
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556741414;
+	bh=AV+5t3l62F3zf8yV66aVKy1r4g8vDQo8zZMAK6XnJLw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HA97Lqm4j2jMSFF6oAyD2dnQQ605nxEF12a8OLajPKvKpnbIVtEpvMb9tWD+CE3v+
+	 Fp6V1ru4jGCUZv0EUr+h51GK0m3RWx66dBKpieTUEoSLfV1H9zhcnDQMGjoXGDyGHG
+	 BZpgjtKqeCv6bUL+tMvPOFa45wMnjwBzsp6xt73A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfEAUIv (ORCPT
+        id S1726255AbfEAUKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:08:51 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45362 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfEAUIv (ORCPT
+        Wed, 1 May 2019 16:10:13 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36742 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfEAUKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:08:51 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t189so11642087oih.12;
-        Wed, 01 May 2019 13:08:50 -0700 (PDT)
+        Wed, 1 May 2019 16:10:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b18so98794otq.3;
+        Wed, 01 May 2019 13:10:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MhhNnHbahaGD1ttZfVO4EhM/RU7xN3mKfU+xr7R87yk=;
-        b=hI6oktlvKf+Ger9NgBwx/iOt3LV9jj4U7z8ssAlDj6mukQSYflV6FP97cKGCYXan0I
-         vljAfduz5gxZpYH5ph4/bzXwHDAULBcZQgUzIrVYO95hQisNH89wYA5j+hQbdkzIxRpE
-         3XYe6fu9go1xU31eTKikEMVwRC4nb5VDWuz/CqF+WKzSYjCEr3Q/98qa+bQfYEFkmixm
-         7GmUj7JVLCUr/nnf5EGzgpG9K5A74bOMFd0aqEbGlRrhVTHkoN2w65/RRgLIYJhNYG0p
-         M3HzpihJC/lBpbMhhOj8ZTYezsVDzKaBu54L/PtiMzin6uJ5cvQuP2G4Q2Vguic+70/6
-         5AEQ==
-X-Gm-Message-State: APjAAAXrpB4WtvQuAkDw2/kVAiViZWtfVkU74lKS9naZ7pYWuBJKByih
-        6KJCqmgW4AWjpyepnFreMnrKIhZflos=
-X-Google-Smtp-Source: APXvYqzR1olsNduTJsdwTlemApTsjad5n0OFjYzdfFwFXFzE3AdxuB0ZTj1CXtat3hGvPBo/9chNuA==
-X-Received: by 2002:aca:d9c4:: with SMTP id q187mr55118oig.91.1556741330228;
-        Wed, 01 May 2019 13:08:50 -0700 (PDT)
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
-        by smtp.gmail.com with ESMTPSA id y17sm1101701oix.54.2019.05.01.13.08.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 13:08:49 -0700 (PDT)
-Received: by mail-oi1-f173.google.com with SMTP id d62so8798518oib.13;
-        Wed, 01 May 2019 13:08:49 -0700 (PDT)
-X-Received: by 2002:aca:4e83:: with SMTP id c125mr62690oib.13.1556741329634;
- Wed, 01 May 2019 13:08:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190427071031.6563-1-laurentiu.tudor@nxp.com> <20190427071031.6563-2-laurentiu.tudor@nxp.com>
-In-Reply-To: <20190427071031.6563-2-laurentiu.tudor@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 1 May 2019 15:08:38 -0500
-X-Gmail-Original-Message-ID: <CADRPPNRGxEz_YXhzrJPCZrz_Xc-9Fh21tgbjERoOazMMQmiVbA@mail.gmail.com>
-Message-ID: <CADRPPNRGxEz_YXhzrJPCZrz_Xc-9Fh21tgbjERoOazMMQmiVbA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] soc/fsl/qman: fixup liodns only on ppc targets
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     Netdev <netdev@vger.kernel.org>, madalin.bucur@nxp.com,
-        Roy Pledge <roy.pledge@nxp.com>, camelia.groza@nxp.com,
-        David Miller <davem@davemloft.net>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Li1WCYAdhD2QkMcE4ruPAS6fhCxmScJLOyEkxKVVobU=;
+        b=Y1NJ0Z13ozOJpjCrpF35pfhMGlyD2vOOIvljemWguUt/AzW9/c0oK8G+zletYrXAlJ
+         fI+4bCa2gFCoG8TBrpym5BubCwE7dmkhpZIFOLyjf1S70UmS0MXpz4TxrYluSNm9n/V1
+         17Xl0qJ2GP8l/52zsx96xJhyOl11gJ+ZEVaRso3j3iAY2GV3/MNlIedEiOo4Pr/9q0YP
+         /6AmA95yFRP8sJjws1UhLTW9fRkGu/GxqkT3OCRVBxSqk93khWZKDKm1aPm3nwtdcSQT
+         u3zVkD5akN7RYLZlQINQdhzgfKxPBpWa84fy3TuFhjydc5S2RyKKNpAIEXm3Ec1YRmIZ
+         /qlQ==
+X-Gm-Message-State: APjAAAU0JwWy0EOsch9V7lQ78Y8m0n1TMuUuEYGhvuHTlaHAc7kys4gi
+        C6Gv1eoDPcYyEypzjfMKoFvIpaU=
+X-Google-Smtp-Source: APXvYqyd/tRgzRRtNvYE+Ndpu5/eEiN+nwsOv+vpJslnGlpkbWEws5Vx8h9SHYzmsSInIENUj5oIxg==
+X-Received: by 2002:a9d:61c6:: with SMTP id h6mr9873837otk.316.1556741411946;
+        Wed, 01 May 2019 13:10:11 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d78sm5529492oib.15.2019.05.01.13.10.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 13:10:11 -0700 (PDT)
+Date:   Wed, 1 May 2019 15:10:10 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Message-ID: <20190501201010.GA7249@bogus>
+References: <1556421727-7401-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556421727-7401-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 2:14 AM <laurentiu.tudor@nxp.com> wrote:
->
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
->
-> ARM SoCs use SMMU so the liodn fixup done in the qman driver is no
-> longer making sense and it also breaks the ICID settings inherited
-> from u-boot. Do the fixups only for PPC targets.
->
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-
-Applied for next.  Thanks.
-
-Leo
+On Sun, Apr 28, 2019 at 03:27:00AM +0000, Anson Huang wrote:
+> i.MX system controller watchdog has pretimeout function which
+> depends on i.MX SCU driver, so watchdog DT node needs to be
+> subnode of SCU, this patch adds i.MX system controller watchdog
+> binding to SCU binding doc.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  drivers/soc/fsl/qbman/qman_ccsr.c | 2 +-
->  drivers/soc/fsl/qbman/qman_priv.h | 9 ++++++++-
->  2 files changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman_ccsr.c
-> index 109b38de3176..a6bb43007d03 100644
-> --- a/drivers/soc/fsl/qbman/qman_ccsr.c
-> +++ b/drivers/soc/fsl/qbman/qman_ccsr.c
-> @@ -596,7 +596,7 @@ static int qman_init_ccsr(struct device *dev)
->  }
->
->  #define LIO_CFG_LIODN_MASK 0x0fff0000
-> -void qman_liodn_fixup(u16 channel)
-> +void __qman_liodn_fixup(u16 channel)
->  {
->         static int done;
->         static u32 liodn_offset;
-> diff --git a/drivers/soc/fsl/qbman/qman_priv.h b/drivers/soc/fsl/qbman/qman_priv.h
-> index 75a8f905f8f7..04515718cfd9 100644
-> --- a/drivers/soc/fsl/qbman/qman_priv.h
-> +++ b/drivers/soc/fsl/qbman/qman_priv.h
-> @@ -193,7 +193,14 @@ extern struct gen_pool *qm_cgralloc; /* CGR ID allocator */
->  u32 qm_get_pools_sdqcr(void);
->
->  int qman_wq_alloc(void);
-> -void qman_liodn_fixup(u16 channel);
-> +#ifdef CONFIG_FSL_PAMU
-> +#define qman_liodn_fixup __qman_liodn_fixup
-> +#else
-> +static inline void qman_liodn_fixup(u16 channel)
-> +{
-> +}
-> +#endif
-> +void __qman_liodn_fixup(u16 channel);
->  void qman_set_sdest(u16 channel, unsigned int cpu_idx);
->
->  struct qman_portal *qman_create_affine_portal(
-> --
-> 2.17.1
->
+> New patch.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt         | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index 5d7dbab..1b56557 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -133,6 +133,16 @@ RTC bindings based on SCU Message Protocol
+>  Required properties:
+>  - compatible: should be "fsl,imx8qxp-sc-rtc";
+>  
+> +Watchdog bindings based on SCU Message Protocol
+> +------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible: should be:
+> +              "fsl,imx8qxp-sc-wdt"
+> +              followed by "fsl,imx-sc-wdt";
+> +Optional properties:
+> +- timeout-sec: contains the watchdog timeout in seconds.
+
+This should be the time to reset the system, but the subject talks about 
+the pre-timeout which I guess is just an interrupt. If it is pre-timeout 
+you want add a new property and don't abuse the existing one.
+
+Rob
