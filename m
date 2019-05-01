@@ -2,142 +2,96 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9302CC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BC1C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6742821743
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6732087B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZR2GyJS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfEABfY (ORCPT
+        id S1727463AbfEABl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 21:35:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfEABfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 21:35:23 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC08A21734;
-        Wed,  1 May 2019 01:35:19 +0000 (UTC)
-Date:   Tue, 30 Apr 2019 21:35:17 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC][PATCH v2] ftrace/x86: Emulate call function while
- updating in breakpoint handler
-Message-ID: <20190430213517.7bcfaf8e@oasis.local.home>
-In-Reply-To: <20190430175334.423821c0@gandalf.local.home>
-References: <20190428133826.3e142cfd@oasis.local.home>
-        <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
-        <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
-        <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
-        <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
-        <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
-        <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
-        <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
-        <20190430135602.GD2589@hirez.programming.kicks-ass.net>
-        <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
-        <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
-        <20190430130359.330e895b@gandalf.local.home>
-        <20190430132024.0f03f5b8@gandalf.local.home>
-        <20190430134913.4e29ce72@gandalf.local.home>
-        <20190430175334.423821c0@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Apr 2019 21:41:59 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36915 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfEABl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 21:41:59 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c1so9499783qkk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 18:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VzGKxXFfllxyPKqLe/F+e5VHkssK7p8Vb80iGpJgCFA=;
+        b=ZR2GyJS5dWX7nLKzsIONL3xnxWag/CPBF5z5Q3WK4lqkd0uuprDeD/PvnrPHd+4U94
+         wj8wxPBjQvKSHa8bKLP0YPQa22v6D5IK1Qk+OWvF6LZyVxs/f24ikLRRuo5C6b6qV8WP
+         Yj2z8dNAXONHRRn4vANpEqSjjdF9+LD8Si+kulNXhWlDfWXzGilwpom0mW20Qqy0QlKP
+         VI+psISXQUlkSuzu/k2MY5KWwQ+PjXvlvIz3cfcEhkfxa8QQrCyKfFndwTrjxkfCEE/o
+         YX9uFd30PbyKcPfP8d2HNblJjkx21LkGIDuTLbGqG80QkBVF107m8/u/keL3bz/L1XB6
+         LXUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VzGKxXFfllxyPKqLe/F+e5VHkssK7p8Vb80iGpJgCFA=;
+        b=GJ9uRMik9arC++dJ96/d938WDeyG7UqhiSheZCRxuwbvJX5sEjdezvkGbzfsnhDrJk
+         IgsHUFnbD/sb28WLZ5tNY5XBAsamY2IEuJsUQtqVTicWR4b5ET/OjzP9aD8dfVKs6VQG
+         osqQKoWAYOtuivxpt9jHoCzoT/7KF0QxBMSjg/9toej+RCJYgmbdu2elJ9kbGuqEWVcq
+         Grl1EC9VYVzbUs2iDhNcGpnpEANLNVK0mRdiWQGAFS9g9dXrCgj2BBjYLzbbmOaiPo33
+         /BZkLX3wmTu7qxIb/EyrMMBZR5rkOIVCi8Zk4gjQ7wpjsQ2iaEaeb83NKwByJTVZOpH3
+         hzjA==
+X-Gm-Message-State: APjAAAWhkIO56rk7UH0zegATpw5QIiKL4ZwndL1PcS5gZ59WI60qQ182
+        TYPc6bf7MQBy1BMOYVTxECtRv0atYaE=
+X-Google-Smtp-Source: APXvYqxDJRW8H1a19W7cRgf2FHPg/okPqiJ0Vj9a0lEZHAKZo54gr9gYUOu23p/8BJzgO3lcoC4zIA==
+X-Received: by 2002:a37:5042:: with SMTP id e63mr52290993qkb.240.1556674918195;
+        Tue, 30 Apr 2019 18:41:58 -0700 (PDT)
+Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m60sm20587636qte.81.2019.04.30.18.41.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 18:41:57 -0700 (PDT)
+Subject: Re: "iommu/amd: Set exclusion range correctly" causes smartpqi
+ offline
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     iommu@lists.linux-foundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1556290348.6132.6.camel@lca.pw> <20190426152632.GC3173@suse.de>
+ <1556294112.6132.7.camel@lca.pw> <20190429142326.GA4678@suse.de>
+From:   Qian Cai <cai@lca.pw>
+Message-ID: <61d3a8d6-48b0-0ec4-82e0-10c67ad9dcd7@lca.pw>
+Date:   Tue, 30 Apr 2019 21:41:56 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190429142326.GA4678@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 17:53:34 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> +	if (ftrace_location(ip)) {
-> +		/* A breakpoint at the beginning of the function was hit */
-> +		if (in_nmi()) {
-> +			/* NMIs have their own trampoline */
-> +			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
-> +			regs->ip = (unsigned long) ftrace_emulate_call_nmi;
-> +			return 1;
-> +		}
-> +		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
-> +		if (regs->flags & X86_EFLAGS_IF) {
-> +			regs->flags &= ~X86_EFLAGS_IF;
-> +			regs->ip = (unsigned long) ftrace_emulate_call_irqoff;
-> +			/* Tell lockdep here we are enabling interrupts */
-> +			trace_hardirqs_on();
-
-This isn't good enough. The return from interrupt does call lockdep
-saying interrupts are disabled. Need to add the lockdep tracking in the
-asm as well.
-
-Probably easier to move it from inline asm to ftrace_X.S and use the
-lockdep TRACE_ON/OFF macros.
-
--- Steve
 
 
+On 4/29/19 10:23 AM, Joerg Roedel wrote:
+> On Fri, Apr 26, 2019 at 11:55:12AM -0400, Qian Cai wrote:
+>> https://git.sr.ht/~cai/linux-debug/blob/master/dmesg
+> 
+> Thanks, I can't see any definitions for unity ranges or exclusion ranges
+> in the IVRS table dump, which makes it even more weird.
+> 
+> Can you please send me the output of
+> 
+> 	for f in `ls -1 /sys/kernel/iommu_groups/*/reserved_regions`; do echo "---$f"; cat $f;done
+> 
+> to double-check?
 
-
-> +		} else {
-> +			regs->ip = (unsigned long) ftrace_emulate_call_irqon;
-> +		}
-> +		return 1;
-> +	} else if (is_ftrace_caller(ip)) {
-> +		/* An ftrace trampoline is being updated */
-> +		if (!ftrace_update_func_call) {
-> +			/* If it's a jump, just need to skip it */
-> +			regs->ip += MCOUNT_INSN_SIZE -1;
-> +			return 1;
-> +		}
-> +		if (in_nmi()) {
-> +			/* NMIs have their own trampoline */
-> +			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
-> +			regs->ip = (unsigned long) ftrace_emulate_call_update_nmi;
-> +			return 1;
-> +		}
-> +		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
-> +		if (regs->flags & X86_EFLAGS_IF) {
-> +			regs->flags &= ~X86_EFLAGS_IF;
-> +			regs->ip = (unsigned long) ftrace_emulate_call_update_irqoff;
-> +			trace_hardirqs_on();
-> +		} else {
-> +			regs->ip = (unsigned long) ftrace_emulate_call_update_irqon;
-> +		}
-> +		return 1;
-> +	}
->  
-> -	return 1;
-> +	return 0;
->  }
+It is going to take a while to reserve that system again to gather the
+information. BTW, this is only reproducible on linux-next but not mainline.
