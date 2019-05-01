@@ -2,84 +2,103 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF113C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C79C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C1C208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4600C20835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfEAQSC (ORCPT
+        id S1726561AbfEAQXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:18:02 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33514 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfEAQSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:18:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 718BEA78;
-        Wed,  1 May 2019 09:18:01 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8D143F719;
-        Wed,  1 May 2019 09:17:58 -0700 (PDT)
-Date:   Wed, 1 May 2019 17:17:52 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v3 1/4] ptrace: move clearing of TIF_SYSCALL_EMU flag to
- core
-Message-ID: <20190501161752.GA12498@e107155-lin>
-References: <20190430170520.29470-1-sudeep.holla@arm.com>
- <20190430170520.29470-2-sudeep.holla@arm.com>
- <20190501161330.GD30235@redhat.com>
+        Wed, 1 May 2019 12:23:19 -0400
+Received: from gateway22.websitewelcome.com ([192.185.46.152]:31225 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726388AbfEAQXS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 12:23:18 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 90B7A8ACF
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 11:23:17 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Ls0rhCdHH4FKpLs0rhd9yr; Wed, 01 May 2019 11:23:17 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=36490 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLs0q-001tWw-5p; Wed, 01 May 2019 11:23:16 -0500
+Date:   Wed, 1 May 2019 11:23:15 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH net-next] net: sched: cls_u32: use struct_size() helper
+Message-ID: <20190501162315.GA27166@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501161330.GD30235@redhat.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLs0q-001tWw-5p
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.119.203]:36490
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 06:13:30PM +0200, Oleg Nesterov wrote:
-> On 04/30, Sudeep Holla wrote:
-> >
-> > While the TIF_SYSCALL_EMU is set in ptrace_resume independent of any
-> > architecture, currently only powerpc and x86 unset the TIF_SYSCALL_EMU
-> > flag in ptrace_disable which gets called from ptrace_detach.
-> >
-> > Let's move the clearing of TIF_SYSCALL_EMU flag to __ptrace_unlink
-> > which gets executed from ptrace_detach and also keep it along with
-> > or close to clearing of TIF_SYSCALL_TRACE.
-> >
-> > Cc: Oleg Nesterov <oleg@redhat.com>
-> > Cc: Paul Mackerras <paulus@samba.org>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
->
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes, in particular in the
+context in which this code is being used.
 
-Since 1/4 and 2/4 are completely independent of arm64 changes in 3&4/4,
-I prefer you take these via your tree.
+So, replace code of the following form:
 
---
-Regards,
-Sudeep
+sizeof(*s) + s->nkeys*sizeof(struct tc_u32_key)
+
+with:
+
+struct_size(s, keys, s->nkeys)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ net/sched/cls_u32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sched/cls_u32.c b/net/sched/cls_u32.c
+index 04e9ef088535..4b8710a266cc 100644
+--- a/net/sched/cls_u32.c
++++ b/net/sched/cls_u32.c
+@@ -847,7 +847,7 @@ static struct tc_u_knode *u32_init_knode(struct net *net, struct tcf_proto *tp,
+ 	/* Similarly success statistics must be moved as pointers */
+ 	new->pcpu_success = n->pcpu_success;
+ #endif
+-	memcpy(&new->sel, s, sizeof(*s) + s->nkeys*sizeof(struct tc_u32_key));
++	memcpy(&new->sel, s, struct_size(s, keys, s->nkeys));
+ 
+ 	if (tcf_exts_init(&new->exts, net, TCA_U32_ACT, TCA_U32_POLICE)) {
+ 		kfree(new);
+-- 
+2.21.0
+
