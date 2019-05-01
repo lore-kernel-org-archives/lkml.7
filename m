@@ -2,68 +2,134 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9790C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E1FC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784F2206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556748605;
-	bh=UE28lYkTYNrPj6QrzxBXTjJp9ZvJ/7j1m3GZZ/pt7DU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=AreM/JI7Umqp0eP7UNYrn1PfLQythQjM248qJUb+MftWVQfKwjsbJBzcTWyxtRZzT
-	 WFSbRuZYmPLaqNAuLs3I2+juLt7ySvBUJV/VFbvqeV/mG9A+FO/Dh6Tqn+CrwC+lwh
-	 J+hpFr0cYAW2smadsYL9kyCjfW5tr5vhxaeplPqY=
+	by mail.kernel.org (Postfix) with ESMTP id 76B3E20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:23:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iOgai+aE";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Eze9Cz+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbfEAWKE (ORCPT
+        id S1726202AbfEAWXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 18:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfEAWKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 18:10:04 -0400
-Subject: Re: [GIT PULL] power-supply changes for 5.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556748603;
-        bh=UE28lYkTYNrPj6QrzxBXTjJp9ZvJ/7j1m3GZZ/pt7DU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=lmi2kjnrCRp6LnWwI+StO8q3UMDMdHAuNtBEvswKfP7zFZyQEmZp8K7XUxZsuQ0R9
-         zgIaapI0nftllTTkoDbXDiGvCfFjZ5UF/9bAivmDda0j5eP2bywe0fIsCQHqpmzk8O
-         zltckELcpWc+LF1Y/8BF6FOCj9F9Mk2q0SH5RhEU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190501212610.5qrl7gyttdyzs2dq@earth.universe>
-References: <20190501212610.5qrl7gyttdyzs2dq@earth.universe>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190501212610.5qrl7gyttdyzs2dq@earth.universe>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git
- tags/for-v5.1-rc
-X-PR-Tracked-Commit-Id: 349ced9984ff540ce74ca8a0b2e9b03dc434b9dd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 600d7258316d87cf9ecd58b6fdc8a35deca0870c
-Message-Id: <155674860340.24187.4197229987499690721.pr-tracker-bot@kernel.org>
-Date:   Wed, 01 May 2019 22:10:03 +0000
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+        Wed, 1 May 2019 18:23:31 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37598 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726126AbfEAWXb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 18:23:31 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x41MIVLC022812;
+        Wed, 1 May 2019 15:23:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=MeD0z7nSNAiPX7xglTMuxpGvHQqFrooIDgaIP6EVFPM=;
+ b=iOgai+aEsl8rDux6W/GgEUW8s7NcQJ37eW0daxCauNk0uUZQUMdLq9QbrbEjlOHU2mGi
+ EHZigX3g9LjqFGlNP35TkMf+7OChz3gjWMPt3npZpacPRBQZUD/KeNwrKtA+/7ffRrTf
+ Ms73myFO4BqQd1O4IYHtnLsWJDJxpRpzem0= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2s7d0q1k9w-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 01 May 2019 15:23:02 -0700
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 1 May 2019 15:23:01 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 1 May 2019 15:23:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MeD0z7nSNAiPX7xglTMuxpGvHQqFrooIDgaIP6EVFPM=;
+ b=Eze9Cz+z7obd1ewMXFCMKYw/o4/kvnsWkoVzrV9m5G/Qhp8dZ+hRsBgIK+R1iiXB6K7O8nFLbPyFLKiceqBxovGjDWiVFlnXIJz0Q8MWYWkCuY19mPBUy9YIsUCGQ48kI5qKJ4QzvjTobxPGceoD7NFeaQ0Ow5nvoT6kClqOTWU=
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
+ CY4PR15MB1800.namprd15.prod.outlook.com (10.174.52.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Wed, 1 May 2019 22:22:59 +0000
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::1039:c5b1:f43e:14e9]) by CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::1039:c5b1:f43e:14e9%3]) with mapi id 15.20.1835.010; Wed, 1 May 2019
+ 22:22:59 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>
+CC:     Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH v2] misc: aspeed-lpc-ctrl: make parameter optional
+Thread-Topic: [PATCH v2] misc: aspeed-lpc-ctrl: make parameter optional
+Thread-Index: AQHUrecp120UxlsdUUK9uZiXf1PR66W0eREAgAB5LwCAoXbNgIAADfIAgACQt4A=
+Date:   Wed, 1 May 2019 22:22:59 +0000
+Message-ID: <3CEAC0C9-9B7A-4329-B719-B08A1951F12F@fb.com>
+References: <20190116220154.1026171-1-vijaykhemka@fb.com>
+ <1547787502.2061444.1637712576.1F1E21B4@webmail.messagingengine.com>
+ <DCD8D2E5-DB18-427C-AA8F-18289E9AB0AB@fb.com>
+ <CACPK8Xdgv1YVgeykf0grSpR3LXTGa45hoBwZVq+zWgR0anhmTg@mail.gmail.com>
+ <20190501064501.GA20816@kroah.com>
+In-Reply-To: <20190501064501.GA20816@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::1:4686]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3ff9dbae-41a7-4906-70f4-08d6ce839184
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR15MB1800;
+x-ms-traffictypediagnostic: CY4PR15MB1800:
+x-microsoft-antispam-prvs: <CY4PR15MB1800916A122AA4DB389F53E0DD3B0@CY4PR15MB1800.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00246AB517
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(39860400002)(366004)(396003)(376002)(199004)(189003)(36756003)(6486002)(446003)(99286004)(6436002)(68736007)(256004)(46003)(6116002)(33656002)(486006)(66446008)(186003)(64756008)(66556008)(66476007)(11346002)(476003)(229853002)(76116006)(91956017)(6506007)(2906002)(102836004)(66946007)(73956011)(76176011)(82746002)(2616005)(5660300002)(7736002)(478600001)(316002)(4326008)(305945005)(25786009)(4744005)(86362001)(53936002)(6246003)(14454004)(110136005)(71190400001)(8676002)(8936002)(83716004)(71200400001)(6512007)(81156014)(54906003)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1800;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6YSt5i7TEzPUsr/LcIDVOf7T8iqfpXpaImfaYB32v8fdL+NQfkOpCLQ5GBE1cRt8nTSl+xdAeoZp/zUgdqTGrYCrjrdKbJmE3NFLCISHgnnK7Pnjm486/c5K5dmwGQdsK0imppCr37RFHwAzoo3vFjGMzdOwyOoPpujnlf7+0lrwMfq6IVnUBEcCAShBZSbfWDRzpUQwiksGFlIaJIPETHNV9JnVNa1AjPpL7W9IS630ycu/jnA0nF7u9LPyeeLvD6Rkpovu7Aeq6NLRzx9W+FQdEwftLSkI4lELkWWBoqYlIsrieKQ8LZJ9722uKAZcO9gmBPjMHLCqqJDRh/N62zhkynu5UrR9IL15bXw9lzNXV8+8uoebfRPrmswlnKniEnmWBzZxrB6QtE+P9dtwHJqLB45rUY3KWR/J9hyzhtY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <35AE8DEDA36D6048987B73B2DAEB4D24@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ff9dbae-41a7-4906-70f4-08d6ce839184
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 22:22:59.5666
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1800
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-01_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=902 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905010137
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 1 May 2019 23:26:10 +0200:
-
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.1-rc
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/600d7258316d87cf9ecd58b6fdc8a35deca0870c
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+TGV0IG1lIHNlbmQgYm90aCBwYXRjaGVzLg0KDQrvu79PbiA0LzMwLzE5LCAxMTo0NSBQTSwgIkdy
+ZWcgS3JvYWgtSGFydG1hbiIgPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPiB3cm90ZToNCg0K
+ICAgIE9uIFdlZCwgTWF5IDAxLCAyMDE5IGF0IDA1OjU1OjA3QU0gKzAwMDAsIEpvZWwgU3Rhbmxl
+eSB3cm90ZToNCiAgICA+IE9uIEZyaSwgMTggSmFuIDIwMTkgYXQgMjA6MTIsIFZpamF5IEtoZW1r
+YSA8dmlqYXlraGVta2FAZmIuY29tPiB3cm90ZToNCiAgICA+ID4NCiAgICA+ID4gSGkgQW5kcmV3
+LA0KICAgID4gPiBUaGFua3MgZm9yIHRoaXMgcmV2aWV3LCBJIHdpbGwgaGF2ZSBhIGZvbGxvdyB1
+cCBwYXRjaCBmb3IgdGhpcyByZXR1cm4gdmFsdWVzLg0KICAgID4gDQogICAgPiBEaWQgeW91IHNl
+bmQgYSBmb2xsb3cgdXAgcGF0Y2ggdG8gZml4IHRoZSByZXR1cm4gdmFsdWVzPw0KICAgID4gDQog
+ICAgPiBHcmVnLCBpcyB0aGVyZSBhbnkgcmVhc29uIHdoeSB5b3UgZGlkIG5vdCBtZXJnZSB0aGlz
+IG9uZT8gNS4yIHdpbGwNCiAgICA+IGhhdmUgZGV2aWNlIHRyZWVzIHRoYXQgZGVwZW5kIG9uIHRo
+aXMgcGF0Y2gncyBiZWhhdmlvci4NCiAgICANCiAgICBObyBpZGVhLCBpZiBpdCBuZWVkcyB0byBi
+ZSBhcHBsaWVkLCBwbGVhc2UgcmVzZW5kLg0KICAgIA0KICAgIHRoYW5rcywNCiAgICANCiAgICBn
+cmVnIGstaA0KICAgIA0KDQo=
