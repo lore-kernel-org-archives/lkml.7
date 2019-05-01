@@ -2,203 +2,101 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF188C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D46C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE366208C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715F22089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfEAUb6 (ORCPT
+        id S1726244AbfEAUdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbfEAUbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:31:55 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C25521743;
-        Wed,  1 May 2019 20:31:53 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1hLvtQ-0006Z3-Lb; Wed, 01 May 2019 16:31:52 -0400
-Message-Id: <20190501203152.561841784@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Wed, 01 May 2019 16:28:32 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable@vger.kernel.org
-Subject: [RFC][PATCH 2/2] ftrace/x86: Emulate call function while updating in breakpoint
- handler
-References: <20190501202830.347656894@goodmis.org>
+        Wed, 1 May 2019 16:33:12 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:53139 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfEAUdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 16:33:11 -0400
+Received: from excalibur.cnev.de ([213.196.200.188]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MXYAj-1hGI2t16Yp-00Yxxl; Wed, 01 May 2019 22:32:52 +0200
+Received: from karsten by excalibur.cnev.de with local (Exim 4.89)
+        (envelope-from <merker@debian.org>)
+        id 1hLvuK-0000JY-Jd; Wed, 01 May 2019 22:32:48 +0200
+Date:   Wed, 1 May 2019 22:32:48 +0200
+From:   Karsten Merker <merker@debian.org>
+To:     Anup Patel <anup@brainfault.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zong@andestech.com" <zong@andestech.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Cc:     Karsten Merker <merker@debian.org>
+Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
+Message-ID: <20190501203248.oadcldefusc2ighv@excalibur.cnev.de>
+References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
+ <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com>
+ <20190501170053.GG11740@lakrids.cambridge.arm.com>
+ <CAAhSdy2OuCb6wBrs-O=fTWo0D_CgwTztfV-kMDi=tPmSJhM7og@mail.gmail.com>
+ <20190501195443.trgjv6tujctsw5sw@excalibur.cnev.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190501195443.trgjv6tujctsw5sw@excalibur.cnev.de>
+X-No-Archive: yes
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:uAFOUbMAST/fg63gGkCxdt/hO21IE0Vf8MY/Ms1ItZjbUKKeRaM
+ X3ziOi00VTr0wfRTUPku62LmNHlcdHKpp8aqgEypwoZwWgBcyZgLKum6sg6yZZpAK2dOxAc
+ nF/rWnvuGYeP4ket1h/vVRh8ElovIybmZuVDHzPAPHGE+Zn9C3lM76BMHWkWc2BABa8CABQ
+ ELwBTDw9ewm1qd8ZngyVg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xhj0qQJdr/8=:2CTkHkDNXsJsE4iCWO5dGZ
+ BsdK0s641viw46BVtn9Dn7tnCjRB48pPsqevSrPPzLTeLheVoKH6VVF8X3wbe/e1A5ADPY9uO
+ F6kxiXkfJX1u7wUzI597bik0oD1Q4T/a6Qo4LbYvhjVsANX4Aay1V6hcz1/N/Yejed1ZvFMH8
+ gpDywyK0iMhAksuE+lUEgPLjFcG8fqzbQmIE3qOPiuS0Srla/w7dPJ0TXMjph93xBTEN0ZijW
+ 2lRM7b+BsgW9WVdFUC0ioivjHcBGIrC8vNySgjo6rHLxhYncQTfmvBja0pUH8J9tAvDA8OY19
+ 7KJsHZz5s3UTmOMFOW9jpRiE+OIsA3IMXsFfq1nFTrnRZEV3b99AKPwLWCHH1JUulK7p21ZzV
+ TEz4H5nyNf0jUXz6gjTNWKsqJsU8G8IeS6EySdb54WqQDYq8/MKDlpt5lAp7Qfj6JXqH9w7yj
+ qLshvo0KwBP71aG520MA0qEEzpapm4NbVWiN7WctYsFYQ6JsItWMePn4ID+RLYlCIR2+strG2
+ dDs6pJ0q93Q0Ia/2YjdVXQEj9cwC6RFNIdHpzGi0jZAHglLq/EwPElhMGz08TRhC/Fzf7jT6X
+ klVMmo5fb8OClfps8V362x74R1UfFYz+fIrz3D9jNf5WfsXwJuHPJwyH8n2krzTYv48l7HUIH
+ tIUCrLxPPYdvbFaHQPFOK9sPl3QZalaSyUKXBIAZlYfWagXnKHtzhua6/sP0gz5oT129h8mdp
+ 8AcIxS/Q3pD5ibzIBUCx4wuddq+8jLpnvlSC9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+On Wed, May 01, 2019 at 09:54:43PM +0200, Karsten Merker wrote:
+> On Wed, May 01, 2019 at 10:41:52PM +0530, Anup Patel wrote:
+> > On Wed, May 1, 2019 at 10:30 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> > > On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
+> > > > On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
+> > > > > On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
 
-Nicolai Stange discovered[1] that if live kernel patching is enabled, and the
-function tracer started tracing the same function that was patched, the
-conversion of the fentry call site during the translation of going from
-calling the live kernel patch trampoline to the iterator trampoline, would
-have as slight window where it didn't call anything.
+> Probably I'm missing something obvious, but I cannot completely
+> follow you here. My understanding is as follows:
+[...]
+> If the first byte in a PE/COFF header has to be an ASCII "M",
+> that is 01001101 in binary.  RISC-V is little-endian and the last
+> two bits of the lowest-value byte define the type of instruction. 
+> According to the chapter "Base Instruction-Length Encoding" in
+> the RISC-V ISA spec everything except 11 as the lowest bits
+> denotes a compressed instruction and if I have puzzeled together
+> the the various instruction bits correctly, ASCII "MZ" would be
+> excuted as a compressed load immediate to x9/s1, wouldn't it?
 
-As live kernel patching depends on ftrace to always call its code (to
-prevent the function being traced from being called, as it will redirect
-it). This small window would allow the old buggy function to be called, and
-this can cause undesirable results.
+Sorry, I have misinterpreted a bitfield in the spec, it's indeed
+a compressed load immediate to x20/s4.
 
-Nicolai submitted new patches[2] but these were controversial. As this is
-similar to the static call emulation issues that came up a while ago[3].
-But after some debate[4][5] adding a gap in the stack when entering the
-breakpoint handler allows for pushing the return address onto the stack to
-easily emulate a call.
-
-[1] http://lkml.kernel.org/r/20180726104029.7736-1-nstange@suse.de
-[2] http://lkml.kernel.org/r/20190427100639.15074-1-nstange@suse.de
-[3] http://lkml.kernel.org/r/3cf04e113d71c9f8e4be95fb84a510f085aa4afa.1541711457.git.jpoimboe@redhat.com
-[4] http://lkml.kernel.org/r/CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com
-[5] http://lkml.kernel.org/r/CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com
-
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: the arch/x86 maintainers <x86@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Miroslav Benes <mbenes@suse.cz>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nayna Jain <nayna@linux.ibm.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
-Signed-off-by: *** Need SoB From Peter Zijlstra ***
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- arch/x86/kernel/ftrace.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index ef49517f6bb2..fd152f5a937b 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -29,6 +29,7 @@
- #include <asm/kprobes.h>
- #include <asm/ftrace.h>
- #include <asm/nops.h>
-+#include <asm/text-patching.h>
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
- 
-@@ -231,6 +232,7 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
- }
- 
- static unsigned long ftrace_update_func;
-+static unsigned long ftrace_update_func_call;
- 
- static int update_ftrace_func(unsigned long ip, void *new)
- {
-@@ -259,6 +261,8 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
- 	unsigned char *new;
- 	int ret;
- 
-+	ftrace_update_func_call = (unsigned long)func;
-+
- 	new = ftrace_call_replace(ip, (unsigned long)func);
- 	ret = update_ftrace_func(ip, new);
- 
-@@ -294,13 +298,21 @@ int ftrace_int3_handler(struct pt_regs *regs)
- 	if (WARN_ON_ONCE(!regs))
- 		return 0;
- 
--	ip = regs->ip - 1;
--	if (!ftrace_location(ip) && !is_ftrace_caller(ip))
--		return 0;
-+	ip = regs->ip - INT3_INSN_SIZE;
- 
--	regs->ip += MCOUNT_INSN_SIZE - 1;
-+	if (ftrace_location(ip)) {
-+		int3_emulate_call(regs, (unsigned long)ftrace_regs_caller);
-+		return 1;
-+	} else if (is_ftrace_caller(ip)) {
-+		if (!ftrace_update_func_call) {
-+			int3_emulate_jmp(regs, ip + CALL_INSN_SIZE);
-+			return 1;
-+		}
-+		int3_emulate_call(regs, ftrace_update_func_call);
-+		return 1;
-+	}
- 
--	return 1;
-+	return 0;
- }
- NOKPROBE_SYMBOL(ftrace_int3_handler);
- 
-@@ -859,6 +871,8 @@ void arch_ftrace_update_trampoline(struct ftrace_ops *ops)
- 
- 	func = ftrace_ops_get_func(ops);
- 
-+	ftrace_update_func_call = (unsigned long)func;
-+
- 	/* Do a safe modify in case the trampoline is executing */
- 	new = ftrace_call_replace(ip, (unsigned long)func);
- 	ret = update_ftrace_func(ip, new);
-@@ -960,6 +974,7 @@ static int ftrace_mod_jmp(unsigned long ip, void *func)
- {
- 	unsigned char *new;
- 
-+	ftrace_update_func_call = 0UL;
- 	new = ftrace_jmp_replace(ip, (unsigned long)func);
- 
- 	return update_ftrace_func(ip, new);
+Regards,
+Karsten
 -- 
-2.20.1
-
-
+Ich widerspreche hiermit ausdrücklich der Nutzung sowie der
+Weitergabe meiner personenbezogenen Daten für Zwecke der Werbung
+sowie der Markt- oder Meinungsforschung.
