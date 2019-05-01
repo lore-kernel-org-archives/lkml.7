@@ -2,115 +2,71 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B897CC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C238FC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9274621734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E3C21743
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbfEAKVn (ORCPT
+        id S1726302AbfEAKXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 06:21:43 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58967 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfEAKVn (ORCPT
+        Wed, 1 May 2019 06:23:23 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44649 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfEAKXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 06:21:43 -0400
-Received: from 79.184.254.69.ipv4.supernova.orange.pl (79.184.254.69) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id f51534df836c7de9; Wed, 1 May 2019 12:21:40 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-pm@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PM / core: Propagate dev->power.wakeup_path when no callbacks
-Date:   Wed, 01 May 2019 12:21:40 +0200
-Message-ID: <3232066.oa1jrYo8oc@kreacher>
-In-Reply-To: <20190410095516.6170-1-ulf.hansson@linaro.org>
-References: <20190410095516.6170-1-ulf.hansson@linaro.org>
+        Wed, 1 May 2019 06:23:23 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hLmOL-0004HA-AE; Wed, 01 May 2019 10:23:09 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ASoC: SOF: Intel: fix spelling mistake "incompatble" -> "incompatible"
+Date:   Wed,  1 May 2019 11:23:08 +0100
+Message-Id: <20190501102308.30390-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, April 10, 2019 11:55:16 AM CEST Ulf Hansson wrote:
-> The dev->power.direct_complete flag may become set in device_prepare() in
-> case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
-> set). This leads to a broken behaviour, when there is child having wakeup
-> enabled and relies on its parent to be used in the wakeup path.
-> 
-> More precisely, when the direct complete path becomes selected for the
-> child in __device_suspend(), the propagation of the dev->power.wakeup_path
-> becomes skipped as well.
-> 
-> Let's address this problem, by checking if the device is a part the wakeup
-> path or has wakeup enabled, then prevent the direct complete path from
-> being used.
-> 
-> Reported-by: Loic Pallardy <loic.pallardy@st.com>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
-> 
-> More background:
-> 
-> This problem was reported by Loic Pallardy, offlist, while he was working
-> on enabling wakeup for a tty serial console driver.
-> 
-> When I looked more closely, I noticed that uart_suspend_port() calls
-> device_may_wakeup() for the tty child devices, and then also the used serial
-> driver check its device (parent) for device_may_wakeup(). To me this looks like
-> workarounds to fix a behaviour that really should be dealt with from the PM
-> core, no matter of whether the child have PM callbacks assigned or not.
-> 
-> In other words, it seems like the serial driver(s) should be checking the
-> wakeup_path flag for the parent, solely, instead.
-> 
-> I haven't digested further behaviours for other subsystem, but recently
-> reviewed a patch for a gpio driver [1], that seems to be suffering from the
-> similar problems.
-> 
-> Kind regards
-> Ulf Hansson
-> 
-> [1]
-> https://lkml.org/lkml/2019/4/4/1283
-> 
-> ---
->  drivers/base/power/main.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index 41eba82ee7b9..f9cfdeee8288 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -1747,6 +1747,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
->  	if (dev->power.syscore)
->  		goto Complete;
->  
-> +	/* Avoid direct_complete, to let wakeup_path being propagated. */
-> +	if (device_may_wakeup(dev) || dev->power.wakeup_path)
-> +		dev->power.direct_complete = false;
-> +
->  	if (dev->power.direct_complete) {
->  		if (pm_runtime_status_suspended(dev)) {
->  			pm_runtime_disable(dev);
-> 
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied, thanks!
+There is a spelling mistake in a hda_dsp_rom_msg message, fix it.
 
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ sound/soc/sof/intel/hda.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index b8fc19790f3b..84baf275b467 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -54,7 +54,7 @@ static const struct hda_dsp_msg_code hda_dsp_rom_msg[] = {
+ 	{HDA_DSP_ROM_L2_CACHE_ERROR, "error: L2 cache error"},
+ 	{HDA_DSP_ROM_LOAD_OFFSET_TO_SMALL, "error: load offset too small"},
+ 	{HDA_DSP_ROM_API_PTR_INVALID, "error: API ptr invalid"},
+-	{HDA_DSP_ROM_BASEFW_INCOMPAT, "error: base fw incompatble"},
++	{HDA_DSP_ROM_BASEFW_INCOMPAT, "error: base fw incompatible"},
+ 	{HDA_DSP_ROM_UNHANDLED_INTERRUPT, "error: unhandled interrupt"},
+ 	{HDA_DSP_ROM_MEMORY_HOLE_ECC, "error: ECC memory hole"},
+ 	{HDA_DSP_ROM_KERNEL_EXCEPTION, "error: kernel exception"},
+-- 
+2.20.1
 
