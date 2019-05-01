@@ -2,79 +2,100 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8104AC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA43C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5381A20835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556744462;
-	bh=RNfxhTIjmff0paVh7E25ufbTsE9xtP3fIa1eYFm/084=;
-	h=In-Reply-To:References:To:Cc:From:Subject:Date:List-ID:From;
-	b=P8JueqJ7xc4yv9yICU5rH/MutJgt7jTt6Etx9a8yhpWh6AUUvtCKwLJwrIxTA24y8
-	 eM2hfoO3wyJA5JeHN3JDD227mcZ2LhjVzwO5zimHaBJtkIWOPvycGlWfLGxE9NlpHC
-	 bvgk6DidJjETLo0IoW8kyS5ibsRqbF95ex9UUpeI=
+	by mail.kernel.org (Postfix) with ESMTP id 3FACD2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfEAVBB (ORCPT
+        id S1726229AbfEAVDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfEAVBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:01:00 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 094E22075E;
-        Wed,  1 May 2019 21:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556744460;
-        bh=RNfxhTIjmff0paVh7E25ufbTsE9xtP3fIa1eYFm/084=;
-        h=In-Reply-To:References:To:Cc:From:Subject:Date:From;
-        b=IbF1Cx5Sgla9OzDphVepmru3gr3lihFyNA7Ktxt/wAwj70/vPxCydDr43ABcgLTIE
-         C/WulMaNZ+OymYH6AkVZdNkaNdsG3k77QxjCpgpXjl9ONBhYKznyKS+8+0Be1rLTfP
-         K255BKxkq4mqk/ACNZaqJJM6Ux6Qo62e6VX/FKJo=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 1 May 2019 17:03:33 -0400
+Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:38843 "EHLO
+        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726120AbfEAVDd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:03:33 -0400
+Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
+        id 2E52D461D3A; Wed,  1 May 2019 16:52:16 -0400 (EDT)
+Date:   Wed, 1 May 2019 16:52:16 -0400
+To:     linux-kernel@vger.kernel.org
+Cc:     netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Len Sorensen <lsorense@csclub.uwaterloo.ca>
+Subject: i40e X722 RSS problem with NAT-Traversal IPsec packets
+Message-ID: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1556585557-28795-1-git-send-email-Anson.Huang@nxp.com>
-References: <1556585557-28795-1-git-send-email-Anson.Huang@nxp.com>
-To:     "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2] clk: imx: pllv4: add fractional-N pll support
-Message-ID: <155674445915.200842.2835083854881674143@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 01 May 2019 14:00:59 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Content-transfer-encoding header is still base64. I guess it can't
-be fixed.
+We have hit a strange problem with RSS on the X722 on our new servers
+(S2600WFT based).
 
-Quoting Anson Huang (2019-04-29 17:57:22)
-> The pllv4 supports fractional-N function, the formula is:
->=20
-> PLL output freq =3D input * (mult + num/denom),
->=20
-> This patch adds fractional-N function support, including
-> clock round rate, calculate rate and set rate, with this
-> patch, the clock rate of APLL in clock tree is more accurate
-> than before:
->=20
+The RSS hash is distributing most packets across cores quite nicely, with
+one exception.  ESP encapsulated in UDP is always going to queue 0 no
+matter what the hash key is set to or how many cores have queues assigned.
+So if terminating IPsec tunnels that are using NAT-Traversal, all packets
+arrive on the same core, which clearly isn't good for scalability.
+Other UDP packets are fine, TCP is fine, ICMP, ESP, etc have no problem
+that we have seen, only the ESP in UDP packets.
+
+Given the packets are UDP packets I would have hoped they would just
+be distributed using the source and destination ip and port values as
+other UDP packets seem to be, but they are not.  I vaguely suspect the
+UDP tunnel handling support the card has for this since it claims to
+use the internal packet's values for RSS rather than the UDP packet
+itself for certain supported types of UDP encapsulated IP traffic, but
+not ESP in UDP, so perhaps it sees an IP packet inside a UDP packet,
+and decides to try and parse it instead, doesn't know how to handle it
+and stops without assigning any RSS value to the packet at all rather
+than falling back to treating it as a plain UDP packet.  But that's just
+guessing based on the documentation of the hardware capabilities.
+
+Here is an example of a packet that always hits queue 0:
+
+14:48:09.014360 54:ee:75:30:f1:e1 > a4:bf:01:4e:0c:87, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 3312, offset 0, flags [DF], proto UDP (17), length 160)
+    1.99.99.2.4500 > 1.99.99.1.4500: [no cksum] UDP-encap: ESP(spi=0xac11cadf,seq=0x480), length 132
+        0x0000:  4500 00a0 0cf0 4000 4011 6494 0163 6302  E.....@.@.d..cc.
+        0x0010:  0163 6301 1194 1194 008c 0000 ac11 cadf  .cc.............
+        0x0020:  0000 0480 901d 3b39 e884 0616 fed4 3e37  ......;9......>7
+        0x0030:  bb67 bca2 adac e519 c7a9 ced9 00bf 263e  .g............&>
+        0x0040:  28a6 ba38 1e8c e6e3 bbf9 e093 1c49 8154  (..8.........I.T
+        0x0050:  0d66 c1d5 2416 f4d2 26ec f5a1 773f 4ae2  .f..$...&...w?J.
+        0x0060:  8e26 0ed8 0e5f daab 06b2 aa51 2f2f e16e  .&..._.....Q//.n
+        0x0070:  22ca dd94 f499 027b 11d0 de7b 4d9d 7af1  "......{...{M.z.
+        0x0080:  f468 ae0d ad41 5c96 577d 7b44 1cc4 0ba3  .h...A\.W}{D....
+        0x0090:  9ff7 142f b159 c9d0 38e1 c460 120f f4bb  .../.Y..8..`....
+14:48:09.014439 a4:bf:01:4e:0c:87 > 54:ee:75:30:f1:e1, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 43796, offset 0, flags [none], proto UDP (17), length 160)
+    1.99.99.1.4500 > 1.99.99.2.4500: [no cksum] UDP-encap: ESP(spi=0x47f5919c,seq=0x480), length 132
+        0x0000:  4500 00a0 ab14 0000 4011 0670 0163 6301  E.......@..p.cc.
+        0x0010:  0163 6302 1194 1194 008c 0000 47f5 919c  .cc.........G...
+        0x0020:  0000 0480 106b cafb 14ee f75b 3533 16fb  .....k.....[53..
+        0x0030:  87f5 9d90 a73b 8daf 481f 22b7 2b30 b482  .....;..H.".+0..
+        0x0040:  a330 1fe4 59da a394 b48b ac77 5a96 dfac  .0..Y......wZ...
+        0x0050:  4798 793a ca7e 1af2 a9a8 2f7b 9327 d5b9  G.y:.~..../{.'..
+        0x0060:  f8d0 e761 c7b3 a85c c843 ec25 62b2 e083  ...a...\.C.%b...
+        0x0070:  f0d5 1097 736b 051a b15d e7de 7f0e b5b7  ....sk...]......
+        0x0080:  209b 4d1d af37 c1a1 09a0 a6c9 71cf 7d54  ..M..7......q.}T
+        0x0090:  55c3 2797 e622 581f 09cf 9483 2ba5 e64a  U.'.."X.....+..J
+
+This was done on 4.19.28 kernel with the i40e driver in that kernel with
+libreswan for IPsec using netkey in the kernel and nat-traversal in use.
+The packets are a ping echo and reply pair.  NVM version 3.49 and 4.00
+tried so far.
+
+No other network interfaces we have used have had this problem.  RSS has
+always just worked until now.
+
+-- 
+Len Sorensen
