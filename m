@@ -2,121 +2,139 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DF5C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38E5C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047F9206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862B3217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="W0tsRNLM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="m2Kz+qSY";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="dt4gROCK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfEAWxv (ORCPT
+        id S1726194AbfEAW53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 18:53:51 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:58254 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726126AbfEAWxv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 18:53:51 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2829AC0169;
-        Wed,  1 May 2019 22:53:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556751232; bh=MBk03IEPACXRS9nF/u/+JCyk6lPEN0xQOcBI/LToqls=;
-        h=From:To:CC:Subject:Date:From;
-        b=W0tsRNLMk9Zplp79naCLyBUECO+G1OCcPZpjnbHDQ0j4JJ21+GEc7qw+IUL4t4eRr
-         1+yJGuMtYGdk/UfpAxSIB4E3abWSMgWhwO9Aph8PFCieVnhxfEj3gdJPjOP8Z2ZcXN
-         8wJnI2j9ugEr/wzchzwc77NkVhRq2viN3muklkKavGwU4Kts6zN2vKzRqfsLh/OS+s
-         6bOH+l2mhF6Wu608/zXnG2OgPEPxiRQ+3BDZX/SDvj64DDnUduGXik2ckguV2N35ZY
-         zIqSKEjmUbxa0d8mI9A0GwJ6OEk5QM7aISq4zMtNCnqNOA2pqMHBVp1xhuWK0cBIqH
-         H/kaQMXlAt33g==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 03127A0071;
-        Wed,  1 May 2019 22:53:50 +0000 (UTC)
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.104) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 1 May 2019 15:53:49 -0700
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.105) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.103) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 2 May 2019 04:23:58 +0530
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.13.182.230) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 2 May 2019 04:23:57 +0530
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-CC:     <netdev@vger.kernel.org>, Wang Nan <wangnan0@huawei.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-snps-arc@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <arnaldo.melo@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH] tools/bpf: fix perf build error with uClibc (seen on ARC)
-Date:   Wed, 1 May 2019 15:53:29 -0700
-Message-ID: <1556751209-4778-1-git-send-email-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.13.182.230]
+        Wed, 1 May 2019 18:57:29 -0400
+Received: from node.akkea.ca ([192.155.83.177]:38768 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfEAW53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 18:57:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 068524E2050;
+        Wed,  1 May 2019 22:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1556751448; bh=87SETz9I8gVQlR+3xH3Kd2u5LAaaIkJnVBbPxK4CLlY=;
+        h=From:To:Cc:Subject:Date;
+        b=m2Kz+qSYaDJz5RNwnYiv8YseqSpwgBbPe6kYQxQ5PCnaKZvLHn0AcqAB/IV+b2l1w
+         ZT/uMUFDmrSGgvjdVtlRKhb81HdQZIeGh3r45GbcTD582fKCqiApZCzDNamyZv3ADD
+         dKgyhIOtieaCPKoM+QC6EtrewDSTIUK6rgvBO+fA=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oTmigFlXg-cN; Wed,  1 May 2019 22:57:27 +0000 (UTC)
+Received: from localhost.localdomain (198-48-167-13.cpe.pppoe.ca [198.48.167.13])
+        by node.akkea.ca (Postfix) with ESMTPSA id E31F94E204B;
+        Wed,  1 May 2019 22:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1556751447; bh=87SETz9I8gVQlR+3xH3Kd2u5LAaaIkJnVBbPxK4CLlY=;
+        h=From:To:Cc:Subject:Date;
+        b=dt4gROCKQoFh1xXyIleLnM368fcxkOXynGt6vucREcSkLeQJe+Nn5GunAjddbHwXq
+         vv7/QVBlCjUyunNdB9Tb/w9ornZjP6qvHKmvC3QssxlDhfo4bfstggdjMhNYd9+Jwq
+         mWzKuIDbm/yc19nVbtdYUteHD07eNWG+DhFwquYQ=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 0/3] Add support for the Purism Librem5 devkit
+Date:   Wed,  1 May 2019 16:57:16 -0600
+Message-Id: <20190501225719.3257-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When build perf for ARC recently, there was a build failure due to lack
-of __NR_bpf.
+The Librem5 devkit is based on the imx8mq from NXP. This is a default
+devicetree to boot the board to a command prompt.
 
-| Auto-detecting system features:
-|
-| ...                     get_cpuid: [ OFF ]
-| ...                           bpf: [ on  ]
-|
-| #  error __NR_bpf not defined. libbpf does not support your arch.
-    ^~~~~
-| bpf.c: In function 'sys_bpf':
-| bpf.c:66:17: error: '__NR_bpf' undeclared (first use in this function)
-|  return syscall(__NR_bpf, cmd, attr, size);
-|                 ^~~~~~~~
-|                 sys_bpf
+Changes since v7:
 
-The fix is to define a fallbak __NR_bpf.
+More regulators always on for USB.
+Add vbus regulator.
+Drop vbat regulator.
+Replace legacy "gpio-key,wakeup" with "wakeup-source".
+Add vbus-supply to get rid of warning
+imx8mq-usb-phy 382f0040.usb-phy: 382f0040.usb-phy supply vbus not found, using dummy regulator
 
-The obvious fix with be __arc__ specific value, but i think a better fix
-is to use the asm-generic uapi value applicable to ARC as well as any new
-arch (hopefully we don't add an old existing arch here). Otherwise I can
-just add __arc__
+Changes since v6:
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- tools/lib/bpf/bpf.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Dropped unused regulators.
+Fix regulator phandles case.
+Dropped extra whitespace.
 
-diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-index 9cd015574e83..2c5eb7928400 100644
---- a/tools/lib/bpf/bpf.c
-+++ b/tools/lib/bpf/bpf.c
-@@ -47,7 +47,10 @@
- # elif defined(__s390__)
- #  define __NR_bpf 351
- # else
--#  error __NR_bpf not defined. libbpf does not support your arch.
-+/*
-+ * Any non listed arch (new) will have to asm-generic uapi complient
-+ */
-+#  define __NR_bpf 280
- # endif
- #endif
- 
+Changes since v5:
+
+Added reviewed-by tags.
+Moved USB port links to USB controller node.
+
+Changes since v4:
+
+Compiled against linux-next next-20190415.
+Added imx8mq to the arm yaml file.
+Re-arrange regulator nodes to drop undefined supplies.
+Additional ordering for aesthetics.
+Split some long lines.
+Added lots of blank lines.
+Moved pinctl muxes to where they are used.
+Cleaned out reg defintions from regulator nodes.
+
+Changes since v3:
+
+Freshly sorted and pressed nodes.
+Change the backlight to an interpolated scale.
+Dropped i2c2.
+Dropped devkit version number to match debian MR.
+
+Changes since v2:
+
+Fixed incorrect phy-supply for the fsl-fec.
+Dropped unused regulator property.
+Fixup Makefile for linux-next.
+
+Changes since v1:
+
+Dropped config file.
+Updated the board compatible label.
+Changed node names to follow naming conventions.
+Added a more complete regulator hierachy.
+Removed unused nodes.
+Removed unknown devices.
+Fixed comment style.
+Dropped undocumented properties.
+
+Angus Ainslie (Purism) (3):
+  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+  dt-bindings: Add an entry for Purism SPC
+  dt-bindings: arm: fsl: Add the imx8mq boards
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 823 ++++++++++++++++++
+ 4 files changed, 832 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+
 -- 
-2.7.4
+2.17.1
 
