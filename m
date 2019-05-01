@@ -2,125 +2,119 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF0EC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2291FC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0ECB2081C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82632081C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="lqSXhYyi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XrWeMdcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfEARkj (ORCPT
+        id S1726394AbfEARkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:40:39 -0400
-Received: from mail-eopbgr700102.outbound.protection.outlook.com ([40.107.70.102]:34944
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726069AbfEARki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:40:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4KL1l2AfwR4SubBv0dWVJzelYRx3MFtal/g6+bVDW00=;
- b=lqSXhYyieVzcAFd8rCQI0rbCdxr/GiWLhkZz1EaRHekmrgoXaLBm2IUr3wtkplkC4dV/5m7xJkoxvddkb5AywLH/DrWV2sqHGHg32NwSUoW/SZ+OsYgwYHNeP7F3EbjBwVLwhQDts7wo2bE6gRLyhP1NhEpAQULyRR9/9ufGVdY=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1342.namprd22.prod.outlook.com (10.174.162.145) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Wed, 1 May 2019 17:40:34 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1835.018; Wed, 1 May 2019
- 17:40:34 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Ley Foon Tan <lftan@altera.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
-Subject: Re: [PATCH 4/7] dma-direct: provide generic support for uncached
- kernel segments
-Thread-Topic: [PATCH 4/7] dma-direct: provide generic support for uncached
- kernel segments
-Thread-Index: AQHU/0QKKKiJlPSrw0CLkNp0FmAaxqZWhWOAgAAC3QCAAAMrgA==
-Date:   Wed, 1 May 2019 17:40:34 +0000
-Message-ID: <20190501174033.6rj5aiopdeo4uqpw@pburton-laptop>
-References: <20190430110032.25301-1-hch@lst.de>
- <20190430110032.25301-5-hch@lst.de>
- <20190501171857.chfxqntvm6r4xrr4@pburton-laptop>
- <20190501172912.GA19375@lst.de>
-In-Reply-To: <20190501172912.GA19375@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0014.namprd07.prod.outlook.com
- (2603:10b6:a02:bc::27) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 11320ebd-f605-4a90-aa82-08d6ce5c1d45
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1342;
-x-ms-traffictypediagnostic: MWHPR2201MB1342:
-x-microsoft-antispam-prvs: <MWHPR2201MB134268D215E3D15FEB9B61A3C13B0@MWHPR2201MB1342.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00246AB517
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(346002)(136003)(39840400004)(366004)(376002)(199004)(189003)(81166006)(386003)(7736002)(6506007)(305945005)(26005)(76176011)(8676002)(186003)(102836004)(66066001)(99286004)(81156014)(2906002)(8936002)(44832011)(52116002)(7416002)(6246003)(486006)(42882007)(476003)(446003)(53936002)(11346002)(256004)(9686003)(316002)(6512007)(33716001)(58126008)(54906003)(3846002)(6116002)(71190400001)(71200400001)(14454004)(229853002)(4326008)(6436002)(68736007)(6486002)(5660300002)(66556008)(66476007)(64756008)(66446008)(66946007)(1076003)(478600001)(4744005)(73956011)(6916009)(25786009)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1342;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: n1r4pFRo4Na6zEPiDyzqPWsTDS2hTDeCJjqE0Qa6wcviofhOnEXRtzNS+omazVnnjv0dJjUUY6Lh/ePlwFFdTW7x0wLf0Xh4dv/3b4SmKv3vfD5sOeS5ICgcMvToSEw1F2+hiLfMb8qj6ScdB1TVSrJEj2H9rhnOXLMD7VOv/vyE0iZHV5cw598au47wTOOSu8OKZvvF7TnLpUxO76fyuG3jHBJyGLZRysOMPQy8E6OTxU6r6qZNQdDkKhFnd8+SknyuqKoIC1/y8Bl1VPX9mUs2COKORvQ2DvX/sPqSKRBGXYFE6dSJzs02rF4xrlT6k8TE6SO05WaM0dYMCmKxctsldETeBbJDu7eM4vt8sFWjwmD3rWlyMSAT+WnyeRKt7JvAJVOklfobmthBi/GT/1F6p2wwfYh0huHqR0YRoRo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <08C2B433C072184F9A5FA2B58FD07D3B@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 May 2019 13:40:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35996 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEARkc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:40:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=pOou/ppKBZsG8Fa0cGZSx5FVIYbiCMVXa/R+x+Q63f0=; b=XrWeMdcYvqlERkMYm3QhMrYDqy
+        /gr6kOiJkfoUzUYFzZ3WoIF4DqnqysFqXEjQgnj/tPIqW52/JQrluvxUPeAxx1QTqgaLZ/aZBYBQf
+        QHVhmew11rUsSSgj5lOGSQaFHeEIls8M3G8yt5ScY8cuIv7OWclvxcWMAlhK8yqAM7CG1iaAExSYS
+        R4wBbM/SPB2XJ4XuEmge4mYLG05NFWR8IkIri7iC4tGmztyC0OUp/yKKPREOQksWBafKFC1U4+eJf
+        exFO0d/CiGk9t8mUvNTM4CeXdbvBzHkr4jYmptYWSvH8/s1ezJtepuBcXige3corKe2cFFWwrmWEu
+        SRXXeiOg==;
+Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLtDY-0005yl-1B; Wed, 01 May 2019 17:40:28 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] x86: don't use asm-generic/ptrace.h
+Date:   Wed,  1 May 2019 13:39:42 -0400
+Message-Id: <20190501173943.5688-5-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190501173943.5688-1-hch@lst.de>
+References: <20190501173943.5688-1-hch@lst.de>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11320ebd-f605-4a90-aa82-08d6ce5c1d45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 17:40:34.5854
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1342
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Doing the indirection through macros for the regs accessors just
+makes them harder to read, so implement the helpers directly.
 
-On Wed, May 01, 2019 at 07:29:12PM +0200, Christoph Hellwig wrote:
-> On Wed, May 01, 2019 at 05:18:59PM +0000, Paul Burton wrote:
-> > I'm not so sure about this part though.
-> >=20
-> > On MIPS we currently don't clear the allocated memory with memset. Is
-> > doing that really necessary?
->=20
-> We are clearling it on mips, it is inside dma_direct_alloc_pages.
+Note that only the helpers actually used are implemented now.
 
-Ah, of course, I clearly require more caffeine :)
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/x86/include/asm/ptrace.h | 29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
-> > If it is necessary then as-is this code will clear the allocated memory
-> > using uncached writes which will be pretty slow. It would be much more
-> > efficient to perform the memset before arch_dma_prep_coherent() & befor=
-e
-> > converting ret to an uncached address.
->=20
-> Yes, we could do that.
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index 8a7fc0cca2d1..9b81ef539eb3 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -98,7 +98,6 @@ struct cpuinfo_x86;
+ struct task_struct;
+ 
+ extern unsigned long profile_pc(struct pt_regs *regs);
+-#define profile_pc profile_pc
+ 
+ extern unsigned long
+ convert_ip_to_linear(struct task_struct *child, struct pt_regs *regs);
+@@ -175,11 +174,31 @@ static inline unsigned long kernel_stack_pointer(struct pt_regs *regs)
+ }
+ #endif
+ 
+-#define GET_IP(regs) ((regs)->ip)
+-#define GET_FP(regs) ((regs)->bp)
+-#define GET_USP(regs) ((regs)->sp)
++static inline unsigned long instruction_pointer(struct pt_regs *regs)
++{
++	return regs->ip;
++}
++static inline void instruction_pointer_set(struct pt_regs *regs,
++		unsigned long val)
++{
++	regs->ip = val;
++}
++
++static inline unsigned long frame_pointer(struct pt_regs *regs)
++{
++	return regs->bp;
++}
+ 
+-#include <asm-generic/ptrace.h>
++static inline unsigned long user_stack_pointer(struct pt_regs *regs)
++{
++	return regs->sp;
++}
++
++static inline void user_stack_pointer_set(struct pt_regs *regs,
++		unsigned long val)
++{
++	regs->sp = val;
++}
+ 
+ /* Query offset/name of register from its name/offset */
+ extern int regs_query_register_offset(const char *name);
+-- 
+2.20.1
 
-Great; using cached writes would match the existing MIPS behavior.
-
-Thanks,
-    Paul
