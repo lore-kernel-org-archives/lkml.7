@@ -2,103 +2,217 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D966C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048CEC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD482054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD14E21734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eLlCOI2g"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tTkOt0eZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfEAMTF (ORCPT
+        id S1726352AbfEAMay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 08:19:05 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58058 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfEAMTF (ORCPT
+        Wed, 1 May 2019 08:30:54 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:62153 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfEAMay (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 08:19:05 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x41CInFW030028;
-        Wed, 1 May 2019 07:18:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556713129;
-        bh=9aQOi45c/EGVag76udV6doM0PRwWmZo9EP9zOsTY0/k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eLlCOI2gErzAP1SeQMBk3RLC8bHUw3IqTNbW7qY1aCEy6pK/EspZStjcFEV/8hlTj
-         9MmJn6ftIpzYuNa6jhRILkZRkVrg5phmQwqRYCZyyWRtcmOMkcUYiX4r58Uv+T37Qr
-         XOVNJracOfkqDKbYB/ZNLiQplBY6IzhY389B1/XY=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x41CIngO040408
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 May 2019 07:18:49 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 1 May
- 2019 07:18:49 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 1 May 2019 07:18:48 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x41CImd7003631;
-        Wed, 1 May 2019 07:18:48 -0500
-Subject: Re: [PATCH v3 3/3] backlight: lm3630a: add firmware node support
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     Brian Masney <masneyb@onstation.org>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>,
-        <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>,
-        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <jonathan@marek.ca>
-References: <20190415072905.2861-1-masneyb@onstation.org>
- <20190415072905.2861-4-masneyb@onstation.org>
- <0e5e26ba-cf98-913e-8e76-e988a86dc0d1@ti.com> <20190501082627.GA2971@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <fbf41c1b-21c7-a997-f88c-3d29ccd1b42a@ti.com>
-Date:   Wed, 1 May 2019 07:18:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 08:30:54 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x41CUdm4002354;
+        Wed, 1 May 2019 21:30:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x41CUdm4002354
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556713840;
+        bh=ZOz4emb78+mGztbgJdzsGMxS17b8QGJQmYkG176lPJQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tTkOt0eZt6TX4n/BbI6VYt1zXYFqh3fsD2XTR2aELQk6TUTxj9kaltiMoEYN6p9UX
+         s0Z+VpkfeF3Z9lR46rIzMvyj6jUF49uYGLHVxc3tcHO5j3/f36l1rizL3OIa6r/q+v
+         hX78G3wP0nDzdeNIwmpRBa9vDaGPICHX7scAlPu7m7Ow6UFd5vK+syS/Q7wVh0V3Hj
+         TM25wVvrVe//VM3cd7fczwyNHl95Z1qMUCtQBg938o/gjRLj2W9XIitRaG2yw0Czzl
+         BcqAEObaY8l8PecLIuZQ2YeWGYGGnn/u+W9jZijNevkAckzF/ggJ63qixwTtx9Tjzx
+         +6oaLOnGNoeXA==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id x2so3772274vkx.13;
+        Wed, 01 May 2019 05:30:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAW4zkFIzwiAtrowGouaZ+Vrz/bxXEwSf10ELIALSAornnBSP6VL
+        MrVtLE0UWcBThEj2Ar9txs1RM8BX7gRHdLjanjw=
+X-Google-Smtp-Source: APXvYqzUi++U/dY9Kig0p02O9OfqMKCRQi4IlXNh5LN6CXzcHdNrASiQK9qTiXO/Rwvr22mijxSRLnneU2OtXa1+3Lo=
+X-Received: by 2002:a1f:9d0a:: with SMTP id g10mr10052011vke.0.1556713838634;
+ Wed, 01 May 2019 05:30:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190501082627.GA2971@amd>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190430010037.6216-1-natechancellor@gmail.com>
+ <CAK8P3a0gAnruPgGMFcAfoHpj_zDnsn-RJjYiYUXDDj-CrwoO8A@mail.gmail.com>
+ <20190430093352.GA16941@archlinux-i9> <CAK8P3a20t1f6Fmjd7HcGVSXCxx9SP2q7_WpZyj16MgnJe8m8zQ@mail.gmail.com>
+ <20190430205411.GA5628@archlinux-i9>
+In-Reply-To: <20190430205411.GA5628@archlinux-i9>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 1 May 2019 21:30:02 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAREXfnvY9PWBSHa8HApy1NohrDo9Z2eZUwyxO_P-KUrxQ@mail.gmail.com>
+Message-ID: <CAK7LNAREXfnvY9PWBSHa8HApy1NohrDo9Z2eZUwyxO_P-KUrxQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Enable -Wsometimes-uninitialized
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On Wed, May 1, 2019 at 5:54 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Tue, Apr 30, 2019 at 11:46:44AM +0200, Arnd Bergmann wrote:
+> > On Tue, Apr 30, 2019 at 11:33 AM Nathan Chancellor
+> > <natechancellor@gmail.com> wrote:
+> > > On Tue, Apr 30, 2019 at 09:16:50AM +0200, Arnd Bergmann wrote:
+> > > > On Tue, Apr 30, 2019 at 3:01 AM Nathan Chancellor
+> > > > <natechancellor@gmail.com> wrote:
+> > > > >
+> > > > > This is Clang's version of GCC's -Wmaybe-uninitialized. Up to this
+> > > > > point, it has not been used because -Wuninitialized has been disabled,
+> > > > > which also turns off -Wsometimes-uninitialized, meaning that we miss out
+> > > > > on finding some bugs [1]. In my experience, it appears to be more
+> > > > > accurate than GCC and catch some things that GCC can't.
+> > > > >
+> > > > > All of these warnings have now been fixed in -next across arm, arm64,
+> > > > > and x86_64 defconfig/allyesconfig so this should be enabled for everyone
+> > > > > to prevent more from easily creeping in.
+> > > > >
+> > > > > As of next-20190429:
+> > > > >
+> > > > > $ git log --oneline --grep="sometimes-uninitialized" | wc -l
+> > > > > 45
+> > > > >
+> > > > > [1]: https://lore.kernel.org/lkml/86649ee4-9794-77a3-502c-f4cd10019c36@lca.pw/
+> > > > >
+> > > > > Link: https://github.com/ClangBuiltLinux/linux/issues/381
+> > > > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > > > ---
+> > > > >
+> > > > > Masahiro, I am not sure how you want to handle merging this with regards
+> > > > > to all of the patches floating around in -next but I wanted to send this
+> > > > > out to let everyone know this is ready to be turned on.
+> > > > >
+> > > > > Arnd, are there many remaning -Wsometimes-uninitialized warnings in
+> > > > > randconfigs?
+> > > >
+> > > > No, I don't see any with the patches that I submitted. I haven't checked
+> > > > if there are any that still need to get merged into linux-next though.
+> > > >
+> > > > > diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> > > > > index 768306add591..f4332981ea85 100644
+> > > > > --- a/scripts/Makefile.extrawarn
+> > > > > +++ b/scripts/Makefile.extrawarn
+> > > > > @@ -72,5 +72,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, format)
+> > > > >  KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
+> > > > >  KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
+> > > > >  KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
+> > > > > +KBUILD_CFLAGS += $(call cc-option, -Wsometimes-uninitialized)
+> > > > >  endif
+> > > > >  endif
+> > > >
+> > > > This doesn't look right. Shouldn't you remove the line that turns off
+> > > > -Wuninitilized
+> > > > instead of adding only -Wsometimes-uninitialized?
+> > >
+> > > Well, there are still some outstanding issues with -Wuninitialized
+> > > right? Like with DECLARE_WAIT_QUEUE_HEAD_ONSTACK? I'd rather not
+> > > add warnings to the build but if you feel strongly, we could turn it on
+> > > then fix them after.
+> >
+> > Ah, I thought they were all fixed, as I don't see any remaining warnings
+> > in my tree. It seems that I never send this workaround for
+> > DECLARE_WAIT_QUEUE_HEAD_ONSTACK:
+> >
+> > diff --git a/include/linux/wait.h b/include/linux/wait.h
+> > index 5f3efabc36f4..cbe1ea0fce84 100644
+> > --- a/include/linux/wait.h
+> > +++ b/include/linux/wait.h
+> > @@ -68,8 +68,15 @@ extern void __init_waitqueue_head(struct
+> > wait_queue_head *wq_head, const char *n
+> >         } while (0)
+> >
+> >  #ifdef CONFIG_LOCKDEP
+> > -# define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) \
+> > -       ({ init_waitqueue_head(&name); name; })
+> > +# define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) {
+> >                  \
+> > +       .lock           = __SPIN_LOCK_UNLOCKED(name.lock),
+> >          \
+> > +       .head           = ({
+> >          \
+> > +               static struct lock_class_key __key;
+> >          \
+> > +               lockdep_set_class_and_name(&(name).lock, &__key, #
+> > name);       \
+> > +               (struct list_head){ &(name).head, &(name).head };
+> >          \
+> > +       }),
+> >          \
+> > +}
+> > +
+> >  # define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
+> >         struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
+> >  #else
+> >
+> > Are there any others you see?
+> >
+> >       Arnd
+>
+> After applying that diff by hand and another patch that was accepted but
+> not in -next (https://lore.kernel.org/lkml/20190325125147.1436083-1-arnd@arndb.de/),
+> I see three other warnings:
+>
+> arm, arm64, and x86_64 allyesconfig:
+>
+> drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: error: variable 'data'
+> is uninitialized when used here [-Werror,-Wuninitialized]
+>
+> https://github.com/ClangBuiltLinux/linux/issues/464
+>
+> x86 allyesconfig:
+>
+> mm/kasan/common.c:490:40: error: variable 'tag' is uninitialized when
+> used here [-Werror,-Wuninitialized]
+>
+> https://github.com/ClangBuiltLinux/linux/issues/465
+>
+> drivers/misc/sgi-xp/xpc_partition.c:73:14: error: variable 'buf' is
+> uninitialized when used within its own initialization
+> [-Werror,-Wuninitialized]
+>
+> https://github.com/ClangBuiltLinux/linux/issues/466
+>
+> These shouldn't be difficult to fix then we can turn both uninitialized
+> warnings.
+>
+> Please let me know if you have any input with regards to fixing them, I
+> am going to try to look at them later today.
+>
+> Nathan
 
-On 5/1/19 3:26 AM, Pavel Machek wrote:
-> Hi!
-> 
->>> @@ -396,13 +506,20 @@ static int lm3630a_probe(struct i2c_client *client,
->>>  				     GFP_KERNEL);
->>>  		if (pdata == NULL)
->>>  			return -ENOMEM;
->>> +
->>>  		/* default values */
->>> -		pdata->leda_ctrl = LM3630A_LEDA_ENABLE;
->>> -		pdata->ledb_ctrl = LM3630A_LEDB_ENABLE;
->>> +		pdata->leda_ctrl = LM3630A_LEDA_DISABLE;
->>> +		pdata->ledb_ctrl = LM3630A_LEDB_DISABLE;
->>
->> This is not needed since default is disabled and kzalloc will set these to 0
-> 
-> Let compiler do this kind of optimalizations. Code makes sense as-is.
-> 
 
-Yes the code makes sense but it is unnecessary.
+I will postpone this patch.
 
-Dan
 
-> 									Pavel
-> 
+It looks like we agreed to fix warnings first,
+then remove $(call cc-disable-warning, uninitialized).
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
