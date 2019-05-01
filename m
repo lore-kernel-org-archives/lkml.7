@@ -2,101 +2,145 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ED7C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958F2C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16772085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4EF21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfEAPNW (ORCPT
+        id S1726844AbfEAPQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:13:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35382 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfEAPNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:13:22 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1E9B53082134;
-        Wed,  1 May 2019 15:13:21 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 82881629DB;
-        Wed,  1 May 2019 15:13:15 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  1 May 2019 17:13:19 +0200 (CEST)
-Date:   Wed, 1 May 2019 17:13:12 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Colascione <dancol@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>, kernel-team@android.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        KJ Tsanaktsidis <ktsanaktsidis@zendesk.com>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH v2 1/2] Add polling support to pidfd
-Message-ID: <20190501151312.GA30235@redhat.com>
-References: <20190430162154.61314-1-joel@joelfernandes.org>
+        Wed, 1 May 2019 11:16:20 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.161]:27075 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726488AbfEAPQU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 11:16:20 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id C4A6698B7
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 10:16:18 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Lqy2hj5GDYTGMLqy2hnocb; Wed, 01 May 2019 10:16:18 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=59360 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLqy1-001KSh-O8; Wed, 01 May 2019 10:16:17 -0500
+Date:   Wed, 1 May 2019 10:16:15 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH][next] rtw88: phy: mark expected switch fall-throughs
+Message-ID: <20190501151615.GA18557@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190430162154.61314-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 01 May 2019 15:13:21 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLqy1-001KSh-O8
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.119.203]:59360
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/30, Joel Fernandes (Google) wrote:
->
-> +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
-> +{
-> +	struct task_struct *task;
-> +	struct pid *pid = file->private_data;
-> +	int poll_flags = 0;
-> +
-> +	poll_wait(file, &pid->wait_pidfd, pts);
-> +
-> +	rcu_read_lock();
-> +	task = pid_task(pid, PIDTYPE_PID);
-> +	WARN_ON_ONCE(task && !thread_group_leader(task));
-                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-Ah, this is not right, we can race with de_thread() which changes the leader,
-in particular it does leader->exit_signal = -1 to indicate that this thread is
-no longer a group leader, but pid_task() can return the old leader.
+This patch fixes the following warnings:
 
-We are going to check thread_group_empty() below, it won't be true in this case,
-so this race should not make any harm.
+drivers/net/wireless/realtek/rtw88/phy.c: In function ‘rtw_get_channel_group’:
+./include/linux/compiler.h:77:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+ # define unlikely(x) __builtin_expect(!!(x), 0)
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/asm-generic/bug.h:125:2: note: in expansion of macro ‘unlikely’
+  unlikely(__ret_warn_on);     \
+  ^~~~~~~~
+drivers/net/wireless/realtek/rtw88/phy.c:907:3: note: in expansion of macro ‘WARN_ON’
+   WARN_ON(1);
+   ^~~~~~~
+drivers/net/wireless/realtek/rtw88/phy.c:908:2: note: here
+  case 1:
+  ^~~~
+In file included from ./include/linux/bcd.h:5,
+                 from drivers/net/wireless/realtek/rtw88/phy.c:5:
+drivers/net/wireless/realtek/rtw88/phy.c: In function ‘phy_get_2g_tx_power_index’:
+./include/linux/compiler.h:77:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+ # define unlikely(x) __builtin_expect(!!(x), 0)
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/asm-generic/bug.h:125:2: note: in expansion of macro ‘unlikely’
+  unlikely(__ret_warn_on);     \
+  ^~~~~~~~
+drivers/net/wireless/realtek/rtw88/phy.c:1021:3: note: in expansion of macro ‘WARN_ON’
+   WARN_ON(1);
+   ^~~~~~~
+drivers/net/wireless/realtek/rtw88/phy.c:1022:2: note: here
+  case RTW_CHANNEL_WIDTH_20:
+  ^~~~
 
-Just remove this WARN_ON(). We can't use has_group_leader_pid(), it can return
-false if pid_task() returns the new leader.
+Warning level 3 was used: -Wimplicit-fallthrough=3
 
-Otherwise I see no problems.
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-Oleg.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/wireless/realtek/rtw88/phy.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/wireless/realtek/rtw88/phy.c b/drivers/net/wireless/realtek/rtw88/phy.c
+index 35a35dbca85f..4381b360b5b5 100644
+--- a/drivers/net/wireless/realtek/rtw88/phy.c
++++ b/drivers/net/wireless/realtek/rtw88/phy.c
+@@ -905,6 +905,7 @@ static u8 rtw_get_channel_group(u8 channel)
+ 	switch (channel) {
+ 	default:
+ 		WARN_ON(1);
++		/* fall through */
+ 	case 1:
+ 	case 2:
+ 	case 36:
+@@ -1019,6 +1020,7 @@ static u8 phy_get_2g_tx_power_index(struct rtw_dev *rtwdev,
+ 	switch (bandwidth) {
+ 	default:
+ 		WARN_ON(1);
++		/* fall through */
+ 	case RTW_CHANNEL_WIDTH_20:
+ 		tx_power += pwr_idx_2g->ht_1s_diff.bw20 * factor;
+ 		if (above_2ss)
+@@ -1062,6 +1064,7 @@ static u8 phy_get_5g_tx_power_index(struct rtw_dev *rtwdev,
+ 	switch (bandwidth) {
+ 	default:
+ 		WARN_ON(1);
++		/* fall through */
+ 	case RTW_CHANNEL_WIDTH_20:
+ 		tx_power += pwr_idx_5g->ht_1s_diff.bw20 * factor;
+ 		if (above_2ss)
+-- 
+2.21.0
 
