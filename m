@@ -2,138 +2,103 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD8AC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43974C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEE121670
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9AF21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AvZHXP3d";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A6ohC+RU"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WsQ5tCPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfEAMAO (ORCPT
+        id S1726407AbfEAMGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 08:00:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54532 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfEAMAN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 08:00:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 51EDE6090F; Wed,  1 May 2019 12:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556712012;
-        bh=9rtvZnnz1whlALLucRxf79SHTv6CCJrhXnJEzAtE3+I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AvZHXP3dipofRkwuHPfMA6dGubTH1LGIDWoqPUF5lRechhCahm989QFC9bdE2zJvF
-         9z73DVxmds4QLGhnIvORlI8Q627787VCQvVxKh4Eapf2ay+0YtWikuJpDao7TNexaH
-         yQxPWLOdc25hEmheL3nSDuMsyAEP8oe7ECVXK+qI=
-Received: from prsood-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 1 May 2019 08:06:19 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55957 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbfEAMGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 08:06:18 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: prsood@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0AF2E60863;
-        Wed,  1 May 2019 12:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556712011;
-        bh=9rtvZnnz1whlALLucRxf79SHTv6CCJrhXnJEzAtE3+I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6ohC+RUAFeMno2zutZ2eD13JHfJbxe+GzFW3Cy0yyB2sUNFRyrs7/T/wTUfDG7BL
-         Mzeb70n0v4dgtiCwrhf1XKRBdHY1YuU240F6Ga+2hFNDW4mUEG0rDgnhugQacV36cK
-         fvDOyVSS+e5fkFgXhGbxbdgsB41EwCJD7AVb4rEo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0AF2E60863
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
-From:   Prateek Sood <prsood@codeaurora.org>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org
-Cc:     sramana@codeaurora.org, prsood@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] drivers: core: Remove glue dirs early only when refcount is 1
-Date:   Wed,  1 May 2019 17:29:59 +0530
-Message-Id: <1556711999-16898-1-git-send-email-prsood@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <20190501065313.GA30616@kroah.com>
-References: <20190501065313.GA30616@kroah.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vHDQ6w2kz9sNQ;
+        Wed,  1 May 2019 22:06:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556712375;
+        bh=L4xIXdsKIOlYQtIGuIRuPLfaYR8V1c0iZE8OTmuXKkA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WsQ5tCPxvP6YMHDc+pzNUP4lgYdEuGKs/YgHJLZkW6wW2WFlcMOabinBuJPxIgMsq
+         4XuQ5BqGoxeM/aEoGEQgAo5xvNZeWo9eOjD+vY0/GUp7SwCD+R6i18/iVQ014FUkaw
+         knh5re4uaFghK3tUx0pTFjz6X3UF/BqHJd7ZLxhsfsDLIgheuNLrlZqjo1HPriEESk
+         yv+vLTm2oab5jCrM+eCTmIar1iWY2tjSK86tyqgofVVRNOmGkR9eZdGEoBECm9ejMS
+         58+fWYUbWxN73KTKxs7K44oYDpX1sFcyGnshlvYzP+H/LAz5yMaGONzCE81XdXOSkk
+         ACPoAid5kubfg==
+Date:   Wed, 1 May 2019 22:06:13 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: linux-next: Fixes tag needs some work in the kvm-fixes tree
+Message-ID: <20190501220613.635a5bf8@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Uxctia6sdY12mvb7htqdSoi"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While loading firmware blobs parallely in different threads, it is possible
-to free sysfs node of glue_dirs in device_del() from a thread while another
-thread is trying to add subdir from device_add() in glue_dirs sysfs node.
+--Sig_/Uxctia6sdY12mvb7htqdSoi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-    CPU1                                           CPU2
-fw_load_sysfs_fallback()
-  device_add()
-    get_device_parent()
-      class_dir_create_and_add()
-        kobject_add_internal()
-          create_dir() // glue_dir
+Hi all,
 
-                                           fw_load_sysfs_fallback()
-                                             device_add()
-                                               get_device_parent()
-                                                 kobject_get() //glue_dir
+In commit
 
-  device_del()
-    cleanup_glue_dir()
-      kobject_del()
+  e8ab8d24b488 ("KVM: nVMX: Fix size checks in vmx_set_nested_state")
 
-                                               kobject_add()
-                                                 kobject_add_internal()
-                                                   create_dir() // in glue_dir
-                                                     kernfs_create_dir_ns()
+Fixes tag
 
-       sysfs_remove_dir() //glue_dir->sd=NULL
-       sysfs_put() // free glue_dir->sd
+  Fixes: 8fcc4b5923af5de58b80b53a069453b135693304
 
-                                                       kernfs_new_node()
-                                                         kernfs_get(glue_dir)
+has these problem(s):
 
-Fix this race by making sure that kernfs_node for glue_dir is released only
-when refcount for glue_dir kobj is 1.
+  - missing subject
 
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+Did you mean
 
----
+Fixes: 8fcc4b5923af ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
 
-Changes from v2->v3:
- - Added patch version change related comments.
+You can just use:
 
-Changes from v1->v2:
- - Updated callstack from _request_firmware_load() to fw_load_sysfs_fallback().
+  git log -1 --format=3D'Fixes: %h ("%s")' <commit>
 
+--=20
+Cheers,
+Stephen Rothwell
 
- drivers/base/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+--Sig_/Uxctia6sdY12mvb7htqdSoi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4aeaa0c..3955d07 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1820,12 +1820,15 @@ static inline struct kobject *get_glue_dir(struct device *dev)
-  */
- static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
- {
-+	unsigned int refcount;
-+
- 	/* see if we live in a "glue" directory */
- 	if (!live_in_glue_dir(glue_dir, dev))
- 		return;
- 
- 	mutex_lock(&gdp_mutex);
--	if (!kobject_has_children(glue_dir))
-+	refcount = kref_read(&glue_dir->kref);
-+	if (!kobject_has_children(glue_dir) && !--refcount)
- 		kobject_del(glue_dir);
- 	kobject_put(glue_dir);
- 	mutex_unlock(&gdp_mutex);
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzJi7UACgkQAVBC80lX
+0GxOngf+PrnVpQsVNa+lQCveDJpr1DxQwBxQwnH6T+Z5BAKNbEhVa0YhGcB8Kv+I
+WrHRP/9+Y2xk1k6T9qaWTWU7DtG7bUuS+CQCf3MpHjAg4oMJ34rrl5muW/8x8Fgs
+8jdISLjNuRUZplcilZ+l0CmEOY2OuyMwDQ+IAq/0wwVmG3W9KViwLq764SqAnmbw
+n87vfS+9hUB5jo50pWW7TMaAKTkfhvBSm5XsudZZ97g4M/ABMaXFqjXVlJFug3IX
+3AF0fYzS1Y5vbJ08NCPG72FQd/VZTqpQftT6bO0sZDSRKj0M7H6zEGcrKAutob/Z
+E1Z8aXcfTO7sEBtI4mKKjeZIO0xaUg==
+=kmKd
+-----END PGP SIGNATURE-----
+
+--Sig_/Uxctia6sdY12mvb7htqdSoi--
