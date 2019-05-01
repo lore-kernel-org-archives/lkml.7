@@ -2,178 +2,166 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52CAC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B61C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E992081C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662CF2054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfEARmJ (ORCPT
+        id S1726209AbfEARoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:42:09 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.212]:27390 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726125AbfEARmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:42:08 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id CA507400D6A9C
-        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 12:42:06 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id LtF8hlZTcYTGMLtF8hqHic; Wed, 01 May 2019 12:42:06 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.203] (port=40056 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hLtF8-002WgJ-4b; Wed, 01 May 2019 12:42:06 -0500
-Subject: Re: [PATCH net-next] can: kvaser_usb: Use struct_size() in
- alloc_candev()
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190208031035.GA2665@embeddedor>
- <1220cd8d-913f-934b-9c4d-26f4012c3150@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <524a265c-21fb-72e1-e077-dd51d8807751@embeddedor.com>
-Date:   Wed, 1 May 2019 12:42:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 13:44:37 -0400
+Received: from muru.com ([72.249.23.125]:47802 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbfEARoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:44:37 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id B2AB6805C;
+        Wed,  1 May 2019 17:44:51 +0000 (UTC)
+Date:   Wed, 1 May 2019 10:44:31 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "kernelci.org bot" <bot@kernelci.org>, Tejun Heo <tj@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
+        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org
+Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
+Message-ID: <20190501174431.GL8007@atomide.com>
+References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
+ <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
+ <20190501162944.GW8004@atomide.com>
+ <20190501164444.iclxlzrxofqnj4bn@linutronix.de>
+ <20190501165224.GK8007@atomide.com>
+ <20190501170125.xjlwdyqtp5oxx2mb@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1220cd8d-913f-934b-9c4d-26f4012c3150@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.203
-X-Source-L: No
-X-Exim-ID: 1hLtF8-002WgJ-4b
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:40056
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190501170125.xjlwdyqtp5oxx2mb@linutronix.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-
-Friendly ping(second one):
-
-Who can take this?
-
-Thanks
---
-Gustavo
-
-On 2/25/19 6:48 PM, Gustavo A. R. Silva wrote:
-> Hi all,
+* Sebastian Andrzej Siewior <bigeasy@linutronix.de> [190501 17:01]:
+> On 2019-05-01 09:52:24 [-0700], Tony Lindgren wrote:
+> > > > Oh interesting thanks for letting me know. Next boots fine for me here
+> > > > with NFSroot on BBB.
+> > > > 
+> > > > Do you have some output on what happens so I can investigate?
+> > > 
+> > > Nope, the console remains dark.
+> > 
+> > OK. Can you please email me your .config and the kernel cmdline you're
+> > using? I'll try to reproduce that one here.
 > 
-> Friendly ping:
+> This is "multi_v7_defconfig+CONFIG_SMP=n" and my earlyprintk vanished.
+> So with this added:
+> |[    0.000000] Booting Linux on physical CPU 0x0
+> |[    0.000000] Linux version 5.1.0-rc7-next-20190501 (bigeasy@flow) (gcc version 8.3.0 (Debian 8.3.0-7)) #29 Wed May 1 18:55:24 CEST 2019
+> |[    0.000000] CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c5387d
+> |[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+> |[    0.000000] OF: fdt: Machine model: TI AM335x BeagleBone Black
+> |[    0.000000] printk: bootconsole [earlycon0] enabled
+> |[    0.000000] Memory policy: Data cache writeback
+> |[    0.000000] efi: Getting EFI parameters from FDT:
+> |[    0.000000] efi: UEFI not found.
+> |[    0.000000] cma: Reserved 64 MiB at 0x9b800000
+> |[    0.000000] CPU: All CPU(s) started in SVC mode.
+> |[    0.000000] AM335X ES2.0 (neon)
+> |[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 129540
+> |[    0.000000] Kernel command line: console=ttyO0,115200n8 root=/dev/mmcblk1p2 rootwait coherent_pool=1M net.ifnames=0 earlyprintk
+
+Hmm so I tried without "earlycon" in command line thinking it might be
+happening with just "earlyprintk" but still no luck.
+
+BTW, in general you might want to update your kernel command line
+options to:
+
+debug earlyprintk earlycon
+
+As that way you get early output without CONFIG_DEBUG_LL=y
+with earlycon that should be enabled by default already.
+
+> |[    1.073661] Unhandled fault: external abort on non-linefetch (0x1028) at 0xfa1cc000
+> |[    1.081518] pgd = (ptrval)
+> |[    1.084285] [fa1cc000] *pgd=48011452(bad)
+> |[    1.088398] Internal error: : 1028 [#1] ARM
+> |[    1.092681] Modules linked in:
+> |[    1.095814] CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-rc7-next-20190501 #29
+> |[    1.103300] Hardware name: Generic AM33XX (Flattened Device Tree)
+> |[    1.109560] PC is at sysc_probe+0x958/0x10a4
+> |[    1.113932] LR is at sysc_probe+0x928/0x10a4
+> |[    1.118302] pc : [<c0644e38>]    lr : [<c0644e08>]    psr: 60000013
+> |[    1.124720] sp : db0b1db8  ip : 00000013  fp : c162ac60
+> |[    1.130069] r10: 00000000  r9 : 00000028  r8 : 00000001
+> |[    1.135418] r7 : 00000000  r6 : db191210  r5 : c1604048  r4 : db345940
+> |[    1.142103] r3 : fa1cc000  r2 : 00000000  r1 : 00000000  r0 : 00000000
+> |[    1.148793] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+> |[    1.156103] Control: 10c5387d  Table: 80204019  DAC: 00000051
+> |[    1.161987] Process swapper (pid: 1, stack limit = 0x(ptrval))
+> |…
+> |[    1.331712] [<c0644e38>] (sysc_probe) from [<c08f027c>] (platform_drv_probe+0x48/0x98)
+> |[    1.339831] [<c08f027c>] (platform_drv_probe) from [<c08ee41c>] (really_probe+0xf0/0x2c8)
+> |[    1.348216] [<c08ee41c>] (really_probe) from [<c08ee754>] (driver_probe_device+0x60/0x16c)
+> |[    1.356688] [<c08ee754>] (driver_probe_device) from [<c08eea00>] (device_driver_attach+0x58/0x60)
+> |[    1.365782] [<c08eea00>] (device_driver_attach) from [<c08eea60>] (__driver_attach+0x58/0xcc)
+> |[    1.374521] [<c08eea60>] (__driver_attach) from [<c08ec8d8>] (bus_for_each_dev+0x74/0xb4)
+> |[    1.382903] [<c08ec8d8>] (bus_for_each_dev) from [<c08ed944>] (bus_add_driver+0x1b8/0x1d8)
+> |[    1.391374] [<c08ed944>] (bus_add_driver) from [<c08ef394>] (driver_register+0x74/0x108)
+> |[    1.399672] [<c08ef394>] (driver_register) from [<c0302d88>] (do_one_initcall+0x50/0x1a4)
+> |[    1.408064] [<c0302d88>] (do_one_initcall) from [<c1401064>] (kernel_init_freeable+0x1c4/0x25c)
+> |[    1.416989] [<c1401064>] (kernel_init_freeable) from [<c0dedba4>] (kernel_init+0x8/0x10c)
+> |[    1.425373] [<c0dedba4>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
+> |[    1.433127] Exception stack(0xdb0b1fb0 to 0xdb0b1ff8)
+> |[    1.438301] 1fa0:                                     00000000 00000000 00000000 00000000
+> |[    1.446683] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> |[    1.455063] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> |[    1.461845] Code: e3130004 1a000126 e5943014 e0833001 (e5930000) 
+> |[    1.468105] ---[ end trace 5481d6c45bd9fae0 ]---
+> |[    1.472934] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+> |[    1.480784] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
 > 
-> Who can take this?
+> with  arm-linux-gnueabihf-addr2line -i c0644e38 -e vmlinux
+> | arch/arm/include/asm/io.h:117
+> | drivers/bus/ti-sysc.c:117
+> | drivers/bus/ti-sysc.c:132
+> | drivers/bus/ti-sysc.c:1361
+> | drivers/bus/ti-sysc.c:2117
 > 
-> Thanks
-> --
-> Gustavo
-> 
-> On 2/7/19 9:10 PM, Gustavo A. R. Silva wrote:
->> One of the more common cases of allocation size calculations is finding
->> the size of a structure that has a zero-sized array at the end, along
->> with memory for some number of elements for that array. For example:
->>
->> struct foo {
->>     int stuff;
->>     void *entry[];
->> };
->>
->> instance = alloc(sizeof(struct foo) + count * sizeof(void *));
->>
->> Instead of leaving these open-coded and prone to type mistakes, we can
->> now use the new struct_size() helper:
->>
->> instance = alloc(struct_size(instance, entry, count));
->>
->> This code was detected with the help of Coccinelle.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c b/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
->> index c89c7d4900d7..0f1d3e807d63 100644
->> --- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
->> +++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
->> @@ -643,8 +643,7 @@ static int kvaser_usb_init_one(struct kvaser_usb *dev,
->>  			return err;
->>  	}
->>  
->> -	netdev = alloc_candev(sizeof(*priv) +
->> -			      dev->max_tx_urbs * sizeof(*priv->tx_contexts),
->> +	netdev = alloc_candev(struct_size(priv, tx_contexts, dev->max_tx_urbs),
->>  			      dev->max_tx_urbs);
->>  	if (!netdev) {
->>  		dev_err(&dev->intf->dev, "Cannot alloc candev\n");
->>
+> Does this help?
+
+Yes getting closer thanks. Can you please boot one more time with
+the following debug patch that sould confirm which target module
+during probing triggers the abort?
+
+Looking at the oops 0xfa1cc000, so 0x481cc000 I guess which is d_can0?
+
+Regards,
+
+Tony
+
+8< ------------------
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -2069,6 +2069,8 @@ static int sysc_probe(struct platform_device *pdev)
+ 	struct sysc *ddata;
+ 	int error;
+ 
++	dev_info(&pdev->dev, "probing\n");
++
+ 	ddata = devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+ 		return -ENOMEM;
