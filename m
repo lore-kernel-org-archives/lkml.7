@@ -2,29 +2,29 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E18C43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35DAC46460
 	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 09:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D31A21670
+	by mail.kernel.org (Postfix) with ESMTP id C2F91217D4
 	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 09:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbfEAJsR (ORCPT
+        id S1726357AbfEAJsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 05:48:17 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55028 "EHLO huawei.com"
+        Wed, 1 May 2019 05:48:21 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55024 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726193AbfEAJsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 05:48:17 -0400
+        id S1726145AbfEAJsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 05:48:18 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CCCB721BE0C0F1547E36;
+        by Forcepoint Email with ESMTP id BC752D90602CEF28528A;
         Wed,  1 May 2019 17:48:14 +0800 (CST)
 Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 1 May 2019 17:48:08 +0800
+ 14.3.439.0; Wed, 1 May 2019 17:48:06 +0800
 From:   Zenghui Yu <yuzenghui@huawei.com>
 To:     <linux-arm-kernel@lists.infradead.org>,
         <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
@@ -35,12 +35,10 @@ CC:     <marc.zyngier@arm.com>, <christoffer.dall@arm.com>,
         <julien.thierry@arm.com>, <suzuki.poulose@arm.com>,
         <steve.capper@arm.com>, <wanghaibin.wang@huawei.com>,
         Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH 2/5] KVM: arm/arm64: Re-factor building the stage2 page table entries
-Date:   Wed, 1 May 2019 09:44:24 +0000
-Message-ID: <1556703867-22396-3-git-send-email-yuzenghui@huawei.com>
+Subject: [RFC PATCH 0/5] KVM: arm64: Add support for contiguous PTE/PMD hugepages at stage2
+Date:   Wed, 1 May 2019 09:44:22 +0000
+Message-ID: <1556703867-22396-1-git-send-email-yuzenghui@huawei.com>
 X-Mailer: git-send-email 2.6.4.windows.1
-In-Reply-To: <1556703867-22396-1-git-send-email-yuzenghui@huawei.com>
-References: <1556703867-22396-1-git-send-email-yuzenghui@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.184.12.158]
@@ -50,126 +48,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we're going to support creating CONT_{PTE,PMD}_SIZE huge mappings in
-user_mem_abort(), the logic to check vma_pagesize and build page table
-entries will become longer, and looks almost the same (but actually they
-dont). Refactor this part to make it a bit cleaner.
+Currently, we support the following page sizes at stage2:
 
-Add contiguous as a parameter of stage2_build_{pmd,pte}, to indicate
-if we're creating contiguous huge mappings.
+                PTE     PMD     PUD
+               -----   -----   -----
+ 4K granule:     4K      2M      1G
+16K granule:    16K     32M
+64K granule:    64K    512M
 
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
- virt/kvm/arm/mmu.c | 81 ++++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 57 insertions(+), 24 deletions(-)
+And we have Contiguous bit[52] in stage2 VMSAv8-64 block and page
+descriptors. As ARM ARM said, when the value of the Contiguous bit
+is 1, it indicates that the entry is one of a number of adjacent
+translation table entries that point to a contiguous output address
+range.
 
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 27c9583..cf8b035 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1616,6 +1616,56 @@ static void kvm_send_hwpoison_signal(unsigned long address,
- 	send_sig_mceerr(BUS_MCEERR_AR, (void __user *)address, lsb, current);
- }
- 
-+static pud_t stage2_build_pud(kvm_pfn_t pfn, pgprot_t mem_type, bool writable,
-+			      bool needs_exec)
-+{
-+	pud_t new_pud = kvm_pfn_pud(pfn, mem_type);
-+
-+	new_pud = kvm_pud_mkhuge(new_pud);
-+	if (writable)
-+		new_pud = kvm_s2pud_mkwrite(new_pud);
-+
-+	if (needs_exec)
-+		new_pud = kvm_s2pud_mkexec(new_pud);
-+
-+	return new_pud;
-+}
-+
-+static pmd_t stage2_build_pmd(kvm_pfn_t pfn, pgprot_t mem_type, bool writable,
-+			      bool needs_exec, bool contiguous)
-+{
-+	pmd_t new_pmd = kvm_pfn_pmd(pfn, mem_type);
-+
-+	new_pmd = kvm_pmd_mkhuge(new_pmd);
-+	if (writable)
-+		new_pmd = kvm_s2pmd_mkwrite(new_pmd);
-+
-+	if (needs_exec)
-+		new_pmd = kvm_s2pmd_mkexec(new_pmd);
-+
-+	if (contiguous)
-+		new_pmd = kvm_s2pmd_mkcont(new_pmd);
-+
-+	return new_pmd;
-+}
-+
-+static pte_t stage2_build_pte(kvm_pfn_t pfn, pgprot_t mem_type, bool writable,
-+			      bool needs_exec, bool contiguous)
-+{
-+	pte_t new_pte = kvm_pfn_pte(pfn, mem_type);
-+
-+	if (writable)
-+		new_pte = kvm_s2pte_mkwrite(new_pte);
-+
-+	if (needs_exec)
-+		new_pte = kvm_s2pte_mkexec(new_pte);
-+
-+	if (contiguous)
-+		new_pte = kvm_s2pte_mkcont(new_pte);
-+
-+	return new_pte;
-+}
-+
- static bool fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
- 					       unsigned long hva,
- 					       unsigned long map_size)
-@@ -1807,38 +1857,21 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 		(fault_status == FSC_PERM && stage2_is_exec(kvm, fault_ipa));
- 
- 	if (vma_pagesize == PUD_SIZE) {
--		pud_t new_pud = kvm_pfn_pud(pfn, mem_type);
--
--		new_pud = kvm_pud_mkhuge(new_pud);
--		if (writable)
--			new_pud = kvm_s2pud_mkwrite(new_pud);
--
--		if (needs_exec)
--			new_pud = kvm_s2pud_mkexec(new_pud);
-+		pud_t new_pud = stage2_build_pud(pfn, mem_type, writable,
-+						 needs_exec);
- 
- 		ret = stage2_set_pud_huge(kvm, memcache, fault_ipa, &new_pud);
- 	} else if (vma_pagesize == PMD_SIZE) {
--		pmd_t new_pmd = kvm_pfn_pmd(pfn, mem_type);
--
--		new_pmd = kvm_pmd_mkhuge(new_pmd);
--
--		if (writable)
--			new_pmd = kvm_s2pmd_mkwrite(new_pmd);
--
--		if (needs_exec)
--			new_pmd = kvm_s2pmd_mkexec(new_pmd);
-+		pmd_t new_pmd = stage2_build_pmd(pfn, mem_type, writable,
-+						 needs_exec, false);
- 
- 		ret = stage2_set_pmd_huge(kvm, memcache, fault_ipa, &new_pmd);
- 	} else {
--		pte_t new_pte = kvm_pfn_pte(pfn, mem_type);
-+		pte_t new_pte = stage2_build_pte(pfn, mem_type, writable,
-+						 needs_exec, false);
- 
--		if (writable) {
--			new_pte = kvm_s2pte_mkwrite(new_pte);
-+		if (writable)
- 			mark_page_dirty(kvm, gfn);
--		}
--
--		if (needs_exec)
--			new_pte = kvm_s2pte_mkexec(new_pte);
- 
- 		ret = stage2_set_pte(kvm, memcache, fault_ipa, &new_pte, flags);
- 	}
+This series add support for contiguous PTE/PMD hugepages at stage2
+and then we can create huge mappings with following additional
+sizes:
+
+                CONT PTE     CONT PMD
+                --------     --------
+ 4K granule:      64K          32M
+16K granule:       2M           1G
+64K granule:       2M          16G
+
+These patches are based on v5.1.0-rc7 and have been tested on
+Taishan 2280 server (D05) with 4K and 64K granule.
+
+Any comments will be appreciated, thanks!
+
+Zenghui Yu (5):
+  KVM: arm/arm64: Introduce helpers for page table enties with
+    contiguous bit
+  KVM: arm/arm64: Re-factor building the stage2 page table entries
+  KVM: arm/arm64: Support dirty page tracking for contiguous hugepages
+  KVM: arm/arm64: Add support for creating PTE contiguous hugepages at
+    stage2
+  KVM: arm/arm64: Add support for creating PMD contiguous hugepages at
+    stage2
+
+ arch/arm/include/asm/kvm_mmu.h       |  22 +++
+ arch/arm/include/asm/pgtable-hwdef.h |   8 +
+ arch/arm64/include/asm/kvm_mmu.h     |  20 +++
+ virt/kvm/arm/mmu.c                   | 299 ++++++++++++++++++++++++++++++-----
+ 4 files changed, 312 insertions(+), 37 deletions(-)
+
 -- 
 1.8.3.1
 
