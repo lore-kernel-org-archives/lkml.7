@@ -2,151 +2,107 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C043C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF51C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD8720644
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:54:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQOR/ugM"
+	by mail.kernel.org (Postfix) with ESMTP id 67E0E20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfEAUyJ (ORCPT
+        id S1726225AbfEAU4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:54:09 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:50624 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfEAUyJ (ORCPT
+        Wed, 1 May 2019 16:56:20 -0400
+Received: from gateway20.websitewelcome.com ([192.185.47.18]:27988 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfEAU4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:54:09 -0400
-Received: by mail-it1-f194.google.com with SMTP id q14so722287itk.0;
-        Wed, 01 May 2019 13:54:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NIcJKYBcMp0LBZVdGWmzzu8eQ6eVC6AwEkLQJhbgPJA=;
-        b=uQOR/ugMpYcHFXtprrn5lLtqOgrkNpwpZgQl13kys6czcZPk8ShghAJNb/tq+GerLz
-         aFa8rVINWNqfqcBUW+oLMEN4v1TVZTrmsMXUYF5S3RnjZN6t2KR54P/GSIpn522xOD76
-         aIfVMfBp5Ls4Gw4RjG5Lw2a2o5KEdKzKrFh8nS82TqMRrc3wEz8mYIjqjkKSQRHsF3/d
-         KC0R0vKhgYa5Bk7Ex+gpoSw7zkXqK5pEty7RvS6D/RdmloGmb8oZjgsJppdUITXCrqWI
-         WwQVEsDyF9rjMWcywF+ccA+KC6tWrDE7d2KFaCHwZ0Y1qx64ZNYwCuobSFyofd5la7tB
-         elGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NIcJKYBcMp0LBZVdGWmzzu8eQ6eVC6AwEkLQJhbgPJA=;
-        b=ck2eLxj+/S2KCGdY617akxtCQfiJTMG2G2VR8MOy2nbcy5de0GZyG8RKk7Ut1C2LAW
-         hfjuHHZkQt8ee1n4W2LY98WDElu/zeWUw3fdhaET8ctSBD1M9yg0Xu5dkn+51m0rW9oP
-         ye6HzvHho5NX1e9ZO4CmL3SGlHHda3eYnCUINivF8XBvRK70CgsUdOlPVsZFx9L8M0bl
-         pfYZ0a6OtAvPmKDKSoxYO2IRaxlBHud739GZt9aOHpfeUz0gi/oca9PXj3uBz9kme+ca
-         pVr99cOrFZUYYoIRcCvD9LtrpIUsVvqui9kIeHIlF0c6gqf2cjoAgTk1+sjowjCIe3ZM
-         rkYQ==
-X-Gm-Message-State: APjAAAV7yck8YLAdI2Yvhc1mk+H1f99eHo/lf3jGUHb4IUEwwULKJjZ9
-        C9HNyJPJTPuLkuOY/NThkE+NlPFS7cvqRs7a4SaM6BU/
-X-Google-Smtp-Source: APXvYqwDSBwuoIz5Cx9CEVGIcqE/OP3knt8Grs33/FqLWFRA3yEiK7fltJ3XAl5Bin3Nlf+6Jumm0lwyN4qmA4T6+qw=
-X-Received: by 2002:a24:7347:: with SMTP id y68mr9823741itb.58.1556744048323;
- Wed, 01 May 2019 13:54:08 -0700 (PDT)
+        Wed, 1 May 2019 16:56:19 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 435F2400C5273
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 15:56:19 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id LwH5haKSb2qH7LwH5htMZK; Wed, 01 May 2019 15:56:19 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=53920 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLwGU-0045wh-6U; Wed, 01 May 2019 15:56:18 -0500
+Date:   Wed, 1 May 2019 15:55:41 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH][next] i40e: mark expected switch fall-through
+Message-ID: <20190501205541.GA17995@embeddedor>
 MIME-Version: 1.0
-References: <20190424193903.swlfmfuo6cqnpkwa@dcvr> <20190427093319.sgicqik2oqkez3wk@dcvr>
- <CABeXuvrY9QdvF1gTfiMt-eVp7VtobwG9xzjQFkErq+3wpW_P3Q@mail.gmail.com>
- <20190428004858.el3yk6hljloeoxza@dcvr> <20190429204754.hkz7z736tdk4ucum@linux-r8p5>
- <20190429210427.dmfemfft2t2gdwko@dcvr> <CABeXuvqpAjk8ocRUabVU4Yviv7kgRkMneLE1Xy-jAtHdXAHBVw@mail.gmail.com>
- <20190501021405.hfvd7ps623liu25i@dcvr> <20190501073906.ekqr7xbw3qkfgv56@dcvr>
- <CABeXuvq7gCV2qPOo+Q8jvNyRaTvhkRLRbnL_oJ-AuK7Sp=P3QQ@mail.gmail.com> <20190501204826.umekxc7oynslakes@dcvr>
-In-Reply-To: <20190501204826.umekxc7oynslakes@dcvr>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 1 May 2019 13:53:57 -0700
-Message-ID: <CABeXuvqbCDhp+67SpGLAO7dYiWzWufewQBn+MTxY5NYsaQVrPg@mail.gmail.com>
-Subject: Re: Strange issues with epoll since 5.0
-To:     Eric Wong <e@80x24.org>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>, Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLwGU-0045wh-6U
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.119.203]:53920
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 26
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 1:48 PM Eric Wong <e@80x24.org> wrote:
->
-> Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> > So here is my analysis:
->
-> <snip everything I agree with>
->
-> > So the 854a6ed56839a40f6 seems to be better than the original code in
-> > that it detects the signal.
->
-> OTOH, does matter to anybody that a signal is detected slightly
-> sooner than it would've been, otherwise?
+In preparation to enabling -Wimplicit-fallthrough, mark switch cases
+where we are expecting to fall through.
 
-The original code drops the signal altogether. This is because it
-overwrites the current's sigmask with the provided
-one(set_current_blocked()). If a signal bit was set, it is lost
-forever. It does not detect it sooner. The check for pending signal is
-sooner and not just before the syscall returns.
-This is what the patch in discussion does: check for signals just
-before returning.
+This patch fixes the following warning:
 
->
-> > But, the problem is that it doesn't
-> > communicate it to the userspace.
->
-> Yup, that's a big problem :)
->
-> > So a patch like below solves the problem. This is incomplete. I'll
-> > verify and send you a proper fix you can test soon. This is just for
-> > the sake of discussion:
-> >
-> > diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> > index 4a0e98d87fcc..63a387329c3d 100644
-> > --- a/fs/eventpoll.c
-> > +++ b/fs/eventpoll.c
-> > @@ -2317,7 +2317,7 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
-> > epoll_event __user *, events,
-> >                 int, maxevents, int, timeout, const sigset_t __user *, sigmask,
-> >                 size_t, sigsetsize)
-> >  {
-> > -       int error;
-> > +       int error, signal_detected;
-> >         sigset_t ksigmask, sigsaved;
-> >
-> >         /*
-> > @@ -2330,7 +2330,10 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
-> > epoll_event __user *, events,
-> >
-> >         error = do_epoll_wait(epfd, events, maxevents, timeout);
-> >
-> > -       restore_user_sigmask(sigmask, &sigsaved);
-> > +       signal_detected = restore_user_sigmask(sigmask, &sigsaved);
-> > +
-> > +       if (signal_detected && !error)
-> > +               return -EITNR;
-> >
-> >         return error;
->
-> Looks like a reasonable API.
->
-> > @@ -2862,7 +2862,7 @@ void restore_user_sigmask(const void __user
-> > *usigmask, sigset_t *sigsaved)
-> >         if (signal_pending(current)) {
-> >                 current->saved_sigmask = *sigsaved;
-> >                 set_restore_sigmask();
-> > -               return;
-> > +               return 0;
->
-> Shouldn't that "return 1" if a signal is pending?
+drivers/net/ethernet/intel/i40e/i40e_xsk.c: In function ‘i40e_run_xdp_zc’:
+drivers/net/ethernet/intel/i40e/i40e_xsk.c:217:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   bpf_warn_invalid_xdp_action(act);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/intel/i40e/i40e_xsk.c:218:2: note: here
+  case XDP_ABORTED:
+  ^~~~
 
-Yep, I meant this to be 1.
+In preparation to enabling -Wimplicit-fallthrough, mark switch cases
+where we are expecting to fall through.
 
--Deepa
+This patch fixes the following warning:
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/intel/i40e/i40e_xsk.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.c b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
+index 1b17486543ac..557c565c26fc 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_xsk.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
+@@ -215,6 +215,7 @@ static int i40e_run_xdp_zc(struct i40e_ring *rx_ring, struct xdp_buff *xdp)
+ 		break;
+ 	default:
+ 		bpf_warn_invalid_xdp_action(act);
++		/* fall through */
+ 	case XDP_ABORTED:
+ 		trace_xdp_exception(rx_ring->netdev, xdp_prog, act);
+ 		/* fallthrough -- handle aborts by dropping packet */
+-- 
+2.21.0
+
