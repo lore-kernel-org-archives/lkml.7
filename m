@@ -2,180 +2,167 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80103C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF76C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A972063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556733044;
-	bh=c1wj1L2mmEp3b5Zc4h0P4p/sRviKAqQNIMtj49lFokg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HgEqSez3VEQi9ezdsAUK2/Y8sL4UIviedADxS2stfbJwLCpKnmRw0FvIMZp8Q5n6D
-	 Q+wNRYlGXLsqfxbkB/8Mkn/Xhj0s7vadsfUcPEVlieJ5q+op2z3VfPY81SQWSX0958
-	 WNBEz+kVNsZI3FGfZ/NmbV1O7DTlMHgbFqFe/0dM=
+	by mail.kernel.org (Postfix) with ESMTP id E0FCD208C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:52:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3pNtOCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbfEARun (ORCPT
+        id S1726334AbfEARw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfEARum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:50:42 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4CC2063F;
-        Wed,  1 May 2019 17:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556733041;
-        bh=c1wj1L2mmEp3b5Zc4h0P4p/sRviKAqQNIMtj49lFokg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gG+sCU7Pn+mQT5F91kLO8vO2FqssmxCjlJLDuSvhFBgsFLDPE20VbFliRvcxUTqYW
-         fVAjvtF/VHvokMcFJ9bJ5f9NiePZ8U7ua4194GOFbGJ191dIFLdVADwBTFhWpXm+Dt
-         U/k/vMGI81AXUxcNqct2TGxXPKcnz7hzbnFdBTc0=
-Received: by mail-qk1-f178.google.com with SMTP id p19so10594044qkm.10;
-        Wed, 01 May 2019 10:50:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAU72fu9/sqAXS1JB7Ui8775tD55q5vdVrK0WISnDjVpoS/a2m/r
-        llC5mlFwFvlH1RJsei1xIyfUsPlsiYpGJodmUQ==
-X-Google-Smtp-Source: APXvYqxaALIZpIXVBCrI5e0AF+QhkCcGm6801hN03DMuRHPJPYGqONfx33oDbS0RZyhIRlVGgu4C1MuY3dbTFHDfvjc=
-X-Received: by 2002:a37:5c81:: with SMTP id q123mr39758359qkb.29.1556733040411;
- Wed, 01 May 2019 10:50:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190423114424.3578-1-yinbo.zhu@nxp.com>
-In-Reply-To: <20190423114424.3578-1-yinbo.zhu@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 1 May 2019 12:50:29 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+4g+inxc+qcC3oLrXuR+L9AMvXFShGaU5Y3iRDsK3P6A@mail.gmail.com>
-Message-ID: <CAL_Jsq+4g+inxc+qcC3oLrXuR+L9AMvXFShGaU5Y3iRDsK3P6A@mail.gmail.com>
-Subject: Re: [PATCH v1] arm64: ls1028: dtsi: Add esdhc node in dtsi
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 1 May 2019 13:52:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33796 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfEARw2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:52:28 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ck18so4201512plb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:52:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=c4GVYXdtGXK+NpA236Nt4eW2tTRsHxltrkwbVfBnPco=;
+        b=J3pNtOClY2+lUvtAtbd2zfi7C3Bh0DJu8CPT7XYaBWgulAPLIWCZDKrOSyO5FPUKT5
+         BwzjMNsitZNFmAJd5BM/edhuoljJoT3hkYvQz1Bmx7MtNhijbPKlJAukPx+FyflryLiM
+         ysG9pN82/50/qOb3CjLWDbXer0cYdfiiuQMRT4JZRdt0IaK86LnuEhZJ/+vSwB7PpuuJ
+         RLemfSoMn67+eXCEfxwG+6YhS0FAgfTYoRwQlMOtNqM3x2odcvV3qCe346FBw06OLyeX
+         qKTvJLvp8WaSr5KYqNE/6VLF4UeIGpDgWD6tdc8qPm9LdX0Fdv8r48TI3mJrpGk+dWmJ
+         O9Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=c4GVYXdtGXK+NpA236Nt4eW2tTRsHxltrkwbVfBnPco=;
+        b=KCvDyVznvXa8uWZXnqVLAYjOP81Buy7QcoSOCtfRcqnnuhbp8Eha2kCuJZmicD7Gze
+         PjXq+s8dimyvM/hPk0TmseInjMfxwLBmHdB8y92p99T+K96GI6CoS71yGAaJzbRcY5QY
+         s1Tz8Gj3dgQOCqI9gH5Jsqr1sBoy4O6qbpHCYhx4JLIUpRAmdEhr27C3CaEVgx+oXcgC
+         IdGshus8jsC6oq0CxkIQMFAoHjl7sopGwtSnx/hEfru9ANy7Dv7PgHzONST4RPoLLJ7P
+         RtJpzBwh2hiDHREW7ROWohiNKHlZqp192yVIK8UYxEn9sUxeNZAiJhvU6QmBfvizQxt3
+         1Rrg==
+X-Gm-Message-State: APjAAAWvryFsiISaPhh8RqF5zyQzzh479c7IffPwFryYFx5mNtNV/8EJ
+        aOQQ1oWlvQzqBPZ04savcUY=
+X-Google-Smtp-Source: APXvYqyLj2w6QJeDUo/CBCheOxjdP1ZWlHLztJ310vNkx6Gcd8jk+hQIhOsniYvjqD0JY8yQPAKO9w==
+X-Received: by 2002:a17:902:b210:: with SMTP id t16mr78192056plr.84.1556733147678;
+        Wed, 01 May 2019 10:52:27 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id j5sm54182472pfe.15.2019.05.01.10.52.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 10:52:26 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>
+Subject: [PATCH] mtd: nand: raw: brcmnand: When oops in progress use pio and interrupt polling
+Date:   Wed,  1 May 2019 13:46:15 -0400
+Message-Id: <1556733121-20133-1-git-send-email-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 1.9.0.138.g2de3478
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 6:42 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
->
-> From: Ashish Kumar <Ashish.Kumar@nxp.com>
->
-> This patch is to add esdhc node and enable SD UHS-I,
-> eMMC HS200 for ls1028ardb/ls1028aqds board.
->
-> Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> ---
->  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  8 ++++++
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 13 +++++++++
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 27 +++++++++++++++++++
->  3 files changed, 48 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> index 14c79f4691ea..180e5d2a00d1 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> @@ -42,6 +42,14 @@
->         status = "okay";
->  };
->
-> +&esdhc {
-> +       status = "okay";
-> +};
-> +
-> +&esdhc1 {
-> +       status = "okay";
-> +};
-> +
->  &i2c0 {
->         status = "okay";
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> index f86b054a74ae..1bfaf4294db4 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> @@ -30,6 +30,19 @@
->         };
->  };
->
-> +&esdhc {
-> +       status = "okay";
-> +       sd-uhs-sdr104;
-> +       sd-uhs-sdr50;
-> +       sd-uhs-sdr25;
-> +       sd-uhs-sdr12;
-> +       };
-> +
-> +&esdhc1 {
-> +       status = "okay";
-> +       mmc-hs200-1_8v;
-> +       };
-> +
->  &i2c0 {
->         status = "okay";
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 2896bbcfa3bb..d13cd3fb455b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -274,6 +274,33 @@
->                         status = "disabled";
->                 };
->
-> +               esdhc: esdhc@2140000 {
+If mtd_oops is in progress switch to polling for nand command completion
+interrupts and use PIO mode wihtout DMA so that the mtd_oops buffer can
+be completely written in the assinged nand partition. This is needed in
+cases where the panic does not happen on cpu0 and there is only one online
+CPU and the panic is not on cpu0.
 
-mmc@...
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 55 ++++++++++++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 3 deletions(-)
 
-> +                       compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
-> +                       reg = <0x0 0x2140000 0x0 0x10000>;
-> +                       interrupts = <0 28 0x4>; /* Level high type */
-> +                       clock-frequency = <0>;
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 482c6f0..cfbe51a 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -823,6 +823,12 @@ static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
+ 	return ctrl->flash_dma_base;
+ }
+ 
++static inline void disable_flash_dma_xfer(struct brcmnand_controller *ctrl)
++{
++	if (has_flash_dma(ctrl))
++		ctrl->flash_dma_base = 0;
++}
++
+ static inline bool flash_dma_buf_ok(const void *buf)
+ {
+ 	return buf && !is_vmalloc_addr(buf) &&
+@@ -1237,15 +1243,58 @@ static void brcmnand_cmd_ctrl(struct nand_chip *chip, int dat,
+ 	/* intentionally left blank */
+ }
+ 
++static bool is_mtd_oops_in_progress(void)
++{
++	int i = 0;
++
++#ifdef CONFIG_MTD_OOPS
++	if (oops_in_progress && smp_processor_id()) {
++		int cpu = 0;
++
++		for_each_online_cpu(cpu)
++			++i;
++	}
++#endif
++	return i == 1 ? true : false;
++}
++
++static bool brcmstb_nand_wait_for_completion(struct nand_chip *chip)
++{
++	struct brcmnand_host *host = nand_get_controller_data(chip);
++	struct brcmnand_controller *ctrl = host->ctrl;
++	bool err = false;
++	int sts;
++
++	if (is_mtd_oops_in_progress()) {
++		/* Switch to interrupt polling and PIO mode */
++		disable_flash_dma_xfer(ctrl);
++		sts = bcmnand_ctrl_poll_status(ctrl, NAND_CTRL_RDY |
++					       NAND_STATUS_READY,
++					       NAND_CTRL_RDY |
++					       NAND_STATUS_READY, 0);
++		err = (sts < 0) ? true : false;
++	} else {
++		unsigned long timeo = msecs_to_jiffies(
++						NAND_POLL_STATUS_TIMEOUT_MS);
++		/* wait for completion interrupt */
++		sts = wait_for_completion_timeout(&ctrl->done, timeo);
++		err = (sts <= 0) ? true : false;
++	}
++
++	return err;
++}
++
+ static int brcmnand_waitfunc(struct nand_chip *chip)
+ {
+ 	struct brcmnand_host *host = nand_get_controller_data(chip);
+ 	struct brcmnand_controller *ctrl = host->ctrl;
+-	unsigned long timeo = msecs_to_jiffies(100);
++	bool err = false;
+ 
+ 	dev_dbg(ctrl->dev, "wait on native cmd %d\n", ctrl->cmd_pending);
+-	if (ctrl->cmd_pending &&
+-			wait_for_completion_timeout(&ctrl->done, timeo) <= 0) {
++	if (ctrl->cmd_pending)
++		err = brcmstb_nand_wait_for_completion(chip);
++
++	if (err) {
+ 		u32 cmd = brcmnand_read_reg(ctrl, BRCMNAND_CMD_START)
+ 					>> brcmnand_cmd_shift(ctrl);
+ 
+-- 
+1.9.0.138.g2de3478
 
-Filled in by bootloader? If so, add a comment.
-
-> +                       clocks = <&clockgen 2 1>;
-> +                       voltage-ranges = <1800 1800 3300 3300>;
-> +                       sdhci,auto-cmd12;
-> +                       little-endian;
-> +                       bus-width = <4>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               esdhc1: esdhc@2150000 {
-
-mmc@...
-
-> +                       compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
-> +                       reg = <0x0 0x2150000 0x0 0x10000>;
-> +                       interrupts = <0 63 0x4>; /* Level high type */
-> +                       clock-frequency = <0>;
-> +                       clocks = <&clockgen 2 1>;
-> +                       voltage-ranges = <1800 1800 3300 3300>;
-> +                       sdhci,auto-cmd12;
-> +                       broken-cd;
-> +                       little-endian;
-> +                       bus-width = <4>;
-> +                       status = "disabled";
-> +               };
-> +
->                 sata: sata@3200000 {
->                         compatible = "fsl,ls1028a-ahci";
->                         reg = <0x0 0x3200000 0x0 0x10000>,
-> --
-> 2.17.1
->
