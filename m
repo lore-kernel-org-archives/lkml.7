@@ -2,167 +2,168 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF76C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5B9C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0FCD208C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49DE2089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3pNtOCl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JNruUJ7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfEARw2 (ORCPT
+        id S1726224AbfEARzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:52:28 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33796 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfEARw2 (ORCPT
+        Wed, 1 May 2019 13:55:07 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:38301 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfEARzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:52:28 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ck18so4201512plb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:52:28 -0700 (PDT)
+        Wed, 1 May 2019 13:55:07 -0400
+Received: by mail-it1-f193.google.com with SMTP id q19so11002636itk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:55:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=c4GVYXdtGXK+NpA236Nt4eW2tTRsHxltrkwbVfBnPco=;
-        b=J3pNtOClY2+lUvtAtbd2zfi7C3Bh0DJu8CPT7XYaBWgulAPLIWCZDKrOSyO5FPUKT5
-         BwzjMNsitZNFmAJd5BM/edhuoljJoT3hkYvQz1Bmx7MtNhijbPKlJAukPx+FyflryLiM
-         ysG9pN82/50/qOb3CjLWDbXer0cYdfiiuQMRT4JZRdt0IaK86LnuEhZJ/+vSwB7PpuuJ
-         RLemfSoMn67+eXCEfxwG+6YhS0FAgfTYoRwQlMOtNqM3x2odcvV3qCe346FBw06OLyeX
-         qKTvJLvp8WaSr5KYqNE/6VLF4UeIGpDgWD6tdc8qPm9LdX0Fdv8r48TI3mJrpGk+dWmJ
-         O9Bg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Uxj4eaoNpSrPRNPfGOWw+nAI5ei5rNPE4Zz0eGAIncQ=;
+        b=JNruUJ7gsvMMumZ5pwArN8KMnaLlMBIibpuZxx7BAJD42ZxX7b3LrmqnqYo4/MDqFO
+         dvgVUfvRHdOK6AmG1okETPXKrxva+eI2kSuHkKwklwv00I0EiXx+5052rRbZ3fGqVDEm
+         vg8ndfuvDOEQzQb6N/j82EgIcbHlGmTNurlfU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=c4GVYXdtGXK+NpA236Nt4eW2tTRsHxltrkwbVfBnPco=;
-        b=KCvDyVznvXa8uWZXnqVLAYjOP81Buy7QcoSOCtfRcqnnuhbp8Eha2kCuJZmicD7Gze
-         PjXq+s8dimyvM/hPk0TmseInjMfxwLBmHdB8y92p99T+K96GI6CoS71yGAaJzbRcY5QY
-         s1Tz8Gj3dgQOCqI9gH5Jsqr1sBoy4O6qbpHCYhx4JLIUpRAmdEhr27C3CaEVgx+oXcgC
-         IdGshus8jsC6oq0CxkIQMFAoHjl7sopGwtSnx/hEfru9ANy7Dv7PgHzONST4RPoLLJ7P
-         RtJpzBwh2hiDHREW7ROWohiNKHlZqp192yVIK8UYxEn9sUxeNZAiJhvU6QmBfvizQxt3
-         1Rrg==
-X-Gm-Message-State: APjAAAWvryFsiISaPhh8RqF5zyQzzh479c7IffPwFryYFx5mNtNV/8EJ
-        aOQQ1oWlvQzqBPZ04savcUY=
-X-Google-Smtp-Source: APXvYqyLj2w6QJeDUo/CBCheOxjdP1ZWlHLztJ310vNkx6Gcd8jk+hQIhOsniYvjqD0JY8yQPAKO9w==
-X-Received: by 2002:a17:902:b210:: with SMTP id t16mr78192056plr.84.1556733147678;
-        Wed, 01 May 2019 10:52:27 -0700 (PDT)
-Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id j5sm54182472pfe.15.2019.05.01.10.52.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Uxj4eaoNpSrPRNPfGOWw+nAI5ei5rNPE4Zz0eGAIncQ=;
+        b=iUqIKAXqCGtl7Jz5rhatoOeJopNdaAUE9CHFxR5368w00dkeLaeFUWDJlcugF1U3N8
+         bJAvHHSiV7VqdHN/Do50JN+9SswYw6uRTGcoUQ5/ao5tyN0hI6ieYMTjSQQAuDJehGB3
+         1/MXRzvNM6A7hNsCR9f/NyW3StL7gCVDOYB7J51BYKIbsm9v9lp01G/KthnRlON/BcO0
+         iB04kAuY9AIrD+hYpYXd4T5b1+6kc5biyQi6zifs4fo2eSlczu+blIa2qM0T/Fce54A9
+         XDTWY4idVIG3dTf6JxNAQUo0frCH+CR8+O5A/dLIx2CP4vRfHc+rZt02cqQ+9ASrXHdv
+         +xVA==
+X-Gm-Message-State: APjAAAU1GSyhj9WAV2741YwWnOZLd/xzPe1NC8F2l5x2qxV/a3m2YVy5
+        QMGnsRLe4kDew4pJ7MEGAkXHCg==
+X-Google-Smtp-Source: APXvYqzpVR6PQtpadZMu+h/Pzk97UCjaX+Mujf8dWuxCZ8cPgJOzT/0R0gqaARbn9CKksFrazn09PQ==
+X-Received: by 2002:a24:29d4:: with SMTP id p203mr9259864itp.63.1556733306079;
+        Wed, 01 May 2019 10:55:06 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id t24sm10175129ioc.1.2019.05.01.10.55.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 10:52:26 -0700 (PDT)
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH] mtd: nand: raw: brcmnand: When oops in progress use pio and interrupt polling
-Date:   Wed,  1 May 2019 13:46:15 -0400
-Message-Id: <1556733121-20133-1-git-send-email-kdasu.kdev@gmail.com>
-X-Mailer: git-send-email 1.9.0.138.g2de3478
+        Wed, 01 May 2019 10:55:05 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-mmc@vger.kernel.org
+Cc:     djkurtz@chromium.org, Raul E Rangel <rrangel@chromium.org>,
+        hongjiefang <hongjiefang@asrmicro.com>,
+        Jennifer Dahm <jennifer.dahm@ni.com>,
+        linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Kyle Roeschley <kyle.roeschley@ni.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [RFC PATCH 1/2] mmc: sdhci: Manually check card status after reset
+Date:   Wed,  1 May 2019 11:54:56 -0600
+Message-Id: <20190501175457.195855-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If mtd_oops is in progress switch to polling for nand command completion
-interrupts and use PIO mode wihtout DMA so that the mtd_oops buffer can
-be completely written in the assinged nand partition. This is needed in
-cases where the panic does not happen on cpu0 and there is only one online
-CPU and the panic is not on cpu0.
+There is a race condition between resetting the SDHCI controller and
+disconnecting the card.
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+For example:
+0) Card is connected and transferring data
+1) mmc_sd_reset is called to reset the controller due to a data error
+2) sdhci_set_ios calls sdhci_do_reset
+3) SOFT_RESET_ALL is toggled which clears the IRQs the controller has
+configured.
+4) Wait for SOFT_RESET_ALL to clear
+5) CD logic notices card is gone and CARD_PRESENT goes low, but since the
+   IRQs are not configured a CARD_REMOVED interrupt is never raised.
+6) IRQs are enabled again
+7) mmc layer never notices the device is disconnected. The SDHCI layer
+   will keep returning -ENOMEDIUM. This results in a card that is always
+   present and not functional.
+
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 ---
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 55 ++++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 3 deletions(-)
+You can see an example of the following two patches here:
+https://privatebin.net/?b0f5953716d34ca6#C699bCBQ99NdvspfDW7CMucT8CJG4DgL+yUNPyepDCo=
+Line 8213: EILSEQ
+Line 8235: SDHC is hard reset
+Line 8240: Controller completes reset and card is no longer present
+Line 8379: mmc_sd_reset notices card is missing and issues a card_event
+           and schedules a detect change.
+Line 8402: Don't init the card since it's already gone.
+Line 8717: Marks card as removed
+Line 8820: mmc_sd_remove removes the block device
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 482c6f0..cfbe51a 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -823,6 +823,12 @@ static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
- 	return ctrl->flash_dma_base;
- }
+I am running into a kernel panic. A task gets stuck for more than 120
+seconds. I keep seeing blkdev_close in the stack trace, so maybe I'm not
+calling something correctly?
+
+Here is the panic: https://privatebin.net/?8ec48c1547d19975#dq/h189w5jmTlbMKKAwZjUr4bhm7Q2AgvGdRqc5BxAc=
+
+I sometimes see the following:
+[  547.943974] udevd[144]: seq 2350 '/devices/pci0000:00/0000:00:14.7/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p1' is taking a long time
+
+I was getting the kernel panic on a 4.14 kernel: https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f3dc032faf4d074f20ada437e2d081a28ac699da/drivers/mmc/host
+So I'm guessing I'm missing an upstream fix.
+
+Do the patches look correct or am I doing something that would cause a
+kernel panic?
+
+I have a DUT setup with a GPIO I can use to toggle the CD pin. I ran a
+test where I connect and then randomly, between 0s - 1s disconnect the
+card. This got over 20k iterations before the panic. Though when I do it
+manually and stop for 2 minutes the panic happens.
+
+Any help would be appreciated.
+
+Thanks,
+Raul
+
+
+ drivers/mmc/core/sd.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index 265e1aeeb9d8..9206c4297d66 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -1242,7 +1242,27 @@ static int mmc_sd_runtime_resume(struct mmc_host *host)
  
-+static inline void disable_flash_dma_xfer(struct brcmnand_controller *ctrl)
-+{
-+	if (has_flash_dma(ctrl))
-+		ctrl->flash_dma_base = 0;
-+}
-+
- static inline bool flash_dma_buf_ok(const void *buf)
+ static int mmc_sd_hw_reset(struct mmc_host *host)
  {
- 	return buf && !is_vmalloc_addr(buf) &&
-@@ -1237,15 +1243,58 @@ static void brcmnand_cmd_ctrl(struct nand_chip *chip, int dat,
- 	/* intentionally left blank */
- }
- 
-+static bool is_mtd_oops_in_progress(void)
-+{
-+	int i = 0;
++	int present;
+ 	mmc_power_cycle(host, host->card->ocr);
 +
-+#ifdef CONFIG_MTD_OOPS
-+	if (oops_in_progress && smp_processor_id()) {
-+		int cpu = 0;
++	present = host->ops->get_cd(host);
 +
-+		for_each_online_cpu(cpu)
-+			++i;
-+	}
-+#endif
-+	return i == 1 ? true : false;
-+}
-+
-+static bool brcmstb_nand_wait_for_completion(struct nand_chip *chip)
-+{
-+	struct brcmnand_host *host = nand_get_controller_data(chip);
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+	bool err = false;
-+	int sts;
-+
-+	if (is_mtd_oops_in_progress()) {
-+		/* Switch to interrupt polling and PIO mode */
-+		disable_flash_dma_xfer(ctrl);
-+		sts = bcmnand_ctrl_poll_status(ctrl, NAND_CTRL_RDY |
-+					       NAND_STATUS_READY,
-+					       NAND_CTRL_RDY |
-+					       NAND_STATUS_READY, 0);
-+		err = (sts < 0) ? true : false;
-+	} else {
-+		unsigned long timeo = msecs_to_jiffies(
-+						NAND_POLL_STATUS_TIMEOUT_MS);
-+		/* wait for completion interrupt */
-+		sts = wait_for_completion_timeout(&ctrl->done, timeo);
-+		err = (sts <= 0) ? true : false;
++	/* The card status could have changed while resetting. */
++	if ((mmc_card_removed(host->card) && present) ||
++	    (!mmc_card_removed(host->card) && !present)) {
++		pr_info("%s: card status changed during reset\n",
++		       mmc_hostname(host));
++		host->ops->card_event(host);
++		mmc_detect_change(host, 0);
 +	}
 +
-+	return err;
-+}
++	/* Don't perform unnecessary transactions if the card is missing. */
++	if (!present) {
++		pr_info("%s: card was removed during reset\n",
++			mmc_hostname(host));
++		return -ENOMEDIUM;
++	}
 +
- static int brcmnand_waitfunc(struct nand_chip *chip)
- {
- 	struct brcmnand_host *host = nand_get_controller_data(chip);
- 	struct brcmnand_controller *ctrl = host->ctrl;
--	unsigned long timeo = msecs_to_jiffies(100);
-+	bool err = false;
- 
- 	dev_dbg(ctrl->dev, "wait on native cmd %d\n", ctrl->cmd_pending);
--	if (ctrl->cmd_pending &&
--			wait_for_completion_timeout(&ctrl->done, timeo) <= 0) {
-+	if (ctrl->cmd_pending)
-+		err = brcmstb_nand_wait_for_completion(chip);
-+
-+	if (err) {
- 		u32 cmd = brcmnand_read_reg(ctrl, BRCMNAND_CMD_START)
- 					>> brcmnand_cmd_shift(ctrl);
+ 	return mmc_sd_init_card(host, host->card->ocr, host->card);
+ }
  
 -- 
-1.9.0.138.g2de3478
+2.21.0.593.g511ec345e18-goog
 
