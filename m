@@ -2,70 +2,131 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BF1C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A0CC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68DC20835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F24B20835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfEAKiS (ORCPT
+        id S1726295AbfEAKkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 06:38:18 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57718 "EHLO
+        Wed, 1 May 2019 06:40:05 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57756 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfEAKiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 06:38:18 -0400
+        id S1725782AbfEAKkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 06:40:05 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBCEB80D;
-        Wed,  1 May 2019 03:38:17 -0700 (PDT)
-Received: from [10.1.37.14] (unknown [10.1.37.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF9383F719;
-        Wed,  1 May 2019 03:38:14 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v7 05/23] iommu: Introduce cache_invalidate API
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, will.deacon@arm.com, robin.murphy@arm.com
-Cc:     peter.maydell@linaro.org, kevin.tian@intel.com,
-        vincent.stehle@arm.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-6-eric.auger@redhat.com>
-Message-ID: <a9745aef-8686-c761-e3d0-dd0e98a1f5b2@arm.com>
-Date:   Wed, 1 May 2019 11:38:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A01EE80D;
+        Wed,  1 May 2019 03:40:04 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76D6F3F719;
+        Wed,  1 May 2019 03:40:02 -0700 (PDT)
+Date:   Wed, 1 May 2019 11:39:56 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/11] i.MX6, DesignWare PCI improvements
+Message-ID: <20190501103956.GA3100@e121166-lin.cambridge.arm.com>
+References: <20190415004632.5907-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408121911.24103-6-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415004632.5907-1-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 13:18, Eric Auger wrote:
-> +int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
-> +			   struct iommu_cache_invalidate_info *inv_info)
-> +{
-> +	int ret = 0;
-> +
-> +	if (unlikely(!domain->ops->cache_invalidate))
-> +		return -ENODEV;
-> +
-> +	ret = domain->ops->cache_invalidate(domain, dev, inv_info);
-> +
-> +	return ret;
+On Sun, Apr 14, 2019 at 05:46:21PM -0700, Andrey Smirnov wrote:
+> Everyone:
+> 
+> This is the series containing various small improvements that I made
+> while reading the code and researching commit history of pci-imx6.c
+> and pcie-designware*.c files. All changes are optional, so commits
+> that don't seem like an improvement can be easily dropped. Hopefully
+> each patch is self-explanatory.
+> 
+> I tested this series on i.MX6Q, i.MX7D and i.MX8MQ.
 
-Nit: you don't really need ret
+Applied with Lucas' tags to pci/imx, hopefully we can squeeze this
+in for the v5.2 merge window.
 
-The UAPI looks good to me, so
+Lorenzo
 
-Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Feedback is welcome!
+> 
+> Thanks,
+> Andrey Smirnov
+> 
+> Chagnes since [v3]:
+> 
+>     - Collected Reviewed-by from Lucas for most of the patches
+> 
+>     - Converted "PCI: imx6: Replace calls to udelay() with
+>       usleep_range()" to "PCI: imx6: Use usleep_range() in
+>       imx6_pcie_enable_ref_clk()"
+>       
+>     - Converted "PCI: imx6: Remove redundant debug tracing" to "PCI:
+>       imx6: Drop imx6_pcie_wait_for_link()"
+>       
+>     - Converted all of the callers of pcie_phy_poll_ack() to use
+>       true/false in "PCI: imx6: Simplify pcie_phy_poll_ack()"
+> 
+> Changes since [v2]:
+> 
+>     - All non i.MX6 patches dropped, since they were accepted as a
+>       seprarte series
+>       
+>     - Series rebased on latest 'dwc-pci' branch of PCI tree
+>     
+>     - Patches "PCI: imx6: Use flags to indicate support for suspend"
+>       and "PCI: imx6: Replace calls to udelay() with usleep_range()"
+>       added to the series
+> 
+> Changes since [v1]:
+> 
+>   - Dropped "PCI: imx6: Drop imx6_pcie_link_up()" due to the matter
+>     already having been addressed by "PCI: imx6: Fix link training
+>     status detection in link up check" from Trent Piepho
+> 
+>   - Changed "designware" -> "dwc" for all subject lines
+> 
+>   - Collected Acked-by's from Gustavo Pimentel
+> 
+> [v3] lkml.kernel.org/r/20190401042547.14067-1-andrew.smirnov@gmail.com
+> [v2] lkml.kernel.org/r/20190104174925.17153-1-andrew.smirnov@gmail.com
+> [v1] lkml.kernel.org/r/20181221072716.29017-1-andrew.smirnov@gmail.com
+> 
+> Andrey Smirnov (11):
+>   PCI: imx6: Simplify imx7d_pcie_wait_for_phy_pll_lock()
+>   PCI: imx6: Drop imx6_pcie_wait_for_link()
+>   PCI: imx6: Return -ETIMEOUT from imx6_pcie_wait_for_speed_change()
+>   PCI: imx6: Remove PCIE_PL_PFLR_* constants
+>   PCI: dwc: imx6: Share PHY debug register definitions
+>   PCI: imx6: Make use of BIT() in constant definitions
+>   PCI: imx6: Simplify bit operations in PHY functions
+>   PCI: imx6: Simplify pcie_phy_poll_ack()
+>   PCI: imx6: Restrict PHY register data to 16-bit
+>   PCI: imx6: Use flags to indicate support for suspend
+>   PCI: imx6: Use usleep_range() in imx6_pcie_enable_ref_clk()
+> 
+>  drivers/pci/controller/dwc/pci-imx6.c        | 143 ++++++++-----------
+>  drivers/pci/controller/dwc/pcie-designware.c |  12 +-
+>  drivers/pci/controller/dwc/pcie-designware.h |   3 +
+>  3 files changed, 62 insertions(+), 96 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
