@@ -2,163 +2,134 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CFAC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5FEC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83078217D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:26:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gv18BZch"
+	by mail.kernel.org (Postfix) with ESMTP id 89088205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfEAU0i (ORCPT
+        id S1726295AbfEAU1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:26:38 -0400
-Received: from mail-yw1-f44.google.com ([209.85.161.44]:41071 "EHLO
-        mail-yw1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfEAU0h (ORCPT
+        Wed, 1 May 2019 16:27:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726077AbfEAU1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:26:37 -0400
-Received: by mail-yw1-f44.google.com with SMTP id s66so9166723ywg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 13:26:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=k8Q2R+703zo9hbi2OL4YyNWbAuxT/Yv0VfU/hdRrJ0U=;
-        b=gv18BZchL+RuyY1i/cjK9I06s7Og8MeO1hgWKhzRKSj4iw8D8mq3/Q9LCUMlWPbPnS
-         C/vc46VKgN/oa5xXNmgs4KRWwhPJIOxpb5En9PZjT9ZZg3aChZK8V6qEirMSF4tnoPBt
-         6ztAvbV9biZOkot7iUQx+/ll1onHq77lJIIDQMJgN5Rps5XqgPYxSQSDAHyoqDv/dxIN
-         /9UZmKR5JvStQ/DC8leL5XGN5wwm6vuxC52VQQblB6wILUGM/EFL+JGafGkWK40whJiX
-         FJtvI9F/e8Qz+1cYgrVKRwVaCm7bm22QLRXch/JK6nGEiZlCYyR3nXxVmbn5j2svmNTo
-         DsnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=k8Q2R+703zo9hbi2OL4YyNWbAuxT/Yv0VfU/hdRrJ0U=;
-        b=SXrUONA1Q5a6IyenJQWKaNT96eRvhbb7zgyihc9IS+eWOZC4SLXrkrSzlMhSMH8y3d
-         LLJ7dz8h/qzi8grGJjamOAguFyQM/DNPYNHxmC7kk4RbLtCBv22jWDWWR/nj2ItSKbbG
-         ZPneJ7TjuddJTKmRT281Ed630jlOY4xRpmeF907zGSIuKBBi2ygzZ+RZ9JlF/TjfczvG
-         PeUgWYuDp8ecjFES1/Leg+hvsaHY2aQ3EHNJtRD3ql8p+Z/tF1r+WCXxtCBxSWo0LQS2
-         JnENfxiR/o6/EHTTQcfsKmDc7oyO2M2poyY7r1IoNehKnk4PjABiiPzkYsOcXgr3vQbU
-         Wi7g==
-X-Gm-Message-State: APjAAAVbY8zLVH1VWRwpgUQQ2WNFdFq/tn1r05dNvS9GQwChoVgrmwax
-        /m+LpxYPFvXjdMT4Jw6I3w2dKbyE
-X-Google-Smtp-Source: APXvYqyhIdjaj4JsiOk81IFKW/7ghxCbYFtfC+qY4UWVmStXrPMQ3KMLa+vs6vQfQNNfb9fd/ma2kw==
-X-Received: by 2002:a25:3609:: with SMTP id d9mr9176740yba.260.1556742396606;
-        Wed, 01 May 2019 13:26:36 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
-        by smtp.gmail.com with ESMTPSA id 12sm12597899yww.88.2019.05.01.13.26.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 13:26:35 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B030F4111F; Wed,  1 May 2019 16:26:34 -0400 (EDT)
-Date:   Wed, 1 May 2019 16:26:34 -0400
-To:     Thomas Backlund <tmb@mageia.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Song Liu <liu.song.a23@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: perf build broken in 5.1-rc7
-Message-ID: <20190501202634.GE21436@kernel.org>
-References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
- <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
- <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
- <b773df70-58e6-69f8-d566-282b0f7ae579@mageia.org>
- <20190501130751.GB21436@kernel.org>
- <932c4e06-c4db-7bb8-769d-75651d092450@mageia.org>
- <20190501173158.GC21436@kernel.org>
- <f9439dd5-009b-8930-f233-6826c7e7c076@mageia.org>
+        Wed, 1 May 2019 16:27:19 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x41KMsc9036783
+        for <linux-kernel@vger.kernel.org>; Wed, 1 May 2019 16:27:18 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s7gh8n603-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 16:27:17 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 1 May 2019 21:27:16 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 May 2019 21:27:14 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x41KRDMx27656232
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 May 2019 20:27:14 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6A0BB205F;
+        Wed,  1 May 2019 20:27:13 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BAEF0B2065;
+        Wed,  1 May 2019 20:27:13 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  1 May 2019 20:27:13 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id D6EE516C19D9; Wed,  1 May 2019 13:27:13 -0700 (PDT)
+Date:   Wed, 1 May 2019 13:27:13 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, andrea.parri@amarulasolutions.com
+Subject: Re: Question about sched_setaffinity()
+Reply-To: paulmck@linux.ibm.com
+References: <20190427180246.GA15502@linux.ibm.com>
+ <20190430100318.GP2623@hirez.programming.kicks-ass.net>
+ <20190430105129.GA3923@linux.ibm.com>
+ <20190430115551.GT2623@hirez.programming.kicks-ass.net>
+ <20190501191213.GX3923@linux.ibm.com>
+ <20190501151655.51469a4c@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f9439dd5-009b-8930-f233-6826c7e7c076@mageia.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190501151655.51469a4c@gandalf.local.home>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19050120-0040-0000-0000-000004E9BA8C
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011030; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01197178; UDB=6.00627891; IPR=6.00978032;
+ MB=3.00026686; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-01 20:27:16
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050120-0041-0000-0000-000008F5BED2
+Message-Id: <20190501202713.GY3923@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905010126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 01, 2019 at 11:20:02PM +0300, Thomas Backlund escreveu:
+On Wed, May 01, 2019 at 03:16:55PM -0400, Steven Rostedt wrote:
+> On Wed, 1 May 2019 12:12:13 -0700
+> "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
 > 
-> Den 01-05-2019 kl. 20:31, skrev Arnaldo Carvalho de Melo:
-> > Em Wed, May 01, 2019 at 05:09:59PM +0300, Thomas Backlund escreveu:
-> > > Den 01-05-2019 kl. 16:07, skrev Arnaldo Carvalho de Melo:
-> > > > Em Tue, Apr 30, 2019 at 04:31:14PM +0300, Thomas Backlund escreveu:
-> > > > Can you check the output for
-> > > > /tmp/build/perf/feature/test-disassembler-four-args.make.output in your
-> > > > system? And also check what is the prototype for the disassembler()
-> > > > routine on mageia7?
-> > > I guess this is what fails the test:
-> > > cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
-> > > /usr/bin/ld: /usr/lib64/libbfd.a(plugin.o): in function `try_load_plugin':
-> > > /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:243:
-> > > undefined reference to `dlopen'
-> > > /usr/bin/ld:
-> > > /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:271:
-> > > undefined reference to `dlsym'
-> > > /usr/bin/ld:
-> > > /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:256:
-> > > undefined reference to `dlclose'
-> > > /usr/bin/ld:
-> > > /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:246:
-> > > undefined reference to `dlerror'
-> > > as we allow dynamic linking and loading
-> > > And we use linker flags:
-> > > rpm --eval %ldflags
-> > >   -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id
-> > > -Wl,--enable-new-dtags
-> > Would this help?
+> 
+> > OK, what I did was to apply the patch at the end of this email to -rcu
+> > branch dev, then run rcutorture as follows:
 > > 
-> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > index fe3f97e342fa..6d65874e16c3 100644
-> > --- a/tools/perf/Makefile.config
-> > +++ b/tools/perf/Makefile.config
-> > @@ -227,7 +227,7 @@ FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
-> >   EATURE_CHECK_LDFLAGS-libaio = -lrt
-> > -FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes
-> > +FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
-> >   CFLAGS += -fno-omit-frame-pointer
-> >   CFLAGS += -ggdb3
+> > nohup tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 2 --configs "TRIVIAL" --bootargs "trace_event=sched:sched_switch,sched:sched_wakeup ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop"
 > > 
+> > This resulted in the console output that I placed here:
+> > 
+> > http://www2.rdrop.com/~paulmck/submission/console.log.gz
+> > 
+> > But I don't see calls to sched_setaffinity() or migration_cpu_stop().
+> > Steve, is something else needed on the kernel command line in addition to
+> > the following?
+> > 
+> > ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop
 > 
-> Yeah, that fixes it
+> Do you have function graph enabled in the config?
 > 
-> and /tmp/build/perf/feature/test-disassembler-four-args.make.output is now empty as wanted.
-> 
-> 
-> So I guess:
-> 
-> Reported-by: Thomas Backlund <tmb@mageia.org>
-> 
-> Tested-by: Thomas Backlund <tmb@mageia.org>
+> [    2.098303] ftrace bootup tracer 'function_graph' not registered.
 
-Great, thanks for testing!
+I guess I don't!  Thank you, will fix.
 
-- Arnaldo
- 
-> 
-> 
-> Thanks!
-> 
-> 
-> --
-> 
-> Thomas
-> 
+Let's see...
 
--- 
+My .config has CONFIG_HAVE_FUNCTION_GRAPH_TRACER=y.  It looks like I
+need CONFIG_FUNCTION_GRAPH_TRACER=y, which I don't have.  And it looks
+like that needs CONFIG_FUNCTION_TRACER=y, which I also don't have.
+But I do have CONFIG_HAVE_FUNCTION_TRACER=y.  So I should add this
+to my rcutorture command line:
 
-- Arnaldo
+--kconfig "CONFIG_FUNCTION_TRACER=y CONFIG_FUNCTION_GRAPH_TRACER=y".
+
+I fired this up.  Here is hoping!  ;-)
+
+And it does have sched_setaffinity(), woo-hoo!!!  I overwrote the old file:
+
+	http://www2.rdrop.com/~paulmck/submission/console.log.gz
+
+							Thanx, Paul
+
