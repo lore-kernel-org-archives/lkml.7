@@ -2,158 +2,87 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771E1C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC78AC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5055120866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD7020866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:42:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RXpd2YWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfEAVlv (ORCPT
+        id S1726321AbfEAVmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:41:51 -0400
-Received: from muru.com ([72.249.23.125]:47922 "EHLO muru.com"
+        Wed, 1 May 2019 17:42:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33171 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfEAVlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:41:50 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id A87F48198;
-        Wed,  1 May 2019 21:42:06 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 2/2] bus: ti-sysc: Handle devices with no control registers
-Date:   Wed,  1 May 2019 14:41:29 -0700
-Message-Id: <20190501214129.12572-3-tony@atomide.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190501214129.12572-1-tony@atomide.com>
-References: <20190501214129.12572-1-tony@atomide.com>
+        id S1726116AbfEAVmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:42:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vX193pzMz9s9y;
+        Thu,  2 May 2019 07:42:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556746941;
+        bh=5hiGaQoIG0uAw4xFMIcub/IVsipRRaSm2u/2wIbwaoc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RXpd2YWqol42y1AFutefbR/glDVLcZG2/ZDptlhbAHHXETJPaFaK+uXVQ/2A560AQ
+         dRqS0lmUnNvL02FhyNr69wrgtbCvL47652g+j1lXdyHZ6aVw4dQ12JswHu7b0DsQWr
+         s64fOnRGst1vFJbHe/RSctksDyYZoUq8JXhh1aS/XO2pBeyRqodwDTqeKYxoMLgjFM
+         516mN9DFp9/w4vIEgU4NEiigUafxY6p1nin+Prx0WK71dd8WzgKPeE87x+SPMKY/a1
+         YX4U+cLQRhmvDAXoI8okuz85CZNIgyLzjSHA+3Cb/3IaQwQkQeMDperQ4JUcDioEas
+         S9UwFfDzHhJzA==
+Date:   Thu, 2 May 2019 07:42:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the kbuild tree
+Message-ID: <20190502074207.01ae28ba@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/nz79D.vKLeh/Sf1bfBDs.U2"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some interconnect target modules have no module control registers at
-all, such as d_can on am335x and am437x.
+--Sig_/nz79D.vKLeh/Sf1bfBDs.U2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The d_can register offset at 0 is CTL register with 0x401 as the default
-value. I guess I mistook the 0x401 value for a revision register as the
-value happens to look similar to what the revision registers typically
-have for other modules.
+Hi Masahiro,
 
-To handle modules with no control registers, we need to improve the
-ti-sysc driver a bit to bail out with errors on no control registers,
-and then we can remove the bogus revision registers for d_can.
+Commit
 
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/am33xx-l4.dtsi |  4 ----
- arch/arm/boot/dts/am437x-l4.dtsi |  4 ----
- drivers/bus/ti-sysc.c            | 23 +++++++++++------------
- 3 files changed, 11 insertions(+), 20 deletions(-)
+  7b6954a982e7 ("scripts: override locale from environment when running rec=
+ordmcount.pl")
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -1759,8 +1759,6 @@
- 		target-module@cc000 {			/* 0x481cc000, ap 60 46.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "d_can0";
--			reg = <0xcc000 0x4>;
--			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>,
- 				 <&dcan0_fck>;
-@@ -1783,8 +1781,6 @@
- 		target-module@d0000 {			/* 0x481d0000, ap 62 42.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "d_can1";
--			reg = <0xd0000 0x4>;
--			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>,
- 				 <&dcan1_fck>;
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -1575,8 +1575,6 @@
- 		target-module@cc000 {			/* 0x481cc000, ap 50 46.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "d_can0";
--			reg = <0xcc000 0x4>;
--			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>;
- 			clock-names = "fck";
-@@ -1596,8 +1594,6 @@
- 		target-module@d0000 {			/* 0x481d0000, ap 52 3a.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "d_can1";
--			reg = <0xd0000 0x4>;
--			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>;
- 			clock-names = "fck";
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -660,12 +660,6 @@ static int sysc_check_registers(struct sysc *ddata)
- 		nr_regs++;
- 	}
- 
--	if (nr_regs < 1) {
--		dev_err(ddata->dev, "missing registers\n");
--
--		return -EINVAL;
--	}
--
- 	if (nr_matches > nr_regs) {
- 		dev_err(ddata->dev, "overlapping registers: (%i/%i)",
- 			nr_regs, nr_matches);
-@@ -691,12 +685,18 @@ static int sysc_ioremap(struct sysc *ddata)
- {
- 	int size;
- 
--	size = max3(ddata->offsets[SYSC_REVISION],
--		    ddata->offsets[SYSC_SYSCONFIG],
--		    ddata->offsets[SYSC_SYSSTATUS]);
-+	if (ddata->offsets[SYSC_REVISION] < 0 &&
-+	    ddata->offsets[SYSC_SYSCONFIG] < 0 &&
-+	    ddata->offsets[SYSC_SYSSTATUS] < 0) {
-+		size = ddata->module_size;
-+	} else {
-+		size = max3(ddata->offsets[SYSC_REVISION],
-+			    ddata->offsets[SYSC_SYSCONFIG],
-+			    ddata->offsets[SYSC_SYSSTATUS]);
- 
--	if (size < 0 || (size + sizeof(u32)) > ddata->module_size)
--		return -EINVAL;
-+		if ((size + sizeof(u32)) > ddata->module_size)
-+			return -EINVAL;
-+	}
- 
- 	ddata->module_va = devm_ioremap(ddata->dev,
- 					ddata->module_pa,
-@@ -1128,7 +1128,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
- 		   0xffff00f0, 0),
- 	SYSC_QUIRK("dcan", 0, 0, -1, -1, 0xffffffff, 0xffffffff, 0),
--	SYSC_QUIRK("dcan", 0, 0, -1, -1, 0x00001401, 0xffffffff, 0),
- 	SYSC_QUIRK("dmic", 0, 0, 0x10, -1, 0x50010000, 0xffffffff, 0),
- 	SYSC_QUIRK("dwc3", 0, 0, 0x10, -1, 0x500a0200, 0xffffffff, 0),
- 	SYSC_QUIRK("epwmss", 0, 0, 0x4, -1, 0x47400001, 0xffffffff, 0),
--- 
-2.21.0
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/nz79D.vKLeh/Sf1bfBDs.U2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKEq8ACgkQAVBC80lX
+0GwWRQf7B3SsBzdthPP+lVz35l6tnQsMF6k5txw9wWHEEZR1B6xB/8+yvMmXgrSB
+Z5LAfY4HmlqmHpzi2DvU3uZRUH2J46xmOCpTWYAFdOyUwb2Jc8kRJDCHuzJ26Qkr
++/Cc4JlirhZ1OHrbIANuC/gXj9F5vxHJ+zekOMP6ws1ERlMw5/6RYXLkfXOY5xVm
+QJs+8beHWkRULtM4iP+lNcTdpHdGNKneO62MTA5BD0XdXpL0WHrdSsUJNSKLMC40
+/tPM8XQHxjFWpueziiUfmKoY2jm2NZuQ1gbRGlUxI0FachJ5PPOXgxoKuphRqWE/
+KLNHC7fzoGC6sUhr1yxdVqiuRdCulQ==
+=XrbI
+-----END PGP SIGNATURE-----
+
+--Sig_/nz79D.vKLeh/Sf1bfBDs.U2--
