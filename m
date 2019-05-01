@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33F2C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138B1C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6936620866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A482089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mjceeoxu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zc62yhd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfEAQHT (ORCPT
+        id S1726687AbfEAQHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:07:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35074 "EHLO
+        Wed, 1 May 2019 12:07:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35312 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfEAQHS (ORCPT
+        with ESMTP id S1726472AbfEAQHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:07:18 -0400
+        Wed, 1 May 2019 12:07:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lmTrIGpEbI3KMOEYpjM6/I8DyJIPcU5OW04RpHaMmk4=; b=MjceeoxumN84/e65UHYopkW3J5
-        jbvdYbAu8j9CHPZfKzzFkJledp6gzX7UHAiSE2A1+0tOKgHOswlNOFYbe0kDzPsqLWFAsqHV8cNrr
-        DZYb9sdK9qv9jOtfbU0kNMyP2h1odMGgHBqJs6/Hn8xUovLq3lAaypCDyTIVcTzBwLLrwY2M1B1P0
-        tLI0BH7VQbm6FqOam7aePFfeJ2wuzPemXEZlU6HD8vV9Mf8+/QGyqeMYEg5zQ4trcRqAtzgZx+A4B
-        WyjQ6Mecd3IE0LLrFjtwzmEbpo1lQ5ikOYpupyuNZZ+JvnMO4l/qWjwTEpKCJvFnqiiIzt6qKxoj4
-        u3NrNhag==;
+        bh=AzdtBbFHCjWd7P3mgIv4y6C+GQMKPuM0dPoXcWBi+4k=; b=Zc62yhd/KNhOnoD4Oz0HVxIUGJ
+        ECU+tSIb3iXx8Z3M+eD4di90/kAmhkssjjPMj9GHJP4XjlmteyGVje11Wn7gL/JwVChII6z7AowcK
+        MthBbZ+89ENfqzGjZbWywKtyYxVuDh+sfFWmuPgZW+uc5LZni8tEJPG3n7q4xTtM25jG6BG9j0k6c
+        fmpWrrX5SIoI0bzLo8wI/GNU6Upekohnlk8P2MBJZW7MCPOzlCInSikzRv1NXhI+8NHPXFRYwEte3
+        G1cuS7x/BJjBWjSfd7c+o/BL0+efM51xjYubSnmdNSaSB7mHr1BRIFXx0g6OQXDnyjUu37GscR0qu
+        ZnWid9CA==;
 Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLrlL-0008Kv-Eh; Wed, 01 May 2019 16:07:15 +0000
+        id 1hLrlM-0008L9-Sy; Wed, 01 May 2019 16:07:17 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Sami Tolvanen <samitolvanen@google.com>,
@@ -44,9 +44,9 @@ Cc:     Sami Tolvanen <samitolvanen@google.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] mm: fix an overly long line in read_cache_page
-Date:   Wed,  1 May 2019 12:06:33 -0400
-Message-Id: <20190501160636.30841-2-hch@lst.de>
+Subject: [PATCH 2/4] mm: don't cast ->readpage to filler_t for do_read_cache_page
+Date:   Wed,  1 May 2019 12:06:34 -0400
+Message-Id: <20190501160636.30841-3-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190501160636.30841-1-hch@lst.de>
 References: <20190501160636.30841-1-hch@lst.de>
@@ -58,24 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We can just pass a NULL filler and do the right thing inside of
+do_read_cache_page based on the NULL parameter.
+
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- mm/filemap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/pagemap.h |  3 +--
+ mm/filemap.c            | 10 ++++++----
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index bcf909d0de5f..f52c3a2074cd 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -386,8 +386,7 @@ extern int read_cache_pages(struct address_space *mapping,
+ static inline struct page *read_mapping_page(struct address_space *mapping,
+ 				pgoff_t index, void *data)
+ {
+-	filler_t *filler = (filler_t *)mapping->a_ops->readpage;
+-	return read_cache_page(mapping, index, filler, data);
++	return read_cache_page(mapping, index, NULL, data);
+ }
+ 
+ /*
 diff --git a/mm/filemap.c b/mm/filemap.c
-index d78f577baef2..a2fc59f56f50 100644
+index a2fc59f56f50..51f5b02c299a 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
-@@ -2956,7 +2956,8 @@ struct page *read_cache_page(struct address_space *mapping,
- 				int (*filler)(void *, struct page *),
- 				void *data)
+@@ -2866,7 +2866,11 @@ static struct page *do_read_cache_page(struct address_space *mapping,
+ 		}
+ 
+ filler:
+-		err = filler(data, page);
++		if (filler)
++			err = filler(data, page);
++		else
++			err = mapping->a_ops->readpage(data, page);
++
+ 		if (err < 0) {
+ 			put_page(page);
+ 			return ERR_PTR(err);
+@@ -2978,9 +2982,7 @@ struct page *read_cache_page_gfp(struct address_space *mapping,
+ 				pgoff_t index,
+ 				gfp_t gfp)
  {
--	return do_read_cache_page(mapping, index, filler, data, mapping_gfp_mask(mapping));
-+	return do_read_cache_page(mapping, index, filler, data,
-+			mapping_gfp_mask(mapping));
+-	filler_t *filler = (filler_t *)mapping->a_ops->readpage;
+-
+-	return do_read_cache_page(mapping, index, filler, NULL, gfp);
++	return do_read_cache_page(mapping, index, NULL, NULL, gfp);
  }
- EXPORT_SYMBOL(read_cache_page);
+ EXPORT_SYMBOL(read_cache_page_gfp);
  
 -- 
 2.20.1
