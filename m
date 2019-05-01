@@ -2,242 +2,209 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0DCC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78661C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1530207E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32709207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:58:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bIfWBSIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfEAX4e convert rfc822-to-8bit (ORCPT
+        id S1726255AbfEAX6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 19:56:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:10979 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfEAX4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 19:56:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 16:56:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,419,1549958400"; 
-   d="scan'208";a="169748626"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by fmsmga001.fm.intel.com with ESMTP; 01 May 2019 16:56:29 -0700
-Received: from orsmsx124.amr.corp.intel.com (10.22.240.120) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 1 May 2019 16:56:28 -0700
-Received: from orsmsx122.amr.corp.intel.com ([169.254.11.68]) by
- ORSMSX124.amr.corp.intel.com ([169.254.2.120]) with mapi id 14.03.0415.000;
- Wed, 1 May 2019 16:56:29 -0700
-From:   "Allan, Bruce W" <bruce.w.allan@intel.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][next] iavf: use struct_size() helper
-Thread-Topic: [PATCH][next] iavf: use struct_size() helper
-Thread-Index: AQHVAEH1bGJMfMPOGUC5ardmcNljmqZW8YPg
-Date:   Wed, 1 May 2019 23:56:28 +0000
-Message-ID: <804857E1F29AAC47BF68C404FC60A18401094448A5@ORSMSX122.amr.corp.intel.com>
-References: <20190501171759.GA3494@embeddedor>
-In-Reply-To: <20190501171759.GA3494@embeddedor>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiN2UzNDUwMDMtZGE1YS00YTk0LThlM2MtMTRjMGNmNjAxNDZmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiOW5iYTFSeERSWU91bGtUbEEyY2FaU3prdnNYcXdKMDhwTUE3T3RMMUVhQnJPWFVxSTdVdERYWElhbFhRaThlTCJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 1 May 2019 19:58:39 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:34027 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfEAX6i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 19:58:38 -0400
+Received: by mail-vs1-f68.google.com with SMTP id b23so366831vso.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 16:58:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GRQ5pz9uPXwsISxqvh3bR/6vg4eDgpzQJxN66ATgxRs=;
+        b=bIfWBSIawzPHvd2rcG/g2Aj4FB9S6F8w9a48ZYPSAxKA8S28JVG3C9EInd67aWyYuV
+         18VZRmETBaPJZ1Ae+SOkHd8KTUCK54tOvP8PeI3gCgxcRdwoUTReR66QQKzNWx1DFQDC
+         8OysOT2EBdnI7erWaDtovetHazfugNaUnGNqA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GRQ5pz9uPXwsISxqvh3bR/6vg4eDgpzQJxN66ATgxRs=;
+        b=Ivoyb8xH9TtqI6mXImVR/RTYtwSgmlaWnaKbf/AIesdncjIFRIyeSgs2na5TMJ5Yby
+         /l1+p7r7LaHTkGuMgHTEKR4b0KFTd67MEzrGB0cxiQJ9AUWw8ZRG5x0jX3qEGccFN0rq
+         S/N6NZ0c/QMuU46xFtXP2DFzrLxyQlHH7dDg/dhXd1YFco1CJFL/268z2wHPaCzcg2V3
+         x87riMeCg2j5w+4n6/9qxvX0ygM2zgdkICRyoitYEeTleJav/usfDk95r3XDGoRRttY5
+         ksABKUunm+/7FKe9ze200Dp+oKavPcNCJsZl1f552s6r5sG0ODgsbhaCOWqKw5zBNytt
+         NTTQ==
+X-Gm-Message-State: APjAAAXfTBdiC4JgYNaGN9qQw8oNMlPi9JJdt4wnlOF7YNKkqLSp3Iwh
+        OMn9qLZLdf4UJqYnrlZoCiITlcvqBY4=
+X-Google-Smtp-Source: APXvYqxyqjLr0sqH8MTalNInBgGRiIU79B1cfW/vZ/gEJViv8r5M1B2yfq779owHZMkTpZNOli4QSg==
+X-Received: by 2002:a05:6102:98:: with SMTP id t24mr374599vsp.239.1556755117148;
+        Wed, 01 May 2019 16:58:37 -0700 (PDT)
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
+        by smtp.gmail.com with ESMTPSA id s194sm16609889vkf.37.2019.05.01.16.58.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 16:58:35 -0700 (PDT)
+Received: by mail-vk1-f171.google.com with SMTP id x2so133333vkx.13
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 16:58:34 -0700 (PDT)
+X-Received: by 2002:a1f:b654:: with SMTP id g81mr290796vkf.18.1556755113799;
+ Wed, 01 May 2019 16:58:33 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190418001356.124334-1-dianders@chromium.org> <20190418001356.124334-2-dianders@chromium.org>
+In-Reply-To: <20190418001356.124334-2-dianders@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 1 May 2019 16:58:21 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UGjQz9Di=NL_r_g1Hofqv-FWBywfSm9Vu6gGr22wzPrA@mail.gmail.com>
+Message-ID: <CAD=FV=UGjQz9Di=NL_r_g1Hofqv-FWBywfSm9Vu6gGr22wzPrA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] usb: dwc2: bus suspend/resume for hosts with DWC2_POWER_DOWN_PARAM_NONE
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Alexandru M Stan <amstan@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        William Wu <william.wu@rock-chips.com>,
+        linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Randy Li <ayaka@soulik.info>, Chris <zyw@rock-chips.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Julius Werner <jwerner@chromium.org>,
+        Dinh Nguyen <dinguyen@opensource.altera.com>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: netdev-owner@vger.kernel.org [mailto:netdev-
-> owner@vger.kernel.org] On Behalf Of Gustavo A. R. Silva
-> Sent: Wednesday, May 01, 2019 10:18 AM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S. Miller
-> <davem@davemloft.net>
-> Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Subject: [PATCH][next] iavf: use struct_size() helper
-> 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
-> 
-> So, replace code of the following form:
-> 
-> sizeof(struct virtchnl_ether_addr_list) + (count * sizeof(struct
-> virtchnl_ether_addr))
-> 
-> with:
-> 
-> struct_size(veal, list, count)
-> 
-> and so on...
-> 
-> This code was detected with the help of Coccinelle.
+Hi,
 
-What is the Coccinelle script used to detect this issue?
 
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On Wed, Apr 17, 2019 at 5:15 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> This is an attempt to rehash commit 0cf884e819e0 ("usb: dwc2: add bus
+> suspend/resume for dwc2") on ToT.  That commit was reverted in commit
+> b0bb9bb6ce01 ("Revert "usb: dwc2: add bus suspend/resume for dwc2"")
+> because apparently it broke the Altera SOCFPGA.
+>
+> With all the changes that have happened to dwc2 in the meantime, it's
+> possible that the Altera SOCFPGA will just magically work with this
+> change now.  ...and it would be good to get bus suspend/resume
+> implemented.
+>
+> This change is a forward port of one that's been living in the Chrome
+> OS 3.14 kernel tree.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  .../net/ethernet/intel/iavf/iavf_virtchnl.c   | 37 ++++++++-----------
->  1 file changed, 16 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-> b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-> index e64751da0921..9c80bf972b90 100644
-> --- a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-> +++ b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-> @@ -242,7 +242,8 @@ void iavf_configure_queues(struct iavf_adapter
-> *adapter)
->  	struct virtchnl_vsi_queue_config_info *vqci;
->  	struct virtchnl_queue_pair_info *vqpi;
->  	int pairs = adapter->num_active_queues;
-> -	int i, len, max_frame = IAVF_MAX_RXBUFFER;
-> +	int i, max_frame = IAVF_MAX_RXBUFFER;
-> +	size_t len;
-> 
->  	if (adapter->current_op != VIRTCHNL_OP_UNKNOWN) {
->  		/* bail because we already have a command pending */
-> @@ -251,8 +252,7 @@ void iavf_configure_queues(struct iavf_adapter
-> *adapter)
->  		return;
->  	}
->  	adapter->current_op = VIRTCHNL_OP_CONFIG_VSI_QUEUES;
-> -	len = sizeof(struct virtchnl_vsi_queue_config_info) +
-> -		       (sizeof(struct virtchnl_queue_pair_info) * pairs);
-> +	len = struct_size(vqci, qpair, pairs);
->  	vqci = kzalloc(len, GFP_KERNEL);
->  	if (!vqci)
->  		return;
-> @@ -351,7 +351,8 @@ void iavf_map_queues(struct iavf_adapter
-> *adapter)
->  {
->  	struct virtchnl_irq_map_info *vimi;
->  	struct virtchnl_vector_map *vecmap;
-> -	int v_idx, q_vectors, len;
-> +	int v_idx, q_vectors;
-> +	size_t len;
->  	struct iavf_q_vector *q_vector;
-> 
->  	if (adapter->current_op != VIRTCHNL_OP_UNKNOWN) {
-> @@ -364,9 +365,7 @@ void iavf_map_queues(struct iavf_adapter
-> *adapter)
-> 
->  	q_vectors = adapter->num_msix_vectors - NONQ_VECS;
-> 
-> -	len = sizeof(struct virtchnl_irq_map_info) +
-> -	      (adapter->num_msix_vectors *
-> -		sizeof(struct virtchnl_vector_map));
-> +	len = struct_size(vimi, vecmap, adapter->num_msix_vectors);
->  	vimi = kzalloc(len, GFP_KERNEL);
->  	if (!vimi)
->  		return;
-> @@ -433,9 +432,10 @@ int iavf_request_queues(struct iavf_adapter
-> *adapter, int num)
->  void iavf_add_ether_addrs(struct iavf_adapter *adapter)
->  {
->  	struct virtchnl_ether_addr_list *veal;
-> -	int len, i = 0, count = 0;
-> +	int i = 0, count = 0;
->  	struct iavf_mac_filter *f;
->  	bool more = false;
-> +	size_t len;
-> 
->  	if (adapter->current_op != VIRTCHNL_OP_UNKNOWN) {
->  		/* bail because we already have a command pending */
-> @@ -457,15 +457,13 @@ void iavf_add_ether_addrs(struct iavf_adapter
-> *adapter)
->  	}
->  	adapter->current_op = VIRTCHNL_OP_ADD_ETH_ADDR;
-> 
-> -	len = sizeof(struct virtchnl_ether_addr_list) +
-> -	      (count * sizeof(struct virtchnl_ether_addr));
-> +	len = struct_size(veal, list, count);
->  	if (len > IAVF_MAX_AQ_BUF_SIZE) {
->  		dev_warn(&adapter->pdev->dev, "Too many add MAC
-> changes in one request\n");
->  		count = (IAVF_MAX_AQ_BUF_SIZE -
->  			 sizeof(struct virtchnl_ether_addr_list)) /
->  			sizeof(struct virtchnl_ether_addr);
-> -		len = sizeof(struct virtchnl_ether_addr_list) +
-> -		      (count * sizeof(struct virtchnl_ether_addr));
-> +		len = struct_size(veal, list, count);
->  		more = true;
->  	}
-> 
-> @@ -505,8 +503,9 @@ void iavf_del_ether_addrs(struct iavf_adapter
-> *adapter)
->  {
->  	struct virtchnl_ether_addr_list *veal;
->  	struct iavf_mac_filter *f, *ftmp;
-> -	int len, i = 0, count = 0;
-> +	int i = 0, count = 0;
->  	bool more = false;
-> +	size_t len;
-> 
->  	if (adapter->current_op != VIRTCHNL_OP_UNKNOWN) {
->  		/* bail because we already have a command pending */
-> @@ -528,15 +527,13 @@ void iavf_del_ether_addrs(struct iavf_adapter
-> *adapter)
->  	}
->  	adapter->current_op = VIRTCHNL_OP_DEL_ETH_ADDR;
-> 
-> -	len = sizeof(struct virtchnl_ether_addr_list) +
-> -	      (count * sizeof(struct virtchnl_ether_addr));
-> +	len = struct_size(veal, list, count);
->  	if (len > IAVF_MAX_AQ_BUF_SIZE) {
->  		dev_warn(&adapter->pdev->dev, "Too many delete MAC
-> changes in one request\n");
->  		count = (IAVF_MAX_AQ_BUF_SIZE -
->  			 sizeof(struct virtchnl_ether_addr_list)) /
->  			sizeof(struct virtchnl_ether_addr);
-> -		len = sizeof(struct virtchnl_ether_addr_list) +
-> -		      (count * sizeof(struct virtchnl_ether_addr));
-> +		len = struct_size(veal, list, count);
->  		more = true;
->  	}
->  	veal = kzalloc(len, GFP_ATOMIC);
-> @@ -973,7 +970,7 @@ static void iavf_print_link_message(struct
-> iavf_adapter *adapter)
->  void iavf_enable_channels(struct iavf_adapter *adapter)
->  {
->  	struct virtchnl_tc_info *vti = NULL;
-> -	u16 len;
-> +	size_t len;
->  	int i;
-> 
->  	if (adapter->current_op != VIRTCHNL_OP_UNKNOWN) {
-> @@ -983,9 +980,7 @@ void iavf_enable_channels(struct iavf_adapter
-> *adapter)
->  		return;
->  	}
-> 
-> -	len = (adapter->num_tc * sizeof(struct virtchnl_channel_info)) +
-> -	       sizeof(struct virtchnl_tc_info);
-> -
-> +	len = struct_size(vti, list, adapter->num_tc);
->  	vti = kzalloc(len, GFP_KERNEL);
->  	if (!vti)
->  		return;
-> --
-> 2.21.0
+> This patch was last posted at:
+>
+> https://lkml.kernel.org/r/1446237173-15263-1-git-send-email-dianders@chromium.org
+>
+> ...and appears to have died the death of silence.  Maybe it could get
+> some bake time in linuxnext if we can't find any proactive testing?
+>
+> I will also freely admit that I don't know tons about the theory
+> behind this patch.  I'm mostly just re-hashing the original commit
+> from Kever that was reverted since:
+> * Turning on partial power down on rk3288 doesn't "just work".  I
+>   don't get hotplug events.  This is despite dwc2 auto-detecting that
+>   we are power optimized.
+> * If we don't do something like this commit we don't get into as low
+>   of a power mode.
 
+OK, I spent the day digging more into this patch to confirm that it's
+really the right thing to do.  ...and it still seems to be.
+
+First off: I'm pretty sure the above sentence "If we don't do
+something like this commit we don't get into as low of a power mode."
+is totally wrong.  Luckily it's "after the cut" and not part of the
+commit message.  Specifically I did a bunch of power testing and I
+couldn't find any instance saving power after this patch.
+
+...but, then I looked more carefully at all the history of this
+commit.  I ended up at:
+
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/306265/
+
+...where I said that this fixes a resume speed regression.  More
+details could be found at the linked bug, AKA:
+
+https://bugs.chromium.org/p/chromium/issues/detail?id=548336
+
+...but, sadly, I wasn't as verbose as I usually am and didn't describe
+my exact testing setup.  So I tried to reproduce.  ...and I was able
+to.  I tested on an rk3288-veyron-jerry with an empty USB hub plugged
+into the left port (the host port) and my "servo 2" debug board hooked
+up to the right port.  The "power_Resume" test in Chrome OS certainly
+showed a regression in 3.14 when doing a suspend/resume cycle.
+
+
+Digging into the logs in 3.14, before this patch I saw this in the logs:
+
+usb 3-1: reset high-speed USB device number 2 using dwc2
+usb 3-1.7: reset high-speed USB device number 3 using dwc2
+
+...after this patch:
+
+usb 3-1: USB disconnect, device number 2
+usb 3-1.7: USB disconnect, device number 3
+usb 3-1: new high-speed USB device number 4 using dwc2
+usb 3-1: New USB device found, idVendor=1a40, idProduct=0201, bcdDevice= 1.00
+usb 3-1: New USB device strings: Mfr=0, Product=1, SerialNumber=0
+usb 3-1: Product: USB 2.0 Hub [MTT]
+usb 3-1.7: new high-speed USB device number 5 using dwc2
+usb 3-1.7: New USB device found, idVendor=1a40, idProduct=0101, bcdDevice= 1.11
+usb 3-1.7: New USB device strings: Mfr=0, Product=1, SerialNumber=0
+usb 3-1.7: Product: USB 2.0 Hub
+
+...so basically my belief is that without this patch we're just sorta
+leaving the device hanging and it get confused on resume.  After this
+patch we behave slightly better.
+
+I tested on 4.19 and found much the same.  There:
+
+usb 2-1: reset high-speed USB device number 2 using dwc2
+usb 2-1.7: reset high-speed USB device number 3 using dwc2
+
+vs.
+
+usb 2-1.7: USB disconnect, device number 3
+usb 2-1: USB disconnect, device number 2
+usb 2-1: new high-speed USB device number 4 using dwc2
+usb 2-1: New USB device found, idVendor=1a40, idProduct=0201, bcdDevice= 1.00
+usb 2-1: New USB device strings: Mfr=0, Product=1, SerialNumber=0
+usb 2-1: Product: USB 2.0 Hub [MTT]
+usb 2-1.7: new high-speed USB device number 5 using dwc2
+usb 2-1.7: New USB device found, idVendor=1a40, idProduct=0101, bcdDevice= 1.11
+usb 2-1.7: New USB device strings: Mfr=0, Product=1, SerialNumber=0
+usb 2-1.7: Product: USB 2.0 Hub
+
+
+On 4.19 I didn't actually notice a the same resume time regression,
+presumably because things are happening more asynchronously there (I
+didn't confirm this).  ...but in any case it seems like the right
+thing to do to actually do the suspend.
+
+
+I'll also re-iterate once more that I'm not claiming that my patch
+helps with "partial power down".  It merely makes the "power savings
+disabled" case work more properly.
+
+
+I'll also note that my patch is already in Felipe's "testing/next"
+branch which I continue to believe is correct and good.
+
+-Doug
