@@ -2,103 +2,93 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22839C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8299C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3FC21743
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:11:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Iwr3Cs2v"
+	by mail.kernel.org (Postfix) with ESMTP id 870332177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556698304;
+	bh=tFB4aM4+JcpNvRnvjtKNssh7m9a9GaZRisGavKOFPKI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QKt3LUMMKLMoZR4YbFMepMPBJvpbXZSChcnNZFDLZxFjAg4NrsmwcjlUmd102IXuG
+	 3eKlvVM1KI2HXnYhRpjotoIiXtqZ/KkyS7PnAb3ZFyGHxgd+ol2mohHCMRHEK8xmFE
+	 BK9McyltmGfal811gUOU/bwaFIU4raKVuPqKrcMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfEAILM (ORCPT
+        id S1726243AbfEAILn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 04:11:12 -0400
-Received: from sonic317-55.consmr.mail.bf2.yahoo.com ([74.6.129.110]:33532
-        "EHLO sonic317-55.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726022AbfEAILM (ORCPT
+        Wed, 1 May 2019 04:11:43 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43218 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfEAILn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 04:11:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1556698270; bh=Y2dHOET1wsukHphaUpBUg3ZJmm3iLOlC79FvnUDGATo=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=Iwr3Cs2vnCLXqwuJcLFrTtJi9D5feFdQ4OvdmKz12h6W8YAjvazLv+sljuU8NLJwKRz2HwXv0EqEJ3warnxoZqnpEEVZe8vp3mUAiZ4oh5oIOsZwg4x2BEziJwKCdcxQViOzGcuZ9OvcKXoTQjpJ9TQquc4jLGR2x8ho2giXPJ4gyomxtrSahtmEYqizcFbjlWCxi9mY1gyAzjzRQGRLznlBlvY4u7ELN/S2pXtszZEHusUWhAxhdvBlfFivYmp0AoEG6hP+f6NE1LC8H+hid+qlgLg8jTtty71wohNEi0V1fxPVqIdnFRK4x10ha1F5uxpDQwoBFdkMiVYWVoEEJw==
-X-YMail-OSG: 2rrnJ.QVM1koCGyqZVLrE.lIGmouJzP82.MxT_3Mt8TCIW5KhE1lOIlRr9zTD8z
- bjDPQkFPmriu7kk5kJYFBSN7vH5EPgdSWEyCsdr7Q_kfFg3VrJjvON74KtvXZg0hLcsDrDRKyYXI
- m0jxyDHPVeEAvfNuTOSK2YdxMS6kBO0SNzsuwYzQR_GIwwhn4N5MKLKmrowlN7CGyM8Eqsvggqv1
- hNf_CEe0xMsLRjzu290lxvcdvJC6JPd6Z3lMBHfAtisQP_HCj8SEuAa0Q2XSBZfKXgNLoCVdRVdD
- qhjqnxgTFk08oiMg735XRdupNwC_8MwPHl0Qv0a7ww3ozg8w.pkaJ0opuFj35zU9N76uAww1uTUB
- xSdBnEc7hPP1Qy.W.QmYQF1Xxr9VU56iv7S_GTN_GBlp_S.XJ9ykbS0m1CZCm63fSZo7aBBMhSrJ
- BsZAIjSQR.1_sZvIH2L8sYwdqebSZ6nMMxffnicwmJMPr1LUukg1gl1aa_0A45fKIKjGPe_DLXse
- ItQxL8Hxm3Z1gvBhT82_jhvT.VpXSzkIekYVYo9wJ1a4u_214SBfglaOwRcde3ZRW5tG_zwkiDXs
- WARcwN0zvm2R0hYYSTPYOqCadLvO_4x2yBU.jGGYdmSttbbobbhGSSO4EuxrnGkBWWXtnjmETDLZ
- 5NN0rYC8LY644gILCkKN6.N3Si6HWeLILxbMK2nkd5OomJmLA2UjDJufPRiRb.XFL1ruwxfocycR
- gNq2kFjT7nEbm8NTEvOKGAiLuj6mpWhgLbWV9JDdYyLGz4F10qlsTtMYI2aIADKh0Ky6m3CNoJVJ
- 8lnPh84HLJqoDnhLG31JAOEK.EjCfWnK_V1DbOrIamLhcoB7GBmxdo39EreYilyRnWhcW3F_FwLS
- LcVj0qfgO_uPFVeT_Jt7FJQWF.1D6Wv7iBOuNzXKffxqhidtXwaUKK2grbWcjfyXv19so5jDpLO2
- Zy_wK_ry1JMZy.WrincmWH.UPUqZfMeB0vkTUBI9pXk9q2V70TtyrKjGwDmOyQ1BNz13cT04jO9D
- oJZcfQefH6.EoVq38t5Q75xGcH4FxZPhsBuu19arVK_gdN3CPgLWsxOyu2Wgm7iqQSMWe197rfXz
- ZgQDrw5BKVeKLEXW.MtSBblnq_MtXXDkV7zSFuGEy1wstFYy34keUiQl3zKY5QHPCkWpweL9pWfW
- CzDHzRwbVq5T9NAlRZtv_gRTFmp6seDzVqkmlSFaisDodhlN7kld3ti45kvFK18J8qZ0hZx8r75_
- MuLgEQ.vWFogbqCZiwFoDiZ4-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.bf2.yahoo.com with HTTP; Wed, 1 May 2019 08:11:10 +0000
-Received: from adsl-173-228-226-134.prtc.net (EHLO [172.20.4.247]) ([173.228.226.134])
-          by smtp411.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID ea83374154492caf1b6f366f97407823;
-          Wed, 01 May 2019 08:09:09 +0000 (UTC)
-Subject: Re: linux-next: manual merge of the staging tree with the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Gao Xiang <gaoxiang25@huawei.com>
-References: <20190501170528.2d86d133@canb.auug.org.au>
-From:   Gao Xiang <hsiangkao@aol.com>
-Message-ID: <a118d56b-fd0f-1d2d-dd82-b6f16881e0cd@aol.com>
-Date:   Wed, 1 May 2019 16:09:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 04:11:43 -0400
+Received: by mail-ot1-f67.google.com with SMTP id u15so14215233otq.10;
+        Wed, 01 May 2019 01:11:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tFB4aM4+JcpNvRnvjtKNssh7m9a9GaZRisGavKOFPKI=;
+        b=iMYur87mO8zaamRQ0cdCcPbTtLf731eZvEdJNrmExHL6S/PaRNvOF/cCxmU5YaJ2jt
+         qlxhZ8mxxoODmVgToDp2yDHBX1aiuSWnWDu8/HB/LBIV1IjG5Ij62ozg2I56xz1aHpBP
+         jleB2R5R0C9Dk5L980/0ZepWjoowEUDPzB12Cr/jt08oYWq+CSbHyc4bmfGhLsm+RBIT
+         A16xSx+2uqJjDwU2CCM0Pc9tcW0VBVoCbNX2qVzWAMHO7mhuneL4sYpqS41m8dYlqaNL
+         U7Tgeq+R0jspn4SZShKum/fxIT3nLZrNsdWxkH0gBm5jgjxy/RBegiQXtCg6h3ht8NN4
+         e/ew==
+X-Gm-Message-State: APjAAAWJrofgYY9/cAs/z+mVOpAjwdcNvk55wlLgVKij0cFx+RvU/v9w
+        PkuX81EWnxENwidCkIIxg5xOFPZbzYdJiJxp87s=
+X-Google-Smtp-Source: APXvYqzR1Q0ES6xxT4dodfDoZJvDTzRUQY5/M28gbUk04gup0u1/uDZhRu/u7OrdgOYLLASscAMOYOTatSORs1PparU=
+X-Received: by 2002:a9d:6e17:: with SMTP id e23mr15147617otr.65.1556698302675;
+ Wed, 01 May 2019 01:11:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190501170528.2d86d133@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20190430155229.14213-1-pierre-louis.bossart@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 1 May 2019 10:11:31 +0200
+Message-ID: <CAJZ5v0hm5RLDRd-T+fwn_JGCZH-++ZhCZjKf7ww1wbj7ax_KLA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 30, 2019 at 5:52 PM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
+>
+> When the DSDT tables expose devices with subdevices and a set of
+> hierarchical _DSD properties, the data returned by
+> acpi_get_next_subnode() is incorrect, with the results suggesting a bad
+> pointer assignment. The parser works fine with device_nodes or
+> data_nodes, but not with a combination of the two.
+>
+> The problem is traced to an invalid pointer used when jumping from
+> handling device_nodes to data nodes. The existing code looks for data
+> nodes below the last subdevice found instead of the common root. Fix
+> by forcing the acpi_device pointer to be derived from the same fwnode
+> for the two types of subnodes.
+>
+> This same problem of handling device and data nodes was already fixed
+> in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
+> node parsing in acpi_get_next_subnode()")' but broken later by 'commit
+> 34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
+> this should probably go to linux-stable all the way to 4.12
+>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-On 2019/5/1 ??????3:05, Stephen Rothwell wrote:
-> Hi all,
->
-> Today's linux-next merge of the staging tree got conflicts in:
->
->    drivers/staging/erofs/data.c
->    drivers/staging/erofs/unzip_vle.c
->
-> between commit:
->
->    2b070cfe582b ("block: remove the i argument to bio_for_each_segment_all")
->
-> from the block tree and commit:
->
->    14a56ec65bab ("staging: erofs: support IO read error injection")
->
-> from the staging tree.
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->
-the patch looks good to me,
+Applied with the Andy's R-by, but I reformatted the comment to take
+fewer lines of code.
 
-
-Thanks,
-Gao Xiang
-
+Thanks!
