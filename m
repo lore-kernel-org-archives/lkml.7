@@ -2,163 +2,90 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C6DC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5D6C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C8E21670
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4396B2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eg0eNTzo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gWkzZcyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfEAMgi (ORCPT
+        id S1726434AbfEAMhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 08:36:38 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:30802 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfEAMgi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 08:36:38 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x41CaEwG024127;
-        Wed, 1 May 2019 21:36:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x41CaEwG024127
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556714175;
-        bh=VK7aHk/MZyDUXyWzUHoo1zrK2o+1I6T6YLA0xHdjYGg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eg0eNTzo19rCdtgKFC1ZUtcz1rgCM34HuHQkMv9LN9PbFQxiNv73S/BXioyjjSfpc
-         vbKh0FUKDB9LmjBaHMDJCDLr1lOZh2LaAOulEPpmEyqsRkLtY6YcPu7Sx+nobu3tAF
-         S0M1yMKJizIL7xvWoG5zbUumFLSexOkwZUuhDmW36aiCo2SOkzzYvDIEPTA48sm/c3
-         m6s1WLPlWRY82+KhyP1sNiWVUKWEqM7guW5mVw1xzx//oOTgFQfA9KrmNfVNHDDut9
-         6uRsar+A1Ck/mCwxvLYqURDbPqlAKZhBXTd8aZhx3A9BU9UXYkYv+2snDl6kChc97m
-         yjPINA6OVWdQw==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id b74so6626852vsd.9;
-        Wed, 01 May 2019 05:36:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAUVtvx0sYKFZEUt+IYcX/fwOo10OG3hD0Oq2Il/If/4RsD752BU
-        bqlwFq6JqbWYiQ2M58S5KcLmV6g7RjrAVVfV2Bk=
-X-Google-Smtp-Source: APXvYqwk/3oj1zhoTg+o3jglmbW/W9o7ZngLSFSQf3gejL3K9CRIKMsePE069jMjLhDPgdaXIwLGCuhAMjSsxpyQi08=
-X-Received: by 2002:a67:fc4:: with SMTP id 187mr12621550vsp.215.1556714173746;
- Wed, 01 May 2019 05:36:13 -0700 (PDT)
+        Wed, 1 May 2019 08:37:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50911 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbfEAMhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 08:37:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=m0uIUv9YcB2rBMJ6vazLEXNKZm0mfkTXXnCh6q5+fEc=; b=gWkzZcyE8qpTPXGdKfBs5Ya1+d
+        UYiAlBNAbGOCKKSiMeBpBQ8xvKq6cIWlaa7gKMIaeDYWGFGQMaMdioCOJkYfnMCs/YVIUPsz8CaCG
+        Q4YTmOc9Jw+g76NvIdEjmrGYFKmzTEfr+ubOG8iTZwnP1KqNH0QQHi5c1DI9K+JF9DVQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hLoUg-0002l7-JG; Wed, 01 May 2019 14:37:50 +0200
+Date:   Wed, 1 May 2019 14:37:50 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Peng Li <lipeng321@huawei.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        yisen.zhuang@huawei.com, salil.mehta@huawei.com
+Subject: Re: [PATCH net-next 1/3] net: hns3: add support for multiple media
+ type
+Message-ID: <20190501123750.GA9844@lunn.ch>
+References: <1556679944-100941-1-git-send-email-lipeng321@huawei.com>
+ <1556679944-100941-2-git-send-email-lipeng321@huawei.com>
 MIME-Version: 1.0
-References: <1556336020-15634-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1556336020-15634-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 1 May 2019 21:35:37 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT=0qxrCWawSQpoc9qfqM5GZmnznAA-RXrtBzZ5m0Y3mA@mail.gmail.com>
-Message-ID: <CAK7LNAT=0qxrCWawSQpoc9qfqM5GZmnznAA-RXrtBzZ5m0Y3mA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] kbuild: move samples/ to KBUILD_VMLINUX_OBJS
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556679944-100941-2-git-send-email-lipeng321@huawei.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 12:34 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Handle samples/ like the other top-level directories to simplify
-> the Makefile.
->
-> Include include/config/auto.conf earlier to evaluate
-> drivers-$(CONFIG_SAMPLES).
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+On Wed, May 01, 2019 at 11:05:42AM +0800, Peng Li wrote:
+> From: Jian Shen <shenjian15@huawei.com>
+> 
+> Previously, we can only identify copper and fiber type, the
+> supported link modes of port information are always showing
+> SR type. This patch adds support for multiple media types,
+> include SR, LR CR, KR. Driver needs to query the media type
+> from firmware periodicly, and updates the port information.
+> 
+> The new port information looks like this:
+> Settings for eth0:
+>         Supported ports: [ FIBRE ]
+>         Supported link modes:   25000baseCR/Full
+>                                 25000baseSR/Full
+>                                 1000baseX/Full
+>                                 10000baseCR/Full
+>                                 10000baseSR/Full
+>                                 10000baseLR/Full
+>         Supported pause frame use: Symmetric
+>         Supports auto-negotiation: No
+>         Supported FEC modes: None BaseR
+>         Advertised link modes:  25000baseCR/Full
+>                                 25000baseSR/Full
+>                                 1000baseX/Full
+>                                 10000baseCR/Full
+>                                 10000baseSR/Full
+>                                 10000baseLR/Full
 
-Series, applied to linux-kbuild.
+Hi Peng
 
+If it does not support auto-negotiation, do these advertised link
+modes make any sense? Does it really advertise, or is it all fixed
+configured?
 
-
->  Makefile         | 18 ++++++++----------
->  samples/Makefile |  2 +-
->  2 files changed, 9 insertions(+), 11 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 15e17b4..251ded5 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -598,20 +598,21 @@ endif
->
->  export KBUILD_MODULES KBUILD_BUILTIN
->
-> +ifeq ($(dot-config),1)
-> +include include/config/auto.conf
-> +endif
-> +
->  ifeq ($(KBUILD_EXTMOD),)
->  # Objects we will link into vmlinux / subdirs we need to visit
->  init-y         := init/
->  drivers-y      := drivers/ sound/
-> +drivers-$(CONFIG_SAMPLES) += samples/
->  net-y          := net/
->  libs-y         := lib/
->  core-y         := usr/
->  virt-y         := virt/
->  endif # KBUILD_EXTMOD
->
-> -ifeq ($(dot-config),1)
-> -include include/config/auto.conf
-> -endif
-> -
->  # The all: target is the default when no target is given on the
->  # command line.
->  # This allow a user to issue only 'make' to build a kernel including modules
-> @@ -1005,7 +1006,7 @@ export KBUILD_VMLINUX_LIBS := $(libs-y1)
->  export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
->  export LDFLAGS_vmlinux
->  # used by scripts/package/Makefile
-> -export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) arch Documentation include samples scripts tools)
-> +export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) arch Documentation include scripts tools)
->
->  vmlinux-deps := $(KBUILD_LDS) $(KBUILD_VMLINUX_OBJS) $(KBUILD_VMLINUX_LIBS)
->
-> @@ -1042,11 +1043,8 @@ vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
->
->  targets := vmlinux
->
-> -# Build samples along the rest of the kernel. This needs headers_install.
-> -ifdef CONFIG_SAMPLES
-> -vmlinux-dirs += samples
-> +# Some samples need headers_install.
->  samples: headers_install
-> -endif
->
->  # The actual objects are generated when descending,
->  # make sure no implicit rule kicks in
-> @@ -1362,7 +1360,7 @@ MRPROPER_FILES += .config .config.old .version \
->  #
->  clean: rm-dirs  := $(CLEAN_DIRS)
->  clean: rm-files := $(CLEAN_FILES)
-> -clean-dirs      := $(addprefix _clean_, . $(vmlinux-alldirs) Documentation samples)
-> +clean-dirs      := $(addprefix _clean_, . $(vmlinux-alldirs) Documentation)
->
->  PHONY += $(clean-dirs) clean archclean vmlinuxclean
->  $(clean-dirs):
-> diff --git a/samples/Makefile b/samples/Makefile
-> index b1142a9..50f8586 100644
-> --- a/samples/Makefile
-> +++ b/samples/Makefile
-> @@ -1,6 +1,6 @@
->  # Makefile for Linux samples code
->
-> -obj-$(CONFIG_SAMPLES)  += kobject/ kprobes/ trace_events/ livepatch/ \
-> +obj-y                  += kobject/ kprobes/ trace_events/ livepatch/ \
->                            hw_breakpoint/ kfifo/ kdb/ hidraw/ rpmsg/ seccomp/ \
->                            configfs/ connector/ v4l/ trace_printk/ \
->                            vfio-mdev/ statx/ qmi/ binderfs/
-> --
-> 2.7.4
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+	Andrew
