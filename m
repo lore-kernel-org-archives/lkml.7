@@ -2,201 +2,134 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99828C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE76C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C132089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F86820866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfEASB1 (ORCPT
+        id S1726145AbfEASFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 14:01:27 -0400
-Received: from mga04.intel.com ([192.55.52.120]:2382 "EHLO mga04.intel.com"
+        Wed, 1 May 2019 14:05:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40328 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfEASB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 14:01:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 11:01:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,418,1549958400"; 
-   d="scan'208";a="153925777"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by FMSMGA003.fm.intel.com with ESMTP; 01 May 2019 11:01:26 -0700
-Received: from fmsmsx152.amr.corp.intel.com (10.18.125.5) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 1 May 2019 11:01:25 -0700
-Received: from crsmsx103.amr.corp.intel.com (172.18.63.31) by
- FMSMSX152.amr.corp.intel.com (10.18.125.5) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 1 May 2019 11:01:25 -0700
-Received: from crsmsx101.amr.corp.intel.com ([169.254.1.116]) by
- CRSMSX103.amr.corp.intel.com ([169.254.4.184]) with mapi id 14.03.0415.000;
- Wed, 1 May 2019 12:01:22 -0600
-From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>
-Subject: Re: [RESEND PATCH v6 08/12] x86/fsgsbase/64: Use the per-CPU base
- as GSBASE at the paranoid_entry
-Thread-Topic: [RESEND PATCH v6 08/12] x86/fsgsbase/64: Use the per-CPU base
- as GSBASE at the paranoid_entry
-Thread-Index: AQHU22qy2YcgqOSDVkqDsKh+C1SMYaYcjFAAgBE2kgCAAFfpAIAo3UsAgAA/sgCAAAW8AA==
-Date:   Wed, 1 May 2019 18:01:22 +0000
-Message-ID: <0816B012-44E8-40FB-8003-33C4841CD0E1@intel.com>
-References: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com>
- <1552680405-5265-9-git-send-email-chang.seok.bae@intel.com>
- <alpine.DEB.2.21.1903251003090.1798@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1904050007050.1802@nanos.tec.linutronix.de>
- <5DCF2089-98EC-42D3-96C3-6ECCDA0B18E2@amacapital.net>
- <C79FA889-BD9B-4427-902F-52EE33A3E6EF@intel.com>
- <CALCETrV4zACb9L_FaU12ZF1O6_vjVyGrcyWwk-mfSUhyxGMXJA@mail.gmail.com>
-In-Reply-To: <CALCETrV4zACb9L_FaU12ZF1O6_vjVyGrcyWwk-mfSUhyxGMXJA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.144.153.227]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C0075CBA414B8A4985AC62B68DD1D25E@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1725973AbfEASFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 14:05:53 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 196693084039;
+        Wed,  1 May 2019 18:05:53 +0000 (UTC)
+Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 61D9944F97;
+        Wed,  1 May 2019 18:05:50 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH] scsi: ses: Fix out-of-bounds memory access in ses_enclosure_data_process()
+Date:   Wed,  1 May 2019 14:05:35 -0400
+Message-Id: <20190501180535.26718-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 01 May 2019 18:05:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IE9uIE1heSAxLCAyMDE5LCBhdCAxMDo0MCwgQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5l
-bC5vcmc+IHdyb3RlOg0KPiANCj4gT24gV2VkLCBNYXkgMSwgMjAxOSBhdCA2OjUyIEFNIEJhZSwg
-Q2hhbmcgU2VvayA8Y2hhbmcuc2Vvay5iYWVAaW50ZWwuY29tPiB3cm90ZToNCj4+IA0KPj4gDQo+
-Pj4gT24gQXByIDUsIDIwMTksIGF0IDA2OjUwLCBBbmR5IEx1dG9taXJza2kgPGx1dG9AYW1hY2Fw
-aXRhbC5uZXQ+IHdyb3RlOg0KPj4+IA0KPj4+IA0KPj4+IA0KPj4+PiBPbiBBcHIgNSwgMjAxOSwg
-YXQgMjozNSBBTSwgVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+IHdyb3RlOg0K
-Pj4+PiANCj4+Pj4+IE9uIE1vbiwgMjUgTWFyIDIwMTksIFRob21hcyBHbGVpeG5lciB3cm90ZToN
-Cj4+Pj4+PiBPbiBGcmksIDE1IE1hciAyMDE5LCBDaGFuZyBTLiBCYWUgd3JvdGU6DQo+Pj4+Pj4g
-RU5UUlkocGFyYW5vaWRfZXhpdCkNCj4+Pj4+PiAgVU5XSU5EX0hJTlRfUkVHUw0KPj4+Pj4+ICBE
-SVNBQkxFX0lOVEVSUlVQVFMoQ0xCUl9BTlkpDQo+Pj4+Pj4gIFRSQUNFX0lSUVNfT0ZGX0RFQlVH
-DQo+Pj4+Pj4gKyAgICBBTFRFUk5BVElWRSAiam1wIC5McGFyYW5vaWRfZXhpdF9ub19mc2dzYmFz
-ZSIsICAgICJub3AiLFwNCj4+Pj4+PiArICAgICAgICBYODZfRkVBVFVSRV9GU0dTQkFTRQ0KPj4+
-Pj4+ICsgICAgd3Jnc2Jhc2UgICAgJXJieA0KPj4+Pj4+ICsgICAgam1wICAgIC5McGFyYW5vaWRf
-ZXhpdF9ub19zd2FwZ3M7DQo+Pj4+PiANCj4+Pj4+IEFnYWluLiBBIGZldyBuZXdsaW5lcyB3b3Vs
-ZCBtYWtlIGl0IG1vcmUgcmVhZGFibGUuDQo+Pj4+PiANCj4+Pj4+IFRoaXMgbW9kaWZpZXMgdGhl
-IHNlbWFudGljcyBvZiBwYXJhbm9pZF9lbnRyeSBhbmQgcGFyYW5vaWRfZXhpdC4gTG9va2luZyBh
-dA0KPj4+Pj4gdGhlIHVzYWdlIHNpdGVzIHRoZXJlIGlzIHRoZSBmb2xsb3dpbmcgY29kZSBpbiB0
-aGUgbm1pIG1hemU6DQo+Pj4+PiANCj4+Pj4+ICAvKg0KPj4+Pj4gICAqIFVzZSBwYXJhbm9pZF9l
-bnRyeSB0byBoYW5kbGUgU1dBUEdTLCBidXQgbm8gbmVlZCB0byB1c2UgcGFyYW5vaWRfZXhpdA0K
-Pj4+Pj4gICAqIGFzIHdlIHNob3VsZCBub3QgYmUgY2FsbGluZyBzY2hlZHVsZSBpbiBOTUkgY29u
-dGV4dC4NCj4+Pj4+ICAgKiBFdmVuIHdpdGggbm9ybWFsIGludGVycnVwdHMgZW5hYmxlZC4gQW4g
-Tk1JIHNob3VsZCBub3QgYmUNCj4+Pj4+ICAgKiBzZXR0aW5nIE5FRURfUkVTQ0hFRCBvciBhbnl0
-aGluZyB0aGF0IG5vcm1hbCBpbnRlcnJ1cHRzIGFuZA0KPj4+Pj4gICAqIGV4Y2VwdGlvbnMgbWln
-aHQgZG8uDQo+Pj4+PiAgICovDQo+Pj4+PiAgY2FsbCAgICBwYXJhbm9pZF9lbnRyeQ0KPj4+Pj4g
-IFVOV0lORF9ISU5UX1JFR1MNCj4+Pj4+IA0KPj4+Pj4gIC8qIHBhcmFub2lkZW50cnkgZG9fbm1p
-LCAwOyB3aXRob3V0IFRSQUNFX0lSUVNfT0ZGICovDQo+Pj4+PiAgbW92cSAgICAlcnNwLCAlcmRp
-DQo+Pj4+PiAgbW92cSAgICAkLTEsICVyc2kNCj4+Pj4+ICBjYWxsICAgIGRvX25taQ0KPj4+Pj4g
-DQo+Pj4+PiAgLyogQWx3YXlzIHJlc3RvcmUgc3Rhc2hlZCBDUjMgdmFsdWUgKHNlZSBwYXJhbm9p
-ZF9lbnRyeSkgKi8NCj4+Pj4+ICBSRVNUT1JFX0NSMyBzY3JhdGNoX3JlZz0lcjE1IHNhdmVfcmVn
-PSVyMTQNCj4+Pj4+IA0KPj4+Pj4gIHRlc3RsICAgICVlYngsICVlYnggICAgICAgICAgICAvKiBz
-d2FwZ3MgbmVlZGVkPyAqLw0KPj4+Pj4gIGpueiAgICBubWlfcmVzdG9yZQ0KPj4+Pj4gbm1pX3N3
-YXBnczoNCj4+Pj4+ICBTV0FQR1NfVU5TQUZFX1NUQUNLDQo+Pj4+PiBubWlfcmVzdG9yZToNCj4+
-Pj4+ICBQT1BfUkVHUw0KPj4+Pj4gDQo+Pj4+PiBJIG1pZ2h0IGJlIG1pc3Npbmcgc29tZXRoaW5n
-LCBidXQgaG93IGlzIHRoYXQgc3VwcG9zZWQgdG8gd29yayB3aGVuDQo+Pj4+PiBwYXJhbm9pZF9l
-bnRyeSB1c2VzIEZTR1NCQVNFPyBJIHRoaW5rIGl0J3MgYnJva2VuLCBidXQgaWYgaXQncyBub3Qg
-dGhlbg0KPj4+Pj4gdGhlcmUgaXMgYSBiaWcgZmF0IGNvbW1lbnQgbWlzc2luZyBleHBsYWluaW5n
-IHdoeS4NCj4+Pj4gDQo+Pj4+IFNvIHRoaXMgX2lzXyBicm9rZW4uDQo+Pj4+IA0KPj4+PiBPbiBl
-bnRyeToNCj4+Pj4gDQo+Pj4+ICAgIHJieCA9IHJkZ3NiYXNlKCkNCj4+Pj4gICAgd3Jnc2Jhc2Uo
-S0VSTkVMX0dTKQ0KPj4+PiANCj4+Pj4gT24gZXhpdDoNCj4+Pj4gDQo+Pj4+ICAgIGlmIChlYngg
-PT0gMCkNCj4+Pj4gICAgICAgICBzd2FwZ3MNCj4+Pj4gDQo+Pj4+IFRoZSByZXN1bHRpbmcgbWF0
-cml4Og0KPj4+PiANCj4+Pj4gfCAgRU5UUlkgR1MgICAgfCBSQlggICAgICAgIHwgRVhJVCAgICAg
-ICAgfCBHUyBvbiBJUkVUICAgIHwgUkVTVUxUDQo+Pj4+IHwgICAgICAgIHwgICAgICAgIHwgICAg
-ICAgIHwgICAgICAgIHwNCj4+Pj4gMSB8ICBLRVJORUxfR1MgICAgfCBLRVJORUxfR1MgICAgfCBF
-QlggPT0gMCAgICB8IFVTRVJfR1MgICAgfCBGQUlMDQo+Pj4+IHwgICAgICAgIHwgICAgICAgIHwg
-ICAgICAgIHwgICAgICAgIHwNCj4+Pj4gMiB8ICBLRVJORUxfR1MgICAgfCBLRVJORUxfR1MgICAg
-fCBFQlggIT0gMCAgICB8IEtFUk5FTF9HUyAgICB8IG9rDQo+Pj4+IHwgICAgICAgIHwgICAgICAg
-IHwgICAgICAgIHwgICAgICAgIHwNCj4+Pj4gMyB8ICBVU0VSX0dTICAgIHwgVVNFUl9HUyAgICB8
-IEVCWCA9PSAwICAgIHwgVVNFUl9HUyAgICB8IG9rDQo+Pj4+IHwgICAgICAgIHwgICAgICAgIHwg
-ICAgICAgIHwgICAgICAgIHwNCj4+Pj4gNCB8ICBVU0VSX0dTICAgIHwgVVNFUl9HUyAgICB8IEVC
-WCAhPSAwICAgIHwgS0VSTkVMX0dTICAgIHwgRkFJTA0KPj4+PiANCj4+Pj4gDQo+Pj4+ICMxIEp1
-c3Qgd29ya3MgYnkgY2hhbmNlIGJlY2F1c2UgaXQncyB1bmxpa2VseSB0aGF0IHRoZSBsb3dlciAz
-MmJpdHMgb2YgYQ0KPj4+PiBwZXIgQ1BVIGtlcm5lbCBHUyBhcmUgYWxsIDAuDQo+Pj4+IA0KPj4+
-PiBCdXQgaXQncyBqdXN0IGEgcXVlc3Rpb24gb2YgcHJvYmFiaWxpdHkgdGhhdCB0aGlzIHR1cm5z
-IGludG8gYQ0KPj4+PiBub24tZGVidWdnYWJsZSBvbmNlIHBlciB5ZWFyIGNyYXNoICh0aGluayBL
-QVNMUikuDQo+Pj4+IA0KPj4+PiAjNCBUaGlzIGNhbiBoYXBwZW4gd2hlbiB0aGUgTk1JIGhpdHMg
-dGhlIGtlcm5lbCBpbiBzb21lIG90aGVyIGVudHJ5IGNvZGUNCj4+Pj4gX0JFRk9SRV8gb3IgX0FG
-VEVSXyBzd2FwZ3MuDQo+Pj4+IA0KPj4+PiBVc2VyIHNwYWNlIHVzaW5nIEdTIGFkZHJlc3Npbmcg
-d2l0aCBHU1szMTowXSAhPSAwIHdpbGwgY3Jhc2ggYW5kIGJ1cm4uDQo+Pj4+IA0KPj4+PiANCj4+
-PiANCj4+PiBIaSBhbGwtDQo+Pj4gDQo+Pj4gSW4gYSBwcmV2aW91cyBpbmNhcm5hdGlvbiBvZiB0
-aGVzZSBwYXRjaGVzLCBJIGNvbXBsYWluZWQgYWJvdXQgdGhlIHVzZSBvZiBTV0FQR1MgaW4gdGhl
-IHBhcmFub2lkIHBhdGguIE5vdyBJ4oCZbSBwdXR0aW5nIG15IG1haW50YWluZXIgZm9vdCBkb3du
-LiAgT24gYSBub24tRlNHU0JBU0Ugc3lzdGVtLCB0aGUgcGFyYW5vaWQgcGF0aCBrbm93biwgZGVm
-aW5pdGl2ZWx5LCB3aGljaCBHUyBpcyB3aGVyZSwgc28gU1dBUEdTIGlzIGFubm95aW5nLiBXaXRo
-IEZTR1NCQVNFLCB1bmxlc3MgeW91IHN0YXJ0IGxvb2tpbmcgYXQgdGhlIFJJUCB0aGF0IHlvdSBp
-bnRlcnJ1cHRlZCwgeW91IGNhbm5vdCBrbm93IHdoZXRoZXIgeW91IGhhdmUgdXNlciBvciBrZXJu
-ZWwgR1NCQVNFIGxpdmUsIHNpbmNlIHRoZXkgY2FuIGhhdmUgbGl0ZXJhbGx5IHRoZSBzYW1lIHZh
-bHVlLiAgT25lIG9mIHRoZSBudW1lcm91cyB2ZXJzaW9ucyBvZiB0aGlzIHBhdGNoIGNvbXBhcmVk
-IHRoZSB2YWx1ZXMgYW5kIGp1c3Qgc2FpZCDigJx3ZWxsLCBpdOKAmXMgaGFybWxlc3MgdG8gU1dB
-UEdTIGlmIHVzZXIgY29kZSBoYXBwZW5zIHRvIHVzZSB0aGUgc2FtZSB2YWx1ZSBhcyB0aGUga2Vy
-bmVs4oCdLiAgSSBjb21wbGFpbmVkIHRoYXQgaXQgd2FzIGZhciB0b28gZnJhZ2lsZS4NCj4+PiAN
-Cj4+PiBTbyBJ4oCZbSBwdXR0aW5nIG15IGZvb3QgZG93bi4gSWYgeW91IGFsbCB3YW50IG15IGFj
-aywgeW914oCZcmUgZ29pbmcgdG8gc2F2ZSB0aGUgb2xkIEdTLCBsb2FkIHRoZSBuZXcgb25lIHdp
-dGggV1JHU0JBU0UsIGFuZCwgb24gcmV0dXJuLCB5b3XigJlyZSBnb2luZyB0byByZXN0b3JlIHRo
-ZSBvbGQgb25lIHdpdGggV1JHU0JBU0UuIFlvdSB3aWxsIG5vdCB1c2UgU1dBUEdTIGluIHRoZSBw
-YXJhbm9pZCBwYXRoLg0KPj4+IA0KPj4+IE9idmlvdXNseSwgZm9yIHRoZSBub24tcGFyYW5vaWQg
-cGF0aCwgaXQgYWxsIGtlZXBzIHdvcmtpbmcgZXhhY3RseSBsaWtlIGl0IGRvZXMgbm93Lg0KPj4g
-DQo+PiBBbHRob3VnaCBJIGNhbiBzZWUgc29tZSBvdGhlciBjb25jZXJucyB3aXRoIHRoaXMsIGxv
-b2tzIGxpa2UgaXQgaXMgc3RpbGwgd29ydGggcHVyc3VpbmcuDQo+PiANCj4+PiANCj4+PiBGdXJ0
-aGVybW9yZSwgaWYgeW91IGZvbGtzIGV2ZW4gd2FudCBtZSB0byByZXZpZXcgdGhpcyBzZXJpZXMs
-IHRoZSBwdHJhY2UgdGVzdHMgbmVlZCB0byBiZSBpbiBwbGFjZS4gIE9uIGluc3BlY3Rpb24gb2Yg
-dGhlIGN1cnJlbnQgY29kZSAoYWZ0ZXIgdGhlIGRlYmFjbGUgYSBmZXcgcmVsZWFzZXMgYmFjayks
-IGl0IGFwcGVhcnMgdGhlIFNFVFJFR1NFVOKAmXMgZWZmZWN0IGRlcGVuZHMgb24gdGhlIGN1cnJl
-bnQgdmFsdWVzIGluIHRoZSByZWdpc3RlcnMg4oCUIGl0IGRvZXMgbm90IGFjdHVhbGx5IHNlZW0g
-dG8gcmVsaWFibHkgbG9hZCB0aGUgd2hvbGUgc3RhdGUuIFNvIG15IGNvbmZpZGVuY2Ugd2lsbCBi
-ZSBncmVhdGx5IGluY3JlYXNlZCBpZiB5b3VyIHNlcmllcyBmaXJzdCBhZGRzIGEgdGVzdCB0aGF0
-IGRldGVjdHMgdGhhdCBidWcgKGFuZCBmYWlscyEpLCB0aGVuIGZpeGVzIHRoZSBidWcgaW4gYSB0
-aW55IGxpdHRsZSBwYXRjaCwgdGhlbiBhZGRzIEZTR1NCQVNFLCBhbmQga2VlcHMgdGhlIHRlc3Qg
-d29ya2luZy4NCj4+PiANCj4+IA0KPj4gSSB0aGluayBJIG5lZWQgdG8gdW5kZXJzdGFuZCB0aGUg
-aXNzdWUuIEFwcHJlY2lhdGUgaWYgeW91IGNhbiBlbGFib3JhdGUgYSBsaXR0bGUgYml0Lg0KPj4g
-DQo+IA0KPiBUaGlzIHBhdGNoIHNlcmllcyBnaXZlcyBhIHBhcnRpY3VsYXIgYmVoYXZpb3IgdG8g
-UFRSQUNFX1NFVFJFR1MgYW5kDQo+IFBUUkFDRV9QT0tFVVNFUi4gIFRoZXJlIHNob3VsZCBiZSBh
-IHRlc3QgY2FzZSB0aGF0IHZhbGlkYXRlcyB0aGF0DQo+IGJlaGF2aW9yLCBpbmNsdWRpbmcgdGVz
-dGluZyB0aGUgd2VpcmQgY2FzZXMgd2hlcmUgZ3MgIT0gMCBhbmQgZ3NiYXNlDQo+IGNvbnRhaW5z
-IHVudXN1YWwgdmFsdWVzLiAgU29tZSBleGlzdGluZyB0ZXN0cyBtaWdodCBiZSBwcmV0dHkgY2xv
-c2UgdG8NCj4gZG9pbmcgd2hhdCdzIG5lZWRlZC4NCj4gDQo+IEJleW9uZCB0aGF0LCB0aGUgY3Vy
-cmVudCBwdXRyZWcoKSBjb2RlIGRvZXMgdGhpczoNCj4gDQo+ICAgIGNhc2Ugb2Zmc2V0b2Yoc3Ry
-dWN0IHVzZXJfcmVnc19zdHJ1Y3QsZ3NfYmFzZSk6DQo+ICAgICAgICAvKg0KPiAgICAgICAgICog
-RXhhY3RseSB0aGUgc2FtZSBoZXJlIGFzIHRoZSAlZnMgaGFuZGxpbmcgYWJvdmUuDQo+ICAgICAg
-ICAgKi8NCj4gICAgICAgIGlmICh2YWx1ZSA+PSBUQVNLX1NJWkVfTUFYKQ0KPiAgICAgICAgICAg
-IHJldHVybiAtRUlPOw0KPiAgICAgICAgaWYgKGNoaWxkLT50aHJlYWQuZ3NiYXNlICE9IHZhbHVl
-KQ0KPiAgICAgICAgICAgIHJldHVybiBkb19hcmNoX3ByY3RsXzY0KGNoaWxkLCBBUkNIX1NFVF9H
-UywgdmFsdWUpOw0KPiAgICAgICAgcmV0dXJuIDA7DQo+IA0KPiBhbmQgZG9fYXJjaF9wcmN0bF82
-NCgpLCBpbiB0dXJuLCBkb2VzIHRoaXM6DQo+IA0KPiAgICBjYXNlIEFSQ0hfU0VUX0dTOiB7DQo+
-ICAgICAgICBpZiAodW5saWtlbHkoYXJnMiA+PSBUQVNLX1NJWkVfTUFYKSkNCj4gICAgICAgICAg
-ICByZXR1cm4gLUVQRVJNOw0KPiANCj4gICAgICAgIHByZWVtcHRfZGlzYWJsZSgpOw0KPiAgICAg
-ICAgLyoNCj4gICAgICAgICAqIEFSQ0hfU0VUX0dTIGhhcyBhbHdheXMgb3ZlcndyaXR0ZW4gdGhl
-IGluZGV4DQo+ICAgICAgICAgKiBhbmQgdGhlIGJhc2UuIFplcm8gaXMgdGhlIG1vc3Qgc2Vuc2li
-bGUgdmFsdWUNCj4gICAgICAgICAqIHRvIHB1dCBpbiB0aGUgaW5kZXgsIGFuZCBpcyB0aGUgb25s
-eSB2YWx1ZSB0aGF0DQo+ICAgICAgICAgKiBtYWtlcyBhbnkgc2Vuc2UgaWYgRlNHU0JBU0UgaXMg
-dW5hdmFpbGFibGUuDQo+ICAgICAgICAgKi8NCj4gICAgICAgIGlmICh0YXNrID09IGN1cnJlbnQp
-IHsNCj4gICAgICAgICBbbm90IHVzZWQgZm9yIHB0cmFjZV0NCj4gICAgICAgIH0gZWxzZSB7DQo+
-ICAgICAgICAgICAgdGFzay0+dGhyZWFkLmdzaW5kZXggPSAwOw0KPiAgICAgICAgICAgIHg4Nl9n
-c2Jhc2Vfd3JpdGVfdGFzayh0YXNrLCBhcmcyKTsNCj4gICAgICAgIH0NCj4gDQo+ICAgICAgICAu
-Li4NCj4gDQo+IFNvIHdyaXRpbmcgdGhlIHZhbHVlIHRoYXQgd2FzIGFscmVhZHkgdGhlcmUgdG8g
-Z3NiYXNlIHZpYSBwdXRyZWcoKQ0KPiBkb2VzIG5vdGhpbmcsIGJ1dCB3cml0aW5nIGEgKmRpZmZl
-cmVudCogdmFsdWUgaW1wbGljaXRseSBjbGVhcnMgZ3MsDQo+IGJ1dCB3cml0aW5nIGEgZGlmZmVy
-ZW50IHZhbHVlIHdpbGwgY2xlYXIgZ3MuDQo+IA0KPiBUaGlzIGJlaGF2aW9yIGlzLCBBRkFJQ1Qs
-IGNvbXBsZXRlIG5vbnNlbnNlLiAgSXQgaGFwcGVucyB0byB3b3JrDQo+IGJlY2F1c2UgdXN1YWxs
-eSBnZGIgd3JpdGVzIHRoZSBzYW1lIHZhbHVlIGJhY2ssIGFuZCwgaW4gYW55IGNhc2UsIGdzDQo+
-IGNvbWVzICphZnRlciogZ3NiYXNlIGluIHVzZXJfcmVnc19zdHJ1Y3QsIHNvIGdzIGdldHMgcmVw
-bGFjZWQgYW55d2F5Lg0KPiBCdXQgSSB0aGluayB0aGF0IHRoaXMgYmVoYXZpb3Igc2hvdWxkIGJl
-IGZpeGVkIHVwIGFuZCBwcm9iYWJseSB0ZXN0ZWQuDQo+IENlcnRhaW5seSB0aGUgYmVoYXZpb3Ig
-c2hvdWxkICpub3QqIGJlIHRoZSBzYW1lIG9uIGEgZnNnc2Jhc2Uga2VybmVsLA0KPiBhbmQgYW5k
-IHRoZSBmc2dzYmFzZSBiZWhhdmlvciBkZWZpbml0ZWx5IG5lZWRzIGEgc2VsZnRlc3QuDQoNCk9r
-YXksIGdvdCB0aGUgcG9pbnQ7IG5vdyBjcnlzdGFsIGNsZWFyLg0KDQpJIGhhdmUgbXkgb3duIHRl
-c3QgY2FzZSBmb3IgdGhhdCB0aG91Z2gsIG5lZWQgdG8gZmluZCBhIHZlcnkgc2ltcGxlIGFuZA0K
-YWNjZXB0YWJsZSBzb2x1dGlvbi4NCg0KVGhhbmtzLA0KQ2hhbmc=
+KASAN has found a slab-out-of-bounds error in ses_enclosure_data_process().
+
+[   27.298092] BUG: KASAN: slab-out-of-bounds in ses_enclosure_data_process+0x919/0xe80 [ses]
+[   27.306407] Read of size 1 at addr ffff8807c99048b1 by task systemd-udevd/1563
+[   27.315173] CPU: 18 PID: 1563 Comm: systemd-udevd Not tainted 4.18.0-80.23.el8.x86_64+debug #1
+[   27.323835] Hardware name: HPE ProLiant XL450 Gen10/ProLiant XL450 Gen10, BIOS U40 10/02/2018
+[   27.332410] Call Trace:
+  :
+[   27.348557]  kasan_report.cold.6+0x92/0x1a6
+[   27.352771]  ses_enclosure_data_process+0x919/0xe80 [ses]
+[   27.358211]  ? kfree+0xd6/0x2e0
+[   27.361376]  ses_intf_add+0xa23/0xef1 [ses]
+[   27.365590]  ? class_dev_iter_next+0x6c/0xc0
+[   27.370034]  class_interface_register+0x298/0x400
+[   27.374769]  ? tsc_cs_mark_unstable+0x60/0x60
+[   27.379163]  ? class_dev_iter_exit+0x10/0x10
+[   27.384857]  ? 0xffffffffc0838000
+[   27.389580]  ses_init+0x12/0x1000 [ses]
+[   27.394832]  do_one_initcall+0xe9/0x5fd
+  :
+[   27.562322] Allocated by task 1563:
+[   27.562330]  kasan_kmalloc+0xbf/0xe0
+[   27.569433]  __kmalloc+0x150/0x360
+[   27.572858]  ses_intf_add+0x76a/0xef1 [ses]
+[   27.577068]  class_interface_register+0x298/0x400
+[   27.581803]  ses_init+0x12/0x1000 [ses]
+[   27.587053]  do_one_initcall+0xe9/0x5fd
+[   27.592309]  do_init_module+0x1f2/0x710
+[   27.597564]  load_module+0x3e19/0x5910
+[   27.601336]  __do_sys_init_module+0x1dd/0x260
+[   27.606673]  do_syscall_64+0xa5/0x4a0
+[   27.610359]  entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+  :
+[   27.624932] The buggy address belongs to the object at ffff8807c9904400
+                which belongs to the cache kmalloc-2048 of size 2048
+[   27.637701] The buggy address is located 1201 bytes inside of
+                2048-byte region [ffff8807c9904400, ffff8807c9904c00)
+[   27.649683] The buggy address belongs to the page:
+[   27.654503] page:ffffea001f264000 count:1 mapcount:0 mapping:ffff880107c15d80 index:0x0 compound_mapcount: 0
+[   27.664393] flags: 0x17ffffc0008100(slab|head)
+[   27.668865] raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff880107c15d80
+[   27.676656] raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
+[   27.684444] page dumped because: kasan: bad access detected
+
+The out-of-bounds memory access happens to ses_dev->page10 which has a
+size of 1200 bytes in this case. The invalid memory access happens in:
+
+ 600 if (addl_desc_ptr &&
+ 601     /* only find additional descriptions for specific devices */
+ 602     (type_ptr[0] == ENCLOSURE_COMPONENT_DEVICE ||
+ 603      type_ptr[0] == ENCLOSURE_COMPONENT_ARRAY_DEVICE ||
+ 604      type_ptr[0] == ENCLOSURE_COMPONENT_SAS_EXPANDER ||
+ 605      /* these elements are optional */
+ 606      type_ptr[0] == ENCLOSURE_COMPONENT_SCSI_TARGET_PORT ||
+ 607      type_ptr[0] == ENCLOSURE_COMPONENT_SCSI_INITIATOR_PORT ||
+ 608      type_ptr[0] == ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS))
+ 609         addl_desc_ptr += addl_desc_ptr[1] + 2; <-- here
+
+To fix the out-of-bounds memory access, code is now added to make sure
+that addl_desc_ptr will never point to an address outside of its bounds.
+
+With this patch, the KASAN warning is gone.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ drivers/scsi/ses.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/ses.c b/drivers/scsi/ses.c
+index 0fc39224ce1e..dbc9acc2df2f 100644
+--- a/drivers/scsi/ses.c
++++ b/drivers/scsi/ses.c
+@@ -605,9 +605,14 @@ static void ses_enclosure_data_process(struct enclosure_device *edev,
+ 			     /* these elements are optional */
+ 			     type_ptr[0] == ENCLOSURE_COMPONENT_SCSI_TARGET_PORT ||
+ 			     type_ptr[0] == ENCLOSURE_COMPONENT_SCSI_INITIATOR_PORT ||
+-			     type_ptr[0] == ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS))
++			     type_ptr[0] == ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS)) {
+ 				addl_desc_ptr += addl_desc_ptr[1] + 2;
+ 
++				/* Ensure no out-of-bounds memory access */
++				if (addl_desc_ptr >= ses_dev->page10 +
++						     ses_dev->page10_len)
++					addl_desc_ptr = NULL;
++			}
+ 		}
+ 	}
+ 	kfree(buf);
+-- 
+2.18.1
+
