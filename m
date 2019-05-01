@@ -2,93 +2,116 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02526C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09400C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13BE2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FF02075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QecYlWWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfEAWnH (ORCPT
+        id S1726447AbfEAWqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 18:43:07 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37442 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfEAWnG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 18:43:06 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id F07E92639E2
-Received: by earth.universe (Postfix, from userid 1000)
-        id 595FA3C0D1B; Thu,  2 May 2019 00:43:02 +0200 (CEST)
-Date:   Thu, 2 May 2019 00:43:02 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] Driver for UCS1002
-Message-ID: <20190501224302.o5ydj253synve6wl@earth.universe>
-References: <20190501033434.18548-1-andrew.smirnov@gmail.com>
+        Wed, 1 May 2019 18:46:34 -0400
+Received: from ozlabs.org ([203.11.71.1]:35271 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbfEAWqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 18:46:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vYRC2NbNz9s7T;
+        Thu,  2 May 2019 08:46:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556750791;
+        bh=fBGEAfXaHVB+dhd3quAdwiRutAFSqo0yMmTMEyNlnGE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QecYlWWXzzBBQdICUao7ForAFmhkQNx9D6SGliHR2hSqCJgw5VkNAd3JB4tKedQsp
+         x5R5JgKLbST6pnZvqssUf4MlTCnd3QVuFMzr/ZdWPj8mndg795xuWyyPDTDue60BfA
+         DtEN90vFKp8kO2W1xCUYCLk2tMh6Ceqw8L/nqqvkBTlpBZtpOIXAxn3kJlmIbrWDXN
+         d3tM16lPctIdhB4ANSXkDZwnTFlS+anpyMFiJ+xuse+bOgLJ+5aZmj9IZ+0iKMOGvS
+         n5jfmPGQ026BrMg0dqvwEwIYcVC5wAI6my/gTpzY1Wjtq42vf83iyDyqIKjT1I1x1Y
+         19jdRdhUlVFNw==
+Date:   Thu, 2 May 2019 08:46:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the kbuild tree with Linus' tree
+Message-ID: <20190502084626.108fb691@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n44xbk2hl33sq6zz"
-Content-Disposition: inline
-In-Reply-To: <20190501033434.18548-1-andrew.smirnov@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/aMI74E1W0Jhnl1fNB2aKUWK"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---n44xbk2hl33sq6zz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/aMI74E1W0Jhnl1fNB2aKUWK
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi all,
 
-On Tue, Apr 30, 2019 at 08:34:31PM -0700, Andrey Smirnov wrote:
-> This small series adds a driver for UCS1002 Programmable USB Port
-> Power Controller with Charger Emulation. See [page] for product page
-> and [datasheet] for device dataseet. Hopefully each individual patch
-> is self explanatory.
->=20
-> Note that this series is a revival of the upstreaming effort by Enric
-> Balletbo Serra last version of which can be found at [original-effort]
->=20
-> Feedback is welcome!
+Today's linux-next merge of the kbuild tree got a conflict in:
 
-Patchset looks good to me (except for the indention issue).
+  Makefile
 
--- Sebastian
+between commit:
 
---n44xbk2hl33sq6zz
-Content-Type: application/pgp-signature; name="signature.asc"
+  6f303d60534c ("gcc-9: silence 'address-of-packed-member' warning")
+
+from Linus' tree and commit:
+
+  c21e4135d629 ("kbuild: re-enable int-in-bool-context warning")
+
+from the kbuild tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Makefile
+index 633d1196bf00,8b3b62f18c9a..000000000000
+--- a/Makefile
++++ b/Makefile
+@@@ -677,8 -691,6 +691,7 @@@ KBUILD_CFLAGS	+=3D $(call cc-option,-fno-
+  KBUILD_CFLAGS	+=3D $(call cc-disable-warning,frame-address,)
+  KBUILD_CFLAGS	+=3D $(call cc-disable-warning, format-truncation)
+  KBUILD_CFLAGS	+=3D $(call cc-disable-warning, format-overflow)
+- KBUILD_CFLAGS	+=3D $(call cc-disable-warning, int-in-bool-context)
+ +KBUILD_CFLAGS	+=3D $(call cc-disable-warning, address-of-packed-member)
+ =20
+  ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+  KBUILD_CFLAGS	+=3D -Os
+
+--Sig_/aMI74E1W0Jhnl1fNB2aKUWK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzKIPYACgkQ2O7X88g7
-+pqNLRAAkY95bhDG6g1qJtAYZ8gFvVWHVckBHUobqlNSl+pR5I5+oCvDOJXRb8Uk
-N1P4dm2/4uVdzrpM5JGYsLS8iOYjkhmZSbBJEMTqW44sp6dm6hr8zIITjHzJvCA6
-rnV1BjjjOb8fK/ORZYKzU4Y0o+GSPJnbjR9dPTkL+el5Ny0T5H4Iq++fc1lJTGNl
-hN1R8tLp4kN4B8Ku/nFIcbivIOS2P9RdOh6nq28oyCVKLgSu/45QNPzG55bH+KzG
-9BuNoSNwpHygY1qXLB8CWOBteeCfO+5E5GKyWFOrZqdGMSrLJ2UavKdV7WZ0uUNd
-GGncWjbIf6UARekeK7vaT59QFbPoRwBwwPI4dVJJM+Zt18V/sxzTbI68xGzOAsWe
-NK6chymww6w64aXd+c07BKke9+uQyj5nY/fYe2i4xjdfJ5IW2R2u3sILZLSU+dqd
-pYprce94mdoZausZVxYaRoFo0GFM5zSfLDOYj1sigqip/8C1gAMAtPO33D4MLOp0
-p9dcVZOGyrJ0uTnxBrWuP4nSkc0Shh8G+1m6qpoVJ9ilhf+YCp1PW7VNaVyWJOcs
-pjmER4uRJv5OYZ6RCqAJj1LesY9RTXzfm7nWWe+ZRF5m6e+cn+XOBBhVJEiLQFkN
-J8q+NHLHl8ankKkbZ3kMK0BxVItHQfI0PB3ixlgraf+75TkIk8M=
-=JQiP
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKIcIACgkQAVBC80lX
+0GyDWAgAhG9OF5Y3gtnD7UV5wo5EDp/2Pm306QK2UP3L7SZO9UetGPCvMPwcTrki
+jGOX6ihfLZaVZLXSqhnXWXKE1jWGH4c4oCyMgTGDlAAUnjGtThHVD5FOQr98sSqe
+QChsJkhwY0SMWfkzt42h00xghIzYJUzBS0ayJxdKva/hn5kpF1LEGPgJwXeiNOtb
+PTGGAxaXsGln0ndP8pYTHqGzBnM0exk0Dt62Dx3Zm072kXUwJiK7lUvYNLYuwdyf
+5ceG781YTOnTcYN9d4jk1PQLQvjPkv3WkLAUMbgKMxjBSjvZ5vZsEyPai0mrmRFr
+rPdhBYmT0XLOiHWN7LwtCXKNrJ1Npg==
+=on7B
 -----END PGP SIGNATURE-----
 
---n44xbk2hl33sq6zz--
+--Sig_/aMI74E1W0Jhnl1fNB2aKUWK--
