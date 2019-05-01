@@ -2,116 +2,85 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1F3C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD71C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA52B20651
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4012089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556740868;
+	bh=8Srmec4wkq4WH9K5WY9GRHHhT4rDjWka+rb8LRjzfSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D65Ci7v4qlUnZuLpf3qCuIahUgRt1aW8BvbcLzfBnOFNUarYl1nULzA0uMNeU3hak
+	 3dbH6kc1xBQlstjsFjQSQZ49RfqVtLmE/YHXAa14mGjUvSdwsChkB7Wcx1JyTQriHA
+	 q5sUKAV3OsQC/cbd0gHBLh4mwv5xdjWTjbQam2j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfEAT4r (ORCPT
+        id S1726188AbfEAUBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:56:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47768 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726351AbfEAT4p (ORCPT
+        Wed, 1 May 2019 16:01:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34441 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfEAUBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:56:45 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x41JqGKY076127
-        for <linux-kernel@vger.kernel.org>; Wed, 1 May 2019 15:56:44 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s7gftcc8j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 15:56:44 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 1 May 2019 20:56:41 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 1 May 2019 20:56:38 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x41Jubuk48365568
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 May 2019 19:56:37 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9BE3842049;
-        Wed,  1 May 2019 19:56:37 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7CAD542047;
-        Wed,  1 May 2019 19:56:34 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.205.12])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  1 May 2019 19:56:34 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Wed, 01 May 2019 22:56:33 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 3/3] sparc: remove ARCH_SELECT_MEMORY_MODEL
-Date:   Wed,  1 May 2019 22:56:17 +0300
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
-References: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050119-0028-0000-0000-00000369516B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050119-0029-0000-0000-00002428BA52
-Message-Id: <1556740577-4140-4-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905010124
+        Wed, 1 May 2019 16:01:07 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n15so83211ota.1;
+        Wed, 01 May 2019 13:01:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HxbNQi9DeZ2IJLgdIUVTw8HAwd2FcPK6Vz/jlq7BRoc=;
+        b=qWYrQxsnaeocSKQFVcRphBkA+vycl3wfxbMvcbh6w51iBZqqrzHsnlfDrmXw4HeUlP
+         gdNWtOFltDo27ymGE0JLiSKjMG2Lim8qYypZUbCbjAeh9MblDhIyb/rTep0D7526Tys/
+         iICmLFmBS9dJYCHZ3L9lB0DMHCwfQsrBafFdqrNzMG/WZS1zCaN7vdFp8yHq/lcw6vh4
+         2afxJkJeVtUQ+fV3UVd1UpEt6lRzSOzfU6u+kwAq5rqKhDIn4qWpNp8dnNcehjmY06bg
+         9+OpjtWXx6gI9R90su2E3HYTJMy/RDVteapxetfzpYYFFmmVGCCUa2sE4SkBnsFaVlDf
+         4uAg==
+X-Gm-Message-State: APjAAAUdrXzVuW576feo8uN1wa3bf0EnyYgEvoTMZmY+G7tNDfRgXIIn
+        6HQD9Ai7oga6j+FXKgGdfg==
+X-Google-Smtp-Source: APXvYqzcF2UnIXneOHc3vVzJEv6m01JtjNnKY2BTBLXgguBiPwEBqQ+LDGuHzLgGqqLZG3bvV/MztA==
+X-Received: by 2002:a9d:2066:: with SMTP id n93mr14060248ota.193.1556740866212;
+        Wed, 01 May 2019 13:01:06 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r4sm16901646oia.2.2019.05.01.13.01.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 13:01:04 -0700 (PDT)
+Date:   Wed, 1 May 2019 15:01:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     thierry.reding@gmail.com, devicetree@vger.kernel.org,
+        baylibre-upstreaming@groups.io,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: pwm: Update bindings for the Meson
+ G12A Family
+Message-ID: <20190501200104.GA29281@bogus>
+References: <20190423133646.5705-1-narmstrong@baylibre.com>
+ <20190423133646.5705-2-narmstrong@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423133646.5705-2-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ARCH_SELECT_MEMORY_MODEL option is enabled only for 64-bit. However,
-64-bit configuration also enables ARCH_SPARSEMEM_DEFAULT and there is no
-ARCH_FLATMEM_ENABLE in arch/sparc/Kconfig.
+On Tue, 23 Apr 2019 15:36:44 +0200, Neil Armstrong wrote:
+> Update the doc to explicitly support Meson G12A Family.
+> The 2 first (A & B) AO PWM uses different clock source than the last 2
+> (C & D) AO PWM modules, thus we need to differentiate them.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-meson.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-With such settings, the dependencies in mm/Kconfig are always evaluated to
-SPARSEMEM=y for 64-bit and to FLATMEM=y for 32-bit.
-
-The ARCH_SELECT_MEMORY_MODEL option in arch/sparc/Kconfig does not affect
-anything and can be removed.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/sparc/Kconfig | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index 40f8f4f..9137dbe 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -305,9 +305,6 @@ config NODES_SPAN_OTHER_NODES
- 	def_bool y
- 	depends on NEED_MULTIPLE_NODES
- 
--config ARCH_SELECT_MEMORY_MODEL
--	def_bool y if SPARC64
--
- config ARCH_SPARSEMEM_ENABLE
- 	def_bool y if SPARC64
- 	select SPARSEMEM_VMEMMAP_ENABLE
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
