@@ -2,178 +2,162 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1B9C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ABAC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6394420835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:32:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="cFf84aXX"
+	by mail.kernel.org (Postfix) with ESMTP id F392920835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfEAQcU (ORCPT
+        id S1726592AbfEAQgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:32:20 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.1]:47787 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726434AbfEAQcU (ORCPT
+        Wed, 1 May 2019 12:36:17 -0400
+Received: from gateway36.websitewelcome.com ([50.116.126.2]:49177 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726101AbfEAQgR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:32:20 -0400
-Received: from [46.226.52.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-a.eu-west-1.aws.symcld.net id CE/3B-23354-01AC9CC5; Wed, 01 May 2019 16:32:16 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSa0gUURTHvTOzs6O5dlsTj5JC2wvU2dy0msI
-  oetBABRX2oQfYqKO7tK7LzloWCGoZmUWFPcgyS8xge4kU5TNTsF3BHmZZPsKlLWqjkixThGzH
-  WXt8+937/91zz70chtT20pGMmGsXbRbBrKODKONCtISd3uHaFd/TlcR1P2sluDNuD82NdB8hu
-  Of1F2lu7E2BmiuuP6Hian7eRKvUfM1wIc3XlQ2o+VpHMc03f66m+dt3XlB8071Rgh+ujd6s3q
-  EyWVKzc3erjOcvdNDWcZw7fqyKyEcNIUdREEPh2yT0tTWq5YUWnyag7rGDVhaDCL46S3xJIEN
-  jDkqdg7TMM/Ee8DxqJ2WJxN0EFE1MTEqheAO4XhykjiLGJ22E3gcrFH8R9HY4kcwUngtXR5op
-  mTVYgL6iEyqZtXg1/Gi+O1kmEK+B0Rvlkz7CUfC94DopM4nDoddTQcgMGENV4xNS4TD4+PaXS
-  vFFcBW+Qsp+HHT2eJDcDuDZcHyQUrajoKuixK9sgpP3v6oV7kdQ7JWmjh5rG/D7HFSVFPnZCi
-  W/3vvPzodT7d/87cyCfGcBrfAFGhxjacqz0mCovNNfPxocx92U/G2An5LQ0tRPnUQxZf88TeE
-  4uNzwjVY4FqqvfCLLJr9rBrjOe6jLiHKgpak2U6bRniWYzKwhPp41GBaxhmUJbGKCXjjACnox
-  h90nSnbWoBf2SXppf1aaOV1vEe21yDdn6daHsfeR51pmK4pgCF2YZo7WtUsbkpqdvt8oSMYUW
-  45ZlFrRLIbRgea105fNsImZYm6Gyewb1qkYmGDdTM2wHGskq5AlmTKVqAOxTEulu5zUUpZsix
-  gZrpmQJSxLxhzLnxJTI9+FoiJDNSggIEAbbBVtWSb7/7kXhTNIF6p5K1cJNlnsf27y+pogfE2
-  kXGqXm7ALf6PIfLT3cIVYvyWxcAmxIG97Roy5LS6v79wGR3T6pUoh2ZvW5g6tC2vMH5m/PPYl
-  P1GeePD9rZaIjJ7w2QWft817NbAy+Zx55bQVH+Z8XL/2bGNpMry7ldRvT1pnZunuxB2Lve4+y
-  7tm05aEvV/4lK0Xh0JyYuKCD4nC4aLSqIFr6xuCdvI6SjIKhhjSJgm/AbTcIGDtAwAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-5.tower-262.messagelabs.com!1556728335!6480142!1
-X-Originating-IP: [104.47.1.54]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 30722 invoked from network); 1 May 2019 16:32:15 -0000
-Received: from mail-ve1eur01lp2054.outbound.protection.outlook.com (HELO EUR01-VE1-obe.outbound.protection.outlook.com) (104.47.1.54)
-  by server-5.tower-262.messagelabs.com with AES256-GCM-SHA384 encrypted SMTP; 1 May 2019 16:32:15 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AHA49DX1tmJTKWoK7vgDyPjfhBKqwnvf95lp7xvD+cs=;
- b=cFf84aXXAyzFK1uZdzQnBQkbd0Xw+iMneRonF2nnmkkJLWWN8XIL3mLJHoNHeJ60SLVvOOVHRmL1NJL5K8X3XoptjXQTuiGEjnehEuhyl7hQWEM0nRET5Sd2kI/TYHm8xR/oq70uzZLAzin5ZFANBX6Ueoq/IBizmtavfYneKKY=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1075.EURPRD10.PROD.OUTLOOK.COM (10.169.154.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Wed, 1 May 2019 16:32:04 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::45b2:d8a8:e1c:b971]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::45b2:d8a8:e1c:b971%5]) with mapi id 15.20.1856.008; Wed, 1 May 2019
- 16:32:04 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Logesh Kolandavel <logesh.kolandavel@timesys.com>,
-        Support Opensource <Support.Opensource@diasemi.com>
-CC:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] ASoC: da7213: fix DAI_CLK_EN register bit overwrite
-Thread-Topic: [PATCH v2] ASoC: da7213: fix DAI_CLK_EN register bit overwrite
-Thread-Index: AQHU//zoZK9xcowMKU+/9Rs3e1ejAaZWdLGg
-Date:   Wed, 1 May 2019 16:32:04 +0000
-Message-ID: <AM5PR1001MB0994908D0F450CC19DADF69F803B0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190501090424.28861-1-logesh.kolandavel@timesys.com>
-In-Reply-To: <20190501090424.28861-1-logesh.kolandavel@timesys.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.50]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1e73294d-4623-42f0-7a9b-08d6ce528bb0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:AM5PR1001MB1075;
-x-ms-traffictypediagnostic: AM5PR1001MB1075:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-microsoft-antispam-prvs: <AM5PR1001MB1075D1BE011DDB2AD272D171A73B0@AM5PR1001MB1075.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 00246AB517
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(346002)(376002)(136003)(366004)(199004)(189003)(486006)(14444005)(446003)(476003)(186003)(26005)(102836004)(6506007)(53546011)(55236004)(86362001)(256004)(33656002)(66066001)(76176011)(7696005)(6636002)(6116002)(2906002)(3846002)(99286004)(305945005)(74316002)(316002)(68736007)(66476007)(81156014)(81166006)(8936002)(76116006)(73956011)(71200400001)(71190400001)(9686003)(14454004)(53936002)(110136005)(5660300002)(52536014)(54906003)(8676002)(7736002)(11346002)(66446008)(64756008)(66556008)(66946007)(6436002)(4326008)(229853002)(55016002)(72206003)(478600001)(25786009)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1075;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UXIT3sAYZf+Bg9lG4ZWkLMmWzk3UuThf6iATxfV6NXeMIQFmr4F8kV806uiHvFzW/Dwm9P0l7cyuE2l8eJ/BrWBfmdUeJEJ6amWATejrIGherJE1kTU/cdXRm6LweURjBFoScAhhPq8mqn5iUMfHnmOgOzzXEVLJikGK497F2nLQqROpNWji8t2Cs7QIlbuNY6L/55MI6XMe8EIvk52usOsibhj0qRfhtA/Nj3ngqOLeO4dlxm3AQsNJJb8+/fRlSifXJ4n9eNV//97CbEHidmgeDCUeGKknQPUw0kNEXhHM54xyTK4U5sAt70nZLR9e38cQLZ8U5lukUWypaWF9dKBCd12WmXJfiSqGrlOaISgIYMw3MeAOJZXpEdX8hx+iuN0RDz4dmhcowiQn49A5pNudN757Iy+mJVHvLxtGqZo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 May 2019 12:36:17 -0400
+X-Greylist: delayed 1348 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 May 2019 12:36:16 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 44074400CB652
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 10:32:36 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Lrrghk2mMYTGMLrrgholim; Wed, 01 May 2019 11:13:48 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=32916 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLrrf-001oEy-PH; Wed, 01 May 2019 11:13:48 -0500
+Subject: Re: [PATCH] usb: isp1760-hcd: Fix fall-through annotations
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arvid Brodin <arvid.brodin@enea.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190501153934.GA20025@embeddedor>
+ <20190501160327.GA19281@kroah.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <562edc29-07ff-eaf5-5239-a30cd0add70c@embeddedor.com>
+Date:   Wed, 1 May 2019 11:13:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e73294d-4623-42f0-7a9b-08d6ce528bb0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 16:32:04.4791
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1075
+In-Reply-To: <20190501160327.GA19281@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLrrf-001oEy-PH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:32916
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01 May 2019 10:04, Logesh Kolandavel wrote:
 
-> From: Logesh <logesh.kolandavel@timesys.com>
->=20
-> If the da7213 codec is configured as Master with the DAPM power down
-> delay time set, 'snd_soc_component_write' function overwrites the
-> DAI_CLK_EN bit of DAI_CLK_MODE register which leads to audio play
-> only once until it re-initialize after codec power up.
->=20
-> Signed-off-by: Logesh <logesh.kolandavel@timesys.com>
 
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+On 5/1/19 11:03 AM, Greg Kroah-Hartman wrote:
+> On Wed, May 01, 2019 at 10:39:34AM -0500, Gustavo A. R. Silva wrote:
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
+>>
+>> This patch fixes the following warning:
+>>
+>> drivers/usb/isp1760/isp1760-hcd.c: In function ‘collect_qtds’:
+>> drivers/usb/isp1760/isp1760-hcd.c:788:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>       mem_reads8(hcd->regs, qtd->payload_addr,
+>>       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>         qtd->data_buffer,
+>>         ~~~~~~~~~~~~~~~~~
+>>         qtd->actual_length);
+>>         ~~~~~~~~~~~~~~~~~~~
+>> drivers/usb/isp1760/isp1760-hcd.c:792:5: note: here
+>>      case OUT_PID:
+>>      ^~~~
+>>
+>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>
+>> Notice that, in this particular case, the code comments are modified
+>> in accordance with what GCC is expecting to find.
+>>
+>> This patch is part of the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>> Notice that this code has been out there since 2011, and who
+>> introduced the question mark was the original developer.
+>>
+>> It'd be good if someone can confirm that the fall-through
+>> has been intentional all this time.
+> 
+> Yes, it looks intentional.  Messy, and as no one has complained since
+> 2011, let's leave it alone, I'll queue this up.
+> 
 
-> ---
-> Changes in v2:
-> -Include the mask DA7213_DAI_BCLKS_PER_WCLK_MASK
->=20
->  sound/soc/codecs/da7213.c | 5 ++++-
->  sound/soc/codecs/da7213.h | 2 ++
->  2 files changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
-> index 92d006a5283e..425c11d63e49 100644
-> --- a/sound/soc/codecs/da7213.c
-> +++ b/sound/soc/codecs/da7213.c
-> @@ -1305,7 +1305,10 @@ static int da7213_set_dai_fmt(struct snd_soc_dai
-> *codec_dai, unsigned int fmt)
->  	/* By default only 64 BCLK per WCLK is supported */
->  	dai_clk_mode |=3D DA7213_DAI_BCLKS_PER_WCLK_64;
->=20
-> -	snd_soc_component_write(component, DA7213_DAI_CLK_MODE,
-> dai_clk_mode);
-> +	snd_soc_component_update_bits(component,
-> DA7213_DAI_CLK_MODE,
-> +			    DA7213_DAI_BCLKS_PER_WCLK_MASK |
-> +			    DA7213_DAI_CLK_POL_MASK |
-> DA7213_DAI_WCLK_POL_MASK,
-> +			    dai_clk_mode);
->  	snd_soc_component_update_bits(component, DA7213_DAI_CTRL,
-> DA7213_DAI_FORMAT_MASK,
->  			    dai_ctrl);
->  	snd_soc_component_write(component, DA7213_DAI_OFFSET,
-> dai_offset);
-> diff --git a/sound/soc/codecs/da7213.h b/sound/soc/codecs/da7213.h
-> index 5a78dba1dcb5..9d31efc3cfe5 100644
-> --- a/sound/soc/codecs/da7213.h
-> +++ b/sound/soc/codecs/da7213.h
-> @@ -181,7 +181,9 @@
->  #define DA7213_DAI_BCLKS_PER_WCLK_256				(0x3 << 0)
->  #define DA7213_DAI_BCLKS_PER_WCLK_MASK
-> 	(0x3 << 0)
->  #define DA7213_DAI_CLK_POL_INV					(0x1 << 2)
-> +#define DA7213_DAI_CLK_POL_MASK
-> 	(0x1 << 2)
->  #define DA7213_DAI_WCLK_POL_INV					(0x1 << 3)
-> +#define DA7213_DAI_WCLK_POL_MASK				(0x1 << 3)
->  #define DA7213_DAI_CLK_EN_MASK					(0x1 << 7)
->=20
->  /* DA7213_DAI_CTRL =3D 0x29 */
-> --
-> 2.21.0
+Great.
 
+Thanks, Greg.
+--
+Gustavo
