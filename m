@@ -2,115 +2,146 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C148C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DF7C04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2B72085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0381A2085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:18:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KQvdmwVH"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="f+VLFHlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfEATRk (ORCPT
+        id S1726184AbfEATSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:17:40 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47770 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfEATRj (ORCPT
+        Wed, 1 May 2019 15:18:50 -0400
+Received: from mail-qt1-f169.google.com ([209.85.160.169]:36596 "EHLO
+        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfEATSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:17:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+gSyYjZ0CwmIbD+YmCAZE4zrdyoc/i5bD93o1EN4L80=; b=KQvdmwVHilv+bxpOq/seGyHad
-        tQ0SRr3bxpB90tmiYqSJbtSkK6pqddKpXZ32ibe4RtPDFQ2g8jMkIpQV754ck4ah1VA1rZ9z3DY2U
-        uvgb0Bkdcwsju6e6K0LYl3JH1BG/Xko4HfwxSiTuN3BonXUK9EwUad4jUwgh3j+Pkd33LK3/W+EGe
-        RoM2/reFIFUPLuwfvs7O84VXvqJW9WfI6fnQzWaRVKKrSuii+0UMuDZZDkCt/zgEGeXPrcJ6orE3r
-        UOu8jRm7W6lvVtD+x8blkVRWdK7RR8SnXIC2wRiR/S8ytsB712yA4Yk8sH/3J6KCmqCqluHZdVmYz
-        J0dcN5JUA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLujG-0002tD-T7; Wed, 01 May 2019 19:17:19 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1A283984EB4; Wed,  1 May 2019 21:17:16 +0200 (CEST)
-Date:   Wed, 1 May 2019 21:17:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC][PATCH v3] ftrace/x86_64: Emulate call function while
- updating in breakpoint handler
-Message-ID: <20190501191716.GV7905@worktop.programming.kicks-ass.net>
-References: <20190501113238.0ab3f9dd@gandalf.local.home>
- <CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com>
- <20190501145200.6c095d7f@oasis.local.home>
- <CAHk-=wgMZJeMCW5MA25WFJZeYYWCOWr0nGaHhJ7kg+zsu5FY_A@mail.gmail.com>
+        Wed, 1 May 2019 15:18:50 -0400
+Received: by mail-qt1-f169.google.com with SMTP id c35so21107475qtk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 12:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OAQ69X4DsUUmu2uoyueJmu5Yn4QG8MsXOg4ekEMYq7c=;
+        b=f+VLFHlWekiPkTa0WJsOHu6qXrPme8uyI7C6FYdAM/ZJbXyW9yGBW+ehN7l854M2a1
+         sD2ZcHq6fLNkAp7BSjgRXdCLPLNlfcSG+MsXJ9E6phebMZbuQXGwq1Gdvzv0ww7/HxBX
+         6ai2BDJVLAi55EM5q5NZOv+Kmapu5KQ7y0W6G0YKVRoQdNZENRE26wj03jtLhrW0JbnC
+         fdCsOv1XGOc1JcYJe7/cvrndachOYHniG0PtUXaJ0kLDvAM+69bi5jFbmjTGwHY8D3mb
+         GB1SkcRRPWSjp7ncevM/tGHZtRLdSZz5m/FSvx41CzXWldx50mAHFat1UDjm20hf5Ovo
+         BUNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OAQ69X4DsUUmu2uoyueJmu5Yn4QG8MsXOg4ekEMYq7c=;
+        b=E9foAymmOOhKwOv6bYQHeWDwJcbFDYeaunK6wuXISiqJividpKCZUs21zIRqi52Tf+
+         O+rs0FvbprrYUR52FFn+etgfvpYH+V/UYGhM5UBtCgRm8icq6xDx+4V+7l2eXTZabzDp
+         lW6WHHmzUZ554I2o/9RUOyuUrqkLCR78LdjeiBLaqYrI24Q/7cE6oxBICQ+Rjj45PgXQ
+         7lLS/+Sk6wCk+CuuXPumFG/+i6MpfvboVNjTJu0XS5loGCN93AruNysxastW7JmNMkj4
+         vFr59dzXFfGA6Tg+n3jllz58EuF6w0o6jsDtPJu9YfDfZbQZ9yHMsTa6tRuiVyJKPsqZ
+         0YSg==
+X-Gm-Message-State: APjAAAVibwy8QIHnV6EGF75H2pLJeq9H2wLlBzjqkWpM6rOFZHjem1Je
+        Ebp2DZzRwMEK57lZZeA2bJkMAA==
+X-Google-Smtp-Source: APXvYqzCyZTLdMErMvymnUr9OdlM5mz0rF37cxcBelrdS0nhZsEoaskJaHaEp/ddHKjZfP6CgNs73w==
+X-Received: by 2002:aed:2124:: with SMTP id 33mr6517015qtc.35.1556738328959;
+        Wed, 01 May 2019 12:18:48 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id x47sm12610946qth.68.2019.05.01.12.18.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 12:18:48 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, akpm@linux-foundation.org,
+        mhocko@suse.com, dave.hansen@linux.intel.com,
+        dan.j.williams@intel.com, keith.busch@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
+        thomas.lendacky@amd.com, ying.huang@intel.com,
+        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
+        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
+        david@redhat.com
+Subject: [v4 0/2] "Hotremove" persistent memory
+Date:   Wed,  1 May 2019 15:18:44 -0400
+Message-Id: <20190501191846.12634-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgMZJeMCW5MA25WFJZeYYWCOWr0nGaHhJ7kg+zsu5FY_A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 11:59:05AM -0700, Linus Torvalds wrote:
-> On Wed, May 1, 2019 at 11:52 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > I got Peter's patch working. Here it is. What do you think?
-> 
-> I can tell from just looking at it for five seconds that at least the
-> 32-bit case is buggy.
-> 
-> You can't look at CS(%rsp) without first also checking that you're not
-> coming from vm86 mode.
+Changelog:
+v4
+- Addressed comments from Dave Hansen
 
-Something like so then?
+v3
+- Addressed comments from David Hildenbrand. Don't release
+  lock_device_hotplug after checking memory status, and rename
+  memblock_offlined_cb() to check_memblock_offlined_cb()
 
-Index: linux-2.6/arch/x86/entry/entry_32.S
-===================================================================
---- linux-2.6.orig/arch/x86/entry/entry_32.S
-+++ linux-2.6/arch/x86/entry/entry_32.S
-@@ -1479,6 +1479,10 @@ ENTRY(int3)
- 	ASM_CLAC
- 	pushl	$-1				# mark this as an int
+v2
+- Dan Williams mentioned that drv->remove() return is ignored
+  by unbind. Unbind always succeeds. Because we cannot guarantee
+  that memory can be offlined from the driver, don't even
+  attempt to do so. Simply check that every section is offlined
+  beforehand and only then proceed with removing dax memory.
 
-+#ifdef CONFIG_VM86
-+	testl	$X86_EFLAGS_VM, PT_EFLAGS(%esp)
-+	jnz	.Lfrom_usermode_no_gap
-+#endif
- 	testl	$SEGMENT_RPL_MASK, PT_CS(%esp)
- 	jnz	.Lfrom_usermode_no_gap
- 	.rept 6
+---
+
+Recently, adding a persistent memory to be used like a regular RAM was
+added to Linux. This work extends this functionality to also allow hot
+removing persistent memory.
+
+We (Microsoft) have an important use case for this functionality.
+
+The requirement is for physical machines with small amount of RAM (~8G)
+to be able to reboot in a very short period of time (<1s). Yet, there is
+a userland state that is expensive to recreate (~2G).
+
+The solution is to boot machines with 2G preserved for persistent
+memory.
+
+Copy the state, and hotadd the persistent memory so machine still has
+all 8G available for runtime. Before reboot, offline and hotremove
+device-dax 2G, copy the memory that is needed to be preserved to pmem0
+device, and reboot.
+
+The series of operations look like this:
+
+1. After boot restore /dev/pmem0 to ramdisk to be consumed by apps.
+   and free ramdisk.
+2. Convert raw pmem0 to devdax
+   ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
+3. Hotadd to System RAM
+   echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
+   echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
+   echo online_movable > /sys/devices/system/memoryXXX/state
+4. Before reboot hotremove device-dax memory from System RAM
+   echo offline > /sys/devices/system/memoryXXX/state
+   echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+5. Create raw pmem0 device
+   ndctl create-namespace --mode raw  -e namespace0.0 -f
+6. Copy the state that was stored by apps to ramdisk to pmem device
+7. Do kexec reboot or reboot through firmware if firmware does not
+   zero memory in pmem0 region (These machines have only regular
+   volatile memory). So to have pmem0 device either memmap kernel
+   parameter is used, or devices nodes in dtb are specified.
+
+Pavel Tatashin (2):
+  device-dax: fix memory and resource leak if hotplug fails
+  device-dax: "Hotremove" persistent memory that is used like normal RAM
+
+ drivers/dax/dax-private.h |   2 +
+ drivers/dax/kmem.c        | 104 ++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 101 insertions(+), 5 deletions(-)
+
+-- 
+2.21.0
 
