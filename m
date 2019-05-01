@@ -2,109 +2,109 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F12AC04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50A2C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EC7208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7294720645
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZAZlVyv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p4961rDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfEAQsq (ORCPT
+        id S1726656AbfEAQvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:48:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34192 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfEAQsq (ORCPT
+        Wed, 1 May 2019 12:51:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45538 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfEAQvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:48:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ck18so4129847plb.1;
-        Wed, 01 May 2019 09:48:45 -0700 (PDT)
+        Wed, 1 May 2019 12:51:15 -0400
+Received: by mail-pf1-f195.google.com with SMTP id e24so8839221pfi.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 09:51:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=a82ckZo73SGxA8ey3aK0omtfrwDTACIRQAmbz4zxBz8=;
-        b=DZAZlVyv2Zj8QW2ZVaA4F2WxBgm+TYZTAM4t/5EOeChgCJ7BD4Ft2Dzmnf3x6+ydz1
-         XakRftqblAOckP3MeN3ccDznp09ppAFe871YQDxI1Qj+FuNPuoY1ouHhz5kI+3ZQ3PV3
-         /L68VP9/OZfwUxqTI2ADGPFduqoKJR0cQ/ilRG4LirfK9AWJ1nlO4sVAtoc4jAZjVELX
-         dwxVevKkDwYvFLwv52/XqZAeyBzWSZ5CO4uvi+nyaZGWjFQjY/27kRLDK4iQOVPv1bS3
-         pYU7oLCM3TjBP/5voYoXBOCWgkWx+/gNSfwEsWL5ioDvofaSRT3AzcJ5BrlWCeZEJ+vp
-         9TMw==
+        bh=Kd5MuO+17SSO78jER84yawU/+kS4c+qH+M/4Z95iLNY=;
+        b=p4961rDhAAkYdVL2MmCqcSFfDmoIe5vhA3cShJh7egp3Eb4kLmL2sB5jcTZBT1bBrs
+         X2UUpPkwn29f2c9UAdFVjJrMkV/aK/zL0MDk5lw3aYKNt8+QE8TalXcEbVeApDAU7UpH
+         c/g+s2N/Ee/n2VFwIgnhu9W8R9Ope8RnBjoUlC04/UVVNRV/DsvA60nM2TVkJcPgPPBn
+         0NuLBjuj6N2yXocjsMpPtUk0uZ2h6lEVZZCL6NhHgemzzc6Y0KboxPCTpXRsyjpqwnkO
+         9Fb6NIX/Wne6nx8wc6NGWcfcJ8cX/arFAHndFz2zwEoeHM97MNQ6pXGTfWQ6ddBRLQBq
+         9foA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a82ckZo73SGxA8ey3aK0omtfrwDTACIRQAmbz4zxBz8=;
-        b=eRcacc6vuWJ2IS6LXieJP2nV+JdPyK0DzVyTLlpNteUKuYtVLTDB0NNWxFxVMRyLjb
-         jkZpXMqpSxzbj/mmdgDewI9SRm1gkEWnpkRbVCAuVNixmsOJD70pwuK0LPi2FHOaaSmm
-         hFibVoZeRDX1/wyManUZduKYreqenLrLAx/hOuOoKAwJdqC+MnjYFlK3Xikj96r/q1p/
-         toFtIaV03CFd2ihqtn34U663ftD5jqWyHE2G3acj5LIQJTYHsElQFPf5CMjs9aVke1Zo
-         d/piFGUMZ2ufbdSBy3Nt++szGHwQwzqUvoPiyhi/KOEjj1piT95aSD9cmKqJyTOYfdjG
-         EEow==
-X-Gm-Message-State: APjAAAVOZsxdWBX/W9WK/VXby8JYo+/mV9bMdXGB6vtluQfByrpjuZj9
-        HWcbFDc5i4j7omHFxG3mH5nBogrN
-X-Google-Smtp-Source: APXvYqxW8qIcb4HhSImxk+i+ozqc55UYdRTl9MHwDSKvhigyPhTtplKP1yE1tqeQ0DpYt8I1Y+S+aA==
-X-Received: by 2002:a17:902:163:: with SMTP id 90mr79079707plb.34.1556729325186;
-        Wed, 01 May 2019 09:48:45 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r76sm62426017pfa.39.2019.05.01.09.48.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 09:48:44 -0700 (PDT)
-Date:   Wed, 1 May 2019 09:48:43 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-pm@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/6] thermal: Introduce
- devm_thermal_of_cooling_device_register
-Message-ID: <20190501164843.GA16333@roeck-us.net>
-References: <1555617500-10862-1-git-send-email-linux@roeck-us.net>
- <1555617500-10862-2-git-send-email-linux@roeck-us.net>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kd5MuO+17SSO78jER84yawU/+kS4c+qH+M/4Z95iLNY=;
+        b=ZJDGVuFwCVoahBJf6CqXXMReaq4mbkO3lbPJ4N+yVDcbCITuOLeqOp9CGabHb4U817
+         +XyijEj0VPOqCDMpcvA0WbvT9eKJ3scS/0QeN/6mMHtiTaEs+2dLNkznlulFQITeOmmF
+         NlBgqgnsQAQJb02XTmC/3bcOOqaWcZZtSh3hNtEJnOB6O422j3MhEuamm38o/0OUIJC+
+         0PJDUSRzGyBF5mYwQkgKUvJc2II03LyHdXBJqWX4+oQ6lhrAsKxOJgYZl/fA9XnHCZ0g
+         EZmni+7jCcWsL7GhF21IEh0RSQUTSjzlfuxwHZPb/dvEcTFFN+IA4TU59/AhflYEY/xd
+         +T7g==
+X-Gm-Message-State: APjAAAUebZ5r5+wZswhfaJLxCx/PJw3VwF9MwmszakorCt9QtaKVTM1R
+        JRhl38qtySWruu93OTxncDtOqw==
+X-Google-Smtp-Source: APXvYqwTaF3lkS2xcbZsYzpMTkI1G6dbKWjh7tN8qOSRuhSBT3G0ZPf6rYTURl8olJfGXJ2vBQZtGw==
+X-Received: by 2002:a65:6145:: with SMTP id o5mr17411677pgv.262.1556729474737;
+        Wed, 01 May 2019 09:51:14 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 18sm58777799pfp.18.2019.05.01.09.51.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 09:51:13 -0700 (PDT)
+Date:   Wed, 1 May 2019 09:51:15 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/mdp5: Fix mdp5_cfg_init error return
+Message-ID: <20190501165115.GH2938@tuxbook-pro>
+References: <20190501161437.15728-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555617500-10862-2-git-send-email-linux@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190501161437.15728-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 12:58:15PM -0700, Guenter Roeck wrote:
-> thermal_of_cooling_device_register() and thermal_cooling_device_register()
-> are typically called from driver probe functions, and
-> thermal_cooling_device_unregister() is called from remove functions. This
-> makes both a perfect candidate for device managed functions.
-> 
-> Introduce devm_thermal_of_cooling_device_register(). This function can
-> also be used to replace thermal_cooling_device_register() by passing a NULL
-> pointer as device node. The new function requires both struct device *
-> and struct device_node * as parameters since the struct device_node *
-> parameter is not always identical to dev->of_node.
-> 
-> Don't introduce a device managed remove function since it is not needed
-> at this point.
-> 
+On Wed 01 May 09:14 PDT 2019, Jeffrey Hugo wrote:
 
-Any feedback / thoughts / comments ?
+> If mdp5_cfg_init fails because of an unknown major version, a null pointer
+> dereference occurs.  This is because the caller of init expects error
+> pointers, but init returns NULL on error.  Fix this by returning the
+> expected values on error.
+> 
+> Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
 
-Thanks,
-Guenter
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> index ea8f7d7daf7f..52e23780fce1 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> @@ -721,7 +721,7 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+>  	if (cfg_handler)
+>  		mdp5_cfg_destroy(cfg_handler);
+>  
+> -	return NULL;
+> +	return ERR_PTR(ret);
+>  }
+>  
+>  static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
+> -- 
+> 2.17.1
+> 
