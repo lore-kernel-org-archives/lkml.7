@@ -2,112 +2,65 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337C4C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A830C04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90DF204EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B76204EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:48:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Si7Jr3+R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s9c8uTch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfEANre (ORCPT
+        id S1726591AbfEANsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 09:47:34 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:29860 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfEANrd (ORCPT
+        Wed, 1 May 2019 09:48:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33968 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfEANsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 09:47:33 -0400
-Received: from grover.flets-west.jp (softbank126125154137.bbtec.net [126.125.154.137]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x41DkAqH006908;
-        Wed, 1 May 2019 22:46:10 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x41DkAqH006908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556718371;
-        bh=r0tKWu4K0FaqMQsDo16rqksf/YsVt69hJkPu3of5sNs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Si7Jr3+R+5NB5DAbMoi+oNJUQEhichvJc7P6ya+mg1vm6/5aK6WVp9kpY8a1C7Oth
-         ILQAa6yO0t1uWDOFYJeOOHH7SZHzMgJcuFOkTdCoYNDs/C4g3v9c0bDHkWvxP++nuY
-         jRuHdh627B42W8JzIZiZVjagvzZNr2yFf/B3nUtI4moG7spsHrXAueqn5F93lgsc0h
-         xJLRW4w6lEA9utgwsZG49UGerJ6pkdxFhV28p/zihvr6RCKeNvozRQSh+a6rSQPhtF
-         9NgzNE4qWZw0ePK4JiB+3NsmmVKr1nRVT6Qskl+EslWk5ZCxaLXzKXxzMDCS4Bj1NL
-         u2EfE5O1cd7xA==
-X-Nifty-SrcIP: [126.125.154.137]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sirio Balmelli <sirio@b-ad.ch>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        Yonghong Song <yhs@fb.com>,
-        Taeung Song <treeze.taeung@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Martin KaFai Lau <kafai@fb.com>, bpf@vger.kernel.org
-Subject: [PATCH v2] bpftool: exclude bash-completion/bpftool from .gitignore pattern
-Date:   Wed,  1 May 2019 22:45:59 +0900
-Message-Id: <1556718359-1598-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 1 May 2019 09:48:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UtHOeq7UKgkwJ5cmPkO6mA+wJVx0zp2ypCl6r53C874=; b=s9c8uTchNsADzr9NCHty54SmZ
+        EhbjZ/+kbx3FvTSuTQM9OXhZZx14R98MBdwA3toWG366WTGOC5oL7vJsg/aXg63cwUhiaYsNLvBhj
+        y3/+J2YEw/92Z/8qXN+u2ab25KOyxpuQRMdabxu01Po0ak96sAkXKJLJ//rTlVR6qx2b8bJ8qO26X
+        AuIwPCdAwQSwW68isgzZhAzgNED74dCWMxWYYLsYZw14vwIKEqO94G3jxpvlxjyY6BRFu/c8aEIjx
+        C8hBLhVDkZMS9NlMg0CApZhjiQNXYKoB1a3au90sACJ5zKU5m4sTxPJ8odECfxG18YOClczPQgwq7
+        YrVXucZzw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLpb7-0006Mf-DW; Wed, 01 May 2019 13:48:33 +0000
+Date:   Wed, 1 May 2019 06:48:33 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     David Kozub <zub@linux.fjfi.cvut.cz>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Scott Bauer <sbauer@plzdonthack.me>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Subject: Re: [PATCH 2/3] block: sed-opal: ioctl for writing to shadow mbr
+Message-ID: <20190501134833.GB24132@infradead.org>
+References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
+ <1556666459-17948-3-git-send-email-zub@linux.fjfi.cvut.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556666459-17948-3-git-send-email-zub@linux.fjfi.cvut.cz>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
-intended to ignore the following build artifact:
+> +	if (!access_ok((void __user *)(uintptr_t)info->data, info->size))
+> +		return -EFAULT;
 
-  tools/bpf/bpftool/bpftool
-
-However, the .gitignore entry is effective not only for the current
-directory, but also for any sub-directories.
-
-So, from the point of .gitignore grammar, the following check-in file
-is also considered to be ignored:
-
-  tools/bpf/bpftool/bash-completion/bpftool
-
-As the manual gitignore(5) says "Files already tracked by Git are not
-affected", this is not a problem as far as Git is concerned.
-
-However, Git is not the only program that parses .gitignore because
-.gitignore is useful to distinguish build artifacts from source files.
-
-For example, tar(1) supports the --exclude-vcs-ignore option. As of
-writing, this option does not work perfectly, but it intends to create
-a tarball excluding files specified by .gitignore.
-
-So, I believe it is better to fix this issue.
-
-You can fix it by prefixing the pattern with a slash; the leading slash
-means the specified pattern is relative to the current directory.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2:
-  - Add more information to the commit log to clarify my main motivation
-  - Touch "bpftool" pattern only
-
- tools/bpf/bpftool/.gitignore | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
-index 67167e4..8248b8d 100644
---- a/tools/bpf/bpftool/.gitignore
-+++ b/tools/bpf/bpftool/.gitignore
-@@ -1,5 +1,5 @@
- *.d
--bpftool
-+/bpftool
- bpftool*.8
- bpf-helpers.*
- FEATURE-DUMP.bpftool
--- 
-2.7.4
+Just let the copy_from_user itself return the error itself.
 
