@@ -2,171 +2,246 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17507C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FABFC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDBD320866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537A020652
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:37:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1DhOOKM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfkImD+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfEASfN (ORCPT
+        id S1726175AbfEAShf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 14:35:13 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35052 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfEASfN (ORCPT
+        Wed, 1 May 2019 14:37:35 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:50745 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfEAShf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 14:35:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so8559254plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 11:35:12 -0700 (PDT)
+        Wed, 1 May 2019 14:37:35 -0400
+Received: by mail-it1-f194.google.com with SMTP id q14so121300itk.0;
+        Wed, 01 May 2019 11:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TU/X4lenrhvKZLPKc+KvQcmimzu46a0BxraqdwXP8gE=;
-        b=t1DhOOKMUk7nBzv+BJfPuRjj+aREX5KI3qFNldgUyQyCHPpDogZWMRbBCBXYFG8gcH
-         qEDnCfd2KCpt4eg2LTase7aOZgn173fWkOuPopglnbSFr0hm6aKlT3V7dGbmi7G9SDna
-         WFDJ0ab708L+o6V00VnxLy4gGP9corF4jc4IxiRC6M862Kj8eEUSi+11AeFFr0lxSO23
-         uxiH/0rEnZ+SukHBYAhFsjpPMURDe+Jn+/7ZQK7EkK3n3U1BJLEy8pKtned3Hw/NYsxh
-         OdcCi6TFmhUjgfZTqH6oNDgqIBq13X5kvSE7CX9RWHuvGTOtRtnxXxMd1i5Ie6vjX2Nh
-         q5cQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Uy+iWBx+WW6EJbfrO+sYIngfp35VvBvZMQR7Mxibfh8=;
+        b=EfkImD+Bve2AkbZWHWfiW54XbW2+cDyaeJktUqG7AUIm1COpQ7IgvnJC9rXv9VdYxb
+         DNZQcpymHYaiR/xoOrfBTjEtRO+jGTtKNn1z6rDwf4YFpTNiP5qQLAUdnjm1iawVBMY/
+         N6IoCQAIWxP29JXWcXBXa56oLrB11x18o3HO28Nw2I9CZac2BfgkqmZjxHzMkFDYCw3o
+         SF+B0MknNV9/cj/RK25F9XDnw4RJ7aOVKTwn4EwucP2sug/f8u9PEzHaSsBUDgcnu3Y/
+         XD9BkZYgkLlObNzCFO1L6jrSH1YlE8uKsV84bnpktV8DUj7jkHUmFsu3l42oDRUDMVI6
+         kmGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=TU/X4lenrhvKZLPKc+KvQcmimzu46a0BxraqdwXP8gE=;
-        b=Xjy7LXJ5ACcw6H8tKg/CLcOIzXAkjcmRWZP7RscYliAtU49EFZoFublWY6KpXq92XE
-         LLr1xIv77Iir1VQyzShLtvJJCXb/H3vo6znIA2GcFKCTNS12YYmN5touK6Q047F94PjZ
-         aqOCs8N8+a9R0ZekoewS3KMaNPNZHf+oizv6a6ghYcgHC+my98MO6N7glEFxIX3mBZn4
-         qFFcQz9rwubrH0oFH3K1OXypR4I2HK86WyYvCJmBDXiYdEimR6C7UBzQugDwRBexF2s0
-         XmJZea4J2fGz7Uh4pRizoUS8ndvOeckAtuU+7bSvVQwTTXa6+6E2Bon++SB6DjuiOunv
-         mUsQ==
-X-Gm-Message-State: APjAAAWyPXL1XAtHLFjGy2Xfhb4XtDjCID0VncxQHAXG0x10dkxUW9nu
-        HALP9RXtsjyk6coL5ZROtwQ=
-X-Google-Smtp-Source: APXvYqzegJ4qEhrFfDdB/iRCbk8srX1saSipnhx3eXoqYxzh5xBLtLfO5L5ntEHhgRRVnv7TZp8z4w==
-X-Received: by 2002:a17:902:bb0d:: with SMTP id l13mr28541579pls.141.1556735711525;
-        Wed, 01 May 2019 11:35:11 -0700 (PDT)
-Received: from [10.67.50.73] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id e29sm6115856pgb.37.2019.05.01.11.35.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 11:35:10 -0700 (PDT)
-Subject: Re: [PATCH] mtd: rawnand: brcmnand: fix bch ecc layout for large page
- nand
-To:     Kamal Dasu <kdasu.kdev@gmail.com>, linux-mtd@lists.infradead.org
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1556306615-37990-1-git-send-email-kdasu.kdev@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <8e1b5dd6-3f8d-9288-7c43-5d7650269397@gmail.com>
-Date:   Wed, 1 May 2019 11:35:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uy+iWBx+WW6EJbfrO+sYIngfp35VvBvZMQR7Mxibfh8=;
+        b=Jiu1yLWrP7ghsya7itTFSUlUEG7oFGE/iCSEIslXrmMXJYF0Bj9xVah3/tQzyQzLBj
+         9vTVcjeKNDpTF08s4JIwsl6w3z1ghO4HilpttYjwRinXp2ingTMJqjHSBasLJmVv4i20
+         aKLBSd/kBfstZ4QIhJgUjN+nZdFCYhVGOS90yolv/IXDTJzvEBrezVG65pO5pyAehdK2
+         7aWUsw3Xz+2WdQKLcFRJwzcKBddSF551TRIuT63Z24pVTir1POeGPWdAGL5yXfQ0naXs
+         /ftDdAoV4PlUqDp9UPRkPwQWxHRvZesb2wU0FetuSnZ35eCP86STYnQexIxgHzpoKTn/
+         jCmg==
+X-Gm-Message-State: APjAAAW6hK5ruEoTB4uc5MzM/ZDGtuWacUbtWdAAy3N64oPRH8QPz8Bi
+        0fwl+2Iy5CEjtpcpuoqE2JK+f+xWKWEn/KjXHOvhQmif
+X-Google-Smtp-Source: APXvYqxocDr/k4e6yFxb894ZheCA6S/wbtZAuYtRXtMYKK7NJ9+M8eG//wjx0Ci5R6kiQyMRJMfF5VpU5VBC1IznuDc=
+X-Received: by 2002:a24:9412:: with SMTP id j18mr3717991ite.61.1556735854416;
+ Wed, 01 May 2019 11:37:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1556306615-37990-1-git-send-email-kdasu.kdev@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CA+8F9hicnF=kvjXPZFQy=Pa2HJUS3JS+G9VswFHNQQynPMHGVQ@mail.gmail.com>
+ <20190424193903.swlfmfuo6cqnpkwa@dcvr> <20190427093319.sgicqik2oqkez3wk@dcvr>
+ <CABeXuvrY9QdvF1gTfiMt-eVp7VtobwG9xzjQFkErq+3wpW_P3Q@mail.gmail.com>
+ <20190428004858.el3yk6hljloeoxza@dcvr> <20190429204754.hkz7z736tdk4ucum@linux-r8p5>
+ <20190429210427.dmfemfft2t2gdwko@dcvr> <CABeXuvqpAjk8ocRUabVU4Yviv7kgRkMneLE1Xy-jAtHdXAHBVw@mail.gmail.com>
+ <20190501021405.hfvd7ps623liu25i@dcvr> <20190501073906.ekqr7xbw3qkfgv56@dcvr>
+In-Reply-To: <20190501073906.ekqr7xbw3qkfgv56@dcvr>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Wed, 1 May 2019 11:37:23 -0700
+Message-ID: <CABeXuvq7gCV2qPOo+Q8jvNyRaTvhkRLRbnL_oJ-AuK7Sp=P3QQ@mail.gmail.com>
+Subject: Re: Strange issues with epoll since 5.0
+To:     Eric Wong <e@80x24.org>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>, Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/26/19 12:22 PM, Kamal Dasu wrote:
-> The oobregion->offset for large page nand parts was wrong, change
-> fixes this error in calculation.
+Thanks for trying the fix.
 
-Should this have a Fixes tag so this can be backported to stable trees
-seemingly automatically? Thanks!
+So here is my analysis:
 
-> 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> index 482c6f0..3eefea7 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -939,7 +939,7 @@ static int brcmnand_bch_ooblayout_ecc(struct mtd_info *mtd, int section,
->  	if (section >= sectors)
->  		return -ERANGE;
->  
-> -	oobregion->offset = (section * (sas + 1)) - chip->ecc.bytes;
-> +	oobregion->offset = ((section + 1) * sas) - chip->ecc.bytes;
->  	oobregion->length = chip->ecc.bytes;
->  
->  	return 0;
-> 
+Let's start with epoll_pwait:
 
+ep_poll() is what checks for signal_pending() and is responsible for
+setting errno to -EINTR when there is a signal.
 
--- 
-Florian
+So if a signal is received after ep_poll(), it is never noticed by the
+syscall during execution.
+
+Moreover, the original code before
+854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add
+restore_user_sigmask()"), had the following call flow:
+
+     error = do_epoll_wait(epfd, events, maxevents, timeout);
+
+**** Here error = 0 if the signal is received after ep_poll().
+
+-       /*
+-        * If we changed the signal mask, we need to restore the original one.
+-        * In case we've got a signal while waiting, we do not restore the
+-        * signal mask yet, and we allow do_signal() to deliver the signal on
+-        * the way back to userspace, before the signal mask is restored.
+-        */
+-       if (sigmask) {
+-               if (error == -EINTR) {
+-                       memcpy(&current->saved_sigmask, &sigsaved,
+-                              sizeof(sigsaved));
+-                       set_restore_sigmask();
+-               } else
+
+**** Execution reaches this else statement and the sigmask is restored
+directly, ignoring the newly generated signal. The signal is never
+handled.
+
+-                       set_current_blocked(&sigsaved);
+-       }
+
+In the current execution flow:
+
+    error = do_epoll_wait(epfd, events, maxevents, timeout);
+
+**** error is still 0 as ep_poll() did not detect the signal.
+
+restore_user_sigmask(sigmask, &sigsaved, error == -EITNR);
+
+void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+{
+
+        if (!usigmask)
+                return;
+        /*
+         * When signals are pending, do not restore them here.
+         * Restoring sigmask here can lead to delivering signals that the above
+         * syscalls are intended to block because of the sigmask passed in.
+         */
+        if (signal_pending(current)) {
+
+**** execution path reaches here and do_signal() actually delivers the
+signal to userspace. But the errno is not set. So the userspace fails
+to notice it.
+
+                current->saved_sigmask = *sigsaved;
+                set_restore_sigmask();
+                return;
+        }
+
+        /*
+         * This is needed because the fast syscall return path does not restore
+         * saved_sigmask when signals are not pending.
+         */
+        set_current_blocked(sigsaved);
+}
+
+For other syscalls in the same commit:
+
+sys_io_pgetevents() does not seem to have this problem as we are still
+checking signal_pending() here.
+sys_pselect6() seems to have a similar problem. The changes to
+sys_pselect6() also impact sys_select() as the changes are in the
+common code path.
+
+So the 854a6ed56839a40f6 seems to be better than the original code in
+that it detects the signal. But, the problem is that it doesn't
+communicate it to the userspace.
+
+So a patch like below solves the problem. This is incomplete. I'll
+verify and send you a proper fix you can test soon. This is just for
+the sake of discussion:
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index 4a0e98d87fcc..63a387329c3d 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -2317,7 +2317,7 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
+epoll_event __user *, events,
+                int, maxevents, int, timeout, const sigset_t __user *, sigmask,
+                size_t, sigsetsize)
+ {
+-       int error;
++       int error, signal_detected;
+        sigset_t ksigmask, sigsaved;
+
+        /*
+@@ -2330,7 +2330,10 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
+epoll_event __user *, events,
+
+        error = do_epoll_wait(epfd, events, maxevents, timeout);
+
+-       restore_user_sigmask(sigmask, &sigsaved);
++       signal_detected = restore_user_sigmask(sigmask, &sigsaved);
++
++       if (signal_detected && !error)
++               return -EITNR;
+
+        return error;
+ }
+@@ -2342,7 +2345,7 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
+                        const compat_sigset_t __user *, sigmask,
+                        compat_size_t, sigsetsize)
+ {
+-       long err;
++       long err, signal_detected;
+        sigset_t ksigmask, sigsaved;
+
+        /*
+@@ -2355,7 +2358,10 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
+
+        err = do_epoll_wait(epfd, events, maxevents, timeout);
+
+-       restore_user_sigmask(sigmask, &sigsaved);
++       signal_detected = restore_user_sigmask(sigmask, &sigsaved);
++
++       if (signal_detected && !err)
++               return -EITNR;
+
+        return err;
+ }
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 3a9e41197d46..c76ab2a52ebf 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2849,11 +2849,11 @@ EXPORT_SYMBOL(set_compat_user_sigmask);
+  * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
+  * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
+  */
+-void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
++int restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+ {
+
+        if (!usigmask)
+-               return;
++               return 0;
+        /*
+         * When signals are pending, do not restore them here.
+         * Restoring sigmask here can lead to delivering signals that the above
+@@ -2862,7 +2862,7 @@ void restore_user_sigmask(const void __user
+*usigmask, sigset_t *sigsaved)
+        if (signal_pending(current)) {
+                current->saved_sigmask = *sigsaved;
+                set_restore_sigmask();
+-               return;
++               return 0;
+        }
+
+-Deepa
