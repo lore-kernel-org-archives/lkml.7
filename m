@@ -2,221 +2,284 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629E8C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C2EC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CD420866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="bbCwLAC8"
+	by mail.kernel.org (Postfix) with ESMTP id AE8E021743
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfEAOKB (ORCPT
+        id S1726646AbfEAOKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 10:10:01 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44635 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfEAOKA (ORCPT
+        Wed, 1 May 2019 10:10:11 -0400
+Received: from mx1.yrkesakademin.fi ([85.134.45.194]:6556 "EHLO
+        mx1.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbfEAOKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 10:10:00 -0400
-Received: by mail-io1-f66.google.com with SMTP id r71so14862881iod.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 07:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nB5mo0PzD9+ciKHE3nzQsu/xBNhXLuJh3fQvApZ4eDE=;
-        b=bbCwLAC8NXEO1MlCMIaPy05mv66RouPcb+bvkijVpS+pzk5BLMIHVOtFkqZcoAPTA4
-         6ga9XjzjJ1sOuJ49EW+AI/eNAGSgIIkq1S10/GNVx8ke9aJUbIjcO98Y5Kb8NR6cOrWL
-         bjwz8AnzWjfQMhg2dn5RtOw3PplDq7u4QwDmg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nB5mo0PzD9+ciKHE3nzQsu/xBNhXLuJh3fQvApZ4eDE=;
-        b=ooVRxAFRCXFyZx96sLMTwEAoOV1w0UxPWef9CrFqIoSvsfG6FNxNhj7ho3BUkIc3oN
-         9jdjDU0GMAG/pVgxdPn+jHW1dY0SI6ecO7OqdHu0Z1yRo5k8cykxfwuPfnHR7scI3Vgh
-         LXLw/fhrb63R1z5YF6uUnPoCaqF2OprFd0B8dDujGj9vCErnVN/7ux7lmzlEUceho9YX
-         dgevnnTKdCU6BHQe+NmYRLCM8eHW7aCWsne81IDa0M7KImjA4Cq4OSPcQ2mE2xVafC+v
-         ZjMZCiVDpjvBuhiQH1L4tOV8pJOSjdvnhzDyryASqO5/xc1wzpY1Fh95i52JNKyGX9sI
-         1C4Q==
-X-Gm-Message-State: APjAAAUV7xMxdZtq3KaitEes5tEg7wI9aVYsT8DaA4WQwndRhllsb9Rm
-        W/m097DzC8AwA9CsjndpDeIDW2rQIbxTh6bXmkXnvg==
-X-Google-Smtp-Source: APXvYqwJw2QwrXIxZJq4e669u8UmLxc5NF8gdYbnL+eL3xI7LbmEUaDO3+S4myUwXwutRlCDThcxZxJk+wimJdIMuHs=
-X-Received: by 2002:a5d:8d18:: with SMTP id p24mr2089671ioj.267.1556719799202;
- Wed, 01 May 2019 07:09:59 -0700 (PDT)
+        Wed, 1 May 2019 10:10:10 -0400
+Subject: Re: perf build broken in 5.1-rc7
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+CC:     Song Liu <liu.song.a23@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
+ <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
+ <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
+ <b773df70-58e6-69f8-d566-282b0f7ae579@mageia.org>
+ <20190501130751.GB21436@kernel.org>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <932c4e06-c4db-7bb8-769d-75651d092450@mageia.org>
+Date:   Wed, 1 May 2019 17:09:59 +0300
 MIME-Version: 1.0
-References: <20190501121448.3812-1-jagan@amarulasolutions.com>
- <20190501121448.3812-2-jagan@amarulasolutions.com> <cc16498b-71f8-04ce-44d1-25417fd64757@arm.com>
-In-Reply-To: <cc16498b-71f8-04ce-44d1-25417fd64757@arm.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Wed, 1 May 2019 19:39:46 +0530
-Message-ID: <CAMty3ZBdko3+p6SoKYH-Mwism-Qnp3F5u7JV8YQTHzNP8A5kEg@mail.gmail.com>
-Subject: Re: [DO NOT MERGE] [PATCH 2/2] arm64: rockchip: rk3399: nanopc-t4:
- Enable FriendlyELEC HD702E eDP panel
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190501130751.GB21436@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-WatchGuard-Spam-ID: str=0001.0A0C020A.5CC9A8BA.003E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.194
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 6:17 PM Robin Murphy <robin.murphy@arm.com> wrote:
+
+Den 01-05-2019 kl. 16:07, skrev Arnaldo Carvalho de Melo:
+> Em Tue, Apr 30, 2019 at 04:31:14PM +0300, Thomas Backlund escreveu:
+>> Den 30-04-2019 kl. 16:06, skrev Song Liu:
+>>> On Tue, Apr 30, 2019 at 12:55 AM Thomas Backlund <tmb@mageia.org> wrote:
+>>>> Den 30-04-2019 kl. 10:26, skrev Thomas Backlund:
+>>>>> Building perf in 5.1-rc5/6/7 fails:
+>>>>> Build start:
+>>>>>     make -s -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1
+>>>>> WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1
+>>>>> NO_BIONIC=1 NO_JVMTI=1 prefix=/usr lib=lib64 all
+>>>>>      BUILD:   Doing 'make -j32' parallel build
+>>>>>      HOSTCC   fixdep.o
+>>>>>      HOSTLD   fixdep-in.o
+>>>>>      LINK     fixdep
+>>>>> Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h'
+>>>>> differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
+>>>>> diff -u tools/arch/x86/include/uapi/asm/vmx.h
+>>>>> arch/x86/include/uapi/asm/vmx.h
+>>>>>
+>>>>> Auto-detecting system features:
+>>>>> ...                         dwarf: [ on  ]
+>>>>> ...            dwarf_getlocations: [ on  ]
+>>>>> ...                         glibc: [ on  ]
+>>>>> ...                          gtk2: [ on  ]
+>>>>> ...                      libaudit: [ on  ]
+>>>>> ...                        libbfd: [ on  ]
+>>>>> ...                        libelf: [ on  ]
+>>>>> ...                       libnuma: [ on  ]
+>>>>> ...        numa_num_possible_cpus: [ on  ]
+>>>>> ...                       libperl: [ on  ]
+>>>>> ...                     libpython: [ on  ]
+>>>>> ...                      libslang: [ on  ]
+>>>>> ...                     libcrypto: [ on  ]
+>>>>> ...                     libunwind: [ on  ]
+>>>>> ...            libdw-dwarf-unwind: [ on  ]
+>>>>> ...                          zlib: [ on  ]
+>>>>> ...                          lzma: [ on  ]
+>>>>> ...                     get_cpuid: [ on  ]
+>>>>> ...                           bpf: [ on  ]
+>>>>> ...                        libaio: [ on  ]
+>>>>> ...        disassembler-four-args: [ OFF ]
+>>>>>
+>>>>> Makefile.config:473: No sys/sdt.h found, no SDT events are defined,
+>>>>> please install systemtap-sdt-devel or systemtap-sdt-dev
+>>>>> Makefile.config:853: No libbabeltrace found, disables 'perf data' CTF
+>>>>> format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+>>>>>
+>>>>>
+>>>>> And breaks with:
+>>>>>
+>>>>>
+>>>>> CC       ui/setup.o
+>>>>> util/annotate.c: In function 'symbol__disassemble_bpf':
+>>>>> util/annotate.c:1767:29: error: incompatible type for argument 1 of
+>>>>> 'disassembler'
+>>>>>      disassemble = disassembler(bfdf);
+>>>>>                                 ^~~~
+>>>>> In file included from util/annotate.c:1689:
+>>>>> /usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture'
+>>>>> but argument is of type 'bfd *' {aka 'struct bfd *'}
+>>>>>     extern disassembler_ftype disassembler (enum bfd_architecture arc,
+>>>>>                                             ~~~~~~~~~~~~~~~~~~~~~~^~~
+>>>>> util/annotate.c:1767:16: error: too few arguments to function
+>>>>> 'disassembler'
+>>>>>      disassemble = disassembler(bfdf);
+>>>>>                    ^~~~~~~~~~~~
+>>>>> In file included from util/annotate.c:1689:
+>>>>> /usr/include/dis-asm.h:325:27: note: declared here
+>>>>>     extern disassembler_ftype disassembler (enum bfd_architecture arc,
+>>>>>                               ^~~~~~~~~~~~
+>>>>>      CC       arch/x86/util/header.o
+>>>>>      CC       arch/x86/util/tsc.o
+>>>>>      CC       arch/x86/util/pmu.o
+>>>>> mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
+>>>>>      CC       bench/futex-requeue.o
+>>>>>      CC       arch/x86/util/kvm-stat.o
+>>>>> make[4]: ***
+>>>>> [/work/rpmbuild/BUILD/kernel-x86_64/linux-5.0/tools/build/Makefile.build:97:
+>>>>> util/annotate.o] Error 1
+>>>>> make[4]: *** Waiting for unfinished jobs....
+>>>>>      CC       util/build-id.o
+>>>>>
+>>>>>
+>>>>>
+>>>> And I forgot...
+>>>>
+>>>> Reverting:
+>>>>    From 6987561c9e86eace45f2dbb0c564964a63f4150a Mon Sep 17 00:00:00 2001
+>>>> From: Song Liu <songliubraving@fb.com>
+>>>> Date: Mon, 11 Mar 2019 22:30:48 -0700
+>>>> Subject: perf annotate: Enable annotation of BPF programs
+>>>>
+>>>> Makes it build again.
+>>>>
+>>>> --
+>>>> Thomas
+>>>>
+>>> Hi Thomas,
+>>>
+>>> Which system are you running this test on? I would like to repro it in a VM.
+>>>
+>>> Thanks,
+>>> Song
+>>
+>> Mageia Cauldron currently stabilizing to become Mageia 7 in ~1 month.
+>>
+>>
+>> Basesystem is:
+>>
+>> binutils-2.32-5.mga7
+>> (includes all fixes from upstream binutils-2_32-branch)
+>>
+>> gcc-8.3.1-0.20190419.2.mga7
+>>
+>> glibc-2.29-7.mga7
+>> (includes all fixes from upstream glibc release/2.29/master branch up to
+>> 2019-04-15 for now)
+>>
+>>
+>> kernel-desktop-5.1.0-0.rc7.1.mga7
+>> kernel-userspace-headers-5.1.0-0.rc7.1.mga7
+> Ok, so the steps are:
 >
-> On 01/05/2019 13:14, Jagan Teki wrote:
-> > FriendlyELEC HD702E is one of optional LCD panel for
-> > NanoPC T4 eDP interface.
-> >
-> > It features 800x1280 resolutions, with built in GT9271 captive
-> > touchscreen and adjustable backlight via PWM.
-> >
-> > eDP panel connections are:
-> > - VCC3V3_SYS: 3.3V panel power supply
-> > - GPIO4_C2: PWM0_BL pin
-> > - GPIO4_D5_LCD_BL_EN: Backlight enable pin
-> > - VCC12V0_SYS: 12V backlight power supply
-> > - Touchscreen connected via I2C4
-> > - GPIO1_C4_TP_INT: touchscreen interrupt pin
-> > - GPIO1_B5_TP_RST: touchscreen reset pin
-> >
-> > Add support for it.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Note: we need to disable hdmi-cec pinctrl to work with
-> > edp-hpd since both share same pin, otherwise we can
-> > encounter below error during bootup
-> > [    1.047726] rockchip-pinctrl pinctrl: pin gpio4-23 already requested by ff940000.hdmi; cannot claim for ff970000.edp
-> > [    1.048655] rockchip-pinctrl pinctrl: pin-151 (ff970000.edp) status -22
-> > [    1.049235] rockchip-pinctrl pinctrl: could not request pin 151 (gpio4-23) from group edp-hpd  on device rockchip-pinctrl
-> > [    1.050191] rockchip-dp ff970000.edp: Error applying setting, reverse things back
-> > [    1.050867] rockchip-dp: probe of ff970000.edp failed with error -22
+> 1) the feature test, the small C program that we try to build is:
 >
-> Hmm, AFAICS that pin is exclusively wired to the HDMI connector and not
-> used for the eDP interface, so really it's the fault of rk3399.dtsi for
-> trying to claim it unconditionally. Ideally we'd pull those pinctrl
-> properties out into the board DTs which do actually need them, but the
-> quick and easy approach would be to add some "/delete-property/ ..."
-> workarounds to the &edp node here.
-
-Thought that initially, but the same pin shared between HDMI CEC and
-eDP hotplug with different bit function to enable.
-
-gpio4c7_sel
-GPIO4C[7] iomux select
-2'b00: gpio
-2'b01: hdmi_cecinout
-2'b10: edp_hotplug
-2'b11: reserved
-
-GPIO4_C7/HDMI_CECINOUT/EDP_HOTPLUG is the shared pin, which is
-available in any nanopc-t4 as well in rk3399 datasheet, look like it's
-an SoC pin that driver hotplug to eDP and ie same reason is pinmux in
-rk3399.dtsi.
-
-I event removed edp_hpd pinctrl from edp node in rk3399.dtsi, but
-display not appear on the screen and observed edp bridge issue on
-host.
-
-[    1.052191] rockchip-drm display-subsystem: bound ff8f0000.vop (ops
-vop_component_ops)
-[    1.054460] rockchip-drm display-subsystem: bound ff900000.vop (ops
-vop_component_ops)
-[    1.055214] rockchip-dp ff970000.edp: no DP phy configured
-[    1.056088] rockchip-drm display-subsystem: bound ff970000.edp (ops
-rockchip_dp_component_ops)
-[    1.056852] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    1.057449] [drm] No driver support for vblank timestamp query.
-[    1.174379] [drm:analogix_dp_bridge_enable] *ERROR* failed to get
-hpd single ret = -110
-[    1.174408] rockchip-dp ff970000.edp: failed to set bridge, retry: 0
-[    1.285524] [drm:analogix_dp_bridge_enable] *ERROR* failed to get
-hpd single ret = -110
-[    1.285539] rockchip-dp ff970000.edp: failed to set bridge, retry: 1
-[    1.355241] dwmmc_rockchip fe310000.dwmmc: Successfully tuned phase to 212
-[    1.358757] mmc0: new ultra high speed SDR104 SDIO card at address 0001
-[    1.397049] [drm:analogix_dp_bridge_enable] *ERROR* failed to get
-hpd single ret = -110
-[    1.397069] rockchip-dp ff970000.edp: failed to set bridge, retry: 2
-[    1.485582] dwmmc_rockchip fe320000.dwmmc: Successfully tuned phase to 220
-[    1.485590] mmc1: new ultra high speed SDR104 SDHC card at address 084e
-[    1.486246] mmcblk1: mmc1:084e R04GS 3.71 GiB
-[    1.488032]  mmcblk1: p1
-[    1.509088] [drm:analogix_dp_bridge_enable] *ERROR* failed to get
-hpd single ret = -110
-[    1.509119] rockchip-dp ff970000.edp: failed to set bridge, retry: 3
-[    1.620938] [drm:analogix_dp_bridge_enable] *ERROR* failed to get
-hpd single ret = -110
-[    1.620953] rockchip-dp ff970000.edp: failed to set bridge, retry: 4
-[    1.620970] rockchip-dp ff970000.edp: too many times retry set
-bridge, give it up
-[    1.644026] Console: switching to colour frame buffer device 100x80
-
-
+> [acme@quaco perf]$ cat tools/build/feature/test-disassembler-four-args.c
+> // SPDX-License-Identifier: GPL-2.0
+> #include <bfd.h>
+> #include <dis-asm.h>
 >
-> >   .../boot/dts/rockchip/rk3399-nanopc-t4.dts    | 82 +++++++++++++++++++
-> >   1 file changed, 82 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-> > index 931c3dbf1b7d..b652d960946f 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-> > @@ -46,6 +46,48 @@
-> >               };
-> >       };
-> >
-> > +     backlight: backlight {
-> > +             compatible = "pwm-backlight";
-> > +             brightness-levels = <
-> > +                       0   1   2   3   4   5   6   7
-> > +                       8   9  10  11  12  13  14  15
-> > +                      16  17  18  19  20  21  22  23
-> > +                      24  25  26  27  28  29  30  31
-> > +                      32  33  34  35  36  37  38  39
-> > +                      40  41  42  43  44  45  46  47
-> > +                      48  49  50  51  52  53  54  55
-> > +                      56  57  58  59  60  61  62  63
-> > +                      64  65  66  67  68  69  70  71
-> > +                      72  73  74  75  76  77  78  79
-> > +                      80  81  82  83  84  85  86  87
-> > +                      88  89  90  91  92  93  94  95
-> > +                      96  97  98  99 100 101 102 103
-> > +                     104 105 106 107 108 109 110 111
-> > +                     112 113 114 115 116 117 118 119
-> > +                     120 121 122 123 124 125 126 127
-> > +                     128 129 130 131 132 133 134 135
-> > +                     136 137 138 139 140 141 142 143
-> > +                     144 145 146 147 148 149 150 151
-> > +                     152 153 154 155 156 157 158 159
-> > +                     160 161 162 163 164 165 166 167
-> > +                     168 169 170 171 172 173 174 175
-> > +                     176 177 178 179 180 181 182 183
-> > +                     184 185 186 187 188 189 190 191
-> > +                     192 193 194 195 196 197 198 199
-> > +                     200 201 202 203 204 205 206 207
-> > +                     208 209 210 211 212 213 214 215
-> > +                     216 217 218 219 220 221 222 223
-> > +                     224 225 226 227 228 229 230 231
-> > +                     232 233 234 235 236 237 238 239
-> > +                     240 241 242 243 244 245 246 247
-> > +                     248 249 250 251 252 253 254 255>;
+> int main(void)
+> {
+> 	bfd *abfd = bfd_openr(NULL, NULL);
 >
-> This looks trivial enough that I wonder whether it might still work to
-> just omit it? Not that I know anything about backlights, but I had the
-> impression (from mailing list traffic, I guess) that the driver gained
-> the ability to provide a reasonable default behaviour at some point.
+> 	disassembler(bfd_get_arch(abfd),
+> 		     bfd_big_endian(abfd),
+> 		     bfd_get_mach(abfd),
+> 		     abfd);
+>
+> 	return 0;
+> }
+> [acme@quaco perf]$
+>
+> And here in my fedora29 system it ends up producing the following file,
+> when built with:
+>
+> $ make O=/tmp/build/perf  -C tools/perf install-bin
+>
+> [acme@quaco perf]$ cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
+> [acme@quaco perf]$
+> [acme@quaco perf]$ file /tmp/build/perf/feature/test-disassembler-four-args.bin
+> /tmp/build/perf/feature/test-disassembler-four-args.bin: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=c9bd83db766a620c5cb6d756b0cd6991527641ff, not stripped, too many notes (256)
+> [acme@quaco perf]$ ldd /tmp/build/perf/feature/test-disassembler-four-args.bin
+> 	linux-vdso.so.1 (0x00007ffebc5f9000)
+> 	libz.so.1 => /lib64/libz.so.1 (0x00007fed2da04000)
+> 	libdl.so.2 => /lib64/libdl.so.2 (0x00007fed2d9fe000)
+> 	libc.so.6 => /lib64/libc.so.6 (0x00007fed2d838000)
+> 	/lib64/ld-linux-x86-64.so.2 (0x00007fed2da3e000)
+> [acme@quaco perf]$
+>
+> Meaning it built properly, so in this sytem the disassembler() function
+> has indeed four args, so we end up with:
+>
+> [acme@quaco perf]$ grep disassembler /tmp/build/perf/FEATURE-DUMP
+> feature-disassembler-four-args=1
+> [acme@quaco perf]$
+>
+> Can you check the output for
+> /tmp/build/perf/feature/test-disassembler-four-args.make.output in your
+> system? And also check what is the prototype for the disassembler()
+> routine on mageia7?
 
-Unaware about this, would you please pass the thread. on the
-other-hand I can see sapphire-excavator still using the brightness
-levels like this.
+
+I guess this is what fails the test:
+
+cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
+/usr/bin/ld: /usr/lib64/libbfd.a(plugin.o): in function `try_load_plugin':
+/home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:243: 
+undefined reference to `dlopen'
+/usr/bin/ld: 
+/home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:271: 
+undefined reference to `dlsym'
+/usr/bin/ld: 
+/home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:256: 
+undefined reference to `dlclose'
+/usr/bin/ld: 
+/home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:246: 
+undefined reference to `dlerror'
+
+
+as we allow dynamic linking and loading
+
+And we use linker flags:
+
+rpm --eval %ldflags
+  -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id 
+-Wl,--enable-new-dtags
+
+So it reports:
+
+  disassembler-four-args: [ OFF ]
+
+And falls back to one single command.
+
+> Here I have:
+>
+> [acme@quaco perf]$ rpm -q binutils
+> binutils-2.31.1-25.fc29.x86_64
+> [acme@quaco perf]$
+>
+> Perhaps binutils 2.32 changed that prototype again and instead of
+> falling back to using just one arg we need to use some other number of
+> args, or even a different type for the N args it now maybe have?
+>
+> - Arnaldo
+
+
+There is no change in 2.32
+
+
+disassembler_ftype
+disassembler (enum bfd_architecture a,
+               bfd_boolean big ATTRIBUTE_UNUSED,
+               unsigned long mach ATTRIBUTE_UNUSED,
+               bfd *abfd ATTRIBUTE_UNUSED)
+
+
+
+Is there a way to force it to "detect" / use 4 args ?
+
+--
+
+Thomas
+
+
