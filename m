@@ -2,123 +2,170 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01466C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AA7C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43E620656
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:41:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AI68YZzL"
+	by mail.kernel.org (Postfix) with ESMTP id AD05A20656
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbfEAUlS (ORCPT
+        id S1726206AbfEAUl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:41:18 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:35960 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfEAUlS (ORCPT
+        Wed, 1 May 2019 16:41:56 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.144]:40428 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726096AbfEAUlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:41:18 -0400
-Received: by mail-yw1-f66.google.com with SMTP id q185so12968ywe.3;
-        Wed, 01 May 2019 13:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pMnJNBghgbvx76yH858QzVrsxw6HsYRaSJHXl4FlOF4=;
-        b=AI68YZzLhQCxtwydtmox2s1kV3MxxSqKLPVFS6Og6Gd3M5gFoe2OKCwXhiEz1+15uv
-         IiRRn97M0iThIQUH/BaPwDUkQcGbGb5S4Uf5Hn7qD43VNYF8XJyp69yAXPzaT9Q+mneS
-         ei7OpQuFfULYkKf0p/+x45ptb97L0DDa35FckTqUub2nfxm7kqGHKnB+mWXBg3DIOpI8
-         c9UJVKFAolmwD2cqm+KSE5QVowk3QwciDGDzpD78k9wkn1DDIjVkcMKI8yv5hDDIOaiR
-         5XMKmTgXuRbNGyaDp2jIVkFIqtXeztgTYLwSYyKbh2iGEmSCHkfrkOV6yWNSP/rAaUOY
-         v0MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pMnJNBghgbvx76yH858QzVrsxw6HsYRaSJHXl4FlOF4=;
-        b=jLqGZrC+objXWLzEKA0pvXtzzwU8vk7hOY6/d9ptuWfyFh0+wMC8BKB4Y/7mQWTlI4
-         wqxWrTdZCmIq5/R5TOV72L9c5a3e8R3tEPGcQ8FMygtNJhVoBJnuwb8ygLyiyOpkASCj
-         v1J7cKxZR1+cBln5FxSTjVavLClwF5og3qi+aR70RJ/RaX+9W7x/uMBx/q0tzXEs90fl
-         8ZrUkJO/XgS/kLk42l8kSbl0yqUJuW/3ddkjPwCetqPO6Hm2frZ02xxqC+ahtWRDdA56
-         TEMXQXUngY3zn4IOJ5yt5owpJpKPawZyIA4JnYQn5OZ6qat9JIasUssfAcQOBpctni6m
-         KUtw==
-X-Gm-Message-State: APjAAAXq13Q+Bxg3TruOnK51QwB4LabS491K4ZXWVoDWvIlTwKQZG6/5
-        5ZpsgFpIEns3JDLa4hhuc/Q=
-X-Google-Smtp-Source: APXvYqx09QzwfAaXmJ2ImCi7aKVVSbfHDhNFZfxx4iqqJ8p5W2BeNZeou6daKK6v4bUt1oEHtN/Wtg==
-X-Received: by 2002:a81:9b4c:: with SMTP id s73mr57372980ywg.213.1556743277470;
-        Wed, 01 May 2019 13:41:17 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
-        by smtp.gmail.com with ESMTPSA id e12sm2643769ywa.103.2019.05.01.13.41.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 13:41:16 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9B4674111F; Wed,  1 May 2019 16:41:15 -0400 (EDT)
-Date:   Wed, 1 May 2019 16:41:15 -0400
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>
-Subject: Re: perf tools build broken after v5.1-rc1
-Message-ID: <20190501204115.GF21436@kernel.org>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A250584C@us01wembx1.internal.synopsys.com>
- <CAK8P3a2JrAApXDws+t=q8AnKFkHJZSox7gsgwW-xEJTfs_mdzw@mail.gmail.com>
+        Wed, 1 May 2019 16:41:55 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 6A7774C58
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 15:41:54 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Lw38hrJ01dnCeLw38hbNIc; Wed, 01 May 2019 15:41:54 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=50392 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLw1r-003yq0-OB; Wed, 01 May 2019 15:41:54 -0500
+Subject: Re: [PATCH] platform/x86: sony-laptop: Fix unintentional fall-through
+To:     Mattia Dongili <malattia@linux.it>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20190424180934.GA29307@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <cd02e064-1172-a8a2-14af-1f20e09a0738@embeddedor.com>
+Date:   Wed, 1 May 2019 15:40:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2JrAApXDws+t=q8AnKFkHJZSox7gsgwW-xEJTfs_mdzw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190424180934.GA29307@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLw1r-003yq0-OB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:50392
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 30, 2019 at 06:12:35PM +0200, Arnd Bergmann escreveu:
-> On Mon, Apr 29, 2019 at 7:17 PM Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
-> >
-> > On 4/22/19 8:31 AM, Arnaldo Carvalho de Melo wrote:
-> > >> A quick fix for ARC will be to create our own version but I presume all existing
-> > >> arches using generic syscall abi are affected. Thoughts ? In lack of ideas I'll
-> > >> send out a patch for ARC.
-> > >>
-> > >> P.S. Why do we need the unistd.h duplication in tools directory, given it could
-> > >> have used the in-tree unistd headers directly ?
-> > > I have to write down the explanation and have it in a file, but we can't
-> > > use anything in the kernel from outside tools/ to avoid adding a burden
-> > > to kernel developers that would then have to make sure that the changes
-> > > that they make outside tools/ don't break things living there.
-> >
-> > That is a sound guiding principle in general but I don't agree here. unistd is
-> > backbone of kernel user interface it has to work and can't possibly be broken even
-> > when kernel devs add a new syscall is added or condition-alize existing one. So
-> > adding a copy - and deferring the propagation of in-kernel unistd to usersapce
-> > won't necessarily help with anything and it just adds the burden of keeping them
-> > in sync. Granted we won't necessarily need all the bleeding edge (new syscall
-> > updates) into that header, its still more work.
+Hi all,
+
+Friendly ping:
+
+Who can take this?
+
+Thanks
+--
+Gustavo
+
+On 4/24/19 1:09 PM, Gustavo A. R. Silva wrote:
+> It seems that the default case should return AE_CTRL_TERMINATE, instead
+> of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
+> otherwise the line of code at the end of the function is unreachable and
+> makes no sense:
 > 
-> I think more importantly, it seems completely broken to sync a file from
-> asm-generic but not the arch specific file that includes it.
+> return AE_CTRL_TERMINATE;
 > 
-> The 1a787fc5ba18ac7 commit copied over the changes for arm64, but
-> missed all the other architectures changed in c8ce48f06503 and the
-> related commits.
-
-Right, I have a patch copying the missing headers, and that fixed the
-build with the glibc-based toolchain, but then broke the uCLibc one :-\
-
-I'm travelling, so coulnd't get back to this, will try as possible.
-
-- Arnaldo
+> This fix is based on the following thread of discussion:
+> 
+> https://lore.kernel.org/patchwork/patch/959782/
+> 
+> Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/platform/x86/sony-laptop.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index 4bfbfa3f78e6..2058445fc456 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct acpi_resource *resource, void *context)
+>  			}
+>  			return AE_OK;
+>  		}
+> +
+> +	case ACPI_RESOURCE_TYPE_END_TAG:
+> +		return AE_OK;
+> +
+>  	default:
+>  		dprintk("Resource %d isn't an IRQ nor an IO port\n",
+>  			resource->type);
+> +		return AE_CTRL_TERMINATE;
+>  
+> -	case ACPI_RESOURCE_TYPE_END_TAG:
+> -		return AE_OK;
+>  	}
+> -	return AE_CTRL_TERMINATE;
+>  }
+>  
+>  static int sony_pic_possible_resources(struct acpi_device *device)
+> 
