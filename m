@@ -6,546 +6,173 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4601EC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44E5C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0012D2085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDF02085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfEAP7Y (ORCPT
+        id S1727080AbfEAP7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:59:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25560 "EHLO mga17.intel.com"
+        Wed, 1 May 2019 11:59:23 -0400
+Received: from foss.arm.com ([217.140.101.70]:33168 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbfEAP6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:58:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 08:58:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,418,1549958400"; 
-   d="scan'208";a="296115721"
-Received: from modiarvi-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.251.134.211])
-  by orsmga004.jf.intel.com with ESMTP; 01 May 2019 08:58:28 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org,
-        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
-        srinivas.kandagatla@linaro.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v4 12/22] soundwire: stream: fix alignment issues
-Date:   Wed,  1 May 2019 10:57:35 -0500
-Message-Id: <20190501155745.21806-13-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190501155745.21806-1-pierre-louis.bossart@linux.intel.com>
-References: <20190501155745.21806-1-pierre-louis.bossart@linux.intel.com>
+        id S1726881AbfEAP7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 11:59:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B036A78;
+        Wed,  1 May 2019 08:59:21 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BF8813F71A;
+        Wed,  1 May 2019 08:59:19 -0700 (PDT)
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: [PATCHv2] io_uring: avoid page allocation warnings
+Date:   Wed,  1 May 2019 16:59:16 +0100
+Message-Id: <20190501155916.34008-1-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use Linux style
+In io_sqe_buffer_register() we allocate a number of arrays based on the
+iov_len from the user-provided iov. While we limit iov_len to SZ_1G,
+we can still attempt to allocate arrays exceeding MAX_ORDER.
 
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+On a 64-bit system with 4KiB pages, for an iov where iov_base = 0x10 and
+iov_len = SZ_1G, we'll calculate that nr_pages = 262145. When we try to
+allocate a corresponding array of (16-byte) bio_vecs, requiring 4194320
+bytes, which is greater than 4MiB. This results in SLUB warning that
+we're trying to allocate greater than MAX_ORDER, and failing the
+allocation.
+
+Avoid this by using kvmalloc() for allocations dependent on the
+user-provided iov_len. At the same time, fix a leak of imu->bvec when
+registration fails.
+
+Full splat from before this patch:
+
+WARNING: CPU: 1 PID: 2314 at mm/page_alloc.c:4595 __alloc_pages_nodemask+0x7ac/0x2938 mm/page_alloc.c:4595
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 2314 Comm: syz-executor326 Not tainted 5.1.0-rc7-dirty #4
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+ dump_backtrace+0x0/0x2f0 include/linux/compiler.h:193
+ show_stack+0x20/0x30 arch/arm64/kernel/traps.c:158
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x110/0x190 lib/dump_stack.c:113
+ panic+0x384/0x68c kernel/panic.c:214
+ __warn+0x2bc/0x2c0 kernel/panic.c:571
+ report_bug+0x228/0x2d8 lib/bug.c:186
+ bug_handler+0xa0/0x1a0 arch/arm64/kernel/traps.c:956
+ call_break_hook arch/arm64/kernel/debug-monitors.c:301 [inline]
+ brk_handler+0x1d4/0x388 arch/arm64/kernel/debug-monitors.c:316
+ do_debug_exception+0x1a0/0x468 arch/arm64/mm/fault.c:831
+ el1_dbg+0x18/0x8c
+ __alloc_pages_nodemask+0x7ac/0x2938 mm/page_alloc.c:4595
+ alloc_pages_current+0x164/0x278 mm/mempolicy.c:2132
+ alloc_pages include/linux/gfp.h:509 [inline]
+ kmalloc_order+0x20/0x50 mm/slab_common.c:1231
+ kmalloc_order_trace+0x30/0x2b0 mm/slab_common.c:1243
+ kmalloc_large include/linux/slab.h:480 [inline]
+ __kmalloc+0x3dc/0x4f0 mm/slub.c:3791
+ kmalloc_array include/linux/slab.h:670 [inline]
+ io_sqe_buffer_register fs/io_uring.c:2472 [inline]
+ __io_uring_register fs/io_uring.c:2962 [inline]
+ __do_sys_io_uring_register fs/io_uring.c:3008 [inline]
+ __se_sys_io_uring_register fs/io_uring.c:2990 [inline]
+ __arm64_sys_io_uring_register+0x9e0/0x1bc8 fs/io_uring.c:2990
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
+ el0_svc_common.constprop.0+0x148/0x2e0 arch/arm64/kernel/syscall.c:83
+ el0_svc_handler+0xdc/0x100 arch/arm64/kernel/syscall.c:129
+ el0_svc+0x8/0xc arch/arm64/kernel/entry.S:948
+SMP: stopping secondary CPUs
+Dumping ftrace buffer:
+   (ftrace buffer empty)
+Kernel Offset: disabled
+CPU features: 0x002,23000438
+Memory Limit: none
+Rebooting in 1 seconds..
+
+Fixes: edafccee56ff3167 ("io_uring: add support for pre-mapped user IO buffers")
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/soundwire/stream.c | 161 +++++++++++++++++++------------------
- 1 file changed, 84 insertions(+), 77 deletions(-)
+ fs/io_uring.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index 63b162feecfc..ab64c2c4c33f 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -53,9 +53,9 @@ static int sdw_find_row_index(int row)
- 	return 0;
- }
- static int _sdw_program_slave_port_params(struct sdw_bus *bus,
--				struct sdw_slave *slave,
--				struct sdw_transport_params *t_params,
--				enum sdw_dpn_type type)
-+					  struct sdw_slave *slave,
-+					  struct sdw_transport_params *t_params,
-+					  enum sdw_dpn_type type)
- {
- 	u32 addr1, addr2, addr3, addr4;
- 	int ret;
-@@ -119,8 +119,8 @@ static int _sdw_program_slave_port_params(struct sdw_bus *bus,
- }
+Since v1:
+* Use kvmalloc/kvfree
+* Free imu->bvec in case of error (per Jens)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 578b5494f9e5..c6a22c2ae58f 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2364,7 +2364,7 @@ static int io_sqe_buffer_unregister(struct io_ring_ctx *ctx)
  
- static int sdw_program_slave_port_params(struct sdw_bus *bus,
--			struct sdw_slave_runtime *s_rt,
--			struct sdw_port_runtime *p_rt)
-+					 struct sdw_slave_runtime *s_rt,
-+					 struct sdw_port_runtime *p_rt)
- {
- 	struct sdw_transport_params *t_params = &p_rt->transport_params;
- 	struct sdw_port_params *p_params = &p_rt->port_params;
-@@ -131,8 +131,8 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
- 	u8 wbuf;
- 
- 	dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave,
--					s_rt->direction,
--					t_params->port_num);
-+					  s_rt->direction,
-+					  t_params->port_num);
- 	if (!dpn_prop)
- 		return -EINVAL;
- 
-@@ -216,7 +216,7 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
- 
- 	if (dpn_prop->type != SDW_DPN_SIMPLE) {
- 		ret = _sdw_program_slave_port_params(bus, s_rt->slave,
--						t_params, dpn_prop->type);
-+						     t_params, dpn_prop->type);
- 		if (ret < 0)
- 			dev_err(&s_rt->slave->dev,
- 				"Transport reg write failed for port: %d",
-@@ -227,7 +227,7 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
- }
- 
- static int sdw_program_master_port_params(struct sdw_bus *bus,
--		struct sdw_port_runtime *p_rt)
-+					  struct sdw_port_runtime *p_rt)
- {
- 	int ret;
- 
-@@ -244,8 +244,8 @@ static int sdw_program_master_port_params(struct sdw_bus *bus,
- 		return ret;
- 
- 	return bus->port_ops->dpn_set_port_params(bus,
--				&p_rt->port_params,
--				bus->params.next_bank);
-+						  &p_rt->port_params,
-+						  bus->params.next_bank);
- }
- 
- /**
-@@ -292,8 +292,9 @@ static int sdw_program_port_params(struct sdw_master_runtime *m_rt)
-  * actual enable/disable is done with a bank switch
-  */
- static int sdw_enable_disable_slave_ports(struct sdw_bus *bus,
--				struct sdw_slave_runtime *s_rt,
--				struct sdw_port_runtime *p_rt, bool en)
-+					  struct sdw_slave_runtime *s_rt,
-+					  struct sdw_port_runtime *p_rt,
-+					  bool en)
- {
- 	struct sdw_transport_params *t_params = &p_rt->transport_params;
- 	u32 addr;
-@@ -322,7 +323,8 @@ static int sdw_enable_disable_slave_ports(struct sdw_bus *bus,
- }
- 
- static int sdw_enable_disable_master_ports(struct sdw_master_runtime *m_rt,
--			struct sdw_port_runtime *p_rt, bool en)
-+					   struct sdw_port_runtime *p_rt,
-+					   bool en)
- {
- 	struct sdw_transport_params *t_params = &p_rt->transport_params;
- 	struct sdw_bus *bus = m_rt->bus;
-@@ -336,7 +338,8 @@ static int sdw_enable_disable_master_ports(struct sdw_master_runtime *m_rt,
- 	/* Perform Master port channel(s) enable/disable */
- 	if (bus->port_ops->dpn_port_enable_ch) {
- 		ret = bus->port_ops->dpn_port_enable_ch(bus,
--				&enable_ch, bus->params.next_bank);
-+							&enable_ch,
-+							bus->params.next_bank);
- 		if (ret < 0) {
- 			dev_err(bus->dev,
- 				"Master chn_en write failed:%d port:%d",
-@@ -370,7 +373,7 @@ static int sdw_enable_disable_ports(struct sdw_master_runtime *m_rt, bool en)
- 	list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
- 		list_for_each_entry(s_port, &s_rt->port_list, port_node) {
- 			ret = sdw_enable_disable_slave_ports(m_rt->bus, s_rt,
--							s_port, en);
-+							     s_port, en);
- 			if (ret < 0)
- 				return ret;
- 		}
-@@ -387,7 +390,8 @@ static int sdw_enable_disable_ports(struct sdw_master_runtime *m_rt, bool en)
- }
- 
- static int sdw_do_port_prep(struct sdw_slave_runtime *s_rt,
--		struct sdw_prepare_ch prep_ch, enum sdw_port_prep_ops cmd)
-+			    struct sdw_prepare_ch prep_ch,
-+			    enum sdw_port_prep_ops cmd)
- {
- 	const struct sdw_slave_ops *ops = s_rt->slave->ops;
- 	int ret;
-@@ -405,8 +409,9 @@ static int sdw_do_port_prep(struct sdw_slave_runtime *s_rt,
- }
- 
- static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
--			struct sdw_slave_runtime *s_rt,
--			struct sdw_port_runtime *p_rt, bool prep)
-+				       struct sdw_slave_runtime *s_rt,
-+				       struct sdw_port_runtime *p_rt,
-+				       bool prep)
- {
- 	struct completion *port_ready = NULL;
- 	struct sdw_dpn_prop *dpn_prop;
-@@ -420,8 +425,8 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 	prep_ch.ch_mask = p_rt->ch_mask;
- 
- 	dpn_prop = sdw_get_slave_dpn_prop(s_rt->slave,
--					s_rt->direction,
--					prep_ch.num);
-+					  s_rt->direction,
-+					  prep_ch.num);
- 	if (!dpn_prop) {
- 		dev_err(bus->dev,
- 			"Slave Port:%d properties not found", prep_ch.num);
-@@ -442,7 +447,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 	 */
- 	if (prep && intr) {
- 		ret = sdw_configure_dpn_intr(s_rt->slave, p_rt->num, prep,
--						dpn_prop->device_interrupts);
-+					     dpn_prop->device_interrupts);
- 		if (ret < 0)
- 			return ret;
+ 		if (ctx->account_mem)
+ 			io_unaccount_mem(ctx->user, imu->nr_bvecs);
+-		kfree(imu->bvec);
++		kvfree(imu->bvec);
+ 		imu->nr_bvecs = 0;
  	}
-@@ -456,7 +461,7 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
  
- 		if (prep)
- 			ret = sdw_update(s_rt->slave, addr,
--					0xFF, p_rt->ch_mask);
-+					 0xFF, p_rt->ch_mask);
- 		else
- 			ret = sdw_update(s_rt->slave, addr, 0xFF, 0x0);
+@@ -2456,9 +2456,9 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+ 		if (!pages || nr_pages > got_pages) {
+ 			kfree(vmas);
+ 			kfree(pages);
+-			pages = kmalloc_array(nr_pages, sizeof(struct page *),
++			pages = kvmalloc_array(nr_pages, sizeof(struct page *),
+ 						GFP_KERNEL);
+-			vmas = kmalloc_array(nr_pages,
++			vmas = kvmalloc_array(nr_pages,
+ 					sizeof(struct vm_area_struct *),
+ 					GFP_KERNEL);
+ 			if (!pages || !vmas) {
+@@ -2470,7 +2470,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+ 			got_pages = nr_pages;
+ 		}
  
-@@ -486,13 +491,14 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
- 	/* Disable interrupt after Port de-prepare */
- 	if (!prep && intr)
- 		ret = sdw_configure_dpn_intr(s_rt->slave, p_rt->num, prep,
--						dpn_prop->device_interrupts);
-+					     dpn_prop->device_interrupts);
+-		imu->bvec = kmalloc_array(nr_pages, sizeof(struct bio_vec),
++		imu->bvec = kvmalloc_array(nr_pages, sizeof(struct bio_vec),
+ 						GFP_KERNEL);
+ 		ret = -ENOMEM;
+ 		if (!imu->bvec) {
+@@ -2509,6 +2509,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+ 			}
+ 			if (ctx->account_mem)
+ 				io_unaccount_mem(ctx->user, nr_pages);
++			kvfree(imu->bvec);
+ 			goto err;
+ 		}
  
+@@ -2531,12 +2532,12 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+ 
+ 		ctx->nr_user_bufs++;
+ 	}
+-	kfree(pages);
+-	kfree(vmas);
++	kvfree(pages);
++	kvfree(vmas);
+ 	return 0;
+ err:
+-	kfree(pages);
+-	kfree(vmas);
++	kvfree(pages);
++	kvfree(vmas);
+ 	io_sqe_buffer_unregister(ctx);
  	return ret;
  }
- 
- static int sdw_prep_deprep_master_ports(struct sdw_master_runtime *m_rt,
--				struct sdw_port_runtime *p_rt, bool prep)
-+					struct sdw_port_runtime *p_rt,
-+					bool prep)
- {
- 	struct sdw_transport_params *t_params = &p_rt->transport_params;
- 	struct sdw_bus *bus = m_rt->bus;
-@@ -510,7 +516,7 @@ static int sdw_prep_deprep_master_ports(struct sdw_master_runtime *m_rt,
- 		ret = ops->dpn_port_prep(bus, &prep_ch);
- 		if (ret < 0) {
- 			dev_err(bus->dev, "Port prepare failed for port:%d",
--					t_params->port_num);
-+				t_params->port_num);
- 			return ret;
- 		}
- 	}
-@@ -535,7 +541,7 @@ static int sdw_prep_deprep_ports(struct sdw_master_runtime *m_rt, bool prep)
- 	list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
- 		list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
- 			ret = sdw_prep_deprep_slave_ports(m_rt->bus, s_rt,
--							p_rt, prep);
-+							  p_rt, prep);
- 			if (ret < 0)
- 				return ret;
- 		}
-@@ -579,7 +585,7 @@ static int sdw_notify_config(struct sdw_master_runtime *m_rt)
- 			ret = slave->ops->bus_config(slave, &bus->params);
- 			if (ret < 0)
- 				dev_err(bus->dev, "Notify Slave: %d failed",
--								slave->dev_num);
-+					slave->dev_num);
- 			return ret;
- 		}
- 	}
-@@ -658,7 +664,7 @@ static int sdw_bank_switch(struct sdw_bus *bus, int m_rt_count)
- 		addr = SDW_SCP_FRAMECTRL_B0;
- 
- 	sdw_fill_msg(wr_msg, NULL, addr, 1, SDW_BROADCAST_DEV_NUM,
--					SDW_MSG_FLAG_WRITE, wbuf);
-+		     SDW_MSG_FLAG_WRITE, wbuf);
- 	wr_msg->ssp_sync = true;
- 
- 	/*
-@@ -873,7 +879,7 @@ EXPORT_SYMBOL(sdw_alloc_stream);
- 
- static struct sdw_master_runtime
- *sdw_find_master_rt(struct sdw_bus *bus,
--			struct sdw_stream_runtime *stream)
-+		    struct sdw_stream_runtime *stream)
- {
- 	struct sdw_master_runtime *m_rt = NULL;
- 
-@@ -897,8 +903,8 @@ static struct sdw_master_runtime
-  */
- static struct sdw_master_runtime
- *sdw_alloc_master_rt(struct sdw_bus *bus,
--			struct sdw_stream_config *stream_config,
--			struct sdw_stream_runtime *stream)
-+		     struct sdw_stream_config *stream_config,
-+		     struct sdw_stream_runtime *stream)
- {
- 	struct sdw_master_runtime *m_rt;
- 
-@@ -941,8 +947,8 @@ static struct sdw_master_runtime
-  */
- static struct sdw_slave_runtime
- *sdw_alloc_slave_rt(struct sdw_slave *slave,
--			struct sdw_stream_config *stream_config,
--			struct sdw_stream_runtime *stream)
-+		    struct sdw_stream_config *stream_config,
-+		    struct sdw_stream_runtime *stream)
- {
- 	struct sdw_slave_runtime *s_rt = NULL;
- 
-@@ -959,20 +965,19 @@ static struct sdw_slave_runtime
- }
- 
- static void sdw_master_port_release(struct sdw_bus *bus,
--			struct sdw_master_runtime *m_rt)
-+				    struct sdw_master_runtime *m_rt)
- {
- 	struct sdw_port_runtime *p_rt, *_p_rt;
- 
--	list_for_each_entry_safe(p_rt, _p_rt,
--			&m_rt->port_list, port_node) {
-+	list_for_each_entry_safe(p_rt, _p_rt, &m_rt->port_list, port_node) {
- 		list_del(&p_rt->port_node);
- 		kfree(p_rt);
- 	}
- }
- 
- static void sdw_slave_port_release(struct sdw_bus *bus,
--			struct sdw_slave *slave,
--			struct sdw_stream_runtime *stream)
-+				   struct sdw_slave *slave,
-+				   struct sdw_stream_runtime *stream)
- {
- 	struct sdw_port_runtime *p_rt, *_p_rt;
- 	struct sdw_master_runtime *m_rt;
-@@ -985,7 +990,7 @@ static void sdw_slave_port_release(struct sdw_bus *bus,
- 				continue;
- 
- 			list_for_each_entry_safe(p_rt, _p_rt,
--					&s_rt->port_list, port_node) {
-+						 &s_rt->port_list, port_node) {
- 
- 				list_del(&p_rt->port_node);
- 				kfree(p_rt);
-@@ -1003,7 +1008,7 @@ static void sdw_slave_port_release(struct sdw_bus *bus,
-  * This function is to be called with bus_lock held.
-  */
- static void sdw_release_slave_stream(struct sdw_slave *slave,
--			struct sdw_stream_runtime *stream)
-+				     struct sdw_stream_runtime *stream)
- {
- 	struct sdw_slave_runtime *s_rt, *_s_rt;
- 	struct sdw_master_runtime *m_rt;
-@@ -1011,7 +1016,7 @@ static void sdw_release_slave_stream(struct sdw_slave *slave,
- 	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
- 		/* Retrieve Slave runtime handle */
- 		list_for_each_entry_safe(s_rt, _s_rt,
--					&m_rt->slave_rt_list, m_rt_node) {
-+					 &m_rt->slave_rt_list, m_rt_node) {
- 
- 			if (s_rt->slave == slave) {
- 				list_del(&s_rt->m_rt_node);
-@@ -1034,7 +1039,7 @@ static void sdw_release_slave_stream(struct sdw_slave *slave,
-  * no effect as Slave(s) runtime handle would already be freed up.
-  */
- static void sdw_release_master_stream(struct sdw_master_runtime *m_rt,
--			struct sdw_stream_runtime *stream)
-+				      struct sdw_stream_runtime *stream)
- {
- 	struct sdw_slave_runtime *s_rt, *_s_rt;
- 
-@@ -1057,14 +1062,14 @@ static void sdw_release_master_stream(struct sdw_master_runtime *m_rt,
-  * This removes and frees port_rt and master_rt from a stream
-  */
- int sdw_stream_remove_master(struct sdw_bus *bus,
--		struct sdw_stream_runtime *stream)
-+			     struct sdw_stream_runtime *stream)
- {
- 	struct sdw_master_runtime *m_rt, *_m_rt;
- 
- 	mutex_lock(&bus->bus_lock);
- 
- 	list_for_each_entry_safe(m_rt, _m_rt,
--			&stream->master_list, stream_node) {
-+				 &stream->master_list, stream_node) {
- 
- 		if (m_rt->bus != bus)
- 			continue;
-@@ -1092,7 +1097,7 @@ EXPORT_SYMBOL(sdw_stream_remove_master);
-  * This removes and frees port_rt and slave_rt from a stream
-  */
- int sdw_stream_remove_slave(struct sdw_slave *slave,
--		struct sdw_stream_runtime *stream)
-+			    struct sdw_stream_runtime *stream)
- {
- 	mutex_lock(&slave->bus->bus_lock);
- 
-@@ -1116,8 +1121,9 @@ EXPORT_SYMBOL(sdw_stream_remove_slave);
-  * This function is to be called with bus_lock held.
-  */
- static int sdw_config_stream(struct device *dev,
--		struct sdw_stream_runtime *stream,
--		struct sdw_stream_config *stream_config, bool is_slave)
-+			     struct sdw_stream_runtime *stream,
-+			     struct sdw_stream_config *stream_config,
-+			     bool is_slave)
- {
- 	/*
- 	 * Update the stream rate, channel and bps based on data
-@@ -1128,13 +1134,13 @@ static int sdw_config_stream(struct device *dev,
- 	 * comparison and allow the value to be set and stored in stream
- 	 */
- 	if (stream->params.rate &&
--			stream->params.rate != stream_config->frame_rate) {
-+	    stream->params.rate != stream_config->frame_rate) {
- 		dev_err(dev, "rate not matching, stream:%s", stream->name);
- 		return -EINVAL;
- 	}
- 
- 	if (stream->params.bps &&
--			stream->params.bps != stream_config->bps) {
-+	    stream->params.bps != stream_config->bps) {
- 		dev_err(dev, "bps not matching, stream:%s", stream->name);
- 		return -EINVAL;
- 	}
-@@ -1151,7 +1157,7 @@ static int sdw_config_stream(struct device *dev,
- }
- 
- static int sdw_is_valid_port_range(struct device *dev,
--				struct sdw_port_runtime *p_rt)
-+				   struct sdw_port_runtime *p_rt)
- {
- 	if (!SDW_VALID_PORT_RANGE(p_rt->num)) {
- 		dev_err(dev,
-@@ -1162,9 +1168,10 @@ static int sdw_is_valid_port_range(struct device *dev,
- 	return 0;
- }
- 
--static struct sdw_port_runtime *sdw_port_alloc(struct device *dev,
--				struct sdw_port_config *port_config,
--				int port_index)
-+static struct sdw_port_runtime
-+*sdw_port_alloc(struct device *dev,
-+		struct sdw_port_config *port_config,
-+		int port_index)
- {
- 	struct sdw_port_runtime *p_rt;
- 
-@@ -1179,9 +1186,9 @@ static struct sdw_port_runtime *sdw_port_alloc(struct device *dev,
- }
- 
- static int sdw_master_port_config(struct sdw_bus *bus,
--			struct sdw_master_runtime *m_rt,
--			struct sdw_port_config *port_config,
--			unsigned int num_ports)
-+				  struct sdw_master_runtime *m_rt,
-+				  struct sdw_port_config *port_config,
-+				  unsigned int num_ports)
- {
- 	struct sdw_port_runtime *p_rt;
- 	int i;
-@@ -1204,9 +1211,9 @@ static int sdw_master_port_config(struct sdw_bus *bus,
- }
- 
- static int sdw_slave_port_config(struct sdw_slave *slave,
--			struct sdw_slave_runtime *s_rt,
--			struct sdw_port_config *port_config,
--			unsigned int num_config)
-+				 struct sdw_slave_runtime *s_rt,
-+				 struct sdw_port_config *port_config,
-+				 unsigned int num_config)
- {
- 	struct sdw_port_runtime *p_rt;
- 	int i, ret;
-@@ -1248,10 +1255,10 @@ static int sdw_slave_port_config(struct sdw_slave *slave,
-  * @stream: SoundWire stream
-  */
- int sdw_stream_add_master(struct sdw_bus *bus,
--		struct sdw_stream_config *stream_config,
--		struct sdw_port_config *port_config,
--		unsigned int num_ports,
--		struct sdw_stream_runtime *stream)
-+			  struct sdw_stream_config *stream_config,
-+			  struct sdw_port_config *port_config,
-+			  unsigned int num_ports,
-+			  struct sdw_stream_runtime *stream)
- {
- 	struct sdw_master_runtime *m_rt = NULL;
- 	int ret;
-@@ -1273,8 +1280,8 @@ int sdw_stream_add_master(struct sdw_bus *bus,
- 	m_rt = sdw_alloc_master_rt(bus, stream_config, stream);
- 	if (!m_rt) {
- 		dev_err(bus->dev,
--				"Master runtime config failed for stream:%s",
--				stream->name);
-+			"Master runtime config failed for stream:%s",
-+			stream->name);
- 		ret = -ENOMEM;
- 		goto unlock;
- 	}
-@@ -1313,10 +1320,10 @@ EXPORT_SYMBOL(sdw_stream_add_master);
-  *
-  */
- int sdw_stream_add_slave(struct sdw_slave *slave,
--		struct sdw_stream_config *stream_config,
--		struct sdw_port_config *port_config,
--		unsigned int num_ports,
--		struct sdw_stream_runtime *stream)
-+			 struct sdw_stream_config *stream_config,
-+			 struct sdw_port_config *port_config,
-+			 unsigned int num_ports,
-+			 struct sdw_stream_runtime *stream)
- {
- 	struct sdw_slave_runtime *s_rt;
- 	struct sdw_master_runtime *m_rt;
-@@ -1331,8 +1338,8 @@ int sdw_stream_add_slave(struct sdw_slave *slave,
- 	m_rt = sdw_alloc_master_rt(slave->bus, stream_config, stream);
- 	if (!m_rt) {
- 		dev_err(&slave->dev,
--				"alloc master runtime failed for stream:%s",
--				stream->name);
-+			"alloc master runtime failed for stream:%s",
-+			stream->name);
- 		ret = -ENOMEM;
- 		goto error;
- 	}
-@@ -1340,8 +1347,8 @@ int sdw_stream_add_slave(struct sdw_slave *slave,
- 	s_rt = sdw_alloc_slave_rt(slave, stream_config, stream);
- 	if (!s_rt) {
- 		dev_err(&slave->dev,
--				"Slave runtime config failed for stream:%s",
--				stream->name);
-+			"Slave runtime config failed for stream:%s",
-+			stream->name);
- 		ret = -ENOMEM;
- 		goto stream_error;
- 	}
-@@ -1385,8 +1392,8 @@ EXPORT_SYMBOL(sdw_stream_add_slave);
-  * @port_num: Port number
-  */
- struct sdw_dpn_prop *sdw_get_slave_dpn_prop(struct sdw_slave *slave,
--				enum sdw_data_direction direction,
--				unsigned int port_num)
-+					    enum sdw_data_direction direction,
-+					    unsigned int port_num)
- {
- 	struct sdw_dpn_prop *dpn_prop;
- 	u8 num_ports;
-@@ -1501,7 +1508,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 		ret = sdw_prep_deprep_ports(m_rt, true);
- 		if (ret < 0) {
- 			dev_err(bus->dev, "Prepare port(s) failed ret = %d",
--					ret);
-+				ret);
- 			return ret;
- 		}
- 	}
 -- 
-2.17.1
+2.11.0
 
