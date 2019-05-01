@@ -2,101 +2,117 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC50C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D26C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8350320656
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F6220675
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfEAV0w (ORCPT
+        id S1726191AbfEAVbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:26:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44642 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfEAV0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:26:51 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A49A93082A24;
-        Wed,  1 May 2019 21:26:51 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3755678905;
-        Wed,  1 May 2019 21:26:51 +0000 (UTC)
-Subject: Re: [PATCH v3] kernel/module: Reschedule while waiting for modules to
- finish loading
-To:     linux-kernel@vger.kernel.org, Jessica Yu <jeyu@kernel.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Arcari <darcari@redhat.com>
-References: <20190430222207.3002-1-prarit@redhat.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <90e18809-2b70-52d8-00b3-9c16768db9ad@redhat.com>
-Date:   Wed, 1 May 2019 17:26:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 17:31:53 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37240 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfEAVbx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:31:53 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id B3C852787AD
+Received: by earth.universe (Postfix, from userid 1000)
+        id 578E63C0D1B; Wed,  1 May 2019 23:31:49 +0200 (CEST)
+Date:   Wed, 1 May 2019 23:31:49 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
+        "Andrew F. Davis" <afd@ti.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] power: supply: bq27xxx_battery: Notify also about
+ status changes
+Message-ID: <20190501213149.v4xifzj4pxym4vt3@earth.universe>
+References: <1556272742-17232-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190430222207.3002-1-prarit@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 01 May 2019 21:26:51 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oo4nxb7vd5wfkt5c"
+Content-Disposition: inline
+In-Reply-To: <1556272742-17232-1-git-send-email-krzk@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--oo4nxb7vd5wfkt5c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/30/19 6:22 PM, Prarit Bhargava wrote:
-> On a s390 z14 LAR with 2 cpus about stalls about 3% of the time while
-> loading the s390_trng.ko module.
-> 
-> Add a reschedule point to the loop that waits for modules to complete
-> loading.
-> 
-> v3: cleanup Fixes line.
+Hi,
 
-Jessica, even with this additional patch there appears to be some other issues
-in the module code that are causing significant delays in boot up on large
-systems.
+On Fri, Apr 26, 2019 at 11:59:02AM +0200, Krzysztof Kozlowski wrote:
+> User-space might be interested in receiving uevents when the charging
+> starts/stops or if conditions of battery changes (e.g.
+> over-temperature).  Notify about changes in battery also when the flags
+> change, not only SoC.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Please revert these fixes from linux-next & modules-next.  I apologize for the
-extra work but I think it is for the best until I come up with a more complete &
-better tested patch.
+Thanks, queued.
 
-FWIW, the logic in the original patch is correct.  It's just that there's, as
-Heiko discovered, some poor scheduling, etc., that is impacting the module
-loading code after these changes.
+-- Sebastian
 
-Again, my apologies,
-
-P.
-
-> 
-> Reported-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Fixes: f9a75c1d717f ("modules: Only return -EEXIST for modules that have finished loading")
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>=20
 > ---
->  kernel/module.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 410eeb7e4f1d..48748cfec991 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3585,6 +3585,7 @@ static int add_unformed_module(struct module *mod)
->  					       finished_loading(mod->name));
->  			if (err)
->  				goto out_unlocked;
-> +			cond_resched();
->  			goto again;
->  		}
->  		err = -EEXIST;
-> 
+>=20
+> Changes since v1:
+> 1. Remove unneeded backslash (pointed by Pali).
+> ---
+>  drivers/power/supply/bq27xxx_battery.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/suppl=
+y/bq27xxx_battery.c
+> index 29b3a4056865..195c18c2f426 100644
+> --- a/drivers/power/supply/bq27xxx_battery.c
+> +++ b/drivers/power/supply/bq27xxx_battery.c
+> @@ -1612,7 +1612,8 @@ void bq27xxx_battery_update(struct bq27xxx_device_i=
+nfo *di)
+>  			di->charge_design_full =3D bq27xxx_battery_read_dcap(di);
+>  	}
+> =20
+> -	if (di->cache.capacity !=3D cache.capacity)
+> +	if ((di->cache.capacity !=3D cache.capacity) ||
+> +	    (di->cache.flags !=3D cache.flags))
+>  		power_supply_changed(di->bat);
+> =20
+>  	if (memcmp(&di->cache, &cache, sizeof(cache)) !=3D 0)
+> --=20
+> 2.7.4
+>=20
+
+--oo4nxb7vd5wfkt5c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzKEEUACgkQ2O7X88g7
++pqsLw//W11mBfBrUxXGdXS+/jzoIpCyS3GDnTLOyVCWYnHZoAWsj/+IK0pHJBDS
+THqb6RxRE7ttV/pUdIzBkP7V9pSZRSJOWEX4kN0okrd4JuMBBFjSbQPkjgGY87dS
+L6X2gLZiNvktq4j+Nsl8lAxZmEKB41XT7R4kkEPnpJ7Ykswchtip4PxIx5phThIa
+7SQbU6QxurMi9Yj9sJM3nqm9U/72HQAEpQDk5v73IVskq+myeut0zHWB2GSnwN4R
+cKFqlLf/ktjZNIL4ImmHWVPTmiB+LFdywmVuvzNzWxIaPke4/lH9yMSMjsQuwC85
+wZEPcbaDqcSctlv5nVaSDOJGQ0B79YIUwLpE3mhCAg+hpTbfegQ4F1TVolEeHVMM
+yrDp2jOtASj0pUN0g9fR3z4cgYrnPdOAmT2nHm/Ub5ZyZXDT+CDNDsmgCHtzPCUu
+tMUotLhGQmIs2jNZqESSmSKBrm6lB+S8AddlAika4AbtVAGdYp0m3IGGA1IES8Ww
+tgjtyaNwRX9gpcIKJnd/W8io9T/NwiT+XsvHLk63JzhqWIsnCLVFTbfYQvCQmfJ6
+k7KrKg/Y5quiOr0tTVTEWSD+g7EeOtjyaVltZiGePpQsUw9j8qno2fAPnLsaSHU9
+I5WlSAmpzfVeo+YFyiOIPsn4OC0dxL/N3RKnJJr87BGCKRTowBw=
+=VC6P
+-----END PGP SIGNATURE-----
+
+--oo4nxb7vd5wfkt5c--
