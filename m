@@ -2,167 +2,129 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1CAC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F7EC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A97420652
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B25620652
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:47:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K9L7ldtQ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oVjexLeT"
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="O5lpYGU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbfEASnC (ORCPT
+        id S1726137AbfEASrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 14:43:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60250 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfEASnC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 14:43:02 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 178876083E; Wed,  1 May 2019 18:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556736181;
-        bh=yzlxHbc9Bvt+Q3uG2Hf7NalbgMIKbFyBV0j0pUBHNKg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=K9L7ldtQDqt9HBJ9Kty/bKeG3WATmcTbijYEhFr765L8ymZmzUCLHiuRHQ7cXR7zw
-         ahBc6sZFqzkYjAaXNVFKBdapNfSC3fS6OsUErY2VLl7Q6ZwjGGbf8jn83DKeXhjqP3
-         jUp405/EQg9K+jR+zP3XS7zAdFmMuWR/NAfrOL6g=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 44CA56013C;
-        Wed,  1 May 2019 18:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556736180;
-        bh=yzlxHbc9Bvt+Q3uG2Hf7NalbgMIKbFyBV0j0pUBHNKg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oVjexLeT41ojgDbZQP8x+mW2fEauvKXJBmzcIAHBKRjREx9UQQgjJ3KJ313cyshJq
-         7pkOD+k0F2KIgqIqCz487i2CJQPlnFz0nV6vYMP14X2oSuCd5WEM8/MF//AYu+ORYY
-         1/t8sG5gisvBe5dv2pqUz+HScCIlMwj2V+jcx0/M=
+        Wed, 1 May 2019 14:47:17 -0400
+Received: from mail-eopbgr00092.outbound.protection.outlook.com ([40.107.0.92]:57886
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726004AbfEASrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 14:47:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oKp2dNvnG+drs/A6ljFelvF7IrEFVsHdJHmyoRpez/Y=;
+ b=O5lpYGU1TRe3XwHUzG3nkOzLAOXGPVGtaD2jjjzC32ilHwYYno4rR5Y8g7cnezJvuj1Xzl5xRtlpgK8fSrGEewUn9xegvlEeblc8ecmEsisJnrqzRH/34JRG3csVjuajSul4p/H8m7cbkLWBjP7Wz3sXy7CyjELI4O8lbjjNwBA=
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
+ VI1PR10MB1805.EURPRD10.PROD.OUTLOOK.COM (10.165.194.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Wed, 1 May 2019 18:47:11 +0000
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::48b8:9cff:182:f3d8]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::48b8:9cff:182:f3d8%2]) with mapi id 15.20.1856.008; Wed, 1 May 2019
+ 18:47:11 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "qiang.zhao@nxp.com" <qiang.zhao@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "oss@buserror.net" <oss@buserror.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 4/6] dt-bindings: soc/fsl: qe: document new
+ fsl,qe-snums binding
+Thread-Topic: [PATCH v2 4/6] dt-bindings: soc/fsl: qe: document new
+ fsl,qe-snums binding
+Thread-Index: AQHVAABTBBh/pLqBQEiPEhE0F8Qaj6ZWYLAAgAA73IA=
+Date:   Wed, 1 May 2019 18:47:10 +0000
+Message-ID: <12a4abf5-2a56-c5d3-dc43-59b1473c0829@prevas.dk>
+References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+ <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+ <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
+ <4c3aef881393398ca18efac99b1f76e7dbd19acf.camel@infinera.com>
+In-Reply-To: <4c3aef881393398ca18efac99b1f76e7dbd19acf.camel@infinera.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR08CA0071.eurprd08.prod.outlook.com
+ (2603:10a6:7:2a::42) To VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e3::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [5.186.118.63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dcc6a1b8-c38b-4e5f-4370-08d6ce656b50
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR10MB1805;
+x-ms-traffictypediagnostic: VI1PR10MB1805:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR10MB1805211FBA12C94BA0DC11198A3B0@VI1PR10MB1805.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00246AB517
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(366004)(136003)(39850400004)(199004)(189003)(72206003)(7736002)(36756003)(305945005)(478600001)(5660300002)(966005)(66066001)(256004)(110136005)(5024004)(54906003)(71200400001)(71190400001)(68736007)(2906002)(31696002)(71446004)(74482002)(6486002)(6436002)(2201001)(6506007)(386003)(316002)(25786009)(186003)(52116002)(486006)(11346002)(76176011)(8936002)(2616005)(476003)(99286004)(26005)(81156014)(81166006)(8676002)(229853002)(31686004)(6116002)(53936002)(6306002)(6512007)(66946007)(14454004)(73956011)(66476007)(64756008)(66556008)(44832011)(66446008)(2501003)(4326008)(3846002)(6246003)(446003)(42882007)(8976002)(102836004)(7416002)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB1805;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 04Bgu7zXkfJErxHd0qWYxM06+wopIhFAB5HyWoRI33FZD+Mv86mBMFLRvZaMGY7aTxW3AeG0USvQllpUKfnwKlmMTQERzpqf4JuP+GWSXF+LvaSeoF9xNwQL1ssZKN18cosniEMq+HEQqgZoRyda1Ryvm8dG7c8reIHmj/zxwjxEazxlikkEZI1WNhK4ILVzYJwb/F7/344UmuV3umlpxAeFmVmepUYoP1qtIDE/O3rIclhHNhjrKHDx5ZmNBAZa6BHNVR5L08r3qnaFYJVwFH6yX5PxUQQ8xXdhSRtIBAVjJ1hjt1fbeSSbXpxwwLaqM6VjWgbP96FQ+AidUgq/IINsRkAbSL8WWOLZV1Ipmyd4RVqQrvbEMRbMGDzd2gnROOjNyZMApsQL4bRDdbT7xiBTa2fDku2QhwiZuThwT7w=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8D3C3DDBAB3D4847BB37F9D538B0407B@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 01 May 2019 11:43:00 -0700
-From:   Sodagudi Prasad <psodagud@codeaurora.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     julien.thierry@arm.com, will.deacon@arm.com,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: PSCI version 1.1 and SYSTEM_RESET2
-In-Reply-To: <20190501094953.GA21851@e107155-lin>
-References: <24970f7101952f347bd4046c9a980473@codeaurora.org>
- <efee74624f986a358b8986ae3085fba2@codeaurora.org>
- <20190501094953.GA21851@e107155-lin>
-Message-ID: <3ceb06c36ecb745e2befaeaefe49be19@codeaurora.org>
-X-Sender: psodagud@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: dcc6a1b8-c38b-4e5f-4370-08d6ce656b50
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 18:47:11.0077
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1805
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-01 02:49, Sudeep Holla wrote:
-> On Tue, Apr 30, 2019 at 05:07:31PM -0700, Sodagudi Prasad wrote:
->> On 2019-04-30 14:44, Sodagudi Prasad wrote:
->> +Sudeep
->> 
->> > Hi Mark/Will,
->> >
->> > I would like to understand whether ARM linux community have plans to
->> > support PSCI version 1.1 or not.
->> > PSCI_1_1 specification introduced support for SYSTEM_RESET2 command
->> > and this new command helps mobile devices to SYSTEM_WARM_RESET
->> > support. Rebooting devices with warm reboot helps to capture the
->> > snapshot of the ram contents for post-mortem analysis.
->> 
->> I think, there is a recent discussion from Sudeep for the 
->> SYSTEM_RESET2
->> support.
->> https://patchwork.kernel.org/patch/10884345/
->> 
-> 
-> This has landed in -next, and hopefully must appear in v5.2
-> 
->> 
->> Hi Sudeep,
->> 
->> I was going through your discussion in the below list -
->> https://lore.kernel.org/lkml/d73d3580-4ec1-a281-4585-5c776fc08c79@xilinx.com/
->> 
->> There is no provision to set up reboot mode dynamically instead kernel
->> command line parameter.
->> Looking for options to reboot device with warm reboot option when 
->> kernel
->> crashed.
->> 
->> panic() --> emergency_restart() --> machine_emergency_restart() -->
->> machine_restart(NULL);
->> 
->> It would nice if there is a config option to reboot the device either 
->> in
->> warm or cold in the case of kernel panic.
-> 
-> I presume you prefer to do warm boot in case of panic to get a dump of
-> the memory to inspect ? If so, is kexec/kdump not the mechanism to
-> achieve that ?
-
-Hi Sudeep,
-
-Thanks for your response and sharing details about your patch.
-<Sudeep>  If so, is kexec/kdump not the mechanism to achieve that?
-Qualcomm is having vendor specific solution to capture ram contents and 
-for offline analysis.
-
-> 
-> I am just trying to understand the use case. Xilinx asked for the same
-> but never got to understand their use case.
-
-Here is the background -
-Usually, power off drivers are overriding arm_pm_restart and 
-pm_power_off callbacks and registering with reboot notifier with  some 
-priority for the reboot operations.  Here is the Qualcomm poweroff 
-driver for reference.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/power/reset/msm-poweroff.c
-
-Before vendor chip set specific power off driver is probed, 
-arm_pm_restart functions pointer holds the psci_sys_reset function. Once 
-vendor power off driver is probed,  vendor drivers can override the 
-arm_pm_restart function pointer.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firmware/psci.c#n562
-
-Once vendor driver is probed, drivers can take care of devices warm or 
-hard reset configuration part properly.  But there is a window from 
-start_kernel() to vendor specific driver probed, devices are getting 
-cold resets even if kernel crashed.  This is due to arm_pm_restart 
-points to psci_sys_reset function by default.  Is this problem clear 
-now?
-
-Qualcomm downstream kernel has a lot of use cases with respect device 
-reset sequence and the downstream driver is much different from upstream 
-drivers. I think, the above-mentioned problem is common for all the 
-chipset vendors and it is not specific Qualcomm use cases.  I have one 
-downstream solution to this problem but thought to bring up this problem 
-to the upstream community for a common solution, so that all the vendors 
-can use it.
-
-I have modified below flow to avoid cold restart in the case of early 
-kernel panic.
-panic() --> emergency_restart() --> machine_emergency_restart() --> 
-machine_restart(NULL);
-
--Thanks, Prasad
-
-> 
-> --
-> Regards,
-> Sudeep
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum,
-Linux Foundation Collaborative Project
+T24gMDEvMDUvMjAxOSAxNy4xMiwgSm9ha2ltIFRqZXJubHVuZCB3cm90ZToNCj4gT24gV2VkLCAy
+MDE5LTA1LTAxIGF0IDA5OjI5ICswMDAwLCBSYXNtdXMgVmlsbGVtb2VzIHdyb3RlOg0KPj4gQ0FV
+VElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5pemF0
+aW9uLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IHJl
+Y29nbml6ZSB0aGUgc2VuZGVyIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuDQo+Pg0KPj4N
+Cj4+IFJlYWRpbmcgdGFibGUgNC0zMCwgYW5kIGl0cyBmb290bm90ZXMsIG9mIHRoZSBRVUlDQyBF
+bmdpbmUgQmxvY2sNCj4+IFJlZmVyZW5jZSBNYW51YWwgc2hvd3MgdGhhdCB0aGUgc2V0IG9mIHNu
+dW0gX3ZhbHVlc18gaXMgbm90DQo+PiBuZWNlc3NhcmlseSBqdXN0IGEgZnVuY3Rpb24gb2YgdGhl
+IF9udW1iZXJfIG9mIHNudW1zLCBhcyBnaXZlbiBpbiB0aGUNCj4+IGZzbCxxZS1udW0tc251bXMg
+cHJvcGVydHkuDQo+Pg0KPj4gQXMgYW4gYWx0ZXJuYXRpdmUsIHRvIG1ha2UgaXQgZWFzaWVyIHRv
+IGFkZCBzdXBwb3J0IGZvciBvdGhlciB2YXJpYW50cw0KPj4gb2YgdGhlIFFVSUNDIGVuZ2luZSBJ
+UCwgdGhpcyBpbnRyb2R1Y2VzIGEgbmV3IGJpbmRpbmcgZnNsLHFlLXNudW1zLA0KPj4gd2hpY2gg
+YXV0b21hdGljYWxseSBlbmNvZGVzIGJvdGggdGhlIG51bWJlciBvZiBzbnVtcyBhbmQgdGhlIGFj
+dHVhbA0KPj4gdmFsdWVzIHRvIHVzZS4NCj4+DQo+PiBGb3IgZXhhbXBsZSwgZm9yIHRoZSBNUEM4
+MzA5LCBvbmUgd291bGQgc3BlY2lmeSB0aGUgcHJvcGVydHkgYXMNCj4+DQo+PiAgICAgICAgICAg
+ICAgICBmc2wscWUtc251bXMgPSAvYml0cy8gOCA8DQo+PiAgICAgICAgICAgICAgICAgICAgICAg
+IDB4ODggMHg4OSAweDk4IDB4OTkgMHhhOCAweGE5IDB4YjggMHhiOQ0KPj4gICAgICAgICAgICAg
+ICAgICAgICAgICAweGM4IDB4YzkgMHhkOCAweGQ5IDB4ZTggMHhlOT47DQo+IA0KPiBJIHRoaW5r
+IHlvdSBuZWVkIGFkZCB0aGlzIGV4YW1wbGUgdG8gdGhlIHFlLnR4dCBkb2MgaXRzZWxmdC4NCg0K
+U3VyZSwgY2FuIGRvLg0KDQo+IEJUVywgd2hhdCBpcyAvYml0cy8gPw0KDQpUaGF0IGluZGljYXRl
+cyB0aGF0IHRoZSBudW1iZXJzIHNob3VsZCBiZSBzdG9yZWQgYXMgYW4gYXJyYXkgb2YgdTgsIGFu
+ZA0Kbm90IGFzIGJ5IGRlZmF1bHQgYW4gYXJyYXkgb2YgKGJpZy1lbmRpYW4pIDMyLWJpdCBudW1i
+ZXJzLiBTZWUNCg0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL3V0aWxzL2R0Yy9kdGMu
+Z2l0L3RyZWUvRG9jdW1lbnRhdGlvbi9kdHMtZm9ybWF0LnR4dCNuNDYNCg0KVGhpcyBpcyBhbHJl
+YWR5IHVzZWQgaW4gc29tZSBiaW5kaW5ncyBhbmQgZXhpc3RpbmcgLmR0cyAoZS5nLg0KaHdtb24v
+YXNwZWVkLXB3bS10YWNoby50eHQsIGJ1dCBnaXQgZ3JlcCBzaG93cyBtYW55IG1vcmUpLg0KDQpS
+YXNtdXMNCg==
