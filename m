@@ -2,102 +2,109 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6617CC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5872C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2A320866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9033C20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfEATAa (ORCPT
+        id S1726244AbfEATAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfEATA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:00:29 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C985E20675;
-        Wed,  1 May 2019 19:00:26 +0000 (UTC)
-Date:   Wed, 1 May 2019 15:00:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC][PATCH v3] ftrace/x86_64: Emulate call function while
- updating in breakpoint handler
-Message-ID: <20190501150025.40169f1d@gandalf.local.home>
-In-Reply-To: <20190501185726.GR7905@worktop.programming.kicks-ass.net>
-References: <20190501113238.0ab3f9dd@gandalf.local.home>
-        <CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com>
-        <20190501185726.GR7905@worktop.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 1 May 2019 15:00:45 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34801 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEATAp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 15:00:45 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n15so9507091ota.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 12:00:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i9+tfL6fSxYsK1rZcVSRQNqUCLp68RFEdLLJQMKSpDU=;
+        b=YAsW6iUVfIpiXSNvGP6AF3/jeuo3aGJfAPxXVVPuIywbtw6kFsjIjW8tJV5SRg/HEt
+         +8cMfVXu7qclm/FXTyWuX095FlXH1E73CxlJIIekI8VcnWUGrWDuvDj2kNpIhYYD320d
+         bqWGXpx9RiIX62HdxFDB14pyPN+JZBQr3dDxmWn+P31jOAdsvyQ0QmLeG3i5B2+u3lzA
+         TCLCUarQKvkM5bxj6xhC0Z/iouhzEapC2EFivh22VIobhY3QL3QdERFfC+30eeTAZteb
+         OEzTs9em49WfWyXpW8F8ejZwJ51iaZMU586+3jfET0P4CuA/G15iqoXPd/5I1MlwwHKZ
+         PDsA==
+X-Gm-Message-State: APjAAAXgaMgG/yY7XGgMdtjbQTkfihpxIrLjuSJY6zOfYfV8n9SLW+ez
+        VeQFfyWpqCdza6Wx5fAIEIrR01kWLrY=
+X-Google-Smtp-Source: APXvYqxcnZtyfDp5i1OiYkDeOuyLxdZdwkDq1MwmPYmitS4bHnDj2/YJ0PiOVfz/OncExhdTiCmkBg==
+X-Received: by 2002:a9d:490e:: with SMTP id e14mr1744563otf.197.1556737244197;
+        Wed, 01 May 2019 12:00:44 -0700 (PDT)
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
+        by smtp.gmail.com with ESMTPSA id w3sm6779386oic.39.2019.05.01.12.00.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 12:00:43 -0700 (PDT)
+Received: by mail-ot1-f51.google.com with SMTP id b18so6570424otq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 12:00:43 -0700 (PDT)
+X-Received: by 2002:a9d:6409:: with SMTP id h9mr18431913otl.68.1556737243506;
+ Wed, 01 May 2019 12:00:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1552325436-8907-1-git-send-email-roy.pledge@nxp.com>
+In-Reply-To: <1552325436-8907-1-git-send-email-roy.pledge@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 1 May 2019 14:00:32 -0500
+X-Gmail-Original-Message-ID: <CADRPPNRgDN9O2GGd2XyVdByQ8_00MF83ZJ+P8tf13to=-FuN7g@mail.gmail.com>
+Message-ID: <CADRPPNRgDN9O2GGd2XyVdByQ8_00MF83ZJ+P8tf13to=-FuN7g@mail.gmail.com>
+Subject: Re: [PATCH] soc: fsl: dpio: Increase timeout for QBMan Management Commands
+To:     Roy Pledge <roy.pledge@nxp.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Youri Querry <youri.querry_1@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 May 2019 20:57:26 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Mar 11, 2019 at 12:32 PM Roy Pledge <roy.pledge@nxp.com> wrote:
+>
+> From: Youri Querry <youri.querry_1@nxp.com>
+>
+> The timeout for QBMan Management Commands can falsely trigger on a
+> busy system. This patch doubles the timeout to avoid the
+> false error reports
+>
+> Signed-off-by: Youri Querry <youri.querry_1@nxp.com>
+> Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
 
-> On Wed, May 01, 2019 at 11:01:07AM -0700, Linus Torvalds wrote:
-> > This looks sane to me, although I'm surprised that we didn't already
-> > have an annotation for the nonstandard stack frame for asm files. That
-> > probably would be cleaner in a separate commit, but I guess it doesn't
-> > matter.
-> > 
-> > Anyway, I'm willing to consider the entry code version if it looks a
-> > _lot_ simpler than this (so I'd like to see them side-by-side), but
-> > it's not like this looks all that complicated to me either.  
-> 
-> So I posted one earlier today:
-> 
->   https://lkml.kernel.org/r/20190501131117.GW2623@hirez.programming.kicks-ass.net
-> 
-> it's about a 1/3rd the number of lines and has 32bit support. It also
-> provides all the bits required to implement static_call().
+Applied for next.  Thanks.
 
-That's the patch I started with.
-
-> 
-> That is; I think I'm firmly in favour of the entry variant -- provided
-> it actually works of course.
-
-And it works. I ran it through tools/testing/selftests/ftrace/ftracetest
-and it passed as good as without that patch.
-
-I haven't ran it through my full test suite. I can do that and see how
-it makes out.
-
--- Steve
+> ---
+>  drivers/soc/fsl/dpio/qbman-portal.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/soc/fsl/dpio/qbman-portal.h b/drivers/soc/fsl/dpio/qbman-portal.h
+> index 78c700e..f3ec5d2 100644
+> --- a/drivers/soc/fsl/dpio/qbman-portal.h
+> +++ b/drivers/soc/fsl/dpio/qbman-portal.h
+> @@ -1,7 +1,7 @@
+>  /* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
+>  /*
+>   * Copyright (C) 2014-2016 Freescale Semiconductor, Inc.
+> - * Copyright 2016 NXP
+> + * Copyright 2016-2019 NXP
+>   *
+>   */
+>  #ifndef __FSL_QBMAN_PORTAL_H
+> @@ -433,7 +433,7 @@ static inline int qbman_swp_CDAN_set_context_enable(struct qbman_swp *s,
+>  static inline void *qbman_swp_mc_complete(struct qbman_swp *swp, void *cmd,
+>                                           u8 cmd_verb)
+>  {
+> -       int loopvar = 1000;
+> +       int loopvar = 2000;
+>
+>         qbman_swp_mc_submit(swp, cmd, cmd_verb);
+>
+> --
+> 2.7.4
+>
