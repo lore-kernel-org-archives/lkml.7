@@ -2,203 +2,377 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD06C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B197C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5C421734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:29:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GmHq9NsE"
+	by mail.kernel.org (Postfix) with ESMTP id 22F8521743
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfEAP33 (ORCPT
+        id S1726979AbfEAPco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:29:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46799 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfEAP33 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:29:29 -0400
-Received: by mail-io1-f68.google.com with SMTP id m14so4163504ion.13
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 08:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w9icvTpHr/0UAUYKXVxAi0Mjttdtx3G15AY7sawXcdw=;
-        b=GmHq9NsEB0M1Qo6k1yWcAHJTK0LWrOuMLjXx9IWyix/blgs73E4lFLnPvnhmLAAS5u
-         nwqL5nI6DiCbISjtx1RjtFET5bxHiEOPGBOyCGyDbh/tfZlYZTXA6UDZVjaqSVCb60Bh
-         Og8GxSsoOVPGIn+hKcIX6dSyo0eablzlos+vwYtQayNZgF4rWR3xH5xVSlpYyteP3SDS
-         3SoEqVtQn4apu/yRc564DLei1YlkoLjOn93D2lvn8uWV+fK8AMgTkGWwbsTHZnHqwfZs
-         fs7npyoefdRfvUWewCSTCEurMzYSKUFufcv/2sLNSRT5WUMow1oL5g+kogrIdBZWEIih
-         abFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w9icvTpHr/0UAUYKXVxAi0Mjttdtx3G15AY7sawXcdw=;
-        b=sjjwbJ2gSDJzbnZhbg6tYbpumEtwBuiGBXRVlSN+32rdbYPHlP+xdMoFUxgFpCTf/R
-         BNX+vht7T7VCMsGO28HnU3N9gH+pMt1Sqt+DhFKlz2poazot+jyB5FRGuh8ZJPHByULW
-         bO4lg3YeO0wHE8QXzRMby9cLno8XIIvm5J+R1p5v+2xjZDKRqyNDlws6JlIs7HJV52Wo
-         pf9g3Af0ye0NsQMmyBAsHp8roxRwoz3FzDyr4OciGG76InVPp3iW1eVxZewXNufat7wD
-         nnVlT21J6Us1YBPcSbZE88/eRi708lLKEf4Gwbd0GZXCHm/LPbvyCpUksRXFsXDPnZwt
-         6Keg==
-X-Gm-Message-State: APjAAAVWSwMOLVrwO7lT4ZRi6X6g5KeHcARgq51C3ilesydrQRxcf2RJ
-        icYkPEZFbxiV8y6CDvTIcEMqQw==
-X-Google-Smtp-Source: APXvYqxxdhXPqY0wown7mv3DfGcCQbx7MWnNeZLu50Ky50fVdx2xvbdy2IE0njr544wEEG5wdyV9qQ==
-X-Received: by 2002:a6b:6f11:: with SMTP id k17mr20872583ioc.76.1556724568160;
-        Wed, 01 May 2019 08:29:28 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id y7sm4851938ioq.87.2019.05.01.08.29.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 08:29:26 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: avoid page allocation warnings
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
-References: <20190430132405.8268-1-mark.rutland@arm.com>
- <20190430141810.GF13796@bombadil.infradead.org>
- <20190430145938.GA8314@lakrids.cambridge.arm.com>
- <a1af3017-6572-e828-dc8a-a5c8458e6b5a@kernel.dk>
- <20190430170302.GD8314@lakrids.cambridge.arm.com>
- <0bd395a0-e0d3-16a5-e29f-557e97782a48@kernel.dk>
- <20190501103026.GA11740@lakrids.cambridge.arm.com>
- <710a3048-ccab-260d-d8b7-1d51ff6d589d@kernel.dk>
- <20190501150921.GE11740@lakrids.cambridge.arm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <88fee953-ea3e-b9c0-650c-60faea07dd04@kernel.dk>
-Date:   Wed, 1 May 2019 09:29:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 11:32:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbfEAPcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 11:32:43 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE1B0208C3;
+        Wed,  1 May 2019 15:32:39 +0000 (UTC)
+Date:   Wed, 1 May 2019 11:32:38 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: [RFC][PATCH v3] ftrace/x86_64: Emulate call function while updating
+ in breakpoint handler
+Message-ID: <20190501113238.0ab3f9dd@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190501150921.GE11740@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/19 9:09 AM, Mark Rutland wrote:
-> On Wed, May 01, 2019 at 06:41:43AM -0600, Jens Axboe wrote:
->> On 5/1/19 4:30 AM, Mark Rutland wrote:
->>> On Tue, Apr 30, 2019 at 12:11:59PM -0600, Jens Axboe wrote:
->>>> On 4/30/19 11:03 AM, Mark Rutland wrote:
->>>>> I've just had a go at that, but when using kvmalloc() with or without
->>>>> GFP_KERNEL_ACCOUNT I hit OOM and my system hangs within a few seconds with the
->>>>> syzkaller prog below:
->>>>>
->>>>> ----
->>>>> Syzkaller reproducer:
->>>>> # {Threaded:false Collide:false Repeat:false RepeatTimes:0 Procs:1 Sandbox: Fault:false FaultCall:-1 FaultNth:0 EnableTun:false EnableNetDev:false EnableNetReset:false EnableCgroups:false EnableBinfmtMisc:false EnableCloseFds:false UseTmpDir:false HandleSegv:false Repro:false Trace:false}
->>>>> r0 = io_uring_setup(0x378, &(0x7f00000000c0))
->>>>> sendmsg$SEG6_CMD_SET_TUNSRC(0xffffffffffffffff, &(0x7f0000000240)={&(0x7f0000000000)={0x10, 0x0, 0x0, 0x40000000}, 0xc, 0x0, 0x1, 0x0, 0x0, 0x10}, 0x800)
->>>>> io_uring_register$IORING_REGISTER_BUFFERS(r0, 0x0, &(0x7f0000000000), 0x1)
->>>>> ----
->>>>>
->>>>> ... I'm a bit worried that opens up a trivial DoS.
->>>>>
->>>>> Thoughts?
->>>>
->>>> Can you post the patch you used?
->>>
->>> Diff below.
->>
->> And the reproducer, that was never posted.
-> 
-> It was; the "Syzakller reproducer" above is the reproducer I used with
-> syz-repro.
-> 
-> I've manually minimized that to C below. AFAICT, that hits a leak, which
-> is what's triggering the OOM after the program is run a number of times
-> with the previously posted kvmalloc patch.
-> 
-> Per /proc/meminfo, that memory isn't accounted anywhere.
-> 
->> Patch looks fine to me. Note
->> that buffer registration is under the protection of RLIMIT_MEMLOCK.
->> That's usually very limited for non-root, as root you can of course
->> consume as much as you want and OOM the system.
-> 
-> Sure.
-> 
-> As above, it looks like there's a leak, regardless.
 
-The leak is that we're not releasing imu->bvec in case of error. I fixed
-a missing kfree -> kvfree as well in your patch, with this rolled up
-version it works for me.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+
+Nicolai Stange discovered[1] that if live kernel patching is enabled, and the
+function tracer started tracing the same function that was patched, the
+conversion of the fentry call site during the translation of going from
+calling the live kernel patch trampoline to the iterator trampoline, would
+have as slight window where it didn't call anything.
+
+As live kernel patching depends on ftrace to always call its code (to
+prevent the function being traced from being called, as it will redirect
+it). This small window would allow the old buggy function to be called, and
+this can cause undesirable results.
+
+Nicolai submitted new patches[2] but these were controversial. As this is
+similar to the static call emulation issues that came up a while ago[3],
+Linus suggested using per CPU data along with special trampolines[4] to emulate
+the calls.
+
+Linus's solution was for text poke (which was mostly what the static_call
+code did), but as ftrace has its own mechanism, it required doing its own
+thing.
+
+Having ftrace use its own per CPU data and having its own set of specialized
+trampolines solves the issue of missed calls that live kernel patching
+suffers.
+
+[1] http://lkml.kernel.org/r/20180726104029.7736-1-nstange@suse.de
+[2] http://lkml.kernel.org/r/20190427100639.15074-1-nstange@suse.de
+[3] http://lkml.kernel.org/r/3cf04e113d71c9f8e4be95fb84a510f085aa4afa.1541711457.git.jpoimboe@redhat.com
+[4] http://lkml.kernel.org/r/CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com
+
+Inspired-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+
+Changes since v2:
+
+  - Moved inline asm to ftrace_64.S
+  - Used PER_CPU_VAR() and TRACE_IRQS_ON macros in assembly
+  - Renamed trampolines to be a little more coherent
+  - Created assembly version of STACK_FRAME_NON_STANDARD() in asm/frame.h
+  - Call ftrace_regs_caller instead of ftrace_caller
+  - No longer support 32 bit (it crashed badly on tests, and I couldn't figure it out)
 
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 18cecb6a0151..3e817d40fb96 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2443,7 +2443,7 @@ static int io_sqe_buffer_unregister(struct io_ring_ctx *ctx)
+ arch/x86/include/asm/frame.h |  15 ++++++
+ arch/x86/kernel/ftrace.c     | 102 ++++++++++++++++++++++++++++++++++-
+ arch/x86/kernel/ftrace_64.S  |  56 +++++++++++++++++++
+ 3 files changed, 172 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/frame.h b/arch/x86/include/asm/frame.h
+index 5cbce6fbb534..04892b374b93 100644
+--- a/arch/x86/include/asm/frame.h
++++ b/arch/x86/include/asm/frame.h
+@@ -42,4 +42,19 @@
  
- 		if (ctx->account_mem)
- 			io_unaccount_mem(ctx->user, imu->nr_bvecs);
--		kfree(imu->bvec);
-+		kvfree(imu->bvec);
- 		imu->nr_bvecs = 0;
- 	}
+ #endif /* CONFIG_FRAME_POINTER */
  
-@@ -2533,11 +2533,11 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
++#ifdef __ASSEMBLY__
++#ifdef CONFIG_STACK_VALIDATION
++#define STACK_FRAME_NON_STANDARD(func)					\
++.section        .discard.func_stack_frame_non_standard,"aw";		\
++.align 8;								\
++.type		__func_stack_frame_non_standard_##func, @object;	\
++.size		__func_stack_frame_non_standard_##func, 8;		\
++__func_stack_frame_non_standard_##func:					\
++.quad		func;							\
++.previous
++#else /* !CONFIG_STACK_VALIDATION */
++#define STACK_FRAME_NON_STANDARD(func)
++#endif /* CONFIG_STACK_VALIDATION */
++#endif /* __ASSEMBLY__ */
++
+ #endif /* _ASM_X86_FRAME_H */
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index ef49517f6bb2..634fc0d4fe97 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -232,6 +232,9 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
  
- 		ret = 0;
- 		if (!pages || nr_pages > got_pages) {
--			kfree(vmas);
--			kfree(pages);
--			pages = kmalloc_array(nr_pages, sizeof(struct page *),
-+			kvfree(vmas);
-+			kvfree(pages);
-+			pages = kvmalloc_array(nr_pages, sizeof(struct page *),
- 						GFP_KERNEL);
--			vmas = kmalloc_array(nr_pages,
-+			vmas = kvmalloc_array(nr_pages,
- 					sizeof(struct vm_area_struct *),
- 					GFP_KERNEL);
- 			if (!pages || !vmas) {
-@@ -2549,7 +2549,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
- 			got_pages = nr_pages;
- 		}
+ static unsigned long ftrace_update_func;
  
--		imu->bvec = kmalloc_array(nr_pages, sizeof(struct bio_vec),
-+		imu->bvec = kvmalloc_array(nr_pages, sizeof(struct bio_vec),
- 						GFP_KERNEL);
- 		ret = -ENOMEM;
- 		if (!imu->bvec) {
-@@ -2588,6 +2588,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
- 			}
- 			if (ctx->account_mem)
- 				io_unaccount_mem(ctx->user, nr_pages);
-+			kvfree(imu->bvec);
- 			goto err;
- 		}
++/* Used within inline asm below */
++unsigned long ftrace_update_func_call;
++
+ static int update_ftrace_func(unsigned long ip, void *new)
+ {
+ 	unsigned char old[MCOUNT_INSN_SIZE];
+@@ -259,6 +262,8 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
+ 	unsigned char *new;
+ 	int ret;
  
-@@ -2610,12 +2611,12 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
++	ftrace_update_func_call = (unsigned long)func;
++
+ 	new = ftrace_call_replace(ip, (unsigned long)func);
+ 	ret = update_ftrace_func(ip, new);
  
- 		ctx->nr_user_bufs++;
- 	}
--	kfree(pages);
--	kfree(vmas);
-+	kvfree(pages);
-+	kvfree(vmas);
+@@ -280,6 +285,46 @@ static nokprobe_inline int is_ftrace_caller(unsigned long ip)
  	return 0;
- err:
--	kfree(pages);
--	kfree(vmas);
-+	kvfree(pages);
-+	kvfree(vmas);
- 	io_sqe_buffer_unregister(ctx);
- 	return ret;
  }
-
+ 
++#ifdef CONFIG_X86_64
++/*
++ * We need to handle the "call func1" -> "call func2" case.
++ * Just skipping the call is not sufficient as it will be like
++ * changing to "nop" first and then updating the call. But some
++ * users of ftrace require calls never to be missed.
++ *
++ * To emulate the call while converting the call site with a breakpoint,
++ * some trampolines are used along with per CPU buffers.
++ * There are three trampolines for the call sites and three trampolines
++ * for the updating of the call in ftrace trampoline. The three
++ * trampolines are:
++ *
++ * 1) Interrupts are enabled when the breakpoint is hit
++ * 2) Interrupts are disabled when the breakpoint is hit
++ * 3) The breakpoint was hit in an NMI
++ *
++ * As per CPU data is used, interrupts must be disabled to prevent them
++ * from corrupting the data. A separate NMI trampoline is used for the
++ * NMI case. If interrupts are already disabled, then the return path
++ * of where the breakpoint was hit (saved in the per CPU data) is pushed
++ * on the stack and then a jump to either the ftrace_caller (which will
++ * loop through all registered ftrace_ops handlers depending on the ip
++ * address), or if its a ftrace trampoline call update, it will call
++ * ftrace_update_func_call which will hold the call that should be
++ * called.
++ */
++extern asmlinkage void ftrace_emulate_call_sti(void);
++extern asmlinkage void ftrace_emulate_call(void);
++extern asmlinkage void ftrace_emulate_call_nmi(void);
++extern asmlinkage void ftrace_emulate_call_update_sti(void);
++extern asmlinkage void ftrace_emulate_call_update(void);
++extern asmlinkage void ftrace_emulate_call_update_nmi(void);
++
++DEFINE_PER_CPU(void *, ftrace_bp_call_return);
++DEFINE_PER_CPU(void *, ftrace_bp_call_nmi_return);
++
++/* To hold the ftrace_regs_caller address to push on the stack */
++void *ftrace_caller_func = (void *)ftrace_regs_caller;
++
+ /*
+  * A breakpoint was added to the code address we are about to
+  * modify, and this is the handle that will just skip over it.
+@@ -291,6 +336,58 @@ int ftrace_int3_handler(struct pt_regs *regs)
+ {
+ 	unsigned long ip;
+ 
++	if (WARN_ON_ONCE(!regs))
++		return 0;
++
++	ip = regs->ip - 1;
++	if (ftrace_location(ip)) {
++		/* A breakpoint at the beginning of the function was hit */
++		if (in_nmi()) {
++			/* NMIs have their own trampoline */
++			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
++			regs->ip = (unsigned long) ftrace_emulate_call_nmi;
++			return 1;
++		}
++		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
++		if (regs->flags & X86_EFLAGS_IF) {
++			regs->flags &= ~X86_EFLAGS_IF;
++			regs->ip = (unsigned long) ftrace_emulate_call_sti;
++			/* Tell lockdep here we are enabling interrupts */
++			lockdep_hardirqs_on(_THIS_IP_);
++		} else {
++			regs->ip = (unsigned long) ftrace_emulate_call;
++		}
++		return 1;
++	} else if (is_ftrace_caller(ip)) {
++		/* An ftrace trampoline is being updated */
++		if (!ftrace_update_func_call) {
++			/* If it's a jump, just need to skip it */
++			regs->ip += MCOUNT_INSN_SIZE -1;
++			return 1;
++		}
++		if (in_nmi()) {
++			/* NMIs have their own trampoline */
++			this_cpu_write(ftrace_bp_call_nmi_return, (void *)ip + MCOUNT_INSN_SIZE);
++			regs->ip = (unsigned long) ftrace_emulate_call_update_nmi;
++			return 1;
++		}
++		this_cpu_write(ftrace_bp_call_return, (void *)ip + MCOUNT_INSN_SIZE);
++		if (regs->flags & X86_EFLAGS_IF) {
++			regs->flags &= ~X86_EFLAGS_IF;
++			regs->ip = (unsigned long) ftrace_emulate_call_update_sti;
++		} else {
++			regs->ip = (unsigned long) ftrace_emulate_call_update;
++		}
++		return 1;
++	}
++
++	return 0;
++}
++#else /* !X86_64 */
++int ftrace_int3_handler(struct pt_regs *regs)
++{
++	unsigned long ip;
++
+ 	if (WARN_ON_ONCE(!regs))
+ 		return 0;
+ 
+@@ -299,9 +396,9 @@ int ftrace_int3_handler(struct pt_regs *regs)
+ 		return 0;
+ 
+ 	regs->ip += MCOUNT_INSN_SIZE - 1;
+-
+ 	return 1;
+ }
++#endif
+ NOKPROBE_SYMBOL(ftrace_int3_handler);
+ 
+ static int ftrace_write(unsigned long ip, const char *val, int size)
+@@ -859,6 +956,8 @@ void arch_ftrace_update_trampoline(struct ftrace_ops *ops)
+ 
+ 	func = ftrace_ops_get_func(ops);
+ 
++	ftrace_update_func_call = (unsigned long)func;
++
+ 	/* Do a safe modify in case the trampoline is executing */
+ 	new = ftrace_call_replace(ip, (unsigned long)func);
+ 	ret = update_ftrace_func(ip, new);
+@@ -960,6 +1059,7 @@ static int ftrace_mod_jmp(unsigned long ip, void *func)
+ {
+ 	unsigned char *new;
+ 
++	ftrace_update_func_call = 0;
+ 	new = ftrace_jmp_replace(ip, (unsigned long)func);
+ 
+ 	return update_ftrace_func(ip, new);
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 75f2b36b41a6..8642e1719370 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -9,6 +9,9 @@
+ #include <asm/export.h>
+ #include <asm/nospec-branch.h>
+ #include <asm/unwind_hints.h>
++#include <asm/irqflags.h>
++#include <asm/percpu.h>
++#include <asm/frame.h>
+ 
+ 	.code64
+ 	.section .entry.text, "ax"
+@@ -262,6 +265,59 @@ GLOBAL(ftrace_regs_caller_end)
+ ENDPROC(ftrace_regs_caller)
+ 
+ 
++/* Trampoline for function update with interrupts enabled */
++GLOBAL(ftrace_emulate_call_sti)
++	push PER_CPU_VAR(ftrace_bp_call_return)
++	push ftrace_caller_func
++	TRACE_IRQS_ON
++	sti
++	ret
++ENDPROC(ftrace_emulate_call_sti)
++
++/* Trampoline for function update with interrupts disabled*/
++GLOBAL(ftrace_emulate_call)
++	push PER_CPU_VAR(ftrace_bp_call_return)
++	push ftrace_caller_func
++	ret
++ENDPROC(ftrace_emulate_call)
++
++/* Trampoline for function update in an NMI */
++GLOBAL(ftrace_emulate_call_nmi)
++	push PER_CPU_VAR(ftrace_bp_call_nmi_return)
++	push ftrace_caller_func
++	ret
++ENDPROC(ftrace_emulate_call_nmi)
++
++/* Trampoline for ftrace trampoline call update with interrupts enabled */
++GLOBAL(ftrace_emulate_call_update_sti)
++	push PER_CPU_VAR(ftrace_bp_call_return)
++	push ftrace_update_func_call
++	TRACE_IRQS_ON
++	sti
++	ret
++ENDPROC(ftrace_emulate_call_update_sti)
++
++/* Trampoline for ftrace trampoline call update with interrupts disabled */
++GLOBAL(ftrace_emulate_call_update)
++	push PER_CPU_VAR(ftrace_bp_call_return)
++	push ftrace_update_func_call
++	ret
++ENDPROC(ftrace_emulate_call_update)
++
++/* Trampoline for ftrace trampoline call update in an NMI */
++GLOBAL(ftrace_emulate_call_update_nmi)
++	push PER_CPU_VAR(ftrace_bp_call_nmi_return)
++	push ftrace_update_func_call
++	ret
++ENDPROC(ftrace_emulate_call_update_nmi)
++
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_sti)
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call)
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_nmi)
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_sti)
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update)
++STACK_FRAME_NON_STANDARD(ftrace_emulate_call_update_nmi)
++
+ #else /* ! CONFIG_DYNAMIC_FTRACE */
+ 
+ ENTRY(function_hook)
 -- 
-Jens Axboe
+2.20.1
 
