@@ -2,111 +2,284 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FECC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 973ACC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95BFE20651
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwL3Ptqt"
+	by mail.kernel.org (Postfix) with ESMTP id 6668820651
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbfEAGmW (ORCPT
+        id S1726133AbfEAGmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 02:42:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42971 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfEAGmW (ORCPT
+        Wed, 1 May 2019 02:42:46 -0400
+Received: from mx2.yrkesakademin.fi ([85.134.45.195]:31431 "EHLO
+        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfEAGmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 02:42:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w25so8218388pfi.9;
-        Tue, 30 Apr 2019 23:42:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=JsEmKkv5N9dvLUrbidM9wSUlAe5nAnboBrCBffm62Oo=;
-        b=cwL3PtqtIkyYXoJT8odJ4izToz0VBot3Jm0mH9awQEBSbg1neNxRnFwh69nPWQIIU9
-         OdnBFc6HA9635L6JCd7SgGIXGR6FKmL/7sO4BqDh0P/UaoaF+FFA3dRSUBIlS4iOno3Y
-         6+Se5F8lLsaEheXKR0qTOXC727tJuyvgt5NUz1UZEL31cbZItaTzFHuUw0UMY6kI1Xi4
-         JfsTy9tGNmOKxBAHKrPYZn/aphnf4y0tR8uQIB0cqqCF/R16SWDz7PbPXNvPGRiMIffA
-         Cmis7AMgaST3fUN0AzleS+JKzMpseqENAuj9usG0m93dD6ufvhU0A+k4wAOXpejBdiBV
-         yEMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=JsEmKkv5N9dvLUrbidM9wSUlAe5nAnboBrCBffm62Oo=;
-        b=dKnOGb1xJAu3P5biostlnsTSgDRaxDzWezSF4NfGq8hspuTPAYOYT9smCTAX/CwdaI
-         MgpOpR8roNjVo5Uka/x7kj5g5N6z87Xd1sgzSUE6dwD7PzSVFhpRnpMc1+yOf9131zSx
-         2/jFyJS59X18PTwGKGzImPxSUP3Dje3izrUviOnkV9esNneIOVWKMrT+sG+DWiNw9LKH
-         3Zv21/Pw5wBgUc4F+db0FTfbhwceU/IGq2sH7gf8JCMkXhhVd0mVUSQ280CcAlId7PPE
-         cihwcx9FVd1tWG2DKcWbC3WpRuNNBBNj6/i3alUc/4N/oGZiRGSqEkUnKujwrh+ktk/4
-         u17A==
-X-Gm-Message-State: APjAAAVnYogATEUKHfLnfTXYFtv/nY/W/vyGmUuudBNI+151asdsOKB1
-        n4FrzmcjzGH1h85NtTHsgz7x3CiuTROZmw==
-X-Google-Smtp-Source: APXvYqzzg8hCBN/xO+owS00ws0DIIRdvdI1vRuQPYNc5wNzisAaB1v4Ael0P4vq8O2PlbTqQSZrnTw==
-X-Received: by 2002:aa7:8384:: with SMTP id u4mr22819697pfm.214.1556692941512;
-        Tue, 30 Apr 2019 23:42:21 -0700 (PDT)
-Received: from nishad ([106.51.235.3])
-        by smtp.gmail.com with ESMTPSA id b144sm15434921pfb.68.2019.04.30.23.42.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 23:42:20 -0700 (PDT)
-Date:   Wed, 1 May 2019 12:12:13 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-nvdimm@lists.01.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] acpi/nfit: Use the correct style for SPDX License Identifier
-Message-ID: <20190501064209.GA4716@nishad>
+        Wed, 1 May 2019 02:42:46 -0400
+Subject: Re: perf build broken in 5.1-rc7
+To:     Song Liu <liu.song.a23@gmail.com>
+CC:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
+ <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
+ <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
+ <b773df70-58e6-69f8-d566-282b0f7ae579@mageia.org>
+ <CAPhsuW5O7sBdxorngkROCVRPGgRGV2se8mjT-q=O_guxC6Z7SA@mail.gmail.com>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <2e3b5a9d-b9ad-62ba-b3b0-d455dec8c031@mageia.org>
+Date:   Wed, 1 May 2019 09:42:38 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAPhsuW5O7sBdxorngkROCVRPGgRGV2se8mjT-q=O_guxC6Z7SA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-WatchGuard-Spam-ID: str=0001.0A0C020B.5CC93FE1.003A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.195
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in drivers/acpi/nfit/intel.h. For C header files
-Documentation/process/license-rules.rst mandates C-like comments
-(opposed to C source files where C++ style should be used)
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
+Den 01-05-2019 kl. 06:37, skrev Song Liu:
+> On Tue, Apr 30, 2019 at 6:31 AM Thomas Backlund <tmb@mageia.org> wrote:
+>>
+>> Den 30-04-2019 kl. 16:06, skrev Song Liu:
+>>> On Tue, Apr 30, 2019 at 12:55 AM Thomas Backlund <tmb@mageia.org> wrote:
+>>>> Den 30-04-2019 kl. 10:26, skrev Thomas Backlund:
+>>>>> Building perf in 5.1-rc5/6/7 fails:
+>>>>>
+>>>>>
+>>>>> Build start:
+>>>>>
+>>>>>
+>>>>>     make -s -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1
+>>>>> WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1
+>>>>> NO_BIONIC=1 NO_JVMTI=1 prefix=/usr lib=lib64 all
+>>>>>      BUILD:   Doing 'make -j32' parallel build
+>>>>>      HOSTCC   fixdep.o
+>>>>>      HOSTLD   fixdep-in.o
+>>>>>      LINK     fixdep
+>>>>> Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h'
+>>>>> differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
+>>>>> diff -u tools/arch/x86/include/uapi/asm/vmx.h
+>>>>> arch/x86/include/uapi/asm/vmx.h
+>>>>>
+>>>>> Auto-detecting system features:
+>>>>> ...                         dwarf: [ on  ]
+>>>>> ...            dwarf_getlocations: [ on  ]
+>>>>> ...                         glibc: [ on  ]
+>>>>> ...                          gtk2: [ on  ]
+>>>>> ...                      libaudit: [ on  ]
+>>>>> ...                        libbfd: [ on  ]
+>>>>> ...                        libelf: [ on  ]
+>>>>> ...                       libnuma: [ on  ]
+>>>>> ...        numa_num_possible_cpus: [ on  ]
+>>>>> ...                       libperl: [ on  ]
+>>>>> ...                     libpython: [ on  ]
+>>>>> ...                      libslang: [ on  ]
+>>>>> ...                     libcrypto: [ on  ]
+>>>>> ...                     libunwind: [ on  ]
+>>>>> ...            libdw-dwarf-unwind: [ on  ]
+>>>>> ...                          zlib: [ on  ]
+>>>>> ...                          lzma: [ on  ]
+>>>>> ...                     get_cpuid: [ on  ]
+>>>>> ...                           bpf: [ on  ]
+>>>>> ...                        libaio: [ on  ]
+>>>>> ...        disassembler-four-args: [ OFF ]
+>>>>>
+>>>>> Makefile.config:473: No sys/sdt.h found, no SDT events are defined,
+>>>>> please install systemtap-sdt-devel or systemtap-sdt-dev
+>>>>> Makefile.config:853: No libbabeltrace found, disables 'perf data' CTF
+>>>>> format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+>>>>>
+>>>>>
+>>>>> And breaks with:
+>>>>>
+>>>>>
+>>>>> CC       ui/setup.o
+>>>>> util/annotate.c: In function 'symbol__disassemble_bpf':
+>>>>> util/annotate.c:1767:29: error: incompatible type for argument 1 of
+>>>>> 'disassembler'
+>>>>>      disassemble = disassembler(bfdf);
+>>>>>                                 ^~~~
+>>>>> In file included from util/annotate.c:1689:
+>>>>> /usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture'
+>>>>> but argument is of type 'bfd *' {aka 'struct bfd *'}
+>>>>>     extern disassembler_ftype disassembler (enum bfd_architecture arc,
+>>>>>                                             ~~~~~~~~~~~~~~~~~~~~~~^~~
+>>>>> util/annotate.c:1767:16: error: too few arguments to function
+>>>>> 'disassembler'
+>>>>>      disassemble = disassembler(bfdf);
+>>>>>                    ^~~~~~~~~~~~
+>>>>> In file included from util/annotate.c:1689:
+>>>>> /usr/include/dis-asm.h:325:27: note: declared here
+>>>>>     extern disassembler_ftype disassembler (enum bfd_architecture arc,
+>>>>>                               ^~~~~~~~~~~~
+>>>>>      CC       arch/x86/util/header.o
+>>>>>      CC       arch/x86/util/tsc.o
+>>>>>      CC       arch/x86/util/pmu.o
+>>>>> mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
+>>>>>      CC       bench/futex-requeue.o
+>>>>>      CC       arch/x86/util/kvm-stat.o
+>>>>> make[4]: ***
+>>>>> [/work/rpmbuild/BUILD/kernel-x86_64/linux-5.0/tools/build/Makefile.build:97:
+>>>>> util/annotate.o] Error 1
+>>>>> make[4]: *** Waiting for unfinished jobs....
+>>>>>      CC       util/build-id.o
+>>>>>
+>>>>>
+>>>>>
+>>>> And I forgot...
+>>>>
+>>>> Reverting:
+>>>>    From 6987561c9e86eace45f2dbb0c564964a63f4150a Mon Sep 17 00:00:00 2001
+>>>> From: Song Liu <songliubraving@fb.com>
+>>>> Date: Mon, 11 Mar 2019 22:30:48 -0700
+>>>> Subject: perf annotate: Enable annotation of BPF programs
+>>>>
+>>>> Makes it build again.
+>>>>
+>>>> --
+>>>> Thomas
+>>>>
+>>> Hi Thomas,
+>>>
+>>> Which system are you running this test on? I would like to repro it in a VM.
+>>>
+>>> Thanks,
+>>> Song
+>>
+>> Mageia Cauldron currently stabilizing to become Mageia 7 in ~1 month.
+>>
+>>
+>> Basesystem is:
+>>
+>> binutils-2.32-5.mga7
+>> (includes all fixes from upstream binutils-2_32-branch)
+>>
+>> gcc-8.3.1-0.20190419.2.mga7
+>>
+>> glibc-2.29-7.mga7
+>> (includes all fixes from upstream glibc release/2.29/master branch up to
+>> 2019-04-15 for now)
+>>
+>>
+>> kernel-desktop-5.1.0-0.rc7.1.mga7
+>> kernel-userspace-headers-5.1.0-0.rc7.1.mga7
+>>
+>>
+>> --
+>>
+>> Thomas
+>>
+>>
+> I am trying to install Mageia 7 beta 3, but hit some issue. While I try fix it,
+> could you please try clean everything under tools/ and retry:
+>
+>    make -C tools/ clean
+>    make -C tools/perf -j
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/acpi/nfit/intel.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/nfit/intel.h b/drivers/acpi/nfit/intel.h
-index 0aca682ab9d7..8f5461c1dd9d 100644
---- a/drivers/acpi/nfit/intel.h
-+++ b/drivers/acpi/nfit/intel.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright(c) 2018 Intel Corporation. All rights reserved.
-  * Intel specific definitions for NVDIMM Firmware Interface Table - NFIT
--- 
-2.17.1
+Still fails:
+
+util/annotate.c: In function 'symbol__disassemble_bpf':
+util/annotate.c:1767:29: error: incompatible type for argument 1 of 
+'disassembler'
+   disassemble = disassembler(bfdf);
+                              ^~~~
+In file included from util/annotate.c:1689:
+/usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture' 
+but argument is of type 'bfd *' {aka 'struct bfd *'}
+  extern disassembler_ftype disassembler (enum bfd_architecture arc,
+                                          ~~~~~~~~~~~~~~~~~~~~~~^~~
+util/annotate.c:1767:16: error: too few arguments to function 'disassembler'
+   disassemble = disassembler(bfdf);
+                 ^~~~~~~~~~~~
+In file included from util/annotate.c:1689:
+/usr/include/dis-asm.h:325:27: note: declared here
+  extern disassembler_ftype disassembler (enum bfd_architecture arc,
+                            ^~~~~~~~~~~~
+   CC       scripts/python/Perf-Trace-Util/Context.o
+   CC       bench/mem-memcpy-x86-64-lib.o
+   CC       tests/parse-events.o
+   CC       util/block-range.o
+mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
+make[4]: *** 
+[/work/5.1/linux-5.1-rc7-mga07/tools/build/Makefile.build:97: 
+util/annotate.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+   CC       ui/util.o
+
+>
+> If it still fails, how about building bpftool?
+>
+>    make -C tools/bpf -j
+
+
+Also fails:
+
+
+Auto-detecting system features:
+...                        libbfd: [ on  ]
+...        disassembler-four-args: [ OFF ]
+
+   CC       bpf_jit_disasm.o
+   CC       bpf_dbg.o
+   CC       bpf_asm.o
+   BISON    bpf_exp.yacc.c
+   DESCEND  bpftool
+make[1]: Entering directory 
+'/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpftool'
+/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c: In function 
+'get_asm_insns':
+/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c:81:29: error: 
+incompatible type for argument 1 of 'disassembler'
+   disassemble = disassembler(bfdf);
+                              ^~~~
+In file included from 
+/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c:24:
+/usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture' 
+but argument is of type 'bfd *' {aka 'struct bfd *'}
+  extern disassembler_ftype disassembler (enum bfd_architecture arc,
+                                          ~~~~~~~~~~~~~~~~~~~~~~^~~
+/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c:81:16: error: 
+too few arguments to function 'disassembler'
+   disassemble = disassembler(bfdf);
+                 ^~~~~~~~~~~~
+In file included from 
+/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c:24:
+/usr/include/dis-asm.h:325:27: note: declared here
+  extern disassembler_ftype disassembler (enum bfd_architecture arc,
+                            ^~~~~~~~~~~~
+make: *** [Makefile:57: bpf_jit_disasm.o] Error 1
+make: *** Waiting for unfinished jobs....
+
+
+
+So is this a bug in feature misdetection?
+
+
+In your commit message you state:
+
+"And making all this dependent on HAVE_LIBBFD_SUPPORT and
+HAVE_LIBBPF_SUPPORT:"
+
+
+Now we obviously have libbfd.
+
+But if the HAVE_LIBBPF_SUPPORT means tools/lib/bpf, then I havent 
+packaged that yet, so why is it detecting it as available ?
+
+
+--
+
+Thomas
+
 
