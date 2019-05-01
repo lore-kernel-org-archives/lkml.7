@@ -2,159 +2,64 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ADAC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDF3C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53046208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:25:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Fz4lDrO5"
+	by mail.kernel.org (Postfix) with ESMTP id EB52421734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfEAPZG (ORCPT
+        id S1726957AbfEAPZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:25:06 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34260 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfEAPZF (ORCPT
+        Wed, 1 May 2019 11:25:47 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:34564 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfEAPZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:25:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e9so411504wrc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 08:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dnCVASXEPfC7FII5Fy/nSbQ8uR8+Ly3wRUufo71BHro=;
-        b=Fz4lDrO5EOlduWF6uAcUY+gytq80mhcFdo73iBEaoTB6srVo+auLCcCsKbP+FWG+h3
-         OD+QhT3HlUehrs2VNoPfaTDXuKHBlVpsK1aqNlhrDic8rNO47IFCbSqrS4L6p8an5uvi
-         LXmnSs7ygFZrHEaL6G9cu/rrBu91h/00Q5kz4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dnCVASXEPfC7FII5Fy/nSbQ8uR8+Ly3wRUufo71BHro=;
-        b=JKc9l2+3xrdkErwra8rUI3WvtDl4C8HO/g1p+gLQXR8Jo5mF6dw8u69zb0AoR6nAnK
-         wxAckbGtvGlnxrAXmUU2ArlITycqLyEnzWm30RLg8fktEQqPveuR29fIjvhztxqGN14D
-         hq0OvfSN80Ioe2j/1hfJtzygssOSRrCAghk5p/fp51PwE7kL+F/NVg5nWbtn/cNeS7N9
-         uF//HoGd5rxg7JcsoBfMkbEJGKgYXW4m4Ip1gOiD0j2M/m0EdLzPrjihhLTe4aveqFNQ
-         TPvtWc+PvlRNIzsFYZSeo/liEE6uBEa374lMfQcQBy5oreotOSzwA7qEM8hKDm1khkyt
-         URyA==
-X-Gm-Message-State: APjAAAUrqUsWYVVU84naERIMV5Gwl65WmRZGoFGMk8qY+c1IuYUUM6kF
-        Su2mRpkEfz6DIMl3yurnGxZuPJtf6Cc6IuavDoVruw==
-X-Google-Smtp-Source: APXvYqzwe5ifWXo+JysSH/l2XXvlDOPp4yfZ8GaGFKMc+ujM+MUFItj0lA+eEOUSuKWPR901Bj+uu2EqlirmPq6I9qQ=
-X-Received: by 2002:adf:fcc8:: with SMTP id f8mr34825124wrs.250.1556724303574;
- Wed, 01 May 2019 08:25:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
- <20190501113038.GA7961@e121166-lin.cambridge.arm.com> <20190501125530.GA15590@google.com>
- <119be78f-34f5-c19b-d41b-f7279e968b46@arm.com>
-In-Reply-To: <119be78f-34f5-c19b-d41b-f7279e968b46@arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Wed, 1 May 2019 20:54:51 +0530
-Message-ID: <CABe79T4TM555y5ePpvoT3OcgVDbRzQUjTQmqeJWNbHT-8FTnaQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] PCIe Host request to reserve IOVA
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
-        Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 1 May 2019 11:25:47 -0400
+Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 424821473A490;
+        Wed,  1 May 2019 08:25:45 -0700 (PDT)
+Date:   Wed, 01 May 2019 11:24:28 -0400 (EDT)
+Message-Id: <20190501.112428.331673135522488793.davem@davemloft.net>
+To:     gustavo@embeddedor.com
+Cc:     linux-net-drivers@solarflare.com, ecree@solarflare.com,
+        mhabets@solarflare.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keescook@chromium.org
+Subject: Re: [PATCH net-next] sfc: mcdi_port: Mark expected switch
+ fall-through
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190429153755.GA10596@embeddedor>
+References: <20190429153755.GA10596@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 01 May 2019 08:25:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date: Mon, 29 Apr 2019 10:37:55 -0500
 
-Thank you so much for all the information.
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning:
+ ...
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Regards,
-Srinath.
-
-On Wed, May 1, 2019 at 6:51 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2019-05-01 1:55 pm, Bjorn Helgaas wrote:
-> > On Wed, May 01, 2019 at 12:30:38PM +0100, Lorenzo Pieralisi wrote:
-> >> On Fri, Apr 12, 2019 at 08:43:32AM +0530, Srinath Mannam wrote:
-> >>> Few SOCs have limitation that their PCIe host can't allow few inbound
-> >>> address ranges. Allowed inbound address ranges are listed in dma-ranges
-> >>> DT property and this address ranges are required to do IOVA mapping.
-> >>> Remaining address ranges have to be reserved in IOVA mapping.
-> >>>
-> >>> PCIe Host driver of those SOCs has to list resource entries of allowed
-> >>> address ranges given in dma-ranges DT property in sorted order. This
-> >>> sorted list of resources will be processed and reserve IOVA address for
-> >>> inaccessible address holes while initializing IOMMU domain.
-> >>>
-> >>> This patch set is based on Linux-5.0-rc2.
-> >>>
-> >>> Changes from v3:
-> >>>    - Addressed Robin Murphy review comments.
-> >>>      - pcie-iproc: parse dma-ranges and make sorted resource list.
-> >>>      - dma-iommu: process list and reserve gaps between entries
-> >>>
-> >>> Changes from v2:
-> >>>    - Patch set rebased to Linux-5.0-rc2
-> >>>
-> >>> Changes from v1:
-> >>>    - Addressed Oza review comments.
-> >>>
-> >>> Srinath Mannam (3):
-> >>>    PCI: Add dma_ranges window list
-> >>>    iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
-> >>>    PCI: iproc: Add sorted dma ranges resource entries to host bridge
-> >>>
-> >>>   drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
-> >>>   drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
-> >>>   drivers/pci/probe.c                 |  3 +++
-> >>>   include/linux/pci.h                 |  1 +
-> >>>   4 files changed, 66 insertions(+), 1 deletion(-)
-> >>
-> >> Bjorn, Joerg,
-> >>
-> >> this series should not affect anything in the mainline other than its
-> >> consumer (ie patch 3); if that's the case should we consider it for v5.2
-> >> and if yes how are we going to merge it ?
-> >
-> > I acked the first one
-> >
-> > Robin reviewed the second
-> > (https://lore.kernel.org/lkml/e6c812d6-0cad-4cfd-defd-d7ec427a6538@arm.com)
-> > (though I do agree with his comment about DMA_BIT_MASK()), Joerg was OK
-> > with it if Robin was
-> > (https://lore.kernel.org/lkml/20190423145721.GH29810@8bytes.org).
-> >
-> > Eric reviewed the third (and pointed out a typo).
-> >
-> > My Kconfiggery never got fully answered -- it looks to me as though it's
-> > possible to build pcie-iproc without the DMA hole support, and I thought
-> > the whole point of this series was to deal with those holes
-> > (https://lore.kernel.org/lkml/20190418234241.GF126710@google.com).  I would
-> > have expected something like making pcie-iproc depend on IOMMU_SUPPORT.
-> > But Srinath didn't respond to that, so maybe it's not an issue and it
-> > should only affect pcie-iproc anyway.
->
-> Hmm, I'm sure I had at least half-written a reply on that point, but I
-> can't seem to find it now... anyway, the gist is that these inbound
-> windows are generally set up to cover the physical address ranges of
-> DRAM and anything else that devices might need to DMA to. Thus if you're
-> not using an IOMMU, the fact that devices can't access the gaps in
-> between doesn't matter because there won't be anything there anyway; it
-> only needs mitigating if you do use an IOMMU and start giving arbitrary
-> non-physical addresses to the endpoint.
->
-> > So bottom line, I'm fine with merging it for v5.2.  Do you want to merge
-> > it, Lorenzo, or ...?
->
-> This doesn't look like it will conflict with the other DMA ops and MSI
-> mapping changes currently in-flight for iommu-dma, so I have no
-> objection to it going through the PCI tree for 5.2.
->
-> Robin.
+Applied.
