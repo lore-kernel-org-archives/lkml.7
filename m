@@ -2,128 +2,147 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3A0C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC4CC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF80920866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58FE320866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dHTzSkwH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSeAplYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbfEADeb (ORCPT
+        id S1726145AbfEADev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 23:34:31 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46552 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfEADeb (ORCPT
+        Tue, 30 Apr 2019 23:34:51 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33257 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfEADeu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 23:34:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so7767149pgg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 20:34:30 -0700 (PDT)
+        Tue, 30 Apr 2019 23:34:50 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z28so2758061pfk.0;
+        Tue, 30 Apr 2019 20:34:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z7Y0W+yPy+sMONnWtsUi4WhB3PoZq5jkTkqQGVhK+8A=;
-        b=dHTzSkwHlR9fahblade0lNP6k7mVt/ADXDFZVVqbtDltoBXW81X72+tS1gBYZ2VtrE
-         WMGJ3FQWExQq0oqgVX8EAYNiv+loYJ5szL3nQa5ElEI4sCsiVO37x902Df9nPT9swLE4
-         N+hr7RxXb9RTDBhdg04Z5VQxqc8L07yEGz4du0GLgZjNN6TPLwbdjH81ceujl73xxmpg
-         SyGgHe2utDfvEjKsnqYa0rV8SNBCBdk4gibM9ZLsZldiq68C6yM5EpVJTmn1+4bbpN3O
-         cQRzDgL4ErOXPwRjdEmPaImP9qOtKHMCg7g7u/mdOEaAtYcWvvqdbOas3X35jTc32HxO
-         ytfQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RPsVB2S9FC30k5ZDF9TZAWElHhifrxZfdzo+5rcy/7w=;
+        b=dSeAplYcgPpHA7GV+7AMspoHKdxUW/iEIFzJ8nfRkqgg2Fua/DgBSY7Eyt3gfSrcVt
+         SQmrONba1TbWF+tbaTkSxi9G5tIkgzPNqJLorDKWHQ7hS6Z8qaGViyuDcF2DlfAQ4l3E
+         TZ2JP7/Q8NE6r/KoDF9tmKeBaQVDUVMnEFNOuHJIRv1DiizojkYj0XoEF704PUH7sV7T
+         Ou1dcrv1W/JdOHr7dar1o8BbGk/VX7ImPItQf2w3aycqKd0PG6Vu1npmjbUQ4RwELuRF
+         j+M2+ecqXNXeNWaS/bfn/UxejqwF9wn5tYXsNjs+gextF1ACOi58f6qcZlSAGXBvoiEG
+         7ehg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z7Y0W+yPy+sMONnWtsUi4WhB3PoZq5jkTkqQGVhK+8A=;
-        b=XZ1vRT8IEsFFE9qPLpCuVbMW5AVxfvDjWn62izTLMr19yl3Ksu8Q1XOu8Q9sc/0ZU0
-         Gj958TlhploRASy86uoE2jFqgqo8SA25UiZvkCLuMKBC+P6QsW7NIKBqkFF4mnE1GUoe
-         Z9WQ0EDOfX9LZFx0gfqRNzA0xzCADkpw7IT6sV6yxaU0eQjhnYWr28TW9TDvDhfIn7aH
-         XF9rfR/9havAToQ/AujnndRjSHSwJzqHaiHQXLy/eZNIP0laRTVAi2VvIFhkjC5j6ylE
-         pBhIb2mri1iyrCtPb4sMJfC7XHRApGVW4DO88ALGxxaW6R7cI50j06Vd3UDZEPCyi02y
-         jkvg==
-X-Gm-Message-State: APjAAAU7sUzAJzV7vxTWfZ+HXltzsk5GyEr5V0SgW7si/yg+OFd6oKZQ
-        Vze0dl/OhkMYTf9X4XS6ODX6FQ==
-X-Google-Smtp-Source: APXvYqzF2hor9KKNh1Dhy3y/uIkcVZC9gP8XWkFg1gbF9WejzbumEdBaeqZHO0pQSkMiGc8OvhWTFw==
-X-Received: by 2002:a65:6554:: with SMTP id a20mr72479803pgw.284.1556681670335;
-        Tue, 30 Apr 2019 20:34:30 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n65sm63104738pga.92.2019.04.30.20.34.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RPsVB2S9FC30k5ZDF9TZAWElHhifrxZfdzo+5rcy/7w=;
+        b=uNEi6dRGC9bDBiOPGV3Fr/yCqVCYdVr9dfdMdExgXH0UxSMp53/6klHSvUJ8Q5fqNd
+         0I3thjVTn/3OzmlKf0f8UfzmkexVLdWgXU9MVTSGaxQDSHG74RsuQKGNnuOtwqJFZneH
+         y80akCbHT+s9PzBGl4HfdpZ7sluKU3rfH1i/4OP+JnEnxl2IgaUJEyL+rgtmlwA7BDee
+         hvSONLLncoR62fRk0n0C7Hc8WM31n51tPStACoxYNdTnm0Btzt4gf0hNA6Z3UE9nBkHy
+         aOiaU7UP72OSZEFF48fE0sRtKYozDuB1grb75numOUqEufOSClnQi/C4Iv4hGE6/rw+A
+         MyIQ==
+X-Gm-Message-State: APjAAAXS0F/WPtP2XrD9p6eYCzK1y6R0ARaTC+vtgAaXPMO8ucCh3SaL
+        Rj9eA/oSP95I5VUv7f+yDRpB2kpIAos=
+X-Google-Smtp-Source: APXvYqyIK0hLNhe3zMquhHD1+pgFu48T+Ge+QePKPU4G8iESHt7J94zXTAj2+d5q9os9otiZbG5aZw==
+X-Received: by 2002:a63:778b:: with SMTP id s133mr8179547pgc.198.1556681689234;
+        Tue, 30 Apr 2019 20:34:49 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id r11sm47421067pga.87.2019.04.30.20.34.46
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 20:34:29 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 20:34:30 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org, marc.w.gonzalez@free.fr,
-        david.brown@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-Message-ID: <20190501033430.GB2938@tuxbook-pro>
-References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
- <1556677473-29242-1-git-send-email-jhugo@codeaurora.org>
+        Tue, 30 Apr 2019 20:34:47 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/3] Driver for UCS1002
+Date:   Tue, 30 Apr 2019 20:34:31 -0700
+Message-Id: <20190501033434.18548-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556677473-29242-1-git-send-email-jhugo@codeaurora.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 30 Apr 19:24 PDT 2019, Jeffrey Hugo wrote:
+Everyone:
 
-> The global clock controller on MSM8998 can consume a number of external
-> clocks.  Document them.
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/clock/qcom,gcc.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> index 8661c3c..7d45323 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> @@ -28,6 +28,16 @@ Required properties :
->  - #clock-cells : shall contain 1
->  - #reset-cells : shall contain 1
->  
-> +For MSM8998 only:
-> +	- clocks: a list of phandles and clock-specifier pairs,
-> +		  one for each entry in clock-names.
-> +	- clock-names: "xo" (required)
-> +		       "usb3_pipe" (optional)
-> +		       "ufs_rx_symbol0" (optional)
-> +		       "ufs_rx_symbol1" (optional)
-> +		       "ufs_tx_symbol0" (optional)
-> +		       "pcie0_pipe" (optional)
+This small series adds a driver for UCS1002 Programmable USB Port
+Power Controller with Charger Emulation. See [page] for product page
+and [datasheet] for device dataseet. Hopefully each individual patch
+is self explanatory.
 
-The optional clocks here comes from hardware blocks that in turn depends
-on the gcc, so we would need to resolve them lazily (in contrast to xo).
+Note that this series is a revival of the upstreaming effort by Enric
+Balletbo Serra last version of which can be found at [original-effort]
 
-We typically don't list these in DT, but if this is close to the
-complete list of incoming clocks then I like the explicitness of it.
+Feedback is welcome!
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Thanks,
+Andrey Smirnov
 
-Regards,
-Bjorn
+Changes since [v4]:
 
-> +
->  Optional properties :
->  - #power-domain-cells : shall contain 1
->  - Qualcomm TSENS (thermal sensor device) on some devices can
-> -- 
-> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-> Qualcomm Technologies, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
-> 
+    - Chagned "interrupts-extended" -> "interrupts" in DT bindings description
+
+    - Collected Reviewed-by from Rob
+
+Changes since [v3]:
+
+    - Added a check for negative values to ucs1002_set_usb_type()
+
+Changes since [v2]:
+
+    - Fixed a bug pointed out by Lucas
+
+Changes since [v1]:
+
+    - Moved IRQ trigger specification to DT
+
+    - Fixed silent error paths in probe()
+    
+    - Dropped error message in ucs1002_set_max_current()
+
+    - Fixed license mismatch
+
+    - Changed the driver to configure the chip to BC1.2 CDP by default
+
+    - Made other small fixes as per feedback for v1
+
+[v4] https://lore.kernel.org/lkml/20190430064557.28469-1-andrew.smirnov@gmail.com
+[v3] https://lore.kernel.org/lkml/20190429195349.20335-1-andrew.smirnov@gmail.com
+[v2] https://lore.kernel.org/lkml/20190429054741.7286-1-andrew.smirnov@gmail.com
+[v1] https://lore.kernel.org/lkml/20190417084457.28747-1-andrew.smirnov@gmail.com/
+[page] https://www.microchip.com/wwwproducts/en/UCS1002-2
+[datasheet] https://ww1.microchip.com/downloads/en/DeviceDoc/UCS1002-2%20Data%20Sheet.pdf
+[original-effort] https://lore.kernel.org/lkml/1460705181-10493-1-git-send-email-enric.balletbo@collabora.com/
+
+Andrey Smirnov (3):
+  power: supply: core: Add POWER_SUPPLY_HEALTH_OVERCURRENT constant
+  power: supply: Add driver for Microchip UCS1002
+  dt-bindings: power: supply: Add bindings for Microchip UCS1002
+
+ .../power/supply/microchip,ucs1002.txt        |  27 +
+ drivers/power/supply/Kconfig                  |   9 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/power_supply_sysfs.c     |   2 +-
+ drivers/power/supply/ucs1002_power.c          | 646 ++++++++++++++++++
+ include/linux/power_supply.h                  |   1 +
+ 6 files changed, 685 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+ create mode 100644 drivers/power/supply/ucs1002_power.c
+
+-- 
+2.20.1
+
