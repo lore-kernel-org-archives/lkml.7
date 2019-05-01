@@ -2,199 +2,106 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63997C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20037C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39ADC208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3742085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfEAS6a (ORCPT
+        id S1726197AbfEAS7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 14:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfEAS63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 14:58:29 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D793420675;
-        Wed,  1 May 2019 18:58:25 +0000 (UTC)
-Date:   Wed, 1 May 2019 14:58:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC][PATCH] ftrace/x86: Emulate call function while updating
- in breakpoint handler
-Message-ID: <20190501145824.08aed43a@gandalf.local.home>
-In-Reply-To: <20190501131117.GW2623@hirez.programming.kicks-ass.net>
-References: <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
- <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
- <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
- <20190430135602.GD2589@hirez.programming.kicks-ass.net>
- <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
- <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
- <20190430130359.330e895b@gandalf.local.home>
- <20190430132024.0f03f5b8@gandalf.local.home>
- <20190430134913.4e29ce72@gandalf.local.home>
- <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
- <20190501131117.GW2623@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 1 May 2019 14:59:32 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40010 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEAS7c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 14:59:32 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y64so8991555oia.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 11:59:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z+2ax8ZyIZztFylyBB7zkL9d45BwY6plRBtZFuq3Y0w=;
+        b=oyJ09WdWiVE0ksKnaDfs0Z4mLFfDvEXJw6m608TVk1sKMmop0OjokhympI+55/xnLo
+         lAXc9+Xx71OTCA30IlLTbymxlotbE2lUGrGx0Gui/mDqchB5iT7KyWbhL7c5npaalhgG
+         HFhTaP3ouDosEdzpld7AiDIxcLQSJwhjoSe9uACpeJrElf7MgWiIl6rKPqw7TQdXkxbz
+         HyWBiBv7TfKB1WP+b/4m4/89hajS/fm9mr+IdvbuZvMT7RUpUdT43a/KOuGpKWlQK7Ir
+         cGpJX8JH3WWF5n6tYd5TsaHUwtuDan/dAo6bC1VfE/rtqJOQuZpDl+h8iAsesKCz188v
+         FTfw==
+X-Gm-Message-State: APjAAAXDZIKGBq/M+grnoeYc5XseQCPBfRLN6sUeK7lteVAoTUssOI70
+        eevV02ccgir0kFzL1wPMj7Apymesikw=
+X-Google-Smtp-Source: APXvYqxuF4ZrOgKgDN0G9B9VnqV2zgqYYxKIGoLFBWyyXfd2L57ctRqtiDPclK1WMovCbQvG0Z7shg==
+X-Received: by 2002:aca:4c51:: with SMTP id z78mr5464667oia.106.1556737171215;
+        Wed, 01 May 2019 11:59:31 -0700 (PDT)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id p1sm16039834otl.75.2019.05.01.11.59.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 11:59:30 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id t184so12006422oie.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 11:59:30 -0700 (PDT)
+X-Received: by 2002:aca:d984:: with SMTP id q126mr7776664oig.108.1556737169867;
+ Wed, 01 May 2019 11:59:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1554475256-4805-1-git-send-email-roy.pledge@nxp.com>
+In-Reply-To: <1554475256-4805-1-git-send-email-roy.pledge@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 1 May 2019 13:59:18 -0500
+X-Gmail-Original-Message-ID: <CADRPPNSLGYDGnhVfJAYk66=bP2oZVtJiynwwgLiKiAKeSseR7w@mail.gmail.com>
+Message-ID: <CADRPPNSLGYDGnhVfJAYk66=bP2oZVtJiynwwgLiKiAKeSseR7w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] soc: fsl: dpio: Add support for memory backed
+ QBMan portals
+To:     Roy Pledge <roy.pledge@nxp.com>
+Cc:     "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 May 2019 15:11:17 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Apr 5, 2019 at 9:42 AM Roy Pledge <roy.pledge@nxp.com> wrote:
+>
+> This patch series adds support for QBMan memory backed portals which is
+> avaialble in devices containing QBMan verion 5.0 and above (for example
+> NXP's LX2160A SoC).
+>
+> Memory backed portals can be mapped as normal cacheable/shareable memory
+> which allows the portals to migrate between cores without needing manual
+> cache manipulations by the CPU.
+>
+> The patches add support for the new portal attributes in the fsl-mc bus
+> drivers as well as modifying the QBMan driver to use the new portal read
+> trigger mechanism.
+>
+> Changes since v1:
+>  * Support older DPRC command in case of older MC firmware
+>  * Fix issue with padding in command
+>
+>
+> Roy Pledge (2):
+>   bus: mc-bus: Add support for mapping shareable portals
+>   soc: fsl: dpio: Add support for memory backed QBMan portals
 
-> On Tue, Apr 30, 2019 at 11:33:21AM -0700, Linus Torvalds wrote:
-> > Anyway, since Andy really likes the entry code change, can we have
-> > that patch in parallel and judge the difference that way? Iirc, that
-> > was x86-64 specific too.  
-> 
-> Here goes, compile tested only...
-> 
-> It obviously needs a self-test, but that shoulnd't be too hard to
-> arrange.
-> 
+Both applied for next.  Thanks.
 
-I was able to get it applied (with slight tweaking) but it then
-crashed. But that was due to incorrect updates in the
-ftrace_int3_handler().
-
-> ---
->  arch/x86/entry/entry_32.S            |  7 +++++++
->  arch/x86/entry/entry_64.S            | 14 ++++++++++++--
->  arch/x86/include/asm/text-patching.h | 20 ++++++++++++++++++++
->  arch/x86/kernel/ftrace.c             | 24 +++++++++++++++++++-----
->  4 files changed, 58 insertions(+), 7 deletions(-)
-
-
->  #endif /* _ASM_X86_TEXT_PATCHING_H */
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index ef49517f6bb2..90d319687d7e 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -29,6 +29,7 @@
->  #include <asm/kprobes.h>
->  #include <asm/ftrace.h>
->  #include <asm/nops.h>
-> +#include <asm/text-patching.h>
->  
->  #ifdef CONFIG_DYNAMIC_FTRACE
->  
-> @@ -231,6 +232,7 @@ int ftrace_modify_call(struct dyn_ftrace *rec,
-> unsigned long old_addr, }
->  
->  static unsigned long ftrace_update_func;
-> +static unsigned long ftrace_update_func_call;
->  
->  static int update_ftrace_func(unsigned long ip, void *new)
->  {
-> @@ -259,6 +261,8 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
->  	unsigned char *new;
->  	int ret;
->  
-> +	ftrace_update_func_call = (unsigned long)func;
-> +
->  	new = ftrace_call_replace(ip, (unsigned long)func);
->  	ret = update_ftrace_func(ip, new);
->  
-> @@ -295,12 +299,19 @@ int ftrace_int3_handler(struct pt_regs *regs)
->  		return 0;
->  
->  	ip = regs->ip - 1;
-> -	if (!ftrace_location(ip) && !is_ftrace_caller(ip))
-> -		return 0;
-> -
-> -	regs->ip += MCOUNT_INSN_SIZE - 1;
-> +	if (ftrace_location(ip)) {
-> +		int3_emulate_call(regs, ftrace_update_func_call);
-
-Should be:
-
-		int3_emulate_call(regs, (unsigned long)ftrace_regs_caller);
-
-> +		return 1;
-> +	} else if (is_ftrace_caller(ip)) {
-> +		if (!ftrace_update_func_call) {
-> +			int3_emulate_jmp(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
-
-I see what you did here, but I think:
-
-			int3_emulate_jmp(regs, ip + CALL_INSN_SIZE);
-
-looks better. But that said, we could in the beginning do:
-
-	ip = regs->ip - INT3_INSN_SIZE;
-
-instead of
-
-	ip = regs->ip - 1;
-
-I made these updates and posted them to Linus.
-
--- Steve
-
-
-> +			return 1;
-> +		}
-> +		int3_emulate_call(regs, ftrace_update_func_call);
-> +		return 1;
-> +	}
->  
-> -	return 1;
-> +	return 0;
->  }
->  NOKPROBE_SYMBOL(ftrace_int3_handler);
->  
-> @@ -859,6 +870,8 @@ void arch_ftrace_update_trampoline(struct
-> ftrace_ops *ops) 
->  	func = ftrace_ops_get_func(ops);
->  
-> +	ftrace_update_func_call = (unsigned long)func;
-> +
->  	/* Do a safe modify in case the trampoline is executing */
->  	new = ftrace_call_replace(ip, (unsigned long)func);
->  	ret = update_ftrace_func(ip, new);
-> @@ -960,6 +973,7 @@ static int ftrace_mod_jmp(unsigned long ip, void
-> *func) {
->  	unsigned char *new;
->  
-> +	ftrace_update_func_call = 0UL;
->  	new = ftrace_jmp_replace(ip, (unsigned long)func);
->  
->  	return update_ftrace_func(ip, new);
+>
+>  drivers/bus/fsl-mc/dprc.c           |  30 +++++++-
+>  drivers/bus/fsl-mc/fsl-mc-bus.c     |  15 +++-
+>  drivers/bus/fsl-mc/fsl-mc-private.h |  17 ++++-
+>  drivers/soc/fsl/dpio/dpio-driver.c  |  23 ++++--
+>  drivers/soc/fsl/dpio/qbman-portal.c | 148 ++++++++++++++++++++++++++++++------
+>  drivers/soc/fsl/dpio/qbman-portal.h |   5 ++
+>  6 files changed, 199 insertions(+), 39 deletions(-)
+>
+> --
+> 2.7.4
+>
