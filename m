@@ -2,100 +2,131 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E526EC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC13BC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18A620578
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556741584;
-	bh=CiwCqNF0AEoX8NrNOC+IaqM7NvK5IlyE+1fuJSrq6z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VDMmp7XI0oPNBjm1MlhjrQdgHroUugpq6bmY8yv21GP0QBrymOWe+n02VCgFW6Pb8
-	 0jsr83tYe1ijdbVPF95FydG2kkwIfdZzh8KeDZGdlqkTONgT6y69RkYEY6MzHN3rmJ
-	 MccQoj0t9hNNJXCDg0tHL8Gq38TImcb9/Xlar6BA=
+	by mail.kernel.org (Postfix) with ESMTP id 8D879205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xwzbMKbN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfEAUND (ORCPT
+        id S1726189AbfEAUTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:13:03 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46074 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfEAUND (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:13:03 -0400
-Received: by mail-ot1-f66.google.com with SMTP id a10so58049otl.12;
-        Wed, 01 May 2019 13:13:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jd1WFvY6vXO7XfCF+c2Cho4laj+45+LGc52UGSOL454=;
-        b=OaiLNVA0XK4vSFhc243yEWEVfMLqZgB+0NWmQz7zOwDblwkEISp/Zbhd8QxLKPY75O
-         XZWrVl4k1xh8zemdx1be2GXWhVAH6dqS18jbBWxEAz0sSrdMnV11VfYQMt0NjX4/DpoI
-         3P4qg1VJ/u9ndC3UKwXo5oMTg/2kRlScbe3ifaLmd2tVfXUztB0gla1hvICM+3quj1mL
-         AsszzwzzWJkgC4MC56jPsOSYI0ZjVxqswKKAaPwvr/boCzQ1YXi7+FStIXj9nC/g3x3+
-         s8JL9tTBE8GtSyKTop4r80RGVYTYwsv9DKwn1hHkdo50wl3lQfqS/ND+/jOfuRex72Zy
-         YgkQ==
-X-Gm-Message-State: APjAAAWRmys428K9sMjCvx9j+6Hw8pkIsvtl6Ts8QkkWx1cbM5jhgqQD
-        WcJW4NmiUO/S9Xyxy8lYdQ==
-X-Google-Smtp-Source: APXvYqxADl/71OMLKkk8hcK2ifMcCTcMNV9ChiXtbLjzAeL1AP7BH1TBc0wF1XoqAnVF8KKqFTYPeg==
-X-Received: by 2002:a9d:19ed:: with SMTP id k100mr8627234otk.214.1556741582508;
-        Wed, 01 May 2019 13:13:02 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h24sm15854390otr.39.2019.05.01.13.13.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 13:13:01 -0700 (PDT)
-Date:   Wed, 1 May 2019 15:13:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Wed, 1 May 2019 16:19:25 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:51461 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfEAUTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 16:19:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=s6BGr5cr9wEgPZpkidr/u2k/JjLoCrVQkciMEVrY8/8=; b=xwzbMKbNvvOvT14C63QHLOQOjC
+        +NcK+cVLxkLdlhw7HwV8S9XVr10v/J5oY6sOSrZkREFDSuVCckB0ihvgDW8486nzBRPm5Bsqgkpn7
+        s5l2VJEOADYnuvDt69nJ+o4Oiya/HudMiS13MVO1vBmoR4Qp243EqGjIA5mnsShWAD5k=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hLvhH-00085b-Mb; Wed, 01 May 2019 22:19:19 +0200
+Date:   Wed, 1 May 2019 22:19:19 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V2 4/4] dt-bindings: watchdog: remove i.MX system
- controller watchdog
-Message-ID: <20190501201300.GA13176@bogus>
-References: <1556421727-7401-1-git-send-email-Anson.Huang@nxp.com>
- <1556421727-7401-4-git-send-email-Anson.Huang@nxp.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [RFC PATCH 1/5] net: dsa: mv88e6xxx: introduce support for two
+ chips using direct smi addressing
+Message-ID: <20190501201919.GC19809@lunn.ch>
+References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
+ <20190501193126.19196-2-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556421727-7401-4-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190501193126.19196-2-rasmus.villemoes@prevas.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 03:27:17AM +0000, Anson Huang wrote:
-> i.MX system controller watchdog now depends on SCU driver, so it
-> needs to be subnode of SCU node in DT, binding doc is moved to
-> fsl,scu.txt as well.
+On Wed, May 01, 2019 at 07:32:10PM +0000, Rasmus Villemoes wrote:
+> The 88e6250 (as well as 6220, 6071, 6070, 6020) do not support
+> multi-chip (indirect) addressing. However, one can still have two of
+> them on the same mdio bus, since the device only uses 16 of the 32
+> possible addresses, either addresses 0x00-0x0F or 0x10-0x1F depending
+> on the ADDR4 pin at reset [since ADDR4 is internally pulled high, the
+> latter is the default].
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> In order to prepare for supporting the 88e6250 and friends, introduce
+> mv88e6xxx_info::dual_chip to allow having a non-zero sw_addr while
+> still using direct addressing.
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 > ---
-> New patch.
-> ---
->  .../bindings/watchdog/fsl-imx-sc-wdt.txt           | 24 ----------------------
->  1 file changed, 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
+>  drivers/net/dsa/mv88e6xxx/chip.c | 10 +++++++---
+>  drivers/net/dsa/mv88e6xxx/chip.h |  5 +++++
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+> index c078c791f481..f66daa77774b 100644
+> --- a/drivers/net/dsa/mv88e6xxx/chip.c
+> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+> @@ -62,6 +62,10 @@ static void assert_reg_lock(struct mv88e6xxx_chip *chip)
+>   * When ADDR is non-zero, the chip uses Multi-chip Addressing Mode, allowing
+>   * multiple devices to share the SMI interface. In this mode it responds to only
+>   * 2 registers, used to indirectly access the internal SMI devices.
+> + *
+> + * Some chips use a different scheme: Only the ADDR4 pin is used for
+> + * configuration, and the device responds to 16 of the 32 SMI
+> + * addresses, allowing two to coexist on the same SMI interface.
+>   */
+>  
+>  static int mv88e6xxx_smi_read(struct mv88e6xxx_chip *chip,
+> @@ -87,7 +91,7 @@ static int mv88e6xxx_smi_single_chip_read(struct mv88e6xxx_chip *chip,
+>  {
+>  	int ret;
+>  
+> -	ret = mdiobus_read_nested(chip->bus, addr, reg);
+> +	ret = mdiobus_read_nested(chip->bus, addr + chip->sw_addr, reg);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -101,7 +105,7 @@ static int mv88e6xxx_smi_single_chip_write(struct mv88e6xxx_chip *chip,
+>  {
+>  	int ret;
+>  
+> -	ret = mdiobus_write_nested(chip->bus, addr, reg, val);
+> +	ret = mdiobus_write_nested(chip->bus, addr + chip->sw_addr, reg, val);
+>  	if (ret < 0)
+>  		return ret;
 
-This should probably just be part of patch 1 to be clear you are moving 
-things.
+Hi Rasmus
+
+This works, but i think i prefer adding mv88e6xxx_smi_dual_chip_write,
+mv88e6xxx_smi_dual_chip_read, and create a
+mv88e6xxx_smi_single_chip_ops.
+
+>  
+> @@ -4548,7 +4552,7 @@ static struct mv88e6xxx_chip *mv88e6xxx_alloc_chip(struct device *dev)
+>  static int mv88e6xxx_smi_init(struct mv88e6xxx_chip *chip,
+>  			      struct mii_bus *bus, int sw_addr)
+>  {
+> -	if (sw_addr == 0)
+> +	if (sw_addr == 0 || chip->info->dual_chip)
+>  		chip->smi_ops = &mv88e6xxx_smi_single_chip_ops;
+>  	else if (chip->info->multi_chip)
+>  		chip->smi_ops = &mv88e6xxx_smi_multi_chip_ops;
+
+And then select the dual chip ops here. That seems be to more in
+keeping with the current code.
+
+Thanks
+	Andrew
