@@ -2,131 +2,141 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42130C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50454C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174AE2087B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113C52177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556680966;
+	bh=y0ZKEom+r+3nKeT3XoP/0YeApgO9zG8roaeIIUc40Cw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jbiamoK4gQ3u1ZCN4C8AGp4sWAhNOCGLH0e4u07SLhgbXWqVPuUHFPLWXSDqVlxoG
+	 uDxhipzBoz6pImufCCb6lNS9QSRY+NLPXPO7Q83c5QwCFhyszjTiO+Ajfx7ZpogtrG
+	 E/HdsUQ6hIYFiNkQ6IPeRHl+xvp4nmXJ5qhy9+6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbfEADMW (ORCPT
+        id S1726079AbfEADWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 23:12:22 -0400
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:32874 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfEADMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 23:12:21 -0400
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1hLffL-0002EU-00; Wed, 01 May 2019 03:12:15 +0000
-Date:   Tue, 30 Apr 2019 23:12:15 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        "devel@uclibc-ng.org" <devel@uclibc-ng.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Detecting libc in perf (was Re: perf tools build broken after
- v5.1-rc1)
-Message-ID: <20190501031215.GZ23599@brightrain.aerifal.cx>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org>
- <20190425214800.GC21829@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
- <20190430011818.GE7857@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A250601B@us01wembx1.internal.synopsys.com>
- <20190430170404.GX23599@brightrain.aerifal.cx>
- <17a86bc7-c1f9-8c3c-8f1d-711e95dac49d@synopsys.com>
+        Tue, 30 Apr 2019 23:22:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfEADWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 23:22:44 -0400
+Received: from localhost (unknown [104.132.1.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B33E020866;
+        Wed,  1 May 2019 03:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556680963;
+        bh=y0ZKEom+r+3nKeT3XoP/0YeApgO9zG8roaeIIUc40Cw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MDXR8/Gt6v+8xrIi9M/g/+vpKPsAd7cGi6tL1Yt0DRSmpc43a0QxZXTcoX/Nx0xkr
+         l291h4XsfHAyDFKMziQDXXQRANPtccjG25pn2oSmHpBuLFfJRkNrRyzTtDJVHroX7r
+         dR8pXWWp5dckgeyjjGyB5FdNUKrs2BcjmR8Z/mX4=
+Date:   Tue, 30 Apr 2019 20:22:42 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <chao@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: fix to do sanity with enabled features in image
+Message-ID: <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190424094850.118323-1-yuchao0@huawei.com>
+ <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
+ <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <17a86bc7-c1f9-8c3c-8f1d-711e95dac49d@synopsys.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 10:13:40AM -0700, Vineet Gupta wrote:
-> On 4/30/19 10:04 AM, Rich Felker wrote:
-> > On Tue, Apr 30, 2019 at 03:53:18PM +0000, Vineet Gupta wrote:
-> >> On 4/29/19 6:18 PM, Arnaldo Carvalho de Melo wrote:
-> >>>>> Auto-detecting system features:
-> >>>>> ...                         dwarf: [ OFF ]
-> >>>>> ...            dwarf_getlocations: [ OFF ]
-> >>>>> ...                         glibc: [ on  ]
-> >>>> Not related to current issue, this run uses a uClibc toolchain and yet it is
-> >>>> detecting glibc - doesn't seem right to me.
-> >>> Ok, I'll improve that, I think it just tries to detect a libc, yeah,
-> >>> see:
-> >>>
-> >>> [acme@quaco linux]$ cat tools/build/feature/test-glibc.c
-> >>> // SPDX-License-Identifier: GPL-2.0
-> >>> #include <stdlib.h>
-> >>>
-> >>> #if !defined(__UCLIBC__)
-> >>> #include <gnu/libc-version.h>
-> >>> #else
-> >>> #define XSTR(s) STR(s)
-> >>> #define STR(s) #s
-> >>> #endif
-> >>>
-> >>> int main(void)
-> >>> {
-> >>> #if !defined(__UCLIBC__)
-> >>> 	const char *version = gnu_get_libc_version();
-> >>> #else
-> >>> 	const char *version = XSTR(__GLIBC__) "." XSTR(__GLIBC_MINOR__);
-> >>> #endif
-> >>>
-> >>> 	return (long)version;
-> >>> }
-> >>> [acme@quaco linux]$
-> >>>
-> >>> [perfbuilder@59ca4b424ded /]$ grep __GLIBC__ /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/*.h
-> >>> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:   The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
-> >>> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:#define	__GLIBC__	2
-> >>> /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/features.h:	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
-> >>> [perfbuilder@59ca4b424ded /]$
-> >>>
-> >>> Isn't that part of uClibc?
-> >>
-> >> Right you are. Per the big fat comment right above that code, this gross hack in
-> >> uclibc is unavoidable as applications tend to rely on that define.
-> >> So a better fix would be to check for various !GLIBC libs explicitly.
-> >>
-> >> #ifdef __UCLIBC__
-> >>
-> >> #elseif defined __MUSL__
-> >>
-> >> ....
-> >>
-> >> Not pretty from app usage pov, but that seems to be the only sane way of doing it.
+On 04/29, Chao Yu wrote:
+> On 2019-4-28 21:38, Jaegeuk Kim wrote:
+> > On 04/24, Chao Yu wrote:
+> >> This patch fixes to do sanity with enabled features in image, if
+> >> there are features kernel can not recognize, just fail the mount.
 > > 
-> > What are you trying to achieve? I was just CC'd and I'm missing the
-> > context.
+> > We need to figure out per-feature-based rejection, since some of them can
+> > be set without layout change.
 > 
-> Sorry I added you as a subject matter expert but didn't provide enough context.
-> 
-> The original issue [1] was perf failing to build on ARC due to perf tools needing
-> a copy of unistd.h but this thread [2] was a small side issue of auto-detecting
-> libc variaint in perf tools where despite uClibc tools, glibc is declared to be
-> detected, due to uClibc's historical hack of defining __GLIBC__. So __GLIBC__ is
-> not sufficient (and probably not the right interface to begin wtih) to ensure glibc.
-> 
-> [1] http://lists.infradead.org/pipermail/linux-snps-arc/2019-April/005676.html
-> [2] http://lists.infradead.org/pipermail/linux-snps-arc/2019-April/005684.html
+> So any suggestion on how to implement this?
 
-I think you misunderstood -- I'm asking what you're trying to achieve
-by detecting whether the libc is glibc, rather than whether it has
-some particular interface you want to conditionally use. This is a
-major smell and is usually something wrong that shouldn't be done.
+Which features do we need to disallow? When we introduce new features, they
+didn't hurt the previous flow by checking f2fs_sb_has_###().
 
-Rich
+> 
+> Maybe:
+> 
+> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
+> 	check 4.14+ features
+> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
+> 	check 4.9+ features
+> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
+> 	check 4.4+ features
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >> ---
+> >>  fs/f2fs/f2fs.h  | 13 +++++++++++++
+> >>  fs/f2fs/super.c |  9 +++++++++
+> >>  2 files changed, 22 insertions(+)
+> >>
+> >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >> index f5ffc09705eb..15b640967e12 100644
+> >> --- a/fs/f2fs/f2fs.h
+> >> +++ b/fs/f2fs/f2fs.h
+> >> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
+> >>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
+> >>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
+> >>  
+> >> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
+> >> +				F2FS_FEATURE_BLKZONED |			\
+> >> +				F2FS_FEATURE_ATOMIC_WRITE |		\
+> >> +				F2FS_FEATURE_EXTRA_ATTR |		\
+> >> +				F2FS_FEATURE_PRJQUOTA |			\
+> >> +				F2FS_FEATURE_INODE_CHKSUM |		\
+> >> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
+> >> +				F2FS_FEATURE_QUOTA_INO |		\
+> >> +				F2FS_FEATURE_INODE_CRTIME |		\
+> >> +				F2FS_FEATURE_LOST_FOUND |		\
+> >> +				F2FS_FEATURE_VERITY |			\
+> >> +				F2FS_FEATURE_SB_CHKSUM)
+> >> +
+> >>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
+> >>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
+> >>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
+> >> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> >> index 4f8e9ab48b26..57f2fc6d14ba 100644
+> >> --- a/fs/f2fs/super.c
+> >> +++ b/fs/f2fs/super.c
+> >> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+> >>  		return 1;
+> >>  	}
+> >>  
+> >> +	/* check whether kernel supports all features */
+> >> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
+> >> +		f2fs_msg(sb, KERN_INFO,
+> >> +			"Unsupported feature:%u: supported:%u",
+> >> +			le32_to_cpu(raw_super->feature),
+> >> +			F2FS_ALL_FEATURES);
+> >> +		return 1;
+> >> +	}
+> >> +
+> >>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
+> >>  	if (sanity_check_area_boundary(sbi, bh))
+> >>  		return 1;
+> >> -- 
+> >> 2.18.0.rc1
