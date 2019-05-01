@@ -2,131 +2,88 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A0CC04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02A7C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F24B20835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE6920835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfEAKkF (ORCPT
+        id S1726372AbfEAKlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 06:40:05 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57756 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfEAKkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 06:40:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A01EE80D;
-        Wed,  1 May 2019 03:40:04 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76D6F3F719;
-        Wed,  1 May 2019 03:40:02 -0700 (PDT)
-Date:   Wed, 1 May 2019 11:39:56 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "A.s. Dong" <aisheng.dong@nxp.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/11] i.MX6, DesignWare PCI improvements
-Message-ID: <20190501103956.GA3100@e121166-lin.cambridge.arm.com>
-References: <20190415004632.5907-1-andrew.smirnov@gmail.com>
+        Wed, 1 May 2019 06:41:11 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62017 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfEAKlL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 06:41:11 -0400
+Received: from 79.184.254.69.ipv4.supernova.orange.pl (79.184.254.69) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 7927eb6e3a1ebc0d; Wed, 1 May 2019 12:41:08 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Andy Tang <andy.tang@nxp.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: qoriq: Add ls1028a chip support
+Date:   Wed, 01 May 2019 12:41:08 +0200
+Message-ID: <2243345.ebHGfCmnM5@kreacher>
+In-Reply-To: <CAJZ5v0jOOKW92X8iGPZD8Dfye4K9seXgiYaTLURby9Y3BbMYpg@mail.gmail.com>
+References: <20190424023223.29614-1-andy.tang@nxp.com> <20190424090252.7cmwzxf4t5lwjat6@vireshk-i7> <CAJZ5v0jOOKW92X8iGPZD8Dfye4K9seXgiYaTLURby9Y3BbMYpg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415004632.5907-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 05:46:21PM -0700, Andrey Smirnov wrote:
-> Everyone:
+On Wednesday, April 24, 2019 11:25:07 AM CEST Rafael J. Wysocki wrote:
+> On Wed, Apr 24, 2019 at 11:02 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 24-04-19, 09:24, Rafael J. Wysocki wrote:
+> > > On Wed, Apr 24, 2019 at 6:01 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > >
+> > > > On 24-04-19, 10:32, andy.tang@nxp.com wrote:
+> > > > > From: Yuantian Tang <andy.tang@nxp.com>
+> > > > >
+> > > > > Enable cpufreq feature on ls1028a chip by adding its compatible
+> > > > > string.
+> > > > >
+> > > > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > > > > ---
+> > > > >  drivers/cpufreq/qoriq-cpufreq.c |    1 +
+> > > > >  1 files changed, 1 insertions(+), 0 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/cpufreq/qoriq-cpufreq.c b/drivers/cpufreq/qoriq-cpufreq.c
+> > > > > index 4295e54..d308c4d 100644
+> > > > > --- a/drivers/cpufreq/qoriq-cpufreq.c
+> > > > > +++ b/drivers/cpufreq/qoriq-cpufreq.c
+> > > > > @@ -280,6 +280,7 @@ static int qoriq_cpufreq_target(struct cpufreq_policy *policy,
+> > > > >
+> > > > >       { .compatible = "fsl,ls1012a-clockgen", },
+> > > > >       { .compatible = "fsl,ls1021a-clockgen", },
+> > > > > +     { .compatible = "fsl,ls1028a-clockgen", },
+> > > > >       { .compatible = "fsl,ls1043a-clockgen", },
+> > > > >       { .compatible = "fsl,ls1046a-clockgen", },
+> > > > >       { .compatible = "fsl,ls1088a-clockgen", },
+> > > >
+> > > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > >
+> > > So do you want me to take this one directly?
+> >
+> > I actually applied it and then realized it is powerpc and so dropped
+> > it. You want me to apply it ?
 > 
-> This is the series containing various small improvements that I made
-> while reading the code and researching commit history of pci-imx6.c
-> and pcie-designware*.c files. All changes are optional, so commits
-> that don't seem like an improvement can be easily dropped. Hopefully
-> each patch is self-explanatory.
+> No, I can do that, thanks!
 > 
-> I tested this series on i.MX6Q, i.MX7D and i.MX8MQ.
 
-Applied with Lucas' tags to pci/imx, hopefully we can squeeze this
-in for the v5.2 merge window.
+Applied, thanks!
 
-Lorenzo
 
-> Feedback is welcome!
-> 
-> Thanks,
-> Andrey Smirnov
-> 
-> Chagnes since [v3]:
-> 
->     - Collected Reviewed-by from Lucas for most of the patches
-> 
->     - Converted "PCI: imx6: Replace calls to udelay() with
->       usleep_range()" to "PCI: imx6: Use usleep_range() in
->       imx6_pcie_enable_ref_clk()"
->       
->     - Converted "PCI: imx6: Remove redundant debug tracing" to "PCI:
->       imx6: Drop imx6_pcie_wait_for_link()"
->       
->     - Converted all of the callers of pcie_phy_poll_ack() to use
->       true/false in "PCI: imx6: Simplify pcie_phy_poll_ack()"
-> 
-> Changes since [v2]:
-> 
->     - All non i.MX6 patches dropped, since they were accepted as a
->       seprarte series
->       
->     - Series rebased on latest 'dwc-pci' branch of PCI tree
->     
->     - Patches "PCI: imx6: Use flags to indicate support for suspend"
->       and "PCI: imx6: Replace calls to udelay() with usleep_range()"
->       added to the series
-> 
-> Changes since [v1]:
-> 
->   - Dropped "PCI: imx6: Drop imx6_pcie_link_up()" due to the matter
->     already having been addressed by "PCI: imx6: Fix link training
->     status detection in link up check" from Trent Piepho
-> 
->   - Changed "designware" -> "dwc" for all subject lines
-> 
->   - Collected Acked-by's from Gustavo Pimentel
-> 
-> [v3] lkml.kernel.org/r/20190401042547.14067-1-andrew.smirnov@gmail.com
-> [v2] lkml.kernel.org/r/20190104174925.17153-1-andrew.smirnov@gmail.com
-> [v1] lkml.kernel.org/r/20181221072716.29017-1-andrew.smirnov@gmail.com
-> 
-> Andrey Smirnov (11):
->   PCI: imx6: Simplify imx7d_pcie_wait_for_phy_pll_lock()
->   PCI: imx6: Drop imx6_pcie_wait_for_link()
->   PCI: imx6: Return -ETIMEOUT from imx6_pcie_wait_for_speed_change()
->   PCI: imx6: Remove PCIE_PL_PFLR_* constants
->   PCI: dwc: imx6: Share PHY debug register definitions
->   PCI: imx6: Make use of BIT() in constant definitions
->   PCI: imx6: Simplify bit operations in PHY functions
->   PCI: imx6: Simplify pcie_phy_poll_ack()
->   PCI: imx6: Restrict PHY register data to 16-bit
->   PCI: imx6: Use flags to indicate support for suspend
->   PCI: imx6: Use usleep_range() in imx6_pcie_enable_ref_clk()
-> 
->  drivers/pci/controller/dwc/pci-imx6.c        | 143 ++++++++-----------
->  drivers/pci/controller/dwc/pcie-designware.c |  12 +-
->  drivers/pci/controller/dwc/pcie-designware.h |   3 +
->  3 files changed, 62 insertions(+), 96 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+
+
