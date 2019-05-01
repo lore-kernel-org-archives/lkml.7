@@ -2,81 +2,106 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAF3C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E30C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9873D205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556720657;
-	bh=AGc2ptjXjYLZEV3rzOzVcRBQBKEK0MXhlz7kc4XHY7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sGVnK+yg41+6Uu+T3fwTXFkfR8S5nMwNrpqWz6LCSL0jmpgKDfYCblbYAFgu8X64g
-	 yJM4PUV60MXdPgYTf4T3mDNf4zwHKhfF+IF3nebA9WPOojJn7sMvPo1dGjgepRHdz3
-	 QjzWszqKbgza9E5VQoAN9exz7iB9ZZLI37HOMlv0=
+	by mail.kernel.org (Postfix) with ESMTP id 84CC8205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:24:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="swluUk2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfEAOYQ (ORCPT
+        id S1726785AbfEAOYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 10:24:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbfEAOYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 10:24:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A188205F4;
-        Wed,  1 May 2019 14:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556720655;
-        bh=AGc2ptjXjYLZEV3rzOzVcRBQBKEK0MXhlz7kc4XHY7k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GPwhl0FFgZVk8m+Vk0fdJro7BdQKrfy+5hzPYgcXFug6dSV4e6ce2pFKwYy0GbQ64
-         Fu+hcBJHw9sW89kCXX57F+9Eky/fpGClfOll42faX79+aEyxZCcGPHzyF2tdBCTG5J
-         Ojf0KFUGUyGrqktgM9SVl01iwN6O/Iu65HOImm6s=
-Date:   Wed, 1 May 2019 16:24:12 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] staging/fieldbus-dev for 5.2
-Message-ID: <20190501142412.GB13008@kroah.com>
-References: <20190501140624.6931-1-TheSven73@gmail.com>
- <20190501142332.GA13008@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501142332.GA13008@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Wed, 1 May 2019 10:24:39 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]:46455 "EHLO
+        mail-qk1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbfEAOYi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 10:24:38 -0400
+Received: by mail-qk1-f181.google.com with SMTP id a132so1252263qkb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 07:24:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1nDe3Q8lVrKLHD6e8iJ+WnXX7G5B73AT07ShH3QN+rY=;
+        b=swluUk2V/bh3HjKNZICmITYVs/tov0A0sMmEMtxfMv32xhz7XcyHy9dfIj+kupBJ28
+         Z7zCu+CVrOdz4JL08wzCNtgihRG9ZBFy/1LxVh8IsRSYvUZhmHfWbPxUAbq5pcl8j/sU
+         RfRNCQXLdeZeweSiiLfHTGwg122gfYoZcoNbmUPrsouXWZqLD9BebvhWNkOsm5ZViZYr
+         TnO2+15K+OcRrfxCBEfvSCx5y56I1qYjnaJHjBHFziPbVr+SJKVGQQJTbikXJAVNVz45
+         nsui+G38ntKJDfbXFddXdAygz/NaoVhvfblerBV9H67BgI5CkopE3z479A/pfooRHIEf
+         oivg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1nDe3Q8lVrKLHD6e8iJ+WnXX7G5B73AT07ShH3QN+rY=;
+        b=OgSm38t8gA+YcInIewIchPtsJCVS6OpKqaNOWXUaSJOXI5bDArjBk/MDq7tsvC5o2n
+         PVafrfmoA8fR0SQ/jD7cWeHRS0RKBBsl1CvCrP5+uPAujU86oay9eeJX2N1KYWART0JV
+         FhhVW+bAoLPPtgoMxNj/MbfoWeISU4MJk+sG9VIdl4aF5fIdehwcc28nErdLnIG9iv5T
+         Gjr1Y7kxACn3qNUlavVgam6d1ZLlHW8KwyenN3SmTfA5ouxEjWuMBJi/tyJKa0/U9gRn
+         oaC1jYa20F3cl40rL1T2EyJNWi/uxsVwdN7LsWODhqYukdPx12PiSkUsjoQYEM3DS2Gs
+         Jhzw==
+X-Gm-Message-State: APjAAAXKb/pUdfmJvG97WfX9FEGIGipMcDG4MsCPK+rLcW1wHi2eS/WT
+        pKnWuYfxCCoaCVV9l4pS8Wp78g==
+X-Google-Smtp-Source: APXvYqxV5XfxqjY+SCPkXMvZD7CovAe5BjMtLdYKn/gXQa7IE6AxjkR1qb/HdWpRFZZQH+Kbf0Lh0Q==
+X-Received: by 2002:a05:620a:129c:: with SMTP id w28mr3993092qki.232.1556720677380;
+        Wed, 01 May 2019 07:24:37 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id l127sm6227761qkc.81.2019.05.01.07.24.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 07:24:36 -0700 (PDT)
+Message-ID: <1556720675.6132.15.camel@lca.pw>
+Subject: Re: mlx5_core failed to load with 5.1.0-rc7-next-20190430+
+From:   Qian Cai <cai@lca.pw>
+To:     Saeed Mahameed <saeedm@dev.mellanox.co.il>
+Cc:     kliteyn@mellanox.com, ozsh@mellanox.com,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        linux kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 01 May 2019 10:24:35 -0400
+In-Reply-To: <CALzJLG-5ZXeOrOa3rsVEF0nHrfkxJ=65nEH2H7Sfa9pYyDpmRg@mail.gmail.com>
+References: <bab2ed8b-70dc-4a00-6c68-06a2df6ccb62@lca.pw>
+         <CALzJLG-TgHP8tgv_1eqYmWjpO4nRD3=7QRdyGXGp1x_qQdKErg@mail.gmail.com>
+         <CALzJLG-5ZXeOrOa3rsVEF0nHrfkxJ=65nEH2H7Sfa9pYyDpmRg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 04:23:32PM +0200, Greg KH wrote:
-> On Wed, May 01, 2019 at 10:06:24AM -0400, Sven Van Asbroeck wrote:
-> > The following changes since commit a4965d98b4d1ffa5b22f2039bc9e87898aff4976:
+On Tue, 2019-04-30 at 20:26 -0700, Saeed Mahameed wrote:
+> On Tue, Apr 30, 2019 at 8:00 PM Saeed Mahameed
+> <saeedm@dev.mellanox.co.il> wrote:
 > > 
-> >   staging: comedi: comedi_isadma: Use a non-NULL device for DMA API (2019-04-27 15:00:35 +0200)
+> > On Tue, Apr 30, 2019 at 6:23 PM Qian Cai <cai@lca.pw> wrote:
+> > > 
+> > > Reverted the commit b169e64a2444 ("net/mlx5: Geneve, Add flow table
+> > > capabilities
+> > > for Geneve decap with TLV options") fixed the problem below during boot
+> > > ends up
+> > > without networking.
+> > > 
 > > 
-> > are available in the Git repository at:
+> > Hi Qian, thanks for the report, i clearly see where the issue is,
+> > mlx5_ifc_cmd_hca_cap_bits offsets are all off ! due to cited patch,
+> > will fix ASAP.
 > > 
-> >   git@gitlab.com:TheSven73/linux.git tags/fieldbus-dev-for-5.2
 > 
-> I don't "trust" the gitlab infrastructure, sorry, and I don't think I
-> have a valid gpg signature from you anywhere :(
+> Hi Qian, can you please try the following commit :
 > 
-> Can you just send these as patches?  I can easily queue them up that
-> way.
+> [mlx5-next] net/mlx5: Fix broken hca cap offset1093551diffmboxseries
+> https://patchwork.ozlabs.org/patch/1093551/
+> 
+> $ curl -s https://patchwork.ozlabs.org/patch/1093551//mbox/ | git am
 
-And as this is just a single patch, handling them as patches is much
-easier anyway.  Only when you get into the 20+ at a time does pull
-requests help.
-
-thanks,
-
-greg k-h
+Yes, it works great!
