@@ -2,184 +2,121 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD89C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DC6C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23C4205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556741972;
-	bh=441CZhwfcRIrFOVzu/K0cumt8XEJqkx9UO7D0j2Kbko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m2hUo/+3+a6fUjz2ghBWicIkymgSOYzdgN6Z9id1C00k/9mXH9PjvbLyr31FL0adr
-	 v8U6mygZkcSRiLS/GouVDseSrTENZrZuClCKayj8kiDnb0zAEAjK9Ao3J7R5ShAI/v
-	 wgPf06qIqsNHkuXXBd9dAYL/WYH5al4ZSismgZSM=
+	by mail.kernel.org (Postfix) with ESMTP id AEFD92089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfEAUT2 (ORCPT
+        id S1726297AbfEAUUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:19:28 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35511 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfEAUT1 (ORCPT
+        Wed, 1 May 2019 16:20:07 -0400
+Received: from mx2.yrkesakademin.fi ([85.134.45.195]:47720 "EHLO
+        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfEAUUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:19:27 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g24so123073otq.2;
-        Wed, 01 May 2019 13:19:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pWjiQFV3UJniVf7i9GQdkFxM1mLNQy5apvQLEnb/wcA=;
-        b=XT8kSi7FStTspSJhrHhowV4YV87QWx3IoXw8viq3VZsJIyenPoK10/Y30plqk//gx6
-         RKCRVFMrjzpv16pf9HZubSxQbddDtdEvrYB+liXndKWiW0PG2zMtEVvpMU5qhVhRUmNv
-         1n1VhHAUw6cWXUo3qPQniH20RWvAvokDiy5V31NZsxhCm4O4OJCtdbzjFM652tkIjq7g
-         u2W3g1J6OtsReuwUdEJllAMDHeHehtvqgQQk0eyy3tKADIJtbMUVbyBdJTusLr9wIj2T
-         rAjsYS4C0p3Dc88E+ckT2YotutXRdm8ajNrwD5y9whumABBfWWn9a2b1i0NDxmWr0/7E
-         cWYw==
-X-Gm-Message-State: APjAAAXPnwhqqhSNwwAo1Vc1Wya9Rvoje4lu0rJ3Ig+OChWTndswe8/Z
-        TaVtXC3iSSj3S0MCuT3yJQ==
-X-Google-Smtp-Source: APXvYqw5MFY6FhUc4sy5hYLKwSVXvm613zjKKo4m1Gvry7731V5ByvnaY6LCX29jU2nFksffTD10oQ==
-X-Received: by 2002:a05:6830:1647:: with SMTP id h7mr12775386otr.360.1556741966617;
-        Wed, 01 May 2019 13:19:26 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 2sm16316487ots.22.2019.05.01.13.19.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 13:19:25 -0700 (PDT)
-Date:   Wed, 1 May 2019 15:19:25 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>,
-        John Crispin <john@phrozen.org>
-Subject: Re: [PATCH v2 1/4] of_net: Add NVMEM support to of_get_mac_address
-Message-ID: <20190501201925.GA15495@bogus>
-References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
- <1556456002-13430-2-git-send-email-ynezz@true.cz>
+        Wed, 1 May 2019 16:20:06 -0400
+Subject: Re: perf build broken in 5.1-rc7
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+CC:     Song Liu <liu.song.a23@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
+ <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
+ <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
+ <b773df70-58e6-69f8-d566-282b0f7ae579@mageia.org>
+ <20190501130751.GB21436@kernel.org>
+ <932c4e06-c4db-7bb8-769d-75651d092450@mageia.org>
+ <20190501173158.GC21436@kernel.org>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <f9439dd5-009b-8930-f233-6826c7e7c076@mageia.org>
+Date:   Wed, 1 May 2019 23:20:02 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190501173158.GC21436@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556456002-13430-2-git-send-email-ynezz@true.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+X-WatchGuard-Spam-ID: str=0001.0A0C0209.5CC9FF75.001F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.195
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 02:53:19PM +0200, Petr Štetiar wrote:
-> Many embedded devices have information such as MAC addresses stored
-> inside NVMEMs like EEPROMs and so on. Currently there are only two
-> drivers in the tree which benefit from NVMEM bindings.
-> 
-> Adding support for NVMEM into every other driver would mean adding a lot
-> of repetitive code. This patch allows us to configure MAC addresses in
-> various devices like ethernet and wireless adapters directly from
-> of_get_mac_address, which is already used by almost every driver in the
-> tree.
-> 
-> Predecessor of this patch which used directly MTD layer has originated
-> in OpenWrt some time ago and supports already about 497 use cases in 357
-> device tree files.
-> 
-> Cc: Alban Bedel <albeu@free.fr>
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Petr Štetiar <ynezz@true.cz>
-> ---
-> 
->  Changes since v1:
-> 
->   * moved handling of nvmem after mac-address and local-mac-address properties
-> 
->  drivers/of/of_net.c | 42 ++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 40 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-> index d820f3e..8ce4f47 100644
-> --- a/drivers/of/of_net.c
-> +++ b/drivers/of/of_net.c
-> @@ -8,6 +8,7 @@
->  #include <linux/etherdevice.h>
->  #include <linux/kernel.h>
->  #include <linux/of_net.h>
-> +#include <linux/of_platform.h>
->  #include <linux/phy.h>
->  #include <linux/export.h>
->  
-> @@ -47,12 +48,45 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
->  	return NULL;
->  }
->  
-> +static const void *of_get_mac_addr_nvmem(struct device_node *np)
-> +{
-> +	int r;
-> +	u8 mac[ETH_ALEN];
-> +	struct property *pp;
-> +	struct platform_device *pdev = of_find_device_by_node(np);
-> +
-> +	if (!pdev)
-> +		return NULL;
-> +
-> +	r = nvmem_get_mac_address(&pdev->dev, &mac);
-> +	if (r < 0)
-> +		return NULL;
-> +
-> +	pp = kzalloc(sizeof(*pp), GFP_KERNEL);
-> +	if (!pp)
-> +		return NULL;
-> +
-> +	pp->name = "nvmem-mac-address";
-> +	pp->length = ETH_ALEN;
-> +	pp->value = kmemdup(mac, ETH_ALEN, GFP_KERNEL);
-> +	if (!pp->value || of_add_property(np, pp))
-> +		goto free;
 
-Why add this to the DT? You have the struct device ptr, so just use 
-devm_kzalloc() if you need an allocation.
+Den 01-05-2019 kl. 20:31, skrev Arnaldo Carvalho de Melo:
+> Em Wed, May 01, 2019 at 05:09:59PM +0300, Thomas Backlund escreveu:
+>> Den 01-05-2019 kl. 16:07, skrev Arnaldo Carvalho de Melo:
+>>> Em Tue, Apr 30, 2019 at 04:31:14PM +0300, Thomas Backlund escreveu:
+>>> Can you check the output for
+>>> /tmp/build/perf/feature/test-disassembler-four-args.make.output in your
+>>> system? And also check what is the prototype for the disassembler()
+>>> routine on mageia7?
+>> I guess this is what fails the test:
+>   
+>> cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
+>> /usr/bin/ld: /usr/lib64/libbfd.a(plugin.o): in function `try_load_plugin':
+>> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:243:
+>> undefined reference to `dlopen'
+>> /usr/bin/ld:
+>> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:271:
+>> undefined reference to `dlsym'
+>> /usr/bin/ld:
+>> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:256:
+>> undefined reference to `dlclose'
+>> /usr/bin/ld:
+>> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:246:
+>> undefined reference to `dlerror'
+>   
+>> as we allow dynamic linking and loading
+>   
+>> And we use linker flags:
+>   
+>> rpm --eval %ldflags
+>>  �-Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id
+>> -Wl,--enable-new-dtags
+> Would this help?
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index fe3f97e342fa..6d65874e16c3 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -227,7 +227,7 @@ FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
+>   
+>   EATURE_CHECK_LDFLAGS-libaio = -lrt
+>   
+> -FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes
+> +FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
+>   
+>   CFLAGS += -fno-omit-frame-pointer
+>   CFLAGS += -ggdb3
+>
 
-> +
-> +	return pp->value;
-> +free:
-> +	kfree(pp->value);
-> +	kfree(pp);
-> +
-> +	return NULL;
-> +}
-> +
->  /**
->   * Search the device tree for the best MAC address to use.  'mac-address' is
->   * checked first, because that is supposed to contain to "most recent" MAC
->   * address. If that isn't set, then 'local-mac-address' is checked next,
-> - * because that is the default address.  If that isn't set, then the obsolete
-> - * 'address' is checked, just in case we're using an old device tree.
-> + * because that is the default address.  If that isn't set, try to get MAC
-> + * address from nvmem cell named 'mac-address'. If that isn't set, then the
-> + * obsolete 'address' is checked, just in case we're using an old device tree.
->   *
->   * Note that the 'address' property is supposed to contain a virtual address of
->   * the register set, but some DTS files have redefined that property to be the
-> @@ -77,6 +111,10 @@ const void *of_get_mac_address(struct device_node *np)
->  	if (addr)
->  		return addr;
->  
-> +	addr = of_get_mac_addr_nvmem(np);
-> +	if (addr)
-> +		return addr;
-> +
->  	return of_get_mac_addr(np, "address");
->  }
->  EXPORT_SYMBOL(of_get_mac_address);
-> -- 
-> 1.9.1
-> 
+Yeah, that fixes it
+
+and /tmp/build/perf/feature/test-disassembler-four-args.make.output is now empty as wanted.
+
+
+So I guess:
+
+Reported-by: Thomas Backlund <tmb@mageia.org>
+
+Tested-by: Thomas Backlund <tmb@mageia.org>
+
+
+
+Thanks!
+
+
+--
+
+Thomas
+
+
