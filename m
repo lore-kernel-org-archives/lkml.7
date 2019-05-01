@@ -2,320 +2,91 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47FCC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F71C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E2820866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B33B20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfEAAzI (ORCPT
+        id S1727648AbfEAAzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 20:55:08 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6350 "EHLO mga18.intel.com"
+        Tue, 30 Apr 2019 20:55:51 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57909 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727553AbfEAAzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 20:55:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 17:54:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,415,1549958400"; 
-   d="scan'208";a="228225482"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by orsmga001.jf.intel.com with ESMTP; 30 Apr 2019 17:54:57 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, eranian@google.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [RESEND PATCH 6/6] perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge
-Date:   Tue, 30 Apr 2019 17:53:48 -0700
-Message-Id: <1556672028-119221-7-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556672028-119221-1-git-send-email-kan.liang@linux.intel.com>
-References: <1556672028-119221-1-git-send-email-kan.liang@linux.intel.com>
+        id S1727553AbfEAAzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 20:55:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44v0Lp6GJ9z9s3l;
+        Wed,  1 May 2019 10:55:46 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Serge Belyshev <belyshev@depni.sinp.msu.ru>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2] powerpc/32s: fix BATs setting with CONFIG_STRICT_KERNEL_RWX
+In-Reply-To: <09733bd9d90f2ab9dfee9838442e0bea01df194d.1556640535.git.christophe.leroy@c-s.fr>
+References: <09733bd9d90f2ab9dfee9838442e0bea01df194d.1556640535.git.christophe.leroy@c-s.fr>
+Date:   Wed, 01 May 2019 10:55:46 +1000
+Message-ID: <878svrat7x.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Serge reported some crashes with CONFIG_STRICT_KERNEL_RWX enabled
+> on a book3s32 machine.
+>
+> Analysis shows two issues:
+> - BATs addresses and sizes are not properly aligned.
+> - There is a gap between the last address covered by BATs and the
+> first address covered by pages.
+>
+> Memory mapped with DBATs:
+> 0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
+> 1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
+> 2: 0xc0c00000-0xc13fffff 0x00c00000 Kernel RW coherent
+> 3: 0xc1400000-0xc23fffff 0x01400000 Kernel RW coherent
+> 4: 0xc2400000-0xc43fffff 0x02400000 Kernel RW coherent
+> 5: 0xc4400000-0xc83fffff 0x04400000 Kernel RW coherent
+> 6: 0xc8400000-0xd03fffff 0x08400000 Kernel RW coherent
+> 7: 0xd0400000-0xe03fffff 0x10400000 Kernel RW coherent
+>
+> Memory mapped with pages:
+> 0xe1000000-0xefffffff  0x21000000       240M        rw       present           dirty  accessed
+>
+> This patch fixes both issues. With the patch, we get the following
+> which is as expected:
+>
+> Memory mapped with DBATs:
+> 0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
+> 1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
+> 2: 0xc0c00000-0xc0ffffff 0x00c00000 Kernel RW coherent
+> 3: 0xc1000000-0xc1ffffff 0x01000000 Kernel RW coherent
+> 4: 0xc2000000-0xc3ffffff 0x02000000 Kernel RW coherent
+> 5: 0xc4000000-0xc7ffffff 0x04000000 Kernel RW coherent
+> 6: 0xc8000000-0xcfffffff 0x08000000 Kernel RW coherent
+> 7: 0xd0000000-0xdfffffff 0x10000000 Kernel RW coherent
+>
+> Memory mapped with pages:
+> 0xe0000000-0xefffffff  0x20000000       256M        rw       present           dirty  accessed
+>
+> Reported-by: Serge Belyshev <belyshev@depni.sinp.msu.ru>
+> Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+> Cc: stable@vger.kernel.org
 
-IMC uncore unit can only be accessed via MMIO on Snow Ridge.
-The MMIO space of IMC uncore is at the specified offsets from the
-MEM0_BAR. Add snr_uncore_get_mc_dev() to locate the PCI device with
-MMIO_BASE and MEM0_BAR register.
+I could probably still get this into v5.1 if you're confident it's a
+good fix.
 
-Add new ops to access the IMC registers via MMIO.
-
-Add 3 new free running counters for clocks, read and write bandwidth.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/uncore.c       |   3 +-
- arch/x86/events/intel/uncore.h       |   2 +
- arch/x86/events/intel/uncore_snbep.c | 197 +++++++++++++++++++++++++++++++++++
- 3 files changed, 201 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 39b0f96..f5db8dd 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -28,7 +28,7 @@ struct event_constraint uncore_constraint_empty =
- 
- MODULE_LICENSE("GPL");
- 
--static int uncore_pcibus_to_physid(struct pci_bus *bus)
-+int uncore_pcibus_to_physid(struct pci_bus *bus)
- {
- 	struct pci2phy_map *map;
- 	int phys_id = -1;
-@@ -1437,6 +1437,7 @@ static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
- static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
- 	.cpu_init = snr_uncore_cpu_init,
- 	.pci_init = snr_uncore_pci_init,
-+	.mmio_init = snr_uncore_mmio_init,
- };
- 
- static const struct x86_cpu_id intel_uncore_match[] __initconst = {
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 738bed3..57641bf 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -163,6 +163,7 @@ struct pci2phy_map {
- };
- 
- struct pci2phy_map *__find_pci2phy_map(int segment);
-+int uncore_pcibus_to_physid(struct pci_bus *bus);
- 
- ssize_t uncore_event_show(struct kobject *kobj,
- 			  struct kobj_attribute *attr, char *buf);
-@@ -555,6 +556,7 @@ int skx_uncore_pci_init(void);
- void skx_uncore_cpu_init(void);
- int snr_uncore_pci_init(void);
- void snr_uncore_cpu_init(void);
-+void snr_uncore_mmio_init(void);
- 
- /* uncore_nhmex.c */
- void nhmex_uncore_cpu_init(void);
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 851f76f..7420e8b6 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -374,6 +374,19 @@
- #define SNR_PCIE3_PCI_PMON_CTR0			0x4e8
- #define SNR_PCIE3_PCI_PMON_BOX_CTL		0x4e4
- 
-+/* SNR IMC */
-+#define SNR_IMC_MMIO_PMON_FIXED_CTL		0x54
-+#define SNR_IMC_MMIO_PMON_FIXED_CTR		0x38
-+#define SNR_IMC_MMIO_PMON_CTL0			0x40
-+#define SNR_IMC_MMIO_PMON_CTR0			0x8
-+#define SNR_IMC_MMIO_PMON_BOX_CTL		0x22800
-+#define SNR_IMC_MMIO_OFFSET			0x4000
-+#define SNR_IMC_MMIO_SIZE			0x4000
-+#define SNR_IMC_MMIO_BASE_OFFSET		0xd0
-+#define SNR_IMC_MMIO_BASE_MASK			0x1FFFFFFF
-+#define SNR_IMC_MMIO_MEM0_OFFSET		0xd8
-+#define SNR_IMC_MMIO_MEM0_MASK			0x7FF
-+
- DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
- DEFINE_UNCORE_FORMAT_ATTR(event2, event, "config:0-6");
- DEFINE_UNCORE_FORMAT_ATTR(event_ext, event, "config:0-7,21");
-@@ -4370,4 +4383,188 @@ int snr_uncore_pci_init(void)
- 	return 0;
- }
- 
-+static struct pci_dev *snr_uncore_get_mc_dev(int id)
-+{
-+	struct pci_dev *mc_dev = NULL;
-+	int phys_id, pkg;
-+
-+	while (1) {
-+		mc_dev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3451, mc_dev);
-+		if (!mc_dev)
-+			break;
-+		phys_id = uncore_pcibus_to_physid(mc_dev->bus);
-+		if (phys_id < 0)
-+			continue;
-+		pkg = topology_phys_to_logical_pkg(phys_id);
-+		if (pkg < 0)
-+			continue;
-+		else if (pkg == id)
-+			break;
-+	}
-+	return mc_dev;
-+}
-+
-+static void snr_uncore_mmio_init_box(struct intel_uncore_box *box)
-+{
-+	struct pci_dev *pdev = snr_uncore_get_mc_dev(box->pkgid);
-+	unsigned int box_ctl = uncore_mmio_box_ctl(box);
-+	resource_size_t addr;
-+	u32 pci_dword;
-+
-+	if (!pdev)
-+		return;
-+
-+	pci_read_config_dword(pdev, SNR_IMC_MMIO_BASE_OFFSET, &pci_dword);
-+	addr = (pci_dword & SNR_IMC_MMIO_BASE_MASK) << 23;
-+
-+	pci_read_config_dword(pdev, SNR_IMC_MMIO_MEM0_OFFSET, &pci_dword);
-+	addr |= (pci_dword & SNR_IMC_MMIO_MEM0_MASK) << 12;
-+
-+	addr += box_ctl;
-+
-+	box->io_addr = ioremap(addr, SNR_IMC_MMIO_SIZE);
-+	if (!box->io_addr)
-+		return;
-+
-+	writel(IVBEP_PMON_BOX_CTL_INT, box->io_addr);
-+}
-+
-+static void snr_uncore_mmio_disable_box(struct intel_uncore_box *box)
-+{
-+	u32 config;
-+
-+	if (!box->io_addr)
-+		return;
-+
-+	config = readl(box->io_addr);
-+	config |= SNBEP_PMON_BOX_CTL_FRZ;
-+	writel(config, box->io_addr);
-+}
-+
-+static void snr_uncore_mmio_enable_box(struct intel_uncore_box *box)
-+{
-+	u32 config;
-+
-+	if (!box->io_addr)
-+		return;
-+
-+	config = readl(box->io_addr);
-+	config &= ~SNBEP_PMON_BOX_CTL_FRZ;
-+	writel(config, box->io_addr);
-+}
-+
-+static void snr_uncore_mmio_enable_event(struct intel_uncore_box *box,
-+					   struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (!box->io_addr)
-+		return;
-+
-+	writel(hwc->config | SNBEP_PMON_CTL_EN,
-+	       box->io_addr + hwc->config_base);
-+}
-+
-+static void snr_uncore_mmio_disable_event(struct intel_uncore_box *box,
-+					    struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (!box->io_addr)
-+		return;
-+
-+	writel(hwc->config, box->io_addr + hwc->config_base);
-+}
-+
-+static struct intel_uncore_ops snr_uncore_mmio_ops = {
-+	.init_box	= snr_uncore_mmio_init_box,
-+	.exit_box	= uncore_mmio_exit_box,
-+	.disable_box	= snr_uncore_mmio_disable_box,
-+	.enable_box	= snr_uncore_mmio_enable_box,
-+	.disable_event	= snr_uncore_mmio_disable_event,
-+	.enable_event	= snr_uncore_mmio_enable_event,
-+	.read_counter	= uncore_mmio_read_counter,
-+};
-+
-+static struct uncore_event_desc snr_uncore_imc_events[] = {
-+	INTEL_UNCORE_EVENT_DESC(clockticks,      "event=0x00,umask=0x00"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read,  "event=0x04,umask=0x0f"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_read.unit, "MiB"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write, "event=0x04,umask=0x30"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(cas_count_write.unit, "MiB"),
-+	{ /* end: all zeroes */ },
-+};
-+
-+static struct intel_uncore_type snr_uncore_imc = {
-+	.name		= "imc",
-+	.num_counters   = 4,
-+	.num_boxes	= 2,
-+	.perf_ctr_bits	= 48,
-+	.fixed_ctr_bits	= 48,
-+	.fixed_ctr	= SNR_IMC_MMIO_PMON_FIXED_CTR,
-+	.fixed_ctl	= SNR_IMC_MMIO_PMON_FIXED_CTL,
-+	.event_descs	= snr_uncore_imc_events,
-+	.perf_ctr	= SNR_IMC_MMIO_PMON_CTR0,
-+	.event_ctl	= SNR_IMC_MMIO_PMON_CTL0,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.box_ctl	= SNR_IMC_MMIO_PMON_BOX_CTL,
-+	.mmio_offset	= SNR_IMC_MMIO_OFFSET,
-+	.ops		= &snr_uncore_mmio_ops,
-+	.format_group	= &skx_uncore_format_group,
-+};
-+
-+enum perf_uncore_snr_imc_freerunning_type_id {
-+	SNR_IMC_DCLK,
-+	SNR_IMC_DDR,
-+
-+	SNR_IMC_FREERUNNING_TYPE_MAX,
-+};
-+
-+static struct freerunning_counters snr_imc_freerunning[] = {
-+	[SNR_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
-+	[SNR_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
-+};
-+
-+static struct uncore_event_desc snr_uncore_imc_freerunning_events[] = {
-+	INTEL_UNCORE_EVENT_DESC(dclk,		"event=0xff,umask=0x10"),
-+
-+	INTEL_UNCORE_EVENT_DESC(read,		"event=0xff,umask=0x20"),
-+	INTEL_UNCORE_EVENT_DESC(read.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(read.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(write,		"event=0xff,umask=0x21"),
-+	INTEL_UNCORE_EVENT_DESC(write.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(write.unit,	"MiB"),
-+};
-+
-+static struct intel_uncore_ops snr_uncore_imc_freerunning_ops = {
-+	.init_box	= snr_uncore_mmio_init_box,
-+	.exit_box	= uncore_mmio_exit_box,
-+	.read_counter	= uncore_mmio_read_counter,
-+	.hw_config	= uncore_freerunning_hw_config,
-+};
-+
-+static struct intel_uncore_type snr_uncore_imc_free_running = {
-+	.name			= "imc_free_running",
-+	.num_counters		= 3,
-+	.num_boxes		= 1,
-+	.num_freerunning_types	= SNR_IMC_FREERUNNING_TYPE_MAX,
-+	.freerunning		= snr_imc_freerunning,
-+	.ops			= &snr_uncore_imc_freerunning_ops,
-+	.event_descs		= snr_uncore_imc_freerunning_events,
-+	.format_group		= &skx_uncore_iio_freerunning_format_group,
-+};
-+
-+static struct intel_uncore_type *snr_mmio_uncores[] = {
-+	&snr_uncore_imc,
-+	&snr_uncore_imc_free_running,
-+	NULL,
-+};
-+
-+void snr_uncore_mmio_init(void)
-+{
-+	uncore_mmio_uncores = snr_mmio_uncores;
-+}
-+
- /* end of SNR uncore support */
--- 
-2.7.4
-
+cheers
