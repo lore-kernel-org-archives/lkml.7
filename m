@@ -2,97 +2,99 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BEEC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A354C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B13208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B1321743
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQJpgIgl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AVw7QCQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfEAQOq (ORCPT
+        id S1726779AbfEAQPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:14:46 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45895 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfEAQOq (ORCPT
+        Wed, 1 May 2019 12:15:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47964 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfEAQPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:14:46 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e24so8794699pfi.12;
-        Wed, 01 May 2019 09:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MtPcWFimi13xS3IBIx9BAJvwvZMDedknu7EfbmKtTWY=;
-        b=FQJpgIglCJ0STefvmKylU7hCbm9/3Ti8NdGAjxmYsarjZNYLDciepWCd3aHOjfpkWl
-         wmAa5L2N7Y6yFny/vBSqk7W7BI5FhkmYq0U59el4Mybcq9InW0WjBJUGeg1ogQZNkGBt
-         GueH03/qpPNvi2UpJ3QBCgx6ZCBgVneWvbOPXk8sqjB3KU3POR5rOPhmSvHQC3weufdw
-         kEbZf44EgL+zNX3U/5tonWDsUuEK6IWRuorC++4JOoDBUps2fxX/Hw7Tr26dJOQ3PXif
-         T4JTAF72jU1r+mHcH1yvPRUzjMAqDu7MU6iq+Kpv8QgvJu3MNZinuKTzg317rIpVEbHa
-         i5jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MtPcWFimi13xS3IBIx9BAJvwvZMDedknu7EfbmKtTWY=;
-        b=AiT+RGJIme7UINYCCe24wcvJSI6cbSF2mksWBjg1gY7KS1hTX8tZyZ/AxmTXF26uli
-         GdMosyXoLIYHN37erIViIBRCT9d1wMYFEYiQrXxoCEyo+z5VZqTIToQXfkVihm54M8ok
-         v/Qetm/nxmiUk0Sbi+cMk9Um7voR7wMGLvFW4CTAbpP8TC+NHiB/PkVlOKdH20+jGepG
-         8+ZTAMhn1wiprAY5hvIl+FYA/abfcXDSsYvCMB9dBLFi48to43jWE5VAqZhlg0WBrTa4
-         lfPqwjHCmCf0VjJY/Ikxe3mbuSKepS03ajWdhBl+ok7Fu6D9Q6GVDs5uykiLZGN1EOmO
-         6J7g==
-X-Gm-Message-State: APjAAAUhWFPYujBwcuPs3JYY4Bs5DhXBbFAzv2jjmTpKy3Ye1I7L8/8E
-        truvwsf6SpoUK1iEtKFEkUaTKSw6
-X-Google-Smtp-Source: APXvYqyHYU9WI4SIoemO/0OUMF/xgVkvo4cWypdtmSh6f0UJvj0k5fgpL7UiIzxsX9urC7r36EOPMg==
-X-Received: by 2002:a62:2b4e:: with SMTP id r75mr28501975pfr.131.1556727285407;
-        Wed, 01 May 2019 09:14:45 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id 132sm32102040pfw.87.2019.05.01.09.14.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 09:14:44 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] drm/msm/mdp5: Fix mdp5_cfg_init error return
-Date:   Wed,  1 May 2019 09:14:37 -0700
-Message-Id: <20190501161437.15728-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 May 2019 12:15:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ETKz6gU+Zh1sVT+wHucAZ2tKu04QiQsyCfpwI3943/o=; b=AVw7QCQZWiZbIjmE0LQ+vYvsdK
+        0DoFSxcISg1c7PzSgqPMQbaS6UtjIDDTnq7/v9yASqAYlGZayTN2V0q2vG3wgyzLJusCmlEnWo1Cg
+        kmPrgr4Xdhbcf1Sm2/n+lbSmQsusKZrVkTevz6YtyQj0eiwnMEtzQp2Y5JMTSElFcpwapFa/B3mto
+        JYTjldLtQKl9jfhrM0GKScmzdSAZD8FOOVDrST0a+MaJq0hQEMnXAx3bu5Fs2QEv2/2dU/cI8SA+V
+        zyrONLmZ3b/Xdmc5V2cFxWfKUTPLJ/XIszZsi4I6iXQEP1M2qlW8vsPYTyGe3U3Z86DNsPZUKGEDZ
+        MLV2fO1Q==;
+Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLrsp-0004P5-4N; Wed, 01 May 2019 16:14:59 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
+        Chris Leech <cleech@redhat.com>, Willem Riede <osst@riede.org>,
+        Doug Gilbert <dgilbert@interlog.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+        osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [PATCH 03/24] scsi_netlink: remove duplicate GPL boilerplate text
+Date:   Wed,  1 May 2019 12:13:56 -0400
+Message-Id: <20190501161417.32592-4-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190501161417.32592-1-hch@lst.de>
+References: <20190501161417.32592-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If mdp5_cfg_init fails because of an unknown major version, a null pointer
-dereference occurs.  This is because the caller of init expects error
-pointers, but init returns NULL on error.  Fix this by returning the
-expected values on error.
+The SCSI netlink uapi header already has a proper SPDX tag, remove the
+duplicate boilerplate text.
 
-Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/uapi/scsi/scsi_netlink.h | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
-index ea8f7d7daf7f..52e23780fce1 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
-@@ -721,7 +721,7 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
- 	if (cfg_handler)
- 		mdp5_cfg_destroy(cfg_handler);
- 
--	return NULL;
-+	return ERR_PTR(ret);
- }
- 
- static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
+diff --git a/include/uapi/scsi/scsi_netlink.h b/include/uapi/scsi/scsi_netlink.h
+index 5ccc2333acab..5dd382054e45 100644
+--- a/include/uapi/scsi/scsi_netlink.h
++++ b/include/uapi/scsi/scsi_netlink.h
+@@ -4,21 +4,6 @@
+  *    Used for the posting of outbound SCSI transport events
+  *
+  *  Copyright (C) 2006   James Smart, Emulex Corporation
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+- *
+  */
+ #ifndef SCSI_NETLINK_H
+ #define SCSI_NETLINK_H
 -- 
-2.17.1
+2.20.1
 
