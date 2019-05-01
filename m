@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CB3C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164FCC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D043208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E48208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfEAP6g (ORCPT
+        id S1726887AbfEAP6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:58:36 -0400
+        Wed, 1 May 2019 11:58:38 -0400
 Received: from mga17.intel.com ([192.55.52.151]:25560 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbfEAP6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:58:32 -0400
+        id S1726561AbfEAP6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 11:58:34 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 08:58:32 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 08:58:33 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,418,1549958400"; 
-   d="scan'208";a="296115725"
+   d="scan'208";a="296115730"
 Received: from modiarvi-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.251.134.211])
-  by orsmga004.jf.intel.com with ESMTP; 01 May 2019 08:58:30 -0700
+  by orsmga004.jf.intel.com with ESMTP; 01 May 2019 08:58:32 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -36,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         srinivas.kandagatla@linaro.org,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v4 13/22] soundwire: slave: fix alignment issues
-Date:   Wed,  1 May 2019 10:57:36 -0500
-Message-Id: <20190501155745.21806-14-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v4 14/22] soundwire: intel_init: fix alignment issues
+Date:   Wed,  1 May 2019 10:57:37 -0500
+Message-Id: <20190501155745.21806-15-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190501155745.21806-1-pierre-louis.bossart@linux.intel.com>
 References: <20190501155745.21806-1-pierre-louis.bossart@linux.intel.com>
@@ -52,46 +52,52 @@ Use Linux style
 Reviewed-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/slave.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/soundwire/intel_init.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-index ac103bd0c176..f39a5815e25d 100644
---- a/drivers/soundwire/slave.c
-+++ b/drivers/soundwire/slave.c
-@@ -14,7 +14,7 @@ static void sdw_slave_release(struct device *dev)
+diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+index e0f2903101c7..9ad6045720c4 100644
+--- a/drivers/soundwire/intel_init.c
++++ b/drivers/soundwire/intel_init.c
+@@ -69,7 +69,7 @@ static struct sdw_intel_ctx
+ 	/* Found controller, find links supported */
+ 	count = 0;
+ 	ret = fwnode_property_read_u8_array(acpi_fwnode_handle(adev),
+-				  "mipi-sdw-master-count", &count, 1);
++					    "mipi-sdw-master-count", &count, 1);
+ 
+ 	/* Don't fail on error, continue and use hw value */
+ 	if (ret) {
+@@ -87,7 +87,7 @@ static struct sdw_intel_ctx
+ 	/* Check count is within bounds */
+ 	if (count > SDW_MAX_LINKS) {
+ 		dev_err(&adev->dev, "Link count %d exceeds max %d\n",
+-						count, SDW_MAX_LINKS);
++			count, SDW_MAX_LINKS);
+ 		return NULL;
+ 	}
+ 
+@@ -147,7 +147,7 @@ static struct sdw_intel_ctx
  }
  
- static int sdw_slave_add(struct sdw_bus *bus,
--		struct sdw_slave_id *id, struct fwnode_handle *fwnode)
-+			 struct sdw_slave_id *id, struct fwnode_handle *fwnode)
+ static acpi_status sdw_intel_acpi_cb(acpi_handle handle, u32 level,
+-					void *cdata, void **return_value)
++				     void *cdata, void **return_value)
  {
- 	struct sdw_slave *slave;
- 	int ret;
-@@ -30,8 +30,8 @@ static int sdw_slave_add(struct sdw_bus *bus,
+ 	struct sdw_intel_res *res = cdata;
+ 	struct acpi_device *adev;
+@@ -174,9 +174,9 @@ void *sdw_intel_init(acpi_handle *parent_handle, struct sdw_intel_res *res)
+ 	acpi_status status;
  
- 	/* name shall be sdw:link:mfg:part:class:unique */
- 	dev_set_name(&slave->dev, "sdw:%x:%x:%x:%x:%x",
--			bus->link_id, id->mfg_id, id->part_id,
--			id->class_id, id->unique_id);
-+		     bus->link_id, id->mfg_id, id->part_id,
-+		     id->class_id, id->unique_id);
- 
- 	slave->dev.release = sdw_slave_release;
- 	slave->dev.bus = &sdw_bus_type;
-@@ -84,11 +84,11 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
- 		acpi_status status;
- 
- 		status = acpi_evaluate_integer(adev->handle,
--					METHOD_NAME__ADR, NULL, &addr);
-+					       METHOD_NAME__ADR, NULL, &addr);
- 
- 		if (ACPI_FAILURE(status)) {
- 			dev_err(bus->dev, "_ADR resolution failed: %x\n",
--							status);
-+				status);
- 			return status;
- 		}
+ 	status = acpi_walk_namespace(ACPI_TYPE_DEVICE,
+-					parent_handle, 1,
+-					sdw_intel_acpi_cb,
+-					NULL, res, NULL);
++				     parent_handle, 1,
++				     sdw_intel_acpi_cb,
++				     NULL, res, NULL);
+ 	if (ACPI_FAILURE(status))
+ 		return NULL;
  
 -- 
 2.17.1
