@@ -2,92 +2,163 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CF5C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED1EC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D532085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556716925;
-	bh=0JyGM5+DOr1DenIgK+6iZu8HEZ1tzW8kT2w+HTyRdfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y2VCNvwTJmejgfTFgpPoTN3ZkijUf1/vDd7x/U/SvjcsHWn8Q4iRGfzsdeoQrPJo0
-	 nLvCaipJnHqpWc5hfpbsP/LeeVXE9yw7H7SFq0oIzGQZ0Dd+mYauKVH52VbQI4gEjv
-	 YSzYOKYbBR/cnNaMzY924hIEDAJBLeY+as44TDYQ=
+	by mail.kernel.org (Postfix) with ESMTP id 01D7E21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfEANWF (ORCPT
+        id S1726551AbfEANWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 09:22:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:25692 "EHLO mga06.intel.com"
+        Wed, 1 May 2019 09:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbfEANWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 09:22:03 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 06:22:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,417,1549958400"; 
-   d="scan'208";a="135945711"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga007.jf.intel.com with ESMTP; 01 May 2019 06:22:01 -0700
-Date:   Wed, 1 May 2019 07:16:15 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Alex G <mr.nuke.me@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20190501131614.GA26831@localhost.localdomain>
-References: <20190429185611.121751-1-helgaas@kernel.org>
- <20190429185611.121751-2-helgaas@kernel.org>
- <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
- <20190430161151.GB145057@google.com>
- <20190430180508.GB25654@localhost.localdomain>
- <20190430181813.GC25654@localhost.localdomain>
- <20190501021249.GD145057@google.com>
+        id S1725993AbfEANWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 09:22:54 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67D95206DF;
+        Wed,  1 May 2019 13:22:51 +0000 (UTC)
+Date:   Wed, 1 May 2019 09:22:49 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Nicolai Stange <nstange@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch\/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [RFC][PATCH v2] ftrace/x86: Emulate call function while
+ updating in breakpoint handler
+Message-ID: <20190501092249.54cdbd94@gandalf.local.home>
+In-Reply-To: <87muk6vavb.fsf@suse.de>
+References: <20190428133826.3e142cfd@oasis.local.home>
+        <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+        <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+        <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
+        <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
+        <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
+        <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
+        <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
+        <20190430135602.GD2589@hirez.programming.kicks-ass.net>
+        <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
+        <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
+        <20190430130359.330e895b@gandalf.local.home>
+        <20190430132024.0f03f5b8@gandalf.local.home>
+        <20190430134913.4e29ce72@gandalf.local.home>
+        <20190430175334.423821c0@gandalf.local.home>
+        <87muk6vavb.fsf@suse.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501021249.GD145057@google.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 09:12:49PM -0500, Bjorn Helgaas wrote:
-> On Tue, Apr 30, 2019 at 12:18:13PM -0600, Keith Busch wrote:
-> > On Tue, Apr 30, 2019 at 12:05:09PM -0600, Keith Busch wrote:
-> > > On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
-> > > > > I'm not convinced a revert is the best call.
-> > > > 
-> > > > I have very limited options at this stage of the release, but I'd be
-> > > > glad to hear suggestions.  My concern is that if we release v5.1
-> > > > as-is, we'll spend a lot of energy on those false positives.
-> > > 
-> > > May be too late now if the revert is queued up, but I think this feature
-> > > should have been a default 'false' Kconfig bool rather than always on.
+On Wed, 01 May 2019 10:26:32 +0200
+Nicolai Stange <nstange@suse.de> wrote:
+
+> > +extern asmlinkage void ftrace_emulate_call_irqon(void);
+> > +extern asmlinkage void ftrace_emulate_call_irqoff(void);
+> > +extern asmlinkage void ftrace_emulate_call_nmi(void);
+> > +extern asmlinkage void ftrace_emulate_call_update_irqoff(void);
+> > +extern asmlinkage void ftrace_emulate_call_update_irqon(void);
+> > +extern asmlinkage void ftrace_emulate_call_update_nmi(void);
+> > +
+> > +static DEFINE_PER_CPU(void *, ftrace_bp_call_return);
+> > +static DEFINE_PER_CPU(void *, ftrace_bp_call_nmi_return);  
 > 
-> Since this feature currently just adds a message in dmesg, which we
-> don't really consider a stable API, I think a Kconfig switch is a
-> reasonable option.
+> Andy mentioned #DB and #MC exceptions here:
+> https://lkml.kernel.org/r/C55DED25-C60D-4731-9A6B-92BDA8771766@amacapital.net
 > 
-> If you send me a signed-off-by for the following patch, I can apply it:
+> I think that #DB won't be possible, provided the trampolines below get
+> tagged as NOKPROBE (do_int3() and ftrace_int3_handler() already have
+> it).
+> 
+> It's highly theoretic, but tracing do_machine_check() could clobber
+> ftrace_bp_call_return or ftrace_bp_call_nmi_return?
 
-Sounds good, I'll need to resend though since I messed up the Makefile:
+Probably shouldn't trace do_machine_check() then ;-)
 
-> +obj-$(CONFIG_PCIE_BW)		:= bw_notification.o
+> 
+> 
+> > +#ifdef CONFIG_SMP
+> > +#ifdef CONFIG_X86_64
+> > +# define BP_CALL_RETURN		"%gs:ftrace_bp_call_return"
+> > +# define BP_CALL_NMI_RETURN	"%gs:ftrace_bp_call_nmi_return"
+> > +#else
+> > +# define BP_CALL_RETURN		"%fs:ftrace_bp_call_return"
+> > +# define BP_CALL_NMI_RETURN	"%fs:ftrace_bp_call_nmi_return"
+> > +#endif
+> > +#else /* SMP */
+> > +# define BP_CALL_RETURN		"ftrace_bp_call_return"
+> > +# define BP_CALL_NMI_RETURN	"ftrace_bp_call_nmi_return"
+> > +#endif
+> > +
+> > +/* To hold the ftrace_caller address to push on the stack */
+> > +void *ftrace_caller_func = (void *)ftrace_caller;  
+> 
+> The live patching ftrace_ops need ftrace_regs_caller.
 
-    s/:=/+=
+Ah, you're right. Luckily ftrace_regs_caller is a superset of
+ftrace_caller. That is, those only needing ftrace_caller can do fine
+with ftrace_regs_caller (but not vice versa).
+
+Easy enough to fix.
+
+> 
+> 
+> > +
+> > +asm(
+> > +	".text\n"
+> > +
+> > +	/* Trampoline for function update with interrupts enabled */
+> > +	".global ftrace_emulate_call_irqoff\n"
+> > +	".type ftrace_emulate_call_irqoff, @function\n"
+> > +	"ftrace_emulate_call_irqoff:\n\t"
+> > +		"push "BP_CALL_RETURN"\n\t"
+> > +		"push ftrace_caller_func\n"
+> > +		"sti\n\t"
+> > +		"ret\n\t"
+> > +	".size ftrace_emulate_call_irqoff, .-ftrace_emulate_call_irqoff\n"
+> > +
+> > +	/* Trampoline for function update with interrupts disabled*/
+> > +	".global ftrace_emulate_call_irqon\n"  
+> 
+> The naming is perhaps a bit confusing, i.e. "update with interrupts
+> disabled" vs. "irqon"... How about swapping irqoff<->irqon?
+
+I just used the terminology Linus used. It is confusing. Perhaps just
+call it ftrace_emulate_call (for non sti case) and
+ftrace_emulate_call_sti for the sti case. That should remove the
+confusion.
+
+-- Steve
+
+
