@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CFBC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C2BC04AA9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8004E20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7B72177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfEAAyy (ORCPT
+        id S1727589AbfEAAzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 20:54:54 -0400
+        Tue, 30 Apr 2019 20:55:04 -0400
 Received: from mga18.intel.com ([134.134.136.126]:6348 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfEAAyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 20:54:54 -0400
+        id S1726166AbfEAAy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 20:54:57 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 17:54:53 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 17:54:55 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,415,1549958400"; 
-   d="scan'208";a="228225465"
+   d="scan'208";a="228225476"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by orsmga001.jf.intel.com with ESMTP; 30 Apr 2019 17:54:53 -0700
+  by orsmga001.jf.intel.com with ESMTP; 30 Apr 2019 17:54:55 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     acme@kernel.org, eranian@google.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [RESEND PATCH 2/6] perf/x86/intel/uncore: Add uncore support for Snow Ridge server
-Date:   Tue, 30 Apr 2019 17:53:44 -0700
-Message-Id: <1556672028-119221-3-git-send-email-kan.liang@linux.intel.com>
+Subject: [RESEND PATCH 4/6] perf/x86/intel/uncore: Support MMIO type uncore blocks
+Date:   Tue, 30 Apr 2019 17:53:46 -0700
+Message-Id: <1556672028-119221-5-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556672028-119221-1-git-send-email-kan.liang@linux.intel.com>
 References: <1556672028-119221-1-git-send-email-kan.liang@linux.intel.com>
@@ -46,503 +46,234 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The uncore subsystem on Snow Ridge is similar as previous SKX server.
-The uncore units on Snow Ridge include Ubox, Chabox, IIO, IRP, M2PCIE,
-PCU, M2M, PCIE3 and IMC.
-- The config register encoding and pci device IDs are changed.
-- For CHA, the umask_ext and filter_tid fields are changed.
-- For IIO, the ch_mask and fc_mask fields are changed.
-- For M2M, the mask_ext field is changed.
-- Add new PCIe3 unit for PCIe3 root port which provides the interface
-  between PCIe devices, plugged into the PCIe port, and the components
-  (in M2IOSF).
-- IMC can only be accessed via MMIO on Snow Ridge now. Current common
-  code doesn't support it yet. IMC will be supported in following
-  patches.
-- There are 9 free running counters for IIO CLOCKS and bandwidth In.
-- Full uncore event list is not published yet. Event constrain is not
-  included in this patch. It will be added later separately.
+A new MMIO type uncore box is introduced on Snow Ridge server. The
+counters of MMIO type uncore box can only be accessed by MMIO.
+
+Add a new uncore type, uncore_mmio_uncores, for MMIO type uncore blocks.
+
+Support MMIO type uncore blocks in CPU hot plug. The MMIO space has to
+be map/unmap for the first/last CPU. The context also need to be
+migrated if the bind CPU changes.
+
+Add mmio_init() to init and register PMUs for MMIO type uncore blocks.
+
+Add a helper to calculate the box_ctl address.
+
+The helpers which calculate ctl/ctr can be shared with PCI type uncore
+blocks.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/uncore.c       |   6 +
- arch/x86/events/intel/uncore.h       |   2 +
- arch/x86/events/intel/uncore_snbep.c | 403 +++++++++++++++++++++++++++++++++++
- 3 files changed, 411 insertions(+)
+ arch/x86/events/intel/uncore.c | 51 ++++++++++++++++++++++++++++++++++++------
+ arch/x86/events/intel/uncore.h | 21 ++++++++++++-----
+ 2 files changed, 60 insertions(+), 12 deletions(-)
 
 diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index fc40a14..ee23b50 100644
+index 0b72ca5..3c00635 100644
 --- a/arch/x86/events/intel/uncore.c
 +++ b/arch/x86/events/intel/uncore.c
-@@ -1372,6 +1372,11 @@ static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
- 	.pci_init = skl_uncore_pci_init,
- };
+@@ -7,6 +7,7 @@
+ static struct intel_uncore_type *empty_uncore[] = { NULL, };
+ struct intel_uncore_type **uncore_msr_uncores = empty_uncore;
+ struct intel_uncore_type **uncore_pci_uncores = empty_uncore;
++struct intel_uncore_type **uncore_mmio_uncores = empty_uncore;
  
-+static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
-+	.cpu_init = snr_uncore_cpu_init,
-+	.pci_init = snr_uncore_pci_init,
-+};
-+
- static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM_EP,	  nhm_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM,	  nhm_uncore_init),
-@@ -1399,6 +1404,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
-+	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ATOM_TREMONT_X, snr_uncore_init),
- 	{},
- };
+ static bool pcidrv_registered;
+ struct pci_driver *uncore_pci_driver;
+@@ -1175,12 +1176,14 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+ 		target = -1;
  
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 28499e3..5e97e5e 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -538,6 +538,8 @@ int knl_uncore_pci_init(void);
- void knl_uncore_cpu_init(void);
- int skx_uncore_pci_init(void);
- void skx_uncore_cpu_init(void);
-+int snr_uncore_pci_init(void);
-+void snr_uncore_cpu_init(void);
+ 	uncore_change_context(uncore_msr_uncores, cpu, target);
++	uncore_change_context(uncore_mmio_uncores, cpu, target);
+ 	uncore_change_context(uncore_pci_uncores, cpu, target);
  
- /* uncore_nhmex.c */
- void nhmex_uncore_cpu_init(void);
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 8e4e8e4..851f76f 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -324,12 +324,64 @@
- #define SKX_M2M_PCI_PMON_CTR0		0x200
- #define SKX_M2M_PCI_PMON_BOX_CTL	0x258
- 
-+/* SNR Ubox */
-+#define SNR_U_MSR_PMON_CTR0			0x1f98
-+#define SNR_U_MSR_PMON_CTL0			0x1f91
-+#define SNR_U_MSR_PMON_UCLK_FIXED_CTL		0x1f93
-+#define SNR_U_MSR_PMON_UCLK_FIXED_CTR		0x1f94
-+
-+/* SNR CHA */
-+#define SNR_CHA_RAW_EVENT_MASK_EXT		0x3ffffff
-+#define SNR_CHA_MSR_PMON_CTL0			0x1c01
-+#define SNR_CHA_MSR_PMON_CTR0			0x1c08
-+#define SNR_CHA_MSR_PMON_BOX_CTL		0x1c00
-+#define SNR_C0_MSR_PMON_BOX_FILTER0		0x1c05
-+
-+
-+/* SNR IIO */
-+#define SNR_IIO_MSR_PMON_CTL0			0x1e08
-+#define SNR_IIO_MSR_PMON_CTR0			0x1e01
-+#define SNR_IIO_MSR_PMON_BOX_CTL		0x1e00
-+#define SNR_IIO_MSR_OFFSET			0x10
-+#define SNR_IIO_PMON_RAW_EVENT_MASK_EXT		0x7ffff
-+
-+/* SNR IRP */
-+#define SNR_IRP0_MSR_PMON_CTL0			0x1ea8
-+#define SNR_IRP0_MSR_PMON_CTR0			0x1ea1
-+#define SNR_IRP0_MSR_PMON_BOX_CTL		0x1ea0
-+#define SNR_IRP_MSR_OFFSET			0x10
-+
-+/* SNR M2PCIE */
-+#define SNR_M2PCIE_MSR_PMON_CTL0		0x1e58
-+#define SNR_M2PCIE_MSR_PMON_CTR0		0x1e51
-+#define SNR_M2PCIE_MSR_PMON_BOX_CTL		0x1e50
-+#define SNR_M2PCIE_MSR_OFFSET			0x10
-+
-+/* SNR PCU */
-+#define SNR_PCU_MSR_PMON_CTL0			0x1ef1
-+#define SNR_PCU_MSR_PMON_CTR0			0x1ef8
-+#define SNR_PCU_MSR_PMON_BOX_CTL		0x1ef0
-+#define SNR_PCU_MSR_PMON_BOX_FILTER		0x1efc
-+
-+/* SNR M2M */
-+#define SNR_M2M_PCI_PMON_CTL0			0x468
-+#define SNR_M2M_PCI_PMON_CTR0			0x440
-+#define SNR_M2M_PCI_PMON_BOX_CTL		0x438
-+#define SNR_M2M_PCI_PMON_UMASK_EXT		0xff
-+
-+/* SNR PCIE3 */
-+#define SNR_PCIE3_PCI_PMON_CTL0			0x508
-+#define SNR_PCIE3_PCI_PMON_CTR0			0x4e8
-+#define SNR_PCIE3_PCI_PMON_BOX_CTL		0x4e4
-+
- DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
- DEFINE_UNCORE_FORMAT_ATTR(event2, event, "config:0-6");
- DEFINE_UNCORE_FORMAT_ATTR(event_ext, event, "config:0-7,21");
- DEFINE_UNCORE_FORMAT_ATTR(use_occ_ctr, use_occ_ctr, "config:7");
- DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
- DEFINE_UNCORE_FORMAT_ATTR(umask_ext, umask, "config:8-15,32-43,45-55");
-+DEFINE_UNCORE_FORMAT_ATTR(umask_ext2, umask, "config:8-15,32-57");
-+DEFINE_UNCORE_FORMAT_ATTR(umask_ext3, umask, "config:8-15,32-39");
- DEFINE_UNCORE_FORMAT_ATTR(qor, qor, "config:16");
- DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
- DEFINE_UNCORE_FORMAT_ATTR(tid_en, tid_en, "config:19");
-@@ -343,11 +395,14 @@ DEFINE_UNCORE_FORMAT_ATTR(occ_invert, occ_invert, "config:30");
- DEFINE_UNCORE_FORMAT_ATTR(occ_edge, occ_edge, "config:14-51");
- DEFINE_UNCORE_FORMAT_ATTR(occ_edge_det, occ_edge_det, "config:31");
- DEFINE_UNCORE_FORMAT_ATTR(ch_mask, ch_mask, "config:36-43");
-+DEFINE_UNCORE_FORMAT_ATTR(ch_mask2, ch_mask, "config:36-47");
- DEFINE_UNCORE_FORMAT_ATTR(fc_mask, fc_mask, "config:44-46");
-+DEFINE_UNCORE_FORMAT_ATTR(fc_mask2, fc_mask, "config:48-50");
- DEFINE_UNCORE_FORMAT_ATTR(filter_tid, filter_tid, "config1:0-4");
- DEFINE_UNCORE_FORMAT_ATTR(filter_tid2, filter_tid, "config1:0");
- DEFINE_UNCORE_FORMAT_ATTR(filter_tid3, filter_tid, "config1:0-5");
- DEFINE_UNCORE_FORMAT_ATTR(filter_tid4, filter_tid, "config1:0-8");
-+DEFINE_UNCORE_FORMAT_ATTR(filter_tid5, filter_tid, "config1:0-9");
- DEFINE_UNCORE_FORMAT_ATTR(filter_cid, filter_cid, "config1:5");
- DEFINE_UNCORE_FORMAT_ATTR(filter_link, filter_link, "config1:5-8");
- DEFINE_UNCORE_FORMAT_ATTR(filter_link2, filter_link, "config1:6-8");
-@@ -3968,3 +4023,351 @@ int skx_uncore_pci_init(void)
+ unref:
+ 	/* Clear the references */
+ 	pkg = topology_logical_package_id(cpu);
+ 	uncore_box_unref(uncore_msr_uncores, pkg);
++	uncore_box_unref(uncore_mmio_uncores, pkg);
+ 	return 0;
  }
  
- /* end of SKX uncore support */
-+
-+/* SNR uncore support */
-+
-+static struct intel_uncore_type snr_uncore_ubox = {
-+	.name			= "ubox",
-+	.num_counters		= 2,
-+	.num_boxes		= 1,
-+	.perf_ctr_bits		= 48,
-+	.fixed_ctr_bits		= 48,
-+	.perf_ctr		= SNR_U_MSR_PMON_CTR0,
-+	.event_ctl		= SNR_U_MSR_PMON_CTL0,
-+	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-+	.fixed_ctr		= SNR_U_MSR_PMON_UCLK_FIXED_CTR,
-+	.fixed_ctl		= SNR_U_MSR_PMON_UCLK_FIXED_CTL,
-+	.ops			= &ivbep_uncore_msr_ops,
-+	.format_group		= &ivbep_uncore_format_group,
-+};
-+
-+static struct attribute *snr_uncore_cha_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask_ext2.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_tid_en.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_thresh8.attr,
-+	&format_attr_filter_tid5.attr,
-+	NULL,
-+};
-+static const struct attribute_group snr_uncore_chabox_format_group = {
-+	.name = "format",
-+	.attrs = snr_uncore_cha_formats_attr,
-+};
-+
-+static int snr_cha_hw_config(struct intel_uncore_box *box, struct perf_event *event)
+@@ -1248,12 +1251,13 @@ static int uncore_box_ref(struct intel_uncore_type **types,
+ 
+ static int uncore_event_cpu_online(unsigned int cpu)
+ {
+-	int ret, pkg, target;
++	int pkg, target, msr_ret, mmio_ret;
+ 
+ 	pkg = topology_logical_package_id(cpu);
+-	ret = uncore_box_ref(uncore_msr_uncores, pkg, cpu);
+-	if (ret)
+-		return ret;
++	msr_ret = uncore_box_ref(uncore_msr_uncores, pkg, cpu);
++	mmio_ret = uncore_box_ref(uncore_mmio_uncores, pkg, cpu);
++	if (msr_ret && mmio_ret)
++		return -ENOMEM;
+ 
+ 	/*
+ 	 * Check if there is an online cpu in the package
+@@ -1265,7 +1269,10 @@ static int uncore_event_cpu_online(unsigned int cpu)
+ 
+ 	cpumask_set_cpu(cpu, &uncore_cpu_mask);
+ 
+-	uncore_change_context(uncore_msr_uncores, -1, cpu);
++	if (!msr_ret)
++		uncore_change_context(uncore_msr_uncores, -1, cpu);
++	if (!mmio_ret)
++		uncore_change_context(uncore_mmio_uncores, -1, cpu);
+ 	uncore_change_context(uncore_pci_uncores, -1, cpu);
+ 	return 0;
+ }
+@@ -1313,12 +1320,35 @@ static int __init uncore_cpu_init(void)
+ 	return ret;
+ }
+ 
++static int __init uncore_mmio_init(void)
 +{
-+	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
++	struct intel_uncore_type **types = uncore_mmio_uncores;
++	int ret;
 +
-+	reg1->reg = SNR_C0_MSR_PMON_BOX_FILTER0 +
-+		    box->pmu->type->msr_offset * box->pmu->pmu_idx;
-+	reg1->config = event->attr.config1 & SKX_CHA_MSR_PMON_BOX_FILTER_TID;
-+	reg1->idx = 0;
++	ret = uncore_types_init(types, true);
++	if (ret)
++		goto err;
 +
-+	return 0;
-+}
-+
-+static void snr_cha_enable_event(struct intel_uncore_box *box,
-+				   struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct hw_perf_event_extra *reg1 = &hwc->extra_reg;
-+
-+	if (reg1->idx != EXTRA_REG_NONE)
-+		wrmsrl(reg1->reg, reg1->config);
-+
-+	wrmsrl(hwc->config_base, hwc->config | SNBEP_PMON_CTL_EN);
-+}
-+
-+static struct intel_uncore_ops snr_uncore_chabox_ops = {
-+	.init_box		= ivbep_uncore_msr_init_box,
-+	.disable_box		= snbep_uncore_msr_disable_box,
-+	.enable_box		= snbep_uncore_msr_enable_box,
-+	.disable_event		= snbep_uncore_msr_disable_event,
-+	.enable_event		= snr_cha_enable_event,
-+	.read_counter		= uncore_msr_read_counter,
-+	.hw_config		= snr_cha_hw_config,
-+};
-+
-+static struct intel_uncore_type snr_uncore_chabox = {
-+	.name			= "cha",
-+	.num_counters		= 4,
-+	.num_boxes		= 6,
-+	.perf_ctr_bits		= 48,
-+	.event_ctl		= SNR_CHA_MSR_PMON_CTL0,
-+	.perf_ctr		= SNR_CHA_MSR_PMON_CTR0,
-+	.box_ctl		= SNR_CHA_MSR_PMON_BOX_CTL,
-+	.msr_offset		= HSWEP_CBO_MSR_OFFSET,
-+	.event_mask		= HSWEP_S_MSR_PMON_RAW_EVENT_MASK,
-+	.event_mask_ext		= SNR_CHA_RAW_EVENT_MASK_EXT,
-+	.ops			= &snr_uncore_chabox_ops,
-+	.format_group		= &snr_uncore_chabox_format_group,
-+};
-+
-+static struct attribute *snr_uncore_iio_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_thresh9.attr,
-+	&format_attr_ch_mask2.attr,
-+	&format_attr_fc_mask2.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group snr_uncore_iio_format_group = {
-+	.name = "format",
-+	.attrs = snr_uncore_iio_formats_attr,
-+};
-+
-+static struct intel_uncore_type snr_uncore_iio = {
-+	.name			= "iio",
-+	.num_counters		= 4,
-+	.num_boxes		= 5,
-+	.perf_ctr_bits		= 48,
-+	.event_ctl		= SNR_IIO_MSR_PMON_CTL0,
-+	.perf_ctr		= SNR_IIO_MSR_PMON_CTR0,
-+	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-+	.event_mask_ext		= SNR_IIO_PMON_RAW_EVENT_MASK_EXT,
-+	.box_ctl		= SNR_IIO_MSR_PMON_BOX_CTL,
-+	.msr_offset		= SNR_IIO_MSR_OFFSET,
-+	.ops			= &ivbep_uncore_msr_ops,
-+	.format_group		= &snr_uncore_iio_format_group,
-+};
-+
-+static struct intel_uncore_type snr_uncore_irp = {
-+	.name			= "irp",
-+	.num_counters		= 2,
-+	.num_boxes		= 5,
-+	.perf_ctr_bits		= 48,
-+	.event_ctl		= SNR_IRP0_MSR_PMON_CTL0,
-+	.perf_ctr		= SNR_IRP0_MSR_PMON_CTR0,
-+	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-+	.box_ctl		= SNR_IRP0_MSR_PMON_BOX_CTL,
-+	.msr_offset		= SNR_IRP_MSR_OFFSET,
-+	.ops			= &ivbep_uncore_msr_ops,
-+	.format_group		= &ivbep_uncore_format_group,
-+};
-+
-+static struct intel_uncore_type snr_uncore_m2pcie = {
-+	.name		= "m2pcie",
-+	.num_counters	= 4,
-+	.num_boxes	= 5,
-+	.perf_ctr_bits	= 48,
-+	.event_ctl	= SNR_M2PCIE_MSR_PMON_CTL0,
-+	.perf_ctr	= SNR_M2PCIE_MSR_PMON_CTR0,
-+	.box_ctl	= SNR_M2PCIE_MSR_PMON_BOX_CTL,
-+	.msr_offset	= SNR_M2PCIE_MSR_OFFSET,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.ops		= &ivbep_uncore_msr_ops,
-+	.format_group	= &ivbep_uncore_format_group,
-+};
-+
-+static int snr_pcu_hw_config(struct intel_uncore_box *box, struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct hw_perf_event_extra *reg1 = &hwc->extra_reg;
-+	int ev_sel = hwc->config & SNBEP_PMON_CTL_EV_SEL_MASK;
-+
-+	if (ev_sel >= 0xb && ev_sel <= 0xe) {
-+		reg1->reg = SNR_PCU_MSR_PMON_BOX_FILTER;
-+		reg1->idx = ev_sel - 0xb;
-+		reg1->config = event->attr.config1 & (0xff << reg1->idx);
++	for (; *types; types++) {
++		ret = type_pmu_register(*types);
++		if (ret)
++			goto err;
 +	}
 +	return 0;
++err:
++	uncore_types_exit(uncore_mmio_uncores);
++	uncore_mmio_uncores = empty_uncore;
++	return ret;
 +}
 +
-+static struct intel_uncore_ops snr_uncore_pcu_ops = {
-+	IVBEP_UNCORE_MSR_OPS_COMMON_INIT(),
-+	.hw_config		= snr_pcu_hw_config,
-+	.get_constraint		= snbep_pcu_get_constraint,
-+	.put_constraint		= snbep_pcu_put_constraint,
-+};
 +
-+static struct intel_uncore_type snr_uncore_pcu = {
-+	.name			= "pcu",
-+	.num_counters		= 4,
-+	.num_boxes		= 1,
-+	.perf_ctr_bits		= 48,
-+	.perf_ctr		= SNR_PCU_MSR_PMON_CTR0,
-+	.event_ctl		= SNR_PCU_MSR_PMON_CTL0,
-+	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-+	.box_ctl		= SNR_PCU_MSR_PMON_BOX_CTL,
-+	.num_shared_regs	= 1,
-+	.ops			= &snr_uncore_pcu_ops,
-+	.format_group		= &skx_uncore_pcu_format_group,
-+};
+ #define X86_UNCORE_MODEL_MATCH(model, init)	\
+ 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)&init }
+ 
+ struct intel_uncore_init_fun {
+ 	void	(*cpu_init)(void);
+ 	int	(*pci_init)(void);
++	void	(*mmio_init)(void);
+ };
+ 
+ static const struct intel_uncore_init_fun nhm_uncore_init __initconst = {
+@@ -1431,7 +1461,7 @@ static int __init intel_uncore_init(void)
+ {
+ 	const struct x86_cpu_id *id;
+ 	struct intel_uncore_init_fun *uncore_init;
+-	int pret = 0, cret = 0, ret;
++	int pret = 0, cret = 0, mret = 0, ret;
+ 
+ 	id = x86_match_cpu(intel_uncore_match);
+ 	if (!id)
+@@ -1454,7 +1484,12 @@ static int __init intel_uncore_init(void)
+ 		cret = uncore_cpu_init();
+ 	}
+ 
+-	if (cret && pret)
++	if (uncore_init->mmio_init) {
++		uncore_init->mmio_init();
++		mret = uncore_mmio_init();
++	}
 +
-+enum perf_uncore_snr_iio_freerunning_type_id {
-+	SNR_IIO_MSR_IOCLK,
-+	SNR_IIO_MSR_BW_IN,
-+
-+	SNR_IIO_FREERUNNING_TYPE_MAX,
-+};
-+
-+static struct freerunning_counters snr_iio_freerunning[] = {
-+	[SNR_IIO_MSR_IOCLK]	= { 0x1eac, 0x1, 0x10, 1, 48 },
-+	[SNR_IIO_MSR_BW_IN]	= { 0x1f00, 0x1, 0x10, 8, 48 },
-+};
-+
-+static struct uncore_event_desc snr_uncore_iio_freerunning_events[] = {
-+	/* Free-Running IIO CLOCKS Counter */
-+	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
-+	/* Free-Running IIO BANDWIDTH IN Counters */
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
-+	{ /* end: all zeroes */ },
-+};
-+
-+static struct intel_uncore_type snr_uncore_iio_free_running = {
-+	.name			= "iio_free_running",
-+	.num_counters		= 9,
-+	.num_boxes		= 5,
-+	.num_freerunning_types	= SNR_IIO_FREERUNNING_TYPE_MAX,
-+	.freerunning		= snr_iio_freerunning,
-+	.ops			= &skx_uncore_iio_freerunning_ops,
-+	.event_descs		= snr_uncore_iio_freerunning_events,
-+	.format_group		= &skx_uncore_iio_freerunning_format_group,
-+};
-+
-+static struct intel_uncore_type *snr_msr_uncores[] = {
-+	&snr_uncore_ubox,
-+	&snr_uncore_chabox,
-+	&snr_uncore_iio,
-+	&snr_uncore_irp,
-+	&snr_uncore_m2pcie,
-+	&snr_uncore_pcu,
-+	&snr_uncore_iio_free_running,
-+	NULL,
-+};
-+
-+void snr_uncore_cpu_init(void)
++	if (cret && pret && mret)
+ 		return -ENODEV;
+ 
+ 	/* Install hotplug callbacks to setup the targets for each package */
+@@ -1468,6 +1503,7 @@ static int __init intel_uncore_init(void)
+ 
+ err:
+ 	uncore_types_exit(uncore_msr_uncores);
++	uncore_types_exit(uncore_mmio_uncores);
+ 	uncore_pci_exit();
+ 	return ret;
+ }
+@@ -1477,6 +1513,7 @@ static void __exit intel_uncore_exit(void)
+ {
+ 	cpuhp_remove_state(CPUHP_AP_PERF_X86_UNCORE_ONLINE);
+ 	uncore_types_exit(uncore_msr_uncores);
++	uncore_types_exit(uncore_mmio_uncores);
+ 	uncore_pci_exit();
+ }
+ module_exit(intel_uncore_exit);
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 5e97e5e..426a490 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -56,7 +56,10 @@ struct intel_uncore_type {
+ 	unsigned fixed_ctr;
+ 	unsigned fixed_ctl;
+ 	unsigned box_ctl;
+-	unsigned msr_offset;
++	union {
++		unsigned msr_offset;
++		unsigned mmio_offset;
++	};
+ 	unsigned num_shared_regs:8;
+ 	unsigned single_fixed:1;
+ 	unsigned pair_ctr_ctl:1;
+@@ -190,6 +193,13 @@ static inline bool uncore_pmc_freerunning(int idx)
+ 	return idx == UNCORE_PMC_IDX_FREERUNNING;
+ }
+ 
++static inline
++unsigned int uncore_mmio_box_ctl(struct intel_uncore_box *box)
 +{
-+	uncore_msr_uncores = snr_msr_uncores;
++	return box->pmu->type->box_ctl +
++	       box->pmu->type->mmio_offset * box->pmu->pmu_idx;
 +}
 +
-+static void snr_m2m_uncore_pci_init_box(struct intel_uncore_box *box)
-+{
-+	struct pci_dev *pdev = box->pci_dev;
-+	int box_ctl = uncore_pci_box_ctl(box);
-+
-+	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
-+	pci_write_config_dword(pdev, box_ctl, IVBEP_PMON_BOX_CTL_INT);
-+}
-+
-+static struct intel_uncore_ops snr_m2m_uncore_pci_ops = {
-+	.init_box	= snr_m2m_uncore_pci_init_box,
-+	.disable_box	= snbep_uncore_pci_disable_box,
-+	.enable_box	= snbep_uncore_pci_enable_box,
-+	.disable_event	= snbep_uncore_pci_disable_event,
-+	.enable_event	= snbep_uncore_pci_enable_event,
-+	.read_counter	= snbep_uncore_pci_read_counter,
-+};
-+
-+static struct attribute *snr_m2m_uncore_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask_ext3.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_thresh8.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group snr_m2m_uncore_format_group = {
-+	.name = "format",
-+	.attrs = snr_m2m_uncore_formats_attr,
-+};
-+
-+static struct intel_uncore_type snr_uncore_m2m = {
-+	.name		= "m2m",
-+	.num_counters   = 4,
-+	.num_boxes	= 1,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= SNR_M2M_PCI_PMON_CTR0,
-+	.event_ctl	= SNR_M2M_PCI_PMON_CTL0,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.event_mask_ext	= SNR_M2M_PCI_PMON_UMASK_EXT,
-+	.box_ctl	= SNR_M2M_PCI_PMON_BOX_CTL,
-+	.ops		= &snr_m2m_uncore_pci_ops,
-+	.format_group	= &snr_m2m_uncore_format_group,
-+};
-+
-+static struct intel_uncore_type snr_uncore_pcie3 = {
-+	.name		= "pcie3",
-+	.num_counters	= 4,
-+	.num_boxes	= 1,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= SNR_PCIE3_PCI_PMON_CTR0,
-+	.event_ctl	= SNR_PCIE3_PCI_PMON_CTL0,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.box_ctl	= SNR_PCIE3_PCI_PMON_BOX_CTL,
-+	.ops		= &ivbep_uncore_pci_ops,
-+	.format_group	= &ivbep_uncore_format_group,
-+};
-+
-+enum {
-+	SNR_PCI_UNCORE_M2M,
-+	SNR_PCI_UNCORE_PCIE3,
-+};
-+
-+static struct intel_uncore_type *snr_pci_uncores[] = {
-+	[SNR_PCI_UNCORE_M2M]		= &snr_uncore_m2m,
-+	[SNR_PCI_UNCORE_PCIE3]		= &snr_uncore_pcie3,
-+	NULL,
-+};
-+
-+static const struct pci_device_id snr_uncore_pci_ids[] = {
-+	{ /* M2M */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(12, 0, SNR_PCI_UNCORE_M2M, 0),
-+	},
-+	{ /* PCIe3 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(4, 0, SNR_PCI_UNCORE_PCIE3, 0),
-+	},
-+	{ /* end: all zeroes */ }
-+};
-+
-+static struct pci_driver snr_uncore_pci_driver = {
-+	.name		= "snr_uncore",
-+	.id_table	= snr_uncore_pci_ids,
-+};
-+
-+int snr_uncore_pci_init(void)
-+{
-+	/* SNR UBOX DID */
-+	int ret = snbep_pci2phy_map_init(0x3460, SKX_CPUNODEID,
-+					 SKX_GIDNIDMAP, true);
-+
-+	if (ret)
-+		return ret;
-+
-+	uncore_pci_uncores = snr_pci_uncores;
-+	uncore_pci_driver = &snr_uncore_pci_driver;
-+	return 0;
-+}
-+
-+/* end of SNR uncore support */
+ static inline unsigned uncore_pci_box_ctl(struct intel_uncore_box *box)
+ {
+ 	return box->pmu->type->box_ctl;
+@@ -330,7 +340,7 @@ unsigned uncore_msr_perf_ctr(struct intel_uncore_box *box, int idx)
+ static inline
+ unsigned uncore_fixed_ctl(struct intel_uncore_box *box)
+ {
+-	if (box->pci_dev)
++	if (box->pci_dev || box->io_addr)
+ 		return uncore_pci_fixed_ctl(box);
+ 	else
+ 		return uncore_msr_fixed_ctl(box);
+@@ -339,7 +349,7 @@ unsigned uncore_fixed_ctl(struct intel_uncore_box *box)
+ static inline
+ unsigned uncore_fixed_ctr(struct intel_uncore_box *box)
+ {
+-	if (box->pci_dev)
++	if (box->pci_dev || box->io_addr)
+ 		return uncore_pci_fixed_ctr(box);
+ 	else
+ 		return uncore_msr_fixed_ctr(box);
+@@ -348,7 +358,7 @@ unsigned uncore_fixed_ctr(struct intel_uncore_box *box)
+ static inline
+ unsigned uncore_event_ctl(struct intel_uncore_box *box, int idx)
+ {
+-	if (box->pci_dev)
++	if (box->pci_dev || box->io_addr)
+ 		return uncore_pci_event_ctl(box, idx);
+ 	else
+ 		return uncore_msr_event_ctl(box, idx);
+@@ -357,7 +367,7 @@ unsigned uncore_event_ctl(struct intel_uncore_box *box, int idx)
+ static inline
+ unsigned uncore_perf_ctr(struct intel_uncore_box *box, int idx)
+ {
+-	if (box->pci_dev)
++	if (box->pci_dev || box->io_addr)
+ 		return uncore_pci_perf_ctr(box, idx);
+ 	else
+ 		return uncore_msr_perf_ctr(box, idx);
+@@ -507,6 +517,7 @@ u64 uncore_shared_reg_config(struct intel_uncore_box *box, int idx);
+ 
+ extern struct intel_uncore_type **uncore_msr_uncores;
+ extern struct intel_uncore_type **uncore_pci_uncores;
++extern struct intel_uncore_type **uncore_mmio_uncores;
+ extern struct pci_driver *uncore_pci_driver;
+ extern raw_spinlock_t pci2phy_map_lock;
+ extern struct list_head pci2phy_map_head;
 -- 
 2.7.4
 
