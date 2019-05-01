@@ -2,74 +2,168 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17BCC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD385C04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4CE21670
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:37:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6+PYlkM"
+	by mail.kernel.org (Postfix) with ESMTP id 91E45208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfEAOhh (ORCPT
+        id S1726865AbfEAOhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 10:37:37 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39288 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfEAOhg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 10:37:36 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o39so3654860ota.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 07:37:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oeNawWVBAySPb9PDlZKwYFSNGyoNGUr1GIrZtBOZHwE=;
-        b=W6+PYlkMPJHz0yB1KJTSgTz43TMM4saV68HGbJbXDY0sKCSjZpKqfbag63PHUxXT4j
-         y9jjjepBKDyN8HH89wXIlTQJ4dgAciZbAEhiu/ycDGsHIV0RDTVktQHwX7pRqto/HIA1
-         EWhQEfwJdAxKsw97tKEsEI2kIxlSYmfcNtJdYRSVCei6bcyI2zaGbYpyCWKOgZwq+uHA
-         KlGFNTVAxTlrKCfZxElihlpCAiTe6ihDbdyZf3kjmuMoFEDLmG1+PYsn1BnSji3tY3VL
-         ugcW1al6YyHyrBKe6Wuj7Ojb1gv66lNKfkKvSxLGJpeA0w8chmBDiJRcvnU0C7HXaDAH
-         9ODA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oeNawWVBAySPb9PDlZKwYFSNGyoNGUr1GIrZtBOZHwE=;
-        b=oPj03rKcnG2YxU+p5e6pbMDiO94P9SPFm5ieDPMb/f9n9b8eWmcAsY2+nwQPsqnYrm
-         779a3bTNnnchzm2U3BGd1hMr8kiAq3uEtcQcR1WuuB1qSILU8w61xwEseuI9xiXHw1bi
-         MlfLjGR2AF3rGBCnxmYzolL+qL+aVa53b/BY3XoobsnkNcldwbsoPZ+0X9O+AHm+OkwU
-         4MU842m1ofSFbFqOjj6+o0l3ae7C+yhJGEq1Xit7RmT3ynbAYiTghnaGg6qYhHM2+PFh
-         mHHOuuT3lbHKTPUi17SP0oyNXXWwi7Q+Fb739fdt8o4rUxH9K/+E6/znMUSwWDuAr48l
-         ZooA==
-X-Gm-Message-State: APjAAAVG5thaZOzrKtD1oCajvOEE2++sNeHlTRR5/hfKvk2QOXPIPTPq
-        kqgWcN2IsmfAmfO9WvzQQP+ggSk0+5bzx4ZVs20=
-X-Google-Smtp-Source: APXvYqxUPcBihXr+kVa92SD3B7QipRcrz8gjMtl76VPv4sjk/YqbN4YdwpCOihv0kXUK0oSdzfMFoibXinHK/tOaEsE=
-X-Received: by 2002:a9d:7319:: with SMTP id e25mr2089734otk.279.1556721456085;
- Wed, 01 May 2019 07:37:36 -0700 (PDT)
+        Wed, 1 May 2019 10:37:50 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60248 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbfEAOhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 10:37:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B93A78;
+        Wed,  1 May 2019 07:37:49 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A51063F719;
+        Wed,  1 May 2019 07:37:47 -0700 (PDT)
+Date:   Wed, 1 May 2019 15:37:42 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] PCI: iproc: Add sorted dma ranges resource
+ entries to host bridge
+Message-ID: <20190501143742.GA13089@e121166-lin.cambridge.arm.com>
+References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+ <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
-References: <20190501143543.7586-1-TheSven73@gmail.com>
-In-Reply-To: <20190501143543.7586-1-TheSven73@gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Wed, 1 May 2019 10:37:25 -0400
-Message-ID: <CAGngYiUSmDw8PH0Qy25Pk7dW0-tKdkZbLmBDdp-tTMJdsZTXww@mail.gmail.com>
-Subject: Re: [PATCH] staging: fieldbus: anybus-s: fix wait_for_completion_timeout
- return handling
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 10:35 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> Reviewed-by: Sven Van Asbroeck <TheSven73@googlemail.com>
+On Fri, Apr 12, 2019 at 08:43:35AM +0530, Srinath Mannam wrote:
+> IPROC host has the limitation that it can use only those address ranges
+> given by dma-ranges property as inbound address. So that the memory
+> address holes in dma-ranges should be reserved to allocate as DMA address.
+> 
+> Inbound address of host accessed by PCIe devices will not be translated
+> before it comes to IOMMU or directly to PE.
 
-Ouch, this isn't right. I'll re-send the patch. Sorry.
+What does that mean "directly to PE" ?
+
+IIUC all you want to say is that there is no entity translating
+PCI memory transactions addresses before they it the PCI host
+controller inbound regions address decoder.
+
+> But the limitation of this host is, access to few address ranges are
+> ignored. So that IOVA ranges for these address ranges have to be
+> reserved.
+> 
+> All allowed address ranges are listed in dma-ranges DT parameter. These
+> address ranges are converted as resource entries and listed in sorted
+> order add added to dma_ranges list of PCI host bridge structure.
+> 
+> Ex:
+> dma-ranges = < \
+>   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
+>   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
+>   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
+> 
+> In the above example of dma-ranges, memory address from
+> 0x0 - 0x80000000,
+> 0x100000000 - 0x800000000,
+> 0x1000000000 - 0x8000000000 and
+> 0x10000000000 - 0xffffffffffffffff.
+> are not allowed to use as inbound addresses.
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+> ---
+>  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 43 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index c20fd6b..94ba5c0 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
+>  	return ret;
+>  }
+>  
+> +static int
+> +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
+> +			 struct of_pci_range *range)
+> +{
+> +	struct resource *res;
+> +	struct resource_entry *entry, *tmp;
+> +	struct list_head *head = resources;
+> +
+> +	res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
+> +	if (!res)
+> +		return -ENOMEM;
+> +
+> +	resource_list_for_each_entry(tmp, resources) {
+> +		if (tmp->res->start < range->cpu_addr)
+> +			head = &tmp->node;
+> +	}
+> +
+> +	res->start = range->cpu_addr;
+> +	res->end = res->start + range->size - 1;
+> +
+> +	entry = resource_list_create_entry(res, 0);
+> +	if (!entry)
+> +		return -ENOMEM;
+> +
+> +	entry->offset = res->start - range->cpu_addr;
+> +	resource_list_add(entry, head);
+> +
+> +	return 0;
+> +}
+> +
+>  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+>  {
+> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+>  	struct of_pci_range range;
+>  	struct of_pci_range_parser parser;
+>  	int ret;
+> +	LIST_HEAD(resources);
+>  
+>  	/* Get the dma-ranges from DT */
+>  	ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
+> @@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+>  		return ret;
+>  
+>  	for_each_of_pci_range(&parser, &range) {
+> +		ret = iproc_pcie_add_dma_range(pcie->dev,
+> +					       &resources,
+> +					       &range);
+> +		if (ret)
+> +			goto out;
+>  		/* Each range entry corresponds to an inbound mapping region */
+>  		ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
+>  		if (ret)
+> -			return ret;
+> +			goto out;
+>  	}
+>  
+> +	list_splice_init(&resources, &host->dma_ranges);
+> +
+>  	return 0;
+> +out:
+> +	pci_free_resource_list(&resources);
+> +	return ret;
+>  }
+>  
+>  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+> -- 
+> 2.7.4
+> 
