@@ -2,152 +2,156 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FBAC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC34C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873B9208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9AD208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BsP6AnL/"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="B4H7Slgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfEAPWO (ORCPT
+        id S1726945AbfEAPXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:22:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43614 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfEAPWN (ORCPT
+        Wed, 1 May 2019 11:23:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39513 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfEAPXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:22:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x41ExFjM181642;
-        Wed, 1 May 2019 15:21:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=i/eVb1RrPCrDgsQYwTIls1vT7PGrIbuHhUptmv1sc2U=;
- b=BsP6AnL/ORY8ld331R4h0ac65YxS73XkP57Vczvh6L/OUPqAHMOzeF1ujrkUCRrgatxc
- jebYYcNYN8gNQ1pZZRlBgRtNrMTisjdd42nTg+Ycd9UXFg6tu7mpm/FPlvNziKb4GHgk
- Ev/rAHicr5ObHUMRbubGeDPRgTwGg3FWy0K33/iF0u2XsYkT68SDeK3uZU5y4oVZ33kj
- +ktkW9kzO8wVZMrVdA8Y+QMoCoV8U1+8O4GynSn3BODBw+OLs3zxFhsPGV8DCVHOV/rL
- f8jPd2DGbY/dStdvsDL4ViC8D5ksbEkNxvDpzU9xr8j+5etNJkZgs8hgSt7qW6slgjfr KA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2s6xhyk8g7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 May 2019 15:21:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x41FIh2M030628;
-        Wed, 1 May 2019 15:19:04 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2s6xhgjet8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 May 2019 15:19:03 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x41FIjxB018467;
-        Wed, 1 May 2019 15:18:46 GMT
-Received: from [192.168.1.16] (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 01 May 2019 08:18:45 -0700
-Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
- Ownership (XPFO)
-To:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@kernel.org>
-Cc:     juergh@gmail.com, tycho@tycho.ws, jsteckli@amazon.de,
-        keescook@google.com, konrad.wilk@oracle.com,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
-        tyhicks@canonical.com, dwmw@amazon.co.uk,
-        andrew.cooper3@citrix.com, jcm@redhat.com,
-        boris.ostrovsky@oracle.com, iommu@lists.linux-foundation.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-security-module@vger.kernel.org,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <cover.1554248001.git.khalid.aziz@oracle.com>
- <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
- <20190417161042.GA43453@gmail.com>
- <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
- <35c4635e-8214-7dde-b4ec-4cb266b2ea10@redhat.com>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <4a47cf86-a05d-3de5-0320-eda06101cc75@oracle.com>
-Date:   Wed, 1 May 2019 09:18:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 11:23:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n25so7336916wmk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 08:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C2dDHqb44ARX3Yztd2XOkkIcS57EqAJiduKSA+40hqY=;
+        b=B4H7Slgo13GVtTdhXOvblWdA307ca2M2Vc9PW/+6I7Zb/SHqGJQat3r7KGswaHwLas
+         +eCx2KBktEsNdXzKYy7NfvvWYZm4BrloOVMeFW3udHFlHW6v6brccesj/0F5QUCmin9Z
+         0po7SPRn1hOGjc0I3RN2zIgYDn/2Y8OJDjwFU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C2dDHqb44ARX3Yztd2XOkkIcS57EqAJiduKSA+40hqY=;
+        b=SFG+PzpL56VKkoqs1mNSlcBPsd6nr5dsNRAK6B9I9iqvqRK2n76TPeLGrlfVpIQdRr
+         vU68Ir9Cyt+IG1hytakFU+lLKwFR2Y9yyPrLDlq+KVZLlbbRrkqSkNAUQ86Y/8KHF6Fw
+         7a3JV1Wh1cxzig71jH+KdCTgM4LIhCYyR8fNwPjz+NWDvj2QKRSx9Cvoud1ODT2zG2kY
+         gquo/IyBulYyE8Wma5I9RjBq3d4mAzzVY0p9vpxG9ePNCAQAKZEasQosDoYBgMaim51U
+         wRbQuPE7gvjuw7Fe5QPrWlYkdwiNUBzGYJC80vc7JZcKZ/fD0flGr4cXtY1hh1zy1xOS
+         bsdA==
+X-Gm-Message-State: APjAAAXmuWj2UcLvEbIEXJava4oYWsxB4J4WFj9ARw40uwYz3EDsNQlp
+        IByeFTvWmdtzQw81ANap4ax38PpDFAr9/YGSuHbJQg==
+X-Google-Smtp-Source: APXvYqyobNQXTfJQ0szO4X40p9tWtHXtsWsksB9cI2BnsZ+fws67LQdUFK01DCztjM7BkmaLesBSpswNH3CLX+lXMIQ=
+X-Received: by 2002:a1c:a843:: with SMTP id r64mr4785280wme.45.1556724190405;
+ Wed, 01 May 2019 08:23:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <35c4635e-8214-7dde-b4ec-4cb266b2ea10@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9243 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905010096
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9243 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905010096
+References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+ <20190501113038.GA7961@e121166-lin.cambridge.arm.com> <20190501125530.GA15590@google.com>
+In-Reply-To: <20190501125530.GA15590@google.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Wed, 1 May 2019 20:52:58 +0530
+Message-ID: <CABe79T5w4hb572KHUhyrwAN7+Xxnz2jF9OGLpfTmAdHuLuO2Fw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] PCIe Host request to reserve IOVA
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>, poza@codeaurora.org,
+        Ray Jui <rjui@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/19 8:49 AM, Waiman Long wrote:
-> On Wed, Apr 03, 2019 at 11:34:04AM -0600, Khalid Aziz wrote:
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt
-> b/Documentation/admin-guide/kernel-parameters.txt
->=20
->> index 858b6c0b9a15..9b36da94760e 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -2997,6 +2997,12 @@
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nox2apic=C2=A0=C2=A0=C2=A0 [X86-64,APIC=
-] Do not enable x2APIC mode.
->>
->> +=C2=A0=C2=A0=C2=A0 noxpfo=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [=
-XPFO] Disable eXclusive Page Frame Ownership (XPFO)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wh=
-en CONFIG_XPFO is on. Physical pages mapped into
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 us=
-er applications will also be mapped in the
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ke=
-rnel's address space as if CONFIG_XPFO was not
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 en=
-abled.
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpu0_hotplug=C2=A0=C2=A0=C2=A0 [X86] Tu=
-rn on CPU0 hotplug feature when
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 CONFIG_BO OTPARAM_HOTPLUG_CPU0 is off.
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 Some features depend on CPU0. Known dependencies are:
->=20
-> Given the big performance impact that XPFO can have. It should be off b=
-y
-> default when configured. Instead, the xpfo option should be used to
-> enable it.
+Hi Bjorn,
 
-Agreed. I plan to disable it by default in the next version of the
-patch. This is likely to end up being a feature for extreme security
-conscious folks only, unless I or someone else comes up with further
-significant performance boost.
+Thank you. Please find my reply below.
 
-Thanks,
-Khalid
+On Wed, May 1, 2019 at 6:25 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, May 01, 2019 at 12:30:38PM +0100, Lorenzo Pieralisi wrote:
+> > On Fri, Apr 12, 2019 at 08:43:32AM +0530, Srinath Mannam wrote:
+> > > Few SOCs have limitation that their PCIe host can't allow few inbound
+> > > address ranges. Allowed inbound address ranges are listed in dma-ranges
+> > > DT property and this address ranges are required to do IOVA mapping.
+> > > Remaining address ranges have to be reserved in IOVA mapping.
+> > >
+> > > PCIe Host driver of those SOCs has to list resource entries of allowed
+> > > address ranges given in dma-ranges DT property in sorted order. This
+> > > sorted list of resources will be processed and reserve IOVA address for
+> > > inaccessible address holes while initializing IOMMU domain.
+> > >
+> > > This patch set is based on Linux-5.0-rc2.
+> > >
+> > > Changes from v3:
+> > >   - Addressed Robin Murphy review comments.
+> > >     - pcie-iproc: parse dma-ranges and make sorted resource list.
+> > >     - dma-iommu: process list and reserve gaps between entries
+> > >
+> > > Changes from v2:
+> > >   - Patch set rebased to Linux-5.0-rc2
+> > >
+> > > Changes from v1:
+> > >   - Addressed Oza review comments.
+> > >
+> > > Srinath Mannam (3):
+> > >   PCI: Add dma_ranges window list
+> > >   iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
+> > >   PCI: iproc: Add sorted dma ranges resource entries to host bridge
+> > >
+> > >  drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
+> > >  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+> > >  drivers/pci/probe.c                 |  3 +++
+> > >  include/linux/pci.h                 |  1 +
+> > >  4 files changed, 66 insertions(+), 1 deletion(-)
+> >
+> > Bjorn, Joerg,
+> >
+> > this series should not affect anything in the mainline other than its
+> > consumer (ie patch 3); if that's the case should we consider it for v5.2
+> > and if yes how are we going to merge it ?
+>
+> I acked the first one
+I will send new patch with change in commit message as per your comment.
+"s/bridge This list/bridge, this list/"
 
+>
+> Robin reviewed the second
+> (https://lore.kernel.org/lkml/e6c812d6-0cad-4cfd-defd-d7ec427a6538@arm.com)
+> (though I do agree with his comment about DMA_BIT_MASK()), Joerg was OK
+> with it if Robin was
+> (https://lore.kernel.org/lkml/20190423145721.GH29810@8bytes.org).
+>
+I will send patch, for "DMA_BIT_MASK(sizeof(dma_addr_t) *
+BITS_PER_BYTE)" change to "~(dma_addr_t)0".
+> Eric reviewed the third (and pointed out a typo).
+I will send a new patch to address this typo.
+>
+> My Kconfiggery never got fully answered -- it looks to me as though it's
+> possible to build pcie-iproc without the DMA hole support, and I thought
+> the whole point of this series was to deal with those holes
+> (https://lore.kernel.org/lkml/20190418234241.GF126710@google.com).  I would
+> have expected something like making pcie-iproc depend on IOMMU_SUPPORT.
+> But Srinath didn't respond to that, so maybe it's not an issue and it
+> should only affect pcie-iproc anyway.
+I am sorry to miss to respond..
+In NO-IOMMU case, All inbound addresses allocated from dma APIs are
+physical addresses of DDR.
+All DDR physical addresses are fall inside given dma-ranges. so that,
+without IOMMU_SUPPORT, will not
+be any issue.
+
+Regards,
+Srinath.
+>
+> So bottom line, I'm fine with merging it for v5.2.  Do you want to merge
+> it, Lorenzo, or ...?
+>
+> Bjorn
