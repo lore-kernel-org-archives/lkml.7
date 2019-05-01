@@ -2,566 +2,196 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	TVD_PH_BODY_ACCOUNTS_PRE autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0844CC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF95C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AFD2089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6727E206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Blt9AVsN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkLdASeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfEAXDh (ORCPT
+        id S1726404AbfEAXDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 19:03:37 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:53369 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfEAXDh (ORCPT
+        Wed, 1 May 2019 19:03:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35312 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfEAXDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 19:03:37 -0400
-Received: by mail-yw1-f73.google.com with SMTP id v127so1079320ywb.20
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 16:03:36 -0700 (PDT)
+        Wed, 1 May 2019 19:03:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f7so581318wrs.2;
+        Wed, 01 May 2019 16:03:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZGugbd6ry3Wlf19Kn+GtsjZdXaG5gr13Xptu5ffd5W8=;
-        b=Blt9AVsNLDcY4dzWPpbbUqOR70Z2yqiMu11f00krd3MJTxoBrHCbZjPNMOfmqUzUlm
-         JoQ2gF3twFejCu7TtwthLPhkQmvI+pmE8VakV2hrGG+DX+VgXkE4LGd4TJZlvNeBsZ8B
-         GMxgX6Umco53wrVpRiic4BgicoDXY0d3Fhu4T2YzAv7oure8ZU1hPeaq4XIBQw7DROUO
-         olkHb0KzDgdTN2n5ayE9AwiKUiGoU7pREdZe80Rc3xCTp3+wMiQjQ0nMpA5mqHfrpEiD
-         YDcZh1Anpr8hUvFaGu1+eabGEvECX8y0t7TQJTMyyJqzlSefENyhxfKn//0WzqSrfw7s
-         eHCA==
+        bh=9dwIam3UIpcq7Xll5Xc0hLS4by0pOvzP1sRyP0/58rI=;
+        b=pkLdASeUDAmknYB3Kxj2XChtbSOk7YvC+ym+Adfae/F1s4GyQzjLAcCBRbc8ENHwPe
+         xQr/hvTsUrssIY2EozTWEOQCjZEz+BamJvgs0V3VfV+rP76+E5HYm7i4ZAH7JaVEAPA+
+         ZeK1MjzNhIB1zVIN0WJ9AJdUXbwMkY6SU5f/UMjn6zaSuntjVELPgzofGg34gKlRx7D7
+         eSwWirk9ShUgt8pUyhtxigNHlw9Soo0C4VcJXAPSbesg0UTbtG18o4knOmTX8o6k5YT1
+         2FgNBmbVstfyO2vXy2j1VEn4Xi7AD6n2aoLQZnV5K4T1VHJelDx56KBsx+wN4Md6Ek+a
+         QOFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=ZGugbd6ry3Wlf19Kn+GtsjZdXaG5gr13Xptu5ffd5W8=;
-        b=IRG8f6vjkYr69t/sNwpDdZdwtzfkKM+jKLo7IOXbAHbk8QpDhahaI6R41vACZyEM/N
-         6Lg43n/BWmCUbZEfF3+y1Lpxje4kJQWTuzfdqTNVjGwWXeAlL9Vxv6jjFfxt+hNEW9u6
-         RyZvEvatUMXgJie927DEU0RgJiN1l7BBhXtHSXq28fZW5NmFgyBX2IY8wuTkc6JrS8U7
-         g0Xvq+sPCLXaiMWr7aNgD73Tgv+V+UROeN4iYmY1I7MJMW4y+35mDnMtkPDiBvOmJcmn
-         mr3tSzhsdT7PtPgbpDLU/JznzWPQP+SFfGMIjGi27wCLoPsL0MtwanjLLwU1KKYVL6IP
-         /nrA==
-X-Gm-Message-State: APjAAAU/e3g9CmGMR7miyJY6sc73RmjxSjbKxgua8zl7hN1JvPPDpiyN
-        EYNrOYciUKJyMSCXFRCcd39DsJ7pjELMywtwZxxaFA==
-X-Google-Smtp-Source: APXvYqzD/aP88Rwq3+lV5P2sQiGmwwwxO51iSW+eD4GJ96LdaOvHlPNRalIRxFHPHpVX9suc+9bmSwJN9Hgpb+Y/smWI9w==
-X-Received: by 2002:a25:c5c8:: with SMTP id v191mr422844ybe.52.1556751816142;
- Wed, 01 May 2019 16:03:36 -0700 (PDT)
-Date:   Wed,  1 May 2019 16:01:14 -0700
-In-Reply-To: <20190501230126.229218-1-brendanhiggins@google.com>
-Message-Id: <20190501230126.229218-6-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH v2 05/17] kunit: test: add the concept of expectations
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com,
-        Brendan Higgins <brendanhiggins@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9dwIam3UIpcq7Xll5Xc0hLS4by0pOvzP1sRyP0/58rI=;
+        b=BJJFdGgleFZX/Fscm54JAXK4bQ+XKE7dAcGj15GFuFSg/jrir0DulK8D+T0ws1vAZ4
+         1aFUU8nOxz6sv9PuH605MDWe8q0+PEEeU48LwJpbbC9R7SfhXGgSa0qFBDxBGPFzeiWu
+         kcvigvHtQeNVZGbG0TYD5LEnT7NluM6fr6OUpP2Z5rupABdxcz5mr+nGXaStOGCb0Qg0
+         l7dHyLFcAJ7GEgN4lR7kJ0XR+GNIvJ5YwzqN7DTHfzofFhukiBTYmX/byQKEucG3+OwG
+         eHIJOmDDkUo9tG/qsrmhH6F+zrgg+J00aIvxbXlipKpgUnQ9YSJ/TLmXWcwkcyKeX3lv
+         PH/g==
+X-Gm-Message-State: APjAAAX6qur2YJtOodoieblt7hOPMjxYglQVEDm9I3tmL4cOVfEZ7uIE
+        nZ1LwmWtPI70QBT0Jvx7jDTobcCNxLZZWsEBtcg=
+X-Google-Smtp-Source: APXvYqxtUeux1nJc2m6hnvZUzCnT9ES2c+qfw6SZO0tQjD1yhuvvaE3dtWzGF9ppq5YnpzPycuOPtCv3nL18iWRl0eM=
+X-Received: by 2002:adf:e811:: with SMTP id o17mr368176wrm.30.1556751823159;
+ Wed, 01 May 2019 16:03:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190426212112.5624-1-fancer.lancer@gmail.com>
+ <20190426212112.5624-2-fancer.lancer@gmail.com> <20190426214631.GV4041@lunn.ch>
+ <20190426233511.qnkgz75ag7axt5lp@mobilestation> <f27df721-47aa-a708-aaee-69be53def814@gmail.com>
+ <CA+h21hpTRCrD=FxDr=ihDPr+Pdhu6hXT3xcKs47-NZZZ3D9zyg@mail.gmail.com>
+ <20190429211225.ce7cspqwvlhwdxv6@mobilestation> <CAFBinCBxgMr6ZkOSGfXZ9VwJML=GnzrL+FSo5jMpN27L2o5+JA@mail.gmail.com>
+In-Reply-To: <CAFBinCBxgMr6ZkOSGfXZ9VwJML=GnzrL+FSo5jMpN27L2o5+JA@mail.gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 2 May 2019 02:03:31 +0300
+Message-ID: <CA+h21hq_4rMXaOgr4ZQjiwwvpKSZmRoTg__PZisWZCz3pzCPOA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] net: phy: realtek: Change TX-delay setting for
+ RGMII modes only
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for expectations, which allow properties to be specified and
-then verified in tests.
+On Wed, 1 May 2019 at 00:16, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+>  Hello Serge,
+>
+> On Mon, Apr 29, 2019 at 11:12 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> [...]
+> > > > > Apparently the current config_init method doesn't support RXID setting.
+> > > > > The patch introduced current function code was submitted by
+> > > > > Martin Blumenstingl in 2016:
+> > > > > https://patchwork.kernel.org/patch/9447581/
+> > > > > and was reviewed by Florian. So we'd better ask him why it was ok to mark
+> > > > > the RGMII_ID as supported while only TX-delay could be set.
+> > > > > I also failed to find anything regarding programmatic rtl8211f delays setting
+> > > > > in the Internet. So at this point we can set TX-delay only for f-model of the PHY.
+> let me give you a bit of context on that patch:
+> most boards (SBCs and TV boxes) with an Amlogic SoC and a Gigabit
+> Ethernet PHY use a Realtek RTL8211F PHY. we were seeing high packet
+> loss when transmitting from the board to another device.
+> it took us very long to understand that a combination of different
+> hardware and driver pieces lead to this issue:
+> - in the MAC driver we enabled a 2ns TX delay by default, like Amlogic
+> does it in their vendor (BSP) kernel
+> - we used the upstream Realtek RTL8211F PHY driver which only enabled
+> the TX delay if requested (it never disabled the TX delay)
+> - hardware defaults or pin strapping of the Realtek RTL8211F PHY
+> enabled the TX delay in the PHY
+>
+> This means that the TX delay was applied twice: once at the MAC and
+> once at the PHY.
+> That lead to high packet loss when transmitting data.
+> To solve that I wrote the patch you mentioned, which has since been
+> ported over to u-boot (for a non-Amlogic related board)
+>
+> > > > > Anyway lets clarify the situation before to proceed further. You are suggesting
+> > > > > to return an error in case if either RGMII_ID or RGMII_RXID interface mode is
+> > > > > requested to be enabled for the PHY. It's fair seeing the driver can't fully
+> > > > > support either of them.
+> I don't have any datasheet for the Realtek RTL8211F PHY and I'm not in
+> the position to get one (company contracts seem to be required for
+> this).
+> Linux is not my main job, I do driver development in my spare time.
+>
+> there may or may not be a register or pin strapping to configure the RX delay.
+> due to this I decided to leave the RX delay behavior "not defined"
+> instead of rejecting RGMII_RXID and RGMII_ID.
+>
+> > > > That is how I read Andrew's suggestion and it is reasonable. WRT to the
+> > > > original changes from Martin, he is probably the one you would want to
+> > > > add to this conversation in case there are any RX delay control knobs
+> > > > available, I certainly don't have the datasheet, and Martin's change
+> > > > looks and looked reasonable, seemingly independent of the direction of
+> > > > this very conversation we are having.
+> the changes in patch 1 are looking good to me (except that I would use
+> phy_modify_paged instead of open-coding it, functionally it's
+> identical with what you have already)
+>
+> I'm not sure about patch 2:
+> personally I would wait for someone to come up with the requirement to
+> use RGMII_RXID with a RTL8211F PHY.
+> that person will then a board to test the changes and (hopefully) a
+> datasheet to explain the RX delay situation with that PHY.
+> that way we only change the RGMII_RXID behavior once (when someone
+> requests support for it) instead of twice (now with your change, later
+> on when someone needs RGMII_RXID support in the RTL8211F driver)
+>
+> that said, the change in patch 2 itself looks fine on Amlogic boards
+> (because all upstream .dts let the MAC generate the TX delay). I
+> haven't runtime-tested your patch there yet.
+> but there seem to be other boards (than the Amlogic ones, the RTL8211F
+> PHY driver discussion in u-boot was not related to an Amlogic board)
+> out there with a RTL8211F PHY (these may or may not be supported in
+> mainline Linux or u-boot and may or may not use RGMII_RXID where you
+> are now changing the behavior). that's not a problem by itself, but
+> you should be aware of this.
+>
+> [...]
+> > rtl8211(e|f) TX/RX delays can be configured either by external pins
+> > strapping or via software registers. This is one of the clue to provide
+> > a proper config_init method code. But not all rtl8211f phys provide
+> > that software register, and if they do it only concerns TX-delay (as we
+> > aware of). So we need to take this into account when creating the updated
+> > versions of these functions.
+> >
+> > (Martin, I also Cc'ed you in this discussion, so if you have anything to
+> > say in this matter, please don't hesitate to comment.)
+> Amlogic boards, such as the Hardkernel Odroid-C1 and Odroid-C2 as well
+> as the Khadas VIM2 use a "RTL8211F" RGMII PHY. I don't know whether
+> there are multiple versions of this PHY. all RTL8211F I have seen so
+> far did behave exactly the same.
+>
+> I also don't know whether the RX delay is configurable (by pin
+> strapping or some register) on RTL8211F PHYs because I don't have
+> access to the datasheet.
+>
+>
+> Martin
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- include/kunit/test.h | 419 +++++++++++++++++++++++++++++++++++++++++++
- kunit/test.c         |  34 ++++
- 2 files changed, 453 insertions(+)
+Hi Martin, Sergey,
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 4668e8a635954..e441270561ece 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -273,4 +273,423 @@ void __printf(3, 4) kunit_printk(const char *level,
- #define kunit_err(test, fmt, ...) \
- 		kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
- 
-+static inline struct kunit_stream *kunit_expect_start(struct kunit *test,
-+						      const char *file,
-+						      const char *line)
-+{
-+	struct kunit_stream *stream = kunit_new_stream(test);
-+
-+	kunit_stream_add(stream, "EXPECTATION FAILED at %s:%s\n\t", file, line);
-+
-+	return stream;
-+}
-+
-+static inline void kunit_expect_end(struct kunit *test,
-+				    bool success,
-+				    struct kunit_stream *stream)
-+{
-+	if (!success)
-+		test->fail(test, stream);
-+	else
-+		kunit_stream_clear(stream);
-+}
-+
-+#define KUNIT_EXPECT_START(test) \
-+		kunit_expect_start(test, __FILE__, __stringify(__LINE__))
-+
-+#define KUNIT_EXPECT_END(test, success, stream) \
-+		kunit_expect_end(test, success, stream)
-+
-+#define KUNIT_EXPECT_MSG(test, success, message, fmt, ...) do {		       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+									       \
-+	kunit_stream_add(__stream, message);				       \
-+	kunit_stream_add(__stream, fmt, ##__VA_ARGS__);			       \
-+	KUNIT_EXPECT_END(test, success, __stream);			       \
-+} while (0)
-+
-+#define KUNIT_EXPECT(test, success, message) do {			       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+									       \
-+	kunit_stream_add(__stream, message);				       \
-+	KUNIT_EXPECT_END(test, success, __stream);			       \
-+} while (0)
-+
-+/**
-+ * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
-+ * @test: The test context object.
-+ *
-+ * The opposite of KUNIT_FAIL(), it is an expectation that cannot fail. In other
-+ * words, it does nothing and only exists for code clarity. See
-+ * KUNIT_EXPECT_TRUE() for more information.
-+ */
-+#define KUNIT_SUCCEED(test) do {} while (0)
-+
-+/**
-+ * KUNIT_FAIL() - Always causes a test to fail when evaluated.
-+ * @test: The test context object.
-+ * @fmt: an informational message to be printed when the assertion is made.
-+ * @...: string format arguments.
-+ *
-+ * The opposite of KUNIT_SUCCEED(), it is an expectation that always fails. In
-+ * other words, it always results in a failed expectation, and consequently
-+ * always causes the test case to fail when evaluated. See KUNIT_EXPECT_TRUE()
-+ * for more information.
-+ */
-+#define KUNIT_FAIL(test, fmt, ...) do {					       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+									       \
-+	kunit_stream_add(__stream, fmt, ##__VA_ARGS__);			       \
-+	KUNIT_EXPECT_END(test, false, __stream);			       \
-+} while (0)
-+
-+/**
-+ * KUNIT_EXPECT_TRUE() - Causes a test failure when the expression is not true.
-+ * @test: The test context object.
-+ * @condition: an arbitrary boolean expression. The test fails when this does
-+ * not evaluate to true.
-+ *
-+ * This and expectations of the form `KUNIT_EXPECT_*` will cause the test case
-+ * to fail when the specified condition is not met; however, it will not prevent
-+ * the test case from continuing to run; this is otherwise known as an
-+ * *expectation failure*.
-+ */
-+#define KUNIT_EXPECT_TRUE(test, condition)				       \
-+		KUNIT_EXPECT(test, (condition),				       \
-+		       "Expected " #condition " is true, but is false.\n")
-+
-+#define KUNIT_EXPECT_TRUE_MSG(test, condition, fmt, ...)		       \
-+		KUNIT_EXPECT_MSG(test, (condition),			       \
-+				"Expected " #condition " is true, but is false.\n",\
-+				fmt, ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_EXPECT_FALSE() - Makes a test failure when the expression is not false.
-+ * @test: The test context object.
-+ * @condition: an arbitrary boolean expression. The test fails when this does
-+ * not evaluate to false.
-+ *
-+ * Sets an expectation that @condition evaluates to false. See
-+ * KUNIT_EXPECT_TRUE() for more information.
-+ */
-+#define KUNIT_EXPECT_FALSE(test, condition)				       \
-+		KUNIT_EXPECT(test, !(condition),			       \
-+		       "Expected " #condition " is false, but is true.")
-+
-+#define KUNIT_EXPECT_FALSE_MSG(test, condition, fmt, ...)		       \
-+		KUNIT_EXPECT_MSG(test, !(condition),			       \
-+				"Expected " #condition " is false, but is true.\n",\
-+				fmt, ##__VA_ARGS__)
-+
-+void kunit_expect_binary_msg(struct kunit *test,
-+			     long long left, const char *left_name,
-+			     long long right, const char *right_name,
-+			     bool compare_result,
-+			     const char *compare_name,
-+			     const char *file,
-+			     const char *line,
-+			     const char *fmt, ...);
-+
-+static inline void kunit_expect_binary(struct kunit *test,
-+				       long long left, const char *left_name,
-+				       long long right, const char *right_name,
-+				       bool compare_result,
-+				       const char *compare_name,
-+				       const char *file,
-+				       const char *line)
-+{
-+	struct kunit_stream *stream = kunit_expect_start(test, file, line);
-+
-+	kunit_stream_add(stream,
-+			 "Expected %s %s %s, but\n",
-+			 left_name, compare_name, right_name);
-+	kunit_stream_add(stream, "\t\t%s == %lld\n", left_name, left);
-+	kunit_stream_add(stream, "\t\t%s == %lld\n", right_name, right);
-+
-+	kunit_expect_end(test, compare_result, stream);
-+}
-+
-+/*
-+ * A factory macro for defining the expectations for the basic comparisons
-+ * defined for the built in types.
-+ *
-+ * Unfortunately, there is no common type that all types can be promoted to for
-+ * which all the binary operators behave the same way as for the actual types
-+ * (for example, there is no type that long long and unsigned long long can
-+ * both be cast to where the comparison result is preserved for all values). So
-+ * the best we can do is do the comparison in the original types and then coerce
-+ * everything to long long for printing; this way, the comparison behaves
-+ * correctly and the printed out value usually makes sense without
-+ * interpretation, but can always be interpretted to figure out the actual
-+ * value.
-+ */
-+#define KUNIT_EXPECT_BINARY(test, left, condition, right) do {		       \
-+	typeof(left) __left = (left);					       \
-+	typeof(right) __right = (right);				       \
-+	kunit_expect_binary(test,					       \
-+			    (long long) __left, #left,			       \
-+			    (long long) __right, #right,		       \
-+			    __left condition __right, #condition,	       \
-+			    __FILE__, __stringify(__LINE__));		       \
-+} while (0)
-+
-+#define KUNIT_EXPECT_BINARY_MSG(test, left, condition, right, fmt, ...) do {   \
-+	typeof(left) __left = (left);					       \
-+	typeof(right) __right = (right);				       \
-+	kunit_expect_binary_msg(test,					       \
-+				(long long) __left, #left,		       \
-+				(long long) __right, #right,		       \
-+				__left condition __right, #condition,	       \
-+				__FILE__, __stringify(__LINE__),	       \
-+				fmt, ##__VA_ARGS__);			       \
-+} while (0)
-+
-+/**
-+ * KUNIT_EXPECT_EQ() - Sets an expectation that @left and @right are equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an expectation that the values that @left and @right evaluate to are
-+ * equal. This is semantically equivalent to
-+ * KUNIT_EXPECT_TRUE(@test, (@left) == (@right)). See KUNIT_EXPECT_TRUE() for
-+ * more information.
-+ */
-+#define KUNIT_EXPECT_EQ(test, left, right) \
-+		KUNIT_EXPECT_BINARY(test, left, ==, right)
-+
-+#define KUNIT_EXPECT_EQ_MSG(test, left, right, fmt, ...)		       \
-+		KUNIT_EXPECT_BINARY_MSG(test,				       \
-+					left,				       \
-+					==,				       \
-+					right,				       \
-+					fmt,				       \
-+					##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_EXPECT_NE() - An expectation that @left and @right are not equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an expectation that the values that @left and @right evaluate to are not
-+ * equal. This is semantically equivalent to
-+ * KUNIT_EXPECT_TRUE(@test, (@left) != (@right)). See KUNIT_EXPECT_TRUE() for
-+ * more information.
-+ */
-+#define KUNIT_EXPECT_NE(test, left, right) \
-+		KUNIT_EXPECT_BINARY(test, left, !=, right)
-+
-+#define KUNIT_EXPECT_NE_MSG(test, left, right, fmt, ...)		       \
-+		KUNIT_EXPECT_BINARY_MSG(test,				       \
-+					left,				       \
-+					!=,				       \
-+					right,				       \
-+					fmt,				       \
-+					##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_EXPECT_LT() - An expectation that @left is less than @right.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an expectation that the value that @left evaluates to is less than the
-+ * value that @right evaluates to. This is semantically equivalent to
-+ * KUNIT_EXPECT_TRUE(@test, (@left) < (@right)). See KUNIT_EXPECT_TRUE() for
-+ * more information.
-+ */
-+#define KUNIT_EXPECT_LT(test, left, right) \
-+		KUNIT_EXPECT_BINARY(test, left, <, right)
-+
-+#define KUNIT_EXPECT_LT_MSG(test, left, right, fmt, ...)		       \
-+		KUNIT_EXPECT_BINARY_MSG(test,				       \
-+					left,				       \
-+					<,				       \
-+					right,				       \
-+					fmt,				       \
-+					##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_EXPECT_LE() - Expects that @left is less than or equal to @right.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an expectation that the value that @left evaluates to is less than or
-+ * equal to the value that @right evaluates to. Semantically this is equivalent
-+ * to KUNIT_EXPECT_TRUE(@test, (@left) <= (@right)). See KUNIT_EXPECT_TRUE() for
-+ * more information.
-+ */
-+#define KUNIT_EXPECT_LE(test, left, right) \
-+		KUNIT_EXPECT_BINARY(test, left, <=, right)
-+
-+#define KUNIT_EXPECT_LE_MSG(test, left, right, fmt, ...)		       \
-+		KUNIT_EXPECT_BINARY_MSG(test,				       \
-+					left,				       \
-+					<=,				       \
-+					right,				       \
-+					fmt,				       \
-+					##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_EXPECT_GT() - An expectation that @left is greater than @right.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an expectation that the value that @left evaluates to is greater than
-+ * the value that @right evaluates to. This is semantically equivalent to
-+ * KUNIT_EXPECT_TRUE(@test, (@left) > (@right)). See KUNIT_EXPECT_TRUE() for
-+ * more information.
-+ */
-+#define KUNIT_EXPECT_GT(test, left, right) \
-+		KUNIT_EXPECT_BINARY(test, left, >, right)
-+
-+#define KUNIT_EXPECT_GT_MSG(test, left, right, fmt, ...)		       \
-+		KUNIT_EXPECT_BINARY_MSG(test,				       \
-+					left,				       \
-+					>,				       \
-+					right,				       \
-+					fmt,				       \
-+					##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_EXPECT_GE() - Expects that @left is greater than or equal to @right.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an expectation that the value that @left evaluates to is greater than
-+ * the value that @right evaluates to. This is semantically equivalent to
-+ * KUNIT_EXPECT_TRUE(@test, (@left) >= (@right)). See KUNIT_EXPECT_TRUE() for
-+ * more information.
-+ */
-+#define KUNIT_EXPECT_GE(test, left, right) \
-+		KUNIT_EXPECT_BINARY(test, left, >=, right)
-+
-+#define KUNIT_EXPECT_GE_MSG(test, left, right, fmt, ...)		       \
-+		KUNIT_EXPECT_BINARY_MSG(test,				       \
-+					left,				       \
-+					>=,				       \
-+					right,				       \
-+					fmt,				       \
-+					##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_EXPECT_STREQ() - Expects that strings @left and @right are equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a null terminated string.
-+ * @right: an arbitrary expression that evaluates to a null terminated string.
-+ *
-+ * Sets an expectation that the values that @left and @right evaluate to are
-+ * equal. This is semantically equivalent to
-+ * KUNIT_EXPECT_TRUE(@test, !strcmp((@left), (@right))). See KUNIT_EXPECT_TRUE()
-+ * for more information.
-+ */
-+#define KUNIT_EXPECT_STREQ(test, left, right) do {			       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+	typeof(left) __left = (left);					       \
-+	typeof(right) __right = (right);				       \
-+									       \
-+	kunit_stream_add(__stream, "Expected " #left " == " #right ", but\n"); \
-+	kunit_stream_add(__stream, "\t\t%s == %s\n", #left, __left);	       \
-+	kunit_stream_add(__stream, "\t\t%s == %s\n", #right, __right);	       \
-+									       \
-+	KUNIT_EXPECT_END(test, !strcmp(left, right), __stream);		       \
-+} while (0)
-+
-+#define KUNIT_EXPECT_STREQ_MSG(test, left, right, fmt, ...) do {	       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+	typeof(left) __left = (left);					       \
-+	typeof(right) __right = (right);				       \
-+									       \
-+	kunit_stream_add(__stream, "Expected " #left " == " #right ", but\n"); \
-+	kunit_stream_add(__stream, "\t\t%s == %s\n", #left, __left);	       \
-+	kunit_stream_add(__stream, "\t\t%s == %s\n", #right, __right);	       \
-+	kunit_stream_add(__stream, fmt, ##__VA_ARGS__);			       \
-+									       \
-+	KUNIT_EXPECT_END(test, !strcmp(left, right), __stream);		       \
-+} while (0)
-+
-+/**
-+ * KUNIT_EXPECT_STRNEQ() - Expects that strings @left and @right are not equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a null terminated string.
-+ * @right: an arbitrary expression that evaluates to a null terminated string.
-+ *
-+ * Sets an expectation that the values that @left and @right evaluate to are
-+ * not equal. This is semantically equivalent to
-+ * KUNIT_EXPECT_TRUE(@test, strcmp((@left), (@right))). See KUNIT_EXPECT_TRUE()
-+ * for more information.
-+ */
-+#define KUNIT_EXPECT_STRNEQ(test, left, right) do {			       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+	typeof(left) __left = (left);					       \
-+	typeof(right) __right = (right);				       \
-+									       \
-+	kunit_stream_add(__stream, "Expected " #left " != " #right ", but\n"); \
-+	kunit_stream_add(__stream, "\t\t%s == %s\n", #left, __left);	       \
-+	kunit_stream_add(__stream, "\t\t%s == %s\n", #right, __right);	       \
-+									       \
-+	KUNIT_EXPECT_END(test, strcmp(left, right), __stream);		       \
-+} while (0)
-+
-+#define KUNIT_EXPECT_STRNEQ_MSG(test, left, right, fmt, ...) do {	       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+	typeof(left) __left = (left);					       \
-+	typeof(right) __right = (right);				       \
-+									       \
-+	kunit_stream_add(__stream, "Expected " #left " != " #right ", but\n"); \
-+	kunit_stream_add(__stream, "\t\t%s == %s\n", #left, __left);	       \
-+	kunit_stream_add(__stream, "\t\t%s == %s\n", #right, __right);	       \
-+	kunit_stream_add(__stream, fmt, ##__VA_ARGS__);			       \
-+									       \
-+	KUNIT_EXPECT_END(test, strcmp(left, right), __stream);		       \
-+} while (0)
-+
-+/**
-+ * KUNIT_EXPECT_NOT_ERR_OR_NULL() - Expects that @ptr is not null and not err.
-+ * @test: The test context object.
-+ * @ptr: an arbitrary pointer.
-+ *
-+ * Sets an expectation that the value that @ptr evaluates to is not null and not
-+ * an errno stored in a pointer. This is semantically equivalent to
-+ * KUNIT_EXPECT_TRUE(@test, !IS_ERR_OR_NULL(@ptr)). See KUNIT_EXPECT_TRUE() for
-+ * more information.
-+ */
-+#define KUNIT_EXPECT_NOT_ERR_OR_NULL(test, ptr) do {			       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+	typeof(ptr) __ptr = (ptr);					       \
-+									       \
-+	if (!__ptr)							       \
-+		kunit_stream_add(__stream,				       \
-+			      "Expected " #ptr " is not null, but is.");       \
-+	if (IS_ERR(__ptr))						       \
-+		kunit_stream_add(__stream,				       \
-+			      "Expected " #ptr " is not error, but is: %ld",   \
-+			      PTR_ERR(__ptr));				       \
-+									       \
-+	KUNIT_EXPECT_END(test, !IS_ERR_OR_NULL(__ptr), __stream);	       \
-+} while (0)
-+
-+#define KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(test, ptr, fmt, ...) do {	       \
-+	struct kunit_stream *__stream = KUNIT_EXPECT_START(test);	       \
-+	typeof(ptr) __ptr = (ptr);					       \
-+									       \
-+	if (!__ptr) {							       \
-+		kunit_stream_add(__stream,				       \
-+			      "Expected " #ptr " is not null, but is.");       \
-+		kunit_stream_add(__stream, fmt, ##__VA_ARGS__);		       \
-+	}								       \
-+	if (IS_ERR(__ptr)) {						       \
-+		kunit_stream_add(__stream,				       \
-+			      "Expected " #ptr " is not error, but is: %ld",   \
-+			      PTR_ERR(__ptr));				       \
-+									       \
-+		kunit_stream_add(__stream, fmt, ##__VA_ARGS__);		       \
-+	}								       \
-+	KUNIT_EXPECT_END(test, !IS_ERR_OR_NULL(__ptr), __stream);	       \
-+} while (0)
-+
- #endif /* _KUNIT_TEST_H */
-diff --git a/kunit/test.c b/kunit/test.c
-index f7575b127e2df..01e82c18b2fa6 100644
---- a/kunit/test.c
-+++ b/kunit/test.c
-@@ -269,3 +269,37 @@ void kunit_printk(const char *level,
- 
- 	va_end(args);
- }
-+
-+void kunit_expect_binary_msg(struct kunit *test,
-+			     long long left, const char *left_name,
-+			     long long right, const char *right_name,
-+			     bool compare_result,
-+			     const char *compare_name,
-+			     const char *file,
-+			     const char *line,
-+			     const char *fmt, ...)
-+{
-+	struct kunit_stream *stream = kunit_expect_start(test, file, line);
-+	struct va_format vaf;
-+	va_list args;
-+
-+	kunit_stream_add(stream,
-+			 "Expected %s %s %s, but\n",
-+			 left_name, compare_name, right_name);
-+	kunit_stream_add(stream, "\t\t%s == %lld\n", left_name, left);
-+	kunit_stream_add(stream, "\t\t%s == %lld", right_name, right);
-+
-+	if (fmt) {
-+		va_start(args, fmt);
-+
-+		vaf.fmt = fmt;
-+		vaf.va = &args;
-+
-+		kunit_stream_add(stream, "\n%pV", &vaf);
-+
-+		va_end(args);
-+	}
-+
-+	kunit_expect_end(test, compare_result, stream);
-+}
-+
--- 
-2.21.0.593.g511ec345e18-goog
+I had another look and it seems that Realtek has designated the same
+PHY ID for the RTL8211F and RTL8211FS. However the F is a 40-pin
+package and the FS is a 48-pin package. The datasheet for the F
+doesn't mention about the MDIO bit for TXDLY being implemented,
+whereas for FS it does. That can mean anything, really, but as I only
+have access to a board with the FS chip, I can't easily check. Maybe
+Martin can confirm that his chip's designation is really not FS.
+But my point still remains, though. The F and FS share the same PHY
+ID, and one supports only RGMII while the other can be configured for
+SGMII as well. Good luck being ultra-correct in the phy-mode checking
+when you can't distinguish the chip. But in general DT description is
+chief and should not be contradicted. Perhaps an argument could be
+made for the RGMII delays as they constitute an exception to the "HW
+description" rule.
 
+Thanks,
+-Vladimir
