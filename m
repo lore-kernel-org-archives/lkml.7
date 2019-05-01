@@ -2,135 +2,115 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB26CC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FD2C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A826A205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBE320651
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EozbuQL5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TGXTwv7p"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IaT2UBQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfEAOZs (ORCPT
+        id S1726761AbfEAO3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 10:25:48 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34290 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfEAOZr (ORCPT
+        Wed, 1 May 2019 10:29:52 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:9719 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfEAO3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 10:25:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 197DA601C4; Wed,  1 May 2019 14:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556720746;
-        bh=bDbtm8CMC90CAwMbWbrZQYJY7BBDEyAzThnSYcHAuyA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EozbuQL51YR6wuirjWo2GANM09ysjBEw0FKWqLZ74QHI6J0xUiwotvRsqZQfJvz4O
-         ZjRnGKHINand56bc4sqAqgs6/YV0UvZYaMPVzeLBtVi8HEXTn7ejzx8NumTAuXl52z
-         itjs0TD6+k1lL0bV4xkEBA/NbHJSwzruneNph7o4=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61120601C4;
-        Wed,  1 May 2019 14:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556720745;
-        bh=bDbtm8CMC90CAwMbWbrZQYJY7BBDEyAzThnSYcHAuyA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TGXTwv7pmGksjnVhJGpyQJlF0qI5KQTjjiACABVMVOJLk1OJXMCkFtpNc0kWrH/8R
-         tPiAhxrdAZujasXNx7ISwIGGyUWGDFrNJYgZDFwDWc7/PVEcxGaPZZxnE6UkhE7MNP
-         EC8MIIWohEDaYQztYLNGngTn1hoAvf/W+QfMRiJU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61120601C4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v3 5/6] clk: qcom: Add MSM8998 Multimedia Clock Controller
- (MMCC) driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, agross@kernel.org,
-        marc.w.gonzalez@free.fr, david.brown@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
- <1556677642-29428-1-git-send-email-jhugo@codeaurora.org>
- <20190501034314.GE2938@tuxbook-pro>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <0513163c-5088-6168-64fb-04fa51f711fa@codeaurora.org>
-Date:   Wed, 1 May 2019 08:25:44 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Wed, 1 May 2019 10:29:52 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cc9ad400000>; Wed, 01 May 2019 07:29:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 01 May 2019 07:29:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 01 May 2019 07:29:51 -0700
+Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 May
+ 2019 14:29:50 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 1 May 2019 14:29:50 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.21.132.148]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cc9ad5d0003>; Wed, 01 May 2019 07:29:50 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH] ASoC: max98090: Fix restore of DAPM Muxes
+Date:   Wed, 1 May 2019 15:29:38 +0100
+Message-ID: <1556720978-13233-1-git-send-email-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20190501034314.GE2938@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1556720960; bh=xzT+9ba+DceKVlRkNgzKqIKE7WlhmlwTc7GlIb8E9ro=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=IaT2UBQzynNCN/2eXAVNDVLxSkZSDCAzS0LclJG1c3uS6XbayGWgg7i1NAGp7RZMF
+         PEEvqulVMyj29lGIme6Oxtgfoq0dEDr90f94ooyYI486Py/IdmcAS1wliKT5wuUAZj
+         1jva8sARGHkQqAYL61yFpXxKs0Z2uDxW3QLm8sslA0kNo61Q3wABU/1eKw7+OFK2+c
+         I+GfliL5FUFPU5DwhBb/1WlFaYWFy7njqV9XNFUYGJHkhaal3prKpFKyrNsDN+I8x8
+         k3gT7XPbrwG/46mL4qobH9/wdExfoo1Hn0vxIcJplCsyX+3EyeZxAft7IGkNPh0pcY
+         wiRkdWGYy1PQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/2019 9:43 PM, Bjorn Andersson wrote:
-> On Tue 30 Apr 19:27 PDT 2019, Jeffrey Hugo wrote:
->> +static const struct of_device_id mmcc_msm8998_match_table[] = {
->> +	{ .compatible = "qcom,mmcc-msm8998" },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, mmcc_msm8998_match_table);
->> +
->> +static int mmcc_msm8998_probe(struct platform_device *pdev)
->> +{
->> +	struct regmap *regmap;
->> +
-> 
-> Don't you want to wait for "xo" here as well?
+The max98090 driver defines 3 DAPM muxes; one for the right line output
+(LINMOD Mux), one for the left headphone mixer source (MIXHPLSEL Mux)
+and one for the right headphone mixer source (MIXHPRSEL Mux). The same
+bit is used for the mux as well as the DAPM enable, and although the mux
+can be correctly configured, after playback has completed, the mux will
+be reset during the disable phase. This is preventing the state of these
+muxes from being saved and restored correctly on system reboot. Fix this
+by marking these muxes as SND_SOC_NOPM.
 
-No, I don't want to.  As far as I recall, Stephen would like to make a 
-clear divide between clock providers, and clock consumers.  Since we 
-have the uart issue in gcc, and gcc is pretty critical to the entire 
-SoC, it seems like there is a reason (not sure I'd call it "good") to 
-wait for xo there.
+Note this has been verified this on the Tegra124 Nyan Big which features
+the MAX98090 codec.
 
-Here, I'm less confident in the reasoning.  mmcc is not really critical 
-to the SoC, and everything it services is "optional".  If you have a 
-headless system with no display output, you won't even need it.  On 
-system where there is a display, I expect the realistic driver ordering 
-to be that everything which consumes a mmcc clock to come up well after 
-xo is available.
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+If this is the correct fix for this issue, can we tag this for stable?
+Or I can re-send with the stable tag. However, wanted to send out for
+review first.
 
-In short, seems like a bit of a kludge to maybe avoid an issue which 
-doesn't seem like would happen.
+ sound/soc/codecs/max98090.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> 
->> +	regmap = qcom_cc_map(pdev, &mmcc_msm8998_desc);
->> +	if (IS_ERR(regmap))
->> +		return PTR_ERR(regmap);
->> +
->> +	return qcom_cc_really_probe(pdev, &mmcc_msm8998_desc, regmap);
->> +}
-> [..]
->> +MODULE_DESCRIPTION("QCOM MMCC MSM8998 Driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:mmcc-msm8998");
-> 
-> MODULE_DEVICE_TABLE() will provide the alias for module auto loading, so
-> drop this.
-
-Huh.  I did not know that.  Will put on the list to fixup.
-
-> 
-> Regards,
-> Bjorn
-> 
-
-
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index 30c242c38d99..7619ea31ab50 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1194,14 +1194,14 @@ static const struct snd_soc_dapm_widget max98090_dapm_widgets[] = {
+ 		&max98090_right_rcv_mixer_controls[0],
+ 		ARRAY_SIZE(max98090_right_rcv_mixer_controls)),
+ 
+-	SND_SOC_DAPM_MUX("LINMOD Mux", M98090_REG_LOUTR_MIXER,
+-		M98090_LINMOD_SHIFT, 0, &max98090_linmod_mux),
++	SND_SOC_DAPM_MUX("LINMOD Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_linmod_mux),
+ 
+-	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPLSEL_SHIFT, 0, &max98090_mixhplsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhplsel_mux),
+ 
+-	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPRSEL_SHIFT, 0, &max98090_mixhprsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhprsel_mux),
+ 
+ 	SND_SOC_DAPM_PGA("HP Left Out", M98090_REG_OUTPUT_ENABLE,
+ 		M98090_HPLEN_SHIFT, 0, NULL, 0),
 -- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.7.4
+
