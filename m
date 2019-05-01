@@ -2,159 +2,55 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD63C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20341C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9906B2085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52202085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfEANN6 (ORCPT
+        id S1726478AbfEANQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 09:13:58 -0400
-Received: from verein.lst.de ([213.95.11.211]:52884 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbfEANN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 09:13:58 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 6CF0168AFE; Wed,  1 May 2019 15:13:39 +0200 (CEST)
-Date:   Wed, 1 May 2019 15:13:39 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Ley Foon Tan <lftan@altera.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
-Subject: [PATCH 5/7 v2] MIPS: use the generic uncached segment support in
- dma-direct
-Message-ID: <20190501131339.GA890@lst.de>
-References: <20190430110032.25301-1-hch@lst.de> <20190430110032.25301-6-hch@lst.de> <20190430201041.536amvinrcvd2wua@pburton-laptop> <20190430202947.GA30262@lst.de> <20190430211105.ielntedm46uqamca@pburton-laptop>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430211105.ielntedm46uqamca@pburton-laptop>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Wed, 1 May 2019 09:16:39 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60656 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbfEANQj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 09:16:39 -0400
+Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 31A2D146D4354;
+        Wed,  1 May 2019 06:16:38 -0700 (PDT)
+Date:   Wed, 01 May 2019 09:16:36 -0400 (EDT)
+Message-Id: <20190501.091636.921976773535468727.davem@davemloft.net>
+To:     jan.kiszka@siemens.com
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        baocheng.su@siemens.com, andy.shevchenko@gmail.com
+Subject: Re: [PATCH] stmmac: pci: Fix typo in IOT2000 comment
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <59169e7b-d58c-8c7e-e644-f8a7c8f60188@siemens.com>
+References: <59169e7b-d58c-8c7e-e644-f8a7c8f60188@siemens.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 01 May 2019 06:16:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stop providing our arch alloc/free hooks and just expose the segment
-offset instead.
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Date: Mon, 29 Apr 2019 07:51:44 +0200
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/mips/Kconfig              |  1 +
- arch/mips/include/asm/page.h   |  3 ---
- arch/mips/jazz/jazzdma.c       |  6 ------
- arch/mips/mm/dma-noncoherent.c | 26 +++++++++-----------------
- 4 files changed, 10 insertions(+), 26 deletions(-)
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 4a5f5b0ee9a9..cde4b490f3c7 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -9,6 +9,7 @@ config MIPS
- 	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UNCACHED_SEGMENT
- 	select ARCH_SUPPORTS_UPROBES
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
-diff --git a/arch/mips/include/asm/page.h b/arch/mips/include/asm/page.h
-index 6b31c93b5eaa..23e0f1386e04 100644
---- a/arch/mips/include/asm/page.h
-+++ b/arch/mips/include/asm/page.h
-@@ -258,9 +258,6 @@ extern int __virt_addr_valid(const volatile void *kaddr);
- 	 ((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0) | \
- 	 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
- 
--#define UNCAC_ADDR(addr)	(UNCAC_BASE + __pa(addr))
--#define CAC_ADDR(addr)		((unsigned long)__va((addr) - UNCAC_BASE))
--
- #include <asm-generic/memory_model.h>
- #include <asm-generic/getorder.h>
- 
-diff --git a/arch/mips/jazz/jazzdma.c b/arch/mips/jazz/jazzdma.c
-index bedb5047aff3..1804dc9d8136 100644
---- a/arch/mips/jazz/jazzdma.c
-+++ b/arch/mips/jazz/jazzdma.c
-@@ -575,10 +575,6 @@ static void *jazz_dma_alloc(struct device *dev, size_t size,
- 		return NULL;
- 	}
- 
--	if (!(attrs & DMA_ATTR_NON_CONSISTENT)) {
--		dma_cache_wback_inv((unsigned long)ret, size);
--		ret = (void *)UNCAC_ADDR(ret);
--	}
- 	return ret;
- }
- 
-@@ -586,8 +582,6 @@ static void jazz_dma_free(struct device *dev, size_t size, void *vaddr,
- 		dma_addr_t dma_handle, unsigned long attrs)
- {
- 	vdma_free(dma_handle);
--	if (!(attrs & DMA_ATTR_NON_CONSISTENT))
--		vaddr = (void *)CAC_ADDR((unsigned long)vaddr);
- 	dma_direct_free_pages(dev, size, vaddr, dma_handle, attrs);
- }
- 
-diff --git a/arch/mips/mm/dma-noncoherent.c b/arch/mips/mm/dma-noncoherent.c
-index f9549d2fbea3..ed56c6fa7be2 100644
---- a/arch/mips/mm/dma-noncoherent.c
-+++ b/arch/mips/mm/dma-noncoherent.c
-@@ -44,33 +44,25 @@ static inline bool cpu_needs_post_dma_flush(struct device *dev)
- 	}
- }
- 
--void *arch_dma_alloc(struct device *dev, size_t size,
--		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
-+void arch_dma_prep_coherent(struct page *page, size_t size)
- {
--	void *ret;
--
--	ret = dma_direct_alloc_pages(dev, size, dma_handle, gfp, attrs);
--	if (ret && !(attrs & DMA_ATTR_NON_CONSISTENT)) {
--		dma_cache_wback_inv((unsigned long) ret, size);
--		ret = (void *)UNCAC_ADDR(ret);
--	}
-+	dma_cache_wback_inv((unsigned long)page_address(page), size);
-+}
- 
--	return ret;
-+void *uncached_kernel_address(void *addr)
-+{
-+	return (void *)(__pa(addr) + UNCAC_BASE);
- }
- 
--void arch_dma_free(struct device *dev, size_t size, void *cpu_addr,
--		dma_addr_t dma_addr, unsigned long attrs)
-+void *cached_kernel_address(void *addr)
- {
--	if (!(attrs & DMA_ATTR_NON_CONSISTENT))
--		cpu_addr = (void *)CAC_ADDR((unsigned long)cpu_addr);
--	dma_direct_free_pages(dev, size, cpu_addr, dma_addr, attrs);
-+	return __va(addr) - UNCAC_BASE;
- }
- 
- long arch_dma_coherent_to_pfn(struct device *dev, void *cpu_addr,
- 		dma_addr_t dma_addr)
- {
--	unsigned long addr = CAC_ADDR((unsigned long)cpu_addr);
--	return page_to_pfn(virt_to_page((void *)addr));
-+	return page_to_pfn(virt_to_page(cached_kernel_address(cpu_addr)));
- }
- 
- pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
--- 
-2.20.1
-
+Applied.
