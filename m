@@ -2,184 +2,137 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECEFC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179A6C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332A920866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23392081C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9jW4+Wf"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="BXpRmV+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfEAXMo (ORCPT
+        id S1726197AbfEAXZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 19:12:44 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44978 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfEAXMo (ORCPT
+        Wed, 1 May 2019 19:25:20 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44596 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfEAXZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 19:12:44 -0400
-Received: by mail-pl1-f193.google.com with SMTP id l2so101509plt.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 16:12:43 -0700 (PDT)
+        Wed, 1 May 2019 19:25:20 -0400
+Received: by mail-qt1-f193.google.com with SMTP id s10so456698qtc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 16:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=xkHY0Vk0CxJ06DIPyqIQG5n7Y+l7wmOyvhLV4dHGd9M=;
-        b=C9jW4+Wf+dG9vgT4hlyOesCrC6DT31u4n5QFfZ4h83VmJwVBANCoa2/4T7aNfba6O/
-         Knev24dh6CyFTdVrpgU/LF1LvjWfogUqgxcQpxw0jJknCi09EFFhBTFVnDBhZ1IIUjjP
-         SWfdvb4gNYZInR0Poe2Cc0xZY0C+qsmoyhn/oMeSlpZ9MEor77ihhqx2bbsWLDFChWCi
-         6n8XsSL6uEnRD7wSNTbC62rw8zEdy/XYk0Ri+YLGy3jMA1vuZ8JV7tMEUOkBTg8oqI2e
-         0c4Cu4BdaxiN5JFG+g5yZcwZThco7XvxoXDbdR0NICQ1jIJ6yCiNagCiXWDb1oKz0UEe
-         bNNA==
+        d=soleen.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AH9bebtrf3dfxBIvf5hyUAJKcC8A07SNFaz6GXtYOok=;
+        b=BXpRmV+6OvhC688uYI7duSFxoIJaSy5qGca6z3Jg/huzWFwaDds/rsuOmCgs+X/2D6
+         nBypKSCBxfF4R11Now1TSKhdmOMcrt3KkOdbhBH0StpDAk0pUqh67sdtSS9SmVYGhDUk
+         /99rNYVp/l9SQQD1woxx4wplZpwQh7L398wBwiSgokkpiSyf3soHy/rfnupj45f8qETL
+         3Zbbo4Qv4rbnpxEJ3d7hMOa96+c1exFDA5YIp3AA2vuT6pZa8bi7DOkFM2mh3N66ok6F
+         IOCT3T8WXbGp8+s6DBvFxEJp6jdS5SHiiuzhxHnHHGQ0ViVh7R+puVcqX8lGPsNsV6j6
+         gf/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=xkHY0Vk0CxJ06DIPyqIQG5n7Y+l7wmOyvhLV4dHGd9M=;
-        b=HP2eYlteogQ5pz+IcR9NloftxP6DfhIpzjpPTl4JJ3cr6YTbIfcM4Vcu+MXNhHzFe8
-         WTTwCZXiuRfAAZJ++EPb8lRNynWIvGxz43ik44E7VYOP4iYfM9LSPIyVR0nlz++I2NIl
-         s0B/7ZcnRcwIWWeq2hgm+2sW41YTQlG1Slb0x8OaHv/iOpnI7UZzIjJkn5HYehI0JIuu
-         CZWOw6vAB3qQJKtjE8FJLeHe4V4XZSlNi+9PJdm+v/OmzNbexHIVX4LhE7gz8kYfpz+j
-         Ara94J16CcWxplytrkDr4RBINSuZidgK8UPjy64+WQBzKb/d37Y4UGxumyCDRIhRLQUi
-         l27w==
-X-Gm-Message-State: APjAAAXJcO/3BpS0pcEoyiWp3GhUHDQdFfEoEsEWhDZ6uNqF77sqYgQY
-        HJSCgvP9QY+LOGNlDHXbRpTEHRvM
-X-Google-Smtp-Source: APXvYqyyNUsriZFwlNNi9BYNctRtO2Ir6dekDtDCQOGJakWCRwdlJTZtC/P8pWDGVUU7/R80WMqfNQ==
-X-Received: by 2002:a17:902:302:: with SMTP id 2mr275822pld.232.1556752363524;
-        Wed, 01 May 2019 16:12:43 -0700 (PDT)
-Received: from localhost ([61.68.7.233])
-        by smtp.gmail.com with ESMTPSA id i10sm93944058pfj.7.2019.05.01.16.12.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AH9bebtrf3dfxBIvf5hyUAJKcC8A07SNFaz6GXtYOok=;
+        b=raUU5tQ8p5k16TDzmUUSOHhrKWuFoE49/34qkcGB1waIt3YzBgox9MrX5ND6kbFDOT
+         RkumGBft+ekvstzs7F2AxxRaynckY0aM3YS1QlxTTSwflP9mE/gtfEqnpfa2USrusvVD
+         V48h51aRmFDHHBPjSiASkavHzRzroBdazlIVafOMmN7Ooa7QqXTg8TLKitfUBDFVNCbc
+         9VptpXVtgSDL9+yXD1N/a2avWHuYFn7Bs5Fn+iwNiPH4bLf72vGE5rvwfGLSI7ZgKRCL
+         1865Ri3KiPzzI18N4XK+OMYmekNHdLw+LZw63Q1yNOeqeWfq9Rh7oHAW7tPzoXA4yhOQ
+         k0gw==
+X-Gm-Message-State: APjAAAUcR20xMuV6OPVZm0S4/Eczv6I5txx2IbO0UFDGR5uceoWRXKY4
+        M1o2hVzQSzUnzB7lvFY++cF3RQ==
+X-Google-Smtp-Source: APXvYqz0BDqKG+Q2jzUmKI5xzLPAvNPYQjFLDLv988MLkpQr6Ryuk0h2Lnb2Pj89t7Bct/URoLhIMw==
+X-Received: by 2002:ac8:27aa:: with SMTP id w39mr658332qtw.227.1556753119438;
+        Wed, 01 May 2019 16:25:19 -0700 (PDT)
+Received: from soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net ([40.117.208.181])
+        by smtp.gmail.com with ESMTPSA id 62sm13373216qtf.89.2019.05.01.16.25.18
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 16:12:42 -0700 (PDT)
-Date:   Thu, 02 May 2019 09:12:34 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v4] powerpc/pseries: Remove limit in wait for dying CPU
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-References: <20190423223914.3882-1-bauerman@linux.ibm.com>
-        <877ebbsb8u.fsf@linux.ibm.com> <87v9yve02x.fsf@morokweng.localdomain>
-        <8736lyrzmh.fsf@linux.ibm.com>
-In-Reply-To: <8736lyrzmh.fsf@linux.ibm.com>
+        Wed, 01 May 2019 16:25:18 -0700 (PDT)
+Date:   Wed, 1 May 2019 23:25:17 +0000
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        david@redhat.com
+Subject: Re: [PATCH v6 01/12] mm/sparsemem: Introduce struct mem_section_usage
+Message-ID: <20190501232517.crbmgcuk7u4gvujr@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1556752043.jyg2z3kgaw.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nathan Lynch's on May 2, 2019 12:57 am:
-> Hi Thiago,
->=20
-> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
->> Nathan Lynch <nathanl@linux.ibm.com> writes:
->>> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
->>>> +		while (true) {
->>>>  			cpu_status =3D smp_query_cpu_stopped(pcpu);
->>>>  			if (cpu_status =3D=3D QCSS_STOPPED ||
->>>>  			    cpu_status =3D=3D QCSS_HARDWARE_ERROR)
->>>>  				break;
->>>> -			cpu_relax();
->>>> +			udelay(100);
->>>>  		}
->>>>  	}
->>>
->>> I agree with looping indefinitely but doesn't it need a cond_resched()
->>> or similar check?
->>
->> If there's no kernel or hypervisor bug, it shouldn't take more than a
->> few tens of ms for this loop to complete (Gautham measured a maximum of
->> 10 ms on a POWER9 with an earlier version of this patch).
->=20
-> 10ms is twice the default scheduler quantum...
->=20
->=20
->> In case of bugs related to CPU hotplug (either in the kernel or the
->> hypervisor), I was hoping that the resulting lockup warnings would be a
->> good indicator that something is wrong. :-)
->=20
-> Not convinced we should assume something is wrong if it takes a few
-> dozen ms to complete the operation.
+On 19-04-17 11:39:00, Dan Williams wrote:
+> Towards enabling memory hotplug to track partial population of a
+> section, introduce 'struct mem_section_usage'.
+> 
+> A pointer to a 'struct mem_section_usage' instance replaces the existing
+> pointer to a 'pageblock_flags' bitmap. Effectively it adds one more
+> 'unsigned long' beyond the 'pageblock_flags' (usemap) allocation to
+> house a new 'map_active' bitmap.  The new bitmap enables the memory
+> hot{plug,remove} implementation to act on incremental sub-divisions of a
+> section.
+> 
+> The primary motivation for this functionality is to support platforms
+> that mix "System RAM" and "Persistent Memory" within a single section,
+> or multiple PMEM ranges with different mapping lifetimes within a single
+> section. The section restriction for hotplug has caused an ongoing saga
+> of hacks and bugs for devm_memremap_pages() users.
+> 
+> Beyond the fixups to teach existing paths how to retrieve the 'usemap'
+> from a section, and updates to usemap allocation path, there are no
+> expected behavior changes.
+> 
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  include/linux/mmzone.h |   23 ++++++++++++--
+>  mm/memory_hotplug.c    |   18 ++++++-----
+>  mm/page_alloc.c        |    2 +
+>  mm/sparse.c            |   81 ++++++++++++++++++++++++------------------------
+>  4 files changed, 71 insertions(+), 53 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 70394cabaf4e..f0bbd85dc19a 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1160,6 +1160,19 @@ static inline unsigned long section_nr_to_pfn(unsigned long sec)
+>  #define SECTION_ALIGN_UP(pfn)	(((pfn) + PAGES_PER_SECTION - 1) & PAGE_SECTION_MASK)
+>  #define SECTION_ALIGN_DOWN(pfn)	((pfn) & PAGE_SECTION_MASK)
+>  
+> +#define SECTION_ACTIVE_SIZE ((1UL << SECTION_SIZE_BITS) / BITS_PER_LONG)
+> +#define SECTION_ACTIVE_MASK (~(SECTION_ACTIVE_SIZE - 1))
+> +
+> +struct mem_section_usage {
+> +	/*
+> +	 * SECTION_ACTIVE_SIZE portions of the section that are populated in
+> +	 * the memmap
+> +	 */
+> +	unsigned long map_active;
 
-Right, and if there is no kernel or hypervisor bug then it will stop
-eventually :)
+I think this should be proportional to section_size / subsection_size.
+For example, on intel section size = 128M, and subsection is 2M, so
+64bits work nicely. But, on arm64 section size if 1G, so subsection is
+16M.
 
-> AFAIK we don't have any guarantees
-> about the maximum latency of stop-self, and it can be affected by other
-> activity in the system, whether we're in shared processor mode, etc. Not
-> to mention smp_query_cpu_stopped has to acquire the global RTAS lock and
-> be serialized with other tasks calling into RTAS. So I am concerned
-> about generating spurious warnings here.
-
-Agreed.
-
->=20
-> If for whatever reason the operation is taking too long, drmgr or
-> whichever application is initiating the change will appear to stop
-> making progress. It's not too hard to find out what's going on with
-> facilities like perf or /proc/pid/stack.
->=20
->=20
->> Though perhaps adding a cond_resched() every 10 ms or so, with a
->> WARN_ON() if it loops for more than 50 ms would be better.
->=20
-> A warning doesn't seem appropriate to me, and cond_resched should be
-> invoked in each iteration. Or just msleep(1) in each iteration would be
-> fine, I think.
->=20
-> But I'd like to bring in some more context -- here is the body of
-> pseries_cpu_die:
->=20
-> static void pseries_cpu_die(unsigned int cpu)
-> {
-> 	int tries;
-> 	int cpu_status =3D 1;
-> 	unsigned int pcpu =3D get_hard_smp_processor_id(cpu);
->=20
-> 	if (get_preferred_offline_state(cpu) =3D=3D CPU_STATE_INACTIVE) {
-> 		cpu_status =3D 1;
-> 		for (tries =3D 0; tries < 5000; tries++) {
-> 			if (get_cpu_current_state(cpu) =3D=3D CPU_STATE_INACTIVE) {
-> 				cpu_status =3D 0;
-> 				break;
-> 			}
-> 			msleep(1);
-> 		}
-> 	} else if (get_preferred_offline_state(cpu) =3D=3D CPU_STATE_OFFLINE) {
->=20
-> 		for (tries =3D 0; tries < 25; tries++) {
-> 			cpu_status =3D smp_query_cpu_stopped(pcpu);
-> 			if (cpu_status =3D=3D QCSS_STOPPED ||
-> 			    cpu_status =3D=3D QCSS_HARDWARE_ERROR)
-> 				break;
-> 			cpu_relax();
-> 		}
-> }
->=20
-> This patch alters the behavior of the second loop (the CPU_STATE_OFFLINE
-> branch). The CPU_STATE_INACTIVE branch is used when the offline behavior
-> is to use H_CEDE instead of stop-self, correct?
->=20
-> And isn't entering H_CEDE expected to be quite a bit faster than
-> stop-self? If so, why does that path get five whole seconds[*] while
-> we're bikeshedding about tens of milliseconds for stop-self? :-)
->=20
-> [*] And should it be made to retry indefinitely as well?
-
-I think so.
-
-Thanks,
-Nick
-=
+On the other hand 16M is already much better than what we have: with 1G
+section size and 2M pmem alignment we guaranteed to loose 1022M. And
+with 16M subsection it is only 14M.
