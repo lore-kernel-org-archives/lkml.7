@@ -2,128 +2,154 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C099C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A58C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C2120835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1900320835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:54:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mdmHe26O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfEAQw3 (ORCPT
+        id S1726726AbfEAQyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:52:29 -0400
-Received: from muru.com ([72.249.23.125]:47784 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfEAQw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:52:29 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A1185805C;
-        Wed,  1 May 2019 16:52:44 +0000 (UTC)
-Date:   Wed, 1 May 2019 09:52:24 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     "kernelci.org bot" <bot@kernelci.org>, Tejun Heo <tj@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org
-Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
-Message-ID: <20190501165224.GK8007@atomide.com>
-References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
- <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
- <20190501162944.GW8004@atomide.com>
- <20190501164444.iclxlzrxofqnj4bn@linutronix.de>
+        Wed, 1 May 2019 12:54:07 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43043 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfEAQyG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 12:54:06 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e67so8838088pfe.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 09:54:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xONlzx3IaXMZ6M2dIMHdENsla+SllYiw67kc5eZCItg=;
+        b=mdmHe26OBi9kOgFFLbKVTkeFrr/oF7ylBvU855Q+odT/xOzuTNul9rItz3QAEJD0Oe
+         IYQEGUcYenG1Hvwks5L36dSwARhC5uiRVulTqgCNAuiBvmJ86HlXK9xxNZ4mc3xI/TOh
+         m0ZYdFFI2iGNENCIsW+jnZIjhpRhyBOyXL9R9qgx/iPr0MgejOrJwkZQ9z/jPOATBchZ
+         ljykq3BK8ezWbsX2WJVG9i/qDXnwLuQ8wIzuFbKOqMIO5F1BJK3ocgrKxgeZKags1cWH
+         Uo6z0T7WEKDsgyiLA92M+r8PxjRC65a8GzXoV0Nix+j780MTA95B4UEScAdGlBv6WSAh
+         +1sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xONlzx3IaXMZ6M2dIMHdENsla+SllYiw67kc5eZCItg=;
+        b=osDxIg9muxXcecQEKqS8Az1QMXncSiR3PFzesYlUdGgwMFNo0iqtBPvzVYSLsCuxFg
+         TQBLUdiCuqIAOXkph5vw4e896gl6oaQOnO/uu2nibW5tOe6HosuuNG2XSik4p6BVkmWp
+         uuc32wo+TIOQeRZPTI5YqSVm+Gpxc/iq2api15YB7cOO474qBaiQ/fj8E9Aqg95W5FBx
+         +n4lf6MGg6kOvu8CA7hDggFlNcFFt+dwciGtoSg5UsjKQH1udmeNzOvCgaKE5rfDGnrR
+         XckvhvAcsqi7wcr/ZMxUv6uPGoKUn5yEG52sdQN6xpBNkCnp06TMzUKn2i+wR4iO1DKl
+         TYlQ==
+X-Gm-Message-State: APjAAAUmiTzP/ippE1LKuB8sF5Go+JqLxyOBejwJnW72ecNUglSXaPyL
+        KCFNRHJDoOjW1e7O/SYw5AA1YQ==
+X-Google-Smtp-Source: APXvYqzfb2xrwvHBji0xFCXOTmqgNI8ofWQ4r1hEacPKpw22h+6vWrHSlazGTj5++rju1N8fNQ4TEg==
+X-Received: by 2002:aa7:8e14:: with SMTP id c20mr47798607pfr.14.1556729645920;
+        Wed, 01 May 2019 09:54:05 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 4sm4316877pfd.55.2019.05.01.09.54.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 09:54:04 -0700 (PDT)
+Date:   Wed, 1 May 2019 09:54:06 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, agross@kernel.org,
+        marc.w.gonzalez@free.fr, david.brown@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] clk: qcom: Add MSM8998 Multimedia Clock
+ Controller (MMCC) driver
+Message-ID: <20190501165406.GI2938@tuxbook-pro>
+References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
+ <1556677642-29428-1-git-send-email-jhugo@codeaurora.org>
+ <20190501034314.GE2938@tuxbook-pro>
+ <0513163c-5088-6168-64fb-04fa51f711fa@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501164444.iclxlzrxofqnj4bn@linutronix.de>
+In-Reply-To: <0513163c-5088-6168-64fb-04fa51f711fa@codeaurora.org>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Sebastian Andrzej Siewior <bigeasy@linutronix.de> [190501 16:45]:
-> On 2019-05-01 09:29:44 [-0700], Tony Lindgren wrote:
-> > Hi,
+On Wed 01 May 07:25 PDT 2019, Jeffrey Hugo wrote:
+
+> On 4/30/2019 9:43 PM, Bjorn Andersson wrote:
+> > On Tue 30 Apr 19:27 PDT 2019, Jeffrey Hugo wrote:
+> > > +static const struct of_device_id mmcc_msm8998_match_table[] = {
+> > > +	{ .compatible = "qcom,mmcc-msm8998" },
+> > > +	{ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, mmcc_msm8998_match_table);
+> > > +
+> > > +static int mmcc_msm8998_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct regmap *regmap;
+> > > +
 > > 
-> > * Sebastian Andrzej Siewior <bigeasy@linutronix.de> [190501 15:37]:
-> > > 
-> > > On 2019-04-30 13:51:40 [-0700], kernelci.org bot wrote:
-> > > > next/master boot bisection: next-20190430 on beagle-xm
-> > > > 
-> > > > Summary:
-> > > >   Start:      f43b05fd4c17 Add linux-next specific files for 20190430
-> > > >   Details:    https://kernelci.org/boot/id/5cc84d7359b514b7ab55847b
-> > > >   Plain log:  https://storage.kernelci.org//next/master/next-20190430/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-baylibre/boot-omap3-beagle-xm.txt
-> > > >   HTML log:   https://storage.kernelci.org//next/master/next-20190430/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-baylibre/boot-omap3-beagle-xm.html
-> > > >   Result:     6d25be5782e4 sched/core, workqueues: Distangle worker accounting from rq lock
-> > > > 
-> > > > Checks:
-> > > >   revert:     PASS
-> > > >   verify:     PASS
-> > > > 
-> > > > Parameters:
-> > > >   Tree:       next
-> > > >   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > > >   Branch:     master
-> > > >   Target:     beagle-xm
-> > > >   CPU arch:   arm
-> > > >   Lab:        lab-baylibre
-> > > >   Compiler:   gcc-7
-> > > >   Config:     multi_v7_defconfig+CONFIG_SMP=n
-> > > >   Test suite: boot
-> > > > 
-> > > > Breaking commit found:
-> > > > 
-> > > > -------------------------------------------------------------------------------
-> > > > commit 6d25be5782e482eb93e3de0c94d0a517879377d0
-> > > > Author: Thomas Gleixner <tglx@linutronix.de>
-> > > > Date:   Wed Mar 13 17:55:48 2019 +0100
-> > > > 
-> > > >     sched/core, workqueues: Distangle worker accounting from rq lock
-> > > 
-> > > According to the bootlog it just stopped its output. This commit is in
-> > > next since a week or two so I don't understand why this pops up now.
-> > 
-> > Adding Kevin to Cc, he just confirmed on #armlinux irc that he is able to
-> > reproduce this with CONFIG_SMP=n and root=/dev/ram0. I could not reproduce
-> > this issue so far on omap3 with NFSroot at least.
+> > Don't you want to wait for "xo" here as well?
 > 
-> So that problem remains even that the job for today passed?
-
-So it seems, let's wait and see what Kevin comes up with.
-
-> > > I just revived my BBB and I can boot that commit in question. Currently
-> > > that as close as I get to a beagle-xm. 
-> > > Looking at
-> > > 	https://kernelci.org/boot/id/5cc9a64359b514a77f5584af/
-> > > it seems that the very same board managed to boot linux-next for
-> > > next-20190501.
-> > > 
-> > > Side note: I can't boot next-20190501 on my BBB, bisect points to commit
-> > >   1a5cd7c23cc52 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
-> > > 
-> > > any idea?
-> > 
-> > Oh interesting thanks for letting me know. Next boots fine for me here
-> > with NFSroot on BBB.
-> > 
-> > Do you have some output on what happens so I can investigate?
+> No, I don't want to.  As far as I recall, Stephen would like to make a clear
+> divide between clock providers, and clock consumers.  Since we have the uart
+> issue in gcc, and gcc is pretty critical to the entire SoC, it seems like
+> there is a reason (not sure I'd call it "good") to wait for xo there.
 > 
-> Nope, the console remains dark.
+> Here, I'm less confident in the reasoning.  mmcc is not really critical to
+> the SoC, and everything it services is "optional".  If you have a headless
+> system with no display output, you won't even need it.  On system where
+> there is a display, I expect the realistic driver ordering to be that
+> everything which consumes a mmcc clock to come up well after xo is
+> available.
+> 
+> In short, seems like a bit of a kludge to maybe avoid an issue which doesn't
+> seem like would happen.
+> 
 
-OK. Can you please email me your .config and the kernel cmdline you're
-using? I'll try to reproduce that one here.
+Okay, cool.
+
+> > 
+> > > +	regmap = qcom_cc_map(pdev, &mmcc_msm8998_desc);
+> > > +	if (IS_ERR(regmap))
+> > > +		return PTR_ERR(regmap);
+> > > +
+> > > +	return qcom_cc_really_probe(pdev, &mmcc_msm8998_desc, regmap);
+> > > +}
+> > [..]
+> > > +MODULE_DESCRIPTION("QCOM MMCC MSM8998 Driver");
+> > > +MODULE_LICENSE("GPL v2");
+> > > +MODULE_ALIAS("platform:mmcc-msm8998");
+> > 
+> > MODULE_DEVICE_TABLE() will provide the alias for module auto loading, so
+> > drop this.
+> 
+> Huh.  I did not know that.  Will put on the list to fixup.
+> 
+
+With this dropped (and your objection above) I think the patch looks
+good.
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
+Bjorn
 
-Tony
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> 
+> 
+> -- 
+> Jeffrey Hugo
+> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies,
+> Inc.
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
