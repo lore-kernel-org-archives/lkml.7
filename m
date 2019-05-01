@@ -2,170 +2,123 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AA7C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3463C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD05A20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8015E20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:42:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wj+Rkbod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfEAUl4 (ORCPT
+        id S1726282AbfEAUmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:41:56 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.144]:40428 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726096AbfEAUlz (ORCPT
+        Wed, 1 May 2019 16:42:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58408 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfEAUmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:41:55 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 6A7774C58
-        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 15:41:54 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Lw38hrJ01dnCeLw38hbNIc; Wed, 01 May 2019 15:41:54 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.203] (port=50392 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hLw1r-003yq0-OB; Wed, 01 May 2019 15:41:54 -0500
-Subject: Re: [PATCH] platform/x86: sony-laptop: Fix unintentional fall-through
-To:     Mattia Dongili <malattia@linux.it>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190424180934.GA29307@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <cd02e064-1172-a8a2-14af-1f20e09a0738@embeddedor.com>
-Date:   Wed, 1 May 2019 15:40:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 16:42:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xjFUiKHVKRYeZR2wUaD2tSOO8e6Ya1jD8WtfOGkq95Y=; b=Wj+RkbodXdXD8te9RPXfkToEu
+        SifdbqvPQeFbdZ6nsnUxyXxNblHAFtIx/QJS1Z+UfSwLVE5oK5V1GRj4WbCG3F+UfkOd3iV95MD2B
+        2uiSigDEnf8eouEFLFTXfECiRstIdz81Zzy390omGT0BRP5V8pyylSVSR+gzsto2fVy2CyNTXrv8e
+        2RORYRDpoqjd/ImdNawKryn1ydZ3Xr8DsBJefdaFA/zGs8ZwdoEEPyzgxSkSFB2bP8W1uTG0P0Bbc
+        udFmI0pB4+NTTnB42XM9jZyDA32Yj5relRWWlae/hqBYqhVccyOgITfDQppTVADE4XobuoEEsOH14
+        2iMz2+67g==;
+Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLw2P-0000N1-Nj; Wed, 01 May 2019 20:41:59 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     ceph-devel@vger.kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ceph: remove ceph_get_direct_page_vector
+Date:   Wed,  1 May 2019 16:40:32 -0400
+Message-Id: <20190501204032.26380-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190424180934.GA29307@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.203
-X-Source-L: No
-X-Exim-ID: 1hLw1r-003yq0-OB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:50392
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+This function is entirely unused.
 
-Friendly ping:
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/ceph/libceph.h |  4 ----
+ net/ceph/pagevec.c           | 33 ---------------------------------
+ 2 files changed, 37 deletions(-)
 
-Who can take this?
+diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
+index 337d5049ff93..a3cddf5f0e60 100644
+--- a/include/linux/ceph/libceph.h
++++ b/include/linux/ceph/libceph.h
+@@ -299,10 +299,6 @@ int ceph_wait_for_latest_osdmap(struct ceph_client *client,
+ 
+ /* pagevec.c */
+ extern void ceph_release_page_vector(struct page **pages, int num_pages);
+-
+-extern struct page **ceph_get_direct_page_vector(const void __user *data,
+-						 int num_pages,
+-						 bool write_page);
+ extern void ceph_put_page_vector(struct page **pages, int num_pages,
+ 				 bool dirty);
+ extern struct page **ceph_alloc_page_vector(int num_pages, gfp_t flags);
+diff --git a/net/ceph/pagevec.c b/net/ceph/pagevec.c
+index d3736f5bffec..64305e7056a1 100644
+--- a/net/ceph/pagevec.c
++++ b/net/ceph/pagevec.c
+@@ -10,39 +10,6 @@
+ 
+ #include <linux/ceph/libceph.h>
+ 
+-/*
+- * build a vector of user pages
+- */
+-struct page **ceph_get_direct_page_vector(const void __user *data,
+-					  int num_pages, bool write_page)
+-{
+-	struct page **pages;
+-	int got = 0;
+-	int rc = 0;
+-
+-	pages = kmalloc_array(num_pages, sizeof(*pages), GFP_NOFS);
+-	if (!pages)
+-		return ERR_PTR(-ENOMEM);
+-
+-	while (got < num_pages) {
+-		rc = get_user_pages_fast(
+-		    (unsigned long)data + ((unsigned long)got * PAGE_SIZE),
+-		    num_pages - got, write_page, pages + got);
+-		if (rc < 0)
+-			break;
+-		BUG_ON(rc == 0);
+-		got += rc;
+-	}
+-	if (rc < 0)
+-		goto fail;
+-	return pages;
+-
+-fail:
+-	ceph_put_page_vector(pages, got, false);
+-	return ERR_PTR(rc);
+-}
+-EXPORT_SYMBOL(ceph_get_direct_page_vector);
+-
+ void ceph_put_page_vector(struct page **pages, int num_pages, bool dirty)
+ {
+ 	int i;
+-- 
+2.20.1
 
-Thanks
---
-Gustavo
-
-On 4/24/19 1:09 PM, Gustavo A. R. Silva wrote:
-> It seems that the default case should return AE_CTRL_TERMINATE, instead
-> of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
-> otherwise the line of code at the end of the function is unreachable and
-> makes no sense:
-> 
-> return AE_CTRL_TERMINATE;
-> 
-> This fix is based on the following thread of discussion:
-> 
-> https://lore.kernel.org/patchwork/patch/959782/
-> 
-> Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/platform/x86/sony-laptop.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-> index 4bfbfa3f78e6..2058445fc456 100644
-> --- a/drivers/platform/x86/sony-laptop.c
-> +++ b/drivers/platform/x86/sony-laptop.c
-> @@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct acpi_resource *resource, void *context)
->  			}
->  			return AE_OK;
->  		}
-> +
-> +	case ACPI_RESOURCE_TYPE_END_TAG:
-> +		return AE_OK;
-> +
->  	default:
->  		dprintk("Resource %d isn't an IRQ nor an IO port\n",
->  			resource->type);
-> +		return AE_CTRL_TERMINATE;
->  
-> -	case ACPI_RESOURCE_TYPE_END_TAG:
-> -		return AE_OK;
->  	}
-> -	return AE_CTRL_TERMINATE;
->  }
->  
->  static int sony_pic_possible_resources(struct acpi_device *device)
-> 
