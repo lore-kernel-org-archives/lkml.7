@@ -3,73 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1134FC04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B51C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF00208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556730230;
-	bh=BBvwoNEHVRq6c/XWJXO2zRZ6ZBCo20OJ+aAG/Lv8KEw=;
-	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
-	b=F9/kvOVGwZPcTNrgxCJoD/iSAxsi5odOujHu+GdlShPOaZnqK6KQ778/vBMcmbH8Y
-	 47mngEynyNykXQPEWMa2qp+vKCVUYDuUdJ7soYrMINyBOl86BulxXunSPjD0YsClAn
-	 ar3PmViVEaSsUIag/2VvIdKRV2ZA1WdC6c9ASDy0=
+	by mail.kernel.org (Postfix) with ESMTP id 0C9ED20835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:07:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MvYa7E2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfEARDt (ORCPT
+        id S1726120AbfEARHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725973AbfEARDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:03:48 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 261CB20835;
-        Wed,  1 May 2019 17:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556730228;
-        bh=BBvwoNEHVRq6c/XWJXO2zRZ6ZBCo20OJ+aAG/Lv8KEw=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=0gtlaiv6NrICHtxforyV7oISLK86EyMix5IUOatqtwQ4kcZeGdpRed8mVTYeLb1S3
-         foVvw/4MYzmnzg9+rks40rohOWflkP2KHZAL9EYhuoRYXNDeCG9zIODbT2xcYqgoAW
-         HD932Ci7ImLSuvL3t9y+sbDPcxVCvsnPbxKT5vKo=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 1 May 2019 13:07:04 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45084 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfEARHE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:07:04 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a10so6485035otl.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g7qnNr6MRSnXOVYDlHOY9LAc6zjoMyDbcD9t1WnGzmw=;
+        b=MvYa7E2UKVx8S8EMnlKM+cSXsa+G5bLnaTqA2iyBLxmVjoEn2PnWbAv0fQ3wEeKRfB
+         v5ygLbWkyrtuu1yCwqFcfafqd0/OczmJtSVhy2beVZ7uQvdkkA8DrQMoMaYiBeLkDeTP
+         GysstmUcOFXKCuc6Hht30amiW4XmNlaEehq5A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g7qnNr6MRSnXOVYDlHOY9LAc6zjoMyDbcD9t1WnGzmw=;
+        b=J/qKuN55jMqfia55+MKFFG5oHGxVlyFRs7EPUySZ8UkuKGle5GjkqdI+h6vKcgkXvH
+         cI829jZIiZFglF5ZxQ/NefdxIZZuLTNfgXSTIe74NV+AHhKUbUZGaCGdj30Qkh1jLdGJ
+         6BEJNf5VSrzJuYnPhe+clugjoLpoha+X3ZPSDT84x/YT9qP4avZfOCYZF6/6/JBN+jHM
+         TlmHYhlzoZ61aaAKhuoXG3MLbKSidBXz0tWdjHwAURb+jtnZo0i66kjcIahZ1D0ob/vw
+         kycXBY6zxGqHpsAqHrw0xw4H4qsmkjqL8nyL3pS0LQOu/2Y/26dDTPZKY9mD9x1QIgDe
+         CY/g==
+X-Gm-Message-State: APjAAAX2M3pe+ft7MyVBCT0UsZ8Hjd0fEEhNx5Tt4FKZS6Hq1oNEgc6V
+        4HrGV81px2lxceQhim6AuA6K+ukso54=
+X-Google-Smtp-Source: APXvYqyvlU9FsmOYB2kSqGndugUFByflaVDLs8wYd4Rp6AOESRvXAP7H6X7PSxddKVN9Hs1M1I+5Lw==
+X-Received: by 2002:a9d:560e:: with SMTP id e14mr3321869oti.31.1556730423546;
+        Wed, 01 May 2019 10:07:03 -0700 (PDT)
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com. [209.85.167.172])
+        by smtp.gmail.com with ESMTPSA id o1sm18137066otj.11.2019.05.01.10.07.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 10:07:00 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id l203so14319484oia.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:07:00 -0700 (PDT)
+X-Received: by 2002:aca:3e56:: with SMTP id l83mr6950442oia.111.1556730419948;
+ Wed, 01 May 2019 10:06:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <DB3PR0402MB3916F59134DB9CF9837B43C1F53B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1556589033-6080-1-git-send-email-Anson.Huang@nxp.com> <155664820799.168659.12393223246835475198@swboyd.mtv.corp.google.com> <DB3PR0402MB3916F59134DB9CF9837B43C1F53B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH] clk: imx: pllv3: Fix fall through build warning
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Anson Huang <anson.huang@nxp.com>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-Message-ID: <155673022723.168659.16788237682007828514@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 01 May 2019 10:03:47 -0700
+References: <20190417012048.87977-1-ncrews@chromium.org> <CAHX4x8483=65JVKRoZn9RadmoCp0VObLCH6BZO6dFT28B_r0ew@mail.gmail.com>
+In-Reply-To: <CAHX4x8483=65JVKRoZn9RadmoCp0VObLCH6BZO6dFT28B_r0ew@mail.gmail.com>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Wed, 1 May 2019 11:06:48 -0600
+X-Gmail-Original-Message-ID: <CAHX4x85QsjwnePOdmurJpifMpTMFO=YxFgnLsXPjWaswTgBa_A@mail.gmail.com>
+Message-ID: <CAHX4x85QsjwnePOdmurJpifMpTMFO=YxFgnLsXPjWaswTgBa_A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] platform/chrome: wilco_ec: Add Boot on AC support
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Daniel Erat <derat@google.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Simon Glass <sjg@chromium.org>, bartfab@chromium.org,
+        Oleh Lamzin <lamzin@google.com>,
+        Jason Wong <jchwong@google.com>,
+        Benson Leung <bleung@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Anson Huang (2019-05-01 02:33:46)
-> Hi, Stephen
->         I saw Gustavo already sent out a patch to fix these two warnings,=
- so I will NOT sent the patch again, thanks.
+Hi Enric,
 
-So I will apply that patch instead? Can you send your reviewed-by tag
-then?
+Are these two patches an acceptable use of sysfs? There were concerns
+earlier about abusing sysfs, but I think that these two uses follow
+other sysfs use-cases well.
 
+Thanks,
+Nick
