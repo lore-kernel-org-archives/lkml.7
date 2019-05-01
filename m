@@ -2,173 +2,139 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A80CC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A69C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE3120866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8159B20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WIZw2cJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfEAR3d (ORCPT
+        id S1726133AbfEARcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:29:33 -0400
-Received: from verein.lst.de ([213.95.11.211]:54065 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfEAR3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:29:33 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 09DA468AFE; Wed,  1 May 2019 19:29:12 +0200 (CEST)
-Date:   Wed, 1 May 2019 19:29:12 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Ley Foon Tan <lftan@altera.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
-Subject: Re: [PATCH 4/7] dma-direct: provide generic support for uncached
- kernel segments
-Message-ID: <20190501172912.GA19375@lst.de>
-References: <20190430110032.25301-1-hch@lst.de> <20190430110032.25301-5-hch@lst.de> <20190501171857.chfxqntvm6r4xrr4@pburton-laptop>
+        Wed, 1 May 2019 13:32:02 -0400
+Received: from mail-yw1-f53.google.com ([209.85.161.53]:33522 "EHLO
+        mail-yw1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEARcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:32:02 -0400
+Received: by mail-yw1-f53.google.com with SMTP id q11so8836967ywb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=y8s0ijs5pK7GyD3aubmLvTQxqI7m/6fliYiTiXFg8ns=;
+        b=WIZw2cJaQ2aQ0+C0kHMcDmC5dYQIg43PN9XuFrxHcyh8RlI3+7jsE6jwvmX73MUu4U
+         JSA3hB2C9torLjbjvbp89EGZFy6liURIdw6uIutl4YJeaRj7iMi55Txp7ejFylZLVW8K
+         vclkl5LQNebvpvHWB8ceDUKbt7hwDKea5VT9JJD4K0wpjWt7SwUiezox/Vzb9QkBcuPv
+         0CmRb8JPPt5Ixt4KepD082ngjJdeafhPAxohWtqR6Y3LcIrOP35onJ+J49RwlxnF9QEd
+         5ybR/gfkrBLiDFlzX+djjXxgSvFA2Mld9kgvKAyQfbXmTY+Y4hFg9huKaKcUUsVme/dC
+         c3BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=y8s0ijs5pK7GyD3aubmLvTQxqI7m/6fliYiTiXFg8ns=;
+        b=FYsLGFw/4+7WnxjW9KuM6sTynkQNS1JEKOEef5ulUmzvxHWAzWd/4g/j2/n3OtB9og
+         qOyKOyKnnx1xsbiDmSo8XpkZ8XZOi0WhYKSVbCW/O8CzQ/aA1cPT1ooK56h38m9lBRZt
+         3FLFxyeZRaSnmAh6aGdXMCvgj+gRYXLJL023yMtkCcEizFX2kW0PdbiFOVHXF0U6ognp
+         wimMqAnVyHvfpdMiB9x/g1lWHXDNLFXDilhRVI7Q9RuUDx/vQiN7tXQgvxbRHgJC5dC9
+         Pyxp8Wsuc+JXPuRyRocNIb/YE+/hEmicDnPE3t93DDbPribt6DEHaytVJb0GVDcXEsZo
+         i+nw==
+X-Gm-Message-State: APjAAAVbf/rxMw1td8ilGtBTJLhbpF/eiVszD69SVu8ByrLDmq7gO1BI
+        455PIjUtX8du/oo5yASLz+tRpIet
+X-Google-Smtp-Source: APXvYqzW+A7RggX5v0o2m4cwEo61mPhoJq4vEPnDXZJW4gyzVSQqf6tQu1YNeYkwm0rB5RS3zzdM8Q==
+X-Received: by 2002:a25:3758:: with SMTP id e85mr40210396yba.35.1556731920922;
+        Wed, 01 May 2019 10:32:00 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
+        by smtp.gmail.com with ESMTPSA id i13sm6780578ywl.22.2019.05.01.10.31.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 10:31:59 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C1B3A4111F; Wed,  1 May 2019 13:31:58 -0400 (EDT)
+Date:   Wed, 1 May 2019 13:31:58 -0400
+To:     Thomas Backlund <tmb@mageia.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Song Liu <liu.song.a23@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: perf build broken in 5.1-rc7
+Message-ID: <20190501173158.GC21436@kernel.org>
+References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
+ <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
+ <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
+ <b773df70-58e6-69f8-d566-282b0f7ae579@mageia.org>
+ <20190501130751.GB21436@kernel.org>
+ <932c4e06-c4db-7bb8-769d-75651d092450@mageia.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ew6BAiZeqk4r7MaW"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190501171857.chfxqntvm6r4xrr4@pburton-laptop>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <932c4e06-c4db-7bb8-769d-75651d092450@mageia.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, May 01, 2019 at 05:18:59PM +0000, Paul Burton wrote:
-> I'm not so sure about this part though.
+Em Wed, May 01, 2019 at 05:09:59PM +0300, Thomas Backlund escreveu:
 > 
-> On MIPS we currently don't clear the allocated memory with memset. Is
-> doing that really necessary?
-
-We are clearling it on mips, it is inside dma_direct_alloc_pages.
-
-> If it is necessary then as-is this code will clear the allocated memory
-> using uncached writes which will be pretty slow. It would be much more
-> efficient to perform the memset before arch_dma_prep_coherent() & before
-> converting ret to an uncached address.
-
-Yes, we could do that.
-
---ew6BAiZeqk4r7MaW
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="0001-dma-direct-provide-generic-support-for-uncached-kern.patch"
-
-From 247ca658ebeb7c8d04918747ec8a0da45c36bcb8 Mon Sep 17 00:00:00 2001
-From: Christoph Hellwig <hch@lst.de>
-Date: Sun, 28 Apr 2019 13:23:26 -0500
-Subject: dma-direct: provide generic support for uncached kernel segments
-
-A few architectures support uncached kernel segments.  In that case we get
-an uncached mapping for a given physica address by using an offset in the
-uncached segement.  Implement support for this scheme in the generic
-dma-direct code instead of duplicating it in arch hooks.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/Kconfig                    |  8 ++++++++
- include/linux/dma-noncoherent.h |  3 +++
- kernel/dma/direct.c             | 17 +++++++++++++++--
- 3 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 33687dddd86a..ea22a8c894ec 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -249,6 +249,14 @@ config ARCH_HAS_FORTIFY_SOURCE
- config ARCH_HAS_SET_MEMORY
- 	bool
+> Den 01-05-2019 kl. 16:07, skrev Arnaldo Carvalho de Melo:
+> > Em Tue, Apr 30, 2019 at 04:31:14PM +0300, Thomas Backlund escreveu:
+> > Can you check the output for
+> > /tmp/build/perf/feature/test-disassembler-four-args.make.output in your
+> > system? And also check what is the prototype for the disassembler()
+> > routine on mageia7?
+> 
+> I guess this is what fails the test:
  
-+#
-+# Select if arch has an uncached kernel segment and provides the
-+# uncached_kernel_address / cached_kernel_address symbols to use it
-+#
-+config ARCH_HAS_UNCACHED_SEGMENT
-+	select ARCH_HAS_DMA_PREP_COHERENT
-+	bool
-+
- # Select if arch init_task must go in the __init_task_data section
- config ARCH_TASK_STRUCT_ON_STACK
-        bool
-diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
-index 9741767e400f..7e0126a04e02 100644
---- a/include/linux/dma-noncoherent.h
-+++ b/include/linux/dma-noncoherent.h
-@@ -80,4 +80,7 @@ static inline void arch_dma_prep_coherent(struct page *page, size_t size)
- }
- #endif /* CONFIG_ARCH_HAS_DMA_PREP_COHERENT */
+> cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
+> /usr/bin/ld: /usr/lib64/libbfd.a(plugin.o): in function `try_load_plugin':
+> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:243:
+> undefined reference to `dlopen'
+> /usr/bin/ld:
+> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:271:
+> undefined reference to `dlsym'
+> /usr/bin/ld:
+> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:256:
+> undefined reference to `dlclose'
+> /usr/bin/ld:
+> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:246:
+> undefined reference to `dlerror'
  
-+void *uncached_kernel_address(void *addr);
-+void *cached_kernel_address(void *addr);
-+
- #endif /* _LINUX_DMA_NONCOHERENT_H */
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 2c2772e9702a..6688e1cee7d1 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -171,6 +171,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 		*dma_handle = phys_to_dma(dev, page_to_phys(page));
- 	}
- 	memset(ret, 0, size);
-+
-+	if (IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
-+	    !dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_NON_CONSISTENT)) {
-+		arch_dma_prep_coherent(page, size);
-+		ret = uncached_kernel_address(ret);
-+	}
-+
- 	return ret;
- }
+> as we allow dynamic linking and loading
  
-@@ -189,13 +196,18 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+> And we use linker flags:
  
- 	if (force_dma_unencrypted())
- 		set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
-+
-+	if (IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
-+	    !dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_NON_CONSISTENT))
-+		cpu_addr = cached_kernel_address(cpu_addr);
- 	__dma_direct_free_pages(dev, size, virt_to_page(cpu_addr));
- }
- 
- void *dma_direct_alloc(struct device *dev, size_t size,
- 		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
- {
--	if (!dev_is_dma_coherent(dev))
-+	if (!IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
-+	    !dev_is_dma_coherent(dev))
- 		return arch_dma_alloc(dev, size, dma_handle, gfp, attrs);
- 	return dma_direct_alloc_pages(dev, size, dma_handle, gfp, attrs);
- }
-@@ -203,7 +215,8 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- void dma_direct_free(struct device *dev, size_t size,
- 		void *cpu_addr, dma_addr_t dma_addr, unsigned long attrs)
- {
--	if (!dev_is_dma_coherent(dev))
-+	if (!IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
-+	    !dev_is_dma_coherent(dev))
- 		arch_dma_free(dev, size, cpu_addr, dma_addr, attrs);
- 	else
- 		dma_direct_free_pages(dev, size, cpu_addr, dma_addr, attrs);
--- 
-2.20.1
+> rpm --eval %ldflags
+>  -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id
+> -Wl,--enable-new-dtags
 
+Would this help?
 
---ew6BAiZeqk4r7MaW--
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index fe3f97e342fa..6d65874e16c3 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -227,7 +227,7 @@ FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
+ 
+ EATURE_CHECK_LDFLAGS-libaio = -lrt
+ 
+-FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes
++FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
+ 
+ CFLAGS += -fno-omit-frame-pointer
+ CFLAGS += -ggdb3
+
