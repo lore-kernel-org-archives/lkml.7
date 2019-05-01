@@ -2,180 +2,188 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882C2C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04306C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536622081C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCAE2081C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:12:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KvFmuLge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbfEATMU (ORCPT
+        id S1726267AbfEATMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:12:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42744 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726019AbfEATMU (ORCPT
+        Wed, 1 May 2019 15:12:38 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34830 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEATMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:12:20 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x41JBhLJ056834
-        for <linux-kernel@vger.kernel.org>; Wed, 1 May 2019 15:12:18 -0400
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s7es8ycw0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 15:12:18 -0400
-Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 1 May 2019 20:12:18 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 1 May 2019 20:12:14 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x41JCDbq29294592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 May 2019 19:12:14 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9711B205F;
-        Wed,  1 May 2019 19:12:13 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DD8AB2065;
-        Wed,  1 May 2019 19:12:13 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  1 May 2019 19:12:13 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id A88BF16C1656; Wed,  1 May 2019 12:12:13 -0700 (PDT)
-Date:   Wed, 1 May 2019 12:12:13 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, andrea.parri@amarulasolutions.com,
-        rostedt@goodmis.org
-Subject: Re: Question about sched_setaffinity()
-Reply-To: paulmck@linux.ibm.com
-References: <20190427180246.GA15502@linux.ibm.com>
- <20190430100318.GP2623@hirez.programming.kicks-ass.net>
- <20190430105129.GA3923@linux.ibm.com>
- <20190430115551.GT2623@hirez.programming.kicks-ass.net>
+        Wed, 1 May 2019 15:12:37 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t21so9027468pfh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 12:12:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AmRJhTtjfmKOoXa3/mXW1aySDkpXtExm2OlSrQR+ugY=;
+        b=KvFmuLges6lzqL86Wp4gV1PjIrKF2kIQ/Yx5XZyG3wDE/yk+PZ0IVgcKRTiSxkGLmY
+         1emllscLGeYik7SfWUbHKjEFkULGXLTyFTx9+jjwTcyIvZJasqta7kh2z2r7mjT4cSeQ
+         4hpXBEfzBwkCxMI4TwM79Gtu32AExBI1rbCo+PlgaIzg6sFgQZ1vzOM2KigHWiYPUXkV
+         QprpwrRd079y/Nxc/lpMMk7S3HRq7u7hQQfE0+wWT5en57lOtJB1ulKZXaSkWzxyQFsf
+         hIRjjYWDacbrRvIdvx85yv5+PzzwpDEUVEAE3ELVQoXlTXAWk0klZ2IZZdCPBZD3/AhY
+         hUWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AmRJhTtjfmKOoXa3/mXW1aySDkpXtExm2OlSrQR+ugY=;
+        b=kOZrhjzQtBMorgBe+Zo5qseeAtv0bNfqaPfH3WAw9iYsSkfW14//nZqcl+o59tIUXn
+         PWztrIf9Zj8cU2JrMosoW8IZUAc9dEQATEgPxfuJOvS2q8dFPGZOMVSgd2y2NOGfI+Et
+         HwaBUqZbPrJi0Huj80WC7u20Xno7UsbwkWg3WtPV+PLCdJSe/1qUonDGENc1GGUdLja5
+         oG9aI63KxrxVhSgV7yp4q5TOJaFvRFWHSbFb9dXGZJC/9A9JhY8tNhYH293KvDpyeHXn
+         faTN188rDMv47BcuJhmEpXxzLGAyGR7SlQpxdMo1utj470CDVv29Op+gS1eLYfNnZl1w
+         DqbQ==
+X-Gm-Message-State: APjAAAWYVEqVkOmA9F53uKlXWsMbk4kz6XEPfrUC8WzIcdGC947PzeTn
+        Znx8QDGOa8r7xzQg/tb32wa1Uw==
+X-Google-Smtp-Source: APXvYqy31d2sjh8GWh1zvaBPPWQhuKan83tMATfhwqSzWvN6oZmlGEUpR+06ZSdcPU34fmyVNmOyUg==
+X-Received: by 2002:a63:66c1:: with SMTP id a184mr13541136pgc.412.1556737956127;
+        Wed, 01 May 2019 12:12:36 -0700 (PDT)
+Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:ad22:1cbb:d8fa:7d55])
+        by smtp.googlemail.com with ESMTPSA id j12sm15835555pff.148.2019.05.01.12.12.33
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 12:12:35 -0700 (PDT)
+Subject: Re: [PATCH 1/2] x86, numa: always initialize all possible nodes
+To:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-ia64@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@elte.hu>, Michal Hocko <mhocko@suse.com>
+References: <20190212095343.23315-1-mhocko@kernel.org>
+ <20190212095343.23315-2-mhocko@kernel.org>
+From:   Barret Rhoden <brho@google.com>
+Message-ID: <34f96661-41c2-27cc-422d-5a7aab526f87@google.com>
+Date:   Wed, 1 May 2019 15:12:32 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430115551.GT2623@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19050119-0040-0000-0000-000004E9B45D
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011030; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01197153; UDB=6.00627876; IPR=6.00978007;
- MB=3.00026686; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-01 19:12:16
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050119-0041-0000-0000-000008F5B899
-Message-Id: <20190501191213.GX3923@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905010119
+In-Reply-To: <20190212095343.23315-2-mhocko@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 01:55:51PM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 30, 2019 at 03:51:30AM -0700, Paul E. McKenney wrote:
-> > > Then I'm not entirely sure how we can return 0 and not run on the
-> > > expected CPU. If we look at __set_cpus_allowed_ptr(), the only paths out
-> > > to 0 are:
-> > > 
-> > >  - if the mask didn't change
-> > >  - if we already run inside the new mask
-> > >  - if we migrated ourself with the stop-task
-> > >  - if we're not in fact running
-> > > 
-> > > That last case should never trigger in your circumstances, since @p ==
-> > > current and current is obviously running. But for completeness, the
-> > > wakeup of @p would do the task placement in that case.
-> > 
-> > Are there some diagnostics I could add that would help track this down,
-> > be it my bug or yours?
-> 
-> Maybe limited function trace combined with the scheduling tracepoints
-> would give clue.
-> 
-> Trouble is, I forever forget how to set that up properly :/ Maybe
-> something along these lines:
-> 
-> $ trace-cmd record -p function_graph -g sched_setaffinity -g migration_cpu_stop -e
-> sched_migirate_task -e sched_switch -e sched_wakeup
-> 
-> Also useful would be:
-> 
-> echo 1 > /proc/sys/kernel/traceoff_on_warning
-> 
-> which ensures the trace stops the moment we find fail.
+Hi -
 
-OK, what I did was to apply the patch at the end of this email to -rcu
-branch dev, then run rcutorture as follows:
+This patch triggered an oops for me (more below).
 
-nohup tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 2 --configs "TRIVIAL" --bootargs "trace_event=sched:sched_switch,sched:sched_wakeup ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop"
+On 2/12/19 4:53 AM, Michal Hocko wrote:
+[snip]
+> Fix the issue by reworking how x86 initializes the memory less nodes.
+> The current implementation is hacked into the workflow and it doesn't
+> allow any flexibility. There is init_memory_less_node called for each
+> offline node that has a CPU as already mentioned above. This will make
+> sure that we will have a new online node without any memory. Much later
+> on we build a zone list for this node and things seem to work, except
+> they do not (e.g. due to nr_cpus). Not to mention that it doesn't really
+> make much sense to consider an empty node as online because we just
+> consider this node whenever we want to iterate nodes to use and empty
+> node is obviously not the best candidate. This is all just too fragile.
 
-This resulted in the console output that I placed here:
+The problem might be in here - I have a case with a 'memoryless' node 
+that has CPUs that get onlined during SMP boot, but that onlining 
+triggers a page fault during device registration.
 
-http://www2.rdrop.com/~paulmck/submission/console.log.gz
+I'm running on a NUMA machine but I marked all of the memory on node 1 
+as type 12 (PRAM), using the memmap arg.  That makes node 1 appear to 
+have no memory.
 
-But I don't see calls to sched_setaffinity() or migration_cpu_stop().
-Steve, is something else needed on the kernel command line in addition to
-the following?
+During SMP boot, the fault is in bus_add_device():
 
-ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop
+	error = sysfs_create_link(&bus->p->devices_kset->kobj,
 
-							Thanx, Paul
+bus->p is NULL.
 
-------------------------------------------------------------------------
+That p is the subsys_private struct, and it should have been set in
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index da04b5073dc3..ceae80522d64 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -680,12 +680,18 @@ static struct rcu_torture_ops tasks_ops = {
- static void synchronize_rcu_trivial(void)
- {
- 	int cpu;
-+	static int dont_trace;
- 
- 	for_each_online_cpu(cpu) {
--		while (raw_smp_processor_id() != cpu)
--			rcutorture_sched_setaffinity(current->pid,
--						     cpumask_of(cpu));
--		WARN_ON_ONCE(raw_smp_processor_id() != cpu);
-+		if (!READ_ONCE(dont_trace))
-+			tracing_on();
-+		rcutorture_sched_setaffinity(current->pid, cpumask_of(cpu));
-+		tracing_off();
-+		if (raw_smp_processor_id() != cpu) {
-+			WRITE_ONCE(dont_trace, 1);
-+			WARN_ON_ONCE(1);
-+			ftrace_dump(DUMP_ALL);
-+		}
- 	}
- }
- 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index caffee644932..edaf0ca22ff7 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3495,6 +3495,7 @@ void __init rcu_init(void)
- 	rcu_par_gp_wq = alloc_workqueue("rcu_par_gp", WQ_MEM_RECLAIM, 0);
- 	WARN_ON(!rcu_par_gp_wq);
- 	srcu_init();
-+	tracing_off();
- }
- 
- #include "tree_stall.h"
+	postcore_initcall(register_node_type);
+
+But that happens after SMP boot.  This fault happens during SMP boot.
+
+The old code had set this node online via alloc_node_data(), so when it 
+came time to do_cpu_up() -> try_online_node(), the node was already up 
+and nothing happened.
+
+Now, it attempts to online the node, which registers the node with 
+sysfs, but that can't happen before the 'node' subsystem is registered.
+
+My modified e820 map looks like this:
+
+> [    0.000000] user: [mem 0x0000000000000100-0x000000000009c7ff] usable
+> [    0.000000] user: [mem 0x000000000009c800-0x000000000009ffff] reserved
+> [    0.000000] user: [mem 0x00000000000e0000-0x00000000000fffff] reserved
+> [    0.000000] user: [mem 0x0000000000100000-0x0000000073216fff] usable
+> [    0.000000] user: [mem 0x0000000073217000-0x0000000075316fff] reserved
+> [    0.000000] user: [mem 0x0000000075317000-0x00000000754f8fff] ACPI data
+> [    0.000000] user: [mem 0x00000000754f9000-0x0000000076057fff] ACPI NVS
+> [    0.000000] user: [mem 0x0000000076058000-0x0000000077ae9fff] reserved
+> [    0.000000] user: [mem 0x0000000077aea000-0x0000000077ffffff] usable
+> [    0.000000] user: [mem 0x0000000078000000-0x000000008fffffff] reserved
+> [    0.000000] user: [mem 0x00000000fd000000-0x00000000fe7fffff] reserved
+> [    0.000000] user: [mem 0x00000000ff000000-0x00000000ffffffff] reserved
+> [    0.000000] user: [mem 0x0000000100000000-0x00000004ffffffff] usable
+> [    0.000000] user: [mem 0x0000000500000000-0x000000603fffffff] persistent (type 12)
+
+Which leads to an empty zone 1:
+
+> [    0.016060] Initmem setup node 0 [mem 0x0000000000001000-0x00000004ffffffff]
+> [    0.073310] Initmem setup node 1 [mem 0x0000000000000000-0x0000000000000000]
+
+The backtrace:
+
+> [    2.175327] Call Trace:
+> [    2.175327]  device_add+0x43e/0x690
+> [    2.175327]  device_register+0x107/0x110
+> [    2.175327]  __register_one_node+0x72/0x150
+> [    2.175327]  __try_online_node+0x8f/0xd0
+> [    2.175327]  try_online_node+0x2b/0x50
+> [    2.175327]  do_cpu_up+0x46/0xf0
+> [    2.175327]  cpu_up+0x13/0x20
+> [    2.175327]  smp_init+0x6e/0xd0
+> [    2.175327]  kernel_init_freeable+0xe5/0x21f
+> [    2.175327]  ? rest_init+0xb0/0xb0
+> [    2.175327]  kernel_init+0xf/0x180
+> [    2.175327]  ? rest_init+0xb0/0xb0
+> [    2.175327]  ret_from_fork+0x1f/0x30
+
+To get it booting again, I unconditionally node_set_online:
+
+arch/x86/mm/numa.c
+@@ -583,7 +583,7 @@ static int __init numa_register_memblks(struct 
+numa_meminfo *mi)
+                         continue;
+
+                 alloc_node_data(nid);
+-               if (end)
++               //if (end)
+                         node_set_online(nid);
+         }
+
+A more elegant solution may be to avoid registering with sysfs during 
+early boot, or something else entirely.  But I figured I'd ask for help 
+at this point.  =)
+
+Thanks,
+
+Barret
 
