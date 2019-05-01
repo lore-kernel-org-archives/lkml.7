@@ -2,570 +2,141 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AB9C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC72C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174A12085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625982085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfEAVUJ (ORCPT
+        id S1726299AbfEAVVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:20:09 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33823 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfEAVUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:20:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 14:20:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,419,1549958400"; 
-   d="scan'208";a="228462615"
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga001.jf.intel.com with ESMTP; 01 May 2019 14:20:03 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
-Date:   Wed,  1 May 2019 14:12:17 -0700
-Message-Id: <20190501211217.5039-1-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 May 2019 17:21:13 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.200]:17910 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfEAVVM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:21:12 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 7A1081BE26A
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 16:21:10 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Lwf8h4jFfiQerLwf8hkOmk; Wed, 01 May 2019 16:21:10 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=52682 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLwf5-004IrK-SC; Wed, 01 May 2019 16:21:10 -0500
+Subject: Re: [PATCH net-next] sfc: mcdi_port: Mark expected switch
+ fall-through
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-net-drivers@solarflare.com, ecree@solarflare.com,
+        mhabets@solarflare.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keescook@chromium.org
+References: <20190429153755.GA10596@embeddedor>
+ <20190501.112428.331673135522488793.davem@davemloft.net>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <7d1c6339-325c-275b-f6f5-44a1c8b83cce@embeddedor.com>
+Date:   Wed, 1 May 2019 16:21:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190501.112428.331673135522488793.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLwf5-004IrK-SC
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:52682
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An ELF file's .note.gnu.property indicates features the executable file
-can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
-indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
-GNU_PROPERTY_X86_FEATURE_1_SHSTK.
 
-This patch was part of the Control-flow Enforcement series; the original
-patch is here: https://lkml.org/lkml/2018/11/20/205.  Dave Martin responded
-that ARM recently introduced new features to NT_GNU_PROPERTY_TYPE_0 with
-properties closely modelled on GNU_PROPERTY_X86_FEATURE_1_AND, and it is
-logical to split out the generic part.  Here it is.
 
-With this patch, if an arch needs to setup features from ELF properties,
-it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
-arch_setup_property().
+On 5/1/19 10:24 AM, David Miller wrote:
+> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+> Date: Mon, 29 Apr 2019 10:37:55 -0500
+> 
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
+>>
+>> This patch fixes the following warning:
+>  ...
+>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>
+>> This patch is part of the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Applied.
+> 
 
-For example, for X86_64:
-
-int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
-{
-	int r;
-	uint32_t property;
-
-	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
-			     &property);
-	...
-}
-
-Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
----
- fs/Kconfig.binfmt        |   4 +
- fs/Makefile              |   1 +
- fs/binfmt_elf.c          |  13 ++
- fs/gnu_property.c        | 363 +++++++++++++++++++++++++++++++++++++++
- include/linux/elf.h      |  12 ++
- include/uapi/linux/elf.h |   8 +
- 6 files changed, 401 insertions(+)
- create mode 100644 fs/gnu_property.c
-
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index b795f8da81f3..175a1f58e785 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -35,6 +35,10 @@ config COMPAT_BINFMT_ELF
- config ARCH_BINFMT_ELF_STATE
- 	bool
- 
-+config ARCH_USE_GNU_PROPERTY
-+	bool
-+	depends on 64BIT
-+
- config BINFMT_ELF_FDPIC
- 	bool "Kernel support for FDPIC ELF binaries"
- 	default y if !BINFMT_ELF
-diff --git a/fs/Makefile b/fs/Makefile
-index 427fec226fae..8a35abbebf8b 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_BINFMT_ELF)	+= binfmt_elf.o
- obj-$(CONFIG_COMPAT_BINFMT_ELF)	+= compat_binfmt_elf.o
- obj-$(CONFIG_BINFMT_ELF_FDPIC)	+= binfmt_elf_fdpic.o
- obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
-+obj-$(CONFIG_ARCH_USE_GNU_PROPERTY) += gnu_property.o
- 
- obj-$(CONFIG_FS_MBCACHE)	+= mbcache.o
- obj-$(CONFIG_FS_POSIX_ACL)	+= posix_acl.o
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 7d09d125f148..40aa4a4fd64d 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1076,6 +1076,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		goto out_free_dentry;
- 	}
- 
-+	if (interpreter) {
-+		retval = arch_setup_property(&loc->interp_elf_ex,
-+					     interp_elf_phdata,
-+					     interpreter, true);
-+	} else {
-+		retval = arch_setup_property(&loc->elf_ex,
-+					     elf_phdata,
-+					     bprm->file, false);
-+	}
-+
-+	if (retval < 0)
-+		goto out_free_dentry;
-+
- 	if (elf_interpreter) {
- 		unsigned long interp_map_addr = 0;
- 
-diff --git a/fs/gnu_property.c b/fs/gnu_property.c
-new file mode 100644
-index 000000000000..656ea3951840
---- /dev/null
-+++ b/fs/gnu_property.c
-@@ -0,0 +1,363 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Extract an ELF file's .note.gnu.property.
-+ *
-+ * The path from the ELF header to the note section is the following:
-+ * elfhdr->elf_phdr->elf_note->property[].
-+ */
-+
-+#include <uapi/linux/elf-em.h>
-+#include <linux/processor.h>
-+#include <linux/binfmts.h>
-+#include <linux/elf.h>
-+#include <linux/slab.h>
-+#include <linux/fs.h>
-+#include <linux/uaccess.h>
-+#include <linux/string.h>
-+#include <linux/compat.h>
-+
-+/*
-+ * The .note.gnu.property layout:
-+ *
-+ *	struct elf_note {
-+ *		u32 n_namesz; --> sizeof(n_name[]); always (4)
-+ *		u32 n_ndescsz;--> sizeof(property[])
-+ *		u32 n_type;   --> always NT_GNU_PROPERTY_TYPE_0
-+ *	};
-+ *	char n_name[4]; --> always 'GNU\0'
-+ *
-+ *	struct {
-+ *		struct gnu_property {
-+ *			u32 pr_type;
-+ *			u32 pr_datasz;
-+ *		};
-+ *		u8 pr_data[pr_datasz];
-+ *	}[];
-+ */
-+
-+#define BUF_SIZE (PAGE_SIZE / 4)
-+
-+struct gnu_property {
-+	u32 pr_type;
-+	u32 pr_datasz;
-+};
-+
-+typedef bool (test_item_fn)(void *buf, u32 *arg, u32 type);
-+typedef void *(next_item_fn)(void *buf, u32 *arg, u32 type);
-+
-+static inline bool test_note_type(void *buf, u32 *align, u32 note_type)
-+{
-+	struct elf_note *n = buf;
-+
-+	return ((n->n_type == note_type) && (n->n_namesz == 4) &&
-+		(memcmp(n + 1, "GNU", 4) == 0));
-+}
-+
-+static inline void *next_note(void *buf, u32 *align, u32 note_type)
-+{
-+	struct elf_note *n = buf;
-+	u64 size;
-+
-+	if (check_add_overflow((u64)sizeof(*n), (u64)n->n_namesz, &size))
-+		return NULL;
-+
-+	size = round_up(size, *align);
-+
-+	if (check_add_overflow(size, (u64)n->n_descsz, &size))
-+		return NULL;
-+
-+	size = round_up(size, *align);
-+
-+	if (buf + size < buf)
-+		return NULL;
-+	else
-+		return (buf + size);
-+}
-+
-+static inline bool test_property(void *buf, u32 *max_type, u32 pr_type)
-+{
-+	struct gnu_property *pr = buf;
-+
-+	/*
-+	 * Property types must be in ascending order.
-+	 * Keep track of the max when testing each.
-+	 */
-+	if (pr->pr_type > *max_type)
-+		*max_type = pr->pr_type;
-+
-+	return (pr->pr_type == pr_type);
-+}
-+
-+static inline void *next_property(void *buf, u32 *max_type, u32 pr_type)
-+{
-+	struct gnu_property *pr = buf;
-+
-+	if ((buf + sizeof(*pr) +  pr->pr_datasz < buf) ||
-+	    (pr->pr_type > pr_type) ||
-+	    (pr->pr_type > *max_type))
-+		return NULL;
-+	else
-+		return (buf + sizeof(*pr) + pr->pr_datasz);
-+}
-+
-+/*
-+ * Scan 'buf' for a pattern; return true if found.
-+ * *pos is the distance from the beginning of buf to where
-+ * the searched item or the next item is located.
-+ */
-+static int scan(u8 *buf, u32 buf_size, int item_size, test_item_fn test_item,
-+		next_item_fn next_item, u32 *arg, u32 type, u32 *pos)
-+{
-+	int found = 0;
-+	u8 *p, *max;
-+
-+	max = buf + buf_size;
-+	if (max < buf)
-+		return 0;
-+
-+	p = buf;
-+
-+	while ((p + item_size < max) && (p + item_size > buf)) {
-+		if (test_item(p, arg, type)) {
-+			found = 1;
-+			break;
-+		}
-+
-+		p = next_item(p, arg, type);
-+	}
-+
-+	*pos = (p + item_size <= buf) ? 0 : (u32)(p - buf);
-+	return found;
-+}
-+
-+/*
-+ * Search an NT_GNU_PROPERTY_TYPE_0 for the property of 'pr_type'.
-+ */
-+static int find_property(struct file *file, unsigned long desc_size,
-+			 loff_t file_offset, u8 *buf,
-+			 u32 pr_type, u32 *property)
-+{
-+	u32 buf_pos;
-+	unsigned long read_size;
-+	unsigned long done;
-+	int found = 0;
-+	int ret = 0;
-+	u32 last_pr = 0;
-+
-+	*property = 0;
-+	buf_pos = 0;
-+
-+	for (done = 0; done < desc_size; done += buf_pos) {
-+		read_size = desc_size - done;
-+		if (read_size > BUF_SIZE)
-+			read_size = BUF_SIZE;
-+
-+		ret = kernel_read(file, buf, read_size, &file_offset);
-+
-+		if (ret != read_size)
-+			return (ret < 0) ? ret : -EIO;
-+
-+		ret = 0;
-+		found = scan(buf, read_size, sizeof(struct gnu_property),
-+			     test_property, next_property,
-+			     &last_pr, pr_type, &buf_pos);
-+
-+		if ((!buf_pos) || found)
-+			break;
-+
-+		file_offset += buf_pos - read_size;
-+	}
-+
-+	if (found) {
-+		struct gnu_property *pr =
-+			(struct gnu_property *)(buf + buf_pos);
-+
-+		if (pr->pr_datasz == 4) {
-+			u32 *max =  (u32 *)(buf + read_size);
-+			u32 *data = (u32 *)((u8 *)pr + sizeof(*pr));
-+
-+			if (data + 1 <= max) {
-+				*property = *data;
-+			} else {
-+				file_offset += buf_pos - read_size;
-+				file_offset += sizeof(*pr);
-+				ret = kernel_read(file, property, 4,
-+						  &file_offset);
-+			}
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+/*
-+ * Search a PT_NOTE segment for NT_GNU_PROPERTY_TYPE_0.
-+ */
-+static int find_note_type_0(struct file *file, loff_t file_offset,
-+			    unsigned long note_size, u32 align,
-+			    u32 pr_type, u32 *property)
-+{
-+	u8 *buf;
-+	u32 buf_pos;
-+	unsigned long read_size;
-+	unsigned long done;
-+	int found = 0;
-+	int ret = 0;
-+
-+	buf = kmalloc(BUF_SIZE, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	*property = 0;
-+	buf_pos = 0;
-+
-+	for (done = 0; done < note_size; done += buf_pos) {
-+		read_size = note_size - done;
-+		if (read_size > BUF_SIZE)
-+			read_size = BUF_SIZE;
-+
-+		ret = kernel_read(file, buf, read_size, &file_offset);
-+
-+		if (ret != read_size) {
-+			ret = (ret < 0) ? ret : -EIO;
-+			kfree(buf);
-+			return ret;
-+		}
-+
-+		/*
-+		 * item_size = sizeof(struct elf_note) + elf_note.n_namesz.
-+		 * n_namesz is 4 for the note type we look for.
-+		 */
-+		ret = scan(buf, read_size, sizeof(struct elf_note) + 4,
-+			      test_note_type, next_note,
-+			      &align, NT_GNU_PROPERTY_TYPE_0, &buf_pos);
-+
-+		file_offset += buf_pos - read_size;
-+
-+		if (ret && !found) {
-+			struct elf_note *n =
-+				(struct elf_note *)(buf + buf_pos);
-+			u64 start = round_up(sizeof(*n) + n->n_namesz, align);
-+			u64 total = 0;
-+
-+			if (check_add_overflow(start, (u64)n->n_descsz, &total)) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+			total = round_up(total, align);
-+
-+			ret = find_property(file, n->n_descsz,
-+					    file_offset + start,
-+					    buf, pr_type, property);
-+			found++;
-+			file_offset += total;
-+			buf_pos += total;
-+		} else if (!buf_pos || ret) {
-+			ret = 0;
-+			*property = 0;
-+			break;
-+		}
-+	}
-+
-+	kfree(buf);
-+	return ret;
-+}
-+
-+/*
-+ * Look at an ELF file's PT_NOTE segments, then NT_GNU_PROPERTY_TYPE_0, then
-+ * the property of pr_type.
-+ *
-+ * Input:
-+ *	file: the file to search;
-+ *	phdr: the file's elf header;
-+ *	phnum: number of entries in phdr;
-+ *	pr_type: the property type.
-+ *
-+ * Output:
-+ *	The property found.
-+ *
-+ * Return:
-+ *	Zero or error.
-+ */
-+static int scan_segments_64(struct file *file, struct elf64_phdr *phdr,
-+			    int phnum, u32 pr_type, u32 *property)
-+{
-+	int i;
-+	int err = 0;
-+
-+	for (i = 0; i < phnum; i++, phdr++) {
-+		if ((phdr->p_type != PT_NOTE) || (phdr->p_align != 8))
-+			continue;
-+
-+		/*
-+		 * Search the PT_NOTE segment for NT_GNU_PROPERTY_TYPE_0.
-+		 */
-+		err = find_note_type_0(file, phdr->p_offset, phdr->p_filesz,
-+				       phdr->p_align, pr_type, property);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_COMPAT
-+static int scan_segments_32(struct file *file, struct elf32_phdr *phdr,
-+			    int phnum, u32 pr_type, u32 *property)
-+{
-+	int i;
-+	int err = 0;
-+
-+	for (i = 0; i < phnum; i++, phdr++) {
-+		if ((phdr->p_type != PT_NOTE) || (phdr->p_align != 4))
-+			continue;
-+
-+		/*
-+		 * Search the PT_NOTE segment for NT_GNU_PROPERTY_TYPE_0.
-+		 */
-+		err = find_note_type_0(file, phdr->p_offset, phdr->p_filesz,
-+				       phdr->p_align, pr_type, property);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
-+		     u32 pr_type, u32 *property)
-+{
-+	struct elf64_hdr *ehdr64 = ehdr_p;
-+	int err = 0;
-+
-+	*property = 0;
-+
-+	if (ehdr64->e_ident[EI_CLASS] == ELFCLASS64) {
-+		struct elf64_phdr *phdr64 = phdr_p;
-+
-+		err = scan_segments_64(f, phdr64, ehdr64->e_phnum,
-+				       pr_type, property);
-+		if (err < 0)
-+			goto out;
-+	} else {
-+#ifdef CONFIG_COMPAT
-+		struct elf32_hdr *ehdr32 = ehdr_p;
-+
-+		if (ehdr32->e_ident[EI_CLASS] == ELFCLASS32) {
-+			struct elf32_phdr *phdr32 = phdr_p;
-+
-+			err = scan_segments_32(f, phdr32, ehdr32->e_phnum,
-+					       pr_type, property);
-+			if (err < 0)
-+				goto out;
-+		}
-+#else
-+	WARN_ONCE(1, "Exec of 32-bit app, but CONFIG_COMPAT is not enabled.\n");
-+	return -ENOTSUPP;
-+#endif
-+	}
-+
-+out:
-+	return err;
-+}
-diff --git a/include/linux/elf.h b/include/linux/elf.h
-index e3649b3e970e..c15febebe7f2 100644
---- a/include/linux/elf.h
-+++ b/include/linux/elf.h
-@@ -56,4 +56,16 @@ static inline int elf_coredump_extra_notes_write(struct coredump_params *cprm) {
- extern int elf_coredump_extra_notes_size(void);
- extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
- #endif
-+
-+#ifdef CONFIG_ARCH_USE_GNU_PROPERTY
-+extern int arch_setup_property(void *ehdr, void *phdr, struct file *f,
-+			       bool interp);
-+extern int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
-+			    u32 pr_type, u32 *feature);
-+#else
-+static inline int arch_setup_property(void *ehdr, void *phdr, struct file *f,
-+				      bool interp) { return 0; }
-+static inline int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
-+				   u32 pr_type, u32 *feature) { return 0; }
-+#endif
- #endif /* _LINUX_ELF_H */
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 34c02e4290fe..7b7603a44cbc 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -372,6 +372,7 @@ typedef struct elf64_shdr {
- #define NT_PRFPREG	2
- #define NT_PRPSINFO	3
- #define NT_TASKSTRUCT	4
-+#define NT_GNU_PROPERTY_TYPE_0 5
- #define NT_AUXV		6
- /*
-  * Note to userspace developers: size of NT_SIGINFO note may increase
-@@ -443,4 +444,11 @@ typedef struct elf64_note {
-   Elf64_Word n_type;	/* Content type */
- } Elf64_Nhdr;
- 
-+/* .note.gnu.property types */
-+#define GNU_PROPERTY_X86_FEATURE_1_AND		(0xc0000002)
-+
-+/* Bits of GNU_PROPERTY_X86_FEATURE_1_AND */
-+#define GNU_PROPERTY_X86_FEATURE_1_IBT		(0x00000001)
-+#define GNU_PROPERTY_X86_FEATURE_1_SHSTK	(0x00000002)
-+
- #endif /* _UAPI_LINUX_ELF_H */
--- 
-2.17.1
-
+Thanks, Dave.
+--
+Gustavo
