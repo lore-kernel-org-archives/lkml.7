@@ -2,37 +2,53 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D74C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5C7C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF672085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAD12081C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kV7BH9e/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfEATNf (ORCPT
+        id S1726285AbfEATOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:13:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfEATNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:13:34 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A6FD2081C;
-        Wed,  1 May 2019 19:13:31 +0000 (UTC)
-Date:   Wed, 1 May 2019 15:13:30 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
+        Wed, 1 May 2019 15:14:08 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47726 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEATOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 15:14:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CQZu/nhAN5edPKc+7iLxYRmq0e/3BquQrybqmy+ub08=; b=kV7BH9e/fZOTUtilmbKXOkCiV
+        cz68cQ45IykgvQQvjPtQ91s1A3FHoc4l8yPl6DtyoAUW7psmDTq8TptOuHRy2DWwxof2ScJ0n26g8
+        +p3QtsdE8qhgm5ys0tT6IZP/bZVqrceefDeDn3zbQWrd0WSiBJnE7Dez8c9R1B5K96xBI5BzioGke
+        aOQm85JWi3oV0BrQvPO3gcl2SE1WsnnhDDPHJZpLgGkuPaHyZ5hov9fbcukmlTq9Y5TcvpvRxWY3C
+        +qIr+b+4qcPdAZqkigz6+8+61KkKJf2x7Hefo+6LTLtysSYIp4SLDWa351erSFGEgA45thEMbmePY
+        Zk5Af9Wfg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLufX-0002s6-8q; Wed, 01 May 2019 19:13:27 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7370D984EB4; Wed,  1 May 2019 21:13:24 +0200 (CEST)
+Date:   Wed, 1 May 2019 21:13:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Andy Lutomirski <luto@kernel.org>,
         Nicolai Stange <nstange@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Jiri Kosina <jikos@kernel.org>,
         Miroslav Benes <mbenes@suse.cz>,
@@ -52,41 +68,39 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         live-patching@vger.kernel.org,
         "open list:KERNEL SELFTEST FRAMEWORK" 
         <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC][PATCH] ftrace/x86: Emulate call function while updating
- in breakpoint handler
-Message-ID: <20190501151330.023cc620@gandalf.local.home>
-In-Reply-To: <CAHk-=wjCoycqdVjvWkkFnVRQS9fHEzdmiAG4uUV8B04xv7ZVwA@mail.gmail.com>
-References: <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
-        <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
-        <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
-        <20190430135602.GD2589@hirez.programming.kicks-ass.net>
-        <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
-        <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
-        <20190430130359.330e895b@gandalf.local.home>
-        <20190430132024.0f03f5b8@gandalf.local.home>
-        <20190430134913.4e29ce72@gandalf.local.home>
-        <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
-        <20190501131117.GW2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wjCoycqdVjvWkkFnVRQS9fHEzdmiAG4uUV8B04xv7ZVwA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Subject: Re: [RFC][PATCH] ftrace/x86: Emulate call function while updating in
+ breakpoint handler
+Message-ID: <20190501191324.GU7905@worktop.programming.kicks-ass.net>
+References: <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
+ <20190430135602.GD2589@hirez.programming.kicks-ass.net>
+ <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
+ <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
+ <20190430130359.330e895b@gandalf.local.home>
+ <20190430132024.0f03f5b8@gandalf.local.home>
+ <20190430134913.4e29ce72@gandalf.local.home>
+ <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
+ <20190501131117.GW2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wjCoycqdVjvWkkFnVRQS9fHEzdmiAG4uUV8B04xv7ZVwA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjCoycqdVjvWkkFnVRQS9fHEzdmiAG4uUV8B04xv7ZVwA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 May 2019 12:03:52 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
+On Wed, May 01, 2019 at 12:03:52PM -0700, Linus Torvalds wrote:
 > On Wed, May 1, 2019 at 6:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
 > >
-> > Here goes, compile tested only...  
+> > Here goes, compile tested only...
 > 
 > Ugh, two different threads. This has the same bug (same source) as the
 > one Steven posted:
-> 
+
+This is what Steve started from; lets continue in the other thread.
+
 > > --- a/arch/x86/entry/entry_32.S
 > > +++ b/arch/x86/entry/entry_32.S
 > > @@ -1479,6 +1479,13 @@ ENTRY(int3)
@@ -98,22 +112,11 @@ Linus Torvalds <torvalds@linux-foundation.org> wrote:
 > > +       .rept 6
 > > +       pushl   5*4(%esp)
 > > +       .endr
-> > +.Lfrom_usermode_no_gap:  
+> > +.Lfrom_usermode_no_gap:
 > 
 > This will corrupt things horribly if you still use vm86 mode. Checking
 > CS RPL is simply not correct.
 
-I never tested the 32 bit version of this. And we could just not
-implement it (I don't think there's live kernel patching for it
-either).
-
-But this doesn't make it any worse than my version, because under the
-full testing of my patch with the trampolines, I would easily crash the
-32 bit version. That was one reason I made my last patch only support 64
-bit.
-
-Under light load, 32 bit works, but when I stress it (running perf and
-ftrace together) it blows up. Could be an NMI issue.
-
--- Steve
-
+I'll go fix; I never really understood that vm86 crud and I cobbled this
+32bit thing together based on the 64bit version (that Josh did a while
+ago).
