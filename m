@@ -4,78 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56970C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FA7C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBC920866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE4A20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:35:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfEARfB (ORCPT
+        id S1726266AbfEARfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:35:01 -0400
-Received: from verein.lst.de ([213.95.11.211]:54116 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfEARfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:35:01 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 5364068AFE; Wed,  1 May 2019 19:34:43 +0200 (CEST)
-Date:   Wed, 1 May 2019 19:34:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/4] 9p: pass the correct prototype to read_cache_page
-Message-ID: <20190501173443.GA19969@lst.de>
-References: <20190501160636.30841-1-hch@lst.de>
+        Wed, 1 May 2019 13:35:32 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34486 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbfEARfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:35:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2382780D;
+        Wed,  1 May 2019 10:35:31 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2DEA3F719;
+        Wed,  1 May 2019 10:35:29 -0700 (PDT)
+Date:   Wed, 1 May 2019 18:35:27 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zong@andestech.com" <zong@andestech.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
+Message-ID: <20190501173526.GH11740@lakrids.cambridge.arm.com>
+References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
+ <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com>
+ <20190501170053.GG11740@lakrids.cambridge.arm.com>
+ <CAAhSdy2OuCb6wBrs-O=fTWo0D_CgwTztfV-kMDi=tPmSJhM7og@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501160636.30841-1-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAAhSdy2OuCb6wBrs-O=fTWo0D_CgwTztfV-kMDi=tPmSJhM7og@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the callback 9p passes to read_cache_page to actually have the
-proper type expected.  Casting around function pointers can easily
-hide typing bugs, and defeats control flow protection.
+On Wed, May 01, 2019 at 10:41:52PM +0530, Anup Patel wrote:
+> On Wed, May 1, 2019 at 10:30 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
+> > > On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
+> > > > On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
+> > > > > Currently, last stage boot loaders such as U-Boot can accept only
+> > > > > uImage which is an unnecessary additional step in automating boot flows.
+> > > > >
+> > > > > Add a simple image header that boot loaders can parse and directly
+> > > > > load kernel flat Image. The existing booting methods will continue to
+> > > > > work as it is.
+> > > > >
+> > > > > Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+> > > > >
+> > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > > ---
+> > > > >   arch/riscv/include/asm/image.h | 32 ++++++++++++++++++++++++++++++++
+> > > > >   arch/riscv/kernel/head.S       | 28 ++++++++++++++++++++++++++++
+> > > > >   2 files changed, 60 insertions(+)
+> > > > >   create mode 100644 arch/riscv/include/asm/image.h
+> > > > >
+> > > > > diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+> > > > > new file mode 100644
+> > > > > index 000000000000..76a7e0d4068a
+> > > > > --- /dev/null
+> > > > > +++ b/arch/riscv/include/asm/image.h
+> > > > > @@ -0,0 +1,32 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > > +
+> > > > > +#ifndef __ASM_IMAGE_H
+> > > > > +#define __ASM_IMAGE_H
+> > > > > +
+> > > > > +#define RISCV_IMAGE_MAGIC        "RISCV"
+> > > > > +
+> > > > > +#ifndef __ASSEMBLY__
+> > > > > +/*
+> > > > > + * struct riscv_image_header - riscv kernel image header
+> > > > > + *
+> > > > > + * @code0:               Executable code
+> > > > > + * @code1:               Executable code
+> > > > > + * @text_offset: Image load offset
+> > > > > + * @image_size:          Effective Image size
+> > > > > + * @reserved:            reserved
+> > > > > + * @magic:               Magic number
+> > > > > + * @reserved:            reserved
+> > > > > + */
+> > > > > +
+> > > > > +struct riscv_image_header {
+> > > > > + u32 code0;
+> > > > > + u32 code1;
+> > > > > + u64 text_offset;
+> > > > > + u64 image_size;
+> > > > > + u64 res1;
+> > > > > + u64 magic;
+> > > > > + u32 res2;
+> > > > > + u32 res3;
+> > > > > +};
+> > > >
+> > > > I don't want to invent our own file format.  Is there a reason we can't just
+> > > > use something standard?  Off the top of my head I can think of ELF files and
+> > > > multiboot.
+> > >
+> > > Additional header is required to accommodate PE header format. Currently,
+> > > this is only used for booti command but it will be reused for EFI headers as
+> > > well. Linux kernel Image can pretend as an EFI application if PE/COFF header
+> > > is present. This removes the need of an explicit EFI boot loader and EFI
+> > > firmware can directly load Linux (obviously after EFI stub implementation
+> > > for RISC-V).
+> >
+> > Adding the EFI stub on arm64 required very careful consideration of our
+> > Image header and the EFI spec, along with the PE/COFF spec.
+> >
+> > For example, to be a compliant PE/COFF header, the first two bytes of
+> > your kernel image need to be "MZ" in ASCII. On arm64 we happened to find
+> > a valid instruction that we could rely upon that met this requirement...
+> 
+> The "MZ" ASCII (i.e. 0x5a4d) is "li s4,-13" instruction in RISC-V so this
+> modifies "s4" register which is pretty harmless from Linux RISC-V booting
+> perspective.
+> 
+> Of course, we should only add "MZ" ASCII in Linux RISC-V image header
+> when CONFIG_EFI is enabled (just like Linux ARM64).
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/9p/vfs_addr.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Great. It would probably be worth just mentioning that in the commit
+message, so that it's clear that has been considered.
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index 0bcbcc20f769..02e0fc51401e 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -50,8 +50,9 @@
-  * @page: structure to page
-  *
-  */
--static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
-+static int v9fs_fid_readpage(void *data, struct page *page)
- {
-+	struct p9_fid *fid = data;
- 	struct inode *inode = page->mapping->host;
- 	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
- 	struct iov_iter to;
-@@ -122,7 +123,8 @@ static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
- 	if (ret == 0)
- 		return ret;
- 
--	ret = read_cache_pages(mapping, pages, (void *)v9fs_vfs_readpage, filp);
-+	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
-+			filp->private_data);
- 	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
- 	return ret;
- }
--- 
-2.20.1
-
+Thanks,
+Mark.
