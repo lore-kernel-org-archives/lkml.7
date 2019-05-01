@@ -2,91 +2,187 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F71C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B20CC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B33B20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 00:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106FE20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBgRMPrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfEAAzv (ORCPT
+        id S1727379AbfEABDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 20:55:51 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57909 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727553AbfEAAzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 20:55:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44v0Lp6GJ9z9s3l;
-        Wed,  1 May 2019 10:55:46 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Serge Belyshev <belyshev@depni.sinp.msu.ru>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] powerpc/32s: fix BATs setting with CONFIG_STRICT_KERNEL_RWX
-In-Reply-To: <09733bd9d90f2ab9dfee9838442e0bea01df194d.1556640535.git.christophe.leroy@c-s.fr>
-References: <09733bd9d90f2ab9dfee9838442e0bea01df194d.1556640535.git.christophe.leroy@c-s.fr>
-Date:   Wed, 01 May 2019 10:55:46 +1000
-Message-ID: <878svrat7x.fsf@concordia.ellerman.id.au>
+        Tue, 30 Apr 2019 21:03:44 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44467 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfEABDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 21:03:43 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d24so13666355otl.11;
+        Tue, 30 Apr 2019 18:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D8JqNmSTPQ6nq3IPohV0pejJRJM2MdP7k52Jd0Iy06I=;
+        b=OBgRMPrlGwfS7BnihWgRMRHXpInxhXEtdURsse3KRkc+ZvM7i+knOFRaKLwH21DYa3
+         F8UCOqLxraAdLbdy9FpmTRvT7k5NEQ3I5fSV04bHvxOuVMjbQE6bGffD5UCSXQFhP4fk
+         jvV8/JeY2GozDuEVwgMYeYUggtShvpZ1ghFVFNLCDtFxZTcgBuyyEj9hPnd461uKmZm0
+         mVhVRpkbMQwDxpnDzAPhIEXy87g2HfnRurVJm7duPv9x7hOcUXchjiHKKPrWvMveC4Th
+         lApuqLjs6Iy4qw/sugSJop+SMp9YU4aMK3n9tD/bLz+hKPc+miWeeImt04Tb+azg6GVc
+         thqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=D8JqNmSTPQ6nq3IPohV0pejJRJM2MdP7k52Jd0Iy06I=;
+        b=QHebUDaYhGVU1UWNvy6+RQvMEtxzj9QPbdyefgxYb/ETHEPtsOVik1vMphaMpJFVMB
+         JGvGA/aYR+FV0AzNJam3K1MFJXnBG9Zp7Bv/+Mcr15NxntS3U3gR5X0P5Iv/CIVrHx9w
+         8P2xfjYwhcM4KpBQiR/QnGpSt0Pz3vyGTn7MSH0Kwwpa7vamPsUcaoJ56nnmX2AW8e8i
+         mDlGIIQ6nM1q0YEEkASU8YIEWceXJkjElbP3ZR8JzyhxvTjYB7M98hP8D3SOraPEcKOV
+         m6RUB0Nggn8ZCxb4co0tytvQqJef1z5r4i9XFMtxxZnPrNL3lVDHr5MSjzEfCEMZlU0T
+         kYeQ==
+X-Gm-Message-State: APjAAAUVuQC64Xc00xYnABtEjl9injxa8gfuxiUuSxNRTAT0+eY3cbiC
+        8GslL685Onx8Z6PNcqAH672C2ho=
+X-Google-Smtp-Source: APXvYqxqXy3iiWcj3hNDa625EQ39pvs4cZ94rXpyiwWPjpEjxEXyzXcmeRt2XoUGq9xTYbSTAq8o4Q==
+X-Received: by 2002:a9d:6519:: with SMTP id i25mr7244981otl.287.1556672621912;
+        Tue, 30 Apr 2019 18:03:41 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.134.43])
+        by smtp.gmail.com with ESMTPSA id s63sm15756259oif.52.2019.04.30.18.03.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 18:03:41 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:d5e:aa5a:44d8:6907])
+        by serve.minyard.net (Postfix) with ESMTPSA id 8FDB61800CB;
+        Wed,  1 May 2019 01:03:40 +0000 (UTC)
+Date:   Tue, 30 Apr 2019 20:03:31 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Vadim Pasternak <vadimp@mellanox.com>
+Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        Michael Shych <michaelsh@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH v4 0/1] Add support for IPMB driver
+Message-ID: <20190501010300.GG6623@minyard.net>
+Reply-To: minyard@acm.org
+References: <cover.1556645340.git.Asmaa@mellanox.com>
+ <AM6PR05MB5224FCACBD4EF55F3890EC6AA23A0@AM6PR05MB5224.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR05MB5224FCACBD4EF55F3890EC6AA23A0@AM6PR05MB5224.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Serge reported some crashes with CONFIG_STRICT_KERNEL_RWX enabled
-> on a book3s32 machine.
->
-> Analysis shows two issues:
-> - BATs addresses and sizes are not properly aligned.
-> - There is a gap between the last address covered by BATs and the
-> first address covered by pages.
->
-> Memory mapped with DBATs:
-> 0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
-> 1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
-> 2: 0xc0c00000-0xc13fffff 0x00c00000 Kernel RW coherent
-> 3: 0xc1400000-0xc23fffff 0x01400000 Kernel RW coherent
-> 4: 0xc2400000-0xc43fffff 0x02400000 Kernel RW coherent
-> 5: 0xc4400000-0xc83fffff 0x04400000 Kernel RW coherent
-> 6: 0xc8400000-0xd03fffff 0x08400000 Kernel RW coherent
-> 7: 0xd0400000-0xe03fffff 0x10400000 Kernel RW coherent
->
-> Memory mapped with pages:
-> 0xe1000000-0xefffffff  0x21000000       240M        rw       present           dirty  accessed
->
-> This patch fixes both issues. With the patch, we get the following
-> which is as expected:
->
-> Memory mapped with DBATs:
-> 0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
-> 1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
-> 2: 0xc0c00000-0xc0ffffff 0x00c00000 Kernel RW coherent
-> 3: 0xc1000000-0xc1ffffff 0x01000000 Kernel RW coherent
-> 4: 0xc2000000-0xc3ffffff 0x02000000 Kernel RW coherent
-> 5: 0xc4000000-0xc7ffffff 0x04000000 Kernel RW coherent
-> 6: 0xc8000000-0xcfffffff 0x08000000 Kernel RW coherent
-> 7: 0xd0000000-0xdfffffff 0x10000000 Kernel RW coherent
->
-> Memory mapped with pages:
-> 0xe0000000-0xefffffff  0x20000000       256M        rw       present           dirty  accessed
->
-> Reported-by: Serge Belyshev <belyshev@depni.sinp.msu.ru>
-> Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
-> Cc: stable@vger.kernel.org
+On Tue, Apr 30, 2019 at 09:24:29PM +0000, Vadim Pasternak wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Asmaa Mnebhi <Asmaa@mellanox.com>
+> > Sent: Tuesday, April 30, 2019 8:59 PM
+> > To: minyard@acm.org; wsa@the-dreams.de; Vadim Pasternak
+> > <vadimp@mellanox.com>; Michael Shych <michaelsh@mellanox.com>
+> > Cc: Asmaa Mnebhi <Asmaa@mellanox.com>; linux-kernel@vger.kernel.org;
+> > linux-i2c@vger.kernel.org
+> > Subject: [PATCH v4 0/1] Add support for IPMB driver
+> > 
+> > Thank you for your feedback Vadim. I have addressed your comments.
+> 
+> Hi Asmaa,
+> 
+> Thank you for your comments and added doc.
+> 
+> > 
+> > 1) You are correct. This driver is not specific to Mellanox so I have removed the
+> > Mellanox attribute.
+> > 
+> > 2) I have added a documentation file called IPMB.txt which explains how this
+> > module works and how it should be instantiated. It is very similar to the existing
+> > linux i2c-slave-eeprom module.
+> > 
+> > The HW for my testing works as follows:
+> > A BMC is connected to a Satellite MC via I2C (I2C is equivalent to IPMB). The
+> > BMC initiates the IPMB requests and sends them via I2C.
+> > Obviously the BMC needs its own driver to do this which I haven't included in this
+> > code. We have no intent of upstreaming that at the moment.
+> 
+> I believe you are going to do it at some point, right?
 
-I could probably still get this into v5.1 if you're confident it's a
-good fix.
+This is a little confusing to me.  Why wouldn't you use the same driver on the
+BMC?  IIRC, the IPMB protocol is symmetric at this level.
 
-cheers
+-corey
+
+> 
+> > This ipmb-dev-int driver is to be loaded and instantiated on the Satellite MC to
+> > be able to receive IPMB requests. These IPMB request messages will be picked
+> > up by a user space program such (in my case it is OpenIPMI) to handle the
+> > request and generate a response.
+> > The response will be then passed from the user program back to kernel space.
+> > Then this driver would send that response back to the BMC.
+> > 
+> > 3) You asked the following:
+> > 
+> > "Is it expected to be zero in vaid case?"
+> > The 8 least significant bits of the sum is always expected to be 0 in the case
+> > where the checksum is valid. I have added a comment for clarifications.
+> 
+> 
+> > 
+> > "why do you need this cast?"
+> > buf[++ipmb_dev_p->msg_idx]=(u8)(client->addr<<1)
+> > This is because client->addr is of type unsigned short which is
+> > 2 bytes so it is safer to typecast it to u8 (u8* buf)
+> 
+> Better, if you can avoid cast.
+> Would compiler warn if you use for example
+> rol16(client->addr, 1) & GENMASK(7, 0);
+> or something like it?
+> 
+> 
+> > 
+> > "It could be only single ipmb-dev within the system? Couldn't it be few, like
+> > master/slave for example?"
+> > My understanding of your question is that: what if we have multiple instances of
+> > ipmb-dev-int, that we register it under different addresses?
+> > This driver only works as a slave so it will only be instantiated once on the
+> > Satellite MC under one slave address.
+> 
+> I mentioned some config like:
+> BMC1 (master)  -- busA --|
+> 			Satellite
+> BMC2 (standby)	-- busB --| 
+> 
+> Since this is not Mellanox specific driver, maybe it would be good to support
+> multiple instances of it.
+
+I second this.  Especially if it's on a BMC, you can expect to have multiple
+IPMBs.
+
+-corey
+
+> 
+> > 
+> > Asmaa Mnebhi (1):
+> >   Add support for IPMB driver
+> > 
+> >  Documentation/IPMB.txt           |  53 ++++++
+> >  drivers/char/ipmi/Kconfig        |   8 +
+> >  drivers/char/ipmi/Makefile       |   1 +
+> >  drivers/char/ipmi/ipmb_dev_int.c | 381
+> > +++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 443 insertions(+)
+> >  create mode 100644 Documentation/IPMB.txt  create mode 100644
+> > drivers/char/ipmi/ipmb_dev_int.c
+> > 
+> > --
+> > 2.1.2
+> 
