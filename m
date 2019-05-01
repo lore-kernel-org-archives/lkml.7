@@ -2,91 +2,70 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D23AC46470
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BF1C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E5221670
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:37:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fjfi.cvut.cz header.i=@fjfi.cvut.cz header.b="AS7jt7FK"
+	by mail.kernel.org (Postfix) with ESMTP id B68DC20835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfEAKhJ (ORCPT
+        id S1726362AbfEAKiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 06:37:09 -0400
-Received: from mailgw2.fjfi.cvut.cz ([147.32.9.131]:37416 "EHLO
-        mailgw2.fjfi.cvut.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfEAKhI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 06:37:08 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTP id 02625A0261;
-        Wed,  1 May 2019 12:37:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjfi.cvut.cz;
-        s=20151024; t=1556707026; i=@fjfi.cvut.cz;
-        bh=xUNgtvQRFKyYsdfzqHIQRM1/8TevvQ9MUZytgCe0Bcg=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References;
-        b=AS7jt7FKvTgOTl13fyJcvaOTmNJ2dZf4ZuuB17hfuzLpXKbkjnJ9YmDqdAUvphajn
-         YYnHoGYNT8phdmDr3oRDhSeVcuZC+Bf6ZNFTZbQaMA+eUDtosG332AHP0oBgX10g6m
-         mKIOk1DPak4GBM7EkEAAILym7uJqpLbBOAHli7fo=
-X-CTU-FNSPE-Virus-Scanned: amavisd-new at fjfi.cvut.cz
-Received: from mailgw2.fjfi.cvut.cz ([127.0.0.1])
-        by localhost (mailgw2.fjfi.cvut.cz [127.0.0.1]) (amavisd-new, port 10022)
-        with ESMTP id sWmveC4fgvN5; Wed,  1 May 2019 12:36:41 +0200 (CEST)
-Received: from linux.fjfi.cvut.cz (linux.fjfi.cvut.cz [147.32.5.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailgw2.fjfi.cvut.cz (Postfix) with ESMTPS id 5D1DAA00DC;
-        Wed,  1 May 2019 12:36:41 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailgw2.fjfi.cvut.cz 5D1DAA00DC
-Received: by linux.fjfi.cvut.cz (Postfix, from userid 1001)
-        id 147DB6004D; Wed,  1 May 2019 12:36:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by linux.fjfi.cvut.cz (Postfix) with ESMTP id E8CC06002A;
-        Wed,  1 May 2019 12:36:40 +0200 (CEST)
-Date:   Wed, 1 May 2019 12:36:40 +0200 (CEST)
-From:   David Kozub <zub@linux.fjfi.cvut.cz>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Scott Bauer <sbauer@plzdonthack.me>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-cc:     Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: Re: [PATCH 1/3] block: sed-opal: add ioctl for done-mark of shadow
- mbr
-In-Reply-To: <1556666459-17948-2-git-send-email-zub@linux.fjfi.cvut.cz>
-Message-ID: <alpine.LRH.2.21.1905010145240.19150@linux.fjfi.cvut.cz>
-References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz> <1556666459-17948-2-git-send-email-zub@linux.fjfi.cvut.cz>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Wed, 1 May 2019 06:38:18 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57718 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfEAKiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 06:38:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBCEB80D;
+        Wed,  1 May 2019 03:38:17 -0700 (PDT)
+Received: from [10.1.37.14] (unknown [10.1.37.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF9383F719;
+        Wed,  1 May 2019 03:38:14 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v7 05/23] iommu: Introduce cache_invalidate API
+To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, will.deacon@arm.com, robin.murphy@arm.com
+Cc:     peter.maydell@linaro.org, kevin.tian@intel.com,
+        vincent.stehle@arm.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com
+References: <20190408121911.24103-1-eric.auger@redhat.com>
+ <20190408121911.24103-6-eric.auger@redhat.com>
+Message-ID: <a9745aef-8686-c761-e3d0-dd0e98a1f5b2@arm.com>
+Date:   Wed, 1 May 2019 11:38:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <20190408121911.24103-6-eric.auger@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 May 2019, David Kozub wrote:
+On 08/04/2019 13:18, Eric Auger wrote:
+> +int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
+> +			   struct iommu_cache_invalidate_info *inv_info)
+> +{
+> +	int ret = 0;
+> +
+> +	if (unlikely(!domain->ops->cache_invalidate))
+> +		return -ENODEV;
+> +
+> +	ret = domain->ops->cache_invalidate(domain, dev, inv_info);
+> +
+> +	return ret;
 
-> @@ -104,6 +109,12 @@ struct opal_mbr_data {
-> 	__u8 __align[7];
-> };
->
-> +struct opal_mbr_done {
-> +	struct opal_key key;
-> +	__u8 done_flag;
-> +	__u8 __align[7];
-> +};
+Nit: you don't really need ret
 
-While I just copied opal_mbr_data here, I wonder what is the point of 
-__align in these structs. By itself it just pads the structure to have a 
-size that is a multiple of 8. Is this to make sure that anything that lies 
-past the structure is 8-bytes aligned (assuming the start is 8-bytes 
-aligned too), perhaps for 32bit userspace with 64bit kernel?
+The UAPI looks good to me, so
 
-And if it's this, is it needed for these IOCTL structs? (I can see it 
-being useful for struct opal_key.)
-
-Best regards,
-David
+Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
