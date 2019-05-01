@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4031FC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F84C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DF220656
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B97B20651
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:37:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGuIYAYe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WU3EDWzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfEAUhC (ORCPT
+        id S1726285AbfEAUhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:37:02 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:52663 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfEAUhB (ORCPT
+        Wed, 1 May 2019 16:37:05 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39687 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfEAUhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:37:01 -0400
-Received: by mail-it1-f196.google.com with SMTP id x132so637498itf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 13:37:00 -0700 (PDT)
+        Wed, 1 May 2019 16:37:03 -0400
+Received: by mail-io1-f65.google.com with SMTP id c3so130108iok.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 13:37:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+KAo6ijPdCS4aoHsw3o79Oxi2MB5E6AUiqT1snQkbWo=;
-        b=bGuIYAYeo9Ag9IwHTV+sNMxXiahJ+gyUV9oPDMfeLh6nAJ7YAD2rplVBwZNKwn7V5d
-         JW21fHWBzJ9iqBeJaTrko79n577lecZRU06PFqoMCW2yz49GZ5cY2nK3Xzn3dw3M+vdH
-         3j0+Px+1Kbq0oa95lEOHXWRzWN6FQab9D/JZGOzbg7yBZ6rwruSR85X5nkckGepxjygh
-         HAyQeUwCYGGUwRZUjAUB1xdkF94h3fhcFf72VaFvKsIuScZJvRMLln5A1D31bBafdQ41
-         tQn+D2KSlzAB0WJvbg8h22EZ4inZwHPbnMSvHUIoOUNZ1SXFah2EZoGb7zKF88tL9irD
-         YABw==
+        bh=3zIAKpFfXPkXqRz5OrRs3k5HritCnvTMh+/IiInNaVk=;
+        b=WU3EDWzrKPd8bv5M9R2EmAJo+tuQeQfxsPd/zkBzzTFPbnFAKtJEBcTTgVdStqwkq/
+         tJbXmkjQ6n9eMjakSPQVs65e7nswhRIT1ApRhKA9VBrE4RsLm+DOma75Xh8Wf+0k9wS5
+         DjbtXAvU75Jd99XdJfAr9BSmFTG0eSODaXGCCbjB/IamS/NDPypzban3QtGyWZ7E2+Ci
+         sJ0PLQKVvByZfySNTBYxqHtg9wOlJwiLhh5HWB+ybpuivLweRCc9ovHzYyMN5a1gnFnb
+         ABxrGp72ww8JjXvPXc/ruXO42Q5V5HQsZdHmILBVi6JV2PIR9MMjXlw6HVmg3ao4+ve5
+         9O1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+KAo6ijPdCS4aoHsw3o79Oxi2MB5E6AUiqT1snQkbWo=;
-        b=cQcHSlluUreswQMDMGF+oC7GUFKHfGog8FttoegJGzc74FZotYuAoaFR/sxwyO5O2L
-         SJG+Cbk3xXzLnQGtSmZI0lYHor9udiOpA44qiEjVKs+TxmKvFu8Fb5zx+Gc1LyRj3SSd
-         MwTwyNZnawTr/DF23wo4u+lmg/faCiPMbp9sYCEwdSE0N17QIAbWvF0y26pOJ8xtPkP9
-         QDMTO2P1UT3TS0w/d/6dXosa4CdvvyMY8bOSUh7O/z9+SPMaymODaiMCVbKIg1Y4veLI
-         C8qbBVUTyyRWqLjZYcB9X65gVIKhFjCAP92ymzzzKpPq3BlgrqHzwKQg7CrE4JaRw2xX
-         LFiA==
-X-Gm-Message-State: APjAAAX5Q4p/9ReFmrb/TbX0lO4YJwj0vVjv/tfdlrKJApUckyw+CIfL
-        prdeMHLKiEQpHiXvHZhBJw==
-X-Google-Smtp-Source: APXvYqwTHcmMRjNgMB60ONlq+GbAAfOIUkIVKKYwajj8cCMrFHXW/1JfrkH233ZnRjnEWSInIYpizw==
-X-Received: by 2002:a24:6e15:: with SMTP id w21mr9581660itc.170.1556743019665;
-        Wed, 01 May 2019 13:36:59 -0700 (PDT)
+        bh=3zIAKpFfXPkXqRz5OrRs3k5HritCnvTMh+/IiInNaVk=;
+        b=iiIvaqdqJcq0yEMMCehK4J73jzbHwnKi8FuhK3geiTo0EIcYwDIRYE4PzeGmE2AiV9
+         yTV9b4ZznBi6gfIBTR7k+VqQh+72haq3DVizIvM8LMLIpK8lP+eFCvPo51vyyZNTWiVd
+         aqs1mftumFGI/aAiZWganH2Fv/PGM6vTKiTWdb8wsO1Q+t4WYyTEzViIFxUFx/63xqRr
+         1e0zA2BrEf7SGBUW3V5ztOc5cqmwG0TapfNohrXfDz5sJimyr99EK4R6TWUk52s49N2j
+         A3vgug/F1lTL9N48HXJBUd6cTNa2E4ULyvw3phWs/gtBBN4lhAwXoKfT1UMNzN/n3P58
+         UckQ==
+X-Gm-Message-State: APjAAAWuQcMHQW4wmRO9vg5+HwsyGu0yuS3xShSs5OkSeH1DKG+K46na
+        P+pmRBvfixTeBNBUok+4sg==
+X-Google-Smtp-Source: APXvYqzVLe43sUufLeXmYCBmTkeSg0k/ZyYIJ0Xc3seALVBFcwKJpLFT9k4xXRvwEeXwzP7pTWtBpQ==
+X-Received: by 2002:a6b:c38d:: with SMTP id t135mr17799785iof.284.1556743021797;
+        Wed, 01 May 2019 13:37:01 -0700 (PDT)
 Received: from localhost.localdomain ([92.117.183.162])
-        by smtp.gmail.com with ESMTPSA id u16sm9323998iol.66.2019.05.01.13.36.57
+        by smtp.gmail.com with ESMTPSA id u16sm9323998iol.66.2019.05.01.13.36.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 13:36:59 -0700 (PDT)
+        Wed, 01 May 2019 13:37:01 -0700 (PDT)
 From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
 Cc:     Joel Fernandes <joel@joelfernandes.org>,
         Viktor Rosendahl <viktor.rosendahl@gmail.com>
-Subject: [PATCH v2 1/4] ftrace: Implement fs notification for preempt/irqsoff tracers
-Date:   Wed,  1 May 2019 22:36:47 +0200
-Message-Id: <20190501203650.29548-2-viktor.rosendahl@gmail.com>
+Subject: [PATCH v2 2/4] preemptirq_delay_test: Add the burst feature and a sysfs trigger
+Date:   Wed,  1 May 2019 22:36:48 +0200
+Message-Id: <20190501203650.29548-3-viktor.rosendahl@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190501203650.29548-1-viktor.rosendahl@gmail.com>
 References: <20190501203650.29548-1-viktor.rosendahl@gmail.com>
@@ -71,197 +71,238 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements the feature that the trace file, e.g.
-/sys/kernel/debug/tracing/trace will receive notifications through
-the fsnotify framework when a new trace is available.
+This burst feature enables the user to generate a burst of
+preempt/irqsoff latencies. This makes it possible to test whether we
+are able to detect latencies that systematically occur very close to
+each other.
 
-This makes it possible to implement a user space program that can,
-with equal probability, obtain traces of latencies that occur
-immediately after each other in spite of the fact that the
-preempt/irqsoff tracers operate in overwrite mode.
+The maximum burst size is 10. We also create 10 identical test
+functions, so that we get 10 different backtraces; this is useful
+when we want to test whether we can detect all the latencies in a
+burst. Otherwise, there would be no easy way of differentiating
+between which latency in a burst was captured by the tracer.
+
+In addition, there is a sysfs trigger, so that it's not necessary to
+reload the module to repeat the test. The trigger will appear as
+/sys/kernel/preemptirq_delay_test/trigger in sysfs.
 
 Signed-off-by: Viktor Rosendahl <viktor.rosendahl@gmail.com>
 ---
- kernel/trace/Kconfig         | 10 ++++++++++
- kernel/trace/trace.c         | 31 +++++++++++++++++++++++++++++--
- kernel/trace/trace.h         |  5 +++++
- kernel/trace/trace_irqsoff.c | 35 +++++++++++++++++++++++++++++++++++
- 4 files changed, 79 insertions(+), 2 deletions(-)
+ kernel/trace/Kconfig                 |   6 +-
+ kernel/trace/preemptirq_delay_test.c | 145 +++++++++++++++++++++++----
+ 2 files changed, 129 insertions(+), 22 deletions(-)
 
 diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 8bd1d6d001d7..35e5fd3224f6 100644
+index 35e5fd3224f6..e5e8f2a0199e 100644
 --- a/kernel/trace/Kconfig
 +++ b/kernel/trace/Kconfig
-@@ -234,6 +234,16 @@ config PREEMPT_TRACER
- 	  enabled. This option and the irqs-off timing option can be
- 	  used together or separately.)
+@@ -750,9 +750,9 @@ config PREEMPTIRQ_DELAY_TEST
+ 	  configurable delay. The module busy waits for the duration of the
+ 	  critical section.
  
-+	config PREEMPTIRQ_FSNOTIFY
-+	bool "Generate fsnotify events for the latency tracers"
-+	default n
-+	depends on (IRQSOFF_TRACER || PREEMPT_TRACER) && FSNOTIFY
-+	help
-+	  This option will enable the generation of fsnotify events for the
-+	  trace file. This makes it possible for userspace to be notified about
-+	  modification of /sys/kernel/debug/tracing/trace through the inotify
-+	  interface.
-+
- config SCHED_TRACER
- 	bool "Scheduling Latency Tracer"
- 	select GENERIC_TRACER
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ca1ee656d6d8..ebefb8d4e072 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -44,6 +44,8 @@
- #include <linux/trace.h>
- #include <linux/sched/clock.h>
- #include <linux/sched/rt.h>
-+#include <linux/fsnotify.h>
-+#include <linux/workqueue.h>
+-	  For example, the following invocation forces a one-time irq-disabled
+-	  critical section for 500us:
+-	  modprobe preemptirq_delay_test test_mode=irq delay=500000
++	  For example, the following invocation generates a burst of three
++	  irq-disabled critical sections for 500us:
++	  modprobe preemptirq_delay_test test_mode=irq delay=500 burst_size=3
  
- #include "trace.h"
- #include "trace_output.h"
-@@ -8191,6 +8193,32 @@ static __init void create_trace_instances(struct dentry *d_tracer)
- 		return;
- }
+ 	  If unsure, say N
  
-+#ifdef CONFIG_PREEMPTIRQ_FSNOTIFY
-+
-+static void trace_notify_workfn(struct work_struct *work)
-+{
-+	struct trace_array *tr = container_of(work, struct trace_array,
-+					      notify_work);
-+	fsnotify(tr->d_trace->d_inode, FS_MODIFY, tr->d_trace->d_inode,
-+		 FSNOTIFY_EVENT_INODE, NULL, 0);
-+}
-+
-+static void trace_create_trace_file(struct trace_array *tr,
-+				    struct dentry *d_tracer)
-+{
-+	/* For notify we need to init the work structure and save the pointer */
-+	INIT_WORK(&tr->notify_work, trace_notify_workfn);
-+	tr->d_trace = trace_create_file("trace", 0644, d_tracer, tr,
-+					&tracing_fops);
-+}
-+
-+#else /* !CONFIG_PREEMPTIRQ_FSNOTIFY */
-+
-+#define trace_create_trace_file(tr, d_tracer) \
-+	trace_create_file("trace", 0644, d_tracer, tr, &tracing_fops)
-+
-+#endif
-+
- static void
- init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- {
-@@ -8209,8 +8237,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 	trace_create_file("trace_options", 0644, d_tracer,
- 			  tr, &tracing_iter_fops);
- 
--	trace_create_file("trace", 0644, d_tracer,
--			  tr, &tracing_fops);
-+	trace_create_trace_file(tr, d_tracer);
- 
- 	trace_create_file("trace_pipe", 0444, d_tracer,
- 			  tr, &tracing_pipe_fops);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index d80cee49e0eb..59dc01ac52fd 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -17,6 +17,7 @@
- #include <linux/compiler.h>
- #include <linux/trace_seq.h>
- #include <linux/glob.h>
-+#include <linux/workqueue.h>
- 
- #ifdef CONFIG_FTRACE_SYSCALLS
- #include <asm/unistd.h>		/* For NR_SYSCALLS	     */
-@@ -302,6 +303,10 @@ struct trace_array {
- 	struct dentry		*options;
- 	struct dentry		*percpu_dir;
- 	struct dentry		*event_dir;
-+#ifdef CONFIG_PREEMPTIRQ_FSNOTIFY
-+	struct dentry		*d_trace;
-+	struct work_struct	notify_work;
-+#endif
- 	struct trace_options	*topts;
- 	struct list_head	systems;
- 	struct list_head	events;
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index a745b0cee5d3..07a391e845de 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -82,6 +82,31 @@ static inline int irqsoff_display_graph(struct trace_array *tr, int set)
+diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
+index d8765c952fab..dc281fa75198 100644
+--- a/kernel/trace/preemptirq_delay_test.c
++++ b/kernel/trace/preemptirq_delay_test.c
+@@ -3,6 +3,7 @@
+  * Preempt / IRQ disable delay thread to test latency tracers
+  *
+  * Copyright (C) 2018 Joel Fernandes (Google) <joel@joelfernandes.org>
++ * Copyright (C) 2018, 2019 BMW Car IT GmbH
   */
- static __cacheline_aligned_in_smp	unsigned long max_sequence;
  
-+#ifdef CONFIG_PREEMPTIRQ_FSNOTIFY
-+
-+static struct workqueue_struct *notify_wq;
-+
-+static __init void trace_file_notify_init(void)
-+{
-+	notify_wq = alloc_workqueue("irqsoff_notify_wq",
-+				    WQ_UNBOUND | WQ_HIGHPRI, 0);
-+	if (!notify_wq)
-+		pr_err("Unable to allocate irqsoff_notify_wq");
-+}
-+
-+static inline void trace_file_notify(struct trace_array *tr)
-+{
-+	if (likely(notify_wq))
-+		queue_work(notify_wq, &tr->notify_work);
-+}
-+
-+#else /* !CONFIG_PREEMPTIRQ_FSNOTIFY */
-+
-+#define trace_file_notify_init() do {} while (0)
-+#define trace_file_notify(tr) do {} while (0)
-+
-+#endif /* !CONFIG_PREEMPTIRQ_FSNOTIFY */
-+
- #ifdef CONFIG_FUNCTION_TRACER
- /*
-  * Prologue for the preempt and irqs off function tracers.
-@@ -323,6 +348,7 @@ check_critical_timing(struct trace_array *tr,
- 	u64 T0, T1, delta;
- 	unsigned long flags;
- 	int pc;
-+	bool notify = false;
+ #include <linux/trace_clock.h>
+@@ -10,18 +11,25 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
++#include <linux/kobject.h>
+ #include <linux/kthread.h>
+ #include <linux/module.h>
+ #include <linux/printk.h>
+ #include <linux/string.h>
++#include <linux/sysfs.h>
  
- 	T0 = data->preempt_timestamp;
- 	T1 = ftrace_now(cpu);
-@@ -353,6 +379,7 @@ check_critical_timing(struct trace_array *tr,
- 	if (likely(!is_tracing_stopped())) {
- 		tr->max_latency = delta;
- 		update_max_tr_single(tr, current, cpu);
-+		notify = true;
- 	}
+ static ulong delay = 100;
+-static char test_mode[10] = "irq";
++static char test_mode[12] = "irq";
++static uint burst_size = 1;
  
- 	max_sequence++;
-@@ -364,6 +391,13 @@ check_critical_timing(struct trace_array *tr,
- 	data->critical_sequence = max_sequence;
- 	data->preempt_timestamp = ftrace_now(cpu);
- 	__trace_function(tr, CALLER_ADDR0, parent_ip, flags, pc);
+-module_param_named(delay, delay, ulong, S_IRUGO);
+-module_param_string(test_mode, test_mode, 10, S_IRUGO);
+-MODULE_PARM_DESC(delay, "Period in microseconds (100 uS default)");
+-MODULE_PARM_DESC(test_mode, "Mode of the test such as preempt or irq (default irq)");
++module_param_named(delay, delay, ulong, 0444);
++module_param_string(test_mode, test_mode, 12, 0444);
++module_param_named(burst_size, burst_size, uint, 0444);
++MODULE_PARM_DESC(delay, "Period in microseconds (100 us default)");
++MODULE_PARM_DESC(test_mode, "Mode of the test such as preempt, irq, or alternate (default irq)");
++MODULE_PARM_DESC(burst_size, "The size of a burst (default 1)");
 +
-+	/*
-+	 * We are optimizing for a high threshold, meaning that this will
-+	 * happen seldom
-+	 */
-+	if (unlikely(notify))
-+		trace_file_notify(tr);
++#define MIN(x, y) ((x) < (y) ? (x) : (y))
+ 
+ static void busy_wait(ulong time)
+ {
+@@ -34,37 +42,136 @@ static void busy_wait(ulong time)
+ 	} while ((end - start) < (time * 1000));
  }
  
- static nokprobe_inline void
-@@ -745,6 +779,7 @@ static struct tracer preemptirqsoff_tracer __read_mostly =
- 
- __init static int init_irqsoff_tracer(void)
+-static int preemptirq_delay_run(void *data)
++static __always_inline void irqoff_test(void)
  {
-+	trace_file_notify_init();
- #ifdef CONFIG_IRQSOFF_TRACER
- 	register_tracer(&irqsoff_tracer);
- #endif
+ 	unsigned long flags;
++	local_irq_save(flags);
++	busy_wait(delay);
++	local_irq_restore(flags);
++}
+ 
+-	if (!strcmp(test_mode, "irq")) {
+-		local_irq_save(flags);
+-		busy_wait(delay);
+-		local_irq_restore(flags);
+-	} else if (!strcmp(test_mode, "preempt")) {
+-		preempt_disable();
+-		busy_wait(delay);
+-		preempt_enable();
++static __always_inline void preemptoff_test(void)
++{
++	preempt_disable();
++	busy_wait(delay);
++	preempt_enable();
++}
++
++static void execute_preemptirqtest(int idx)
++{
++	if (!strcmp(test_mode, "irq"))
++		irqoff_test();
++	else if (!strcmp(test_mode, "preempt"))
++		preemptoff_test();
++	else if (!strcmp(test_mode, "alternate")) {
++		if (idx % 2 == 0)
++			irqoff_test();
++		else
++			preemptoff_test();
+ 	}
++}
++
++#define DECLARE_TESTFN(POSTFIX)				\
++	static void preemptirqtest_##POSTFIX(int idx)	\
++	{						\
++		execute_preemptirqtest(idx);		\
++	}						\
+ 
++/*
++ * We create 10 different functions, so that we can get 10 different
++ * backtraces.
++ */
++DECLARE_TESTFN(0)
++DECLARE_TESTFN(1)
++DECLARE_TESTFN(2)
++DECLARE_TESTFN(3)
++DECLARE_TESTFN(4)
++DECLARE_TESTFN(5)
++DECLARE_TESTFN(6)
++DECLARE_TESTFN(7)
++DECLARE_TESTFN(8)
++DECLARE_TESTFN(9)
++
++static void (*testfuncs[])(int)  = {
++	preemptirqtest_0,
++	preemptirqtest_1,
++	preemptirqtest_2,
++	preemptirqtest_3,
++	preemptirqtest_4,
++	preemptirqtest_5,
++	preemptirqtest_6,
++	preemptirqtest_7,
++	preemptirqtest_8,
++	preemptirqtest_9,
++};
++
++#define NR_TEST_FUNCS ARRAY_SIZE(testfuncs)
++
++static int preemptirq_delay_run(void *data)
++{
++	int i;
++	int s = MIN(burst_size, NR_TEST_FUNCS);
++
++	for (i = 0; i < s; i++)
++		(testfuncs[i])(i);
+ 	return 0;
+ }
+ 
+-static int __init preemptirq_delay_init(void)
++static struct task_struct *preemptirq_start_test(void)
+ {
+ 	char task_name[50];
+-	struct task_struct *test_task;
+ 
+ 	snprintf(task_name, sizeof(task_name), "%s_test", test_mode);
++	return kthread_run(preemptirq_delay_run, NULL, task_name);
++}
++
++
++static ssize_t trigger_store(struct kobject *kobj, struct kobj_attribute *attr,
++			 const char *buf, size_t count)
++{
++	preemptirq_start_test();
++	return count;
++}
++
++static struct kobj_attribute trigger_attribute =
++	__ATTR(trigger, 0200, NULL, trigger_store);
++
++static struct attribute *attrs[] = {
++	&trigger_attribute.attr,
++	NULL,
++};
++
++static struct attribute_group attr_group = {
++	.attrs = attrs,
++};
++
++static struct kobject *preemptirq_delay_kobj;
++
++static int __init preemptirq_delay_init(void)
++{
++	struct task_struct *test_task;
++	int retval;
++
++	test_task = preemptirq_start_test();
++	retval = PTR_ERR_OR_ZERO(test_task);
++	if (retval != 0)
++		return retval;
++
++	preemptirq_delay_kobj = kobject_create_and_add("preemptirq_delay_test",
++						       kernel_kobj);
++	if (!preemptirq_delay_kobj)
++		return -ENOMEM;
++
++	retval = sysfs_create_group(preemptirq_delay_kobj, &attr_group);
++	if (retval)
++		kobject_put(preemptirq_delay_kobj);
+ 
+-	test_task = kthread_run(preemptirq_delay_run, NULL, task_name);
+-	return PTR_ERR_OR_ZERO(test_task);
++	return retval;
+ }
+ 
+ static void __exit preemptirq_delay_exit(void)
+ {
+-	return;
++	kobject_put(preemptirq_delay_kobj);
+ }
+ 
+ module_init(preemptirq_delay_init)
 -- 
 2.17.1
 
