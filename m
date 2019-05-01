@@ -2,81 +2,97 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D878AC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BEEC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBED21743
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B13208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQJpgIgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfEAQNh (ORCPT
+        id S1726656AbfEAQOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:13:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34088 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbfEAQNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:13:36 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9B3D4309175F;
-        Wed,  1 May 2019 16:13:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7519A100200A;
-        Wed,  1 May 2019 16:13:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  1 May 2019 18:13:34 +0200 (CEST)
-Date:   Wed, 1 May 2019 18:13:30 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v3 1/4] ptrace: move clearing of TIF_SYSCALL_EMU flag to
- core
-Message-ID: <20190501161330.GD30235@redhat.com>
-References: <20190430170520.29470-1-sudeep.holla@arm.com>
- <20190430170520.29470-2-sudeep.holla@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430170520.29470-2-sudeep.holla@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 01 May 2019 16:13:36 +0000 (UTC)
+        Wed, 1 May 2019 12:14:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45895 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfEAQOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 12:14:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id e24so8794699pfi.12;
+        Wed, 01 May 2019 09:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MtPcWFimi13xS3IBIx9BAJvwvZMDedknu7EfbmKtTWY=;
+        b=FQJpgIglCJ0STefvmKylU7hCbm9/3Ti8NdGAjxmYsarjZNYLDciepWCd3aHOjfpkWl
+         wmAa5L2N7Y6yFny/vBSqk7W7BI5FhkmYq0U59el4Mybcq9InW0WjBJUGeg1ogQZNkGBt
+         GueH03/qpPNvi2UpJ3QBCgx6ZCBgVneWvbOPXk8sqjB3KU3POR5rOPhmSvHQC3weufdw
+         kEbZf44EgL+zNX3U/5tonWDsUuEK6IWRuorC++4JOoDBUps2fxX/Hw7Tr26dJOQ3PXif
+         T4JTAF72jU1r+mHcH1yvPRUzjMAqDu7MU6iq+Kpv8QgvJu3MNZinuKTzg317rIpVEbHa
+         i5jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MtPcWFimi13xS3IBIx9BAJvwvZMDedknu7EfbmKtTWY=;
+        b=AiT+RGJIme7UINYCCe24wcvJSI6cbSF2mksWBjg1gY7KS1hTX8tZyZ/AxmTXF26uli
+         GdMosyXoLIYHN37erIViIBRCT9d1wMYFEYiQrXxoCEyo+z5VZqTIToQXfkVihm54M8ok
+         v/Qetm/nxmiUk0Sbi+cMk9Um7voR7wMGLvFW4CTAbpP8TC+NHiB/PkVlOKdH20+jGepG
+         8+ZTAMhn1wiprAY5hvIl+FYA/abfcXDSsYvCMB9dBLFi48to43jWE5VAqZhlg0WBrTa4
+         lfPqwjHCmCf0VjJY/Ikxe3mbuSKepS03ajWdhBl+ok7Fu6D9Q6GVDs5uykiLZGN1EOmO
+         6J7g==
+X-Gm-Message-State: APjAAAUhWFPYujBwcuPs3JYY4Bs5DhXBbFAzv2jjmTpKy3Ye1I7L8/8E
+        truvwsf6SpoUK1iEtKFEkUaTKSw6
+X-Google-Smtp-Source: APXvYqyHYU9WI4SIoemO/0OUMF/xgVkvo4cWypdtmSh6f0UJvj0k5fgpL7UiIzxsX9urC7r36EOPMg==
+X-Received: by 2002:a62:2b4e:: with SMTP id r75mr28501975pfr.131.1556727285407;
+        Wed, 01 May 2019 09:14:45 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 132sm32102040pfw.87.2019.05.01.09.14.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 09:14:44 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] drm/msm/mdp5: Fix mdp5_cfg_init error return
+Date:   Wed,  1 May 2019 09:14:37 -0700
+Message-Id: <20190501161437.15728-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/30, Sudeep Holla wrote:
->
-> While the TIF_SYSCALL_EMU is set in ptrace_resume independent of any
-> architecture, currently only powerpc and x86 unset the TIF_SYSCALL_EMU
-> flag in ptrace_disable which gets called from ptrace_detach.
->
-> Let's move the clearing of TIF_SYSCALL_EMU flag to __ptrace_unlink
-> which gets executed from ptrace_detach and also keep it along with
-> or close to clearing of TIF_SYSCALL_TRACE.
->
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+If mdp5_cfg_init fails because of an unknown major version, a null pointer
+dereference occurs.  This is because the caller of init expects error
+pointers, but init returns NULL on error.  Fix this by returning the
+expected values on error.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+index ea8f7d7daf7f..52e23780fce1 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+@@ -721,7 +721,7 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+ 	if (cfg_handler)
+ 		mdp5_cfg_destroy(cfg_handler);
+ 
+-	return NULL;
++	return ERR_PTR(ret);
+ }
+ 
+ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
+-- 
+2.17.1
 
