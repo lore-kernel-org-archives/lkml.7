@@ -2,107 +2,103 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF51C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE66C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E0E20644
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA7F2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556744454;
+	bh=l/wR4d4iRsfjpuQxW9MR9oYJf6ZsBFqafHtxFbdg7CM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rr6olnzLy7SyyK6faGguYJyuTk88l9RzHByuKMtZPLyIo/fMSfAsFob5cqWIr3sW+
+	 nr6FOR4Sb35+A3L3DnLxVnyAYqIvtxChlbCrLNJ53upwpWBLpH4g4X78hekmlVmhSt
+	 zToG9htG6K5RAQTXg96FBJXjnEMmngJEh4Gmt6FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfEAU4U (ORCPT
+        id S1726183AbfEAVAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:56:20 -0400
-Received: from gateway20.websitewelcome.com ([192.185.47.18]:27988 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbfEAU4T (ORCPT
+        Wed, 1 May 2019 17:00:53 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33617 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfEAVAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:56:19 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 435F2400C5273
-        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 15:56:19 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id LwH5haKSb2qH7LwH5htMZK; Wed, 01 May 2019 15:56:19 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.203] (port=53920 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hLwGU-0045wh-6U; Wed, 01 May 2019 15:56:18 -0500
-Date:   Wed, 1 May 2019 15:55:41 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH][next] i40e: mark expected switch fall-through
-Message-ID: <20190501205541.GA17995@embeddedor>
+        Wed, 1 May 2019 17:00:52 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l1so100517oib.0;
+        Wed, 01 May 2019 14:00:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fhyjh+pEfTmxGVzs4D2NxCU9BjdUSsUEryv2fL7NV2Q=;
+        b=aJ27kwJKE1bHITPpYzgGDnZvwKlGN6k5VpQDiDet08cxGP9h+A04A0X0IrOVGFsHOK
+         fq6dXT6D+mBZ6k+PMDLngx8UFdXEdKWdHnIfLA3VUuvb8yvc/dyiBoxDA+I27iTfXIFJ
+         AccRIrDPye+28jjp650/n8qY91jKPQN4QHrawqYAGJPacZ1yqypu2zfJ0xmWrA2Ly6nC
+         y0qlutIHwoNalFwY4NJQP0d3aVK9XGmNjOxfK5nhCIvYq8XqDwjuhv0u01yeR3Fx551F
+         NvFwj2WhSpdfqYS2FK6ZepkfVhl/X2bna6ALLsgun1FtqfX/wpUD6+3XKRaTWHgDFU/W
+         msuQ==
+X-Gm-Message-State: APjAAAVHyUmwVzSvSbSBz5J4IzNRM6FpZwN4SXL8rYB3WQiLBonMELM/
+        Z7AwX/45hLbJKQIHS/TtWw==
+X-Google-Smtp-Source: APXvYqyNVKjPoji2SxJxP3ylggeCueF4E0E33rMuGH1+fipTxjK6PYV0QFeg1sxueHl1rXk5rOqFqA==
+X-Received: by 2002:aca:fd52:: with SMTP id b79mr241015oii.34.1556744451588;
+        Wed, 01 May 2019 14:00:51 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m206sm17199824oif.50.2019.05.01.14.00.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 14:00:49 -0700 (PDT)
+Date:   Wed, 1 May 2019 16:00:48 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [PATCH v2 4/6] dt-bindings: soc/fsl: qe: document new
+ fsl,qe-snums  binding
+Message-ID: <20190501210048.GA20658@bogus>
+References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+ <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+ <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.203
-X-Source-L: No
-X-Exim-ID: 1hLwGU-0045wh-6U
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.119.203]:53920
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 26
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-where we are expecting to fall through.
+On Wed, 1 May 2019 09:29:08 +0000, Rasmus Villemoes wrote:
+> Reading table 4-30, and its footnotes, of the QUICC Engine Block
+> Reference Manual shows that the set of snum _values_ is not
+> necessarily just a function of the _number_ of snums, as given in the
+> fsl,qe-num-snums property.
+> 
+> As an alternative, to make it easier to add support for other variants
+> of the QUICC engine IP, this introduces a new binding fsl,qe-snums,
+> which automatically encodes both the number of snums and the actual
+> values to use.
+> 
+> For example, for the MPC8309, one would specify the property as
+> 
+>                fsl,qe-snums = /bits/ 8 <
+>                        0x88 0x89 0x98 0x99 0xa8 0xa9 0xb8 0xb9
+>                        0xc8 0xc9 0xd8 0xd9 0xe8 0xe9>;
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> ---
+>  Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
 
-This patch fixes the following warning:
-
-drivers/net/ethernet/intel/i40e/i40e_xsk.c: In function ‘i40e_run_xdp_zc’:
-drivers/net/ethernet/intel/i40e/i40e_xsk.c:217:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   bpf_warn_invalid_xdp_action(act);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/intel/i40e/i40e_xsk.c:218:2: note: here
-  case XDP_ABORTED:
-  ^~~~
-
-In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-where we are expecting to fall through.
-
-This patch fixes the following warning:
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/ethernet/intel/i40e/i40e_xsk.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.c b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-index 1b17486543ac..557c565c26fc 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-@@ -215,6 +215,7 @@ static int i40e_run_xdp_zc(struct i40e_ring *rx_ring, struct xdp_buff *xdp)
- 		break;
- 	default:
- 		bpf_warn_invalid_xdp_action(act);
-+		/* fall through */
- 	case XDP_ABORTED:
- 		trace_xdp_exception(rx_ring->netdev, xdp_prog, act);
- 		/* fallthrough -- handle aborts by dropping packet */
--- 
-2.21.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
