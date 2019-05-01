@@ -2,183 +2,251 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D360EC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32595C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914E120866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D829621734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 01:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="Y1ONhyuh"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="dBSHabVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfEABLp (ORCPT
+        id S1727422AbfEABXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 21:11:45 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40557 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbfEABLp (ORCPT
+        Tue, 30 Apr 2019 21:23:21 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36247 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbfEABXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 21:11:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d31so7653263pgl.7
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 18:11:44 -0700 (PDT)
+        Tue, 30 Apr 2019 21:23:21 -0400
+Received: by mail-qt1-f195.google.com with SMTP id c35so18674984qtk.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 18:23:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cLbFfePIXhHKlqLDWpLXnrFweDYBpHhu10xEmMt/WgI=;
-        b=Y1ONhyuhP1pR7OIKl9yssecBqsAP3IDLG2BDOW0p3ekW4bmjco6hF0oh4qeo4OGLmO
-         /Rda5XzA6cOveDKxoWw+CKnBj8RQ8DSnGYh98gg86coQHU+HglcN5MpQ6wzU/+Gv2+N6
-         QrZ6wHBv8+GnnHbujl+B7iQoan2vFQKbafOUFtFP+F9T50p6iwEOTmQJm6ImaQYoFZxk
-         yZNEherIvyqUNzbr8JHl79kyGQfo8s/RNAWpgthG/d6rgX8lGjvajCYwR0jRdxUDQ5k1
-         EvPFAD0PqTWEYahqcUDLYvPEjXuojfI25x+KIgklkO7WBt+MH53fA+czcN9cZ5QYjliJ
-         +a7A==
+        d=lca.pw; s=google;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=o9Uh4eqpzo31M/nD7QgLqjvJrp8muiIgNpQoNpAXvNU=;
+        b=dBSHabVMVPMm3BUZwWxEHQ3t0mylDOoC9pmANvNmiaRNGBO53TRl9ZBImdUldA8H6/
+         6JbJlWOa3kd/qlO7sig2srZYiYO/sopSOhpee8Kw0ZSlnh9jHhh3oCuoObsU6WJemb/V
+         SovJQtN79MfXQZKUUxLUAwyvJWo7DV6+yRpLeLw9Wecmc9iKCZBWECQiRTBopQKkNKYV
+         MbNeCd3p4257wYkgZNQhWwMNTyW/RUaRRc1NcurO2wZYA+8sZcppmN+f4VrFFaLjwph1
+         /sLHWIRuHRoSFd8gK0jssDSJRfIoI1EAA3pEa92WLcBEnGqyp8IarN7+0No7fx0APHJq
+         Gtvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cLbFfePIXhHKlqLDWpLXnrFweDYBpHhu10xEmMt/WgI=;
-        b=tGbFwHOyGJRMKZNJhrNcX6Y7GZfGKCVQUbwENFmKpIZchSdtlcxPizvOqvZ9QqZROU
-         g0XVYHdeNiZnSdrWEkHsKeEuh9ZOnhBs4hn3UrZXuabzqgfn+uLSv92g+VeMagAHOR6U
-         AoW1Sl19UYaOmZlN+5YMrzZ2nRlMk6WvYlCn+vSnIgQMGtpkhc39M1eUotkHe363DeFO
-         zFHTDtCFbQxgnRuCJmpgAvUfsM2XFWJuTUZQP93PNQIFUiEFYE2DGvK/mDTcPm2XbmVq
-         WGNIFlFRGypTkVif83vsXyZ0sQU+MJCXW7IilyO8/jCN5EqzbP6vROMnOAJIvhroGDAe
-         8ajQ==
-X-Gm-Message-State: APjAAAWs4LOK3wJJtM7I7FOtyjFyjLZyKl9i9HeGojOMMKnuGthivEpR
-        rwPR5G2WQyJ2u86OhZIuqZYIZQ==
-X-Google-Smtp-Source: APXvYqxbk62+b0D2+4MUmsK4Q+HXp47m8Z6MP2AWcwzvS1ti1bXxDroalbmsrbxny+Ss6ukUDHZzBA==
-X-Received: by 2002:a63:d803:: with SMTP id b3mr42635926pgh.267.1556673103560;
-        Tue, 30 Apr 2019 18:11:43 -0700 (PDT)
-Received: from localhost.localdomain (36-239-226-61.dynamic-ip.hinet.net. [36.239.226.61])
-        by smtp.gmail.com with ESMTPSA id w38sm31539531pgk.90.2019.04.30.18.11.39
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=o9Uh4eqpzo31M/nD7QgLqjvJrp8muiIgNpQoNpAXvNU=;
+        b=ZcCvyxMBiC6BOokPB5g6ATdQ2svvSQHYUOO5uNJJ6ILaCJHyppZHy7aQ8Lxuf0HUnH
+         znqcfLHTHRbun4ewYbRu9iy4TUH7zUtVFk7G/ALdq04Kbirj0r/e3/+w8SQgS9OBAWuL
+         cJxwe/iIxRjsRx1E/mYJAaEDm1dqqXDr7H+8/Z49QWO2V2rtuTj9/3ikqi2MlTcf9rc+
+         aXLUsiFYhKN/FDjnHmkUR4g46efthnzX2R/5FTs4ZPoCg19YCgAWpHjNeR4/ZNSg2ayE
+         yE7fybEA9pl4RjebisA8fMthrvfA0frBD0t411QovDiMlg2FvdZCXWPZd+u0heg9metB
+         U0Cw==
+X-Gm-Message-State: APjAAAWiwzALFm52oWP4CkLX6sW5sCsD52HdGAM31IuDwan2+qfacR8T
+        l8MfSzT7EozjJg9CHUysEcbG14v0jbw=
+X-Google-Smtp-Source: APXvYqzr6nF0Zn30otpIYsGwwaP/qD9CxXCTbBf5FXTSMoImxZFKxIsRxhU9V1fMrtRTDRNLgMDuKw==
+X-Received: by 2002:aed:20c3:: with SMTP id 61mr56999949qtb.356.1556673799800;
+        Tue, 30 Apr 2019 18:23:19 -0700 (PDT)
+Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i9sm4449073qte.72.2019.04.30.18.23.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 18:11:42 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Guodong Xu <guodong.xu@linaro.org>,
-        Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: hi6xxx: Switch to SPDX identifier
-Date:   Wed,  1 May 2019 09:11:31 +0800
-Message-Id: <20190501011131.16186-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 30 Apr 2019 18:23:18 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+Subject: mlx5_core failed to load with 5.1.0-rc7-next-20190430+
+To:     kliteyn@mellanox.com
+Cc:     ozsh@mellanox.com, saeedm@mellanox.com, leon@kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux kernel <linux-kernel@vger.kernel.org>
+Message-ID: <bab2ed8b-70dc-4a00-6c68-06a2df6ccb62@lca.pw>
+Date:   Tue, 30 Apr 2019 21:23:17 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert HiSilicon hi6xxx PMIC drivers to SPDX identifier.
+Reverted the commit b169e64a2444 ("net/mlx5: Geneve, Add flow table capabilities
+for Geneve decap with TLV options") fixed the problem below during boot ends up
+without networking.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/hi6421-regulator.c     | 24 +++++++++-------------
- drivers/regulator/hi6421v530-regulator.c | 26 ++++++++++--------------
- drivers/regulator/hi655x-regulator.c     | 22 ++++++++------------
- 3 files changed, 30 insertions(+), 42 deletions(-)
+[   92.471247] mlx5_core 0000:0b:00.0: mlx5_cmd_check:744:(pid 13):
+CREATE_EQ(0x301) op_mod(0x0) failed, status bad parameter(0x3), syndrome (0x8fef)
+[   92.484824] mlx5_core 0000:0b:00.0: create_async_eqs:572:(pid 13): failed to
+create async EQ -22
+[   92.603279] mlx5_core 0000:0b:00.0: mlx5_eq_table_create:1007:(pid 13):
+Failed to create async EQs
+[   92.630541] mlx5_core 0000:0b:00.0: mlx5_load:1053:(pid 13): Failed to create EQs
+[   94.866908] mlx5_core 0000:0b:00.0: init_one:1329:(pid 13): mlx5_load_one
+failed with error code -22
+[   94.879657] mlx5_core: probe of 0000:0b:00.0 failed with error -22
+[   94.887784] mlx5_core 0000:0b:00.1: Adding to iommu group 2
+[   95.017012] mlx5_core 0000:0b:00.1: firmware version: 14.21.1000
+[   95.023090] mlx5_core 0000:0b:00.1: 63.008 Gb/s available PCIe bandwidth (8
+GT/s x8 link)
+[   96.155792] mlx5_core 0000:0b:00.1: mlx5_cmd_check:744:(pid 13):
+CREATE_EQ(0x301) op_mod(0x0) failed, status bad parameter(0x3), syndrome (0x8fef)
+[   96.169220] mlx5_core 0000:0b:00.1: create_async_eqs:572:(pid 13): failed to
+create async EQ -22
+[   96.199340] mlx5_core 0000:0b:00.1: mlx5_eq_table_create:1007:(pid 13):
+Failed to create async EQs
+[   96.224004] mlx5_core 0000:0b:00.1: mlx5_load:1053:(pid 13): Failed to create EQs
+[   97.681695] mlx5_core 0000:0b:00.1: init_one:1329:(pid 13): mlx5_load_one
+failed with error code -22
+[   97.692749] mlx5_core: probe of 0000:0b:00.1 failed with error -22
 
-diff --git a/drivers/regulator/hi6421-regulator.c b/drivers/regulator/hi6421-regulator.c
-index 6c7ea4eb4bb0..5ac3d7c29725 100644
---- a/drivers/regulator/hi6421-regulator.c
-+++ b/drivers/regulator/hi6421-regulator.c
-@@ -1,17 +1,13 @@
--/*
-- * Device driver for regulators in Hi6421 IC
-- *
-- * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
-- *              http://www.hisilicon.com
-- * Copyright (c) <2013-2014> Linaro Ltd.
-- *              http://www.linaro.org
-- *
-- * Author: Guodong Xu <guodong.xu@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Device driver for regulators in Hi6421 IC
-+//
-+// Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
-+//              http://www.hisilicon.com
-+// Copyright (c) <2013-2014> Linaro Ltd.
-+//              http://www.linaro.org
-+//
-+// Author: Guodong Xu <guodong.xu@linaro.org>
- 
- #include <linux/slab.h>
- #include <linux/device.h>
-diff --git a/drivers/regulator/hi6421v530-regulator.c b/drivers/regulator/hi6421v530-regulator.c
-index c09bc71538a5..06ae65199afd 100644
---- a/drivers/regulator/hi6421v530-regulator.c
-+++ b/drivers/regulator/hi6421v530-regulator.c
-@@ -1,18 +1,14 @@
--/*
-- * Device driver for regulators in Hi6421V530 IC
-- *
-- * Copyright (c) <2017> HiSilicon Technologies Co., Ltd.
-- *              http://www.hisilicon.com
-- * Copyright (c) <2017> Linaro Ltd.
-- *              http://www.linaro.org
-- *
-- * Author: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-- *         Guodong Xu <guodong.xu@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Device driver for regulators in Hi6421V530 IC
-+//
-+// Copyright (c) <2017> HiSilicon Technologies Co., Ltd.
-+//              http://www.hisilicon.com
-+// Copyright (c) <2017> Linaro Ltd.
-+//              http://www.linaro.org
-+//
-+// Author: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-+//         Guodong Xu <guodong.xu@linaro.org>
- 
- #include <linux/mfd/hi6421-pmic.h>
- #include <linux/module.h>
-diff --git a/drivers/regulator/hi655x-regulator.c b/drivers/regulator/hi655x-regulator.c
-index 6f6635daa026..ac2ee2030211 100644
---- a/drivers/regulator/hi655x-regulator.c
-+++ b/drivers/regulator/hi655x-regulator.c
-@@ -1,16 +1,12 @@
--/*
-- * Device driver for regulators in Hi655x IC
-- *
-- * Copyright (c) 2016 Hisilicon.
-- *
-- * Authors:
-- * Chen Feng <puck.chen@hisilicon.com>
-- * Fei  Wang <w.f@huawei.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Device driver for regulators in Hi655x IC
-+//
-+// Copyright (c) 2016 Hisilicon.
-+//
-+// Authors:
-+// Chen Feng <puck.chen@hisilicon.com>
-+// Fei  Wang <w.f@huawei.com>
- 
- #include <linux/bitops.h>
- #include <linux/device.h>
--- 
-2.17.1
+# lspci -vvv
+...
+0b:00.0 Ethernet controller: Mellanox Technologies MT27710 Family [ConnectX-4 Lx]
+	Subsystem: Hewlett Packard Enterprise Device 028a
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping-
+SERR+ FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort-
+<MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+	Interrupt: pin A routed to IRQ 23
+	NUMA node: 0
+	Region 0: Memory at 10000000000 (64-bit, prefetchable) [size=32M]
+	Expansion ROM at 43000000 [disabled] [size=1M]
+	Capabilities: [60] Express (v2) Endpoint, MSI 00
+		DevCap:	MaxPayload 512 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 0.000W
+		DevCtl:	Report errors: Correctable+ Non-Fatal+ Fatal+ Unsupported+
+			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ FLReset-
+			MaxPayload 128 bytes, MaxReadReq 512 bytes
+		DevSta:	CorrErr+ UncorrErr- FatalErr- UnsuppReq+ AuxPwr- TransPend-
+		LnkCap:	Port #0, Speed 8GT/s, Width x8, ASPM not supported
+			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+		LnkSta:	Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+		DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR-, OBFF Not Supported
+			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
+			 AtomicOpsCtl: ReqEn-
+		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+			 Compliance De-emphasis: -6dB
+		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+,
+EqualizationPhase1+
+			 EqualizationPhase2+, EqualizationPhase3+, LinkEqualizationRequest-
+	Capabilities: [48] Vital Product Data
+		End
+	Capabilities: [9c] MSI-X: Enable+ Count=64 Masked-
+		Vector table: BAR=0 offset=00002000
+		PBA: BAR=0 offset=00003000
+	Capabilities: [c0] Vendor Specific Information: Len=18 <?>
+	Capabilities: [40] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [100 v1] Advanced Error Reporting
+		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC-
+UnsupReq- ACSViol-
+		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC-
+UnsupReq- ACSViol-
+		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
+ECRC- UnsupReq- ACSViol-
+		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr+
+		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr+
+		AERCap:	First Error Pointer: 04, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+		HeaderLog: 00000000 00000000 00000000 00000000
+	Capabilities: [150 v1] Alternative Routing-ID Interpretation (ARI)
+		ARICap:	MFVC- ACS-, Next Function: 1
+		ARICtl:	MFVC- ACS-, Function Group: 0
+	Capabilities: [180 v1] Single Root I/O Virtualization (SR-IOV)
+		IOVCap:	Migration-, Interrupt Message Number: 000
+		IOVCtl:	Enable- Migration- Interrupt- MSE- ARIHierarchy+
+		IOVSta:	Migration-
+		Initial VFs: 8, Total VFs: 8, Number of VFs: 0, Function Dependency Link: 00
+		VF offset: 2, stride: 1, Device ID: 1016
+		Supported Page Size: 000007ff, System Page Size: 00000001
+		Region 0: Memory at 0000010004800000 (64-bit, prefetchable)
+		VF Migration: offset: 00000000, BIR: 0
+	Capabilities: [1c0 v1] #19
+	Capabilities: [230 v1] Access Control Services
+		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl-
+DirectTrans-
+		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl-
+DirectTrans-
+	Kernel driver in use: mlx5_core
+	Kernel modules: mlx5_core
 
+0b:00.1 Ethernet controller: Mellanox Technologies MT27710 Family [ConnectX-4 Lx]
+	Subsystem: Hewlett Packard Enterprise Device 028a
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping-
+SERR+ FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort-
+<MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+	Interrupt: pin B routed to IRQ 24
+	NUMA node: 0
+	Region 0: Memory at 10002000000 (64-bit, prefetchable) [size=32M]
+	Expansion ROM at 43100000 [disabled] [size=1M]
+	Capabilities: [60] Express (v2) Endpoint, MSI 00
+		DevCap:	MaxPayload 512 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 0.000W
+		DevCtl:	Report errors: Correctable+ Non-Fatal+ Fatal+ Unsupported+
+			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ FLReset-
+			MaxPayload 128 bytes, MaxReadReq 512 bytes
+		DevSta:	CorrErr+ UncorrErr- FatalErr- UnsuppReq+ AuxPwr- TransPend-
+		LnkCap:	Port #0, Speed 8GT/s, Width x8, ASPM not supported
+			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+		LnkSta:	Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+		DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR-, OBFF Not Supported
+			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
+			 AtomicOpsCtl: ReqEn-
+		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-,
+EqualizationPhase1-
+			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
+	Capabilities: [48] Vital Product Data
+		End
+	Capabilities: [9c] MSI-X: Enable+ Count=64 Masked-
+		Vector table: BAR=0 offset=00002000
+		PBA: BAR=0 offset=00003000
+	Capabilities: [c0] Vendor Specific Information: Len=18 <?>
+	Capabilities: [40] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [100 v1] Advanced Error Reporting
+		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC-
+UnsupReq- ACSViol-
+		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC-
+UnsupReq- ACSViol-
+		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
+ECRC- UnsupReq- ACSViol-
+		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr+
+		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr+
+		AERCap:	First Error Pointer: 04, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+		HeaderLog: 00000000 00000000 00000000 00000000
+	Capabilities: [150 v1] Alternative Routing-ID Interpretation (ARI)
+		ARICap:	MFVC- ACS-, Next Function: 0
+		ARICtl:	MFVC- ACS-, Function Group: 0
+	Capabilities: [180 v1] Single Root I/O Virtualization (SR-IOV)
+		IOVCap:	Migration-, Interrupt Message Number: 000
+		IOVCtl:	Enable- Migration- Interrupt- MSE- ARIHierarchy-
+		IOVSta:	Migration-
+		Initial VFs: 8, Total VFs: 8, Number of VFs: 0, Function Dependency Link: 00
+		VF offset: 9, stride: 1, Device ID: 1016
+		Supported Page Size: 000007ff, System Page Size: 00000001
+		Region 0: Memory at 0000010004000000 (64-bit, prefetchable)
+		VF Migration: offset: 00000000, BIR: 0
+	Capabilities: [230 v1] Access Control Services
+		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl-
+DirectTrans-
+		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl-
+DirectTrans-
+	Kernel driver in use: mlx5_core
+	Kernel modules: mlx5_core
