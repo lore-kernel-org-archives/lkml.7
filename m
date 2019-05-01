@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2F6C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89364C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0F421850
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C443208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SBk3G7PW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kz3MYmyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfEAQPT (ORCPT
+        id S1727068AbfEAQPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:15:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48134 "EHLO
+        Wed, 1 May 2019 12:15:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48126 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbfEAQPS (ORCPT
+        with ESMTP id S1726969AbfEAQPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:15:18 -0400
+        Wed, 1 May 2019 12:15:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GJLxfg47z5zmIYUnbxiCrlaCmFGP4tL9Ue8BxujcGKc=; b=SBk3G7PWSgsHFXsfeH/0Dradex
-        QUHBzeq1K2pCLbWceGonhCBirec9RvOFEOF9Ca2R45hg1o5+54omlqwAXn12qp++b8LG6E/zeRdOf
-        6r5Kfk4ASwoPo8zQ+EJSZ7i9N4P1laf0gfmnitEb4cHN/eI0KUeNxMTLqaF6MAeFna5IN7Pe+TBdd
-        nOm8SPHPV2qyolHimCsu8Lq5FXY2+syL0LhjtPgDiCgb0FtAHPyJw+ELo0PkzZ6qzqFCWtgeJgCn4
-        sTtro3lNTEsGj/FNmWBko/Y/knF0hEan08I3zbJj9uFumVLqo0IGfaT10YMBwjPdBYe7FxkBmKDHi
-        x022MMOQ==;
+        bh=UXZQf5uORHjO699A4RsfuSsjKt6Jg++LKU72VXs3P30=; b=kz3MYmyOkGt9BAHPBWnTnSzmUL
+        I4hg5DVsxjEkJ7cns/0nVgbZbJ4Gjq4I9akoJ3jiG6/vlbPCPchdwMGwr3afhdCxrfEBJVayG08sO
+        QSaafn1IavVK57UpN445+5E7/+q4iLLkO5Spfi30QtIFMdhFsfOTkWVSBRvxL1s4cwuFZbbjX1hvC
+        Ct19PN3MqmVgpBfxmsWkJTkXEDUcjYf/Hzoep32+SUaJaLjp9Tt8vr3vaI9uKfpamsEyucX59jN6d
+        8Me/IeXzp+/tGCCSkINH1WiZ1PKDy6hoi51CMtfC9HhJatx6eHa+M+8P/8hkGJlSIKE5yasfPTWVj
+        KpGkCa/Q==;
 Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLrt1-0005du-NP; Wed, 01 May 2019 16:15:12 +0000
+        id 1hLrsy-0005Fk-7s; Wed, 01 May 2019 16:15:08 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>
@@ -47,9 +47,9 @@ Cc:     Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
         =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
         linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
         osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/24] libfc: remove duplicate GPL boilerplate text
-Date:   Wed,  1 May 2019 12:14:04 -0400
-Message-Id: <20190501161417.32592-12-hch@lst.de>
+Subject: [PATCH 09/24] scsi_transport_spi: switch to SPDX tags
+Date:   Wed,  1 May 2019 12:14:02 -0400
+Message-Id: <20190501161417.32592-10-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190501161417.32592-1-hch@lst.de>
 References: <20190501161417.32592-1-hch@lst.de>
@@ -61,113 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The libfc uapi headers already have proper SPDX tags, remove the
-duplicate boilerplate text.
+Use the the GPLv2+ SPDX tag instead of verbose boilerplate text.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/uapi/scsi/fc/fc_els.h | 13 -------------
- include/uapi/scsi/fc/fc_fs.h  | 13 -------------
- include/uapi/scsi/fc/fc_gs.h  | 13 -------------
- include/uapi/scsi/fc/fc_ns.h  | 13 -------------
- 4 files changed, 52 deletions(-)
+ drivers/scsi/scsi_transport_spi.c | 15 +--------------
+ include/scsi/scsi_transport_spi.h | 15 +--------------
+ 2 files changed, 2 insertions(+), 28 deletions(-)
 
-diff --git a/include/uapi/scsi/fc/fc_els.h b/include/uapi/scsi/fc/fc_els.h
-index a81c53508cc6..76f627f0d13b 100644
---- a/include/uapi/scsi/fc/fc_els.h
-+++ b/include/uapi/scsi/fc/fc_els.h
-@@ -2,19 +2,6 @@
- /*
-  * Copyright(c) 2007 Intel Corporation. All rights reserved.
+diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
+index 40b85b752b79..474d2ffad9d8 100644
+--- a/drivers/scsi/scsi_transport_spi.c
++++ b/drivers/scsi/scsi_transport_spi.c
+@@ -1,22 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /* 
+  *  Parallel SCSI (SPI) transport specific attributes exported to sysfs.
   *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
+  *  Copyright (c) 2003 Silicon Graphics, Inc.  All rights reserved.
+  *  Copyright (c) 2004, 2005 James Bottomley <James.Bottomley@SteelEye.com>
 - *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
 - *
-- * You should have received a copy of the GNU General Public License along with
-- * this program; if not, write to the Free Software Foundation, Inc.,
-- * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
 - *
-  * Maintained at www.Open-FCoE.org
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
- 
-diff --git a/include/uapi/scsi/fc/fc_fs.h b/include/uapi/scsi/fc/fc_fs.h
-index 8c0a292a61ed..0dab49dbb2f7 100644
---- a/include/uapi/scsi/fc/fc_fs.h
-+++ b/include/uapi/scsi/fc/fc_fs.h
-@@ -2,19 +2,6 @@
- /*
-  * Copyright(c) 2007 Intel Corporation. All rights reserved.
+ #include <linux/ctype.h>
+ #include <linux/init.h>
+diff --git a/include/scsi/scsi_transport_spi.h b/include/scsi/scsi_transport_spi.h
+index a4fa52b4d5c5..12516d16933d 100644
+--- a/include/scsi/scsi_transport_spi.h
++++ b/include/scsi/scsi_transport_spi.h
+@@ -1,21 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /* 
+  *  Parallel SCSI (SPI) transport specific attributes exported to sysfs.
   *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
+  *  Copyright (c) 2003 Silicon Graphics, Inc.  All rights reserved.
 - *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
 - *
-- * You should have received a copy of the GNU General Public License along with
-- * this program; if not, write to the Free Software Foundation, Inc.,
-- * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
 - *
-  * Maintained at www.Open-FCoE.org
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
- 
-diff --git a/include/uapi/scsi/fc/fc_gs.h b/include/uapi/scsi/fc/fc_gs.h
-index 2153f3524555..effb4c662fe5 100644
---- a/include/uapi/scsi/fc/fc_gs.h
-+++ b/include/uapi/scsi/fc/fc_gs.h
-@@ -2,19 +2,6 @@
- /*
-  * Copyright(c) 2007 Intel Corporation. All rights reserved.
-  *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * You should have received a copy of the GNU General Public License along with
-- * this program; if not, write to the Free Software Foundation, Inc.,
-- * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
-- *
-  * Maintained at www.Open-FCoE.org
-  */
- 
-diff --git a/include/uapi/scsi/fc/fc_ns.h b/include/uapi/scsi/fc/fc_ns.h
-index 015e5e1ce8f1..4cf0a40a099a 100644
---- a/include/uapi/scsi/fc/fc_ns.h
-+++ b/include/uapi/scsi/fc/fc_ns.h
-@@ -2,19 +2,6 @@
- /*
-  * Copyright(c) 2007 Intel Corporation. All rights reserved.
-  *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * You should have received a copy of the GNU General Public License along with
-- * this program; if not, write to the Free Software Foundation, Inc.,
-- * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
-- *
-  * Maintained at www.Open-FCoE.org
-  */
- 
+ #ifndef SCSI_TRANSPORT_SPI_H
+ #define SCSI_TRANSPORT_SPI_H
 -- 
 2.20.1
 
