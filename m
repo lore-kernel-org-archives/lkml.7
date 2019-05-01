@@ -2,88 +2,153 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C32C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537DCC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE93B20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:45:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VE8QSTtL"
+	by mail.kernel.org (Postfix) with ESMTP id 20A0E20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556747293;
+	bh=E8jIFGzG7vaR7AHaEplUmQBbOqtPEysF8UkMQIN0jWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nvbYLiWuhdNc2z5BB316MFjzIrmMCvMbWDrhKFihlXoVFhg6QxUjv85tXmqfchqp7
+	 R+Y7cvnijx8yzhCngMva8vsk10EeSER4zmGbywg5eP9AD7PDSjqslwBJczowU9WBim
+	 S+6QtMJH0EokuUslw9sSlWRem/C1xkQm47iYwAMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfEAVpZ (ORCPT
+        id S1726236AbfEAVsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:45:25 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54131 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfEAVpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:45:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vX4d50ZSz9s9y;
-        Thu,  2 May 2019 07:45:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556747121;
-        bh=Bsw32OJ7r12VV192rzOnvs7PeeB1/zzU5dXXeD713Tg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VE8QSTtLwo11z1uTHWtHAsG17Q2avaxfn/NPETopH2DBAv8y6dJEQNcbITcUqQ9aH
-         hO2w9K25fsNiA8qRt09J9MZIFW0YhFtjDv+rPo6vTOY/r4ogRpMWPWDWlhynH8a+gu
-         0Q023GnGpB603n7a/f6Vihl7nmzT1e9OR7OHQmO1xEiqeAztwR/p8hsuFPqQKKaSLf
-         2AYiFE0EoNIIc9ZjtRugM/T1F3+5upCxqFWrXvOYgPaw416j0eRBi87NcbLcgZKAhC
-         c66Eesli0HSKUWMTAG37NGfiKuGUE91Je41yK5pNKN6yWu140Ek9ztUjKF66m19VRx
-         K3zmjfGCZaihw==
-Date:   Thu, 2 May 2019 07:45:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Helge Deller <deller@gmx.de>,
-        Parisc List <linux-parisc@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the parisc-hd tree
-Message-ID: <20190502074519.61272b42@canb.auug.org.au>
+        Wed, 1 May 2019 17:48:12 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39750 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfEAVsL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:48:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a9so349915wrp.6;
+        Wed, 01 May 2019 14:48:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ISxFsNQTTZgb94Y+nE3oZI+k8F70LS/7cW4W/9uLa7U=;
+        b=OcHYTYyMKiyld7evqlH2vdeCYcF6+pxC+w2hlQ6NSntJcjs0NMlozgV+dTlEL/aDOq
+         1avpIR9qmwl7frnX6lGtFw28I/4yE0YIOzJ2L2zKHB4j4UKA8bOT12WDD7veT4UF1ghp
+         +FDT3woAmbc/CncNlT/fZrWHrjkAheIS48VwSyK1mKF0Jla4P72Sqc4A7V2PHfSvZviI
+         GkV5J/y2jdeWoIqUqAYJuhUj2+c5LDYpWz/uhfgeEBjhbmYn1q9ukrlNyJ7PuB8Kbw9P
+         kfNcfc4h5RVllMCyxoPCh+LNvl5FoW1nTCXRkMZ7m677AVsP1LY36az1L1ULuODoYZv/
+         jCzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ISxFsNQTTZgb94Y+nE3oZI+k8F70LS/7cW4W/9uLa7U=;
+        b=Av8yilIFc0fjuOSWlO+qE78vzVFAK3k4EQf2InrUwdbNY/LLIPecKm2fBvQpfbBWNZ
+         vp/hHLxCvhEmkxqwKZf/iSLRNOg3l5vYieCGLJesh+odaIEq4Md1tn90lvzHlfvya1zm
+         Y2B4gFSkSIgoKklA/jHk38bfj52fn1C4BUSMzEe783f8IPzvByYJX/IbKN5DEdMiUmVR
+         shcZahihs2vIV6uymJiWeDZfqgk9mHtuwq/HIeouX6x6lX/YIjPQEpScQQbJuof+/7Uk
+         VHEYZPWkMYzBJjKFOzlIgSJLjxPBqGzQfCpXgBbXqLJRluiJvmHiwg7ROUjQ2wpw+ccc
+         Gq/A==
+X-Gm-Message-State: APjAAAVXNVZ5X/byn36hxiaso+c+KcTvrZnGH8jOXhe7ay7yJGDShUkm
+        KvO5WALsXK2yqr65gpz7KRE=
+X-Google-Smtp-Source: APXvYqzWng3pdPQ2BP2fhMvQnPtjtHCcqRh/94dsv2GLRx9Y0hUc1T0Qby9lY2ggvwI9sBUOqXKlVA==
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr195674wrm.225.1556747289408;
+        Wed, 01 May 2019 14:48:09 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id d16sm34471858wrs.68.2019.05.01.14.48.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 14:48:08 -0700 (PDT)
+Date:   Wed, 1 May 2019 23:48:05 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] x86: don't use asm-generic/ptrace.h
+Message-ID: <20190501214805.GA54736@gmail.com>
+References: <20190501173943.5688-1-hch@lst.de>
+ <20190501173943.5688-5-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/UxZFVieJsY9lj86GqzTCcoc"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501173943.5688-5-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UxZFVieJsY9lj86GqzTCcoc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+* Christoph Hellwig <hch@lst.de> wrote:
 
-Commit
+> Doing the indirection through macros for the regs accessors just
+> makes them harder to read, so implement the helpers directly.
+> 
+> Note that only the helpers actually used are implemented now.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/x86/include/asm/ptrace.h | 29 ++++++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+> index 8a7fc0cca2d1..9b81ef539eb3 100644
+> --- a/arch/x86/include/asm/ptrace.h
+> +++ b/arch/x86/include/asm/ptrace.h
+> @@ -98,7 +98,6 @@ struct cpuinfo_x86;
+>  struct task_struct;
+>  
+>  extern unsigned long profile_pc(struct pt_regs *regs);
+> -#define profile_pc profile_pc
+>  
+>  extern unsigned long
+>  convert_ip_to_linear(struct task_struct *child, struct pt_regs *regs);
+> @@ -175,11 +174,31 @@ static inline unsigned long kernel_stack_pointer(struct pt_regs *regs)
+>  }
+>  #endif
+>  
+> -#define GET_IP(regs) ((regs)->ip)
+> -#define GET_FP(regs) ((regs)->bp)
+> -#define GET_USP(regs) ((regs)->sp)
+> +static inline unsigned long instruction_pointer(struct pt_regs *regs)
+> +{
+> +	return regs->ip;
+> +}
+> +static inline void instruction_pointer_set(struct pt_regs *regs,
 
-  2b731a920986 ("parisc: Update huge TLB page support to use per-pagetable =
-spinlock")
+Nit: missing newline between inline functions.
 
-is missing a Signed-off-by from its committer.
+> +		unsigned long val)
+> +{
+> +	regs->ip = val;
+> +}
+> +
+> +static inline unsigned long frame_pointer(struct pt_regs *regs)
+> +{
+> +	return regs->bp;
+> +}
+>  
+> -#include <asm-generic/ptrace.h>
+> +static inline unsigned long user_stack_pointer(struct pt_regs *regs)
+> +{
+> +	return regs->sp;
+> +}
+> +
+> +static inline void user_stack_pointer_set(struct pt_regs *regs,
+> +		unsigned long val)
+> +{
+> +	regs->sp = val;
+> +}
 
---=20
-Cheers,
-Stephen Rothwell
+Other than that:
 
---Sig_/UxZFVieJsY9lj86GqzTCcoc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Acked-by: Ingo Molnar <mingo@kernel.org>
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKE28ACgkQAVBC80lX
-0GxRxwf8DHQTsHKRnH90QXbQDqi1m+thimy1aXVksY17/7RdZZU/tR8JSJ8yX1uc
-pEimJuBWfIbwieTRDx4wXHtehGKB39hK3WwxL7hfmWwR5nOK0iDgjA1MCD3c0K36
-USoqsNHAKuh971K0kG2i73sdVdlaur199k+VfjFL+4tX8hG4YrylluxjJAUgMjFU
-OB3X5dcMWyxuYrK6KX9WQkj1dvVR1YgF7ZMMnS/8XnP8retWcpcap0ZjKh9L/5Yf
-CHWYIST/jlNgrEDRZceSH5jwmyb6h5EzBFpjFhtqmRJHsva0yYoM+OZB5Fs+uLvQ
-ruDSMPCnBKSsnzYoTU+xO1lozVUk6g==
-=+BOR
------END PGP SIGNATURE-----
-
---Sig_/UxZFVieJsY9lj86GqzTCcoc--
+	Ingo
