@@ -2,96 +2,176 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AB0C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74993C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B080820835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:49:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556696946;
-	bh=T7T/LYH0oG6Mc669/vIbBfSwXFvp8DN+Ci6R4EJ8Qn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CTzuCzNRrOHRE2n2hFACvgGWqvh4a6Xcumaw4FgQt2taBuwhBuzIsP53QFvzmsA+l
-	 KNN4HuyGk+Ph+FWzi9VLPVI71/qCv+/7Wu7IzaGD3kouPQ71LwMNtL0Ze70LAFD1PX
-	 s+rqOljfOR/xXy6bbR4sKUHySEsbggbwpJV2Xmvs=
+	by mail.kernel.org (Postfix) with ESMTP id 3856C20835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:51:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CoYnf+ZU";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bDjrhtsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfEAHtF (ORCPT
+        id S1726189AbfEAHvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 03:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfEAHtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 03:49:05 -0400
-Received: from linux-8ccs (ip5f5ade58.dynamic.kabel-deutschland.de [95.90.222.88])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 1 May 2019 03:51:01 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43282 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfEAHvB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 03:51:01 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D4F5C608D4; Wed,  1 May 2019 07:50:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556697059;
+        bh=iNrkDBSiMlVRKyLmefjQ5N8FGGudYMobLCdcSYJ8Hl0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CoYnf+ZUYBbvMvC4wXYAEXNLABXWKp6w+i4D81Tny2QR3lPqz7mloAX4A6TlSjM6Q
+         5KYkLgrmi9pppjOKpPkEyWmU4sZeU4AGeUm7rUwC4sHglAYkPboZZbJKDsN/RZFB1j
+         9SYFcVwTj3VSPgp+XXXUEQ+Ni+aCAin+jB4l3y9A=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E161120835;
-        Wed,  1 May 2019 07:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556696944;
-        bh=T7T/LYH0oG6Mc669/vIbBfSwXFvp8DN+Ci6R4EJ8Qn0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kz5ZywLQtC5O4MQJgeBS7YOcoYeVeHsk+DL/bwKbOfvzXsrel5rxxDm2pzWIm2yAN
-         dBA8E7qK7EfaCFd1HInwQci20NcAAH8osWtQusbk1xKb0pGZ1yZh0IasTNeV/g/PHd
-         bFhrdLjYHakCsLHmG7Ym1QFbgYvBeTbYCoostYYM=
-Date:   Wed, 1 May 2019 09:49:00 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: Re: [PATCH v3] kernel/module: Reschedule while waiting for modules
- to finish loading
-Message-ID: <20190501074900.GA10762@linux-8ccs>
-References: <20190430222207.3002-1-prarit@redhat.com>
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB3C6607B9;
+        Wed,  1 May 2019 07:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556697058;
+        bh=iNrkDBSiMlVRKyLmefjQ5N8FGGudYMobLCdcSYJ8Hl0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bDjrhtsXNLBWxlMH/v+1rLPbmNecnGPQTVULW1srVOr9UPzXBYr8EMc1pxOtOE8RH
+         KBSkG898EjyQ6t/bwG8ybCSuMWo3PHWV2vTC2Sd2ZY7qoSbIIA5wdzaTjGQbUW3JLk
+         igaSabI4emOTehRL5xD13PBje1kc5/RJn7UULMEg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB3C6607B9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v2] Input: uinput: Avoid Object-Already-Free with a global
+ lock
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gaurav Kohli <gkohli@codeaurora.org>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        Martin Kepplinger <martink@posteo.de>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+References: <a4d1a2f3-1db7-e300-9569-7b7a2fadd64e@codeaurora.org>
+ <20190419071152.x5ghvbybjhv76uxt@penguin>
+ <f3cd46fb-2bb1-0422-b2be-3f7625ec9c4e@codeaurora.org>
+ <20190423032839.xvbldglrmjxkdntj@penguin>
+ <17f4a0be-ab04-8537-9197-32fbca807f3f@codeaurora.org>
+ <20190423084944.gj2boxfcg7lp4zad@penguin>
+ <20190423110611.GL2217@ZenIV.linux.org.uk>
+ <5614f04f-827d-1668-9ed0-60d93e110b8e@codeaurora.org>
+ <20190424130711.GP2217@ZenIV.linux.org.uk>
+ <5b02ac1e-df3e-d9cd-ecf3-fe60cda2cece@codeaurora.org>
+ <20190424225641.GQ2217@ZenIV.linux.org.uk>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <f0a48477-8b25-6538-20e0-53b732afb4d1@codeaurora.org>
+Date:   Wed, 1 May 2019 13:20:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190430222207.3002-1-prarit@redhat.com>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190424225641.GQ2217@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Prarit Bhargava [30/04/19 18:22 -0400]:
->On a s390 z14 LAR with 2 cpus about stalls about 3% of the time while
->loading the s390_trng.ko module.
->
->Add a reschedule point to the loop that waits for modules to complete
->loading.
->
->v3: cleanup Fixes line.
+Sorry to come late on this
 
-Thanks, this patch has been re-applied to modules-next.
-
-Jessica
-
->Reported-by: Heiko Carstens <heiko.carstens@de.ibm.com>
->Fixes: f9a75c1d717f ("modules: Only return -EEXIST for modules that have finished loading")
->Signed-off-by: Prarit Bhargava <prarit@redhat.com>
->Cc: Jessica Yu <jeyu@kernel.org>
->Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->---
-> kernel/module.c | 1 +
-> 1 file changed, 1 insertion(+)
+On 4/25/2019 4:26 AM, Al Viro wrote:
+> On Wed, Apr 24, 2019 at 07:39:03PM +0530, Mukesh Ojha wrote:
 >
->diff --git a/kernel/module.c b/kernel/module.c
->index 410eeb7e4f1d..48748cfec991 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -3585,6 +3585,7 @@ static int add_unformed_module(struct module *mod)
-> 					       finished_loading(mod->name));
-> 			if (err)
-> 				goto out_unlocked;
->+			cond_resched();
-> 			goto again;
-> 		}
-> 		err = -EEXIST;
->-- 
->2.18.1
+>> This was my simple program no multithreading just to understand f_counting
+>>
+>> int main()
+>> {
+>>          int fd = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
+>>          ioctl(fd, UI_SET_EVBIT, EV_KEY);
+>>          close(fd);
+>>          return 0;
+>> }
+>>
+>>             uinput-532   [002] ....    45.312044: SYSC_ioctl: 2   <= f_count
+> Er...  So how does it manage to hit ioctl(2) before open(2)?  Confused...
+
+I was confused too about this earlier, but after printing fd got to know 
+this is not for the same fd
+opening for /dev/uinput, may it is for something while running the 
+executable.
+
 >
+>>>      <After fdget()
+>>            uinput-532   [002] ....    45.312055: SYSC_ioctl: 2
+>> <After fdput()
+>>            uinput-532   [004] ....    45.313766: uinput_open: uinput: 1   /*
+>> This is from the uinput driver uinput_open()*/
+>>
+>>    =>>>>                         /* All the above calls happened for the
+>> open() in userspace*/
+>>
+>>            uinput-532   [004] ....    45.313783: SYSC_ioctl: 1 /* This print
+>> is for the trace, i put after fdget */
+>>            uinput-532   [004] ....    45.313788: uinput_ioctl_handler:
+>> uinput: uinput_ioctl_handler, 1 /* This print is from the uinput_ioctl
+>> driver */
+>>
+>>            uinput-532   [004] ....    45.313835: SYSC_ioctl: 1 /* This print
+>> is for the trace, i put after fdput*/
+>>            uinput-532   [004] ....    45.313843: uinput_release: uinput:  0
+>> /* And this is from the close()  */
+>>
+>>
+>> Should fdget not suppose to increment the f_count here, as it is coming 1 ?
+>> This f_count to one is done at the open, but i have no idea how this  below
+>> f_count 2 came before open() for
+>> this simple program.
+> If descriptor table is not shared, fdget() will simply return you the reference
+> from there, without bothering to bump the refcount.  _And_ having it marked
+> "don't drop refcount" in struct fd.
+>
+> Rationale: since it's not shared, nobody other than our process can modify
+> it.  So unless we remove (and drop) the reference from it ourselves (which
+> we certainly have no business doing in ->ioctl() and do not do anywhere
+> in drivers/input), it will remain there until we return from syscall.
+>
+> Nobody is allowed to modify descriptor table other than their own.
+> And if it's not shared, no other owners can appear while the only
+> existing one is in the middle of syscall other than clone() (with
+> CLONE_FILES in flags, at that).
+>
+> For shared descriptor table fdget() bumps file refcount, since there
+> the reference in descriptor table itself could be removed and dropped
+> by another thread.
+>
+> And fdget() marks whether fput() is needed in fd.flags, so that
+> fdput() does the right thing.
+
+
+Thanks Al, it is quite clear that issue can't happen while a ioctl is in 
+progress.
+Actually the issue seems to be a race while glue_dir input is removed.
+
+   114.339374] input: syz1 as /devices/virtual/input/input278
+[  114.345619] input: syz1 as /devices/virtual/input/input279
+[  114.353502] input: syz1 as /devices/virtual/input/input280
+[  114.361907] input: syz1 as /devices/virtual/input/input281
+[  114.367276] input: syz1 as /devices/virtual/input/input282
+[  114.382292] input: syz1 as /devices/virtual/input/input283
+
+in our case it is input which is getting removed while a inputxx is 
+trying make node inside input.
+
+Similar issue https://lkml.org/lkml/2019/5/1/3
+
+Thanks,
+Mukesh
+
+
+
