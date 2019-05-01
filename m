@@ -2,93 +2,133 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F7DC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB93C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7A620866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF9120866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mtLLfELQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rTsCkA1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbfEADnb (ORCPT
+        id S1726213AbfEADoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 23:43:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42818 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfEADna (ORCPT
+        Tue, 30 Apr 2019 23:44:07 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46935 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfEADoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 23:43:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=NX9lVh4U+E8N0tdek5TWZY7FDPPnmK0y+fQRg+gjxcc=; b=mtLLfELQooqikemDiLpl9Y8N7w
-        xK/DC/j9Djd+FBLHw3fa6omLGrwIn9MTk7GSaOusgp9brphU33RyqEPwDdIEMFxZ/VraaoPfvzFt1
-        Boq2DDzDV+ID9xP8FpGt3kNDyasVCINSk9tWg6PINrLcjb+PwM7nqzGjZhESGFyzbuYhxm1ZVVMad
-        XBATV4F8LqsyyBCi66uHNh6XJgMHbgpX8AdvV41ah8CBcJNXYZd3MIpB0XS6LwyA6bx0z+OXrQaAI
-        nu+MKSa92E5jUgKarpd3mC7nJeed77uJCupOYy8FUFzh72iNXV3o/ELcHR8N5gfdn/d40ZyiiTp93
-        d5i+4LCg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLg9X-0004t2-65; Wed, 01 May 2019 03:43:27 +0000
-Subject: Re: [PATCH v5 2/3] power: supply: Add driver for Microchip UCS1002
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
-Cc:     Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20190501033434.18548-1-andrew.smirnov@gmail.com>
- <20190501033434.18548-3-andrew.smirnov@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7002fe8e-7686-fe84-374f-766f99f8317d@infradead.org>
-Date:   Tue, 30 Apr 2019 20:43:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Apr 2019 23:44:07 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bi2so2892692plb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 20:44:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=025dxPWxKmwI/dBmRrdG4C63+fVgWqjqwo+ZLtKNyyw=;
+        b=rTsCkA1UlAa0fjgvcykfFxaRHBlVq4HLzf+0AOpB0PQr4x4g+FpJj2IJD18yUq6l3i
+         ULePD0caC4TBBXoj5oODrZCNBAwFgtOKs/wBH2O9krb5sPs83IRhAZQwa1AYbOJwCAoo
+         l+1eAKQNRAEJkospYiGsNJiGDFW6MrdSVb6YHVLTzQVPkYsnqd7YyvY2LxGq53y2lsfJ
+         GoA7+YYe8ewT/6sgbX3ChA8HSx5Te2AI8FVfXWDj2vDEEAHNq1PFqEnsv46vxigeom//
+         mQ41EaAxkmeKbFDtY0H+UIjaA3MM7Q7zlrH/BEzEXsb3KMcbscRefVr+mq6elB91+TQp
+         +4Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=025dxPWxKmwI/dBmRrdG4C63+fVgWqjqwo+ZLtKNyyw=;
+        b=Quw/VQoQIfVMPR2PDO/1TCd1fedHKCBzXQ3+vrfZ9YA76vxr/0VnsOluhjfOt7vv8W
+         F/y+0eTkWrKsMEOTXW4xO4rvJMhG8+Zuzi4o6wVmI0XxP/WfVMs+wSsRcdlBdm0U1+42
+         VDJxrro/ztuomy16YDbZW3j4WztUi8vKSBwEtW7uTysgHuXoGR7AYZP7c/ap8jVaLvbg
+         cXY5+R0UPxj5cX45nBQrjpsabKU4gFj/fd4urdxhPfJ+Rw98EXS+PN+sZIY5npVVWAbi
+         VeRjfNAgliYugLf22amYj+XhPcD2/a/blikDv3Fo2/jmAtJJ8K0btW01eGzWSBchnKgd
+         JBtQ==
+X-Gm-Message-State: APjAAAXzdbkAcKAqq1Lx2M9a20eGkWHIZXNluuZfjTQy0Ed+CmYTzLxS
+        LAWUKO8He9irHxckdD6rYh7oag==
+X-Google-Smtp-Source: APXvYqzLQCo7RS7U18iLNvi0f4WF4MPd5oRVQUcgtOF/CmHYVo3C9Vx1is70i17QsW8aDl8n2g1zQA==
+X-Received: by 2002:a17:902:f24:: with SMTP id 33mr67625015ply.44.1556682246445;
+        Tue, 30 Apr 2019 20:44:06 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j22sm23188511pfi.139.2019.04.30.20.44.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 20:44:05 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 20:44:06 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     agross@kernel.org, david.brown@linaro.org, marc.w.gonzalez@free.fr,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] arm64: dts: qcom: msm8998: Add mmcc node
+Message-ID: <20190501034406.GF2938@tuxbook-pro>
+References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
+ <1556677679-29465-1-git-send-email-jhugo@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20190501033434.18548-3-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556677679-29465-1-git-send-email-jhugo@codeaurora.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue 30 Apr 19:27 PDT 2019, Jeffrey Hugo wrote:
 
-On 4/30/19 8:34 PM, Andrey Smirnov wrote:
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index e901b9879e7e..c614c8a196f3 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -660,4 +660,13 @@ config FUEL_GAUGE_SC27XX
->  	 Say Y here to enable support for fuel gauge with SC27XX
->  	 PMIC chips.
+> Add MSM8998 Multimedia Clock Controller DT node.
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+(But same comment as earlier wrt clocks vs clock-names ordering)
+
+Regards,
+Bjorn
+
+> ---
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> index 9c88801..5b63fa2 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> @@ -3,6 +3,7 @@
 >  
-> +config CHARGER_UCS1002
-> +        tristate "Microchip UCS1002 USB Port Power Controller"
-
-Please indent the tristate line with a tab instead of spaces.
-
-> +	depends on I2C
-> +	depends on OF
-> +	select REGMAP_I2C
-> +	help
-> +	  Say Y to enable support for Microchip UCS1002 Programmable
-> +	  USB Port Power Controller with Charger Emulation.
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-msm8998.h>
+> +#include <dt-bindings/clock/qcom,mmcc-msm8998.h>
+>  #include <dt-bindings/clock/qcom,rpmcc.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  
+> @@ -1066,6 +1067,19 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		mmcc: clock-controller@c8c0000 {
+> +			compatible = "qcom,mmcc-msm8998";
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			#power-domain-cells = <1>;
+> +			reg = <0x0c8c0000 0x40000>;
 > +
->  endif # POWER_SUPPLY
-
-
-thnx.
--- 
-~Randy
+> +			clock-names = "xo",
+> +				      "gpll0";
+> +			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
+> +				 <&gcc GPLL0_OUT_MAIN>;
+> +		};
+> +
+>  		timer@17920000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> -- 
+> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
