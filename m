@@ -2,179 +2,226 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E763C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32886C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77A421743
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556709027;
-	bh=RiyWMednSoirkDMsCPXi4Knnz0zqm8dM0sStuxwCq2c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FLTh3b3DX00IiPLblGnIPzXsMXJLSdqXFELe+8N3NO6GGgwmxL5uQf0dIEc3+5SyW
-	 /BUtRSbrTD2qd9Wc04SajvKJxRTq0I8Gkb0g3cGV+tnEyx8r+KWwU246S6ehHBcAr3
-	 Fhw0XBuRK7Zm+TOVmcONiWxka6BovvA30HEXqEjg=
+	by mail.kernel.org (Postfix) with ESMTP id F3AE92183E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:11:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VYFojUtq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfEALK0 (ORCPT
+        id S1726396AbfEALLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 07:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
+        Wed, 1 May 2019 07:11:13 -0400
+Received: from ozlabs.org ([203.11.71.1]:59579 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfEALK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 07:10:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726010AbfEALLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 07:11:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1650321670;
-        Wed,  1 May 2019 11:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556709025;
-        bh=RiyWMednSoirkDMsCPXi4Knnz0zqm8dM0sStuxwCq2c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hnle+CACXHAFvDb/WM/1E/ZcBNOsOp0NWUUhZgXSb/3+3fxqs68eYLWUo1M3Hqdiw
-         ThphdE3pbM4ye2Z7oOT2zkqn5lxhQMbnmJnOdBf1hIoqHrQHfL9pINSyTT778u+F6W
-         g337f28a2qQKngNzYkFfJ0iEi9hRwvN7+PBmIgvs=
-Date:   Wed, 1 May 2019 13:10:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: kobject_init_and_add() confusion
-Message-ID: <20190501111022.GA15959@kroah.com>
-References: <20190430233803.GB10777@eros.localdomain>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vG0r3W7pz9sB8;
+        Wed,  1 May 2019 21:11:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556709070;
+        bh=lsMvESVyOeSnprDet45y/tXWUQqz+VKeCIWe4VhLqjE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VYFojUtqlOLIhUlUCI2X0uDSl5wBVgQ8/59Rew2+1j1xL/QWo8/k5+kqopZsj1v3I
+         fWyGX3RQRchdkNox2WzdvYv+qKcg2IFUD71yI6njvWFmXl/XCeY0mN9HeN4cUmhmm+
+         UciuEUT2vMXFa5fU3tPxUYSC4TonrUFdm2csBwNbIwkibLrSgm3Eq8/Z/0cFGfXdRs
+         48aJKYAd70+L2RS6rAQr8C2X8CP+iE0fE0KjqUjrzqCX/xV9hhApP/iHdRgjK7uypd
+         vQCGrZ2h4y13+4Z2Yy9x3gefnJryegz95QyppxxJSBrWADBqqKDLFPAT7D94r8LuSe
+         uZW/WkU9Be14g==
+Date:   Wed, 1 May 2019 21:10:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20190501211031.1f0eb5a5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430233803.GB10777@eros.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/QxL+bWKEAp1VX8+Fdfr48cU"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 09:38:03AM +1000, Tobin C. Harding wrote:
-> Hi,
-> 
-> Looks like I've created a bit of confusion trying to fix memleaks in
-> calls to kobject_init_and_add().  Its spread over various patches and
-> mailing lists so I'm starting a new thread and CC'ing anyone that
-> commented on one of those patches.
-> 
-> If there is a better way to go about this discussion please do tell me.
-> 
-> The problem
-> -----------
-> 
-> Calls to kobject_init_and_add() are leaking memory throughout the kernel
-> because of how the error paths are handled.
+--Sig_/QxL+bWKEAp1VX8+Fdfr48cU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-s/are leaking/have the potential to leak/
+Hi all,
 
-Note, no one ever hits these error paths, so it isn't a big issue, and
-is why no one has seen this except for the use of syzbot at times.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-> The solution
-> ------------
-> 
-> Write the error path code correctly.
-> 
-> Example
-> -------
-> 
-> We have samples/kobject/kobject-example.c but it uses
-> kobject_create_and_add().  I thought of adding another example file here
-> but could not think of how to do it off the top of my head without being
-> super contrived.  Can add this to the TODO list if it will help.
+  mm/vmalloc.c
 
-You could take the example I wrote in that old email and use it, or your
-version below as well.
+between commit:
 
-> Here is an attempted canonical usage of kobject_init_and_add() typical
-> of the code that currently is getting it wrong.  This is the second time
-> I've written this and the first time it was wrong even after review (you
-> know who you are, you are definitely buying the next round of drinks :)
-> 
-> Assumes we have an object in memory already that has the kobject
-> embedded in it. Variable 'kobj' below would typically be &ptr->kobj
-> 
-> 
-> 	void fn(void)
-> 	{
-> 	        int ret;
-> 
-> 	        ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
-> 	        if (ret) {
-> 			/*
-> 			 * This means kobject_init() has succeeded
+  bade3b4bdcdb ("mm/vmalloc.c: refactor __vunmap() to avoid duplicated call=
+ to find_vm_area()")
 
-kobject_init() can not fail except in fun ways that dumps the stack and
-then keeps on going due to the failure being on the caller, not the
-kobject code itself.
+from the tip tree and commit:
 
-> 			 * but kobject_add() failed.
-> 			 */
-> 			goto err_put;
-> 		}
-> 
-> 	        ret = some_init_fn();
-> 	        if (ret) {
-> 			/*
-> 			 * We need to wind back kobject_add() AND kobject_put().
-> 			 * kobject_add() incremented the refcount in
-> 			 * kobj->parent, that needs to be decremented THEN we need
-> 			 * the call to kobject_put() to decrement the refcount of kobj.
-> 			 */
-> 			goto err_del;
-> 		}
-> 
-> 	        ret = some_other_init_fn();
-> 	        if (ret)
-> 	                goto other_err;
-> 
-> 	        kobject_uevent(kobj, KOBJ_ADD);
-> 	        return 0;
-> 
-> 	other_err:
-> 	        other_clean_up_fn();
-> 	err_del:
-> 	        kobject_del(kobj);
-> 	err_put:
-> 		kobject_put(kobj);
-> 
-> 	        return ret;
-> 	}
-> 
-> 
-> Have I got this correct?
+  868b104d7379 ("mm/vmalloc: Add flag for freeing of special permsissions")
 
-From what I can tell, yes.
+from the akpm-current tree.
 
-> TODO
-> ----
-> 
-> - Fix all the callsites to kobject_init_and_add()
-> - Further clarify the function docstring for kobject_init_and_add() [perhaps]
+I fixed it up (I made an attempt ta a fix up - see below) and can carry
+the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the
+conflicting tree to minimise any particularly complex conflicts.
 
-More documentation, sure!
+--=20
+Cheers,
+Stephen Rothwell
 
-> - Add a section to Documentation/kobject.txt [optional]
+diff --cc mm/vmalloc.c
+index e5e9e1fcac01,4a91acce4b5f..000000000000
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@@ -1490,94 -2103,16 +2110,83 @@@ static struct vm_struct *__remove_vm_ar
+   */
+  struct vm_struct *remove_vm_area(const void *addr)
+  {
++ 	struct vm_struct *vm =3D NULL;
+  	struct vmap_area *va;
+ =20
+- 	might_sleep();
+-=20
+  	va =3D find_vmap_area((unsigned long)addr);
+- 	if (va && va->flags & VM_VM_AREA) {
+- 		struct vm_struct *vm =3D va->vm;
+-=20
+- 		spin_lock(&vmap_area_lock);
+- 		va->vm =3D NULL;
+- 		va->flags &=3D ~VM_VM_AREA;
+- 		va->flags |=3D VM_LAZY_FREE;
+- 		spin_unlock(&vmap_area_lock);
+-=20
+- 		kasan_free_shadow(vm);
+- 		free_unmap_vmap_area(va);
++ 	if (va && va->flags & VM_VM_AREA)
++ 		vm =3D __remove_vm_area(va);
+ =20
+- 		return vm;
+- 	}
+- 	return NULL;
++ 	return vm;
+  }
+ =20
+ +static inline void set_area_direct_map(const struct vm_struct *area,
+ +				       int (*set_direct_map)(struct page *page))
+ +{
+ +	int i;
+ +
+ +	for (i =3D 0; i < area->nr_pages; i++)
+ +		if (page_address(area->pages[i]))
+ +			set_direct_map(area->pages[i]);
+ +}
+ +
+ +/* Handle removing and resetting vm mappings related to the vm_struct. */
+- static void vm_remove_mappings(struct vm_struct *area, int deallocate_pag=
+es)
+++static void vm_remove_mappings(struct vmap_area *va, int deallocate_pages)
+ +{
+++	struct vm_struct *area =3D va->vm;
+ +	unsigned long addr =3D (unsigned long)area->addr;
+ +	unsigned long start =3D ULONG_MAX, end =3D 0;
+ +	int flush_reset =3D area->flags & VM_FLUSH_RESET_PERMS;
+ +	int i;
+ +
+ +	/*
+ +	 * The below block can be removed when all architectures that have
+ +	 * direct map permissions also have set_direct_map_() implementations.
+ +	 * This is concerned with resetting the direct map any an vm alias with
+ +	 * execute permissions, without leaving a RW+X window.
+ +	 */
+ +	if (flush_reset && !IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
+ +		set_memory_nx(addr, area->nr_pages);
+ +		set_memory_rw(addr, area->nr_pages);
+ +	}
+ +
+- 	remove_vm_area(area->addr);
+++	__remove_vm_area(va);
+ +
+ +	/* If this is not VM_FLUSH_RESET_PERMS memory, no need for the below. */
+ +	if (!flush_reset)
+ +		return;
+ +
+ +	/*
+ +	 * If not deallocating pages, just do the flush of the VM area and
+ +	 * return.
+ +	 */
+ +	if (!deallocate_pages) {
+ +		vm_unmap_aliases();
+ +		return;
+ +	}
+ +
+ +	/*
+ +	 * If execution gets here, flush the vm mapping and reset the direct
+ +	 * map. Find the start and end range of the direct mappings to make sure
+ +	 * the vm_unmap_aliases() flush includes the direct map.
+ +	 */
+ +	for (i =3D 0; i < area->nr_pages; i++) {
+ +		if (page_address(area->pages[i])) {
+ +			start =3D min(addr, start);
+ +			end =3D max(addr, end);
+ +		}
+ +	}
+ +
+ +	/*
+ +	 * Set direct map to something invalid so that it won't be cached if
+ +	 * there are any accesses after the TLB flush, then flush the TLB and
+ +	 * reset the direct map permissions to the default.
+ +	 */
+ +	set_area_direct_map(area, set_direct_map_invalid_noflush);
+ +	_vm_unmap_aliases(start, end, 1);
+ +	set_area_direct_map(area, set_direct_map_default_noflush);
+ +}
+ +
+  static void __vunmap(const void *addr, int deallocate_pages)
+  {
+  	struct vm_struct *area;
+@@@ -1599,8 -2136,7 +2210,8 @@@
+  	debug_check_no_locks_freed(area->addr, get_vm_area_size(area));
+  	debug_check_no_obj_freed(area->addr, get_vm_area_size(area));
+ =20
+- 	vm_remove_mappings(area, deallocate_pages);
+ -	__remove_vm_area(va);
+++	vm_remove_mappings(va, deallocate_pages);
+ +
+  	if (deallocate_pages) {
+  		int i;
+ =20
 
-That file should probably be reviewed and converted to .rst, I haven't
-looked at it in years.
+--Sig_/QxL+bWKEAp1VX8+Fdfr48cU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> - Add a sample usage file under samples/kobject [optional]
+-----BEGIN PGP SIGNATURE-----
 
-Would be a good idea, so we can point people at it.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzJfqcACgkQAVBC80lX
+0Gywpgf/fkQGSKG68XdL83eMJERncTj8Pr1TQpGxQtR5nqMxC+D9Uy1cjCerDgGA
+3xYP7bVzBpH7amGWi3Bh2kHgfo6VzdL3u88CrC6LnpfgMozy+9QvZb1GV/BzWI9E
+8jLk6t06oI8ZVvxH+8Zabk+KQ2DUkrKVBC90/m9q+TGfaBajMM11qkAwM+t9RWju
+nyZ1Az4U/b9Gmg7NLBulwXH81LMTFKMGhp9/DUVhgRkSBi0anWLLRRsAW72RvdnS
+0C1YHyqMYipNBbHZDOcr1I7ZRa6KdHtdoyPNoxuKeoteeGOtr8QqWlxeEgTeJfOn
+ukA7aU8GKGV9fyl1tchV86kZ3UELkA==
+=X3ak
+-----END PGP SIGNATURE-----
 
-thanks,
-
-greg k-h
+--Sig_/QxL+bWKEAp1VX8+Fdfr48cU--
