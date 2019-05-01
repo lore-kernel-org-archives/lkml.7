@@ -6,98 +6,99 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DFAC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B7BC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B2220675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B13420675
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:58:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cZtAbaPU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fm9qS77V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbfEASyL (ORCPT
+        id S1726150AbfEAS6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 14:54:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47624 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfEASyL (ORCPT
+        Wed, 1 May 2019 14:58:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60976 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEAS6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 14:54:11 -0400
+        Wed, 1 May 2019 14:58:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mIUlTqn6wXkiuEWJTRY2AWbGrT0fqFXBa6GVgICMsZg=; b=cZtAbaPU0seeywoUsS+mL9FNN
-        wgQK8SIjmW4Ud5TVI4TTGPQA03RBCRkmxIK9mDDrB28g2tmT/pcfJLbkHFxdOtZRhlYkNpdvqLiD7
-        2+quQLFdEjQCrQGvWHbziSUuc7curcbqYaVcrIcPXsFOYJK0CGj6yOnPKKuRnpm94pXp+oz6i6IIo
-        8rE+WFEeqapcu32Rupj1qi6mCbEvUpSv3fLD0cLrEKwhOrZF7IfVD8JS0lA5i7z+LcLTVx+LV7bKG
-        tAe+ZtyymPighUulm2vDyqJ8lWCN+RleTtSYh81nrsjeyomD5WO3fUzwxf8N7zmraQQ8Q64FougBk
-        c592qFNGw==;
+         bh=3CoCMxRNI5B81hO4bBNVrThAA9Fq27JtsrjXALFMYvM=; b=fm9qS77Vw7+9yE2lMBrpxLtZj
+        oEyoU6pcvTlYigA8B7sutWVGYJzn0tgwf8z0dXBIxzgiXLy/voa4x7O0lTiK0X6XJFbhSLcE+2t0D
+        h+MELCRu7dNUdXyKI0+zXNcV2FYVRW5O3qBsZOk+fuuCnFO+ayo9NB2QwATFkn9bzoEgzHrzhmOIX
+        /4dWzIkIdBFz5R/3/HGFzb24EOnhAmtUOUqfUff8ugc6lCuM5UZQTPztHV5w0aegeWLSBY5iYrzZU
+        v3kdgMt5rme6EAHc1qA6v0Cd233xRrBjV5jhbrS16kNy3pyrVYylNabEjFF0a+YsW3enmcTuULWOI
+        Gs9fHE7rQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLuMm-0002oG-3g; Wed, 01 May 2019 18:54:04 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLuQ6-0007pZ-C0; Wed, 01 May 2019 18:57:30 +0000
 Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4DB27984EB4; Wed,  1 May 2019 20:54:00 +0200 (CEST)
-Date:   Wed, 1 May 2019 20:54:00 +0200
+        id DC946984EB4; Wed,  1 May 2019 20:57:26 +0200 (CEST)
+Date:   Wed, 1 May 2019 20:57:26 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, jack@suse.com,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
- current) with fsfreeze (4.19.25-rt16)
-Message-ID: <20190501185400.GQ7905@worktop.programming.kicks-ass.net>
-References: <20190326093421.GA29508@localhost.localdomain>
- <20190419085627.GI4742@localhost.localdomain>
- <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
- <20190430132811.GB2589@hirez.programming.kicks-ass.net>
- <20190501170953.GB2650@hirez.programming.kicks-ass.net>
- <ce854251-139e-15f1-2ac5-b66a27f8284c@redhat.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [RFC][PATCH v3] ftrace/x86_64: Emulate call function while
+ updating in breakpoint handler
+Message-ID: <20190501185726.GR7905@worktop.programming.kicks-ass.net>
+References: <20190501113238.0ab3f9dd@gandalf.local.home>
+ <CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ce854251-139e-15f1-2ac5-b66a27f8284c@redhat.com>
+In-Reply-To: <CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 01:26:08PM -0400, Waiman Long wrote:
-> On 5/1/19 1:09 PM, Peter Zijlstra wrote:
-> > On Tue, Apr 30, 2019 at 03:28:11PM +0200, Peter Zijlstra wrote:
-> >
-> >> Yeah, but AFAIK fs freezing code has a history of doing exactly that..
-> >> This is just the latest incarnation here.
-> >>
-> >> So the immediate problem here is that the task doing thaw isn't the same
-> >> that did freeze, right? The thing is, I'm not seeing how that isn't a
-> >> problem with upstream either.
-> >>
-> >> The freeze code seems to do: percpu_down_write() for the various states,
-> >> and then frobs lockdep state.
-> >>
-> >> Thaw then does the reverse, frobs lockdep and then does: percpu_up_write().
-> >>
-> >> percpu_down_write() directly relies on down_write(), and
-> >> percpu_up_write() on up_write(). And note how __up_write() has:
-> >>
-> >> 	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
-> >>
-> >> So why isn't this same code coming unstuck in mainline?
+On Wed, May 01, 2019 at 11:01:07AM -0700, Linus Torvalds wrote:
+> This looks sane to me, although I'm surprised that we didn't already
+> have an annotation for the nonstandard stack frame for asm files. That
+> probably would be cleaner in a separate commit, but I guess it doesn't
+> matter.
 > 
-> That code is in just in the tip tree. It is not in the mainline yet. I
-> do realize that it can be a problem and so I have it modified to the
-> following in my part2 patchset.
+> Anyway, I'm willing to consider the entry code version if it looks a
+> _lot_ simpler than this (so I'd like to see them side-by-side), but
+> it's not like this looks all that complicated to me either.
 
-Nah, the percpu_rwsem abuse by the freezer is atrocious, we really
-should not encourage that. Also, it completely wrecks -RT.
+So I posted one earlier today:
 
-Hence the proposed patch.
+  https://lkml.kernel.org/r/20190501131117.GW2623@hirez.programming.kicks-ass.net
+
+it's about a 1/3rd the number of lines and has 32bit support. It also
+provides all the bits required to implement static_call().
+
+That is; I think I'm firmly in favour of the entry variant -- provided
+it actually works of course.
