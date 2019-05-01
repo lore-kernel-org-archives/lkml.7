@@ -2,145 +2,152 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958F2C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FBAC004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4EF21670
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873B9208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:22:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BsP6AnL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfEAPQU (ORCPT
+        id S1726909AbfEAPWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:16:20 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.161]:27075 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726488AbfEAPQU (ORCPT
+        Wed, 1 May 2019 11:22:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43614 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbfEAPWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:16:20 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id C4A6698B7
-        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 10:16:18 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Lqy2hj5GDYTGMLqy2hnocb; Wed, 01 May 2019 10:16:18 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.203] (port=59360 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hLqy1-001KSh-O8; Wed, 01 May 2019 10:16:17 -0500
-Date:   Wed, 1 May 2019 10:16:15 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH][next] rtw88: phy: mark expected switch fall-throughs
-Message-ID: <20190501151615.GA18557@embeddedor>
+        Wed, 1 May 2019 11:22:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x41ExFjM181642;
+        Wed, 1 May 2019 15:21:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=i/eVb1RrPCrDgsQYwTIls1vT7PGrIbuHhUptmv1sc2U=;
+ b=BsP6AnL/ORY8ld331R4h0ac65YxS73XkP57Vczvh6L/OUPqAHMOzeF1ujrkUCRrgatxc
+ jebYYcNYN8gNQ1pZZRlBgRtNrMTisjdd42nTg+Ycd9UXFg6tu7mpm/FPlvNziKb4GHgk
+ Ev/rAHicr5ObHUMRbubGeDPRgTwGg3FWy0K33/iF0u2XsYkT68SDeK3uZU5y4oVZ33kj
+ +ktkW9kzO8wVZMrVdA8Y+QMoCoV8U1+8O4GynSn3BODBw+OLs3zxFhsPGV8DCVHOV/rL
+ f8jPd2DGbY/dStdvsDL4ViC8D5ksbEkNxvDpzU9xr8j+5etNJkZgs8hgSt7qW6slgjfr KA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2s6xhyk8g7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 May 2019 15:21:04 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x41FIh2M030628;
+        Wed, 1 May 2019 15:19:04 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2s6xhgjet8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 May 2019 15:19:03 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x41FIjxB018467;
+        Wed, 1 May 2019 15:18:46 GMT
+Received: from [192.168.1.16] (/24.9.64.241)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 01 May 2019 08:18:45 -0700
+Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
+ Ownership (XPFO)
+To:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@kernel.org>
+Cc:     juergh@gmail.com, tycho@tycho.ws, jsteckli@amazon.de,
+        keescook@google.com, konrad.wilk@oracle.com,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
+        tyhicks@canonical.com, dwmw@amazon.co.uk,
+        andrew.cooper3@citrix.com, jcm@redhat.com,
+        boris.ostrovsky@oracle.com, iommu@lists.linux-foundation.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-security-module@vger.kernel.org,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arjan van de Ven <arjan@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <cover.1554248001.git.khalid.aziz@oracle.com>
+ <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
+ <20190417161042.GA43453@gmail.com>
+ <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
+ <35c4635e-8214-7dde-b4ec-4cb266b2ea10@redhat.com>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+Message-ID: <4a47cf86-a05d-3de5-0320-eda06101cc75@oracle.com>
+Date:   Wed, 1 May 2019 09:18:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <35c4635e-8214-7dde-b4ec-4cb266b2ea10@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.203
-X-Source-L: No
-X-Exim-ID: 1hLqy1-001KSh-O8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.119.203]:59360
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9243 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905010096
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9243 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905010096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
+On 5/1/19 8:49 AM, Waiman Long wrote:
+> On Wed, Apr 03, 2019 at 11:34:04AM -0600, Khalid Aziz wrote:
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt
+> b/Documentation/admin-guide/kernel-parameters.txt
+>=20
+>> index 858b6c0b9a15..9b36da94760e 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -2997,6 +2997,12 @@
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nox2apic=C2=A0=C2=A0=C2=A0 [X86-64,APIC=
+] Do not enable x2APIC mode.
+>>
+>> +=C2=A0=C2=A0=C2=A0 noxpfo=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [=
+XPFO] Disable eXclusive Page Frame Ownership (XPFO)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wh=
+en CONFIG_XPFO is on. Physical pages mapped into
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 us=
+er applications will also be mapped in the
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ke=
+rnel's address space as if CONFIG_XPFO was not
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 en=
+abled.
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpu0_hotplug=C2=A0=C2=A0=C2=A0 [X86] Tu=
+rn on CPU0 hotplug feature when
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 CONFIG_BO OTPARAM_HOTPLUG_CPU0 is off.
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 Some features depend on CPU0. Known dependencies are:
+>=20
+> Given the big performance impact that XPFO can have. It should be off b=
+y
+> default when configured. Instead, the xpfo option should be used to
+> enable it.
 
-This patch fixes the following warnings:
+Agreed. I plan to disable it by default in the next version of the
+patch. This is likely to end up being a feature for extreme security
+conscious folks only, unless I or someone else comes up with further
+significant performance boost.
 
-drivers/net/wireless/realtek/rtw88/phy.c: In function ‘rtw_get_channel_group’:
-./include/linux/compiler.h:77:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
- # define unlikely(x) __builtin_expect(!!(x), 0)
-                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/bug.h:125:2: note: in expansion of macro ‘unlikely’
-  unlikely(__ret_warn_on);     \
-  ^~~~~~~~
-drivers/net/wireless/realtek/rtw88/phy.c:907:3: note: in expansion of macro ‘WARN_ON’
-   WARN_ON(1);
-   ^~~~~~~
-drivers/net/wireless/realtek/rtw88/phy.c:908:2: note: here
-  case 1:
-  ^~~~
-In file included from ./include/linux/bcd.h:5,
-                 from drivers/net/wireless/realtek/rtw88/phy.c:5:
-drivers/net/wireless/realtek/rtw88/phy.c: In function ‘phy_get_2g_tx_power_index’:
-./include/linux/compiler.h:77:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
- # define unlikely(x) __builtin_expect(!!(x), 0)
-                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/bug.h:125:2: note: in expansion of macro ‘unlikely’
-  unlikely(__ret_warn_on);     \
-  ^~~~~~~~
-drivers/net/wireless/realtek/rtw88/phy.c:1021:3: note: in expansion of macro ‘WARN_ON’
-   WARN_ON(1);
-   ^~~~~~~
-drivers/net/wireless/realtek/rtw88/phy.c:1022:2: note: here
-  case RTW_CHANNEL_WIDTH_20:
-  ^~~~
-
-Warning level 3 was used: -Wimplicit-fallthrough=3
-
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/realtek/rtw88/phy.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/wireless/realtek/rtw88/phy.c b/drivers/net/wireless/realtek/rtw88/phy.c
-index 35a35dbca85f..4381b360b5b5 100644
---- a/drivers/net/wireless/realtek/rtw88/phy.c
-+++ b/drivers/net/wireless/realtek/rtw88/phy.c
-@@ -905,6 +905,7 @@ static u8 rtw_get_channel_group(u8 channel)
- 	switch (channel) {
- 	default:
- 		WARN_ON(1);
-+		/* fall through */
- 	case 1:
- 	case 2:
- 	case 36:
-@@ -1019,6 +1020,7 @@ static u8 phy_get_2g_tx_power_index(struct rtw_dev *rtwdev,
- 	switch (bandwidth) {
- 	default:
- 		WARN_ON(1);
-+		/* fall through */
- 	case RTW_CHANNEL_WIDTH_20:
- 		tx_power += pwr_idx_2g->ht_1s_diff.bw20 * factor;
- 		if (above_2ss)
-@@ -1062,6 +1064,7 @@ static u8 phy_get_5g_tx_power_index(struct rtw_dev *rtwdev,
- 	switch (bandwidth) {
- 	default:
- 		WARN_ON(1);
-+		/* fall through */
- 	case RTW_CHANNEL_WIDTH_20:
- 		tx_power += pwr_idx_5g->ht_1s_diff.bw20 * factor;
- 		if (above_2ss)
--- 
-2.21.0
+Thanks,
+Khalid
 
