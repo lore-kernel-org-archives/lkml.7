@@ -2,101 +2,149 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D46C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055DDC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715F22089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CED2089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfEAUdM (ORCPT
+        id S1726186AbfEAUgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:33:12 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:53139 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfEAUdL (ORCPT
+        Wed, 1 May 2019 16:36:45 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.184]:38857 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfEAUgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:33:11 -0400
-Received: from excalibur.cnev.de ([213.196.200.188]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MXYAj-1hGI2t16Yp-00Yxxl; Wed, 01 May 2019 22:32:52 +0200
-Received: from karsten by excalibur.cnev.de with local (Exim 4.89)
-        (envelope-from <merker@debian.org>)
-        id 1hLvuK-0000JY-Jd; Wed, 01 May 2019 22:32:48 +0200
-Date:   Wed, 1 May 2019 22:32:48 +0200
-From:   Karsten Merker <merker@debian.org>
-To:     Anup Patel <anup@brainfault.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zong@andestech.com" <zong@andestech.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Cc:     Karsten Merker <merker@debian.org>
-Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
-Message-ID: <20190501203248.oadcldefusc2ighv@excalibur.cnev.de>
-References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
- <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com>
- <20190501170053.GG11740@lakrids.cambridge.arm.com>
- <CAAhSdy2OuCb6wBrs-O=fTWo0D_CgwTztfV-kMDi=tPmSJhM7og@mail.gmail.com>
- <20190501195443.trgjv6tujctsw5sw@excalibur.cnev.de>
+        Wed, 1 May 2019 16:36:45 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id B7C531CB2F86
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 15:36:43 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Lvy7hoFJiYTGMLvy7hsw7w; Wed, 01 May 2019 15:36:43 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=52658 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLvxm-003wyT-QW; Wed, 01 May 2019 15:36:42 -0500
+Date:   Wed, 1 May 2019 15:36:21 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2] mmc: usdhi6rol0: mark expected switch fall-throughs
+Message-ID: <20190501203621.GA11352@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190501195443.trgjv6tujctsw5sw@excalibur.cnev.de>
-X-No-Archive: yes
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:uAFOUbMAST/fg63gGkCxdt/hO21IE0Vf8MY/Ms1ItZjbUKKeRaM
- X3ziOi00VTr0wfRTUPku62LmNHlcdHKpp8aqgEypwoZwWgBcyZgLKum6sg6yZZpAK2dOxAc
- nF/rWnvuGYeP4ket1h/vVRh8ElovIybmZuVDHzPAPHGE+Zn9C3lM76BMHWkWc2BABa8CABQ
- ELwBTDw9ewm1qd8ZngyVg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xhj0qQJdr/8=:2CTkHkDNXsJsE4iCWO5dGZ
- BsdK0s641viw46BVtn9Dn7tnCjRB48pPsqevSrPPzLTeLheVoKH6VVF8X3wbe/e1A5ADPY9uO
- F6kxiXkfJX1u7wUzI597bik0oD1Q4T/a6Qo4LbYvhjVsANX4Aay1V6hcz1/N/Yejed1ZvFMH8
- gpDywyK0iMhAksuE+lUEgPLjFcG8fqzbQmIE3qOPiuS0Srla/w7dPJ0TXMjph93xBTEN0ZijW
- 2lRM7b+BsgW9WVdFUC0ioivjHcBGIrC8vNySgjo6rHLxhYncQTfmvBja0pUH8J9tAvDA8OY19
- 7KJsHZz5s3UTmOMFOW9jpRiE+OIsA3IMXsFfq1nFTrnRZEV3b99AKPwLWCHH1JUulK7p21ZzV
- TEz4H5nyNf0jUXz6gjTNWKsqJsU8G8IeS6EySdb54WqQDYq8/MKDlpt5lAp7Qfj6JXqH9w7yj
- qLshvo0KwBP71aG520MA0qEEzpapm4NbVWiN7WctYsFYQ6JsItWMePn4ID+RLYlCIR2+strG2
- dDs6pJ0q93Q0Ia/2YjdVXQEj9cwC6RFNIdHpzGi0jZAHglLq/EwPElhMGz08TRhC/Fzf7jT6X
- klVMmo5fb8OClfps8V362x74R1UfFYz+fIrz3D9jNf5WfsXwJuHPJwyH8n2krzTYv48l7HUIH
- tIUCrLxPPYdvbFaHQPFOK9sPl3QZalaSyUKXBIAZlYfWagXnKHtzhua6/sP0gz5oT129h8mdp
- 8AcIxS/Q3pD5ibzIBUCx4wuddq+8jLpnvlSC9A==
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLvxm-003wyT-QW
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.119.203]:52658
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 09:54:43PM +0200, Karsten Merker wrote:
-> On Wed, May 01, 2019 at 10:41:52PM +0530, Anup Patel wrote:
-> > On Wed, May 1, 2019 at 10:30 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > > On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
-> > > > On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
-> > > > > On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-> Probably I'm missing something obvious, but I cannot completely
-> follow you here. My understanding is as follows:
-[...]
-> If the first byte in a PE/COFF header has to be an ASCII "M",
-> that is 01001101 in binary.  RISC-V is little-endian and the last
-> two bits of the lowest-value byte define the type of instruction. 
-> According to the chapter "Base Instruction-Length Encoding" in
-> the RISC-V ISA spec everything except 11 as the lowest bits
-> denotes a compressed instruction and if I have puzzeled together
-> the the various instruction bits correctly, ASCII "MZ" would be
-> excuted as a compressed load immediate to x9/s1, wouldn't it?
+This patch fixes the following warnings:
 
-Sorry, I have misinterpreted a bitfield in the spec, it's indeed
-a compressed load immediate to x20/s4.
+In file included from drivers/mmc/host/usdhi6rol0.c:9:
+drivers/mmc/host/usdhi6rol0.c: In function ‘usdhi6_timeout_work’:
+./include/linux/device.h:1483:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/mmc/host/usdhi6rol0.c:1689:3: note: in expansion of macro ‘dev_err’
+   dev_err(mmc_dev(host->mmc), "Invalid state %u\n", host->wait);
+   ^~~~~~~
+drivers/mmc/host/usdhi6rol0.c:1691:2: note: here
+  case USDHI6_WAIT_FOR_CMD:
+  ^~~~
+drivers/mmc/host/usdhi6rol0.c:1711:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   usdhi6_sg_unmap(host, true);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/mmc/host/usdhi6rol0.c:1716:2: note: here
+  case USDHI6_WAIT_FOR_DATA_END:
+  ^~~~
+  CC [M]  drivers/isdn/hisax/hisax_isac.o
+drivers/mmc/host/usdhi6rol0.c: In function ‘usdhi6_stop_cmd’:
+drivers/mmc/host/usdhi6rol0.c:1338:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (mrq->stop->opcode == MMC_STOP_TRANSMISSION) {
+      ^
+drivers/mmc/host/usdhi6rol0.c:1343:2: note: here
+  default:
+  ^~~~~~~
 
-Regards,
-Karsten
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+Changes in v2:
+ - Turn multiple line comments into single line comments.
+ - Fix additional fall-through warning.
+
+ drivers/mmc/host/usdhi6rol0.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
+index cd8b1b9d4d8a..f0cc5e0dbf79 100644
+--- a/drivers/mmc/host/usdhi6rol0.c
++++ b/drivers/mmc/host/usdhi6rol0.c
+@@ -1339,7 +1339,7 @@ static int usdhi6_stop_cmd(struct usdhi6_host *host)
+ 			host->wait = USDHI6_WAIT_FOR_STOP;
+ 			return 0;
+ 		}
+-		/* Unsupported STOP command */
++		/* fall through - Unsupported STOP command */
+ 	default:
+ 		dev_err(mmc_dev(host->mmc),
+ 			"unsupported stop CMD%d for CMD%d\n",
+@@ -1687,7 +1687,7 @@ static void usdhi6_timeout_work(struct work_struct *work)
+ 	switch (host->wait) {
+ 	default:
+ 		dev_err(mmc_dev(host->mmc), "Invalid state %u\n", host->wait);
+-		/* mrq can be NULL in this actually impossible case */
++		/* fall through - mrq can be NULL in this actually impossible case */
+ 	case USDHI6_WAIT_FOR_CMD:
+ 		usdhi6_error_code(host);
+ 		if (mrq)
+@@ -1709,10 +1709,7 @@ static void usdhi6_timeout_work(struct work_struct *work)
+ 			host->offset, data->blocks, data->blksz, data->sg_len,
+ 			sg_dma_len(sg), sg->offset);
+ 		usdhi6_sg_unmap(host, true);
+-		/*
+-		 * If USDHI6_WAIT_FOR_DATA_END times out, we have already unmapped
+-		 * the page
+-		 */
++		/* fall through - If USDHI6_WAIT_FOR_DATA_END times out, we have already unmapped the page */
+ 	case USDHI6_WAIT_FOR_DATA_END:
+ 		usdhi6_error_code(host);
+ 		data->error = -ETIMEDOUT;
 -- 
-Ich widerspreche hiermit ausdrücklich der Nutzung sowie der
-Weitergabe meiner personenbezogenen Daten für Zwecke der Werbung
-sowie der Markt- oder Meinungsforschung.
+2.21.0
+
