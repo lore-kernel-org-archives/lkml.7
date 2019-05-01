@@ -2,182 +2,122 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60791C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BD8C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249EC20645
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F05F2085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:14:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="H4LAJTY1"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="mCxlssX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfEARMF (ORCPT
+        id S1726173AbfEAROB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:12:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44408 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfEARMF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:12:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c5so25269613wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:12:03 -0700 (PDT)
+        Wed, 1 May 2019 13:14:01 -0400
+Received: from mail-eopbgr820129.outbound.protection.outlook.com ([40.107.82.129]:52973
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726005AbfEAROB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:14:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1MdDGHJ3v97Gewzs4mi2SgVk5SjqgGKkN3GGzAhTMHk=;
-        b=H4LAJTY1Xw2haEQfz90FjZBT6ELgPfL9OYWEXT/aRGZ06VxQzckTDK4HK4tNM+UuAt
-         obiUo20BRZEtrd3rY8FxHC8ZzXNhardxP7bgwgVn7u5VPFap9ogbgXNHe034cDz1iHi2
-         7Hf96XEYRcg9XbiGhmnx4HevojSwQpL3KIKSuJAQYA04GsmXSNMT0jv5drMAUKdCi3uJ
-         0C+zfT+f/Xr6nVup8E7LFqbF1XnL9/w0L3l7AdpyLvqx2HorEZDYBy6TSNwa43A9LBOB
-         XTLuB7OZpOZuTb5KZ1QP7PARf8F/FhERT2NKDMOPnJjZuH0VyYsnBiaDbfZZpfd3MzSJ
-         LGEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1MdDGHJ3v97Gewzs4mi2SgVk5SjqgGKkN3GGzAhTMHk=;
-        b=HjnXoC88tGuyjvKtAwy5wipvKKiSVP4YSmQj2Wz1OijKHCAoPvDf+5W+4uUkZPS8Fk
-         QeTvkQXEi2jDZnksYuIhSUiErlOg9lXMZ36nFxQdTg65/c8FeiQRis8pmB5ksyx0CsoA
-         mbDsWAIha938ZKL9bxhfFoNvRAo3i/6WybgJVcvHNdxeSmkuou8aPrkf8ZqPEcFPl1Ry
-         GbOQhAyvD+FPCmuVyJF7IX2Gtxlz01iSD0bc0BnkzKKzzRwDblMQtzpuzUz9j3pzgNIK
-         lrAlBviI4EirZKkPiFW/gQD/ODVC4LdlWQv+DS0vwZV+jW567aKsU5xaec4mTrDhn/Y8
-         FP9w==
-X-Gm-Message-State: APjAAAWgoJW53NyfxG3UQY/fsROTQd0VaYshXZUclktq1lXTUAzFzsr+
-        hWhSebUKrHqZ0qLw3YkFSN8Bkeofl4sfYA2943uYrg==
-X-Google-Smtp-Source: APXvYqz7GWnHLq9+RE6M3Yb6xG2DPvzlRUPlkD/3MWd/z79DglFDFnxHpuM0kxtcdoGfNWGVRZBY33sQnd5M8zYqUB0=
-X-Received: by 2002:adf:e3c7:: with SMTP id k7mr2418315wrm.128.1556730722955;
- Wed, 01 May 2019 10:12:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
- <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com> <20190501170053.GG11740@lakrids.cambridge.arm.com>
-In-Reply-To: <20190501170053.GG11740@lakrids.cambridge.arm.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 1 May 2019 22:41:52 +0530
-Message-ID: <CAAhSdy2OuCb6wBrs-O=fTWo0D_CgwTztfV-kMDi=tPmSJhM7og@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HABJON+PUwKKspjD9/5rvoUoFvtxnRJTtI3uP9m84jA=;
+ b=mCxlssX/fSUbWEVb2VVYdxuzP6WTJXUoID7oXybpmZtZVwXaaUwA6oDPteNnndFZnjcms3WVbEk0dOF3DlZqKIX7AfYJZP4sJmCbYRtdw60uIVrSxajoSw9KnZsTqvAgS57jzMC7IzyRbPDt9Kp6+5jrtJIrn0lz0wT4pi/eiYQ=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1360.namprd22.prod.outlook.com (10.174.162.150) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Wed, 1 May 2019 17:13:57 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1835.018; Wed, 1 May 2019
+ 17:13:57 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Ley Foon Tan <lftan@altera.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zong@andestech.com" <zong@andestech.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Subject: Re: [PATCH 5/7 v2] MIPS: use the generic uncached segment support in
+ dma-direct
+Thread-Topic: [PATCH 5/7 v2] MIPS: use the generic uncached segment support in
+ dma-direct
+Thread-Index: AQHVAB+93knDJH4MwEqQLib+MMfMNKZWgkOA
+Date:   Wed, 1 May 2019 17:13:57 +0000
+Message-ID: <20190501171355.7wnrutfnax5djkpx@pburton-laptop>
+References: <20190430110032.25301-1-hch@lst.de>
+ <20190430110032.25301-6-hch@lst.de>
+ <20190430201041.536amvinrcvd2wua@pburton-laptop>
+ <20190430202947.GA30262@lst.de>
+ <20190430211105.ielntedm46uqamca@pburton-laptop>
+ <20190501131339.GA890@lst.de>
+In-Reply-To: <20190501131339.GA890@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0050.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::27) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 11d33d32-661c-4be2-e2ef-08d6ce586500
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1360;
+x-ms-traffictypediagnostic: MWHPR2201MB1360:
+x-microsoft-antispam-prvs: <MWHPR2201MB1360446168387E44DE27414AC13B0@MWHPR2201MB1360.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1148;
+x-forefront-prvs: 00246AB517
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(39840400004)(366004)(136003)(396003)(346002)(376002)(199004)(189003)(44832011)(71190400001)(71200400001)(486006)(4744005)(6436002)(6486002)(1076003)(476003)(11346002)(6506007)(386003)(8676002)(73956011)(102836004)(26005)(81166006)(81156014)(478600001)(6116002)(3846002)(66946007)(229853002)(305945005)(2906002)(7736002)(446003)(256004)(66476007)(64756008)(66446008)(66556008)(7416002)(6916009)(8936002)(4326008)(68736007)(33716001)(6512007)(52116002)(76176011)(99286004)(53936002)(42882007)(6246003)(9686003)(5660300002)(66066001)(316002)(186003)(58126008)(54906003)(14454004)(25786009)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1360;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RyJnvgB3VbpTL1lCiqOR1TUJLbWECPHaCuWA4fJ4a25biAZrmmqnIY/y4PaIgDe+k9ZqYq6Kue008thEQ7/ViQ0msPhX/yfaRI4Lu1LwY0MUXoN9ZHu0fWjLG1cN53DkiOjeJ17ykF8TOzIYyWDCnhN4AwRHESAlxD5kGqKCkJjiKX4wqU41M9uxtrB6pNYbmBe1478S51AbWB0ZceRXxMX0lpP5EuF1C9GJYOlvXvGVIlEinM4Y8iyJpdQk6FQwXM4TzOSuWZwBO4GjFt4f6MSKj6bhnToCXk4jvAzHre8aQFrce1x0zNCKn80ju95fNSN1mhqRloSJxq8uPM+Ty44XPZeB+xEbJ/YCDZlPhjPnwsS3J70XuYQV9KemHV8BNMyOOZY3IuIzSL7FdDWmRWrv2vEECO89rI8SxzaLvZ8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F14412FE76975045800B7CCED7EAD807@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11d33d32-661c-4be2-e2ef-08d6ce586500
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 17:13:57.6422
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1360
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 10:30 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
-> > On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
-> > > On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
-> > > > Currently, last stage boot loaders such as U-Boot can accept only
-> > > > uImage which is an unnecessary additional step in automating boot flows.
-> > > >
-> > > > Add a simple image header that boot loaders can parse and directly
-> > > > load kernel flat Image. The existing booting methods will continue to
-> > > > work as it is.
-> > > >
-> > > > Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
-> > > >
-> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > ---
-> > > >   arch/riscv/include/asm/image.h | 32 ++++++++++++++++++++++++++++++++
-> > > >   arch/riscv/kernel/head.S       | 28 ++++++++++++++++++++++++++++
-> > > >   2 files changed, 60 insertions(+)
-> > > >   create mode 100644 arch/riscv/include/asm/image.h
-> > > >
-> > > > diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
-> > > > new file mode 100644
-> > > > index 000000000000..76a7e0d4068a
-> > > > --- /dev/null
-> > > > +++ b/arch/riscv/include/asm/image.h
-> > > > @@ -0,0 +1,32 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > +
-> > > > +#ifndef __ASM_IMAGE_H
-> > > > +#define __ASM_IMAGE_H
-> > > > +
-> > > > +#define RISCV_IMAGE_MAGIC        "RISCV"
-> > > > +
-> > > > +#ifndef __ASSEMBLY__
-> > > > +/*
-> > > > + * struct riscv_image_header - riscv kernel image header
-> > > > + *
-> > > > + * @code0:               Executable code
-> > > > + * @code1:               Executable code
-> > > > + * @text_offset: Image load offset
-> > > > + * @image_size:          Effective Image size
-> > > > + * @reserved:            reserved
-> > > > + * @magic:               Magic number
-> > > > + * @reserved:            reserved
-> > > > + */
-> > > > +
-> > > > +struct riscv_image_header {
-> > > > + u32 code0;
-> > > > + u32 code1;
-> > > > + u64 text_offset;
-> > > > + u64 image_size;
-> > > > + u64 res1;
-> > > > + u64 magic;
-> > > > + u32 res2;
-> > > > + u32 res3;
-> > > > +};
-> > >
-> > > I don't want to invent our own file format.  Is there a reason we can't just
-> > > use something standard?  Off the top of my head I can think of ELF files and
-> > > multiboot.
-> >
-> > Additional header is required to accommodate PE header format. Currently,
-> > this is only used for booti command but it will be reused for EFI headers as
-> > well. Linux kernel Image can pretend as an EFI application if PE/COFF header
-> > is present. This removes the need of an explicit EFI boot loader and EFI
-> > firmware can directly load Linux (obviously after EFI stub implementation
-> > for RISC-V).
->
-> Adding the EFI stub on arm64 required very careful consideration of our
-> Image header and the EFI spec, along with the PE/COFF spec.
->
-> For example, to be a compliant PE/COFF header, the first two bytes of
-> your kernel image need to be "MZ" in ASCII. On arm64 we happened to find
-> a valid instruction that we could rely upon that met this requirement...
+Hi Christoph,
 
-The "MZ" ASCII (i.e. 0x5a4d) is "li s4,-13" instruction in RISC-V so this
-modifies "s4" register which is pretty harmless from Linux RISC-V booting
-perspective.
+On Wed, May 01, 2019 at 03:13:39PM +0200, Christoph Hellwig wrote:
+> Stop providing our arch alloc/free hooks and just expose the segment
+> offset instead.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/mips/Kconfig              |  1 +
+>  arch/mips/include/asm/page.h   |  3 ---
+>  arch/mips/jazz/jazzdma.c       |  6 ------
+>  arch/mips/mm/dma-noncoherent.c | 26 +++++++++-----------------
+>  4 files changed, 10 insertions(+), 26 deletions(-)
 
-Of course, we should only add "MZ" ASCII in Linux RISC-V image header
-when CONFIG_EFI is enabled (just like Linux ARM64).
+This one looks good to me now, for patches 1 & 5:
 
->
-> > > >   __INIT
-> > > >   ENTRY(_start)
-> > > > + /*
-> > > > +  * Image header expected by Linux boot-loaders. The image header data
-> > > > +  * structure is described in asm/image.h.
-> > > > +  * Do not modify it without modifying the structure and all bootloaders
-> > > > +  * that expects this header format!!
-> > > > +  */
-> > > > + /* jump to start kernel */
-> > > > + j _start_kernel
->
-> ... but it's not clear to me if this instruction meets that requriement.
->
-> I would strongly encourage you to consider what you actually need for a
-> compliant EFI header before you set the rest of this ABI in stone.
->
-> On arm64 we also had issues with endianness, and I would strongly
-> recommend that you define how big/little endian will work ahead of time.
-> e.g. whether fields are always in a fixed endianness.
+  Acked-by: Paul Burton <paul.burton@mips.com>
 
-As of now RISC-V is little-endian but if big-endian show-up in-future
-then we should consider endianness issue.
-
-Regards,
-Anup
+Thanks,
+    Paul
