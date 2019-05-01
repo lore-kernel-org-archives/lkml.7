@@ -2,284 +2,100 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973ACC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E9DC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6668820651
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053ED20651
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Li2tjDtF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfEAGmq (ORCPT
+        id S1726197AbfEAGm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 02:42:46 -0400
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:31431 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfEAGmq (ORCPT
+        Wed, 1 May 2019 02:42:57 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34669 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfEAGm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 02:42:46 -0400
-Subject: Re: perf build broken in 5.1-rc7
-To:     Song Liu <liu.song.a23@gmail.com>
-CC:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
- <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
- <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
- <b773df70-58e6-69f8-d566-282b0f7ae579@mageia.org>
- <CAPhsuW5O7sBdxorngkROCVRPGgRGV2se8mjT-q=O_guxC6Z7SA@mail.gmail.com>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <2e3b5a9d-b9ad-62ba-b3b0-d455dec8c031@mageia.org>
-Date:   Wed, 1 May 2019 09:42:38 +0300
-MIME-Version: 1.0
-In-Reply-To: <CAPhsuW5O7sBdxorngkROCVRPGgRGV2se8mjT-q=O_guxC6Z7SA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-WatchGuard-Spam-ID: str=0001.0A0C020B.5CC93FE1.003A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.195
-X-WatchGuard-Mail-From: tmb@mageia.org
+        Wed, 1 May 2019 02:42:56 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ck18so3550173plb.1;
+        Tue, 30 Apr 2019 23:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=beknjYINW1vOED6WG9jtPKU0KCvm6eKI+KuD6xRtVow=;
+        b=Li2tjDtFodzMtKZddiSawePYQNHhKcEDjzlw7HHOLEvyRhHZLqgjtfl4GZw5lbFrpc
+         dRA7Kx3usDYrXgvjr3NZewRrU0y+BH5v5zYTpFF/l7wCewPOjaZ61zgwZL4IQlVKBzow
+         IlS+2EHqY5671Q6RIyXcvm/3qvi/wA9GR14lM4UR/IyXHFb4B9Xr7hC+MXDv8+O7tbHZ
+         1rzMLrqB+fJERcwz1uYCLP7+oO1HU4aSi9Am+bdRp0c7IDwOPaQmc4w4CQWlmfdxtYO7
+         +pyQ9aMej9LTEl1/sk8P1Nzc60AZ9SDgFyYPxmU2R3q+Jrz8FeW8k1PqpE+sDWLCAcwc
+         Mqgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=beknjYINW1vOED6WG9jtPKU0KCvm6eKI+KuD6xRtVow=;
+        b=cF8sPkcG1f63rYNYTlpQc1R76APbEbmKubTC3CaW2rcVUgSRS/2orOciOJLL3HdIiu
+         hGGx8xXTpu7RVf+mw8+UKT/2gSOu/Oo+UnwJBA4dGP4meV9Mg3ljeuef45fkB00haR9A
+         vCMQn96lxZ7AtWZL/1qNzWEFGMJtAGb2yxkYCUyAbRAa+ssVBkZYjrvQqOjrZB+kB9AX
+         tB35eMbSVgSCuV//MBS5+Xc6gMSecMV9Ol2EenD4nZCv7FDAgJg9cT4kWwp6hBmS9L8w
+         jom/h8QkNIfsdOhUAhtoJ+SjOyKNMeDhWsPq9pudYBCaFcR89ZTarH1fiEAZL0xGLLOx
+         kVAg==
+X-Gm-Message-State: APjAAAWiTFMCCQgzu3mCOCYXa4X3CCmPFjTGLCrixJR1eAUv8AHsXTeq
+        Anh0vuUpc4aGgvuHidqAiNg=
+X-Google-Smtp-Source: APXvYqyMoEr7FhUfBVsNlCw915ZYE92+xxw7SCzLDB2SSfK/dTEMav15LkOXzFYhd0PO6Mlb3cNKHA==
+X-Received: by 2002:a17:902:76c5:: with SMTP id j5mr75212990plt.337.1556692975835;
+        Tue, 30 Apr 2019 23:42:55 -0700 (PDT)
+Received: from bridge.localdomain ([119.28.31.106])
+        by smtp.gmail.com with ESMTPSA id 25sm56800323pfo.145.2019.04.30.23.42.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 23:42:54 -0700 (PDT)
+From:   Wenbin Zeng <wenbin.zeng@gmail.com>
+X-Google-Original-From: Wenbin Zeng <wenbinzeng@tencent.com>
+To:     viro@zeniv.linux.org.uk, davem@davemloft.net, bfields@fieldses.org,
+        jlayton@kernel.org, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, wenbinzeng@tencent.com,
+        dsahern@gmail.com, nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH 0/3] auth_gss: netns refcount leaks when use-gss-proxy==1
+Date:   Wed,  1 May 2019 14:42:22 +0800
+Message-Id: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series fixes an auth_gss bug that results in netns refcount leaks when use-gss-proxy is set to 1.
 
-Den 01-05-2019 kl. 06:37, skrev Song Liu:
-> On Tue, Apr 30, 2019 at 6:31 AM Thomas Backlund <tmb@mageia.org> wrote:
->>
->> Den 30-04-2019 kl. 16:06, skrev Song Liu:
->>> On Tue, Apr 30, 2019 at 12:55 AM Thomas Backlund <tmb@mageia.org> wrote:
->>>> Den 30-04-2019 kl. 10:26, skrev Thomas Backlund:
->>>>> Building perf in 5.1-rc5/6/7 fails:
->>>>>
->>>>>
->>>>> Build start:
->>>>>
->>>>>
->>>>>     make -s -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1
->>>>> WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1
->>>>> NO_BIONIC=1 NO_JVMTI=1 prefix=/usr lib=lib64 all
->>>>>      BUILD:   Doing 'make -j32' parallel build
->>>>>      HOSTCC   fixdep.o
->>>>>      HOSTLD   fixdep-in.o
->>>>>      LINK     fixdep
->>>>> Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h'
->>>>> differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
->>>>> diff -u tools/arch/x86/include/uapi/asm/vmx.h
->>>>> arch/x86/include/uapi/asm/vmx.h
->>>>>
->>>>> Auto-detecting system features:
->>>>> ...                         dwarf: [ on  ]
->>>>> ...            dwarf_getlocations: [ on  ]
->>>>> ...                         glibc: [ on  ]
->>>>> ...                          gtk2: [ on  ]
->>>>> ...                      libaudit: [ on  ]
->>>>> ...                        libbfd: [ on  ]
->>>>> ...                        libelf: [ on  ]
->>>>> ...                       libnuma: [ on  ]
->>>>> ...        numa_num_possible_cpus: [ on  ]
->>>>> ...                       libperl: [ on  ]
->>>>> ...                     libpython: [ on  ]
->>>>> ...                      libslang: [ on  ]
->>>>> ...                     libcrypto: [ on  ]
->>>>> ...                     libunwind: [ on  ]
->>>>> ...            libdw-dwarf-unwind: [ on  ]
->>>>> ...                          zlib: [ on  ]
->>>>> ...                          lzma: [ on  ]
->>>>> ...                     get_cpuid: [ on  ]
->>>>> ...                           bpf: [ on  ]
->>>>> ...                        libaio: [ on  ]
->>>>> ...        disassembler-four-args: [ OFF ]
->>>>>
->>>>> Makefile.config:473: No sys/sdt.h found, no SDT events are defined,
->>>>> please install systemtap-sdt-devel or systemtap-sdt-dev
->>>>> Makefile.config:853: No libbabeltrace found, disables 'perf data' CTF
->>>>> format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
->>>>>
->>>>>
->>>>> And breaks with:
->>>>>
->>>>>
->>>>> CC       ui/setup.o
->>>>> util/annotate.c: In function 'symbol__disassemble_bpf':
->>>>> util/annotate.c:1767:29: error: incompatible type for argument 1 of
->>>>> 'disassembler'
->>>>>      disassemble = disassembler(bfdf);
->>>>>                                 ^~~~
->>>>> In file included from util/annotate.c:1689:
->>>>> /usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture'
->>>>> but argument is of type 'bfd *' {aka 'struct bfd *'}
->>>>>     extern disassembler_ftype disassembler (enum bfd_architecture arc,
->>>>>                                             ~~~~~~~~~~~~~~~~~~~~~~^~~
->>>>> util/annotate.c:1767:16: error: too few arguments to function
->>>>> 'disassembler'
->>>>>      disassemble = disassembler(bfdf);
->>>>>                    ^~~~~~~~~~~~
->>>>> In file included from util/annotate.c:1689:
->>>>> /usr/include/dis-asm.h:325:27: note: declared here
->>>>>     extern disassembler_ftype disassembler (enum bfd_architecture arc,
->>>>>                               ^~~~~~~~~~~~
->>>>>      CC       arch/x86/util/header.o
->>>>>      CC       arch/x86/util/tsc.o
->>>>>      CC       arch/x86/util/pmu.o
->>>>> mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
->>>>>      CC       bench/futex-requeue.o
->>>>>      CC       arch/x86/util/kvm-stat.o
->>>>> make[4]: ***
->>>>> [/work/rpmbuild/BUILD/kernel-x86_64/linux-5.0/tools/build/Makefile.build:97:
->>>>> util/annotate.o] Error 1
->>>>> make[4]: *** Waiting for unfinished jobs....
->>>>>      CC       util/build-id.o
->>>>>
->>>>>
->>>>>
->>>> And I forgot...
->>>>
->>>> Reverting:
->>>>    From 6987561c9e86eace45f2dbb0c564964a63f4150a Mon Sep 17 00:00:00 2001
->>>> From: Song Liu <songliubraving@fb.com>
->>>> Date: Mon, 11 Mar 2019 22:30:48 -0700
->>>> Subject: perf annotate: Enable annotation of BPF programs
->>>>
->>>> Makes it build again.
->>>>
->>>> --
->>>> Thomas
->>>>
->>> Hi Thomas,
->>>
->>> Which system are you running this test on? I would like to repro it in a VM.
->>>
->>> Thanks,
->>> Song
->>
->> Mageia Cauldron currently stabilizing to become Mageia 7 in ~1 month.
->>
->>
->> Basesystem is:
->>
->> binutils-2.32-5.mga7
->> (includes all fixes from upstream binutils-2_32-branch)
->>
->> gcc-8.3.1-0.20190419.2.mga7
->>
->> glibc-2.29-7.mga7
->> (includes all fixes from upstream glibc release/2.29/master branch up to
->> 2019-04-15 for now)
->>
->>
->> kernel-desktop-5.1.0-0.rc7.1.mga7
->> kernel-userspace-headers-5.1.0-0.rc7.1.mga7
->>
->>
->> --
->>
->> Thomas
->>
->>
-> I am trying to install Mageia 7 beta 3, but hit some issue. While I try fix it,
-> could you please try clean everything under tools/ and retry:
->
->    make -C tools/ clean
->    make -C tools/perf -j
+The problem was found in privileged docker containers with gssproxy service enabled and /proc/net/rpc/use-gss-proxy set to 1, the corresponding struct net->count ends up at 2 after container gets killed, the consequence is that the struct net cannot be freed.
 
+It turns out that write_gssp() called gssp_rpc_create() to create a rpc client, this increases net->count by 2; rpcsec_gss_exit_net() is supposed to decrease net->count but it never gets called because its call-path is:
+	net->count==0 -> cleanup_net -> ops_exit_list -> rpcsec_gss_exit_net
+Before rpcsec_gss_exit_net() gets called, net->count cannot reach 0, this is a deadlock situation.
 
-Still fails:
+To fix the problem, we must break the deadlock, rpcsec_gss_exit_net() should move out of the put() path and find another chance to get called, I think nsfs_evict() is a good place to go, when netns inode gets evicted we call rpcsec_gss_exit_net() to free the rpc client, this requires a new callback i.e. evict to be added in struct proc_ns_operations, and add netns_evict() as one of netns_operations as well.
 
-util/annotate.c: In function 'symbol__disassemble_bpf':
-util/annotate.c:1767:29: error: incompatible type for argument 1 of 
-'disassembler'
-   disassemble = disassembler(bfdf);
-                              ^~~~
-In file included from util/annotate.c:1689:
-/usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture' 
-but argument is of type 'bfd *' {aka 'struct bfd *'}
-  extern disassembler_ftype disassembler (enum bfd_architecture arc,
-                                          ~~~~~~~~~~~~~~~~~~~~~~^~~
-util/annotate.c:1767:16: error: too few arguments to function 'disassembler'
-   disassemble = disassembler(bfdf);
-                 ^~~~~~~~~~~~
-In file included from util/annotate.c:1689:
-/usr/include/dis-asm.h:325:27: note: declared here
-  extern disassembler_ftype disassembler (enum bfd_architecture arc,
-                            ^~~~~~~~~~~~
-   CC       scripts/python/Perf-Trace-Util/Context.o
-   CC       bench/mem-memcpy-x86-64-lib.o
-   CC       tests/parse-events.o
-   CC       util/block-range.o
-mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
-make[4]: *** 
-[/work/5.1/linux-5.1-rc7-mga07/tools/build/Makefile.build:97: 
-util/annotate.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-   CC       ui/util.o
+Wenbin Zeng (3):
+  nsfs: add evict callback into struct proc_ns_operations
+  netns: add netns_evict into netns_operations
+  auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when
+    use-gss-proxy==1
 
->
-> If it still fails, how about building bpftool?
->
->    make -C tools/bpf -j
+ fs/nsfs.c                      |  2 ++
+ include/linux/proc_ns.h        |  1 +
+ include/net/net_namespace.h    |  1 +
+ net/core/net_namespace.c       | 12 ++++++++++++
+ net/sunrpc/auth_gss/auth_gss.c |  9 ++++++---
+ 5 files changed, 22 insertions(+), 3 deletions(-)
 
-
-Also fails:
-
-
-Auto-detecting system features:
-...                        libbfd: [ on  ]
-...        disassembler-four-args: [ OFF ]
-
-   CC       bpf_jit_disasm.o
-   CC       bpf_dbg.o
-   CC       bpf_asm.o
-   BISON    bpf_exp.yacc.c
-   DESCEND  bpftool
-make[1]: Entering directory 
-'/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpftool'
-/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c: In function 
-'get_asm_insns':
-/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c:81:29: error: 
-incompatible type for argument 1 of 'disassembler'
-   disassemble = disassembler(bfdf);
-                              ^~~~
-In file included from 
-/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c:24:
-/usr/include/dis-asm.h:325:63: note: expected 'enum bfd_architecture' 
-but argument is of type 'bfd *' {aka 'struct bfd *'}
-  extern disassembler_ftype disassembler (enum bfd_architecture arc,
-                                          ~~~~~~~~~~~~~~~~~~~~~~^~~
-/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c:81:16: error: 
-too few arguments to function 'disassembler'
-   disassemble = disassembler(bfdf);
-                 ^~~~~~~~~~~~
-In file included from 
-/work/5.1/linux-5.1-rc7-mga07/tools/bpf/bpf_jit_disasm.c:24:
-/usr/include/dis-asm.h:325:27: note: declared here
-  extern disassembler_ftype disassembler (enum bfd_architecture arc,
-                            ^~~~~~~~~~~~
-make: *** [Makefile:57: bpf_jit_disasm.o] Error 1
-make: *** Waiting for unfinished jobs....
-
-
-
-So is this a bug in feature misdetection?
-
-
-In your commit message you state:
-
-"And making all this dependent on HAVE_LIBBFD_SUPPORT and
-HAVE_LIBBPF_SUPPORT:"
-
-
-Now we obviously have libbfd.
-
-But if the HAVE_LIBBPF_SUPPORT means tools/lib/bpf, then I havent 
-packaged that yet, so why is it detecting it as available ?
-
-
---
-
-Thomas
-
+-- 
+1.8.3.1
 
