@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39143C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BEDC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E1A21743
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBBF21743
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pDVa8e7j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="abB3juO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfEAEhs (ORCPT
+        id S1726236AbfEAEhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 00:37:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36497 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfEAEhp (ORCPT
+        Wed, 1 May 2019 00:37:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44855 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfEAEhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 00:37:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 85so7848354pgc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 21:37:45 -0700 (PDT)
+        Wed, 1 May 2019 00:37:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y13so8105833pfm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 21:37:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=a10hGuK3vdCOEjNUJMZxmg7vPboJuN/bkuHq4KflRrI=;
-        b=pDVa8e7jbf89RlDz7t1+7lQQ+gTrLa77cMVKC9yzBXt2ZLJ0JEj/hwmcULHc622DgJ
-         3kIrUqha4lTIRi7Y+3OGpb3Z4iCFXn3zrarCVhLebOkzUpvOyvL35hYNH/zkbL97xw2S
-         ZCu1Xn0NiiZrCYi++EtqzAonCHVqP4OetOyUAwDA2Tt1Qg4sNW8iSYQGJKR1L7o/kdsi
-         mVPU6SCgzyZ9L6A674KvQtkVOZ1KYE/3mTtKOfAzErDR79jQcEZuzPs5wi/e2O/frGo2
-         HVrwooQxILs73RIAzRRqQ8lD/8BhZdiHLigNfww2WuM+8GC9gC4tcCLyJFClGCW7wPH9
-         HWLw==
+        bh=kYQemACgtqbxChV7HlM7UTpQsyhEGfC7nSYz5voNBQE=;
+        b=abB3juO+SS2LUU1SgcrraCl+bJp/tnE8gP4EhklXGXaopPMd9nyPKTj9cDfLGONhhe
+         5ShLVmxluI/igrC+r+yfxlYEuR+TfbVAr7+o+BPc2zR7IhDLvHsldeFNBw9D7h/nqvGh
+         lciItM4yv4MEzy5epyposxToqpTDoht8Vg9SILWfIaItHB+d+J5j56D8x0yCaS11j/P4
+         yK61kli9KOcJimIA7VoJZZk1KFAY9yTACLwR0CIkFS42aqohHGJMy2WLaqqcbUi3MYA0
+         bYWoq5isfXJTRhUYKwAPcO4xOs9H4P1zyRWh5m7OIaA/CVslg97vw2AffgNNBRQsX4h2
+         HZeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=a10hGuK3vdCOEjNUJMZxmg7vPboJuN/bkuHq4KflRrI=;
-        b=kMbVnTfSUhYaFkRcbnSLTom1k5NSLb+Zwc4/qBVBXqZe5INGvn4e4PgLe+clZgXTFw
-         3vSbrCSJkS0KnmkjQVr0peOjc00KphBsfaAzgH6fwYEtfOlsWlmP1WKAZ3FnZC2AMh1c
-         hsT1zYB0HL8ZuCxpX294PfXTbwdjoqFJ3ynrqNIk408TKjbGu0LzBCGpgdhQgXrWEUmv
-         kJZ/asua3Ih9zPlXAJQVuxWozfrLhrETCaHk/+vzeE9WgmASrIt40r8VNTjgrZCSdwxr
-         X8ZQwG9t1fZh+Y64ePsEgU/gxqU2RZxXb9QSrGgYIu8Di+31COM/i4oh66QnZJiGIqTy
-         n5uQ==
-X-Gm-Message-State: APjAAAWya+Fw+TdzsEF9JBXspzfgI01mdJA/lcRopoMNe4mRdfv9hxrK
-        OgM97Kbmb5Mkdn6nXTOkEhzoLQ==
-X-Google-Smtp-Source: APXvYqxDL3tBlXKBoiRHapCs8F39VS8hqCDS0TDifmuNZad6+uhihpKq85ibaXI51cIOXSctG7fOEQ==
-X-Received: by 2002:a63:541d:: with SMTP id i29mr43040926pgb.174.1556685464670;
-        Tue, 30 Apr 2019 21:37:44 -0700 (PDT)
+        bh=kYQemACgtqbxChV7HlM7UTpQsyhEGfC7nSYz5voNBQE=;
+        b=YGaNOaDVgriUzlklQV+PpTfC5BT1SQ55DCUKonmKKMmoUXwl2Zc6usNB546MRHha9R
+         bJKUHC6E4tDjfc6kxgnF9Ml1pEAMkYjLKgFUIjfX4zOfKFaihpgBsEnnsU7J1L61Vo8i
+         Sc6qBqKzs0iPE6KXF9TLy/nfkLRkAW09bWIIayVCOOqFmr0W2CPBd54ZrCV3YSGYijnn
+         zFTkrIpBgr6hLNsLc1eSKqp3Ynl4HeJg8DlmxD7yqQSkr3wnjar1pXKkooc1+6TlpAtD
+         gtX05KzX5CWiwiqS0pAfT6buGjqCt8pI15mLpyntLA6R7zMcjJmh4b4pypwMxp5+8iWu
+         wQwQ==
+X-Gm-Message-State: APjAAAXyITWf73z/KcefhRD++iDZ+WvrlZg98HKp741g+CTeclAbTkOn
+        /ethzV329oaRywSwJh0pFH1Qsw==
+X-Google-Smtp-Source: APXvYqzrZ9SoEybJnVOhC2d/a1LUv6LnCcxn3uWAj24FD3GC79oNQ4GXyHclR7myxMoOuGWGiVZyew==
+X-Received: by 2002:a65:5682:: with SMTP id v2mr43006216pgs.100.1556685462966;
+        Tue, 30 Apr 2019 21:37:42 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q128sm55912865pga.60.2019.04.30.21.37.43
+        by smtp.gmail.com with ESMTPSA id q128sm55912865pga.60.2019.04.30.21.37.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 21:37:43 -0700 (PDT)
+        Tue, 30 Apr 2019 21:37:41 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         David Brown <david.brown@linaro.org>
@@ -63,9 +63,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <swboyd@chromium.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 4/4] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date:   Tue, 30 Apr 2019 21:37:34 -0700
-Message-Id: <20190501043734.26706-5-bjorn.andersson@linaro.org>
+Subject: [PATCH v7 3/4] arm64: dts: qcom: Add AOSS QMP node
+Date:   Tue, 30 Apr 2019 21:37:33 -0700
+Message-Id: <20190501043734.26706-4-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190501043734.26706-1-bjorn.andersson@linaro.org>
 References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
@@ -74,90 +74,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+The AOSS QMP provides a number of power domains, used for QDSS and
+PIL, add the node for this.
 
-This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v6:
-- None
+- Added #clock-cells
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 58 ++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 666bc88d3e81..2f3ab6acda3d 100644
+index fcb93300ca62..666bc88d3e81 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1672,6 +1672,64 @@
- 			};
+@@ -14,6 +14,7 @@
+ #include <dt-bindings/interconnect/qcom,sdm845.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
++#include <dt-bindings/power/qcom-aoss-qmp.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+ #include <dt-bindings/reset/qcom,sdm845-pdc.h>
+@@ -2142,6 +2143,15 @@
+ 			#reset-cells = <1>;
  		};
  
-+		mss_pil: remoteproc@4080000 {
-+			compatible = "qcom,sdm845-mss-pil";
-+			reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
-+			reg-names = "qdsp6", "rmb";
++		aoss_qmp: qmp@c300000 {
++			compatible = "qcom,sdm845-aoss-qmp";
++			reg = <0 0x0c300000 0 0x100000>;
++			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
++			mboxes = <&apss_shared 0>;
 +
-+			interrupts-extended =
-+				<&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack",
-+					  "shutdown-ack";
-+
-+			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-+				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
-+				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
-+				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
-+				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-+				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-+				 <&gcc GCC_PRNG_AHB_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "iface", "bus", "mem", "gpll0_mss",
-+				      "snoc_axi", "mnoc_axi", "prng", "xo";
-+
-+			qcom,smem-states = <&modem_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
-+				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
-+			reset-names = "mss_restart", "pdc_reset";
-+
-+			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-+
-+			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
-+					<&rpmhpd SDM845_CX>,
-+					<&rpmhpd SDM845_MX>,
-+					<&rpmhpd SDM845_MSS>;
-+			power-domain-names = "load_state", "cx", "mx", "mss";
-+
-+			mba {
-+				memory-region = <&mba_region>;
-+			};
-+
-+			mpss {
-+				memory-region = <&mpss_region>;
-+			};
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
-+				label = "modem";
-+				qcom,remote-pid = <1>;
-+				mboxes = <&apss_shared 12>;
-+			};
++			#clock-cells = <0>;
++			#power-domain-cells = <1>;
 +		};
 +
- 		gpucc: clock-controller@5090000 {
- 			compatible = "qcom,sdm845-gpucc";
- 			reg = <0 0x05090000 0 0x9000>;
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0 0x0c440000 0 0x1100>,
 -- 
 2.18.0
 
