@@ -2,176 +2,182 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74993C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAA6C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3856C20835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:51:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CoYnf+ZU";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bDjrhtsX"
+	by mail.kernel.org (Postfix) with ESMTP id 309BF21734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556697271;
+	bh=1aQpcuRv7eGuERoCUmndQa8VFtF8VQoHgzkh4JtPH3I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=imq8Ah4nvq+3rRT2O8sMa8bUeBXeq5EDd9oxAcnBPh9xjXP+eKTncZpkjTt9NGAgK
+	 a0Kkrj0wf3pourfxZxwSF+fO4efG6RWJXXXLTkmfgzkMmmAK1TJ2sStJO9q/y5w5B5
+	 +9EITYOmWrRzsrF2uaECUJkXUva3vqdXEyuvorKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfEAHvB (ORCPT
+        id S1726145AbfEAHya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 03:51:01 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43282 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfEAHvB (ORCPT
+        Wed, 1 May 2019 03:54:30 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36056 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfEAHy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 03:51:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D4F5C608D4; Wed,  1 May 2019 07:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556697059;
-        bh=iNrkDBSiMlVRKyLmefjQ5N8FGGudYMobLCdcSYJ8Hl0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=CoYnf+ZUYBbvMvC4wXYAEXNLABXWKp6w+i4D81Tny2QR3lPqz7mloAX4A6TlSjM6Q
-         5KYkLgrmi9pppjOKpPkEyWmU4sZeU4AGeUm7rUwC4sHglAYkPboZZbJKDsN/RZFB1j
-         9SYFcVwTj3VSPgp+XXXUEQ+Ni+aCAin+jB4l3y9A=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB3C6607B9;
-        Wed,  1 May 2019 07:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556697058;
-        bh=iNrkDBSiMlVRKyLmefjQ5N8FGGudYMobLCdcSYJ8Hl0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=bDjrhtsXNLBWxlMH/v+1rLPbmNecnGPQTVULW1srVOr9UPzXBYr8EMc1pxOtOE8RH
-         KBSkG898EjyQ6t/bwG8ybCSuMWo3PHWV2vTC2Sd2ZY7qoSbIIA5wdzaTjGQbUW3JLk
-         igaSabI4emOTehRL5xD13PBje1kc5/RJn7UULMEg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB3C6607B9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2] Input: uinput: Avoid Object-Already-Free with a global
- lock
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gaurav Kohli <gkohli@codeaurora.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        Martin Kepplinger <martink@posteo.de>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-References: <a4d1a2f3-1db7-e300-9569-7b7a2fadd64e@codeaurora.org>
- <20190419071152.x5ghvbybjhv76uxt@penguin>
- <f3cd46fb-2bb1-0422-b2be-3f7625ec9c4e@codeaurora.org>
- <20190423032839.xvbldglrmjxkdntj@penguin>
- <17f4a0be-ab04-8537-9197-32fbca807f3f@codeaurora.org>
- <20190423084944.gj2boxfcg7lp4zad@penguin>
- <20190423110611.GL2217@ZenIV.linux.org.uk>
- <5614f04f-827d-1668-9ed0-60d93e110b8e@codeaurora.org>
- <20190424130711.GP2217@ZenIV.linux.org.uk>
- <5b02ac1e-df3e-d9cd-ecf3-fe60cda2cece@codeaurora.org>
- <20190424225641.GQ2217@ZenIV.linux.org.uk>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <f0a48477-8b25-6538-20e0-53b732afb4d1@codeaurora.org>
-Date:   Wed, 1 May 2019 13:20:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 03:54:29 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b18so5219830otq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 00:54:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1IZIZCgRlJrdoeeM5+bR4Nwd/BZVjgYJ9Aq/1WcElNo=;
+        b=k/JRdASVZCYaYVofPMvkl0Sw4h4JBKuFkXgJ8FSE80nmPE+JLfz1+7wP806dr9TFUb
+         6155yhM+n6EGy+4TGpmwIbnosQOt5AXkl11tAEul86ii4oqMHVwTJ6NxPWrHgmDIeQZd
+         by8HSCJLEkh8/S7qnlOvf6nPweIcI3VqXk6YjqJBDUANmJG6oKRy26NgteSTnFIMvdsS
+         ucKLqIeZJnhfhsSCqmU3PF9dEqW8cSACFDKCEGXEo3/B9OEUFxh2VIslJYqvnWR7miEl
+         wiQv/KeIcYQRxkFW1r+LsGMA3I+ggcA984sSxHwW4U0OTorARdvJELQCbGaYpSgccAg6
+         CcIg==
+X-Gm-Message-State: APjAAAWVv39ZT10l14FhpD/hOuMGqVF/cE58nErsidwFcuK+XBOH+DNt
+        PqT12YHZ6fD8ilcoADMiTBBvleLi2u4xoHcZws0=
+X-Google-Smtp-Source: APXvYqzk76H+LXDVVKS5qcdc+PUv8u6pna/A7rMA01ocZP/3p1ee9ZNh9RyKeZV5MBJtuVO8gggUle3wKriHUUuXT2w=
+X-Received: by 2002:a9d:6e17:: with SMTP id e23mr15111444otr.65.1556697268777;
+ Wed, 01 May 2019 00:54:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190424225641.GQ2217@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190430233803.GB10777@eros.localdomain>
+In-Reply-To: <20190430233803.GB10777@eros.localdomain>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 1 May 2019 09:54:16 +0200
+Message-ID: <CAJZ5v0g34RZmugeBm63UT3XRvUmdJtvCAjcowdwDffrRorrscQ@mail.gmail.com>
+Subject: Re: kobject_init_and_add() confusion
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry to come late on this
-
-On 4/25/2019 4:26 AM, Al Viro wrote:
-> On Wed, Apr 24, 2019 at 07:39:03PM +0530, Mukesh Ojha wrote:
+On Wed, May 1, 2019 at 1:38 AM Tobin C. Harding <me@tobin.cc> wrote:
 >
->> This was my simple program no multithreading just to understand f_counting
->>
->> int main()
->> {
->>          int fd = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
->>          ioctl(fd, UI_SET_EVBIT, EV_KEY);
->>          close(fd);
->>          return 0;
->> }
->>
->>             uinput-532   [002] ....    45.312044: SYSC_ioctl: 2   <= f_count
-> Er...  So how does it manage to hit ioctl(2) before open(2)?  Confused...
-
-I was confused too about this earlier, but after printing fd got to know 
-this is not for the same fd
-opening for /dev/uinput, may it is for something while running the 
-executable.
-
+> Hi,
 >
->>>      <After fdget()
->>            uinput-532   [002] ....    45.312055: SYSC_ioctl: 2
->> <After fdput()
->>            uinput-532   [004] ....    45.313766: uinput_open: uinput: 1   /*
->> This is from the uinput driver uinput_open()*/
->>
->>    =>>>>                         /* All the above calls happened for the
->> open() in userspace*/
->>
->>            uinput-532   [004] ....    45.313783: SYSC_ioctl: 1 /* This print
->> is for the trace, i put after fdget */
->>            uinput-532   [004] ....    45.313788: uinput_ioctl_handler:
->> uinput: uinput_ioctl_handler, 1 /* This print is from the uinput_ioctl
->> driver */
->>
->>            uinput-532   [004] ....    45.313835: SYSC_ioctl: 1 /* This print
->> is for the trace, i put after fdput*/
->>            uinput-532   [004] ....    45.313843: uinput_release: uinput:  0
->> /* And this is from the close()  */
->>
->>
->> Should fdget not suppose to increment the f_count here, as it is coming 1 ?
->> This f_count to one is done at the open, but i have no idea how this  below
->> f_count 2 came before open() for
->> this simple program.
-> If descriptor table is not shared, fdget() will simply return you the reference
-> from there, without bothering to bump the refcount.  _And_ having it marked
-> "don't drop refcount" in struct fd.
+> Looks like I've created a bit of confusion trying to fix memleaks in
+> calls to kobject_init_and_add().  Its spread over various patches and
+> mailing lists so I'm starting a new thread and CC'ing anyone that
+> commented on one of those patches.
 >
-> Rationale: since it's not shared, nobody other than our process can modify
-> it.  So unless we remove (and drop) the reference from it ourselves (which
-> we certainly have no business doing in ->ioctl() and do not do anywhere
-> in drivers/input), it will remain there until we return from syscall.
+> If there is a better way to go about this discussion please do tell me.
 >
-> Nobody is allowed to modify descriptor table other than their own.
-> And if it's not shared, no other owners can appear while the only
-> existing one is in the middle of syscall other than clone() (with
-> CLONE_FILES in flags, at that).
+> The problem
+> -----------
 >
-> For shared descriptor table fdget() bumps file refcount, since there
-> the reference in descriptor table itself could be removed and dropped
-> by another thread.
+> Calls to kobject_init_and_add() are leaking memory throughout the kernel
+> because of how the error paths are handled.
 >
-> And fdget() marks whether fput() is needed in fd.flags, so that
-> fdput() does the right thing.
+> The solution
+> ------------
+>
+> Write the error path code correctly.
+>
+> Example
+> -------
+>
+> We have samples/kobject/kobject-example.c but it uses
+> kobject_create_and_add().  I thought of adding another example file here
+> but could not think of how to do it off the top of my head without being
+> super contrived.  Can add this to the TODO list if it will help.
+>
+> Here is an attempted canonical usage of kobject_init_and_add() typical
+> of the code that currently is getting it wrong.  This is the second time
+> I've written this and the first time it was wrong even after review (you
+> know who you are, you are definitely buying the next round of drinks :)
+>
+>
+> Assumes we have an object in memory already that has the kobject
+> embedded in it. Variable 'kobj' below would typically be &ptr->kobj
+>
+>
+>         void fn(void)
+>         {
+>                 int ret;
+>
+>                 ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
+>                 if (ret) {
+>                         /*
+>                          * This means kobject_init() has succeeded
+>                          * but kobject_add() failed.
+>                          */
+>                         goto err_put;
+>                 }
+>
+>                 ret = some_init_fn();
+>                 if (ret) {
+>                         /*
+>                          * We need to wind back kobject_add() AND kobject_put().
 
+kobject_add() and kobject_init() I suppose?
 
-Thanks Al, it is quite clear that issue can't happen while a ioctl is in 
-progress.
-Actually the issue seems to be a race while glue_dir input is removed.
+>                          * kobject_add() incremented the refcount in
+>                          * kobj->parent, that needs to be decremented THEN we need
+>                          * the call to kobject_put() to decrement the refcount of kobj.
+>                          */
 
-   114.339374] input: syz1 as /devices/virtual/input/input278
-[  114.345619] input: syz1 as /devices/virtual/input/input279
-[  114.353502] input: syz1 as /devices/virtual/input/input280
-[  114.361907] input: syz1 as /devices/virtual/input/input281
-[  114.367276] input: syz1 as /devices/virtual/input/input282
-[  114.382292] input: syz1 as /devices/virtual/input/input283
+So actually, if you look at kobject_cleanup(), it calls kobject_del()
+if kobj->state_in_sysfs is set.
 
-in our case it is input which is getting removed while a inputxx is 
-trying make node inside input.
+Now, if you look at kobject_add_internal(), it sets
+kobj->state_in_sysfs when about to return 0 (success).
 
-Similar issue https://lkml.org/lkml/2019/5/1/3
+Therefore calling kobject_put() without the preceding kobject_del() is
+not a bug technically, even though it will trigger the "auto cleanup
+kobject_del" message with debug enabled.
+
+>                         goto err_del;
+>                 }
+>
+>                 ret = some_other_init_fn();
+>                 if (ret)
+>                         goto other_err;
+>
+>                 kobject_uevent(kobj, KOBJ_ADD);
+>                 return 0;
+>
+>         other_err:
+>                 other_clean_up_fn();
+>         err_del:
+>                 kobject_del(kobj);
+>         err_put:
+>                 kobject_put(kobj);
+>
+>                 return ret;
+>         }
+>
+>
+> Have I got this correct?
+>
+> TODO
+> ----
+>
+> - Fix all the callsites to kobject_init_and_add()
+> - Further clarify the function docstring for kobject_init_and_add() [perhaps]
+> - Add a section to Documentation/kobject.txt [optional]
+> - Add a sample usage file under samples/kobject [optional]
+
+The plan sounds good to me, but there is one thing to note IMO:
+kobject_cleanup() invokes the ->release() callback for the ktype, so
+these callbacks need to be able to cope with kobjects after a failing
+kobject_add() which may not be entirely obvious to developers
+introducing them ATM.
 
 Thanks,
-Mukesh
-
-
-
+Rafael
