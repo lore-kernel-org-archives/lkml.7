@@ -2,86 +2,118 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04920C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B629CC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1394205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F71205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfEAUUr (ORCPT
+        id S1726206AbfEAUVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:20:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48656 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726266AbfEAUUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:20:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9EB1BAD12;
-        Wed,  1 May 2019 20:20:45 +0000 (UTC)
-Subject: Re: [PATCH] clk: actions: Use the correct style for SPDX License
- Identifier
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-References: <20190501070707.GA5619@nishad>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Linux GmbH
-Message-ID: <057d9b37-7475-1902-bce7-6d519c2e0fdf@suse.de>
-Date:   Wed, 1 May 2019 22:20:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 16:21:55 -0400
+Received: from muru.com ([72.249.23.125]:47828 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfEAUVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 16:21:55 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AAB61805C;
+        Wed,  1 May 2019 20:22:09 +0000 (UTC)
+Date:   Wed, 1 May 2019 13:21:49 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "kernelci.org bot" <bot@kernelci.org>, Tejun Heo <tj@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
+        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org
+Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
+Message-ID: <20190501202149.GM8007@atomide.com>
+References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
+ <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
+ <20190501162944.GW8004@atomide.com>
+ <20190501164444.iclxlzrxofqnj4bn@linutronix.de>
+ <20190501165224.GK8007@atomide.com>
+ <20190501170125.xjlwdyqtp5oxx2mb@linutronix.de>
+ <20190501174431.GL8007@atomide.com>
+ <20190501190303.pz2yxs3hnc2qpamu@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190501070707.GA5619@nishad>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190501190303.pz2yxs3hnc2qpamu@linutronix.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ linux-actions
+Hi,
 
-Am 01.05.19 um 09:07 schrieb Nishad Kamdar:
-> This patch corrects the SPDX License Identifier style
-> in header files related to Clock Drivers for Actions Semi Socs.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used)
-[...]
->  drivers/clk/actions/owl-common.h       | 2 +-
->  drivers/clk/actions/owl-composite.h    | 2 +-
->  drivers/clk/actions/owl-divider.h      | 2 +-
->  drivers/clk/actions/owl-factor.h       | 2 +-
->  drivers/clk/actions/owl-fixed-factor.h | 2 +-
->  drivers/clk/actions/owl-gate.h         | 2 +-
->  drivers/clk/actions/owl-mux.h          | 2 +-
->  drivers/clk/actions/owl-pll.h          | 2 +-
->  drivers/clk/actions/owl-reset.h        | 2 +-
->  9 files changed, 9 insertions(+), 9 deletions(-)
+* Sebastian Andrzej Siewior <bigeasy@linutronix.de> [190501 19:03]:
+> On 2019-05-01 10:44:31 [-0700], Tony Lindgren wrote:
+> > Hmm so I tried without "earlycon" in command line thinking it might be
+> > happening with just "earlyprintk" but still no luck.
+> > 
+> > BTW, in general you might want to update your kernel command line
+> > options to:
+> > 
+> > debug earlyprintk earlycon
+> 
+> debug. Let me look if I manage to hide that `debug' from systemd…
 
-Where's the practical benefit of this patch? These are all private
-headers used from C files, so they can handle C++ comments just fine,
-otherwise we would've seen build failures.
+Oh that.. I've been quite happy with openrc now for years :)
 
-I could understand if you were patching files in include/ but not here.
+> > Looking at the oops 0xfa1cc000, so 0x481cc000 I guess which is d_can0?
+> 
+> That node around it I guess.
+
+OK I found two issues. It seems that d_can also needs osc clock
+on am335x. And there's no revision register for d_can.. We're now
+reading the CTL register unnecessarily.
+
+Below is what I hope fixes the boot issue for you, care to boot
+test?
+
+If this helps I'll send out proper patches for for both issues.
 
 Regards,
-Andreas
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+Tony
+
+8< ----------------------
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -1762,8 +1762,9 @@
+ 			reg = <0xcc000 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>;
+-			clock-names = "fck";
++			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>,
++				 <&dcan0_fck>;
++			clock-names = "fck", "osc";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0xcc000 0x2000>;
+@@ -1785,8 +1786,9 @@
+ 			reg = <0xd0000 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>;
+-			clock-names = "fck";
++			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>,
++				 <&dcan1_fck>;
++			clock-names = "fck", "osc";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0xd0000 0x2000>;
