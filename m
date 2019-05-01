@@ -2,123 +2,145 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7410C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE34C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BD520835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0397420835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfEARA1 (ORCPT
+        id S1726771AbfEARA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:00:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40212 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfEARA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:00:27 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 519AADBD73;
-        Wed,  1 May 2019 17:00:27 +0000 (UTC)
-Received: from gimli.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07B52752BE;
-        Wed,  1 May 2019 17:00:16 +0000 (UTC)
-Subject: [PATCH] PCI: Return error if cannot probe VF
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        myron.stowe@redhat.com, bodong@mellanox.com, eli@mellanox.com,
-        laine@redhat.com
-Date:   Wed, 01 May 2019 11:00:16 -0600
-Message-ID: <155672991496.20698.4279330795743262888.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        Wed, 1 May 2019 13:00:58 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34088 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbfEARA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:00:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9102C80D;
+        Wed,  1 May 2019 10:00:57 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C2023F719;
+        Wed,  1 May 2019 10:00:56 -0700 (PDT)
+Date:   Wed, 1 May 2019 18:00:53 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zong@andestech.com" <zong@andestech.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
+Message-ID: <20190501170053.GG11740@lakrids.cambridge.arm.com>
+References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
+ <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 01 May 2019 17:00:27 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
-VF driver binding") allows the user to specify that drivers for VFs of
-a PF should not be probed, but it actually causes pci_device_probe() to
-return success back to the driver core in this case.  Therefore by all
-sysfs appearances the device is bound to a driver, the driver link from
-the device exists as does the device link back from the driver, yet the
-driver's probe function is never called on the device.  We also fail to
-do any sort of cleanup when we're prohibited from probing the device,
-the irq setup remains in place and we even hold a device reference.
+On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
+> On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
+> > On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
+> > > Currently, last stage boot loaders such as U-Boot can accept only
+> > > uImage which is an unnecessary additional step in automating boot flows.
+> > > 
+> > > Add a simple image header that boot loaders can parse and directly
+> > > load kernel flat Image. The existing booting methods will continue to
+> > > work as it is.
+> > > 
+> > > Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+> > > 
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > ---
+> > >   arch/riscv/include/asm/image.h | 32 ++++++++++++++++++++++++++++++++
+> > >   arch/riscv/kernel/head.S       | 28 ++++++++++++++++++++++++++++
+> > >   2 files changed, 60 insertions(+)
+> > >   create mode 100644 arch/riscv/include/asm/image.h
+> > > 
+> > > diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+> > > new file mode 100644
+> > > index 000000000000..76a7e0d4068a
+> > > --- /dev/null
+> > > +++ b/arch/riscv/include/asm/image.h
+> > > @@ -0,0 +1,32 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +
+> > > +#ifndef __ASM_IMAGE_H
+> > > +#define __ASM_IMAGE_H
+> > > +
+> > > +#define RISCV_IMAGE_MAGIC	"RISCV"
+> > > +
+> > > +#ifndef __ASSEMBLY__
+> > > +/*
+> > > + * struct riscv_image_header - riscv kernel image header
+> > > + *
+> > > + * @code0:		Executable code
+> > > + * @code1:		Executable code
+> > > + * @text_offset:	Image load offset
+> > > + * @image_size:		Effective Image size
+> > > + * @reserved:		reserved
+> > > + * @magic:		Magic number
+> > > + * @reserved:		reserved
+> > > + */
+> > > +
+> > > +struct riscv_image_header {
+> > > +	u32 code0;
+> > > +	u32 code1;
+> > > +	u64 text_offset;
+> > > +	u64 image_size;
+> > > +	u64 res1;
+> > > +	u64 magic;
+> > > +	u32 res2;
+> > > +	u32 res3;
+> > > +};
+> > 
+> > I don't want to invent our own file format.  Is there a reason we can't just
+> > use something standard?  Off the top of my head I can think of ELF files and
+> > multiboot.
+> 
+> Additional header is required to accommodate PE header format. Currently,
+> this is only used for booti command but it will be reused for EFI headers as
+> well. Linux kernel Image can pretend as an EFI application if PE/COFF header
+> is present. This removes the need of an explicit EFI boot loader and EFI
+> firmware can directly load Linux (obviously after EFI stub implementation
+> for RISC-V).
 
-Instead, abort with errno before any setup or references are taken when
-pci_device_can_probe() prevents us from trying to probe the device.
+Adding the EFI stub on arm64 required very careful consideration of our
+Image header and the EFI spec, along with the PE/COFF spec.
 
-Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
+For example, to be a compliant PE/COFF header, the first two bytes of
+your kernel image need to be "MZ" in ASCII. On arm64 we happened to find
+a valid instruction that we could rely upon that met this requirement...
 
-This issue is easily tested by disabling sriov_drivers_autoprobe and
-creating VFs:
+> > >   __INIT
+> > >   ENTRY(_start)
+> > > +	/*
+> > > +	 * Image header expected by Linux boot-loaders. The image header data
+> > > +	 * structure is described in asm/image.h.
+> > > +	 * Do not modify it without modifying the structure and all bootloaders
+> > > +	 * that expects this header format!!
+> > > +	 */
+> > > +	/* jump to start kernel */
+> > > +	j _start_kernel
 
-# echo 0 > sriov_drivers_autoprobe
-# echo 3 > sriov_numvfs
-# readlink -f virtfn*/driver
-/sys/bus/pci/drivers/iavf
-/sys/bus/pci/drivers/iavf
-/sys/bus/pci/drivers/iavf
-(yet no netdevs exist for these VFs)
+... but it's not clear to me if this instruction meets that requriement.
 
-The semantics of this autoprobe disabling are a bit strange for the
-user as well, I suppose it works if we force a bind through a driver's
-bind attribute, but tools like libvirt and driverctl expect to bind
-devices by setting the driver_override and then pushing the device
-through driver_probe on the bus.  Is the intention of disabling
-"autoprobe" that a driver_override should still work?  Otherwise the
-user needs to set the driver_override for each VF, re-enable
-sriov_drivers_autoprobe on the PF, and then probe the VFs.  Thus maybe
-pci_device_can_probe() should allow probes of the driver_override
-driver?  Thanks,
+I would strongly encourage you to consider what you actually need for a
+compliant EFI header before you set the rest of this ABI in stone.
 
-Alex
+On arm64 we also had issues with endianness, and I would strongly
+recommend that you define how big/little endian will work ahead of time.
+e.g. whether fields are always in a fixed endianness.
 
- drivers/pci/pci-driver.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 71853befd435..da7b82e56c83 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -414,6 +414,9 @@ static int pci_device_probe(struct device *dev)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	struct pci_driver *drv = to_pci_driver(dev->driver);
- 
-+	if (!pci_device_can_probe(pci_dev))
-+		return -ENODEV;
-+
- 	pci_assign_irq(pci_dev);
- 
- 	error = pcibios_alloc_irq(pci_dev);
-@@ -421,12 +424,10 @@ static int pci_device_probe(struct device *dev)
- 		return error;
- 
- 	pci_dev_get(pci_dev);
--	if (pci_device_can_probe(pci_dev)) {
--		error = __pci_device_probe(drv, pci_dev);
--		if (error) {
--			pcibios_free_irq(pci_dev);
--			pci_dev_put(pci_dev);
--		}
-+	error = __pci_device_probe(drv, pci_dev);
-+	if (error) {
-+		pcibios_free_irq(pci_dev);
-+		pci_dev_put(pci_dev);
- 	}
- 
- 	return error;
-
+Thanks,
+Mark.
