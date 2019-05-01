@@ -2,392 +2,151 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97C3C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FABC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A282A20835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0AC20645
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rvdJtYFa"
+	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="jNSlPJSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfEARKG (ORCPT
+        id S1726184AbfEARLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:10:06 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47076 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfEARKF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:10:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PHgLsKQMBP/rg6N34ArN/d4IlTAvZMQCtwzu5XcNJ6U=; b=rvdJtYFacwNWRUf0X1YjcvkgL
-        6X5iyCjGwYjd547AhhDCwWXnmTJPUdAl3pRyVkZxjGP1mFug1XboJEuNxKNzxEUFn9b7TeFr/pljz
-        ZATwmHyw/KWRRGwV+F7aCkoDx1zPHuTBXdgOWTaN62SuA7JjOylFFtvSJjfpfGj/wZ23ImY3E1xOO
-        FfGlyaJ8Zq4EuiKaGMufnHTLoy7zwB0ErDh9dvrXODWYnQVwSzSZ+RBPX8vWvFFI4sYcaZTZnM6PK
-        X0Ivkx9Gsg8+WuIREoJ6yohVXZE6UAjvQGlGgWkIgaotSZErYmPajj0U8icKqkUW4o0ovJ47WBNCZ
-        Ur2cPnptA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLsk1-0002Bu-Ft; Wed, 01 May 2019 17:09:57 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AF78E29AA6077; Wed,  1 May 2019 19:09:53 +0200 (CEST)
-Date:   Wed, 1 May 2019 19:09:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, jack@suse.com,
-        Waiman Long <longman@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
- current) with fsfreeze (4.19.25-rt16)
-Message-ID: <20190501170953.GB2650@hirez.programming.kicks-ass.net>
-References: <20190326093421.GA29508@localhost.localdomain>
- <20190419085627.GI4742@localhost.localdomain>
- <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
- <20190430132811.GB2589@hirez.programming.kicks-ass.net>
+        Wed, 1 May 2019 13:11:55 -0400
+Received: from mail-eopbgr770113.outbound.protection.outlook.com ([40.107.77.113]:61102
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726005AbfEARLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:11:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kojW7S+AlG1rx3CFD8ID9aPv2p0VvWWrcMoljH3m8Ik=;
+ b=jNSlPJSYueMMqpo7dHLXaFUPCgdqrFHuXreClNhB3Z7G0ihqQFLpFXTIK/FIhyR/JIW8Dl2HXe/RPbBqCN4B0TQzvznh+sl6srsoZKHzSN5JFRJ5Kj0s4SXaCM/sdKFY18eZ226zKG2BiBMtcofFgi1tlOQjlgZNYS2E1oO/1VI=
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
+ MWHPR0601MB3596.namprd06.prod.outlook.com (10.167.236.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Wed, 1 May 2019 17:11:50 +0000
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::2d6d:7e4b:d2ff:5e29]) by MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::2d6d:7e4b:d2ff:5e29%3]) with mapi id 15.20.1856.008; Wed, 1 May 2019
+ 17:11:44 +0000
+From:   Trent Piepho <tpiepho@impinj.com>
+To:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+CC:     "patrice.chotard@st.com" <patrice.chotard@st.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] rtc: st-lpc: remove unnecessary check
+Thread-Topic: [PATCH] rtc: st-lpc: remove unnecessary check
+Thread-Index: AQHU/5H32hcx4X+jhEK8dI4HvkdrpqZVSbiAgAEKhICAAC6FgA==
+Date:   Wed, 1 May 2019 17:11:44 +0000
+Message-ID: <1556730703.31309.53.camel@impinj.com>
+References: <20190430201834.12634-1-alexandre.belloni@bootlin.com>
+         <1556663479.31309.36.camel@impinj.com> <20190501142513.GK11339@piout.net>
+In-Reply-To: <20190501142513.GK11339@piout.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tpiepho@impinj.com; 
+x-originating-ip: [216.207.205.253]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5f998f5b-d709-4b3a-6e6f-08d6ce58165b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0601MB3596;
+x-ms-traffictypediagnostic: MWHPR0601MB3596:
+x-microsoft-antispam-prvs: <MWHPR0601MB359624CB2F7E7F44721D9C8ED33B0@MWHPR0601MB3596.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00246AB517
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(39850400004)(136003)(366004)(376002)(189003)(199004)(91956017)(68736007)(186003)(71190400001)(6246003)(478600001)(71200400001)(446003)(26005)(2501003)(86362001)(53936002)(229853002)(11346002)(6512007)(2616005)(476003)(76116006)(73956011)(66476007)(25786009)(8936002)(2906002)(486006)(54906003)(5640700003)(81156014)(66556008)(6916009)(36756003)(305945005)(6116002)(5660300002)(64756008)(66446008)(3846002)(99286004)(2351001)(66066001)(103116003)(6506007)(14454004)(14444005)(81166006)(102836004)(6486002)(8676002)(66946007)(256004)(7736002)(6436002)(316002)(4326008)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3596;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: impinj.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CdNHVVc3M3BSSAHRBa9grt07cs2ZjPhftO1uO/+0uYkQPei6up/y+ihObIZGm0EqdY588gXnLBtSe4GydW8sim1scm58cRInN4FnSEZ8KKIoFMUrhsoOjp6hdK/xJUpv8p7arWHc0DY/BttQiC4AVyqT9RT/NtiGii4sNUNoSXiKf9/WlGSYqFXBpS78MiQvOdubKRksVnuIbxb+TlPghL1ai47nPH0IoHiEtgCepWbNPqTtJigZgn+h1hndMaTa+h2WBbfaKumCzPsLflsDkjxg+2p+YNavAGzC0BQVbnwGn7XEEfBr0tZ9TXNamnnTC4qauUn36hhwjMwK5DuUF5Stic3UaJ8rqn9g4B1MDAUNIXX7lKTi5kRzM0oFY0gUN7QG1qkYKhgTYB7ZdWwBgVjAXIwMCUBv9VzPOy/a3EA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <49FCA81B3B0C5042BD02E5EC95515723@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430132811.GB2589@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: impinj.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f998f5b-d709-4b3a-6e6f-08d6ce58165b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 17:11:44.6117
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3596
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 03:28:11PM +0200, Peter Zijlstra wrote:
-
-> Yeah, but AFAIK fs freezing code has a history of doing exactly that..
-> This is just the latest incarnation here.
-> 
-> So the immediate problem here is that the task doing thaw isn't the same
-> that did freeze, right? The thing is, I'm not seeing how that isn't a
-> problem with upstream either.
-> 
-> The freeze code seems to do: percpu_down_write() for the various states,
-> and then frobs lockdep state.
-> 
-> Thaw then does the reverse, frobs lockdep and then does: percpu_up_write().
-> 
-> percpu_down_write() directly relies on down_write(), and
-> percpu_up_write() on up_write(). And note how __up_write() has:
-> 
-> 	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
-> 
-> So why isn't this same code coming unstuck in mainline?
-
-Anyway; I cobbled together the below. Oleg, could you have a look, I'm
-sure I messed it up.
-
----
- fs/super.c                    | 31 ++----------------
- include/linux/fs.h            |  4 +--
- include/linux/percpu-rwsem.h  | 25 ++++++--------
- kernel/locking/percpu-rwsem.c | 76 ++++++++++++++++++++++++++++++++-----------
- 4 files changed, 71 insertions(+), 65 deletions(-)
-
-diff --git a/fs/super.c b/fs/super.c
-index 583a0124bc39..bf9c54d05edb 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1629,30 +1629,7 @@ EXPORT_SYMBOL(__sb_start_write);
-  */
- static void sb_wait_write(struct super_block *sb, int level)
- {
--	percpu_down_write(sb->s_writers.rw_sem + level-1);
--}
--
--/*
-- * We are going to return to userspace and forget about these locks, the
-- * ownership goes to the caller of thaw_super() which does unlock().
-- */
--static void lockdep_sb_freeze_release(struct super_block *sb)
--{
--	int level;
--
--	for (level = SB_FREEZE_LEVELS - 1; level >= 0; level--)
--		percpu_rwsem_release(sb->s_writers.rw_sem + level, 0, _THIS_IP_);
--}
--
--/*
-- * Tell lockdep we are holding these locks before we call ->unfreeze_fs(sb).
-- */
--static void lockdep_sb_freeze_acquire(struct super_block *sb)
--{
--	int level;
--
--	for (level = 0; level < SB_FREEZE_LEVELS; ++level)
--		percpu_rwsem_acquire(sb->s_writers.rw_sem + level, 0, _THIS_IP_);
-+	percpu_down_write_non_owner(sb->s_writers.rw_sem + level-1);
- }
- 
- static void sb_freeze_unlock(struct super_block *sb)
-@@ -1660,7 +1637,7 @@ static void sb_freeze_unlock(struct super_block *sb)
- 	int level;
- 
- 	for (level = SB_FREEZE_LEVELS - 1; level >= 0; level--)
--		percpu_up_write(sb->s_writers.rw_sem + level);
-+		percpu_up_write_non_owner(sb->s_writers.rw_sem + level);
- }
- 
- /**
-@@ -1753,7 +1730,6 @@ int freeze_super(struct super_block *sb)
- 	 * when frozen is set to SB_FREEZE_COMPLETE, and for thaw_super().
- 	 */
- 	sb->s_writers.frozen = SB_FREEZE_COMPLETE;
--	lockdep_sb_freeze_release(sb);
- 	up_write(&sb->s_umount);
- 	return 0;
- }
-@@ -1779,14 +1755,11 @@ static int thaw_super_locked(struct super_block *sb)
- 		goto out;
- 	}
- 
--	lockdep_sb_freeze_acquire(sb);
--
- 	if (sb->s_op->unfreeze_fs) {
- 		error = sb->s_op->unfreeze_fs(sb);
- 		if (error) {
- 			printk(KERN_ERR
- 				"VFS:Filesystem thaw failed\n");
--			lockdep_sb_freeze_release(sb);
- 			up_write(&sb->s_umount);
- 			return error;
- 		}
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index dd28e7679089..3b61740b90d7 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1557,9 +1557,9 @@ void __sb_end_write(struct super_block *sb, int level);
- int __sb_start_write(struct super_block *sb, int level, bool wait);
- 
- #define __sb_writers_acquired(sb, lev)	\
--	percpu_rwsem_acquire(&(sb)->s_writers.rw_sem[(lev)-1], 1, _THIS_IP_)
-+	percpu_rwsem_acquire(&(sb)->s_writers.rw_sem[(lev)-1], _THIS_IP_)
- #define __sb_writers_release(sb, lev)	\
--	percpu_rwsem_release(&(sb)->s_writers.rw_sem[(lev)-1], 1, _THIS_IP_)
-+	percpu_rwsem_release(&(sb)->s_writers.rw_sem[(lev)-1], _THIS_IP_)
- 
- /**
-  * sb_end_write - drop write access to a superblock
-diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
-index 03cb4b6f842e..e0c02d0f82a6 100644
---- a/include/linux/percpu-rwsem.h
-+++ b/include/linux/percpu-rwsem.h
-@@ -5,15 +5,15 @@
- #include <linux/atomic.h>
- #include <linux/rwsem.h>
- #include <linux/percpu.h>
--#include <linux/rcuwait.h>
-+#include <linux/wait.h>
- #include <linux/rcu_sync.h>
- #include <linux/lockdep.h>
- 
- struct percpu_rw_semaphore {
- 	struct rcu_sync		rss;
- 	unsigned int __percpu	*read_count;
--	struct rw_semaphore	rw_sem; /* slowpath */
--	struct rcuwait          writer; /* blocked writer */
-+	struct rw_semaphore	rw_sem;
-+	wait_queue_head_t	writer;
- 	int			readers_block;
- };
- 
-@@ -23,7 +23,7 @@ static struct percpu_rw_semaphore name = {				\
- 	.rss = __RCU_SYNC_INITIALIZER(name.rss, RCU_SCHED_SYNC),	\
- 	.read_count = &__percpu_rwsem_rc_##name,			\
- 	.rw_sem = __RWSEM_INITIALIZER(name.rw_sem),			\
--	.writer = __RCUWAIT_INITIALIZER(name.writer),			\
-+	.writer = __WAIT_QUEUE_HEAD_INITIALIZER(name.writer),		\
- }
- 
- extern int __percpu_down_read(struct percpu_rw_semaphore *, int);
-@@ -95,6 +95,9 @@ static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
- extern void percpu_down_write(struct percpu_rw_semaphore *);
- extern void percpu_up_write(struct percpu_rw_semaphore *);
- 
-+extern void percpu_down_write_non_owner(struct percpu_rw_semaphore *);
-+extern void percpu_up_write_non_owner(struct percpu_rw_semaphore *);
-+
- extern int __percpu_init_rwsem(struct percpu_rw_semaphore *,
- 				const char *, struct lock_class_key *);
- 
-@@ -112,23 +115,15 @@ extern void percpu_free_rwsem(struct percpu_rw_semaphore *);
- 	lockdep_assert_held(&(sem)->rw_sem)
- 
- static inline void percpu_rwsem_release(struct percpu_rw_semaphore *sem,
--					bool read, unsigned long ip)
-+					unsigned long ip)
- {
- 	lock_release(&sem->rw_sem.dep_map, 1, ip);
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
--	if (!read)
--		sem->rw_sem.owner = RWSEM_OWNER_UNKNOWN;
--#endif
- }
- 
- static inline void percpu_rwsem_acquire(struct percpu_rw_semaphore *sem,
--					bool read, unsigned long ip)
-+					unsigned long ip)
- {
--	lock_acquire(&sem->rw_sem.dep_map, 0, 1, read, 1, NULL, ip);
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
--	if (!read)
--		sem->rw_sem.owner = current;
--#endif
-+	lock_acquire(&sem->rw_sem.dep_map, 0, 1, 1, 1, NULL, ip);
- }
- 
- #endif
-diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
-index f17dad99eec8..a51fd2a9ee90 100644
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -1,6 +1,7 @@
- #include <linux/atomic.h>
- #include <linux/rwsem.h>
- #include <linux/percpu.h>
-+#include <linux/wait.h>
- #include <linux/lockdep.h>
- #include <linux/percpu-rwsem.h>
- #include <linux/rcupdate.h>
-@@ -19,7 +20,7 @@ int __percpu_init_rwsem(struct percpu_rw_semaphore *sem,
- 	/* ->rw_sem represents the whole percpu_rw_semaphore for lockdep */
- 	rcu_sync_init(&sem->rss, RCU_SCHED_SYNC);
- 	__init_rwsem(&sem->rw_sem, name, rwsem_key);
--	rcuwait_init(&sem->writer);
-+	init_waitqueue_head(&sem->writer);
- 	sem->readers_block = 0;
- 	return 0;
- }
-@@ -40,6 +41,40 @@ void percpu_free_rwsem(struct percpu_rw_semaphore *sem)
- }
- EXPORT_SYMBOL_GPL(percpu_free_rwsem);
- 
-+static void readers_block(struct percpu_rw_semaphore *sem)
-+{
-+	wait_event_cmd(sem->writer, !sem->readers_block,
-+		       __up_read(&sem->rw_sem), __down_read(&sem->rw_sem));
-+}
-+
-+static void block_readers(struct percpu_rw_semaphore *sem)
-+{
-+	wait_event_exclusive_cmd(sem->writer, !sem->readers_block,
-+				 __up_write(&sem->rw_sem),
-+				 __down_write(&sem->rw_sem));
-+	/*
-+	 * Notify new readers to block; up until now, and thus throughout the
-+	 * longish rcu_sync_enter() above, new readers could still come in.
-+	 */
-+	WRITE_ONCE(sem->readers_block, 1);
-+}
-+
-+static void unblock_readers(struct percpu_rw_semaphore *sem)
-+{
-+	/*
-+	 * Signal the writer is done, no fast path yet.
-+	 *
-+	 * One reason that we cannot just immediately flip to readers_fast is
-+	 * that new readers might fail to see the results of this writer's
-+	 * critical section.
-+	 *
-+	 * Therefore we force it through the slow path which guarantees an
-+	 * acquire and thereby guarantees the critical section's consistency.
-+	 */
-+	smp_store_release(&sem->readers_block, 0);
-+	wake_up(&sem->writer);
-+}
-+
- int __percpu_down_read(struct percpu_rw_semaphore *sem, int try)
- {
- 	/*
-@@ -85,6 +120,9 @@ int __percpu_down_read(struct percpu_rw_semaphore *sem, int try)
- 	 * Avoid lockdep for the down/up_read() we already have them.
- 	 */
- 	__down_read(&sem->rw_sem);
-+
-+	readers_block(sem);
-+
- 	this_cpu_inc(*sem->read_count);
- 	__up_read(&sem->rw_sem);
- 
-@@ -104,7 +142,7 @@ void __percpu_up_read(struct percpu_rw_semaphore *sem)
- 	__this_cpu_dec(*sem->read_count);
- 
- 	/* Prod writer to recheck readers_active */
--	rcuwait_wake_up(&sem->writer);
-+	wake_up(&sem->writer);
- }
- EXPORT_SYMBOL_GPL(__percpu_up_read);
- 
-@@ -146,11 +184,7 @@ void percpu_down_write(struct percpu_rw_semaphore *sem)
- 
- 	down_write(&sem->rw_sem);
- 
--	/*
--	 * Notify new readers to block; up until now, and thus throughout the
--	 * longish rcu_sync_enter() above, new readers could still come in.
--	 */
--	WRITE_ONCE(sem->readers_block, 1);
-+	block_readers(sem);
- 
- 	smp_mb(); /* D matches A */
- 
-@@ -161,23 +195,13 @@ void percpu_down_write(struct percpu_rw_semaphore *sem)
- 	 */
- 
- 	/* Wait for all now active readers to complete. */
--	rcuwait_wait_event(&sem->writer, readers_active_check(sem));
-+	wait_event(sem->writer, readers_active_check(sem));
- }
- EXPORT_SYMBOL_GPL(percpu_down_write);
- 
- void percpu_up_write(struct percpu_rw_semaphore *sem)
- {
--	/*
--	 * Signal the writer is done, no fast path yet.
--	 *
--	 * One reason that we cannot just immediately flip to readers_fast is
--	 * that new readers might fail to see the results of this writer's
--	 * critical section.
--	 *
--	 * Therefore we force it through the slow path which guarantees an
--	 * acquire and thereby guarantees the critical section's consistency.
--	 */
--	smp_store_release(&sem->readers_block, 0);
-+	unblock_readers(sem);
- 
- 	/*
- 	 * Release the write lock, this will allow readers back in the game.
-@@ -191,4 +215,18 @@ void percpu_up_write(struct percpu_rw_semaphore *sem)
- 	 */
- 	rcu_sync_exit(&sem->rss);
- }
-+EXPORT_SYMBOL_GPL(percpu_up_write_non_owner);
-+
-+void percpu_down_write_non_owner(struct percpu_rw_semaphore *sem)
-+{
-+	percpu_down_write(sem);
-+	up_write(&sem->rw_sem);
-+}
-+EXPORT_SYMBOL_GPL(percpu_down_write_non_owner);
-+
-+void percpu_up_write_non_owner(struct percpu_rw_semaphore *sem)
-+{
-+	down_write(&sem->rw_sem);
-+	percpu_up_write(sem);
-+}
- EXPORT_SYMBOL_GPL(percpu_up_write);
+T24gV2VkLCAyMDE5LTA1LTAxIGF0IDE2OjI1ICswMjAwLCBBbGV4YW5kcmUgQmVsbG9uaSB3cm90
+ZToNCj4gT24gMzAvMDQvMjAxOSAyMjozMToxOSswMDAwLCBUcmVudCBQaWVwaG8gd3JvdGU6DQo+
+ID4gT24gVHVlLCAyMDE5LTA0LTMwIGF0IDIyOjE4ICswMjAwLCBBbGV4YW5kcmUgQmVsbG9uaSB3
+cm90ZToNCj4gPiA+IFRoZSBSVEMgY29yZSBhbHJlYWR5IGVuc3VyZXMgdGhlIGFsYXJtIGlzIHNl
+dCB0byBhIHRpbWUgaW4gdGhlIGZ1dHVyZSwgaXQNCj4gPiA+IGlzIG5vdCBuZWNlc3NhcnkgdG8g
+Y2hlY2sgYWdhaW4gaW4gdGhlIGRyaXZlci4NCj4gPiANCj4gPiBNeSByZWFkaW5nIG9mIHRoZSBy
+dGMgY29yZSBjb2RlIGlzIHRoYXQgaXQgY2hlY2tzIGlmIHRoZSBhbGFybSBpcyBpbg0KPiA+IHRo
+ZSBmdXR1cmUgKnR3aWNlKiBiZWZvcmUgaGFuZGluZyBvZmYgdGhlIHNldCBjYWxsIHRvIHRoZSBk
+cml2ZXIsIHdoaWNoDQo+ID4gcG9zc2libHkgY2hlY2tzIGEgM3JkIHRpbWUgKGFzIHNlZW4gaGVy
+ZSkuDQo+ID4gDQo+ID4gSG93ZXZlciwgYWxsIHRoZXNlIGNoZWNrcyBhcmUgZG9uZSAqYmVmb3Jl
+KiBzZXR0aW5nIHRoZSBhbGFybS4gIEl0DQo+ID4gc3RpbGwgcG9zc2libGUgdG8gaGF2ZSBhIHJh
+Y2UgYW5kIHNldCB0aGUgYWxhcm0gYWZ0ZXIgdGhlIHRpbWUgaGFzDQo+ID4gYWxyZWFkeSBwYXNz
+ZWQsIGluIHdoaWNoIGNhc2UgdGhlIGFsYXJtIHdpbGwgbmV2ZXIgZmlyZS4NCj4gPiANCj4gDQo+
+IEkgYWdyZWUgdGhlIGNvcmUgbmVlZCB0byBoYW5kbGUgdGhhdCBwb3NzaWJsZSByYWNlIGJldHRl
+ciBhbmQgdGhpcyBpcw0KPiBzb21ldGhpbmcgSSdtIHBsYW5uaW5nIHRvIHdvcmsgb24uDQo+IA0K
+PiA+IFRoZSB3YXkgdG8gZml4IHRoZSByYWNlIHdvdWxkIGJlIHRvIGhhdmUgdGhlIGRyaXZlciBj
+aGVjayB0aGUgYWxhcm0NCj4gPiAqYWZ0ZXIqIHNldHRpbmcgaXQuICBJbiBwcmVjaXNlbHkgdGhp
+cyBvcmRlciwgZG8gdGhlc2Ugc3RlcHM6DQo+ID4gDQo+ID4gMS4gU2V0IGFsYXJtIGluIFJUQywg
+dG8gVGFsYXJtDQo+ID4gMi4gR2V0IHRpbWUgZnJvbSBSVEMsIGFzIFRjdXJyZW50DQo+ID4gMy4g
+R2V0IGFsYXJtIHN0YXR1cyBmcm9tIFJUQw0KPiA+IA0KPiA+IElmIFRhbGFybSA8IFRjdXJyZW50
+LCBhbGFybSB3YXMgc2V0IHRvIGZ1dHVyZSB0aW1lLCBubyBlcnJvcg0KPiANCj4gVGhpcyBzaG91
+bGQgYmUgVGFsYXJtID4gVGN1cnJlbnQsIHJpZ2h0Pw0KDQpZZXMuICBJIHdyb3RlIHRoYXQgYmFj
+a3dhcmQuDQoNCj4gPiBFbHNlDQo+ID4gICBJZiBzdGF0dXMgPT0gZmlyZWQsIGFsYXJtIHdhcyBz
+ZXQgYW5kIGhhcyBzaW5jZSBmaXJlZCwgbm8gZXJyb3INCj4gPiAgIEVsc2Ugc3RhdHVzID09IG5v
+dCBmaXJlZCwgYWxhcm0gd2FzIHNldCBpbiBwYXN0LCBFSU5WQUwNCj4gPiANCj4gPiBUaGlzIHNo
+b3VsZCBiZSByYWNlIGZyZWUuDQo+ID4gDQo+ID4gDQo+ID4gPiAgDQo+ID4gPiAtCS8qIEludmFs
+aWQgYWxhcm0gdGltZSAqLw0KPiA+ID4gLQlpZiAobm93X3NlY3MgPiBhbGFybV9zZWNzKQ0KPiA+
+ID4gLQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gPiAtDQo+ID4gPiAgCW1lbWNweSgmcnRjLT5hbGFy
+bSwgdCwgc2l6ZW9mKHN0cnVjdCBydGNfd2thbHJtKSk7DQo+ID4gPiAgDQo+ID4gPiAgCS8qIE5v
+dyBtYW55IHNlY3MgdG8gZmlyZSAqLw0KPiA+IA0KPiA+ICAgICAgICAgYWxhcm1fc2VjcyAtPSBu
+b3dfc2VjczsNCj4gPiAgICAgICAgIGxwYSA9ICh1bnNpZ25lZCBsb25nIGxvbmcpYWxhcm1fc2Vj
+cyAqIHJ0Yy0+Y2xrcmF0ZTsNCj4gPiANCj4gPiBXaGlsZSBpdCdzIHRydWUgdGhlIHRpbWUgd291
+bGRuJ3Qgbm9ybWFsbHkgYmUgaW4gcGFzdCwgaXQgc3RpbGwgcmFjZXMsDQo+ID4gYXMgZGVzY3Jp
+YmUgYWJvdmUuIEluIHRoYXQgY2FzZSwgdGhlIG1hdGggaGVyZSB1bmRlcmZsb3dzIGFsYXJtX3Nl
+Y3MsDQo+ID4gc28gaXQgcHJvYmFibHkgc3RpbGwgbWFrZXMgc2Vuc2UgdG8gY2hlY2suDQo+IA0K
+PiBJIGNhbid0IGJlbGlldmUgeW91IGNhbiBwb3NzaWJseSBoYXZlIG1vcmUgdGhhbiBvbmUgc2Vj
+b25kIGJldHdlZW4gdGhlDQo+IGNoZWNrIGluIHRoZSBjb3JlIGFuZCB0aGUgY2hlY2sgaW4gdGhl
+IGRyaXZlciwgaXQgZG9lc24ndCBtYWtlIG11Y2gNCj4gc2Vuc2UgdG8gY2hlY2ssIGV2ZW4gaW4g
+dGhlIGN1cnJlbnQgc3RhdGUgb2YgdGhlIGNvcmUuDQoNCkl0J3MgY2VydGFpbmx5IHBvc3NpYmxl
+IHRvIGhhdmUgbXVsdGlwbGUgc2Vjb25kcyBwYXNzLiAgRm9yIGFuIGV4dGVybmFsDQpkZXZpY2Ug
+b3ZlciBTUEkgb3IgSTJDLCBvbmUgaGFzIHRvIHdhaXQgZm9yIHRoZSBidXMgdG8gYmVjb21lIGZy
+ZWUuIA0KQW5kIG9uIFNQSSB0aGF0IHJlcXVpcmVzIHRoZSBrZXJuZWwgdGhyZWFkIHJ1bm5pbmcg
+dGhlIGJ1cyB0byBiZSANCnNjaGVkdWxlZC4gIEp1c3QgcHV0IGluIHNvbWUgcmVhbC10aW1lIHRh
+c2tzIGFuZCBtYXliZSBhIGJpZyB0cmFuc2Zlcg0KdG8gYSBmbGFzaCBjaGlwIGFuZCBpdCBjb3Vs
+ZCBiZSBhIHdoaWxlIGJlZm9yZSB0aGF0IGhhcHBlbnMuDQoNCkkgZG9uJ3QgdGhpbmsgdGhpcyBk
+ZXZpY2UgaGFzIHRoYXQgaXNzdWUgYXMgSSBkb24ndCB0aGluayBpdCdzDQpleHRlcm5hbC4gIEFu
+ZCBldmVyIGZvciBhIGRldmljZSBvbiBhbiBleHRlcm5hbCBidXMsIGRlbGF5cyA+IDEgc2Vjb25k
+DQphcmUgdW5saWtlbHkuICBQb3NzaWJsZSwgYnV0IHVubGlrZWx5Lg0KDQpZb3UgY2FuIGFsc28g
+Z2V0IHRoZW0gd2hlbiBMaW51eCBpcyBydW5uaW5nIHVuZGVyIGEgaHlwZXJ2aXNvciwgaS5lLiBh
+DQpMaW51eCBWTS4gIEJ1dCBhbHNvIHNvbWV0aGluZyBsaWtlIGFuIE5NSSBhbmQgQUNQSSBCSU9T
+LiAgSWYgdGhlIExpbnV4DQpndWVzdCBpcyBub3Qgc2NoZWR1bGVkIHRvIHJ1biBmb3Igd2hpbGUg
+YW55dGhpbmcgdGhhdCBpcyBzdXBwb3NlZCB0byBiZQ0KYmFzZWQgb24gcmVhbCB0aW1lLCBsaWtl
+IHRoZSB2YWx1ZSByZXR1cm5lZCBieSBhbiBSVEMsIHdpbGwgc3RpbGwNCmFkdmFuY2UuICBJdCBp
+cyBwb3NzaWJsZSB0aGF0IG11bHRpcGxlIHNlY29uZHMgZWxhcHNlIGZyb20gdGhlIGd1ZXN0DQpD
+UFUgZXhlY3V0aW5nIG9uZSBpbnN0cnVjdGlvbiB0byB0aGUgbmV4dC4NCg0KQnV0IGV2ZW4gaWdu
+b3JpbmcgdGhhdCwgZG9lcyBpdCByZXF1aXJlID4gMSBzZWNvbmQgdG8gZWxhcHNlLiAgQ2FuJ3Qg
+aXQNCmhhcHBlbiB3aGVuIHRoZSBjbG9jayB0aWNrcyBmcm9tIG9uZSBzZWNvbmQgdG8gdGhlIG5l
+eHQsIHdoaWNoIGhhcHBlbnMNCmVmZmVjdGl2ZWx5IGluc3RhbnRseT8NCg0KSWYgdGhlIHRpbWUg
+ZnJvbSB0aGUgY2hlY2sgdG8gdGhlIHRpbWUgd2hlbiB0aGUgYWxhcm0gaXMgc2V0IGlzIDENCm1p
+Y3Jvc2Vjb25kLCBhbmQgdGhlIHRpbWUgdGhpcyBjYWxsIHRvIHNldCB0aGUgYWxhcm0gaXMgbWFk
+ZSBpcw0KcmFuZG9tbHkgZG9uZSBhbmQgbm90IHN5bmNocm9uaXplZCB0byB0aGUgUlRDLCB0aGVu
+IGlzbid0IHRoZXJlIGEgMSBvdXQNCm9mIDEgbWlsbGlvbiBjaGFuY2UgKDEgbWljcm9zZWNvbmQg
+LyAxIHNlY29uZCksIHRoYXQgdGhlIG9uY2UgcGVyDQpzZWNvbmQgY2xvY2sgdGljayB3aWxsIGhp
+dCBvdXIgMSB1cyB3aW5kb3c/
