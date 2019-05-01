@@ -2,263 +2,178 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967F2C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52CAC004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5402021734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556732467;
-	bh=2oTmPhZqaw3vNZbfB7bs4LyPn7qmFvHgcHnsZW4i4n0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pv90yqlNuGla7uAL/ifPbSsO883d55wSla8v5o4JpIDmjS/5i0LfOq9cPNBS8lCvo
-	 2jVkT+DgDz4QvWqMQf1GCwxq7Bnn1E1oAQ0ghnyLsHfJOwPfPqd5J4b95knhBLPfbt
-	 VZ0dtE2nFiGlJEbi9G336BzpYH1XV9/STIi2ieMM=
+	by mail.kernel.org (Postfix) with ESMTP id 98E992081C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfEARlG (ORCPT
+        id S1726359AbfEARmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfEARlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:41:05 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB200217D4
-        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 17:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556732464;
-        bh=2oTmPhZqaw3vNZbfB7bs4LyPn7qmFvHgcHnsZW4i4n0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jv7KC42MJxT8+3jykKY/7gnfrf6z6+cTx4xVH6r0kgUkJyaGQSHvAUM+QQGRsxYbT
-         tXXZkEvyGIu3aY+uY041gZvJmj26qwRa063PUIp9UgGsEC/IxR6Shd8JAZlRLXETs0
-         NOCkRYPiiYzqSQeGBPeDGabmYLf91IbszsuFkPyY=
-Received: by mail-wm1-f46.google.com with SMTP id b67so4866236wmg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:41:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAV/+m00gaK85kjA9U/ap/YY8cERMbzmXoqxcL43reINooJP6fp1
-        XcpOINL89lXws3vWwRINPMfg8mm21tSLLcdma4XHUw==
-X-Google-Smtp-Source: APXvYqy1Hmv5g4Rys7L1REgIHb6mADZx4IN01lQcN/xXhxJGjq3CTbQvaVDfFeqkIll/vkb1fmQnpDrydR54DpOAVik=
-X-Received: by 2002:a7b:c844:: with SMTP id c4mr7222559wml.108.1556732462310;
- Wed, 01 May 2019 10:41:02 -0700 (PDT)
+        Wed, 1 May 2019 13:42:09 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.212]:27390 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726125AbfEARmI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:42:08 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id CA507400D6A9C
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 12:42:06 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id LtF8hlZTcYTGMLtF8hqHic; Wed, 01 May 2019 12:42:06 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=40056 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLtF8-002WgJ-4b; Wed, 01 May 2019 12:42:06 -0500
+Subject: Re: [PATCH net-next] can: kvaser_usb: Use struct_size() in
+ alloc_candev()
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190208031035.GA2665@embeddedor>
+ <1220cd8d-913f-934b-9c4d-26f4012c3150@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
+ 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
+ tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
+ DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
+ 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
+ YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
+ m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
+ NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
+ qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
+ LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABtCxHdXN0YXZvIEEu
+ IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPokCPQQTAQgAJwUCWywcDAIbIwUJ
+ CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
+ l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
+ obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
+ cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
+ ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
+ JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
+ JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
+ PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
+ R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
+ 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
+ e5YnLxF8ctRAp7K4yVlvA7kCDQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
+ H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
+ DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
+ 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
+ otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
+ l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
+ jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
+ zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
+ I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
+ ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
+ EQEAAYkCJQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
+ UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
+ XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
+ WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
+ imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
+ fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
+ 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
+ ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
+ YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
+ GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <524a265c-21fb-72e1-e077-dd51d8807751@embeddedor.com>
+Date:   Wed, 1 May 2019 12:42:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com>
- <1552680405-5265-9-git-send-email-chang.seok.bae@intel.com>
- <alpine.DEB.2.21.1903251003090.1798@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1904050007050.1802@nanos.tec.linutronix.de>
- <5DCF2089-98EC-42D3-96C3-6ECCDA0B18E2@amacapital.net> <C79FA889-BD9B-4427-902F-52EE33A3E6EF@intel.com>
-In-Reply-To: <C79FA889-BD9B-4427-902F-52EE33A3E6EF@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 1 May 2019 10:40:50 -0700
-X-Gmail-Original-Message-ID: <CALCETrV4zACb9L_FaU12ZF1O6_vjVyGrcyWwk-mfSUhyxGMXJA@mail.gmail.com>
-Message-ID: <CALCETrV4zACb9L_FaU12ZF1O6_vjVyGrcyWwk-mfSUhyxGMXJA@mail.gmail.com>
-Subject: Re: [RESEND PATCH v6 08/12] x86/fsgsbase/64: Use the per-CPU base as
- GSBASE at the paranoid_entry
-To:     "Bae, Chang Seok" <chang.seok.bae@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1220cd8d-913f-934b-9c4d-26f4012c3150@embeddedor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLtF8-002WgJ-4b
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:40056
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 6:52 AM Bae, Chang Seok <chang.seok.bae@intel.com> w=
-rote:
->
->
-> > On Apr 5, 2019, at 06:50, Andy Lutomirski <luto@amacapital.net> wrote:
-> >
-> >
-> >
-> >> On Apr 5, 2019, at 2:35 AM, Thomas Gleixner <tglx@linutronix.de> wrote=
-:
-> >>
-> >>> On Mon, 25 Mar 2019, Thomas Gleixner wrote:
-> >>>> On Fri, 15 Mar 2019, Chang S. Bae wrote:
-> >>>> ENTRY(paranoid_exit)
-> >>>>   UNWIND_HINT_REGS
-> >>>>   DISABLE_INTERRUPTS(CLBR_ANY)
-> >>>>   TRACE_IRQS_OFF_DEBUG
-> >>>> +    ALTERNATIVE "jmp .Lparanoid_exit_no_fsgsbase",    "nop",\
-> >>>> +        X86_FEATURE_FSGSBASE
-> >>>> +    wrgsbase    %rbx
-> >>>> +    jmp    .Lparanoid_exit_no_swapgs;
-> >>>
-> >>> Again. A few newlines would make it more readable.
-> >>>
-> >>> This modifies the semantics of paranoid_entry and paranoid_exit. Look=
-ing at
-> >>> the usage sites there is the following code in the nmi maze:
-> >>>
-> >>>   /*
-> >>>    * Use paranoid_entry to handle SWAPGS, but no need to use paranoid=
-_exit
-> >>>    * as we should not be calling schedule in NMI context.
-> >>>    * Even with normal interrupts enabled. An NMI should not be
-> >>>    * setting NEED_RESCHED or anything that normal interrupts and
-> >>>    * exceptions might do.
-> >>>    */
-> >>>   call    paranoid_entry
-> >>>   UNWIND_HINT_REGS
-> >>>
-> >>>   /* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
-> >>>   movq    %rsp, %rdi
-> >>>   movq    $-1, %rsi
-> >>>   call    do_nmi
-> >>>
-> >>>   /* Always restore stashed CR3 value (see paranoid_entry) */
-> >>>   RESTORE_CR3 scratch_reg=3D%r15 save_reg=3D%r14
-> >>>
-> >>>   testl    %ebx, %ebx            /* swapgs needed? */
-> >>>   jnz    nmi_restore
-> >>> nmi_swapgs:
-> >>>   SWAPGS_UNSAFE_STACK
-> >>> nmi_restore:
-> >>>   POP_REGS
-> >>>
-> >>> I might be missing something, but how is that supposed to work when
-> >>> paranoid_entry uses FSGSBASE? I think it's broken, but if it's not th=
-en
-> >>> there is a big fat comment missing explaining why.
-> >>
-> >> So this _is_ broken.
-> >>
-> >>  On entry:
-> >>
-> >>     rbx =3D rdgsbase()
-> >>     wrgsbase(KERNEL_GS)
-> >>
-> >>  On exit:
-> >>
-> >>     if (ebx =3D=3D 0)
-> >>          swapgs
-> >>
-> >> The resulting matrix:
-> >>
-> >>  |  ENTRY GS    | RBX        | EXIT        | GS on IRET    | RESULT
-> >>  |        |        |        |        |
-> >> 1 |  KERNEL_GS    | KERNEL_GS    | EBX =3D=3D 0    | USER_GS    | FAIL
-> >>  |        |        |        |        |
-> >> 2 |  KERNEL_GS    | KERNEL_GS    | EBX !=3D 0    | KERNEL_GS    | ok
-> >>  |        |        |        |        |
-> >> 3 |  USER_GS    | USER_GS    | EBX =3D=3D 0    | USER_GS    | ok
-> >>  |        |        |        |        |
-> >> 4 |  USER_GS    | USER_GS    | EBX !=3D 0    | KERNEL_GS    | FAIL
-> >>
-> >>
-> >> #1 Just works by chance because it's unlikely that the lower 32bits of=
- a
-> >>  per CPU kernel GS are all 0.
-> >>
-> >>  But it's just a question of probability that this turns into a
-> >>  non-debuggable once per year crash (think KASLR).
-> >>
-> >> #4 This can happen when the NMI hits the kernel in some other entry co=
-de
-> >>  _BEFORE_ or _AFTER_ swapgs.
-> >>
-> >>  User space using GS addressing with GS[31:0] !=3D 0 will crash and bu=
-rn.
-> >>
-> >>
-> >
-> > Hi all-
-> >
-> > In a previous incarnation of these patches, I complained about the use =
-of SWAPGS in the paranoid path. Now I=E2=80=99m putting my maintainer foot =
-down.  On a non-FSGSBASE system, the paranoid path known, definitively, whi=
-ch GS is where, so SWAPGS is annoying. With FSGSBASE, unless you start look=
-ing at the RIP that you interrupted, you cannot know whether you have user =
-or kernel GSBASE live, since they can have literally the same value.  One o=
-f the numerous versions of this patch compared the values and just said =E2=
-=80=9Cwell, it=E2=80=99s harmless to SWAPGS if user code happens to use the=
- same value as the kernel=E2=80=9D.  I complained that it was far too fragi=
-le.
-> >
-> > So I=E2=80=99m putting my foot down. If you all want my ack, you=E2=80=
-=99re going to save the old GS, load the new one with WRGSBASE, and, on ret=
-urn, you=E2=80=99re going to restore the old one with WRGSBASE. You will no=
-t use SWAPGS in the paranoid path.
-> >
-> > Obviously, for the non-paranoid path, it all keeps working exactly like=
- it does now.
->
-> Although I can see some other concerns with this, looks like it is still =
-worth pursuing.
->
-> >
-> > Furthermore, if you folks even want me to review this series, the ptrac=
-e tests need to be in place.  On inspection of the current code (after the =
-debacle a few releases back), it appears the SETREGSET=E2=80=99s effect dep=
-ends on the current values in the registers =E2=80=94 it does not actually =
-seem to reliably load the whole state. So my confidence will be greatly inc=
-reased if your series first adds a test that detects that bug (and fails!),=
- then fixes the bug in a tiny little patch, then adds FSGSBASE, and keeps t=
-he test working.
-> >
->
-> I think I need to understand the issue. Appreciate if you can elaborate a=
- little bit.
->
+Hi all,
 
-This patch series gives a particular behavior to PTRACE_SETREGS and
-PTRACE_POKEUSER.  There should be a test case that validates that
-behavior, including testing the weird cases where gs !=3D 0 and gsbase
-contains unusual values.  Some existing tests might be pretty close to
-doing what's needed.
+Friendly ping(second one):
 
-Beyond that, the current putreg() code does this:
+Who can take this?
 
-    case offsetof(struct user_regs_struct,gs_base):
-        /*
-         * Exactly the same here as the %fs handling above.
-         */
-        if (value >=3D TASK_SIZE_MAX)
-            return -EIO;
-        if (child->thread.gsbase !=3D value)
-            return do_arch_prctl_64(child, ARCH_SET_GS, value);
-        return 0;
+Thanks
+--
+Gustavo
 
-and do_arch_prctl_64(), in turn, does this:
-
-    case ARCH_SET_GS: {
-        if (unlikely(arg2 >=3D TASK_SIZE_MAX))
-            return -EPERM;
-
-        preempt_disable();
-        /*
-         * ARCH_SET_GS has always overwritten the index
-         * and the base. Zero is the most sensible value
-         * to put in the index, and is the only value that
-         * makes any sense if FSGSBASE is unavailable.
-         */
-        if (task =3D=3D current) {
-         [not used for ptrace]
-        } else {
-            task->thread.gsindex =3D 0;
-            x86_gsbase_write_task(task, arg2);
-        }
-
-        ...
-
-So writing the value that was already there to gsbase via putreg()
-does nothing, but writing a *different* value implicitly clears gs,
-but writing a different value will clear gs.
-
-This behavior is, AFAICT, complete nonsense.  It happens to work
-because usually gdb writes the same value back, and, in any case, gs
-comes *after* gsbase in user_regs_struct, so gs gets replaced anyway.
-But I think that this behavior should be fixed up and probably tested.
-Certainly the behavior should *not* be the same on a fsgsbase kernel,
-and and the fsgsbase behavior definitely needs a selftest.
+On 2/25/19 6:48 PM, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping:
+> 
+> Who can take this?
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> On 2/7/19 9:10 PM, Gustavo A. R. Silva wrote:
+>> One of the more common cases of allocation size calculations is finding
+>> the size of a structure that has a zero-sized array at the end, along
+>> with memory for some number of elements for that array. For example:
+>>
+>> struct foo {
+>>     int stuff;
+>>     void *entry[];
+>> };
+>>
+>> instance = alloc(sizeof(struct foo) + count * sizeof(void *));
+>>
+>> Instead of leaving these open-coded and prone to type mistakes, we can
+>> now use the new struct_size() helper:
+>>
+>> instance = alloc(struct_size(instance, entry, count));
+>>
+>> This code was detected with the help of Coccinelle.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c b/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
+>> index c89c7d4900d7..0f1d3e807d63 100644
+>> --- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
+>> +++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
+>> @@ -643,8 +643,7 @@ static int kvaser_usb_init_one(struct kvaser_usb *dev,
+>>  			return err;
+>>  	}
+>>  
+>> -	netdev = alloc_candev(sizeof(*priv) +
+>> -			      dev->max_tx_urbs * sizeof(*priv->tx_contexts),
+>> +	netdev = alloc_candev(struct_size(priv, tx_contexts, dev->max_tx_urbs),
+>>  			      dev->max_tx_urbs);
+>>  	if (!netdev) {
+>>  		dev_err(&dev->intf->dev, "Cannot alloc candev\n");
+>>
