@@ -2,114 +2,136 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F9AC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82743C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09D42081C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556753631;
-	bh=UQ03RoUVgEqrh24m1ibWvm3BQ70ctrej1g8FlyRCbUQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OlVndVWsvFarTi3ISh0zc8flEQWSrmr0mvdGwsY4MXAnTc5QguCll23IRiySNTvUC
-	 4kYhwt4SQKKDW/qBVhf9tDsHSmYR8F1vz+nx0FsY79epdZPvD+iwUwMQth01DiTJD1
-	 1/IkilSTayojWYuuSs1gEMt9zQx2obENqc4apefo=
+	by mail.kernel.org (Postfix) with ESMTP id 4B911208C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:41:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lqv1YbTq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfEAXdu (ORCPT
+        id S1726225AbfEAXlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 19:33:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfEAXdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 19:33:50 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2C1121783
-        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 23:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556753628;
-        bh=UQ03RoUVgEqrh24m1ibWvm3BQ70ctrej1g8FlyRCbUQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=u/0c+KuVBUG5WeZTCWcOhcZoPGxsnZH1n8O333AVJBL1xvQaxjnzaAT1VFaLZIzmG
-         ldgZ7PChxp8fVfst7G6uIsNSYIshYptv7boi+gwVtzkmo+fHmVb3rfaXbWOtKZqm2V
-         I5BfoVcJt0/2MdXqc2QwtyaI7tOrHyjPUfZnhai8=
-Received: by mail-wr1-f50.google.com with SMTP id e9so653279wrc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 16:33:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAWmZor7vBQoYbLs1OnqV3INj27MB2Hv6d8/IRJePSQBjw0V8Us+
-        KgYQQXPq+GeA/BSSaZMBhZm53QVIFAwuBHRCwpAUUg==
-X-Google-Smtp-Source: APXvYqyeDPaEKJWIVdSsQa8ssu/spC/1Vo4v4BXrY0/UmVS9TH9Usb5cgGcb5aNntQqgdOGpAdU1WvcOFqQNH6Mag6I=
-X-Received: by 2002:a5d:4e82:: with SMTP id e2mr381220wru.199.1556753627151;
- Wed, 01 May 2019 16:33:47 -0700 (PDT)
+        Wed, 1 May 2019 19:41:42 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50785 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfEAXlm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 19:41:42 -0400
+Received: by mail-it1-f195.google.com with SMTP id q14so362090itk.0;
+        Wed, 01 May 2019 16:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jnT0HZUrSkPAf62Nq5Lp+ecgHqDHRXVjUFxnFCahDOY=;
+        b=Lqv1YbTqvom86+7/lE6U9SACKtF0F/Qq7zpHyaavTiVV9Wp28vzbpuUS0L1rSB6AGG
+         2UmY3Kf7Vu9ylvEYyjVcifFOp6hIj3ev8keSdTLh9FTqvrqO7tIuPGXAW6BOTG15x69X
+         B94wg7SzkS5IpUhWkqcWXq0zty2zQN0A0TBRxAMuKBlxsV2+s/GsmKpVo1WPejfWq5FM
+         PLgZkq5IxzlhFLW4usrsM2eTnCmFtW2aOawfk8VjZfnYbAaSJxTEWhu7TnqgxBQk0TOH
+         H33Gsc10TqfHZtXEof12XS0kLNwd06roWkyDzMPnBW88au5xFRfCUuQObqaEmzCn9MAF
+         bd+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jnT0HZUrSkPAf62Nq5Lp+ecgHqDHRXVjUFxnFCahDOY=;
+        b=jMiIvgejnpVI9au7S6uc1dc7NOlV0OUCozNndh35pv1zpAxUNqsmwG64SG4ZfE/hGv
+         Gy1Jjpg57SBekh9FEII9Qb/8Heoz7STeVVMEFtMXCxAMWlhoWaNdH1MDYa3oHj1oFQS2
+         sTcnRIusCyPtErly17L1/2z1YDcA3s41ilsVU7SCE3G7i8cbyC25xQLwSzv4NeXSddha
+         i3zCe4ktysNLLSCs4GH3rLsJi6lNOn2GN5pDJn2xK9NoE8/iaQX1Gff0LYf7Zd8xKtUQ
+         0WWaHpJ06vL8c0+UFlXP8iCitmFVmAsm5z9NpraAfkaaUVjLSb40naOuidsigQwoy33a
+         FvuA==
+X-Gm-Message-State: APjAAAXhnopsU4as135epmhq3KaMrxjpEbX5yX6K/dHRlBSLc0jlmixJ
+        b20AJ5e+9Jhw4thSjCoP+kosAshh
+X-Google-Smtp-Source: APXvYqzhe09Pgdh3StOglufr1LW3DFH5RNgtkgWKazS/LM4NepZXI3XSVojE4IpPjSiczaWFPlZvpg==
+X-Received: by 2002:a24:3755:: with SMTP id r82mr244747itr.60.1556754101322;
+        Wed, 01 May 2019 16:41:41 -0700 (PDT)
+Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.gmail.com with ESMTPSA id m3sm2392507ion.69.2019.05.01.16.41.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 16:41:39 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and Tegra20/30 support
+Date:   Thu,  2 May 2019 02:37:59 +0300
+Message-Id: <20190501233815.32643-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
- <20190416120822.GV11158@hirez.programming.kicks-ass.net> <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
- <20190416154348.GB3004@mit.edu> <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
- <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com> <20190417151555.GG4686@mit.edu>
- <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com> <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
- <20190426140102.GA4922@mit.edu> <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net> <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
-In-Reply-To: <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 1 May 2019 16:33:35 -0700
-X-Gmail-Original-Message-ID: <CALCETrW93mtF+Q=A=t2OkAN3dTFonrZRMUzQhQ+2gkS3o1W1ZA@mail.gmail.com>
-Message-ID: <CALCETrW93mtF+Q=A=t2OkAN3dTFonrZRMUzQhQ+2gkS3o1W1ZA@mail.gmail.com>
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 1:42 AM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Reshetova, Elena
-> > Sent: 30 April 2019 18:51
-> ...
-> > +unsigned char random_get_byte(void)
-> > +{
-> > +    struct rnd_buffer *buffer = &get_cpu_var(stack_rand_offset);
-> > +    unsigned char res;
-> > +
-> > +    if (buffer->byte_counter >= RANDOM_BUFFER_SIZE) {
-> > +        get_random_bytes(&(buffer->buffer), sizeof(buffer->buffer));
-> > +        buffer->byte_counter = 0;
-> > +    }
-> > +
-> > +    res = buffer->buffer[buffer->byte_counter];
-> > +    buffer->buffer[buffer->byte_counter] = 0;
->
-> If is really worth dirtying a cache line to zero data we've used?
-> The unused bytes following are much more interesting.
->
+Changelog:
 
-For this particular use case, zeroing is probably worthless.  But, for
-the general case of get_random_bytes(), we need to zero, and I would
-argue that get_random_bytes() should be doing exactly this in general.
+v4: Addressed all review comments that were made by Chanwoo Choi to v3:
+
+    - changed the driver removal order to match the probe exactly
+    - added clarifying comment for 1/8 ratio to the Tegra20 driver
+
+    Chanwoo, please also note that the clk patch that should fix
+    compilation problem that was reported the kbuild-test-robot is already
+    applied and available in the recent linux-next.
+
+v3: Addressed all review comments that were made by Chanwoo Choi to v2.
+
+    Patch "Synchronize IRQ after masking it in hardware" morphed into
+    "Properly disable interrupts", which disables interrupts more solidly.
+
+    Added new minor patch: "Rename tegra-devfreq.c to tegra30-devfreq.c".
+
+    Added missed error handlings for dev_pm_opp_add().
+
+v2: The patchset was quite heavily reworked since v1, few patches we
+    dropped or squashed into the new ones and more patches we added.
+    In a result more bugs and potential problems are fixed now, driver's
+    code got more clean up.
+
+    The Tegra20 driver-addition patch is now a part of this series, it has
+    no changes since v1.
+
+Dmitry Osipenko (16):
+  PM / devfreq: tegra: Fix kHz to Hz conversion
+  PM / devfreq: tegra: Replace readl-writel with relaxed versions
+  PM / devfreq: tegra: Replace write memory barrier with the read
+    barrier
+  PM / devfreq: tegra: Don't ignore clk errors
+  PM / devfreq: tegra: Don't set EMC clock rate to maximum on probe
+  PM / devfreq: tegra: Drop primary interrupt handler
+  PM / devfreq: tegra: Properly disable interrupts
+  PM / devfreq: tegra: Clean up driver's probe / remove
+  PM / devfreq: tegra: Avoid inconsistency of current frequency value
+  PM / devfreq: tegra: Mark ACTMON's governor as immutable
+  PM / devfreq: tegra: Move governor registration to driver's probe
+  PM / devfreq: tegra: Reconfigure hardware on governor's restart
+  PM / devfreq: tegra: Support Tegra30
+  PM / devfreq: tegra: Enable COMPILE_TEST for the driver
+  PM / devfreq: tegra: Rename tegra-devfreq.c to tegra30-devfreq.c
+  PM / devfreq: Introduce driver for NVIDIA Tegra20
+
+ MAINTAINERS                                   |   8 +
+ drivers/devfreq/Kconfig                       |  15 +-
+ drivers/devfreq/Makefile                      |   3 +-
+ drivers/devfreq/tegra20-devfreq.c             | 212 ++++++++++++
+ .../{tegra-devfreq.c => tegra30-devfreq.c}    | 315 ++++++++----------
+ 5 files changed, 379 insertions(+), 174 deletions(-)
+ create mode 100644 drivers/devfreq/tegra20-devfreq.c
+ rename drivers/devfreq/{tegra-devfreq.c => tegra30-devfreq.c} (81%)
+
+-- 
+2.21.0
+
