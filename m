@@ -4,74 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AD7C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4360C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4418120866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18F420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556684760;
-	bh=g3M/5b15eERHdZTOti1ql2/n1RS20eeqRM8IM0ukWMQ=;
+	s=default; t=1556684763;
+	bh=k1Jv58Df73YZhzI+gHs65MvR/WrxoEvI2Or//tv2pU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
 	 From;
-	b=yv1aRCCIHrFixb7+cKMNszPCTcZ9vAoASd/qB1+fzNcPtIyDNgku6rIEZqR+tW3O2
-	 wAc05vtaAKX0M6JcLxwZgN3mv/yLJmGNr9m5w/+MBdHVtc0zuxHrONyDT0SQEGRUKg
-	 hpDVfIerZ+Bk1il1D2U3OG1YWGioAIXBLTEA+eXY=
+	b=EWEVQEvhQ5PQ0c7ZIVYJk4pNktjENVmEV3Porzxyt7tWwc/CLS4ccJkIGX9UTFXZc
+	 /w8n2IaCAGT44RVit0PvG6Gza9UGmJM4aROOlzd9jiTdL3r35yO5eEQ2+xGFL3gTa7
+	 4TFMuWSBIfQMOENwRP06bn1gfQgDhmOz9qLm+21Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbfEAEYk (ORCPT
+        id S1726504AbfEAE0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 00:24:40 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:50857 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfEAEYf (ORCPT
+        Wed, 1 May 2019 00:26:02 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35388 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfEAEYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 00:24:35 -0400
-Received: by mail-it1-f194.google.com with SMTP id q14so8375221itk.0;
-        Tue, 30 Apr 2019 21:24:35 -0700 (PDT)
+        Wed, 1 May 2019 00:24:38 -0400
+Received: by mail-io1-f68.google.com with SMTP id r18so14121213ioh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 21:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :reply-to:organization;
-        bh=Nk48nKxFrzVCbK/utRpRT/1210jzyM5INfoRqpnVTi0=;
-        b=hAjGPJJwuCRGfx7J5DNr7yixJbVMhYzPBZftMDPiFmRzYV2GTkZynFtEWe7oki+5LX
-         d/4twZjqbNISjooUyKgalqeHdcZF0c5pvEr/Jkn5pOJyEROW9EnLQjzlG/pyZ6zYo1oN
-         DajJB8QL5feM8TkJpmbDyjR/6Q1gV19JzbAeVlNnfFYGBwqKulvrNgbY8DZyEZV9yOPT
-         F3UZjQuKA4r/M0KXBpNL5cGbI7HUUr9RPG9OUwZL1lZ6ulsG87W3k4mgsYAVTzDAH5Qx
-         waYgVeb68BYyjzvSr/rLMltXFUHczwu/fQKn1c5RWth+eMWvKzkbhT4ExSn9Fgv4xlyP
-         Z2oQ==
+        bh=uD3OvFcls30SXN52XBWKTLWJTDIBIfXTSrwZineFKm8=;
+        b=g6Qo2DhocXBthkfzHjb5lXWzSD2Rg61uT1VPPiyZmosOuPUCtNw/L7rlkgjhjFeawF
+         AYy6RKE7m2aJoljKCiWbwtjFjbi5pqNovdknBJi9O020X2Z1tJdX3FMYHH5Fri697UHf
+         w3Rfk26XjZ91vPbizxJILLB2Tey1S/qU5wHuiFtmVWeeB+a3F9oUIaMpkRIRM3D/+/8i
+         dRFcHJT11Xi12wIYidmJhPivJC4VAFhdpCgrsPc4N7mJU5ZBuHrwPYRo9cek05hkHTGx
+         RDT5lIzwP2Kqmm65DweyHwMqZqjOkbtCpwz3G+ogiuYQnMoDYJTE+MUMQId0oruLCG1R
+         v01A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:reply-to:organization;
-        bh=Nk48nKxFrzVCbK/utRpRT/1210jzyM5INfoRqpnVTi0=;
-        b=p9NeGFbYZxXWx3Z41vwloO4DLjae6E/UwZuVWfV7Ssguyf2ACQ781XTIRwmgk8oHvY
-         6nUsn3vEzcjaAE8bu5KsY9AD2gDGJycK7lAtqUZAmEfaxgVHsjIMaiktFL+P5BxNxudm
-         c1Nn2wK2rE+h4VY9bTdPY78hxewDadCUYv7uEMaV0PGBpdSWearDd++on5j6/HSDCKKt
-         ervA80CvMbJfA2eZI4xqNM6hVlOfcsHCQNaM4AeUtyqc43P7O3WDw7W9AKtKr9szW5yu
-         eHKf8Fj9UzdUJo9UZcpEsj1P3z8MIz9cO4IbdgId2uTFBjOazncJMD77/W8Zw+Basuxf
-         kXqQ==
-X-Gm-Message-State: APjAAAWFWs+YoQN5g6hI4JJy6Hn7WekJYJhzRRjP75tnPnoQo/YzgqW/
-        HM8jtbgspr+NRMs1mz6hn2o=
-X-Google-Smtp-Source: APXvYqwWa2ZAqJt4ecnI9pcgMvcwq1G4EZn6BY/+uHQYojEevrJIVmj0qsNp2jOhfMoHIObotM6eqQ==
-X-Received: by 2002:a24:9414:: with SMTP id j20mr6385601ite.91.1556684674965;
-        Tue, 30 Apr 2019 21:24:34 -0700 (PDT)
+        bh=uD3OvFcls30SXN52XBWKTLWJTDIBIfXTSrwZineFKm8=;
+        b=TRhUtCl4abav+5ss1sZmNiDVxiDHiLmRu5M166d7unYjF5tEQb9kT9alrF1uxo50d5
+         H3Ddwh3R4xnW+nzVHnwLxRq9YPy7p7csjm08RsvFPo2pvAjYnFEt95Od8C1lfvAiHh/F
+         ZL8B7e03QTyFjTAEquzL/yO4zp2K4JqWSdMqfzFxTLOhmATetN3mZtmaxDwxEqBmdp/w
+         LwNjWvPUszkIMImGlg+zbMKNleWBsqWrdMQBIEJUUQMSBzUzj/E2C2ihjVKHnZDRCorv
+         1i4uHnR39Gu7taDRAm9KvVqYrE1/fOPkHpetPKM+JSZha5m56pg+55nGFIbswUInbky3
+         7SpA==
+X-Gm-Message-State: APjAAAXTbH42pvTmNG1eSCoRPHp1aWyW+dAT9gaBLUuuZXJpr8I8a+Wv
+        ZpOGKUAkkP7T8iUn/s2lNhg=
+X-Google-Smtp-Source: APXvYqyQhAzojkHBWUoRpPkxj27UOO7RtOpy8g6IcIXUi0BCJp5H+z+RAP5y/mIXodO24dbhzA6r2Q==
+X-Received: by 2002:a5e:8216:: with SMTP id l22mr17088870iom.269.1556684677910;
+        Tue, 30 Apr 2019 21:24:37 -0700 (PDT)
 Received: from nuc8.lan (h69-131-112-51.cntcnh.dsl.dynamic.tds.net. [69.131.112.51])
-        by smtp.gmail.com with ESMTPSA id b8sm2569728itb.20.2019.04.30.21.24.33
+        by smtp.gmail.com with ESMTPSA id b8sm2569728itb.20.2019.04.30.21.24.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 21:24:34 -0700 (PDT)
+        Tue, 30 Apr 2019 21:24:37 -0700 (PDT)
 From:   Len Brown <lenb@kernel.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 01/18] x86 topology: Fix doc typo
-Date:   Wed,  1 May 2019 00:24:10 -0400
-Message-Id: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1556657368.git.len.brown@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>
+Subject: [PATCH 03/18] x86 smpboot: Rename match_die() to match_pkg()
+Date:   Wed,  1 May 2019 00:24:12 -0400
+Message-Id: <44a39ba11153106d2b029d9cffee1b062bdbce4b.1556657368.git.len.brown@intel.com>
 X-Mailer: git-send-email 2.18.0-rc0
-In-Reply-To: <20190501042427.13156-1-lenb@kernel.org>
-References: <20190501042427.13156-1-lenb@kernel.org>
+In-Reply-To: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1556657368.git.len.brown@intel.com>
+References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1556657368.git.len.brown@intel.com>
 Reply-To: Len Brown <lenb@kernel.org>
 Organization: Intel Open Source Technology Center
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,29 +81,44 @@ From: Len Brown <len.brown@intel.com>
 
 Syntax only, no functional or semantic change.
 
-reflect actual cpuinfo_x86 field name:
-
-s/logical_id/logical_proc_id/
+This routine matches packages, not die, so name it thus.
 
 Signed-off-by: Len Brown <len.brown@intel.com>
-Cc: linux-doc@vger.kernel.org
 ---
- Documentation/x86/topology.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/smpboot.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/x86/topology.txt b/Documentation/x86/topology.txt
-index 2953e3ec9a02..06b3cdbc4048 100644
---- a/Documentation/x86/topology.txt
-+++ b/Documentation/x86/topology.txt
-@@ -51,7 +51,7 @@ The topology of a system is described in the units of:
-     The physical ID of the package. This information is retrieved via CPUID
-     and deduced from the APIC IDs of the cores in the package.
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index ce1a67b70168..3f8bbfb26c18 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -455,7 +455,7 @@ static bool match_llc(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
+  * multicore group inside a NUMA node.  If this happens, we will
+  * discard the MC level of the topology later.
+  */
+-static bool match_die(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
++static bool match_pkg(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
+ {
+ 	if (c->phys_proc_id == o->phys_proc_id)
+ 		return true;
+@@ -546,7 +546,7 @@ void set_cpu_sibling_map(int cpu)
+ 	for_each_cpu(i, cpu_sibling_setup_mask) {
+ 		o = &cpu_data(i);
  
--  - cpuinfo_x86.logical_id:
-+  - cpuinfo_x86.logical_proc_id:
+-		if ((i == cpu) || (has_mp && match_die(c, o))) {
++		if ((i == cpu) || (has_mp && match_pkg(c, o))) {
+ 			link_mask(topology_core_cpumask, cpu, i);
  
-     The logical ID of the package. As we do not trust BIOSes to enumerate the
-     packages in a consistent way, we introduced the concept of logical package
+ 			/*
+@@ -570,7 +570,7 @@ void set_cpu_sibling_map(int cpu)
+ 			} else if (i != cpu && !c->booted_cores)
+ 				c->booted_cores = cpu_data(i).booted_cores;
+ 		}
+-		if (match_die(c, o) && !topology_same_node(c, o))
++		if (match_pkg(c, o) && !topology_same_node(c, o))
+ 			x86_has_numa_in_package = true;
+ 	}
+ 
 -- 
 2.18.0-rc0
 
