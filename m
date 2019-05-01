@@ -2,111 +2,98 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C29C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B39C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8553521734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4B221783
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556700229;
+	bh=nqU4Ne54nAYYVwV/En/Nlu9SJUv5DPfaJj7HvYaVPVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mFVQFX5hmQpcfwyImzUp0Kra8CYwrF1S9OTbZoMkgeOwORXizMeJLPEYsixFs9v4f
+	 OxvK7O7dNQThJVsTAWOuOw10xdIHkefEcIqpd9af8qsV0sls1B/qqrNvbkMHGv52/V
+	 D0KefHSYAaQKM0K0u51TDkiWtj4v1nCcsFr7YFoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfEAImN (ORCPT
+        id S1726267AbfEAIns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 04:42:13 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:28714 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725776AbfEAImN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 04:42:13 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-144-CW7NFOPjM2SPadXKTPuDJQ-1; Wed, 01 May 2019 09:41:58 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
- 1 May 2019 09:41:57 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 1 May 2019 09:41:57 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Reshetova, Elena'" <elena.reshetova@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-CC:     Theodore Ts'o <tytso@mit.edu>, Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Index: AQHU9E1UquBTkhVACE2y3BuRFoekIqY8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA9yhg
-Date:   Wed, 1 May 2019 08:41:57 +0000
-Message-ID: <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
-References: <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
- <20190416120822.GV11158@hirez.programming.kicks-ass.net>
- <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
- <20190416154348.GB3004@mit.edu>
- <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
- <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
- <20190417151555.GG4686@mit.edu>
- <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
- <20190426140102.GA4922@mit.edu>
- <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
-In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 1 May 2019 04:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfEAIns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 04:43:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B05B21734;
+        Wed,  1 May 2019 08:43:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556700227;
+        bh=nqU4Ne54nAYYVwV/En/Nlu9SJUv5DPfaJj7HvYaVPVQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SjnWpIVN1eenhFh+EckL7uKpPTC6kgjq+oiV1ZleEgK+AE+GfSirxJ3wpCp2tU0//
+         tHVZ4Tzm3Atws4IIQMm7eDyK0WthjMvVYU8701zbTaiISfB5ThSLaaRY4bReSzaTsF
+         jHGTlQAeWXkIiBKNe/9SYbH0jVTTeZOluWygxwVI=
+Date:   Wed, 1 May 2019 10:43:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.0 00/89] 5.0.11-stable review
+Message-ID: <20190501084344.GA22332@kroah.com>
+References: <20190430113609.741196396@linuxfoundation.org>
+ <0cfe6d22-5919-f1f3-f7f0-eb6232b5db9c@nvidia.com>
 MIME-Version: 1.0
-X-MC-Unique: CW7NFOPjM2SPadXKTPuDJQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0cfe6d22-5919-f1f3-f7f0-eb6232b5db9c@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUmVzaGV0b3ZhLCBFbGVuYQ0KPiBTZW50OiAzMCBBcHJpbCAyMDE5IDE4OjUxDQouLi4N
-Cj4gK3Vuc2lnbmVkIGNoYXIgcmFuZG9tX2dldF9ieXRlKHZvaWQpDQo+ICt7DQo+ICsgICAgc3Ry
-dWN0IHJuZF9idWZmZXIgKmJ1ZmZlciA9ICZnZXRfY3B1X3ZhcihzdGFja19yYW5kX29mZnNldCk7
-DQo+ICsgICAgdW5zaWduZWQgY2hhciByZXM7DQo+ICsNCj4gKyAgICBpZiAoYnVmZmVyLT5ieXRl
-X2NvdW50ZXIgPj0gUkFORE9NX0JVRkZFUl9TSVpFKSB7DQo+ICsgICAgICAgIGdldF9yYW5kb21f
-Ynl0ZXMoJihidWZmZXItPmJ1ZmZlciksIHNpemVvZihidWZmZXItPmJ1ZmZlcikpOw0KPiArICAg
-ICAgICBidWZmZXItPmJ5dGVfY291bnRlciA9IDA7DQo+ICsgICAgfQ0KPiArDQo+ICsgICAgcmVz
-ID0gYnVmZmVyLT5idWZmZXJbYnVmZmVyLT5ieXRlX2NvdW50ZXJdOw0KPiArICAgIGJ1ZmZlci0+
-YnVmZmVyW2J1ZmZlci0+Ynl0ZV9jb3VudGVyXSA9IDA7DQoNCklmIGlzIHJlYWxseSB3b3J0aCBk
-aXJ0eWluZyBhIGNhY2hlIGxpbmUgdG8gemVybyBkYXRhIHdlJ3ZlIHVzZWQ/DQpUaGUgdW51c2Vk
-IGJ5dGVzIGZvbGxvd2luZyBhcmUgbXVjaCBtb3JlIGludGVyZXN0aW5nLg0KDQpBY3R1YWxseSBp
-ZiB5b3UgZ290ICdieXRlX2NvdW50ZXInIGludG8gYSBjb21wbGV0ZWx5IGRpZmZlcmVudA0KYXJl
-YSBvZiBtZW1vcnkgKGluIGRhdGEgdGhhdCBpcyBjaGFuZ2VkIG1vcmUgb2Z0ZW4gdG8gYXZvaWQN
-CmRpcnR5aW5nIGFuIGV4dHJhIGNhY2hlIGxpbmUpIHRoZW4gbm90IHplcm9pbmcgdGhlIHVzZWQg
-ZGF0YQ0Kd291bGQgbWFrZSBpdCBoYXJkZXIgdG8gZGV0ZXJtaW5lIHdoaWNoIGJ5dGUgd2lsbCBi
-ZSB1c2VkIG5leHQuDQoNCkknbSBhbHNvIGd1ZXNzaW5nIHRoYXQgZ2V0X2NwdV92YXIoKSBkaXNh
-YmxlcyBwcmUtZW1wdGlvbj8NClRoaXMgY29kZSBjb3VsZCBwcm9iYWJseSBydW4gJ2Zhc3QgYW5k
-IGxvb3NlJyBhbmQganVzdCBpZ25vcmUNCnRoZSBmYWN0IHRoYXQgcHJlLWVtcHRpb24gd291bGQg
-aGF2ZSBvZGQgZWZmZWN0cy4NCkFsbCBpdCB3b3VsZCBkbyBpcyBwZXJ0dXJiIHRoZSByYW5kb21u
-ZXNzIQ0KDQoJRGF2aWQNCg0KDQo+ICsgICAgYnVmZmVyLT5ieXRlX2NvdW50ZXIgKys7DQo+ICsg
-ICAgIHB1dF9jcHVfdmFyKHN0YWNrX3JhbmRfb2Zmc2V0KTsNCj4gKyAgICByZXR1cm4gcmVzOw0K
-PiArfQ0KPiArRVhQT1JUX1NZTUJPTChyYW5kb21fZ2V0X2J5dGUpOw0KDQotDQpSZWdpc3RlcmVk
-IEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5l
-cywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Wed, May 01, 2019 at 09:26:39AM +0100, Jon Hunter wrote:
+> 
+> On 30/04/2019 12:37, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.0.11 release.
+> > There are 89 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu 02 May 2019 11:35:03 AM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.11-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.0:
+>     12 builds:	12 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     32 tests:	32 pass, 0 fail
+> 
+> Linux version:	5.0.11-rc1-g852cce3
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
 
+Great!  Thanks for testing all of these and letting me know.
+
+greg k-h
