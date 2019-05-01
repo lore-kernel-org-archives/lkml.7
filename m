@@ -2,90 +2,91 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4FAC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955F3C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA7A20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:49:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SZaUrBqt"
+	by mail.kernel.org (Postfix) with ESMTP id 63BE420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556740223;
+	bh=fg8xVJgVFfWH/q1Q+G0+EcW7TGIIidIL/wMAMgyMy9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BDrbLvit+gvMgq6QGwATPX2tvHUMAVLkoe4SKBVi917DNlxNW/mKLZ1hrWy2P2i0a
+	 E4sWn94142EN6dJB+NHuzVu5dRx+LI3/hofgDPAqPP7noSp3e1i8MS+k7tnSRPDDjT
+	 39aBqKny9UkMk2sOZ5N+UHLu3qJtT306kUUBrVFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfEATtD (ORCPT
+        id S1726266AbfEATuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:49:03 -0400
-Received: from mout.gmx.net ([212.227.15.18]:57667 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbfEATtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:49:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1556740137;
-        bh=21zQ6hHqrFQ3g2iUdFoiowCPHS6/TQd1VUg3wwhis9o=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=SZaUrBqtcwq1X7pXBzbBrTtBS+Jr9vgtIzZi7foz9VwTlN6p9xEvnOkNUakE6pga2
-         gvL/8RHzmTz0K+pqPxi+DArA5pcgrfjoQeE8TVyxwp7kXEGIoSjt8pv5pT0eCayv7K
-         gEdZZW1fOC5PWaQRy1WiOWwY2W+IbEykUOolMwRo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([37.4.249.111]) by mail.gmx.com
- (mrgmx001 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 0MAxyW-1hVn6z3AP6-009zm4; Wed, 01 May 2019 21:48:57 +0200
-From:   Stefan Wahren <wahrenst@gmx.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH] MAINTAINERS: Update Stefan Wahren email address
-Date:   Wed,  1 May 2019 21:47:35 +0200
-Message-Id: <1556740055-4962-1-git-send-email-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:f+rwKC3ASZA5zARUzjT+aTKfFX/7Q7fJ1bIFmoxL+HAxUDFYoR8
- 4H4+NgGEvqIJ/4u7ig7sA6sT5KK/jox8bEbj7z6wQ5F3eTUnmxJLGnFKI0HQrdIR7o9LNu6
- gQz5mL+4ON8Z5UyQuk84AUQJ0PMI4Un2uQoy3NYCFnqLKtV5ZziRb84WTbvsvV655CzTAdV
- zzbxJOjVu2Q/fhqBgy+BA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0w6+BajR9i8=:fTwrj/p6wwBuGwdA0a7fn+
- 7U5HXEnj4BKaQMGwJxDP65dFWTkEA6TMKvg2cN7PO251fO0wrbzxmRv+xf+fqKvY2J3NqyRmL
- wu3IDdHB4g0o2plLCZYfOA9a4fQOxBtpySZ78FuzrxlFc7bZumiUsrOesom/OvtL+i7d+xP95
- CcgUkpoHo0eE94jNZ9rqiJygMlP4VV+m57oDumsLtKQw4Kri67XQ7JLMD4xXFvBVz6ubmNJJY
- qwAuK7pBXrgEq3VlrRCSrX2wLRSrpuXdsjkNgciHpuZ5tqGVfYWGR7H79swIs+hdi3mMUEb9w
- o/whKNyf7dwy/bainOeIFUM+7vtGwEXrleZr/xPHt+p8z8KC1eYyU6aMmmGPj32V/6cPzFjw7
- 8khAXeKRRC37jJ8wS2wsI59EDZ6zftf9FOGYYdyMUKbzNFFMZgaRi+NTD3C47CwjfxwxeSzrs
- Z1bitLLQ0ulMIZagL7rhdi937FGcQrtmiVrFeR7rUSs8p3FUxmNEHdaPMRdjltkKQRzhx8tc7
- QnotSf8//75DB+Zfc5f2enqoG+CjngoV6MkgFzLXazIU5+/sDJfEDgdHgvMbQ6Uj2h08uuiTY
- VmcXP87OA5TNoj6bAT88oUkuusdUkqJ41km9v2O7OObJLnz/25Ih0bTOksC67/ezaMkWezA6P
- 62DpzbT8UbAAmPAzIcrxJS6LU7ThkDZSg31LR3qoPI0a/jprOTAaFzuDcdQ4ECCHPFXLsZBjt
- jFfonXyAaf+CgBBHQIaRc6NG3hgYPJa9sW7p1vrEAfnJP8V82Yf4VT27F1pphvXUuuV0BQVgX
- bjpeSe4t42laKfhNylpWIf0zWhFjPv0bDDobIMaJ+e4MXZVlqQHY2CC9RMjbfcpbY3F1nfkpQ
- kj4FWeFT0CAd3Kx2yndB3Ph1wCjjcdeFMsglO5oylyYFMxvsJs9OiAMS5g+lpi
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 May 2019 15:50:22 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35760 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfEATuV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 15:50:21 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g24so54692otq.2;
+        Wed, 01 May 2019 12:50:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4aS2uE1D91mkrl/gYeWQtzT+PKkraqjyORTXhMdPTWc=;
+        b=CLsCrl92AN4eW8Drf5Lp07Aqira5qR87/PwV8rJqrq4Mv+X+4/2yAXjnWrlxhSZOXu
+         3pbpbQyQpNSYLpbaoJDHTCUcwv1WH3drYUEH+UnNCxSFx4ZPbJxVQ2WaRB24k8yAwz93
+         xHKRmMTivetJuU1wYMy1gZblOH6q7DjeLBdUmIxnVohfLhWUmbtUyE/65TKnj4bI0tV8
+         n0unMCLHZx3UiDMiJ2BXqm/EVCP+ICtknU+mdN9ARxThuhIRLOsKdJRjDMW8N4v0AUpn
+         FlPux9OMpqqj6Oj8GwjAIUaRLnA5bo23GAMGKMNJPMqz8ZxOvRRQtjxgGY8zZy0OPTa1
+         ENcQ==
+X-Gm-Message-State: APjAAAXBYxx7BOaNCg0ElxTg+ERo4fAFBhxoKfdkwHZNc9PY5m/Xav/E
+        6XYzGlfy5Qw3LIDzZGyApg==
+X-Google-Smtp-Source: APXvYqwGNT8oOeMnhcZ+vSGs9Gi6hU6lT2YIKllylFBKjcxVlXfqb2L6uc1z343lFHswKPCjvxaXXA==
+X-Received: by 2002:a9d:6344:: with SMTP id y4mr20118098otk.11.1556740221087;
+        Wed, 01 May 2019 12:50:21 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m124sm16994766oia.3.2019.05.01.12.50.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 12:50:20 -0700 (PDT)
+Date:   Wed, 1 May 2019 14:50:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com,
+        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: sound: sun4i-spdif: Add Allwinner H6
+ compatible
+Message-ID: <20190501195019.GA13211@bogus>
+References: <20190419191730.9437-1-peron.clem@gmail.com>
+ <20190419191730.9437-2-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190419191730.9437-2-peron.clem@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I2SE has been acquired, so i decided to use my private address now.
+On Fri, 19 Apr 2019 21:17:26 +0200, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
+> Allwinner H6 has a SPDIF controller with an increase of the fifo
+> size and a sligher difference in memory mapping compare which
+> make it not compatible with the previous generation H3/A64.
+> 
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2c7d4e1..75a7876 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3068,7 +3068,7 @@ F:	arch/arm/mach-bcm/
-
- BROADCOM BCM2835 ARM ARCHITECTURE
- M:	Eric Anholt <eric@anholt.net>
--M:	Stefan Wahren <stefan.wahren@i2se.com>
-+M:	Stefan Wahren <wahrenst@gmx.net>
- L:	linux-rpi-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://github.com/anholt/linux
-=2D-
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
