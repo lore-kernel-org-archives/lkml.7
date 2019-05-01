@@ -2,173 +2,111 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B5AC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FECC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA60921734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BFE20651
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iaj1R25I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwL3Ptqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfEAGdF (ORCPT
+        id S1726090AbfEAGmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 02:33:05 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45172 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfEAGdF (ORCPT
+        Wed, 1 May 2019 02:42:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42971 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfEAGmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 02:33:05 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w12so3085125ljh.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 23:33:04 -0700 (PDT)
+        Wed, 1 May 2019 02:42:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w25so8218388pfi.9;
+        Tue, 30 Apr 2019 23:42:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wGXhZyqFBvdoHfbjGYl1bpeRe9mYvugSCMYlXRy7D5Q=;
-        b=iaj1R25IbggIQNeMdCAlOB/g8xSDDwMPK7d1wjbSKntu2Tr4RtJ2Z5ygdr2ZsGBOXZ
-         XQlMPqcDS+kwhWTMvK8RIY42cdPTpbAuh7Qbp2UZsnyLtF10Pv8n5Qxb4mC17K8vG2mz
-         v3rRnNcTdfsUBjw43JSdypzB/532axOQgVpuWXvvuuT3uYzuoI4vHEr+3bgqKg2zyPS/
-         hWgs50DsXTjRUzLmcWTmdosIhdrekB9ZvTEILVB644m9xecjm/PPckHCaytfgu6b1Wgf
-         1GMjmu1BoJKDASQ+rdX7d9JlgTN6OgLmX4amvq5uo5RVycOQhXC6Wzbc0oBTLAhtxVXI
-         Z6mQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=JsEmKkv5N9dvLUrbidM9wSUlAe5nAnboBrCBffm62Oo=;
+        b=cwL3PtqtIkyYXoJT8odJ4izToz0VBot3Jm0mH9awQEBSbg1neNxRnFwh69nPWQIIU9
+         OdnBFc6HA9635L6JCd7SgGIXGR6FKmL/7sO4BqDh0P/UaoaF+FFA3dRSUBIlS4iOno3Y
+         6+Se5F8lLsaEheXKR0qTOXC727tJuyvgt5NUz1UZEL31cbZItaTzFHuUw0UMY6kI1Xi4
+         JfsTy9tGNmOKxBAHKrPYZn/aphnf4y0tR8uQIB0cqqCF/R16SWDz7PbPXNvPGRiMIffA
+         Cmis7AMgaST3fUN0AzleS+JKzMpseqENAuj9usG0m93dD6ufvhU0A+k4wAOXpejBdiBV
+         yEMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wGXhZyqFBvdoHfbjGYl1bpeRe9mYvugSCMYlXRy7D5Q=;
-        b=UkAJVuyjy4m55u/BCJriBmuSCtnV7UOH6XFQq63X2KhLU5hlnveN33k4dqGx6SNMR2
-         tAYv6MELzm7C5XDZQiUMYJ/hxhHJ1iGgdbAHOhM/8x0TdKOBMNPeqtQ1nwAyC9b53GUO
-         71NekBYymUyjI2zAGCB36KsUGJRmdO6OiiT7fqJ6Yej5rMJg3VgoGQd5bwu0raFmghzH
-         zdr6kXDbKLO7l9QReenXNfUcNZ8gbz3gda2x1mxDmAewrG9gPLfhpQ818OdWq0Nqj+Ge
-         OxqEUH0baLP4oWtL1IecRGpwDKCPQRMGA2loDtmPczt2AfqnPnq3KFtSbg1SGTZ1ZE+H
-         S5KA==
-X-Gm-Message-State: APjAAAV4hRw0brNKxN3vpYvo2qcAswv1h6TnlXs8D9tQHulaN0Cb+J8d
-        neLcAym9hBpd83rOxit0xf6v6qdKtc48WN2bZKKdvg==
-X-Google-Smtp-Source: APXvYqy2o3GZ+Gj9fH7vvPJTbhjpP7nFr9Hb9moMaaeVPHcRKJ+et23eQC8UT+16SIKk4auJ1pOl68zqo+UsRVN6AMA=
-X-Received: by 2002:a2e:309:: with SMTP id 9mr40273052ljd.114.1556692383315;
- Tue, 30 Apr 2019 23:33:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=JsEmKkv5N9dvLUrbidM9wSUlAe5nAnboBrCBffm62Oo=;
+        b=dKnOGb1xJAu3P5biostlnsTSgDRaxDzWezSF4NfGq8hspuTPAYOYT9smCTAX/CwdaI
+         MgpOpR8roNjVo5Uka/x7kj5g5N6z87Xd1sgzSUE6dwD7PzSVFhpRnpMc1+yOf9131zSx
+         2/jFyJS59X18PTwGKGzImPxSUP3Dje3izrUviOnkV9esNneIOVWKMrT+sG+DWiNw9LKH
+         3Zv21/Pw5wBgUc4F+db0FTfbhwceU/IGq2sH7gf8JCMkXhhVd0mVUSQ280CcAlId7PPE
+         cihwcx9FVd1tWG2DKcWbC3WpRuNNBBNj6/i3alUc/4N/oGZiRGSqEkUnKujwrh+ktk/4
+         u17A==
+X-Gm-Message-State: APjAAAVnYogATEUKHfLnfTXYFtv/nY/W/vyGmUuudBNI+151asdsOKB1
+        n4FrzmcjzGH1h85NtTHsgz7x3CiuTROZmw==
+X-Google-Smtp-Source: APXvYqzzg8hCBN/xO+owS00ws0DIIRdvdI1vRuQPYNc5wNzisAaB1v4Ael0P4vq8O2PlbTqQSZrnTw==
+X-Received: by 2002:aa7:8384:: with SMTP id u4mr22819697pfm.214.1556692941512;
+        Tue, 30 Apr 2019 23:42:21 -0700 (PDT)
+Received: from nishad ([106.51.235.3])
+        by smtp.gmail.com with ESMTPSA id b144sm15434921pfb.68.2019.04.30.23.42.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 23:42:20 -0700 (PDT)
+Date:   Wed, 1 May 2019 12:12:13 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-nvdimm@lists.01.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] acpi/nfit: Use the correct style for SPDX License Identifier
+Message-ID: <20190501064209.GA4716@nishad>
 MIME-Version: 1.0
-References: <20190430113549.400132183@linuxfoundation.org>
-In-Reply-To: <20190430113549.400132183@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 1 May 2019 12:02:52 +0530
-Message-ID: <CA+G9fYt=uAFaBUEYM80_2n7QE34zytY4zdZ4gR9ErOiV0ktXfw@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/53] 4.14.115-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 at 17:12, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.115 release.
-> There are 53 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu 02 May 2019 11:34:49 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.115-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+This patch corrects the SPDX License Identifier style
+in drivers/acpi/nfit/intel.h. For C header files
+Documentation/process/license-rules.rst mandates C-like comments
+(opposed to C source files where C++ style should be used)
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46
 
-Summary
-------------------------------------------------------------------------
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/acpi/nfit/intel.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-kernel: 4.14.115-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: db44a158d937ed88d91fa55f1df54c11490a5b57
-git describe: v4.14.114-54-gdb44a158d937
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.114-54-gdb44a158d937
+diff --git a/drivers/acpi/nfit/intel.h b/drivers/acpi/nfit/intel.h
+index 0aca682ab9d7..8f5461c1dd9d 100644
+--- a/drivers/acpi/nfit/intel.h
++++ b/drivers/acpi/nfit/intel.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright(c) 2018 Intel Corporation. All rights reserved.
+  * Intel specific definitions for NVDIMM Firmware Interface Table - NFIT
+-- 
+2.17.1
 
-No regressions (compared to build v4.14.114)
-
-No fixes (compared to build v4.14.114)
-
-Ran 23587 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
