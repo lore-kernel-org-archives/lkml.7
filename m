@@ -2,151 +2,182 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FABC04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60791C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0AC20645
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249EC20645
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="jNSlPJSY"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="H4LAJTY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfEARLz (ORCPT
+        id S1726206AbfEARMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:11:55 -0400
-Received: from mail-eopbgr770113.outbound.protection.outlook.com ([40.107.77.113]:61102
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726005AbfEARLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:11:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kojW7S+AlG1rx3CFD8ID9aPv2p0VvWWrcMoljH3m8Ik=;
- b=jNSlPJSYueMMqpo7dHLXaFUPCgdqrFHuXreClNhB3Z7G0ihqQFLpFXTIK/FIhyR/JIW8Dl2HXe/RPbBqCN4B0TQzvznh+sl6srsoZKHzSN5JFRJ5Kj0s4SXaCM/sdKFY18eZ226zKG2BiBMtcofFgi1tlOQjlgZNYS2E1oO/1VI=
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3596.namprd06.prod.outlook.com (10.167.236.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Wed, 1 May 2019 17:11:50 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::2d6d:7e4b:d2ff:5e29]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::2d6d:7e4b:d2ff:5e29%3]) with mapi id 15.20.1856.008; Wed, 1 May 2019
- 17:11:44 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "patrice.chotard@st.com" <patrice.chotard@st.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] rtc: st-lpc: remove unnecessary check
-Thread-Topic: [PATCH] rtc: st-lpc: remove unnecessary check
-Thread-Index: AQHU/5H32hcx4X+jhEK8dI4HvkdrpqZVSbiAgAEKhICAAC6FgA==
-Date:   Wed, 1 May 2019 17:11:44 +0000
-Message-ID: <1556730703.31309.53.camel@impinj.com>
-References: <20190430201834.12634-1-alexandre.belloni@bootlin.com>
-         <1556663479.31309.36.camel@impinj.com> <20190501142513.GK11339@piout.net>
-In-Reply-To: <20190501142513.GK11339@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tpiepho@impinj.com; 
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5f998f5b-d709-4b3a-6e6f-08d6ce58165b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0601MB3596;
-x-ms-traffictypediagnostic: MWHPR0601MB3596:
-x-microsoft-antispam-prvs: <MWHPR0601MB359624CB2F7E7F44721D9C8ED33B0@MWHPR0601MB3596.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00246AB517
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(39850400004)(136003)(366004)(376002)(189003)(199004)(91956017)(68736007)(186003)(71190400001)(6246003)(478600001)(71200400001)(446003)(26005)(2501003)(86362001)(53936002)(229853002)(11346002)(6512007)(2616005)(476003)(76116006)(73956011)(66476007)(25786009)(8936002)(2906002)(486006)(54906003)(5640700003)(81156014)(66556008)(6916009)(36756003)(305945005)(6116002)(5660300002)(64756008)(66446008)(3846002)(99286004)(2351001)(66066001)(103116003)(6506007)(14454004)(14444005)(81166006)(102836004)(6486002)(8676002)(66946007)(256004)(7736002)(6436002)(316002)(4326008)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3596;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: impinj.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CdNHVVc3M3BSSAHRBa9grt07cs2ZjPhftO1uO/+0uYkQPei6up/y+ihObIZGm0EqdY588gXnLBtSe4GydW8sim1scm58cRInN4FnSEZ8KKIoFMUrhsoOjp6hdK/xJUpv8p7arWHc0DY/BttQiC4AVyqT9RT/NtiGii4sNUNoSXiKf9/WlGSYqFXBpS78MiQvOdubKRksVnuIbxb+TlPghL1ai47nPH0IoHiEtgCepWbNPqTtJigZgn+h1hndMaTa+h2WBbfaKumCzPsLflsDkjxg+2p+YNavAGzC0BQVbnwGn7XEEfBr0tZ9TXNamnnTC4qauUn36hhwjMwK5DuUF5Stic3UaJ8rqn9g4B1MDAUNIXX7lKTi5kRzM0oFY0gUN7QG1qkYKhgTYB7ZdWwBgVjAXIwMCUBv9VzPOy/a3EA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <49FCA81B3B0C5042BD02E5EC95515723@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 1 May 2019 13:12:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44408 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfEARMF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:12:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c5so25269613wrs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:12:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1MdDGHJ3v97Gewzs4mi2SgVk5SjqgGKkN3GGzAhTMHk=;
+        b=H4LAJTY1Xw2haEQfz90FjZBT6ELgPfL9OYWEXT/aRGZ06VxQzckTDK4HK4tNM+UuAt
+         obiUo20BRZEtrd3rY8FxHC8ZzXNhardxP7bgwgVn7u5VPFap9ogbgXNHe034cDz1iHi2
+         7Hf96XEYRcg9XbiGhmnx4HevojSwQpL3KIKSuJAQYA04GsmXSNMT0jv5drMAUKdCi3uJ
+         0C+zfT+f/Xr6nVup8E7LFqbF1XnL9/w0L3l7AdpyLvqx2HorEZDYBy6TSNwa43A9LBOB
+         XTLuB7OZpOZuTb5KZ1QP7PARf8F/FhERT2NKDMOPnJjZuH0VyYsnBiaDbfZZpfd3MzSJ
+         LGEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1MdDGHJ3v97Gewzs4mi2SgVk5SjqgGKkN3GGzAhTMHk=;
+        b=HjnXoC88tGuyjvKtAwy5wipvKKiSVP4YSmQj2Wz1OijKHCAoPvDf+5W+4uUkZPS8Fk
+         QeTvkQXEi2jDZnksYuIhSUiErlOg9lXMZ36nFxQdTg65/c8FeiQRis8pmB5ksyx0CsoA
+         mbDsWAIha938ZKL9bxhfFoNvRAo3i/6WybgJVcvHNdxeSmkuou8aPrkf8ZqPEcFPl1Ry
+         GbOQhAyvD+FPCmuVyJF7IX2Gtxlz01iSD0bc0BnkzKKzzRwDblMQtzpuzUz9j3pzgNIK
+         lrAlBviI4EirZKkPiFW/gQD/ODVC4LdlWQv+DS0vwZV+jW567aKsU5xaec4mTrDhn/Y8
+         FP9w==
+X-Gm-Message-State: APjAAAWgoJW53NyfxG3UQY/fsROTQd0VaYshXZUclktq1lXTUAzFzsr+
+        hWhSebUKrHqZ0qLw3YkFSN8Bkeofl4sfYA2943uYrg==
+X-Google-Smtp-Source: APXvYqz7GWnHLq9+RE6M3Yb6xG2DPvzlRUPlkD/3MWd/z79DglFDFnxHpuM0kxtcdoGfNWGVRZBY33sQnd5M8zYqUB0=
+X-Received: by 2002:adf:e3c7:: with SMTP id k7mr2418315wrm.128.1556730722955;
+ Wed, 01 May 2019 10:12:02 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f998f5b-d709-4b3a-6e6f-08d6ce58165b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 17:11:44.6117
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3596
+References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
+ <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com> <20190501170053.GG11740@lakrids.cambridge.arm.com>
+In-Reply-To: <20190501170053.GG11740@lakrids.cambridge.arm.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 1 May 2019 22:41:52 +0530
+Message-ID: <CAAhSdy2OuCb6wBrs-O=fTWo0D_CgwTztfV-kMDi=tPmSJhM7og@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zong@andestech.com" <zong@andestech.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTAxIGF0IDE2OjI1ICswMjAwLCBBbGV4YW5kcmUgQmVsbG9uaSB3cm90
-ZToNCj4gT24gMzAvMDQvMjAxOSAyMjozMToxOSswMDAwLCBUcmVudCBQaWVwaG8gd3JvdGU6DQo+
-ID4gT24gVHVlLCAyMDE5LTA0LTMwIGF0IDIyOjE4ICswMjAwLCBBbGV4YW5kcmUgQmVsbG9uaSB3
-cm90ZToNCj4gPiA+IFRoZSBSVEMgY29yZSBhbHJlYWR5IGVuc3VyZXMgdGhlIGFsYXJtIGlzIHNl
-dCB0byBhIHRpbWUgaW4gdGhlIGZ1dHVyZSwgaXQNCj4gPiA+IGlzIG5vdCBuZWNlc3NhcnkgdG8g
-Y2hlY2sgYWdhaW4gaW4gdGhlIGRyaXZlci4NCj4gPiANCj4gPiBNeSByZWFkaW5nIG9mIHRoZSBy
-dGMgY29yZSBjb2RlIGlzIHRoYXQgaXQgY2hlY2tzIGlmIHRoZSBhbGFybSBpcyBpbg0KPiA+IHRo
-ZSBmdXR1cmUgKnR3aWNlKiBiZWZvcmUgaGFuZGluZyBvZmYgdGhlIHNldCBjYWxsIHRvIHRoZSBk
-cml2ZXIsIHdoaWNoDQo+ID4gcG9zc2libHkgY2hlY2tzIGEgM3JkIHRpbWUgKGFzIHNlZW4gaGVy
-ZSkuDQo+ID4gDQo+ID4gSG93ZXZlciwgYWxsIHRoZXNlIGNoZWNrcyBhcmUgZG9uZSAqYmVmb3Jl
-KiBzZXR0aW5nIHRoZSBhbGFybS4gIEl0DQo+ID4gc3RpbGwgcG9zc2libGUgdG8gaGF2ZSBhIHJh
-Y2UgYW5kIHNldCB0aGUgYWxhcm0gYWZ0ZXIgdGhlIHRpbWUgaGFzDQo+ID4gYWxyZWFkeSBwYXNz
-ZWQsIGluIHdoaWNoIGNhc2UgdGhlIGFsYXJtIHdpbGwgbmV2ZXIgZmlyZS4NCj4gPiANCj4gDQo+
-IEkgYWdyZWUgdGhlIGNvcmUgbmVlZCB0byBoYW5kbGUgdGhhdCBwb3NzaWJsZSByYWNlIGJldHRl
-ciBhbmQgdGhpcyBpcw0KPiBzb21ldGhpbmcgSSdtIHBsYW5uaW5nIHRvIHdvcmsgb24uDQo+IA0K
-PiA+IFRoZSB3YXkgdG8gZml4IHRoZSByYWNlIHdvdWxkIGJlIHRvIGhhdmUgdGhlIGRyaXZlciBj
-aGVjayB0aGUgYWxhcm0NCj4gPiAqYWZ0ZXIqIHNldHRpbmcgaXQuICBJbiBwcmVjaXNlbHkgdGhp
-cyBvcmRlciwgZG8gdGhlc2Ugc3RlcHM6DQo+ID4gDQo+ID4gMS4gU2V0IGFsYXJtIGluIFJUQywg
-dG8gVGFsYXJtDQo+ID4gMi4gR2V0IHRpbWUgZnJvbSBSVEMsIGFzIFRjdXJyZW50DQo+ID4gMy4g
-R2V0IGFsYXJtIHN0YXR1cyBmcm9tIFJUQw0KPiA+IA0KPiA+IElmIFRhbGFybSA8IFRjdXJyZW50
-LCBhbGFybSB3YXMgc2V0IHRvIGZ1dHVyZSB0aW1lLCBubyBlcnJvcg0KPiANCj4gVGhpcyBzaG91
-bGQgYmUgVGFsYXJtID4gVGN1cnJlbnQsIHJpZ2h0Pw0KDQpZZXMuICBJIHdyb3RlIHRoYXQgYmFj
-a3dhcmQuDQoNCj4gPiBFbHNlDQo+ID4gICBJZiBzdGF0dXMgPT0gZmlyZWQsIGFsYXJtIHdhcyBz
-ZXQgYW5kIGhhcyBzaW5jZSBmaXJlZCwgbm8gZXJyb3INCj4gPiAgIEVsc2Ugc3RhdHVzID09IG5v
-dCBmaXJlZCwgYWxhcm0gd2FzIHNldCBpbiBwYXN0LCBFSU5WQUwNCj4gPiANCj4gPiBUaGlzIHNo
-b3VsZCBiZSByYWNlIGZyZWUuDQo+ID4gDQo+ID4gDQo+ID4gPiAgDQo+ID4gPiAtCS8qIEludmFs
-aWQgYWxhcm0gdGltZSAqLw0KPiA+ID4gLQlpZiAobm93X3NlY3MgPiBhbGFybV9zZWNzKQ0KPiA+
-ID4gLQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gPiAtDQo+ID4gPiAgCW1lbWNweSgmcnRjLT5hbGFy
-bSwgdCwgc2l6ZW9mKHN0cnVjdCBydGNfd2thbHJtKSk7DQo+ID4gPiAgDQo+ID4gPiAgCS8qIE5v
-dyBtYW55IHNlY3MgdG8gZmlyZSAqLw0KPiA+IA0KPiA+ICAgICAgICAgYWxhcm1fc2VjcyAtPSBu
-b3dfc2VjczsNCj4gPiAgICAgICAgIGxwYSA9ICh1bnNpZ25lZCBsb25nIGxvbmcpYWxhcm1fc2Vj
-cyAqIHJ0Yy0+Y2xrcmF0ZTsNCj4gPiANCj4gPiBXaGlsZSBpdCdzIHRydWUgdGhlIHRpbWUgd291
-bGRuJ3Qgbm9ybWFsbHkgYmUgaW4gcGFzdCwgaXQgc3RpbGwgcmFjZXMsDQo+ID4gYXMgZGVzY3Jp
-YmUgYWJvdmUuIEluIHRoYXQgY2FzZSwgdGhlIG1hdGggaGVyZSB1bmRlcmZsb3dzIGFsYXJtX3Nl
-Y3MsDQo+ID4gc28gaXQgcHJvYmFibHkgc3RpbGwgbWFrZXMgc2Vuc2UgdG8gY2hlY2suDQo+IA0K
-PiBJIGNhbid0IGJlbGlldmUgeW91IGNhbiBwb3NzaWJseSBoYXZlIG1vcmUgdGhhbiBvbmUgc2Vj
-b25kIGJldHdlZW4gdGhlDQo+IGNoZWNrIGluIHRoZSBjb3JlIGFuZCB0aGUgY2hlY2sgaW4gdGhl
-IGRyaXZlciwgaXQgZG9lc24ndCBtYWtlIG11Y2gNCj4gc2Vuc2UgdG8gY2hlY2ssIGV2ZW4gaW4g
-dGhlIGN1cnJlbnQgc3RhdGUgb2YgdGhlIGNvcmUuDQoNCkl0J3MgY2VydGFpbmx5IHBvc3NpYmxl
-IHRvIGhhdmUgbXVsdGlwbGUgc2Vjb25kcyBwYXNzLiAgRm9yIGFuIGV4dGVybmFsDQpkZXZpY2Ug
-b3ZlciBTUEkgb3IgSTJDLCBvbmUgaGFzIHRvIHdhaXQgZm9yIHRoZSBidXMgdG8gYmVjb21lIGZy
-ZWUuIA0KQW5kIG9uIFNQSSB0aGF0IHJlcXVpcmVzIHRoZSBrZXJuZWwgdGhyZWFkIHJ1bm5pbmcg
-dGhlIGJ1cyB0byBiZSANCnNjaGVkdWxlZC4gIEp1c3QgcHV0IGluIHNvbWUgcmVhbC10aW1lIHRh
-c2tzIGFuZCBtYXliZSBhIGJpZyB0cmFuc2Zlcg0KdG8gYSBmbGFzaCBjaGlwIGFuZCBpdCBjb3Vs
-ZCBiZSBhIHdoaWxlIGJlZm9yZSB0aGF0IGhhcHBlbnMuDQoNCkkgZG9uJ3QgdGhpbmsgdGhpcyBk
-ZXZpY2UgaGFzIHRoYXQgaXNzdWUgYXMgSSBkb24ndCB0aGluayBpdCdzDQpleHRlcm5hbC4gIEFu
-ZCBldmVyIGZvciBhIGRldmljZSBvbiBhbiBleHRlcm5hbCBidXMsIGRlbGF5cyA+IDEgc2Vjb25k
-DQphcmUgdW5saWtlbHkuICBQb3NzaWJsZSwgYnV0IHVubGlrZWx5Lg0KDQpZb3UgY2FuIGFsc28g
-Z2V0IHRoZW0gd2hlbiBMaW51eCBpcyBydW5uaW5nIHVuZGVyIGEgaHlwZXJ2aXNvciwgaS5lLiBh
-DQpMaW51eCBWTS4gIEJ1dCBhbHNvIHNvbWV0aGluZyBsaWtlIGFuIE5NSSBhbmQgQUNQSSBCSU9T
-LiAgSWYgdGhlIExpbnV4DQpndWVzdCBpcyBub3Qgc2NoZWR1bGVkIHRvIHJ1biBmb3Igd2hpbGUg
-YW55dGhpbmcgdGhhdCBpcyBzdXBwb3NlZCB0byBiZQ0KYmFzZWQgb24gcmVhbCB0aW1lLCBsaWtl
-IHRoZSB2YWx1ZSByZXR1cm5lZCBieSBhbiBSVEMsIHdpbGwgc3RpbGwNCmFkdmFuY2UuICBJdCBp
-cyBwb3NzaWJsZSB0aGF0IG11bHRpcGxlIHNlY29uZHMgZWxhcHNlIGZyb20gdGhlIGd1ZXN0DQpD
-UFUgZXhlY3V0aW5nIG9uZSBpbnN0cnVjdGlvbiB0byB0aGUgbmV4dC4NCg0KQnV0IGV2ZW4gaWdu
-b3JpbmcgdGhhdCwgZG9lcyBpdCByZXF1aXJlID4gMSBzZWNvbmQgdG8gZWxhcHNlLiAgQ2FuJ3Qg
-aXQNCmhhcHBlbiB3aGVuIHRoZSBjbG9jayB0aWNrcyBmcm9tIG9uZSBzZWNvbmQgdG8gdGhlIG5l
-eHQsIHdoaWNoIGhhcHBlbnMNCmVmZmVjdGl2ZWx5IGluc3RhbnRseT8NCg0KSWYgdGhlIHRpbWUg
-ZnJvbSB0aGUgY2hlY2sgdG8gdGhlIHRpbWUgd2hlbiB0aGUgYWxhcm0gaXMgc2V0IGlzIDENCm1p
-Y3Jvc2Vjb25kLCBhbmQgdGhlIHRpbWUgdGhpcyBjYWxsIHRvIHNldCB0aGUgYWxhcm0gaXMgbWFk
-ZSBpcw0KcmFuZG9tbHkgZG9uZSBhbmQgbm90IHN5bmNocm9uaXplZCB0byB0aGUgUlRDLCB0aGVu
-IGlzbid0IHRoZXJlIGEgMSBvdXQNCm9mIDEgbWlsbGlvbiBjaGFuY2UgKDEgbWljcm9zZWNvbmQg
-LyAxIHNlY29uZCksIHRoYXQgdGhlIG9uY2UgcGVyDQpzZWNvbmQgY2xvY2sgdGljayB3aWxsIGhp
-dCBvdXIgMSB1cyB3aW5kb3c/
+On Wed, May 1, 2019 at 10:30 PM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
+> > On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
+> > > On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
+> > > > Currently, last stage boot loaders such as U-Boot can accept only
+> > > > uImage which is an unnecessary additional step in automating boot flows.
+> > > >
+> > > > Add a simple image header that boot loaders can parse and directly
+> > > > load kernel flat Image. The existing booting methods will continue to
+> > > > work as it is.
+> > > >
+> > > > Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+> > > >
+> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > ---
+> > > >   arch/riscv/include/asm/image.h | 32 ++++++++++++++++++++++++++++++++
+> > > >   arch/riscv/kernel/head.S       | 28 ++++++++++++++++++++++++++++
+> > > >   2 files changed, 60 insertions(+)
+> > > >   create mode 100644 arch/riscv/include/asm/image.h
+> > > >
+> > > > diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+> > > > new file mode 100644
+> > > > index 000000000000..76a7e0d4068a
+> > > > --- /dev/null
+> > > > +++ b/arch/riscv/include/asm/image.h
+> > > > @@ -0,0 +1,32 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +
+> > > > +#ifndef __ASM_IMAGE_H
+> > > > +#define __ASM_IMAGE_H
+> > > > +
+> > > > +#define RISCV_IMAGE_MAGIC        "RISCV"
+> > > > +
+> > > > +#ifndef __ASSEMBLY__
+> > > > +/*
+> > > > + * struct riscv_image_header - riscv kernel image header
+> > > > + *
+> > > > + * @code0:               Executable code
+> > > > + * @code1:               Executable code
+> > > > + * @text_offset: Image load offset
+> > > > + * @image_size:          Effective Image size
+> > > > + * @reserved:            reserved
+> > > > + * @magic:               Magic number
+> > > > + * @reserved:            reserved
+> > > > + */
+> > > > +
+> > > > +struct riscv_image_header {
+> > > > + u32 code0;
+> > > > + u32 code1;
+> > > > + u64 text_offset;
+> > > > + u64 image_size;
+> > > > + u64 res1;
+> > > > + u64 magic;
+> > > > + u32 res2;
+> > > > + u32 res3;
+> > > > +};
+> > >
+> > > I don't want to invent our own file format.  Is there a reason we can't just
+> > > use something standard?  Off the top of my head I can think of ELF files and
+> > > multiboot.
+> >
+> > Additional header is required to accommodate PE header format. Currently,
+> > this is only used for booti command but it will be reused for EFI headers as
+> > well. Linux kernel Image can pretend as an EFI application if PE/COFF header
+> > is present. This removes the need of an explicit EFI boot loader and EFI
+> > firmware can directly load Linux (obviously after EFI stub implementation
+> > for RISC-V).
+>
+> Adding the EFI stub on arm64 required very careful consideration of our
+> Image header and the EFI spec, along with the PE/COFF spec.
+>
+> For example, to be a compliant PE/COFF header, the first two bytes of
+> your kernel image need to be "MZ" in ASCII. On arm64 we happened to find
+> a valid instruction that we could rely upon that met this requirement...
+
+The "MZ" ASCII (i.e. 0x5a4d) is "li s4,-13" instruction in RISC-V so this
+modifies "s4" register which is pretty harmless from Linux RISC-V booting
+perspective.
+
+Of course, we should only add "MZ" ASCII in Linux RISC-V image header
+when CONFIG_EFI is enabled (just like Linux ARM64).
+
+>
+> > > >   __INIT
+> > > >   ENTRY(_start)
+> > > > + /*
+> > > > +  * Image header expected by Linux boot-loaders. The image header data
+> > > > +  * structure is described in asm/image.h.
+> > > > +  * Do not modify it without modifying the structure and all bootloaders
+> > > > +  * that expects this header format!!
+> > > > +  */
+> > > > + /* jump to start kernel */
+> > > > + j _start_kernel
+>
+> ... but it's not clear to me if this instruction meets that requriement.
+>
+> I would strongly encourage you to consider what you actually need for a
+> compliant EFI header before you set the rest of this ABI in stone.
+>
+> On arm64 we also had issues with endianness, and I would strongly
+> recommend that you define how big/little endian will work ahead of time.
+> e.g. whether fields are always in a fixed endianness.
+
+As of now RISC-V is little-endian but if big-endian show-up in-future
+then we should consider endianness issue.
+
+Regards,
+Anup
