@@ -5,103 +5,99 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20037C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6617CC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3742085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2A320866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfEAS7c (ORCPT
+        id S1726224AbfEATAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 14:59:32 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40010 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfEAS7c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 14:59:32 -0400
-Received: by mail-oi1-f195.google.com with SMTP id y64so8991555oia.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 11:59:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z+2ax8ZyIZztFylyBB7zkL9d45BwY6plRBtZFuq3Y0w=;
-        b=oyJ09WdWiVE0ksKnaDfs0Z4mLFfDvEXJw6m608TVk1sKMmop0OjokhympI+55/xnLo
-         lAXc9+Xx71OTCA30IlLTbymxlotbE2lUGrGx0Gui/mDqchB5iT7KyWbhL7c5npaalhgG
-         HFhTaP3ouDosEdzpld7AiDIxcLQSJwhjoSe9uACpeJrElf7MgWiIl6rKPqw7TQdXkxbz
-         HyWBiBv7TfKB1WP+b/4m4/89hajS/fm9mr+IdvbuZvMT7RUpUdT43a/KOuGpKWlQK7Ir
-         cGpJX8JH3WWF5n6tYd5TsaHUwtuDan/dAo6bC1VfE/rtqJOQuZpDl+h8iAsesKCz188v
-         FTfw==
-X-Gm-Message-State: APjAAAXDZIKGBq/M+grnoeYc5XseQCPBfRLN6sUeK7lteVAoTUssOI70
-        eevV02ccgir0kFzL1wPMj7Apymesikw=
-X-Google-Smtp-Source: APXvYqxuF4ZrOgKgDN0G9B9VnqV2zgqYYxKIGoLFBWyyXfd2L57ctRqtiDPclK1WMovCbQvG0Z7shg==
-X-Received: by 2002:aca:4c51:: with SMTP id z78mr5464667oia.106.1556737171215;
-        Wed, 01 May 2019 11:59:31 -0700 (PDT)
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
-        by smtp.gmail.com with ESMTPSA id p1sm16039834otl.75.2019.05.01.11.59.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 11:59:30 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id t184so12006422oie.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 11:59:30 -0700 (PDT)
-X-Received: by 2002:aca:d984:: with SMTP id q126mr7776664oig.108.1556737169867;
- Wed, 01 May 2019 11:59:29 -0700 (PDT)
+        Wed, 1 May 2019 15:00:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbfEATA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 15:00:29 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C985E20675;
+        Wed,  1 May 2019 19:00:26 +0000 (UTC)
+Date:   Wed, 1 May 2019 15:00:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [RFC][PATCH v3] ftrace/x86_64: Emulate call function while
+ updating in breakpoint handler
+Message-ID: <20190501150025.40169f1d@gandalf.local.home>
+In-Reply-To: <20190501185726.GR7905@worktop.programming.kicks-ass.net>
+References: <20190501113238.0ab3f9dd@gandalf.local.home>
+        <CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com>
+        <20190501185726.GR7905@worktop.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1554475256-4805-1-git-send-email-roy.pledge@nxp.com>
-In-Reply-To: <1554475256-4805-1-git-send-email-roy.pledge@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 1 May 2019 13:59:18 -0500
-X-Gmail-Original-Message-ID: <CADRPPNSLGYDGnhVfJAYk66=bP2oZVtJiynwwgLiKiAKeSseR7w@mail.gmail.com>
-Message-ID: <CADRPPNSLGYDGnhVfJAYk66=bP2oZVtJiynwwgLiKiAKeSseR7w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] soc: fsl: dpio: Add support for memory backed
- QBMan portals
-To:     Roy Pledge <roy.pledge@nxp.com>
-Cc:     "stuyoder@gmail.com" <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 9:42 AM Roy Pledge <roy.pledge@nxp.com> wrote:
->
-> This patch series adds support for QBMan memory backed portals which is
-> avaialble in devices containing QBMan verion 5.0 and above (for example
-> NXP's LX2160A SoC).
->
-> Memory backed portals can be mapped as normal cacheable/shareable memory
-> which allows the portals to migrate between cores without needing manual
-> cache manipulations by the CPU.
->
-> The patches add support for the new portal attributes in the fsl-mc bus
-> drivers as well as modifying the QBMan driver to use the new portal read
-> trigger mechanism.
->
-> Changes since v1:
->  * Support older DPRC command in case of older MC firmware
->  * Fix issue with padding in command
->
->
-> Roy Pledge (2):
->   bus: mc-bus: Add support for mapping shareable portals
->   soc: fsl: dpio: Add support for memory backed QBMan portals
+On Wed, 1 May 2019 20:57:26 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Both applied for next.  Thanks.
+> On Wed, May 01, 2019 at 11:01:07AM -0700, Linus Torvalds wrote:
+> > This looks sane to me, although I'm surprised that we didn't already
+> > have an annotation for the nonstandard stack frame for asm files. That
+> > probably would be cleaner in a separate commit, but I guess it doesn't
+> > matter.
+> > 
+> > Anyway, I'm willing to consider the entry code version if it looks a
+> > _lot_ simpler than this (so I'd like to see them side-by-side), but
+> > it's not like this looks all that complicated to me either.  
+> 
+> So I posted one earlier today:
+> 
+>   https://lkml.kernel.org/r/20190501131117.GW2623@hirez.programming.kicks-ass.net
+> 
+> it's about a 1/3rd the number of lines and has 32bit support. It also
+> provides all the bits required to implement static_call().
 
->
->  drivers/bus/fsl-mc/dprc.c           |  30 +++++++-
->  drivers/bus/fsl-mc/fsl-mc-bus.c     |  15 +++-
->  drivers/bus/fsl-mc/fsl-mc-private.h |  17 ++++-
->  drivers/soc/fsl/dpio/dpio-driver.c  |  23 ++++--
->  drivers/soc/fsl/dpio/qbman-portal.c | 148 ++++++++++++++++++++++++++++++------
->  drivers/soc/fsl/dpio/qbman-portal.h |   5 ++
->  6 files changed, 199 insertions(+), 39 deletions(-)
->
-> --
-> 2.7.4
->
+That's the patch I started with.
+
+> 
+> That is; I think I'm firmly in favour of the entry variant -- provided
+> it actually works of course.
+
+And it works. I ran it through tools/testing/selftests/ftrace/ftracetest
+and it passed as good as without that patch.
+
+I haven't ran it through my full test suite. I can do that and see how
+it makes out.
+
+-- Steve
