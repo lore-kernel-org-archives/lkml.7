@@ -2,115 +2,84 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FD2C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D2C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBE320651
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07CF621743
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IaT2UBQz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FeYsxGTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfEAO3w (ORCPT
+        id S1726790AbfEAOaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 10:29:52 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9719 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfEAO3w (ORCPT
+        Wed, 1 May 2019 10:30:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42715 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfEAOaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 10:29:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cc9ad400000>; Wed, 01 May 2019 07:29:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 01 May 2019 07:29:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 01 May 2019 07:29:51 -0700
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 May
- 2019 14:29:50 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 1 May 2019 14:29:50 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.21.132.148]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cc9ad5d0003>; Wed, 01 May 2019 07:29:50 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] ASoC: max98090: Fix restore of DAPM Muxes
-Date:   Wed, 1 May 2019 15:29:38 +0100
-Message-ID: <1556720978-13233-1-git-send-email-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Wed, 1 May 2019 10:30:18 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f23so14876774otl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 07:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cifjmdVuek90Eb9d8NwHoWeg6/t7bpNo+ZBi6uHa05U=;
+        b=FeYsxGTo5CIOsG4xy2ONV0j0r43VcHxWOO3nSxXbuk4KY6WsizcIXGQMGrK/i8wRw9
+         5ZKphp7F09P+EA2c2nhUW3C//JDPS3E5Thsa+ul9MehqLJ4G+UsQNfWLJL9x1SRR5GXp
+         CNO/mcqSVnRLQakQG16Cav3fU8I4KIG8TSfEayFh0T7+eVSrpN4sSQrfW3s3IVcRYyV0
+         UfG6KorNZBiG6cYnHAfBDQOWX2TyIz/tVxt9X3nmTXbnbLzLu+sTPKyGlslfwMtAsntH
+         6JkDTUbiBFXcj3FO0qpdxWG6yuSR/U/E8ug7NbkMw5NmYJwz6UgC9YubVouIBMcQRTCq
+         sIBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cifjmdVuek90Eb9d8NwHoWeg6/t7bpNo+ZBi6uHa05U=;
+        b=TycAbQaPX1drEv29/twCtwYYfTJI29yig3sUnbBx1ZUZHLqM/yAdrWp5H2daxziDll
+         BZBiX4Tpijxk6Eboy3UrzewtKauX5hEqUt/ZvF2BBj1QG4vtIMOxfqAuWY9XSELxUNjw
+         Buwx7owyN6ko1cI0b+5FSmm0nB7TzmNuJgdWc6HA2DKQUtx/9Pd4Fgc1nisvUemqY52T
+         Q3IG0uWWyVCPVKaC7yP6DG8bEs5k92Rf6bUwNx/0fP+vm5d1tU9m5CFHnhgldHF3MI8U
+         Hf1F0ewxZfEhjX058/9WCo9ERlKlPuqWV4NdSvURM5HphOrFoZXk4QIswDMWOQCbRDsm
+         NSzg==
+X-Gm-Message-State: APjAAAVOIjU/7i7lRCEHI7vKKebjx39VdWimhlY2fmuo5R9pual3ymmJ
+        VkWC45ZUEo1sUBQJROK9Pjbdynr1CErFHi5hYZSIaA==
+X-Google-Smtp-Source: APXvYqzhx8fmXwpBkzIUzk0BEAStWDINK7JA0bM+9KhN81HQMs98IYIVPUY8tJMaMy1QE1Zkz9OkOoXQdQQd3RfVppY=
+X-Received: by 2002:a9d:6318:: with SMTP id q24mr6218422otk.95.1556721017492;
+ Wed, 01 May 2019 07:30:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556720960; bh=xzT+9ba+DceKVlRkNgzKqIKE7WlhmlwTc7GlIb8E9ro=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=IaT2UBQzynNCN/2eXAVNDVLxSkZSDCAzS0LclJG1c3uS6XbayGWgg7i1NAGp7RZMF
-         PEEvqulVMyj29lGIme6Oxtgfoq0dEDr90f94ooyYI486Py/IdmcAS1wliKT5wuUAZj
-         1jva8sARGHkQqAYL61yFpXxKs0Z2uDxW3QLm8sslA0kNo61Q3wABU/1eKw7+OFK2+c
-         I+GfliL5FUFPU5DwhBb/1WlFaYWFy7njqV9XNFUYGJHkhaal3prKpFKyrNsDN+I8x8
-         k3gT7XPbrwG/46mL4qobH9/wdExfoo1Hn0vxIcJplCsyX+3EyeZxAft7IGkNPh0pcY
-         wiRkdWGYy1PQA==
+References: <20190501140624.6931-1-TheSven73@gmail.com> <20190501142332.GA13008@kroah.com>
+ <20190501142412.GB13008@kroah.com>
+In-Reply-To: <20190501142412.GB13008@kroah.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Wed, 1 May 2019 10:30:06 -0400
+Message-ID: <CAGngYiVznEOQk-Tbyh6km+=+70gJebBEATxN5A8OE6iEzrHXqA@mail.gmail.com>
+Subject: Re: [GIT PULL] staging/fieldbus-dev for 5.2
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The max98090 driver defines 3 DAPM muxes; one for the right line output
-(LINMOD Mux), one for the left headphone mixer source (MIXHPLSEL Mux)
-and one for the right headphone mixer source (MIXHPRSEL Mux). The same
-bit is used for the mux as well as the DAPM enable, and although the mux
-can be correctly configured, after playback has completed, the mux will
-be reset during the disable phase. This is preventing the state of these
-muxes from being saved and restored correctly on system reboot. Fix this
-by marking these muxes as SND_SOC_NOPM.
+On Wed, May 1, 2019 at 10:24 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> And as this is just a single patch, handling them as patches is much
+> easier anyway.  Only when you get into the 20+ at a time does pull
+> requests help.
+>
 
-Note this has been verified this on the Tegra124 Nyan Big which features
-the MAX98090 codec.
+Patches are much easier for me too, but I assumed this had to be done via a
+pull request.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
-If this is the correct fix for this issue, can we tag this for stable?
-Or I can re-send with the stable tag. However, wanted to send out for
-review first.
+How do you distinguish between a patch that's still spinning on the
+mailing list,
+and one coming from my next tree? The Reviewed-by or Acked-by tag?
 
- sound/soc/codecs/max98090.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index 30c242c38d99..7619ea31ab50 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1194,14 +1194,14 @@ static const struct snd_soc_dapm_widget max98090_dapm_widgets[] = {
- 		&max98090_right_rcv_mixer_controls[0],
- 		ARRAY_SIZE(max98090_right_rcv_mixer_controls)),
- 
--	SND_SOC_DAPM_MUX("LINMOD Mux", M98090_REG_LOUTR_MIXER,
--		M98090_LINMOD_SHIFT, 0, &max98090_linmod_mux),
-+	SND_SOC_DAPM_MUX("LINMOD Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_linmod_mux),
- 
--	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", M98090_REG_HP_CONTROL,
--		M98090_MIXHPLSEL_SHIFT, 0, &max98090_mixhplsel_mux),
-+	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_mixhplsel_mux),
- 
--	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", M98090_REG_HP_CONTROL,
--		M98090_MIXHPRSEL_SHIFT, 0, &max98090_mixhprsel_mux),
-+	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_mixhprsel_mux),
- 
- 	SND_SOC_DAPM_PGA("HP Left Out", M98090_REG_OUTPUT_ENABLE,
- 		M98090_HPLEN_SHIFT, 0, NULL, 0),
--- 
-2.7.4
-
+Patch coming up, thanks :)
