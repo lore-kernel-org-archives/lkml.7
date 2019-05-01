@@ -2,94 +2,183 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBFDC04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673CAC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D8721743
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:16:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nF1HMGNW"
+	by mail.kernel.org (Postfix) with ESMTP id 304D021670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfEAHQA (ORCPT
+        id S1726188AbfEAHQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 03:16:00 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44790 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfEAHQA (ORCPT
+        Wed, 1 May 2019 03:16:56 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:44789 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfEAHQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 03:16:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y13so8250134pfm.11;
-        Wed, 01 May 2019 00:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2lTg3UwRF188Hyu1qFGSZBHjhJOOcy42FRYJbO0gLLI=;
-        b=nF1HMGNWHCZzcBQvlVSecKGX5SVnflrEGORafGvOJhRk8aDafzMkiICMCjy2LA98l9
-         vi2aTHHFcIDpt9Oyxlm5aSFwRLhs+7M9vE8zheuYGQifEybyxKq5ZsQfiLrMDgK2ShVe
-         qowh4o7+s2EL8+i14ReS/9RDMw68qsuKMrhD3Zjh+ZvCLMP/eghsZpctdHtEcUbJ95wR
-         c8q26/qZQ7R584up4S1Zzlfo/QNRbhD1TPyRgtOLu7l8ozCtp/JMQibOtLtWYiGbtsul
-         QZNh+e6F447FHxVEhSdmG3VPHKgWa3WZpRaZ1j6/jTZT3Yj8M92/1NTNCH4GqKOZWLIh
-         gUkg==
+        Wed, 1 May 2019 03:16:55 -0400
+Received: by mail-vs1-f65.google.com with SMTP id j184so9409805vsd.11;
+        Wed, 01 May 2019 00:16:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2lTg3UwRF188Hyu1qFGSZBHjhJOOcy42FRYJbO0gLLI=;
-        b=s6/6GPL/BZi99nUuaOMBEdUPts2doFr6gn8pYvoWp+dHMdNKiXziGZURquLLdgGzO6
-         fzjAo//c1CG+IgpEblt80OteKQc7ANAxieDQ9KOReSFS/pziN6r3no+qnUacxtns3Sar
-         BUtCYAscpCAujgtHWPfQRzWqau/6yzgtcZT3dohK9mSdRsx0D18Bm099miEZFj3Xzbys
-         jSLUPOlvihhr+D/85zfu3fmIxMEE4rJyXz14pCJK4Ggwy3mONI8d0BYJ36RrdsxeH/VP
-         Fa8dhWkFzCTGZCQLLY8HQu4EabBxRgfpL2llzPpgNaIw18rBT09PJagTwHgKctUACgq4
-         5Akg==
-X-Gm-Message-State: APjAAAWAnqBgTVubWwbKgYBsVbSjuvkU4dZWEy1eUG6uqPy/EEV3c+uH
-        67oKTcmSVoewgIhihHHploM=
-X-Google-Smtp-Source: APXvYqzhto3zBWANIqlONgb3cXufZS2EXRLnqHv3Qa/bGxdtqrI7gv4AYsngpAiXNVifvC214Qcj9g==
-X-Received: by 2002:a63:f707:: with SMTP id x7mr71571472pgh.343.1556694959735;
-        Wed, 01 May 2019 00:15:59 -0700 (PDT)
-Received: from localhost.localdomain ([103.87.57.94])
-        by smtp.gmail.com with ESMTPSA id w65sm25894769pfb.59.2019.05.01.00.15.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 00:15:59 -0700 (PDT)
-From:   Vatsala Narang <vatsalanarang@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        julia.lawall@lip6.fr, Vatsala Narang <vatsalanarang@gmail.com>
-Subject: [PATCH] staging: iio: adc: Add paragraph to describe Kconfig symbol
-Date:   Wed,  1 May 2019 12:45:41 +0530
-Message-Id: <20190501071541.4734-1-vatsalanarang@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nMAztx+niF0rjgBsTBcRVWZKFQ1zhY6tWWp3MolxdTE=;
+        b=nrr5cTupPC4occ+r8zMB053llPHMj1sKFE9HW5PWbLq7Ghmd3kehqb5XlM3P5AGEYH
+         6oq6Xlj3OOfYN5TIkSamAUZR0Rt0q9bpgDJ/n1yosWKKhwkX6+KVgNGboAdIa4MlgfXZ
+         PI9tuHqSculqhWwaIE0zc8LedmNxRXaR6mwi+pSN766bsB2P2bCItiokH7o1MdY5LEko
+         fZMB5goIbpuaWMNfvHJGA04pAqqnApYf9MBsVqJHQLiYtOXJzFJqx9F1ghmLf5wpgGYd
+         lRdO7auNviW/3kBJ+831UCH02dNh7TaTYTRSjSzvKFlByRR5lXAARA5FG7peKKEtcu/I
+         IZsA==
+X-Gm-Message-State: APjAAAU+72aoF0nLzXj75X18p/YItwn8892S0+f66nmAjICVB4xaCZhu
+        l4U9DWfkVVZFQCLkCaj+q2W+mo30gmv7V1lR3sg=
+X-Google-Smtp-Source: APXvYqzWSlP00i5y3FO3uyB0eC/PSGgr1BiCxz4n4K9fNkT2o1GgBISYNrXofxtkEIS2gYzGCdKDd387g2F/JGJEG6Y=
+X-Received: by 2002:a67:83cf:: with SMTP id f198mr9345888vsd.63.1556695013995;
+ Wed, 01 May 2019 00:16:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+ <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 1 May 2019 09:16:41 +0200
+Message-ID: <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch updates Kconfig with paragraph that describe config symbol
-fully.Issue addressed by checkpatch.
+Hi Rob,
 
-Signed-off-by: Vatsala Narang <vatsalanarang@gmail.com>
----
- drivers/staging/iio/adc/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+On Tue, Apr 30, 2019 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
+> On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> > On 30/04/2019 16:02, Rob Herring wrote:
+> > > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> > > <geert+renesas@glider.be> wrote:
+> > >>
+> > >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> > >>
+> > >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > >> ---
+> > >> v2:
+> > >>   - Add "renesas,gic-spi-base",
+> > >>   - Document RZ/A2M.
+> > >> ---
+> > >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+> > >>  1 file changed, 30 insertions(+)
+> > >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > >>
+> > >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > >> new file mode 100644
+> > >> index 0000000000000000..ea8ddb6955338ccd
+> > >> --- /dev/null
+> > >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > >> @@ -0,0 +1,30 @@
+> > >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> > >> +
+> > >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> > >> +RZ/A1 and RZ/A2 SoCs:
+> > >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> > >> +    interrupts,
+> > >> +  - NMI edge select.
+> > >> +
+> > >> +Required properties:
+> > >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> > >> +               fallback.
+> > >> +               Examples with soctypes are:
+> > >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> > >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> > >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> > >> +                                in interrupts.txt in this directory)
+> > >> +  - interrupt-controller: Marks the device as an interrupt controller
+> > >> +  - reg: Base address and length of the memory resource used by the interrupt
+> > >> +         controller
+> > >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+> > >
+> > > Why isn't this just an 'interrupts' property?
+> >
+> > That's likely because of kernel limitations. The DT code does an
+> > of_populate() on any device that it finds, parse the "interrupts"
+> > propertiy, resulting in the irq_descs being populated.
+> >
+> > That creates havoc, as these interrupts are not for this device, but for
+> > something that is connected to it. This is merely a bridge of some sort.
+>
+> 'interrupt-map' would avoid that problem I think.
 
-diff --git a/drivers/staging/iio/adc/Kconfig b/drivers/staging/iio/adc/Kconfig
-index 23d9a655a520..31cd9a12f40f 100644
---- a/drivers/staging/iio/adc/Kconfig
-+++ b/drivers/staging/iio/adc/Kconfig
-@@ -12,6 +12,9 @@ config AD7816
- 	  Say yes here to build support for Analog Devices AD7816/7/8
- 	  temperature sensors and ADC.
- 
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ad7816.
-+
- config AD7192
- 	tristate "Analog Devices AD7190 AD7192 AD7193 AD7195 ADC driver"
- 	depends on SPI
+"interrupt-map" seems to be meant for translation on a bus?
+What to do with the child and parent unit addresses fields?
+The parent unit address size depends on the #address-cells of the parent
+interrupt-controller (i.e. GIC, so it's zero).
+But the child unit address size depends on the #address-cells of the bus node
+on which the child is located, so that's a (non-zero) bus #address-cells
+(from the root node), not an interrupt-controller #address-cells.
+
+Each line in an interrupt-map also contains a child interrupt specifier.
+As the RZ/A1 IRQC supports 8 interrupt inputs with 4 sense types,
+that would mean 32 lines? Or should I just ignore the senses here,
+and specify 0?
+
+i.e. interrupt-map = <0 0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH,
+                      0 1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH,
+                      0 2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH,
+                      0 3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH,
+                      0 4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH,
+                      0 5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH,
+                      0 6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH,
+                      0 7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+
+(using zero for the child unit addresses, too)?
+
+> > Furthermore, this is a rather long established practice: gic-v2m,
+> > gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
+> > for one reason or another plug onto the GIC use the same method.
+>
+> All handling the mapping to the parent in their own way...
+>
+> > > Plus, without 'interrupts' walking the hierarchy is broken.
+> >
+> > Erm... Which hierarchy?
+>
+> of_irq_init() expects that an interrupt-controller without an
+> interrupt-parent is the root controller. So you're right. We only need
+
+That applies to IRQCHIP_DECLARE() drivers only, not platform device
+drivers, right?
+
+> to have an 'interrupt-parent', but not 'interrupts'.
+
+This is implied by "interrupt-parent = <&gic>;" on the soc node.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
