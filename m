@@ -2,109 +2,103 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50A2C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50E1C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7294720645
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p4961rDh"
+	by mail.kernel.org (Postfix) with ESMTP id B007120644
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfEAQvQ (ORCPT
+        id S1726677AbfEAQv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:51:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45538 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfEAQvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:51:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e24so8839221pfi.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 09:51:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Kd5MuO+17SSO78jER84yawU/+kS4c+qH+M/4Z95iLNY=;
-        b=p4961rDhAAkYdVL2MmCqcSFfDmoIe5vhA3cShJh7egp3Eb4kLmL2sB5jcTZBT1bBrs
-         X2UUpPkwn29f2c9UAdFVjJrMkV/aK/zL0MDk5lw3aYKNt8+QE8TalXcEbVeApDAU7UpH
-         c/g+s2N/Ee/n2VFwIgnhu9W8R9Ope8RnBjoUlC04/UVVNRV/DsvA60nM2TVkJcPgPPBn
-         0NuLBjuj6N2yXocjsMpPtUk0uZ2h6lEVZZCL6NhHgemzzc6Y0KboxPCTpXRsyjpqwnkO
-         9Fb6NIX/Wne6nx8wc6NGWcfcJ8cX/arFAHndFz2zwEoeHM97MNQ6pXGTfWQ6ddBRLQBq
-         9foA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kd5MuO+17SSO78jER84yawU/+kS4c+qH+M/4Z95iLNY=;
-        b=ZJDGVuFwCVoahBJf6CqXXMReaq4mbkO3lbPJ4N+yVDcbCITuOLeqOp9CGabHb4U817
-         +XyijEj0VPOqCDMpcvA0WbvT9eKJ3scS/0QeN/6mMHtiTaEs+2dLNkznlulFQITeOmmF
-         NlBgqgnsQAQJb02XTmC/3bcOOqaWcZZtSh3hNtEJnOB6O422j3MhEuamm38o/0OUIJC+
-         0PJDUSRzGyBF5mYwQkgKUvJc2II03LyHdXBJqWX4+oQ6lhrAsKxOJgYZl/fA9XnHCZ0g
-         EZmni+7jCcWsL7GhF21IEh0RSQUTSjzlfuxwHZPb/dvEcTFFN+IA4TU59/AhflYEY/xd
-         +T7g==
-X-Gm-Message-State: APjAAAUebZ5r5+wZswhfaJLxCx/PJw3VwF9MwmszakorCt9QtaKVTM1R
-        JRhl38qtySWruu93OTxncDtOqw==
-X-Google-Smtp-Source: APXvYqwTaF3lkS2xcbZsYzpMTkI1G6dbKWjh7tN8qOSRuhSBT3G0ZPf6rYTURl8olJfGXJ2vBQZtGw==
-X-Received: by 2002:a65:6145:: with SMTP id o5mr17411677pgv.262.1556729474737;
-        Wed, 01 May 2019 09:51:14 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 18sm58777799pfp.18.2019.05.01.09.51.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 09:51:13 -0700 (PDT)
-Date:   Wed, 1 May 2019 09:51:15 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/mdp5: Fix mdp5_cfg_init error return
-Message-ID: <20190501165115.GH2938@tuxbook-pro>
-References: <20190501161437.15728-1-jeffrey.l.hugo@gmail.com>
+        Wed, 1 May 2019 12:51:58 -0400
+Received: from foss.arm.com ([217.140.101.70]:33974 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726434AbfEAQv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 12:51:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48B2880D;
+        Wed,  1 May 2019 09:51:57 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35DD13F719;
+        Wed,  1 May 2019 09:51:54 -0700 (PDT)
+Date:   Wed, 1 May 2019 17:51:51 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Message-ID: <20190501165151.GB12498@e107155-lin>
+References: <20190318104925.16600-1-sudeep.holla@arm.com>
+ <20190318104925.16600-4-sudeep.holla@arm.com>
+ <20190318153321.GA23521@redhat.com>
+ <20190430164413.GA18913@e107155-lin>
+ <20190501155711.GB30235@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501161437.15728-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190501155711.GB30235@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01 May 09:14 PDT 2019, Jeffrey Hugo wrote:
+On Wed, May 01, 2019 at 05:57:11PM +0200, Oleg Nesterov wrote:
+> On 04/30, Sudeep Holla wrote:
+> >
+> > On Mon, Mar 18, 2019 at 04:33:22PM +0100, Oleg Nesterov wrote:
+> > >
+> > > And it seems that _TIF_WORK_SYSCALL_ENTRY needs some cleanups too... We don't need
+> > > "& _TIF_WORK_SYSCALL_ENTRY" in syscall_trace_enter, and _TIF_WORK_SYSCALL_ENTRY
+> > > should not include _TIF_NOHZ?
+> > >
+> >
+> > I was about to post the updated version and checked this to make sure I have
+> > covered everything or not. I had missed the above comment. All architectures
+> > have _TIF_NOHZ in their mask that they check to do work. And from x86, I read
+> > "...syscall_trace_enter(). Also includes TIF_NOHZ for enter_from_user_mode()"
+> > So I don't understand why _TIF_NOHZ needs to be dropped.
+>
+> I have already forgot this discussion... But after I glanced at this code again
+> I still think the same, and I don't understand why do you disagree.
+>
 
-> If mdp5_cfg_init fails because of an unknown major version, a null pointer
-> dereference occurs.  This is because the caller of init expects error
-> pointers, but init returns NULL on error.  Fix this by returning the
-> expected values on error.
-> 
-> Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
+Sorry, but I didn't have any disagreement, I just said I don't understand
+the usage on all architectures at that moment.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Also if we need to drop, we can address that separately examining all archs.
+>
+> Sure, and I was only talking about x86. We can keep TIF_NOHZ and even
+> set_tsk_thread_flag(TIF_NOHZ) in context_tracking_cpu_set() if some arch needs
+> this but remove TIF_NOHZ from TIF_WORK_SYSCALL_ENTRY in arch/x86/include/asm/thread_info.h,
+> afaics this shouldn't make any difference.
+>
 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
-> index ea8f7d7daf7f..52e23780fce1 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
-> @@ -721,7 +721,7 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
->  	if (cfg_handler)
->  		mdp5_cfg_destroy(cfg_handler);
->  
-> -	return NULL;
-> +	return ERR_PTR(ret);
->  }
->  
->  static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
-> -- 
-> 2.17.1
-> 
+OK, it's just x86, then I understand your point. I was looking at all
+the architectures, sorry for the confusion.
+
+> And I see no reason why x86 needs to use TIF_WORK_SYSCALL_ENTRY in
+> syscall_trace_enter().
+>
+
+Agreed
+
+--
+Regards,
+Sudeep
