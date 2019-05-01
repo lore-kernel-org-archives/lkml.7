@@ -2,90 +2,127 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D4CC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8FCC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E8621670
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8775D2064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfEAKoS (ORCPT
+        id S1726193AbfEAKrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 06:44:18 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:52866 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfEAKoR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 06:44:17 -0400
-Received: from 79.184.254.69.ipv4.supernova.orange.pl (79.184.254.69) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 5fa0b5174c139008; Wed, 1 May 2019 12:44:15 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, tobin@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: Fix kobject memleak
-Date:   Wed, 01 May 2019 12:44:15 +0200
-Message-ID: <1632168.ncxJcclsFx@kreacher>
-In-Reply-To: <815f7c7cea02e05c90d5bf678ea8717f01cc9f63.1556604312.git.viresh.kumar@linaro.org>
-References: <815f7c7cea02e05c90d5bf678ea8717f01cc9f63.1556604312.git.viresh.kumar@linaro.org>
+        Wed, 1 May 2019 06:47:40 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57854 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbfEAKrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 06:47:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BBBA80D;
+        Wed,  1 May 2019 03:47:39 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 769603F719;
+        Wed,  1 May 2019 03:47:36 -0700 (PDT)
+Date:   Wed, 1 May 2019 11:47:33 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, rmk+kernel@armlinux.org.uk,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: Demote boot and shutdown messages to pr_debug
+Message-ID: <20190501104733.GB11740@lakrids.cambridge.arm.com>
+References: <20190430223835.23513-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430223835.23513-1-f.fainelli@gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, April 30, 2019 8:05:52 AM CEST Viresh Kumar wrote:
-> Currently the error return path from kobject_init_and_add() is not
-> followed by a call to kobject_put() - which means we are leaking the
-> kobject.
+On Tue, Apr 30, 2019 at 03:38:31PM -0700, Florian Fainelli wrote:
+> Similar to commits c68b0274fb3cf ("ARM: reduce "Booted secondary
+> processor" message to debug level") and 035e787543de7 ("ARM: 8644/1: Reduce "CPU:
+> shutdown" message to debug level"), demote the secondary_start_kernel()
+> and __cpu_die() messages from info, respectively notice to debug. While
+> we are at it, also do this for cpu_psci_cpu_kill() which is redundant
+> with __cpu_die().
 > 
-> Fix it by adding a call to kobject_put() in the error path of
-> kobject_init_and_add().
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> This helps improve the amount of possible hotplug cycles by around +50%
+> on ARCH_BRCMSTB.
+
+Could you elaborate on why that matters? 
+
+e.g. is this just for testing, or does this matter in some shutdown or
+hibernate scenario?
+
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
-> Tobin fixed this for schedutil already.
+>  arch/arm64/kernel/psci.c | 2 +-
+>  arch/arm64/kernel/smp.c  | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
->  drivers/cpufreq/cpufreq.c          | 1 +
->  drivers/cpufreq/cpufreq_governor.c | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index e10922709d13..bbf79544d0ad 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1098,6 +1098,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
->  				   cpufreq_global_kobject, "policy%u", cpu);
->  	if (ret) {
->  		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
-> +		kobject_put(&policy->kobj);
->  		goto err_free_real_cpus;
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index 8cdaf25e99cd..a78581046c80 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -96,7 +96,7 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+>  	for (i = 0; i < 10; i++) {
+>  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+>  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+> -			pr_info("CPU%d killed.\n", cpu);
+> +			pr_debug("CPU%d killed.\n", cpu);
+>  			return 0;
+>  		}
+>  
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 824de7038967..71fd2b5a3f0e 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -259,7 +259,7 @@ asmlinkage notrace void secondary_start_kernel(void)
+>  	 * the CPU migration code to notice that the CPU is online
+>  	 * before we continue.
+>  	 */
+> -	pr_info("CPU%u: Booted secondary processor 0x%010lx [0x%08x]\n",
+> +	pr_debug("CPU%u: Booted secondary processor 0x%010lx [0x%08x]\n",
+>  					 cpu, (unsigned long)mpidr,
+>  					 read_cpuid_id());
+
+I generally agree that we don't need to be verbose, and demoting these
+to debug is fine, but it's a shame that these won't be accessible in
+defconfig.
+
+I wonder if we should enable DYNAMIC_DEBUG so that we can turn these on
+from the kernel command line, or if we should have something like a
+verbose_hotplug option specifically for these messages.
+
+Thanks,
+Mark.
+
+>  	update_cpu_boot_status(CPU_BOOT_SUCCESS);
+> @@ -348,7 +348,7 @@ void __cpu_die(unsigned int cpu)
+>  		pr_crit("CPU%u: cpu didn't die\n", cpu);
+>  		return;
 >  	}
+> -	pr_notice("CPU%u: shutdown\n", cpu);
+> +	pr_debug("CPU%u: shutdown\n", cpu);
 >  
-> diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
-> index ffa9adeaba31..9d1d9bf02710 100644
-> --- a/drivers/cpufreq/cpufreq_governor.c
-> +++ b/drivers/cpufreq/cpufreq_governor.c
-> @@ -459,6 +459,8 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
->  	/* Failure, so roll back. */
->  	pr_err("initialization failed (dbs_data kobject init error %d)\n", ret);
->  
-> +	kobject_put(&dbs_data->attr_set.kobj);
-> +
->  	policy->governor_data = NULL;
->  
->  	if (!have_governor_per_policy())
+>  	/*
+>  	 * Now that the dying CPU is beyond the point of no return w.r.t.
+> -- 
+> 2.17.1
 > 
-
-Applied, thanks!
-
-
-
-
