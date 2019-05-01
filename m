@@ -2,117 +2,137 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D26C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54277C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F6220675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259FE20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfEAVbx (ORCPT
+        id S1726207AbfEAVdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:31:53 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37240 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfEAVbx (ORCPT
+        Wed, 1 May 2019 17:33:32 -0400
+Received: from gateway33.websitewelcome.com ([192.185.145.216]:19284 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726088AbfEAVdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:31:53 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id B3C852787AD
-Received: by earth.universe (Postfix, from userid 1000)
-        id 578E63C0D1B; Wed,  1 May 2019 23:31:49 +0200 (CEST)
-Date:   Wed, 1 May 2019 23:31:49 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        "Andrew F. Davis" <afd@ti.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] power: supply: bq27xxx_battery: Notify also about
- status changes
-Message-ID: <20190501213149.v4xifzj4pxym4vt3@earth.universe>
-References: <1556272742-17232-1-git-send-email-krzk@kernel.org>
+        Wed, 1 May 2019 17:33:31 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id C7D7241906
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 16:33:30 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Lwr4hoy4zYTGMLwr4hteTi; Wed, 01 May 2019 16:33:30 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=56366 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLwr3-004Of0-QI; Wed, 01 May 2019 16:33:29 -0500
+Date:   Wed, 1 May 2019 16:33:29 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2] USB: serial: io_edgeport: mark expected switch
+ fall-throughs
+Message-ID: <20190501213329.GA26972@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oo4nxb7vd5wfkt5c"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1556272742-17232-1-git-send-email-krzk@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLwr3-004Of0-QI
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.119.203]:56366
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
---oo4nxb7vd5wfkt5c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch fixes the following warnings:
 
-Hi,
+drivers/usb/serial/io_edgeport.c: In function ‘process_rcvd_data’:
+drivers/usb/serial/io_edgeport.c:1750:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    if (bufferLength == 0) {
+       ^
+drivers/usb/serial/io_edgeport.c:1755:3: note: here
+   case EXPECT_HDR2:
+   ^~~~
+drivers/usb/serial/io_edgeport.c:1810:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     if (bufferLength == 0) {
+        ^
+drivers/usb/serial/io_edgeport.c:1816:3: note: here
+   case EXPECT_DATA: /* Expect data */
+   ^~~~
 
-On Fri, Apr 26, 2019 at 11:59:02AM +0200, Krzysztof Kozlowski wrote:
-> User-space might be interested in receiving uevents when the charging
-> starts/stops or if conditions of battery changes (e.g.
-> over-temperature).  Notify about changes in battery also when the flags
-> change, not only SoC.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Warning level 3 was used: -Wimplicit-fallthrough=3
 
-Thanks, queued.
+Notice that, in this particular case, the code comments are modified
+in accordance with what GCC is expecting to find.
 
--- Sebastian
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
->=20
-> ---
->=20
-> Changes since v1:
-> 1. Remove unneeded backslash (pointed by Pali).
-> ---
->  drivers/power/supply/bq27xxx_battery.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/suppl=
-y/bq27xxx_battery.c
-> index 29b3a4056865..195c18c2f426 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -1612,7 +1612,8 @@ void bq27xxx_battery_update(struct bq27xxx_device_i=
-nfo *di)
->  			di->charge_design_full =3D bq27xxx_battery_read_dcap(di);
->  	}
-> =20
-> -	if (di->cache.capacity !=3D cache.capacity)
-> +	if ((di->cache.capacity !=3D cache.capacity) ||
-> +	    (di->cache.flags !=3D cache.flags))
->  		power_supply_changed(di->bat);
-> =20
->  	if (memcmp(&di->cache, &cache, sizeof(cache)) !=3D 0)
-> --=20
-> 2.7.4
->=20
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+Changes in v2:
+ - Warning level 3 is now used: -Wimplicit-fallthrough=3
+   instead of warning level 2.
+ - All warnings in the switch statement are addressed now.
 
---oo4nxb7vd5wfkt5c
-Content-Type: application/pgp-signature; name="signature.asc"
+Notice that these are the last remaining fall-through warnings
+in the USB subsystem. :)
 
------BEGIN PGP SIGNATURE-----
+Thanks
+--
+Gustavo
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzKEEUACgkQ2O7X88g7
-+pqsLw//W11mBfBrUxXGdXS+/jzoIpCyS3GDnTLOyVCWYnHZoAWsj/+IK0pHJBDS
-THqb6RxRE7ttV/pUdIzBkP7V9pSZRSJOWEX4kN0okrd4JuMBBFjSbQPkjgGY87dS
-L6X2gLZiNvktq4j+Nsl8lAxZmEKB41XT7R4kkEPnpJ7Ykswchtip4PxIx5phThIa
-7SQbU6QxurMi9Yj9sJM3nqm9U/72HQAEpQDk5v73IVskq+myeut0zHWB2GSnwN4R
-cKFqlLf/ktjZNIL4ImmHWVPTmiB+LFdywmVuvzNzWxIaPke4/lH9yMSMjsQuwC85
-wZEPcbaDqcSctlv5nVaSDOJGQ0B79YIUwLpE3mhCAg+hpTbfegQ4F1TVolEeHVMM
-yrDp2jOtASj0pUN0g9fR3z4cgYrnPdOAmT2nHm/Ub5ZyZXDT+CDNDsmgCHtzPCUu
-tMUotLhGQmIs2jNZqESSmSKBrm6lB+S8AddlAika4AbtVAGdYp0m3IGGA1IES8Ww
-tgjtyaNwRX9gpcIKJnd/W8io9T/NwiT+XsvHLk63JzhqWIsnCLVFTbfYQvCQmfJ6
-k7KrKg/Y5quiOr0tTVTEWSD+g7EeOtjyaVltZiGePpQsUw9j8qno2fAPnLsaSHU9
-I5WlSAmpzfVeo+YFyiOIPsn4OC0dxL/N3RKnJJr87BGCKRTowBw=
-=VC6P
------END PGP SIGNATURE-----
+ drivers/usb/serial/io_edgeport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---oo4nxb7vd5wfkt5c--
+diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
+index 4ca31c0e4174..7ad10328f4e2 100644
+--- a/drivers/usb/serial/io_edgeport.c
++++ b/drivers/usb/serial/io_edgeport.c
+@@ -1751,7 +1751,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
+ 				edge_serial->rxState = EXPECT_HDR2;
+ 				break;
+ 			}
+-			/* otherwise, drop on through */
++			/* Fall through - otherwise, drop on through */
+ 		case EXPECT_HDR2:
+ 			edge_serial->rxHeader2 = *buffer;
+ 			++buffer;
+@@ -1813,6 +1813,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
+ 				}
+ 				/* Else, drop through */
+ 			}
++			/* Fall through */
+ 		case EXPECT_DATA: /* Expect data */
+ 			if (bufferLength < edge_serial->rxBytesRemaining) {
+ 				rxLen = bufferLength;
+-- 
+2.21.0
+
