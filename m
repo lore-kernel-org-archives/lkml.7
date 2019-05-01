@@ -2,142 +2,95 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B604C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9098C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73435208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826E82085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfEAP4I (ORCPT
+        id S1726586AbfEAP5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:56:08 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:55451 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfEAP4G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:56:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id y5so14064896ioc.22
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 08:56:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3L9qIVywPxn4NdTzZ0/yrPZgy1EQg/K092XtGtDKgZI=;
-        b=TBIbW0egRlwo1hQVjdPL64Hb/730Qrjt6Olh37lxV7lQY1+dOHK8e82PcUoPOSrSCh
-         0FnfzlwEwS9SlNym0upX+CQ7GQ2d8Epta2NTj6F2WovF0flir84DgN8gUTO8A+cKBQQd
-         J/qfjCZm47KorwmaaBwQ05Iem7yGxHMapBSBPQm/GH2c7jlteTZcydiWDwmbwviJlYKk
-         ZbG4r4K+HIVC5icSH5Fs1Ut+pRKNpqwVGkZMx9dc7HRi5AHZ4y3wjRkva7vFfAxF7pF/
-         q5yYaFkUfC/h0oXOAjbtqz9KIxV5fFc8iTsGQbe7GDBgeYiPUxg+Y2oZWPYOYGuot0LH
-         ReIw==
-X-Gm-Message-State: APjAAAWMDADMWO1yx2QTC6iFE4KkIdr2xOitluAK12KC+PNVhilOrXeP
-        bjXRIbzc+8dxrEwQ3WlvU7vz9CJfI5gPc4f71xtIGTUXm04I
-X-Google-Smtp-Source: APXvYqwDUh6w7HAsgUF+XhKPrtpFhuL0giycAnJdFa54DEqYDEtt0AIDph+ND+4T6j0lfmsTdnM073k0YWkwsRPJSrZ1asRki4zJ
+        Wed, 1 May 2019 11:57:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57680 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbfEAP5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 11:57:18 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 86BC8C053B34;
+        Wed,  1 May 2019 15:57:18 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 83E2A1001E95;
+        Wed,  1 May 2019 15:57:14 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed,  1 May 2019 17:57:16 +0200 (CEST)
+Date:   Wed, 1 May 2019 17:57:11 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Message-ID: <20190501155711.GB30235@redhat.com>
+References: <20190318104925.16600-1-sudeep.holla@arm.com>
+ <20190318104925.16600-4-sudeep.holla@arm.com>
+ <20190318153321.GA23521@redhat.com>
+ <20190430164413.GA18913@e107155-lin>
 MIME-Version: 1.0
-X-Received: by 2002:a24:7a8b:: with SMTP id a133mr8418165itc.118.1556726166096;
- Wed, 01 May 2019 08:56:06 -0700 (PDT)
-Date:   Wed, 01 May 2019 08:56:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002492cc0587d58ed8@google.com>
-Subject: WARNING in ovl_rename
-From:   syzbot <syzbot+bb1836a212e69f8e201a@syzkaller.appspotmail.com>
-To:     amir73il@gmail.com, linux-kernel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
-        mszeredi@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430164413.GA18913@e107155-lin>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 01 May 2019 15:57:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 04/30, Sudeep Holla wrote:
+>
+> On Mon, Mar 18, 2019 at 04:33:22PM +0100, Oleg Nesterov wrote:
+> >
+> > And it seems that _TIF_WORK_SYSCALL_ENTRY needs some cleanups too... We don't need
+> > "& _TIF_WORK_SYSCALL_ENTRY" in syscall_trace_enter, and _TIF_WORK_SYSCALL_ENTRY
+> > should not include _TIF_NOHZ?
+> >
+>
+> I was about to post the updated version and checked this to make sure I have
+> covered everything or not. I had missed the above comment. All architectures
+> have _TIF_NOHZ in their mask that they check to do work. And from x86, I read
+> "...syscall_trace_enter(). Also includes TIF_NOHZ for enter_from_user_mode()"
+> So I don't understand why _TIF_NOHZ needs to be dropped.
 
-syzbot found the following crash on:
+I have already forgot this discussion... But after I glanced at this code again
+I still think the same, and I don't understand why do you disagree.
 
-HEAD commit:    037904a2 Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11f58ecca00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a42d110b47dd6b36
-dashboard link: https://syzkaller.appspot.com/bug?extid=bb1836a212e69f8e201a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15ba097ca00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10be1ceca00000
+> Also if we need to drop, we can address that separately examining all archs.
 
-The bug was bisected to:
+Sure, and I was only talking about x86. We can keep TIF_NOHZ and even
+set_tsk_thread_flag(TIF_NOHZ) in context_tracking_cpu_set() if some arch needs
+this but remove TIF_NOHZ from TIF_WORK_SYSCALL_ENTRY in arch/x86/include/asm/thread_info.h,
+afaics this shouldn't make any difference.
 
-commit 6eaf011144af10cad34c0d46f82e50d382c8e926
-Author: Amir Goldstein <amir73il@gmail.com>
-Date:   Thu Oct 12 16:03:04 2017 +0000
+And I see no reason why x86 needs to use TIF_WORK_SYSCALL_ENTRY in
+syscall_trace_enter().
 
-     ovl: fix EIO from lookup of non-indexed upper
+Oleg.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1430a262a00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1630a262a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1230a262a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bb1836a212e69f8e201a@syzkaller.appspotmail.com
-Fixes: 6eaf011144af ("ovl: fix EIO from lookup of non-indexed upper")
-
-overlayfs: workdir and upperdir must reside under the same mount
-WARNING: CPU: 0 PID: 8323 at fs/overlayfs/dir.c:1176  
-ovl_rename+0x159c/0x1940 fs/overlayfs/dir.c:1176
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 8323 Comm: syz-executor156 Not tainted 5.1.0-rc6+ #89
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:571
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:ovl_rename+0x159c/0x1940 fs/overlayfs/dir.c:1176
-Code: 80 00 00 00 e8 45 f7 19 ff 8b b4 24 80 00 00 00 85 f6 0f 85 cd f6 ff  
-ff e8 b1 f5 19 ff 4c 89 f7 e9 a5 f6 ff ff e8 a4 f5 19 ff <0f> 0b e9 a4 f3  
-ff ff e8 98 f5 19 ff 48 8b 54 24 70 b8 ff ff 37 00
-RSP: 0018:ffff88809366fad8 EFLAGS: 00010293
-RAX: ffff88808bb781c0 RBX: 0000000000000000 RCX: ffff888095efc6e0
-RDX: 0000000000000000 RSI: ffffffff8256970c RDI: ffff888095efc738
-RBP: ffff88809366fbf8 R08: ffff88808bb781c0 R09: 0000000000000008
-R10: ffffed1015d05bc7 R11: ffff8880ae82de3b R12: ffff88808b22f160
-R13: 0000000000000000 R14: ffff888095efc580 R15: ffff88809366fb90
-  vfs_rename+0x803/0x1ac0 fs/namei.c:4475
-  do_renameat2+0xb0f/0xc40 fs/namei.c:4625
-  __do_sys_rename fs/namei.c:4671 [inline]
-  __se_sys_rename fs/namei.c:4669 [inline]
-  __x64_sys_rename+0x61/0x80 fs/namei.c:4669
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446d89
-Code: e8 ec b9 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 db 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f8603ed4d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
-RAX: ffffffffffffffda RBX: 00000000006dcc28 RCX: 0000000000446d89
-RDX: 0000000000446d89 RSI: 0000000020000140 RDI: 00000000200000c0
-RBP: 00000000006dcc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc2c
-R13: 69647265776f6c2c R14: 30656c69662f2e3d R15: 7269647265707075
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
