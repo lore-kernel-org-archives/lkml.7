@@ -2,88 +2,65 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7419FC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC76CC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3878E20651
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:37:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MIuqm2d8"
+	by mail.kernel.org (Postfix) with ESMTP id 8CC942089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfEAVhQ (ORCPT
+        id S1726183AbfEAVlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:37:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41234 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfEAVhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:37:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mSSNwGMhoyWQ5375GOOf/uQ74wm3NC5DdejM1nUCyb8=; b=MIuqm2d8VU91YVOYxQcFgYL/Y
-        EgDLKBirDKGYVS8njJgpYjtO0nte87j6Ureh+xG2CF5T2Ak8YrJbr83WEXXC+C+tTFi8xsnB+Y9c3
-        r45yrTeiKPEenIPh4ig1Xr8nS9WWtgeMINKNXgliuECdMmLwjA7kFxRGEHUcMTOLCD5nCgQmzc3o8
-        jtrfYtmcawNX95xG97tIjmlWld/5sAZjcOmVNeBzBf7MMo70X6/C5dGhmpRUBL3+YN9uEjqooL0tJ
-        tBgUgyclGQsdLK4AlU/9oDbbodCn/5XNg6XvTLtHj3S1ycFFHTl3jvKDc/a5JiC2ReoJZu1F+B4/k
-        aQPeDuoWA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLwub-0000lV-Nw; Wed, 01 May 2019 21:37:09 +0000
-Date:   Wed, 1 May 2019 14:37:09 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
-Message-ID: <20190501213709.GD28500@bombadil.infradead.org>
-References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
+        Wed, 1 May 2019 17:41:47 -0400
+Received: from muru.com ([72.249.23.125]:47904 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfEAVlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:41:46 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 13E82805C;
+        Wed,  1 May 2019 21:42:02 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 0/2] Two ti-sysc driver fixes for v5.3 merge window
+Date:   Wed,  1 May 2019 14:41:27 -0700
+Message-Id: <20190501214129.12572-1-tony@atomide.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501211217.5039-1-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
-> +++ b/fs/Kconfig.binfmt
-> @@ -35,6 +35,10 @@ config COMPAT_BINFMT_ELF
->  config ARCH_BINFMT_ELF_STATE
->  	bool
->  
-> +config ARCH_USE_GNU_PROPERTY
-> +	bool
-> +	depends on 64BIT
+Hi all,
 
-I don't think this is right.  I think you should get rid of the depends line
-and instead select the symbol from each of argh64 and x86 Kconfig files.
+Here are few fixes for the am335x d_can boot issue Sebastian reported for
+Beaglebone.
+
+Regards,
+
+Tony
+
+
+Tony Lindgren (2):
+  ARM: dts: Configure osc clock for d_can on am335x
+  bus: ti-sysc: Handle devices with no control registers
+
+ arch/arm/boot/dts/am33xx-l4.dtsi | 14 ++++++--------
+ arch/arm/boot/dts/am437x-l4.dtsi |  4 ----
+ drivers/bus/ti-sysc.c            | 23 +++++++++++------------
+ 3 files changed, 17 insertions(+), 24 deletions(-)
+
+-- 
+2.21.0
