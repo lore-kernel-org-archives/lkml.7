@@ -2,278 +2,176 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E790C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 05:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3A6C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E046C20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 05:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074D920866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="POuz/+h9"
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="V8VpVdLU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfEAFzU (ORCPT
+        id S1726115AbfEAGAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 01:55:20 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41853 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfEAFzT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 01:55:19 -0400
-Received: by mail-qt1-f194.google.com with SMTP id f25so19051974qtc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 22:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vh2Ozgk0VmlPQd7PW8aAJh/gHpZAsKkiYtAyIwnbr/E=;
-        b=POuz/+h9A6e9HtZJ2mOy0y+TPu6sTG1JgVQfIh14dO+62rxifGgdHrT5qY81Ewd3yW
-         jkgCoBr2ZZQDjWi8yXm4oBs5jadxHRAJDp8ciLb15BxwZ1tP3xT3u2/RAbwk/VZVmbmo
-         +fwMoqpJ5hGr2IudZxWQIe5RprBgIJjGqGFHo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vh2Ozgk0VmlPQd7PW8aAJh/gHpZAsKkiYtAyIwnbr/E=;
-        b=Dbb0UEi6wpFtARviTXFjnvKbmXx9wbg5Q2A5i+rMSOuifsp+ZlBwqHvtzvdDO6BOp+
-         t3dY4HPSmAr+xG+EVDFlP2128VnRTd3pI47StuZueQXc94O5cBs1MWCTTJdLbN7NZFmi
-         MTPh+2lOaVjAvCj7O2qABItS5XUF9JSRVh5lLXQkN2bWptc60M9O805Ax+dt3A3hwGe7
-         pd46sJxwSfQJGCRizlpyBqGRceTcNhOiAKBXJmHSm8Ip4P2k3FHr4bJttBxdK7ZduVxg
-         eS7PQWClN/Y4U5rogfVnPIiqSKHkpN3sJ2NTjZapf/1I56mRs9WbicAl4AOzmYxv3ZCD
-         AeDw==
-X-Gm-Message-State: APjAAAWZOqcJ/Mscj4iaORzii0Pb7sBnlPSzDiHk9qVZ9R2K0JCTysQf
-        p36ou/OcJMvlwN6Q3001SQ2tcSAuBTf5VNqNUHw=
-X-Google-Smtp-Source: APXvYqxonRKsHrdfDd26bCtYo5fYsPcn3rMvyjaIMrcN1fbhQt90CyHYfzk0ETV5lzOVeHWMy1Qs006deJEcWgUr4oU=
-X-Received: by 2002:a0c:948e:: with SMTP id j14mr27304455qvj.245.1556690118487;
- Tue, 30 Apr 2019 22:55:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190116220154.1026171-1-vijaykhemka@fb.com> <1547787502.2061444.1637712576.1F1E21B4@webmail.messagingengine.com>
- <DCD8D2E5-DB18-427C-AA8F-18289E9AB0AB@fb.com>
-In-Reply-To: <DCD8D2E5-DB18-427C-AA8F-18289E9AB0AB@fb.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 1 May 2019 05:55:07 +0000
-Message-ID: <CACPK8Xdgv1YVgeykf0grSpR3LXTGa45hoBwZVq+zWgR0anhmTg@mail.gmail.com>
-Subject: Re: [PATCH v2] misc: aspeed-lpc-ctrl: make parameter optional
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Wed, 1 May 2019 02:00:35 -0400
+Received: from mail-eopbgr60125.outbound.protection.outlook.com ([40.107.6.125]:2550
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726068AbfEAGAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 02:00:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8K5xgdlg0/k1J6n0iovZ671aInNMOQMSU4q2c7QVMZA=;
+ b=V8VpVdLUGBQQ+6pYSmH8nKMRahSXzlEZX2pDSuRkrRnNhMc9bp1dhS8uHkvxy+cGLEJGzfjSEzwtjtbiiH/mlpr+jGfhJr9WzNNtKfTftp6x1v+BLAiT4A2FB9T+qiem0eoq2wd07K7xYEiQZAw4117RF78XZ45yHQlDnQdN/EE=
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
+ VI1PR10MB1568.EURPRD10.PROD.OUTLOOK.COM (10.165.191.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Wed, 1 May 2019 06:00:28 +0000
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::48b8:9cff:182:f3d8]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::48b8:9cff:182:f3d8%2]) with mapi id 15.20.1856.008; Wed, 1 May 2019
+ 06:00:28 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 4/5] soc/fsl/qe: qe.c: support fsl,qe-snums property
+Thread-Topic: [PATCH 4/5] soc/fsl/qe: qe.c: support fsl,qe-snums property
+Thread-Index: AQHU/1m5/ppidONGckmXHq9mm5btW6ZU8u6AgADUtYA=
+Date:   Wed, 1 May 2019 06:00:28 +0000
+Message-ID: <1927421e-f7c5-453d-586f-d2427adab961@prevas.dk>
+References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+ <20190430133615.25721-5-rasmus.villemoes@prevas.dk>
+ <4c1c4fe8-9412-2543-e9bc-83b7e5d7c202@c-s.fr>
+In-Reply-To: <4c1c4fe8-9412-2543-e9bc-83b7e5d7c202@c-s.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1P189CA0015.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::28)
+ To VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:e3::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [81.216.59.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fde35d43-53fc-4838-97f1-08d6cdfa4fb1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR10MB1568;
+x-ms-traffictypediagnostic: VI1PR10MB1568:
+x-microsoft-antispam-prvs: <VI1PR10MB15680276D976078DFC35157F8A3B0@VI1PR10MB1568.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00246AB517
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(376002)(39850400004)(136003)(40224003)(189003)(199004)(81156014)(476003)(11346002)(2906002)(486006)(64756008)(66946007)(68736007)(5660300002)(66556008)(66476007)(42882007)(6486002)(71190400001)(73956011)(66446008)(6436002)(71200400001)(305945005)(3846002)(316002)(66066001)(6116002)(110136005)(54906003)(31696002)(99286004)(53936002)(229853002)(446003)(2616005)(31686004)(8936002)(186003)(14454004)(8976002)(8676002)(72206003)(7736002)(44832011)(4326008)(26005)(256004)(52116002)(478600001)(6512007)(102836004)(25786009)(386003)(6246003)(36756003)(76176011)(74482002)(81166006)(6506007)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB1568;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8mim5vu1/AygnRWJJIrSda6L3U1NVyB712YE4Mrwx7bjqgf6Y5z1WQIKAtXumQ51LmDhcRkfv8bzJTMejWBAoSSQkMnzbjt1KJlXSMOVmjo7P0I8uhCZAkw9E0fXD5Z5rKxmlM6A2pMG9NSXhZUExDtEwMDi5NpXd5perj89VkYeKjoBpfrbKA+TKWtq8Tai2Why7/L1FrzBeokQERQJfHHwpqpQnTbw88aFMXHhDC1IDTFOuNTe06ymStDVRoGpLRvjKOcoaGD9W9YXTUDPx+yLzN9uFNNcrlbE9Nmonq/OYAS9SDdebeifYYd09419BSrt7Upu/wLURabCpcwo/yUuM8VzkQk01cS2PVS8x7RqLwqx+58nKEO7vHSSTcbJvMaTAe/PZUIJj/yA//hRUDcGe5RrlPg2sYqmgXS8cus=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <65BADB671623194A9E732DA6AE293E5E@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: fde35d43-53fc-4838-97f1-08d6cdfa4fb1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 06:00:28.4632
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1568
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Jan 2019 at 20:12, Vijay Khemka <vijaykhemka@fb.com> wrote:
->
-> Hi Andrew,
-> Thanks for this review, I will have a follow up patch for this return val=
-ues.
-
-Did you send a follow up patch to fix the return values?
-
-Greg, is there any reason why you did not merge this one? 5.2 will
-have device trees that depend on this patch's behavior.
-
-Cheers,
-
-Joel
-
-> =EF=BB=BFOn 1/17/19, 8:58 PM, "Andrew Jeffery" <andrew@aj.id.au> wrote:
->
->     Hi Vijay,
->
->     Thanks for doing the work to fix the driver. Some minor queries/point=
-s
->     below.
->
->     On Thu, 17 Jan 2019, at 08:31, Vijay Khemka wrote:
->     > Makiing memory-region and flash as optional parameter in device
->     > tree if user needs to use these parameter through ioctl then
->     > need to define in devicetree.
->     >
->     > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
->     > ---
->     >  drivers/misc/aspeed-lpc-ctrl.c | 58 +++++++++++++++++++++---------=
-----
->     >  1 file changed, 36 insertions(+), 22 deletions(-)
->     >
->     > diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/misc/aspeed-l=
-pc-
->     > ctrl.c
->     > index a024f8042259..332210e06e98 100644
->     > --- a/drivers/misc/aspeed-lpc-ctrl.c
->     > +++ b/drivers/misc/aspeed-lpc-ctrl.c
->     > @@ -68,6 +68,7 @@ static long aspeed_lpc_ctrl_ioctl(struct file *fi=
-le,
->     > unsigned int cmd,
->     >           unsigned long param)
->     >  {
->     >   struct aspeed_lpc_ctrl *lpc_ctrl =3D file_aspeed_lpc_ctrl(file);
->     > + struct device *dev =3D file->private_data;
->     >   void __user *p =3D (void __user *)param;
->     >   struct aspeed_lpc_ctrl_mapping map;
->     >   u32 addr;
->     > @@ -90,6 +91,12 @@ static long aspeed_lpc_ctrl_ioctl(struct file *f=
-ile,
->     > unsigned int cmd,
->     >           if (map.window_id !=3D 0)
->     >                   return -EINVAL;
->     >
->     > +         /* If memory-region is not described in device tree */
->     > +         if (!lpc_ctrl->mem_size) {
->     > +                 dev_err(dev, "Didn't find reserved memory\n");
->     > +                 return -EINVAL;
->
->     I feel like EINVAL isn't quite right - it's pretty generic, and the p=
-arameter
->     value changes its validity with the devicetree context. My gut instin=
-ct
->     would be to use EINVAL for parameter values that violate assumptions
->     of the driver rather than violate configuration of the driver. Maybe =
-ENXIO
->     ("No such device or address") is an improvement: "I can't map that de=
-vice
->     because there's no such device or address"?
->
->     > +         }
->     > +
->     >           map.size =3D lpc_ctrl->mem_size;
->     >
->     >           return copy_to_user(p, &map, sizeof(map)) ? -EFAULT : 0;
->     > @@ -126,9 +133,18 @@ static long aspeed_lpc_ctrl_ioctl(struct file
->     > *file, unsigned int cmd,
->     >                   return -EINVAL;
->     >
->     >           if (map.window_type =3D=3D ASPEED_LPC_CTRL_WINDOW_FLASH) =
-{
->     > +                 if (!lpc_ctrl->pnor_size) {
->     > +                         dev_err(dev, "Didn't find host pnor flash=
-\n");
->     > +                         return -EINVAL;
->
->     See the error code discussion above. Also, this is userspace's error =
-not
->     the kernel's, so I think dev_err() is a bit harsh. Probably best to j=
-ust let
->     userspace log the error if it thinks the it is concerning.
->
->     > +                 }
->     >                   addr =3D lpc_ctrl->pnor_base;
->     >                   size =3D lpc_ctrl->pnor_size;
->     >           } else if (map.window_type =3D=3D ASPEED_LPC_CTRL_WINDOW_=
-MEMORY) {
->     > +                 /* If memory-region is not described in device tr=
-ee */
->     > +                 if (!lpc_ctrl->mem_size) {
->     > +                         dev_err(dev, "Didn't find reserved memory=
-\n");
->     > +                         return -EINVAL;
->
->     as above.
->
->     > +                 }
->     >                   addr =3D lpc_ctrl->mem_base;
->     >                   size =3D lpc_ctrl->mem_size;
->     >           } else {
->     > @@ -196,17 +212,17 @@ static int aspeed_lpc_ctrl_probe(struct
->     > platform_device *pdev)
->     >   if (!lpc_ctrl)
->     >           return -ENOMEM;
->     >
->     > + /* If flash is described in device tree then store */
->     >   node =3D of_parse_phandle(dev->of_node, "flash", 0);
->     >   if (!node) {
->     > -         dev_err(dev, "Didn't find host pnor flash node\n");
->     > -         return -ENODEV;
->     > - }
->     > -
->     > - rc =3D of_address_to_resource(node, 1, &resm);
->     > - of_node_put(node);
->     > - if (rc) {
->     > -         dev_err(dev, "Couldn't address to resource for flash\n");
->     > -         return rc;
->     > +         dev_dbg(dev, "Didn't find host pnor flash node\n");
->     > + } else {
->     > +         rc =3D of_address_to_resource(node, 1, &resm);
->     > +         of_node_put(node);
->     > +         if (rc) {
->     > +                 dev_err(dev, "Couldn't address to resource for fl=
-ash\n");
->     > +                 return rc;
->     > +         }
->     >   }
->     >
->     >   lpc_ctrl->pnor_size =3D resource_size(&resm);
->     > @@ -214,22 +230,22 @@ static int aspeed_lpc_ctrl_probe(struct
->     > platform_device *pdev)
->     >
->     >   dev_set_drvdata(&pdev->dev, lpc_ctrl);
->     >
->     > + /* If memory-region is described in device tree then store */
->     >   node =3D of_parse_phandle(dev->of_node, "memory-region", 0);
->     >   if (!node) {
->     > -         dev_err(dev, "Didn't find reserved memory\n");
->     > -         return -EINVAL;
->     > - }
->     > +         dev_dbg(dev, "Didn't find reserved memory\n");
->     > + } else {
->     > +         rc =3D of_address_to_resource(node, 0, &resm);
->     > +         of_node_put(node);
->     > +         if (rc) {
->     > +                 dev_err(dev, "Couldn't address to resource for re=
-served memory\n");
->     > +                 return -ENOMEM;
->
->     Wow, I think this is an abuse of ENOMEM. Its description is "Out of m=
-emory"
->     which doesn't really reflect the problem here.
->
->     Not really your fault though, maybe we'll fix that with some follow-u=
-p patches.
->
->     Cheers,
->
->     Andrew
->
->     > +         }
->     >
->     > - rc =3D of_address_to_resource(node, 0, &resm);
->     > - of_node_put(node);
->     > - if (rc) {
->     > -         dev_err(dev, "Couldn't address to resource for reserved m=
-emory\n");
->     > -         return -ENOMEM;
->     > +         lpc_ctrl->mem_size =3D resource_size(&resm);
->     > +         lpc_ctrl->mem_base =3D resm.start;
->     >   }
->     >
->     > - lpc_ctrl->mem_size =3D resource_size(&resm);
->     > - lpc_ctrl->mem_base =3D resm.start;
->     > -
->     >   lpc_ctrl->regmap =3D syscon_node_to_regmap(
->     >                   pdev->dev.parent->of_node);
->     >   if (IS_ERR(lpc_ctrl->regmap)) {
->     > @@ -258,8 +274,6 @@ static int aspeed_lpc_ctrl_probe(struct
->     > platform_device *pdev)
->     >           goto err;
->     >   }
->     >
->     > - dev_info(dev, "Loaded at %pr\n", &resm);
->     > -
->     >   return 0;
->     >
->     >  err:
->     > --
->     > 2.17.1
->     >
->
->
+T24gMzAvMDQvMjAxOSAxOS4xOSwgQ2hyaXN0b3BoZSBMZXJveSB3cm90ZToNCj4gDQo+IA0KPiBM
+ZSAzMC8wNC8yMDE5IMOgIDE1OjM2LCBSYXNtdXMgVmlsbGVtb2VzIGEgw6ljcml0wqA6DQo+PiBU
+aGUgY3VycmVudCBjb2RlIGFzc3VtZXMgdGhhdCB0aGUgc2V0IG9mIHNudW0gX3ZhbHVlc18gdG8g
+cG9wdWxhdGUgdGhlDQo+PiBzbnVtc1tdIGFycmF5IHdpdGggaXMgYSBmdW5jdGlvbiBvZiB0aGUg
+X251bWJlcl8gb2Ygc251bXMNCj4+IGFsb25lLiBIb3dldmVyLCByZWFkaW5nIHRhYmxlIDQtMzAs
+IGFuZCBpdHMgZm9vdG5vdGVzLCBvZiB0aGUgUVVJQ0MNCj4+IEVuZ2luZSBCbG9jayBSZWZlcmVu
+Y2UgTWFudWFsIHNob3dzIHRoYXQgdGhhdCBpcyBhIGJpdCB0b28gbmFpdmUuDQo+Pg0KPj4gQXMg
+YW4gYWx0ZXJuYXRpdmUsIHRoaXMgaW50cm9kdWNlcyBhIG5ldyBiaW5kaW5nIGZzbCxxZS1zbnVt
+cywgd2hpY2gNCj4+IGF1dG9tYXRpY2FsbHkgZW5jb2RlcyBib3RoIHRoZSBudW1iZXIgb2Ygc251
+bXMgYW5kIHRoZSBhY3R1YWwgdmFsdWVzIHRvDQo+PiB1c2UuIENvbnZlbmllbnRseSwgb2ZfcHJv
+cGVydHlfcmVhZF92YXJpYWJsZV91OF9hcnJheSBkb2VzIGV4YWN0bHkNCj4+IHdoYXQgd2UgbmVl
+ZC4NCj4+DQo+PiBGb3IgZXhhbXBsZSwgZm9yIHRoZSBNUEM4MzA5LCBvbmUgd291bGQgc3BlY2lm
+eSB0aGUgcHJvcGVydHkgYXMNCj4+DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+ZnNsLHFlLXNudW1zID0gL2JpdHMvIDggPA0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCAweDg4IDB4ODkgMHg5OCAweDk5IDB4YTggMHhhOSAweGI4IDB4
+YjkNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHhj
+OCAweGM5IDB4ZDggMHhkOSAweGU4IDB4ZTk+Ow0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFJhc211
+cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJldmFzLmRrPg0KPj4gLS0tDQo+PiDCoCAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2NwbV9xZS9xZS50eHTCoMKgwqDCoMKgIHzC
+oCA4ICsrKysrKystDQo+PiDCoCBkcml2ZXJzL3NvYy9mc2wvcWUvcWUuY8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDE0ICsrKysrKysrKysr
+KystDQo+PiDCoCAyIGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
+KC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zb2MvZnNsL2NwbV9xZS9xZS50eHQNCj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4dA0KPj4gaW5kZXggZDdhZmFmZjVmYWZmLi4wNWY1
+ZjQ4NTU2MmEgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3Mvc29jL2ZzbC9jcG1fcWUvcWUudHh0DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUudHh0DQo+PiBAQCAtMTgsNyArMTgsOCBAQCBS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPj4gwqAgLSByZWcgOiBvZmZzZXQgYW5kIGxlbmd0aCBvZiB0
+aGUgZGV2aWNlIHJlZ2lzdGVycy4NCj4+IMKgIC0gYnVzLWZyZXF1ZW5jeSA6IHRoZSBjbG9jayBm
+cmVxdWVuY3kgZm9yIFFVSUNDIEVuZ2luZS4NCj4+IMKgIC0gZnNsLHFlLW51bS1yaXNjczogZGVm
+aW5lIGhvdyBtYW55IFJJU0MgZW5naW5lcyB0aGUgUUUgaGFzLg0KPj4gLS0gZnNsLHFlLW51bS1z
+bnVtczogZGVmaW5lIGhvdyBtYW55IHNlcmlhbCBudW1iZXIoU05VTSkgdGhlIFFFIGNhbg0KPj4g
+dXNlIGZvciB0aGUNCj4+ICstIGZzbCxxZS1zbnVtczogVGhpcyBwcm9wZXJ0eSBoYXMgdG8gYmUg
+c3BlY2lmaWVkIGFzICcvYml0cy8gOCcgdmFsdWUsDQo+PiArwqAgZGVmaW5pbmcgdGhlIGFycmF5
+IG9mIHNlcmlhbCBudW1iZXIgKFNOVU0pIHZhbHVlcyBmb3IgdGhlIHZpcnR1YWwNCj4+IMKgwqDC
+oCB0aHJlYWRzLg0KPj4gwqAgwqAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4+IEBAIC0zNCw2ICsz
+NSwxMSBAQCBSZWNvbW1lbmRlZCBwcm9wZXJ0aWVzDQo+PiDCoCAtIGJyZy1mcmVxdWVuY3kgOiB0
+aGUgaW50ZXJuYWwgY2xvY2sgc291cmNlIGZyZXF1ZW5jeSBmb3IgYmF1ZC1yYXRlDQo+PiDCoMKg
+wqAgZ2VuZXJhdG9ycyBpbiBIei4NCj4+IMKgICtEZXByZWNhdGVkIHByb3BlcnRpZXMNCj4+ICst
+IGZzbCxxZS1udW0tc251bXM6IGRlZmluZSBob3cgbWFueSBzZXJpYWwgbnVtYmVyKFNOVU0pIHRo
+ZSBRRSBjYW4gdXNlDQo+PiArwqAgZm9yIHRoZSB0aHJlYWRzLiBVc2UgZnNsLHFlLXNudW1zIGlu
+c3RlYWQgdG8gbm90IG9ubHkgc3BlY2lmeSB0aGUNCj4+ICvCoCBudW1iZXIgb2Ygc251bXMsIGJ1
+dCBhbHNvIHRoZWlyIHZhbHVlcy4NCj4+ICsNCj4+IMKgIEV4YW1wbGU6DQo+PiDCoMKgwqDCoMKg
+wqAgcWVAZTAxMDAwMDAgew0KPj4gwqDCoMKgwqDCoCAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyBiL2RyaXZlcnMvc29jL2ZzbC9x
+ZS9xZS5jDQo+PiBpbmRleCBhZmY5ZDEzNzM1MjkuLmFmM2MyYjJiMjY4ZiAxMDA2NDQNCj4+IC0t
+LSBhL2RyaXZlcnMvc29jL2ZzbC9xZS9xZS5jDQo+PiArKysgYi9kcml2ZXJzL3NvYy9mc2wvcWUv
+cWUuYw0KPj4gQEAgLTI4Myw3ICsyODMsNiBAQCBFWFBPUlRfU1lNQk9MKHFlX2Nsb2NrX3NvdXJj
+ZSk7DQo+PiDCoMKgICovDQo+PiDCoCBzdGF0aWMgdm9pZCBxZV9zbnVtc19pbml0KHZvaWQpDQo+
+PiDCoCB7DQo+PiAtwqDCoMKgIGludCBpOw0KPiANCj4gV2h5IGRvIHlvdSBtb3ZlIHRoaXMgb25l
+ID8NCg0KVG8ga2VlcCB0aGUgZGVjbGFyYXRpb25zIG9mIHRoZSBhdXRvIHZhcmlhYmxlcyB0b2dl
+dGhlci4gV2hlbiByZWFkaW5nDQp0aGUgY29kZSBhbmQgbmVlZGluZyB0byBrbm93IHRoZSB0eXBl
+IG9mIGksIGl0J3MgbXVjaCBoYXJkZXIgdG8gZmluZCBpdHMNCmRlY2xhcmF0aW9uIGlmIG9uZSBo
+YXMgdG8gc2tpcCBiYWNrIG92ZXIgdGhlIHR3byB0YWJsZXMsIGFuZCBpdCdzDQp1bm5hdHVyYWwg
+dG8gaGF2ZSBpdCBzZXBhcmF0ZSBmcm9tIHRoZSBvdGhlcnMuDQoNCj4+IMKgwqDCoMKgwqAgc3Rh
+dGljIGNvbnN0IHU4IHNudW1faW5pdF83NltdID0gew0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgIDB4
+MDQsIDB4MDUsIDB4MEMsIDB4MEQsIDB4MTQsIDB4MTUsIDB4MUMsIDB4MUQsDQo+PiDCoMKgwqDC
+oMKgwqDCoMKgwqAgMHgyNCwgMHgyNSwgMHgyQywgMHgyRCwgMHgzNCwgMHgzNSwgMHg4OCwgMHg4
+OSwNCj4+IEBAIC0zMDQsOSArMzAzLDIyIEBAIHN0YXRpYyB2b2lkIHFlX3NudW1zX2luaXQodm9p
+ZCkNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCAweDI4LCAweDI5LCAweDM4LCAweDM5LCAweDQ4LCAw
+eDQ5LCAweDU4LCAweDU5LA0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgIDB4NjgsIDB4NjksIDB4Nzgs
+IDB4NzksIDB4ODAsIDB4ODEsDQo+PiDCoMKgwqDCoMKgIH07DQo+PiArwqDCoMKgIHN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqcWU7DQo+PiDCoMKgwqDCoMKgIGNvbnN0IHU4ICpzbnVtX2luaXQ7DQo+PiAr
+wqDCoMKgIGludCBpOw0KPj4gwqAgwqDCoMKgwqDCoCBiaXRtYXBfemVybyhzbnVtX3N0YXRlLCBR
+RV9OVU1fT0ZfU05VTSk7DQo+PiArwqDCoMKgIHFlID0gcWVfZ2V0X2RldmljZV9ub2RlKCk7DQo+
+PiArwqDCoMKgIGlmIChxZSkgew0KPj4gK8KgwqDCoMKgwqDCoMKgIGkgPSBvZl9wcm9wZXJ0eV9y
+ZWFkX3ZhcmlhYmxlX3U4X2FycmF5KHFlLCAiZnNsLHFlLXNudW1zIiwNCj4+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc251bXMs
+IDEsIFFFX05VTV9PRl9TTlVNKTsNCj4+ICvCoMKgwqDCoMKgwqDCoCBvZl9ub2RlX3B1dChxZSk7
+DQo+PiArwqDCoMKgwqDCoMKgwqAgaWYgKGkgPiAwKSB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBxZV9udW1fb2Zfc251bSA9IGk7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1
+cm47DQo+IA0KPiBJbiB0aGF0IGNhc2UgeW91IHNraXAgdGhlIHJlc3Qgb2YgdGhlIGluaXQgPyBD
+YW4geW91IGV4cGxhaW4gPw0KDQpJZiBvZl9wcm9wZXJ0eV9yZWFkX3ZhcmlhYmxlX3U4X2FycmF5
+IGlzIHN1Y2Nlc2Z1bCwgaXQgaGFzIGFscmVhZHkNCnN0b3JlZCB0aGUgdmFsdWVzIGludG8gdGhl
+IHNudW1zIGFycmF5LCBzbyB0aGVyZSdzIG5vIGNvcHlpbmcgbGVmdCB0bw0KZG8sIGFuZCB0aGUg
+cmV0dXJuIHZhbHVlIGlzIHRoZSBsZW5ndGggb2YgdGhlIGFycmF5ICh3aGljaCB3ZSBzYXZlIGZv
+cg0KbGF0ZXIgaW4gcWVfbnVtX29mX3NudW0pLiBTbyB0aGVyZSdzIHJlYWxseSBub3RoaW5nIG1v
+cmUgdG8gZG8uDQoNClRoaXMgd2FzIHdoYXQgSSB0cmllZCB0byBoaW50IGF0IHdpdGggIkNvbnZl
+bmllbnRseSwNCm9mX3Byb3BlcnR5X3JlYWRfdmFyaWFibGVfdThfYXJyYXkgZG9lcyBleGFjdGx5
+DQp3aGF0IHdlIG5lZWQuIiwgYnV0IEkgY2FuIHNlZSB0aGF0IHRoYXQgbWlnaHQgbmVlZCBlbGFi
+b3JhdGluZyBhIGxpdHRsZS4NCg0KUmFzbXVzDQo=
