@@ -2,182 +2,116 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFB1C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C09C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0719320835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556728037;
-	bh=QNpnCPkV3/b0tnrMUodSGF1+h/20QEARntDWcAUOpKM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XE0BZ9I1PtBvpvq782987I0WSCkeEX7fWvoLaNoaNhsw7iCvvtAj8xPT15fJlUa3Y
-	 qbhPkElfrQgb0CGlrX8/YsdcYyrHqJH1+TQkLZg79mNQoBHVD7RM9s9sQQGRsDPogN
-	 u2EyhHlLXUDewbYtXqQTDimX0/9K0DC9gHaobztI=
+	by mail.kernel.org (Postfix) with ESMTP id 2BC0B20835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfEAQ1Q (ORCPT
+        id S1726599AbfEAQ3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35952 "EHLO mail.kernel.org"
+        Wed, 1 May 2019 12:29:50 -0400
+Received: from muru.com ([72.249.23.125]:47754 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbfEAQ1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:27:15 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2CA520835;
-        Wed,  1 May 2019 16:27:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556728034;
-        bh=QNpnCPkV3/b0tnrMUodSGF1+h/20QEARntDWcAUOpKM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sqp5SVDa4nhuGj8W5aMwN2LXkCdkQZqPMRHJ0VE6EbJWrWjaF0XZGB7QCW274ngeN
-         zt8SRq8ojVn1IhRh/oZ3E0Wy07Izd3E5uDkZWFr/uBGJsx4yPe5DgRGTm9sOupSDwM
-         ntW4IqK7hZ0hGVZgH9EWQzCtWQeGNe8R7Kt7YyZc=
-Received: by mail-qk1-f169.google.com with SMTP id d5so10443998qko.12;
-        Wed, 01 May 2019 09:27:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAW4DateloU5ER4cMe3XJxfJjHjGZTmVwvD/o38ts8iLpVZFsGff
-        T4iT3mnuLUigZU3lOHwcg0JPUoolr1VqZA+U3Q==
-X-Google-Smtp-Source: APXvYqyCXQr3u7uAxcUVOILBuMuhFCX+sPtcLyuqXIgJyVLjwYMn8i16UWe/OA76g5f5zMY/VN+/wMpT65IW9JfEWjg=
-X-Received: by 2002:a37:4711:: with SMTP id u17mr19046164qka.326.1556728033039;
- Wed, 01 May 2019 09:27:13 -0700 (PDT)
+        id S1726434AbfEAQ3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 12:29:49 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id BB80B805C;
+        Wed,  1 May 2019 16:30:04 +0000 (UTC)
+Date:   Wed, 1 May 2019 09:29:44 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "kernelci.org bot" <bot@kernelci.org>, Tejun Heo <tj@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
+        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org
+Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
+Message-ID: <20190501162944.GW8004@atomide.com>
+References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
+ <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
 MIME-Version: 1.0
-References: <20190420064019.57522-1-chenyu56@huawei.com> <20190420064019.57522-3-chenyu56@huawei.com>
- <20190425213532.GA32028@bogus> <f925304a-17ef-1574-b671-77d4ad0331d8@huawei.com>
-In-Reply-To: <f925304a-17ef-1574-b671-77d4ad0331d8@huawei.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 1 May 2019 11:27:01 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Xf===cii0me0pwjZ2mcxXmYXDjNH7UpOftUphHCxd1w@mail.gmail.com>
-Message-ID: <CAL_Jsq+Xf===cii0me0pwjZ2mcxXmYXDjNH7UpOftUphHCxd1w@mail.gmail.com>
-Subject: Re: [PATCH v6 02/13] dt-bindings: misc: Add bindings for HiSilicon
- usb hub and data role switch functionality on HiKey960
-To:     Chen Yu <chenyu56@huawei.com>
-Cc:     liuyu712@hisilicon.com, Linux USB List <linux-usb@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Suzhuangluan <suzhuangluan@hisilicon.com>, kongfei@hisilicon.com,
-        wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com,
-        fangshengzhou@hisilicon.com,
-        Li Pengcheng <lipengcheng8@huawei.com>,
-        Song Xiaowei <songxiaowei@hisilicon.com>,
-        Yiping Xu <xuyiping@hisilicon.com>, xuyoujun4@huawei.com,
-        yudongbin@hisilicon.com, zangleigang <zangleigang@hisilicon.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 1:08 AM Chen Yu <chenyu56@huawei.com> wrote:
->
-> Hi Rob,
->
-> On 2019/4/26 5:35, Rob Herring wrote:
-> > On Sat, Apr 20, 2019 at 02:40:08PM +0800, Yu Chen wrote:
-> >> This patch adds binding documentation to support usb hub and usb
-> >> data role switch of Hisilicon HiKey960 Board.
-> >
-> > Sorry I've been slow to really review this, but I needed to look at the
-> > schematics to see what exactly is going on here.
-> >
-> > I think this needs some changes to better reflect the h/w and utilize
-> > existing bindings. It should really be designed ignoring the muxing to
-> > start with. Define the binding for the TypeC connector and then the host
-> > hub and make sure they can coexist. Then overlay what you need to switch
-> > between the 2 modes which AFAICT is just a single GPIO.
-> >
-> >>
-> >> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> >> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >> Cc: Rob Herring <robh+dt@kernel.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Cc: John Stultz <john.stultz@linaro.org>
-> >> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> >> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> >> ---
-> >> v1:
-> >> * Fix some format errors as suggested by Sergei.
-> >> * Modify gpio description to use gpiod API.
-> >> v2:
-> >> * Remove information about Hikey.
-> >> * Fix gpio description.
-> >> * Remove device_type of endpoint.
-> >> v3:
-> >> * Remove property typec-vbus-enable-val.
-> >> * Add description of pinctrl-names.
-> >> * Add example for "hisilicon,gpio-hubv1"
-> >> * Add flag in gpiod properties.
-> >> ---
-> >> ---
-> >>  .../bindings/misc/hisilicon-hikey-usb.txt          | 52 ++++++++++++++++++++++
-> >>  1 file changed, 52 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> >> new file mode 100644
-> >> index 000000000000..422e844df719
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> >> @@ -0,0 +1,52 @@
-> >> +Support usb hub and usb data role switch of Hisilicon HiKey960 Board.
-> >> +
-> >> +-----------------------------
-> >> +
-> >> +Required properties:
-> >> +- compatible: "hisilicon,gpio-hubv1","hisilicon,hikey960-usb"
-> >> +- typec-vbus-gpios: gpio to control the vbus of typeC port
-> >
-> > This should be a gpio regulator and then connected to 'vbus-supply' in a
-> > usb-connector node (see .../bindings/connectors/usb-connector.txt).
-> Currently usb-connector node has no "vbus-supply" property and
-> I do not find process that handles vbus-supply in RT1711H TypeC driver.
+Hi,
 
-The patch[1] adding that is posted to the list and may not have landed yet.
+* Sebastian Andrzej Siewior <bigeasy@linutronix.de> [190501 15:37]:
+> 
+> On 2019-04-30 13:51:40 [-0700], kernelci.org bot wrote:
+> > next/master boot bisection: next-20190430 on beagle-xm
+> > 
+> > Summary:
+> >   Start:      f43b05fd4c17 Add linux-next specific files for 20190430
+> >   Details:    https://kernelci.org/boot/id/5cc84d7359b514b7ab55847b
+> >   Plain log:  https://storage.kernelci.org//next/master/next-20190430/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-baylibre/boot-omap3-beagle-xm.txt
+> >   HTML log:   https://storage.kernelci.org//next/master/next-20190430/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-baylibre/boot-omap3-beagle-xm.html
+> >   Result:     6d25be5782e4 sched/core, workqueues: Distangle worker accounting from rq lock
+> > 
+> > Checks:
+> >   revert:     PASS
+> >   verify:     PASS
+> > 
+> > Parameters:
+> >   Tree:       next
+> >   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >   Branch:     master
+> >   Target:     beagle-xm
+> >   CPU arch:   arm
+> >   Lab:        lab-baylibre
+> >   Compiler:   gcc-7
+> >   Config:     multi_v7_defconfig+CONFIG_SMP=n
+> >   Test suite: boot
+> > 
+> > Breaking commit found:
+> > 
+> > -------------------------------------------------------------------------------
+> > commit 6d25be5782e482eb93e3de0c94d0a517879377d0
+> > Author: Thomas Gleixner <tglx@linutronix.de>
+> > Date:   Wed Mar 13 17:55:48 2019 +0100
+> > 
+> >     sched/core, workqueues: Distangle worker accounting from rq lock
+> 
+> According to the bootlog it just stopped its output. This commit is in
+> next since a week or two so I don't understand why this pops up now.
 
-Whether the RT1711H TypeC driver handles it or not is not a binding problem.
+Adding Kevin to Cc, he just confirmed on #armlinux irc that he is able to
+reproduce this with CONFIG_SMP=n and root=/dev/ram0. I could not reproduce
+this issue so far on omap3 with NFSroot at least.
 
-> > Then you also need the RT1711HWSC TypeC controller in DT. That is
-> > typically the parent device of the connector node.
-> >
-> >> +- otg-switch-gpios: gpio to switch DP & DM between the hub and typeC port
-> >
-> > This probably belongs in USB controller node.
-> >
-> The otg-switch-gpios controls a mux like fsusb30mux. It is related to
-> the board design of HiKey960. And the state of the mux is decided by
-> the typeC port state. So I think it is not so good to make it belongs
-> in USB controller node.
+> I just revived my BBB and I can boot that commit in question. Currently
+> that as close as I get to a beagle-xm. 
+> Looking at
+> 	https://kernelci.org/boot/id/5cc9a64359b514a77f5584af/
+> it seems that the very same board managed to boot linux-next for
+> next-20190501.
+> 
+> Side note: I can't boot next-20190501 on my BBB, bisect points to commit
+>   1a5cd7c23cc52 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
+> 
+> any idea?
 
-Let me put it this way. The gpio property belongs wherever the mux is
-represented. In this case, I would expect the graph port representing
-the HS port to have 2 endpoints representing the 2 mux outputs. We
-don't generally put properties in the endpoint or port nodes, but the
-parent nodes.
+Oh interesting thanks for letting me know. Next boots fine for me here
+with NFSroot on BBB.
 
-> >> +- hub-vdd33-en-gpios: gpio to enable the power of hub
-> >
-> > This too should be a gpio regulator and then in a hub node. We have 2
-> > ways to represent hubs. Either as an I2C device or as a child of the
-> > host controller. The latter is preferred, but I'm not too sure how the
-> > OF graph connection linking the controller to the TypeC connector will
-> > work with the usb bus binding.
-> >
-> There is no particular code except the power control for the hub.
-> The i2c on the hub is not used. So it can not be an I2C device.
-> Is there such an example that make the hub as a child of the host controller
-> and control its power?
+Do you have some output on what happens so I can investigate?
 
-Yes, bindings/usb/usb-device.txt.
+Regards,
 
-Rob
+Tony
 
-[1] https://www.spinics.net/lists/kernel/msg3089136.html
