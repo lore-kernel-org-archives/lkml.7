@@ -2,84 +2,102 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D06C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42EDC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 254B0208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:46:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuZYyAbE"
+	by mail.kernel.org (Postfix) with ESMTP id 8DCB0208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfEAOqM (ORCPT
+        id S1726836AbfEAOtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 10:46:12 -0400
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:37418 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfEAOqM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 10:46:12 -0400
-Received: by mail-ot1-f47.google.com with SMTP id r20so13804452otg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 07:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mean50VLm+Ltg1ziPZdYCm7+U49ZnbbE0jixdd/cy0k=;
-        b=EuZYyAbEXhDX3NX22m5vtTI/l2EQZDXA0UkrGpfrpPip7Wnx3tOs9TNb87ijtjA1N7
-         Q+Qi4l5PJqqMStLjUmtvi2YvkCcPEb5EoskucFLQToCdQ78RupAX5zkWnJy810iPjWdw
-         y7GBfFU1rbrIr0wFpfR70HjSRAol/h26bFTcZUK9KTlXdX8hwI0F9W84CkIyvjIOmnxh
-         PlNerHi87ZMnxjVsb+GPBgmuy2wm93tCsGxK+pwUWFM0QqXFFAqXDjOCHC0JPjDFI12c
-         uXxJGowLdnBj1jhJTdQAywq8V5KcsOampjy/PVGNDNgDTA5kXWVJu1BVoRR72YaARCQf
-         r7gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mean50VLm+Ltg1ziPZdYCm7+U49ZnbbE0jixdd/cy0k=;
-        b=FveXWMH3q4OEPfFg/kgYlIxW01tOXchfJxKjob+4HOAPp47TuPWdb95Zy0951cfNGO
-         4w1gcDyu0XcEuJgdF3K+PyGmM2/dF1O72HvateP9fTw4zQ+0ZaBGgzE2x3EIZn+VbpCi
-         jae8HIgZiZmd4qn9/7rZIpucMO0pQxDkm0yo8/j9fExBxMbdHmbLVB1evyhlYu9F1PsD
-         MRJkaALkRn6rQS6jvLJNTITTQRJvoUj1QECH3Nj06+CpbChJM5k21SZBJx+1hBW5aRVO
-         yrOtyi98xmwVoUFnoJSJ2WYdnk7temGQNvGKO4lSZYmL4+3U+w0lpDQMXT2UxXkeGMVL
-         i41w==
-X-Gm-Message-State: APjAAAXBvGq7IPWp1ul9W+QoOXDvGmTtgKB8PGx9gZFnwVdn0ZHQrZKX
-        FXBgmOiWZW9s/b/CholR/DhNZmKMJuVcWMwBPqh+lg==
-X-Google-Smtp-Source: APXvYqwUHSRvz9ag5AOqu6flAFRoXst5Dx8uASfN3YMKHW3QrlzwBzSPWqAs/BNqjdGiNyEk1dysEEWAgcBVsZ/vfcY=
-X-Received: by 2002:a9d:7319:: with SMTP id e25mr2112796otk.279.1556721971685;
- Wed, 01 May 2019 07:46:11 -0700 (PDT)
+        Wed, 1 May 2019 10:49:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49598 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726673AbfEAOtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 10:49:50 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6AA7EC024915;
+        Wed,  1 May 2019 14:49:49 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E30A710021B4;
+        Wed,  1 May 2019 14:49:44 +0000 (UTC)
+Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
+ Ownership (XPFO)
+To:     Khalid Aziz <khalid.aziz@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     juergh@gmail.com, tycho@tycho.ws, jsteckli@amazon.de,
+        keescook@google.com, konrad.wilk@oracle.com,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
+        tyhicks@canonical.com, dwmw@amazon.co.uk,
+        andrew.cooper3@citrix.com, jcm@redhat.com,
+        boris.ostrovsky@oracle.com, iommu@lists.linux-foundation.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-security-module@vger.kernel.org,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arjan van de Ven <arjan@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <cover.1554248001.git.khalid.aziz@oracle.com>
+ <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
+ <20190417161042.GA43453@gmail.com>
+ <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <35c4635e-8214-7dde-b4ec-4cb266b2ea10@redhat.com>
+Date:   Wed, 1 May 2019 10:49:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190501140624.6931-1-TheSven73@gmail.com> <20190501142332.GA13008@kroah.com>
- <CAGngYiXAz-10BtMs6K1mNwHgakK=U80hX4+Cf6tG8Vc3Ag=NOA@mail.gmail.com> <20190501144321.GB31461@kroah.com>
-In-Reply-To: <20190501144321.GB31461@kroah.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Wed, 1 May 2019 10:46:00 -0400
-Message-ID: <CAGngYiX6-VWLus5uxey0EqANYTL=EJJTyQUCDA4juNfwm_6Anw@mail.gmail.com>
-Subject: Re: [GIT PULL] staging/fieldbus-dev for 5.2
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 01 May 2019 14:49:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 10:43 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> > What infrastructure do you trust? GitHub?
->
-> Hahahahahahaha
+On Wed, Apr 03, 2019 at 11:34:04AM -0600, Khalid Aziz wrote:
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt
+b/Documentation/admin-guide/kernel-parameters.txt
 
-Okay, maybe I wasn't completely innocent when I suggested
-that one :)
-
+> index 858b6c0b9a15..9b36da94760e 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2997,6 +2997,12 @@
 >
-> If you want a kernel.org account, so that you can have a development
-> tree there for future work, I suggest you apply for one.
+>      nox2apic    [X86-64,APIC] Do not enable x2APIC mode.
 >
+> +    noxpfo        [XPFO] Disable eXclusive Page Frame Ownership (XPFO)
+> +            when CONFIG_XPFO is on. Physical pages mapped into
+> +            user applications will also be mapped in the
+> +            kernel's address space as if CONFIG_XPFO was not
+> +            enabled.
+> +
+>      cpu0_hotplug    [X86] Turn on CPU0 hotplug feature when
+>              CONFIG_BO OTPARAM_HOTPLUG_CPU0 is off.
+>              Some features depend on CPU0. Known dependencies are:
 
-I will, thank you for the suggestion !
+Given the big performance impact that XPFO can have. It should be off by
+default when configured. Instead, the xpfo option should be used to
+enable it.
+
+Cheers,
+Longman
+
