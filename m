@@ -2,118 +2,127 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B629CC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628B0C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F71205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3592089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556742124;
+	bh=ieQcaLO4zm7IDaiolQ4F1oO1N2L0q7/pg35riCi+S20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xzfc6z9T6R4qE607fhOlFB4934mthVlbEtd78SeyPktW4pphVP2n3qnZ0PjzGrqCl
+	 d5Khhh/MBx+T84zyUki7qkt+I2Y76EbfTkgcsP9CMSjQ2zp625MdlQnFcrOEYLwy6L
+	 k/18TTeUCAwg+W1ecr92/qvqZ8zzvImL/d/KaRNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfEAUVz (ORCPT
+        id S1726369AbfEAUWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:21:55 -0400
-Received: from muru.com ([72.249.23.125]:47828 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfEAUVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:21:55 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AAB61805C;
-        Wed,  1 May 2019 20:22:09 +0000 (UTC)
-Date:   Wed, 1 May 2019 13:21:49 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     "kernelci.org bot" <bot@kernelci.org>, Tejun Heo <tj@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org
-Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
-Message-ID: <20190501202149.GM8007@atomide.com>
-References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
- <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
- <20190501162944.GW8004@atomide.com>
- <20190501164444.iclxlzrxofqnj4bn@linutronix.de>
- <20190501165224.GK8007@atomide.com>
- <20190501170125.xjlwdyqtp5oxx2mb@linutronix.de>
- <20190501174431.GL8007@atomide.com>
- <20190501190303.pz2yxs3hnc2qpamu@linutronix.de>
+        Wed, 1 May 2019 16:22:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39183 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfEAUWC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 16:22:02 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o39so109498ota.6;
+        Wed, 01 May 2019 13:22:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=j6+33T0eQYv+IRslxaB17BzPQR0ZaM4rayHxbAHslak=;
+        b=RE6QiWOQgI6pN7NXiR369Zc17nr6DSuJ+8WpLwe9HKX90iyJN3ZF/LZKuGuN5WX+OT
+         mbyQ3IY/oE9sMAKNVibyhoYcDh43raPXJjnio8waBjPMRAFp6mmftR/ELP0LMm8ZE4U2
+         HX3EMy9v/wYPmdA/JDgDBs81N4C0G4bET98BHO0/HrY36iLRDavO80l9UrsPRa4wbYBi
+         974N3+L8n8iuG4KTGffGiRvRQIMkDOWVhZFa1aPJmYzK5+ZXvTuh0JETya+9IR7AMCns
+         i+3etzKo9Cxo3sQYHdeigUcEG7xv05ClqArwQ5eHmSVjlE7t/a4Sp312u3NresQezP8n
+         AksA==
+X-Gm-Message-State: APjAAAU1ajGQxBVV1GNN8Al3jvWv9JDZ1pg/M+xqvlZGRmIO4eIIwgcO
+        OcvIkxxVuHZfCHIjSwj71Q==
+X-Google-Smtp-Source: APXvYqwBsg5utWlEXRbe3QYD7lyCysBSGwYTazCLxVYMMvMP+E5wWbFBBWdUCspop11+hVf0xHJhqQ==
+X-Received: by 2002:a9d:3624:: with SMTP id w33mr19027211otb.284.1556742121379;
+        Wed, 01 May 2019 13:22:01 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c26sm2891416otl.19.2019.05.01.13.22.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 13:22:00 -0700 (PDT)
+Date:   Wed, 1 May 2019 15:22:00 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Alban Bedel <albeu@free.fr>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: doc: Reflect new NVMEM
+ of_get_mac_address behaviour
+Message-ID: <20190501202200.GB15495@bogus>
+References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
+ <1556456002-13430-3-git-send-email-ynezz@true.cz>
+ <20190428165326.GI23059@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190501190303.pz2yxs3hnc2qpamu@linutronix.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190428165326.GI23059@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-* Sebastian Andrzej Siewior <bigeasy@linutronix.de> [190501 19:03]:
-> On 2019-05-01 10:44:31 [-0700], Tony Lindgren wrote:
-> > Hmm so I tried without "earlycon" in command line thinking it might be
-> > happening with just "earlyprintk" but still no luck.
+On Sun, Apr 28, 2019 at 06:53:26PM +0200, Andrew Lunn wrote:
+> On Sun, Apr 28, 2019 at 02:53:20PM +0200, Petr Štetiar wrote:
+> > As of_get_mac_address now supports NVMEM under the hood, we need to update
+> > the bindings documentation with the new nvmem-cell* properties, which would
+> > mean copy&pasting a lot of redundant information to every binding
+> > documentation currently referencing some of the MAC address properties.
 > > 
-> > BTW, in general you might want to update your kernel command line
-> > options to:
-> > 
-> > debug earlyprintk earlycon
+> > So I've just removed all the references to the optional MAC address
+> > properties and replaced them with the reference to the net/ethernet.txt
+> > file.  While at it, I've also removed other optional Ethernet properties.
 > 
-> debug. Let me look if I manage to hide that `debug' from systemd…
-
-Oh that.. I've been quite happy with openrc now for years :)
-
-> > Looking at the oops 0xfa1cc000, so 0x481cc000 I guess which is d_can0?
+> Hi Petr
 > 
-> That node around it I guess.
+> I think each individual binding needs to give a hint if
+> of_get_mac_address() is used, and hence if these optional properties
+> are respected. The same is true for other optional properties. I don't
+> want to have to look at the driver to know which optional properties
+> are implemented, the binding should tell me. What the optional
+> properties mean, and which order they are used in can then be defined
+> in ethernet.txt.
+> 
+> So i would suggests something like:
+> 
+> The MAC address will be determined using the optional properties
+> defined in ethernet.txt.
+> 
+> And leave all the other optional parameters in the bindings.
 
-OK I found two issues. It seems that d_can also needs osc clock
-on am335x. And there's no revision register for d_can.. We're now
-reading the CTL register unnecessarily.
+Yes. Generally we need to know which properties from a common pool of 
+properties apply to a specific binding. Also there are typically 
+additional constraints for a specific binding.
 
-Below is what I hope fixes the boot issue for you, care to boot
-test?
-
-If this helps I'll send out proper patches for for both issues.
-
-Regards,
-
-Tony
-
-8< ----------------------
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -1762,8 +1762,9 @@
- 			reg = <0xcc000 0x4>;
- 			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
--			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>;
--			clock-names = "fck";
-+			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>,
-+				 <&dcan0_fck>;
-+			clock-names = "fck", "osc";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0xcc000 0x2000>;
-@@ -1785,8 +1786,9 @@
- 			reg = <0xd0000 0x4>;
- 			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
--			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>;
--			clock-names = "fck";
-+			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>,
-+				 <&dcan1_fck>;
-+			clock-names = "fck", "osc";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0xd0000 0x2000>;
+Rob
