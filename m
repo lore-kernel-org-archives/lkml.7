@@ -6,32 +6,39 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C4BC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B897CC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7A321734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9274621734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfEAKT2 (ORCPT
+        id S1726301AbfEAKVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 06:19:28 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55722 "EHLO
+        Wed, 1 May 2019 06:21:43 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58967 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfEAKT0 (ORCPT
+        with ESMTP id S1726052AbfEAKVn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 06:19:26 -0400
+        Wed, 1 May 2019 06:21:43 -0400
 Received: from 79.184.254.69.ipv4.supernova.orange.pl (79.184.254.69) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 70b3b62544c16d63; Wed, 1 May 2019 12:19:24 +0200
+ id f51534df836c7de9; Wed, 1 May 2019 12:21:40 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Kyle Lin <linkyle0915@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cpufreq: stats: Use lock by stat to replace global spin lock
-Date:   Wed, 01 May 2019 12:19:24 +0200
-Message-ID: <10618804.orJkbRSvsU@kreacher>
-In-Reply-To: <20190409092752.kvaiq2gqjqjmy3pr@vireshk-i7>
-References: <20190409084304.35855-1-linkyle0915@gmail.com> <20190409092752.kvaiq2gqjqjmy3pr@vireshk-i7>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PM / core: Propagate dev->power.wakeup_path when no callbacks
+Date:   Wed, 01 May 2019 12:21:40 +0200
+Message-ID: <3232066.oa1jrYo8oc@kreacher>
+In-Reply-To: <20190410095516.6170-1-ulf.hansson@linaro.org>
+References: <20190410095516.6170-1-ulf.hansson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -40,92 +47,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, April 9, 2019 11:27:52 AM CEST Viresh Kumar wrote:
-> On 09-04-19, 16:43, Kyle Lin wrote:
-> > Stats is updated by each policy, using the lock by stat can
-> > reduce the contention.
-> > 
-> > Signed-off-by: Kyle Lin <linkyle0915@gmail.com>
-> > ---
-> > Changes in v2:
-> >   - Drop the comment of the lock.
-> > 
-> >  drivers/cpufreq/cpufreq_stats.c | 15 ++++++++-------
-> >  1 file changed, 8 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/cpufreq/cpufreq_stats.c b/drivers/cpufreq/cpufreq_stats.c
-> > index e2db5581489a..08b192eb22c6 100644
-> > --- a/drivers/cpufreq/cpufreq_stats.c
-> > +++ b/drivers/cpufreq/cpufreq_stats.c
-> > @@ -14,7 +14,6 @@
-> >  #include <linux/module.h>
-> >  #include <linux/slab.h>
-> >  
-> > -static DEFINE_SPINLOCK(cpufreq_stats_lock);
-> >  
-> >  struct cpufreq_stats {
-> >  	unsigned int total_trans;
-> > @@ -23,6 +22,7 @@ struct cpufreq_stats {
-> >  	unsigned int state_num;
-> >  	unsigned int last_index;
-> >  	u64 *time_in_state;
-> > +	spinlock_t lock;
-> >  	unsigned int *freq_table;
-> >  	unsigned int *trans_table;
-> >  };
-> > @@ -39,12 +39,12 @@ static void cpufreq_stats_clear_table(struct cpufreq_stats *stats)
-> >  {
-> >  	unsigned int count = stats->max_state;
-> >  
-> > -	spin_lock(&cpufreq_stats_lock);
-> > +	spin_lock(&stats->lock);
-> >  	memset(stats->time_in_state, 0, count * sizeof(u64));
-> >  	memset(stats->trans_table, 0, count * count * sizeof(int));
-> >  	stats->last_time = get_jiffies_64();
-> >  	stats->total_trans = 0;
-> > -	spin_unlock(&cpufreq_stats_lock);
-> > +	spin_unlock(&stats->lock);
-> >  }
-> >  
-> >  static ssize_t show_total_trans(struct cpufreq_policy *policy, char *buf)
-> > @@ -62,9 +62,9 @@ static ssize_t show_time_in_state(struct cpufreq_policy *policy, char *buf)
-> >  	if (policy->fast_switch_enabled)
-> >  		return 0;
-> >  
-> > -	spin_lock(&cpufreq_stats_lock);
-> > +	spin_lock(&stats->lock);
-> >  	cpufreq_stats_update(stats);
-> > -	spin_unlock(&cpufreq_stats_lock);
-> > +	spin_unlock(&stats->lock);
-> >  
-> >  	for (i = 0; i < stats->state_num; i++) {
-> >  		len += sprintf(buf + len, "%u %llu\n", stats->freq_table[i],
-> > @@ -211,6 +211,7 @@ void cpufreq_stats_create_table(struct cpufreq_policy *policy)
-> >  	stats->state_num = i;
-> >  	stats->last_time = get_jiffies_64();
-> >  	stats->last_index = freq_table_get_index(stats, policy->cur);
-> > +	spin_lock_init(&stats->lock);
-> >  
-> >  	policy->stats = stats;
-> >  	ret = sysfs_create_group(&policy->kobj, &stats_attr_group);
-> > @@ -242,11 +243,11 @@ void cpufreq_stats_record_transition(struct cpufreq_policy *policy,
-> >  	if (old_index == -1 || new_index == -1 || old_index == new_index)
-> >  		return;
-> >  
-> > -	spin_lock(&cpufreq_stats_lock);
-> > +	spin_lock(&stats->lock);
-> >  	cpufreq_stats_update(stats);
-> >  
-> >  	stats->last_index = new_index;
-> >  	stats->trans_table[old_index * stats->max_state + new_index]++;
-> >  	stats->total_trans++;
-> > -	spin_unlock(&cpufreq_stats_lock);
-> > +	spin_unlock(&stats->lock);
-> >  }
+On Wednesday, April 10, 2019 11:55:16 AM CEST Ulf Hansson wrote:
+> The dev->power.direct_complete flag may become set in device_prepare() in
+> case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
+> set). This leads to a broken behaviour, when there is child having wakeup
+> enabled and relies on its parent to be used in the wakeup path.
 > 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> More precisely, when the direct complete path becomes selected for the
+> child in __device_suspend(), the propagation of the dev->power.wakeup_path
+> becomes skipped as well.
+> 
+> Let's address this problem, by checking if the device is a part the wakeup
+> path or has wakeup enabled, then prevent the direct complete path from
+> being used.
+> 
+> Reported-by: Loic Pallardy <loic.pallardy@st.com>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+> 
+> More background:
+> 
+> This problem was reported by Loic Pallardy, offlist, while he was working
+> on enabling wakeup for a tty serial console driver.
+> 
+> When I looked more closely, I noticed that uart_suspend_port() calls
+> device_may_wakeup() for the tty child devices, and then also the used serial
+> driver check its device (parent) for device_may_wakeup(). To me this looks like
+> workarounds to fix a behaviour that really should be dealt with from the PM
+> core, no matter of whether the child have PM callbacks assigned or not.
+> 
+> In other words, it seems like the serial driver(s) should be checking the
+> wakeup_path flag for the parent, solely, instead.
+> 
+> I haven't digested further behaviours for other subsystem, but recently
+> reviewed a patch for a gpio driver [1], that seems to be suffering from the
+> similar problems.
+> 
+> Kind regards
+> Ulf Hansson
+> 
+> [1]
+> https://lkml.org/lkml/2019/4/4/1283
+> 
+> ---
+>  drivers/base/power/main.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index 41eba82ee7b9..f9cfdeee8288 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -1747,6 +1747,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
+>  	if (dev->power.syscore)
+>  		goto Complete;
+>  
+> +	/* Avoid direct_complete, to let wakeup_path being propagated. */
+> +	if (device_may_wakeup(dev) || dev->power.wakeup_path)
+> +		dev->power.direct_complete = false;
+> +
+>  	if (dev->power.direct_complete) {
+>  		if (pm_runtime_status_suspended(dev)) {
+>  			pm_runtime_disable(dev);
+> 
 
-Patch applied, thanks!
+Applied, thanks!
 
 
 
