@@ -2,117 +2,83 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF99C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214B3C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C12208C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:40:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kTy6Fwcp"
+	by mail.kernel.org (Postfix) with ESMTP id E254A21734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfEARka (ORCPT
+        id S1726443AbfEARk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:40:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35550 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfEARk3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:40:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ngUiwEDQptjC481jfdI3glduioMsRJldRZETJeFfRw8=; b=kTy6FwcpjbvgRSyTlVgtpyoXEn
-        bwCehv5Pin9sLdarGRLYz9ywdSvNZ+QGFj4WWNbAKwCA+o9L4E+ktqYnzvnAPr9QlD59B89CTXn6P
-        oi1Q36/DqDbp2WhGcGyzvYMN+3oZcP2tc44XiDrCqlXFN2PBf/KSCr7bjpfD7mGBqVPhwRwiV0jpe
-        atzqim91mIiaTIy+gbjEiBNz6uLbm12UHOuwOdramGl9kNU5m0DqVzGEbrqF8AScavkagQOFohFPb
-        uqWr+Df3TL3WZ44vwBmYeE7Jkc9uvhUoOtl7FYriNpMxVR8CNfr6LtrvEqKmImIe6QRYg24nCy0VR
-        b92je/3g==;
-Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLtDW-0005wL-9P; Wed, 01 May 2019 17:40:26 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] sh: don't use asm-generic/ptrace.h
-Date:   Wed,  1 May 2019 13:39:41 -0400
-Message-Id: <20190501173943.5688-4-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190501173943.5688-1-hch@lst.de>
-References: <20190501173943.5688-1-hch@lst.de>
+        Wed, 1 May 2019 13:40:56 -0400
+Received: from foss.arm.com ([217.140.101.70]:34662 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfEARkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:40:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CAEE80D;
+        Wed,  1 May 2019 10:40:55 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50A513F719;
+        Wed,  1 May 2019 10:40:53 -0700 (PDT)
+Subject: Re: [PATCH v2 06/19] drivers core: Add I/O ASID allocator
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Auger Eric <eric.auger@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-7-git-send-email-jacob.jun.pan@linux.intel.com>
+ <4550408f-39ff-7bf9-0072-a0898c6c2f60@redhat.com>
+ <fd5b8c6c-05f0-307b-aaa2-0938337014a8@arm.com>
+ <20190430132405.62902350@jacob-builder>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <e3f1d619-1421-fd19-72ce-dadb56b07aaa@arm.com>
+Date:   Wed, 1 May 2019 18:40:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190430132405.62902350@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doing the indirection through macros for the regs accessors just
-makes them harder to read, so implement the helpers directly.
+On 30/04/2019 21:24, Jacob Pan wrote:
+> On Thu, 25 Apr 2019 11:41:05 +0100
+> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+> 
+>> On 25/04/2019 11:17, Auger Eric wrote:
+>>>> +/**
+>>>> + * ioasid_alloc - Allocate an IOASID
+>>>> + * @set: the IOASID set
+>>>> + * @min: the minimum ID (inclusive)
+>>>> + * @max: the maximum ID (exclusive)
+>>>> + * @private: data private to the caller
+>>>> + *
+>>>> + * Allocate an ID between @min and @max (or %0 and %INT_MAX).
+>>>> Return the  
+>>> I would remove "(or %0 and %INT_MAX)".  
+>>
+>> Agreed, those where the default values of idr, but the xarray doesn't
+>> define a default max value. By the way, I do think squashing patches 6
+>> and 7 would be better (keeping my SOB but you can change the author).
+>>
+> I will squash 6 and 7 in v3. I will just add my SOB but keep the
+> author if that is OK.
 
-Note that only the helpers actually used are implemented now.
+Sure, that works
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/sh/include/asm/ptrace.h | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
-
-diff --git a/arch/sh/include/asm/ptrace.h b/arch/sh/include/asm/ptrace.h
-index 9143c7babcbe..6c89e3e04cee 100644
---- a/arch/sh/include/asm/ptrace.h
-+++ b/arch/sh/include/asm/ptrace.h
-@@ -16,8 +16,31 @@
- #define user_mode(regs)			(((regs)->sr & 0x40000000)==0)
- #define kernel_stack_pointer(_regs)	((unsigned long)(_regs)->regs[15])
- 
--#define GET_FP(regs)	((regs)->regs[14])
--#define GET_USP(regs)	((regs)->regs[15])
-+static inline unsigned long instruction_pointer(struct pt_regs *regs)
-+{
-+	return regs->pc;
-+}
-+static inline void instruction_pointer_set(struct pt_regs *regs,
-+		unsigned long val)
-+{
-+	regs->pc = val;
-+}
-+
-+static inline unsigned long frame_pointer(struct pt_regs *regs)
-+{
-+	return regs->regs[14];
-+}
-+
-+static inline unsigned long user_stack_pointer(struct pt_regs *regs)
-+{
-+	return regs->regs[15];
-+}
-+
-+static inline void user_stack_pointer_set(struct pt_regs *regs,
-+		unsigned long val)
-+{
-+	regs->regs[15] = val;
-+}
- 
- #define arch_has_single_step()	(1)
- 
-@@ -112,7 +135,5 @@ static inline unsigned long profile_pc(struct pt_regs *regs)
- 
- 	return pc;
- }
--#define profile_pc profile_pc
- 
--#include <asm-generic/ptrace.h>
- #endif /* __ASM_SH_PTRACE_H */
--- 
-2.20.1
-
+Thanks,
+Jean
