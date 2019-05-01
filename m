@@ -2,146 +2,260 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6D3C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 02:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BA0C04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 02:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C28A321743
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 02:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556676774;
-	bh=lB4/aFNGpFTPYT+2MM7qes/8i6/9JWncrFE5ixUZcw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H4P8BM/IA6+b7U6xb1ld6QWjeZYPDWoT3oiMK2RkNoLmRn5mMotPdRRm/YiLuuDqh
-	 p3QtTaCJXN6isE+xQO/juSwNXRy1TONfn9lFq7UMDVlyVbZa7FvYWz5CIKZdudAUuU
-	 o1t1pQK22jzjIizfFSwEds8ZmWaMrxj2wda+Dj0w=
+	by mail.kernel.org (Postfix) with ESMTP id DA37421734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 02:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfEACMx (ORCPT
+        id S1727569AbfEACOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 22:12:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33984 "EHLO mail.kernel.org"
+        Tue, 30 Apr 2019 22:14:07 -0400
+Received: from dcvr.yhbt.net ([64.71.152.64]:40332 "EHLO dcvr.yhbt.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726123AbfEACMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 22:12:52 -0400
-Received: from localhost (104.sub-174-234-128.myvzw.com [174.234.128.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83D9E21734;
-        Wed,  1 May 2019 02:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556676771;
-        bh=lB4/aFNGpFTPYT+2MM7qes/8i6/9JWncrFE5ixUZcw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0SfrUdY4tAMwBEy1M3fwZCtpcWSqWCpLPQ20HeKHUfuXUDF5tKPRx2EWpvZ8PU2KA
-         r7fACImZYsRKZ56VzrMrU2Lsg18s5vWrI23zC3KJa5UaxlGLu1O/mR7Ue+Ljglb4RF
-         3N6lvvrVRC1Z+Zl8CJky2PiKjN+ko2D14L38CS78=
-Date:   Tue, 30 Apr 2019 21:12:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Alex G <mr.nuke.me@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20190501021249.GD145057@google.com>
-References: <20190429185611.121751-1-helgaas@kernel.org>
- <20190429185611.121751-2-helgaas@kernel.org>
- <d902522e-f788-5e12-6b63-18ac5d5fa955@gmail.com>
- <20190430161151.GB145057@google.com>
- <20190430180508.GB25654@localhost.localdomain>
- <20190430181813.GC25654@localhost.localdomain>
+        id S1726123AbfEACOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 22:14:07 -0400
+Received: from localhost (dcvr.yhbt.net [127.0.0.1])
+        by dcvr.yhbt.net (Postfix) with ESMTP id 212941F453;
+        Wed,  1 May 2019 02:14:06 +0000 (UTC)
+Date:   Wed, 1 May 2019 02:14:05 +0000
+From:   Eric Wong <e@80x24.org>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>, Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Subject: Re: Strange issues with epoll since 5.0
+Message-ID: <20190501021405.hfvd7ps623liu25i@dcvr>
+References: <CA+8F9hicnF=kvjXPZFQy=Pa2HJUS3JS+G9VswFHNQQynPMHGVQ@mail.gmail.com>
+ <20190424193903.swlfmfuo6cqnpkwa@dcvr>
+ <20190427093319.sgicqik2oqkez3wk@dcvr>
+ <CABeXuvrY9QdvF1gTfiMt-eVp7VtobwG9xzjQFkErq+3wpW_P3Q@mail.gmail.com>
+ <20190428004858.el3yk6hljloeoxza@dcvr>
+ <20190429204754.hkz7z736tdk4ucum@linux-r8p5>
+ <20190429210427.dmfemfft2t2gdwko@dcvr>
+ <CABeXuvqpAjk8ocRUabVU4Yviv7kgRkMneLE1Xy-jAtHdXAHBVw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190430181813.GC25654@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CABeXuvqpAjk8ocRUabVU4Yviv7kgRkMneLE1Xy-jAtHdXAHBVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:18:13PM -0600, Keith Busch wrote:
-> On Tue, Apr 30, 2019 at 12:05:09PM -0600, Keith Busch wrote:
-> > On Tue, Apr 30, 2019 at 11:11:51AM -0500, Bjorn Helgaas wrote:
-> > > > I'm not convinced a revert is the best call.
-> > > 
-> > > I have very limited options at this stage of the release, but I'd be
-> > > glad to hear suggestions.  My concern is that if we release v5.1
-> > > as-is, we'll spend a lot of energy on those false positives.
-> > 
-> > May be too late now if the revert is queued up, but I think this feature
-> > should have been a default 'false' Kconfig bool rather than always on.
+Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> I was also not able to reproduce this.
+> Arnd and I were talking about this today morning. Here is something
+> Arnd noticed:
+> 
+> If there was a signal after do_epoll_wait(), we never were not
+> entering the if (err = -EINTR) at all before.
 
-Since this feature currently just adds a message in dmesg, which we
-don't really consider a stable API, I think a Kconfig switch is a
-reasonable option.
+I'm not sure which `if' statement you're talking about, but ok...
 
-If you send me a signed-off-by for the following patch, I can apply it:
+> But, now we do.
+> We could try with the below patch:
 
-commit 302b77157e66
-Author: Keith Busch <kbusch@kernel.org>
-Date:   Tue Apr 30 12:18:13 2019 -0600
+Wasn't close to applying or being buildable, but I put a
+working version together (below).
 
-    PCI/LINK: Add Kconfig option (default off)
-    
-    e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
-    notification") added dmesg logging whenever a link changes speed or width
-    to a state that is considered degraded.  Unfortunately, it cannot
-    differentiate signal integrity-related link changes from those
-    intentionally initiated by an endpoint driver, including drivers that may
-    live in userspace or VMs when making use of vfio-pci.  Some GPU drivers
-    actively manage the link state to save power, which generates a stream of
-    messages like this:
-    
-      vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5 GT/s x16 link)
-    
-    Since we can't distinguish the intentional changes from the signal
-    integrity issues, leave the reporting turned off by default.  Add a Kconfig
-    option to turn it on if desired.
-    
-    Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
-    notification")
+epoll_pwait wakes up as expected, now :>
 
-diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-index 5cbdbca904ac..4a094f0d2856 100644
---- a/drivers/pci/pcie/Kconfig
-+++ b/drivers/pci/pcie/Kconfig
-@@ -142,3 +142,12 @@ config PCIE_PTM
+> If this works that means we know what is busted.
+
+OK, good to know...
+
+> I'm not sure what the hang in the userspace is about. Is it because
+> the syscall did not return an error or the particular signal was
+> blocked etc.
+
+Uh, ok; that's less comforting.
+
+> There are also a few timing differences also. But, can we try this first?
+
+Anyways, the following patch works and builds cleanly for me
+(didn't test AIO, but everything else seems good)
+
+Thanks!
+
+---------8<-------
+Subject: [PATCH] test fix from Deepa
+
+TBD
+---
+ fs/aio.c               |  8 ++++----
+ fs/eventpoll.c         |  4 ++--
+ fs/select.c            | 12 ++++++------
+ include/linux/signal.h |  2 +-
+ kernel/signal.c        |  6 ++++--
+ 5 files changed, 17 insertions(+), 15 deletions(-)
+
+diff --git a/fs/aio.c b/fs/aio.c
+index 3d9669d011b9..d54513ca11b6 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -2146,7 +2146,7 @@ SYSCALL_DEFINE6(io_pgetevents,
+ 		return ret;
  
- 	  This is only useful if you have devices that support PTM, but it
- 	  is safe to enable even if you don't.
-+
-+config PCIE_BW
-+	bool "PCI Express Bandwidth Change Notification"
-+	default n
-+	depends on PCIEPORTBUS
-+	help
-+	  This enables PCI Express Bandwidth Change Notification.  If
-+	  you know link width or rate changes occur only to correct
-+	  unreliable links, you may answer Y.
-diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-index f1d7bc1e5efa..d356a5bdb158 100644
---- a/drivers/pci/pcie/Makefile
-+++ b/drivers/pci/pcie/Makefile
-@@ -3,7 +3,6 @@
- # Makefile for PCI Express features and port driver
+ 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
+-	restore_user_sigmask(ksig.sigmask, &sigsaved);
++	restore_user_sigmask(ksig.sigmask, &sigsaved, -1);
+ 	if (signal_pending(current) && !ret)
+ 		ret = -ERESTARTNOHAND;
  
- pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
--pcieportdrv-y			+= bw_notification.o
+@@ -2180,7 +2180,7 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
+ 		return ret;
  
- obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
+ 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
+-	restore_user_sigmask(ksig.sigmask, &sigsaved);
++	restore_user_sigmask(ksig.sigmask, &sigsaved, -1);
+ 	if (signal_pending(current) && !ret)
+ 		ret = -ERESTARTNOHAND;
  
-@@ -13,3 +12,4 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
- obj-$(CONFIG_PCIE_PME)		+= pme.o
- obj-$(CONFIG_PCIE_DPC)		+= dpc.o
- obj-$(CONFIG_PCIE_PTM)		+= ptm.o
-+obj-$(CONFIG_PCIE_BW)		:= bw_notification.o
+@@ -2244,7 +2244,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
+ 		return ret;
+ 
+ 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
+-	restore_user_sigmask(ksig.sigmask, &sigsaved);
++	restore_user_sigmask(ksig.sigmask, &sigsaved, -1);
+ 	if (signal_pending(current) && !ret)
+ 		ret = -ERESTARTNOHAND;
+ 
+@@ -2277,7 +2277,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
+ 		return ret;
+ 
+ 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
+-	restore_user_sigmask(ksig.sigmask, &sigsaved);
++	restore_user_sigmask(ksig.sigmask, &sigsaved, -1);
+ 	if (signal_pending(current) && !ret)
+ 		ret = -ERESTARTNOHAND;
+ 
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index a5d219d920e7..bd84ec54a8fb 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -2247,7 +2247,7 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
+ 
+ 	error = do_epoll_wait(epfd, events, maxevents, timeout);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, error == -EINTR);
+ 
+ 	return error;
+ }
+@@ -2272,7 +2272,7 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
+ 
+ 	err = do_epoll_wait(epfd, events, maxevents, timeout);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, err == -EINTR);
+ 
+ 	return err;
+ }
+diff --git a/fs/select.c b/fs/select.c
+index d0f35dbc0e8f..04720e5856ed 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -760,7 +760,7 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
+ 	ret = core_sys_select(n, inp, outp, exp, to);
+ 	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, -1);
+ 
+ 	return ret;
+ }
+@@ -1106,7 +1106,7 @@ SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, -1);
+ 
+ 	/* We can restart this syscall, usually */
+ 	if (ret == -EINTR)
+@@ -1142,7 +1142,7 @@ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, -1);
+ 
+ 	/* We can restart this syscall, usually */
+ 	if (ret == -EINTR)
+@@ -1352,7 +1352,7 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
+ 	ret = compat_core_sys_select(n, inp, outp, exp, to);
+ 	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, -1);
+ 
+ 	return ret;
+ }
+@@ -1425,7 +1425,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, -1);
+ 
+ 	/* We can restart this syscall, usually */
+ 	if (ret == -EINTR)
+@@ -1461,7 +1461,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	restore_user_sigmask(sigmask, &sigsaved);
++	restore_user_sigmask(sigmask, &sigsaved, -1);
+ 
+ 	/* We can restart this syscall, usually */
+ 	if (ret == -EINTR)
+diff --git a/include/linux/signal.h b/include/linux/signal.h
+index 9702016734b1..b55804ae2021 100644
+--- a/include/linux/signal.h
++++ b/include/linux/signal.h
+@@ -276,7 +276,7 @@ extern int sigprocmask(int, sigset_t *, sigset_t *);
+ extern int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
+ 	sigset_t *oldset, size_t sigsetsize);
+ extern void restore_user_sigmask(const void __user *usigmask,
+-				 sigset_t *sigsaved);
++				 sigset_t *sigsaved, int sig_pending);
+ extern void set_current_blocked(sigset_t *);
+ extern void __set_current_blocked(const sigset_t *);
+ extern int show_unhandled_signals;
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 57b7771e20d7..cc827e6c4bea 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2843,11 +2843,13 @@ EXPORT_SYMBOL(set_compat_user_sigmask);
+  * usigmask: sigmask passed in from userland.
+  * sigsaved: saved sigmask when the syscall started and changed the sigmask to
+  *           usigmask.
++ * sig_pending: "> 0" if a signal is pending, "< 0" to check signal_pending
+  *
+  * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
+  * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
+  */
+-void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
++void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved,
++			  int sig_pending)
+ {
+ 
+ 	if (!usigmask)
+@@ -2857,7 +2859,7 @@ void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+ 	 * Restoring sigmask here can lead to delivering signals that the above
+ 	 * syscalls are intended to block because of the sigmask passed in.
+ 	 */
+-	if (signal_pending(current)) {
++	if (sig_pending > 0 || (sig_pending < 0 && signal_pending(current))) {
+ 		current->saved_sigmask = *sigsaved;
+ 		set_restore_sigmask();
+ 		return;
+-- 
