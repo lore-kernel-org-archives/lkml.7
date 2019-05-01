@@ -2,100 +2,128 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04238C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731E7C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1AB7205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3BD21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfEAPh0 (ORCPT
+        id S1726985AbfEAPji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:37:26 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51224 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfEAPhZ (ORCPT
+        Wed, 1 May 2019 11:39:38 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.51]:19723 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbfEAPji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:37:25 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hLrIF-0001Nb-SC; Wed, 01 May 2019 17:37:12 +0200
-Date:   Wed, 1 May 2019 17:37:11 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "kernelci.org bot" <bot@kernelci.org>
-Cc:     Tejun Heo <tj@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
-Message-ID: <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
-References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
+        Wed, 1 May 2019 11:39:38 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 66C7F1D81B
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 10:39:37 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id LrKbhTgYT90onLrKbhc3Me; Wed, 01 May 2019 10:39:37 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=32788 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLrKa-001Vu7-Gn; Wed, 01 May 2019 10:39:36 -0500
+Date:   Wed, 1 May 2019 10:39:34 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arvid Brodin <arvid.brodin@enea.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] usb: isp1760-hcd: Fix fall-through annotations
+Message-ID: <20190501153934.GA20025@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLrKa-001Vu7-Gn
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.119.203]:32788
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-On 2019-04-30 13:51:40 [-0700], kernelci.org bot wrote:
-> next/master boot bisection: next-20190430 on beagle-xm
-> 
-> Summary:
->   Start:      f43b05fd4c17 Add linux-next specific files for 20190430
->   Details:    https://kernelci.org/boot/id/5cc84d7359b514b7ab55847b
->   Plain log:  https://storage.kernelci.org//next/master/next-20190430/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-baylibre/boot-omap3-beagle-xm.txt
->   HTML log:   https://storage.kernelci.org//next/master/next-20190430/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-baylibre/boot-omap3-beagle-xm.html
->   Result:     6d25be5782e4 sched/core, workqueues: Distangle worker accounting from rq lock
-> 
-> Checks:
->   revert:     PASS
->   verify:     PASS
-> 
-> Parameters:
->   Tree:       next
->   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->   Branch:     master
->   Target:     beagle-xm
->   CPU arch:   arm
->   Lab:        lab-baylibre
->   Compiler:   gcc-7
->   Config:     multi_v7_defconfig+CONFIG_SMP=n
->   Test suite: boot
-> 
-> Breaking commit found:
-> 
-> -------------------------------------------------------------------------------
-> commit 6d25be5782e482eb93e3de0c94d0a517879377d0
-> Author: Thomas Gleixner <tglx@linutronix.de>
-> Date:   Wed Mar 13 17:55:48 2019 +0100
-> 
->     sched/core, workqueues: Distangle worker accounting from rq lock
+This patch fixes the following warning:
 
-According to the bootlog it just stopped its output. This commit is in
-next since a week or two so I don't understand why this pops up now.
+drivers/usb/isp1760/isp1760-hcd.c: In function ‘collect_qtds’:
+drivers/usb/isp1760/isp1760-hcd.c:788:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+      mem_reads8(hcd->regs, qtd->payload_addr,
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        qtd->data_buffer,
+        ~~~~~~~~~~~~~~~~~
+        qtd->actual_length);
+        ~~~~~~~~~~~~~~~~~~~
+drivers/usb/isp1760/isp1760-hcd.c:792:5: note: here
+     case OUT_PID:
+     ^~~~
 
-I just revived my BBB and I can boot that commit in question. Currently
-that as close as I get to a beagle-xm. 
-Looking at
-	https://kernelci.org/boot/id/5cc9a64359b514a77f5584af/
-it seems that the very same board managed to boot linux-next for
-next-20190501.
+Warning level 3 was used: -Wimplicit-fallthrough=3
 
-Side note: I can't boot next-20190501 on my BBB, bisect points to commit
-  1a5cd7c23cc52 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
+Notice that, in this particular case, the code comments are modified
+in accordance with what GCC is expecting to find.
 
-any idea?
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-Sebastian
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+Notice that this code has been out there since 2011, and who
+introduced the question mark was the original developer.
+
+It'd be good if someone can confirm that the fall-through
+has been intentional all this time.
+	
+Thanks
+--
+Gustavo
+
+ drivers/usb/isp1760/isp1760-hcd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/isp1760/isp1760-hcd.c b/drivers/usb/isp1760/isp1760-hcd.c
+index 8142c6b4c4cf..320fc4739835 100644
+--- a/drivers/usb/isp1760/isp1760-hcd.c
++++ b/drivers/usb/isp1760/isp1760-hcd.c
+@@ -788,11 +788,11 @@ static void collect_qtds(struct usb_hcd *hcd, struct isp1760_qh *qh,
+ 					mem_reads8(hcd->regs, qtd->payload_addr,
+ 							qtd->data_buffer,
+ 							qtd->actual_length);
+-					/* Fall through (?) */
++					/* Fall through */
+ 				case OUT_PID:
+ 					qtd->urb->actual_length +=
+ 							qtd->actual_length;
+-					/* Fall through ... */
++					/* Fall through */
+ 				case SETUP_PID:
+ 					break;
+ 				}
+-- 
+2.21.0
+
