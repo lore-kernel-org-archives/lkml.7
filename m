@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0B8C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DACC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8695208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9A1217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i+2aZYPX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aeltI4ss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfEAQPL (ORCPT
+        id S1726965AbfEAQPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:15:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47954 "EHLO
+        Wed, 1 May 2019 12:15:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48050 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfEAQPI (ORCPT
+        with ESMTP id S1726869AbfEAQPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:15:08 -0400
+        Wed, 1 May 2019 12:15:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hnEGiTF3cvFUVxv7N+HsUgXJr+bSX4IoZxtMu1jYf2k=; b=i+2aZYPX4wAc43i9clg/0xgVNv
-        OTEtrsXIHIraOhGzPGdl1nyZ8L42jcOAEiPZw7km06bHh3PPslYfVJiFZ0NYIswT1jO8A4VoJ+imd
-        1eaEeLHZXZLcSpfe1xWjD6jUaqUg+y0wt7raOJ5il3KREK6dbueJ6CbCEILzgxxUvftXrxhoc0kNg
-        hOm0QtpfZomVc+OPkAoImbv+PpwJlOS3juxCVFJkghyf+LzFPyGWJsMXVa1qdv3jO52XX//Cm0OMG
-        8447lnoN0ggNOdakcEUq13OwHnyZdbTSm22kBUi3Dx+Zw1WW5YxOmIzgwaXZIu05vo5/Qzja0HX3S
-        jcGa3quQ==;
+        bh=kqkRyqJ2EE6kG6MIQJuCBicRKsHNMcWcqBqw8JwJ1OU=; b=aeltI4ssNOB5S4aMVag+/jceFU
+        EY2iVwJBprXjYckIAr1Apm1jLfRlEyIMhkYrG42gpDt63BwAngeWIu7ROh1J8rvpECXCW0OVwtcy3
+        SFda+0B9LxJ6/w1mMTGZ39VK7FKBwp0VLVvd5xD+y+25Evjl3a0h343yJhuQQfoy/pLxpn/ulNeUU
+        LnkJUyoccXFDDcYnfCv2Cvf90j6RfwEuXo+5g50A6u9KZ8TannGELRPS0KnHnyL10rrmttG8wXk+Y
+        QILmB+pu4E8BZI/q0pwZ38PniGXvN5/obkM+6wMz+EyBIfbofIKbPBuaCt9ULoxK08UAQnPb1ZJnX
+        4sB6x47A==;
 Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLrsn-0004OZ-Ma; Wed, 01 May 2019 16:14:57 +0000
+        id 1hLrsw-0004zf-Gz; Wed, 01 May 2019 16:15:06 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>
@@ -47,9 +47,9 @@ Cc:     Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
         =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
         linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
         osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/24] scsi: switch the remaining scsi midlayer files to use SPDX tags
-Date:   Wed,  1 May 2019 12:13:55 -0400
-Message-Id: <20190501161417.32592-3-hch@lst.de>
+Subject: [PATCH 08/24] scsi_transport_sas: switch to SPDX tags
+Date:   Wed,  1 May 2019 12:14:01 -0400
+Message-Id: <20190501161417.32592-9-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190501161417.32592-1-hch@lst.de>
 References: <20190501161417.32592-1-hch@lst.de>
@@ -61,68 +61,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the GPLv2 SPDX tag instead of verbose boilerplate text.
+Use the the GPLv2 SPDX tag instead of a free form blurb.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/scsi_logging.c |  3 +--
- drivers/scsi/scsi_sysctl.c  |  2 +-
- drivers/scsi/scsi_trace.c   | 14 +-------------
- 3 files changed, 3 insertions(+), 16 deletions(-)
+ drivers/scsi/scsi_transport_sas.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_logging.c b/drivers/scsi/scsi_logging.c
-index bd70339c1242..ca582218d72d 100644
---- a/drivers/scsi/scsi_logging.c
-+++ b/drivers/scsi/scsi_logging.c
-@@ -1,10 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * scsi_logging.c
-  *
-  * Copyright (C) 2014 SUSE Linux Products GmbH
-  * Copyright (C) 2014 Hannes Reinecke <hare@suse.de>
-- *
-- * This file is released under the GPLv2
-  */
- 
- #include <linux/kernel.h>
-diff --git a/drivers/scsi/scsi_sysctl.c b/drivers/scsi/scsi_sysctl.c
-index 546f16299ef9..c74a965a51a7 100644
---- a/drivers/scsi/scsi_sysctl.c
-+++ b/drivers/scsi/scsi_sysctl.c
+diff --git a/drivers/scsi/scsi_transport_sas.c b/drivers/scsi/scsi_transport_sas.c
+index 60f1a81d2034..fbfe01b06eb3 100644
+--- a/drivers/scsi/scsi_transport_sas.c
++++ b/drivers/scsi/scsi_transport_sas.c
 @@ -1,6 +1,6 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  * Copyright (C) 2003 Christoph Hellwig.
+  * Copyright (C) 2005-2006 Dell Inc.
 - *	Released under GPL v2.
-  */
- 
- #include <linux/errno.h>
-diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
-index 0ff083bbf5b1..6ae168fcc119 100644
---- a/drivers/scsi/scsi_trace.c
-+++ b/drivers/scsi/scsi_trace.c
-@@ -1,19 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2010 FUJITSU LIMITED
-  * Copyright (C) 2010 Tomohiro Kusumi <kusumi.tomohiro@jp.fujitsu.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  */
- #include <linux/kernel.h>
- #include <linux/trace_seq.h>
+  *
+  * Serial Attached SCSI (SAS) transport class.
+  *
 -- 
 2.20.1
 
