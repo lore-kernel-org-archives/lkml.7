@@ -2,99 +2,130 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCD2C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D6AC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA0D20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8524420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 04:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmcLEQXl"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E7D9mBcf";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RfBwtPi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfEAEWv (ORCPT
+        id S1726096AbfEAEXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 00:22:51 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:38536 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfEAEWu (ORCPT
+        Wed, 1 May 2019 00:23:04 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56052 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfEAEXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 00:22:50 -0400
-Received: by mail-it1-f194.google.com with SMTP id q19so8382841itk.3;
-        Tue, 30 Apr 2019 21:22:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xLNLpr9McoqnZqM8qeAGoxcDpyWL0pd5yB3wHBmNQm0=;
-        b=NmcLEQXlPhSFJDrg69XhaztQv9FwpJDoR3ICozL6BnfDa6JUamP72xKNEx/p3r2p1V
-         Gp5r1ZL5TOKJsIELli3PI9U8zy01eMq4sLwrQbV3g0z9+xX/EebtoEH4fce6bBmnY0dr
-         +3d0Az6GreLoBDM+9CK8lLRTxIepWhGuKvRcVgtfuJkeMd0oIvyXUPZgmcntHCTr9VJY
-         XyS+lNGjz/DrxOCMiTo4b4XYfWYTOX9C7I7zr3srwgikzTicwM+azzDxKfhE4KFMd5YQ
-         dcHc09zTm9WBcwywOLewvs2YuDOi3lwFFrfG5SOpQwesXt5uzRqTCQQJaTnsOz/0ngBD
-         Bs3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xLNLpr9McoqnZqM8qeAGoxcDpyWL0pd5yB3wHBmNQm0=;
-        b=lmyq/udZGBTQ8zlLOAZow9EJqO+7i6o16PnMwunyCSBbD7qtst2kF21Z1buCvRp2a2
-         UipbqTQhvskaysfXNUT93kFTxoObCid8Cj56TW7U+es6wcNw/uECcLwOxuwkmpq571Sb
-         oUh8OFdonD7XKWFNtPw0A2tZALRtD2VkheJMpGF6NKJfK+ZhwzlaYAuowfBZGxYC8r2E
-         7Au4JNG6ndKJO1nVIgvvlp3j5HC1GK+W6CKZHI4j+tEPqMv79/74u9Bw7TrJwKL1aMvn
-         ZU8kH/W28+ga4i1xm2ps64v7mHzWEAVXHVLtRADTZb4f9kundgaQLKNMHCGuFnQjNHWF
-         3IyQ==
-X-Gm-Message-State: APjAAAXiAoPoDw2RMbVVU2M2j6/1idKR9PXPBl67q/ZnUSIlaRgp0cya
-        WvyoD8OSsq7jSA98HhFz0V2lAs94n3N0Ju8p/8Q=
-X-Google-Smtp-Source: APXvYqxzb+WfoWfhy9nmR7qVPjfUguVHUWr1/2N/LZbAHqn+R00pTq8JbjmDBb1oH3gYFLQoydzOFrzrc++N9aTNUwE=
-X-Received: by 2002:a05:660c:2c5:: with SMTP id j5mr6925933itd.154.1556684569670;
- Tue, 30 Apr 2019 21:22:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190501033434.18548-1-andrew.smirnov@gmail.com>
- <20190501033434.18548-3-andrew.smirnov@gmail.com> <7002fe8e-7686-fe84-374f-766f99f8317d@infradead.org>
-In-Reply-To: <7002fe8e-7686-fe84-374f-766f99f8317d@infradead.org>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 30 Apr 2019 21:22:38 -0700
-Message-ID: <CAHQ1cqHnAS4kb76cTNfLX=YJsRT+dOJhwONGLCAdErh0KBTWyw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] power: supply: Add driver for Microchip UCS1002
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 1 May 2019 00:23:04 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 184C7608D4; Wed,  1 May 2019 04:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556684583;
+        bh=9yPzt7cVWcZKP8nlRDpsy/7HZAKxdDrFJEzcJkPStZA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E7D9mBcflXuLQkvW89gPzPY86YW25tNk3H07hoySU+c/Ghgj+F0Qc8XpSH24jD3p6
+         Wdemz5LtQg7Qw8ZESsbTaLLwT6VmZDzQSsB0jRn1yUYsu5ww5B0u3/AHJH0CGosx+0
+         Ske/2pExBTJdhRe560F4C+3nz+ea4wF9q4XQa8z0=
+Received: from prsood-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: prsood@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BBC5960115;
+        Wed,  1 May 2019 04:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556684582;
+        bh=9yPzt7cVWcZKP8nlRDpsy/7HZAKxdDrFJEzcJkPStZA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RfBwtPi/edPbtS6tz27A7MR7i6+FNk6fpUQzRXpHW2RWBpAN/+0+bCYuXh6AiishN
+         BAa0OCzMIaRVMF9P9IU1EumZyE/xuunPMBrGP1UBR3L7XQPsJoYfJ8UjFP4sh4sdBL
+         oWgybQSjCKHhVHAj9f5SA+Q1e/dBg9LVJos+S3Hk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BBC5960115
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+From:   Prateek Sood <prsood@codeaurora.org>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     sramana@codeaurora.org, prsood@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2] drivers: core: Remove glue dirs early only when refcount is 1
+Date:   Wed,  1 May 2019 09:52:47 +0530
+Message-Id: <1556684567-26710-1-git-send-email-prsood@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1556632540-17382-1-git-send-email-prsood@codeaurora.org>
+References: <1556632540-17382-1-git-send-email-prsood@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 8:43 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Hi,
->
-> On 4/30/19 8:34 PM, Andrey Smirnov wrote:
-> > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> > index e901b9879e7e..c614c8a196f3 100644
-> > --- a/drivers/power/supply/Kconfig
-> > +++ b/drivers/power/supply/Kconfig
-> > @@ -660,4 +660,13 @@ config FUEL_GAUGE_SC27XX
-> >        Say Y here to enable support for fuel gauge with SC27XX
-> >        PMIC chips.
-> >
-> > +config CHARGER_UCS1002
-> > +        tristate "Microchip UCS1002 USB Port Power Controller"
->
-> Please indent the tristate line with a tab instead of spaces.
->
+While loading firmware blobs parallely in different threads, it is possible
+to free sysfs node of glue_dirs in device_del() from a thread while another
+thread is trying to add subdir from device_add() in glue_dirs sysfs node.
 
-OK, will do.
+    CPU1                                           CPU2
+fw_load_sysfs_fallback()
+  device_add()
+    get_device_parent()
+      class_dir_create_and_add()
+        kobject_add_internal()
+          create_dir() // glue_dir
 
-Thanks,
-Andrey Smirnov
+                                           fw_load_sysfs_fallback()
+                                             device_add()
+                                               get_device_parent()
+                                                 kobject_get() //glue_dir
+
+  device_del()
+    cleanup_glue_dir()
+      kobject_del()
+
+                                               kobject_add()
+                                                 kobject_add_internal()
+                                                   create_dir() // in glue_dir
+                                                     kernfs_create_dir_ns()
+
+       sysfs_remove_dir() //glue_dir->sd=NULL
+       sysfs_put() // free glue_dir->sd
+
+                                                       kernfs_new_node()
+                                                         kernfs_get(glue_dir)
+
+Fix this race by making sure that kernfs_node for glue_dir is released only
+when refcount for glue_dir kobj is 1.
+
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+---
+ drivers/base/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 4aeaa0c..3955d07 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1820,12 +1820,15 @@ static inline struct kobject *get_glue_dir(struct device *dev)
+  */
+ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
+ {
++	unsigned int refcount;
++
+ 	/* see if we live in a "glue" directory */
+ 	if (!live_in_glue_dir(glue_dir, dev))
+ 		return;
+ 
+ 	mutex_lock(&gdp_mutex);
+-	if (!kobject_has_children(glue_dir))
++	refcount = kref_read(&glue_dir->kref);
++	if (!kobject_has_children(glue_dir) && !--refcount)
+ 		kobject_del(glue_dir);
+ 	kobject_put(glue_dir);
+ 	mutex_unlock(&gdp_mutex);
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
