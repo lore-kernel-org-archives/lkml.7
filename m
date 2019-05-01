@@ -2,125 +2,84 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27DBC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A1FC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8E621734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861A8217D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556697578;
-	bh=zxgDmRsn1/IVmGuf5U9azTe0s7v3EA8DrDT/1fTHG9Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wWVxSMTtsBmaXOKktl5fFLNs8vMtPU4ecwOelLZvud2Uu9tif+80Thy/EZN0I1oR6
-	 ayA/41t8FaOOtadvXCwhaZdbxjpWzn3tTo++zU803ERfSFKMLOGXSfAQVg88Vbpknq
-	 n8nokDK8XBszZAtO4JBkXMY1IFGhdOjXAv/eImSk=
+	s=default; t=1556697837;
+	bh=tbBM1g+FiEOjBmIG8Qd5Y6+KdWgZZC+apZiwQPkwfeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hMQdU0JaLiEYuZxRl8zlf8TBoJQJQ6pbBkFbE8dTLkFRO/Zjf74bvKCpguZArVLe+
+	 FxMsm8yKW7xpiPdgVXSspuVZl5hKL4uPA8EBkRZcY3DvyXKmZyhjZNJfv3zbUWr2od
+	 ARZ74/x72dHpBA/0Ymy94rHeEzX2j93UtoxxqloQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfEAH7h (ORCPT
+        id S1726193AbfEAID4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 03:59:37 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39564 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfEAH7h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 03:59:37 -0400
-Received: by mail-oi1-f196.google.com with SMTP id n187so13331388oih.6;
-        Wed, 01 May 2019 00:59:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zxgDmRsn1/IVmGuf5U9azTe0s7v3EA8DrDT/1fTHG9Q=;
-        b=PUj7w7vy+5nCWP5ihcrknRU1Akta81PiptNrPSNTlAKjEYcyOgLzzUX1i0TbcL1BMw
-         CXT+BI7QjJlxZgZz7eNF/mfKLil/g4EAXvUxFUZdGR41ozghtAZU7cWJR/xfrKwp6EeO
-         JotsYfril4ff8GgGGXEvqdZQZjxxNQMCR1VjbiMWtSsMjwQbof7xxJXbOYcME3lfolMl
-         2fpPx30QUwuK7Zytuw91mMj4dV4IcfPvz//cXez+JQexLyHn4uOPR5K5/6DWByTkXw8/
-         6I5pCjQROJR7ZBLvXSNasZum9K5nLu9J1FrCSA7wp5cdDnw/3jS73tef72/MOywvGQme
-         7zgA==
-X-Gm-Message-State: APjAAAWFY9Ic/74mtbnmlDhRus1PKbVD+uGU69QQIrpR2Hpk1yoohtXj
-        0ORSr+x7GbvYEArdbxZSYYGxsmjCTIWqAv5f04U=
-X-Google-Smtp-Source: APXvYqwRucsn2ORnmZzJM80aybzIMoVJlKVHwZ0llOPopwmEQAxBSBA2QxPX+O9LwH4uQ12+7ADgZSOR7ZOcJJsf2+o=
-X-Received: by 2002:aca:ba82:: with SMTP id k124mr6169480oif.110.1556697576304;
- Wed, 01 May 2019 00:59:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190415151857.25531-1-pierre-louis.bossart@linux.intel.com>
- <20190416032923.GQ28103@vkoul-mobl> <CAJZ5v0jOkQ7aWn6B_yVTYd7y+78mpGSzBoGuWe3uCdzDRNE94Q@mail.gmail.com>
- <eda0ed4e-fc36-a53a-225f-e7d54bb73413@linux.intel.com>
-In-Reply-To: <eda0ed4e-fc36-a53a-225f-e7d54bb73413@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 1 May 2019 09:59:25 +0200
-Message-ID: <CAJZ5v0iwm5tLRy2mLX6_uTk2wh+1Y4VaEcqDx5Z1WDLZHMnpEg@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ACPI / device_sysfs: change _ADR
- representation to 64 bits
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Wed, 1 May 2019 04:03:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfEAID4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 04:03:56 -0400
+Received: from linux-8ccs (ip5f5ade58.dynamic.kabel-deutschland.de [95.90.222.88])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5858521734;
+        Wed,  1 May 2019 08:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556697835;
+        bh=tbBM1g+FiEOjBmIG8Qd5Y6+KdWgZZC+apZiwQPkwfeg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RQPwDOX2iVGyR4gEz/Yd3c4wRHY3HibssGH1adJZJ9Tcz6SEfeTt0AwpTSx2gZWca
+         jh5wvRYDfW3dzy0W5gtddQkjLRIILXRiTn9+dBNxUmzSTWU1NcfPVUJWTZQcamPFkz
+         HAscoE1k+qWbTQW/7Cyktmq0uM97Itd0OhrWoC8U=
+Date:   Wed, 1 May 2019 10:03:51 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        jank@cadence.com, Joe Perches <joe@perches.com>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Len Brown <lenb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Prarit Bhargava <prarit@redhat.com>
+Subject: Re: linux-next: Fixes tag needs some work in the modules tree
+Message-ID: <20190501080351.GB10762@linux-8ccs>
+References: <20190501081054.387820b2@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190501081054.387820b2@canb.auug.org.au>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 8:23 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
++++ Stephen Rothwell [01/05/19 08:10 +1000]:
+>Hi all,
 >
+>In commit
 >
+>  7e470ea99bcd ("kernel/module: Reschedule while waiting for modules to finish loading")
 >
-> On 4/16/19 3:09 AM, Rafael J. Wysocki wrote:
-> > On Tue, Apr 16, 2019 at 5:29 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >>
-> >> On 15-04-19, 10:18, Pierre-Louis Bossart wrote:
-> >>> Standards such as the MIPI DisCo for SoundWire 1.0 specification
-> >>> assume the _ADR field is 64 bits.
-> >>>
-> >>> _ADR is defined as an "Integer" represented as 64 bits since ACPI 2.0
-> >>> released in 2002. The low levels already use _ADR as 64 bits, e.g. in
-> >>> struct acpi_device_info.
-> >>>
-> >>> This patch bumps the representation used for sysfs to 64 bits.
-> >>>
-> >>> Example with a SoundWire device, the results show the complete
-> >>> vendorID and linkID which were omitted before:
-> >>>
-> >>> Before:
-> >>> $ more /sys/bus/acpi/devices/device\:38/adr
-> >>> 0x5d070000
-> >>> After:
-> >>> $ more /sys/bus/acpi/devices/device\:38/adr
-> >>> 0x000010025d070000
-> >>
-> >> This looks fine but the sysfs file is an ABI. Not sure if we can modify
-> >> the value returned this way.. Though it should not cause userspace
-> >> reading 32bits to break...
-> >
-> > Well, IIRC using "08" instead of "016" in the format field would
-> > preserve the existing behavior for 32-bit values, wouldn't it?
+>Fixes tag
 >
-> yes, but it makes the 64-bit address not aligned depending on the number
-> of leading zeroes, see below. I get a migraine just looking at the results.
+>  Fixes: linux-next commit f9a75c1d717f ("modules: Only return -EEXIST for modules that have finished loading")
+>
+>has these problem(s):
+>
+>  - the "linux-next commit" is unexpected (and not really meaningful
+>    once this is merged into Linus' tree)
+>
+>-- 
+>Cheers,
+>Stephen Rothwell
 
-Well, scripts reading them won't get that, but fair enough.
+A fixed verison has been pushed out to modules-next.
 
-> Maybe add a test to use 08 for values that are below 0xFFFFFFFF and 16
-> for addresses who really need the full range, typically because of an
-> encoding?
+Thanks!
 
-That would be fine by me.
+Jessica
