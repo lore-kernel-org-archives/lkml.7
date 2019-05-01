@@ -2,79 +2,58 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6DAC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD42C46460
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F252085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174612089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfEAVN6 (ORCPT
+        id S1726229AbfEAVOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:13:58 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:52346 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfEAVN5 (ORCPT
+        Wed, 1 May 2019 17:14:03 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40224 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfEAVOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:13:57 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hLwXw-0000mK-CK; Wed, 01 May 2019 23:13:44 +0200
-Date:   Wed, 1 May 2019 23:13:44 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     "kernelci.org bot" <bot@kernelci.org>, Tejun Heo <tj@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org
-Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
-Message-ID: <20190501211344.v5n7bmb2p5kksa47@linutronix.de>
-References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
- <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
- <20190501162944.GW8004@atomide.com>
- <20190501164444.iclxlzrxofqnj4bn@linutronix.de>
- <20190501165224.GK8007@atomide.com>
- <20190501170125.xjlwdyqtp5oxx2mb@linutronix.de>
- <20190501174431.GL8007@atomide.com>
- <20190501190303.pz2yxs3hnc2qpamu@linutronix.de>
- <20190501202149.GM8007@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190501202149.GM8007@atomide.com>
-User-Agent: NeoMutt/20180716
+        Wed, 1 May 2019 17:14:02 -0400
+Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 01763133E97C0;
+        Wed,  1 May 2019 14:13:59 -0700 (PDT)
+Date:   Wed, 01 May 2019 17:13:54 -0400 (EDT)
+Message-Id: <20190501.171354.1527034483459886062.davem@davemloft.net>
+To:     maxime.chevallier@bootlin.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com,
+        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
+        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
+        linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+        saeedm@mellanox.com, jakub.kicinski@netronome.com
+Subject: Re: [PATCH net-next 0/4] net: mvpp2: cls: Add classification
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190430131429.19361-1-maxime.chevallier@bootlin.com>
+References: <20190430131429.19361-1-maxime.chevallier@bootlin.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 01 May 2019 14:14:01 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-01 13:21:49 [-0700], Tony Lindgren wrote:
-> Hi,
-Hi,
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Date: Tue, 30 Apr 2019 15:14:25 +0200
 
-> OK I found two issues. It seems that d_can also needs osc clock
-> on am335x. And there's no revision register for d_can.. We're now
-> reading the CTL register unnecessarily.
-> 
-> Below is what I hope fixes the boot issue for you, care to boot
-> test?
+> This series is a rework of the previously standalone patch adding
+> classification support for mvpp2 :
+ ...
 
-yup, that boots.
-Thanks.
-
-> If this helps I'll send out proper patches for for both issues.
-> 
-> Regards,
-> 
-> Tony
-
-Sebastian
+Series applied, thanks.
