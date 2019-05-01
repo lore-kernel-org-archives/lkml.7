@@ -2,262 +2,129 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05002C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4FBC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA1520652
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:57:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=outv.im header.i=@outv.im header.b="EZulYK1w";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VbVFmgon"
+	by mail.kernel.org (Postfix) with ESMTP id 3E25B21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfEAN5q (ORCPT
+        id S1726602AbfEAN6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 09:57:46 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:47493 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726501AbfEAN5p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 09:57:45 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4FDCED4C0;
-        Wed,  1 May 2019 09:57:44 -0400 (EDT)
-Received: from imap7 ([10.202.2.57])
-  by compute6.internal (MEProxy); Wed, 01 May 2019 09:57:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outv.im; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=i6ZDFE3qIozev5Q3opbv/0KPi5BRO4v
-        aJeP9x7WykGw=; b=EZulYK1wMsePO58H9QUYaVRL77qwLWWWYT2iAFwyF1j3Nk0
-        q2sKCIAzL9o8D3RJ1DIp+mNxcw1CODiY+ZrKOXuJGH70miKLYL0POCkb5TpaYu6n
-        trUhzHCuC7oOnJCGLriao9/oozKw9ppVmdDPCEij5E2da61porhP0P4UuJp6nrrr
-        dwsueWRRSY2VEuz3ZUF2fZFVwS++RnPH7AoTMT6vrZwpQzypLrk7kK3XZtwxD/j9
-        10WphHKRxzQWLu0XluNlzaOgs8BuQ+sfU00lusa33Cc3Cqg1nGRvkKD/kzMoDsdh
-        xxsB5VkKPTIiP9kDl5U03vAPPVX6VJ/VChG65eg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=i6ZDFE
-        3qIozev5Q3opbv/0KPi5BRO4vaJeP9x7WykGw=; b=VbVFmgonBqvxEA8dZmO1oA
-        YE0XulU25QXfpCfPoBOczi4AS9xr0yYK+bwA4f+5t3sATf/jDrhLZh4sLceVAiJt
-        RzoDccMuNopKh8g2rHhNBoq1wD0xQ6T6f1gAAeVD+exom90XscPbVc+V84kfPzY8
-        kpRwhamqi8+rQsFF8k0ugWcLFrjzYE96y5RtF4LAGm8OOC/2BX1ZyoIvU/NqX5BL
-        RA8uO4sWbT8jnz5oifXdnfiWmbRNetqYRqoVh+c365Zy9RQ8sdx46jGyhgG1f73O
-        Vkd5iwCMFltQhDkI9t0Ygkl/btTIBcQDX0XqUfD4BdzzLunt3GVkcrI7UFXFCB2A
-        ==
-X-ME-Sender: <xms:1qXJXI4KdDIeVJtizQr5f-oK131l5S01x85_o5L34RGNNT244fjLcw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieejgdejvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepofgfggfkjghffffhvffutgesthdtre
-    dtreertdenucfhrhhomhepfdfquhhtvhhiucggfdcuoehisehouhhtvhdrihhmqeenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgpdgrrhgthhhlihhnuhigrdhorhhgnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehisehouhhtvhdrihhmnecuvehluhhsthgvrhfuihiivgep
-    td
-X-ME-Proxy: <xmx:1qXJXFnpGDdQQMbmLgoZSnL_y46g3IY8oogpu0VjD3EHx-8E9EkWLQ>
-    <xmx:1qXJXOVIv-_vh9tTiFJGR_bGr-_9KlkZCZ5G6N17833I9TDw5DbrfA>
-    <xmx:1qXJXB-I-AaGQPMYD3ktIbX5e9STYC4El_4b3hLNRNtxAlNkZg0VYA>
-    <xmx:1qXJXLp4bZazXTaL0nm0OV0wKRX3hbV7x8g1XC3Ca5EMLV8dE01y5g>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 8EF7C211BD; Wed,  1 May 2019 09:57:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-449-gfb3fc5a-fmstable-20190430v1
-Mime-Version: 1.0
-Message-Id: <5d276db9-540c-49ad-82d7-6e22649d25f8@www.fastmail.com>
-In-Reply-To: <9db8c26a-d9fd-4cc9-a3aa-bd593d8f73ac@www.fastmail.com>
-References: <0c87e12c-c964-40a3-b97e-af2286c318c4@www.fastmail.com>
- <9db8c26a-d9fd-4cc9-a3aa-bd593d8f73ac@www.fastmail.com>
-Date:   Wed, 01 May 2019 09:57:16 -0400
-From:   "Outvi V" <i@outv.im>
-To:     dmitry.torokhov@gmail.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [REOPENED] PROBLEM: Elan touchpad regression on Kernel 5.0.10
-Content-Type: text/plain
+        Wed, 1 May 2019 09:58:36 -0400
+Received: from foss.arm.com ([217.140.101.70]:59610 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfEAN6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 09:58:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90542A78;
+        Wed,  1 May 2019 06:58:35 -0700 (PDT)
+Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4095B3F5AF;
+        Wed,  1 May 2019 06:58:33 -0700 (PDT)
+From:   Julien Grall <julien.grall@arm.com>
+To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     logang@deltatee.com, douliyangs@gmail.com,
+        miquel.raynal@bootlin.com, marc.zyngier@arm.com,
+        jason@lakedaemon.net, tglx@linutronix.de, joro@8bytes.org,
+        robin.murphy@arm.com, bigeasy@linutronix.de,
+        linux-rt-users@vger.kernel.org, Julien Grall <julien.grall@arm.com>
+Subject: [PATCH v3 0/7] iommu/dma-iommu: Split iommu_dma_map_msi_msg in two parts
+Date:   Wed,  1 May 2019 14:58:17 +0100
+Message-Id: <20190501135824.25586-1-julien.grall@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi all,
 
-  Sorry for disturbing. But later I find it is not actually solved. It seems to be a regression that randomly happens. Sometimes the touchpad works after starting without any bad logs, while somethime the touchpad is completely unusable.
+On RT, the function iommu_dma_map_msi_msg expects to be called from preemptible
+context. However, this is not always the case resulting a splat with
+!CONFIG_DEBUG_ATOMIC_SLEEP:
 
-  I have filed a bug on Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203467
+[   48.875777] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:974
+[   48.875779] in_atomic(): 1, irqs_disabled(): 128, pid: 2103, name: ip
+[   48.875782] INFO: lockdep is turned off.
+[   48.875784] irq event stamp: 10684
+[   48.875786] hardirqs last  enabled at (10683): [<ffff0000110c8d70>] _raw_spin_unlock_irqrestore+0x88/0x90
+[   48.875791] hardirqs last disabled at (10684): [<ffff0000110c8b2c>] _raw_spin_lock_irqsave+0x24/0x68
+[   48.875796] softirqs last  enabled at (0): [<ffff0000100ec590>] copy_process.isra.1.part.2+0x8d8/0x1970
+[   48.875801] softirqs last disabled at (0): [<0000000000000000>]           (null)
+[   48.875805] Preemption disabled at:
+[   48.875805] [<ffff000010189ae8>] __setup_irq+0xd8/0x6c0
+[   48.875811] CPU: 2 PID: 2103 Comm: ip Not tainted 5.0.3-rt1-00007-g42ede9a0fed6 #45
+[   48.875815] Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Jan 23 2017
+[   48.875817] Call trace:
+[   48.875818]  dump_backtrace+0x0/0x140
+[   48.875821]  show_stack+0x14/0x20
+[   48.875823]  dump_stack+0xa0/0xd4
+[   48.875827]  ___might_sleep+0x16c/0x1f8
+[   48.875831]  rt_spin_lock+0x5c/0x70
+[   48.875835]  iommu_dma_map_msi_msg+0x5c/0x1d8
+[   48.875839]  gicv2m_compose_msi_msg+0x3c/0x48
+[   48.875843]  irq_chip_compose_msi_msg+0x40/0x58
+[   48.875846]  msi_domain_activate+0x38/0x98
+[   48.875849]  __irq_domain_activate_irq+0x58/0xa0
+[   48.875852]  irq_domain_activate_irq+0x34/0x58
+[   48.875855]  irq_activate+0x28/0x30
+[   48.875858]  __setup_irq+0x2b0/0x6c0
+[   48.875861]  request_threaded_irq+0xdc/0x188
+[   48.875865]  sky2_setup_irq+0x44/0xf8
+[   48.875868]  sky2_open+0x1a4/0x240
+[   48.875871]  __dev_open+0xd8/0x188
+[   48.875874]  __dev_change_flags+0x164/0x1f0
+[   48.875877]  dev_change_flags+0x20/0x60
+[   48.875879]  do_setlink+0x2a0/0xd30
+[   48.875882]  __rtnl_newlink+0x5b4/0x6d8
+[   48.875885]  rtnl_newlink+0x50/0x78
+[   48.875888]  rtnetlink_rcv_msg+0x178/0x640
+[   48.875891]  netlink_rcv_skb+0x58/0x118
+[   48.875893]  rtnetlink_rcv+0x14/0x20
+[   48.875896]  netlink_unicast+0x188/0x200
+[   48.875898]  netlink_sendmsg+0x248/0x3d8
+[   48.875900]  sock_sendmsg+0x18/0x40
+[   48.875904]  ___sys_sendmsg+0x294/0x2d0
+[   48.875908]  __sys_sendmsg+0x68/0xb8
+[   48.875911]  __arm64_sys_sendmsg+0x20/0x28
+[   48.875914]  el0_svc_common+0x90/0x118
+[   48.875918]  el0_svc_handler+0x2c/0x80
+[   48.875922]  el0_svc+0x8/0xc
 
-  If any detail is needed, please don't hesitate to contact me.
+Most of the patches have now been acked (missing a couple of ack from Joerg).
 
-Regards,
+I was able to test the changes in GICv2m and GICv3 ITS. I don't have
+hardware for the other interrupt controllers.
 
-On Tue, Apr 30, 2019, at 14:16, Outvi V wrote:
-> Hello,
-> 
->   After a cold restart, this problems seem to be solved automatically 
-> on kernel 5.0.10.
-> 
-> Regards,
-> 
-> On Tue, Apr 30, 2019, at 12:21, Outvi V wrote:
-> > Hello,
-> > 
-> > [1.] One line summary of the problem: Elan touchpad regression on Kernel 5.0.10
-> > 
-> > [2.] Full description of the problem/report:
-> >   Elan touchpad does not work on 5.0.10 while working on 5.0.9
-> > 
-> > [3.] Keywords: elan_i2c_core elan i2c touchpad 5.0.10
-> > 
-> > [4.] Kernel information
-> > [4.1.] Kernel version:
-> >   Linux version 5.0.10-arch1-1-ARCH (builduser@heftig-2592) (gcc 
-> > version 8.3.0 (GCC)) #1 SMP PREEMPT Sat Apr 27 20:06:45 UTC 2019
-> > [4.2.] Kernel .config file:
-> >   I'm not sure, but I think it may be referring to
-> >   
-> > https://git.archlinux.org/svntogit/packages.git/tree/trunk/config?h=packages/linux
-> > [5.] Most recent kernel version which did not have the bug: 5.0.9
-> > 
-> > [6.] Output of Oops.. message (if applicable) with symbolic information
-> >      resolved (Not appliable)
-> > [7.] A small shell script or example program which triggers the
-> >      problem: (Not appliable)
-> > 
-> > [8.] Environment
-> > [8.1.] Software (add the output of the ver_linux script here)
-> >   
-> > Linux sheltty 5.0.10-arch1-1-ARCH #1 SMP PREEMPT Sat Apr 27 20:06:45 
-> > UTC 2019 x86_64 GNU/Linux
-> > 
-> > GNU C                   8.3.0
-> > GNU Make                4.2.1
-> > Binutils                2.32
-> > Util-linux              2.33.2
-> > Mount                   2.33.2
-> > Module-init-tools       26
-> > E2fsprogs               1.45.0
-> > Jfsutils                1.1.15
-> > Reiserfsprogs           3.6.27
-> > Xfsprogs                4.20.0
-> > PPP                     2.4.7
-> > Linux C Library         2.29
-> > Dynamic linker (ldd)    2.29
-> > Linux C++ Library       6.0.25
-> > Procps                  3.3.15
-> > Kbd                     2.0.4
-> > Console-tools           2.0.4
-> > Sh-utils                8.31
-> > Udev                    242
-> > Modules Loaded          8021q 8250_dw ac ac97_bus acpi_thermal_rel 
-> > aesni_intel aes_x86_64 agpgart ahci arc4 atkbd battery bbswitch 
-> > bluetooth btbcm btintel btrtl btusb cfg80211 coretemp crc16 
-> > crc32c_generic crc32c_intel crc32_pclmul crct10dif_pclmul cryptd 
-> > crypto_simd crypto_user drm drm_kms_helper ecdh_generic elan_i2c evdev 
-> > ext4 fat fb_sys_fops fscrypto garp ghash_clmulni_intel glue_helper hid 
-> > hid_generic i2c_algo_bit i2c_hid i2c_i801 i8042 i915 idma64 input_leds 
-> > int3400_thermal int3403_thermal int340x_thermal_zone intel_cstate 
-> > intel_gtt intel_lpss intel_lpss_pci intel_pch_thermal intel_powerclamp 
-> > intel_rapl intel_rapl_perf intel_soc_dts_iosf intel_uncore 
-> > intel_wmi_thunderbolt ip_tables irqbypass iTCO_vendor_support iTCO_wdt 
-> > jbd2 joydev kvm kvmgt kvm_intel ledtrig_audio libahci libata libphy 
-> > libps2 llc mac80211 mac_hid mbcache mdev media mei mei_me mousedev mrp 
-> > nls_cp437 nls_iso8859_1 pcc_cpufreq processor_thermal_device r8169 
-> > r8822be realtek rfkill rng_core scsi_mod serio serio_raw snd 
-> > snd_compress snd_hda_codec snd_hda_codec_generic snd_hda_codec_hdmi 
-> > snd_hda_codec_realtek snd_hda_core snd_hda_ext_core snd_hda_intel 
-> > snd_hwdep snd_pcm snd_pcm_dmaengine snd_soc_acpi 
-> > snd_soc_acpi_intel_match snd_soc_core snd_soc_hdac_hda snd_soc_skl 
-> > snd_soc_skl_ipc snd_soc_sst_dsp snd_soc_sst_ipc snd_timer soundcore stp 
-> > syscopyarea sysfillrect sysimgblt tpm tpm_crb tpm_tis tpm_tis_core 
-> > typec typec_ucsi ucsi_acpi usbhid uvcvideo vfat vfio vfio_iommu_type1 
-> > vfio_mdev videobuf2_common videobuf2_memops videobuf2_v4l2 
-> > videobuf2_vmalloc videodev wmi wmi_bmof x86_pkg_temp_thermal xhci_hcd 
-> > xhci_pci x_tables
-> > 
-> > [8.2.] Processor information (from /proc/cpuinfo): (Maybe not appliable)
-> > [8.3.] Module information (from /proc/modules): 
-> > 
-> > (Parts related to i2c and elan:)
-> > 
-> > i2c_algo_bit 16384 1 i915, Live 0x0000000000000000
-> > i2c_hid 32768 0 - Live 0x0000000000000000
-> > hid 147456 3 hid_generic,usbhid,i2c_hid, Live 0x0000000000000000
-> > elan_i2c 49152 0 - Live 0x0000000000000000
-> > i2c_i801 36864 0 - Live 0x0000000000000000
-> > 
-> > [8.4.] Loaded driver and hardware information (/proc/ioports, /proc/iomem)
-> > 
-> > /proc/ioports:
-> > 0000-0000 : PCI Bus 0000:00
-> >   0000-0000 : dma1
-> >   0000-0000 : pic1
-> >   0000-0000 : iTCO_wdt
-> >   0000-0000 : timer0
-> >   0000-0000 : timer1
-> >   0000-0000 : keyboard
-> >   0000-0000 : PNP0C09:00
-> >     0000-0000 : EC data
-> >   0000-0000 : keyboard
-> >   0000-0000 : PNP0C09:00
-> >     0000-0000 : EC cmd
-> >   0000-0000 : rtc0
-> >   0000-0000 : dma page reg
-> >   0000-0000 : pic2
-> >   0000-0000 : dma2
-> >   0000-0000 : fpu
-> >     0000-0000 : PNP0C04:00
-> >   0000-0000 : iTCO_wdt
-> >   0000-0000 : pnp 00:02
-> > 0000-0000 : PCI conf1
-> > 0000-0000 : PCI Bus 0000:00
-> >   0000-0000 : pnp 00:02
-> >   0000-0000 : pnp 00:00
-> >     0000-0000 : ACPI PM1a_EVT_BLK
-> >     0000-0000 : ACPI PM1a_CNT_BLK
-> >     0000-0000 : ACPI PM_TMR
-> >     0000-0000 : ACPI CPU throttle
-> >     0000-0000 : ACPI PM2_CNT_BLK
-> >     0000-0000 : pnp 00:04
-> >     0000-0000 : ACPI GPE0_BLK
-> >   0000-0000 : pnp 00:01
-> >   0000-0000 : PCI Bus 0000:08
-> >     0000-0000 : 0000:08:00.0
-> >   0000-0000 : PCI Bus 0000:07
-> >     0000-0000 : 0000:07:00.0
-> >       0000-0000 : r8822be
-> >   0000-0000 : PCI Bus 0000:01
-> >     0000-0000 : 0000:01:00.0
-> >   0000-0000 : 0000:00:02.0
-> >   0000-0000 : 0000:00:1f.4
-> >     0000-0000 : i801_smbus
-> >   0000-0000 : 0000:00:17.0
-> >     0000-0000 : ahci
-> >   0000-0000 : 0000:00:17.0
-> >     0000-0000 : ahci
-> >   0000-0000 : 0000:00:17.0
-> >     0000-0000 : ahci
-> > 
-> > 
-> > [8.5.] PCI information
-> >   It seems to be long (over 700 lines) and unrelated to this 
-> > regression. Omitted to avoid flooding. I've kept an archive so feel 
-> > free to ask me to post it if needed.
-> > 
-> > [8.6.] SCSI information (from /proc/scsi/scsi): (Empty)
-> > [8.7.] Other information that might be relevant to the problem:
-> > 
-> >   dmesg is constantly showing "elan_i2c i2c-ELAN061B:00: invalid report 
-> > id data (d)".
-> >   I checked the git log and it is likely to be related to commit 
-> > "95df599f95f398b0a34d081dadfdee3126e58163".
-> >   I'm using Arch Linux, its kernel repository link: [1]
-> >   I checked the related file "elan_i2c_core.c" in Arch Linux's kernel 
-> > repository [2], and it is the same as in 5.0.10 on kernel.org.
-> >   My laptop is a Lenovo Legion Y7000.
-> > 
-> > Links:
-> > [1]. https://git.archlinux.org/linux.git
-> > [2]. 
-> > https://git.archlinux.org/linux.git/tree/drivers/input/mouse/elan_i2c_core.c?h=v5.0.10-arch1
-> > 
-> > Please don't hesitate if more information or operation is needed.
+Cheers,
+
+Julien Grall (7):
+  genirq/msi: Add a new field in msi_desc to store an IOMMU cookie
+  iommu/dma-iommu: Split iommu_dma_map_msi_msg() in two parts
+  irqchip/gicv2m: Don't map the MSI page in gicv2m_compose_msi_msg()
+  irqchip/gic-v3-its: Don't map the MSI page in
+    its_irq_compose_msi_msg()
+  irqchip/ls-scfg-msi: Don't map the MSI page in
+    ls_scfg_msi_compose_msg()
+  irqchip/gic-v3-mbi: Don't map the MSI page in mbi_compose_m{b,
+    s}i_msg()
+  iommu/dma-iommu: Remove iommu_dma_map_msi_msg()
+
+ drivers/iommu/Kconfig             |  1 +
+ drivers/iommu/dma-iommu.c         | 48 +++++++++++++++++++++++----------------
+ drivers/irqchip/irq-gic-v2m.c     |  8 ++++++-
+ drivers/irqchip/irq-gic-v3-its.c  |  7 +++++-
+ drivers/irqchip/irq-gic-v3-mbi.c  | 15 ++++++++++--
+ drivers/irqchip/irq-ls-scfg-msi.c |  7 +++++-
+ include/linux/dma-iommu.h         | 24 ++++++++++++++++++--
+ include/linux/msi.h               | 26 +++++++++++++++++++++
+ kernel/irq/Kconfig                |  3 +++
+ 9 files changed, 112 insertions(+), 27 deletions(-)
+
+-- 
+2.11.0
+
