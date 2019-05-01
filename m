@@ -2,89 +2,84 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1166EC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF113C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE592177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:17:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556727451;
-	bh=9o1Wqby8GAdwNUTUXUjvvLYIGm1+ZXKZ7uOR3la3Q9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pVG4y1Lm/f3ajyD4ZVOeBWlrlRjKDaIpflY6jwQmr3vUyInficnHtnlOwIVC9neBB
-	 WcArfyzV5dUVgfCeDApIiMr2/aEVeBYOlrkmGaeLi/oxcVz5jD0kHOyjLEjjdTzVxf
-	 xx2RyCaVYvKnNeLpBUDskk93bWZWV0+iit2IZu8Q=
+	by mail.kernel.org (Postfix) with ESMTP id B2C1C208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfEAQRa (ORCPT
+        id S1727218AbfEAQSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbfEAQR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:17:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0548421848;
-        Wed,  1 May 2019 16:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556727448;
-        bh=9o1Wqby8GAdwNUTUXUjvvLYIGm1+ZXKZ7uOR3la3Q9E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zsgeg9CitNEME7oMnzxZZpWt/O8gMNUcntPgXjPvbiQ+2Gimpww0039adfEae9wZ7
-         FiX/L4ckz5hl32sW6lbjMPd/in6eVCRmCd+K/oF4Mz6G7Hmtzw0LC9tB9L33dtVIAo
-         lYfMS4WG8cC7vUvHKTDGvbo4FdHINuk1DZQe0DrY=
-Date:   Wed, 1 May 2019 18:17:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Christian Gromm <christian.gromm@microchip.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Andrey Shvetsov <andrey.shvetsov@k2l.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>,
-        Marcin Ciupak <marcin.s.ciupak@gmail.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] staging: most: cdev: fix chrdev_region leak in mod_exit
-Message-ID: <20190501161726.GA382@kroah.com>
-References: <20190424192343.15418-1-erosca@de.adit-jv.com>
+        Wed, 1 May 2019 12:18:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33514 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbfEAQSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 12:18:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 718BEA78;
+        Wed,  1 May 2019 09:18:01 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8D143F719;
+        Wed,  1 May 2019 09:17:58 -0700 (PDT)
+Date:   Wed, 1 May 2019 17:17:52 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v3 1/4] ptrace: move clearing of TIF_SYSCALL_EMU flag to
+ core
+Message-ID: <20190501161752.GA12498@e107155-lin>
+References: <20190430170520.29470-1-sudeep.holla@arm.com>
+ <20190430170520.29470-2-sudeep.holla@arm.com>
+ <20190501161330.GD30235@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424192343.15418-1-erosca@de.adit-jv.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190501161330.GD30235@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 09:23:43PM +0200, Eugeniu Rosca wrote:
-> From: Suresh Udipi <sudipi@jp.adit-jv.com>
+On Wed, May 01, 2019 at 06:13:30PM +0200, Oleg Nesterov wrote:
+> On 04/30, Sudeep Holla wrote:
+> >
+> > While the TIF_SYSCALL_EMU is set in ptrace_resume independent of any
+> > architecture, currently only powerpc and x86 unset the TIF_SYSCALL_EMU
+> > flag in ptrace_disable which gets called from ptrace_detach.
+> >
+> > Let's move the clearing of TIF_SYSCALL_EMU flag to __ptrace_unlink
+> > which gets executed from ptrace_detach and also keep it along with
+> > or close to clearing of TIF_SYSCALL_TRACE.
+> >
+> > Cc: Oleg Nesterov <oleg@redhat.com>
+> > Cc: Paul Mackerras <paulus@samba.org>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > 
-> It looks like v4.18-rc1 commit [0] which upstreams mld-1.8.0
-> commit [1] missed to fix the memory leak in mod_exit function.
-> 
-> Do it now.
-> 
-> [0] aba258b7310167 ("staging: most: cdev: fix chrdev_region leak")
-> [1] https://github.com/microchip-ais/linux/commit/a2d8f7ae7ea381
->     ("staging: most: cdev: fix leak for chrdev_region")
-> 
-> Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> ---
->  drivers/staging/most/cdev/cdev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+>
 
-Christian, I'd like your ack/review on this before applying it.
+Since 1/4 and 2/4 are completely independent of arm64 changes in 3&4/4,
+I prefer you take these via your tree.
 
-thanks,
-
-greg k-h
+--
+Regards,
+Sudeep
