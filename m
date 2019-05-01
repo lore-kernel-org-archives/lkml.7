@@ -2,183 +2,182 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673CAC04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8DBC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304D021670
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECD92064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 07:17:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="XL9RJUiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfEAHQ4 (ORCPT
+        id S1726202AbfEAHRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 03:16:56 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44789 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfEAHQz (ORCPT
+        Wed, 1 May 2019 03:17:43 -0400
+Received: from mailrelay2-1.pub.mailoutpod1-cph3.one.com ([46.30.210.183]:25323
+        "EHLO mailrelay2-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725776AbfEAHRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 03:16:55 -0400
-Received: by mail-vs1-f65.google.com with SMTP id j184so9409805vsd.11;
-        Wed, 01 May 2019 00:16:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nMAztx+niF0rjgBsTBcRVWZKFQ1zhY6tWWp3MolxdTE=;
-        b=nrr5cTupPC4occ+r8zMB053llPHMj1sKFE9HW5PWbLq7Ghmd3kehqb5XlM3P5AGEYH
-         6oq6Xlj3OOfYN5TIkSamAUZR0Rt0q9bpgDJ/n1yosWKKhwkX6+KVgNGboAdIa4MlgfXZ
-         PI9tuHqSculqhWwaIE0zc8LedmNxRXaR6mwi+pSN766bsB2P2bCItiokH7o1MdY5LEko
-         fZMB5goIbpuaWMNfvHJGA04pAqqnApYf9MBsVqJHQLiYtOXJzFJqx9F1ghmLf5wpgGYd
-         lRdO7auNviW/3kBJ+831UCH02dNh7TaTYTRSjSzvKFlByRR5lXAARA5FG7peKKEtcu/I
-         IZsA==
-X-Gm-Message-State: APjAAAU+72aoF0nLzXj75X18p/YItwn8892S0+f66nmAjICVB4xaCZhu
-        l4U9DWfkVVZFQCLkCaj+q2W+mo30gmv7V1lR3sg=
-X-Google-Smtp-Source: APXvYqzWSlP00i5y3FO3uyB0eC/PSGgr1BiCxz4n4K9fNkT2o1GgBISYNrXofxtkEIS2gYzGCdKDd387g2F/JGJEG6Y=
-X-Received: by 2002:a67:83cf:: with SMTP id f198mr9345888vsd.63.1556695013995;
- Wed, 01 May 2019 00:16:53 -0700 (PDT)
+        Wed, 1 May 2019 03:17:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=haabendal.dk; s=20140924;
+        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
+         to:from:from;
+        bh=F15j0AFunF4CBEEgLxdpx3aWJyR9of//q1hGRpFq+i0=;
+        b=XL9RJUiTRW24HdIpIv99IKY08IB4D/AbB6uaTp2riAlcowmbs4L5wrp9suCUKv53yrB/gicGQOskP
+         vssZsQZGw6nESy6VoQGQewoOn7zpYIaemkSNc6taPCrWENckWgguWdXvlK+SeaVk/gCyB48O1L50l6
+         Bzh6piVjllF1nxqg=
+X-HalOne-Cookie: 6c80926cc8f071f60467f5cf294afa5a4b457f55
+X-HalOne-ID: 32f67941-6be1-11e9-931a-d0431ea8a290
+Received: from localhost (unknown [193.163.1.7])
+        by mailrelay2.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 32f67941-6be1-11e9-931a-d0431ea8a290;
+        Wed, 01 May 2019 07:17:38 +0000 (UTC)
+From:   Esben Haabendal <esben@haabendal.dk>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-serial@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] serial: 8250: Add support for using platform_device resources
+References: <20190430140416.4707-1-esben@geanix.com>
+        <20190430153736.GL9224@smile.fi.intel.com>
+Date:   Wed, 01 May 2019 09:17:37 +0200
+In-Reply-To: <20190430153736.GL9224@smile.fi.intel.com> (Andy Shevchenko's
+        message of "Tue, 30 Apr 2019 18:37:36 +0300")
+Message-ID: <874l6efxta.fsf@haabendal.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <20190430121254.3737-1-geert+renesas@glider.be>
- <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
- <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 1 May 2019 09:16:41 +0200
-Message-ID: <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/A1 Interrupt Controller
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-On Tue, Apr 30, 2019 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
-> On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> > On 30/04/2019 16:02, Rob Herring wrote:
-> > > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
-> > > <geert+renesas@glider.be> wrote:
-> > >>
-> > >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
-> > >>
-> > >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >> ---
-> > >> v2:
-> > >>   - Add "renesas,gic-spi-base",
-> > >>   - Document RZ/A2M.
-> > >> ---
-> > >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
-> > >>  1 file changed, 30 insertions(+)
-> > >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> > >>
-> > >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> > >> new file mode 100644
-> > >> index 0000000000000000..ea8ddb6955338ccd
-> > >> --- /dev/null
-> > >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> > >> @@ -0,0 +1,30 @@
-> > >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
-> > >> +
-> > >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
-> > >> +RZ/A1 and RZ/A2 SoCs:
-> > >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
-> > >> +    interrupts,
-> > >> +  - NMI edge select.
-> > >> +
-> > >> +Required properties:
-> > >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
-> > >> +               fallback.
-> > >> +               Examples with soctypes are:
-> > >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
-> > >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
-> > >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
-> > >> +                                in interrupts.txt in this directory)
-> > >> +  - interrupt-controller: Marks the device as an interrupt controller
-> > >> +  - reg: Base address and length of the memory resource used by the interrupt
-> > >> +         controller
-> > >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
-> > >
-> > > Why isn't this just an 'interrupts' property?
-> >
-> > That's likely because of kernel limitations. The DT code does an
-> > of_populate() on any device that it finds, parse the "interrupts"
-> > propertiy, resulting in the irq_descs being populated.
-> >
-> > That creates havoc, as these interrupts are not for this device, but for
-> > something that is connected to it. This is merely a bridge of some sort.
+> On Tue, Apr 30, 2019 at 04:04:13PM +0200, Esben Haabendal wrote:
+>> Remaining platform_data fields (other than mapbase, iobase, mapsize and
+>> irq) are used just as before.  Note
 >
-> 'interrupt-map' would avoid that problem I think.
+> Note what?
 
-"interrupt-map" seems to be meant for translation on a bus?
-What to do with the child and parent unit addresses fields?
-The parent unit address size depends on the #address-cells of the parent
-interrupt-controller (i.e. GIC, so it's zero).
-But the child unit address size depends on the #address-cells of the bus node
-on which the child is located, so that's a (non-zero) bus #address-cells
-(from the root node), not an interrupt-controller #address-cells.
+Note nothing.  I will remove it, sorry about that.
 
-Each line in an interrupt-map also contains a child interrupt specifier.
-As the RZ/A1 IRQC supports 8 interrupt inputs with 4 sense types,
-that would mean 32 lines? Or should I just ignore the senses here,
-and specify 0?
-
-i.e. interrupt-map = <0 0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH,
-                      0 1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH,
-                      0 2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH,
-                      0 3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH,
-                      0 4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH,
-                      0 5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH,
-                      0 6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH,
-                      0 7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-
-(using zero for the child unit addresses, too)?
-
-> > Furthermore, this is a rather long established practice: gic-v2m,
-> > gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
-> > for one reason or another plug onto the GIC use the same method.
+>> +static int serial8250_probe_resources(struct platform_device *pdev,
+>> +				      unsigned int num,
+>> +				      struct plat_serial8250_port *p,
+>> +				      struct uart_8250_port *uart)
+>> +{
+>> +	struct resource *r;
+>> +	int irq;
+>> +
+>> +	switch (p->iotype) {
+>> +	case UPIO_AU:
+>> +	case UPIO_TSI:
+>> +	case UPIO_MEM32:
+>> +	case UPIO_MEM32BE:
+>> +	case UPIO_MEM16:
+>> +	case UPIO_MEM:
+>> +		r = platform_get_resource(pdev, IORESOURCE_MEM, num);
+>> +		if (!r)
+>> +			return -ENODEV;
+>> +		uart->port.mapbase = r->start;
+>> +		uart->port.mapsize = resource_size(r);
+>> +		uart->port.flags |= UPF_IOREMAP;
+>> +		break;
+>> +	case UPIO_HUB6:
+>> +	case UPIO_PORT:
+>> +		r = platform_get_resource(pdev, IORESOURCE_IO, num);
+>> +		if (!r)
+>> +			return -ENODEV;
+>> +		uart->port.iobase = r->start;
+>> +		uart->port.mapsize = resource_size(r);
+>> +		break;
+>> +	}
+>> +
+>> +	irq = platform_get_irq(pdev, num);
+>> +	if (irq == -ENXIO)
+>> +		uart->port.irq = 0; /* no interrupt -> use polling */
+>> +	else if (irq < 0)
+>> +		return irq;
+>> +	uart->port.irq = irq;
+>> +
+>> +	return 0;
+>> +}
 >
-> All handling the mapping to the parent in their own way...
+> Hmm... Currently it's done inside individual port drivers, like 8250_dw.c.
+> Each of the drivers can do it differently, for example 8250_lpss.c or
+> 8250_pnp.c.
+
+So, you would prefer to create a new "specialized" port driver that uses
+platform resources?  I am not doing anything else different from
+the generic port driver here in 8250_core.c.
+
+>> +				if (!(port->flags & UPF_DEV_RESOURCES))
+>> +					release_mem_region(port->mapbase, size);
 >
-> > > Plus, without 'interrupts' walking the hierarchy is broken.
-> >
-> > Erm... Which hierarchy?
+> This is again same issue. The parent should not request resource it
+> doesn't use.
+
+Yes, this is same issue.
+
+But the last part is not true.  A parent mfd driver might "use" a memory
+resource for the sole purpose of splitting it up for it's mfd child
+devices.  This is a core part of mfd framework, and not something I am
+inventing with this patch.  I am just trying to make it possible to use
+8250 driver in that context.
+
+> I think I understand what is a confusion here.
 >
-> of_irq_init() expects that an interrupt-controller without an
-> interrupt-parent is the root controller. So you're right. We only need
+> For the IO resources we have two operations:
+> - mapping / re-mapping (may be shared)
+> - requesting (exclusive)
+>
+> In the parenthesis I put a level of access to it. While many device
+> drivers can *share* same resource (mapped or unmapped), the only one
+> can actually request it.
 
-That applies to IRQCHIP_DECLARE() drivers only, not platform device
-drivers, right?
+Mostly true.  But there is an important twist to the exclusive restriction.
 
-> to have an 'interrupt-parent', but not 'interrupts'.
+The exclusive part of the request is limited to the the same root/parent
+resource.
 
-This is implied by "interrupt-parent = <&gic>;" on the soc node.
+When you request a memory resource from the root resource
+(iomem_resource), the resource returned can be used as a new parent
+resource.  This new parent can then be used to give exclusive access to
+slices of that resource.  When used like that, I expect that the parent
+resource is not supposed to be used for anything else than honoring
+resource requests.
 
-Thanks!
+And this is exactly what mfd-core uses the mem_base argument
+in mfd_add_devices().
 
-Gr{oetje,eeting}s,
+> So, the parent can take an slice resources as it would be
+> appropriated, but not requesting them.
 
-                        Geert
+The parent is not and should not be doing that by itself.  The request
+is done on by mfd-core when mfd_add_devices() is called.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> OTOH, it's possible to have a (weird) MFD case where parent *requested*
+> resources, and *all* of its children are aware of that.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I am not sure what you mean with this, but mfd drivers should not pass
+along it's intire requested memory resource(s) to child devices.  The
+child devices will get the requested resource slices, as implemented by
+mfd_add_devices().
+
+I hope you can see that I am not violating any fundamental design
+decissions here, but actually try adhere to them (resource management,
+platform_device resource management, and mfd-core).
+
+/Esben
