@@ -2,124 +2,217 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B718AC04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3231FC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CD32177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BD121734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:02:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gog7uv7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfEADA5 (ORCPT
+        id S1726189AbfEADCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 23:00:57 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:57075 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725909AbfEADAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 23:00:55 -0400
-Received: from callcc.thunk.org (adsl-173-228-226-134.prtc.net [173.228.226.134])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x412xVCE001527
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Apr 2019 22:59:32 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 95C10420023; Tue, 30 Apr 2019 22:59:30 -0400 (EDT)
-Date:   Tue, 30 Apr 2019 22:59:30 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Olaf Weber <olaf@sgi.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2] unicode: refactor the rule for regenerating utf8data.h
-Message-ID: <20190501025930.GB5377@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Olaf Weber <olaf@sgi.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-fsdevel@vger.kernel.org
-References: <1556507731-830-1-git-send-email-yamada.masahiro@socionext.com>
+        Tue, 30 Apr 2019 23:02:10 -0400
+Received: from ozlabs.org ([203.11.71.1]:36641 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfEADCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 23:02:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44v38W66Sgz9s9T;
+        Wed,  1 May 2019 13:02:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556679726;
+        bh=mJ1gGQj+3W3VHxjTxKHKaQ7/wNorgvmBDE2iMo3R9BM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gog7uv7heUXwS6TdGAN5O81zR6nYKN/E5f7Ks1MuVOZK4EABfCWdHnPMqFWRFpY6l
+         zcOQguNcN2ufPMiUk14Th6TyjzAYYcmFSkb4eJJyXfMyjcWlUvPKqkthqm5tMjh6ba
+         51VW79le5d68v4QUQmKQ7GR7si8HMUlIK2MSNUum7q+2/fh65sNI9dx2u0qPAer68m
+         iA/wQOOJptnCpVXlNr/HZ4P5Lw4VJz43+qCFTCBDwn/C1A+cD1jBBSk1hqott362Qe
+         Vt49iVzC/OikjbrPzE/8vtPpPMosL3entR1yZPZ62DvZpVoDQfQZ9h3sgQnO3DAWnU
+         eTkVY69zaN70Q==
+Date:   Wed, 1 May 2019 13:01:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>
+Subject: Re: linux-next: manual merge of the ipsec-next tree with the ipsec
+ tree
+Message-ID: <20190501130157.27fb69cd@canb.auug.org.au>
+In-Reply-To: <20190426114120.73e906e3@canb.auug.org.au>
+References: <20190426114120.73e906e3@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556507731-830-1-git-send-email-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/M3cE/Mz/_GFYcjnICVpCSmv"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 12:15:31PM +0900, Masahiro Yamada wrote:
-> scripts/mkutf8data is used only when regenerating utf8data.h,
-> which never happens in the normal kernel build. However, it is
-> irrespectively built if CONFIG_UNICODE is enabled.
-> 
-> Moreover, there is no good reason for it to reside in the scripts/
-> directory since it is only used in fs/unicode/.
-> 
-> Hence, move it from scripts/ to fs/unicode/.
-> 
-> In some cases, we bypass build artifacts in the normal build. The
-> conventional way to do so is to surround the code with ifdef REGENERATE_*.
-> 
-> For example,
-> 
->  - 7373f4f83c71 ("kbuild: add implicit rules for parser generation")
->  - 6aaf49b495b4 ("crypto: arm,arm64 - Fix random regeneration of S_shipped")
-> 
-> I rewrote the rule in a more kbuild'ish style.
-> 
-> In the normal build, utf8data.h is just shipped from the check-in file.
-> 
-> $ make
->   [ snip ]
->   SHIPPED fs/unicode/utf8data.h
->   CC      fs/unicode/utf8-norm.o
->   CC      fs/unicode/utf8-core.o
->   CC      fs/unicode/utf8-selftest.o
->   AR      fs/unicode/built-in.a
-> 
-> If you want to generate utf8data.h based on UCD, put *.txt files into
-> fs/unicode/, then pass REGENERATE_UTF8DATA=1 from the command line.
-> The mkutf8data tool will be automatically compiled to generate the
-> utf8data.h from the *.txt files.
-> 
-> $ make REGENERATE_UTF8DATA=1
->   [ snip ]
->   HOSTCC  fs/unicode/mkutf8data
->   GEN     fs/unicode/utf8data.h
->   CC      fs/unicode/utf8-norm.o
->   CC      fs/unicode/utf8-core.o
->   CC      fs/unicode/utf8-selftest.o
->   AR      fs/unicode/built-in.a
-> 
-> I renamed the check-in utf8data.h to utf8data.h_shipped so that this
-> will work for the out-of-tree build.
-> 
-> You can update it based on the latest UCD like this:
-> 
-> $ make REGENERATE_UTF8DATA=1 fs/unicode/
-> $ cp fs/unicode/utf8data.h fs/unicode/utf8data.h_shipped
-> 
-> Also, I added entries to .gitignore and dontdiff.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+--Sig_/M3cE/Mz/_GFYcjnICVpCSmv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Fri, 26 Apr 2019 11:41:20 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the ipsec-next tree got a conflict in:
+>=20
+>   net/ipv4/xfrm4_policy.c
+>=20
+> between commit:
+>=20
+>   8742dc86d0c7 ("xfrm4: Fix uninitialized memory read in _decode_session4=
+")
+>=20
+> from the ipsec tree and commit:
+>=20
+>   c53ac41e3720 ("xfrm: remove decode_session indirection from afinfo_poli=
+cy")
+>=20
+> from the ipsec-next tree.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Fri, 26 Apr 2019 11:37:41 +1000
+> Subject: [PATCH] xfrm4: fix up for moved _decode_session4
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 > ---
-> 
-> Changes in v2:
->  - Make this work correctly with O= option
+>  net/xfrm/xfrm_policy.c | 24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+> index 410233c5681e..7a43ae6b2a44 100644
+> --- a/net/xfrm/xfrm_policy.c
+> +++ b/net/xfrm/xfrm_policy.c
+> @@ -3264,7 +3264,8 @@ static void
+>  decode_session4(struct sk_buff *skb, struct flowi *fl, bool reverse)
+>  {
+>  	const struct iphdr *iph =3D ip_hdr(skb);
+> -	u8 *xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> +	int ihl =3D iph->ihl;
+> +	u8 *xprth =3D skb_network_header(skb) + ihl * 4;
+>  	struct flowi4 *fl4 =3D &fl->u.ip4;
+>  	int oif =3D 0;
+> =20
+> @@ -3275,6 +3276,11 @@ decode_session4(struct sk_buff *skb, struct flowi =
+*fl, bool reverse)
+>  	fl4->flowi4_mark =3D skb->mark;
+>  	fl4->flowi4_oif =3D reverse ? skb->skb_iif : oif;
+> =20
+> +	fl4->flowi4_proto =3D iph->protocol;
+> +	fl4->daddr =3D reverse ? iph->saddr : iph->daddr;
+> +	fl4->saddr =3D reverse ? iph->daddr : iph->saddr;
+> +	fl4->flowi4_tos =3D iph->tos;
+> +
+>  	if (!ip_is_fragment(iph)) {
+>  		switch (iph->protocol) {
+>  		case IPPROTO_UDP:
+> @@ -3286,7 +3292,7 @@ decode_session4(struct sk_buff *skb, struct flowi *=
+fl, bool reverse)
+>  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+>  				__be16 *ports;
+> =20
+> -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> +				xprth =3D skb_network_header(skb) + ihl * 4;
+>  				ports =3D (__be16 *)xprth;
+> =20
+>  				fl4->fl4_sport =3D ports[!!reverse];
+> @@ -3298,7 +3304,7 @@ decode_session4(struct sk_buff *skb, struct flowi *=
+fl, bool reverse)
+>  			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
+>  				u8 *icmp;
+> =20
+> -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> +				xprth =3D skb_network_header(skb) + ihl * 4;
+>  				icmp =3D xprth;
+> =20
+>  				fl4->fl4_icmp_type =3D icmp[0];
+> @@ -3310,7 +3316,7 @@ decode_session4(struct sk_buff *skb, struct flowi *=
+fl, bool reverse)
+>  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+>  				__be32 *ehdr;
+> =20
+> -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> +				xprth =3D skb_network_header(skb) + ihl * 4;
+>  				ehdr =3D (__be32 *)xprth;
+> =20
+>  				fl4->fl4_ipsec_spi =3D ehdr[0];
+> @@ -3321,7 +3327,7 @@ decode_session4(struct sk_buff *skb, struct flowi *=
+fl, bool reverse)
+>  			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
+>  				__be32 *ah_hdr;
+> =20
+> -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> +				xprth =3D skb_network_header(skb) + ihl * 4;
+>  				ah_hdr =3D (__be32 *)xprth;
+> =20
+>  				fl4->fl4_ipsec_spi =3D ah_hdr[1];
+> @@ -3332,7 +3338,7 @@ decode_session4(struct sk_buff *skb, struct flowi *=
+fl, bool reverse)
+>  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+>  				__be16 *ipcomp_hdr;
+> =20
+> -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> +				xprth =3D skb_network_header(skb) + ihl * 4;
+>  				ipcomp_hdr =3D (__be16 *)xprth;
+> =20
+>  				fl4->fl4_ipsec_spi =3D htonl(ntohs(ipcomp_hdr[1]));
+> @@ -3344,7 +3350,7 @@ decode_session4(struct sk_buff *skb, struct flowi *=
+fl, bool reverse)
+>  				__be16 *greflags;
+>  				__be32 *gre_hdr;
+> =20
+> -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> +				xprth =3D skb_network_header(skb) + ihl * 4;
+>  				greflags =3D (__be16 *)xprth;
+>  				gre_hdr =3D (__be32 *)xprth;
+> =20
+> @@ -3360,10 +3366,6 @@ decode_session4(struct sk_buff *skb, struct flowi =
+*fl, bool reverse)
+>  			break;
+>  		}
+>  	}
+> -	fl4->flowi4_proto =3D iph->protocol;
+> -	fl4->daddr =3D reverse ? iph->saddr : iph->daddr;
+> -	fl4->saddr =3D reverse ? iph->daddr : iph->saddr;
+> -	fl4->flowi4_tos =3D iph->tos;
+>  }
+> =20
+>  #if IS_ENABLED(CONFIG_IPV6)
 
-Thanks, I've updated my tree to use this version of the commit.
+This is now a conflict between the net and net-next trees.
 
-	     	     	     	    	 - Ted
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/M3cE/Mz/_GFYcjnICVpCSmv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzJDCUACgkQAVBC80lX
+0Gy9Fgf8CKCUfwZyOc+NYnIis5XdV2rt9QwhMOvdPufFxymwNzoDM7d0vdYMfL7f
+reyK2cgoYezviKavCgOz7L1kLblWC+XBe9fP/sVZHLqwPtkiBuFPXV4AScfmFw7W
+txSo06oWFFV1NWnpU4eOazlaJf71odiX2ANPJAfSivk6baPB//ULlOwCot4E6fPj
+UCmWikVk5Y7UAv+TfCA+x7qwI/h8fQf5Dd0y+4+GOKBe0l45mwtnAq369f6lSGKu
+Q4lDNOuhLHsUWxqx7rfGDkH5bsHky4BtwznTUsCZ5VVzmrZLzRNE3eECk7MLc/60
+Qe8YSET02WFYVDt2C11QWgmoCGKyQQ==
+=LQEd
+-----END PGP SIGNATURE-----
+
+--Sig_/M3cE/Mz/_GFYcjnICVpCSmv--
