@@ -2,189 +2,74 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27CDC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1134FC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0A020835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:02:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="LUHd8Vyd"
+	by mail.kernel.org (Postfix) with ESMTP id CDF00208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556730230;
+	bh=BBvwoNEHVRq6c/XWJXO2zRZ6ZBCo20OJ+aAG/Lv8KEw=;
+	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
+	b=F9/kvOVGwZPcTNrgxCJoD/iSAxsi5odOujHu+GdlShPOaZnqK6KQ778/vBMcmbH8Y
+	 47mngEynyNykXQPEWMa2qp+vKCVUYDuUdJ7soYrMINyBOl86BulxXunSPjD0YsClAn
+	 ar3PmViVEaSsUIag/2VvIdKRV2ZA1WdC6c9ASDy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfEARCo (ORCPT
+        id S1726144AbfEARDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:02:44 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33732 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfEARCn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:02:43 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e28so2214552wra.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:02:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a+7UN/TvPGOY1J7TOpoWrixPjZV5XzV6c6DylKQU1Cg=;
-        b=LUHd8VydBhmf7vhYTUKvS6O4NXb+ua7oBI/PzRnYWGn6GIN1Sg3NfFmQ3Rw5nuMnEx
-         r6nuE2m6mntrxXnQ1NQb/j//9ulTW8sFj+mE4fppjkOKtpkDAHW96TCuKX9NQUMKmats
-         Vc2l1T/ZRi2FU+0qXSAhEh2CfW1NV9YmiilUuO7lYxp+TchuFbgXQhIstqfCu/vJVlJH
-         tDu09p5T2ff7n/nGGOQreLv2zX6ugsvcrEwuwwVOTE0MiMHKdb2zY1nK/PpeF+VBycVY
-         JiHPv85Y5SpHDaCEC/jh5uGlP5JCJYaUQKXwzFnCPSbBHVTpFqeaO1RuSLG90Cl39v8W
-         gpcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a+7UN/TvPGOY1J7TOpoWrixPjZV5XzV6c6DylKQU1Cg=;
-        b=m3vly6WPznc5l1EQk2G5+oy1bEkKD8L+VGA7nGw6E4bxCqfulEYverGv4mN6kCH3Ja
-         ZqdEJanCYhdqG6LI9apLQBHzNCTBX8tKezUdVPzckk5bYTfTogl6GkulhccCbKue61d4
-         GuZw+7pwAXr1DJ48AvvCl7scmJG4BF7H1rCIuf6jngCs1y5LR+d/Ia4QUQ+vyS+m8j3q
-         turklMEc0OqvE1EtePROXjoC0LxphF79HEe8gkzIUqyN2bHgbZt06eXygwgsU0NmuZp7
-         SpFqR/+tWb+YXf5a8shSwVd4QjtcnqtCOtIwzJsCnotR/RoyOelRnqUndw+BW6hi2Kot
-         UiVA==
-X-Gm-Message-State: APjAAAXG3ieshJrbgpbW1noGtIpaJQIs/Z5ic2bNhCIyP6il0U4vVdUW
-        1CqpJm6prrhwxvh9dPsBUdEqVpsh04JaE5PvpZI9CQ==
-X-Google-Smtp-Source: APXvYqws5lEa+Yj446nSmR206A9Wct0CycB4RSuaA4Ezp6RqWz6ze9dLA7rKLlOXI1ea3VYrZpChweTo+2lF976AZgc=
-X-Received: by 2002:adf:e8c4:: with SMTP id k4mr10606348wrn.9.1556730161137;
- Wed, 01 May 2019 10:02:41 -0700 (PDT)
+        Wed, 1 May 2019 13:03:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfEARDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:03:48 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 261CB20835;
+        Wed,  1 May 2019 17:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556730228;
+        bh=BBvwoNEHVRq6c/XWJXO2zRZ6ZBCo20OJ+aAG/Lv8KEw=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=0gtlaiv6NrICHtxforyV7oISLK86EyMix5IUOatqtwQ4kcZeGdpRed8mVTYeLb1S3
+         foVvw/4MYzmnzg9+rks40rohOWflkP2KHZAL9EYhuoRYXNDeCG9zIODbT2xcYqgoAW
+         HD932Ci7ImLSuvL3t9y+sbDPcxVCvsnPbxKT5vKo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
- <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com> <20190501164355.ce76wjmq6sszrf5g@excalibur.cnev.de>
-In-Reply-To: <20190501164355.ce76wjmq6sszrf5g@excalibur.cnev.de>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 1 May 2019 22:32:30 +0530
-Message-ID: <CAAhSdy3kjqDahp13gQa0g9GF4gKPQeVgSakZzuP0uYwkCrvdAg@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
-To:     Karsten Merker <merker@debian.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "zong@andestech.com" <zong@andestech.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <DB3PR0402MB3916F59134DB9CF9837B43C1F53B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1556589033-6080-1-git-send-email-Anson.Huang@nxp.com> <155664820799.168659.12393223246835475198@swboyd.mtv.corp.google.com> <DB3PR0402MB3916F59134DB9CF9837B43C1F53B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: RE: [PATCH] clk: imx: pllv3: Fix fall through build warning
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Anson Huang <anson.huang@nxp.com>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+Message-ID: <155673022723.168659.16788237682007828514@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Wed, 01 May 2019 10:03:47 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 10:14 PM Karsten Merker <merker@debian.org> wrote:
->
-> On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
-> > On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
-> > > On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
-> > > > Currently, last stage boot loaders such as U-Boot can accept only
-> > > > uImage which is an unnecessary additional step in automating boot flows.
-> > > >
-> > > > Add a simple image header that boot loaders can parse and directly
-> > > > load kernel flat Image. The existing booting methods will continue to
-> > > > work as it is.
-> > > >
-> > > > Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
-> > > >
-> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > ---
-> > > >   arch/riscv/include/asm/image.h | 32 ++++++++++++++++++++++++++++++++
-> > > >   arch/riscv/kernel/head.S       | 28 ++++++++++++++++++++++++++++
-> > > >   2 files changed, 60 insertions(+)
-> > > >   create mode 100644 arch/riscv/include/asm/image.h
-> > > >
-> > > > diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
-> > > > new file mode 100644
-> > > > index 000000000000..76a7e0d4068a
-> > > > --- /dev/null
-> > > > +++ b/arch/riscv/include/asm/image.h
-> > > > @@ -0,0 +1,32 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > +
-> > > > +#ifndef __ASM_IMAGE_H
-> > > > +#define __ASM_IMAGE_H
-> > > > +
-> > > > +#define RISCV_IMAGE_MAGIC        "RISCV"
-> > > > +
-> > > > +#ifndef __ASSEMBLY__
-> > > > +/*
-> > > > + * struct riscv_image_header - riscv kernel image header
-> > > > + *
-> > > > + * @code0:               Executable code
-> > > > + * @code1:               Executable code
-> > > > + * @text_offset: Image load offset
-> > > > + * @image_size:          Effective Image size
-> > > > + * @reserved:            reserved
-> > > > + * @magic:               Magic number
-> > > > + * @reserved:            reserved
-> > > > + */
-> > > > +
-> > > > +struct riscv_image_header {
-> > > > + u32 code0;
-> > > > + u32 code1;
-> > > > + u64 text_offset;
-> > > > + u64 image_size;
-> > > > + u64 res1;
-> > > > + u64 magic;
-> > > > + u32 res2;
-> > > > + u32 res3;
-> > > > +};
-> > >
-> > > I don't want to invent our own file format.  Is there a reason we can't just
-> > > use something standard?  Off the top of my head I can think of ELF files and
-> > > multiboot.
-> >
-> > Additional header is required to accommodate PE header format. Currently,
-> > this is only used for booti command but it will be reused for EFI headers as
-> > well. Linux kernel Image can pretend as an EFI application if PE/COFF header
-> > is present. This removes the need of an explicit EFI boot loader and EFI
-> > firmware can directly load Linux (obviously after EFI stub implementation
-> > for RISC-V).
-> >
-> > ARM64 follows the similar header format as well.
-> > https://www.kernel.org/doc/Documentation/arm64/booting.txt
->
-> Hello Atish,
->
-> the arm64 header looks a bit different (quoted from the
-> aforementioned URL):
->
->   u32 code0;                    /* Executable code */
->   u32 code1;                    /* Executable code */
->   u64 text_offset;              /* Image load offset, little endian */
->   u64 image_size;               /* Effective Image size, little endian */
->   u64 flags;                    /* kernel flags, little endian */
->   u64 res2      = 0;            /* reserved */
->   u64 res3      = 0;            /* reserved */
->   u64 res4      = 0;            /* reserved */
->   u32 magic     = 0x644d5241;   /* Magic number, little endian, "ARM\x64" */
->   u32 res5;                     /* reserved (used for PE COFF offset) */
->
-> What I am unclear about is in which ways a RISC-V PE/COFF header
-> differs from an arm64 one as the arm64 struct is longer than your
-> RISC-V header and for arm64 the PE offset field is in the last
-> field, i.e. outside of the area covered by your RISC-V structure
-> definition.  Can you perhaps explain this part in a bit more
-> detail or does anybody else have a pointer to a specification of
-> the RISC-V PE/COFF header format (I have found a lot of documents
-> about COFF in general, but nothing specific to RISC-V).
+Quoting Anson Huang (2019-05-01 02:33:46)
+> Hi, Stephen
+>         I saw Gustavo already sent out a patch to fix these two warnings,=
+ so I will NOT sent the patch again, thanks.
 
-The only difference compared to ARM64 is the values of code0, code1
-and res5 fields.
+So I will apply that patch instead? Can you send your reviewed-by tag
+then?
 
-As-per PE/COFF, the 32bit value at offset 0x3c tells us offset of PE/COFF
-header in image.
-
-For more details refer,
-https://en.wikipedia.org/wiki/Portable_Executable
-https://en.wikipedia.org/wiki/Portable_Executable#/media/File:Portable_Executable_32_bit_Structure_in_SVG_fixed.svg
-
-For both ARM64 header and RISC-V image header, is actually the
-"DOS header" part of PE/COFF format.
-
-This patch only adds "DOS header" part of PE/COFF format. Rest of
-the PE/COFF header will be added when add EFI support to Linux
-RISC-V kernel.
-
-Regards,
-Anup
