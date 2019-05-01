@@ -2,85 +2,90 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36174C46460
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4FAC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27EF20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556740138;
-	bh=bD4ynz3Hn4pfw3+uE1looZJWFzyV8VUA15yYFnArROo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p8/RAJhbcHzE687PornjDMFxJL7dReCqbuFabXPUbSJa9z6cmlc7I+v+KOK3iGiZw
-	 tMgyAaaYMRM/PkQwiNW4Bzg2+IwUhy+QFurY7K6KMeatPlrthPIjKrDv9/J0oVXTUE
-	 AEHZ9LkQshU7g0JnsnGfRbfrVKo0toityRZyprPE=
+	by mail.kernel.org (Postfix) with ESMTP id 7EA7A20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:49:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SZaUrBqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfEATs5 (ORCPT
+        id S1726296AbfEATtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:48:57 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34439 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfEATs4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:48:56 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v10so14656328oib.1;
-        Wed, 01 May 2019 12:48:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9ikJo1NEP++jN/CQZU0v1y07L/HudzlvOQM/HORBFx0=;
-        b=VXNt608PdhODnru1svgmZG2uxNiN1emdJw7k4jeOclQ2xyIR0/QHPZ+ffimbz0tkYc
-         f9VC4Q8FBmcsmoTI4pbfneaRreNcxkMoiVJTzrHJqIs51Yv6Z3d6MO+3d9tJCE+2uovO
-         2XSpbz+R4BL1IFw1/G/G6zJJDHCWPBQBnT9rYZwz3Z1Nrko+9DSqXqu6SJAoUDW1vcXq
-         F5I245YemZhna4vjmXlWSyqDRbeYsbCoanrs18IrfzzdTxyH5EA7cTASltMtfJ1ueX+H
-         zhmpWGvyK5lrnMFnarLIFj2MSepwNnqjjeHVPnhdUBPmCr4Fn0yk1CpSKT1NMF8J89aC
-         ajug==
-X-Gm-Message-State: APjAAAWflQJ59o6pKddmPqdiid1JHrc/LBiDI8lZ6KZyRwnzugmFXosf
-        tHkpbV6XC9fxCXXjc3mU9opHOoM=
-X-Google-Smtp-Source: APXvYqyisfJMnup7uluBIkIszKSOr0l6ULyLaAvsXMlVi039cSIjJeTIlO7zl+QNjSx8mRgPMjl8IA==
-X-Received: by 2002:aca:f004:: with SMTP id o4mr3763oih.55.1556740135900;
-        Wed, 01 May 2019 12:48:55 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c65sm25713oih.53.2019.05.01.12.48.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 12:48:54 -0700 (PDT)
-Date:   Wed, 1 May 2019 14:48:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
-        david.brown@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-Message-ID: <20190501194854.GA10996@bogus>
-References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
- <1556677473-29242-1-git-send-email-jhugo@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556677473-29242-1-git-send-email-jhugo@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 1 May 2019 15:49:03 -0400
+Received: from mout.gmx.net ([212.227.15.18]:57667 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726004AbfEATtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 15:49:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1556740137;
+        bh=21zQ6hHqrFQ3g2iUdFoiowCPHS6/TQd1VUg3wwhis9o=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=SZaUrBqtcwq1X7pXBzbBrTtBS+Jr9vgtIzZi7foz9VwTlN6p9xEvnOkNUakE6pga2
+         gvL/8RHzmTz0K+pqPxi+DArA5pcgrfjoQeE8TVyxwp7kXEGIoSjt8pv5pT0eCayv7K
+         gEdZZW1fOC5PWaQRy1WiOWwY2W+IbEykUOolMwRo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([37.4.249.111]) by mail.gmx.com
+ (mrgmx001 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 0MAxyW-1hVn6z3AP6-009zm4; Wed, 01 May 2019 21:48:57 +0200
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH] MAINTAINERS: Update Stefan Wahren email address
+Date:   Wed,  1 May 2019 21:47:35 +0200
+Message-Id: <1556740055-4962-1-git-send-email-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.7.4
+X-Provags-ID: V03:K1:f+rwKC3ASZA5zARUzjT+aTKfFX/7Q7fJ1bIFmoxL+HAxUDFYoR8
+ 4H4+NgGEvqIJ/4u7ig7sA6sT5KK/jox8bEbj7z6wQ5F3eTUnmxJLGnFKI0HQrdIR7o9LNu6
+ gQz5mL+4ON8Z5UyQuk84AUQJ0PMI4Un2uQoy3NYCFnqLKtV5ZziRb84WTbvsvV655CzTAdV
+ zzbxJOjVu2Q/fhqBgy+BA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0w6+BajR9i8=:fTwrj/p6wwBuGwdA0a7fn+
+ 7U5HXEnj4BKaQMGwJxDP65dFWTkEA6TMKvg2cN7PO251fO0wrbzxmRv+xf+fqKvY2J3NqyRmL
+ wu3IDdHB4g0o2plLCZYfOA9a4fQOxBtpySZ78FuzrxlFc7bZumiUsrOesom/OvtL+i7d+xP95
+ CcgUkpoHo0eE94jNZ9rqiJygMlP4VV+m57oDumsLtKQw4Kri67XQ7JLMD4xXFvBVz6ubmNJJY
+ qwAuK7pBXrgEq3VlrRCSrX2wLRSrpuXdsjkNgciHpuZ5tqGVfYWGR7H79swIs+hdi3mMUEb9w
+ o/whKNyf7dwy/bainOeIFUM+7vtGwEXrleZr/xPHt+p8z8KC1eYyU6aMmmGPj32V/6cPzFjw7
+ 8khAXeKRRC37jJ8wS2wsI59EDZ6zftf9FOGYYdyMUKbzNFFMZgaRi+NTD3C47CwjfxwxeSzrs
+ Z1bitLLQ0ulMIZagL7rhdi937FGcQrtmiVrFeR7rUSs8p3FUxmNEHdaPMRdjltkKQRzhx8tc7
+ QnotSf8//75DB+Zfc5f2enqoG+CjngoV6MkgFzLXazIU5+/sDJfEDgdHgvMbQ6Uj2h08uuiTY
+ VmcXP87OA5TNoj6bAT88oUkuusdUkqJ41km9v2O7OObJLnz/25Ih0bTOksC67/ezaMkWezA6P
+ 62DpzbT8UbAAmPAzIcrxJS6LU7ThkDZSg31LR3qoPI0a/jprOTAaFzuDcdQ4ECCHPFXLsZBjt
+ jFfonXyAaf+CgBBHQIaRc6NG3hgYPJa9sW7p1vrEAfnJP8V82Yf4VT27F1pphvXUuuV0BQVgX
+ bjpeSe4t42laKfhNylpWIf0zWhFjPv0bDDobIMaJ+e4MXZVlqQHY2CC9RMjbfcpbY3F1nfkpQ
+ kj4FWeFT0CAd3Kx2yndB3Ph1wCjjcdeFMsglO5oylyYFMxvsJs9OiAMS5g+lpi
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 20:24:33 -0600, Jeffrey Hugo wrote:
-> The global clock controller on MSM8998 can consume a number of external
-> clocks.  Document them.
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/clock/qcom,gcc.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
+I2SE has been acquired, so i decided to use my private address now.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2c7d4e1..75a7876 100644
+=2D-- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3068,7 +3068,7 @@ F:	arch/arm/mach-bcm/
+
+ BROADCOM BCM2835 ARM ARCHITECTURE
+ M:	Eric Anholt <eric@anholt.net>
+-M:	Stefan Wahren <stefan.wahren@i2se.com>
++M:	Stefan Wahren <wahrenst@gmx.net>
+ L:	linux-rpi-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ T:	git git://github.com/anholt/linux
+=2D-
+2.7.4
+
