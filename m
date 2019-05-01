@@ -2,125 +2,172 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E66AC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B16DC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F24220866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:52:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1aBWvxy"
+	by mail.kernel.org (Postfix) with ESMTP id CFF5D21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfEAOwp (ORCPT
+        id S1726823AbfEAO5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 10:52:45 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33044 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfEAOwn (ORCPT
+        Wed, 1 May 2019 10:57:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41076 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726506AbfEAO5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 10:52:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z28so3405102pfk.0;
-        Wed, 01 May 2019 07:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oWROtRdPBWTf7HTlcFeLvHN8moYEACZeaHhy/xJiSv0=;
-        b=L1aBWvxy2K+R3sMxmTz7GhC3sns+1WyTpaeuGZ0wjKCrk9xzgtACf0ijI5RHnG5F7T
-         K4gxPCeVPvHbm/PC6gaehD3NSEyogbDn4a6cAEYc0F4z5hQSJu60LnDdVC1H2v3Zlubt
-         isIxmGloKem4FUOw5j15O2ZPoDDB1FpzqL5+bWsFZwK0pFHXBGS2SJgR51jwdHUdNK8S
-         fqfBnbldFbG7qXj0oElml4Sz7dMWlX4HQ4Cf7vwNsravbptRTh+0DJzAR6NNacj01r1W
-         m+R7kJO2OIIso1c8XYcCgCMxzn+3bCznvYOmkqd61vkIU2mfgPsMyxyI8rwdYfiQf1+Z
-         Y8cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oWROtRdPBWTf7HTlcFeLvHN8moYEACZeaHhy/xJiSv0=;
-        b=Zlt74aulX6xvwSeTdLnaTwq7eElWZNzlxxiHhsCb4z4zuPYYO6fD7mWbO4PX+25oBh
-         PXjahoyANZ5x5SszvmyudlyW+8K2i32RKaEOt+gFNttAPhHVYZYQuWa+6AF9Pal+is3H
-         ubTJQLWI63wVu8LUxUUQ9ArGjn8/RvbG9zosSio52NMEmHLryybTWRl4/VE1YLv+zi9W
-         /mRoGjcqkLJ1LFMBnZ+lpzV9yoL278MNdenhXc14KLKg2OoEzFvPmkH7Xwgc7myZQalG
-         UIL4f9m3hOjcIAr44LRb8qNfYEtUX+vraf7qsx3gdQ/WYpYgW0+OgzxfexF6McrordqV
-         YKwg==
-X-Gm-Message-State: APjAAAVJcpAmPWGo5xrdNr5tJwj1Q08oZ5T2bfpyQ2IUvoXz7A/Sb2j5
-        agnPnys2tVzIp2aFQSYxulE=
-X-Google-Smtp-Source: APXvYqzS2NLovEFoo71ZXdlfy+C1Ekszn7LBSp60zvJC49KCN2jjwa0O/cUTe5CtRQP7pQXSimKQNQ==
-X-Received: by 2002:aa7:99c7:: with SMTP id v7mr19874361pfi.103.1556722362514;
-        Wed, 01 May 2019 07:52:42 -0700 (PDT)
-Received: from ?IPv6:2601:282:800:fd80:950d:299e:8124:b280? ([2601:282:800:fd80:950d:299e:8124:b280])
-        by smtp.googlemail.com with ESMTPSA id m131sm984427pfc.25.2019.05.01.07.52.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 07:52:41 -0700 (PDT)
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Julian Anastasov <ja@ssi.bg>, Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000007d22100573d66078@google.com>
- <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
- <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
- <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
- <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
- <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
- <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
- <057735f0-4475-7a7b-815f-034b1095fa6c@gmail.com>
- <6e57bc11-1603-0898-dfd4-0f091901b422@i-love.sakura.ne.jp>
- <f71dd5cd-c040-c8d6-ab4b-df97dea23341@gmail.com>
- <d56b7989-8ac6-36be-0d0b-43251e1a2907@gmail.com>
- <117fcc49-d389-c389-918f-86ccaef82e51@i-love.sakura.ne.jp>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <70be7d61-a6fe-e703-978a-d17f544efb44@gmail.com>
-Date:   Wed, 1 May 2019 08:52:37 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Wed, 1 May 2019 10:57:49 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x41Euv03095966
+        for <linux-kernel@vger.kernel.org>; Wed, 1 May 2019 10:57:47 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s7cypsjy5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:57:47 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nathanl@linux.ibm.com>;
+        Wed, 1 May 2019 15:57:46 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 May 2019 15:57:44 +0100
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x41Evh1A35913762
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 May 2019 14:57:43 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72088112062;
+        Wed,  1 May 2019 14:57:43 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4CDC7112061;
+        Wed,  1 May 2019 14:57:43 +0000 (GMT)
+Received: from localhost (unknown [9.80.206.5])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  1 May 2019 14:57:43 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4] powerpc/pseries: Remove limit in wait for dying CPU
+In-Reply-To: <87v9yve02x.fsf@morokweng.localdomain>
+References: <20190423223914.3882-1-bauerman@linux.ibm.com> <877ebbsb8u.fsf@linux.ibm.com> <87v9yve02x.fsf@morokweng.localdomain>
+Date:   Wed, 01 May 2019 09:57:42 -0500
 MIME-Version: 1.0
-In-Reply-To: <117fcc49-d389-c389-918f-86ccaef82e51@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19050114-0060-0000-0000-00000337074D
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011029; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01197068; UDB=6.00627825; IPR=6.00977922;
+ MB=3.00026683; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-01 14:57:46
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050114-0061-0000-0000-00004929B429
+Message-Id: <8736lyrzmh.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-01_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905010096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/19 7:38 AM, Tetsuo Handa wrote:
-> On 2019/04/30 3:43, David Ahern wrote:
->>> The attached patch adds a tracepoint to notifier_call_chain. If you have
->>> KALLSYMS enabled it will show the order of the function handlers:
->>>
->>> perf record -e notifier:* -a -g &
->>>
->>> ip netns del <NAME>
->>> <wait a few seconds>
->>>
->>> fg
->>> <ctrl-c on perf-record>
->>>
->>> perf script
->>>
+Hi Thiago,
+
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+> Nathan Lynch <nathanl@linux.ibm.com> writes:
+>> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+>>> +		while (true) {
+>>>  			cpu_status = smp_query_cpu_stopped(pcpu);
+>>>  			if (cpu_status == QCSS_STOPPED ||
+>>>  			    cpu_status == QCSS_HARDWARE_ERROR)
+>>>  				break;
+>>> -			cpu_relax();
+>>> +			udelay(100);
+>>>  		}
+>>>  	}
 >>
->> with the header file this time.
->>
-> 
-> What is the intent of your patch? I can see that many notifiers are called. But
-> how does this help identify which event is responsible for dropping the refcount?
-> 
+>> I agree with looping indefinitely but doesn't it need a cond_resched()
+>> or similar check?
+>
+> If there's no kernel or hypervisor bug, it shouldn't take more than a
+> few tens of ms for this loop to complete (Gautham measured a maximum of
+> 10 ms on a POWER9 with an earlier version of this patch).
 
-In a previous response you stated: "Since I'm not a netdev person, I
-appreciate if you can explain that shutdown sequence using a flow chart."
+10ms is twice the default scheduler quantum...
 
-The notifier sequence tells you the order of cleanup handlers and what
-happens when a namespace is destroyed.
 
-The dev_hold / dev_put tracepoint helps find the refcnt leak but
-requires some time analyzing the output to match up hold / put stack traces.
+> In case of bugs related to CPU hotplug (either in the kernel or the
+> hypervisor), I was hoping that the resulting lockup warnings would be a
+> good indicator that something is wrong. :-)
+
+Not convinced we should assume something is wrong if it takes a few
+dozen ms to complete the operation. AFAIK we don't have any guarantees
+about the maximum latency of stop-self, and it can be affected by other
+activity in the system, whether we're in shared processor mode, etc. Not
+to mention smp_query_cpu_stopped has to acquire the global RTAS lock and
+be serialized with other tasks calling into RTAS. So I am concerned
+about generating spurious warnings here.
+
+If for whatever reason the operation is taking too long, drmgr or
+whichever application is initiating the change will appear to stop
+making progress. It's not too hard to find out what's going on with
+facilities like perf or /proc/pid/stack.
+
+
+> Though perhaps adding a cond_resched() every 10 ms or so, with a
+> WARN_ON() if it loops for more than 50 ms would be better.
+
+A warning doesn't seem appropriate to me, and cond_resched should be
+invoked in each iteration. Or just msleep(1) in each iteration would be
+fine, I think.
+
+But I'd like to bring in some more context -- here is the body of
+pseries_cpu_die:
+
+static void pseries_cpu_die(unsigned int cpu)
+{
+	int tries;
+	int cpu_status = 1;
+	unsigned int pcpu = get_hard_smp_processor_id(cpu);
+
+	if (get_preferred_offline_state(cpu) == CPU_STATE_INACTIVE) {
+		cpu_status = 1;
+		for (tries = 0; tries < 5000; tries++) {
+			if (get_cpu_current_state(cpu) == CPU_STATE_INACTIVE) {
+				cpu_status = 0;
+				break;
+			}
+			msleep(1);
+		}
+	} else if (get_preferred_offline_state(cpu) == CPU_STATE_OFFLINE) {
+
+		for (tries = 0; tries < 25; tries++) {
+			cpu_status = smp_query_cpu_stopped(pcpu);
+			if (cpu_status == QCSS_STOPPED ||
+			    cpu_status == QCSS_HARDWARE_ERROR)
+				break;
+			cpu_relax();
+		}
+}
+
+This patch alters the behavior of the second loop (the CPU_STATE_OFFLINE
+branch). The CPU_STATE_INACTIVE branch is used when the offline behavior
+is to use H_CEDE instead of stop-self, correct?
+
+And isn't entering H_CEDE expected to be quite a bit faster than
+stop-self? If so, why does that path get five whole seconds[*] while
+we're bikeshedding about tens of milliseconds for stop-self? :-)
+
+[*] And should it be made to retry indefinitely as well?
+
