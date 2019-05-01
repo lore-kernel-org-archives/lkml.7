@@ -2,90 +2,109 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5D6C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AD4C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4396B2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82882075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gWkzZcyE"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xpGNYik6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfEAMhz (ORCPT
+        id S1726400AbfEAMkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 08:37:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50911 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfEAMhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 08:37:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=m0uIUv9YcB2rBMJ6vazLEXNKZm0mfkTXXnCh6q5+fEc=; b=gWkzZcyE8qpTPXGdKfBs5Ya1+d
-        UYiAlBNAbGOCKKSiMeBpBQ8xvKq6cIWlaa7gKMIaeDYWGFGQMaMdioCOJkYfnMCs/YVIUPsz8CaCG
-        Q4YTmOc9Jw+g76NvIdEjmrGYFKmzTEfr+ubOG8iTZwnP1KqNH0QQHi5c1DI9K+JF9DVQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hLoUg-0002l7-JG; Wed, 01 May 2019 14:37:50 +0200
-Date:   Wed, 1 May 2019 14:37:50 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Peng Li <lipeng321@huawei.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        yisen.zhuang@huawei.com, salil.mehta@huawei.com
-Subject: Re: [PATCH net-next 1/3] net: hns3: add support for multiple media
- type
-Message-ID: <20190501123750.GA9844@lunn.ch>
-References: <1556679944-100941-1-git-send-email-lipeng321@huawei.com>
- <1556679944-100941-2-git-send-email-lipeng321@huawei.com>
+        Wed, 1 May 2019 08:40:40 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:43537 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfEAMkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 08:40:40 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x41CeEvq012097;
+        Wed, 1 May 2019 21:40:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x41CeEvq012097
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556714415;
+        bh=wstbh6udNlyaWVSJp63gZDV8qckdtdvHWUSqhwKDTBQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xpGNYik6PkrHcrmRRatBTfGwBShD05t/viLiJMc/NAWFDS5I8e225gpyVC6hxeKrC
+         bwghV7p4xPuNu7gnDACU83zabJ/v5RpSMux3JFmb6s7XN0ZvdaHxNlImbL8EFNW6o8
+         apVF08+0fizEhKanhpl/lyTy9nXbOfO+jmSRdoUAUGD7/zo1t35CHmYkkBJI+mhCRO
+         SnxDFfLQu57//ZkkRSwN5fsGKb6efQZhY9EgqUCjWZhn/dnec2LHsffpxwTiHgzvaj
+         M60DPQ0pEGiX//4EqoBT5PfRYgcSCOh+faTeX4oCrNu/Ejc1PSZ3EQSoP+xty6QJQl
+         kGPJUmIGkJGKw==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id g187so9770055vsc.8;
+        Wed, 01 May 2019 05:40:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAVCjiiOFxmHMJ7fwu+G6RfAeAeCTycVkyUQAdB4paDxUDpQnly7
+        c8ySBkKEmHgFm5QI8fl8YL7xvlwXYAq/8MxKi88=
+X-Google-Smtp-Source: APXvYqwtb7qafYKHH8EQMfXlBNAi1O6+jjKobAktgcxFpVPb8KpUXXNxsbrCe6pMNY6EgdXssJMG2v4uC/j26IDVuLk=
+X-Received: by 2002:a67:f105:: with SMTP id n5mr39314337vsk.181.1556714414404;
+ Wed, 01 May 2019 05:40:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556679944-100941-2-git-send-email-lipeng321@huawei.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1556510803-5628-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1556510803-5628-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 1 May 2019 21:39:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATcTiFgeTz7NJMgHZkZKuEiBuSRRrxftp4UBEzNFa2ErA@mail.gmail.com>
+Message-ID: <CAK7LNATcTiFgeTz7NJMgHZkZKuEiBuSRRrxftp4UBEzNFa2ErA@mail.gmail.com>
+Subject: Re: [PATCH] scripts/tags.sh: fix direct execution of scripts/tags.sh
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 11:05:42AM +0800, Peng Li wrote:
-> From: Jian Shen <shenjian15@huawei.com>
-> 
-> Previously, we can only identify copper and fiber type, the
-> supported link modes of port information are always showing
-> SR type. This patch adds support for multiple media types,
-> include SR, LR CR, KR. Driver needs to query the media type
-> from firmware periodicly, and updates the port information.
-> 
-> The new port information looks like this:
-> Settings for eth0:
->         Supported ports: [ FIBRE ]
->         Supported link modes:   25000baseCR/Full
->                                 25000baseSR/Full
->                                 1000baseX/Full
->                                 10000baseCR/Full
->                                 10000baseSR/Full
->                                 10000baseLR/Full
->         Supported pause frame use: Symmetric
->         Supports auto-negotiation: No
->         Supported FEC modes: None BaseR
->         Advertised link modes:  25000baseCR/Full
->                                 25000baseSR/Full
->                                 1000baseX/Full
->                                 10000baseCR/Full
->                                 10000baseSR/Full
->                                 10000baseLR/Full
+On Mon, Apr 29, 2019 at 1:07 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> I thought this script was run via "make tags" etc. but some people
+> run it directly.
+>
+> Prior to commit a9a49c2ad9b9 ("kbuild: use $(srctree) instead of
+> KBUILD_SRC to check out-of-tree build"), in such a usecase, "tree"
+> was set empty since KBUILD_SRC is undefined. Now, "tree" is set to
+> "${srctree}/", which is evaluated to "/".
+>
+> Fix it by taking into account the case where "srctree" is unset.
+>
+> Link: https://lkml.org/lkml/2019/4/19/501
+> Fixes: a9a49c2ad9b9 ("kbuild: use $(srctree) instead of KBUILD_SRC to check out-of-tree build")
+> Reported-by: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Hi Peng
+Applied to linux-kbuild.
 
-If it does not support auto-negotiation, do these advertised link
-modes make any sense? Does it really advertise, or is it all fixed
-configured?
 
-	Andrew
+>
+>  scripts/tags.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/tags.sh b/scripts/tags.sh
+> index 6a55180..70e14c6 100755
+> --- a/scripts/tags.sh
+> +++ b/scripts/tags.sh
+> @@ -19,7 +19,7 @@ ignore="$ignore ( -name *.mod.c ) -prune -o"
+>  # Do not use full path if we do not use O=.. builds
+>  # Use make O=. {tags|cscope}
+>  # to force full paths for a non-O= build
+> -if [ "${srctree}" = "." ]; then
+> +if [ "${srctree}" = "." -o -z "${srctree}" ]; then
+>         tree=
+>  else
+>         tree=${srctree}/
+> --
+> 2.7.4
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
