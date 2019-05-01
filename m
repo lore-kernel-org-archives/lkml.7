@@ -2,137 +2,159 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179A6C43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48686C46470
 	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D23392081C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="BXpRmV+6"
+	by mail.kernel.org (Postfix) with ESMTP id 0C167208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfEAXZU (ORCPT
+        id S1726242AbfEAX1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 19:25:20 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44596 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfEAXZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 19:25:20 -0400
-Received: by mail-qt1-f193.google.com with SMTP id s10so456698qtc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 16:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AH9bebtrf3dfxBIvf5hyUAJKcC8A07SNFaz6GXtYOok=;
-        b=BXpRmV+6OvhC688uYI7duSFxoIJaSy5qGca6z3Jg/huzWFwaDds/rsuOmCgs+X/2D6
-         nBypKSCBxfF4R11Now1TSKhdmOMcrt3KkOdbhBH0StpDAk0pUqh67sdtSS9SmVYGhDUk
-         /99rNYVp/l9SQQD1woxx4wplZpwQh7L398wBwiSgokkpiSyf3soHy/rfnupj45f8qETL
-         3Zbbo4Qv4rbnpxEJ3d7hMOa96+c1exFDA5YIp3AA2vuT6pZa8bi7DOkFM2mh3N66ok6F
-         IOCT3T8WXbGp8+s6DBvFxEJp6jdS5SHiiuzhxHnHHGQ0ViVh7R+puVcqX8lGPsNsV6j6
-         gf/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AH9bebtrf3dfxBIvf5hyUAJKcC8A07SNFaz6GXtYOok=;
-        b=raUU5tQ8p5k16TDzmUUSOHhrKWuFoE49/34qkcGB1waIt3YzBgox9MrX5ND6kbFDOT
-         RkumGBft+ekvstzs7F2AxxRaynckY0aM3YS1QlxTTSwflP9mE/gtfEqnpfa2USrusvVD
-         V48h51aRmFDHHBPjSiASkavHzRzroBdazlIVafOMmN7Ooa7QqXTg8TLKitfUBDFVNCbc
-         9VptpXVtgSDL9+yXD1N/a2avWHuYFn7Bs5Fn+iwNiPH4bLf72vGE5rvwfGLSI7ZgKRCL
-         1865Ri3KiPzzI18N4XK+OMYmekNHdLw+LZw63Q1yNOeqeWfq9Rh7oHAW7tPzoXA4yhOQ
-         k0gw==
-X-Gm-Message-State: APjAAAUcR20xMuV6OPVZm0S4/Eczv6I5txx2IbO0UFDGR5uceoWRXKY4
-        M1o2hVzQSzUnzB7lvFY++cF3RQ==
-X-Google-Smtp-Source: APXvYqz0BDqKG+Q2jzUmKI5xzLPAvNPYQjFLDLv988MLkpQr6Ryuk0h2Lnb2Pj89t7Bct/URoLhIMw==
-X-Received: by 2002:ac8:27aa:: with SMTP id w39mr658332qtw.227.1556753119438;
-        Wed, 01 May 2019 16:25:19 -0700 (PDT)
-Received: from soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net ([40.117.208.181])
-        by smtp.gmail.com with ESMTPSA id 62sm13373216qtf.89.2019.05.01.16.25.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 16:25:18 -0700 (PDT)
-Date:   Wed, 1 May 2019 23:25:17 +0000
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        david@redhat.com
-Subject: Re: [PATCH v6 01/12] mm/sparsemem: Introduce struct mem_section_usage
-Message-ID: <20190501232517.crbmgcuk7u4gvujr@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Wed, 1 May 2019 19:27:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:20577 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfEAX1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 19:27:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 16:27:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,419,1549958400"; 
+   d="scan'208";a="145275145"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by fmsmga008.fm.intel.com with ESMTP; 01 May 2019 16:27:14 -0700
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <2364f2b65bf50826d881c84d7634b6565dfee527.1556025155.git.vpillai@digitalocean.com>
+ <20190429061516.GA9796@aaronlu>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: [RFC PATCH v2 11/17] sched: Basic tracking of matching tasks
+Message-ID: <6dfc392f-e24b-e641-2f7d-f336a90415fa@linux.intel.com>
+Date:   Wed, 1 May 2019 16:27:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190429061516.GA9796@aaronlu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-04-17 11:39:00, Dan Williams wrote:
-> Towards enabling memory hotplug to track partial population of a
-> section, introduce 'struct mem_section_usage'.
+On 4/28/19 11:15 PM, Aaron Lu wrote:
+> On Tue, Apr 23, 2019 at 04:18:16PM +0000, Vineeth Remanan Pillai wrote:
+>> +/*
+>> + * Find left-most (aka, highest priority) task matching @cookie.
+>> + */
+>> +struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+>> +{
+>> +	struct rb_node *node = rq->core_tree.rb_node;
+>> +	struct task_struct *node_task, *match;
+>> +
+>> +	/*
+>> +	 * The idle task always matches any cookie!
+>> +	 */
+>> +	match = idle_sched_class.pick_task(rq);
+>> +
+>> +	while (node) {
+>> +		node_task = container_of(node, struct task_struct, core_node);
+>> +
+>> +		if (node_task->core_cookie < cookie) {
+>> +			node = node->rb_left;
 > 
-> A pointer to a 'struct mem_section_usage' instance replaces the existing
-> pointer to a 'pageblock_flags' bitmap. Effectively it adds one more
-> 'unsigned long' beyond the 'pageblock_flags' (usemap) allocation to
-> house a new 'map_active' bitmap.  The new bitmap enables the memory
-> hot{plug,remove} implementation to act on incremental sub-divisions of a
-> section.
+> Should go right here?
 > 
-> The primary motivation for this functionality is to support platforms
-> that mix "System RAM" and "Persistent Memory" within a single section,
-> or multiple PMEM ranges with different mapping lifetimes within a single
-> section. The section restriction for hotplug has caused an ongoing saga
-> of hacks and bugs for devm_memremap_pages() users.
-> 
-> Beyond the fixups to teach existing paths how to retrieve the 'usemap'
-> from a section, and updates to usemap allocation path, there are no
-> expected behavior changes.
-> 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  include/linux/mmzone.h |   23 ++++++++++++--
->  mm/memory_hotplug.c    |   18 ++++++-----
->  mm/page_alloc.c        |    2 +
->  mm/sparse.c            |   81 ++++++++++++++++++++++++------------------------
->  4 files changed, 71 insertions(+), 53 deletions(-)
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 70394cabaf4e..f0bbd85dc19a 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -1160,6 +1160,19 @@ static inline unsigned long section_nr_to_pfn(unsigned long sec)
->  #define SECTION_ALIGN_UP(pfn)	(((pfn) + PAGES_PER_SECTION - 1) & PAGE_SECTION_MASK)
->  #define SECTION_ALIGN_DOWN(pfn)	((pfn) & PAGE_SECTION_MASK)
->  
-> +#define SECTION_ACTIVE_SIZE ((1UL << SECTION_SIZE_BITS) / BITS_PER_LONG)
-> +#define SECTION_ACTIVE_MASK (~(SECTION_ACTIVE_SIZE - 1))
-> +
-> +struct mem_section_usage {
-> +	/*
-> +	 * SECTION_ACTIVE_SIZE portions of the section that are populated in
-> +	 * the memmap
-> +	 */
-> +	unsigned long map_active;
 
-I think this should be proportional to section_size / subsection_size.
-For example, on intel section size = 128M, and subsection is 2M, so
-64bits work nicely. But, on arm64 section size if 1G, so subsection is
-16M.
+I think Aaron is correct.  We order the rb tree where tasks with smaller core cookies
+go to the left part of the tree.
 
-On the other hand 16M is already much better than what we have: with 1G
-section size and 2M pmem alignment we guaranteed to loose 1022M. And
-with 16M subsection it is only 14M.
+In this case, the cookie we are looking for is larger than the current node's cookie.
+It seems like we should move to the right to look for a node with matching cookie.
+
+At least making the following change still allow us to run the system stably for sysbench.
+Need to gather more data to see how performance changes.
+
+Tim
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 25638a47c408..ed4cfa49e3f2 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -208,9 +208,9 @@ static struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+        while (node) {
+                node_task = container_of(node, struct task_struct, core_node);
+ 
+-               if (node_task->core_cookie < cookie) {
++               if (cookie < node_task->core_cookie) {
+                        node = node->rb_left;
+-               } else if (node_task->core_cookie > cookie) {
++               } else if (cookie > node_task->core_cookie) {
+                        node = node->rb_right;
+                } else {
+                        match = node_task;
+
+
