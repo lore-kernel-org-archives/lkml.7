@@ -2,78 +2,109 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD2FC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEABC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BD82089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47532089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:17:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="XoS1rkNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfEAVRy (ORCPT
+        id S1726280AbfEAVR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:17:54 -0400
-Received: from muru.com ([72.249.23.125]:47870 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbfEAVRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:17:54 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 118D9805C;
-        Wed,  1 May 2019 21:18:09 +0000 (UTC)
-Date:   Wed, 1 May 2019 14:17:49 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     "kernelci.org bot" <bot@kernelci.org>, Tejun Heo <tj@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org
-Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
-Message-ID: <20190501211749.GN8007@atomide.com>
-References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
- <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
- <20190501162944.GW8004@atomide.com>
- <20190501164444.iclxlzrxofqnj4bn@linutronix.de>
- <20190501165224.GK8007@atomide.com>
- <20190501170125.xjlwdyqtp5oxx2mb@linutronix.de>
- <20190501174431.GL8007@atomide.com>
- <20190501190303.pz2yxs3hnc2qpamu@linutronix.de>
- <20190501202149.GM8007@atomide.com>
- <20190501211344.v5n7bmb2p5kksa47@linutronix.de>
+        Wed, 1 May 2019 17:17:58 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:57716 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726125AbfEAVR4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:17:56 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A313BC00F2;
+        Wed,  1 May 2019 21:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556745472; bh=o9gWZgWxlyqzbNvDvVaS/uwTvpYA+tKh0TU9G0Uljco=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=XoS1rkNaboLNuhTTcvseigKNBfEExaO38krmRW4cfyibntBAOQIUu+1FHiwmv1kMY
+         nuwVd7TkomspnAM07lP02koCRCb7JUUaqI0RtJmmFFI4442GCa8Lt24U1WbbxpXTIg
+         9I7AER2rltLKsa8GSfFDgK7AR7oBauq8mB4+e5WtwwdrSLZjHN0vHHwnBjRkhr5psb
+         Hn5hw15oPGCg8uYUVo+srchTQxmJNkVc1Q0PDX+Zc1edwDUQqjsVMa0qQleo/1WAGN
+         BQakxVhjbZsW2Sx9ZU+EYLCYcREv8SUa2q6LiTpthgA9ib5m0b0WZOrKDEqMeeoGQZ
+         9DdV3bKSgEWrg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 35ED4A0071;
+        Wed,  1 May 2019 21:17:53 +0000 (UTC)
+Received: from us01wembx1.internal.synopsys.com ([169.254.1.223]) by
+ US01WEHTC3.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed, 1
+ May 2019 14:17:53 -0700
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Rich Felker <dalias@libc.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>
+Subject: Re: perf tools build broken after v5.1-rc1
+Thread-Topic: perf tools build broken after v5.1-rc1
+Thread-Index: AQHU9whSYuAYlq2eD0OAivz0M0d5Nw==
+Date:   Wed, 1 May 2019 21:17:52 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A2506BF3@us01wembx1.internal.synopsys.com>
+References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
+ <20190422152027.GB11750@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A250584C@us01wembx1.internal.synopsys.com>
+ <CAK8P3a2JrAApXDws+t=q8AnKFkHJZSox7gsgwW-xEJTfs_mdzw@mail.gmail.com>
+ <20190501204115.GF21436@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.13.184.19]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501211344.v5n7bmb2p5kksa47@linutronix.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Sebastian Andrzej Siewior <bigeasy@linutronix.de> [190501 21:14]:
-> On 2019-05-01 13:21:49 [-0700], Tony Lindgren wrote:
-> > Hi,
-> Hi,
-> 
-> > OK I found two issues. It seems that d_can also needs osc clock
-> > on am335x. And there's no revision register for d_can.. We're now
-> > reading the CTL register unnecessarily.
-> > 
-> > Below is what I hope fixes the boot issue for you, care to boot
-> > test?
-> 
-> yup, that boots.
-
-OK good to hear and thanks a lot for testing it. I'll post two
-patches shortly.
-
-Regards,
-
-Tony
+On 5/1/19 1:41 PM, Arnaldo Carvalho de Melo wrote:=0A=
+>> The 1a787fc5ba18ac7 commit copied over the changes for arm64, but=0A=
+>> missed all the other architectures changed in c8ce48f06503 and the=0A=
+>> related commits.=0A=
+> Right, I have a patch copying the missing headers, and that fixed the=0A=
+> build with the glibc-based toolchain, but then broke the uCLibc one :-\=
+=0A=
+=0A=
+tools/perf/util/cloexec.c  #includes <sys/syscall.h> which for glibc includ=
+es=0A=
+asm/unistd.h=0A=
+=0A=
+uClibc <sys/syscall.h> OTOH #include <bits/sysnum.h> containign#define __NR=
+_*=0A=
+(generated by parsing kernel's unistd). This header does the right thing by=
+=0A=
+chekcing for redefs, but in the end we still collide with newly added=0A=
+tools/arc/arc/*/**/unistd.h which doesn't have conditional definitions. I'm=
+ sure=0A=
+this is not an ARC problem, any uClibc build would be affected. Do you have=
+ a arm=0A=
+uclibc toolchain to test ?=0A=
+=0A=
+All in all this is a mess. The quick band aid I can think of would be to ad=
+d a=0A=
+#ifndef __UCLIBC__ in tools/arch/arc/include/uapi/asm/unistd.h which is sup=
+er=0A=
+ugly, but in the end the solution is to get rid of this header duplicity.=
+=0A=
+=0A=
+-Vineet=0A=
