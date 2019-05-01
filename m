@@ -2,174 +2,120 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4B9C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED1DC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C26E21734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E94521734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 06:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qpcTg3+K"
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="mwGfmt1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfEAG1f (ORCPT
+        id S1726096AbfEAGcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 02:27:35 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41772 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfEAG1f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 02:27:35 -0400
-Received: by mail-lf1-f65.google.com with SMTP id d8so931653lfb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 23:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dzm4zghPHgy0zEn2cLtSgFxZC88oT3myi6wWsLQwn5M=;
-        b=qpcTg3+KqhqkDGb+iGg+JnRB03XssHdca5/8OGluAOxTrjz0kZNilD7VipUIzdvhPs
-         1p2bKMuymujnnYR3AXKTnm3w2pBu8bnwRq6EWP+MC3MwPYiRnpmcTN4ywhXiKEYMwFRy
-         uYPTiWqS4z12eycdaRofS3yR1wiBhH3ojmKFWM7D1DINvW475AR9eARza7TpBF+GVHiZ
-         59PfXLnCJCZ/yY1uIjiIja88Xs1rryE4teCtghrlrXJ1d+YzsZBnsK8X05ujprevBfqt
-         EFr4usUmY+QmDRqt4j5OHqjkitCH3pCBX/+UvHOEeDKi2XfsaAD5hmj1oHsyo+Qc5EJu
-         LA5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dzm4zghPHgy0zEn2cLtSgFxZC88oT3myi6wWsLQwn5M=;
-        b=LdiVHOxKygdmqsSJTDHAR9a86RpgnV/62RYhdlUKYHgp7iXMnKr89Oo+S2DEDQvdSf
-         XOXKEjXH5J1ykr97WQt3WUTUCtGOxN3x1iSuK9jAO/h7aRi2aJfAG7j6etH1ifgDTlQ4
-         Uh13IdjTtOIS+DQoXntSE0z1AvvSR03ebmd3piIyElqx5uO66xI8245atG9OTVfyo1vP
-         8vgB5b3i5zk7l2dzFKBY8h8TK9wa5qwA/GS+8jE3WPPDTCTq7O1LelpT5WrjdYCRd0w6
-         R/obE0YDhx7BPrOoDBJNd+INs54SOW/kjIy5xtYqTa+KYqc9htv41WkXLEuVNueLH/JT
-         sNlA==
-X-Gm-Message-State: APjAAAXQSVglpJuEKJB4APpGSUD4XUl4TDtJxNEFlYgVWJOqLzmHzg0Z
-        6wZQkE3t+Gpxj0kU1boQFTH6WnGTXwWmPW6j91Q4Hg==
-X-Google-Smtp-Source: APXvYqzPq9RimoaBMRncwlJYaHz31pfM3hP17Pcu3n0BLA1W7ruAJj0HcyveNNBvD5oFLLctMrax/rSf4E5iQ3i17WM=
-X-Received: by 2002:ac2:4a89:: with SMTP id l9mr10118545lfp.60.1556692052879;
- Tue, 30 Apr 2019 23:27:32 -0700 (PDT)
+        Wed, 1 May 2019 02:32:09 -0400
+Received: from mail-eopbgr20100.outbound.protection.outlook.com ([40.107.2.100]:31200
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbfEAGcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 02:32:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zzb9vUd4d1YkAInqZkuXsKBS405lJk3GCp+bez9xrEA=;
+ b=mwGfmt1HW2reSS1KLLQQfBv0f2nm+RPNXY/f4y5/3jj5b6GVFVh175QoqbYrJbkDxA1XIQg0rEOBj46UONC6mIKsSauUfOXUbRiGc3US7zrdNrJ4NkcLMAo2HcMJOstCjjs39utePIvWP6Aj35rl8Btjisa0IaTmPp/AtTrZzHg=
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
+ VI1PR10MB2445.EURPRD10.PROD.OUTLOOK.COM (20.177.62.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.16; Wed, 1 May 2019 06:32:02 +0000
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::48b8:9cff:182:f3d8]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::48b8:9cff:182:f3d8%2]) with mapi id 15.20.1856.008; Wed, 1 May 2019
+ 06:32:02 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     "Jerry.Hoemann@hpe.com" <Jerry.Hoemann@hpe.com>
+CC:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Esben Haabendal <esben@haabendal.dk>,
+        "martin@hundeboll.net" <martin@hundeboll.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [PATCH v9 0/3] watchdog: allow setting deadline for opening
+ /dev/watchdogN
+Thread-Topic: [PATCH v9 0/3] watchdog: allow setting deadline for opening
+ /dev/watchdogN
+Thread-Index: AQHUscpDmplMI0yNIE6bua5CvRNO/KZV/4GAgABsEQA=
+Date:   Wed, 1 May 2019 06:32:02 +0000
+Message-ID: <31d75b51-6cd6-9029-40a5-fec631e110bf@prevas.dk>
+References: <20190116121432.26732-1-rasmus.villemoes@prevas.dk>
+ <20190121204527.5548-1-rasmus.villemoes@prevas.dk>
+ <20190501000511.GA25050@anatevka>
+In-Reply-To: <20190501000511.GA25050@anatevka>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR09CA0071.eurprd09.prod.outlook.com
+ (2603:10a6:7:3d::15) To VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e3::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [81.216.59.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 89c97c9b-046f-43b6-5648-08d6cdfeb86e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR10MB2445;
+x-ms-traffictypediagnostic: VI1PR10MB2445:
+x-microsoft-antispam-prvs: <VI1PR10MB244502683A17A360EB99954B8A3B0@VI1PR10MB2445.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00246AB517
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(136003)(39850400004)(396003)(346002)(199004)(189003)(66446008)(2906002)(476003)(66066001)(81166006)(64756008)(81156014)(6246003)(4326008)(66556008)(107886003)(2501003)(66946007)(25786009)(6512007)(6486002)(36756003)(66476007)(6916009)(6116002)(8676002)(73956011)(53936002)(8976002)(52116002)(256004)(229853002)(8936002)(3846002)(68736007)(5640700003)(6436002)(74482002)(71190400001)(2351001)(7736002)(305945005)(42882007)(11346002)(486006)(446003)(26005)(14454004)(71200400001)(72206003)(186003)(478600001)(99286004)(31686004)(6506007)(386003)(5660300002)(102836004)(316002)(76176011)(44832011)(54906003)(31696002)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2445;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9gFa7ZrD39oH2fEoRwnEh2Z+vgAsLsMb6WWIdR6j7GSAUNQlaEvVsbyTQWaLlgz5kCNPE7cq5RdKDYF+UJfLnezHV5mSqAVIx/WbGLA1tdnX3O0zpXEiKDfmIUUKsSUfU0Imq7fSajchzPajiurlya4Gk9kE/V8NOr9dFssN0FtC66e7fNWVWG6BQtgIg58sf0BnO1TgU0wO6gRnzrOnxfr3HNrOblNlQDRbFv9ozVLvnPUUFvKGmvpZn/0DTPS4kXZIwbRm90q0b2Ui+ZRZfgPOcoolwpqg+kdhvwcGK4Icuhwm9Do39dQflHmslvtcwWOKB96693tfIE6C85XfPuaEbjP8VmHTdr5xrBfwbPasV5ZlXbE5IVzh2SgkE4kpQI+xxBkhjhA3ET7OmjK7IjnhaZw0bToC+2rEgHnf6cs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FB086433BD17BF4893190A6BD32355D2@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190430113608.616903219@linuxfoundation.org>
-In-Reply-To: <20190430113608.616903219@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 1 May 2019 11:57:21 +0530
-Message-ID: <CA+G9fYv60oqvt+PTEdEi8-B_riM2_WwQWXoZz1fOa_OsQYzSnw@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/100] 4.19.38-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89c97c9b-046f-43b6-5648-08d6cdfeb86e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2019 06:32:02.1901
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2445
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 at 17:14, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.38 release.
-> There are 100 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu 02 May 2019 11:34:55 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.38-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.19.38-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: f0b5b3d18a2fd4e0a223ff2ef04d4d1f435d19f2
-git describe: v4.19.37-101-gf0b5b3d18a2f
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.37-101-gf0b5b3d18a2f
-
-No regressions (compared to build v4.19.37)
-
-No fixes (compared to build v4.19.37)
-
-Ran 25050 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+T24gMDEvMDUvMjAxOSAwMi4wNSwgSmVycnkgSG9lbWFubiB3cm90ZToNCj4gT24gTW9uLCBKYW4g
+MjEsIDIwMTkgYXQgMDg6NDU6MzhQTSArMDAwMCwgUmFzbXVzIFZpbGxlbW9lcyB3cm90ZToNCj4+
+DQo+PiBUaGVzZSBwYXRjaGVzIGFsbG93IG9uZSB0byBzZXQgYSBtYXhpbXVtIHRpbWUgZm9yIHdo
+aWNoIHRoZSBrZXJuZWwNCj4+IHdpbGwgZmVlZCB0aGUgd2F0Y2hkb2csDQo+IA0KPiBSYXNtdXMs
+DQo+IA0KPiBTb3JyeSBpZiBJIG1pc3NlZCBpdCwgYnV0IGFyZSB5b3Ugc3RpbGwgbG9va2luZyBp
+bnRvIGFkZGluZw0KPiB0aGlzIGZlYXR1cmU/IA0KDQpJIGFtLCBhbmQgc3RpbGwgaW50ZW5kIHRv
+IGdldCBhcm91bmQgdG8gaXQgd2hlbiBJIGdldCBzb21lIGlkbGUgY3ljbGVzLg0KDQpJIHdhcyB0
+aGlua2luZyBpdCBtaWdodCBhbHNvIGJlIHVzZWZ1bCB3aXRoDQo+IGtkdW1wIHdoZW4gYSB3YXRj
+aGRvZyB3YXMgcnVubmluZyBpbiB0aGUgZmlyc3Qga2VybmVsLg0KPiANCj4gQWZ0ZXIgYSBwYW5p
+YyBpZiBrZHVtcCBpcyBjb25maWd1cmVkLCB0aGUgc3lzdGVtIHdpbGwgYm9vdCB0aGUNCj4gY3Jh
+c2gga2VybmVsLiAgSWYgYSB3YXRjaGRvZyB3YXMgcnVubmluZyBpbiB0aGUgZmlyc3Qga2VybmVs
+DQo+IGl0IHdvdWxkIHN0aWxsIHJ1bm5pbmcgaW4gdGhlIGNyYXNoIGtlcm5lbCBlbnZpcm9ubWVu
+dC4NCj4gDQo+IFNvbWUgb2YgdGhlIGRyaXZlcnMgb24gSFBFIHN5c3RlbXMgdGFrZSBhIG5vbi10
+cml2aWFsIGFtb3VudCBvZiB0aW1lDQo+IHRvIHJlc2V0IGR1cmluZyB0aGUgY3Jhc2gga2VybmVs
+IGJvb3QsIHNvIGl0IHdvdWxkIGJlIGdvb2QgdG8gaGF2ZQ0KPiB0aGUgY29yZSBwZXQgdGhlIHdh
+dGNoZG9nIHVudGlsIHVzZXIgc3BhY2UgaXMgcmVhZHkuICBCdXQgYXMgdGhlDQo+IGNyYXNoIGtl
+cm5lbCBlbnZpcm9ubWVudCBoYXMgaXRzIGlzc3VlcywgIHdlIHJlYWxseSBkb24ndCB3YW50DQo+
+IHRoZSBjb3JlIHRvIHBpbmcgdGhlIHdhdGNoZG9nIGluZGVmaW5pdGVseS4NCg0KVGhhbmtzLCBp
+dCdzIGdyZWF0IHRvIGhlYXIgdGhhdCBvdGhlcnMgd291bGQgYWxzbyBiZSBpbnRlcmVzdGVkIGlu
+IHRoaXMuDQpUaGlzIHdpbGwgbW92ZSBpdCB1cCBhIGZldyBwbGFjZXMgb24gbXkgdG9kbyBsaXN0
+LiBJJ2xsIHRyeSB0byByZW1lbWJlcg0KdG8gYWRkIHlvdSB0byB0aGUgY2MgbGlzdC4NCg0KVGhh
+bmtzLA0KUmFzbXVzDQo=
