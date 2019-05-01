@@ -2,148 +2,105 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B44CC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAB0C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5597C2085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:22:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dNFlA7q+"
+	by mail.kernel.org (Postfix) with ESMTP id C23432075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfEARWL (ORCPT
+        id S1726175AbfEAR0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:22:11 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:41647 "EHLO pegase1.c-s.fr"
+        Wed, 1 May 2019 13:26:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41125 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfEARWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:22:10 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44vQDv2VRLz9tyc2;
-        Wed,  1 May 2019 19:22:07 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=dNFlA7q+; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id InMtWq2E-DNV; Wed,  1 May 2019 19:22:07 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44vQDv1Rlxz9tybh;
-        Wed,  1 May 2019 19:22:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556731327; bh=P+ycD4GZ6KQ1BUKCv6VtK/4BHfP/mJbbQKvt313twl8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=dNFlA7q+L3AUpX1FPbXjlvyXrkKoTPNPVmqPEu1AZxaF47kLmQoiAHYJWDTdEqeeY
-         OqLMsekNdjBkK3IaPX3BwfKLDJj/oaY8dKB5zA7LSYsBdjglEVtP8y+Z96EbAuRa1z
-         faemrRGFe5Rvhfesl97Rn8XF59+XQ714ce3b2fzk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E49368B84C;
-        Wed,  1 May 2019 19:22:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id t2ZbW3fjtIaX; Wed,  1 May 2019 19:22:08 +0200 (CEST)
-Received: from [192.168.232.53] (unknown [192.168.232.53])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6BE8B8B74C;
-        Wed,  1 May 2019 19:22:08 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc/32s: fix BATs setting with
- CONFIG_STRICT_KERNEL_RWX
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Serge Belyshev <belyshev@depni.sinp.msu.ru>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <09733bd9d90f2ab9dfee9838442e0bea01df194d.1556640535.git.christophe.leroy@c-s.fr>
- <878svrat7x.fsf@concordia.ellerman.id.au>
-From:   christophe leroy <christophe.leroy@c-s.fr>
-Message-ID: <47f3caee-510b-a95c-cf08-013a282141b6@c-s.fr>
-Date:   Wed, 1 May 2019 19:22:06 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        id S1726069AbfEAR0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:26:20 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D74803084248;
+        Wed,  1 May 2019 17:26:19 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 587D776114;
+        Wed,  1 May 2019 17:26:09 +0000 (UTC)
+Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) != current)
+ with fsfreeze (4.19.25-rt16)
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>, jack@suse.com,
+        Davidlohr Bueso <dave@stgolabs.net>
+References: <20190326093421.GA29508@localhost.localdomain>
+ <20190419085627.GI4742@localhost.localdomain>
+ <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
+ <20190430132811.GB2589@hirez.programming.kicks-ass.net>
+ <20190501170953.GB2650@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <ce854251-139e-15f1-2ac5-b66a27f8284c@redhat.com>
+Date:   Wed, 1 May 2019 13:26:08 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <878svrat7x.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+In-Reply-To: <20190501170953.GB2650@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-Antivirus: Avast (VPS 190501-4, 01/05/2019), Outbound message
-X-Antivirus-Status: Clean
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 01 May 2019 17:26:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 01/05/2019 à 02:55, Michael Ellerman a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> Serge reported some crashes with CONFIG_STRICT_KERNEL_RWX enabled
->> on a book3s32 machine.
+On 5/1/19 1:09 PM, Peter Zijlstra wrote:
+> On Tue, Apr 30, 2019 at 03:28:11PM +0200, Peter Zijlstra wrote:
+>
+>> Yeah, but AFAIK fs freezing code has a history of doing exactly that..
+>> This is just the latest incarnation here.
 >>
->> Analysis shows two issues:
->> - BATs addresses and sizes are not properly aligned.
->> - There is a gap between the last address covered by BATs and the
->> first address covered by pages.
+>> So the immediate problem here is that the task doing thaw isn't the same
+>> that did freeze, right? The thing is, I'm not seeing how that isn't a
+>> problem with upstream either.
 >>
->> Memory mapped with DBATs:
->> 0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
->> 1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
->> 2: 0xc0c00000-0xc13fffff 0x00c00000 Kernel RW coherent
->> 3: 0xc1400000-0xc23fffff 0x01400000 Kernel RW coherent
->> 4: 0xc2400000-0xc43fffff 0x02400000 Kernel RW coherent
->> 5: 0xc4400000-0xc83fffff 0x04400000 Kernel RW coherent
->> 6: 0xc8400000-0xd03fffff 0x08400000 Kernel RW coherent
->> 7: 0xd0400000-0xe03fffff 0x10400000 Kernel RW coherent
+>> The freeze code seems to do: percpu_down_write() for the various states,
+>> and then frobs lockdep state.
 >>
->> Memory mapped with pages:
->> 0xe1000000-0xefffffff  0x21000000       240M        rw       present           dirty  accessed
+>> Thaw then does the reverse, frobs lockdep and then does: percpu_up_write().
 >>
->> This patch fixes both issues. With the patch, we get the following
->> which is as expected:
+>> percpu_down_write() directly relies on down_write(), and
+>> percpu_up_write() on up_write(). And note how __up_write() has:
 >>
->> Memory mapped with DBATs:
->> 0: 0xc0000000-0xc07fffff 0x00000000 Kernel RO coherent
->> 1: 0xc0800000-0xc0bfffff 0x00800000 Kernel RO coherent
->> 2: 0xc0c00000-0xc0ffffff 0x00c00000 Kernel RW coherent
->> 3: 0xc1000000-0xc1ffffff 0x01000000 Kernel RW coherent
->> 4: 0xc2000000-0xc3ffffff 0x02000000 Kernel RW coherent
->> 5: 0xc4000000-0xc7ffffff 0x04000000 Kernel RW coherent
->> 6: 0xc8000000-0xcfffffff 0x08000000 Kernel RW coherent
->> 7: 0xd0000000-0xdfffffff 0x10000000 Kernel RW coherent
+>> 	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
 >>
->> Memory mapped with pages:
->> 0xe0000000-0xefffffff  0x20000000       256M        rw       present           dirty  accessed
->>
->> Reported-by: Serge Belyshev <belyshev@depni.sinp.msu.ru>
->> Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
->> Cc: stable@vger.kernel.org
-> 
-> I could probably still get this into v5.1 if you're confident it's a
-> good fix.
+>> So why isn't this same code coming unstuck in mainline?
 
-If possible it would be great.
+That code is in just in the tip tree. It is not in the mainline yet. I
+do realize that it can be a problem and so I have it modified to the
+following in my part2 patchset.
 
-Yes I'm confident it is a good fix:
-- The fix has no impact on the configurations I tested originally (they 
-were lacking a trailing area not mapped with BATs and the boundarie 
-between RW and RO was a power of 2 so ffs() returned the same as lfs())
-- The fix was tested by myself on QEMU.
-- The fix was tested by Serge.
-- The fix was acked by Segher.
-- The fix make sense (ie ffs() is the good one, fls() was definitly wrong)
+static inline void __up_write(struct rw_semaphore *sem)
+{
+        long tmp;
 
-Christophe
+        /*
+         * sem->owner may differ from current if the ownership is
+transferred
+         * to an anonymous writer by setting the RWSEM_NONSPINNABLE bits.
+         */
+        DEBUG_RWSEMS_WARN_ON((sem->owner != current) &&
+                            !((long)sem->owner & RWSEM_NONSPINNABLE), sem);
 
-> 
-> cheers
-> 
+Maybe I should break this part out and have it merged into tip as well.
 
----
-L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
-https://www.avast.com/antivirus
+Cheers,
+Longman
 
