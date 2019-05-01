@@ -2,161 +2,570 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0E2C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AB9C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847E62085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174A12085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfEAVTJ (ORCPT
+        id S1726267AbfEAVUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:19:09 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:53899 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726116AbfEAVTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:19:08 -0400
-Received: from localhost.localdomain ([83.160.161.190])
-        by smtp-cloud7.xs4all.net with ESMTPSA
-        id Lwd5hCHvaZVjxLwd7h3Uok; Wed, 01 May 2019 23:19:05 +0200
-From:   Paul Bolle <pebolle@tiscali.nl>
-To:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        gigaset307x-common@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] isdn: bas_gigaset: use usb_fill_int_urb() properly
-Date:   Wed,  1 May 2019 23:19:03 +0200
-Message-Id: <20190501211903.14806-1-pebolle@tiscali.nl>
-X-Mailer: git-send-email 2.17.2
-X-CMAE-Envelope: MS4wfOp5vPG9xELxzSh+dUzvBxQYzI2cQDZmE49vzSrlF8aB/d8MQv73euPb7NwpkqLRPCuN2y3q7AaFj98EZiFJVvl+SrNigkTRoTvllg5fw5EIFxwU+O56
- j3yCP7A7LTEJq8/LlQWbDdCDmUFq0Wvy9gy2iwuIVD+TvMvfmMP5RB0Pe2uZfaR/SHjqt0fWAzoKMtK5DoZa4Y++aBIMdOF7AHsYQpq+9LPtTnBayqRgdxDB
- vpLvZxXd6V8HK9zdaSUC4Bbo60+YFl1if+pL7ynypWNO9ff6JGBh5WCQL/FpAVnDEbs2oxchqt4zqY8h1XD0JNCumDMfjOux+pWzbFRzkOYOWmZ4aFA59Ygf
- Ng51pFRb4J3lmMREZejU17ZBtV1jKomXOibkPdbzIMlTMntUPCY=
+        Wed, 1 May 2019 17:20:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:33823 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfEAVUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:20:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 14:20:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,419,1549958400"; 
+   d="scan'208";a="228462615"
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by orsmga001.jf.intel.com with ESMTP; 01 May 2019 14:20:03 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
+Date:   Wed,  1 May 2019 14:12:17 -0700
+Message-Id: <20190501211217.5039-1-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The switch to make bas_gigaset use usb_fill_int_urb() - instead of
-filling that urb "by hand" - missed the subtle ordering of the previous
-code.
+An ELF file's .note.gnu.property indicates features the executable file
+can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+GNU_PROPERTY_X86_FEATURE_1_SHSTK.
 
-See, before the switch urb->dev was set to a member somewhere deep in a
-complicated structure and then supplied to usb_rcvisocpipe() and
-usb_sndisocpipe(). After that switch urb->dev wasn't set to anything
-specific before being supplied to those two macros. This triggers a
-nasty oops:
+This patch was part of the Control-flow Enforcement series; the original
+patch is here: https://lkml.org/lkml/2018/11/20/205.  Dave Martin responded
+that ARM recently introduced new features to NT_GNU_PROPERTY_TYPE_0 with
+properties closely modelled on GNU_PROPERTY_X86_FEATURE_1_AND, and it is
+logical to split out the generic part.  Here it is.
 
-    BUG: unable to handle kernel NULL pointer dereference at 00000000
-    #PF error: [normal kernel read fault]
-    *pde = 00000000
-    Oops: 0000 [#1] SMP
-    CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.1.0-0.rc4.1.local0.fc28.i686 #1
-    Hardware name: IBM 2525FAG/2525FAG, BIOS 74ET64WW (2.09 ) 12/14/2006
-    EIP: gigaset_init_bchannel+0x89/0x320 [bas_gigaset]
-    Code: 75 07 83 8b 84 00 00 00 40 8d 47 74 c7 07 01 00 00 00 89 45 f0 8b 44 b7 68 85 c0 0f 84 6a 02 00 00 8b 48 28 8b 93 88 00 00 00 <8b> 09 8d 54 12 03 c1 e2 0f c1 e1 08 09 ca 8b 8b 8c 00 00 00 80 ca
-    EAX: f05ec200 EBX: ed404200 ECX: 00000000 EDX: 00000000
-    ESI: 00000000 EDI: f065a000 EBP: f30c9f40 ESP: f30c9f20
-    DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010086
-    CR0: 80050033 CR2: 00000000 CR3: 0ddc7000 CR4: 000006d0
-    Call Trace:
-     <SOFTIRQ>
-     ? gigaset_isdn_connD+0xf6/0x140 [gigaset]
-     gigaset_handle_event+0x173e/0x1b90 [gigaset]
-     tasklet_action_common.isra.16+0x4e/0xf0
-     tasklet_action+0x1e/0x20
-     __do_softirq+0xb2/0x293
-     ? __irqentry_text_end+0x3/0x3
-     call_on_stack+0x45/0x50
-     </SOFTIRQ>
-     ? irq_exit+0xb5/0xc0
-     ? do_IRQ+0x78/0xd0
-     ? acpi_idle_enter_s2idle+0x50/0x50
-     ? common_interrupt+0xd4/0xdc
-     ? acpi_idle_enter_s2idle+0x50/0x50
-     ? sched_cpu_activate+0x1b/0xf0
-     ? acpi_fan_resume.cold.7+0x9/0x18
-     ? cpuidle_enter_state+0x152/0x4c0
-     ? cpuidle_enter+0x14/0x20
-     ? call_cpuidle+0x21/0x40
-     ? do_idle+0x1c8/0x200
-     ? cpu_startup_entry+0x25/0x30
-     ? rest_init+0x88/0x8a
-     ? arch_call_rest_init+0xd/0x19
-     ? start_kernel+0x42f/0x448
-     ? i386_start_kernel+0xac/0xb0
-     ? startup_32_smp+0x164/0x168
-    Modules linked in: ppp_generic slhc capi bas_gigaset gigaset kernelcapi nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 xt_conntrack ip_set nfnetlink ebtable_nat ebtable_broute bridge stp llc ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_mangle iptable_raw iptable_security ebtable_filter ebtables ip6table_filter ip6_tables sunrpc ipw2200 iTCO_wdt gpio_ich snd_intel8x0 libipw iTCO_vendor_support snd_ac97_codec lib80211 ppdev ac97_bus snd_seq cfg80211 snd_seq_device pcspkr thinkpad_acpi lpc_ich snd_pcm i2c_i801 snd_timer ledtrig_audio snd soundcore rfkill parport_pc parport pcc_cpufreq acpi_cpufreq i915 i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sdhci_pci sysimgblt cqhci fb_sys_fops drm sdhci mmc_core tg3 ata_generic serio_raw yenta_socket pata_acpi video
-    CR2: 0000000000000000
-    ---[ end trace 1fe07487b9200c73 ]---
-    EIP: gigaset_init_bchannel+0x89/0x320 [bas_gigaset]
-    Code: 75 07 83 8b 84 00 00 00 40 8d 47 74 c7 07 01 00 00 00 89 45 f0 8b 44 b7 68 85 c0 0f 84 6a 02 00 00 8b 48 28 8b 93 88 00 00 00 <8b> 09 8d 54 12 03 c1 e2 0f c1 e1 08 09 ca 8b 8b 8c 00 00 00 80 ca
-    EAX: f05ec200 EBX: ed404200 ECX: 00000000 EDX: 00000000
-    ESI: 00000000 EDI: f065a000 EBP: f30c9f40 ESP: cddcb3bc
-    DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010086
-    CR0: 80050033 CR2: 00000000 CR3: 0ddc7000 CR4: 000006d0
-    Kernel panic - not syncing: Fatal exception in interrupt
-    Kernel Offset: 0xcc00000 from 0xc0400000 (relocation range: 0xc0000000-0xf6ffdfff)
-    ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+With this patch, if an arch needs to setup features from ELF properties,
+it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
+arch_setup_property().
 
-No-one noticed because this Oops is apparently only triggered by setting
-up an ISDN data connection on a live ISDN line on a gigaset base (ie,
-the PBX that the gigaset driver support). Very few people do that
-running present day kernels.
+For example, for X86_64:
 
-Anyhow, a little code reorganization makes this problem go away, while
-avoiding the subtle ordering that was used in the past. So let's do
-that.
+int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
+{
+	int r;
+	uint32_t property;
 
-Fixes: 78c696c19578 ("isdn: gigaset: use usb_fill_int_urb()")
-Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
+	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
+			     &property);
+	...
+}
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
-Arnd's ISDN cleanup hasn't yet hit net-next so this still uses
-drivers/isdn. If people prefer to apply this after Arnd has exiled
-gigaset into staging, I'll gladly respin. 
+ fs/Kconfig.binfmt        |   4 +
+ fs/Makefile              |   1 +
+ fs/binfmt_elf.c          |  13 ++
+ fs/gnu_property.c        | 363 +++++++++++++++++++++++++++++++++++++++
+ include/linux/elf.h      |  12 ++
+ include/uapi/linux/elf.h |   8 +
+ 6 files changed, 401 insertions(+)
+ create mode 100644 fs/gnu_property.c
 
- drivers/isdn/gigaset/bas-gigaset.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/isdn/gigaset/bas-gigaset.c b/drivers/isdn/gigaset/bas-gigaset.c
-index ecdeb89645d0..149b1aca52a2 100644
---- a/drivers/isdn/gigaset/bas-gigaset.c
-+++ b/drivers/isdn/gigaset/bas-gigaset.c
-@@ -958,6 +958,7 @@ static void write_iso_callback(struct urb *urb)
-  */
- static int starturbs(struct bc_state *bcs)
- {
-+	struct usb_device *udev = bcs->cs->hw.bas->udev;
- 	struct bas_bc_state *ubc = bcs->hw.bas;
- 	struct urb *urb;
- 	int j, k;
-@@ -975,8 +976,8 @@ static int starturbs(struct bc_state *bcs)
- 			rc = -EFAULT;
- 			goto error;
- 		}
--		usb_fill_int_urb(urb, bcs->cs->hw.bas->udev,
--				 usb_rcvisocpipe(urb->dev, 3 + 2 * bcs->channel),
-+		usb_fill_int_urb(urb, udev,
-+				 usb_rcvisocpipe(udev, 3 + 2 * bcs->channel),
- 				 ubc->isoinbuf + k * BAS_INBUFSIZE,
- 				 BAS_INBUFSIZE, read_iso_callback, bcs,
- 				 BAS_FRAMETIME);
-@@ -1006,8 +1007,8 @@ static int starturbs(struct bc_state *bcs)
- 			rc = -EFAULT;
- 			goto error;
- 		}
--		usb_fill_int_urb(urb, bcs->cs->hw.bas->udev,
--				 usb_sndisocpipe(urb->dev, 4 + 2 * bcs->channel),
-+		usb_fill_int_urb(urb, udev,
-+				 usb_sndisocpipe(udev, 4 + 2 * bcs->channel),
- 				 ubc->isooutbuf->data,
- 				 sizeof(ubc->isooutbuf->data),
- 				 write_iso_callback, &ubc->isoouturbs[k],
+diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+index b795f8da81f3..175a1f58e785 100644
+--- a/fs/Kconfig.binfmt
++++ b/fs/Kconfig.binfmt
+@@ -35,6 +35,10 @@ config COMPAT_BINFMT_ELF
+ config ARCH_BINFMT_ELF_STATE
+ 	bool
+ 
++config ARCH_USE_GNU_PROPERTY
++	bool
++	depends on 64BIT
++
+ config BINFMT_ELF_FDPIC
+ 	bool "Kernel support for FDPIC ELF binaries"
+ 	default y if !BINFMT_ELF
+diff --git a/fs/Makefile b/fs/Makefile
+index 427fec226fae..8a35abbebf8b 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -44,6 +44,7 @@ obj-$(CONFIG_BINFMT_ELF)	+= binfmt_elf.o
+ obj-$(CONFIG_COMPAT_BINFMT_ELF)	+= compat_binfmt_elf.o
+ obj-$(CONFIG_BINFMT_ELF_FDPIC)	+= binfmt_elf_fdpic.o
+ obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
++obj-$(CONFIG_ARCH_USE_GNU_PROPERTY) += gnu_property.o
+ 
+ obj-$(CONFIG_FS_MBCACHE)	+= mbcache.o
+ obj-$(CONFIG_FS_POSIX_ACL)	+= posix_acl.o
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 7d09d125f148..40aa4a4fd64d 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1076,6 +1076,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 		goto out_free_dentry;
+ 	}
+ 
++	if (interpreter) {
++		retval = arch_setup_property(&loc->interp_elf_ex,
++					     interp_elf_phdata,
++					     interpreter, true);
++	} else {
++		retval = arch_setup_property(&loc->elf_ex,
++					     elf_phdata,
++					     bprm->file, false);
++	}
++
++	if (retval < 0)
++		goto out_free_dentry;
++
+ 	if (elf_interpreter) {
+ 		unsigned long interp_map_addr = 0;
+ 
+diff --git a/fs/gnu_property.c b/fs/gnu_property.c
+new file mode 100644
+index 000000000000..656ea3951840
+--- /dev/null
++++ b/fs/gnu_property.c
+@@ -0,0 +1,363 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Extract an ELF file's .note.gnu.property.
++ *
++ * The path from the ELF header to the note section is the following:
++ * elfhdr->elf_phdr->elf_note->property[].
++ */
++
++#include <uapi/linux/elf-em.h>
++#include <linux/processor.h>
++#include <linux/binfmts.h>
++#include <linux/elf.h>
++#include <linux/slab.h>
++#include <linux/fs.h>
++#include <linux/uaccess.h>
++#include <linux/string.h>
++#include <linux/compat.h>
++
++/*
++ * The .note.gnu.property layout:
++ *
++ *	struct elf_note {
++ *		u32 n_namesz; --> sizeof(n_name[]); always (4)
++ *		u32 n_ndescsz;--> sizeof(property[])
++ *		u32 n_type;   --> always NT_GNU_PROPERTY_TYPE_0
++ *	};
++ *	char n_name[4]; --> always 'GNU\0'
++ *
++ *	struct {
++ *		struct gnu_property {
++ *			u32 pr_type;
++ *			u32 pr_datasz;
++ *		};
++ *		u8 pr_data[pr_datasz];
++ *	}[];
++ */
++
++#define BUF_SIZE (PAGE_SIZE / 4)
++
++struct gnu_property {
++	u32 pr_type;
++	u32 pr_datasz;
++};
++
++typedef bool (test_item_fn)(void *buf, u32 *arg, u32 type);
++typedef void *(next_item_fn)(void *buf, u32 *arg, u32 type);
++
++static inline bool test_note_type(void *buf, u32 *align, u32 note_type)
++{
++	struct elf_note *n = buf;
++
++	return ((n->n_type == note_type) && (n->n_namesz == 4) &&
++		(memcmp(n + 1, "GNU", 4) == 0));
++}
++
++static inline void *next_note(void *buf, u32 *align, u32 note_type)
++{
++	struct elf_note *n = buf;
++	u64 size;
++
++	if (check_add_overflow((u64)sizeof(*n), (u64)n->n_namesz, &size))
++		return NULL;
++
++	size = round_up(size, *align);
++
++	if (check_add_overflow(size, (u64)n->n_descsz, &size))
++		return NULL;
++
++	size = round_up(size, *align);
++
++	if (buf + size < buf)
++		return NULL;
++	else
++		return (buf + size);
++}
++
++static inline bool test_property(void *buf, u32 *max_type, u32 pr_type)
++{
++	struct gnu_property *pr = buf;
++
++	/*
++	 * Property types must be in ascending order.
++	 * Keep track of the max when testing each.
++	 */
++	if (pr->pr_type > *max_type)
++		*max_type = pr->pr_type;
++
++	return (pr->pr_type == pr_type);
++}
++
++static inline void *next_property(void *buf, u32 *max_type, u32 pr_type)
++{
++	struct gnu_property *pr = buf;
++
++	if ((buf + sizeof(*pr) +  pr->pr_datasz < buf) ||
++	    (pr->pr_type > pr_type) ||
++	    (pr->pr_type > *max_type))
++		return NULL;
++	else
++		return (buf + sizeof(*pr) + pr->pr_datasz);
++}
++
++/*
++ * Scan 'buf' for a pattern; return true if found.
++ * *pos is the distance from the beginning of buf to where
++ * the searched item or the next item is located.
++ */
++static int scan(u8 *buf, u32 buf_size, int item_size, test_item_fn test_item,
++		next_item_fn next_item, u32 *arg, u32 type, u32 *pos)
++{
++	int found = 0;
++	u8 *p, *max;
++
++	max = buf + buf_size;
++	if (max < buf)
++		return 0;
++
++	p = buf;
++
++	while ((p + item_size < max) && (p + item_size > buf)) {
++		if (test_item(p, arg, type)) {
++			found = 1;
++			break;
++		}
++
++		p = next_item(p, arg, type);
++	}
++
++	*pos = (p + item_size <= buf) ? 0 : (u32)(p - buf);
++	return found;
++}
++
++/*
++ * Search an NT_GNU_PROPERTY_TYPE_0 for the property of 'pr_type'.
++ */
++static int find_property(struct file *file, unsigned long desc_size,
++			 loff_t file_offset, u8 *buf,
++			 u32 pr_type, u32 *property)
++{
++	u32 buf_pos;
++	unsigned long read_size;
++	unsigned long done;
++	int found = 0;
++	int ret = 0;
++	u32 last_pr = 0;
++
++	*property = 0;
++	buf_pos = 0;
++
++	for (done = 0; done < desc_size; done += buf_pos) {
++		read_size = desc_size - done;
++		if (read_size > BUF_SIZE)
++			read_size = BUF_SIZE;
++
++		ret = kernel_read(file, buf, read_size, &file_offset);
++
++		if (ret != read_size)
++			return (ret < 0) ? ret : -EIO;
++
++		ret = 0;
++		found = scan(buf, read_size, sizeof(struct gnu_property),
++			     test_property, next_property,
++			     &last_pr, pr_type, &buf_pos);
++
++		if ((!buf_pos) || found)
++			break;
++
++		file_offset += buf_pos - read_size;
++	}
++
++	if (found) {
++		struct gnu_property *pr =
++			(struct gnu_property *)(buf + buf_pos);
++
++		if (pr->pr_datasz == 4) {
++			u32 *max =  (u32 *)(buf + read_size);
++			u32 *data = (u32 *)((u8 *)pr + sizeof(*pr));
++
++			if (data + 1 <= max) {
++				*property = *data;
++			} else {
++				file_offset += buf_pos - read_size;
++				file_offset += sizeof(*pr);
++				ret = kernel_read(file, property, 4,
++						  &file_offset);
++			}
++		}
++	}
++
++	return ret;
++}
++
++/*
++ * Search a PT_NOTE segment for NT_GNU_PROPERTY_TYPE_0.
++ */
++static int find_note_type_0(struct file *file, loff_t file_offset,
++			    unsigned long note_size, u32 align,
++			    u32 pr_type, u32 *property)
++{
++	u8 *buf;
++	u32 buf_pos;
++	unsigned long read_size;
++	unsigned long done;
++	int found = 0;
++	int ret = 0;
++
++	buf = kmalloc(BUF_SIZE, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	*property = 0;
++	buf_pos = 0;
++
++	for (done = 0; done < note_size; done += buf_pos) {
++		read_size = note_size - done;
++		if (read_size > BUF_SIZE)
++			read_size = BUF_SIZE;
++
++		ret = kernel_read(file, buf, read_size, &file_offset);
++
++		if (ret != read_size) {
++			ret = (ret < 0) ? ret : -EIO;
++			kfree(buf);
++			return ret;
++		}
++
++		/*
++		 * item_size = sizeof(struct elf_note) + elf_note.n_namesz.
++		 * n_namesz is 4 for the note type we look for.
++		 */
++		ret = scan(buf, read_size, sizeof(struct elf_note) + 4,
++			      test_note_type, next_note,
++			      &align, NT_GNU_PROPERTY_TYPE_0, &buf_pos);
++
++		file_offset += buf_pos - read_size;
++
++		if (ret && !found) {
++			struct elf_note *n =
++				(struct elf_note *)(buf + buf_pos);
++			u64 start = round_up(sizeof(*n) + n->n_namesz, align);
++			u64 total = 0;
++
++			if (check_add_overflow(start, (u64)n->n_descsz, &total)) {
++				ret = -EINVAL;
++				break;
++			}
++			total = round_up(total, align);
++
++			ret = find_property(file, n->n_descsz,
++					    file_offset + start,
++					    buf, pr_type, property);
++			found++;
++			file_offset += total;
++			buf_pos += total;
++		} else if (!buf_pos || ret) {
++			ret = 0;
++			*property = 0;
++			break;
++		}
++	}
++
++	kfree(buf);
++	return ret;
++}
++
++/*
++ * Look at an ELF file's PT_NOTE segments, then NT_GNU_PROPERTY_TYPE_0, then
++ * the property of pr_type.
++ *
++ * Input:
++ *	file: the file to search;
++ *	phdr: the file's elf header;
++ *	phnum: number of entries in phdr;
++ *	pr_type: the property type.
++ *
++ * Output:
++ *	The property found.
++ *
++ * Return:
++ *	Zero or error.
++ */
++static int scan_segments_64(struct file *file, struct elf64_phdr *phdr,
++			    int phnum, u32 pr_type, u32 *property)
++{
++	int i;
++	int err = 0;
++
++	for (i = 0; i < phnum; i++, phdr++) {
++		if ((phdr->p_type != PT_NOTE) || (phdr->p_align != 8))
++			continue;
++
++		/*
++		 * Search the PT_NOTE segment for NT_GNU_PROPERTY_TYPE_0.
++		 */
++		err = find_note_type_0(file, phdr->p_offset, phdr->p_filesz,
++				       phdr->p_align, pr_type, property);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
++#ifdef CONFIG_COMPAT
++static int scan_segments_32(struct file *file, struct elf32_phdr *phdr,
++			    int phnum, u32 pr_type, u32 *property)
++{
++	int i;
++	int err = 0;
++
++	for (i = 0; i < phnum; i++, phdr++) {
++		if ((phdr->p_type != PT_NOTE) || (phdr->p_align != 4))
++			continue;
++
++		/*
++		 * Search the PT_NOTE segment for NT_GNU_PROPERTY_TYPE_0.
++		 */
++		err = find_note_type_0(file, phdr->p_offset, phdr->p_filesz,
++				       phdr->p_align, pr_type, property);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++#endif
++
++int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
++		     u32 pr_type, u32 *property)
++{
++	struct elf64_hdr *ehdr64 = ehdr_p;
++	int err = 0;
++
++	*property = 0;
++
++	if (ehdr64->e_ident[EI_CLASS] == ELFCLASS64) {
++		struct elf64_phdr *phdr64 = phdr_p;
++
++		err = scan_segments_64(f, phdr64, ehdr64->e_phnum,
++				       pr_type, property);
++		if (err < 0)
++			goto out;
++	} else {
++#ifdef CONFIG_COMPAT
++		struct elf32_hdr *ehdr32 = ehdr_p;
++
++		if (ehdr32->e_ident[EI_CLASS] == ELFCLASS32) {
++			struct elf32_phdr *phdr32 = phdr_p;
++
++			err = scan_segments_32(f, phdr32, ehdr32->e_phnum,
++					       pr_type, property);
++			if (err < 0)
++				goto out;
++		}
++#else
++	WARN_ONCE(1, "Exec of 32-bit app, but CONFIG_COMPAT is not enabled.\n");
++	return -ENOTSUPP;
++#endif
++	}
++
++out:
++	return err;
++}
+diff --git a/include/linux/elf.h b/include/linux/elf.h
+index e3649b3e970e..c15febebe7f2 100644
+--- a/include/linux/elf.h
++++ b/include/linux/elf.h
+@@ -56,4 +56,16 @@ static inline int elf_coredump_extra_notes_write(struct coredump_params *cprm) {
+ extern int elf_coredump_extra_notes_size(void);
+ extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
+ #endif
++
++#ifdef CONFIG_ARCH_USE_GNU_PROPERTY
++extern int arch_setup_property(void *ehdr, void *phdr, struct file *f,
++			       bool interp);
++extern int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
++			    u32 pr_type, u32 *feature);
++#else
++static inline int arch_setup_property(void *ehdr, void *phdr, struct file *f,
++				      bool interp) { return 0; }
++static inline int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
++				   u32 pr_type, u32 *feature) { return 0; }
++#endif
+ #endif /* _LINUX_ELF_H */
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index 34c02e4290fe..7b7603a44cbc 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -372,6 +372,7 @@ typedef struct elf64_shdr {
+ #define NT_PRFPREG	2
+ #define NT_PRPSINFO	3
+ #define NT_TASKSTRUCT	4
++#define NT_GNU_PROPERTY_TYPE_0 5
+ #define NT_AUXV		6
+ /*
+  * Note to userspace developers: size of NT_SIGINFO note may increase
+@@ -443,4 +444,11 @@ typedef struct elf64_note {
+   Elf64_Word n_type;	/* Content type */
+ } Elf64_Nhdr;
+ 
++/* .note.gnu.property types */
++#define GNU_PROPERTY_X86_FEATURE_1_AND		(0xc0000002)
++
++/* Bits of GNU_PROPERTY_X86_FEATURE_1_AND */
++#define GNU_PROPERTY_X86_FEATURE_1_IBT		(0x00000001)
++#define GNU_PROPERTY_X86_FEATURE_1_SHSTK	(0x00000002)
++
+ #endif /* _UAPI_LINUX_ELF_H */
 -- 
-2.17.2
+2.17.1
 
