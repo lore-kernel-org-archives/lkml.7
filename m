@@ -2,82 +2,91 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28CDC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6779CC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25BB21734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 10:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4211521734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfEAKx6 (ORCPT
+        id S1726289AbfEALBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 06:53:58 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:55229 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725838AbfEAKx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 06:53:58 -0400
-Received: from [192.168.1.5] (x590c9ba2.dyn.telefonica.de [89.12.155.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 365DA604E364E;
-        Wed,  1 May 2019 12:53:56 +0200 (CEST)
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: UEFI Fast Boot or Quick Boot for MS Windows also for Linux?
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     linux-efi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Message-ID: <082b8964-7173-3a4e-b67d-24df13945617@molgen.mpg.de>
-Date:   Wed, 1 May 2019 12:53:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 07:01:19 -0400
+Received: from foss.arm.com ([217.140.101.70]:58034 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbfEALBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 07:01:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7534580D;
+        Wed,  1 May 2019 04:01:18 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9E603F719;
+        Wed,  1 May 2019 04:01:16 -0700 (PDT)
+Date:   Wed, 1 May 2019 12:01:14 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Arun KS <arunks@codeaurora.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: arm64: Fix size of __early_cpu_boot_status
+Message-ID: <20190501110113.GD11740@lakrids.cambridge.arm.com>
+References: <1556620535-10060-1-git-send-email-arunks@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556620535-10060-1-git-send-email-arunks@codeaurora.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Linux folks,
-
-
-According to `systemd-analyze` the UEFI firmware on several systems, for 
-example the laptop Dell Latitude E7250 and the desktop board MSI B350M 
-MORTAR, take over ten seconds to initialize.
-
-     $ systemd-analyze
-     Startup finished in 11.193s (firmware) + 1.558s (loader) + 4.155s 
-(kernel) + 2.007s (userspace) = 18.914s
-     graphical.target reached after 1.983s in userspace
-
-Talking to other people, I heard, Microsoft Windows since version 8 can 
-activate some fast/quick boot mode in the firmware.
-
-I haven’t even found the specification for that mode. It could be 
-something like [1], but I do not think it is:
-
-> Fast Boot is a feature in BIOS that reduces your computer boot time. If
-> Fast Boot is enabled:
+On Tue, Apr 30, 2019 at 04:05:04PM +0530, Arun KS wrote:
+> __early_cpu_boot_status is of type long. Use quad
+> assembler directive to allocate proper size.
 > 
-> •   Boot from Network, Optical, and Removable Devices are disabled.
-> •   Video and USB devices (keyboard, mouse, drives) won't be available
->     until the operating system loads.
+> Signed-off-by: Arun KS <arunks@codeaurora.org>
+> ---
+>  arch/arm64/kernel/head.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> index eecf792..115f332 100644
+> --- a/arch/arm64/kernel/head.S
+> +++ b/arch/arm64/kernel/head.S
+> @@ -684,7 +684,7 @@ ENTRY(__boot_cpu_mode)
+>   * with MMU turned off.
+>   */
+>  ENTRY(__early_cpu_boot_status)
+> -	.long 	0
+> +	.quad 	0
 
-Some other sources [2] say, that MS Windows just uses hibernation to 
-boot quicker, but I do not think this is it, because with hibernation 
-there should be also a ten seconds delay, right?
+This is the last element in .mmuoff.data.write, which is padded to 2K,
+so luckily we don't clobber anything else (and don't need a backport).
 
-Do you know more about this mode, and how it works? Could it be 
-implemented for Linux?
+For consistency with __boot_cpu_mode, we could instead change the c
+declaration to int, and fix up the calls to
+update_early_cpu_boot_status, to use a w register, but either way:
 
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Kind regards,
+Mark.
 
-Paul
-
-
-[1]: 
-https://www.intel.com/content/www/us/en/support/articles/000006699/mini-pcs.html
+>  
+>  	.popsection
+>  
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
