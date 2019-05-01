@@ -2,99 +2,179 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2180EC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E763C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E3E21734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oMhj4Edu"
+	by mail.kernel.org (Postfix) with ESMTP id C77A421743
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556709027;
+	bh=RiyWMednSoirkDMsCPXi4Knnz0zqm8dM0sStuxwCq2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FLTh3b3DX00IiPLblGnIPzXsMXJLSdqXFELe+8N3NO6GGgwmxL5uQf0dIEc3+5SyW
+	 /BUtRSbrTD2qd9Wc04SajvKJxRTq0I8Gkb0g3cGV+tnEyx8r+KWwU246S6ehHBcAr3
+	 Fhw0XBuRK7Zm+TOVmcONiWxka6BovvA30HEXqEjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfEALGw (ORCPT
+        id S1726311AbfEALK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 07:06:52 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44720 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfEALGv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 07:06:51 -0400
-Received: by mail-lj1-f196.google.com with SMTP id c6so8714124lji.11;
-        Wed, 01 May 2019 04:06:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=eIL682wGpUi32jDyHiv4YP0KGP3S+mHvqENB0UUgtyM=;
-        b=oMhj4EduRZ42J8NPXviNtYfkZPKJ7YbpNc8WdBcU+riYH67W3DL8sqJ49n2S+/EmAQ
-         13xl3uHh+fvqWwa2DdGBgOJkueJbtzz2oP8uHPafT/zQz6OYx2Zue0zIj7kbVJb5cOOU
-         wYFiR566eev3SMFLDVZxA7s+VUZb+K/dTv7DfdN97ZT4IgWxwjgdJW70f+da00Q5uzSH
-         12tBV1OpOiRcgIr5vKBoILgKSJy0Ndf/SisB79kjzGV9Fco+7ehK4StyWr0YpDhrLRWj
-         n6UtVgSExg2R17BXUTrA6NH6TpuiBUUoSVbSy8DMiShHJ+aaOlyEAWn9ta2CVzbn9xx9
-         lNOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eIL682wGpUi32jDyHiv4YP0KGP3S+mHvqENB0UUgtyM=;
-        b=RhV0Ljylo5B/L/3ULeQMeW1g3xgje7BxcUO5TPMmECSQMYFRy5Z+BAZSEI0GnGdvIi
-         PO0nLTfv/DMw/3sLxfAHKRL8vbzX75FsezBA9nv3KwIgpsnm0ghpgEOOA1ymM8Xarfjh
-         4dxaePPK1hdSO6HW0T9WtGb/XJDz7BjNM9L/cbjXBhlTd6/UYauAl1hlpd+USwvB7A6v
-         xJpzDZQjzYhfq6excQ0qoHuqYuCrQyl66D7IqA8/yroaVEiLheee1xzFYC0mB6r8iESW
-         yuOdKA13mc5brlkes6xrdt4W9YslaMMyxXJAcGnbOTTJVmvBfhXmbNDzqG1OvHYQx+KE
-         hHpQ==
-X-Gm-Message-State: APjAAAUrmIN6dz/M6LymMTu/9fKYPR30m11Qj/+59ez/0RZ8L+gMCX0s
-        hqoTJsT3vmv/cSPR1tO0eXBGrYu2
-X-Google-Smtp-Source: APXvYqzBeP2zYtry4IBI2Iz6vl5syRChsbEVdT3BRJq343Eu3hIZE5Gky/xF+r2LMbI/e3Q+6Kux3w==
-X-Received: by 2002:a2e:2b16:: with SMTP id q22mr39437864lje.20.1556708809355;
-        Wed, 01 May 2019 04:06:49 -0700 (PDT)
-Received: from [192.168.1.244] (81-233-89-221-no75.tbcn.telia.com. [81.233.89.221])
-        by smtp.gmail.com with ESMTPSA id z3sm320851ljg.78.2019.05.01.04.06.48
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 04:06:48 -0700 (PDT)
-Subject: Re: [PATCH] mac80211: fix possible deadlock in TX path
-To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        johannes@sipsolutions.net, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190427204155.14211-1-erik.stromdahl@gmail.com>
- <87k1fcnd9y.fsf@toke.dk>
-From:   Erik Stromdahl <erik.stromdahl@gmail.com>
-Message-ID: <656f3938-ef82-c1ce-753c-cb6b9d3c424b@gmail.com>
-Date:   Wed, 1 May 2019 13:06:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 1 May 2019 07:10:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfEALK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 07:10:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1650321670;
+        Wed,  1 May 2019 11:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556709025;
+        bh=RiyWMednSoirkDMsCPXi4Knnz0zqm8dM0sStuxwCq2c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hnle+CACXHAFvDb/WM/1E/ZcBNOsOp0NWUUhZgXSb/3+3fxqs68eYLWUo1M3Hqdiw
+         ThphdE3pbM4ye2Z7oOT2zkqn5lxhQMbnmJnOdBf1hIoqHrQHfL9pINSyTT778u+F6W
+         g337f28a2qQKngNzYkFfJ0iEi9hRwvN7+PBmIgvs=
+Date:   Wed, 1 May 2019 13:10:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: kobject_init_and_add() confusion
+Message-ID: <20190501111022.GA15959@kroah.com>
+References: <20190430233803.GB10777@eros.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <87k1fcnd9y.fsf@toke.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430233803.GB10777@eros.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/30/19 9:49 AM, Toke Høiland-Jørgensen wrote:
-> Erik Stromdahl <erik.stromdahl@gmail.com> writes:
+On Wed, May 01, 2019 at 09:38:03AM +1000, Tobin C. Harding wrote:
+> Hi,
 > 
->> This patch fixes a possible deadlock when updating the TX statistics
->> (when calling into ieee80211_tx_stats()) from ieee80211_tx_dequeue().
+> Looks like I've created a bit of confusion trying to fix memleaks in
+> calls to kobject_init_and_add().  Its spread over various patches and
+> mailing lists so I'm starting a new thread and CC'ing anyone that
+> commented on one of those patches.
 > 
-> So is this the fix for the issue with TX scheduling you reported
-> earlier? :)
+> If there is a better way to go about this discussion please do tell me.
 > 
+> The problem
+> -----------
+> 
+> Calls to kobject_init_and_add() are leaking memory throughout the kernel
+> because of how the error paths are handled.
 
-Actually not. I thought so initially, but then, after a few more test runs,
-I was able to run into the issue again.
+s/are leaking/have the potential to leak/
 
-But it does seem to fix the other issue with the RCU stall since I haven't
-seen it with this patch applied (could be just a coincidence though).
+Note, no one ever hits these error paths, so it isn't a big issue, and
+is why no one has seen this except for the use of syzbot at times.
 
---
-Erik
+> The solution
+> ------------
+> 
+> Write the error path code correctly.
+> 
+> Example
+> -------
+> 
+> We have samples/kobject/kobject-example.c but it uses
+> kobject_create_and_add().  I thought of adding another example file here
+> but could not think of how to do it off the top of my head without being
+> super contrived.  Can add this to the TODO list if it will help.
+
+You could take the example I wrote in that old email and use it, or your
+version below as well.
+
+> Here is an attempted canonical usage of kobject_init_and_add() typical
+> of the code that currently is getting it wrong.  This is the second time
+> I've written this and the first time it was wrong even after review (you
+> know who you are, you are definitely buying the next round of drinks :)
+> 
+> Assumes we have an object in memory already that has the kobject
+> embedded in it. Variable 'kobj' below would typically be &ptr->kobj
+> 
+> 
+> 	void fn(void)
+> 	{
+> 	        int ret;
+> 
+> 	        ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
+> 	        if (ret) {
+> 			/*
+> 			 * This means kobject_init() has succeeded
+
+kobject_init() can not fail except in fun ways that dumps the stack and
+then keeps on going due to the failure being on the caller, not the
+kobject code itself.
+
+> 			 * but kobject_add() failed.
+> 			 */
+> 			goto err_put;
+> 		}
+> 
+> 	        ret = some_init_fn();
+> 	        if (ret) {
+> 			/*
+> 			 * We need to wind back kobject_add() AND kobject_put().
+> 			 * kobject_add() incremented the refcount in
+> 			 * kobj->parent, that needs to be decremented THEN we need
+> 			 * the call to kobject_put() to decrement the refcount of kobj.
+> 			 */
+> 			goto err_del;
+> 		}
+> 
+> 	        ret = some_other_init_fn();
+> 	        if (ret)
+> 	                goto other_err;
+> 
+> 	        kobject_uevent(kobj, KOBJ_ADD);
+> 	        return 0;
+> 
+> 	other_err:
+> 	        other_clean_up_fn();
+> 	err_del:
+> 	        kobject_del(kobj);
+> 	err_put:
+> 		kobject_put(kobj);
+> 
+> 	        return ret;
+> 	}
+> 
+> 
+> Have I got this correct?
+
+From what I can tell, yes.
+
+> TODO
+> ----
+> 
+> - Fix all the callsites to kobject_init_and_add()
+> - Further clarify the function docstring for kobject_init_and_add() [perhaps]
+
+More documentation, sure!
+
+> - Add a section to Documentation/kobject.txt [optional]
+
+That file should probably be reviewed and converted to .rst, I haven't
+looked at it in years.
+
+> - Add a sample usage file under samples/kobject [optional]
+
+Would be a good idea, so we can point people at it.
+
+thanks,
+
+greg k-h
