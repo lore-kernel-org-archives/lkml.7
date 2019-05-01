@@ -2,73 +2,112 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033A1C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 02:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E551C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 02:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67B121734
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 02:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124EF21743
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 02:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OGYy3rkY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U2vGNGZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfEACUk (ORCPT
+        id S1727580AbfEACXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 22:20:40 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:49124 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbfEACUk (ORCPT
+        Tue, 30 Apr 2019 22:23:35 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40116 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbfEACXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 22:20:40 -0400
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23990394AbfEACUhiM2bj (ORCPT
-        <rfc822;sparclinux@vger.kernel.org> + 4 others);
-        Wed, 1 May 2019 04:20:37 +0200
-Date:   Wed, 1 May 2019 03:20:37 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, vz@mleia.com,
-        slemieux.tyco@gmail.com, khilman@baylibre.com, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
-        "David S. Miller" <davem@davemloft.net>, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 01/41] drivers: tty: serial: dz: use dev_err() instead
- of printk()
-In-Reply-To: <20190429131224.GA27385@kroah.com>
-Message-ID: <alpine.LFD.2.21.1905010255070.30973@eddie.linux-mips.org>
-References: <1556369542-13247-1-git-send-email-info@metux.net> <1556369542-13247-2-git-send-email-info@metux.net> <20190427133117.GC11368@kroah.com> <bae3f23b-8823-f089-c40e-024ba225555f@metux.net> <20190429131224.GA27385@kroah.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 30 Apr 2019 22:23:35 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2DF7960A0A; Wed,  1 May 2019 02:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556677414;
+        bh=M0FF3TXXaUXbPylVg3FjoIfzAdVn+sfMksEWs8DGXjI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OGYy3rkY310IT04oiTt9sF5czlSr2v5eGbV0MAQZRJ7/IoY2kyvL6PDCCg5J3Q1wm
+         zU5p+qlGLwcalHYFpXMqjmHZXWgAZxx+dX+sq3dElOwTvuAxktcyXIzRIvEyLUBK34
+         zfX7jJs9m5l7hjl0Vud6F6I9B5N8dKK5QvDMW8Bs=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4139D60791;
+        Wed,  1 May 2019 02:23:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556677413;
+        bh=M0FF3TXXaUXbPylVg3FjoIfzAdVn+sfMksEWs8DGXjI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=U2vGNGZ4NX/LB65kPk6v1n4BrMKnf3n3aPQLJIsQQdkndO8zzs9hv8QhT/pPMX4P5
+         X4kWUJMI5NvBlc7yaUDBwG1Wuu989L6nXPUlUPVJH5Gd4un8Q3bzjM36FomBTfJb3Q
+         FKPDbhioKSwzRDuXNiBt2zgZ0yltaH2Cw+8ymB4c=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4139D60791
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, david.brown@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v3 0/6] MSM8998 Multimedia Clock Controller
+Date:   Tue, 30 Apr 2019 20:23:24 -0600
+Message-Id: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019, Greg KH wrote:
+The multimedia clock controller (mmcc) is the main clock controller for
+the multimedia subsystem and is required to enable things like display and
+camera.
 
-> > >>  drivers/tty/serial/dz.c | 8 ++++----
-> > > 
-> > > Do you have this hardware to test any of these changes with?
-> > 
-> > Unfortunately not :(
-> 
-> Then I can take the "basic" types of patches for the driver (like this
-> one), but not any others, sorry.
+v3:
+-Rebase onto linux-next to get the final version of the clk parent rewrite
+series
+-Moved the bindings header to the bindings patch per Rob
+-Made xo manditory for GCC to work around the lack of clk orphan probe defer
+to avoid the uart console glitch
 
- I can verify changes to dz.c, sb1250-duart.c and zs.c with real hardware, 
-but regrettably not right away: the hardware is in a remote location and 
-while I have it wired for remote operation unfortunately its connectivity 
-has been cut off by an unfriendly ISP.
+v2:
+-Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+mechanisms introduced there.
+-Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+"incorrectly" during late init
+-Corrected the name of the XO clock to "xo"
+-Dropped the fake XO clock in GCC to prevent a namespace conflict
+-Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+-Cleaned up the weird newlines in the added DT node
+-Added DT header file to msm8998 DT for future clients
 
- I'm not sure if all the changes make sense though: if there is a compiler 
-warning or a usability issue, then a patch is surely welcome, otherwise: 
-"If it ain't broke, don't fix it".
+Jeffrey Hugo (6):
+  dt-bindings: clock: Document external clocks for MSM8998 gcc
+  arm64: dts: msm8998: Add xo clock to gcc node
+  clk: qcom: smd: Add XO clock for MSM8998
+  dt-bindings: clock: Add support for the MSM8998 mmcc
+  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+  arm64: dts: qcom: msm8998: Add mmcc node
 
-  Maciej
+ .../devicetree/bindings/clock/qcom,gcc.txt    |   10 +
+ .../devicetree/bindings/clock/qcom,mmcc.txt   |   21 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |   16 +
+ drivers/clk/qcom/Kconfig                      |    9 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/clk-smd-rpm.c                |   24 +-
+ drivers/clk/qcom/gcc-msm8998.c                |   29 +-
+ drivers/clk/qcom/mmcc-msm8998.c               | 2915 +++++++++++++++++
+ include/dt-bindings/clock/qcom,mmcc-msm8998.h |  210 ++
+ 9 files changed, 3214 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+
+-- 
+2.17.1
+
