@@ -2,246 +2,108 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FABFC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BA7C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537A020652
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:37:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfkImD+B"
+	by mail.kernel.org (Postfix) with ESMTP id 4C07420652
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 18:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfEAShf (ORCPT
+        id S1726193AbfEASi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 14:37:35 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:50745 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfEAShf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 14:37:35 -0400
-Received: by mail-it1-f194.google.com with SMTP id q14so121300itk.0;
-        Wed, 01 May 2019 11:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uy+iWBx+WW6EJbfrO+sYIngfp35VvBvZMQR7Mxibfh8=;
-        b=EfkImD+Bve2AkbZWHWfiW54XbW2+cDyaeJktUqG7AUIm1COpQ7IgvnJC9rXv9VdYxb
-         DNZQcpymHYaiR/xoOrfBTjEtRO+jGTtKNn1z6rDwf4YFpTNiP5qQLAUdnjm1iawVBMY/
-         N6IoCQAIWxP29JXWcXBXa56oLrB11x18o3HO28Nw2I9CZac2BfgkqmZjxHzMkFDYCw3o
-         SF+B0MknNV9/cj/RK25F9XDnw4RJ7aOVKTwn4EwucP2sug/f8u9PEzHaSsBUDgcnu3Y/
-         XD9BkZYgkLlObNzCFO1L6jrSH1YlE8uKsV84bnpktV8DUj7jkHUmFsu3l42oDRUDMVI6
-         kmGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uy+iWBx+WW6EJbfrO+sYIngfp35VvBvZMQR7Mxibfh8=;
-        b=Jiu1yLWrP7ghsya7itTFSUlUEG7oFGE/iCSEIslXrmMXJYF0Bj9xVah3/tQzyQzLBj
-         9vTVcjeKNDpTF08s4JIwsl6w3z1ghO4HilpttYjwRinXp2ingTMJqjHSBasLJmVv4i20
-         aKLBSd/kBfstZ4QIhJgUjN+nZdFCYhVGOS90yolv/IXDTJzvEBrezVG65pO5pyAehdK2
-         7aWUsw3Xz+2WdQKLcFRJwzcKBddSF551TRIuT63Z24pVTir1POeGPWdAGL5yXfQ0naXs
-         /ftDdAoV4PlUqDp9UPRkPwQWxHRvZesb2wU0FetuSnZ35eCP86STYnQexIxgHzpoKTn/
-         jCmg==
-X-Gm-Message-State: APjAAAW6hK5ruEoTB4uc5MzM/ZDGtuWacUbtWdAAy3N64oPRH8QPz8Bi
-        0fwl+2Iy5CEjtpcpuoqE2JK+f+xWKWEn/KjXHOvhQmif
-X-Google-Smtp-Source: APXvYqxocDr/k4e6yFxb894ZheCA6S/wbtZAuYtRXtMYKK7NJ9+M8eG//wjx0Ci5R6kiQyMRJMfF5VpU5VBC1IznuDc=
-X-Received: by 2002:a24:9412:: with SMTP id j18mr3717991ite.61.1556735854416;
- Wed, 01 May 2019 11:37:34 -0700 (PDT)
+        Wed, 1 May 2019 14:38:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39556 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfEASi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 14:38:56 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 935233082E6A;
+        Wed,  1 May 2019 18:38:56 +0000 (UTC)
+Received: from redhat.com (ovpn-126-26.rdu2.redhat.com [10.10.126.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C3D031001DE1;
+        Wed,  1 May 2019 18:38:54 +0000 (UTC)
+Date:   Wed, 1 May 2019 14:38:51 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH] mm/hmm: add ARCH_HAS_HMM_MIRROR ARCH_HAS_HMM_DEVICE
+ Kconfig
+Message-ID: <20190501183850.GA4018@redhat.com>
+References: <20190417211141.17580-1-jglisse@redhat.com>
 MIME-Version: 1.0
-References: <CA+8F9hicnF=kvjXPZFQy=Pa2HJUS3JS+G9VswFHNQQynPMHGVQ@mail.gmail.com>
- <20190424193903.swlfmfuo6cqnpkwa@dcvr> <20190427093319.sgicqik2oqkez3wk@dcvr>
- <CABeXuvrY9QdvF1gTfiMt-eVp7VtobwG9xzjQFkErq+3wpW_P3Q@mail.gmail.com>
- <20190428004858.el3yk6hljloeoxza@dcvr> <20190429204754.hkz7z736tdk4ucum@linux-r8p5>
- <20190429210427.dmfemfft2t2gdwko@dcvr> <CABeXuvqpAjk8ocRUabVU4Yviv7kgRkMneLE1Xy-jAtHdXAHBVw@mail.gmail.com>
- <20190501021405.hfvd7ps623liu25i@dcvr> <20190501073906.ekqr7xbw3qkfgv56@dcvr>
-In-Reply-To: <20190501073906.ekqr7xbw3qkfgv56@dcvr>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 1 May 2019 11:37:23 -0700
-Message-ID: <CABeXuvq7gCV2qPOo+Q8jvNyRaTvhkRLRbnL_oJ-AuK7Sp=P3QQ@mail.gmail.com>
-Subject: Re: Strange issues with epoll since 5.0
-To:     Eric Wong <e@80x24.org>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>, Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190417211141.17580-1-jglisse@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 01 May 2019 18:38:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for trying the fix.
+Andrew just the patch that would be nice to get in 5.2 so i can fix
+device driver Kconfig before doing the real update to mm HMM Kconfig
 
-So here is my analysis:
-
-Let's start with epoll_pwait:
-
-ep_poll() is what checks for signal_pending() and is responsible for
-setting errno to -EINTR when there is a signal.
-
-So if a signal is received after ep_poll(), it is never noticed by the
-syscall during execution.
-
-Moreover, the original code before
-854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add
-restore_user_sigmask()"), had the following call flow:
-
-     error = do_epoll_wait(epfd, events, maxevents, timeout);
-
-**** Here error = 0 if the signal is received after ep_poll().
-
--       /*
--        * If we changed the signal mask, we need to restore the original one.
--        * In case we've got a signal while waiting, we do not restore the
--        * signal mask yet, and we allow do_signal() to deliver the signal on
--        * the way back to userspace, before the signal mask is restored.
--        */
--       if (sigmask) {
--               if (error == -EINTR) {
--                       memcpy(&current->saved_sigmask, &sigsaved,
--                              sizeof(sigsaved));
--                       set_restore_sigmask();
--               } else
-
-**** Execution reaches this else statement and the sigmask is restored
-directly, ignoring the newly generated signal. The signal is never
-handled.
-
--                       set_current_blocked(&sigsaved);
--       }
-
-In the current execution flow:
-
-    error = do_epoll_wait(epfd, events, maxevents, timeout);
-
-**** error is still 0 as ep_poll() did not detect the signal.
-
-restore_user_sigmask(sigmask, &sigsaved, error == -EITNR);
-
-void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
-{
-
-        if (!usigmask)
-                return;
-        /*
-         * When signals are pending, do not restore them here.
-         * Restoring sigmask here can lead to delivering signals that the above
-         * syscalls are intended to block because of the sigmask passed in.
-         */
-        if (signal_pending(current)) {
-
-**** execution path reaches here and do_signal() actually delivers the
-signal to userspace. But the errno is not set. So the userspace fails
-to notice it.
-
-                current->saved_sigmask = *sigsaved;
-                set_restore_sigmask();
-                return;
-        }
-
-        /*
-         * This is needed because the fast syscall return path does not restore
-         * saved_sigmask when signals are not pending.
-         */
-        set_current_blocked(sigsaved);
-}
-
-For other syscalls in the same commit:
-
-sys_io_pgetevents() does not seem to have this problem as we are still
-checking signal_pending() here.
-sys_pselect6() seems to have a similar problem. The changes to
-sys_pselect6() also impact sys_select() as the changes are in the
-common code path.
-
-So the 854a6ed56839a40f6 seems to be better than the original code in
-that it detects the signal. But, the problem is that it doesn't
-communicate it to the userspace.
-
-So a patch like below solves the problem. This is incomplete. I'll
-verify and send you a proper fix you can test soon. This is just for
-the sake of discussion:
-
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 4a0e98d87fcc..63a387329c3d 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -2317,7 +2317,7 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
-epoll_event __user *, events,
-                int, maxevents, int, timeout, const sigset_t __user *, sigmask,
-                size_t, sigsetsize)
- {
--       int error;
-+       int error, signal_detected;
-        sigset_t ksigmask, sigsaved;
-
-        /*
-@@ -2330,7 +2330,10 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
-epoll_event __user *, events,
-
-        error = do_epoll_wait(epfd, events, maxevents, timeout);
-
--       restore_user_sigmask(sigmask, &sigsaved);
-+       signal_detected = restore_user_sigmask(sigmask, &sigsaved);
-+
-+       if (signal_detected && !error)
-+               return -EITNR;
-
-        return error;
- }
-@@ -2342,7 +2345,7 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
-                        const compat_sigset_t __user *, sigmask,
-                        compat_size_t, sigsetsize)
- {
--       long err;
-+       long err, signal_detected;
-        sigset_t ksigmask, sigsaved;
-
-        /*
-@@ -2355,7 +2358,10 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
-
-        err = do_epoll_wait(epfd, events, maxevents, timeout);
-
--       restore_user_sigmask(sigmask, &sigsaved);
-+       signal_detected = restore_user_sigmask(sigmask, &sigsaved);
-+
-+       if (signal_detected && !err)
-+               return -EITNR;
-
-        return err;
- }
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 3a9e41197d46..c76ab2a52ebf 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2849,11 +2849,11 @@ EXPORT_SYMBOL(set_compat_user_sigmask);
-  * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
-  * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
-  */
--void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
-+int restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
- {
-
-        if (!usigmask)
--               return;
-+               return 0;
-        /*
-         * When signals are pending, do not restore them here.
-         * Restoring sigmask here can lead to delivering signals that the above
-@@ -2862,7 +2862,7 @@ void restore_user_sigmask(const void __user
-*usigmask, sigset_t *sigsaved)
-        if (signal_pending(current)) {
-                current->saved_sigmask = *sigsaved;
-                set_restore_sigmask();
--               return;
-+               return 0;
-        }
-
--Deepa
+On Wed, Apr 17, 2019 at 05:11:41PM -0400, jglisse@redhat.com wrote:
+> From: Jérôme Glisse <jglisse@redhat.com>
+> 
+> This patch just add 2 new Kconfig that are _not use_ by anyone. I check
+> that various make ARCH=somearch allmodconfig do work and do not complain.
+> This new Kconfig need to be added first so that device driver that do
+> depend on HMM can be updated.
+> 
+> Once drivers are updated then i can update the HMM Kconfig to depends
+> on this new Kconfig in a followup patch.
+> 
+> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Leon Romanovsky <leonro@mellanox.com>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  mm/Kconfig | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 25c71eb8a7db..daadc9131087 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -676,6 +676,22 @@ config ZONE_DEVICE
+>  
+>  	  If FS_DAX is enabled, then say Y.
+>  
+> +config ARCH_HAS_HMM_MIRROR
+> +	bool
+> +	default y
+> +	depends on (X86_64 || PPC64)
+> +	depends on MMU && 64BIT
+> +
+> +config ARCH_HAS_HMM_DEVICE
+> +	bool
+> +	default y
+> +	depends on (X86_64 || PPC64)
+> +	depends on MEMORY_HOTPLUG
+> +	depends on MEMORY_HOTREMOVE
+> +	depends on SPARSEMEM_VMEMMAP
+> +	depends on ARCH_HAS_ZONE_DEVICE
+> +	select XARRAY_MULTI
+> +
+>  config ARCH_HAS_HMM
+>  	bool
+>  	default y
+> -- 
+> 2.20.1
+> 
