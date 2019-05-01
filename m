@@ -2,95 +2,68 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433F2C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C178EC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0C82089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997022089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfEAUae (ORCPT
+        id S1726193AbfEAUby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:30:34 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:60931 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfEAUae (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:30:34 -0400
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id BE03B240008;
-        Wed,  1 May 2019 20:30:23 +0000 (UTC)
-Date:   Wed, 1 May 2019 22:30:23 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Trent Piepho <tpiepho@impinj.com>
-Cc:     "patrice.chotard@st.com" <patrice.chotard@st.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] rtc: st-lpc: remove unnecessary check
-Message-ID: <20190501203023.GL11339@piout.net>
-References: <20190430201834.12634-1-alexandre.belloni@bootlin.com>
- <1556663479.31309.36.camel@impinj.com>
- <20190501142513.GK11339@piout.net>
- <1556730703.31309.53.camel@impinj.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556730703.31309.53.camel@impinj.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Wed, 1 May 2019 16:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfEAUbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 16:31:53 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C8CD20656;
+        Wed,  1 May 2019 20:31:53 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1hLvtQ-0006Y2-Ah; Wed, 01 May 2019 16:31:52 -0400
+Message-Id: <20190501202830.347656894@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Wed, 01 May 2019 16:28:30 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [RFC][PATCH 0/2] ftrace/x86: Allow for breakpoint handlers to emulate call functions
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/05/2019 17:11:44+0000, Trent Piepho wrote:
-> > I can't believe you can possibly have more than one second between the
-> > check in the core and the check in the driver, it doesn't make much
-> > sense to check, even in the current state of the core.
-> 
-> It's certainly possible to have multiple seconds pass.  For an external
-> device over SPI or I2C, one has to wait for the bus to become free. 
-> And on SPI that requires the kernel thread running the bus to be 
-> scheduled.  Just put in some real-time tasks and maybe a big transfer
-> to a flash chip and it could be a while before that happens.
-> 
-> I don't think this device has that issue as I don't think it's
-> external.  And ever for a device on an external bus, delays > 1 second
-> are unlikely.  Possible, but unlikely.
-> 
-> You can also get them when Linux is running under a hypervisor, i.e. a
-> Linux VM.  But also something like an NMI and ACPI BIOS.  If the Linux
-> guest is not scheduled to run for while anything that is supposed to be
-> based on real time, like the value returned by an RTC, will still
-> advance.  It is possible that multiple seconds elapse from the guest
-> CPU executing one instruction to the next.
-> 
-> But even ignoring that, does it require > 1 second to elapse.  Can't it
-> happen when the clock ticks from one second to the next, which happens
-> effectively instantly?
-> 
-> If the time from the check to the time when the alarm is set is 1
-> microsecond, and the time this call to set the alarm is made is
-> randomly done and not synchronized to the RTC, then isn't there a 1 out
-> of 1 million chance (1 microsecond / 1 second), that the once per
-> second clock tick will hit our 1 us window?
 
-No, let's say you want Talarm == Tcurrent + 1, if the core check happens
-right before the next second, then you necessarily end up with
-Talarm == Tcurrent after the check. This means that you now have one
-second before the time read in st-lpc to avoid the
-alarm_secs -= now_secs; underflow.
+I split Peter's patch up into two. One that implements the gap in the
+breakpoint handler, and supplies the helper functions. And the other one
+that adds ftrace as the user of that code.
 
-Obviously, in that case, you are likely to miss the alarm but this is as
-likely to happen with the check that is in the driver. This check
-doesn't provide anything but a false sense of security.
+Peter, I need an offical "Signed-off-by" from you for these.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+I'm currently running them through my full test suite (which will also
+test 32bit). If they work I think these may be the final set to go.
+
+Let me know if there's any issues.
+
+-- Steve
+
+
+
+Peter Zijlstra (2):
+      x86: Allow breakpoints to emulate call functions
+      ftrace/x86: Emulate call function while updating in breakpoint handler
+
+----
+ arch/x86/entry/entry_32.S            | 11 +++++++++++
+ arch/x86/entry/entry_64.S            | 14 ++++++++++++--
+ arch/x86/include/asm/text-patching.h | 20 ++++++++++++++++++++
+ arch/x86/kernel/ftrace.c             | 25 ++++++++++++++++++++-----
+ 4 files changed, 63 insertions(+), 7 deletions(-)
