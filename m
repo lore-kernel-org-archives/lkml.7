@@ -2,93 +2,111 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB842C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C29C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84437217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556699972;
-	bh=hsL6LTXn/4787Cieov8fFQD8yF7YnmKHX2pZJWiOiGE=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=lY1WJKw2c1vb2pa2T8P4SmWVKa9kEdIf2fWfegCEQQ+dUDS4tki0dpSOS23JtfN2A
-	 MVpgVNlGNnGEH2YokfDUr2dUOatL2/9vDrBPjktN6o/TVKdYQrFlVOHJe61mGX6cTn
-	 XqTE6fZoYpdTAaKgv0lfSIJcjIhr81uU3V3FNdoA=
+	by mail.kernel.org (Postfix) with ESMTP id 8553521734
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 08:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfEAIjb (ORCPT
+        id S1726213AbfEAImN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 04:39:31 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39409 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfEAIjb (ORCPT
+        Wed, 1 May 2019 04:42:13 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:28714 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725776AbfEAImN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 04:39:31 -0400
-Received: by mail-oi1-f196.google.com with SMTP id n187so13379533oih.6;
-        Wed, 01 May 2019 01:39:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8LW2GhzSCuZKTF5GZRiwaIj0ovgzsQ1pCVkKzVY4yMY=;
-        b=lO1wGanIlG6VaeqZLFDO/b6cWLmAHpd2nGsmm6Jnnak9lsIZijTA8U8I9Fmqu8/iY4
-         y528p80pKNOsFx85lYDCUJOUu73Ky1ocsBBn/P49noTCufRars7b+qgZGog5xkDvPp/w
-         ZOL9HdzzvjAkFS5vunY3hu48eu6PKhWAhBWuXTPHui9y51nCu+VQUrHGa3ELOQb4Dv90
-         9ITpIbc2cqYJWzIVk3DQOpjeob7xPb1bdGaCSECtCcVUluAu51xv04hQeEicnR4qe2l8
-         xfS9+DzT1MuwSqKuv1iL0eDWZ8hdY84BFmIGDSvW9kd/b0cwPOUoZjB+q8YEnTes8O1f
-         Tkuw==
-X-Gm-Message-State: APjAAAV73UFUMuR0DhoePgRPegm1P8fqkpX53+dxcYHHMc1YhEIIyLqw
-        pnEqpjFrY/1V5w/eITPGNnvX2dAcKzF0uKhPlL9JoDUi
-X-Google-Smtp-Source: APXvYqwB3CY8o7/otJ306S5xVVYxPA2bfkoDWPHdOGqpRorGe2vrXXRZ1LYrHjOAPHcqL/M+FC5P9HaGcMXgFj3EVhg=
-X-Received: by 2002:aca:5304:: with SMTP id h4mr5666284oib.115.1556699970277;
- Wed, 01 May 2019 01:39:30 -0700 (PDT)
+        Wed, 1 May 2019 04:42:13 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-144-CW7NFOPjM2SPadXKTPuDJQ-1; Wed, 01 May 2019 09:41:58 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
+ 1 May 2019 09:41:57 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 1 May 2019 09:41:57 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Reshetova, Elena'" <elena.reshetova@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+CC:     Theodore Ts'o <tytso@mit.edu>, Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Thread-Index: AQHU9E1UquBTkhVACE2y3BuRFoekIqY8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA9yhg
+Date:   Wed, 1 May 2019 08:41:57 +0000
+Message-ID: <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
+References: <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
+ <20190416120822.GV11158@hirez.programming.kicks-ass.net>
+ <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
+ <20190416154348.GB3004@mit.edu>
+ <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
+ <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
+ <20190417151555.GG4686@mit.edu>
+ <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
+ <20190426140102.GA4922@mit.edu>
+ <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
+ <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
+ <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net>
+ <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 1 May 2019 10:39:19 +0200
-Message-ID: <CAJZ5v0i73At_cTv2FJEgSzcqnWUuVnDY-cyX5XWDGFw1f9fnQA@mail.gmail.com>
-Subject: [GIT PULL] ACPI fix for v5.1-rc8
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: CW7NFOPjM2SPadXKTPuDJQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+RnJvbTogUmVzaGV0b3ZhLCBFbGVuYQ0KPiBTZW50OiAzMCBBcHJpbCAyMDE5IDE4OjUxDQouLi4N
+Cj4gK3Vuc2lnbmVkIGNoYXIgcmFuZG9tX2dldF9ieXRlKHZvaWQpDQo+ICt7DQo+ICsgICAgc3Ry
+dWN0IHJuZF9idWZmZXIgKmJ1ZmZlciA9ICZnZXRfY3B1X3ZhcihzdGFja19yYW5kX29mZnNldCk7
+DQo+ICsgICAgdW5zaWduZWQgY2hhciByZXM7DQo+ICsNCj4gKyAgICBpZiAoYnVmZmVyLT5ieXRl
+X2NvdW50ZXIgPj0gUkFORE9NX0JVRkZFUl9TSVpFKSB7DQo+ICsgICAgICAgIGdldF9yYW5kb21f
+Ynl0ZXMoJihidWZmZXItPmJ1ZmZlciksIHNpemVvZihidWZmZXItPmJ1ZmZlcikpOw0KPiArICAg
+ICAgICBidWZmZXItPmJ5dGVfY291bnRlciA9IDA7DQo+ICsgICAgfQ0KPiArDQo+ICsgICAgcmVz
+ID0gYnVmZmVyLT5idWZmZXJbYnVmZmVyLT5ieXRlX2NvdW50ZXJdOw0KPiArICAgIGJ1ZmZlci0+
+YnVmZmVyW2J1ZmZlci0+Ynl0ZV9jb3VudGVyXSA9IDA7DQoNCklmIGlzIHJlYWxseSB3b3J0aCBk
+aXJ0eWluZyBhIGNhY2hlIGxpbmUgdG8gemVybyBkYXRhIHdlJ3ZlIHVzZWQ/DQpUaGUgdW51c2Vk
+IGJ5dGVzIGZvbGxvd2luZyBhcmUgbXVjaCBtb3JlIGludGVyZXN0aW5nLg0KDQpBY3R1YWxseSBp
+ZiB5b3UgZ290ICdieXRlX2NvdW50ZXInIGludG8gYSBjb21wbGV0ZWx5IGRpZmZlcmVudA0KYXJl
+YSBvZiBtZW1vcnkgKGluIGRhdGEgdGhhdCBpcyBjaGFuZ2VkIG1vcmUgb2Z0ZW4gdG8gYXZvaWQN
+CmRpcnR5aW5nIGFuIGV4dHJhIGNhY2hlIGxpbmUpIHRoZW4gbm90IHplcm9pbmcgdGhlIHVzZWQg
+ZGF0YQ0Kd291bGQgbWFrZSBpdCBoYXJkZXIgdG8gZGV0ZXJtaW5lIHdoaWNoIGJ5dGUgd2lsbCBi
+ZSB1c2VkIG5leHQuDQoNCkknbSBhbHNvIGd1ZXNzaW5nIHRoYXQgZ2V0X2NwdV92YXIoKSBkaXNh
+YmxlcyBwcmUtZW1wdGlvbj8NClRoaXMgY29kZSBjb3VsZCBwcm9iYWJseSBydW4gJ2Zhc3QgYW5k
+IGxvb3NlJyBhbmQganVzdCBpZ25vcmUNCnRoZSBmYWN0IHRoYXQgcHJlLWVtcHRpb24gd291bGQg
+aGF2ZSBvZGQgZWZmZWN0cy4NCkFsbCBpdCB3b3VsZCBkbyBpcyBwZXJ0dXJiIHRoZSByYW5kb21u
+ZXNzIQ0KDQoJRGF2aWQNCg0KDQo+ICsgICAgYnVmZmVyLT5ieXRlX2NvdW50ZXIgKys7DQo+ICsg
+ICAgIHB1dF9jcHVfdmFyKHN0YWNrX3JhbmRfb2Zmc2V0KTsNCj4gKyAgICByZXR1cm4gcmVzOw0K
+PiArfQ0KPiArRVhQT1JUX1NZTUJPTChyYW5kb21fZ2V0X2J5dGUpOw0KDQotDQpSZWdpc3RlcmVk
+IEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5l
+cywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-Please pull from the tag
-
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.1-rc8
-
-with top-most commit 2c2a2fb1e2a9256714338875bede6b7cbd4b9542
-
- Revert "ACPICA: Clear status of GPEs before enabling them"
-
-on top of commit 37624b58542fb9f2d9a70e6ea006ef8a5f66c30b
-
- Linux 5.1-rc7
-
-to receive an ACPI fix for 5.1-rc8 (or final 5.1).
-
-This reverts a recent ACPICA change that caused initialization to
-fail on systems with Thunderbolt docking stations connected at the
-init time.
-
-Thanks!
-
-
----------------
-
-Rafael J. Wysocki (1):
-      Revert "ACPICA: Clear status of GPEs before enabling them"
-
----------------
-
- drivers/acpi/acpica/evgpe.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
