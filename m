@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0
 	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F73FC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0BBC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5999720656
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59E120675
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfEAUhv (ORCPT
+        id S1726376AbfEAUiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:37:51 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:56214 "EHLO inva021.nxp.com"
+        Wed, 1 May 2019 16:38:00 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37260 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfEAUhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:37:50 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 31E52200068;
-        Wed,  1 May 2019 22:37:49 +0200 (CEST)
+        id S1726088AbfEAUiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 16:38:00 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 19DDF1A02B4;
+        Wed,  1 May 2019 22:37:58 +0200 (CEST)
 Received: from smtp.na-rdc02.nxp.com (inv1260.us-phx01.nxp.com [134.27.49.11])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EDEE420002A;
-        Wed,  1 May 2019 22:37:48 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D2C901A000D;
+        Wed,  1 May 2019 22:37:57 +0200 (CEST)
 Received: from someleo.am.freescale.net (someleo.am.freescale.net [10.81.32.93])
-        by inv1260.us-phx01.nxp.com (Postfix) with ESMTP id 376E640A63;
-        Wed,  1 May 2019 13:37:48 -0700 (MST)
+        by inv1260.us-phx01.nxp.com (Postfix) with ESMTP id 1D22D40A63;
+        Wed,  1 May 2019 13:37:57 -0700 (MST)
 From:   Li Yang <leoyang.li@nxp.com>
 To:     arm@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         shawnguo@kernel.org
-Subject: [GIT PULL] fixes to soc/fsl drivers for v5.1
-Date:   Wed,  1 May 2019 15:37:48 -0500
-Message-Id: <20190501203748.5393-1-leoyang.li@nxp.com>
+Subject: [GIT PULL] updates to soc/fsl drivers for v5.2
+Date:   Wed,  1 May 2019 15:37:56 -0500
+Message-Id: <20190501203756.5443-1-leoyang.li@nxp.com>
 X-Mailer: git-send-email 2.17.1
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,10 +45,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi arm-soc maintainers,
 
-Please help to merge the following fix for soc/fsl drivers.
+Please help to merge for-next patches for the upcoming merge window.  Thanks
 
-Thanks,
+Regards,
 Leo
+
 
 The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
@@ -56,21 +57,67 @@ The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-fix-v5.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-next-v5.2
 
-for you to fetch changes up to 5674a92ca4b7e5a6a19231edd10298d30324cd27:
+for you to fetch changes up to 1c8f39946c033de08e382025d7ac7f55fbca57eb:
 
-  soc/fsl/qe: Fix an error code in qe_pin_request() (2019-04-02 18:02:48 -0500)
-
-----------------------------------------------------------------
-NXP/FSL soc driver fixes for v5.1
-
-QE drivers
-- Fix an error path in qe_pin_request()
+  soc: fsl: qbman_portals: add APIs to retrieve the probing status (2019-05-01 15:09:59 -0500)
 
 ----------------------------------------------------------------
-Dan Carpenter (1):
-      soc/fsl/qe: Fix an error code in qe_pin_request()
+NXP/FSL SoC driver updates for v5.2
 
- drivers/soc/fsl/qe/gpio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+DPAA2 Console driver
+- Add driver to export two char devices to dump logs for MC and
+  AIOP
+
+DPAA2 DPIO driver
+- Add support for memory backed QBMan portals
+- Increase the timeout period to prevent false error
+- Add APIs to retrieve QBMan portal probing status
+
+DPAA Qman driver
+- Only make liodn fixup on powerpc SoCs with PAMU iommu
+
+Guts driver
+- Add definition for LX2160a SoC
+
+----------------------------------------------------------------
+Ioana Ciornei (2):
+      Documentation: DT: Add entry for DPAA2 console
+      soc: fsl: add DPAA2 console support
+
+Laurentiu Tudor (2):
+      soc: fsl: qman: fixup liodns only on ppc targets
+      soc: fsl: qbman_portals: add APIs to retrieve the probing status
+
+Roy Pledge (2):
+      bus: mc-bus: Add support for mapping shareable portals
+      soc: fsl: dpio: Add support for memory backed QBMan portals
+
+Vabhav Sharma (1):
+      soc: fsl: guts: Add definition for LX2160A
+
+Youri Querry (1):
+      soc: fsl: dpio: Increase timeout for QBMan Management Commands
+
+ .../devicetree/bindings/misc/fsl,dpaa2-console.txt |  11 +
+ MAINTAINERS                                        |   1 +
+ drivers/bus/fsl-mc/dprc.c                          |  30 +-
+ drivers/bus/fsl-mc/fsl-mc-bus.c                    |  15 +-
+ drivers/bus/fsl-mc/fsl-mc-private.h                |  17 +-
+ drivers/soc/fsl/Kconfig                            |  10 +
+ drivers/soc/fsl/Makefile                           |   1 +
+ drivers/soc/fsl/dpaa2-console.c                    | 329 +++++++++++++++++++++
+ drivers/soc/fsl/dpio/dpio-driver.c                 |  23 +-
+ drivers/soc/fsl/dpio/qbman-portal.c                | 148 +++++++--
+ drivers/soc/fsl/dpio/qbman-portal.h                |   9 +-
+ drivers/soc/fsl/guts.c                             |   6 +
+ drivers/soc/fsl/qbman/bman_portal.c                |  20 +-
+ drivers/soc/fsl/qbman/qman_ccsr.c                  |   2 +-
+ drivers/soc/fsl/qbman/qman_portal.c                |  21 +-
+ drivers/soc/fsl/qbman/qman_priv.h                  |   9 +-
+ include/soc/fsl/bman.h                             |   8 +
+ include/soc/fsl/qman.h                             |   9 +
+ 18 files changed, 618 insertions(+), 51 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt
+ create mode 100644 drivers/soc/fsl/dpaa2-console.c
