@@ -2,120 +2,109 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69351C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B2C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375C020866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA5320866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PYTnRD1j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWZ3Tyz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfEADlC (ORCPT
+        id S1726115AbfEADnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 23:41:02 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59107 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfEADlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 23:41:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44v41M23gFz9s55;
-        Wed,  1 May 2019 13:40:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556682059;
-        bh=8/XWx6sTUgF3n+CQYAwAK2rz3oF1AniFXec/UrIaKoU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PYTnRD1j05cpZNgnouPOZxI2LE0Q/a8toRyA0/QUVtb8v1kzwLcnXLd9UYHpEadEE
-         zV2NwIt5nLO1hSF823ITo54wVvvF5rjuFgDmRCm+fh4ZKIrMcTlONCatxL9u/9/IUZ
-         StEn07m90jAkYHleo5Hg9BcrY+vU0xgxDDEbENmMiozm0fiP+i0EpzQIA+TPxCuItM
-         fOzmvyv7wDczI/NcakxbGOkxMBltqSgEHyzf5givh9eSzMqOgjsGsa2Wg/oyZIAKeK
-         JPpTRbhtfWbk8i8kNmIaxcoC8yTHgsbqmxNzl0qof0kaSenwp8BRiNaFnL+vKpHKue
-         1vm8ZLg01sZxA==
-Date:   Wed, 1 May 2019 13:40:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOp?= =?UTF-8?B?cm9u?= 
-        <peron.clem@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jeff LaBundy <jeff@labundy.com>
-Subject: linux-next: manual merge of the input tree with the arm-soc tree
-Message-ID: <20190501134054.4271616e@canb.auug.org.au>
+        Tue, 30 Apr 2019 23:43:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34915 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfEADnP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Apr 2019 23:43:15 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h1so7801543pgs.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2019 20:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PZNK8TQA6QxASDcv10s+KmD7Rn3kLnmZaWKpog8pPPs=;
+        b=DWZ3Tyz6M6dt6LbxZV1HGVLIzfXTQEEs+kmUxjPEnVWZ0cnnQ9Yj9SS3WgdMmR93R6
+         DZwRjmuhrTuWH8lN3NvFeLB1zzh0I5qZonPMKc/g4KHXQE0kD8VHTIsUZVvnjQV4ImrD
+         M93pCPAoXIXaZATvRh6tiKgnW3k0QputsjYvZNOIC0+PSyrC9f4JW84O4LA5SrCgq747
+         iy29eonVGYCUzyd6Gt4DycC3Z6HmuoTWRU2F2/xq3Kymz+54dIqBqcNEtNPmIXCcR/GM
+         tj3NghJvAHCGxO+mCCE3gEsL6gPDZdDbWy1RZP5y+PCmlT+u2zAJ8B/CpA61L7Pg/bQj
+         Au5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PZNK8TQA6QxASDcv10s+KmD7Rn3kLnmZaWKpog8pPPs=;
+        b=VAqRZKhDul1jbk9LJ26tHFEgKgBIwspwf0Rm9r13KMjHPG8+mX/tjeTZEDYbwA0B2w
+         VRRLD3yERyfLGct+TNrPdBoTXG8D0hE46TwbzMvBMX65cXGjNnyvgvSy5pUafyp9O+n8
+         CBezgzWYFpCDLq/gU5+knRweOIndScSeLXZadcLTYaxle1L66Me7Eii+zL2kDYYlFvzr
+         HoLgg3mtn019NqzAffmMSkLSJjdE39VFadnJ0N+rAqKAPSRU7tMiVDvgDntB9+47YXPZ
+         dJDzPcxccCDzuJo41TVcFJI2pc1RoJEgyBhuIddy2XzpmgXsgGgbBL3Onk1fxUxovaKT
+         ZZow==
+X-Gm-Message-State: APjAAAUTX8PTIhCtHkBaqZPPXg5Iy0iYB49nCucbwMUM7H5juo6uM6/p
+        N+UdYOnSPbiw2IcdjLj9wUnI+Q==
+X-Google-Smtp-Source: APXvYqyIzd9mFhheIg0Jy9agsnkv1bpzxwGdFd9FfLoyMeJtZ4BIsJ13C1S1WTPgB7fVpH/TmgKvwg==
+X-Received: by 2002:a63:6fcf:: with SMTP id k198mr70433161pgc.158.1556682194666;
+        Tue, 30 Apr 2019 20:43:14 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y3sm15333736pfe.9.2019.04.30.20.43.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 20:43:13 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 20:43:14 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, agross@kernel.org,
+        marc.w.gonzalez@free.fr, david.brown@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] clk: qcom: Add MSM8998 Multimedia Clock
+ Controller (MMCC) driver
+Message-ID: <20190501034314.GE2938@tuxbook-pro>
+References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
+ <1556677642-29428-1-git-send-email-jhugo@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/UWQNxjObisc6mUEj5M3b=YF"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556677642-29428-1-git-send-email-jhugo@codeaurora.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UWQNxjObisc6mUEj5M3b=YF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue 30 Apr 19:27 PDT 2019, Jeffrey Hugo wrote:
+> +static const struct of_device_id mmcc_msm8998_match_table[] = {
+> +	{ .compatible = "qcom,mmcc-msm8998" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mmcc_msm8998_match_table);
+> +
+> +static int mmcc_msm8998_probe(struct platform_device *pdev)
+> +{
+> +	struct regmap *regmap;
+> +
 
-Hi Dmitry,
+Don't you want to wait for "xo" here as well?
 
-Today's linux-next merge of the input tree got a conflict in:
+> +	regmap = qcom_cc_map(pdev, &mmcc_msm8998_desc);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	return qcom_cc_really_probe(pdev, &mmcc_msm8998_desc, regmap);
+> +}
+[..]
+> +MODULE_DESCRIPTION("QCOM MMCC MSM8998 Driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:mmcc-msm8998");
 
-  Documentation/devicetree/bindings/vendor-prefixes.txt
+MODULE_DEVICE_TABLE() will provide the alias for module auto loading, so
+drop this.
 
-between commit:
-
-  2c98d9e47533 ("dt-bindings: vendor-prefixes: add AZW")
-
-from the arm-soc tree and commit:
-
-  7b5bb55d0dad ("Input: add support for Azoteq IQS550/572/525")
-
-from the input tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/devicetree/bindings/vendor-prefixes.txt
-index 5f2b185a04e6,51f99549161e..000000000000
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@@ -54,7 -53,7 +54,8 @@@ avic	Shanghai AVIC Optoelectronics Co.
-  avnet	Avnet, Inc.
-  axentia	Axentia Technologies AB
-  axis	Axis Communications AB
-+ azoteq	Azoteq (Pty) Ltd
- +azw     Shenzhen AZW Technology Co., Ltd.
-  bananapi BIPAI KEJI LIMITED
-  bhf	Beckhoff Automation GmbH & Co. KG
-  bitmain	Bitmain Technologies
-
---Sig_/UWQNxjObisc6mUEj5M3b=YF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzJFUYACgkQAVBC80lX
-0GwG8gf+PSn5NwiucS2UN3Q5cHfZXRaTVQjB78Dkpj3XTPbyFqg7SVpsas3Ct9Ns
-8OjTx6pYCJp1tWvhxYAwqRVqETe9NmBDB3o4Xh9yOnqim16XqjihKG9dI8zGnpGC
-hRvvtAYJA4cRK8vvfjJyH+AEakSdAsxeMT2f4ga0EiRbJzqA+w1xXANhPJaCb8i/
-IbfkkIJlm7BBDFASt8ffm20NZPBLCgw6W+FgwztU6YRT2GI+d1wxO+ntlAncoFtt
-5c6Rd4n0RVLoZk6zXXA/20Vbb/8C0hIa/QlGX9zOHykOb2dzAEIlBJ4eR41+gmo/
-M/lYHoOjepSUO1R3PU9dCCguMDsalg==
-=tn9Y
------END PGP SIGNATURE-----
-
---Sig_/UWQNxjObisc6mUEj5M3b=YF--
+Regards,
+Bjorn
