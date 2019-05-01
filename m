@@ -2,122 +2,184 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88972C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D65C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6686E21670
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B61821670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 14:02:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="wnTExwJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfEAN64 (ORCPT
+        id S1726572AbfEAOCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 09:58:56 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59756 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfEAN6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 09:58:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7424AA78;
-        Wed,  1 May 2019 06:58:54 -0700 (PDT)
-Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00E743F5AF;
-        Wed,  1 May 2019 06:58:51 -0700 (PDT)
-From:   Julien Grall <julien.grall@arm.com>
-To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, marc.zyngier@arm.com,
-        jason@lakedaemon.net, tglx@linutronix.de, joro@8bytes.org,
-        robin.murphy@arm.com, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org,
-        Julien Grall <julien.grall@arm.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: [PATCH v3 7/7] iommu/dma-iommu: Remove iommu_dma_map_msi_msg()
-Date:   Wed,  1 May 2019 14:58:24 +0100
-Message-Id: <20190501135824.25586-8-julien.grall@arm.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190501135824.25586-1-julien.grall@arm.com>
-References: <20190501135824.25586-1-julien.grall@arm.com>
+        Wed, 1 May 2019 10:02:31 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33310 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfEAOCa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 10:02:30 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e28so1647810wra.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 07:02:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TwsO2wFjZO2vvYlbEHyzdno1Dpggj2I7OM8g4T68ZR8=;
+        b=wnTExwJyZzK+XA1MJcx4Vm1SICd5aDt9tZg/ErnfQ4XbXW+xQcSGAaVaVCNWa0QTcC
+         aKohWqX3FEKfuNzJkNyiPDzrPyZfVe/EjCkN03lnOGzVgpzMo/tbUMvWXJHMUvN7fOmo
+         85cy8+7hkbSADq61UFQxm3y5t6BQeFJ2MgFjZVryYxb18sIHhJoWDg9ir/W9ga6EpWa3
+         1ftnI/dhzftaVhAOA1Wx7sGjNiRgD+2CxARoF2zEragj1DHq+xZF21kBFwiWB911YrVt
+         wUbgkZKEo3/PFzDe4+0rplTs9GHLimUWiAlatA8d0FhLwMwRZXlQvua+GPcbk4CJA3X4
+         WLBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TwsO2wFjZO2vvYlbEHyzdno1Dpggj2I7OM8g4T68ZR8=;
+        b=RdYZpeJv0IQYsyMsggxCBwXuULNE2DlQlgJlOUm1GfR0hS7R8tI8DL3mbVvtPbr5Lb
+         ZrFyFseLdcyNe497xzwEMOdANTl3Ot6csVzbb9cMe/1qPWYGfmH+WD5cnSDz8BII3vgg
+         A5PntwfmYUsuf4cMexgbR5dETsxkJ4p0+6lj+K7ffO7KKElD8uzbBWRB/2MM0FeL5IYN
+         pq4gkVOc9de7D0P23971waOlhh9/CONhkCuQVxmCxalzvmII4M/b/oMoKUNtcIeEfAUT
+         jHldUjB3npBgnId0WA4jGTStZCSrVfDXgSdMBMxdIyIodChiIEszPQrtmNXkzsvNcOF9
+         XKCg==
+X-Gm-Message-State: APjAAAXNKZGVN1DVqudkG4HT88vo9NDIw0G5FFbhIvIK0ADHCSoTx45V
+        MVoy/xCm5KWf6q/gJ2aDliKlAA==
+X-Google-Smtp-Source: APXvYqzjwuQ0bO4MsykfOZ//x/l/XUt08HE+WQ7h8mp0msWbAvZrrvU072ThfM4+YRD53yNX62wYYQ==
+X-Received: by 2002:adf:92e2:: with SMTP id 89mr15436366wrn.53.1556719348220;
+        Wed, 01 May 2019 07:02:28 -0700 (PDT)
+Received: from [172.20.1.104] ([217.38.71.146])
+        by smtp.gmail.com with ESMTPSA id p18sm32119901wrp.38.2019.05.01.07.02.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 07:02:27 -0700 (PDT)
+Subject: Re: [PATCH v2] bpftool: exclude bash-completion/bpftool from
+ .gitignore pattern
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Sirio Balmelli <sirio@b-ad.ch>, Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+        Yonghong Song <yhs@fb.com>,
+        Taeung Song <treeze.taeung@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Martin KaFai Lau <kafai@fb.com>, bpf@vger.kernel.org
+References: <1556718359-1598-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Quentin Monnet <quentin.monnet@netronome.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
+ 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
+ RHhSHGnKaQ6MfrTge5Q0h5A=
+Message-ID: <b550f762-5324-0bdb-7097-6bcf354b6d67@netronome.com>
+Date:   Wed, 1 May 2019 15:02:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1556718359-1598-1-git-send-email-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent change split iommu_dma_map_msi_msg() in two new functions. The
-function was still implemented to avoid modifying all the callers at
-once.
+2019-05-01 22:45 UTC+0900 ~ Masahiro Yamada <yamada.masahiro@socionext.com>
+> tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
+> intended to ignore the following build artifact:
+> 
+>   tools/bpf/bpftool/bpftool
+> 
+> However, the .gitignore entry is effective not only for the current
+> directory, but also for any sub-directories.
+> 
+> So, from the point of .gitignore grammar, the following check-in file
+> is also considered to be ignored:
+> 
+>   tools/bpf/bpftool/bash-completion/bpftool
+> 
+> As the manual gitignore(5) says "Files already tracked by Git are not
+> affected", this is not a problem as far as Git is concerned.
+> 
+> However, Git is not the only program that parses .gitignore because
+> .gitignore is useful to distinguish build artifacts from source files.
+> 
+> For example, tar(1) supports the --exclude-vcs-ignore option. As of
+> writing, this option does not work perfectly, but it intends to create
+> a tarball excluding files specified by .gitignore.
+> 
+> So, I believe it is better to fix this issue.
+> 
+> You can fix it by prefixing the pattern with a slash; the leading slash
+> means the specified pattern is relative to the current directory.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> Changes in v2:
+>   - Add more information to the commit log to clarify my main motivation
+>   - Touch "bpftool" pattern only
+> 
+>  tools/bpf/bpftool/.gitignore | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
+> index 67167e4..8248b8d 100644
+> --- a/tools/bpf/bpftool/.gitignore
+> +++ b/tools/bpf/bpftool/.gitignore
+> @@ -1,5 +1,5 @@
+>  *.d
+> -bpftool
+> +/bpftool
+>  bpftool*.8
+>  bpf-helpers.*
+>  FEATURE-DUMP.bpftool
+> 
 
-Now that all the callers have been reworked, iommu_dma_map_msi_msg() can
-be removed.
+Thanks a lot for the changes!
 
-Signed-off-by: Julien Grall <julien.grall@arm.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
----
-    Changes in v3:
-        - Add Robin's and Eric's reviewed-by
-
-    Changes in v2:
-        - Rework the commit message
----
- drivers/iommu/dma-iommu.c | 20 --------------------
- include/linux/dma-iommu.h |  5 -----
- 2 files changed, 25 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index f847904098f7..13916fefeb27 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -935,23 +935,3 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
- 	msg->address_lo &= cookie_msi_granule(domain->iova_cookie) - 1;
- 	msg->address_lo += lower_32_bits(msi_page->iova);
- }
--
--void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
--{
--	struct msi_desc *desc = irq_get_msi_desc(irq);
--	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
--
--	if (WARN_ON(iommu_dma_prepare_msi(desc, msi_addr))) {
--		/*
--		 * We're called from a void callback, so the best we can do is
--		 * 'fail' by filling the message with obviously bogus values.
--		 * Since we got this far due to an IOMMU being present, it's
--		 * not like the existing address would have worked anyway...
--		 */
--		msg->address_hi = ~0U;
--		msg->address_lo = ~0U;
--		msg->data = ~0U;
--	} else {
--		iommu_dma_compose_msi_msg(desc, msg);
--	}
--}
-diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
-index 0b781a98ee73..476e0c54de2d 100644
---- a/include/linux/dma-iommu.h
-+++ b/include/linux/dma-iommu.h
-@@ -84,7 +84,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr);
- void iommu_dma_compose_msi_msg(struct msi_desc *desc,
- 			       struct msi_msg *msg);
- 
--void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
- void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
- 
- #else
-@@ -124,10 +123,6 @@ static inline void iommu_dma_compose_msi_msg(struct msi_desc *desc,
- {
- }
- 
--static inline void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
--{
--}
--
- static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
- {
- }
--- 
-2.11.0
-
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
