@@ -2,140 +2,112 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FA7C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4B2C46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE4A20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0815920866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:37:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CEjb4MdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfEARfc (ORCPT
+        id S1726270AbfEARhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:35:32 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34486 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfEARfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:35:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2382780D;
-        Wed,  1 May 2019 10:35:31 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2DEA3F719;
-        Wed,  1 May 2019 10:35:29 -0700 (PDT)
-Date:   Wed, 1 May 2019 18:35:27 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zong@andestech.com" <zong@andestech.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
-Message-ID: <20190501173526.GH11740@lakrids.cambridge.arm.com>
-References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
- <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com>
- <20190501170053.GG11740@lakrids.cambridge.arm.com>
- <CAAhSdy2OuCb6wBrs-O=fTWo0D_CgwTztfV-kMDi=tPmSJhM7og@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhSdy2OuCb6wBrs-O=fTWo0D_CgwTztfV-kMDi=tPmSJhM7og@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Wed, 1 May 2019 13:37:00 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38751 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEARg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 13:36:59 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w11so8771406edl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 10:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=WQh6+iJ1c5LV37hewjiOUJ2VVaJB8K0iqnjk0rOcMbE=;
+        b=CEjb4MdJxi08K/sHDaK0eh5tzCmNnbKo8l7lks3hzoghFBcg/r6yFxaG++ZgfgWdOW
+         yhDjocgFxXdRp2TXI0xdQdK5/myMxON+Mu0JLn+NQ1dTx8bFetH/46D3fX3SPvCsbFnq
+         MJg+fKzdyXBskAw+hqszBABaL0ctbb+ffQuas=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WQh6+iJ1c5LV37hewjiOUJ2VVaJB8K0iqnjk0rOcMbE=;
+        b=U20xJiiGaNVKAawTH/0xBndb9VnSk3+v1gph7M78P29f42Ray9bNPMnREb50JVufLd
+         qUULg7an7XWs/c94oWL1gD3YfW3enibCqx1kpaWyeXuBOLELzkHOzK4cNY6v9rDbvqEO
+         GZqmgyWp45Yi9W7/0DdQvwMCDx34qElu2ht51fPgIdOlHu6snM66Gja7sucEnowICaif
+         aqOqxpDcfmFPI1bx1GuIKCiG2BPSQLiP4JEXa3M6q83sT66utzlin7tbDyuPSNSjZo+7
+         v1AQPHF+fSccYDrMzYwl4NuP627YB06j38pLl+S/tR8Dd3Gtg5/DDyOy6Rkc6GK6bHxw
+         QzKw==
+X-Gm-Message-State: APjAAAVEB/qCjJzPGlzXEiZAU1iWSI2/GkANlk9t2DlPsO2y3UKRJe9E
+        j/PpCEvMgKjd1zkmDfLOolN6kA==
+X-Google-Smtp-Source: APXvYqyT8CYAd7eurrFrFI8PfzHJPMcWdZ7fq9QHDpPRgQBgROfDRCybBxqF9//b4tm21qJoRt4Byg==
+X-Received: by 2002:a17:906:e10e:: with SMTP id gj14mr15158656ejb.285.1556732217818;
+        Wed, 01 May 2019 10:36:57 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id s6sm2462671eji.13.2019.05.01.10.36.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 01 May 2019 10:36:56 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v5 0/3] PCIe Host request to reserve IOVA
+Date:   Wed,  1 May 2019 23:06:23 +0530
+Message-Id: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 10:41:52PM +0530, Anup Patel wrote:
-> On Wed, May 1, 2019 at 10:30 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
-> > > On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
-> > > > On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
-> > > > > Currently, last stage boot loaders such as U-Boot can accept only
-> > > > > uImage which is an unnecessary additional step in automating boot flows.
-> > > > >
-> > > > > Add a simple image header that boot loaders can parse and directly
-> > > > > load kernel flat Image. The existing booting methods will continue to
-> > > > > work as it is.
-> > > > >
-> > > > > Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
-> > > > >
-> > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > > ---
-> > > > >   arch/riscv/include/asm/image.h | 32 ++++++++++++++++++++++++++++++++
-> > > > >   arch/riscv/kernel/head.S       | 28 ++++++++++++++++++++++++++++
-> > > > >   2 files changed, 60 insertions(+)
-> > > > >   create mode 100644 arch/riscv/include/asm/image.h
-> > > > >
-> > > > > diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
-> > > > > new file mode 100644
-> > > > > index 000000000000..76a7e0d4068a
-> > > > > --- /dev/null
-> > > > > +++ b/arch/riscv/include/asm/image.h
-> > > > > @@ -0,0 +1,32 @@
-> > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > +
-> > > > > +#ifndef __ASM_IMAGE_H
-> > > > > +#define __ASM_IMAGE_H
-> > > > > +
-> > > > > +#define RISCV_IMAGE_MAGIC        "RISCV"
-> > > > > +
-> > > > > +#ifndef __ASSEMBLY__
-> > > > > +/*
-> > > > > + * struct riscv_image_header - riscv kernel image header
-> > > > > + *
-> > > > > + * @code0:               Executable code
-> > > > > + * @code1:               Executable code
-> > > > > + * @text_offset: Image load offset
-> > > > > + * @image_size:          Effective Image size
-> > > > > + * @reserved:            reserved
-> > > > > + * @magic:               Magic number
-> > > > > + * @reserved:            reserved
-> > > > > + */
-> > > > > +
-> > > > > +struct riscv_image_header {
-> > > > > + u32 code0;
-> > > > > + u32 code1;
-> > > > > + u64 text_offset;
-> > > > > + u64 image_size;
-> > > > > + u64 res1;
-> > > > > + u64 magic;
-> > > > > + u32 res2;
-> > > > > + u32 res3;
-> > > > > +};
-> > > >
-> > > > I don't want to invent our own file format.  Is there a reason we can't just
-> > > > use something standard?  Off the top of my head I can think of ELF files and
-> > > > multiboot.
-> > >
-> > > Additional header is required to accommodate PE header format. Currently,
-> > > this is only used for booti command but it will be reused for EFI headers as
-> > > well. Linux kernel Image can pretend as an EFI application if PE/COFF header
-> > > is present. This removes the need of an explicit EFI boot loader and EFI
-> > > firmware can directly load Linux (obviously after EFI stub implementation
-> > > for RISC-V).
-> >
-> > Adding the EFI stub on arm64 required very careful consideration of our
-> > Image header and the EFI spec, along with the PE/COFF spec.
-> >
-> > For example, to be a compliant PE/COFF header, the first two bytes of
-> > your kernel image need to be "MZ" in ASCII. On arm64 we happened to find
-> > a valid instruction that we could rely upon that met this requirement...
-> 
-> The "MZ" ASCII (i.e. 0x5a4d) is "li s4,-13" instruction in RISC-V so this
-> modifies "s4" register which is pretty harmless from Linux RISC-V booting
-> perspective.
-> 
-> Of course, we should only add "MZ" ASCII in Linux RISC-V image header
-> when CONFIG_EFI is enabled (just like Linux ARM64).
+Few SOCs have limitation that their PCIe host can't allow few inbound
+address ranges. Allowed inbound address ranges are listed in dma-ranges
+DT property and this address ranges are required to do IOVA mapping.
+Remaining address ranges have to be reserved in IOVA mapping.
 
-Great. It would probably be worth just mentioning that in the commit
-message, so that it's clear that has been considered.
+PCIe Host driver of those SOCs has to list resource entries of allowed
+address ranges given in dma-ranges DT property in sorted order. This
+sorted list of resources will be processed and reserve IOVA address for
+inaccessible address holes while initializing IOMMU domain.
 
-Thanks,
-Mark.
+This patch set is based on Linux-5.1-rc3.
+
+Changes from v4:
+  - Addressed Bjorn, Robin Murphy and Auger Eric review comments.
+    - Commit message modification.
+    - Change DMA_BIT_MASK to "~(dma_addr_t)0".
+
+Changes from v3:
+  - Addressed Robin Murphy review comments.
+    - pcie-iproc: parse dma-ranges and make sorted resource list.
+    - dma-iommu: process list and reserve gaps between entries
+
+Changes from v2:
+  - Patch set rebased to Linux-5.0-rc2
+
+Changes from v1:
+  - Addressed Oza review comments.
+
+Srinath Mannam (3):
+  PCI: Add dma_ranges window list
+  iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
+  PCI: iproc: Add sorted dma ranges resource entries to host bridge
+
+ drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
+ drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+ drivers/pci/probe.c                 |  3 +++
+ include/linux/pci.h                 |  1 +
+ 4 files changed, 66 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
