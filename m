@@ -2,121 +2,102 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D9DC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1670C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55DE72085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE61E2085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SJA5DhTT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0GXurpj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfEANxl (ORCPT
+        id S1726574AbfEANyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 09:53:41 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:65220 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfEANxl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 09:53:41 -0400
-X-Greylist: delayed 169645 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 May 2019 09:53:39 EDT
-Received: from grover.flets-west.jp (softbank126125154137.bbtec.net [126.125.154.137]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x41Dr9KW001783;
-        Wed, 1 May 2019 22:53:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x41Dr9KW001783
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556718790;
-        bh=f6uJF7746NTCDxjp6+FkBz2Du0qsSubKTcds7GgCmco=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SJA5DhTTi821Pj+Q5LYIHqGxGy2XM2r0Ng2p26UQO6PkIgt+5rBBRp0Cyhe1KOTYw
-         nwONMzvbm9uYd0isyedRBSvziHXPGi4B/E35xIPVpGe4uRXCFeIrPDFT5HQosLhJSp
-         zRT/GT7NzuED8Uq7Qjurvb2F1CH4AIhVjKOqKkIbTKiu2lcOLeCrZByp16SN0rUAvV
-         BjwCX3YH7R76EGw58UrGw81RFCjob7ELLodCd6qsTQYWvhKS9gAs/OU30h8YsMO2Y+
-         kh3RqFXH2jdbHCKPM41ZMrt/OMy8OUCUDBNWRf/izouPRkjOJLs6IlEn6ml2iyIPNj
-         uFGhca07xFLcg==
-X-Nifty-SrcIP: [126.125.154.137]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        linux-acpi@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        Erik Schmauss <erik.schmauss@intel.com>, devel@acpica.org
-Subject: [PATCH v2] tools/power/acpi: exclude tools/* from .gitignore pattern
-Date:   Wed,  1 May 2019 22:53:05 +0900
-Message-Id: <1556718785-4417-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 1 May 2019 09:54:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50962 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbfEANyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 09:54:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=4b2MeUM65BJCSCVV5omqKdf271pxpyOswePbL8+W7f4=; b=0GXurpj8rD8/3hixIl1Iwnk4e8
+        NJ4/JKTZGYuwArzJWvpTmIVXUP0UHXeGybTs3idHvKmfC7MTmJVXVa4B/7Rbij5rKYfg2lUJzJ5R5
+        0CElid7s3A7cPstCIH5mq+EsFkM/b4CMLN95HtdhVrJ6x9/MyeldSWH5oMpcCtiykNw8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hLpgf-0003Xb-Em; Wed, 01 May 2019 15:54:17 +0200
+Date:   Wed, 1 May 2019 15:54:17 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Alban Bedel <albeu@free.fr>
+Subject: Re: Handling of EPROBE_DEFER in of_get_mac_address [Was: Re: [PATCH
+ v2 3/4] net: macb: Drop nvmem_get_mac_address usage]
+Message-ID: <20190501135417.GB19809@lunn.ch>
+References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
+ <1556456002-13430-4-git-send-email-ynezz@true.cz>
+ <20190428165637.GJ23059@lunn.ch>
+ <20190428210814.GA346@meh.true.cz>
+ <20190428213640.GB10772@lunn.ch>
+ <20190429075514.GB346@meh.true.cz>
+ <20190429130248.GC10772@lunn.ch>
+ <20190430141335.GC346@meh.true.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190430141335.GC346@meh.true.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tools/power/acpi/.gitignore has the following entries:
+On Tue, Apr 30, 2019 at 04:13:35PM +0200, Petr Štetiar wrote:
+> Andrew Lunn <andrew@lunn.ch> [2019-04-29 15:02:48]:
+> 
+> Hi Andrew,
+> 
+> > > My understanding of -PROBE_DEFER is, that it needs to be propagated back from
+> > > the driver's probe callback/hook to the upper device/driver subsystem in order
+> > > to be moved to the list of pending drivers and considered for probe later
+> > > again. This is not going to happen in any of the current drivers, thus it will
+> > > probably still always result in random MAC address in case of -EPROBE_DEFER
+> > > error from the nvmem subsystem.
+> > 
+> > All current drivers which don't look in NVMEM don't expect
+> > EPROBE_DEFER. 
+> 
+> once there's NVMEM wired in of_get_mac_address, one can simply use it, nothing
+> is going to stop the potential user of doing so and if EPROBE_DEFER isn't
+> propagated from the driver back to the upper device driver subsytem, it's
+> probably going to end with random MAC address in some (very rare?) cases.
 
-  acpidbg
-  acpidump
-  ec
+Hi Petr
 
-They are intended to ignore the following build artifacts:
+There is no simple answer here. If we add EPROBE_DEFER support to all
+the current drivers using of_get_mac_address(), we are likely to break
+something. Regressions are bad. If somebody does add NVMEM properties
+to a device which does not currently have them, and it fails, that it
+just bad testing, not a regressions.
 
-  tools/power/acpi/acpidbg
-  tools/power/acpi/acpidump
-  tools/power/acpi/ec
+So i would keep it KISS. Allow of_get_mac_address() to return an
+error, but don't modify current drivers to look for it.
 
-However, those .gitignore entries are effective not only for the
-current directory, but also for any sub-directories.
-
-So, from the point of .gitignore grammar, the following check-in
-directories are also considered to be ignored:
-
-  tools/power/acpi/tools/acpidbg
-  tools/power/acpi/tools/acpidump
-  tools/power/acpi/tools/ec
-
-As the manual gitignore(5) says "Files already tracked by Git are not
-affected", this is not a problem as far as Git is concerned.
-
-However, Git is not the only program that parses .gitignore because
-.gitignore is useful to distinguish build artifacts from source files.
-
-For example, tar(1) supports the --exclude-vcs-ignore option. As of
-writing, this option does not work perfectly, but it intends to create
-a tarball excluding files specified by .gitignore.
-
-So, I believe it is better to fix this issue.
-
-You can fix it by prefixing the pattern with a slash; the leading slash
-means the specified pattern is relative to the current directory.
-
-I also prefixed the "include" consistently. IMHO, it is safer when you
-intend to ignore specific files or directories.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2:
-  - Add more information to the commit log to clarify my main motivation
-
- tools/power/acpi/.gitignore | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/power/acpi/.gitignore b/tools/power/acpi/.gitignore
-index cba3d99..f698a0e 100644
---- a/tools/power/acpi/.gitignore
-+++ b/tools/power/acpi/.gitignore
-@@ -1,4 +1,4 @@
--acpidbg
--acpidump
--ec
--include
-+/acpidbg
-+/acpidump
-+/ec
-+/include/
--- 
-2.7.4
-
+       Andrew
