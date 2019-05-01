@@ -2,505 +2,217 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0533C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7116EC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1EE20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE7320866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 17:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qSPBSbQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfEARcU (ORCPT
+        id S1726268AbfEARcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 13:32:20 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51629 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfEARcT (ORCPT
+        Wed, 1 May 2019 13:32:50 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:45959 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfEARcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 13:32:19 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hLt5a-0004N1-NT; Wed, 01 May 2019 19:32:15 +0200
-Date:   Wed, 1 May 2019 19:32:14 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] v5.0.10-rt7
-Message-ID: <20190501173214.emniok77pg5hsav5@linutronix.de>
+        Wed, 1 May 2019 13:32:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1556731969; x=1588267969;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=yZk+fPlM+300B5dQPeSnp2Y+5IZKCQeLUZItpCF7QKs=;
+  b=qSPBSbQCTVesGBTErvl5jqUuw/sJP4NctlL3x0B3e3dpVJDXGrtfwKpb
+   /LSP04PorydUtkOIqF1BPGf2/zZD9pUr+lBSKoZ3SKJoICcl+AfGAQjdY
+   0flwWbdSlzzT/Au+o9eL6oHvbFii+FFXTjfMzjaKEz685efI02vnsarcB
+   GyYVoUbCTMX/6gvWkbud+Sh/AOOvksMP07uYIVst7Ea8H+nhJpV6H9Vv8
+   CloBQazrPWYwsFDiVLoxaM+d4XT/O0XTdRq8k8/6Yer5z/wd45975iz0z
+   5pl4cdLSH3+kFCnOy85iy0etRMRng3TwVqTORNWRKk4QZr4H9UW3AZwr/
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.60,418,1549900800"; 
+   d="scan'208";a="213198125"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 02 May 2019 01:32:49 +0800
+IronPort-SDR: bcBsqJ6TPAvmAq8mQCZ+WXf2tQ+lo3H8IJTwZ/Y3LUQqGQaYT5V2i/rdY0bZaR5I3aLHs/ZiCF
+ z5BRn4traw92oxVtaKqIBJIF2MlNYfZ8PDnvDJSsVbmw6503vF/tEjPJZUAxXbNkTjFDLb9VEC
+ PLUfWQ2QFvDhVzW+q4CgjwiXCqqgLvflulJPmEBd24kpGDPQSwodbvjOqUlKL9JFHAjbHusZYG
+ sxiOahlxiWM5R5n4I844sed5Hy934I2B6adN40729omog+IouVaPZ2b454BSVgtR1FeTd5fZZo
+ Md+VNJiFPpjkXLnHj5DYaFY5
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 01 May 2019 10:11:17 -0700
+IronPort-SDR: TxMvhl+cFQ4TxMP+d9Z7AnTy0se99146r4IxgWjHgpK+CIrayOFf2TbciER+Qlg8BZF9NdRRLB
+ 1MVJQBTPBXrM76Aceux1LCjr43m1XIZjTYQBU/jTvSF/YrryRNlh5k2zJgj8erGkJiJr7turG0
+ okgZ36FcRDC56y+X8YVIS8vEsmgqT1PZdWjFkh0T40JonlbOkKHjrDXN7N0tID0dpxpAjv5utw
+ dGgVWv/8LoU+6XeVzGf9uYQmYoogjzm8gtF5uh2aMnSdMBqzY9dvwSgkmGpQEFOSAS0MkJnPxN
+ ksg=
+Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
+  by uls-op-cesaip01.wdc.com with ESMTP; 01 May 2019 10:32:48 -0700
+Subject: Re: [PATCH] RISC-V: Add an Image header that boot loader can parse.
+To:     Anup Patel <anup@brainfault.org>,
+        Karsten Merker <merker@debian.org>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        "zong@andestech.com" <zong@andestech.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <mhng-cab2c6b9-f623-4286-99a4-61e4b3a58761@palmer-si-x1e>
+ <e801ca8b-c8e2-d8b1-d55a-744414db77e3@wdc.com>
+ <20190501164355.ce76wjmq6sszrf5g@excalibur.cnev.de>
+ <CAAhSdy3kjqDahp13gQa0g9GF4gKPQeVgSakZzuP0uYwkCrvdAg@mail.gmail.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <eca0de61-885c-0ca1-d07b-870ad0c83327@wdc.com>
+Date:   Wed, 1 May 2019 10:32:47 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAAhSdy3kjqDahp13gQa0g9GF4gKPQeVgSakZzuP0uYwkCrvdAg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear RT folks!
+On 5/1/19 10:02 AM, Anup Patel wrote:
+> On Wed, May 1, 2019 at 10:14 PM Karsten Merker <merker@debian.org> wrote:
+>>
+>> On Mon, Apr 29, 2019 at 10:42:40PM -0700, Atish Patra wrote:
+>>> On 4/29/19 4:40 PM, Palmer Dabbelt wrote:
+>>>> On Tue, 23 Apr 2019 16:25:06 PDT (-0700), atish.patra@wdc.com wrote:
+>>>>> Currently, last stage boot loaders such as U-Boot can accept only
+>>>>> uImage which is an unnecessary additional step in automating boot flows.
+>>>>>
+>>>>> Add a simple image header that boot loaders can parse and directly
+>>>>> load kernel flat Image. The existing booting methods will continue to
+>>>>> work as it is.
+>>>>>
+>>>>> Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+>>>>>
+>>>>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>>>>> ---
+>>>>>    arch/riscv/include/asm/image.h | 32 ++++++++++++++++++++++++++++++++
+>>>>>    arch/riscv/kernel/head.S       | 28 ++++++++++++++++++++++++++++
+>>>>>    2 files changed, 60 insertions(+)
+>>>>>    create mode 100644 arch/riscv/include/asm/image.h
+>>>>>
+>>>>> diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+>>>>> new file mode 100644
+>>>>> index 000000000000..76a7e0d4068a
+>>>>> --- /dev/null
+>>>>> +++ b/arch/riscv/include/asm/image.h
+>>>>> @@ -0,0 +1,32 @@
+>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>>> +
+>>>>> +#ifndef __ASM_IMAGE_H
+>>>>> +#define __ASM_IMAGE_H
+>>>>> +
+>>>>> +#define RISCV_IMAGE_MAGIC        "RISCV"
+>>>>> +
+>>>>> +#ifndef __ASSEMBLY__
+>>>>> +/*
+>>>>> + * struct riscv_image_header - riscv kernel image header
+>>>>> + *
+>>>>> + * @code0:               Executable code
+>>>>> + * @code1:               Executable code
+>>>>> + * @text_offset: Image load offset
+>>>>> + * @image_size:          Effective Image size
+>>>>> + * @reserved:            reserved
+>>>>> + * @magic:               Magic number
+>>>>> + * @reserved:            reserved
+>>>>> + */
+>>>>> +
+>>>>> +struct riscv_image_header {
+>>>>> + u32 code0;
+>>>>> + u32 code1;
+>>>>> + u64 text_offset;
+>>>>> + u64 image_size;
+>>>>> + u64 res1;
+>>>>> + u64 magic;
+>>>>> + u32 res2;
+>>>>> + u32 res3;
+>>>>> +};
+>>>>
+>>>> I don't want to invent our own file format.  Is there a reason we can't just
+>>>> use something standard?  Off the top of my head I can think of ELF files and
+>>>> multiboot.
+>>>
+>>> Additional header is required to accommodate PE header format. Currently,
+>>> this is only used for booti command but it will be reused for EFI headers as
+>>> well. Linux kernel Image can pretend as an EFI application if PE/COFF header
+>>> is present. This removes the need of an explicit EFI boot loader and EFI
+>>> firmware can directly load Linux (obviously after EFI stub implementation
+>>> for RISC-V).
+>>>
+>>> ARM64 follows the similar header format as well.
+>>> https://www.kernel.org/doc/Documentation/arm64/booting.txt
+>>
+>> Hello Atish,
+>>
+>> the arm64 header looks a bit different (quoted from the
+>> aforementioned URL):
+>>
+>>    u32 code0;                    /* Executable code */
+>>    u32 code1;                    /* Executable code */
+>>    u64 text_offset;              /* Image load offset, little endian */
+>>    u64 image_size;               /* Effective Image size, little endian */
+>>    u64 flags;                    /* kernel flags, little endian */
+>>    u64 res2      = 0;            /* reserved */
+>>    u64 res3      = 0;            /* reserved */
+>>    u64 res4      = 0;            /* reserved */
+>>    u32 magic     = 0x644d5241;   /* Magic number, little endian, "ARM\x64" */
+>>    u32 res5;                     /* reserved (used for PE COFF offset) */
+>>
+>> What I am unclear about is in which ways a RISC-V PE/COFF header
+>> differs from an arm64 one as the arm64 struct is longer than your
+>> RISC-V header and for arm64 the PE offset field is in the last
+>> field, i.e. outside of the area covered by your RISC-V structure
+>> definition.  Can you perhaps explain this part in a bit more
+>> detail or does anybody else have a pointer to a specification of
+>> the RISC-V PE/COFF header format (I have found a lot of documents
+>> about COFF in general, but nothing specific to RISC-V).
+> 
 
-I'm pleased to announce the v5.0.10-rt7 patch set. 
+Karsten,
 
-Changes since v5.0.10-rt6:
+> The only difference compared to ARM64 is the values of code0, code1
+> and res5 fields.
+> 
+> As-per PE/COFF, the 32bit value at offset 0x3c tells us offset of PE/COFF
+> header in image.
+> 
+> For more details refer,
+> https://en.wikipedia.org/wiki/Portable_Executable
+> https://en.wikipedia.org/wiki/Portable_Executable#/media/File:Portable_Executable_32_bit_Structure_in_SVG_fixed.svg
+> 
+> For both ARM64 header and RISC-V image header, is actually the
+> "DOS header" part of PE/COFF format.
+> 
+> This patch only adds "DOS header" part of PE/COFF format. Rest of
+> the PE/COFF header will be added when add EFI support to Linux
+> RISC-V kernel.
+> I think Anup answered your question. The original plan was to add EFI 
+specific stuff in EFI support patch. That includes adjusting the PE/COFF 
+offset at 0x3c and adding the "MZ" value for code0 if EFI is enabled.
 
-  - Two FPU related patches for x86 which were merged upstream (after
-    the "x86: load FPU registers on return to userland" series has been
-    applied).
-  
-  - Rename rwsem_rt.h -> rwsem-rt.h for consistency reasons with
-    rwsem-rt.c.
+In hindsight, I think it created more confusion. I will update the 
+"riscv_image_header" structure to put PE/COFF offset(0x3c) at right 
+place in v2 patch to avoid further confusion.
 
-  - Remove the kmsg_dump_lock mutex which could be acquired in atomic
-    context. Reported by Scott Wood, patch by John Ogness.
+"MZ" value part should be added once EFI is enabled.
 
-  - Update "clocksource: improve Atmel TCB timer driver" by Alexandre
-    Belloni from v0 to v3.
+I will update the comments on riscv/include/asm/image.h as well to 
+clarify more.
 
-  - Check if EFI services are disabled at runtime before using them in
-    secureboot. Patch by Scott Wood.
+Regards,
+Atish
+> Regards,
+> Anup
+> 
 
-Known issues
-     - A warning triggered in "rcu_note_context_switch" originated from
-       SyS_timer_gettime(). The issue was always there, it is now
-       visible. Reported by Grygorii Strashko and Daniel Wagner.
-
-     - rcutorture is currently broken on -RT. Reported by Juri Lelli.
-
-The delta patch against v5.0.10-rt6 is appended below and can be found here:
- 
-     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.0/incr/patch-5.0.10-rt6-rt7.patch.xz
-
-You can get this release via the git tree at:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.0.10-rt7
-
-The RT patch against v5.0.10 can be found here:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.0/older/patch-5.0.10-rt7.patch.xz
-
-The split quilt queue is available at:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.0/older/patches-5.0.10-rt7.tar.xz
-
-Sebastian
-
-diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
-index c8876d0ca41a8..e4b1be66b3f56 100644
---- a/arch/arm/configs/at91_dt_defconfig
-+++ b/arch/arm/configs/at91_dt_defconfig
-@@ -19,7 +19,6 @@ CONFIG_ARCH_MULTI_V5=y
- CONFIG_ARCH_AT91=y
- CONFIG_SOC_AT91RM9200=y
- CONFIG_SOC_AT91SAM9=y
--# CONFIG_ATMEL_CLOCKSOURCE_PIT is not set
- CONFIG_AEABI=y
- CONFIG_UACCESS_WITH_MEMCPY=y
- CONFIG_ZBOOT_ROM_TEXT=0x0
-diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-index 10ebc9481f72c..b0026f73083d7 100644
---- a/arch/arm/configs/sama5_defconfig
-+++ b/arch/arm/configs/sama5_defconfig
-@@ -20,7 +20,6 @@ CONFIG_ARCH_AT91=y
- CONFIG_SOC_SAMA5D2=y
- CONFIG_SOC_SAMA5D3=y
- CONFIG_SOC_SAMA5D4=y
--# CONFIG_ATMEL_CLOCKSOURCE_PIT is not set
- CONFIG_AEABI=y
- CONFIG_UACCESS_WITH_MEMCPY=y
- CONFIG_ZBOOT_ROM_TEXT=0x0
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 16f700d5b3a47..5d37ea10eaa26 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -157,11 +157,9 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
-  */
- int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
- {
--	struct fpu *fpu = &current->thread.fpu;
--	struct xregs_state *xsave = &fpu->state.xsave;
- 	struct task_struct *tsk = current;
- 	int ia32_fxstate = (buf != buf_fx);
--	int ret = -EFAULT;
-+	int ret;
- 
- 	ia32_fxstate &= (IS_ENABLED(CONFIG_X86_32) ||
- 			 IS_ENABLED(CONFIG_IA32_EMULATION));
-@@ -174,12 +172,13 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
- 			sizeof(struct user_i387_ia32_struct), NULL,
- 			(struct _fpstate_32 __user *) buf) ? -1 : 1;
- 
-+retry:
- 	fpregs_lock();
- 	/*
- 	 * Load the FPU register if they are not valid for the current task.
- 	 * With a valid FPU state we can attempt to save the state directly to
--	 * userland's stack frame which will likely succeed. If it does not, do
--	 * the slowpath.
-+	 * userland's stack frame which will likely succeed. If it does not,
-+	 * resolve the fault in the user memory and try again.
- 	 */
- 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
- 		__fpregs_load_activate();
-@@ -187,20 +186,20 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
- 	pagefault_disable();
- 	ret = copy_fpregs_to_sigframe(buf_fx);
- 	pagefault_enable();
--	if (ret && !test_thread_flag(TIF_NEED_FPU_LOAD))
--		copy_fpregs_to_fpstate(fpu);
--	set_thread_flag(TIF_NEED_FPU_LOAD);
- 	fpregs_unlock();
- 
- 	if (ret) {
--		if (using_compacted_format()) {
--			if (copy_xstate_to_user(buf_fx, xsave, 0, size))
--				return -1;
--		} else {
--			fpstate_sanitize_xstate(fpu);
--			if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
--				return -1;
--		}
-+		int aligned_size;
-+		int nr_pages;
-+
-+		aligned_size = offset_in_page(buf_fx) + fpu_user_xstate_size;
-+		nr_pages = DIV_ROUND_UP(aligned_size, PAGE_SIZE);
-+
-+		ret = get_user_pages((unsigned long)buf_fx, nr_pages,
-+				     FOLL_WRITE, NULL, NULL);
-+		if (ret == nr_pages)
-+			goto retry;
-+		return -EFAULT;
- 	}
- 
- 	/* Save the fsave header for the 32-bit frames. */
-diff --git a/arch/x86/kernel/ima_arch.c b/arch/x86/kernel/ima_arch.c
-index e47cd9390ab4e..2a2e87717bad1 100644
---- a/arch/x86/kernel/ima_arch.c
-+++ b/arch/x86/kernel/ima_arch.c
-@@ -17,6 +17,11 @@ static enum efi_secureboot_mode get_sb_mode(void)
- 
- 	size = sizeof(secboot);
- 
-+	if (!efi_enabled(EFI_RUNTIME_SERVICES)) {
-+		pr_info("ima: secureboot mode unknown, no efi\n");
-+		return efi_secureboot_mode_unknown;
-+	}
-+
- 	/* Get variable contents into buffer */
- 	status = efi.get_variable(efi_SecureBoot_name, &efi_variable_guid,
- 				  NULL, &size, &secboot);
-diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index cfcc18902651a..05b5272f5d7e9 100644
---- a/drivers/clocksource/timer-atmel-tcb.c
-+++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -65,7 +65,7 @@ static u64 tc_get_cycles32(struct clocksource *cs)
- 	return readl_relaxed(tcaddr + ATMEL_TC_REG(0, CV));
- }
- 
--void tc_clksrc_suspend(struct clocksource *cs)
-+static void tc_clksrc_suspend(struct clocksource *cs)
- {
- 	int i;
- 
-@@ -80,7 +80,7 @@ void tc_clksrc_suspend(struct clocksource *cs)
- 	bmr_cache = readl(tcaddr + ATMEL_TC_BMR);
- }
- 
--void tc_clksrc_resume(struct clocksource *cs)
-+static void tc_clksrc_resume(struct clocksource *cs)
- {
- 	int i;
- 
-@@ -360,16 +360,24 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
- 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
- }
- 
-+static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
-+
-+static const struct of_device_id atmel_tcb_of_match[] = {
-+	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
-+	{ .compatible = "atmel,at91sam9x5-tcb", .data = (void *)32, },
-+	{ /* sentinel */ }
-+};
-+
- static int __init tcb_clksrc_init(struct device_node *node)
- {
- 	struct atmel_tc tc;
- 	struct clk *t0_clk;
- 	const struct of_device_id *match;
- 	u64 (*tc_sched_clock)(void);
--	int irq;
- 	u32 rate, divided_rate = 0;
- 	int best_divisor_idx = -1;
- 	int clk32k_divisor_idx = -1;
-+	int bits;
- 	int i;
- 	int ret;
- 
-@@ -389,10 +397,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	if (IS_ERR(tc.slow_clk))
- 		return PTR_ERR(tc.slow_clk);
- 
--	irq = of_irq_get(node->parent, 0);
--	if (irq <= 0)
--		return -EINVAL;
--
- 	tc.clk[0] = t0_clk;
- 	tc.clk[1] = of_clk_get_by_name(node->parent, "t1_clk");
- 	if (IS_ERR(tc.clk[1]))
-@@ -401,16 +405,15 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	if (IS_ERR(tc.clk[2]))
- 		tc.clk[2] = t0_clk;
- 
--	tc.irq[0] = irq;
--	tc.irq[1] = of_irq_get(node->parent, 1);
--	if (tc.irq[1] <= 0)
--		tc.irq[1] = irq;
- 	tc.irq[2] = of_irq_get(node->parent, 2);
--	if (tc.irq[2] <= 0)
--		tc.irq[2] = irq;
-+	if (tc.irq[2] <= 0) {
-+		tc.irq[2] = of_irq_get(node->parent, 0);
-+		if (tc.irq[2] <= 0)
-+			return -EINVAL;
-+	}
- 
--	match = of_match_node(atmel_tcb_dt_ids, node->parent);
--	tc.tcb_config = match->data;
-+	match = of_match_node(atmel_tcb_of_match, node->parent);
-+	bits = (uintptr_t)match->data;
- 
- 	for (i = 0; i < ARRAY_SIZE(tc.irq); i++)
- 		writel(ATMEL_TC_ALL_IRQ, tc.regs + ATMEL_TC_REG(i, IDR));
-@@ -423,8 +426,8 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 
- 	/* How fast will we be counting?  Pick something over 5 MHz.  */
- 	rate = (u32) clk_get_rate(t0_clk);
--	for (i = 0; i < ARRAY_SIZE(atmel_tc_divisors); i++) {
--		unsigned divisor = atmel_tc_divisors[i];
-+	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
-+		unsigned divisor = atmel_tcb_divisors[i];
- 		unsigned tmp;
- 
- 		/* remember 32 KiHz clock for later */
-@@ -450,7 +453,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 
- 	tcaddr = tc.regs;
- 
--	if (tc.tcb_config->counter_width == 32) {
-+	if (bits == 32) {
- 		/* use apropriate function to read 32 bit counter */
- 		clksrc.read = tc_get_cycles32;
- 		/* setup ony channel 0 */
-@@ -492,7 +495,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	clocksource_unregister(&clksrc);
- 
- err_disable_t1:
--	if (tc.tcb_config->counter_width != 32)
-+	if (bits != 32)
- 		clk_disable_unprepare(tc.clk[1]);
- 
- err_disable_t0:
-diff --git a/drivers/misc/atmel_tclib.c b/drivers/misc/atmel_tclib.c
-index b610cc894cd82..2c6850ef0e9c8 100644
---- a/drivers/misc/atmel_tclib.c
-+++ b/drivers/misc/atmel_tclib.c
-@@ -17,6 +17,18 @@
-  * share individual timers between different drivers.
-  */
- 
-+#if defined(CONFIG_AVR32)
-+/* AVR32 has these divide PBB */
-+const u8 atmel_tc_divisors[5] = { 0, 4, 8, 16, 32, };
-+EXPORT_SYMBOL(atmel_tc_divisors);
-+
-+#elif defined(CONFIG_ARCH_AT91)
-+/* AT91 has these divide MCK */
-+const u8 atmel_tc_divisors[5] = { 2, 8, 32, 128, 0, };
-+EXPORT_SYMBOL(atmel_tc_divisors);
-+
-+#endif
-+
- static DEFINE_SPINLOCK(tc_list_lock);
- static LIST_HEAD(tc_list);
- 
-@@ -68,6 +80,26 @@ void atmel_tc_free(struct atmel_tc *tc)
- EXPORT_SYMBOL_GPL(atmel_tc_free);
- 
- #if defined(CONFIG_OF)
-+static struct atmel_tcb_config tcb_rm9200_config = {
-+	.counter_width = 16,
-+};
-+
-+static struct atmel_tcb_config tcb_sam9x5_config = {
-+	.counter_width = 32,
-+};
-+
-+static const struct of_device_id atmel_tcb_dt_ids[] = {
-+	{
-+		.compatible = "atmel,at91rm9200-tcb",
-+		.data = &tcb_rm9200_config,
-+	}, {
-+		.compatible = "atmel,at91sam9x5-tcb",
-+		.data = &tcb_sam9x5_config,
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+
- MODULE_DEVICE_TABLE(of, atmel_tcb_dt_ids);
- #endif
- 
-@@ -80,7 +112,7 @@ static int __init tc_probe(struct platform_device *pdev)
- 	unsigned int	i;
- 
- 	if (of_get_child_count(pdev->dev.of_node))
--		return 0;
-+		return -EBUSY;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
-diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
-index d7e92fd552e40..7da1fdb4d269c 100644
---- a/drivers/pwm/pwm-atmel-tcb.c
-+++ b/drivers/pwm/pwm-atmel-tcb.c
-@@ -17,10 +17,10 @@
- #include <linux/ioport.h>
- #include <linux/io.h>
- #include <linux/platform_device.h>
--#include <soc/at91/atmel_tcb.h>
- #include <linux/pwm.h>
- #include <linux/of_device.h>
- #include <linux/slab.h>
-+#include <soc/at91/atmel_tcb.h>
- 
- #define NPWM	6
- 
-diff --git a/include/linux/rwsem_rt.h b/include/linux/rwsem-rt.h
-similarity index 100%
-rename from include/linux/rwsem_rt.h
-rename to include/linux/rwsem-rt.h
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index c4adabc5a049a..47b2e5d12fde9 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -21,7 +21,7 @@
- #endif
- 
- #ifdef CONFIG_PREEMPT_RT_FULL
--#include <linux/rwsem_rt.h>
-+#include <linux/rwsem-rt.h>
- #else /* PREEMPT_RT_FULL */
- 
- struct rw_semaphore;
-diff --git a/include/soc/at91/atmel_tcb.h b/include/soc/at91/atmel_tcb.h
-index cb0c5f53cd46c..c3c7200ce1512 100644
---- a/include/soc/at91/atmel_tcb.h
-+++ b/include/soc/at91/atmel_tcb.h
-@@ -76,27 +76,8 @@ extern struct atmel_tc *atmel_tc_alloc(unsigned block);
- extern void atmel_tc_free(struct atmel_tc *tc);
- 
- /* platform-specific ATMEL_TC_TIMER_CLOCKx divisors (0 means 32KiHz) */
--static const u8 atmel_tc_divisors[] = { 2, 8, 32, 128, 0, };
-+extern const u8 atmel_tc_divisors[5];
- 
--static const struct atmel_tcb_config tcb_rm9200_config = {
--	.counter_width = 16,
--};
--
--static const struct atmel_tcb_config tcb_sam9x5_config = {
--	.counter_width = 32,
--};
--
--static const struct of_device_id atmel_tcb_dt_ids[] = {
--	{
--		.compatible = "atmel,at91rm9200-tcb",
--		.data = &tcb_rm9200_config,
--	}, {
--		.compatible = "atmel,at91sam9x5-tcb",
--		.data = &tcb_sam9x5_config,
--	}, {
--		/* sentinel */
--	}
--};
- 
- /*
-  * Two registers have block-wide controls.  These are: configuring the three
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 997d07b6bf975..7d3522e0bcecb 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -359,8 +359,6 @@ static u64 syslog_seq;
- static size_t syslog_partial;
- static bool syslog_time;
- 
--static DEFINE_MUTEX(kmsg_dump_lock);
--
- /* the last printk record at the last 'clear' command */
- static u64 clear_seq;
- 
-@@ -2820,6 +2818,7 @@ module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
-  */
- void kmsg_dump(enum kmsg_dump_reason reason)
- {
-+	struct kmsg_dumper dumper_local;
- 	struct kmsg_dumper *dumper;
- 
- 	if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
-@@ -2830,16 +2829,18 @@ void kmsg_dump(enum kmsg_dump_reason reason)
- 		if (dumper->max_reason && reason > dumper->max_reason)
- 			continue;
- 
--		/* initialize iterator with data about the stored records */
--		dumper->active = true;
-+		/*
-+		 * use a local copy to avoid modifying the
-+		 * iterator used by any other cpus/contexts
-+		 */
-+		memcpy(&dumper_local, dumper, sizeof(dumper_local));
- 
--		kmsg_dump_rewind(dumper);
-+		/* initialize iterator with data about the stored records */
-+		dumper_local.active = true;
-+		kmsg_dump_rewind(&dumper_local);
- 
- 		/* invoke dumper which will iterate over records */
--		dumper->dump(dumper, reason);
--
--		/* reset iterator */
--		dumper->active = false;
-+		dumper_local.dump(&dumper_local, reason);
- 	}
- 	rcu_read_unlock();
- }
-@@ -2951,9 +2952,7 @@ bool kmsg_dump_get_line(struct kmsg_dumper *dumper, bool syslog,
- {
- 	bool ret;
- 
--	mutex_lock(&kmsg_dump_lock);
- 	ret = kmsg_dump_get_line_nolock(dumper, syslog, line, size, len);
--	mutex_unlock(&kmsg_dump_lock);
- 
- 	return ret;
- }
-@@ -3105,9 +3104,7 @@ void kmsg_dump_rewind_nolock(struct kmsg_dumper *dumper)
-  */
- void kmsg_dump_rewind(struct kmsg_dumper *dumper)
- {
--	mutex_lock(&kmsg_dump_lock);
- 	kmsg_dump_rewind_nolock(dumper);
--	mutex_unlock(&kmsg_dump_lock);
- }
- EXPORT_SYMBOL_GPL(kmsg_dump_rewind);
- 
-diff --git a/localversion-rt b/localversion-rt
-index 8fc605d806670..045478966e9f1 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt6
-+-rt7
