@@ -2,183 +2,188 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A4BC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9FDC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767852053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B3B2089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556739524;
+	bh=3r13nXEJ/55Q/6bcHEMx6ujePRfuqPpaN3lyt842VmY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UPJNVgxO6JVqwnueXHnyoYQqlswcu6ZIjrlySzYl/T5Fv9OpCwr6R+hLmKC1ygeBl
+	 XbIJHn7qHJJYh/Yq20xzmhfPwywneP2YMB399v6QKZfThOX5+yWHHJIaxMPV7TgdjP
+	 UH/N+/P6MvlfucTsTf+ifdtCEOCSfOuDp/bkTbz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfEATej (ORCPT
+        id S1726150AbfEATin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:34:39 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:43280 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfEATej (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:34:39 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 1 May 2019 15:38:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726004AbfEATim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 15:38:42 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id F0AB9804A7;
-        Wed,  1 May 2019 21:34:30 +0200 (CEST)
-Date:   Wed, 1 May 2019 21:34:29 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 1/2] drm/panel: simple: Add FriendlyELEC HD702E 800x1280
- LCD panel
-Message-ID: <20190501193429.GA9075@ravnborg.org>
-References: <20190501121448.3812-1-jagan@amarulasolutions.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 17C8D21670;
+        Wed,  1 May 2019 19:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556739521;
+        bh=3r13nXEJ/55Q/6bcHEMx6ujePRfuqPpaN3lyt842VmY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=089rLRllTb8+Hm/6P1egJyBZnX9sB8aKtVtWwogTnxXRsJuTn4DBQ1NC8Si4aWC4v
+         sOFQ9CsmsKXAG5eYC4HMcDNFQIvoZM3tSAjl6Y8Ew1+szgJd0yOz16wQ8wG6YeVwGl
+         vfLQ4gipfpktss6CffbKiN0D3er8MCXTYV0qxtIk=
+Received: by mail-qt1-f175.google.com with SMTP id c13so1160670qtn.8;
+        Wed, 01 May 2019 12:38:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAWkdBpmbmll8h1l8zXj4ep1AQk6ok68FquOlGAtr+qp+aN51SUB
+        NndaEau4edhsPI8V1u7WE7fqu7mR3FhZeE6Lag==
+X-Google-Smtp-Source: APXvYqyvDY9yv37xfenzQ3oQK4fKJuQiVVo4N665MF6Ku+f5ZwXO7oFy/tj3G/zv+m8eSK7TOR5xnEpNff7satGEkbc=
+X-Received: by 2002:aed:3f6b:: with SMTP id q40mr21394587qtf.26.1556739520237;
+ Wed, 01 May 2019 12:38:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501121448.3812-1-jagan@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dTbK6rJxFaEA:10
-        a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=iP-xVBlJAAAA:8
-        a=zuLzuavZAAAA:8 a=Ojeavkj-tGznWrRYVDAA:9 a=CjuIK1q_8ugA:10
-        a=tCw7dILebdcA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=lHLH-nfn2y1bM_0xSXwp:22
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+ <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+ <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 1 May 2019 14:38:28 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKq0KP9H4DumyxJTjD=7rqwgOM=+5jHhkUxQqamrA3h7g@mail.gmail.com>
+Message-ID: <CAL_JsqKq0KP9H4DumyxJTjD=7rqwgOM=+5jHhkUxQqamrA3h7g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jagan
+On Wed, May 1, 2019 at 2:16 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Apr 30, 2019 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> > > On 30/04/2019 16:02, Rob Herring wrote:
+> > > > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> > > > <geert+renesas@glider.be> wrote:
+> > > >>
+> > > >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> > > >>
+> > > >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > >> ---
+> > > >> v2:
+> > > >>   - Add "renesas,gic-spi-base",
+> > > >>   - Document RZ/A2M.
+> > > >> ---
+> > > >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+> > > >>  1 file changed, 30 insertions(+)
+> > > >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > >>
+> > > >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > >> new file mode 100644
+> > > >> index 0000000000000000..ea8ddb6955338ccd
+> > > >> --- /dev/null
+> > > >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > >> @@ -0,0 +1,30 @@
+> > > >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> > > >> +
+> > > >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> > > >> +RZ/A1 and RZ/A2 SoCs:
+> > > >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> > > >> +    interrupts,
+> > > >> +  - NMI edge select.
+> > > >> +
+> > > >> +Required properties:
+> > > >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> > > >> +               fallback.
+> > > >> +               Examples with soctypes are:
+> > > >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> > > >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> > > >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> > > >> +                                in interrupts.txt in this directory)
+> > > >> +  - interrupt-controller: Marks the device as an interrupt controller
+> > > >> +  - reg: Base address and length of the memory resource used by the interrupt
+> > > >> +         controller
+> > > >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+> > > >
+> > > > Why isn't this just an 'interrupts' property?
+> > >
+> > > That's likely because of kernel limitations. The DT code does an
+> > > of_populate() on any device that it finds, parse the "interrupts"
+> > > propertiy, resulting in the irq_descs being populated.
+> > >
+> > > That creates havoc, as these interrupts are not for this device, but for
+> > > something that is connected to it. This is merely a bridge of some sort.
+> >
+> > 'interrupt-map' would avoid that problem I think.
+>
+> "interrupt-map" seems to be meant for translation on a bus?
+> What to do with the child and parent unit addresses fields?
+> The parent unit address size depends on the #address-cells of the parent
+> interrupt-controller (i.e. GIC, so it's zero).
+> But the child unit address size depends on the #address-cells of the bus node
+> on which the child is located, so that's a (non-zero) bus #address-cells
+> (from the root node), not an interrupt-controller #address-cells.
 
-On Wed, May 01, 2019 at 05:44:47PM +0530, Jagan Teki wrote:
-> HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
-> resolution. It has built in Goodix, GT9271 captive touchscreen
-> with backlight adjustable via PWM.
-> 
-> Add support for it.
-> 
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+The #address-cells is always retrieved from the interrupt-parent node
+(or its parent). The interrupt-parent can implicitly be the child's
+parent, but that is rarely used in modern systems.
 
-Please submit the binding in a separate patch as per
-Documentation/devicetree/bindings/submitting-patches.txt
+> Each line in an interrupt-map also contains a child interrupt specifier.
+> As the RZ/A1 IRQC supports 8 interrupt inputs with 4 sense types,
+> that would mean 32 lines? Or should I just ignore the senses here,
+> and specify 0?
 
-The binding looks like it is compatible with common-panel and
-simple-panel - please say so in the bindings.
-See for example the last few binding documents added to the kernel tree.
+You can ignore parts of the child cells with interrupt-map-mask, so
+you should just need 8 entries.
 
-> ---
->  .../display/panel/friendlyarm,hd702e.txt      | 29 +++++++++++++++++++
->  drivers/gpu/drm/panel/panel-simple.c          | 26 +++++++++++++++++
->  2 files changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt b/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt
-> new file mode 100644
-> index 000000000000..67349d7f79be
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt
-> @@ -0,0 +1,29 @@
-> +FriendlyELEC HD702E 800x1280 LCD panel
-> +
-> +HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
-> +resolution. It has built in Goodix, GT9271 captive touchscreen
-> +with backlight adjustable via PWM.
-> +
-> +Required properties:
-> +- compatible: should be "friendlyarm,hd702e"
-> +- power-supply: regulator to provide the supply voltage
-> +
-> +Optional properties:
-> +- backlight: phandle of the backlight device attached to the panel
-> +
-> +Optional nodes:
-> +- Video port for LCD panel input.
-> +
-> +Example:
-> +
-> +	panel {
-> +		compatible ="friendlyarm,hd702e";
-> +		backlight = <&backlight>;
-> +		power-supply = <&vcc3v3_sys>;
-> +
-> +		port {
-> +			panel_in_edp: endpoint {
-> +				remote-endpoint = <&edp_out_panel>;
-> +			};
-> +		};
-> +	};
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 9e8218f6a3f2..9db3c0c65ef2 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1184,6 +1184,29 @@ static const struct panel_desc foxlink_fl500wvr00_a0t = {
->  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
->  };
->  
-> +static const struct drm_display_mode friendlyarm_hd702e_mode = {
-> +	.clock		= 67185,
-> +	.hdisplay	= 800,
-> +	.hsync_start	= 800 + 20,
-> +	.hsync_end	= 800 + 20 + 24,
-> +	.htotal		= 800 + 20 + 24 + 20,
-> +	.vdisplay	= 1280,
-> +	.vsync_start	= 1280 + 4,
-> +	.vsync_end	= 1280 + 4 + 8,
-> +	.vtotal		= 1280 + 4 + 8 + 4,
-> +	.vrefresh	= 60,
-> +	.flags 		= DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-> +};
-> +
-> +static const struct panel_desc friendlyarm_hd702e = {
-> +	.modes = &friendlyarm_hd702e_mode,
-> +	.num_modes = 1,
-> +	.size = {
-> +		.width	= 94,
-> +		.height	= 151,
-> +	},
-> +};
-As I read the datasheet then this panel needs at least a prepare delay
-of 10 ms (it says > 10 ms from VGH until Data).
-And then we also know that VGH shall be valid at least 10 ms after DVDD
-so prepare is likely 20 ms.
+> i.e. interrupt-map = <0 0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH,
+>                       0 1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH,
+>                       0 2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH,
+>                       0 3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH,
+>                       0 4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH,
+>                       0 5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH,
+>                       0 6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH,
+>                       0 7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>
+> (using zero for the child unit addresses, too)?
+>
+> > > Furthermore, this is a rather long established practice: gic-v2m,
+> > > gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
+> > > for one reason or another plug onto the GIC use the same method.
+> >
+> > All handling the mapping to the parent in their own way...
+> >
+> > > > Plus, without 'interrupts' walking the hierarchy is broken.
+> > >
+> > > Erm... Which hierarchy?
+> >
+> > of_irq_init() expects that an interrupt-controller without an
+> > interrupt-parent is the root controller. So you're right. We only need
+>
+> That applies to IRQCHIP_DECLARE() drivers only, not platform device
+> drivers, right?
 
-Based on datasheet found here:
-https://pan.baidu.com/s/1geEfBLh/
+Right.
 
-Please evaluate all delays.
-
-> +
->  static const struct drm_display_mode giantplus_gpg482739qs5_mode = {
->  	.clock = 9000,
->  	.hdisplay = 480,
-> @@ -2634,6 +2657,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "edt,etm0700g0edh6",
->  		.data = &edt_etm0700g0bdh6,
-> +	}, {
-> +		.compatible = "friendlyarm,hd702e",
-> +		.data = &friendlyarm_hd702e,
->  	}, {
->  		.compatible = "foxlink,fl500wvr00-a0t",
->  		.data = &foxlink_fl500wvr00_a0t,
-
-Add these in sorted order.
-"fox" is before "fri"
-
-	Sam
+Rob
