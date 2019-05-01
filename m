@@ -2,119 +2,217 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2C3C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F3DC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7AD720675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:06:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556737560;
-	bh=BeBRKMJDieNk7rgnor3kOMBv5hXbyliZ8Y5kUb3R8pU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gV7sf5BDIj71i2nU9jVe8W7we+zObsTQK50UAeixJshySAHqa1qgl6MdzTxdo8AAw
-	 Y5tmNgMrpz4hhHDT+FxPWsU8gH0/e+M7zQXjqPKtudbDUW5mhw2lWxp5p7ECDiOobR
-	 sFbfSEK/8S1UiuzNIGGjvwVHLATi0F/lRrIsMjSw=
+	by mail.kernel.org (Postfix) with ESMTP id CBE5D2085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfEATF7 (ORCPT
+        id S1726206AbfEATIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:05:59 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44491 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfEATF7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:05:59 -0400
-Received: by mail-lj1-f194.google.com with SMTP id c6so9764317lji.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 12:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sel235hwbH6X1YvFcp9cC7JRXnS2M4BkT9uwVxDW2CQ=;
-        b=hKJ92qX+WBtDkwAkIRCoWA4GuXtRFgmwNS/x4HHoRL1Cph8V9Ovoot3NqLu+fqUiqM
-         Qth2QafTxUxf+Pm3vpTn95XuskqJEgEpvVEeBMW2fZtoLYrabbeAmSNI1KU3JXjTPrP/
-         nm6QVbnOD2fawZyDG5MwCG7W040aS+7zbGhdM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sel235hwbH6X1YvFcp9cC7JRXnS2M4BkT9uwVxDW2CQ=;
-        b=DAG9lcDs0MbewIo0Aq5N8LAS6v49peYGJPFLgtOYw6KM31pTu1wHtkYQyjKc/AqKJZ
-         TeXMLaf2wZdi7NhpnLpf0hPAJRG+mR1ityFDgOvz0a4HeB7aVjN+dKBFH607F9jfWlhO
-         yr6AFVpU10hgYURKtrCW6uzdCaQStO36bHnLIRduUlHhQAv3KW2F8VEBWcOteaM404pw
-         HkZhcl8nAwzKbaWd3U/Ga/PpwClKseo6gm3/OOVMOiwVqP7BYd/0SKDANihKnw42oUTb
-         D6rVLMJa/5BrKc13+dLSOOLZbq+iVv/6S7nVnQzosdDIQ8k5xuUf6kH7g4Y8oW8v4NW/
-         1YBA==
-X-Gm-Message-State: APjAAAWutria99B5vuIL0qIuAk/w10Ksz2i9rVZiN4JEEFpS0JAChGKd
-        i1TSW2PAveJ1KNkknzdbAE7MPYpJk58=
-X-Google-Smtp-Source: APXvYqxzUiy+YK1byj6WXWMe+eoK7mRECKF5Vk9jw+aIx7HD6qus5VA+nedrWL//sYZZpSmt9OYx3w==
-X-Received: by 2002:a2e:9746:: with SMTP id f6mr4105105ljj.127.1556737556782;
-        Wed, 01 May 2019 12:05:56 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id t7sm8229632ljj.87.2019.05.01.12.05.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 12:05:56 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id u17so68082lfi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 12:05:56 -0700 (PDT)
-X-Received: by 2002:ac2:547a:: with SMTP id e26mr18577958lfn.148.1556737161870;
- Wed, 01 May 2019 11:59:21 -0700 (PDT)
+        Wed, 1 May 2019 15:08:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58834 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfEATIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 15:08:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 54FE430832E1;
+        Wed,  1 May 2019 19:08:34 +0000 (UTC)
+Received: from localhost (ovpn-116-20.ams2.redhat.com [10.36.116.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9290312A47;
+        Wed,  1 May 2019 19:08:33 +0000 (UTC)
+Date:   Wed, 1 May 2019 15:08:31 -0400
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Jorge E. Moreira" <jemoreira@google.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        kernel-team@android.com, stable@vger.kernel.org,
+        sgarzare@redhat.com
+Subject: Re: [PATCH] vsock/virtio: Initialize core virtio vsock before
+ registering the driver
+Message-ID: <20190501190831.GF22391@stefanha-x1.localdomain>
+References: <20190501003001.186239-1-jemoreira@google.com>
 MIME-Version: 1.0
-References: <20190501113238.0ab3f9dd@gandalf.local.home> <CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com>
- <20190501145200.6c095d7f@oasis.local.home>
-In-Reply-To: <20190501145200.6c095d7f@oasis.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 1 May 2019 11:59:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgMZJeMCW5MA25WFJZeYYWCOWr0nGaHhJ7kg+zsu5FY_A@mail.gmail.com>
-Message-ID: <CAHk-=wgMZJeMCW5MA25WFJZeYYWCOWr0nGaHhJ7kg+zsu5FY_A@mail.gmail.com>
-Subject: Re: [RFC][PATCH v3] ftrace/x86_64: Emulate call function while
- updating in breakpoint handler
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lIrNkN/7tmsD/ALM"
+Content-Disposition: inline
+In-Reply-To: <20190501003001.186239-1-jemoreira@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 01 May 2019 19:08:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 11:52 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+
+--lIrNkN/7tmsD/ALM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 30, 2019 at 05:30:01PM -0700, Jorge E. Moreira wrote:
+> Avoid a race in which static variables in net/vmw_vsock/af_vsock.c are
+> accessed (while handling interrupts) before they are initialized.
 >
-> I got Peter's patch working. Here it is. What do you think?
+>=20
+> [    4.201410] BUG: unable to handle kernel paging request at fffffffffff=
+fffe8
+> [    4.207829] IP: vsock_addr_equals_addr+0x3/0x20
+> [    4.211379] PGD 28210067 P4D 28210067 PUD 28212067 PMD 0
+> [    4.211379] Oops: 0000 [#1] PREEMPT SMP PTI
+> [    4.211379] Modules linked in:
+> [    4.211379] CPU: 1 PID: 30 Comm: kworker/1:1 Not tainted 4.14.106-4192=
+97-gd7e28cc1f241 #1
+> [    4.211379] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
+S 1.10.2-1 04/01/2014
+> [    4.211379] Workqueue: virtio_vsock virtio_transport_rx_work
+> [    4.211379] task: ffffa3273d175280 task.stack: ffffaea1800e8000
+> [    4.211379] RIP: 0010:vsock_addr_equals_addr+0x3/0x20
+> [    4.211379] RSP: 0000:ffffaea1800ebd28 EFLAGS: 00010286
+> [    4.211379] RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffffffffb=
+94e42f0
+> [    4.211379] RDX: 0000000000000400 RSI: ffffffffffffffe0 RDI: ffffaea18=
+00ebdd0
+> [    4.211379] RBP: ffffaea1800ebd58 R08: 0000000000000001 R09: 000000000=
+0000001
+> [    4.211379] R10: 0000000000000000 R11: ffffffffb89d5d60 R12: ffffaea18=
+00ebdd0
+> [    4.211379] R13: 00000000828cbfbf R14: 0000000000000000 R15: ffffaea18=
+00ebdc0
+> [    4.211379] FS:  0000000000000000(0000) GS:ffffa3273fd00000(0000) knlG=
+S:0000000000000000
+> [    4.211379] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    4.211379] CR2: ffffffffffffffe8 CR3: 000000002820e001 CR4: 000000000=
+01606e0
+> [    4.211379] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000000000=
+0000000
+> [    4.211379] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000000000=
+0000400
+> [    4.211379] Call Trace:
+> [    4.211379]  ? vsock_find_connected_socket+0x6c/0xe0
+> [    4.211379]  virtio_transport_recv_pkt+0x15f/0x740
+> [    4.211379]  ? detach_buf+0x1b5/0x210
+> [    4.211379]  virtio_transport_rx_work+0xb7/0x140
+> [    4.211379]  process_one_work+0x1ef/0x480
+> [    4.211379]  worker_thread+0x312/0x460
+> [    4.211379]  kthread+0x132/0x140
+> [    4.211379]  ? process_one_work+0x480/0x480
+> [    4.211379]  ? kthread_destroy_worker+0xd0/0xd0
+> [    4.211379]  ret_from_fork+0x35/0x40
+> [    4.211379] Code: c7 47 08 00 00 00 00 66 c7 07 28 00 c7 47 08 ff ff f=
+f ff c7 47 04 ff ff ff ff c3 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 8b 47 0=
+8 <3b> 46 08 75 0a 8b 47 04 3b 46 04 0f 94 c0 c3 31 c0 c3 90 66 2e
+> [    4.211379] RIP: vsock_addr_equals_addr+0x3/0x20 RSP: ffffaea1800ebd28
+> [    4.211379] CR2: ffffffffffffffe8
+> [    4.211379] ---[ end trace f31cc4a2e6df3689 ]---
+> [    4.211379] Kernel panic - not syncing: Fatal exception in interrupt
+> [    4.211379] Kernel Offset: 0x37000000 from 0xffffffff81000000 (relocat=
+ion range: 0xffffffff80000000-0xffffffffbfffffff)
+> [    4.211379] Rebooting in 5 seconds..
+>=20
+> Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unp=
+lug")
+> Cc: Stefan Hajnoczi <stefanha@redhat.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: kvm@vger.kernel.org
+> Cc: virtualization@lists.linux-foundation.org
+> Cc: netdev@vger.kernel.org
+> Cc: kernel-team@android.com
+> Cc: stable@vger.kernel.org [4.9+]
+> Signed-off-by: Jorge E. Moreira <jemoreira@google.com>
+> ---
+>  net/vmw_vsock/virtio_transport.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_tran=
+sport.c
+> index 15eb5d3d4750..96ab344f17bb 100644
+> --- a/net/vmw_vsock/virtio_transport.c
+> +++ b/net/vmw_vsock/virtio_transport.c
+> @@ -702,28 +702,27 @@ static int __init virtio_vsock_init(void)
+>  	if (!virtio_vsock_workqueue)
+>  		return -ENOMEM;
+> =20
+> -	ret =3D register_virtio_driver(&virtio_vsock_driver);
+> +	ret =3D vsock_core_init(&virtio_transport.transport);
 
-I can tell from just looking at it for five seconds that at least the
-32-bit case is buggy.
+Have you checked that all transport callbacks are safe even if another
+CPU calls them while virtio_vsock_probe() is executing on another CPU?
 
-You can't look at CS(%rsp) without first also checking that you're not
-coming from vm86 mode.
+>  	if (ret)
+>  		goto out_wq;
+> =20
+> -	ret =3D vsock_core_init(&virtio_transport.transport);
+> +	ret =3D register_virtio_driver(&virtio_vsock_driver);
+>  	if (ret)
+> -		goto out_vdr;
+> +		goto out_vci;
+> =20
+>  	return 0;
+> =20
+> -out_vdr:
+> -	unregister_virtio_driver(&virtio_vsock_driver);
+> +out_vci:
+> +	vsock_core_exit();
+>  out_wq:
+>  	destroy_workqueue(virtio_vsock_workqueue);
+>  	return ret;
+> -
+>  }
+> =20
+>  static void __exit virtio_vsock_exit(void)
+>  {
+> -	vsock_core_exit();
+>  	unregister_virtio_driver(&virtio_vsock_driver);
+> +	vsock_core_exit();
+>  	destroy_workqueue(virtio_vsock_workqueue);
+>  }
 
-But other than that I guess it does end up being pretty simple.
+The virtio_vsock_exit() order is intentional:
 
-             Linus
+  commit 22b5c0b63f32568e130fa2df4ba23efce3eb495b
+  Author: Stefano Garzarella <sgarzare@redhat.com>
+  Date:   Fri Feb 1 12:42:06 2019 +0100
+
+      vsock/virtio: fix kernel panic after device hot-unplug
+
+      virtio_vsock_remove() invokes the vsock_core_exit() also if there
+      are opened sockets for the AF_VSOCK protocol family. In this way
+      the vsock "transport" pointer is set to NULL, triggering the
+      kernel panic at the first socket activity.
+
+      This patch move the vsock_core_init()/vsock_core_exit() in the
+      virtio_vsock respectively in module_init and module_exit functions,
+      that cannot be invoked until there are open sockets.
+
+Calling vsock_core_exit() after unregister_virtio_driver() is likely to
+lead to the issue that Stefano tried to fix.
+
+Is it necessary to change virtio_vsock_exit()?
+
+Stefan
+
+--lIrNkN/7tmsD/ALM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlzJ7pQACgkQnKSrs4Gr
+c8jR1gf/cnFCrPkul6fp2xkobJXTTX2hwlN4Lg0ubx64+2nm0kboOAywf+Ci3qRb
+bVxc31iEJ0uDkNfrvYCMNAHRdo210mQwQOTgGlwb7NGW+MwadZG2bi7ESaLnC0Bq
+1qs6c4X/wHxjhyz3juLA50/20c0G0jtOdTmiltlgTyK+tsPKu0BQUN0tutokYmeV
+/Maojmx6cXozqPperoF3OZhoQXzKWc5qefOqJyJYIeVpI+XeWiC4DL7zua5Jorp0
+BLXio3tkGHge6idenbxSpzey/cv8l1BMoGt8TtCbpbK11sPcSJk73Ggg8EzqC27u
+uleMVbN1FWgzKvc46IErCJE1P/1S0A==
+=kAew
+-----END PGP SIGNATURE-----
+
+--lIrNkN/7tmsD/ALM--
