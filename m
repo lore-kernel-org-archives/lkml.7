@@ -2,124 +2,109 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3875C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F12AC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC985204EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EC7208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:48:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZAZlVyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfEAQo6 (ORCPT
+        id S1726617AbfEAQsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:44:58 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51491 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfEAQo5 (ORCPT
+        Wed, 1 May 2019 12:48:46 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34192 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfEAQsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:44:57 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hLsLc-00033V-Ci; Wed, 01 May 2019 18:44:44 +0200
-Date:   Wed, 1 May 2019 18:44:44 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     "kernelci.org bot" <bot@kernelci.org>, Tejun Heo <tj@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org
-Subject: Re: next/master boot bisection: next-20190430 on beagle-xm
-Message-ID: <20190501164444.iclxlzrxofqnj4bn@linutronix.de>
-References: <5cc8b55c.1c69fb81.c3759.1c27@mx.google.com>
- <20190501153711.pxmapo2k3n5ynqrc@linutronix.de>
- <20190501162944.GW8004@atomide.com>
+        Wed, 1 May 2019 12:48:46 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ck18so4129847plb.1;
+        Wed, 01 May 2019 09:48:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=a82ckZo73SGxA8ey3aK0omtfrwDTACIRQAmbz4zxBz8=;
+        b=DZAZlVyv2Zj8QW2ZVaA4F2WxBgm+TYZTAM4t/5EOeChgCJ7BD4Ft2Dzmnf3x6+ydz1
+         XakRftqblAOckP3MeN3ccDznp09ppAFe871YQDxI1Qj+FuNPuoY1ouHhz5kI+3ZQ3PV3
+         /L68VP9/OZfwUxqTI2ADGPFduqoKJR0cQ/ilRG4LirfK9AWJ1nlO4sVAtoc4jAZjVELX
+         dwxVevKkDwYvFLwv52/XqZAeyBzWSZ5CO4uvi+nyaZGWjFQjY/27kRLDK4iQOVPv1bS3
+         pYU7oLCM3TjBP/5voYoXBOCWgkWx+/gNSfwEsWL5ioDvofaSRT3AzcJ5BrlWCeZEJ+vp
+         9TMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a82ckZo73SGxA8ey3aK0omtfrwDTACIRQAmbz4zxBz8=;
+        b=eRcacc6vuWJ2IS6LXieJP2nV+JdPyK0DzVyTLlpNteUKuYtVLTDB0NNWxFxVMRyLjb
+         jkZpXMqpSxzbj/mmdgDewI9SRm1gkEWnpkRbVCAuVNixmsOJD70pwuK0LPi2FHOaaSmm
+         hFibVoZeRDX1/wyManUZduKYreqenLrLAx/hOuOoKAwJdqC+MnjYFlK3Xikj96r/q1p/
+         toFtIaV03CFd2ihqtn34U663ftD5jqWyHE2G3acj5LIQJTYHsElQFPf5CMjs9aVke1Zo
+         d/piFGUMZ2ufbdSBy3Nt++szGHwQwzqUvoPiyhi/KOEjj1piT95aSD9cmKqJyTOYfdjG
+         EEow==
+X-Gm-Message-State: APjAAAVOZsxdWBX/W9WK/VXby8JYo+/mV9bMdXGB6vtluQfByrpjuZj9
+        HWcbFDc5i4j7omHFxG3mH5nBogrN
+X-Google-Smtp-Source: APXvYqxW8qIcb4HhSImxk+i+ozqc55UYdRTl9MHwDSKvhigyPhTtplKP1yE1tqeQ0DpYt8I1Y+S+aA==
+X-Received: by 2002:a17:902:163:: with SMTP id 90mr79079707plb.34.1556729325186;
+        Wed, 01 May 2019 09:48:45 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r76sm62426017pfa.39.2019.05.01.09.48.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 09:48:44 -0700 (PDT)
+Date:   Wed, 1 May 2019 09:48:43 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-pm@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/6] thermal: Introduce
+ devm_thermal_of_cooling_device_register
+Message-ID: <20190501164843.GA16333@roeck-us.net>
+References: <1555617500-10862-1-git-send-email-linux@roeck-us.net>
+ <1555617500-10862-2-git-send-email-linux@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501162944.GW8004@atomide.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1555617500-10862-2-git-send-email-linux@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-01 09:29:44 [-0700], Tony Lindgren wrote:
-> Hi,
+On Thu, Apr 18, 2019 at 12:58:15PM -0700, Guenter Roeck wrote:
+> thermal_of_cooling_device_register() and thermal_cooling_device_register()
+> are typically called from driver probe functions, and
+> thermal_cooling_device_unregister() is called from remove functions. This
+> makes both a perfect candidate for device managed functions.
 > 
-> * Sebastian Andrzej Siewior <bigeasy@linutronix.de> [190501 15:37]:
-> > 
-> > On 2019-04-30 13:51:40 [-0700], kernelci.org bot wrote:
-> > > next/master boot bisection: next-20190430 on beagle-xm
-> > > 
-> > > Summary:
-> > >   Start:      f43b05fd4c17 Add linux-next specific files for 20190430
-> > >   Details:    https://kernelci.org/boot/id/5cc84d7359b514b7ab55847b
-> > >   Plain log:  https://storage.kernelci.org//next/master/next-20190430/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-baylibre/boot-omap3-beagle-xm.txt
-> > >   HTML log:   https://storage.kernelci.org//next/master/next-20190430/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-baylibre/boot-omap3-beagle-xm.html
-> > >   Result:     6d25be5782e4 sched/core, workqueues: Distangle worker accounting from rq lock
-> > > 
-> > > Checks:
-> > >   revert:     PASS
-> > >   verify:     PASS
-> > > 
-> > > Parameters:
-> > >   Tree:       next
-> > >   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > >   Branch:     master
-> > >   Target:     beagle-xm
-> > >   CPU arch:   arm
-> > >   Lab:        lab-baylibre
-> > >   Compiler:   gcc-7
-> > >   Config:     multi_v7_defconfig+CONFIG_SMP=n
-> > >   Test suite: boot
-> > > 
-> > > Breaking commit found:
-> > > 
-> > > -------------------------------------------------------------------------------
-> > > commit 6d25be5782e482eb93e3de0c94d0a517879377d0
-> > > Author: Thomas Gleixner <tglx@linutronix.de>
-> > > Date:   Wed Mar 13 17:55:48 2019 +0100
-> > > 
-> > >     sched/core, workqueues: Distangle worker accounting from rq lock
-> > 
-> > According to the bootlog it just stopped its output. This commit is in
-> > next since a week or two so I don't understand why this pops up now.
+> Introduce devm_thermal_of_cooling_device_register(). This function can
+> also be used to replace thermal_cooling_device_register() by passing a NULL
+> pointer as device node. The new function requires both struct device *
+> and struct device_node * as parameters since the struct device_node *
+> parameter is not always identical to dev->of_node.
 > 
-> Adding Kevin to Cc, he just confirmed on #armlinux irc that he is able to
-> reproduce this with CONFIG_SMP=n and root=/dev/ram0. I could not reproduce
-> this issue so far on omap3 with NFSroot at least.
+> Don't introduce a device managed remove function since it is not needed
+> at this point.
+> 
 
-So that problem remains even that the job for today passed?
- 
-> > I just revived my BBB and I can boot that commit in question. Currently
-> > that as close as I get to a beagle-xm. 
-> > Looking at
-> > 	https://kernelci.org/boot/id/5cc9a64359b514a77f5584af/
-> > it seems that the very same board managed to boot linux-next for
-> > next-20190501.
-> > 
-> > Side note: I can't boot next-20190501 on my BBB, bisect points to commit
-> >   1a5cd7c23cc52 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
-> > 
-> > any idea?
-> 
-> Oh interesting thanks for letting me know. Next boots fine for me here
-> with NFSroot on BBB.
-> 
-> Do you have some output on what happens so I can investigate?
+Any feedback / thoughts / comments ?
 
-Nope, the console remains dark.
-
-> Regards,
-> 
-> Tony
-
-Sebastian
+Thanks,
+Guenter
