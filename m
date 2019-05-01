@@ -2,53 +2,84 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83383C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2C3C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD182089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZPHh/iHX"
+	by mail.kernel.org (Postfix) with ESMTP id A7AD720675
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556737560;
+	bh=BeBRKMJDieNk7rgnor3kOMBv5hXbyliZ8Y5kUb3R8pU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gV7sf5BDIj71i2nU9jVe8W7we+zObsTQK50UAeixJshySAHqa1qgl6MdzTxdo8AAw
+	 Y5tmNgMrpz4hhHDT+FxPWsU8gH0/e+M7zQXjqPKtudbDUW5mhw2lWxp5p7ECDiOobR
+	 sFbfSEK/8S1UiuzNIGGjvwVHLATi0F/lRrIsMjSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfEATEV (ORCPT
+        id S1726175AbfEATF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:04:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37302 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfEATEU (ORCPT
+        Wed, 1 May 2019 15:05:59 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44491 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfEATF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:04:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VNCyKNchmG8uJyDZBNfvh+ZXwPXv3ObxEe6ybUIbxas=; b=ZPHh/iHX909FhdEWVMA4QJdeW
-        sLpmidqy0xvcDozQ+OXAes5vq91NYUU8aWQX86/k9ygeaIY4C7zZMqciOMHZ5R1OoZshv/ZPdS+K9
-        u1PoDqxV0n/W43OV4ZA4s7ibK6p3RWi5YjKnVE8oCGoooF0f7HgqqqOkUfPzmRSaX8pRohKrfopVj
-        EL1OQIax2iEVJGug2UG2gK7rSdYoYkZI4YzDwida3M3580xWnQVXqAkq+B42Wz50U3v4QZ0BV8z4m
-        vc1eMsAwaflmpXsQfy08fXm43c2+yfdiZ0P8nvRJ6GDxEf0U0pMeCIHa+EDvgIm1EKKdmbrxvjHNk
-        FoGC73ovw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLuWF-0005bC-D6; Wed, 01 May 2019 19:03:51 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8B6B7984EB4; Wed,  1 May 2019 21:03:48 +0200 (CEST)
-Date:   Wed, 1 May 2019 21:03:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+        Wed, 1 May 2019 15:05:59 -0400
+Received: by mail-lj1-f194.google.com with SMTP id c6so9764317lji.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 12:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sel235hwbH6X1YvFcp9cC7JRXnS2M4BkT9uwVxDW2CQ=;
+        b=hKJ92qX+WBtDkwAkIRCoWA4GuXtRFgmwNS/x4HHoRL1Cph8V9Ovoot3NqLu+fqUiqM
+         Qth2QafTxUxf+Pm3vpTn95XuskqJEgEpvVEeBMW2fZtoLYrabbeAmSNI1KU3JXjTPrP/
+         nm6QVbnOD2fawZyDG5MwCG7W040aS+7zbGhdM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sel235hwbH6X1YvFcp9cC7JRXnS2M4BkT9uwVxDW2CQ=;
+        b=DAG9lcDs0MbewIo0Aq5N8LAS6v49peYGJPFLgtOYw6KM31pTu1wHtkYQyjKc/AqKJZ
+         TeXMLaf2wZdi7NhpnLpf0hPAJRG+mR1ityFDgOvz0a4HeB7aVjN+dKBFH607F9jfWlhO
+         yr6AFVpU10hgYURKtrCW6uzdCaQStO36bHnLIRduUlHhQAv3KW2F8VEBWcOteaM404pw
+         HkZhcl8nAwzKbaWd3U/Ga/PpwClKseo6gm3/OOVMOiwVqP7BYd/0SKDANihKnw42oUTb
+         D6rVLMJa/5BrKc13+dLSOOLZbq+iVv/6S7nVnQzosdDIQ8k5xuUf6kH7g4Y8oW8v4NW/
+         1YBA==
+X-Gm-Message-State: APjAAAWutria99B5vuIL0qIuAk/w10Ksz2i9rVZiN4JEEFpS0JAChGKd
+        i1TSW2PAveJ1KNkknzdbAE7MPYpJk58=
+X-Google-Smtp-Source: APXvYqxzUiy+YK1byj6WXWMe+eoK7mRECKF5Vk9jw+aIx7HD6qus5VA+nedrWL//sYZZpSmt9OYx3w==
+X-Received: by 2002:a2e:9746:: with SMTP id f6mr4105105ljj.127.1556737556782;
+        Wed, 01 May 2019 12:05:56 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id t7sm8229632ljj.87.2019.05.01.12.05.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 12:05:56 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id u17so68082lfi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 12:05:56 -0700 (PDT)
+X-Received: by 2002:ac2:547a:: with SMTP id e26mr18577958lfn.148.1556737161870;
+ Wed, 01 May 2019 11:59:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190501113238.0ab3f9dd@gandalf.local.home> <CAHk-=wjvQxY4DvPrJ6haPgAa6b906h=MwZXO6G8OtiTGe=N7_w@mail.gmail.com>
+ <20190501145200.6c095d7f@oasis.local.home>
+In-Reply-To: <20190501145200.6c095d7f@oasis.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 1 May 2019 11:59:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgMZJeMCW5MA25WFJZeYYWCOWr0nGaHhJ7kg+zsu5FY_A@mail.gmail.com>
+Message-ID: <CAHk-=wgMZJeMCW5MA25WFJZeYYWCOWr0nGaHhJ7kg+zsu5FY_A@mail.gmail.com>
+Subject: Re: [RFC][PATCH v3] ftrace/x86_64: Emulate call function while
+ updating in breakpoint handler
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Nicolai Stange <nstange@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Jiri Kosina <jikos@kernel.org>,
         Miroslav Benes <mbenes@suse.cz>,
@@ -68,67 +99,22 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         live-patching@vger.kernel.org,
         "open list:KERNEL SELFTEST FRAMEWORK" 
         <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC][PATCH] ftrace/x86: Emulate call function while updating in
- breakpoint handler
-Message-ID: <20190501190348.GT7905@worktop.programming.kicks-ass.net>
-References: <CAHk-=wg1QPz0m+7jnVcjQgkySUQLzAXE8_PZARV-vWYK27LB=w@mail.gmail.com>
- <20190430135602.GD2589@hirez.programming.kicks-ass.net>
- <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
- <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
- <20190430130359.330e895b@gandalf.local.home>
- <20190430132024.0f03f5b8@gandalf.local.home>
- <20190430134913.4e29ce72@gandalf.local.home>
- <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
- <20190501131117.GW2623@hirez.programming.kicks-ass.net>
- <20190501145824.08aed43a@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501145824.08aed43a@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 02:58:24PM -0400, Steven Rostedt wrote:
-> > +	if (ftrace_location(ip)) {
-> > +		int3_emulate_call(regs, ftrace_update_func_call);
-> 
-> Should be:
-> 
-> 		int3_emulate_call(regs, (unsigned long)ftrace_regs_caller);
+On Wed, May 1, 2019 at 11:52 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> I got Peter's patch working. Here it is. What do you think?
 
-Ah, I lost the plot a little there.
+I can tell from just looking at it for five seconds that at least the
+32-bit case is buggy.
 
-> > +		return 1;
-> > +	} else if (is_ftrace_caller(ip)) {
-> > +		if (!ftrace_update_func_call) {
-> > +			int3_emulate_jmp(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
-> 
-> I see what you did here, but I think:
-> 
-> 			int3_emulate_jmp(regs, ip + CALL_INSN_SIZE);
-> 
-> looks better. But that said, we could in the beginning do:
-> 
-> 	ip = regs->ip - INT3_INSN_SIZE;
-> 
-> instead of
-> 
-> 	ip = regs->ip - 1;
-> 
-> I made these updates and posted them to Linus.
+You can't look at CS(%rsp) without first also checking that you're not
+coming from vm86 mode.
 
-I was actually considering:
+But other than that I guess it does end up being pretty simple.
 
-static inline void int3_emulate_nop(struct pt_regs *regs, unsigned long size)
-{
-	int3_emulate_jmp(regs, regs->ip - INT3_INSN_SIZE + size);
-}
-
-And then the above becomes:
-
-	int3_emulate_nop(regs, CALL_INSN_SIZE);
-
-Hmm?
+             Linus
