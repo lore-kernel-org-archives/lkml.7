@@ -2,123 +2,160 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3463C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4217CC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8015E20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:42:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wj+Rkbod"
+	by mail.kernel.org (Postfix) with ESMTP id 0726E20656
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfEAUmB (ORCPT
+        id S1726202AbfEAUoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:42:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58408 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfEAUmA (ORCPT
+        Wed, 1 May 2019 16:44:01 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.195]:44407 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726126AbfEAUoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:42:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xjFUiKHVKRYeZR2wUaD2tSOO8e6Ya1jD8WtfOGkq95Y=; b=Wj+RkbodXdXD8te9RPXfkToEu
-        SifdbqvPQeFbdZ6nsnUxyXxNblHAFtIx/QJS1Z+UfSwLVE5oK5V1GRj4WbCG3F+UfkOd3iV95MD2B
-        2uiSigDEnf8eouEFLFTXfECiRstIdz81Zzy390omGT0BRP5V8pyylSVSR+gzsto2fVy2CyNTXrv8e
-        2RORYRDpoqjd/ImdNawKryn1ydZ3Xr8DsBJefdaFA/zGs8ZwdoEEPyzgxSkSFB2bP8W1uTG0P0Bbc
-        udFmI0pB4+NTTnB42XM9jZyDA32Yj5relRWWlae/hqBYqhVccyOgITfDQppTVADE4XobuoEEsOH14
-        2iMz2+67g==;
-Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLw2P-0000N1-Nj; Wed, 01 May 2019 20:41:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     ceph-devel@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ceph: remove ceph_get_direct_page_vector
-Date:   Wed,  1 May 2019 16:40:32 -0400
-Message-Id: <20190501204032.26380-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Wed, 1 May 2019 16:44:00 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 86EC0795F70
+        for <linux-kernel@vger.kernel.org>; Wed,  1 May 2019 15:43:59 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Lw59h4F5AiQerLw59hjutf; Wed, 01 May 2019 15:43:59 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=50596 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hLw59-0040TB-3v; Wed, 01 May 2019 15:43:59 -0500
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Mark expected switch
+ fall-throughs
+To:     ibm-acpi@hmh.eng.br, Kees Cook <keescook@chromium.org>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190424181543.GA31200@embeddedor>
+ <CAGXu5jKRO45m1TRDPA09sv0j+cZCC8e1w+oQty4YfOttKP3FYA@mail.gmail.com>
+ <13ba6003-ff33-4e5b-b88e-ef93bc68dc48@www.fastmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <e1199dfe-86fe-0e42-74c7-15adf0b54406@embeddedor.com>
+Date:   Wed, 1 May 2019 15:43:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <13ba6003-ff33-4e5b-b88e-ef93bc68dc48@www.fastmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hLw59-0040TB-3v
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:50596
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 21
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is entirely unused.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/ceph/libceph.h |  4 ----
- net/ceph/pagevec.c           | 33 ---------------------------------
- 2 files changed, 37 deletions(-)
 
-diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
-index 337d5049ff93..a3cddf5f0e60 100644
---- a/include/linux/ceph/libceph.h
-+++ b/include/linux/ceph/libceph.h
-@@ -299,10 +299,6 @@ int ceph_wait_for_latest_osdmap(struct ceph_client *client,
- 
- /* pagevec.c */
- extern void ceph_release_page_vector(struct page **pages, int num_pages);
--
--extern struct page **ceph_get_direct_page_vector(const void __user *data,
--						 int num_pages,
--						 bool write_page);
- extern void ceph_put_page_vector(struct page **pages, int num_pages,
- 				 bool dirty);
- extern struct page **ceph_alloc_page_vector(int num_pages, gfp_t flags);
-diff --git a/net/ceph/pagevec.c b/net/ceph/pagevec.c
-index d3736f5bffec..64305e7056a1 100644
---- a/net/ceph/pagevec.c
-+++ b/net/ceph/pagevec.c
-@@ -10,39 +10,6 @@
- 
- #include <linux/ceph/libceph.h>
- 
--/*
-- * build a vector of user pages
-- */
--struct page **ceph_get_direct_page_vector(const void __user *data,
--					  int num_pages, bool write_page)
--{
--	struct page **pages;
--	int got = 0;
--	int rc = 0;
--
--	pages = kmalloc_array(num_pages, sizeof(*pages), GFP_NOFS);
--	if (!pages)
--		return ERR_PTR(-ENOMEM);
--
--	while (got < num_pages) {
--		rc = get_user_pages_fast(
--		    (unsigned long)data + ((unsigned long)got * PAGE_SIZE),
--		    num_pages - got, write_page, pages + got);
--		if (rc < 0)
--			break;
--		BUG_ON(rc == 0);
--		got += rc;
--	}
--	if (rc < 0)
--		goto fail;
--	return pages;
--
--fail:
--	ceph_put_page_vector(pages, got, false);
--	return ERR_PTR(rc);
--}
--EXPORT_SYMBOL(ceph_get_direct_page_vector);
--
- void ceph_put_page_vector(struct page **pages, int num_pages, bool dirty)
- {
- 	int i;
--- 
-2.20.1
+On 4/24/19 7:55 PM, ibm-acpi@hmh.eng.br wrote:
+> On Wed, Apr 24, 2019, at 16:05, Kees Cook wrote:
+>> On Wed, Apr 24, 2019 at 11:15 AM Gustavo A. R. Silva
+>> <gustavo@embeddedor.com> wrote:
+>>>
+>>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>>> cases where we are expecting to fall through.
+>>>
+>>> This patch fixes the following warnings:
+>>>
 
+[..]
+
+>>>
+>>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>>
+>>> Notice that, in this particular case, the code comments are modified
+>>> in accordance with what GCC is expecting to find.
+>>>
+>>> This patch is part of the ongoing efforts to enable
+>>> -Wimplicit-fallthrough.
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> 
+
+Thank you both, Kees and Henrique.
+
+Friendly ping:
+
+Who can take this?
+
+Thanks
+--
+Gustavo
