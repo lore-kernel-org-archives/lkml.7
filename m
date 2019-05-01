@@ -2,116 +2,159 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09400C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA0DC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FF02075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEAD206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 22:53:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QecYlWWX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntOlckQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfEAWqe (ORCPT
+        id S1726255AbfEAWxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 18:46:34 -0400
-Received: from ozlabs.org ([203.11.71.1]:35271 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbfEAWqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 18:46:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vYRC2NbNz9s7T;
-        Thu,  2 May 2019 08:46:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556750791;
-        bh=fBGEAfXaHVB+dhd3quAdwiRutAFSqo0yMmTMEyNlnGE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QecYlWWXzzBBQdICUao7ForAFmhkQNx9D6SGliHR2hSqCJgw5VkNAd3JB4tKedQsp
-         x5R5JgKLbST6pnZvqssUf4MlTCnd3QVuFMzr/ZdWPj8mndg795xuWyyPDTDue60BfA
-         DtEN90vFKp8kO2W1xCUYCLk2tMh6Ceqw8L/nqqvkBTlpBZtpOIXAxn3kJlmIbrWDXN
-         d3tM16lPctIdhB4ANSXkDZwnTFlS+anpyMFiJ+xuse+bOgLJ+5aZmj9IZ+0iKMOGvS
-         n5jfmPGQ026BrMg0dqvwEwIYcVC5wAI6my/gTpzY1Wjtq42vf83iyDyqIKjT1I1x1Y
-         19jdRdhUlVFNw==
-Date:   Thu, 2 May 2019 08:46:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the kbuild tree with Linus' tree
-Message-ID: <20190502084626.108fb691@canb.auug.org.au>
+        Wed, 1 May 2019 18:53:10 -0400
+Received: from mail-it1-f177.google.com ([209.85.166.177]:38467 "EHLO
+        mail-it1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfEAWxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 18:53:09 -0400
+Received: by mail-it1-f177.google.com with SMTP id q19so200752itk.3;
+        Wed, 01 May 2019 15:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lCEGcM9PnIt5DAYHqfDvg1iDBkVs7Z1DrSbtLd5SG2M=;
+        b=ntOlckQi4iR3uGuDC5pJIo3d5523IFnSuj81ISLxfzA3r4xxX+etQ4zuELBvLRjKre
+         JDeIZpfWH3a8qB4AvTEj0aW9GkmH0nonNaueJbPUJK8uK7HfHKtOmk1qfcrmtxrXNyh8
+         fX0XfC+0rDGoTL/0mAcupssVxaVSvf5P0NR41UeWM2bcLIJeV5DUaWcmU0Px51R6k8pp
+         4PRSQU6AFZv55KwPpnmJieSl62W7dcrkkjNDsMxzvZGkEtLxNpSrwxjqkc+tTDa+uvDl
+         3KAfHnohf3JO/afDYCAbsadnB2cuGekSqZBMnDKgOht7jAFPuva80/48DdPZwR5yVeN7
+         j5dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lCEGcM9PnIt5DAYHqfDvg1iDBkVs7Z1DrSbtLd5SG2M=;
+        b=AkRP8Dht/jdX1pOiXTZ1vbfXwvnb96g0+XG2ERJXwQL3TRC53J/WlAowX2EKLc6M73
+         GEera0SfoeFp3YbRSeBQxCtc7lTVrlkoSeNIhGkDwwCDgU6nClIuUV3bvLnV0hezTWd6
+         XJjP6ap6n9/hXqHCLolHJ8IdjIAjMYkpUU2ssRwTBIgsBc6TVaiIJpc6+3HZuVfhBHi0
+         1rvgjQ052ZBFoxSchnjW6FwWWgjq3lLOZDyu7K6QAlSqNkUm6GxAghz5tPcsnnlEZkU/
+         lFd/v72+0cZJzc7LnC0rOMNtm3xtffy9lNSvs93XCTbrrfLMje/CMdpJZ15I82mIHNsN
+         nJ2w==
+X-Gm-Message-State: APjAAAUw2+t9I0xikyBaU63fLjAM8yoINOBtZGNDiSFKJEo5v7j+E2As
+        UxKNLf463jyxYkxi6o+ATGjOlBKSMAdDRMDjsNE=
+X-Google-Smtp-Source: APXvYqyHYnoL+gFdKKiqsyQ2eMdhe4z44cQFYnBsLQVPQYlTyAkoFVh4+N+atg7Zjzh/SfjkuofB7GR6P0BdkkctBJI=
+X-Received: by 2002:a24:ce44:: with SMTP id v65mr91304itg.146.1556751188074;
+ Wed, 01 May 2019 15:53:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/aMI74E1W0Jhnl1fNB2aKUWK"; protocol="application/pgp-signature"
+References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
+In-Reply-To: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 1 May 2019 15:52:57 -0700
+Message-ID: <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
+To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aMI74E1W0Jhnl1fNB2aKUWK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 1, 2019 at 2:03 PM Lennart Sorensen
+<lsorense@csclub.uwaterloo.ca> wrote:
+>
+> We have hit a strange problem with RSS on the X722 on our new servers
+> (S2600WFT based).
+>
+> The RSS hash is distributing most packets across cores quite nicely, with
+> one exception.  ESP encapsulated in UDP is always going to queue 0 no
+> matter what the hash key is set to or how many cores have queues assigned.
+> So if terminating IPsec tunnels that are using NAT-Traversal, all packets
+> arrive on the same core, which clearly isn't good for scalability.
+> Other UDP packets are fine, TCP is fine, ICMP, ESP, etc have no problem
+> that we have seen, only the ESP in UDP packets.
+>
+> Given the packets are UDP packets I would have hoped they would just
+> be distributed using the source and destination ip and port values as
+> other UDP packets seem to be, but they are not.  I vaguely suspect the
+> UDP tunnel handling support the card has for this since it claims to
+> use the internal packet's values for RSS rather than the UDP packet
+> itself for certain supported types of UDP encapsulated IP traffic, but
+> not ESP in UDP, so perhaps it sees an IP packet inside a UDP packet,
+> and decides to try and parse it instead, doesn't know how to handle it
+> and stops without assigning any RSS value to the packet at all rather
+> than falling back to treating it as a plain UDP packet.  But that's just
+> guessing based on the documentation of the hardware capabilities.
+>
+> Here is an example of a packet that always hits queue 0:
+>
+> 14:48:09.014360 54:ee:75:30:f1:e1 > a4:bf:01:4e:0c:87, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 3312, offset 0, flags [DF], proto UDP (17), length 160)
+>     1.99.99.2.4500 > 1.99.99.1.4500: [no cksum] UDP-encap: ESP(spi=0xac11cadf,seq=0x480), length 132
+>         0x0000:  4500 00a0 0cf0 4000 4011 6494 0163 6302  E.....@.@.d..cc.
+>         0x0010:  0163 6301 1194 1194 008c 0000 ac11 cadf  .cc.............
+>         0x0020:  0000 0480 901d 3b39 e884 0616 fed4 3e37  ......;9......>7
+>         0x0030:  bb67 bca2 adac e519 c7a9 ced9 00bf 263e  .g............&>
+>         0x0040:  28a6 ba38 1e8c e6e3 bbf9 e093 1c49 8154  (..8.........I.T
+>         0x0050:  0d66 c1d5 2416 f4d2 26ec f5a1 773f 4ae2  .f..$...&...w?J.
+>         0x0060:  8e26 0ed8 0e5f daab 06b2 aa51 2f2f e16e  .&..._.....Q//.n
+>         0x0070:  22ca dd94 f499 027b 11d0 de7b 4d9d 7af1  "......{...{M.z.
+>         0x0080:  f468 ae0d ad41 5c96 577d 7b44 1cc4 0ba3  .h...A\.W}{D....
+>         0x0090:  9ff7 142f b159 c9d0 38e1 c460 120f f4bb  .../.Y..8..`....
+> 14:48:09.014439 a4:bf:01:4e:0c:87 > 54:ee:75:30:f1:e1, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 43796, offset 0, flags [none], proto UDP (17), length 160)
+>     1.99.99.1.4500 > 1.99.99.2.4500: [no cksum] UDP-encap: ESP(spi=0x47f5919c,seq=0x480), length 132
+>         0x0000:  4500 00a0 ab14 0000 4011 0670 0163 6301  E.......@..p.cc.
+>         0x0010:  0163 6302 1194 1194 008c 0000 47f5 919c  .cc.........G...
+>         0x0020:  0000 0480 106b cafb 14ee f75b 3533 16fb  .....k.....[53..
+>         0x0030:  87f5 9d90 a73b 8daf 481f 22b7 2b30 b482  .....;..H.".+0..
+>         0x0040:  a330 1fe4 59da a394 b48b ac77 5a96 dfac  .0..Y......wZ...
+>         0x0050:  4798 793a ca7e 1af2 a9a8 2f7b 9327 d5b9  G.y:.~..../{.'..
+>         0x0060:  f8d0 e761 c7b3 a85c c843 ec25 62b2 e083  ...a...\.C.%b...
+>         0x0070:  f0d5 1097 736b 051a b15d e7de 7f0e b5b7  ....sk...]......
+>         0x0080:  209b 4d1d af37 c1a1 09a0 a6c9 71cf 7d54  ..M..7......q.}T
+>         0x0090:  55c3 2797 e622 581f 09cf 9483 2ba5 e64a  U.'.."X.....+..J
+>
+> This was done on 4.19.28 kernel with the i40e driver in that kernel with
+> libreswan for IPsec using netkey in the kernel and nat-traversal in use.
+> The packets are a ping echo and reply pair.  NVM version 3.49 and 4.00
+> tried so far.
+>
+> No other network interfaces we have used have had this problem.  RSS has
+> always just worked until now.
+>
+> --
+> Len Sorensen
 
-Hi all,
+I'm not sure how RSS will do much for you here. Basically you only
+have the source IP address as your only source of entropy when it
+comes to RSS since the destination IP should always be the same if you
+are performing a server role and terminating packets on the local
+system and as far as the ports in your example you seem to only be
+using 4500 for both the source and the destination.
 
-Today's linux-next merge of the kbuild tree got a conflict in:
+In your testing are you only looking at a point to point connection
+between two systems, or do you have multiple systems accessing the
+system you are testing? I ask as the only way this should do any
+traffic spreading via RSS would be if the source IPs are different and
+that would require multiple client systems accessing the server.
 
-  Makefile
+In the case of other encapsulation types over UDP, such as VXLAN, I
+know that a hash value is stored in the UDP source port location
+instead of the true source port number. This allows the RSS hashing to
+occur on this extra information which would allow for a greater
+diversity in hash results. Depending on how you are generating the ESP
+encapsulation you might look at seeing if it would be possible to have
+a hash on the inner data used as the UDP source port in the outgoing
+packets. This would help to resolve this sort of issue.
 
-between commit:
+Thanks.
 
-  6f303d60534c ("gcc-9: silence 'address-of-packed-member' warning")
-
-from Linus' tree and commit:
-
-  c21e4135d629 ("kbuild: re-enable int-in-bool-context warning")
-
-from the kbuild tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Makefile
-index 633d1196bf00,8b3b62f18c9a..000000000000
---- a/Makefile
-+++ b/Makefile
-@@@ -677,8 -691,6 +691,7 @@@ KBUILD_CFLAGS	+=3D $(call cc-option,-fno-
-  KBUILD_CFLAGS	+=3D $(call cc-disable-warning,frame-address,)
-  KBUILD_CFLAGS	+=3D $(call cc-disable-warning, format-truncation)
-  KBUILD_CFLAGS	+=3D $(call cc-disable-warning, format-overflow)
-- KBUILD_CFLAGS	+=3D $(call cc-disable-warning, int-in-bool-context)
- +KBUILD_CFLAGS	+=3D $(call cc-disable-warning, address-of-packed-member)
- =20
-  ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-  KBUILD_CFLAGS	+=3D -Os
-
---Sig_/aMI74E1W0Jhnl1fNB2aKUWK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKIcIACgkQAVBC80lX
-0GyDWAgAhG9OF5Y3gtnD7UV5wo5EDp/2Pm306QK2UP3L7SZO9UetGPCvMPwcTrki
-jGOX6ihfLZaVZLXSqhnXWXKE1jWGH4c4oCyMgTGDlAAUnjGtThHVD5FOQr98sSqe
-QChsJkhwY0SMWfkzt42h00xghIzYJUzBS0ayJxdKva/hn5kpF1LEGPgJwXeiNOtb
-PTGGAxaXsGln0ndP8pYTHqGzBnM0exk0Dt62Dx3Zm072kXUwJiK7lUvYNLYuwdyf
-5ceG781YTOnTcYN9d4jk1PQLQvjPkv3WkLAUMbgKMxjBSjvZ5vZsEyPai0mrmRFr
-rPdhBYmT0XLOiHWN7LwtCXKNrJ1Npg==
-=on7B
------END PGP SIGNATURE-----
-
---Sig_/aMI74E1W0Jhnl1fNB2aKUWK--
+- Alex
