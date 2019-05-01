@@ -2,98 +2,116 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6A3C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B73FC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF5A20651
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AMFmjekn"
+	by mail.kernel.org (Postfix) with ESMTP id D00EB2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556741235;
+	bh=JG52+e1cr+paiTBj8E+7VfgFtrcKg3yaw03KE2SRslg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SjeCUlU8RqM1ZLuBnbIXf+13ZHfsA5wKBWtFp0cwOmXfCUuRviSMEIDEjtLS8mRCi
+	 A6Hgg/f6326R4Us2precQZUa8qalzFZYJzwhin7GKHypdCJt1bwtXGTY9jOOMgZ+cm
+	 4l2Q5RqSD5igWUlY39qjlYnvE2nmwlLnZBStUCnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfEAUFJ (ORCPT
+        id S1726266AbfEAUHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 16:05:09 -0400
-Received: from mail-oi1-f202.google.com ([209.85.167.202]:42341 "EHLO
-        mail-oi1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfEAUFG (ORCPT
+        Wed, 1 May 2019 16:07:14 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36899 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfEAUHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:05:06 -0400
-Received: by mail-oi1-f202.google.com with SMTP id r84so126767oia.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 13:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=pgwmPCltNlT2qJblASiCpctnwqNtjlaYefBmlV3joCA=;
-        b=AMFmjeknKhEaJ/eh9jtp+QJfhvY+QPJUVoke8a327Koi6aQNO6J+ln7j6aJIvHIwYE
-         8IaY5sY50qyQX7VW6CSR6VKL2/C/yiEv1tEMiYnkWXzxI3tTx7dzZRy24C3bkXZrOaZH
-         v/6HKXlBiUnlx5g7RvwIWd47qfARkNLLJnu58vsP28Lf1xLzun0VrCJFZRKTjcBj0CQZ
-         kxCjc+1RHyqrjlKu5XlAbLWMaP23VslEyGRa0EylGu9Rj7xob49sFengp78TMf1739MD
-         inCxLoW1GbMipIAKe2nmPiN2XN2Kz2sB3z1MEjJhaomm/uvvldW+EC4afPJwobojLOTN
-         IgOg==
+        Wed, 1 May 2019 16:07:14 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 143so1525382oii.4;
+        Wed, 01 May 2019 13:07:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=pgwmPCltNlT2qJblASiCpctnwqNtjlaYefBmlV3joCA=;
-        b=B8aUkd+BciurFfCPIxPvoggdYEHPmrzDZTPypt1BJDBsXgcbZxduzaI8pe6jLlxbXu
-         HjytV/zuSV/J/rZsQaNrueZ+yeWWWsO+voSmEj4h8v+tXc2nQhH63pIuQ8S+aoxqEbbU
-         v0MXe32AZ7obp9n59y/RZJ4X6WAg9kPHu9i2asMn5HRofFLmmpGOenq/AxtlBbhhN/bn
-         hsySit6+KoNqzaLSK8RdRC6EXOtis28ED5keH2Bwkkp5FPDS5Klhl6YprErAyBFQnekx
-         qEYKxjml9t0I9zK6G8Z0yOhOktEH6JNUGRpZS8wbOwE/OizL6LoU6lBtyWxY8Wri+WYI
-         wS2A==
-X-Gm-Message-State: APjAAAVI9ZefMkEEN+pNIJeydOZ3Uv5WaE+sz3aHJzcnJYbToIEBH+i4
-        lW2HpgwB3fLeahm0YiwK22quqeQonZwfVxdGZSc=
-X-Google-Smtp-Source: APXvYqy0WApsbwDI8BfA3Z5wQECjBctYDbr5V6gFmoYub0j5ti+nozhzvzn4wnXwl6X5IMNDwLQwrHjL3uHCJNYqsPM=
-X-Received: by 2002:a9d:6153:: with SMTP id c19mr6049632otk.110.1556741105717;
- Wed, 01 May 2019 13:05:05 -0700 (PDT)
-Date:   Wed,  1 May 2019 13:04:50 -0700
-In-Reply-To: <20190501200451.255615-1-samitolvanen@google.com>
-Message-Id: <20190501200451.255615-2-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20190501200451.255615-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH 1/2] arm64: fix syscall_fn_t type
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mKg6SA0SX5HV854mYVNTFbSlG/IOsGPH6fFYgeCQFmk=;
+        b=LslzHIYy8d9It+IUvj6m0PERlqGiIrc6DAUtHdG5a1B6oZgVZ7XprLQRU+YHmzgPIz
+         c3M4M+7nQ7bMkcA18iWQxvWWAfORw9anlP4HQk+htJnKVGGmYsbHe7Zot1Cp0AZ+dack
+         YBx8H2gVReWnZwFhB+u7zXjMhSVhtt1Z0lMPqEKFPQZCbt+ox6NCdAN1xLio3+cRlQMa
+         zC4yFF9XaNcC+Nr7O2MeRQlMS74qwX/GR1vX6muBBB/7ECZUAsCi3fNYM5seUr7v+aAn
+         7BGufZwXeoiiVw5cB1U7YjtWHL52mxnK9ch4/cpKd4G9EzrmEnxD53Pu+Q9/ZNuQO2xD
+         viSg==
+X-Gm-Message-State: APjAAAWBgcviHFexS90izNnp2e05YVA3f11umLcIuO5PqvuZTATj9mNz
+        h1pKlVGeel7lnTm74BTQ0g==
+X-Google-Smtp-Source: APXvYqx5r0LA6i5YuqMDOd9NBN4QAPVZsvNiRZb0YS/Pv4676PBqH7lCEcuJdpsY+bfpypfvpEhe4g==
+X-Received: by 2002:aca:ec41:: with SMTP id k62mr42673oih.147.1556741233322;
+        Wed, 01 May 2019 13:07:13 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h24sm15848390otr.39.2019.05.01.13.07.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 13:07:12 -0700 (PDT)
+Date:   Wed, 1 May 2019 15:07:11 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to state
+ errata fixed
+Message-ID: <20190501200711.GA31231@bogus>
+References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
+ <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use const struct pt_regs * instead of struct pt_regs * as
-the argument type to fix indirect call type mismatches with
-Control-Flow Integrity checking.
+On Fri, Apr 26, 2019 at 08:05:51AM +0000, Robin Gong wrote:
+> ERR009165 fixed from i.mx6ul, add it to show the errata fixed.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> index 2d32641..32c4263d 100644
+> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> @@ -10,6 +10,8 @@ Required properties:
+>    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
+>    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+>    - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
+> +  - "fsl,imx6ul-ecspi" ERR009165 fixed on i.MX6UL and later Soc
+> +    (https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf)
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/arm64/include/asm/syscall.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+What about other i.MX6 chips?
 
-diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
-index a179df3674a1a..6206ab9bfcfc5 100644
---- a/arch/arm64/include/asm/syscall.h
-+++ b/arch/arm64/include/asm/syscall.h
-@@ -20,7 +20,7 @@
- #include <linux/compat.h>
- #include <linux/err.h>
- 
--typedef long (*syscall_fn_t)(struct pt_regs *regs);
-+typedef long (*syscall_fn_t)(const struct pt_regs *regs);
- 
- extern const syscall_fn_t sys_call_table[];
- 
--- 
-2.21.0.593.g511ec345e18-goog
+Seems like this is missing some fallbacks. The binding doc should make 
+it clear what are all valid combinations of compatible strings.
 
+>    - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8M
+>  - reg : Offset and length of the register set for the device
+>  - interrupts : Should contain CSPI/eCSPI interrupt
+> -- 
+> 2.7.4
+> 
