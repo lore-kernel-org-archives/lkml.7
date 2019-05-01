@@ -2,95 +2,81 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD199C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33F2C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916A42081C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556726707;
-	bh=E8F/3pKddi/VN9Od3ETGWYRD3ebxn03vf7dBr53qS4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k9KlRpA4RvkMZCvInugqJvPpoUs3TQAr23SMVJiSrquel/AFMF+txEAfdpzfgv7KA
-	 kkLSkQ5gVYtNRA4HP+q4mJJ6dXnEnNmGyRtV47J26N/RyMRcz4jcN9ETZowrxpfjZX
-	 yVykP06YrUQ8ncM3N4RIMe7/n+0/yLlup4H9xYww=
+	by mail.kernel.org (Postfix) with ESMTP id 6936620866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 16:07:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mjceeoxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfEAQFG (ORCPT
+        id S1726652AbfEAQHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 12:05:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfEAQFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 12:05:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F9DD20644;
-        Wed,  1 May 2019 16:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556726705;
-        bh=E8F/3pKddi/VN9Od3ETGWYRD3ebxn03vf7dBr53qS4g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0/eU5QSfIyvSF6qY8MTgbPncQaNyEZNbt2FqPgGJoHj6SoRxdIwDUKZJe7/KEPPBL
-         LY2qgf1rYgLo44rQdrC2nTFAHQKpvF9yNIb5cGGhPZCiZ2CkMgcDcLGh1oCTZdkfgi
-         g1KUkxgFGvyo4nEYXAhKQOEU3Qouf77KGZONrXaQ=
-Date:   Wed, 1 May 2019 18:05:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
-        srinivas.kandagatla@linaro.org,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH v4 02/22] soundwire: fix SPDX license for header files
-Message-ID: <20190501160503.GB19281@kroah.com>
-References: <20190501155745.21806-1-pierre-louis.bossart@linux.intel.com>
- <20190501155745.21806-3-pierre-louis.bossart@linux.intel.com>
+        Wed, 1 May 2019 12:07:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35074 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfEAQHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 12:07:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lmTrIGpEbI3KMOEYpjM6/I8DyJIPcU5OW04RpHaMmk4=; b=MjceeoxumN84/e65UHYopkW3J5
+        jbvdYbAu8j9CHPZfKzzFkJledp6gzX7UHAiSE2A1+0tOKgHOswlNOFYbe0kDzPsqLWFAsqHV8cNrr
+        DZYb9sdK9qv9jOtfbU0kNMyP2h1odMGgHBqJs6/Hn8xUovLq3lAaypCDyTIVcTzBwLLrwY2M1B1P0
+        tLI0BH7VQbm6FqOam7aePFfeJ2wuzPemXEZlU6HD8vV9Mf8+/QGyqeMYEg5zQ4trcRqAtzgZx+A4B
+        WyjQ6Mecd3IE0LLrFjtwzmEbpo1lQ5ikOYpupyuNZZ+JvnMO4l/qWjwTEpKCJvFnqiiIzt6qKxoj4
+        u3NrNhag==;
+Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLrlL-0008Kv-Eh; Wed, 01 May 2019 16:07:15 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] mm: fix an overly long line in read_cache_page
+Date:   Wed,  1 May 2019 12:06:33 -0400
+Message-Id: <20190501160636.30841-2-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190501160636.30841-1-hch@lst.de>
+References: <20190501160636.30841-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501155745.21806-3-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 10:57:25AM -0500, Pierre-Louis Bossart wrote:
-> No C++ comments in .h files
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ mm/filemap.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-That's not really the issue here.
+diff --git a/mm/filemap.c b/mm/filemap.c
+index d78f577baef2..a2fc59f56f50 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2956,7 +2956,8 @@ struct page *read_cache_page(struct address_space *mapping,
+ 				int (*filler)(void *, struct page *),
+ 				void *data)
+ {
+-	return do_read_cache_page(mapping, index, filler, data, mapping_gfp_mask(mapping));
++	return do_read_cache_page(mapping, index, filler, data,
++			mapping_gfp_mask(mapping));
+ }
+ EXPORT_SYMBOL(read_cache_page);
+ 
+-- 
+2.20.1
 
-> 
-> Reviewed-by: Takashi Iwai <tiwai@suse.de>
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/bus.h            | 4 ++--
->  drivers/soundwire/cadence_master.h | 4 ++--
->  drivers/soundwire/intel.h          | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-> index c77de05b8100..2f8436584e7f 100644
-> --- a/drivers/soundwire/bus.h
-> +++ b/drivers/soundwire/bus.h
-> @@ -1,5 +1,5 @@
-> -// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> -// Copyright(c) 2015-17 Intel Corporation.
-> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-> +/* Copyright(c) 2015-17 Intel Corporation. */
-
-The first line is fine to change, as that was the requirement (although
-I think it has now been fixed), the second line is just taste, whatever
-you want, it's not a requirement.
-
-But I really don't care, it's not my code :)
-
-thanks,
-
-greg k-h
