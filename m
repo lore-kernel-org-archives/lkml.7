@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F36BC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF58C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A912089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859B72085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 23:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFs4MVzl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvysVq/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfEAXmH (ORCPT
+        id S1726479AbfEAXmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 19:42:07 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43406 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbfEAXmC (ORCPT
+        Wed, 1 May 2019 19:42:11 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:56027 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfEAXmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 19:42:02 -0400
-Received: by mail-io1-f67.google.com with SMTP id v9so448001iol.10;
-        Wed, 01 May 2019 16:42:01 -0700 (PDT)
+        Wed, 1 May 2019 19:42:09 -0400
+Received: by mail-it1-f195.google.com with SMTP id i131so327437itf.5;
+        Wed, 01 May 2019 16:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Urbgjf6ObOt4aJ4US+ZHY6pwQYAco+BhwHPT+aOOMeQ=;
-        b=PFs4MVzlJ7x+4UrblL5kGZ5ttLwSc2vzdb9PqajVVnp4YjfegMdz37kdn5RvmPuM8N
-         q3rJmx4YRs4ngstuh0yuWZTMt2zHPspX8XlVSiR4Bkse9HPPFUZuaFop1GNQwELyhWcV
-         HFtXnmuUXnHx17ln5ucuUwt1BalXvAs6bSfbpGx40a2yxNP6BU8AZNMgdbM2/n3tF+wz
-         gKXEL31a9uVBdM+q2qwY78k+JdHiXItXRD/H++duw7leeidcBZNZJdW8+6o4aQipEtbA
-         afndXf2+ltRTSBNC1sqJgzmcd3mlFMIR7zLEInrvxvpQHcvdksSCm51hXL8RktmwIrh5
-         b14A==
+        bh=+Slbek9V2dfN38nP5SDKBqpG9La7gfuORa6TNt82wFs=;
+        b=XvysVq/qhBjP1JLxnRZYh2kTSaul1A0LJPSa9iSYrZXT5RcHzETWX62zXCCem28acy
+         Ezm7/2KN0CXSvjW5SG7bxIaArsvfBfTzMKjRj0JZloMBWzLY0LQcACw3ElAcZmm8/ksC
+         0wjIPMwNu4b5Uz8wnFYjVQ+vhMPLmHKH6Dd7EWnT7JZuy0VREJ4/8H1bjOaEiMN860I6
+         ekZJSdKSmSzb90xNqXlbqiQgovQQ7XgxDiH+Mj8rm7r9IYrrKoyZSd8veZ17gsj/QJF1
+         ggyT54antUwScI7zvAkQQCQnKEPl0Sy6m/NSBhkFqMqlYAmHoTYG4qsy/RqjhSSQZ/jN
+         xxqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Urbgjf6ObOt4aJ4US+ZHY6pwQYAco+BhwHPT+aOOMeQ=;
-        b=Z8eRWcECK9TR0AduNUXpQOlpoOw5G5t3VAcovy038iLscLF8T4xAztBZq+ZUTU3QK7
-         85BKeI6q5pctJN6NFojLImUSfLUik8VbzoK5TxVyLKKz9bpOAcoinYDQiqv/oJW8J5bc
-         ENb/wktiNrgrbJvJS3jbfez9ombAloYwzn/QuAcl3nvOvCHB+Ilio6BfEfSn2gXDdf3B
-         bn3qSEmpxUdiCvhtNxY84dju9vxhum/m2h/qXTJblrHM4vCAuVbnJY0HNifn9mC//G7b
-         6UZ6YMTIhRHVbIaEqkoWxj2XIG+XMkCpkO7VqsyOcOZFHtr2G9DzGG/pgU3AeYEEKPMJ
-         4DOw==
-X-Gm-Message-State: APjAAAUpDWC6eKneP/Il+RBCfb1Zo0pEPhAjJN5ACCENq4QtD4omhGEl
-        w9q+toA+a/L65Ra2wJ7XK20=
-X-Google-Smtp-Source: APXvYqyS7u8zzMW3mEYseQbkK8L6FaqaWQ05t39Vq1OTGD5aYcFvWmMjqKBYpkD513zq7BCwvCnH+g==
-X-Received: by 2002:a5d:9317:: with SMTP id l23mr380129ion.261.1556754120794;
-        Wed, 01 May 2019 16:42:00 -0700 (PDT)
+        bh=+Slbek9V2dfN38nP5SDKBqpG9La7gfuORa6TNt82wFs=;
+        b=sntatvMMSq2sbuvo4fYnIwGMyJw+U8JxbSzvuOAkonm8J9LSVJvPQQaB0Jjbq5YTyG
+         yFwOq5FJmq2Bky0yEsq6HF0XHzVaxs1+QeKsNTCpp4qeytqp45zbE5CqpTQEsGtz6cBu
+         HzOZeuoR59UKX2TJjO/clyRB0MCCM5LPLM0j4gKDSIv5Qf/7tv6rEIe6z13UiEUsCf7b
+         WHj3KaeNpx6yuONwia/Gly3AqICrBz4pPy19ZtMNvV7A9DhV0aodQm0sw6yMhv00nTIX
+         wYoo9SNHiBrAX6SrYmjWRACbOSSq/c852c1rUCn8/JekNvQ+ytHqS2U3J80Y+FAf9Sb3
+         gwUg==
+X-Gm-Message-State: APjAAAUq6m1iYVR7na36msghT6OMmbxfOAQYorBWNYPLwvPInnJS1b4d
+        wBXUl67q4rl/wSYHWrFhNcU=
+X-Google-Smtp-Source: APXvYqx108GRg4cFAQ0MWjE7KPNS7xiZrAC8Q2dZ685dropJiopjs9L1E52Z4deLa5CxtrqQGU+fkA==
+X-Received: by 2002:a05:660c:20e:: with SMTP id y14mr202652itj.17.1556754127925;
+        Wed, 01 May 2019 16:42:07 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id m3sm2392507ion.69.2019.05.01.16.41.58
+        by smtp.gmail.com with ESMTPSA id m3sm2392507ion.69.2019.05.01.16.42.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 16:42:00 -0700 (PDT)
+        Wed, 01 May 2019 16:42:07 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 08/16] PM / devfreq: tegra: Clean up driver's probe / remove
-Date:   Thu,  2 May 2019 02:38:07 +0300
-Message-Id: <20190501233815.32643-9-digetx@gmail.com>
+Subject: [PATCH v4 11/16] PM / devfreq: tegra: Move governor registration to driver's probe
+Date:   Thu,  2 May 2019 02:38:10 +0300
+Message-Id: <20190501233815.32643-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190501233815.32643-1-digetx@gmail.com>
 References: <20190501233815.32643-1-digetx@gmail.com>
@@ -78,153 +78,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reset hardware, disable ACTMON clock, release OPP's and handle all
-possible error cases correctly, maintaining the correct tear down
-order. Also use devm_platform_ioremap_resource() which is now available
-in the kernel.
+There is no need to register the ACTMON's governor separately from
+the driver, hence let's move the registration into the driver's probe
+function for consistency and to make code cleaner a tad.
 
 Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra-devfreq.c | 83 +++++++++++++++++++--------------
- 1 file changed, 47 insertions(+), 36 deletions(-)
+ drivers/devfreq/tegra-devfreq.c | 43 +++++++++------------------------
+ 1 file changed, 12 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-index ce1eb97a2090..ea0da05cd7f2 100644
+index 65b3a7c72293..40ce9881f144 100644
 --- a/drivers/devfreq/tegra-devfreq.c
 +++ b/drivers/devfreq/tegra-devfreq.c
-@@ -610,7 +610,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- {
- 	struct tegra_devfreq *tegra;
- 	struct tegra_devfreq_device *dev;
--	struct resource *res;
- 	unsigned int i;
- 	unsigned long rate;
- 	int err;
-@@ -619,9 +618,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 	if (!tegra)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--
--	tegra->regs = devm_ioremap_resource(&pdev->dev, res);
-+	tegra->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(tegra->regs))
- 		return PTR_ERR(tegra->regs);
- 
-@@ -643,11 +640,10 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 		return PTR_ERR(tegra->emc_clock);
+@@ -695,6 +695,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 		goto remove_opps;
  	}
  
--	tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
--	err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
--	if (err) {
--		dev_err(&pdev->dev,
--			"Failed to register rate change notifier\n");
-+	tegra->irq = platform_get_irq(pdev, 0);
-+	if (tegra->irq < 0) {
-+		err = tegra->irq;
-+		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
- 		return err;
- 	}
- 
-@@ -678,54 +674,69 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 
- 	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
- 		rate = clk_round_rate(tegra->emc_clock, rate);
--		dev_pm_opp_add(&pdev->dev, rate, 0);
--	}
- 
--	tegra->irq = platform_get_irq(pdev, 0);
--	if (tegra->irq < 0) {
--		err = tegra->irq;
--		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
--		return err;
-+		err = dev_pm_opp_add(&pdev->dev, rate, 0);
-+		if (err) {
-+			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
-+			goto remove_opps;
-+		}
- 	}
- 
- 	platform_set_drvdata(pdev, tegra);
- 
-+	tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
-+	err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
++	err = devfreq_add_governor(&tegra_devfreq_governor);
 +	if (err) {
-+		dev_err(&pdev->dev,
-+			"Failed to register rate change notifier\n");
-+		goto remove_opps;
-+	}
-+
-+	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
-+	tegra->devfreq = devfreq_add_device(&pdev->dev,
-+					    &tegra_devfreq_profile,
-+					    "tegra_actmon",
-+					    NULL);
-+	if (IS_ERR(tegra->devfreq)) {
-+		err = PTR_ERR(tegra->devfreq);
++		dev_err(&pdev->dev, "Failed to add governor: %d\n", err);
 +		goto unreg_notifier;
 +	}
 +
- 	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
- 					actmon_thread_isr, IRQF_ONESHOT,
- 					"tegra-devfreq", tegra);
- 	if (err) {
--		dev_err(&pdev->dev, "Interrupt request failed\n");
--		return err;
-+		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
-+		goto remove_devfreq;
+ 	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
+ 	tegra->devfreq = devfreq_add_device(&pdev->dev,
+ 					    &tegra_devfreq_profile,
+@@ -702,7 +708,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 					    NULL);
+ 	if (IS_ERR(tegra->devfreq)) {
+ 		err = PTR_ERR(tegra->devfreq);
+-		goto unreg_notifier;
++		goto remove_governor;
  	}
  
--	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
--	tegra->devfreq = devm_devfreq_add_device(&pdev->dev,
--						 &tegra_devfreq_profile,
--						 "tegra_actmon",
--						 NULL);
--
- 	return 0;
-+
-+remove_devfreq:
-+	devfreq_remove_device(tegra->devfreq);
-+
-+unreg_notifier:
-+	clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
-+
-+remove_opps:
-+	dev_pm_opp_remove_all_dynamic(&pdev->dev);
-+
-+	reset_control_reset(tegra->reset);
-+	clk_disable_unprepare(tegra->clock);
-+
-+	return err;
- }
+ 	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
+@@ -718,6 +724,9 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ remove_devfreq:
+ 	devfreq_remove_device(tegra->devfreq);
  
- static int tegra_devfreq_remove(struct platform_device *pdev)
- {
++remove_governor:
++	devfreq_remove_governor(&tegra_devfreq_governor);
++
+ unreg_notifier:
+ 	clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
+ 
+@@ -735,6 +744,7 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
  	struct tegra_devfreq *tegra = platform_get_drvdata(pdev);
--	int irq = platform_get_irq(pdev, 0);
--	u32 val;
--	unsigned int i;
--
--	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
--		val = device_readl(&tegra->devices[i], ACTMON_DEV_CTRL);
--		val &= ~ACTMON_DEV_CTRL_ENB;
--		device_writel(&tegra->devices[i], val, ACTMON_DEV_CTRL);
--	}
--
--	actmon_write_barrier(tegra);
  
--	devm_free_irq(&pdev->dev, irq, tegra);
-+	devfreq_remove_device(tegra->devfreq);
+ 	devfreq_remove_device(tegra->devfreq);
++	devfreq_remove_governor(&tegra_devfreq_governor);
  
  	clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
-+	dev_pm_opp_remove_all_dynamic(&pdev->dev);
+ 	dev_pm_opp_remove_all_dynamic(&pdev->dev);
+@@ -760,36 +770,7 @@ static struct platform_driver tegra_devfreq_driver = {
+ 		.of_match_table = tegra_devfreq_of_match,
+ 	},
+ };
+-
+-static int __init tegra_devfreq_init(void)
+-{
+-	int ret = 0;
+-
+-	ret = devfreq_add_governor(&tegra_devfreq_governor);
+-	if (ret) {
+-		pr_err("%s: failed to add governor: %d\n", __func__, ret);
+-		return ret;
+-	}
+-
+-	ret = platform_driver_register(&tegra_devfreq_driver);
+-	if (ret)
+-		devfreq_remove_governor(&tegra_devfreq_governor);
+-
+-	return ret;
+-}
+-module_init(tegra_devfreq_init)
+-
+-static void __exit tegra_devfreq_exit(void)
+-{
+-	int ret = 0;
+-
+-	platform_driver_unregister(&tegra_devfreq_driver);
+-
+-	ret = devfreq_remove_governor(&tegra_devfreq_governor);
+-	if (ret)
+-		pr_err("%s: failed to remove governor: %d\n", __func__, ret);
+-}
+-module_exit(tegra_devfreq_exit)
++module_platform_driver(tegra_devfreq_driver);
  
-+	reset_control_reset(tegra->reset);
- 	clk_disable_unprepare(tegra->clock);
- 
- 	return 0;
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("Tegra devfreq driver");
 -- 
 2.21.0
 
