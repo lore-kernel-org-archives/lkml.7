@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE824C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6A3C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E0420651
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF5A20651
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 20:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fnHCAaSH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AMFmjekn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfEAUFJ (ORCPT
+        id S1726209AbfEAUFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 1 May 2019 16:05:09 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:48022 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfEAUFI (ORCPT
+Received: from mail-oi1-f202.google.com ([209.85.167.202]:42341 "EHLO
+        mail-oi1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfEAUFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 16:05:08 -0400
-Received: by mail-pf1-f202.google.com with SMTP id c15so7082905pfc.14
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 13:05:08 -0700 (PDT)
+        Wed, 1 May 2019 16:05:06 -0400
+Received: by mail-oi1-f202.google.com with SMTP id r84so126767oia.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 13:05:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=MlQndH9JHFu7S8ddgNAyiZUD6B/g+xVzIb+RnIGAaWs=;
-        b=fnHCAaSHp7jm7BX0qFctNdwaGrY7oLfabmSkvoB4dtQBJxSdCKtEx2jxC7FIC3GCxO
-         YlgBkWApyHsNLL6q2+7r2CJg2KnpX2OwDbqGgxNeA53OCgvKuTcxuVB48/S3RpXYbdDY
-         xQI022cfV27rAtSh9fzNB5ly9uYCGubQ/ylCHl9zpyxnc+YN2gOllzLs4Xjgd9TiL++l
-         kMDg+NtQ5Q8uH53COQDUocIYQW0e30MTDPCh60KDEcJ33zjTNRHn9njPDqkCGujG/mVs
-         xQ7iK4l6ssYko9wzto0NLq97Khegf/K37bxoKrlRFtekyZwm6Khlvp/QHuQOSfA9pGKn
-         uedg==
+        bh=pgwmPCltNlT2qJblASiCpctnwqNtjlaYefBmlV3joCA=;
+        b=AMFmjeknKhEaJ/eh9jtp+QJfhvY+QPJUVoke8a327Koi6aQNO6J+ln7j6aJIvHIwYE
+         8IaY5sY50qyQX7VW6CSR6VKL2/C/yiEv1tEMiYnkWXzxI3tTx7dzZRy24C3bkXZrOaZH
+         v/6HKXlBiUnlx5g7RvwIWd47qfARkNLLJnu58vsP28Lf1xLzun0VrCJFZRKTjcBj0CQZ
+         kxCjc+1RHyqrjlKu5XlAbLWMaP23VslEyGRa0EylGu9Rj7xob49sFengp78TMf1739MD
+         inCxLoW1GbMipIAKe2nmPiN2XN2Kz2sB3z1MEjJhaomm/uvvldW+EC4afPJwobojLOTN
+         IgOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=MlQndH9JHFu7S8ddgNAyiZUD6B/g+xVzIb+RnIGAaWs=;
-        b=Dvj+nstUczFl8Kvwtl5K9SoTAEc6my6EWg99BeP+/lygJdPwMnKTM+q6HHRWYbC70y
-         BMnPqkN1Qx90gtJWRhdI/JVbQGusD8wdja16kgXCCHX2tYpdzFWqH33xCTE3yIWuL6VV
-         GV5K40QXSEOFZUEGIO7lFFRShclyxtrGeBFTq7i/WSXuhGGPmC8r459pl0ZMRexlNt9U
-         r6WivOnDZcWUxzm03hHpIeRWBlueKqwU6WcGhyKoXKT/bkHLsUudqXITBeVgv5mPvgey
-         UFfEwPsXqeW2HxzsXG+KI+cMVi5pn+f07zkuiEonQXru3/LwzZThlq1ZzNVCCq3d0AGx
-         GuGA==
-X-Gm-Message-State: APjAAAXhUmDORcRV7V55LEj38KNczal14Ezp/CvG3Qy5rpaxtYg5Gh/2
-        5f/vO8ZiGZ9yFDI+A0RXGuDPQwVBrKs/ic6n5Zc=
-X-Google-Smtp-Source: APXvYqwBclqb9p4MTO0VP/jDbcmcoD0wl/ivARDRHYgzxLNfoOJhYoTrwu/lUR7tBPdfO3m6nARfIKPs1tbACW0AiWU=
-X-Received: by 2002:a63:da51:: with SMTP id l17mr34321605pgj.115.1556741107820;
- Wed, 01 May 2019 13:05:07 -0700 (PDT)
-Date:   Wed,  1 May 2019 13:04:51 -0700
+        bh=pgwmPCltNlT2qJblASiCpctnwqNtjlaYefBmlV3joCA=;
+        b=B8aUkd+BciurFfCPIxPvoggdYEHPmrzDZTPypt1BJDBsXgcbZxduzaI8pe6jLlxbXu
+         HjytV/zuSV/J/rZsQaNrueZ+yeWWWsO+voSmEj4h8v+tXc2nQhH63pIuQ8S+aoxqEbbU
+         v0MXe32AZ7obp9n59y/RZJ4X6WAg9kPHu9i2asMn5HRofFLmmpGOenq/AxtlBbhhN/bn
+         hsySit6+KoNqzaLSK8RdRC6EXOtis28ED5keH2Bwkkp5FPDS5Klhl6YprErAyBFQnekx
+         qEYKxjml9t0I9zK6G8Z0yOhOktEH6JNUGRpZS8wbOwE/OizL6LoU6lBtyWxY8Wri+WYI
+         wS2A==
+X-Gm-Message-State: APjAAAVI9ZefMkEEN+pNIJeydOZ3Uv5WaE+sz3aHJzcnJYbToIEBH+i4
+        lW2HpgwB3fLeahm0YiwK22quqeQonZwfVxdGZSc=
+X-Google-Smtp-Source: APXvYqy0WApsbwDI8BfA3Z5wQECjBctYDbr5V6gFmoYub0j5ti+nozhzvzn4wnXwl6X5IMNDwLQwrHjL3uHCJNYqsPM=
+X-Received: by 2002:a9d:6153:: with SMTP id c19mr6049632otk.110.1556741105717;
+ Wed, 01 May 2019 13:05:05 -0700 (PDT)
+Date:   Wed,  1 May 2019 13:04:50 -0700
 In-Reply-To: <20190501200451.255615-1-samitolvanen@google.com>
-Message-Id: <20190501200451.255615-3-samitolvanen@google.com>
+Message-Id: <20190501200451.255615-2-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20190501200451.255615-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH 2/2] arm64: use the correct function type in SYSCALL_DEFINE0
+Subject: [PATCH 1/2] arm64: fix syscall_fn_t type
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>
@@ -72,51 +72,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
-parameters, use the correct function type to avoid indirect call
-type mismatches with Control-Flow Integrity checking.
+Use const struct pt_regs * instead of struct pt_regs * as
+the argument type to fix indirect call type mismatches with
+Control-Flow Integrity checking.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/include/asm/syscall_wrapper.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/include/asm/syscall.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/syscall_wrapper.h b/arch/arm64/include/asm/syscall_wrapper.h
-index a4477e515b798..507d0ee6bc690 100644
---- a/arch/arm64/include/asm/syscall_wrapper.h
-+++ b/arch/arm64/include/asm/syscall_wrapper.h
-@@ -30,10 +30,10 @@
- 	}										\
- 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
+index a179df3674a1a..6206ab9bfcfc5 100644
+--- a/arch/arm64/include/asm/syscall.h
++++ b/arch/arm64/include/asm/syscall.h
+@@ -20,7 +20,7 @@
+ #include <linux/compat.h>
+ #include <linux/err.h>
  
--#define COMPAT_SYSCALL_DEFINE0(sname)					\
--	asmlinkage long __arm64_compat_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);	\
--	asmlinkage long __arm64_compat_sys_##sname(void)
-+#define COMPAT_SYSCALL_DEFINE0(sname)							\
-+	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused);	\
-+	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);			\
-+	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused)
+-typedef long (*syscall_fn_t)(struct pt_regs *regs);
++typedef long (*syscall_fn_t)(const struct pt_regs *regs);
  
- #define COND_SYSCALL_COMPAT(name) \
- 	cond_syscall(__arm64_compat_sys_##name);
-@@ -62,11 +62,11 @@
- 	static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+ extern const syscall_fn_t sys_call_table[];
  
- #ifndef SYSCALL_DEFINE0
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __arm64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);	\
--	asmlinkage long __arm64_sys_##sname(void)
-+#define SYSCALL_DEFINE0(sname)							\
-+	SYSCALL_METADATA(_##sname, 0);						\
-+	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused);	\
-+	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);			\
-+	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused)
- #endif
- 
- #ifndef COND_SYSCALL
 -- 
 2.21.0.593.g511ec345e18-goog
 
