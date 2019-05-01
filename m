@@ -2,103 +2,92 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01DDC43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29940C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE1920866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:42:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ozn4OG8V"
+	by mail.kernel.org (Postfix) with ESMTP id EE27420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556739749;
+	bh=p4hRM5d72g/gPMuaZsM9eUVBTrsUmjOHYu/mL1LmZVU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rJ5i53sgvGuKC5sTD5SDCk31mWCDgww0NyauX0yYhXSOPRwIacSAWuaZHhaTfxPQq
+	 W+83QPn54zsMaBCgohRrzRQK9SHKYJeyCXMEAlnEfjL3GtFBzcXf4gxZXnB3UPSefp
+	 If3eNWV+pUtH2al8Z/KZjdRdPWka5HVwtfg6knbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfEATmG (ORCPT
+        id S1726202AbfEATm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:42:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42674 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfEATmF (ORCPT
+        Wed, 1 May 2019 15:42:27 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41129 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfEATm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:42:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7oA8gHDb7woGBm64YcjtkTyUbS99LN6SL9zg9DEkjCw=; b=ozn4OG8VcRRrICVNR0eS1eU+2
-        baR6SDPRSEH135PXPPoEvbdaM5sBGAYfLLFQTpUJXys0lubT8V7DE+UleyMbVXonD4BnmUghFS18X
-        +f6vCUPCqD+6tAQViFEb93ChGc+IT1BEkBPJz+6eejTY7ghNeXBTP4DOZnfC1ytFHXQD5nd5GFJme
-        DxWaxstHlwX28VzbXhkRrjsbTnOqXQrWPtKr+vJz5I2sWkK6aGl2m4MFvKTVQEHErHTAiETMJuDx+
-        bfPAVpYsp16c7r7aeqfbiv/T9Z8jyzc9X5w3PBYo7VOrzkdWkuNFY0wb8WVYOhRPp4QAPC18sUsDC
-        dL5yKHd3Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hLv6k-0000iv-RV; Wed, 01 May 2019 19:41:35 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 578D7984EB4; Wed,  1 May 2019 21:41:32 +0200 (CEST)
-Date:   Wed, 1 May 2019 21:41:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC][PATCH] ftrace/x86: Emulate call function while updating in
- breakpoint handler
-Message-ID: <20190501194132.GX7905@worktop.programming.kicks-ass.net>
-References: <CAHk-=wg7vUGMRHyBsLig6qiPK0i4_BK3bRrTN+HHHziUGg1P_A@mail.gmail.com>
- <CALCETrXujRWxwkgAwB+8xja3N9H22t52AYBYM_mbrjKKZ624Eg@mail.gmail.com>
- <20190430130359.330e895b@gandalf.local.home>
- <20190430132024.0f03f5b8@gandalf.local.home>
- <20190430134913.4e29ce72@gandalf.local.home>
- <CAHk-=wjJ8D74+FDcXGL65Q9aB0cc7B4vr2s2rS6V4d4a3hU-1Q@mail.gmail.com>
- <20190501131117.GW2623@hirez.programming.kicks-ass.net>
- <CAHk-=wjCoycqdVjvWkkFnVRQS9fHEzdmiAG4uUV8B04xv7ZVwA@mail.gmail.com>
- <20190501151330.023cc620@gandalf.local.home>
- <nycvar.YFH.7.76.1905012132100.9803@cbobk.fhfr.pm>
+        Wed, 1 May 2019 15:42:27 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g8so5025otl.8;
+        Wed, 01 May 2019 12:42:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/akMSMW0lkhkcz4fLafCmBrbNFX/5xviGaoV6lXM1Y8=;
+        b=NyFG1lEsp8uwSAL33/aZOkumkCoxlJy//Ep6DoGcQ+Bz2GPohsp6M/+tr+jRc7J60q
+         wvpfM7IL78LlZfPz55o0iWRnyz8wxKEgzVx9U6wlRboMH6vwSiTUO7tNJPNXfUfo0mie
+         ET3+1JgsHRtRgf50W0lxKp2pl5jIswJSjs3CO1A8LV7htp5K349SgddKx/P69ah4yWG1
+         et5akwOD6svGngHLJA+D2KwENyEcR+I6+K8QmTStBklAqrfvG+cLQnMugsxxnX+v3g7K
+         Dt2G4I4Xs2KGpy4Lbrd2av5LqTBD4NammLlnE17/ktgw8GU8PYNz9Z4LHgynK/To2eBX
+         /nJg==
+X-Gm-Message-State: APjAAAVWMOizvYq+VR29WpX20TY7AfVusVpoHHVsNaHy5bVgu3dY5Djq
+        h9BnFQ6TX9J9To3vSCA1Bw==
+X-Google-Smtp-Source: APXvYqy7QZlChMFuDIvHaPNMKu8rKskf7m4kpsM8BwMmpGUyLD23FF9FutcQYt299vngj2/BqVSlmw==
+X-Received: by 2002:a9d:30f:: with SMTP id 15mr17258580otv.236.1556739746283;
+        Wed, 01 May 2019 12:42:26 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b51sm18552291otc.8.2019.05.01.12.42.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 12:42:25 -0700 (PDT)
+Date:   Wed, 1 May 2019 14:42:24 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/4] dt-bindings: soc: qcom: Add AOSS QMP binding
+Message-ID: <20190501194224.GA991@bogus>
+References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+ <20190501043734.26706-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1905012132100.9803@cbobk.fhfr.pm>
+In-Reply-To: <20190501043734.26706-2-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 09:33:28PM +0200, Jiri Kosina wrote:
-> On Wed, 1 May 2019, Steven Rostedt wrote:
+On Tue, 30 Apr 2019 21:37:31 -0700, Bjorn Andersson wrote:
+> Add binding for the QMP based side-channel communication mechanism to
+> the AOSS, which is used to control resources not exposed through the
+> RPMh interface.
 > 
-> > I never tested the 32 bit version of this. And we could just not
-> > implement it (I don't think there's live kernel patching for it
-> > either).
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 > 
-> That's correct, there is no livepatching on x86_32 (and no plans for 
-> it). CONFIG_LIVEPATCH is not available for 32bit builds at all.
+> Changes since v6:
+> - Added #clock-cells
+> 
+>  .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 81 +++++++++++++++++++
+>  include/dt-bindings/power/qcom-aoss-qmp.h     | 14 ++++
+>  2 files changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+>  create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
+> 
 
-We still want this for static_call(), even on 32bit.
+Reviewed-by: Rob Herring <robh@kernel.org>
