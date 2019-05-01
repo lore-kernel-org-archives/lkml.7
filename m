@@ -4,86 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98106C04AA8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80787C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D2C2085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524EC2085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 13:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556716085;
-	bh=8/mdyWTopgYXMGmoCnxG3YsNyNXWiGF01vuAp/fhSSQ=;
+	s=default; t=1556716110;
+	bh=SRO4r3Co9WuqsnOgY0780Sz3PYGcGIFeiwKYqJlAa1A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AR+K4nRBIWgm5e9pI1vIlE8rDF9segbBnXiePtNzKWUJim4/qQ+FkCQzX4Ht6bF26
-	 0uJ70J4FGR1J132oyTpAcDxnPYJndAzjYBFnzX0svu4vRe5rjf0HArPaed96ojqZVV
-	 E1fkinMcygEUTXgBU4PaVB7jsZ9X/nmO3nMPzXKQ=
+	b=DWbLGXfVDX11DDOxYgkiVXRqhA67sDPfj4nD/E+bdzY+mfjQeh9JIAVAi5GVJVE/K
+	 zM7H+QisNETbJdpp0ecT127nS+62tRKKbrPV83DlgCNdxDZ8GKH3lCsqLF+aBYWxao
+	 vgkiCDL/QnNjJv/5Oa0RxReaQwe6RxoA8SZ9PTps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfEANIE (ORCPT
+        id S1726505AbfEANI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 09:08:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
+        Wed, 1 May 2019 09:08:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbfEANIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 09:08:04 -0400
+        id S1725993AbfEANI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 09:08:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C3FC2085A;
-        Wed,  1 May 2019 13:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A82242085A;
+        Wed,  1 May 2019 13:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556716083;
-        bh=8/mdyWTopgYXMGmoCnxG3YsNyNXWiGF01vuAp/fhSSQ=;
+        s=default; t=1556716108;
+        bh=SRO4r3Co9WuqsnOgY0780Sz3PYGcGIFeiwKYqJlAa1A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bWwSO7jnRiU+mtI0evjo+3t2JenQ72Kcn50zQLZYeoiwjkQ9+e3sRgOtdN8nh7ZqA
-         M3X26E+fP9hW8l9o7V1UF9jCoTdBI1s1Sf1oAFT/5SMoB8xwb4ZokywxspSIN37EM5
-         LbfhlxfkwIvNPKssW8LSG2ns0NyLk1IjuUs/DMfM=
-Date:   Wed, 1 May 2019 15:08:00 +0200
+        b=gwxV1JApnL7suD71vDinkM0jGvS0+hYCIKzOOpZQ+cLL4DKg4uLQhOlf9Iw9/64uI
+         sgNKvMXFb/67aOweL8suJZelhdO6on/R679WPfEK7kApoGiUChM8qKWITB52QjC0FX
+         9mBiVNokfU5SZ7gDHgGhPLxhA329dOLLtwgprLw8=
+Date:   Wed, 1 May 2019 15:08:25 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dave Airlie <airlied@redhat.com>
-Subject: Re: [PATCH 5.0 44/89] Revert "drm/i915/fbdev: Actually configure
- untiled displays"
-Message-ID: <20190501130800.GA28264@kroah.com>
-References: <20190430113609.741196396@linuxfoundation.org>
- <20190430113611.821040876@linuxfoundation.org>
- <20190501130208.GA3929@sasha-vm>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] kobject: fix dereference before null check on kobj
+Message-ID: <20190501130825.GA28441@kroah.com>
+References: <20190501124317.1759-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501130208.GA3929@sasha-vm>
+In-Reply-To: <20190501124317.1759-1-colin.king@canonical.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 09:02:08AM -0400, Sasha Levin wrote:
-> On Tue, Apr 30, 2019 at 01:38:35PM +0200, Greg Kroah-Hartman wrote:
-> > From: Dave Airlie <airlied@redhat.com>
-> > 
-> > commit 9fa246256e09dc30820524401cdbeeaadee94025 upstream.
-> > 
-> > This reverts commit d179b88deb3bf6fed4991a31fd6f0f2cad21fab5.
-> > 
-> > This commit is documented to break userspace X.org modesetting driver in certain configurations.
-> > 
-> > The X.org modesetting userspace driver is broken. No fixes are available yet. In order for this patch to be applied it either needs a config option or a workaround developed.
-> > 
-> > This has been reported a few times, saying it's a userspace problem is clearly against the regression rules.
-> > 
-> > Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109806
-> > Signed-off-by: Dave Airlie <airlied@redhat.com>
-> > Cc: <stable@vger.kernel.org> # v3.19+
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Wed, May 01, 2019 at 01:43:17PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> This commit has a follow-up fix as abbc0697d5fbf ("drm/fb: revert the
-> i915 Actually configure untiled displays from master").
+> The kobj pointer is being null-checked so potentially it could be null,
+> however, the ktype declaration before the null check is dereferencing kobj
+> hence we have a potential null pointer deference. Fix this by moving the
+> assignment of ktype after kobj has been null checked.
+> 
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: aa30f47cf666 ("kobject: Add support for default attribute groups to kobj_type")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  lib/kobject.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-I don't see that commit in Linus's tree, where did you find it?
-
-confused,
+Nice catch, thanks, will go queue this up now.
 
 greg k-h
