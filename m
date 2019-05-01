@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6484EC46460
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AADC04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A48A208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8846E20651
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 19:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfEAT4h (ORCPT
+        id S1726341AbfEAT4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 15:56:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60612 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726096AbfEAT4g (ORCPT
+        Wed, 1 May 2019 15:56:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38016 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726310AbfEAT4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 15:56:36 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x41JqHMs037360
-        for <linux-kernel@vger.kernel.org>; Wed, 1 May 2019 15:56:34 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s7dvw2juq-1
+        Wed, 1 May 2019 15:56:40 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x41JqHMK028599
+        for <linux-kernel@vger.kernel.org>; Wed, 1 May 2019 15:56:39 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s7f0wrc2d-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 15:56:34 -0400
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 15:56:39 -0400
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 1 May 2019 20:56:32 +0100
+        Wed, 1 May 2019 20:56:36 +0100
 Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 1 May 2019 20:56:29 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x41JuS8U46792752
+        Wed, 1 May 2019 20:56:33 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x41JuXfo48889916
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 May 2019 19:56:28 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3BC024203F;
-        Wed,  1 May 2019 19:56:28 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16D8B4204C;
-        Wed,  1 May 2019 19:56:25 +0000 (GMT)
+        Wed, 1 May 2019 19:56:33 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC7F8A4054;
+        Wed,  1 May 2019 19:56:32 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF155A405C;
+        Wed,  1 May 2019 19:56:29 +0000 (GMT)
 Received: from rapoport-lnx (unknown [9.148.205.12])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  1 May 2019 19:56:24 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Wed, 01 May 2019 22:56:23 +0300
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  1 May 2019 19:56:29 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Wed, 01 May 2019 22:56:28 +0300
 From:   Mike Rapoport <rppt@linux.ibm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -61,58 +61,54 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 1/3] arm: remove ARCH_SELECT_MEMORY_MODEL
-Date:   Wed,  1 May 2019 22:56:15 +0300
+Subject: [PATCH 2/3] s390: remove ARCH_SELECT_MEMORY_MODEL
+Date:   Wed,  1 May 2019 22:56:16 +0300
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
 References: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19050119-0028-0000-0000-00000369516A
+x-cbid: 19050119-0008-0000-0000-000002E24BDE
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050119-0029-0000-0000-00002428BA50
-Message-Id: <1556740577-4140-2-git-send-email-rppt@linux.ibm.com>
+x-cbparentid: 19050119-0009-0000-0000-0000224EB7A8
+Message-Id: <1556740577-4140-3-git-send-email-rppt@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-01_09:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=979 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905010124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ARCH_SELECT_MEMORY_MODEL in arch/arm/Kconfig is enabled only when
-ARCH_SPARSEMEM_ENABLE=y. But in this case, ARCH_SPARSEMEM_DEFAULT is also
-enabled and this in turn enables SPARSEMEM_MANUAL.
+The only reason s390 has ARCH_SELECT_MEMORY_MODEL option in
+arch/s390/Kconfig is an ancient compile error with allnoconfig which was
+fixed by commit 97195d6b411f ("[S390] fix sparsemem related compile error
+with allnoconfig on s390") by adding the ARCH_SELECT_MEMORY_MODEL option.
 
-Since there is no definition of ARCH_FLATMEM_ENABLE in arch/arm/Kconfig,
-SPARSEMEM_MANUAL is the only enabled memory model, hence the final
-selection will evaluate to SPARSEMEM=y.
-
-Since ARCH_SPARSEMEM_ENABLE is set to 'y' only by several sub-arch
-configurations, the default for must sub-arches would be the falback to
-FLATMEM regardless of ARCH_SELECT_MEMORY_MODEL.
+Since then a lot have changed and now allnoconfig builds just fine without
+ARCH_SELECT_MEMORY_MODEL, so it can be removed.
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/arm/Kconfig | 3 ---
+ arch/s390/Kconfig | 3 ---
  1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 9aed25a..25a69a3 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1592,9 +1592,6 @@ config ARCH_SPARSEMEM_ENABLE
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index b6e3d06..69d3956 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -621,9 +621,6 @@ config ARCH_SPARSEMEM_ENABLE
  config ARCH_SPARSEMEM_DEFAULT
- 	def_bool ARCH_SPARSEMEM_ENABLE
+ 	def_bool y
  
 -config ARCH_SELECT_MEMORY_MODEL
--	def_bool ARCH_SPARSEMEM_ENABLE
+-	def_bool y
 -
- config HAVE_ARCH_PFN_VALID
- 	def_bool ARCH_HAS_HOLES_MEMORYMODEL || !SPARSEMEM
+ config ARCH_ENABLE_MEMORY_HOTPLUG
+ 	def_bool y if SPARSEMEM
  
 -- 
 2.7.4
