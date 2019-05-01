@@ -2,154 +2,133 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE31C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F3C04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F22C20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F008620866
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 03:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2U9bzmZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aiCTr0aF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfEADpI (ORCPT
+        id S1726071AbfEADsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Apr 2019 23:45:08 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:36242 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfEADpI (ORCPT
+        Tue, 30 Apr 2019 23:48:54 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40899 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfEADsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Apr 2019 23:45:08 -0400
-Received: by mail-it1-f194.google.com with SMTP id v143so8320254itc.1;
-        Tue, 30 Apr 2019 20:45:07 -0700 (PDT)
+        Tue, 30 Apr 2019 23:48:54 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so7682320plr.7;
+        Tue, 30 Apr 2019 20:48:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TkB4s1r5PgKZ71uFpCZrkh9Mfe0SQFgPVceh4zEIkSk=;
-        b=r2U9bzmZ4Y6ku1VauS7d9URFGDT4u5JUD7x0BNTY8EPKVgOGKi4B0Rqy9IIPKuaQYz
-         hG3GjtDOkNtEYw/aRPyUtfR0ouV2NDJGL+ytieVOP/7GGlVs31JK9wxyTQRi6WYM7LXQ
-         GNupGNRgjxle5/iHjwCUgtFaz1x1+C7ukuwHKCgskbrzAuHQMG9hfI7ekZyQSDDxORe5
-         l5YonGybDLIYk0hMmgNnDdBehyX2eZcEnIXhhEXLrD936AZ83a8ThriwX9BqauKOZHos
-         XpRfNS0purqncEtQ7g4OPhcFNpzjQtrNbRdhBFo8gl2lvR/1q1rr+r92HLADczj9zzbs
-         tt/A==
+        h=sender:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J2KKEs5qyD3bh3G1zZGaua5TSLn8SD0b1DxMZllL6B0=;
+        b=aiCTr0aF1jwCU6PVFSia8Pix5giZW2BrHRP2t+9nT7yY6qXkNjgT4dXFbarVh2yRwf
+         2VzTuK+4w3GAA6gy+Yh7XXG9OWHRO50z0K37Qfy4tWwZqwuHERCyWJ9gg9bm/O9hQncH
+         HpwZpGrbClf4rxxZ9IRMaU5Rq4bawD52k99IqRKE8OaBgHwh4vNjkeMgior0Rz66Eu2Q
+         YlCsGwDKJ+GUIdeXLpCTaVdRWsVVbW57nOE/0YTLBbKvFdF7+uVpaynt7OPC/sodK0Qy
+         kn+7JUNdY8bMctxcYyIn9L4wVHApmfiXH71ZdeWPThdjWVi8AZQtNU9Zk1BvYI7nI/Xw
+         m1KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TkB4s1r5PgKZ71uFpCZrkh9Mfe0SQFgPVceh4zEIkSk=;
-        b=nixPt1PalCuQZbKD0skd68p7ejmLXEJSuU8iv7npvYoJfV7nTpkA0we72+XTZF6OO+
-         9bncvXm/M0BMRyLgbJOeYIDc3869OocUzuxEp4qrUogLG430fcQJs65qWTldhMtGlvm2
-         MktodUneHAe+VK7r2uSKfpGJQYRzDv0ZcLiglSd/iJLu3naQb6xdelO9VQX3vyVQxMfg
-         C0rj9f9A2+jeB4E6s1vAcF4XHQPZSSegL5W9udmcEsBYTKocku9V/fVNrX0slxswWBvx
-         7sjxtep0oFFjvbjBWazj0eG4W8BzwPHJVI0gAE+iwcGWx+Tfyj6N8cvhQU+hXqguCmbu
-         YoPQ==
-X-Gm-Message-State: APjAAAX7gngn+M/chZZRvLH0gowyHcpMXFBIy+p1wyuK46O9d1x4IewW
-        rfgiSN1SBOfafYeno0SR8Qdo9+rEyA6mYYoNYS4=
-X-Google-Smtp-Source: APXvYqzLrMqPKXV9+qRMezJD64nBLRaRn4e3qS42BmiTaPw+hgZdIxV+ckAZw+e3Lf1qZMsMEU3u87FCKEVCosnWcg0=
-X-Received: by 2002:a24:6c54:: with SMTP id w81mr6507934itb.78.1556682307120;
- Tue, 30 Apr 2019 20:45:07 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J2KKEs5qyD3bh3G1zZGaua5TSLn8SD0b1DxMZllL6B0=;
+        b=tIIya+zL2dAeyOybW1p6gQ49enKQJ0vbefe2vZzxVrXEBJgrqMixIb1MxqGe3n3pxR
+         8Bu6QUTkAWax4Y2rMmJ3rele5fczYmZaT8AA4Vt1c94N7MWyE1RZJ/O92EusXK9NH9Dc
+         ifIyQyx3jYlf3a2au0itIXhyQkWMzh33BH/g1FxlbDIEM10PCIZe7GyQeXSsx6eKXSZn
+         PuXgTWR+EqeDF8MAiSnWYOcVSo7ikCl/F8/b+NVIdKCDJ0ZPvnk0CMiyGlvsxFZGWSJq
+         hu1z8/gUTJB7WjvrKWF6gYQDXa2MlqH1xMI5xt1srqzL4tcHrmDOdUkdUSdYk50VzQcS
+         R4hg==
+X-Gm-Message-State: APjAAAXq/DDBEbWn0p1wPaglo2z90RTp/gNNtt3nkvawdRqL7EAUm1+T
+        Xeo9nH9xhuy/eb0EGOWwcmA=
+X-Google-Smtp-Source: APXvYqxBTptVBTtEmK4RFqNsvgCEuMsx2VcjLAtSPV+h4yj3hV+KeAT84WPh7J/rBmsy6SdJ6Ca0cw==
+X-Received: by 2002:a17:902:ba8c:: with SMTP id k12mr56252983pls.213.1556682533865;
+        Tue, 30 Apr 2019 20:48:53 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n11sm39757785pgq.8.2019.04.30.20.48.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2019 20:48:52 -0700 (PDT)
+Subject: Re: [PATCH] hwmon: Convert to hwmon_device_register_with_info()
+To:     Alakesh Haloi <alakesh.haloi@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>
+References: <20190430222955.GA97523@ip-172-31-29-54.us-west-2.compute.internal>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <479b3c4b-0191-5c1e-506e-4ba85a9d1267@roeck-us.net>
+Date:   Tue, 30 Apr 2019 20:48:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-3-tiny.windzz@gmail.com>
- <20190426211540.GA890@bogus> <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
- <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com> <20190430044245.s4viduudej6q2eq6@vireshk-i7>
-In-Reply-To: <20190430044245.s4viduudej6q2eq6@vireshk-i7>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Wed, 1 May 2019 11:44:55 +0800
-Message-ID: <CAEExFWsAQ3b42YqfW-b8vuq_NZgfDe+0D5TzP09ber0Ljvv43g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190430222955.GA97523@ip-172-31-29-54.us-west-2.compute.internal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:42 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 29-04-19, 11:18, Rob Herring wrote:
-> > On Sun, Apr 28, 2019 at 4:53 AM Frank Lee <tiny.windzz@gmail.com> wrote:
-> > >
-> > > On Sat, Apr 27, 2019 at 5:15 AM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
-> > > > > Allwinner Process Voltage Scaling Tables defines the voltage and
-> > > > > frequency value based on the speedbin blown in the efuse combination.
-> > > > > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> > > > > provide the OPP framework with required information.
-> > > > > This is used to determine the voltage and frequency value for each
-> > > > > OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> > > > >
-> > > > > The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
-> > > > > with following parameters:
-> > > > > - nvmem-cells (NVMEM area containig the speedbin information)
-> > > > > - opp-microvolt-<name>: voltage in micro Volts.
-> > > > >   At runtime, the platform can pick a <name> and matching
-> > > > >   opp-microvolt-<name> property.
-> > > > >                       HW:             <name>:
-> > > > >                       sun50iw-h6      speed0 speed1 speed2
-> > > >
-> > > > We already have at least one way to support speed bins with QC kryo
-> > > > binding. Why do we need a different way?
-> > >
-> > > For some SOCs, for some reason (making the CPU have approximate performance),
-> > > they use the same frequency but different voltage. In the case where
-> > > this speed bin
-> > > is not a lot and opp uses the same frequency, too many repeated opp
-> > > nodes are a bit
-> > > redundant and not intuitive enough.
-> > >
-> > > So, I think it's worth the new method.
-> >
-> > Well, I don't.
-> >
-> > We can't have every SoC vendor doing their own thing just because they
-> > want to. If there are technical reasons why existing bindings don't
-> > work, then maybe we need to do something different. But I haven't
-> > heard any reasons.
->
-> Well there is a good reason for attempting the new bindings and I wasn't sure if
-> updating the earlier bindings or adding another one for platform is correct. As
-> we aren't really adding new bindings, but just documentation around it.
-We didn't really add anything else, it still revolves around the
-features that opp already supports.
->
-> So there are two ways OPP core support this thing:
->
-> - opp-supported-hw: This is a better fit if we have a smaller group of
->   frequencies to select from a bigger group, so we disable non-required OPPs
->   completely. This is what Qcom did as they wanted to select different
->   frequencies all together.
->
-> - opp-microvolt-<name>: This is a better fit if the frequencies remain same and
->   only few of the properties like voltage/current have a different value. So we
->   don't disable any OPPs but just select the right voltage/current for those
->   frequencies. This avoids unnecessary duplication of the OPPs in DT and that's
->   what allwinner guys want.
->
-> The kryo nvmem bindings currently supports opp-supported-hw, maybe we can add
-> mention support for second one in the same file and rename it well.
-So which way is correct?
+On 4/30/19 3:29 PM, Alakesh Haloi wrote:
+> Booting linux on bare metal instance type causes this warning:
+> 
+> hwmon_device_register() is deprecated. Please convert the driver
+> to use hwmon_device_register_with_info().
+> 
+> This patch fixes this call to deprecated function in acpi_power_meter.c
+> 
 
-Thx,
-Yangtao
->
-> --
-> viresh
+Changing the function name to call isn't really a conversion to the new API.
+
+Looking into the driver, I have to say it is broken almost beyond repair.
+The hwmon device is registered with no attributes present, attributes,
+including the mandatory name attribute, are added and removed more or
+less randomly. Various attributes (such as oem and serial number) simply
+don't belong into a hwmon driver.
+
+If you really want to convert the driver, it should be a real conversion.
+It should register with a hwmon_chip_info data structure, augmented with
+whatever non-standard sysfs attributes are there.
+The hwmon device should only be registered together with its attributes.
+If it is changed, the hwmon device should be removed and re-registered.
+Anything else doesn't really make sense.
+
+Faking the use of the new API _really_ doesn't add any value, and doesn't
+make any sense. If you don't want to convert the driver for real, it is
+better to leave it alone.
+
+> Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
+> Cc: stable@vger.kernel.org
+
+And, no, this is definitely not a patch to be applied to stable releases.
+
+Guenter
+
+> ---
+>   drivers/hwmon/acpi_power_meter.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+> index e98591fa2528..d1b8029d0147 100644
+> --- a/drivers/hwmon/acpi_power_meter.c
+> +++ b/drivers/hwmon/acpi_power_meter.c
+> @@ -898,7 +898,9 @@ static int acpi_power_meter_add(struct acpi_device *device)
+>   	if (res)
+>   		goto exit_free;
+>   
+> -	resource->hwmon_dev = hwmon_device_register(&device->dev);
+> +	resource->hwmon_dev = hwmon_device_register_with_info(&device->dev,
+> +				ACPI_POWER_METER_NAME,
+> +				&device->driver_data, NULL, NULL);
+>   	if (IS_ERR(resource->hwmon_dev)) {
+>   		res = PTR_ERR(resource->hwmon_dev);
+>   		goto exit_remove;
+> 
+
