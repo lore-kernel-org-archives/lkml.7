@@ -2,222 +2,86 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064D3C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74D9C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C331B20835
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:15:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="n1IZMCvR"
+	by mail.kernel.org (Postfix) with ESMTP id 936B020835
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfEAMP1 (ORCPT
+        id S1726447AbfEAMQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 08:15:27 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33001 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfEAMP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 08:15:27 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y3so7288100plp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 05:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=94vB13sHTlZr5Bs7pA31wHDlzJuKT2BJO6sMbFgdL1A=;
-        b=n1IZMCvRycqCIql9nXCuOiCKPXBoaW5HtMSbkanKhb1YHQbkhjLllkBXfWUQhKRArg
-         wWerKM9pjdhTRqZRgspXhfRRXhSJjUp87KDpNvrcCSWIV4DJ24ETVfMZTjic97Xj91R8
-         lsIuVji++GNk3kABHwhGDn/bzrBw9gGnhRtkM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=94vB13sHTlZr5Bs7pA31wHDlzJuKT2BJO6sMbFgdL1A=;
-        b=cv/LFJwA7ZoTUW4IRwIHN8/WdaMBvcXL7kt30WkdJpjUfLssqmpRP04vYK0pPPQGHP
-         hPnC6+WxRTbHvNTzOjQeZMvdgN4thpBQS1+VCjLbt+DqKi0Ex80DvP2ufefmsY3JVK31
-         xd+um0RjZsTO1wM9Gw/0bqNSYEB0XB7EWNEU078wuQ8P5LP750AVAoNf0azH+4J74z+L
-         oypZ+ii4BLLYTF9omXb8QlMOGFzK+2HTfzk8P9MCKQyxuj+YU4esceLQhrmh/UPiMq5F
-         YeiorPI72u3Md0JCj2zth9920RBcUNCUsw288i03wl5Bo7JXLChFonp/dYJc5qnj7tlf
-         dDvw==
-X-Gm-Message-State: APjAAAWv6unoHJZ78Ocjl8Q1T9VUu2oV6abVHBLTjAARPx/HWjd1cFSG
-        c4VbybmlYKCHyHfcMJjT1MJURA==
-X-Google-Smtp-Source: APXvYqz3eAltqeg6DJWrjpVbkmDoaq7Xx7Iu8cbap99+zZVfqJaGqNjcq7kfpvRuzkqnvfE8TkcmQg==
-X-Received: by 2002:a17:902:a582:: with SMTP id az2mr77934840plb.315.1556712926355;
-        Wed, 01 May 2019 05:15:26 -0700 (PDT)
-Received: from localhost.localdomain ([183.82.229.33])
-        by smtp.gmail.com with ESMTPSA id e193sm71082978pgc.53.2019.05.01.05.15.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 05:15:25 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH 2/2] arm64: rockchip: rk3399: nanopc-t4: Enable FriendlyELEC HD702E eDP panel
-Date:   Wed,  1 May 2019 17:44:48 +0530
-Message-Id: <20190501121448.3812-2-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20190501121448.3812-1-jagan@amarulasolutions.com>
-References: <20190501121448.3812-1-jagan@amarulasolutions.com>
+        Wed, 1 May 2019 08:16:20 -0400
+Received: from mga05.intel.com ([192.55.52.43]:60979 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726416AbfEAMQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 08:16:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 05:16:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,417,1549958400"; 
+   d="scan'208";a="169578990"
+Received: from sbahirat-mobl1.amr.corp.intel.com (HELO [10.255.231.197]) ([10.255.231.197])
+  by fmsmga001.fm.intel.com with ESMTP; 01 May 2019 05:16:18 -0700
+Subject: Re: [alsa-devel] [PATCH][next] ASoC: SOF: Intel: fix spelling mistake
+ "incompatble" -> "incompatible"
+To:     Colin King <colin.king@canonical.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190501102308.30390-1-colin.king@canonical.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <7aff79bd-e0d5-a10b-7443-6f27ea1f47c7@linux.intel.com>
+Date:   Wed, 1 May 2019 07:16:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190501102308.30390-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FriendlyELEC HD702E is one of optional LCD panel for
-NanoPC T4 eDP interface.
 
-It features 800x1280 resolutions, with built in GT9271 captive
-touchscreen and adjustable backlight via PWM.
 
-eDP panel connections are:
-- VCC3V3_SYS: 3.3V panel power supply
-- GPIO4_C2: PWM0_BL pin
-- GPIO4_D5_LCD_BL_EN: Backlight enable pin
-- VCC12V0_SYS: 12V backlight power supply
-- Touchscreen connected via I2C4
-- GPIO1_C4_TP_INT: touchscreen interrupt pin
-- GPIO1_B5_TP_RST: touchscreen reset pin
+On 5/1/19 5:23 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a hda_dsp_rom_msg message, fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Add support for it.
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Note: we need to disable hdmi-cec pinctrl to work with
-edp-hpd since both share same pin, otherwise we can
-encounter below error during bootup
-[    1.047726] rockchip-pinctrl pinctrl: pin gpio4-23 already requested by ff940000.hdmi; cannot claim for ff970000.edp
-[    1.048655] rockchip-pinctrl pinctrl: pin-151 (ff970000.edp) status -22
-[    1.049235] rockchip-pinctrl pinctrl: could not request pin 151 (gpio4-23) from group edp-hpd  on device rockchip-pinctrl
-[    1.050191] rockchip-dp ff970000.edp: Error applying setting, reverse things back
-[    1.050867] rockchip-dp: probe of ff970000.edp failed with error -22
+Thanks for the fix!
 
- .../boot/dts/rockchip/rk3399-nanopc-t4.dts    | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-index 931c3dbf1b7d..b652d960946f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-@@ -46,6 +46,48 @@
- 		};
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		brightness-levels = <
-+			  0   1   2   3   4   5   6   7
-+			  8   9  10  11  12  13  14  15
-+			 16  17  18  19  20  21  22  23
-+			 24  25  26  27  28  29  30  31
-+			 32  33  34  35  36  37  38  39
-+			 40  41  42  43  44  45  46  47
-+			 48  49  50  51  52  53  54  55
-+			 56  57  58  59  60  61  62  63
-+			 64  65  66  67  68  69  70  71
-+			 72  73  74  75  76  77  78  79
-+			 80  81  82  83  84  85  86  87
-+			 88  89  90  91  92  93  94  95
-+			 96  97  98  99 100 101 102 103
-+			104 105 106 107 108 109 110 111
-+			112 113 114 115 116 117 118 119
-+			120 121 122 123 124 125 126 127
-+			128 129 130 131 132 133 134 135
-+			136 137 138 139 140 141 142 143
-+			144 145 146 147 148 149 150 151
-+			152 153 154 155 156 157 158 159
-+			160 161 162 163 164 165 166 167
-+			168 169 170 171 172 173 174 175
-+			176 177 178 179 180 181 182 183
-+			184 185 186 187 188 189 190 191
-+			192 193 194 195 196 197 198 199
-+			200 201 202 203 204 205 206 207
-+			208 209 210 211 212 213 214 215
-+			216 217 218 219 220 221 222 223
-+			224 225 226 227 228 229 230 231
-+			232 233 234 235 236 237 238 239
-+			240 241 242 243 244 245 246 247
-+			248 249 250 251 252 253 254 255>;
-+		default-brightness-level = <200>;
-+		enable-gpios = <&gpio4 RK_PD5 GPIO_ACTIVE_HIGH>;	/* GPIO4_D5_LCD_BL_EN */
-+		pwms = <&pwm0 0 25000 0>;
-+		power-supply = <&vcc12v0_sys>;
-+		status = "okay";
-+	};
-+
- 	ir-receiver {
- 		compatible = "gpio-ir-receiver";
- 		gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_LOW>;
-@@ -64,6 +106,18 @@
- 		fan-supply = <&vcc12v0_sys>;
- 		pwms = <&pwm1 0 50000 0>;
- 	};
-+
-+	panel {
-+		compatible ="friendlyarm,hd702e";
-+		backlight = <&backlight>;
-+		power-supply = <&vcc3v3_sys>;
-+
-+		port {
-+			panel_in_edp: endpoint {
-+				remote-endpoint = <&edp_out_panel>;
-+			};
-+		};
-+	};
- };
- 
- &cpu_thermal {
-@@ -94,6 +148,23 @@
- 	};
- };
- 
-+&edp {
-+	status = "okay";
-+
-+	ports {
-+		edp_out: port@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			edp_out_panel: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&panel_in_edp>;
-+			};
-+		};
-+	};
-+};
-+
- &gpu_thermal {
- 	trips {
- 		gpu_warm: gpu_warm {
-@@ -130,6 +201,17 @@
- 	};
- };
- 
-+&i2c4 {
-+	touchscreen@5d {
-+		compatible = "goodix,gt911";
-+		reg = <0x5d>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <RK_PC4 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpio = <&gpio1 RK_PC4 GPIO_ACTIVE_HIGH>;	/* GPIO1_C4_TP_INT */
-+		reset-gpio = <&gpio1 RK_PB5 GPIO_ACTIVE_LOW>;	/* GPIO1_B5_TP_RST */
-+	};
-+};
-+
- &sdhci {
- 	mmc-hs400-1_8v;
- 	mmc-hs400-enhanced-strobe;
--- 
-2.18.0.321.gffc6fa0e3
-
+> ---
+>   sound/soc/sof/intel/hda.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+> index b8fc19790f3b..84baf275b467 100644
+> --- a/sound/soc/sof/intel/hda.c
+> +++ b/sound/soc/sof/intel/hda.c
+> @@ -54,7 +54,7 @@ static const struct hda_dsp_msg_code hda_dsp_rom_msg[] = {
+>   	{HDA_DSP_ROM_L2_CACHE_ERROR, "error: L2 cache error"},
+>   	{HDA_DSP_ROM_LOAD_OFFSET_TO_SMALL, "error: load offset too small"},
+>   	{HDA_DSP_ROM_API_PTR_INVALID, "error: API ptr invalid"},
+> -	{HDA_DSP_ROM_BASEFW_INCOMPAT, "error: base fw incompatble"},
+> +	{HDA_DSP_ROM_BASEFW_INCOMPAT, "error: base fw incompatible"},
+>   	{HDA_DSP_ROM_UNHANDLED_INTERRUPT, "error: unhandled interrupt"},
+>   	{HDA_DSP_ROM_MEMORY_HOLE_ECC, "error: ECC memory hole"},
+>   	{HDA_DSP_ROM_KERNEL_EXCEPTION, "error: kernel exception"},
+> 
