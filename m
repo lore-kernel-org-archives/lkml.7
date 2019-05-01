@@ -2,90 +2,138 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80268C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD8AC43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B9421743
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 11:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AEE121670
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 12:00:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AvZHXP3d";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A6ohC+RU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfEAL7e (ORCPT
+        id S1726447AbfEAMAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 07:59:34 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:55325 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfEAL7d (ORCPT
+        Wed, 1 May 2019 08:00:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54532 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfEAMAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 07:59:33 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 31CB530000F2A;
-        Wed,  1 May 2019 13:59:31 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id EE4CF233EA5; Wed,  1 May 2019 13:59:30 +0200 (CEST)
-Date:   Wed, 1 May 2019 13:59:30 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>, Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?iso-8859-1?B?S3I/P23hPz8=?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kvm ML <kvm@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, x86-ml <x86@kernel.org>
-Subject: Re: [PATCH 4.19 083/100] x86/fpu: Dont export
- __kernel_fpu_{begin,end}()
-Message-ID: <20190501115930.wa7ubea67rmsoqo7@wunner.de>
-References: <20190430113608.616903219@linuxfoundation.org>
- <20190430113612.682532449@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430113612.682532449@linuxfoundation.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Wed, 1 May 2019 08:00:13 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 51EDE6090F; Wed,  1 May 2019 12:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556712012;
+        bh=9rtvZnnz1whlALLucRxf79SHTv6CCJrhXnJEzAtE3+I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AvZHXP3dipofRkwuHPfMA6dGubTH1LGIDWoqPUF5lRechhCahm989QFC9bdE2zJvF
+         9z73DVxmds4QLGhnIvORlI8Q627787VCQvVxKh4Eapf2ay+0YtWikuJpDao7TNexaH
+         yQxPWLOdc25hEmheL3nSDuMsyAEP8oe7ECVXK+qI=
+Received: from prsood-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: prsood@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0AF2E60863;
+        Wed,  1 May 2019 12:00:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556712011;
+        bh=9rtvZnnz1whlALLucRxf79SHTv6CCJrhXnJEzAtE3+I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A6ohC+RUAFeMno2zutZ2eD13JHfJbxe+GzFW3Cy0yyB2sUNFRyrs7/T/wTUfDG7BL
+         Mzeb70n0v4dgtiCwrhf1XKRBdHY1YuU240F6Ga+2hFNDW4mUEG0rDgnhugQacV36cK
+         fvDOyVSS+e5fkFgXhGbxbdgsB41EwCJD7AVb4rEo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0AF2E60863
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+From:   Prateek Sood <prsood@codeaurora.org>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     sramana@codeaurora.org, prsood@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] drivers: core: Remove glue dirs early only when refcount is 1
+Date:   Wed,  1 May 2019 17:29:59 +0530
+Message-Id: <1556711999-16898-1-git-send-email-prsood@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <20190501065313.GA30616@kroah.com>
+References: <20190501065313.GA30616@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 01:38:52PM +0200, Greg Kroah-Hartman wrote:
-> commit 12209993e98c5fa1855c467f22a24e3d5b8be205 upstream.
-> 
-> There is one user of __kernel_fpu_begin() and before invoking it,
-> it invokes preempt_disable(). So it could invoke kernel_fpu_begin()
-> right away. The 32bit version of arch_efi_call_virt_setup() and
-> arch_efi_call_virt_teardown() does this already.
-> 
-> The comment above *kernel_fpu*() claims that before invoking
-> __kernel_fpu_begin() preemption should be disabled and that KVM is a
-> good example of doing it. Well, KVM doesn't do that since commit
-> 
->   f775b13eedee2 ("x86,kvm: move qemu/guest FPU switching out to vcpu_run")
-> 
-> so it is not an example anymore.
-> 
-> With EFI gone as the last user of __kernel_fpu_{begin|end}(), both can
-> be made static and not exported anymore.
+While loading firmware blobs parallely in different threads, it is possible
+to free sysfs node of glue_dirs in device_del() from a thread while another
+thread is trying to add subdir from device_add() in glue_dirs sysfs node.
 
-This is just a cleanup and therefore doesn't seem to satisfy the rules
-for stable patches per Documentation/process/stable-kernel-rules.rst
-("It must fix a real bug that bothers people / fix a problem that causes
-a build error").
+    CPU1                                           CPU2
+fw_load_sysfs_fallback()
+  device_add()
+    get_device_parent()
+      class_dir_create_and_add()
+        kobject_add_internal()
+          create_dir() // glue_dir
 
-Why is it being queued up for stable and why are the rules disregarded here?
+                                           fw_load_sysfs_fallback()
+                                             device_add()
+                                               get_device_parent()
+                                                 kobject_get() //glue_dir
 
-Thanks,
+  device_del()
+    cleanup_glue_dir()
+      kobject_del()
 
-Lukas
+                                               kobject_add()
+                                                 kobject_add_internal()
+                                                   create_dir() // in glue_dir
+                                                     kernfs_create_dir_ns()
+
+       sysfs_remove_dir() //glue_dir->sd=NULL
+       sysfs_put() // free glue_dir->sd
+
+                                                       kernfs_new_node()
+                                                         kernfs_get(glue_dir)
+
+Fix this race by making sure that kernfs_node for glue_dir is released only
+when refcount for glue_dir kobj is 1.
+
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+
+---
+
+Changes from v2->v3:
+ - Added patch version change related comments.
+
+Changes from v1->v2:
+ - Updated callstack from _request_firmware_load() to fw_load_sysfs_fallback().
+
+
+ drivers/base/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 4aeaa0c..3955d07 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1820,12 +1820,15 @@ static inline struct kobject *get_glue_dir(struct device *dev)
+  */
+ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
+ {
++	unsigned int refcount;
++
+ 	/* see if we live in a "glue" directory */
+ 	if (!live_in_glue_dir(glue_dir, dev))
+ 		return;
+ 
+ 	mutex_lock(&gdp_mutex);
+-	if (!kobject_has_children(glue_dir))
++	refcount = kref_read(&glue_dir->kref);
++	if (!kobject_has_children(glue_dir) && !--refcount)
+ 		kobject_del(glue_dir);
+ 	kobject_put(glue_dir);
+ 	mutex_unlock(&gdp_mutex);
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
