@@ -2,208 +2,328 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D595C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD11C04AA8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36EC2089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:44:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gNkzwNiA"
+	by mail.kernel.org (Postfix) with ESMTP id D0557208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 15:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfEAPoU (ORCPT
+        id S1726505AbfEAPzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 11:44:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45124 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfEAPoU (ORCPT
+        Wed, 1 May 2019 11:55:37 -0400
+Received: from mx2.yrkesakademin.fi ([85.134.45.195]:29526 "EHLO
+        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfEAPzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 11:44:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s15so24983121wra.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 08:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ihqeIyGh+Y0PhIVYUkh50s+LpirgFvDtjhB/Se6zeC8=;
-        b=gNkzwNiArWy5yewD/+hCc/NoNCTC4qqIVgOLD0Em21KOQs330a4EVeaHeS52tSmWif
-         zhUZJP4XmgDWOwMejTM0kSJpYHbwQJPL8hEKaH7qArPj7UoNmCoPoeXBGsx5gYT4a5wl
-         9i57NGYnzfI6HOk9fkB/GcNW1pbqu40Ii6kHk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ihqeIyGh+Y0PhIVYUkh50s+LpirgFvDtjhB/Se6zeC8=;
-        b=RIBfXjtbJ4Rq9wmIejJPhS4zg7pysRHKIs20V49C2jfpmcKRxi4BduoZSOqlJo8KVd
-         4/LI6h6S+TL8TOQS4ki3JWGionxw1y6la+b5r2mqmsjspZmywID/trPvARWRIZbpSqTN
-         gkg45rVfCXJVOxql0aUfXuhTb/lOKOQ4mNWGGWTFRP1auD93yUXOy8FHKsTfB2vLvNi+
-         ZiZg1LgdFJKBOQVMnwys8C4GJaLxJXWHSRQuEHHSN2R9Jbt2VOQA9AugA1vyAplCMPiX
-         dZ4XmE1AJm2lquZKABLo7O6WfxzY5hRdxX/GD8SP81UBmKwums1GlTp9+sCHRMpYebi2
-         ltmw==
-X-Gm-Message-State: APjAAAX5yffYEp/KC6vchLkiDDOrtYcCzhNB1UXHl/gwbcJT3FWrGgBE
-        DhNfNWPPbvH9J7JI8EH1V6o69UslLTZVkyC6vwNcXQ==
-X-Google-Smtp-Source: APXvYqxXc5jGnGaJFZyfJ2rjjTdiDutg0T5xSEPxqrkoHXM+EaLYQMJpSL5Z/eCSoYW68v9gMTV6cUYlNz/ZT9sBNR0=
-X-Received: by 2002:a5d:4fc3:: with SMTP id h3mr8375115wrw.54.1556725458010;
- Wed, 01 May 2019 08:44:18 -0700 (PDT)
+        Wed, 1 May 2019 11:55:36 -0400
+Subject: Re: perf build broken in 5.1-rc7
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+CC:     Song Liu <liu.song.a23@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <560abacf-da1d-7f55-755c-2086096bdf2c@mageia.org>
+ <fff8c124-505c-91b7-ff4b-cabca894b689@mageia.org>
+ <CAPhsuW7dS9TXOAW--U2q9-zmsgS4_K+uZYLnbPra+r+2LjJKDQ@mail.gmail.com>
+ <b773df70-58e6-69f8-d566-282b0f7ae579@mageia.org>
+ <20190501130751.GB21436@kernel.org>
+ <932c4e06-c4db-7bb8-769d-75651d092450@mageia.org>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <b60b74b9-e989-b70e-d3f2-f4a724a49b60@mageia.org>
+Date:   Wed, 1 May 2019 18:55:29 +0300
 MIME-Version: 1.0
-References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
- <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com> <20190501143742.GA13089@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190501143742.GA13089@e121166-lin.cambridge.arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Wed, 1 May 2019 21:14:06 +0530
-Message-ID: <CABe79T58F+xikMGthd4wc19qQzC3=Q4znaaf6qDMjBXn+PBpfw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] PCI: iproc: Add sorted dma ranges resource entries
- to host bridge
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
-        Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <932c4e06-c4db-7bb8-769d-75651d092450@mageia.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-WatchGuard-Spam-ID: str=0001.0A0C0206.5CC9C174.0014,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.195
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
 
-Please see my reply below.
+Den 01-05-2019 kl. 17:09, skrev Thomas Backlund:
+>
+> Den 01-05-2019 kl. 16:07, skrev Arnaldo Carvalho de Melo:
+>> Em Tue, Apr 30, 2019 at 04:31:14PM +0300, Thomas Backlund escreveu:
+>>> Den 30-04-2019 kl. 16:06, skrev Song Liu:
+>>>> On Tue, Apr 30, 2019 at 12:55 AM Thomas Backlund <tmb@mageia.org> 
+>>>> wrote:
+>>>>> Den 30-04-2019 kl. 10:26, skrev Thomas Backlund:
+>>>>>> Building perf in 5.1-rc5/6/7 fails:
+>>>>>> Build start:
+>>>>>>     make -s -C tools/perf NO_PERF_READ_VDSO32=1 
+>>>>>> NO_PERF_READ_VDSOX32=1
+>>>>>> WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1
+>>>>>> NO_BIONIC=1 NO_JVMTI=1 prefix=/usr lib=lib64 all
+>>>>>>      BUILD:   Doing 'make -j32' parallel build
+>>>>>>      HOSTCC   fixdep.o
+>>>>>>      HOSTLD   fixdep-in.o
+>>>>>>      LINK     fixdep
+>>>>>> Warning: Kernel ABI header at 
+>>>>>> 'tools/arch/x86/include/uapi/asm/vmx.h'
+>>>>>> differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
+>>>>>> diff -u tools/arch/x86/include/uapi/asm/vmx.h
+>>>>>> arch/x86/include/uapi/asm/vmx.h
+>>>>>>
+>>>>>> Auto-detecting system features:
+>>>>>> ...                         dwarf: [ on  ]
+>>>>>> ...            dwarf_getlocations: [ on  ]
+>>>>>> ...                         glibc: [ on  ]
+>>>>>> ...                          gtk2: [ on  ]
+>>>>>> ...                      libaudit: [ on  ]
+>>>>>> ...                        libbfd: [ on  ]
+>>>>>> ...                        libelf: [ on  ]
+>>>>>> ...                       libnuma: [ on  ]
+>>>>>> ...        numa_num_possible_cpus: [ on  ]
+>>>>>> ...                       libperl: [ on  ]
+>>>>>> ...                     libpython: [ on  ]
+>>>>>> ...                      libslang: [ on  ]
+>>>>>> ...                     libcrypto: [ on  ]
+>>>>>> ...                     libunwind: [ on  ]
+>>>>>> ...            libdw-dwarf-unwind: [ on  ]
+>>>>>> ...                          zlib: [ on  ]
+>>>>>> ...                          lzma: [ on  ]
+>>>>>> ...                     get_cpuid: [ on  ]
+>>>>>> ...                           bpf: [ on  ]
+>>>>>> ...                        libaio: [ on  ]
+>>>>>> ...        disassembler-four-args: [ OFF ]
+>>>>>>
+>>>>>> Makefile.config:473: No sys/sdt.h found, no SDT events are defined,
+>>>>>> please install systemtap-sdt-devel or systemtap-sdt-dev
+>>>>>> Makefile.config:853: No libbabeltrace found, disables 'perf data' 
+>>>>>> CTF
+>>>>>> format support, please install 
+>>>>>> libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+>>>>>>
+>>>>>>
+>>>>>> And breaks with:
+>>>>>>
+>>>>>>
+>>>>>> CC       ui/setup.o
+>>>>>> util/annotate.c: In function 'symbol__disassemble_bpf':
+>>>>>> util/annotate.c:1767:29: error: incompatible type for argument 1 of
+>>>>>> 'disassembler'
+>>>>>>      disassemble = disassembler(bfdf);
+>>>>>>                                 ^~~~
+>>>>>> In file included from util/annotate.c:1689:
+>>>>>> /usr/include/dis-asm.h:325:63: note: expected 'enum 
+>>>>>> bfd_architecture'
+>>>>>> but argument is of type 'bfd *' {aka 'struct bfd *'}
+>>>>>>     extern disassembler_ftype disassembler (enum bfd_architecture 
+>>>>>> arc,
+>>>>>> ~~~~~~~~~~~~~~~~~~~~~~^~~
+>>>>>> util/annotate.c:1767:16: error: too few arguments to function
+>>>>>> 'disassembler'
+>>>>>>      disassemble = disassembler(bfdf);
+>>>>>>                    ^~~~~~~~~~~~
+>>>>>> In file included from util/annotate.c:1689:
+>>>>>> /usr/include/dis-asm.h:325:27: note: declared here
+>>>>>>     extern disassembler_ftype disassembler (enum bfd_architecture 
+>>>>>> arc,
+>>>>>>                               ^~~~~~~~~~~~
+>>>>>>      CC       arch/x86/util/header.o
+>>>>>>      CC       arch/x86/util/tsc.o
+>>>>>>      CC       arch/x86/util/pmu.o
+>>>>>> mv: cannot stat 'util/.annotate.o.tmp': No such file or directory
+>>>>>>      CC       bench/futex-requeue.o
+>>>>>>      CC       arch/x86/util/kvm-stat.o
+>>>>>> make[4]: ***
+>>>>>> [/work/rpmbuild/BUILD/kernel-x86_64/linux-5.0/tools/build/Makefile.build:97: 
+>>>>>>
+>>>>>> util/annotate.o] Error 1
+>>>>>> make[4]: *** Waiting for unfinished jobs....
+>>>>>>      CC       util/build-id.o
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>> And I forgot...
+>>>>>
+>>>>> Reverting:
+>>>>>    From 6987561c9e86eace45f2dbb0c564964a63f4150a Mon Sep 17 
+>>>>> 00:00:00 2001
+>>>>> From: Song Liu <songliubraving@fb.com>
+>>>>> Date: Mon, 11 Mar 2019 22:30:48 -0700
+>>>>> Subject: perf annotate: Enable annotation of BPF programs
+>>>>>
+>>>>> Makes it build again.
+>>>>>
+>>>>> -- 
+>>>>> Thomas
+>>>>>
+>>>> Hi Thomas,
+>>>>
+>>>> Which system are you running this test on? I would like to repro it 
+>>>> in a VM.
+>>>>
+>>>> Thanks,
+>>>> Song
+>>>
+>>> Mageia Cauldron currently stabilizing to become Mageia 7 in ~1 month.
+>>>
+>>>
+>>> Basesystem is:
+>>>
+>>> binutils-2.32-5.mga7
+>>> (includes all fixes from upstream binutils-2_32-branch)
+>>>
+>>> gcc-8.3.1-0.20190419.2.mga7
+>>>
+>>> glibc-2.29-7.mga7
+>>> (includes all fixes from upstream glibc release/2.29/master branch 
+>>> up to
+>>> 2019-04-15 for now)
+>>>
+>>>
+>>> kernel-desktop-5.1.0-0.rc7.1.mga7
+>>> kernel-userspace-headers-5.1.0-0.rc7.1.mga7
+>> Ok, so the steps are:
+>>
+>> 1) the feature test, the small C program that we try to build is:
+>>
+>> [acme@quaco perf]$ cat tools/build/feature/test-disassembler-four-args.c
+>> // SPDX-License-Identifier: GPL-2.0
+>> #include <bfd.h>
+>> #include <dis-asm.h>
+>>
+>> int main(void)
+>> {
+>>     bfd *abfd = bfd_openr(NULL, NULL);
+>>
+>>     disassembler(bfd_get_arch(abfd),
+>>              bfd_big_endian(abfd),
+>>              bfd_get_mach(abfd),
+>>              abfd);
+>>
+>>     return 0;
+>> }
+>> [acme@quaco perf]$
+>>
+>> And here in my fedora29 system it ends up producing the following file,
+>> when built with:
+>>
+>> $ make O=/tmp/build/perf  -C tools/perf install-bin
+>>
+>> [acme@quaco perf]$ cat 
+>> /tmp/build/perf/feature/test-disassembler-four-args.make.output
+>> [acme@quaco perf]$
+>> [acme@quaco perf]$ file 
+>> /tmp/build/perf/feature/test-disassembler-four-args.bin
+>> /tmp/build/perf/feature/test-disassembler-four-args.bin: ELF 64-bit 
+>> LSB executable, x86-64, version 1 (SYSV), dynamically linked, 
+>> interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, 
+>> BuildID[sha1]=c9bd83db766a620c5cb6d756b0cd6991527641ff, not stripped, 
+>> too many notes (256)
+>> [acme@quaco perf]$ ldd 
+>> /tmp/build/perf/feature/test-disassembler-four-args.bin
+>>     linux-vdso.so.1 (0x00007ffebc5f9000)
+>>     libz.so.1 => /lib64/libz.so.1 (0x00007fed2da04000)
+>>     libdl.so.2 => /lib64/libdl.so.2 (0x00007fed2d9fe000)
+>>     libc.so.6 => /lib64/libc.so.6 (0x00007fed2d838000)
+>>     /lib64/ld-linux-x86-64.so.2 (0x00007fed2da3e000)
+>> [acme@quaco perf]$
+>>
+>> Meaning it built properly, so in this sytem the disassembler() function
+>> has indeed four args, so we end up with:
+>>
+>> [acme@quaco perf]$ grep disassembler /tmp/build/perf/FEATURE-DUMP
+>> feature-disassembler-four-args=1
+>> [acme@quaco perf]$
+>>
+>> Can you check the output for
+>> /tmp/build/perf/feature/test-disassembler-four-args.make.output in your
+>> system? And also check what is the prototype for the disassembler()
+>> routine on mageia7?
+>
+>
+> I guess this is what fails the test:
+>
+> cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
+> /usr/bin/ld: /usr/lib64/libbfd.a(plugin.o): in function 
+> `try_load_plugin':
+> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:243: 
+> undefined reference to `dlopen'
+> /usr/bin/ld: 
+> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:271: 
+> undefined reference to `dlsym'
+> /usr/bin/ld: 
+> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:256: 
+> undefined reference to `dlclose'
+> /usr/bin/ld: 
+> /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:246: 
+> undefined reference to `dlerror'
+>
+>
+> as we allow dynamic linking and loading
+>
+> And we use linker flags:
+>
+> rpm --eval %ldflags
+>  -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 
+> -Wl,--build-id -Wl,--enable-new-dtags
+>
+> So it reports:
+>
+>  disassembler-four-args: [ OFF ]
+>
+> And falls back to one single command.
+>
+>> Here I have:
+>>
+>> [acme@quaco perf]$ rpm -q binutils
+>> binutils-2.31.1-25.fc29.x86_64
+>> [acme@quaco perf]$
+>>
+>> Perhaps binutils 2.32 changed that prototype again and instead of
+>> falling back to using just one arg we need to use some other number of
+>> args, or even a different type for the N args it now maybe have?
+>>
+>> - Arnaldo
+>
+>
+> There is no change in 2.32
+>
+>
+> disassembler_ftype
+> disassembler (enum bfd_architecture a,
+>               bfd_boolean big ATTRIBUTE_UNUSED,
+>               unsigned long mach ATTRIBUTE_UNUSED,
+>               bfd *abfd ATTRIBUTE_UNUSED)
+>
+>
+>
+> Is there a way to force it to "detect" / use 4 args ?
+>
+>
 
-On Wed, May 1, 2019 at 8:07 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Fri, Apr 12, 2019 at 08:43:35AM +0530, Srinath Mannam wrote:
-> > IPROC host has the limitation that it can use only those address ranges
-> > given by dma-ranges property as inbound address. So that the memory
-> > address holes in dma-ranges should be reserved to allocate as DMA address.
-> >
-> > Inbound address of host accessed by PCIe devices will not be translated
-> > before it comes to IOMMU or directly to PE.
->
-> What does that mean "directly to PE" ?
-In general, with IOMMU enable case, inbound address access of endpoint
-will come to IOMMU.
-If IOMMU disable then it comes to PE (processing element - ARM).
->
-> IIUC all you want to say is that there is no entity translating
-> PCI memory transactions addresses before they it the PCI host
-> controller inbound regions address decoder.
-In our SOC we have an entity (Inside PCIe RC) which will translate
-inbound address before it goes to
-IOMMU or PE. In other SOCs this will not be the case, all inbound
-address access will go to IOMMU or
-PE.
-Regards,
-Srinath.
->
-> > But the limitation of this host is, access to few address ranges are
-> > ignored. So that IOVA ranges for these address ranges have to be
-> > reserved.
-> >
-> > All allowed address ranges are listed in dma-ranges DT parameter. These
-> > address ranges are converted as resource entries and listed in sorted
-> > order add added to dma_ranges list of PCI host bridge structure.
-> >
-> > Ex:
-> > dma-ranges = < \
-> >   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
-> >   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
-> >   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
-> >
-> > In the above example of dma-ranges, memory address from
-> > 0x0 - 0x80000000,
-> > 0x100000000 - 0x800000000,
-> > 0x1000000000 - 0x8000000000 and
-> > 0x10000000000 - 0xffffffffffffffff.
-> > are not allowed to use as inbound addresses.
-> >
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-> > Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-> > ---
-> >  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 43 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > index c20fd6b..94ba5c0 100644
-> > --- a/drivers/pci/controller/pcie-iproc.c
-> > +++ b/drivers/pci/controller/pcie-iproc.c
-> > @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
-> >       return ret;
-> >  }
-> >
-> > +static int
-> > +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
-> > +                      struct of_pci_range *range)
-> > +{
-> > +     struct resource *res;
-> > +     struct resource_entry *entry, *tmp;
-> > +     struct list_head *head = resources;
-> > +
-> > +     res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
-> > +     if (!res)
-> > +             return -ENOMEM;
-> > +
-> > +     resource_list_for_each_entry(tmp, resources) {
-> > +             if (tmp->res->start < range->cpu_addr)
-> > +                     head = &tmp->node;
-> > +     }
-> > +
-> > +     res->start = range->cpu_addr;
-> > +     res->end = res->start + range->size - 1;
-> > +
-> > +     entry = resource_list_create_entry(res, 0);
-> > +     if (!entry)
-> > +             return -ENOMEM;
-> > +
-> > +     entry->offset = res->start - range->cpu_addr;
-> > +     resource_list_add(entry, head);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> >  {
-> > +     struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-> >       struct of_pci_range range;
-> >       struct of_pci_range_parser parser;
-> >       int ret;
-> > +     LIST_HEAD(resources);
-> >
-> >       /* Get the dma-ranges from DT */
-> >       ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
-> > @@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> >               return ret;
-> >
-> >       for_each_of_pci_range(&parser, &range) {
-> > +             ret = iproc_pcie_add_dma_range(pcie->dev,
-> > +                                            &resources,
-> > +                                            &range);
-> > +             if (ret)
-> > +                     goto out;
-> >               /* Each range entry corresponds to an inbound mapping region */
-> >               ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
-> >               if (ret)
-> > -                     return ret;
-> > +                     goto out;
-> >       }
-> >
-> > +     list_splice_init(&resources, &host->dma_ranges);
-> > +
-> >       return 0;
-> > +out:
-> > +     pci_free_resource_list(&resources);
-> > +     return ret;
-> >  }
-> >
-> >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> > --
-> > 2.7.4
-> >
+And just to confirm, disabling the test with:
+
+--- linux/tools/perf/Makefile.config.orig    2019-04-29 
+11:45:54.168627795 +0300
++++ linux/tools/perf/Makefile.config    2019-05-01 17:18:25.328312186 +0300
+@@ -813,9 +813,9 @@ ifdef HAVE_KVM_STAT_SUPPORT
+      CFLAGS += -DHAVE_KVM_STAT_SUPPORT
+  endif
+
+-ifeq ($(feature-disassembler-four-args), 1)
++#ifeq ($(feature-disassembler-four-args), 1)
+      CFLAGS += -DDISASM_FOUR_ARGS_SIGNATURE
+-endif
++#endif
+
+
+makes the perf build work again.
+
+
+--
+
+Thomas
+
+
