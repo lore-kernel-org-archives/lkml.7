@@ -2,121 +2,101 @@ Return-Path: <SRS0=0OOB=TB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9A7C43219
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC50C43219
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E3920656
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556745974;
-	bh=zlVypDJix2aPc5aPr2Bir4wsza86pu7M8teneGSTxEo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hAruEsGqHohg0I0CWc/ZAb2ZMRVqS5uZpFtnXxNFgjftTkMKoIdUuPF8eCcRABEKR
-	 tzoX+M/7w0+jpd/Vcu6oobfiQig/XsQDN3QBRPMHxKUopMr7BkqTG+5wmJiWr8T7nB
-	 MTyXcbfMsa43L2lqVLFsg6DmEXRdiMWivSF0YQuk=
+	by mail.kernel.org (Postfix) with ESMTP id 8350320656
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 May 2019 21:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfEAV0N (ORCPT
+        id S1726206AbfEAV0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 17:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57404 "EHLO mail.kernel.org"
+        Wed, 1 May 2019 17:26:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44642 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfEAV0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 17:26:13 -0400
-Received: from earth.universe (unknown [185.62.205.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726088AbfEAV0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 17:26:51 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B933020656;
-        Wed,  1 May 2019 21:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556745972;
-        bh=zlVypDJix2aPc5aPr2Bir4wsza86pu7M8teneGSTxEo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=e/Z5TRqxwl2YcmO937o4pfMbaEoS/rp175noLuRCjFXAXPKmQwGBpwY0nMwmYERnf
-         XDGxkSOeSALwjEjJiJbZMtfkGQEV/vdCaTsSe+yGVFlAIKUukFMALieMLzUcoxYles
-         mjSoFxfT2q4mhzcXxQtKIorR/qwMN1De9KxcwS/I=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 69A383C0D1B; Wed,  1 May 2019 23:26:10 +0200 (CEST)
-Date:   Wed, 1 May 2019 23:26:10 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [GIT PULL] power-supply changes for 5.1
-Message-ID: <20190501212610.5qrl7gyttdyzs2dq@earth.universe>
+        by mx1.redhat.com (Postfix) with ESMTPS id A49A93082A24;
+        Wed,  1 May 2019 21:26:51 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3755678905;
+        Wed,  1 May 2019 21:26:51 +0000 (UTC)
+Subject: Re: [PATCH v3] kernel/module: Reschedule while waiting for modules to
+ finish loading
+To:     linux-kernel@vger.kernel.org, Jessica Yu <jeyu@kernel.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Arcari <darcari@redhat.com>
+References: <20190430222207.3002-1-prarit@redhat.com>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <90e18809-2b70-52d8-00b3-9c16768db9ad@redhat.com>
+Date:   Wed, 1 May 2019 17:26:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="37hn66nvtdvo22am"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190430222207.3002-1-prarit@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 01 May 2019 21:26:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---37hn66nvtdvo22am
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Hi Linus,
+On 4/30/19 6:22 PM, Prarit Bhargava wrote:
+> On a s390 z14 LAR with 2 cpus about stalls about 3% of the time while
+> loading the s390_trng.ko module.
+> 
+> Add a reschedule point to the loop that waits for modules to complete
+> loading.
+> 
+> v3: cleanup Fixes line.
 
-I have two more fixes for the 5.1 cycle. One division by zero fix
-in a specific driver and one core workaround for bad userspace
-behaviour from systemd regarding uevents. IMHO this can be considered
-to be a userspace bug, but the debug messages are useless anyways.
+Jessica, even with this additional patch there appears to be some other issues
+in the module code that are causing significant delays in boot up on large
+systems.
 
--- Sebastian
+Please revert these fixes from linux-next & modules-next.  I apologize for the
+extra work but I think it is for the best until I come up with a more complete &
+better tested patch.
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+FWIW, the logic in the original patch is correct.  It's just that there's, as
+Heiko discovered, some poor scheduling, etc., that is impacting the module
+loading code after these changes.
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+Again, my apologies,
 
-are available in the Git repository at:
+P.
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.1-rc
-
-for you to fetch changes up to 349ced9984ff540ce74ca8a0b2e9b03dc434b9dd:
-
-  power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG (2019-04-26 00:06:56 +0200)
-
-----------------------------------------------------------------
-Power Supply Fixes for 5.1 cycle
-
-* cpcap-battery: fix a division by zero
-* core: fix systemd issue due to log messages produced by uevent
-
-----------------------------------------------------------------
-Andrey Smirnov (1):
-      power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
-
-Tony Lindgren (1):
-      power: supply: cpcap-battery: Fix division by zero
-
- drivers/power/supply/cpcap-battery.c      | 3 +++
- drivers/power/supply/power_supply_sysfs.c | 6 ------
- 2 files changed, 3 insertions(+), 6 deletions(-)
-
---37hn66nvtdvo22am
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzKDvIACgkQ2O7X88g7
-+ppArQ/+PT2tpBOjdBDsXD0AfKO80q8kHVFNFkMe/ZU5KPOktT2kYzGboQA9k3aN
-AkxkL15Lb+dEDrTeKWUz9rIXAzxyWmlo9O3jfYO7LS1kz4EVl4I2PuUeJo3ji+cP
-2DywEl4UvT78bZEYDHw96A2SHZOOIaqDUQXTJNawLxvwOdpIvsba8EVcxmEB8Elh
-LYjlfQudZ6QH47+hGg8QbiAPCC3+RP+jtyfvHER1QdUqSplRzJ8pZfIuPQPyP06E
-oo78XkNAybPDEHy1RmqcLNX5tzTOQ6EnYzkOnF9CfC1CIrdSEKSv2rBZA+aLDGkh
-PdMgJUG8NU5J5mLrqfN4s118+gQUbWvRWhnCCTzZUPzG2HpF2iCIhNJzPF5RdUbD
-PwhmcERAqZ+t8uGY/fXkCuly4EKydUiItR4kl601yD6C6NCDXF7w7YnzsDmlSk/t
-b4umcC9BvKFvlMp/iRYN362bqS4OEWDunuQnhkxErTYEYVbm208e7Tu+UziY/ISx
-mJ2eDol3ogMekOdZqEq9uUJegdnKx6lxvzG/eDF/32ud+Ib+4PI+faxutNalQbNd
-S7uxHAqPyyTejD3GZfPRxGzGYyyttOxE69IQ1n5s+wZmgt70sbYkG/u5mxPMQo6J
-gppkBT/RmJwHxOQfkcXlbxPbRwOgG9NNnrD1K397aV/KbiinuW0=
-=1AuR
------END PGP SIGNATURE-----
-
---37hn66nvtdvo22am--
+> 
+> Reported-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Fixes: f9a75c1d717f ("modules: Only return -EEXIST for modules that have finished loading")
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> ---
+>  kernel/module.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 410eeb7e4f1d..48748cfec991 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3585,6 +3585,7 @@ static int add_unformed_module(struct module *mod)
+>  					       finished_loading(mod->name));
+>  			if (err)
+>  				goto out_unlocked;
+> +			cond_resched();
+>  			goto again;
+>  		}
+>  		err = -EEXIST;
+> 
