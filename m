@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E03C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CC2C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2958220449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B2120449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811583;
-	bh=amzHIsb1JZLNUlbv3jmFnjLvDs4ldLoWwIImwCYYt6s=;
+	s=default; t=1556811587;
+	bh=2gKEp1sdKEAeZm6GB/BYbziVeiU8R9/8+F7dhe6csOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uae81yK4uHcQr8maTyDGCD4NWRxaDU3Zo70GPtqwxFMgB+jZaWnNkIxItsS35HMST
-	 Rs4byf7bb/ki4UzB01Jm0n/EtjdhN3Do/S8jdQnlwamtO/AL8pNWOo1nuVaNsyjAlf
-	 +dKxWEjQyS3i7NonJF4EYGz3M5+e67UqCJzYhURg=
+	b=ggMOgM8zoX3TlAw1ZI1CQboirItmPCNdLtuidrPkSnBg4ZWAOfAobDSQkhIBpEwu7
+	 YG7bGxVL153ljM8lYklj5AAxUF1euWzw/KWIhr2TTGtfgUl82k5Z0wNNSC8vX9JZfC
+	 TCxfWtnPw0LYMXGQJgSmqkFT8ZnUz6Xfi5zyNBqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfEBPjm (ORCPT
+        id S1728469AbfEBP3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbfEBP3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 May 2019 11:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728404AbfEBP33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C220C20B7C;
-        Thu,  2 May 2019 15:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CF7D20B7C;
+        Thu,  2 May 2019 15:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810974;
-        bh=amzHIsb1JZLNUlbv3jmFnjLvDs4ldLoWwIImwCYYt6s=;
+        s=default; t=1556810969;
+        bh=2gKEp1sdKEAeZm6GB/BYbziVeiU8R9/8+F7dhe6csOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sDt1QdBUIBdiJK9MjDRtKkhsENFYRswxk6RkFZwP9vFTyLO5yuqOoS7Vq8IXfKgBE
-         gj4GvQMohs/oqG8sXoby35FB6uiS77p8+WAaxByi2dEQoFbdQRoCzzdsIdqM+0RVi0
-         Bf1Xn5fuZDzE+HJI2Lr0bq5g6XeKHdhtY7H9xC7c=
+        b=FOksPB/ZemnYmMbCUJHmIcEGlcWYVrC732eRk2eUN2I8Kv5jCCMar0wAsUjG43Izh
+         Wqx0FPa27HX/xS1GRsl+ocqA/mqVmx+ZRCSyBuKjJ1jK7zAJNxefCesiiequI4c9R/
+         PDFEOCO6HleNhqWaMRvNUH/0gU20F7GyUU/Ebzew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 027/101] s390/qeth: fix race when initializing the IP address table
-Date:   Thu,  2 May 2019 17:20:29 +0200
-Message-Id: <20190502143341.539158443@linuxfoundation.org>
+Subject: [PATCH 5.0 025/101] netfilter: fix NETFILTER_XT_TARGET_TEE dependencies
+Date:   Thu,  2 May 2019 17:20:27 +0200
+Message-Id: <20190502143341.459702817@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,40 +65,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7221b727f0079a32aca91f657141e1de564d4b97 ]
+[ Upstream commit d1fa381033eb718df5c602f64b6e88676138dfc6 ]
 
-The ucast IP table is utilized by some of the L3-specific sysfs attributes
-that qeth_l3_create_device_attributes() provides. So initialize the table
-_before_ registering the attributes.
+With NETFILTER_XT_TARGET_TEE=y and IP6_NF_IPTABLES=m, we get a link
+error when referencing the NF_DUP_IPV6 module:
 
-Fixes: ebccc7397e4a ("s390/qeth: add missing hash table initializations")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+net/netfilter/xt_TEE.o: In function `tee_tg6':
+xt_TEE.c:(.text+0x14): undefined reference to `nf_dup_ipv6'
+
+The problem here is the 'select NF_DUP_IPV6 if IP6_NF_IPTABLES'
+that forces NF_DUP_IPV6 to be =m as well rather than setting it
+to =y as was intended here. Adding a soft dependency on
+IP6_NF_IPTABLES avoids that broken configuration.
+
+Fixes: 5d400a4933e8 ("netfilter: Kconfig: Change select IPv6 dependencies")
+Cc: Máté Eckl <ecklm94@gmail.com>
+Cc: Taehee Yoo <ap420073@gmail.com>
+Link: https://patchwork.ozlabs.org/patch/999498/
+Link: https://lore.kernel.org/patchwork/patch/960062/
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l3_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/netfilter/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index df34bff4ac31..f73ce96e9603 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -2316,12 +2316,14 @@ static int qeth_l3_probe_device(struct ccwgroup_device *gdev)
- 	struct qeth_card *card = dev_get_drvdata(&gdev->dev);
- 	int rc;
- 
-+	hash_init(card->ip_htable);
-+
- 	if (gdev->dev.type == &qeth_generic_devtype) {
- 		rc = qeth_l3_create_device_attributes(&gdev->dev);
- 		if (rc)
- 			return rc;
- 	}
--	hash_init(card->ip_htable);
-+
- 	hash_init(card->ip_mc_htable);
- 	card->info.hwtrap = 0;
- 	return 0;
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index beb3a69ce1d4..0f0e5806bf77 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -995,6 +995,7 @@ config NETFILTER_XT_TARGET_TEE
+ 	depends on NETFILTER_ADVANCED
+ 	depends on IPV6 || IPV6=n
+ 	depends on !NF_CONNTRACK || NF_CONNTRACK
++	depends on IP6_NF_IPTABLES || !IP6_NF_IPTABLES
+ 	select NF_DUP_IPV4
+ 	select NF_DUP_IPV6 if IP6_NF_IPTABLES
+ 	---help---
 -- 
 2.19.1
 
