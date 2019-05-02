@@ -2,185 +2,292 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE0DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD84C04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B3B20C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556815870;
-	bh=j/F8Err226AP96vXweFKgqE+muADxZNr6D1JUPjWuMo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=We6xT1S56j3qIumGIJQoLvKH417oqQokNMACHId8q1PWL89z4ti4faYVyiHk1LPl0
-	 XJUARlH5dG6x7qQwI0MfcwRS6C22/edE2wTqrweDqNCB3pS5dGAltFS/BC6JKPBZBk
-	 jYtZLWz5su92X5jrsZG5WvKuZEPU/rZslOBhYQco=
+	by mail.kernel.org (Postfix) with ESMTP id 8D8872081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfEBQvJ (ORCPT
+        id S1726560AbfEBQwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:51:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbfEBQvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:51:09 -0400
-Received: from mail-yw1-f52.google.com (mail-yw1-f52.google.com [209.85.161.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C98932177B;
-        Thu,  2 May 2019 16:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556815867;
-        bh=j/F8Err226AP96vXweFKgqE+muADxZNr6D1JUPjWuMo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=D+buKVZ/P+c/5dK5QJ0Uf4jsZV3M1JyWnPYzYabnXXKA+lV7cVhOq5uuDNoErLxGh
-         DYYwlBoeWa5RbbYSJq+S7JuHtkTU+Q59GytDOoxS/dIEtEWlmk6nGKFOFypERbq+qJ
-         yBVp20iDZIb64E7XUC4PEEiNXvqSuba9eaYQkgJc=
-Received: by mail-yw1-f52.google.com with SMTP id t79so2077984ywc.7;
-        Thu, 02 May 2019 09:51:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAUX++UMEdBrS5SJl1AinvpDQGXPR1j99cmRAruk7uFQOIts6K3h
-        Qwsng0+c7go8za8VAnxmNylGE66NN4yK+IO7ZA==
-X-Google-Smtp-Source: APXvYqxD9LcjXVbe2ii7BTnARq19nBFtVGc/blWrzvG4y4x6vf5IRzZXMon1pIFvBdx0Wj5at9/tiBhSlHx/nyRzhX0=
-X-Received: by 2002:a25:3850:: with SMTP id f77mr3852123yba.93.1556815866946;
- Thu, 02 May 2019 09:51:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190430121254.3737-1-geert+renesas@glider.be>
- <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
- <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
- <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com>
- <CAL_JsqKq0KP9H4DumyxJTjD=7rqwgOM=+5jHhkUxQqamrA3h7g@mail.gmail.com> <CAMuHMdVWG4LDAAht-6Rendt8L96vW+VEJK4tGnOCMJ38pRDybA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVWG4LDAAht-6Rendt8L96vW+VEJK4tGnOCMJ38pRDybA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 2 May 2019 11:50:53 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ34-0T_XjmRaXc3YTp4OHhptUaO3F+yygAy6L0iaNhdg@mail.gmail.com>
-Message-ID: <CAL_JsqJ34-0T_XjmRaXc3YTp4OHhptUaO3F+yygAy6L0iaNhdg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/A1 Interrupt Controller
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Thu, 2 May 2019 12:52:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53826 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726121AbfEBQwV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:52:21 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42GgKjs046508
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 12:52:20 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s83w19fqh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:52:19 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 2 May 2019 17:52:18 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 2 May 2019 17:52:15 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42GqEAM50725064
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 May 2019 16:52:14 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A283AE053;
+        Thu,  2 May 2019 16:52:14 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73619AE051;
+        Thu,  2 May 2019 16:52:13 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.95.175])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  2 May 2019 16:52:13 +0000 (GMT)
+Subject: Re: [PATCH v3 1/4] added a new ima policy func buffer_check, and
+ ima hook to measure the buffer hash into ima
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-secuirty-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ebiederm@xmission.com, vgoyal@redhat.com, nayna@linux.ibm.com
+Date:   Thu, 02 May 2019 12:52:02 -0400
+In-Reply-To: <20190429214743.4625-2-prsriva02@gmail.com>
+References: <20190429214743.4625-1-prsriva02@gmail.com>
+         <20190429214743.4625-2-prsriva02@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050216-0012-0000-0000-00000317A1FD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050216-0013-0000-0000-000021501213
+Message-Id: <1556815922.4134.76.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 5:01 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Rob,
->
-> On Wed, May 1, 2019 at 9:38 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > On Wed, May 1, 2019 at 2:16 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Tue, Apr 30, 2019 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > > > On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> > > > > On 30/04/2019 16:02, Rob Herring wrote:
-> > > > > > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
-> > > > > > <geert+renesas@glider.be> wrote:
-> > > > > >>
-> > > > > >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
-> > > > > >>
-> > > > > >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > > >> ---
-> > > > > >> v2:
-> > > > > >>   - Add "renesas,gic-spi-base",
-> > > > > >>   - Document RZ/A2M.
-> > > > > >> ---
-> > > > > >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
-> > > > > >>  1 file changed, 30 insertions(+)
-> > > > > >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> > > > > >>
-> > > > > >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> > > > > >> new file mode 100644
-> > > > > >> index 0000000000000000..ea8ddb6955338ccd
-> > > > > >> --- /dev/null
-> > > > > >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> > > > > >> @@ -0,0 +1,30 @@
-> > > > > >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
-> > > > > >> +
-> > > > > >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
-> > > > > >> +RZ/A1 and RZ/A2 SoCs:
-> > > > > >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
-> > > > > >> +    interrupts,
-> > > > > >> +  - NMI edge select.
-> > > > > >> +
-> > > > > >> +Required properties:
-> > > > > >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
-> > > > > >> +               fallback.
-> > > > > >> +               Examples with soctypes are:
-> > > > > >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
-> > > > > >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
-> > > > > >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
-> > > > > >> +                                in interrupts.txt in this directory)
-> > > > > >> +  - interrupt-controller: Marks the device as an interrupt controller
-> > > > > >> +  - reg: Base address and length of the memory resource used by the interrupt
-> > > > > >> +         controller
-> > > > > >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
-> > > > > >
-> > > > > > Why isn't this just an 'interrupts' property?
-> > > > >
-> > > > > That's likely because of kernel limitations. The DT code does an
-> > > > > of_populate() on any device that it finds, parse the "interrupts"
-> > > > > propertiy, resulting in the irq_descs being populated.
-> > > > >
-> > > > > That creates havoc, as these interrupts are not for this device, but for
-> > > > > something that is connected to it. This is merely a bridge of some sort.
-> > > >
-> > > > 'interrupt-map' would avoid that problem I think.
-> > >
-> > > "interrupt-map" seems to be meant for translation on a bus?
-> > > What to do with the child and parent unit addresses fields?
-> > > The parent unit address size depends on the #address-cells of the parent
-> > > interrupt-controller (i.e. GIC, so it's zero).
-> > > But the child unit address size depends on the #address-cells of the bus node
-> > > on which the child is located, so that's a (non-zero) bus #address-cells
-> > > (from the root node), not an interrupt-controller #address-cells.
-> >
-> > The #address-cells is always retrieved from the interrupt-parent node
-> > (or its parent). The interrupt-parent can implicitly be the child's
-> > parent, but that is rarely used in modern systems.
->
-> That's not what Devicetree Specification, Release v0.2 says:
->
->     child unit address The unit address of the child node being mapped.
->     The number of 32-bit cells required to specify this is described by
->     the #address-cells property of the bus node on which the child is
->     located.
->
-> 2.4.4 Interrupt Mapping Example (for PCI) says the bus node is the PCI
-> bridge, with #address-cells = <3>.
+On Mon, 2019-04-29 at 14:47 -0700, Prakhar Srivastava wrote:
+> From: Prakhar Srivastava <prsriva02@gmail.com>
+> 
+> added a new ima policy func buffer_check, and ima hook to
+>  measure the buffer hash into ima logs.
 
-PCI is more inline with the spec wording, but systems evolved where
-the interrupt hierarchy doesn't match the bus hierarchy.
+When defining a new LSN/IMA hook please conform to the existing naming
+conventions.  Generally LSM hooks are specific to a particular
+function.  In this instance, the name of the hook would be something
+like security_kexec_cmdline() or ima_kexec_cmdline(), which would call
+the generic process_buffer_measurement() you've defined.
 
-> But in the RZ/A1 case the child unit address is irrelevant, as its an
-> external interrupt input not related to a specific bus.  It could be
-> used by a device without unit address (e.g. gpio-keys), or some device
-> on an external local bus (root #adress-cells is <1> on 32-bit without
-> LPAE, but this block could be reused in a future LPAE or arm64 SoCs),
-> or on e.g. an SPI or i2c bus, with its own #adress-cells value
-> (coincidentally <1>, too).
->
-> I see of_irq_parse_raw() does use the address-cells of the parent
-> interrupt controller (which is usually 0) when iterating its way up,
-> following interrupt-map.
->
-> So the child unit address does have two different meanings?
+Mimi
 
-Indeed. That's why you'll see interrupt-controller nodes with the odd
-'#address-cells = <0>;' in them. It's often omitted because it only
-matters if there's an interrupt-map. We should clarify the spec.
+> 
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+> ---
+>  Documentation/ABI/testing/ima_policy |  1 +
+>  include/linux/ima.h                  |  5 ++
+>  security/integrity/ima/ima.h         |  1 +
+>  security/integrity/ima/ima_api.c     |  1 +
+>  security/integrity/ima/ima_main.c    | 89 ++++++++++++++++++++++++++++
+>  security/integrity/ima/ima_policy.c  |  8 +++
+>  6 files changed, 105 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+> index 74c6702de74e..12cfe3ff2dea 100644
+> --- a/Documentation/ABI/testing/ima_policy
+> +++ b/Documentation/ABI/testing/ima_policy
+> @@ -29,6 +29,7 @@ Description:
+>  		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
+>  				[FIRMWARE_CHECK]
+>  				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+> +				[BUFFER_CHECK]
+>  			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+>  			       [[^]MAY_EXEC]
+>  			fsmagic:= hex value
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index dc12fbcf484c..f0abade74707 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -26,6 +26,8 @@ extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
+>  extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>  			      enum kernel_read_file_id id);
+>  extern void ima_post_path_mknod(struct dentry *dentry);
+> +extern void ima_buffer_check(const void *buff, int size,
+> +				const char *eventname);
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+> @@ -92,6 +94,9 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
+>  	return;
+>  }
+>  
+> +static inline void ima_buffer_check(const void *buff, int size,
+> +		const char *eventname)
+> +{}
+>  #endif /* CONFIG_IMA */
+>  
+>  #ifndef CONFIG_IMA_KEXEC
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index d213e835c498..de70df132575 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -184,6 +184,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
+>  	hook(KEXEC_KERNEL_CHECK)	\
+>  	hook(KEXEC_INITRAMFS_CHECK)	\
+>  	hook(POLICY_CHECK)		\
+> +	hook(BUFFER_CHECK)		\
+>  	hook(MAX_CHECK)
+>  #define __ima_hook_enumify(ENUM)	ENUM,
+>  
+> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+> index c7505fb122d4..cb3f67b366f1 100644
+> --- a/security/integrity/ima/ima_api.c
+> +++ b/security/integrity/ima/ima_api.c
+> @@ -169,6 +169,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+>   *		subj=, obj=, type=, func=, mask=, fsmagic=
+>   *	subj,obj, and type: are LSM specific.
+>   *	func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
+> + *	| BUFFER_CHECK
+>   *	mask: contains the permission mask
+>   *	fsmagic: hex value
+>   *
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 357edd140c09..3db3f3966ac7 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -576,6 +576,95 @@ int ima_load_data(enum kernel_load_data_id id)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * process_buffer_measurement - Measure the buffer passed to ima log.
+> + * (Instead of using the file hash the buffer hash is used).
+> + * @buff - The buffer that needs to be added to the log
+> + * @size - size of buffer(in bytes)
+> + * @eventname - this is eventname used for the various buffers
+> + * that can be measured.
+> + *
+> + * The buffer passed is added to the ima logs.
+> + * If the sig template is used, then the sig field contains the buffer.
+> + *
+> + * On success return 0.
+> + * On error cases surface errors from ima calls.
+> + */
+> +static int process_buffer_measurement(const void *buff, int size,
+> +				const char *eventname, const struct cred *cred,
+> +				u32 secid)
+> +{
+> +	int ret = -EINVAL;
+> +	struct ima_template_entry *entry = NULL;
+> +	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+> +	struct ima_event_data event_data = {iint, NULL, NULL,
+> +					    NULL, 0, NULL};
+> +	struct {
+> +		struct ima_digest_data hdr;
+> +		char digest[IMA_MAX_DIGEST_SIZE];
+> +	} hash;
+> +	int violation = 0;
+> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
+> +
+> +	if (!buff || size ==  0 || !eventname)
+> +		goto err_out;
+> +
+> +	if (ima_get_action(NULL, cred, secid, 0, BUFFER_CHECK, &pcr)
+> +		!= IMA_MEASURE)
+> +		goto err_out;
+> +
+> +	memset(iint, 0, sizeof(*iint));
+> +	memset(&hash, 0, sizeof(hash));
+> +
+> +	event_data.filename = eventname;
+> +
+> +	iint->ima_hash = &hash.hdr;
+> +	iint->ima_hash->algo = ima_hash_algo;
+> +	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
+> +
+> +	ret = ima_calc_buffer_hash(buff, size, iint->ima_hash);
+> +	if (ret < 0)
+> +		goto err_out;
+> +
+> +	ret = ima_alloc_init_template(&event_data, &entry);
+> +	if (ret < 0)
+> +		goto err_out;
+> +
+> +	ret = ima_store_template(entry, violation, NULL,
+> +					buff, pcr);
+> +	if (ret < 0) {
+> +		ima_free_template_entry(entry);
+> +		goto err_out;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_out:
+> +	pr_err("Error in adding buffer measure: %d\n", ret);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * ima_buffer_check - based on policy, collect & store buffer measurement
+> + * @buf: pointer to buffer
+> + * @size: size of buffer
+> + * @eventname: event name identifier
+> + *
+> + * Buffers can only be measured, not appraised.  The buffer identifier
+> + * is used as the measurement list entry name (eg. boot_cmdline).
+> + */
+> +void ima_buffer_check(const void *buf, int size, const char *eventname)
+> +{
+> +	u32 secid;
+> +
+> +	if (buf && size != 0 && eventname) {
+> +		security_task_getsecid(current, &secid);
+> +		process_buffer_measurement(buf, size, eventname,
+> +				current_cred(), secid);
+> +	}
+> +}
+> +
+> +
+>  static int __init init_ima(void)
+>  {
+>  	int error;
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index e0cc323f948f..b12551ed191c 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -291,6 +291,12 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+>  {
+>  	int i;
+>  
+> +	// Incase of BUFFER_CHECK, Inode is NULL
+> +	if (!inode) {
+> +		if ((rule->flags & IMA_FUNC) && (rule->func == func))
+> +			return true;
+> +		return false;
+> +	}
+>  	if ((rule->flags & IMA_FUNC) &&
+>  	    (rule->func != func && func != POST_SETATTR))
+>  		return false;
+> @@ -869,6 +875,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>  				entry->func = KEXEC_INITRAMFS_CHECK;
+>  			else if (strcmp(args[0].from, "POLICY_CHECK") == 0)
+>  				entry->func = POLICY_CHECK;
+> +			else if (strcmp(args[0].from, "BUFFER_CHECK") == 0)
+> +				entry->func = BUFFER_CHECK;
+>  			else
+>  				result = -EINVAL;
+>  			if (!result)
 
-Rob
