@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CEDC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BF6C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23502216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F5F20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810856;
-	bh=d3m7PQSSBTdvSaJ14Zwtv2BlPgAGJByr5swq2PYGtRU=;
+	s=default; t=1556810858;
+	bh=djyInSHTCQqaF8tjMhJZ3EopzTq1PtfC9tQnVRxQMkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jpt/ws1TQMUMcwRRgcVz1PB9dKBoutAELWppEkStMhGBpSVnc0sTr+wLKlO1kFrj7
-	 +GQxQ4HIPu4jO/nZ7SJc6/naAqAe6v/CLAAUjtHJdyzi+WbUJqDqA86gjgMiSg5kCa
-	 H+tzLo2/gY8DL16jvBpUykmG58vMnkBA6Owkh1X0=
+	b=UrZTt1iO6n1IL9xZ4k+EZ+UGM2qhcCpH/ObsDtw0laJRlTzaRCwrM2VEuaViXoDVR
+	 xZbiKQF+RkaB6YgOmlYaPpvb6gt5D5YyTK8W8mhOy/Bsqzwe/d9o1fR0UZCzhDAkGT
+	 /ST/zip0vUe+TKda9lcNp3+SJ6QBxb2mwLj5OHBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbfEBP1e (ORCPT
+        id S1728016AbfEBP1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:27:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbfEBP1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:27:32 -0400
+        id S1727996AbfEBP1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:27:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EC8E214DA;
-        Thu,  2 May 2019 15:27:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA892081C;
+        Thu,  2 May 2019 15:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810852;
-        bh=d3m7PQSSBTdvSaJ14Zwtv2BlPgAGJByr5swq2PYGtRU=;
+        s=default; t=1556810854;
+        bh=djyInSHTCQqaF8tjMhJZ3EopzTq1PtfC9tQnVRxQMkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S7AdOSyc1BKBd7u4jE7IgsLnGefu12Dq7kFhMtwHLkzFgvyzs8sNKSQnHDq/kH4Cj
-         59L700mxXHffMqgf43rqmRPRRXyDXMphK0oRXGT31F/6K7id1w/nqRAtCLFxNP3yyk
-         OvnaGl485ULDyfKsG/v8F1bdff0DsX08Of+bp6PA=
+        b=d+L6yvZ1OPQOnANjrhg4BS3EqpXEuzudeQdu4SeP3mqHWztBqE5vw84FItDXftACk
+         eJtpvkv2B3rxGDHwZAdtj3tkFvg8SBatTg5kvEq44JSZbTPBCHHzRpXBPQiGSwEPmD
+         KH4VBZBgu4iLzgT4PC3aqSqhjgeYPBUwAC96mMLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Florian Westphal <fw@strlen.de>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 17/72] netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
-Date:   Thu,  2 May 2019 17:20:39 +0200
-Message-Id: <20190502143334.689747978@linuxfoundation.org>
+Subject: [PATCH 4.19 18/72] netfilter: fix NETFILTER_XT_TARGET_TEE dependencies
+Date:   Thu,  2 May 2019 17:20:40 +0200
+Message-Id: <20190502143334.764997451@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -63,54 +65,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e166e4fdaced850bee3d5ee12a5740258fb30587 ]
+[ Upstream commit d1fa381033eb718df5c602f64b6e88676138dfc6 ]
 
-Since Commit 21d1196a35f5 ("ipv4: set transport header earlier"),
-skb->transport_header has been always set before entering INET
-netfilter. This patch is to set skb->transport_header for bridge
-before entering INET netfilter by bridge-nf-call-iptables.
+With NETFILTER_XT_TARGET_TEE=y and IP6_NF_IPTABLES=m, we get a link
+error when referencing the NF_DUP_IPV6 module:
 
-It also fixes an issue that sctp_error() couldn't compute a right
-csum due to unset skb->transport_header.
+net/netfilter/xt_TEE.o: In function `tee_tg6':
+xt_TEE.c:(.text+0x14): undefined reference to `nf_dup_ipv6'
 
-Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
-Reported-by: Li Shuang <shuali@redhat.com>
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Acked-by: Florian Westphal <fw@strlen.de>
+The problem here is the 'select NF_DUP_IPV6 if IP6_NF_IPTABLES'
+that forces NF_DUP_IPV6 to be =m as well rather than setting it
+to =y as was intended here. Adding a soft dependency on
+IP6_NF_IPTABLES avoids that broken configuration.
+
+Fixes: 5d400a4933e8 ("netfilter: Kconfig: Change select IPv6 dependencies")
+Cc: Máté Eckl <ecklm94@gmail.com>
+Cc: Taehee Yoo <ap420073@gmail.com>
+Link: https://patchwork.ozlabs.org/patch/999498/
+Link: https://lore.kernel.org/patchwork/patch/960062/
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/bridge/br_netfilter_hooks.c | 1 +
- net/bridge/br_netfilter_ipv6.c  | 2 ++
- 2 files changed, 3 insertions(+)
+ net/netfilter/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index 3b0a03b92080..212c184c1eee 100644
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -515,6 +515,7 @@ static unsigned int br_nf_pre_routing(void *priv,
- 	nf_bridge->ipv4_daddr = ip_hdr(skb)->daddr;
- 
- 	skb->protocol = htons(ETH_P_IP);
-+	skb->transport_header = skb->network_header + ip_hdr(skb)->ihl * 4;
- 
- 	NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
- 		skb->dev, NULL,
-diff --git a/net/bridge/br_netfilter_ipv6.c b/net/bridge/br_netfilter_ipv6.c
-index 5811208863b7..09d5e0c7b3ba 100644
---- a/net/bridge/br_netfilter_ipv6.c
-+++ b/net/bridge/br_netfilter_ipv6.c
-@@ -235,6 +235,8 @@ unsigned int br_nf_pre_routing_ipv6(void *priv,
- 	nf_bridge->ipv6_daddr = ipv6_hdr(skb)->daddr;
- 
- 	skb->protocol = htons(ETH_P_IPV6);
-+	skb->transport_header = skb->network_header + sizeof(struct ipv6hdr);
-+
- 	NF_HOOK(NFPROTO_IPV6, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
- 		skb->dev, NULL,
- 		br_nf_pre_routing_finish_ipv6);
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index f61c306de1d0..e0fb56d67d42 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -1003,6 +1003,7 @@ config NETFILTER_XT_TARGET_TEE
+ 	depends on NETFILTER_ADVANCED
+ 	depends on IPV6 || IPV6=n
+ 	depends on !NF_CONNTRACK || NF_CONNTRACK
++	depends on IP6_NF_IPTABLES || !IP6_NF_IPTABLES
+ 	select NF_DUP_IPV4
+ 	select NF_DUP_IPV6 if IP6_NF_IPTABLES
+ 	---help---
 -- 
 2.19.1
 
