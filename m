@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F73AC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F16C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D4D2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6042081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfEBGCR (ORCPT
+        id S1726450AbfEBGCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 02:02:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33736 "EHLO mx1.suse.de"
+        Thu, 2 May 2019 02:02:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33816 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726276AbfEBGCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 02:02:17 -0400
+        id S1726191AbfEBGCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 02:02:37 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 08A3CAF81;
-        Thu,  2 May 2019 06:02:16 +0000 (UTC)
-Subject: Re: [PATCH 10/24] scsi_transport_srp: switch to SPDX tags
+        by mx1.suse.de (Postfix) with ESMTP id 59753AEDB;
+        Thu,  2 May 2019 06:02:36 +0000 (UTC)
+Subject: Re: [PATCH 11/24] libfc: remove duplicate GPL boilerplate text
 To:     Christoph Hellwig <hch@lst.de>,
         "James E . J . Bottomley" <jejb@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>
@@ -35,14 +35,14 @@ Cc:     Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
         linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
         osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
 References: <20190501161417.32592-1-hch@lst.de>
- <20190501161417.32592-11-hch@lst.de>
+ <20190501161417.32592-12-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <0e03c324-af1f-fb39-6896-7c2fa516fc60@suse.de>
-Date:   Thu, 2 May 2019 08:02:15 +0200
+Message-ID: <453a0b4d-d152-d2fc-4a2c-51c27ce83c71@suse.de>
+Date:   Thu, 2 May 2019 08:02:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190501161417.32592-11-hch@lst.de>
+In-Reply-To: <20190501161417.32592-12-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -52,12 +52,16 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 5/1/19 6:14 PM, Christoph Hellwig wrote:
-> Use the the GPLv2+ SPDX tag instead of verbose boilerplate text.
+> The libfc uapi headers already have proper SPDX tags, remove the
+> duplicate boilerplate text.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   drivers/scsi/scsi_transport_srp.c | 16 +---------------
->   1 file changed, 1 insertion(+), 15 deletions(-)
+>   include/uapi/scsi/fc/fc_els.h | 13 -------------
+>   include/uapi/scsi/fc/fc_fs.h  | 13 -------------
+>   include/uapi/scsi/fc/fc_gs.h  | 13 -------------
+>   include/uapi/scsi/fc/fc_ns.h  | 13 -------------
+>   4 files changed, 52 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.com>
 
