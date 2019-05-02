@@ -2,139 +2,129 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C947C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBB2C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E6E20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DE220652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uvr7eYDD"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="dhB2boad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfEBQKB (ORCPT
+        id S1726650AbfEBQKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:10:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46716 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbfEBQKB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:10:01 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bi2so1227839plb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 09:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tL3Pud+YJBNQiO93dRarRa44+urFtai9+XXdaXC1EX8=;
-        b=Uvr7eYDD/u9aWB5XeiFkGkmMbcelulOeVmqQHiPNC2nzMhwcnYR4+lUYoOpWkPOzDk
-         WdZFHHq+gptNhRKAm3jIP7r3Rt8dM+1ScsteT2tAHKYQLm397E4YNxFFXHB1tJ17Pr71
-         cQJl7nL0hUVEwvelRott1dHL/TNQY+gaIQTShEzmXgZIrNQcl4zpwNuV4CAg+K1GAyYL
-         zQceMqLx64TWFVEi5oLoIskYJvElCbKVOTSeW6vLbtpbmyAbGVjRK4GmKFsAZ2zj0QqV
-         VLjwgBaIqgxKv4iGzBpB9wnRFhq/2LGGx+otORB2k0+HN1RXbikKMPQMIzxT+Dx329Zy
-         3HnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tL3Pud+YJBNQiO93dRarRa44+urFtai9+XXdaXC1EX8=;
-        b=tu0sdbf63nCT3Cq4EZLFLaPl4Oppgibl0jabPkJI5oVN3ZN/Kh4oIY2gxgHdcaAsI4
-         NoBd2iUQJ55HUt5k7WMyFHj6Ft7MQ8DHthi/66DSWq8mkvK2+cp9VN4LmyHPlaAHZGnM
-         Ax0De6SseCVIl/1XWKV9XeHbtweegf5NGoiL5GDBG2cJMBhDHBmcEVIqTEbXD2tTPDNs
-         QYYEhajC3jB5cCkQTz/KJvrBhht/RPT3T3JAqZ//m3MBCKGZNmMiJD/aLmmoZcR4HHqQ
-         hIUUifItMDr+NjXhyqQUDj8iRIJ6apHacyguCVwpYDMVBN4dZcIPf4hO1ylXPtwK9Lxn
-         nUMg==
-X-Gm-Message-State: APjAAAXJWCA8ak88N3BWXtns5ImYympi8qcEVYAhCl+mCJKwzLcFeyXA
-        NQRTPJhy6l69ob2+iv49o6RBDzMhTHihSqnBwQKYMQ==
-X-Google-Smtp-Source: APXvYqweiMYDaxRdcX6bGs9e5ycuS+mIRgrgR9TjYwmXsa0frVpfhEjm9i8hQX6HSpAqSO8yl/Bh4U950qcyLeHLpMs=
-X-Received: by 2002:a17:902:7207:: with SMTP id ba7mr4392261plb.329.1556813400075;
- Thu, 02 May 2019 09:10:00 -0700 (PDT)
+        Thu, 2 May 2019 12:10:13 -0400
+Received: from mail-eopbgr10067.outbound.protection.outlook.com ([40.107.1.67]:14659
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726270AbfEBQKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:10:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LK68xXDh+7nAsWevH05gUsgIJUTHgjdnO83SF/uud2A=;
+ b=dhB2boadrhRRnlDZ4DuVzLw90Vyl9lCVAQIUfBUlywM/1AxyAJCPh91pYW3eTtaGq5mlgTFDH95cS6eHqP/jIsG1m09KqhbCxIbIlJbAPG5EUqEPg9jh22UId3YyCjHpjaVpcJKAFCnsgsyRkTyds0Gwb3qx9uqCMVIO9z6Povc=
+Received: from VI1PR0801MB1935.eurprd08.prod.outlook.com (10.173.73.149) by
+ VI1PR0801MB2080.eurprd08.prod.outlook.com (10.173.75.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Thu, 2 May 2019 16:10:07 +0000
+Received: from VI1PR0801MB1935.eurprd08.prod.outlook.com
+ ([fe80::ec0c:910f:7b71:aff4]) by VI1PR0801MB1935.eurprd08.prod.outlook.com
+ ([fe80::ec0c:910f:7b71:aff4%7]) with mapi id 15.20.1856.008; Thu, 2 May 2019
+ 16:10:07 +0000
+From:   Ben Davis <Ben.Davis@arm.com>
+To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     nd <nd@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ben Davis <Ben.Davis@arm.com>
+Subject: [PATCH v4 0/2] Add writeback scaling
+Thread-Topic: [PATCH v4 0/2] Add writeback scaling
+Thread-Index: AQHVAQGC3uJ/DsE8jUWAOzsm4a0XMQ==
+Date:   Thu, 2 May 2019 16:10:07 +0000
+Message-ID: <1556813386-18823-1-git-send-email-ben.davis@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.53]
+x-clientproxiedby: LO2P123CA0018.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:a6::30) To VI1PR0801MB1935.eurprd08.prod.outlook.com
+ (2603:10a6:800:89::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Ben.Davis@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3f682d4c-dfd7-4ae6-1913-08d6cf18a4e6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0801MB2080;
+x-ms-traffictypediagnostic: VI1PR0801MB2080:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VI1PR0801MB2080BDE1C1416304BE69DD1DE5340@VI1PR0801MB2080.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(136003)(346002)(396003)(189003)(199004)(5660300002)(14454004)(52116002)(305945005)(6512007)(54906003)(6116002)(71190400001)(6486002)(3846002)(66446008)(73956011)(66946007)(64756008)(66556008)(66476007)(53936002)(7736002)(71200400001)(2906002)(26005)(5640700003)(2351001)(6436002)(50226002)(99286004)(316002)(8936002)(386003)(81156014)(6506007)(8676002)(102836004)(14444005)(256004)(86362001)(478600001)(44832011)(2501003)(81166006)(476003)(2616005)(186003)(68736007)(486006)(36756003)(4326008)(6916009)(72206003)(66066001)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0801MB2080;H:VI1PR0801MB1935.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RI8M3Z/MLgdiGmviJ/qH3mtS5NTLyts3OJaLQV1hpO+k22Bz3xy3+yOHC6l2QEdzF8KyhePWP79u7H271g5LaJ1xhjfRkaie7MIKXOD+wy4RnnYtwlD6XJSsN9SjvE+bIYqNKHrDgvfCj0TYMKJOfeuKtGLcN9/FkxCHx78ulX9JwV4hDQxrneGZjZh7b9A+2J0gqGgYhYrE3enOJwWbTxuBGdiZxf4OhCCVVH24KpeouET18hffGqhm/5/KLE7brbxa1gtz30u2qsc0YWZJQl4fz2YXB57Gxljqq3coCI7nw+OpU8qwLgw456jZUnuc/AzQl6OzTiXvXniilm/qKRzuAt5F1xzcmhQmpDJixGlFaeIeTtjy6KaZ3C6gBdwiEMF1yTa308tJBSMoid9arA6B6Q5/J9Ri3OCerjP/7hM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <0000000000004101370587c052fb@google.com> <Pine.LNX.4.44L0.1904301058150.1465-100000@iolanthe.rowland.org>
- <CAAeHK+zYQ0QF_vo+iYns2d0O7RZ=Uq0kxi1mWc1W_0bBxMGR0A@mail.gmail.com> <20190430154000.GB23459@kroah.com>
-In-Reply-To: <20190430154000.GB23459@kroah.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 2 May 2019 18:09:48 +0200
-Message-ID: <CAAeHK+w6NfdqLRCxO8J24YqdmTRkipyG3GaCZBaYdNE5b+Ojeg@mail.gmail.com>
-Subject: Re: WARNING: Support for this device (Terratec Grabster AV400) is experimental.
-To:     Greg KH <greg@kroah.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        syzbot <syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f682d4c-dfd7-4ae6-1913-08d6cf18a4e6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 16:10:07.6054
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0801MB2080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 5:40 PM Greg KH <greg@kroah.com> wrote:
->
-> On Tue, Apr 30, 2019 at 05:14:28PM +0200, Andrey Konovalov wrote:
-> > On Tue, Apr 30, 2019 at 5:00 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Tue, 30 Apr 2019, syzbot wrote:
-> > >
-> > > > Hello,
-> > > >
-> > > > syzbot found the following crash on:
-> > > >
-> > > > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=141ca62d200000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=af8f8d2ac0d39b0ed3a0
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1405bedd200000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ce3bbb200000
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
-> > > >
-> > > > usb 1-1: New USB device found, idVendor=0ccd, idProduct=0039, bcdDevice=
-> > > > d.3c
-> > > > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> > > > usb 1-1: config 0 descriptor??
-> > > > pvrusb2: Hardware description: Terratec Grabster AV400
-> > > > pvrusb2: **********
-> > > > pvrusb2: WARNING: Support for this device (Terratec Grabster AV400) is
-> > > > experimental.
-> > > > pvrusb2: Important functionality might not be entirely working.
-> > > > pvrusb2: Please consider contacting the driver author to help with further
-> > > > stabilization of the driver.
-> > > > pvrusb2: **********
-> > > >
-> > > >
-> > > > ---
-> > > > This bug is generated by a bot. It may contain errors.
-> > > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > >
-> > > This does seem like a bug in syzbot.  Why does it think this pr_info()
-> > > output indicates a crash?  Is it fooled by the capitalized "WARNING" at
-> > > the start of one of the lines?
-> >
-> > Well, as of [1] WARN*() should only be used to indicate a kernel bug.
-> > Normally, WARN*() prints a line that start with a warning, which is
-> > followed by a stack trace. Unfortunately the stack trace is not always
-> > present (kernel memory is badly corrupted, console deadlocked, etc.),
-> > so syzbot detects the "WARNING:" line as a beginning of a WARN*()
-> > reported bug. In this case the driver does something like
-> > `pr_info("WARNING: ...", ...)`, which confuses syzbot. I'd say it's
-> > the kernel that needs to be changed here to use some other kind of
-> > prefix for printing warning messages.
-> >
-> > [1] https://github.com/torvalds/linux/commit/96c6a32ccb55a366054fd82cc63523bb7f7493d3
->
-> Ok, we can change these to "Warning" then.  Want to send a patch?
-
-Done.
-
->
-> thanks,
->
-> greg k-h
+QWRkIHN1cHBvcnQgZm9yIHNjYWxpbmcgb24gd3JpdGViYWNrLiBUbyBkbyB0aGlzIGFkZA0Kd3Jp
+dGViYWNrX2Rlc3RfeCx5LHcsaCB3cml0ZWJhY2sgY29ubmVjdG9yIHByb3BlcnRpZXMgdG8gc3Bl
+Y2lmeSB0aGUNCmRlc2lyZWQgb3V0cHV0IGRpbWVuc2lvbnMuDQpUaGVuIGltcGxlbWVudCBkb3du
+c2NhbGluZyBvbiB3cml0ZWJhY2sgZm9yIE1hbGlkcC01NTAgYW5kIE1hbGlkcC02NTANCih1cHNj
+YWxpbmcgb24gd3JpdGViYWNrIGlzIG5vdCBzdXBwb3J0ZWQgb24gdGhlc2UgZGV2aWNlcykuDQoN
+CnYyOiBVc2UgMCBhcyBkZWZhdWx0IGZvciB3cml0ZWJhY2tfdyxoIGFuZCBzbyB1cGRhdGUgcmFu
+Z2UgdG8gdXNlIDEgYXMNCiAgICBtaW5pbXVtLg0KDQp2MzogUmVuYW1lIHByb3BlcnRpZXMgdG8g
+c3BlY2lmeSB0aGV5IGFyZSBkZXN0aW5hdGlvbiB3aWR0aC9oZWlnaHQuDQogICAgTWFrZSBzdXJl
+IHRoZSB2YWx1ZXMgZnJvbSB0aGUgcHJvcGVydGllcyBhcmUgcGFzc2VkIHRvDQogICAgZW5hYmxl
+X21lbXdyaXRlIHJhdGhlciB0aGFuIHRoZSBmcmFtZWJ1ZmZlciBkaW1lbnNpb25zLg0KDQp2NDog
+QWRkIHdyaXRlYmFja19kZXN0X3gseSBwcm9wZXJ0aWVzIGFzIHdlbGwgZm9yIGNvbnNpc3RlbmN5
+IHdpdGgNCiAgICBwbGFuZSBwcm9wZXJ0aWVzLg0KICAgIFdyaXRpbmcgdG8gYXJiaXRyYXJ5IHgs
+eSBvbiB3cml0ZWJhY2sgaXMgbm90IHN1cHBvcnRlZCBvbiB0aGUNCiAgICBoYXJkd2FyZSBzbyB3
+ZSBzaW11bGF0ZSB0aGlzIGluIHRoZSBkcml2ZXIuDQogICAgQ2xlYXIgdGhlIHByb3BlcnRpZXMg
+b24gZHVwbGljYXRlIHN0YXRlIGZvciByb2J1c3RuZXNzLg0KICAgIFVzZSAwIGFzIG1pbmltdW0g
+Zm9yIGFsbCBhZGRlZCBwcm9wZXJ0aWVzLg0KICAgIEFsc28gYWN0dWFsbHkgbWFrZSBzdXJlIHRo
+ZSB2YWx1ZXMgZnJvbSB0aGUgcHJvcGVydGllcyBhcmUgcGFzc2VkDQogICAgdG8gZW5hYmxlX21l
+bXdyaXRlIGFzIGludGVuZGVkIGluIHYzIGFuZCBzb21lIG90aGVyIGNsZWFuIHVwLg0KDQpCZW4g
+RGF2aXMgKDIpOg0KICBkcm06IEFkZCB3cml0ZWJhY2tfZGVzdF94LHksdyxoIHByb3BlcnRpZXMN
+CiAgZHJtL21hbGlkcDogRW5hYmxlIHdyaXRlYmFjayBzY2FsaW5nDQoNCiBkcml2ZXJzL2dwdS9k
+cm0vYXJtL21hbGlkcF9jcnRjLmMgICAgICAgICB8ICA0NyArKysrKystLS0tLS0NCiBkcml2ZXJz
+L2dwdS9kcm0vYXJtL21hbGlkcF9kcnYuYyAgICAgICAgICB8ICAxMCArKy0NCiBkcml2ZXJzL2dw
+dS9kcm0vYXJtL21hbGlkcF9kcnYuaCAgICAgICAgICB8ICAgMiArDQogZHJpdmVycy9ncHUvZHJt
+L2FybS9tYWxpZHBfaHcuYyAgICAgICAgICAgfCAgNDUgKysrKysrKystLS0tDQogZHJpdmVycy9n
+cHUvZHJtL2FybS9tYWxpZHBfaHcuaCAgICAgICAgICAgfCAgMTkgKysrKy0NCiBkcml2ZXJzL2dw
+dS9kcm0vYXJtL21hbGlkcF9tdy5jICAgICAgICAgICB8IDExNyArKysrKysrKysrKysrKysrKysr
+KysrKystLS0tLS0NCiBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9yZWdzLmggICAgICAgICB8
+ICAgMSArDQogZHJpdmVycy9ncHUvZHJtL2RybV9hdG9taWNfc3RhdGVfaGVscGVyLmMgfCAgIDYg
+KysNCiBkcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pY191YXBpLmMgICAgICAgICB8ICAxNyArKysr
+Kw0KIGRyaXZlcnMvZ3B1L2RybS9kcm1fd3JpdGViYWNrLmMgICAgICAgICAgIHwgIDY2ICsrKysr
+KysrKysrKysrKysrDQogaW5jbHVkZS9kcm0vZHJtX2Nvbm5lY3Rvci5oICAgICAgICAgICAgICAg
+fCAgMjMgKysrKysrDQogaW5jbHVkZS9kcm0vZHJtX21vZGVfY29uZmlnLmggICAgICAgICAgICAg
+fCAgMjAgKysrKysNCiAxMiBmaWxlcyBjaGFuZ2VkLCAzMDggaW5zZXJ0aW9ucygrKSwgNjUgZGVs
+ZXRpb25zKC0pDQoNCi0tIA0KMi43LjQNCg0K
