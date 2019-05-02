@@ -2,136 +2,137 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A01C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657BCC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429F320651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3646E20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="FGA90EGc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zl8iu0TP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfEBTDT (ORCPT
+        id S1726267AbfEBTHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 15:03:19 -0400
-Received: from mail-eopbgr770093.outbound.protection.outlook.com ([40.107.77.93]:13275
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726120AbfEBTDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 15:03:19 -0400
+        Thu, 2 May 2019 15:07:23 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54231 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfEBTHW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 15:07:22 -0400
+Received: by mail-it1-f196.google.com with SMTP id l10so5293666iti.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N5vP4AkogQ4iAySrvubINU0ejgtxmv383VKMfJfN8uU=;
- b=FGA90EGc7npOswhWXNdDBkBfgDW/YA/wBfpJCQnsBf1uiEWNICbqv2coEb6dq+1Y4hICqJ/nl2A2VwS/1ZUlMbldSFF6fWidwS8+avtmYwhLrkNREz5iMe6RkM6Tlq/OsbEaA56KDIXpnYm3xhcIZZ9CO5fMLLwwWKgv9G3slaE=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1216.namprd22.prod.outlook.com (10.174.161.149) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Thu, 2 May 2019 19:03:12 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1835.018; Thu, 2 May 2019
- 19:03:12 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
-        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-        "nios2-dev@lists.rocketboards.org" <nios2-dev@lists.rocketboards.org>
-Subject: Re: [PATCH 01/15] asm-generic, x86: introduce generic
- pte_{alloc,free}_one[_kernel]
-Thread-Topic: [PATCH 01/15] asm-generic, x86: introduce generic
- pte_{alloc,free}_one[_kernel]
-Thread-Index: AQHVAPvLitxTe6gGvUam7UWTEvfeuaZYMWYA
-Date:   Thu, 2 May 2019 19:03:11 +0000
-Message-ID: <20190502190310.voenw3pwgpelmdgw@pburton-laptop>
-References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
- <1556810922-20248-2-git-send-email-rppt@linux.ibm.com>
-In-Reply-To: <1556810922-20248-2-git-send-email-rppt@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0064.prod.exchangelabs.com (2603:10b6:a03:94::41)
- To MWHPR2201MB1277.namprd22.prod.outlook.com (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5584fd04-cb54-4e5f-1234-08d6cf30d264
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1216;
-x-ms-traffictypediagnostic: MWHPR2201MB1216:
-x-microsoft-antispam-prvs: <MWHPR2201MB1216E79B37D05304A7091D29C1340@MWHPR2201MB1216.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(396003)(366004)(376002)(346002)(39840400004)(199004)(189003)(186003)(26005)(44832011)(6506007)(8936002)(256004)(3846002)(81166006)(446003)(486006)(11346002)(42882007)(102836004)(476003)(76176011)(14454004)(81156014)(478600001)(6246003)(99286004)(229853002)(25786009)(6436002)(6486002)(6116002)(8676002)(7406005)(7416002)(5660300002)(4326008)(305945005)(6916009)(54906003)(58126008)(7736002)(53936002)(386003)(66066001)(6512007)(52116002)(64756008)(66446008)(1076003)(4744005)(71190400001)(2906002)(33716001)(66946007)(68736007)(66556008)(66476007)(316002)(73956011)(71200400001)(9686003)(41533002)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1216;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: N7pT2D98deMj6gdm9WFDpL/BCReV8Dm4aZB8yOnNr59VPnbj8T7nWBk4fHyWTOq/nmQqMsk83NqSPJJj8qUO7BE6KcNSyMoVbL/0lMquZu7SRYLvDnMKwUxj1JVI/AaUgM/9WT/5ybmz43VEdmyDQv2ljwflxCkVRDT/Bsg90HjOr+I96N/C54k5ibt/TQI8bjY0DvFTHZZRKLHscLDWQrRmiviTh8DROTiodXO6VyPG4wGmPWVgfi+k87s15NnPE+sue9LVHDnHyHDdrW/ci/n6q0a4v9SemaPZBbDVFX9ZHkeAosVjMqd10ZuFYJguVHP31ldjeAcX5ARFt0UfwVozYTru4XPmC1f8l8kWNHlop4thdTqeXvnreCI4Z784VquKXPUdBCVprKJVKSShs+9KhxfovWtW5UkuYQzD1dk=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FEE563E1598F8E42B0910251031F2C94@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nSKRt3WKRfyEbWZKT2Q22cyuORb9Gh6Tvn4Sl4qmV0M=;
+        b=Zl8iu0TP2UMpdP29UFkOjInL0C10Yr31yzOT9KYJaorbnymWcvJeNGINAwKzYrKSlp
+         1+OSUZ1OAtb+Rx/IldzFFpkSlBqdOwf6DinD4+PGovjuRjmEURBxl4FQHvZoftOznXeM
+         ZmH3sh5RjtInG4aRL1RED3+rowII2KaA7wfQQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nSKRt3WKRfyEbWZKT2Q22cyuORb9Gh6Tvn4Sl4qmV0M=;
+        b=IHNIDwXM5xb5RdPGgtHKYnXMCPHq2ZEkVMjNFTObvfgVz/poloRs66g/l8pQPCCpvK
+         7S+Cm1G5DdfFAWWqYnRCqTwS29LeleutgW8jU2VEZL5Z57XwgTIPnO09oGL+l/YR89+6
+         ukjseudAJEciX5tnofxp7mquRDscTxYGqMs+v29rKEekzjz/Bvo9qzMkKPU0ro4Q0769
+         0BVbRQ5QnSVBxyfKy0wgqT3NI8WWHuiC7oKQcfi/4j0uNjj3dTghh78TCYtWHjpN0H+O
+         x0JuMHLYhHV0OkpCGeQzDFbTVqoElk4R/YH2p/p5q2TMATUBA96tBetsKK9AWiUX2f2I
+         YkLw==
+X-Gm-Message-State: APjAAAUlVK4o6+HWaGKSODrK0V1Yrlw8vxYmuaMtejQ6+Bm5mauBRnEq
+        a0Ghz1ksrGD7gX9po6VtFTwLWw==
+X-Google-Smtp-Source: APXvYqzdK+GIbc9SB9LRwE/81P6E9I0LoEpNla1HajsEWBv7dWBdjOkuk4jwxW7KkyceTbI3CfEmoA==
+X-Received: by 2002:a24:4d8a:: with SMTP id l132mr3770654itb.70.1556824042042;
+        Thu, 02 May 2019 12:07:22 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id g13sm2044503iom.46.2019.05.02.12.07.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 12:07:21 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-mmc@vger.kernel.org
+Cc:     avri.altman@wdc.com, djkurtz@chromium.org, zwisler@chromium.org,
+        Raul E Rangel <rrangel@chromium.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Hannes Reinecke <hare@suse.com>, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH] mmc: Fix tag set memory leak
+Date:   Thu,  2 May 2019 13:07:14 -0600
+Message-Id: <20190502190714.181664-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5584fd04-cb54-4e5f-1234-08d6cf30d264
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 19:03:12.0171
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1216
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+The tag set is allocated in mmc_init_queue but never freed. This results
+in a memory leak. This change makes sure we free the tag set when the
+queue is also freed.
 
-On Thu, May 02, 2019 at 06:28:28PM +0300, Mike Rapoport wrote:
-> +/**
-> + * pte_free_kernel - free PTE-level user page table page
-> + * @mm: the mm_struct of the current context
-> + * @pte_page: the `struct page` representing the page table
-> + */
-> +static inline void pte_free(struct mm_struct *mm, struct page *pte_page)
-> +{
-> +	pgtable_page_dtor(pte_page);
-> +	__free_page(pte_page);
-> +}
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+---
+I found this using kmemleak and plugging and unplugging an SD card in a
+few times.
 
-Nit: the comment names the wrong function (s/pte_free_kernel/pte_free/).
+Here is an example of the output of kmemleak:
+unreferenced object 0xffff888125be4ce8 (size 8):
+  comm "kworker/1:0", pid 17, jiffies 4294901575 (age 204.773s)
+  hex dump (first 8 bytes):
+    00 00 00 00 00 00 00 00                          ........
+  backtrace:
+    [<0000000061cb8887>] blk_mq_alloc_tag_set+0xe9/0x234
+    [<00000000cf532a0f>] mmc_init_queue+0xa9/0x2f0
+    [<000000001e085171>] mmc_blk_alloc_req+0x125/0x2f9
+    [<00000000eae1bd01>] mmc_blk_probe+0x1e2/0x6c1
+    [<00000000a0b4a87d>] really_probe+0x1bd/0x3b0
+    [<00000000e58f3eb9>] driver_probe_device+0xe1/0x115
+    [<00000000358f3b3c>] bus_for_each_drv+0x89/0xac
+    [<00000000ef52ccbe>] __device_attach+0xb0/0x14a
+    [<00000000c9daafa7>] bus_probe_device+0x33/0x9f
+    [<0000000008ac5779>] device_add+0x34b/0x5e2
+    [<00000000b42623cc>] mmc_add_card+0x1f5/0x20d
+    [<00000000f114ebc3>] mmc_attach_sd+0xc5/0x14b
+    [<000000006e915e0d>] mmc_rescan+0x261/0x2b6
+    [<00000000e5b49c26>] process_one_work+0x1d3/0x31f
+    [<0000000068c8cd3c>] worker_thread+0x1cd/0x2bf
+    [<00000000326e2e22>] kthread+0x14f/0x157
 
-Thanks,
-    Paul
+Once I applied this patch the leak went away.
+
+p.s., I included a small white space fix. Hope that's ok.
+
+ drivers/mmc/core/queue.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+index 7c364a9c4eeb..176a08748cf1 100644
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -402,7 +402,7 @@ int mmc_init_queue(struct mmc_queue *mq, struct mmc_card *card)
+ 
+ 	mq->card = card;
+ 	mq->use_cqe = host->cqe_enabled;
+-	
++
+ 	spin_lock_init(&mq->lock);
+ 
+ 	memset(&mq->tag_set, 0, sizeof(mq->tag_set));
+@@ -472,6 +472,7 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
+ 		blk_mq_unquiesce_queue(q);
+ 
+ 	blk_cleanup_queue(q);
++	blk_mq_free_tag_set(&mq->tag_set);
+ 
+ 	/*
+ 	 * A request can be completed before the next request, potentially
+-- 
+2.21.0.593.g511ec345e18-goog
+
