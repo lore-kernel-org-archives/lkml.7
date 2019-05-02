@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23301C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72D4C04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB4420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945BA2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811033;
-	bh=CQdNOpkCUYS+fJWizHJvurWoB2prYbApk3+vaXeZ2gk=;
+	s=default; t=1556811038;
+	bh=nqqXkG8lR/5IvEvEXeBbKuPr7SNqVPy48g/pxuo01Gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N72/6+o+qQhUeYvnqjB/bCTSk4SD6jz9mApLL6LvlrZhpZ5vRGmbZzWwB2Wa0UjsN
-	 DqcpXS02+3cuWOkW8EdV72NmmStNzaA9KmMHHsGgEfV1mwVXaidCyTJAcwqbrmlAOz
-	 TF+Qs9tTT9GhJmC/Xz+SB/q57OR9VglYIRKaM8WM=
+	b=zR30mYIV6WdfRbIBYNJwEqesYEjjqztGr8qEwEcRSA3PMhUyJ2KRzSINbj6Xyhlgl
+	 DWYxeKmFtxwO6gHggx4xc3GxYodxzyx8waL0XztxPgViyqQF7xAph+44tff48AAiJU
+	 DH5t2Q/xSwoFuieuH6kvRHSImlkYHVujDJYpHbvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfEBPab (ORCPT
+        id S1728782AbfEBPah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48984 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727888AbfEBPa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:27 -0400
+        id S1728745AbfEBPaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DE1B20C01;
-        Thu,  2 May 2019 15:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E129D20675;
+        Thu,  2 May 2019 15:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811026;
-        bh=CQdNOpkCUYS+fJWizHJvurWoB2prYbApk3+vaXeZ2gk=;
+        s=default; t=1556811029;
+        bh=nqqXkG8lR/5IvEvEXeBbKuPr7SNqVPy48g/pxuo01Gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jwLWDUuYQJ3BYaJo/WfxGUnvt4m52i2ELLoJ62KVw+Y41+LJrHboWQS+n299cjYC3
-         4rJ0qkvSO03pkzEZdh4hf4ux71lgfUHbRglUrOh4P1EVhZIozrMczewiS+CWwiSl6m
-         ltxUj/uGO8A0z5naSmXGsG8476O2r34JAmYQL74A=
+        b=rPBiMPN4E4CU809QMthW8cSM6roOliE6JdFX1asEUtWSPjko02BXdbL+qz7B+Upih
+         se8/5HlXAGEp6igbVV4RHj7T6YmJKQvTbA6LQ22LSrwwnXSw6jjHTM9BwNAZv5Xssk
+         cWBZe73QI4u4VZgRvySo+7v7smtbDTZnBK/kisUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mukesh Ojha <mojha@codeaurora.org>,
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        Andrey Batyiev <batyiev@gmail.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 047/101] staging: rtlwifi: rtl8822b: fix to avoid potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:20:49 +0200
-Message-Id: <20190502143342.854481854@linuxfoundation.org>
+Subject: [PATCH 5.0 030/101] serial: ar933x_uart: Fix build failure with disabled console
+Date:   Thu,  2 May 2019 17:20:32 +0200
+Message-Id: <20190502143341.671005424@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,33 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d70d70aec9632679dd00dcc1b1e8b2517e2c7da0 ]
+[ Upstream commit 72ff51d8dd262d1fef25baedc2ac35116435be47 ]
 
-skb allocated via dev_alloc_skb can fail and return a NULL pointer.
-This patch avoids such a scenario and returns, consistent with other
-invocations.
+Andrey has reported on OpenWrt's bug tracking system[1], that he
+currently can't use ar93xx_uart as pure serial UART without console
+(CONFIG_SERIAL_8250_CONSOLE and CONFIG_SERIAL_AR933X_CONSOLE undefined),
+because compilation ends with following error:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+ ar933x_uart.c: In function 'ar933x_uart_console_write':
+ ar933x_uart.c:550:14: error: 'struct uart_port' has no
+                               member named 'sysrq'
+
+So this patch moves all the code related to console handling behind
+series of CONFIG_SERIAL_AR933X_CONSOLE ifdefs.
+
+1. https://bugs.openwrt.org/index.php?do=details&task_id=2152
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Andrey Batyiev <batyiev@gmail.com>
+Reported-by: Andrey Batyiev <batyiev@gmail.com>
+Tested-by: Andrey Batyiev <batyiev@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/staging/rtlwifi/rtl8822be/fw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/serial/ar933x_uart.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/staging/rtlwifi/rtl8822be/fw.c b/drivers/staging/rtlwifi/rtl8822be/fw.c
-index a40396614814..c1ed52df05f0 100644
---- a/drivers/staging/rtlwifi/rtl8822be/fw.c
-+++ b/drivers/staging/rtlwifi/rtl8822be/fw.c
-@@ -741,6 +741,8 @@ void rtl8822be_set_fw_rsvdpagepkt(struct ieee80211_hw *hw, bool b_dl_finished)
- 		      u1_rsvd_page_loc, 3);
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index db5df3d54818..3bdd56a1021b 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -49,11 +49,6 @@ struct ar933x_uart_port {
+ 	struct clk		*clk;
+ };
  
- 	skb = dev_alloc_skb(totalpacketlen);
-+	if (!skb)
-+		return;
- 	memcpy((u8 *)skb_put(skb, totalpacketlen), &reserved_page_packet,
- 	       totalpacketlen);
+-static inline bool ar933x_uart_console_enabled(void)
+-{
+-	return IS_ENABLED(CONFIG_SERIAL_AR933X_CONSOLE);
+-}
+-
+ static inline unsigned int ar933x_uart_read(struct ar933x_uart_port *up,
+ 					    int offset)
+ {
+@@ -508,6 +503,7 @@ static const struct uart_ops ar933x_uart_ops = {
+ 	.verify_port	= ar933x_uart_verify_port,
+ };
  
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
+ static struct ar933x_uart_port *
+ ar933x_console_ports[CONFIG_SERIAL_AR933X_NR_UARTS];
+ 
+@@ -604,14 +600,7 @@ static struct console ar933x_uart_console = {
+ 	.index		= -1,
+ 	.data		= &ar933x_uart_driver,
+ };
+-
+-static void ar933x_uart_add_console_port(struct ar933x_uart_port *up)
+-{
+-	if (!ar933x_uart_console_enabled())
+-		return;
+-
+-	ar933x_console_ports[up->port.line] = up;
+-}
++#endif /* CONFIG_SERIAL_AR933X_CONSOLE */
+ 
+ static struct uart_driver ar933x_uart_driver = {
+ 	.owner		= THIS_MODULE,
+@@ -700,7 +689,9 @@ static int ar933x_uart_probe(struct platform_device *pdev)
+ 	baud = ar933x_uart_get_baud(port->uartclk, 0, AR933X_UART_MAX_STEP);
+ 	up->max_baud = min_t(unsigned int, baud, AR933X_UART_MAX_BAUD);
+ 
+-	ar933x_uart_add_console_port(up);
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
++	ar933x_console_ports[up->port.line] = up;
++#endif
+ 
+ 	ret = uart_add_one_port(&ar933x_uart_driver, &up->port);
+ 	if (ret)
+@@ -749,8 +740,9 @@ static int __init ar933x_uart_init(void)
+ {
+ 	int ret;
+ 
+-	if (ar933x_uart_console_enabled())
+-		ar933x_uart_driver.cons = &ar933x_uart_console;
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
++	ar933x_uart_driver.cons = &ar933x_uart_console;
++#endif
+ 
+ 	ret = uart_register_driver(&ar933x_uart_driver);
+ 	if (ret)
 -- 
 2.19.1
 
