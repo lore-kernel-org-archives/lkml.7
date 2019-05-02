@@ -2,97 +2,107 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F52C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE3C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70A22075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50DD321734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfEBMpi (ORCPT
+        id S1726378AbfEBMrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:45:38 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:54758 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfEBMpi (ORCPT
+        Thu, 2 May 2019 08:47:52 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:55384 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfEBMrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:45:38 -0400
-Received: from ramsan ([84.194.111.163])
-        by albert.telenet-ops.be with bizsmtp
-        id 7Qld200053XaVaC06Qldtr; Thu, 02 May 2019 14:45:37 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hMB5k-0007h4-WA; Thu, 02 May 2019 14:45:37 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hMB5k-0001eE-Uc; Thu, 02 May 2019 14:45:36 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] of: unittest: Remove error printing on OOM
-Date:   Thu,  2 May 2019 14:45:35 +0200
-Message-Id: <20190502124535.6292-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Thu, 2 May 2019 08:47:51 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hMB7s-0000qc-KI; Thu, 02 May 2019 14:47:48 +0200
+Message-ID: <f0f772e5e33519dac93672be26fa7995f8109721.camel@sipsolutions.net>
+Subject: Re: [PATCH 2/4] devcoredump: allow to create several coredump files
+ in one device
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Akinobu Mita <akinobu.mita@gmail.com>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Date:   Thu, 02 May 2019 14:47:47 +0200
+In-Reply-To: <1556787561-5113-3-git-send-email-akinobu.mita@gmail.com> (sfid-20190502_105944_673346_AEC5725E)
+References: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
+         <1556787561-5113-3-git-send-email-akinobu.mita@gmail.com>
+         (sfid-20190502_105944_673346_AEC5725E)
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to print a backtrace or other error message if
-kzalloc(), kmemdup(), or devm_kzalloc() fails, as the memory allocation
-core already takes care of that.
+On Thu, 2019-05-02 at 17:59 +0900, Akinobu Mita wrote:
+> 
+>  static void devcd_del(struct work_struct *wk)
+>  {
+>  	struct devcd_entry *devcd;
+> +	int i;
+>  
+>  	devcd = container_of(wk, struct devcd_entry, del_wk.work);
+>  
+> +	for (i = 0; i < devcd->num_files; i++) {
+> +		device_remove_bin_file(&devcd->devcd_dev,
+> +				       &devcd->files[i].bin_attr);
+> +	}
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/of/unittest.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+Not much value in the braces?
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 2f8e43876c3da70c..a3d31103962b7dd9 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -344,7 +344,7 @@ static void __init of_unittest_check_phandles(void)
- 		}
- 
- 		nh = kzalloc(sizeof(*nh), GFP_KERNEL);
--		if (WARN_ON(!nh))
-+		if (!nh)
- 			return;
- 
- 		nh->np = np;
-@@ -1199,12 +1199,9 @@ static int __init unittest_data_add(void)
- 
- 	/* creating copy */
- 	unittest_data = kmemdup(__dtb_testcases_begin, size, GFP_KERNEL);
--
--	if (!unittest_data) {
--		pr_warn("%s: Failed to allocate memory for unittest_data; "
--			"not running tests\n", __func__);
-+	if (!unittest_data)
- 		return -ENOMEM;
--	}
-+
- 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
- 	if (!unittest_data_node) {
- 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
-@@ -1845,10 +1842,8 @@ static int unittest_i2c_bus_probe(struct platform_device *pdev)
- 	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
- 
- 	std = devm_kzalloc(dev, sizeof(*std), GFP_KERNEL);
--	if (!std) {
--		dev_err(dev, "Failed to allocate unittest i2c data\n");
-+	if (!std)
- 		return -ENOMEM;
--	}
- 
- 	/* link them together */
- 	std->pdev = pdev;
--- 
-2.17.1
+> +static struct devcd_entry *devcd_alloc(struct dev_coredumpm_bulk_data *files,
+> +				       int num_files, gfp_t gfp)
+> +{
+> +	struct devcd_entry *devcd;
+> +	int i;
+> +
+> +	devcd = kzalloc(sizeof(*devcd), gfp);
+> +	if (!devcd)
+> +		return NULL;
+> +
+> +	devcd->files = kcalloc(num_files, sizeof(devcd->files[0]), gfp);
+> +	if (!devcd->files) {
+> +		kfree(devcd);
+> +		return NULL;
+> +	}
+> +	devcd->num_files = num_files;
+
+IMHO it would be nicer to allocate all of this in one struct, i.e. have
+
+struct devcd_entry {
+	...
+	struct devcd_file files[];
+}
+
+(and then use struct_size())
+
+> @@ -309,7 +339,41 @@ void dev_coredumpm(struct device *dev, struct module *owner,
+>   put_module:
+>  	module_put(owner);
+>   free:
+> -	free(data);
+> +	for (i = 0; i < num_files; i++)
+> +		files[i].free(files[i].data);
+> +}
+
+and then you don't need to do all this kind of thing to free
+
+Otherwise looks fine. I'd worry a bit that existing userspace will only
+capture the 'data' file, rather than a tarball of all files, but I guess
+that's something you'd have to work out then when actually desiring to
+use multiple files.
+
+johannes
 
