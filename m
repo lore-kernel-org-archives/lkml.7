@@ -2,103 +2,78 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BA1C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8D7C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04CC520675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C741820675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556809741;
-	bh=8m5xZzVo2eoLyShb7QCAgXR3ghFR1Flg9gAfGdg2WJw=;
+	s=default; t=1556809861;
+	bh=sliCV6k2MNA+3/fwIwgX4ihnR6bXNyMlgAQf4+44PAI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XJaU0LBZEi5bvbpkZ9rzVQq8bYWAjYS9Z8IGiHguYRyQzGKjC5+oIzW+MrvfIbFAV
-	 lHi5rxTiyy0a+RL8q9/1fM6ZzurGfjybsIi3OCAkFLtiBap5EzIy7JMD3ba/ySI2mx
-	 ic48Y0Kqf820zSf6R7KaOzR5DQzRRiWr4aO2oIjc=
+	b=K7atjMOB1saL5xYrsrmOR8EDzC4W81fd3WUut8RhwPBCv/UJ7rC7aYmvUqUru2b/U
+	 rVNYxGqwVj/RtMUB/XMgKtLCV4Y9+bjc8ijR+A6m+aUN3YOCOukqlHSGdkQLSccroz
+	 +gBxlGF7cN7swfQd+AaQro3IZcrGQI86RRGcObfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfEBPJA (ORCPT
+        id S1726390AbfEBPLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:09:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37468 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBPI7 (ORCPT
+        Thu, 2 May 2019 11:11:00 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50772 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfEBPLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:08:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k23so3871717wrd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 08:08:58 -0700 (PDT)
+        Thu, 2 May 2019 11:11:00 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p21so3344276wmc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 08:10:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=1TNCGeuNp8G84cQrEGm4SyYivnE2nikv/Arz+uWr9Jw=;
-        b=USy5IvwgOnGnOL8SWon1LPB1/ICXuB+9vrTlwuLJWWIxXY3xlg2aV0KR7Wy6caebP4
-         dbJ4J7osOT+lmfedLKQJnryv0kBU+rsTJdNgy0cDRPHXe/LnwJQoQXA5FvbvRfVQFuS6
-         sVwDJkL+/lwkqLDZgwSQVASys6vuIxwJBMeIV4DAnfH+Hq53BRK7OsXAVjhTbgM5YA9t
-         zJeLMgevqe+3qOWChIcrnlOfJ+mm8ECn781DZCStkxRLuoN2g83jh9bocnX+I49v+sZl
-         UzLGPuZxYizcvu9C537+7KLjW/4GC9bKCIVxNi3ZnjgXzrXcK3AW6mED72jyugftSP2+
-         KrYg==
+        bh=flomCnRvQzTWWCJrB4+rAX3G4vO3zfGDKQE1f825vKE=;
+        b=KiRnzTyeo6a5EiFg/kLFDBhIISuZz4VbXq9EoJfMxh7UwlM492UNaef9zXonR2WEtJ
+         xyGvakCOopbj8HlyF8ZZhstreB+arSJ4Y9EpzZjcSNJNVcNJkne0/SeqrGmNejnBGzpE
+         lDpqmoNvTODbEiW3kAcThNuY2WnHnJc7c6dPvkM7XdcOF/ZQi4VRPBO1/wtA4N3AzAua
+         vV8CoDwhV69r2uUKven044vPIFLB8WTHgrtEFoH4KI1n2hhyzQ/PEczHJUT4fsNzK12J
+         EMK0VN7V52cJFX7/dLXwWQ7nd9XcjojXQxSNWP1bu6S1PRpfH+cipcCz4rOqlgTdZyPy
+         2wig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1TNCGeuNp8G84cQrEGm4SyYivnE2nikv/Arz+uWr9Jw=;
-        b=PnOqSu9Z3zZ4px8Oa0QZ8ZQDDzPcEx+oNOi0xHXd9wHAbzxIjQ62S0tFlXJDYgayBq
-         IHYGHyYgwdYtUtZjXic1xytH+YNRSrvFF2+ZIQjdvQaZQz5Qev+s5lE7ZjL5+PNaSfwr
-         k1SM6vPv+bQYIF9+A6MbjcYm6zIwF5hWXEF23a/30ZxYcTMMSgqS/t4QkCxAuUa/vYxj
-         BUmBq/ZXrno04ixkOzxzgNeJ8Rvv0CBzi+72o9fitOeRDJknET4hoKBMCPmtgv7qQF3E
-         b5SU2sb6D/jWDr/2JW5eanFCFtyE1q/9uY0H9MNalEvjfrg8H5JzWxvuflm+Hzp9Axya
-         7vgg==
-X-Gm-Message-State: APjAAAWyYa8mVEULuwDJjohk8XG4uR4Fa7JNGxOqJyJhc870eVewghnG
-        /d/YY0rQuJ0BrpuleeoJdOs=
-X-Google-Smtp-Source: APXvYqxzeFSAwlc0RDYWzY3a0mDpTjm74oIp1tg2x4HfHStqFZMXO79HoyEB/0vjt0FC7/B0PTEQ/A==
-X-Received: by 2002:a5d:6b10:: with SMTP id v16mr3178292wrw.294.1556809737491;
-        Thu, 02 May 2019 08:08:57 -0700 (PDT)
+        bh=flomCnRvQzTWWCJrB4+rAX3G4vO3zfGDKQE1f825vKE=;
+        b=nhDQ0FWqO8q0EdJkMFPuY6wwwRIYCZ+Ja9g5AG/81M1hTAWCrmVGHbuqpHKV4orCWs
+         E9MEYiq0gpu72iuZtoyJBENB4n9EHiMEBGlpYwDeZuJ6pFHkDvWkwq4uede2AEWJf3mV
+         6xMEQObfDEZwpAVKYGabZYQY2Sj+QFNfqIKbIf7BrE145AD5dZysbHJTlBwTvVMpcL/B
+         bPN4Pvnk4Tdj4S5WOkwEyvU0rZwHWQcGS7mPQCTMXAN7/KWakgr2oeMm63RX4TehVkG5
+         7fKGPjsmqO2vJ9cUkC+08CAHfQiOaekYewsFnXkzImAwxhlqYJ74/fP3hPhM2UJu6IJm
+         4oFw==
+X-Gm-Message-State: APjAAAWlCPQe7z1AszLy8fWWXRxvlnw33r7ppRnSaJU6xKHA8BHew8F2
+        vgkvYLCBZZGLLxI5q7k2kNE=
+X-Google-Smtp-Source: APXvYqwCRacMF5RySKqgm89ppD1BUPcNAoMggbwkXKiaVBCLf8v9vvqxAmMGfDkdmbGN1QNFZ87GRA==
+X-Received: by 2002:a05:600c:2199:: with SMTP id e25mr1849413wme.36.1556809858617;
+        Thu, 02 May 2019 08:10:58 -0700 (PDT)
 Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id q26sm6013672wmq.25.2019.05.02.08.08.55
+        by smtp.gmail.com with ESMTPSA id z5sm11010774wre.70.2019.05.02.08.10.56
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 08:08:56 -0700 (PDT)
-Date:   Thu, 2 May 2019 17:08:53 +0200
+        Thu, 02 May 2019 08:10:57 -0700 (PDT)
+Date:   Thu, 2 May 2019 17:10:55 +0200
 From:   Ingo Molnar <mingo@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Message-ID: <20190502150853.GA16779@gmail.com>
-References: <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
- <20190426140102.GA4922@mit.edu>
- <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
- <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com>
- <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] sched: Provide a pointer to the valid CPU mask
+Message-ID: <20190502151055.GA50195@gmail.com>
+References: <20190423142636.14347-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
+In-Reply-To: <20190423142636.14347-1-bigeasy@linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -106,55 +81,66 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Andy Lutomirski <luto@kernel.org> wrote:
+* Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-> Or we decide that calling get_random_bytes() is okay with IRQs off and 
-> this all gets a bit simpler.
+> In commit 4b53a3412d66 ("sched/core: Remove the tsk_nr_cpus_allowed()
+> wrapper") the tsk_nr_cpus_allowed() wrapper was removed. There was not
+> much difference in !RT but in RT we used this to implement
+> migrate_disable(). Within a migrate_disable() section the CPU mask is
+> restricted to single CPU while the "normal" CPU mask remains untouched.
+> 
+> As an alternative implementation Ingo suggested to use
+> 	struct task_struct {
+> 		const cpumask_t		*cpus_ptr;
+> 		cpumask_t		cpus_mask;
+>         };
+> with
+> 	t->cpus_allowed_ptr = &t->cpus_allowed;
+> 
+> In -RT we then can switch the cpus_ptr to
+> 	t->cpus_allowed_ptr = &cpumask_of(task_cpu(p));
+> 
+> in a migration disabled region. The rules are simple:
+> - Code that 'uses' ->cpus_allowed would use the pointer.
+> - Code that 'modifies' ->cpus_allowed would use the direct mask.
+> 
+> I proposed this patch as a series earlier and it was shutdown due to the
+> migrate_disable() bits. It has been said that migrate_disable() should
+> only be used with RT and thus not introduced without it.
+> I hereby propose only the mask CPU-bits.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  arch/ia64/kernel/mca.c                     |  2 +-
+>  arch/mips/include/asm/switch_to.h          |  4 +--
+>  arch/mips/kernel/mips-mt-fpaff.c           |  2 +-
+>  arch/mips/kernel/traps.c                   |  6 ++--
+>  arch/powerpc/platforms/cell/spufs/sched.c  |  2 +-
+>  arch/x86/kernel/cpu/resctrl/pseudo_lock.c  |  2 +-
+>  drivers/infiniband/hw/hfi1/affinity.c      |  6 ++--
+>  drivers/infiniband/hw/hfi1/sdma.c          |  3 +-
+>  drivers/infiniband/hw/qib/qib_file_ops.c   |  7 ++--
+>  fs/proc/array.c                            |  4 +--
+>  include/linux/sched.h                      |  5 +--
+>  init/init_task.c                           |  3 +-
+>  kernel/cgroup/cpuset.c                     |  2 +-
+>  kernel/fork.c                              |  2 ++
+>  kernel/sched/core.c                        | 40 +++++++++++-----------
+>  kernel/sched/cpudeadline.c                 |  4 +--
+>  kernel/sched/cpupri.c                      |  4 +--
+>  kernel/sched/deadline.c                    |  6 ++--
+>  kernel/sched/fair.c                        | 34 +++++++++---------
+>  kernel/sched/rt.c                          |  4 +--
+>  kernel/trace/trace_hwlat.c                 |  2 +-
+>  lib/smp_processor_id.c                     |  2 +-
+>  samples/trace_events/trace-events-sample.c |  2 +-
+>  23 files changed, 75 insertions(+), 73 deletions(-)
 
-BTW., before we go down this path any further, is the plan to bind this 
-feature to a real CPU-RNG capability, i.e. to the RDRAND instruction, 
-which excludes a significant group of x86 of CPUs?
-
-Because calling tens of millions of system calls per second will deplete 
-any non-CPU-RNG sources of entropy and will also starve all other users 
-of random numbers, which might have a more legitimate need for 
-randomness, such as the networking stack ...
-
-I.e. I'm really *super sceptical* of this whole plan, as currently 
-formulated.
-
-If we bind it to RDRAND then we shouldn't be using the generic 
-drivers/char/random.c pool *at all*, but just call the darn instruction 
-directly. This is an x86 patch-set after all, right?
-
-Furthermore the following post suggests that RDRAND isn't a per CPU 
-capability, but a core or socket level facility, depending on CPU make:
-
-  https://stackoverflow.com/questions/10484164/what-is-the-latency-and-throughput-of-the-rdrand-instruction-on-ivy-bridge
-
-8 gigabits/sec sounds good throughput in principle, if there's no 
-scalability pathologies with that.
-
-It would also be nice to know whether RDRAND does buffering *internally*, 
-in which case it might be better to buffer as little at the system call 
-level as possible, to allow the hardware RNG buffer to rebuild between 
-system calls.
-
-I.e. I'd suggest to retrieve randomness via a fixed number of RDRAND-r64 
-calls (where '1' is a perfectly valid block size - it should be 
-measured), which random bits are then used as-is for the ~6 bits of 
-system call stack offset. (I'd even suggest 7 bits: that skips a full 
-cache line almost for free and makes the fuzz actually meaningful: no 
-spear attacker will take a 1/128, 0.8% chance to successfully attack a 
-critical system.)
-
-Then those 64*N random bits get buffered and consumed in 5-7 bit chunk, 
-in a super efficient fashion, possibly inlining the fast path, totally 
-outside the flow of the drivers/char/random.c
-
-Any non-CPU source of randomness for system calls and plans to add 
-several extra function calls to every x86 system call is crazy talk I 
-believe...
+Looks good to me in principle - Peter, Thomas, any fundamental 
+objections?
 
 Thanks,
 
