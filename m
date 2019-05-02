@@ -2,188 +2,234 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF99C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94670C04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29A72089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:41:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arQlIKcA"
+	by mail.kernel.org (Postfix) with ESMTP id 69F8E208CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfEBQlJ (ORCPT
+        id S1726666AbfEBQmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:41:09 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:42507 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfEBQlI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:41:08 -0400
-Received: by mail-yw1-f67.google.com with SMTP id y131so2044455ywa.9;
-        Thu, 02 May 2019 09:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/D28fWfWdJzUHVix7BI9GxltmT2+d98lgi6IpUKEDdY=;
-        b=arQlIKcAUjJWaJIanQkq4b6YCMfBofw5/KEuiDDY1PXzfCDdCq0L1S4LYg17H3r/GJ
-         KtVeBDGVfc2sYWpTqBbD82TALlaavOoUXK47P07igxT6b6/7pddxwrMJFWHkofWcCOtK
-         q6Bv6gHJQ1tljOIe/+8VBS0WjOAOngriHIOzW3T3hRBEuoYAGm60X05EFZoekyHpYsFt
-         6IM5pS6qj44SOMDKVHAvQtBYZ02AH/qEd7VHgkJ/zA/gIsu+Is8TjPlYQ3LemGOhy4ls
-         wGCdLbt/LY3YIR5pA/xL7KxAHG06iRD38EDFNJ/uHELjjbXET15zBJGHH4+iHIIdTnoa
-         uh/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/D28fWfWdJzUHVix7BI9GxltmT2+d98lgi6IpUKEDdY=;
-        b=U3m3+FQR/4HXrKU6eBux91OTwYZ1MEcarIu04KjS6mFDvuZmFi32LWYTP+I2X1utgw
-         IlGXYaMCMq3wMzpekgaftfC3rIRGbJqpZo4WU+JRgETcgA6tGRONUUv/HdDd5kr6m9yd
-         I/Z4KDVV/Eyo3ZdXNG5qagv92+nVkuRJBrv8KFcBlCgmcd/VlmNmmwD4AfqzmsUq2AZy
-         fH0tNw5MY91KqYR1XQ6jgNgDnlqPQcJ0j8yORUCgVTv+xYI8z/onxpJvsvOncCjytDo1
-         yd01VcCThuitLnJePHSo2BX9TIQDzXwVBQfKLeH2Mys9V5iVOG5a6ZDs5YTA61j20sgA
-         IG6Q==
-X-Gm-Message-State: APjAAAVGlzQ1P/U/eIPXhoNx+alBHvgpxdReRJMjR6li+ef+TXGuSUjk
-        69Q0ojax6FJLZCd3qOa7BKg=
-X-Google-Smtp-Source: APXvYqx7V+w3u+YGizYvbbKac8Y18Xyfn/LtuVrGdmR9WDJC69XbvcxOprEe9bIvpivGOiwxwrcQ1Q==
-X-Received: by 2002:a81:2d09:: with SMTP id t9mr3853041ywt.436.1556815267145;
-        Thu, 02 May 2019 09:41:07 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
-        by smtp.gmail.com with ESMTPSA id i13sm8755938ywl.22.2019.05.02.09.41.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 09:41:05 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CCC24403AD; Thu,  2 May 2019 12:41:04 -0400 (EDT)
-Date:   Thu, 2 May 2019 12:41:04 -0400
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rich Felker <dalias@libc.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>
-Subject: Re: perf tools build broken after v5.1-rc1
-Message-ID: <20190502164104.GB23984@kernel.org>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A250584C@us01wembx1.internal.synopsys.com>
- <CAK8P3a2JrAApXDws+t=q8AnKFkHJZSox7gsgwW-xEJTfs_mdzw@mail.gmail.com>
- <20190501204115.GF21436@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A2506BF3@us01wembx1.internal.synopsys.com>
- <20190502143618.GH21436@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A2506D04@us01wembx1.internal.synopsys.com>
+        Thu, 2 May 2019 12:42:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:49138 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfEBQmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:42:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30FC8A78;
+        Thu,  2 May 2019 09:42:21 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB5023F5AF;
+        Thu,  2 May 2019 09:42:18 -0700 (PDT)
+From:   James Morse <james.morse@arm.com>
+Subject: Re: [PATCH] edac: sifive: Add EDAC platform driver for SiFive SoCs
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     linux-edac@vger.kernel.org, linux-riscv@lists.infradead.org,
+        palmer@sifive.com, bp@alien8.de, paul.walmsley@sifive.com,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        mchehab@kernel.org, sachin.ghadi@sifive.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com
+References: <1556795761-21630-1-git-send-email-yash.shah@sifive.com>
+ <1556795761-21630-2-git-send-email-yash.shah@sifive.com>
+Message-ID: <4072c812-d3bf-9ad5-2b30-6b2a5060bb55@arm.com>
+Date:   Thu, 2 May 2019 17:42:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A2506D04@us01wembx1.internal.synopsys.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1556795761-21630-2-git-send-email-yash.shah@sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, May 02, 2019 at 04:09:43PM +0000, Vineet Gupta escreveu:
-> On 5/2/19 7:36 AM, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, May 01, 2019 at 09:17:52PM +0000, Vineet Gupta escreveu:
-> >> On 5/1/19 1:41 PM, Arnaldo Carvalho de Melo wrote:
-> >>>> The 1a787fc5ba18ac7 commit copied over the changes for arm64, but
-> >>>> missed all the other architectures changed in c8ce48f06503 and the
-> >>>> related commits.
-> >>> Right, I have a patch copying the missing headers, and that fixed the
-> >>> build with the glibc-based toolchain, but then broke the uCLibc one :-\
-> >  
-> >> tools/perf/util/cloexec.c  #includes <sys/syscall.h> which for glibc includes
-> >> asm/unistd.h
-> >  
-> >> uClibc <sys/syscall.h> OTOH #include <bits/sysnum.h> containign#define __NR_*
-> >> (generated by parsing kernel's unistd). This header does the right thing by
-> >> chekcing for redefs, but in the end we still collide with newly added
-> >> tools/arc/arc/*/**/unistd.h which doesn't have conditional definitions. I'm sure
-> >> this is not an ARC problem, any uClibc build would be affected. Do you have a arm
-> >> uclibc toolchain to test ?
-> > This solves it for fedora:29,
-> > arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install,
-> > arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install and
-> > arc_gnu_2019.03-rc1_prebuilt_glibc_le_archs_linux_install.
-> >
-> > Also ok with:
-> >
-> >   make -C tools/perf build-test
-> >
-> > Now build testing with the full set of containers.
-> >
-> > - Arnaldo
-> >
-> > commit 1931594a680dba28e98b526192dd065430c850c0
-> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date:   Thu May 2 09:26:23 2019 -0400
-> >
-> >     perf tools: Remove needless asm/unistd.h include fixing build in some places
-> >     
-> >     We were including sys/syscall.h and asm/unistd.h, since sys/syscall.h
-> >     includes asm/unistd.h, sometimes this leads to the redefinition of
-> >     defines, breaking the build.
-> >     
-> >     Noticed on ARC with uCLibc.
+Hi Yash,
+
+Sorry for the delay on the earlier version of this - I was trying to work out what happens
+when multiple edac drivers probe based on DT...
+
+
+On 02/05/2019 12:16, Yash Shah wrote:
+> The initial ver of EDAC driver supports:
+> - ECC event monitoring and reporting through the EDAC framework for SiFive
+>   L2 cache controller.
 > 
-> Thx for this Arnaldo.
+
+You probably don't want this bit preserved in the kernel log:
+{
+
+> This patch depends on patch
+> 'RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs'
+> https://lkml.org/lkml/2019/5/2/309
+
+}
+
+> The EDAC driver registers for notifier events from the L2 cache controller
+> driver (arch/riscv/mm/sifive_l2_cache.c) for L2 ECC events
 > 
-> While this takes care of immediate issues, for the long term, are you open to idea
-> of removing the header duplicity.
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
 
-In the beginning we used the kernel headers directly, then, acting on
-advice/complaints from Linus about tooling breaking when changes were
-made in the kernel sources we were using directly, we moved to have
-copies and notice when things change so that we could think about what
-changed and act accordingly, without putting the burden to the kernel
-developers to keep tools/ building, I want to keep it that way.
+(if you put it here, it gets discarded when the patch is applied)
 
-Now you say, validly, that there are bits that are designed to be used
-by userspace, so for those, we should go back to not copying and using
-it direcly, elliminating the duplicity you don't like.
+Having an separately posted dependency like this is tricky, as this code can't be
+used/tested until the other bits are merged.
 
-I don't know, I'm used to the duplicity and the checks, not breaking
-tools even when kernel developers make mistakes in the UAPI headers,
-tools/perf is self container wrt the latest and greatest stuff not
-present in older environments, and the onus is on perf developers to do
-the sync.
 
-This specific issue here happened because I made a mistake, which I
-fixed when reported, now I have three containers for cross building for
-ARC, two versions for the uCLibc based toolchain, one for the glibc one,
-libnuma, elfutils and zlib are cross build there, so should make it less
-likely problems like this will happen again.
+>  MAINTAINERS                |   6 +++
+>  arch/riscv/Kconfig         |   1 +
+>  drivers/edac/Kconfig       |   6 +++
+>  drivers/edac/Makefile      |   1 +
+>  drivers/edac/sifive_edac.c | 121 +++++++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 135 insertions(+)
+>  create mode 100644 drivers/edac/sifive_edac.c
 
-> We could use a "less evil" idiom of copying only the minimal bits (since the sync
-> onus remains one way or the other)
-> e.g. I spotted below in bpf code and also seen in other ah-hoc multi arch projects
- 
-> #ifdef __NR_xx
-> # if defined (__arch_y__)
-> 
-> # elif defined (__arch_z__)
-> 
-> # endif
-> #endif
+> diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
+> new file mode 100644
+> index 0000000..eb7a9b9
+> --- /dev/null
+> +++ b/drivers/edac/sifive_edac.c
+> @@ -0,0 +1,121 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * SiFive Platform EDAC Driver
+> + *
+> + * Copyright (C) 2018-2019 SiFive, Inc.
+> + *
+> + * This driver is partially based on octeon_edac-pc.c
+> + *
+> + */
+> +#include <linux/edac.h>
+> +#include <linux/platform_device.h>
+> +#include "edac_module.h"
+> +
+> +#define DRVNAME "sifive_edac"
+> +
+> +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+> +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
 
-- Arnaldo
+Ideally these would live in some header file.
 
-BTW: since the last report:
 
-  25 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
-  26 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1)
-  27 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2)
-  28 fedora:28                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2)
-  29 fedora:29                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2)
-  30 fedora:30                     : Ok   gcc (GCC) 9.0.1 20190312 (Red Hat 9.0.1-0.10)
-  31 fedora:30-x-ARC-glibc         : Ok   arc-linux-gcc (ARC HS GNU/Linux glibc toolchain 2019.03-rc1) 8.3.1 20190225
-  32 fedora:30-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
+> +struct sifive_edac_priv {
+> +	struct notifier_block notifier;
+> +	struct edac_device_ctl_info *dci;
+> +};
+> +
+> +/**
+> + * EDAC error callback
+> + *
+> + * @event: non-zero if unrecoverable.
+> + */
+> +static
+> +int ecc_err_event(struct notifier_block *this, unsigned long event, void *ptr)
+> +{
+> +	const char *msg = (char *)ptr;
+> +	struct sifive_edac_priv *p;
+> +
+> +	p = container_of(this, struct sifive_edac_priv, notifier);
+> +
+> +	if (event)
+> +		edac_device_handle_ue(p->dci, 0, 0, msg);
+> +	else
+> +		edac_device_handle_ce(p->dci, 0, 0, msg);
+
+This would be easier to read if your SIFIVE_L2_ERR_TYPE_UE were exposed via some header file.
+
+
+> +
+> +	return NOTIFY_STOP;
+
+Your notifier register calls are EXPORT_SYMBOL()d, but Kconfig forbids building this as a
+module, so its not for this driver. If there is another user of this notifier-chain, won't
+NOTIFY_STOP here break it?
+
+
+> +}
+> +
+> +static int ecc_register(struct platform_device *pdev)
+> +{
+> +	struct sifive_edac_priv *p;
+> +
+> +	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
+> +	if (!p)
+> +		return -ENOMEM;
+> +
+> +	p->notifier.notifier_call = ecc_err_event;
+> +	platform_set_drvdata(pdev, p);
+> +
+> +	p->dci = edac_device_alloc_ctl_info(sizeof(*p), "sifive_ecc", 1,
+
+sizeof(*p) here is how much space in struct edac_device_ctl_info you need for private
+storage... but you never touch p->dci->pvt_info, so you aren't using it.
+
+0?
+
+
+> +					    "sifive_ecc", 1, 1, NULL, 0,
+> +					    edac_device_alloc_index());
+> +	if (IS_ERR(p->dci))
+> +		return PTR_ERR(p->dci);
+> +
+> +	p->dci->dev = &pdev->dev;
+> +	p->dci->mod_name = "Sifive ECC Manager";
+> +	p->dci->ctl_name = dev_name(&pdev->dev);
+> +	p->dci->dev_name = dev_name(&pdev->dev);
+> +
+> +	if (edac_device_add_device(p->dci)) {
+> +		dev_err(p->dci->dev, "failed to register with EDAC core\n");
+> +		goto err;
+> +	}
+> +
+> +	register_sifive_l2_error_notifier(&p->notifier);
+> +
+> +	return 0;
+> +
+> +err:
+> +	edac_device_free_ctl_info(p->dci);
+> +
+> +	return -ENXIO;
+> +}
+
+> +struct platform_device *sifive_pdev;
+
+static?
+
+
+> +static int __init sifive_edac_init(void)
+> +{
+> +	int ret;
+> +
+> +	sifive_pdev = platform_device_register_simple(DRVNAME, 0, NULL, 0);
+> +	if (IS_ERR(sifive_pdev))
+> +		return PTR_ERR(sifive_pdev);
+> +
+> +	ret = ecc_register(sifive_pdev);
+> +	if (ret)
+> +		platform_device_unregister(sifive_pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +static void __exit sifive_edac_exit(void)
+> +{
+> +	ecc_unregister(sifive_pdev);
+> +	platform_device_unregister(sifive_pdev);
+> +}
+
+Looks good to me. I think this patch should go with its two dependencies, I'm not sure why
+it got split off...
+
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks,
+
+James
