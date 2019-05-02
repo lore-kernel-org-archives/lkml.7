@@ -2,175 +2,183 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802FAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A7EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589F820873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018D820873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfEBIZL convert rfc822-to-8bit (ORCPT
+        id S1726458AbfEBIZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:25:11 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:53479 "EHLO
+        Thu, 2 May 2019 04:25:31 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:59975 "EHLO
         relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfEBIZK (ORCPT
+        with ESMTP id S1725944AbfEBIZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:25:10 -0400
-Received: from xps13 (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 3B27810001D;
-        Thu,  2 May 2019 08:25:05 +0000 (UTC)
-Date:   Thu, 2 May 2019 10:25:04 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH] mtd: nand: raw: brcmnand: When oops in progress use pio
- and interrupt polling
-Message-ID: <20190502102504.32b45247@xps13>
-In-Reply-To: <1556733121-20133-1-git-send-email-kdasu.kdev@gmail.com>
-References: <1556733121-20133-1-git-send-email-kdasu.kdev@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 2 May 2019 04:25:30 -0400
+Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 879AE100015;
+        Thu,  2 May 2019 08:25:26 +0000 (UTC)
+Date:   Thu, 2 May 2019 10:25:26 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 2/5] ASoC: sun4i-spdif: Add support for H6 SoC
+Message-ID: <20190502082526.c5zo4uzceqzizbxo@flea>
+References: <20190419191730.9437-1-peron.clem@gmail.com>
+ <20190419191730.9437-3-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wid6745ec7776hfu"
+Content-Disposition: inline
+In-Reply-To: <20190419191730.9437-3-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kamal,
 
-Kamal Dasu <kdasu.kdev@gmail.com> wrote on Wed,  1 May 2019 13:46:15
--0400:
+--wid6745ec7776hfu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> If mtd_oops is in progress switch to polling for nand command completion
-
-s/nand/NAND/
-
-> interrupts and use PIO mode wihtout DMA so that the mtd_oops buffer can
-> be completely written in the assinged nand partition.
-
-What about:
-
-"If mtd_oops is in progress, switch to polling during NAND command
-completion instead of relying on DMA/interrupts so that the mtd_oops
-buffer can be completely written in the assigned NAND partition."
-
-> This is needed in
-> cases where the panic does not happen on cpu0 and there is only one online
-> CPU and the panic is not on cpu0.
-
-"This is needed in case the panic does not happen on CPU0 and there is
-only one online CPU."
-
-I am not sure to understand the problem or how this can happen (and
-be a problem). Have you met such issue already or is this purely
-speculative?
-
-> 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+On Fri, Apr 19, 2019 at 09:17:27PM +0200, Cl=E9ment P=E9ron wrote:
+> Allwinner H6 has a different mapping for the fifo register controller.
+>
+> Actually only the fifo tx flush bit is used.
+>
+> Add a new quirk to know the correct fifo tx flush bit.
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 > ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 55 ++++++++++++++++++++++++++++++--
->  1 file changed, 52 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> index 482c6f0..cfbe51a 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -823,6 +823,12 @@ static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
->  	return ctrl->flash_dma_base;
->  }
->  
-> +static inline void disable_flash_dma_xfer(struct brcmnand_controller *ctrl)
-> +{
-> +	if (has_flash_dma(ctrl))
-> +		ctrl->flash_dma_base = 0;
-> +}
+>  sound/soc/sunxi/sun4i-spdif.c | 42 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 36 insertions(+), 6 deletions(-)
+>
+> diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdif.c
+> index b4af4aabead1..19e4bf9caa24 100644
+> --- a/sound/soc/sunxi/sun4i-spdif.c
+> +++ b/sound/soc/sunxi/sun4i-spdif.c
+> @@ -75,6 +75,18 @@
+>  	#define SUN4I_SPDIF_FCTL_RXOM(v)		((v) << 0)
+>  	#define SUN4I_SPDIF_FCTL_RXOM_MASK		GENMASK(1, 0)
+>
+> +#define SUN50I_H6_SPDIF_FCTL (0x14)
+> +	#define SUN50I_H6_SPDIF_FCTL_HUB_EN		BIT(31)
+> +	#define SUN50I_H6_SPDIF_FCTL_FTX		BIT(30)
+> +	#define SUN50I_H6_SPDIF_FCTL_FRX		BIT(29)
+> +	#define SUN50I_H6_SPDIF_FCTL_TXTL(v)		((v) << 12)
+> +	#define SUN50I_H6_SPDIF_FCTL_TXTL_MASK		GENMASK(19, 12)
+> +	#define SUN50I_H6_SPDIF_FCTL_RXTL(v)		((v) << 4)
+> +	#define SUN50I_H6_SPDIF_FCTL_RXTL_MASK		GENMASK(10, 4)
+> +	#define SUN50I_H6_SPDIF_FCTL_TXIM		BIT(2)
+> +	#define SUN50I_H6_SPDIF_FCTL_RXOM(v)		((v) << 0)
+> +	#define SUN50I_H6_SPDIF_FCTL_RXOM_MASK		GENMASK(1, 0)
 > +
->  static inline bool flash_dma_buf_ok(const void *buf)
+>  #define SUN4I_SPDIF_FSTA	(0x18)
+>  	#define SUN4I_SPDIF_FSTA_TXE			BIT(14)
+>  	#define SUN4I_SPDIF_FSTA_TXECNTSHT		(8)
+> @@ -169,16 +181,25 @@ struct sun4i_spdif_dev {
+>  	struct snd_soc_dai_driver cpu_dai_drv;
+>  	struct regmap *regmap;
+>  	struct snd_dmaengine_dai_dma_data dma_params_tx;
+> +	const struct sun4i_spdif_quirks *quirks;
+
+I guess this will generate a warning since the structure hasn't been
+defined yet?
+
+> +};
+> +
+> +struct sun4i_spdif_quirks {
+> +	unsigned int reg_dac_txdata;	/* TX FIFO offset for DMA config */
+> +	unsigned int reg_fctl_ftx;	/* TX FIFO flush bitmask */
+> +	bool has_reset;
+
+You don't really need to move it around, you can just add the
+structure prototype.
+
+If you do want to move it around, then please do so in a separate patch
+
+>  };
+>
+>  static void sun4i_spdif_configure(struct sun4i_spdif_dev *host)
 >  {
->  	return buf && !is_vmalloc_addr(buf) &&
-> @@ -1237,15 +1243,58 @@ static void brcmnand_cmd_ctrl(struct nand_chip *chip, int dat,
->  	/* intentionally left blank */
->  }
->  
-> +static bool is_mtd_oops_in_progress(void)
-> +{
-> +	int i = 0;
+> +	const struct sun4i_spdif_quirks *quirks =3D host->quirks;
 > +
-> +#ifdef CONFIG_MTD_OOPS
-> +	if (oops_in_progress && smp_processor_id()) {
-> +		int cpu = 0;
-> +
-> +		for_each_online_cpu(cpu)
-> +			++i;
-> +	}
-> +#endif
-> +	return i == 1 ? true : false;
+>  	/* soft reset SPDIF */
+>  	regmap_write(host->regmap, SUN4I_SPDIF_CTL, SUN4I_SPDIF_CTL_RESET);
+>
+>  	/* flush TX FIFO */
+>  	regmap_update_bits(host->regmap, SUN4I_SPDIF_FCTL,
+> -			   SUN4I_SPDIF_FCTL_FTX, SUN4I_SPDIF_FCTL_FTX);
+> +			   quirks->reg_fctl_ftx, quirks->reg_fctl_ftx);
+>
+>  	/* clear TX counter */
+>  	regmap_write(host->regmap, SUN4I_SPDIF_TXCNT, 0);
+> @@ -405,22 +426,26 @@ static struct snd_soc_dai_driver sun4i_spdif_dai =
+=3D {
+>  	.name =3D "spdif",
+>  };
+>
+> -struct sun4i_spdif_quirks {
+> -	unsigned int reg_dac_txdata;	/* TX FIFO offset for DMA config */
+> -	bool has_reset;
+> -};
+> -
+>  static const struct sun4i_spdif_quirks sun4i_a10_spdif_quirks =3D {
+>  	.reg_dac_txdata	=3D SUN4I_SPDIF_TXFIFO,
+> +	.reg_fctl_ftx   =3D SUN4I_SPDIF_FCTL_FTX,
+>  };
+>
+>  static const struct sun4i_spdif_quirks sun6i_a31_spdif_quirks =3D {
+>  	.reg_dac_txdata	=3D SUN4I_SPDIF_TXFIFO,
+> +	.reg_fctl_ftx   =3D SUN4I_SPDIF_FCTL_FTX,
+>  	.has_reset	=3D true,
+>  };
+>
+>  static const struct sun4i_spdif_quirks sun8i_h3_spdif_quirks =3D {
+>  	.reg_dac_txdata	=3D SUN8I_SPDIF_TXFIFO,
+> +	.reg_fctl_ftx   =3D SUN4I_SPDIF_FCTL_FTX,
+> +	.has_reset	=3D true,
+> +};
+>
+> +static const struct sun4i_spdif_quirks sun50i_h6_spdif_quirks =3D {
+> +	.reg_dac_txdata	=3D SUN8I_SPDIF_TXFIFO,
+> +	.reg_fctl_ftx   =3D SUN50I_H6_SPDIF_FCTL_FTX,
+>  	.has_reset	=3D true,
 
-I suppose return (i == 1); is enough
+The reg_dac_txdata and reg_fctl_ftx changes here should also be part
+of a separate patch.
 
-> +}
-> +
-> +static bool brcmstb_nand_wait_for_completion(struct nand_chip *chip)
-> +{
-> +	struct brcmnand_host *host = nand_get_controller_data(chip);
-> +	struct brcmnand_controller *ctrl = host->ctrl;
-> +	bool err = false;
-> +	int sts;
-> +
-> +	if (is_mtd_oops_in_progress()) {
-> +		/* Switch to interrupt polling and PIO mode */
-> +		disable_flash_dma_xfer(ctrl);
-> +		sts = bcmnand_ctrl_poll_status(ctrl, NAND_CTRL_RDY |
-> +					       NAND_STATUS_READY,
-> +					       NAND_CTRL_RDY |
-> +					       NAND_STATUS_READY, 0);
-> +		err = (sts < 0) ? true : false;
-> +	} else {
-> +		unsigned long timeo = msecs_to_jiffies(
-> +						NAND_POLL_STATUS_TIMEOUT_MS);
-> +		/* wait for completion interrupt */
-> +		sts = wait_for_completion_timeout(&ctrl->done, timeo);
-> +		err = (sts <= 0) ? true : false;
-> +	}
-> +
-> +	return err;
-> +}
-> +
->  static int brcmnand_waitfunc(struct nand_chip *chip)
->  {
->  	struct brcmnand_host *host = nand_get_controller_data(chip);
->  	struct brcmnand_controller *ctrl = host->ctrl;
-> -	unsigned long timeo = msecs_to_jiffies(100);
-> +	bool err = false;
->  
->  	dev_dbg(ctrl->dev, "wait on native cmd %d\n", ctrl->cmd_pending);
-> -	if (ctrl->cmd_pending &&
-> -			wait_for_completion_timeout(&ctrl->done, timeo) <= 0) {
+Maxime
 
-What about the wait_for_completion_timeout() call in brcmnand_write()?
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> +	if (ctrl->cmd_pending)
-> +		err = brcmstb_nand_wait_for_completion(chip);
-> +
-> +	if (err) {
->  		u32 cmd = brcmnand_read_reg(ctrl, BRCMNAND_CMD_START)
->  					>> brcmnand_cmd_shift(ctrl);  
->  
+--wid6745ec7776hfu
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Miquèl
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMqpdgAKCRDj7w1vZxhR
+xWH5AP0V7WwgeoLzp2Jy/IqaN2gkHTAxsL4rN9x34ddtQ9CO2AEA9tdoCjIN+Pu8
+eH0aZZcT+yIqU0dkGQCUJfpkZdUMZQE=
+=bqND
+-----END PGP SIGNATURE-----
+
+--wid6745ec7776hfu--
