@@ -2,163 +2,155 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7900BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B40C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51BD620B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CB9214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556811024;
+	bh=KlR5qBkFFwyurYyyRxUc8BxwSlXbeqURBub8Huv9Img=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rEGx8q3OhdA7wAetmvkQM3naUbIma9arKNVgeh24pKhgXpF6rTdvRoSyja9VJmeUk
+	 8HCAEbIia4plB9DeciQJnAzg7hs1D/HkjwIbPtH/gPc/GxYfNGfrCrsXrdgrUq3x01
+	 Ij21aVO/Cl+zTWo6MHZRdYX/FIwbR2/bR3TfD0BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfEBPaT (ORCPT
+        id S1728230AbfEBPaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 2 May 2019 11:30:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728674AbfEBPaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 May 2019 11:30:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60952 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728674AbfEBPaQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:16 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42FS3xN120997
-        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:30:14 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s824xbdbm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:30:14 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 2 May 2019 16:30:12 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 16:30:04 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FU3Rx47448134
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 15:30:03 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3ED79A4051;
-        Thu,  2 May 2019 15:30:03 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B33DCA4057;
-        Thu,  2 May 2019 15:29:58 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.205.209])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  2 May 2019 15:29:58 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 02 May 2019 18:29:57 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
-        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        nios2-dev@lists.rocketboards.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 13/15] riscv: switch to generic version of pte allocation
-Date:   Thu,  2 May 2019 18:28:40 +0300
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
-References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050215-0016-0000-0000-00000277A12E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050215-0017-0000-0000-000032D4363D
-Message-Id: <1556810922-20248-14-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=975 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905020103
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 818B620675;
+        Thu,  2 May 2019 15:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556811019;
+        bh=KlR5qBkFFwyurYyyRxUc8BxwSlXbeqURBub8Huv9Img=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FFGwdqzOcEbvdpqTfFidw5gjz/K3AOu9OeaccoDScbUr78qjTQKnp2K4J6rt1ZmQZ
+         VAQkGlobLDU5nfoGYCa6cwBvFXiBA1c0n/XU8CejAM7tqugxUTGVbsk3/U7jCn97qP
+         3NZJz9FxJb6KpPYDb/10/corKGoy08Kok7HFC76w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Frank Pavlic <f.pavlic@kunbus.de>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 044/101] net: ks8851: Delay requesting IRQ until opened
+Date:   Thu,  2 May 2019 17:20:46 +0200
+Message-Id: <20190502143342.638875064@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
+References: <20190502143339.434882399@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only difference between the generic and RISC-V implementation of PTE
-allocation is the usage of __GFP_RETRY_MAYFAIL for both kernel and user
-PTEs and the absence of __GFP_ACCOUNT for the user PTEs.
+[ Upstream commit d268f31552794abf5b6aa5af31021643411f25f5 ]
 
-The conversion to the generic version removes the __GFP_RETRY_MAYFAIL and
-ensures that GFP_ACCOUNT is used for the user PTE allocations.
+The ks8851 driver currently requests the IRQ before registering the
+net_device.  Because the net_device name is used as IRQ name and is
+still "eth%d" when the IRQ is requested, it's impossibe to tell IRQs
+apart if multiple ks8851 chips are present.  Most other drivers delay
+requesting the IRQ until the net_device is opened.  Do the same.
 
-The pte_free() and pte_free_kernel() versions are identical to the generic
-ones and can be simply dropped.
+The driver doesn't enable interrupts on the chip before opening the
+net_device and disables them when closing it, so there doesn't seem to
+be a need to request the IRQ already on probe.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/riscv/include/asm/pgalloc.h | 29 ++---------------------------
- 1 file changed, 2 insertions(+), 27 deletions(-)
+ drivers/net/ethernet/micrel/ks8851.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
-index 94043cf..48f28bb 100644
---- a/arch/riscv/include/asm/pgalloc.h
-+++ b/arch/riscv/include/asm/pgalloc.h
-@@ -18,6 +18,8 @@
- #include <linux/mm.h>
- #include <asm/tlb.h>
- 
-+#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
-+
- static inline void pmd_populate_kernel(struct mm_struct *mm,
- 	pmd_t *pmd, pte_t *pte)
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 1633fa5c709c..c9faec4c5b25 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -785,6 +785,15 @@ static void ks8851_tx_work(struct work_struct *work)
+ static int ks8851_net_open(struct net_device *dev)
  {
-@@ -82,33 +84,6 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+ 	struct ks8851_net *ks = netdev_priv(dev);
++	int ret;
++
++	ret = request_threaded_irq(dev->irq, NULL, ks8851_irq,
++				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++				   dev->name, ks);
++	if (ret < 0) {
++		netdev_err(dev, "failed to get irq\n");
++		return ret;
++	}
  
- #endif /* __PAGETABLE_PMD_FOLDED */
+ 	/* lock the card, even if we may not actually be doing anything
+ 	 * else at the moment */
+@@ -899,6 +908,8 @@ static int ks8851_net_stop(struct net_device *dev)
+ 		dev_kfree_skb(txb);
+ 	}
  
--static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
--{
--	return (pte_t *)__get_free_page(
--		GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
--}
++	free_irq(dev->irq, ks);
++
+ 	return 0;
+ }
+ 
+@@ -1529,14 +1540,6 @@ static int ks8851_probe(struct spi_device *spi)
+ 	ks8851_read_selftest(ks);
+ 	ks8851_init_mac(ks);
+ 
+-	ret = request_threaded_irq(spi->irq, NULL, ks8851_irq,
+-				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+-				   ndev->name, ks);
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "failed to get irq\n");
+-		goto err_irq;
+-	}
 -
--static inline struct page *pte_alloc_one(struct mm_struct *mm)
--{
--	struct page *pte;
+ 	ret = register_netdev(ndev);
+ 	if (ret) {
+ 		dev_err(&spi->dev, "failed to register network device\n");
+@@ -1549,11 +1552,7 @@ static int ks8851_probe(struct spi_device *spi)
+ 
+ 	return 0;
+ 
 -
--	pte = alloc_page(GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
--	if (likely(pte != NULL))
--		pgtable_page_ctor(pte);
--	return pte;
--}
+ err_netdev:
+-	free_irq(ndev->irq, ks);
 -
--static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
--{
--	free_page((unsigned long)pte);
--}
--
--static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
--{
--	pgtable_page_dtor(pte);
--	__free_page(pte);
--}
--
- #define __pte_free_tlb(tlb, pte, buf)   \
- do {                                    \
- 	pgtable_page_dtor(pte);         \
+-err_irq:
+ err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+@@ -1574,7 +1573,6 @@ static int ks8851_remove(struct spi_device *spi)
+ 		dev_info(&spi->dev, "remove\n");
+ 
+ 	unregister_netdev(priv->netdev);
+-	free_irq(spi->irq, priv);
+ 	if (gpio_is_valid(priv->gpio))
+ 		gpio_set_value(priv->gpio, 0);
+ 	regulator_disable(priv->vdd_reg);
 -- 
-2.7.4
+2.19.1
+
+
 
