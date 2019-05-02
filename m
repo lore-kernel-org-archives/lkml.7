@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A326C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E57C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD19C20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C4C21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810920;
-	bh=bX/q7qkLSeJnBfh86gMhWCiYqGgWCc51M0T+sqV7Au0=;
+	s=default; t=1556810923;
+	bh=IrfZlWArowlj4XAYmIMnowmF9GVSWBoqIzTFQcWYWMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vUHcrR3mjZkQqF55C8V+AF3JPhOkEDBXJLaeQjwONqdDK9ooBnRj32ywIeMOp/dio
-	 /ThanYuKMIMfVVVnhm2XuHmcr5JG91FZv+3Q/Pe5GWo+wdwF1QNDYLWmwT0q/vDaMV
-	 mdsQTRP6rkrxubg+J2fLqAYhZXPNbi86eDsjc5JE=
+	b=iaOCOXsv8x3SZfdp1w7sep81BjmBpTI1JyREqrFPjxIUTTjJbrA7QR78ROamY0jy4
+	 TOX2/cfTQN2vxwMCiFGjfbkK1hlY97BaIJBmFhFCpXU8cd5WvTLOYRwwtppgrIzMm1
+	 BCqTReaf4fcFTKABWeK2I0nWhUh7RkSFZDFJ4zzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfEBP2j (ORCPT
+        id S1728277AbfEBP2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:28:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45912 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfEBP2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:28:36 -0400
+        id S1728263AbfEBP2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:28:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDF0020675;
-        Thu,  2 May 2019 15:28:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A18A20449;
+        Thu,  2 May 2019 15:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810916;
-        bh=bX/q7qkLSeJnBfh86gMhWCiYqGgWCc51M0T+sqV7Au0=;
+        s=default; t=1556810919;
+        bh=IrfZlWArowlj4XAYmIMnowmF9GVSWBoqIzTFQcWYWMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dGcsj5LzcdgzPHbQvpiH5pBuSQT5YdyZjjG4RCXwJd/vbTocBLSS7A0h2JQTb510q
-         1UdqP9KwPC63lJnAbXUQRH4gsUbxY/J2p5HKc628ARwD0/nerFLpUNIv2HhrnO+wGu
-         GJnt0Q9/nnT0EjiK7uzzumOFjpdv4IETZNpRClRc=
+        b=oU/hxVKm0mMMvYx4xkhTUhrbaOCk+NZ8yZv63bhcBOKPTlGIcePk9APcUAAd4ML1G
+         0PeDKehRAv8kUwr+dUkhIKse49oEe4z5JlJphW5ovmmKDqFq3wItxxlfDX1OkJUiT8
+         33QIfFohww/dJNZWI9dCJg+KCBVXWP7w9kfa7aMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Richard Leitner <richard.leitner@skidata.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 57/72] usb: usb251xb: fix to avoid potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:21:19 +0200
-Message-Id: <20190502143337.920245890@linuxfoundation.org>
+Subject: [PATCH 4.19 58/72] leds: trigger: netdev: fix refcnt leak on interface rename
+Date:   Thu,  2 May 2019 17:21:20 +0200
+Message-Id: <20190502143337.986275826@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,32 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 41f00e6e9e55546390031996b773e7f3c1d95928 ]
+[ Upstream commit 4cb6560514fa19d556954b88128f3846fee66a03 ]
 
-of_match_device in usb251xb_probe can fail and returns a NULL pointer.
-The patch avoids a potential NULL pointer dereference in this scenario.
+Renaming a netdev-trigger-tracked interface was resulting in an
+unbalanced dev_hold().
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Example:
+> iw phy phy0 interface add foo type __ap
+> echo netdev > trigger
+> echo foo > device_name
+> ip link set foo name bar
+> iw dev bar del
+[  237.355366] unregister_netdevice: waiting for bar to become free. Usage count = 1
+[  247.435362] unregister_netdevice: waiting for bar to become free. Usage count = 1
+[  257.545366] unregister_netdevice: waiting for bar to become free. Usage count = 1
+
+Above problem was caused by trigger checking a dev->name which obviously
+changes after renaming an interface. It meant missing all further events
+including the NETDEV_UNREGISTER which is required for calling dev_put().
+
+This change fixes that by:
+1) Comparing device struct *address* for notification-filtering purposes
+2) Dropping unneeded NETDEV_CHANGENAME code (no behavior change)
+
+Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/misc/usb251xb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/leds/trigger/ledtrig-netdev.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index a6efb9a72939..5f7734c729b1 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -601,7 +601,7 @@ static int usb251xb_probe(struct usb251xb *hub)
- 							   dev);
- 	int err;
+diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+index 3dd3ed46d473..167a94c02d05 100644
+--- a/drivers/leds/trigger/ledtrig-netdev.c
++++ b/drivers/leds/trigger/ledtrig-netdev.c
+@@ -301,11 +301,11 @@ static int netdev_trig_notify(struct notifier_block *nb,
+ 		container_of(nb, struct led_netdev_data, notifier);
  
--	if (np) {
-+	if (np && of_id) {
- 		err = usb251xb_get_ofdata(hub,
- 					  (struct usb251xb_data *)of_id->data);
- 		if (err) {
+ 	if (evt != NETDEV_UP && evt != NETDEV_DOWN && evt != NETDEV_CHANGE
+-	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER
+-	    && evt != NETDEV_CHANGENAME)
++	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER)
+ 		return NOTIFY_DONE;
+ 
+-	if (strcmp(dev->name, trigger_data->device_name))
++	if (!(dev == trigger_data->net_dev ||
++	      (evt == NETDEV_REGISTER && !strcmp(dev->name, trigger_data->device_name))))
+ 		return NOTIFY_DONE;
+ 
+ 	cancel_delayed_work_sync(&trigger_data->work);
+@@ -320,12 +320,9 @@ static int netdev_trig_notify(struct notifier_block *nb,
+ 		dev_hold(dev);
+ 		trigger_data->net_dev = dev;
+ 		break;
+-	case NETDEV_CHANGENAME:
+ 	case NETDEV_UNREGISTER:
+-		if (trigger_data->net_dev) {
+-			dev_put(trigger_data->net_dev);
+-			trigger_data->net_dev = NULL;
+-		}
++		dev_put(trigger_data->net_dev);
++		trigger_data->net_dev = NULL;
+ 		break;
+ 	case NETDEV_UP:
+ 	case NETDEV_CHANGE:
 -- 
 2.19.1
 
