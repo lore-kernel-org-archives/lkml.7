@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A969BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0714C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7853F216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FF520449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811482;
-	bh=kZs4w61Wm8GmupGl4Zl/dizDqciv2pjqxJ5g7Jr4eVc=;
+	s=default; t=1556811495;
+	bh=eN6soJ3TpOF/EPFMS28aOsh3zauJV4nUZIBAaAxAP9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xdm1udLx3aWp05jgCVCqiimI0nWGpxVQliBEL4DvCrJ1ZbAulyAC7bS6YsTF5XJoC
-	 7zSyKXkt0XNZMKnT25slxij8UoWv2ctrVQtG9wR+bqnPbKdhD1Fizh7ePl72MhTifj
-	 4unBqy052zI/SVKTXofvpzIoXBWysLkqDywjD24c=
+	b=nSJDO7x24r9KJlHhh6xyulV2r0U6j010ScRhoGshQnTdZnTBCcGi/V3f4bSYRAb8B
+	 M+Y4nVgrK4X7vkK9Mbg7i3anejd1HoelFFeXnovukW3JEhGUNpkJfUjqrx4tm4R56U
+	 NlaUlWmgJMif2AK3OHfjg/RIoQqCJjiLHjTHZ6hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfEBPiB (ORCPT
+        id S1728334AbfEBPiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:38:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:38:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728647AbfEBPaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:08 -0400
+        id S1728626AbfEBPaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB462214DA;
-        Thu,  2 May 2019 15:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F9420C01;
+        Thu,  2 May 2019 15:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811007;
-        bh=kZs4w61Wm8GmupGl4Zl/dizDqciv2pjqxJ5g7Jr4eVc=;
+        s=default; t=1556811004;
+        bh=eN6soJ3TpOF/EPFMS28aOsh3zauJV4nUZIBAaAxAP9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFczbivE7hIHqC0tW7KAP9u9P/YG7CyC+GF0iiAAc9pkNM/EdJAZ7IPYuEjxyB9C8
-         SoPlSBaT2uacH6ebB5t0KbYEYaDxb0ZY2VBtJWia4Jh4kYifSeqtAYP8pLkg/ISMJi
-         YJexW5O7GiIDd4z35HSSf0e94DauRO3d3icFC30k=
+        b=LDSHABrGCUP9h/JwsmV7ukQN+JaA9U3TkyQb5AVl1UB8Y++3kUhIjI3uXnS37O/PE
+         UMNRJCs9n2XWtTX7kPFAKFKrg415YI+9Dliz3tHCTGDgnz4zKcH4PTNHfk79r+U3+2
+         pAwD4W6pMkN7kctoWA9EO3zGcQ/8F52/kQx8AHgg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Stefan Christ <s.christ@phytec.de>,
+        Christian Hemp <c.hemp@phytec.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 040/101] i2c: i801: Add support for Intel Comet Lake
-Date:   Thu,  2 May 2019 17:20:42 +0200
-Message-Id: <20190502143342.378307833@linuxfoundation.org>
+Subject: [PATCH 5.0 039/101] ARM: dts: pfla02: increase phy reset duration
+Date:   Thu,  2 May 2019 17:20:41 +0200
+Message-Id: <20190502143342.307911368@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -62,80 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5cd1c56c42beb6d228cc8d4373fdc5f5ec78a5ad ]
+[ Upstream commit 032f85c9360fb1a08385c584c2c4ed114b33c260 ]
 
-Add PCI ID for Intel Comet Lake PCH.
+Increase the reset duration to ensure correct phy functionality. The
+reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
+pfla02: use long enough reset for ethernet phy"):
 
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
+  small percentage of modules have 'transmission timeouts' errors like
+
+  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
+  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
+  eth0: 1000Mbps full duplex link detected
+  eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+
+Cc: Stefan Christ <s.christ@phytec.de>
+Cc: Christian Hemp <c.hemp@phytec.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- Documentation/i2c/busses/i2c-i801 | 1 +
- drivers/i2c/busses/Kconfig        | 1 +
- drivers/i2c/busses/i2c-i801.c     | 4 ++++
- 3 files changed, 6 insertions(+)
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/i2c/busses/i2c-i801 b/Documentation/i2c/busses/i2c-i801
-index d1ee484a787d..ee9984f35868 100644
---- a/Documentation/i2c/busses/i2c-i801
-+++ b/Documentation/i2c/busses/i2c-i801
-@@ -36,6 +36,7 @@ Supported adapters:
-   * Intel Cannon Lake (PCH)
-   * Intel Cedar Fork (PCH)
-   * Intel Ice Lake (PCH)
-+  * Intel Comet Lake (PCH)
-    Datasheets: Publicly available at the Intel website
- 
- On Intel Patsburg and later chipsets, both the normal host SMBus controller
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index f2c681971201..f8979abb9a19 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -131,6 +131,7 @@ config I2C_I801
- 	    Cannon Lake (PCH)
- 	    Cedar Fork (PCH)
- 	    Ice Lake (PCH)
-+	    Comet Lake (PCH)
- 
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-i801.
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index c91e145ef5a5..679c6c41f64b 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -71,6 +71,7 @@
-  * Cannon Lake-LP (PCH)		0x9da3	32	hard	yes	yes	yes
-  * Cedar Fork (PCH)		0x18df	32	hard	yes	yes	yes
-  * Ice Lake-LP (PCH)		0x34a3	32	hard	yes	yes	yes
-+ * Comet Lake (PCH)		0x02a3	32	hard	yes	yes	yes
-  *
-  * Features supported by this driver:
-  * Software PEC				no
-@@ -240,6 +241,7 @@
- #define PCI_DEVICE_ID_INTEL_LEWISBURG_SSKU_SMBUS	0xa223
- #define PCI_DEVICE_ID_INTEL_KABYLAKE_PCH_H_SMBUS	0xa2a3
- #define PCI_DEVICE_ID_INTEL_CANNONLAKE_H_SMBUS		0xa323
-+#define PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS		0x02a3
- 
- struct i801_mux_config {
- 	char *gpio_chip;
-@@ -1038,6 +1040,7 @@ static const struct pci_device_id i801_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CANNONLAKE_H_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CANNONLAKE_LP_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS) },
- 	{ 0, }
- };
- 
-@@ -1534,6 +1537,7 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	case PCI_DEVICE_ID_INTEL_DNV_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_KABYLAKE_PCH_H_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS:
-+	case PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS:
- 		priv->features |= FEATURE_I2C_BLOCK_READ;
- 		priv->features |= FEATURE_IRQ;
- 		priv->features |= FEATURE_SMBUS_PEC;
+diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+index 1b50b01e9bac..65d03c5d409b 100644
+--- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+@@ -90,6 +90,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+ 	phy-mode = "rgmii";
++	phy-reset-duration = <10>; /* in msecs */
+ 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
+ 	phy-supply = <&vdd_eth_io_reg>;
+ 	status = "disabled";
 -- 
 2.19.1
 
