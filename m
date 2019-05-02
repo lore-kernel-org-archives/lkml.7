@@ -2,132 +2,161 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBB8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABC5C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E00921670
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556814773;
-	bh=McrNd6tEs6nZVZHZJyUQ93Q3IzXi+DcF9byW0dFV23Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pPjDOqLd23hF1XdEkQ0P8k6jyzLXKv6ZN8Ijj48L9egTlf/kvZhE18kYD0ByzD7xk
-	 FvLdMbYuGCkwC0CnbLzpwIlhtmwiHmzkdEc+kleiW5WwC46o3Ht2q6VLjgMypxgqdL
-	 Ma5HhgFsQB2p9hWktnw8UAkJ0ETJcSd+foIPLypE=
+	by mail.kernel.org (Postfix) with ESMTP id 40B5020652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfEBQcw (ORCPT
+        id S1726690AbfEBQd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:32:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54292 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 12:33:26 -0400
+Received: from mga12.intel.com ([192.55.52.136]:6989 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbfEBQcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:32:51 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EE40217D7
-        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 16:32:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556814770;
-        bh=McrNd6tEs6nZVZHZJyUQ93Q3IzXi+DcF9byW0dFV23Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TWKFY4hGY9y3ZYl2DSaHLJTt/+JyEyAs0Lero670lxqNEbI6IKErvi+lHR7HU9CNz
-         MZ27AOQPjy40S1ebGWgqL2/vxA5Y1SBgSFE+FtP/ofczkC17LnbXC3oEpaO2fZh3hV
-         fRABWvih5quF6vjzL0jRnEsXy2YEYlKuy4/KxYdI=
-Received: by mail-wm1-f42.google.com with SMTP id y197so3470483wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 09:32:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAUO4JKynpwRS/vOIQhSyPBkJFSPlIgEFkb7igu1gu3h4YaJrIRl
-        6Jlksui2qo9nJBEDPwy7k4q2q4FZj+Q+sQTU8oLIdg==
-X-Google-Smtp-Source: APXvYqyyVb0mAXndRwfcJvxzuSkpl2wEeWNiGvHb9CLah9bx/jCba8GeoyQekgioeB/zcw/EWZLLsbHAXwmx/9ydGS4=
-X-Received: by 2002:a1c:9689:: with SMTP id y131mr3220276wmd.74.1556814768564;
- Thu, 02 May 2019 09:32:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
- <20190426140102.GA4922@mit.edu> <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net> <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com> <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
- <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com> <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
- <20190502150853.GA16779@gmail.com>
-In-Reply-To: <20190502150853.GA16779@gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 2 May 2019 09:32:35 -0700
-X-Gmail-Original-Message-ID: <CALCETrVBXZNAKGRXm0_txKGjqKnjx30Eb05hesye8M50D4A8Mw@mail.gmail.com>
-Message-ID: <CALCETrVBXZNAKGRXm0_txKGjqKnjx30Eb05hesye8M50D4A8Mw@mail.gmail.com>
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        id S1726451AbfEBQd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:33:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 09:33:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,422,1549958400"; 
+   d="scan'208";a="296427717"
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by orsmga004.jf.intel.com with ESMTP; 02 May 2019 09:33:23 -0700
+Message-ID: <91611b9e159799bbf603b65cf7bb6b37dd81b075.camel@intel.com>
+Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
         Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org
+Date:   Thu, 02 May 2019 09:25:56 -0700
+In-Reply-To: <20190502161424.GQ3567@e103592.cambridge.arm.com>
+References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
+         <20190502111003.GO3567@e103592.cambridge.arm.com>
+         <5b2c6cee345e00182e97842ae90c02cdcd830135.camel@intel.com>
+         <20190502161424.GQ3567@e103592.cambridge.arm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 8:09 AM Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Andy Lutomirski <luto@kernel.org> wrote:
->
-> > Or we decide that calling get_random_bytes() is okay with IRQs off and
-> > this all gets a bit simpler.
->
-> BTW., before we go down this path any further, is the plan to bind this
-> feature to a real CPU-RNG capability, i.e. to the RDRAND instruction,
-> which excludes a significant group of x86 of CPUs?
+On Thu, 2019-05-02 at 17:14 +0100, Dave Martin wrote:
+> On Thu, May 02, 2019 at 08:47:06AM -0700, Yu-cheng Yu wrote:
+> > On Thu, 2019-05-02 at 12:10 +0100, Dave Martin wrote:
+> > > On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
+> > > > An ELF file's .note.gnu.property indicates features the executable file
+> > > > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+> > > > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+> > > > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
+> > 
+> > [...]
+> > > A couple of questions before I look in more detail:
+> > > 
+> > > 1) Can we rely on PT_GNU_PROPERTY being present in the phdrs to describe
+> > > the NT_GNU_PROPERTY_TYPE_0 note?  If so, we can avoid trying to parse
+> > > irrelevant PT_NOTE segments.
+> > 
+> > Some older linkers can create multiples of NT_GNU_PROPERTY_TYPE_0.  The code
+> > scans all PT_NOTE segments to ensure there is only one
+> > NT_GNU_PROPERTY_TYPE_0. 
+> > If there are multiples, then all are considered invalid.
+> 
+> I'm concerned that in the arm64 case we would waste some effort by
+> scanning multiple notes.
+> 
+> Could we do something like iterating over the phdrs, and if we find
+> exactly one PT_GNU_PROPERTY then use that, else fall back to scanning
+> all PT_NOTEs?
 
-It's kind of the opposite.  Elena benchmarked it, and RDRAND's
-performance was truly awful here.
+That makes sense to me, but the concern is that we don't know the
+PT_GNU_PROPERTY the only one.  This probably needs to be discussed with more
+people.
 
->
-> Because calling tens of millions of system calls per second will deplete
-> any non-CPU-RNG sources of entropy and will also starve all other users
-> of random numbers, which might have a more legitimate need for
-> randomness, such as the networking stack ...
+> > > 2) Are there standard types for things like the program property header?
+> > > If not, can we add something in elf.h?  We should try to coordinate with
+> > > libc on that.  Something like
+> > > 
+> > > typedef __u32 Elf_Word;
+> > > 
+> > > typedef struct {
+> > > 	Elf_Word pr_type;
+> > > 	Elf_Word pr_datasz;
+> > > } Elf_Gnu_Prophdr;
+> > > 
+> > > (i.e., just the header part from [1], with a more specific name -- which
+> > > I just made up).
+> > 
+> > Yes, I will fix that.
+> > 
+> > [...]
+> > > 3) It looks like we have to go and re-parse all the notes for every
+> > > property requested by the arch code.
+> > 
+> > As explained above, it is necessary to scan all PT_NOTE segments.  But there
+> > should be only one NT_GNU_PROPERTY_TYPE_0 in an ELF file.  Once that is
+> > found,
+> > perhaps we can store it somewhere, or call into the arch code as you
+> > mentioned
+> > below.  I will look into that.
+> 
+> Just to get something working on arm64, I'm working on some hacks that
+> move things around a bit -- I'll post when I have something.
+> 
+> Did you have any view on my other point, below?
 
-There's no such thing as "starving" other users in this context.  The
-current core RNG code uses a cryptographic RNG that has no limits on
-the number of bytes extracted.  If you want the entropy-accounted
-stuff, you can use /dev/random, which is separate.
+That should work.  I will also make some changes for that.
 
-> 8 gigabits/sec sounds good throughput in principle, if there's no
-> scalability pathologies with that.
-
-The latency is horrible.
-
->
-> It would also be nice to know whether RDRAND does buffering *internally*,
-
-Not in a useful way :(
-
-> Any non-CPU source of randomness for system calls and plans to add
-> several extra function calls to every x86 system call is crazy talk I
-> believe...
-
-I think that, in practice, the only real downside to enabling this
-thing will be the jitter in syscall times. Although we could decide
-that the benefit is a bit dubious and the whole thing isn't worth it.
-But it will definitely be optional.
+> 
+> Cheers
+> ---Dave
+> 
+> > > For now there is only one property requested anyway, so this is probably
+> > > not too bad.  But could we flip things around so that we have some
+> > > CONFIG_ARCH_WANTS_ELF_GNU_PROPERTY (say), and have the ELF core code
+> > > call into the arch backend for each property found?
+> > > 
+> > > The arch could provide some hook
+> > > 
+> > > 	int arch_elf_has_gnu_property(const Elf_Gnu_Prophdr *prop,
+> > > 					const void *data);
+> > > 
+> > > to consume the properties as they are found.
+> > > 
+> > > This would effectively replace the arch_setup_property() hook you
+> > > currently have.
+> > > 
+> > > Cheers
+> > > ---Dave
+> > > 
+> > > [1] https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI
