@@ -2,63 +2,101 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7F3C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B166C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413AA2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9AB2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UGYzq+Jt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfEBIqW (ORCPT
+        id S1726482AbfEBIrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:46:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35208 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725951AbfEBIqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:46:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 955F0AED4;
-        Thu,  2 May 2019 08:46:20 +0000 (UTC)
-Date:   Thu, 2 May 2019 10:46:20 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/5] livepatch: Fix kobject memleak
-Message-ID: <20190502084620.vrtalu473z6wwo22@pathway.suse.cz>
-References: <20190502023142.20139-1-tobin@kernel.org>
- <20190502023142.20139-2-tobin@kernel.org>
+        Thu, 2 May 2019 04:47:55 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55252 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfEBIrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 04:47:55 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x428lfoD048401;
+        Thu, 2 May 2019 03:47:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556786861;
+        bh=ljZGVs3PL5c7yipHfJeHIKWuZiAOsmyLXizubexGNtw=;
+        h=From:To:CC:Subject:Date;
+        b=UGYzq+JtX4bOHSTZQt37bQLdLJCVahH1rn8CBzy5FTbwpEBfuKiRjWtZ0IYVfgqTL
+         GqbLQ2BhbDeY0/3jKdBva/CCEboHt6mjnPpRgjh6pFR5ati+b1TMJEE6bXLjLrAvJI
+         FbhvqRzY4ZXo8A6wZlQEO6dAT8ug/GEAs5ZrHkh8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x428lflG099312
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 May 2019 03:47:41 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 2 May
+ 2019 03:47:41 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 2 May 2019 03:47:41 -0500
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x428lbWD015763;
+        Thu, 2 May 2019 03:47:38 -0500
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
+        <bcousson@baylibre.com>, <ulf.hansson@linaro.org>,
+        <adrian.hunter@intel.com>
+Subject: [PATCH] ARM: dts: am57xx-idk: Remove support for voltage switching for SD card
+Date:   Thu, 2 May 2019 14:17:48 +0530
+Message-ID: <20190502084748.22518-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502023142.20139-2-tobin@kernel.org>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-05-02 12:31:38, Tobin C. Harding wrote:
-> Currently error return from kobject_init_and_add() is not followed by a
-> call to kobject_put().  This means there is a memory leak.
+If UHS speed modes are enabled, a compatible SD card switches down to
+1.8V during enumeration. If after this a software reboot/crash takes
+place and on-chip ROM tries to enumerate the SD card, the difference in
+IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
 
-Strictly speaking there is no real memory leak in this case because
-the structures are either static and or freed later via
-klp_free*() functions.
+The fix for this is to have support for power cycling the card in
+hardware (with a PORz/soft-reset line causing a power cycle of the
+card). Since am571x-, am572x- and am574x-idk don't have this
+capability, disable voltage switching for these boards.
 
-That said, we could do the kobject manipulation a more clear way
-as discussed in the 5th patch.
+The major effect of this is that the maximum supported speed
+mode is now high speed(50 MHz) down from SDR104(200 MHz).
 
-Anyway, thanks for cleaning this.
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ arch/arm/boot/dts/am57xx-idk-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Best Regards,
-Petr
+diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+index f7bd26458915..42e433da79ec 100644
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -420,6 +420,7 @@
+ 	vqmmc-supply = <&ldo1_reg>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
++	no-1-8-v;
+ };
+ 
+ &mmc2 {
+-- 
+2.19.2
+
