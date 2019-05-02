@@ -2,227 +2,147 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B33C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CBCC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02A220675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="WAaGpz9O";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gm9r/FbU"
+	by mail.kernel.org (Postfix) with ESMTP id 9116320651
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfEBIT5 (ORCPT
+        id S1726377AbfEBIUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:19:57 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:38111 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfEBIT5 (ORCPT
+        Thu, 2 May 2019 04:20:19 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42849 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfEBIUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:19:57 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id C43F824313;
-        Thu,  2 May 2019 04:19:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 02 May 2019 04:19:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=mkM5aQJWqSkC3eU/JlI26Sj/q1O
-        0J2IG2bfNM7kDS3o=; b=WAaGpz9OGoYL4AsUVHtlWNmeCH1m2+ne+vWP7R0cXq4
-        d+tK8WGAdnrIP8Y52yGIJ3XowaYfOFlJnPqCW1quJOAQqld1kTO37nDxjPbFqoNR
-        fhKaiIZ7hbxdEqJ+yGo2SBTNY/x9pmU0OLOqTFJ8KfmlrNIC28iMJxLibFJN6a+Z
-        R+x4otZkAaIcuYWGPJEaSsGaQuPL+YzFNC+0x+wgZbyDJoR4K/CTuZb+UYj++sfJ
-        pZCJ4onlRERkti1SHnze1CSwog+9ytQM6ma42hpV8gwvuLx3A7t+HBhR6TxtMlis
-        u3t3KFJeNkI3Cb0vVGq0fulARmg8s4qyhFJTJKXC61Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=mkM5aQ
-        JWqSkC3eU/JlI26Sj/q1O0J2IG2bfNM7kDS3o=; b=gm9r/FbUf1RqQWRhayxwvL
-        RpnVJ6V1EqtjAUGtQzpGV6CkjNh+V0FRecwgA5RcJhAZxJvxZAFxxssgxK5OIgpX
-        ftzUBZPz/b+mLG118FVe3FIeYOpC+EGA3T/vPQ1CVgHoLsDhSA8d04bv3onk7Y8N
-        dsUTiNa/tEtA3FDH3Aac2Z7eN0aVIpC5ocJrgcwPzJ0djjyMvZbEEAkzVpBIMstn
-        UAJ8F1erRhPP28jS+MOg1PjUzk618NsMO2NI4VxfznzUEmg6dMBEKhSwcO/1PKr4
-        tFbRH1DaIraaqaTl8bkt3tgBywVZQbZx/Aogw3a2DmX43PNCh5jDmNNetYlT1NGw
-        ==
-X-ME-Sender: <xms:KqjKXBCfpd2YM7oZJd7aMu21moOxZIz0xDkSsFkaJ2UMHaSNGTN9ZQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieelgddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeftddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:K6jKXPr5NB1oFFNEIxxAfpZEPllE6S3r8gxK5RDI27B_YJcT4pDvNg>
-    <xmx:K6jKXKZpc0HSZE6ZHEuGOySNK7TokJTQ4dvm9cm4MrpV801le8wqAw>
-    <xmx:K6jKXABfDHy45ZcW9tklhsT2w6TIS_Qc-rzJQ-7SoHV9DUxZDS6bGQ>
-    <xmx:K6jKXIcUAY3es7cXRI8he4PIO_YRSNHjgrXzk8aBwlrSmFPt6D3LxA>
-Received: from localhost (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 30C34E4173;
-        Thu,  2 May 2019 04:19:53 -0400 (EDT)
-Date:   Thu, 2 May 2019 18:19:18 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, cl@linux.com,
-        tycho@tycho.ws, willy@infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: memleak around kobject_init_and_add()
-Message-ID: <20190502081918.GA18363@eros.localdomain>
-References: <20190427081330.GA26788@eros.localdomain>
- <20190427192809.GA8454@kroah.com>
- <20190501215616.GD18827@eros.localdomain>
- <20190502071742.GC16247@kroah.com>
- <20190502072808.GA14064@kroah.com>
+        Thu, 2 May 2019 04:20:19 -0400
+Received: by mail-ed1-f65.google.com with SMTP id l25so1309335eda.9;
+        Thu, 02 May 2019 01:20:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bCBHjKNMP3z5CUP9giN1XdvXNXR0qXaBWIcQDT1yIFw=;
+        b=aaLW+J7U4U7zH5t3HJM4mADV2+GChTUW2rfyx7xGf96FzxVIPOCrDhXLUSVmOThJsz
+         oZuB/oiFYPUybJOYu8wGeksU9HcSpA/OIU/+1BSvcN9wRiiNRkqCpr2y/OZ3i+KtTSxD
+         OjpmWoVKPPZYNXjKN3cC7im1mhvnbJxZS17uk+KiizISjBYsEhQuaCBwZLMywgwrF7Ln
+         A1EOHuyW3aix1NLDZmKDGzzatiaxBqEXTnIwWJj8BIj+OtFkEtB3GPqoCh+m/FqRLjbY
+         mQEskbIklg9NdRWVp8lOob9dz5hvlJ9HCYLWQbR1XDBP0irss8xI1CwkzwE64LMdLJ7z
+         l1fA==
+X-Gm-Message-State: APjAAAXln7W3H++QxfPT49FveXMzKrCHjT3UVuueT7mxUEvow7DsB1KD
+        Rt5IfcOJRddmywUmDNqeUeJ6EOo9fZ4=
+X-Google-Smtp-Source: APXvYqzLYQ66yW2CWe56oyMwFeI62kpD26Dq6Zh+jxI7QGVzIIlH2PzIHQCqCNaQXpH4Uqh3cnF0Fg==
+X-Received: by 2002:a17:906:7201:: with SMTP id m1mr1103925ejk.96.1556785216221;
+        Thu, 02 May 2019 01:20:16 -0700 (PDT)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
+        by smtp.gmail.com with ESMTPSA id m7sm2608518edd.64.2019.05.02.01.20.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 01:20:15 -0700 (PDT)
+Received: by mail-wr1-f47.google.com with SMTP id c5so1991345wrs.11;
+        Thu, 02 May 2019 01:20:15 -0700 (PDT)
+X-Received: by 2002:a5d:4ec6:: with SMTP id s6mr1637882wrv.87.1556785214880;
+ Thu, 02 May 2019 01:20:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502072808.GA14064@kroah.com>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
+ <1556040365-10913-8-git-send-email-pgreco@centosproject.org> <20190502074103.vtuxmsl55u3ygyvl@flea>
+In-Reply-To: <20190502074103.vtuxmsl55u3ygyvl@flea>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Thu, 2 May 2019 16:20:02 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65eaRLRkJ2hvoOc1Cr=ncSeqy7Tq2pzt4rk4uiWQeag2w@mail.gmail.com>
+Message-ID: <CAGb2v65eaRLRkJ2hvoOc1Cr=ncSeqy7Tq2pzt4rk4uiWQeag2w@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v5 7/7] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Add Bluetooth device node
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Pablo Greco <pgreco@centosproject.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 09:28:08AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 02, 2019 at 09:17:42AM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, May 02, 2019 at 07:56:16AM +1000, Tobin C. Harding wrote:
-> > > On Sat, Apr 27, 2019 at 09:28:09PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Sat, Apr 27, 2019 at 06:13:30PM +1000, Tobin C. Harding wrote:
-> > > > > (Note at bottom on reasons for 'To' list 'Cc' list)
-> > > > > 
-> > > > > Hi,
-> > > > > 
-> > > > > kobject_init_and_add() seems to be routinely misused.  A failed call to this
-> > > > > function requires a call to kobject_put() otherwise we leak memory.
-> > > > > 
-> > > > > Examples memleaks can be seen in:
-> > > > > 
-> > > > > 	mm/slub.c
-> > > > > 	fs/btrfs/sysfs.c
-> > > > > 	fs/xfs/xfs_sysfs.h: xfs_sysfs_init()
-> > > > > 
-> > > > >  Question: Do we fix the misuse or fix the API?
-> > > > 
-> > > > Fix the misuse.
-> > > > 
-> > > > > $ git grep kobject_init_and_add | wc -l
-> > > > > 117
-> > > > > 
-> > > > > Either way, we will have to go through all 117 call sites and check them.
-> > > > 
-> > > > Yes.  Same for other functions like device_add(), that is the "pattern"
-> > > > those users must follow.
-> > > > 
-> > > > > I
-> > > > > don't mind fixing them all but I don't want to do it twice because I chose the
-> > > > > wrong option.  Reaching out to those more experienced for a suggestion please.
-> > > > > 
-> > > > > Fix the API
-> > > > > -----------
-> > > > > 
-> > > > > Typically init functions do not require cleanup if they fail, this argument
-> > > > > leads to this patch
-> > > > > 
-> > > > > diff --git a/lib/kobject.c b/lib/kobject.c
-> > > > > index aa89edcd2b63..62328054bbd0 100644
-> > > > > --- a/lib/kobject.c
-> > > > > +++ b/lib/kobject.c
-> > > > > @@ -453,6 +453,9 @@ int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,
-> > > > >  	retval = kobject_add_varg(kobj, parent, fmt, args);
-> > > > >  	va_end(args);
-> > > > >  
-> > > > > +	if (retval)
-> > > > > +		kobject_put(kobj);
-> > > > > +
-> > > > >  	return retval;
-> > > > >  }
-> > > > >  EXPORT_SYMBOL_GPL(kobject_init_and_add);
-> > > > 
-> > > > I would _love_ to do this, but realize what a kobject really is.
-> > > > 
-> > > > It's just a "base object" that is embedded inside of some other object.
-> > > > The kobject core has no idea what is going on outside of itself.  If the
-> > > > kobject_init_and_add() function fails, it can NOT drop the last
-> > > > reference on itself, as that would cause the memory owned by the _WHOLE_
-> > > > structure the kobject is embedded in, to be freed.
-> > > > 
-> > > > And the kobject core can not "know" that something else needed to be
-> > > > done _before_ that memory could be freed.  What if the larger structure
-> > > > needs to have some other destructor called on it first?  What if
-> > > > some other api initialization needs to be torn down.
-> > > > 
-> > > > As an example, consider this code:
-> > > > 
-> > > > struct foo {
-> > > > 	struct kobject kobj;
-> > > > 	struct baz *baz;
-> > > > };
-> > > > 
-> > > > void foo_release(struct kobject *kobj)
-> > > > {
-> > > > 	struct foo *foo = container_of(kobj, struct foo, kobj);
-> > > > 	kfree(foo);
-> > > > }
-> > > > 
-> > > > struct kobj_type foo_ktype = {
-> > > > 	.release = foo_release,
-> > > > };
-> > > > 
-> > > > struct foo *foo_create(struct foo *parent, char *name)
-> > > > {
-> > > > 	struct *foo;
-> > > > 
-> > > > 	foo = kzalloc(sizeof(*foo), GFP_KERNEL);
-> > > > 	if (!foo)
-> > > > 		return NULL;
-> > > > 
-> > > > 	foo->baz = baz_create(name);
-> > > > 	if (!foo->baz)
-> > > > 		return NULL;
-> > > > 
-> > > > 	ret = kobject_init_and_add(&foo->kobj, foo_ktype, &parent->kobj, "foo-%s", name);
-> > > > 	if (ret) {
-> > > > 		baz_destroy(foo->baz);
-> > > > 		kobject_put(&foo->kobj);
-> > > > 		return NULL;
-> > > > 	}
-> > > > 
-> > > > 	return foo;
-> > > > }
-> > > > 
-> > > > void foo_destroy(struct foo *foo)
-> > > > {
-> > > > 	baz_destroy(foo->baz);
-> > > > 	kobject_del(&foo->kobj);
-> > > 	kojbect_put(&foo->kobj);
-> > > > }
-> > > 
-> > > Does this need this extra call to kobject_put()?  Then foo_create()
-> > > leaves foo with a refcount of 1 and foo_destroy drops that refcount.
-> > 
-> > Oops, no, I messed this up, it should _only_ be a call to
-> > kobject_put(), kobject_del() is not needed here.
-> > 
-> > kobject_del() is for people who "really want to control the lifetime" of
-> > a kobject.  All it does is remove the kobject from sysfs, and drop the
-> > parent reference of the kobject, allowing the kobject to be "free" on
-> > it's own.  Later a kobject_put() call must be called on it to really
-> > clean it up.
-> > 
-> > If you just call kobject_put(), and this is the last reference,
-> > kobject_del() will be correctly called for you by the kobject code, as
-> > it "knows" this is time to clean up the sysfs entities.
-> > 
-> > A "normal" user should never have to call kobject_del().
-> 
-> Which means your other patch about the kerneldoc for that function is
-> also not correct, I'll go fix that up now...
+On Thu, May 2, 2019 at 3:41 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Apr 23, 2019 at 02:26:04PM -0300, Pablo Greco wrote:
+> > The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
+> > identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+> >
+> > The Bluetooth side is connected to UART3 in a 4 wire configuration. Same
+> > as the WiFi side, due to being the same chip and package, DLDO1 and
+> > DLDO2 regulator outputs from the PMIC provide overall power via VBAT and
+> > I/O power via VDDIO. The CLK_OUT_A clock output from the SoC provides
+> > the LPO low power clock at 32.768 kHz.
+> >
+> > This patch enables Bluetooth on this board, and also adds the missing
+> > LPO clock on the WiFi side. There is also a PCM connection for
+> > Bluetooth, but this is not covered here.
+> >
+> > The LPO clock is fed from CLK_OUT_A, which needs to be muxed on pin
+> > PI12. This can be represented in multiple ways. This patch puts the
+> > pinctrl property in the pin controller node. This is due to limitations
+> > in Linux, where pinmux settings, even the same one, can not be shared
+> > by multiple devices. Thus we cannot put it in both the WiFi and
+> > Bluetooth device nodes. Putting it the CCU node is another option, but
+> > Linux's CCU driver does not handle pinctrl. Also the pin controller is
+> > guaranteed to be initialized after the CCU, when clocks are available.
+> > And any other devices that use muxed pins are guaranteed to be
+> > initialized after the pin controller. Thus having the CLK_OUT_A pinmux
+> > reference be in the pin controller node is a good choice without having
+> > to deal with implementation issues.
+> >
+> > Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > index c87f2c0..15c22b0 100644
+> > --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > @@ -96,6 +96,8 @@
+> >       wifi_pwrseq: wifi_pwrseq {
+> >               compatible = "mmc-pwrseq-simple";
+> >               reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
+> > +             clocks = <&ccu CLK_OUTA>;
+> > +             clock-names = "ext_clock";
+>
+> So if you don't have that patch (that enables bluetooth) the wifi
+> doesn't work (even though the previous patch is supposed to enable it)
 
-lols all around with this one :)  Who knew reference counting could get
-so knotty
+Maybe we should just squash the two (WiFi and Bluetooth) together?
+After all, they are in the same package, and depend on some of the
+same things, such as clocks and regulators.
 
-Cheers,
-Tobin.
+ChenYu
+
+> >       };
+> >  };
+> >
+> > @@ -173,6 +175,7 @@
+> >
+> >  &pio {
+> >       pinctrl-names = "default";
+> > +     pinctrl-0 = <&clk_out_a_pin>;
+>
+> This one should bein the previous one as well
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
