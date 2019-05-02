@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFA4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3395CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7432177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030F221479
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763556;
-	bh=xmDYXP70K6kQoVrzTUB35XnCUcff/iFnnZTl7EG/ojU=;
+	s=default; t=1556763562;
+	bh=czJ2gGl1dfjH/l57awPvh4sM5OwFICV7oNoavQNVK2Q=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=oIJ82xJwnFjeaHYzJ8mGUjQSkxiOP6XJ1h2KZz40Z/7SIDiE3pvdRnaix/cTdlSKQ
-	 ns4Tp13rokfEtUiTEIvNJ7xkMgKjCgfOhSIXgbDNRwJYYPlUxxWJyqmQ2t/zVfQUeD
-	 JLd92AqtU6tREUVLwvOg1CjHzTgwDC21le17Pn8w=
+	b=mjrHE9ALc6ObtkduurnozbM3dDdxunxMSyZesfoJRULpn3vm51iX9uDMQfMvLXoTV
+	 eq1GtvENNoDtLj9I3Bq5I5S78mohlQ9qUe1lMmVnMSE854i7bneznO9Sxo+gE85XwR
+	 Z4fWa529ffPzHH3afe/+PjHgUz7b9CO3hEC2VfdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfEBCTQ (ORCPT
+        id S1726700AbfEBCTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:19:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56874 "EHLO
+        Wed, 1 May 2019 22:19:20 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56980 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfEBCTO (ORCPT
+        with ESMTP id S1726656AbfEBCTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:19:14 -0400
+        Wed, 1 May 2019 22:19:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=TFHxH28B7UfMNIBcUFzJu3t9vBTVEM+AKFNiSzoLIGk=; b=NjVnHuct88Cw
-        pK1b8ccx2ARPRZy2Cj2aQWrkrhvk7zlkv+XbV6rRqzm6pYWtj95lTljQiE0dQ0iGVQRTvtD7aPhbl
-        g2n2Xii/uOUG2T+oTB/fH5GWZbgJ3lLoeS25HFbFBZzVgXFo/G+ZObualzi36zNw46N0IkqsmudF6
-        YcscY=;
+        List-Archive; bh=UHEfdzY2SRblr5bwZcw14SwkQj4L3ql7iy+ou6Q9jpY=; b=RRkiWZznDnkq
+        9i1BJ9BDacg3nhd5+AAC2FWqBYdHF0aOqh+HPw+42Kz5ePNCW35qSAWdrWOKRiPGQaatodjC9RWxf
+        2s09OxcrRo5I/lxpff9XGc64maZTWk4ByZSDzlu/VUOjftvzNCzhieVUtYOetI+ev9D90owDQk804
+        z8VnM=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1JJ-0005ud-Dc; Thu, 02 May 2019 02:18:57 +0000
+        id 1hM1J3-0005sr-SV; Thu, 02 May 2019 02:18:42 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 4C752441D57; Thu,  2 May 2019 03:18:54 +0100 (BST)
+        id BE8A2441D3B; Thu,  2 May 2019 03:18:38 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     alexandre.belloni@bootlin.com, broonie@kernel.org,
-        Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Ludovic.Desroches@microchip.com, Mark Brown <broonie@kernel.org>,
-        Nicolas.Ferre@microchip.com
-Subject: Applied "spi: atmel-quadspi: fix crash while suspending" to the spi tree
-In-Reply-To: <1556097463-29672-1-git-send-email-claudiu.beznea@microchip.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        colin.king@canonical.com, Hulk Robot <hulkci@huawei.com>,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, maruthi.bayyavarapu@amd.com,
+        perex@perex.cz, tiwai@suse.com, Vijendar.Mukunda@amd.com
+Subject: Applied "ASoC: amd: acp3x: Make acp3x_dai_i2s_ops static" to the asoc tree
+In-Reply-To:  <20190416145251.16800-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021854.4C752441D57@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:54 +0100 (BST)
+Message-Id: <20190502021838.BE8A2441D3B@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:38 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel-quadspi: fix crash while suspending
+   ASoC: amd: acp3x: Make acp3x_dai_i2s_ops static
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,47 +89,36 @@ to this mail.
 Thanks,
 Mark
 
-From e5c27498a0403b270620b1a8a0a66e3efc222fb6 Mon Sep 17 00:00:00 2001
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Date: Wed, 24 Apr 2019 09:17:59 +0000
-Subject: [PATCH] spi: atmel-quadspi: fix crash while suspending
+From a1a86e1bd4a87fd09171fd8555fe7490917e4e94 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Tue, 16 Apr 2019 22:52:51 +0800
+Subject: [PATCH] ASoC: amd: acp3x: Make acp3x_dai_i2s_ops static
 
-atmel_qspi objects are kept in spi_controller objects, so, first get
-pointer to spi_controller object and then get atmel_qspi object from
-spi_controller object.
+Fix sparse warning:
 
-Fixes: 2d30ac5ed633 ("mtd: spi-nor: atmel-quadspi: Use spi-mem interface for atmel-quadspi driver")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+sound/soc/amd/raven/acp3x-pcm-dma.c:561:24: warning:
+ symbol 'acp3x_dai_i2s_ops' was not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/atmel-quadspi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index fffc21cd5f79..b3173ebddade 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -570,7 +570,8 @@ static int atmel_qspi_remove(struct platform_device *pdev)
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 1a2e15ff1456..9775bda2a4ca 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -558,7 +558,7 @@ static int acp3x_dai_i2s_trigger(struct snd_pcm_substream *substream,
+ 	return ret;
+ }
  
- static int __maybe_unused atmel_qspi_suspend(struct device *dev)
- {
--	struct atmel_qspi *aq = dev_get_drvdata(dev);
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
- 
- 	clk_disable_unprepare(aq->qspick);
- 	clk_disable_unprepare(aq->pclk);
-@@ -580,7 +581,8 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
- 
- static int __maybe_unused atmel_qspi_resume(struct device *dev)
- {
--	struct atmel_qspi *aq = dev_get_drvdata(dev);
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
- 
- 	clk_prepare_enable(aq->pclk);
- 	clk_prepare_enable(aq->qspick);
+-struct snd_soc_dai_ops acp3x_dai_i2s_ops = {
++static struct snd_soc_dai_ops acp3x_dai_i2s_ops = {
+ 	.hw_params = acp3x_dai_i2s_hwparams,
+ 	.trigger   = acp3x_dai_i2s_trigger,
+ 	.set_fmt = acp3x_dai_i2s_set_fmt,
 -- 
 2.20.1
 
