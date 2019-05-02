@@ -7,54 +7,56 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED1AC04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF98C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFCE208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49AF0208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763582;
-	bh=c/Uaix4stMp7w+irq8SKSBWc6ad7yVn+gFDkPRU3mh8=;
+	s=default; t=1556763591;
+	bh=K8scgsR7nK/HFMN8JtdCXzwpbEYVh4J+o+BOM2s9okk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VEc+VG+Z/1NG0+IeHqnMDkppNgq9mdzhq6JgCCnqpVdB9y9ZN1tICm6T8h+LAzice
-	 4bHN42V0rZ7flqoth9jWJ/spxXkEZY9ej3F9G8fh8Slj0F628g7PQbG1nc/S/HvGB8
-	 CE5IMl2f9JemWbqRbejtDQroQhuRf9X3swhuTYYE=
+	b=zmQBDbQMt5BrkX35NeoHQQ3fjMhu2+oz3MIGM1e8xueutq4FN66OCMEzjMJ8et0dk
+	 9kituzYNJmZMINQn5XaUEb4oA3OY+PoS02sRnqvwYQWlzls1sfnWFnvJf8iC9RcePy
+	 d3l+cDoZHd0ALfaIO/LQDhqCe+rvn0ZRC+38qWmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfEBCTk (ORCPT
+        id S1726823AbfEBCTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:19:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57666 "EHLO
+        Wed, 1 May 2019 22:19:50 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57950 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbfEBCTi (ORCPT
+        with ESMTP id S1726769AbfEBCTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:19:38 -0400
+        Wed, 1 May 2019 22:19:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=1grwRNg1rL6fWWwwY9b01aFhIjRlWDX1p/iSHRpIX2M=; b=Yr9ISyKB5G54
-        mnCOy3hKifVuQiBTblOnEWujwqpIv0cwGsxLW8c3mTOU1uSoWSpwj2HwSm+PnKiU/YfiVSd5ocKyh
-        wKr4tMLmvJemYOQXwPqOj7urdyez9DlIWmKT8kMc/XyTVxCvbxnyNf21OjjZiy7KrtZNRh/B2+FVe
-        ulKbg=;
+        List-Archive; bh=1PItEW2u0htZ2Dr52BH6AmRKT6du/eMXVYsUd1FUuoY=; b=Fsv0WVHf7s/A
+        UkdR6WQPriRoSo64X227WZJIgjdSOIQ97Hk9Gye1hO+CA2qGfRoL6Zi//TUD3i965lLy/UnO+vMcl
+        ks5BonoAnHqwt5fohxQFaHTEUjpuwDAinDDqhG5SezskWvWwT70QZ3BgGmXnDgh4i4gx7D9+9dVNR
+        tE7Yg=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1Jv-0005xk-8k; Thu, 02 May 2019 02:19:35 +0000
+        id 1hM1Jl-0005xV-R3; Thu, 02 May 2019 02:19:26 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id E2A78441D3C; Thu,  2 May 2019 03:19:26 +0100 (BST)
+        id 725C7441D3C; Thu,  2 May 2019 03:19:22 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        naga.sureshkumar.relli@xilinx.com
-Subject: Applied "spi: spi-mem: Fix build error without CONFIG_SPI_MEM" to the spi tree
-In-Reply-To:  <20190408143949.10688-1-yuehaibing@huawei.com>
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Applied "spi: pxa2xx: use a module softdep for dw_dmac" to the spi tree
+In-Reply-To:  <1554900696-28858-2-git-send-email-f.suligoi@asem.it>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021926.E2A78441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:19:26 +0100 (BST)
+Message-Id: <20190502021922.725C7441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:19:22 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-mem: Fix build error without CONFIG_SPI_MEM
+   spi: pxa2xx: use a module softdep for dw_dmac
 
 has been applied to the spi tree at
 
@@ -87,63 +89,31 @@ to this mail.
 Thanks,
 Mark
 
-From 72e6841608b9ce7e04515ed43693b2878936c93a Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Mon, 8 Apr 2019 22:39:49 +0800
-Subject: [PATCH] spi: spi-mem: Fix build error without CONFIG_SPI_MEM
+From 51ebf6acb00fa6f965e600f848bee5bddddd2054 Mon Sep 17 00:00:00 2001
+From: Flavio Suligoi <f.suligoi@asem.it>
+Date: Wed, 10 Apr 2019 14:51:36 +0200
+Subject: [PATCH] spi: pxa2xx: use a module softdep for dw_dmac
 
-When building with CONFIG_SPI_MEM is not set
-gc warns this:
+With dw_dmac, sometimes the request of a DMA channel fails because
+the DMA driver is not ready, so an explicit dependency request
+is necessary.
 
-drivers/spi/spi-zynq-qspi.o: In function `zynq_qspi_supports_op':
-spi-zynq-qspi.c:(.text+0x1da): undefined reference to `spi_mem_default_supports_op'
-
-Fixes: 67dca5e580f1 ("spi: spi-mem: Add support for Zynq QSPI controller")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/linux/spi/spi-mem.h | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-index c845cd6e22ba..1941b845aa15 100644
---- a/include/linux/spi/spi-mem.h
-+++ b/include/linux/spi/spi-mem.h
-@@ -295,6 +295,10 @@ int spi_controller_dma_map_mem_op_data(struct spi_controller *ctlr,
- void spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
- 					  const struct spi_mem_op *op,
- 					  struct sg_table *sg);
-+
-+bool spi_mem_default_supports_op(struct spi_mem *mem,
-+				 const struct spi_mem_op *op);
-+
- #else
- static inline int
- spi_controller_dma_map_mem_op_data(struct spi_controller *ctlr,
-@@ -310,6 +314,13 @@ spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
- 				     struct sg_table *sg)
- {
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index f7068ccfe7d2..3e6811ef37e8 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1957,3 +1957,5 @@ static void __exit pxa2xx_spi_exit(void)
+ 	platform_driver_unregister(&driver);
  }
+ module_exit(pxa2xx_spi_exit);
 +
-+bool spi_mem_default_supports_op(struct spi_mem *mem,
-+				 const struct spi_mem_op *op)
-+{
-+	return false;
-+}
-+
- #endif /* CONFIG_SPI_MEM */
- 
- int spi_mem_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op);
-@@ -341,9 +352,6 @@ int spi_mem_driver_register_with_owner(struct spi_mem_driver *drv,
- 
- void spi_mem_driver_unregister(struct spi_mem_driver *drv);
- 
--bool spi_mem_default_supports_op(struct spi_mem *mem,
--				 const struct spi_mem_op *op);
--
- #define spi_mem_driver_register(__drv)                                  \
- 	spi_mem_driver_register_with_owner(__drv, THIS_MODULE)
- 
++MODULE_SOFTDEP("pre: dw_dmac");
 -- 
 2.20.1
 
