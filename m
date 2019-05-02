@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EECC46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA67C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB332075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0925B2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xHqWaiJW"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fGFv2mw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfEBMK4 (ORCPT
+        id S1726425AbfEBMK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:10:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33240 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfEBMK4 (ORCPT
+        Thu, 2 May 2019 08:10:59 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43155 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfEBMK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:10:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id b188so3379717wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 05:10:55 -0700 (PDT)
+        Thu, 2 May 2019 08:10:57 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a12so2990317wrq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 05:10:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QoGRmL9hNOPY+eFMV8Hy2PltfqYDajcTCyiSgjQt9SQ=;
-        b=xHqWaiJWsWUcZhoNbhOVBcJzfg9qdsYw5E2q3LjZu9iNGHbzEyPhLzBGVHZA6jT6KV
-         6Rtgs1XdKNUB6RCaHd11VIf1KnAUz5OPdkXzXacvy50eQe18yccKyj01+YzaridlzwTR
-         j7yeJj/hnwUDO0jx0ea4gdQcYrJ/KAoQO2Pjnva1wD9MOKFXhuutHa5Uu3hzUkodrTdz
-         a9HxFjfRBg7jiXHRRJbabYEkCNeAHDm5+AsVkCyLloIF6V/QRsR00pUUqrvbtFiYGAmS
-         i4i+68mRlvdS3nrxG4lfLl72/v6dL1ev8BRaeVLfeeNqIkXwtORNEzNtNF0Gh2UQobnY
-         +lGA==
+        bh=WV5PITTv1apIvGOQpl0Oue1rXCYUzZjLQa3jrOACL0k=;
+        b=fGFv2mw4iL0cv2bG/GRA7d1X4HgNeWqkFUlKM+Y/IqRoYZkLd0lJQcSAr9hZhYwfJ6
+         hOPQ2Lvq9gbk+Sd5w5JijwJEeNRrewo04HsjsjC4UFrKfgiKFa9pYpbbdZ3VFnEkmYtV
+         7apA/VD3apl7Qf0l8II8mQYF0IM7z5F7ujT3GPaile4zDTk/anUVf5ndCF1HvidAejb9
+         RDNZpwoYffe52dGwv0N9zyhFGxjRfihGe58Cb++wdZZwKD9NW1ztJc36uCy3vE+0uRn5
+         tZDcSJcNeWAmC+5W/TabQR/vaJWPWnNCVawCbNyKLSflnfO05LztfL+RP8FkKJh4TDuV
+         9hFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QoGRmL9hNOPY+eFMV8Hy2PltfqYDajcTCyiSgjQt9SQ=;
-        b=NxN2lwh9WKpni8lRzvZcRw8lFl/F4uaFHQL/TnqWf6myeeJIDoh1NghqgVzkHPfbhq
-         ozeK87Cdzgo7sY9I/nZMxwcdcYGb2LxoxV+scZNqyc9hwVMCksrmpDvJ75DbprRKoClm
-         lh+T4xXeDKBMOKEKPXQSboYNO2Auboqs8wv1/dowaCazke0OezSc4usQxJsbdBXMJ6qF
-         nngHMpuVqSeh3pQqeRNzUoe7Lubw8gk7u4xXVAglSBjSwEWf6N4zgEydVbPnNoW6QjVW
-         9PX/2VftapVwIJMuOFwbjxc2aeY/twuT95kSm6mlfOoQTa2bKw/DCANhTpGtiqv/U6rg
-         TNdA==
-X-Gm-Message-State: APjAAAXJ3UwGZP4c7UUjv4xfpTQm/l3jFLobN+eI4d43NAt1vKqTbN7G
-        u+3bw/AxdNNXb7mYJF6n7UFsKQ==
-X-Google-Smtp-Source: APXvYqzfD7lY9qYA6s3UXeqowSYnQbSJRYuX0+C/KKMF9ab6t31N4mkff3S6Ouo/4i4XI4ETpGxpDA==
-X-Received: by 2002:a7b:c010:: with SMTP id c16mr2137167wmb.82.1556799054205;
-        Thu, 02 May 2019 05:10:54 -0700 (PDT)
+        bh=WV5PITTv1apIvGOQpl0Oue1rXCYUzZjLQa3jrOACL0k=;
+        b=IuyGeijs5ZGGLHjtEJhYn1+zNseRoUKnKh/Xlbj3GqO6+7B5Xx/I9xwinVw0PRlmyT
+         6I+G3G74pumAIixlFfJHShEuT3aas0B6wV2g9T4UXnbyKEN5Dd0U+XSbxNd8UgPMk61t
+         5EJBLc8fEXxxXgsO4zC9JuGkh9/GZJTIr3OpKdsjAvWWqYc2d72F5mhdMk3fNCwECNpn
+         tLAHzpjhV+rDB9VXwXTLHEWxNiKQF8+PfGBdJ6P1sjVwHRx4UUpKxvQKTXlp4YPcK3P1
+         i5enUpXSp6P7LQmRM8O4ri7W2ZKLydQDtILeBhbJ/zf6fH3swpYBisnPMCyho7usItWV
+         UFtA==
+X-Gm-Message-State: APjAAAVQ2UJg46uJcpulqSX/l1gmotG+DqKVvIpoTPsjF+kulE/gGqnZ
+        TFc1fqbankWay3oihFH5zc2cNA==
+X-Google-Smtp-Source: APXvYqxHbdw86DQT9DLiLhVUZhwVSNryaz0tC87K271cS45Tz+OjI7rgzVXULNJc92nQD2UrLXWBOQ==
+X-Received: by 2002:a5d:5383:: with SMTP id d3mr2573633wrv.105.1556799055563;
+        Thu, 02 May 2019 05:10:55 -0700 (PDT)
 Received: from localhost.localdomain (aputeaux-684-1-8-187.w90-86.abo.wanadoo.fr. [90.86.125.187])
-        by smtp.gmail.com with ESMTPSA id u9sm3648348wmd.14.2019.05.02.05.10.52
+        by smtp.gmail.com with ESMTPSA id u9sm3648348wmd.14.2019.05.02.05.10.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 05:10:53 -0700 (PDT)
+        Thu, 02 May 2019 05:10:54 -0700 (PDT)
 From:   Fabien Parent <fparent@baylibre.com>
 To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, matthias.bgg@gmail.com, perex@perex.cz,
@@ -65,9 +65,9 @@ Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH 1/5] ASoC: mediatek: make agent_disable, msb & hd fields optional
-Date:   Thu,  2 May 2019 14:10:37 +0200
-Message-Id: <20190502121041.8045-2-fparent@baylibre.com>
+Subject: [PATCH 2/5] dt-bindings: sound: Add MT8516 AFE PCM bindings
+Date:   Thu,  2 May 2019 14:10:38 +0200
+Message-Id: <20190502121041.8045-3-fparent@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190502121041.8045-1-fparent@baylibre.com>
 References: <20190502121041.8045-1-fparent@baylibre.com>
@@ -78,64 +78,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not every SoC have the following registers: agent_disable_reg,
-msg_reg, and hd_reg. Make them optional in order to allow more
-SoC to use the common DAI FE code.
+Add documentation for the bindings of the MT8516 AFE PCM driver.
 
 Signed-off-by: Fabien Parent <fparent@baylibre.com>
 ---
- sound/soc/mediatek/common/mtk-afe-fe-dai.c | 23 +++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ .../bindings/sound/mt8516-afe-pcm.txt         | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt
 
-diff --git a/sound/soc/mediatek/common/mtk-afe-fe-dai.c b/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-index cf4978be062f..f39f5d8c4244 100644
---- a/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-+++ b/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-@@ -47,10 +47,13 @@ int mtk_afe_fe_startup(struct snd_pcm_substream *substream,
- 
- 	snd_pcm_hw_constraint_step(substream->runtime, 0,
- 				   SNDRV_PCM_HW_PARAM_BUFFER_BYTES, 16);
+diff --git a/Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt b/Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt
+new file mode 100644
+index 000000000000..c5fb3c55a7f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt
+@@ -0,0 +1,28 @@
++Mediatek AFE PCM controller for mt8516
 +
- 	/* enable agent */
--	mtk_regmap_update_bits(afe->regmap, memif->data->agent_disable_reg,
--			       1 << memif->data->agent_disable_shift,
--			       0 << memif->data->agent_disable_shift);
-+	if (memif->data->agent_disable_shift >= 0)
-+		mtk_regmap_update_bits(afe->regmap,
-+				       memif->data->agent_disable_reg,
-+				       1 << memif->data->agent_disable_shift,
-+				       0 << memif->data->agent_disable_shift);
- 
- 	snd_soc_set_runtime_hwparams(substream, mtk_afe_hardware);
- 
-@@ -143,9 +146,10 @@ int mtk_afe_fe_hw_params(struct snd_pcm_substream *substream,
- 			 memif->phys_buf_addr + memif->buffer_size - 1);
- 
- 	/* set MSB to 33-bit */
--	mtk_regmap_update_bits(afe->regmap, memif->data->msb_reg,
--			       1 << memif->data->msb_shift,
--			       msb_at_bit33 << memif->data->msb_shift);
-+	if (memif->data->msb_shift >= 0)
-+		mtk_regmap_update_bits(afe->regmap, memif->data->msb_reg,
-+				       1 << memif->data->msb_shift,
-+				       msb_at_bit33 << memif->data->msb_shift);
- 
- 	/* set channel */
- 	if (memif->data->mono_shift >= 0) {
-@@ -269,9 +273,10 @@ int mtk_afe_fe_prepare(struct snd_pcm_substream *substream,
- 		break;
- 	}
- 
--	mtk_regmap_update_bits(afe->regmap, memif->data->hd_reg,
--			       1 << memif->data->hd_shift,
--			       hd_audio << memif->data->hd_shift);
-+	if (memif->data->hd_shift >= 0)
-+		mtk_regmap_update_bits(afe->regmap, memif->data->hd_reg,
-+				       1 << memif->data->hd_shift,
-+				       hd_audio << memif->data->hd_shift);
- 
- 	return 0;
- }
++Required properties:
++- compatible:  "mediatek,mt8516-audio"
++- interrupts: should contain AFE interrupt
++- clocks: Must contain an entry for each entry in clock-names
++- clock-names: should have these clock names:
++		"top_pdn_audio",
++		"aud_dac_clk",
++		"aud_dac_predis_clk",
++		"aud_adc_clk";
++
++Example:
++
++
++	afe: mt8516-afe-pcm@11140000  {
++		compatible = "mediatek,mt8516-audio";
++		reg = <0 0x11140000 0 0x1000>;
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_AUDIO>,
++			 <&audiotop CLK_AUD_DAC>,
++			 <&audiotop CLK_AUD_DAC_PREDIS>,
++			 <&audiotop CLK_AUD_ADC>;
++		clock-names = "top_pdn_audio",
++			      "aud_dac_clk",
++			      "aud_dac_predis_clk",
++			      "aud_adc_clk";
++	};
 -- 
 2.20.1
 
