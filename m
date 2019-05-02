@@ -2,180 +2,101 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC30DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26819C46470
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4182133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bv//cIYN"
+	by mail.kernel.org (Postfix) with ESMTP id E19E22085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556801812;
+	bh=yj300TW+fJqT6K6BSGF2jtEG/Xt4a4FDcEA/4LmZcjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z3oSTyDSMhhEsGhgjYSd3eY7K7dhQSnNXoSc+4r43On+dLKi4TEG90FBLaUaJwNmE
+	 dSz6M1ilFOehlTwuzfUZ6SRCBmsYdhfNzCAN9gzqlqe4qj6XzVTTvK/HNMJAMElj/W
+	 bbYMl+NHq0dHpYmnoc5nwcgNc8Ghwrnw1vpsMHy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfEBM4K (ORCPT
+        id S1726779AbfEBM4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:56:10 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15836 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfEBM4H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:56:07 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ccae8ec0000>; Thu, 02 May 2019 05:56:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 02 May 2019 05:56:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 02 May 2019 05:56:05 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 12:56:05 +0000
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 12:55:53 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 2 May 2019 12:55:53 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ccae8d60002>; Thu, 02 May 2019 05:55:53 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <ldewangan@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 4/6] dmaengine: tegra210-adma: add pause/resume support
-Date:   Thu, 2 May 2019 18:25:15 +0530
-Message-ID: <1556801717-31507-5-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
-References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
+        Thu, 2 May 2019 08:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfEBM4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:56:50 -0400
+Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39FB420449;
+        Thu,  2 May 2019 12:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556801809;
+        bh=yj300TW+fJqT6K6BSGF2jtEG/Xt4a4FDcEA/4LmZcjs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N1CNu64DdNDI6n6Pd4zvz/PjlpDiFGriUxmGgT0/aEEIlVYPNO5MpTGqG7iTelmKQ
+         JozEqiBnuNmR0hNLn0yOAQTnPD5zKtk6yBqYPUuJl8FJoyUq8mFmzKss3kpaJ/vgJM
+         2NV/TrbxUU0gmrBBPMtprJNCOepEvFx6dTFGe1Ek=
+Date:   Thu, 2 May 2019 08:50:01 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        yuzenghui@huawei.com, christoffer.dall@arm.com,
+        marc.zyngier@arm.com, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH AUTOSEL 5.0 29/98] KVM: arm/arm64: Enforce PTE mappings
+ at stage2 when needed
+Message-ID: <20190502125001.GB11584@sasha-vm>
+References: <20190422194205.10404-1-sashal@kernel.org>
+ <20190422194205.10404-29-sashal@kernel.org>
+ <e166bc0d-5184-6dda-15ef-2f24d2e42203@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556801773; bh=x3KADU2b1ZOqa7z8dCmJZX7MMsTT2rAs+2WgI/6Qvgc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=bv//cIYNDzX4O4x2+GxLmk+soiBW9SrQK+/RFap4i5dQK/EUzN1A6TPsAgnsXWHgj
-         dSptMAt6tKO5BEx+k178iPOfIzYUF9gKaZpcHPBEcKKoVlegkDXWZD63npTz9QlnFJ
-         IsVBSTdAnG9l44j7t+X/zT0z6tzvfAXwJ2yaxunmXIDFRIgwXG2of+q2PSF33I/lyU
-         Lf5Ube7Go+yzjMOnS2+J2q29DTaX1as7dZdSL0cvEfjLvcZCsyKjL5Ix11Io2LJ81Q
-         uYzym6kxCuauZUWZD0xmTKNynwhniUMzbCPhylFG4FkWfeQj8hb6HLk4EJr36D+X2g
-         FndmJg55g55aA==
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <e166bc0d-5184-6dda-15ef-2f24d2e42203@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During an audio playback session it is observed that, audio goes off after
-few seconds of continuous pause and play. No audio is heard even when the
-playback is resumed.
+On Tue, Apr 23, 2019 at 10:27:26AM +0100, Suzuki K Poulose wrote:
+>Hi Sasha,
+>
+>On 04/22/2019 08:40 PM, Sasha Levin wrote:
+>>From: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>
+>>[ Upstream commit a80868f398554842b14d07060012c06efb57c456 ]
+>>
+>>commit 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
+>>made the checks to skip huge mappings, stricter. However it introduced
+>>a bug where we still use huge mappings, ignoring the flag to
+>>use PTE mappings, by not reseting the vma_pagesize to PAGE_SIZE.
+>>
+>>Also, the checks do not cover the PUD huge pages, that was
+>>under review during the same period. This patch fixes both
+>>the issues.
+>>
+>>Fixes : 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
+>>Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+>>Cc: Zenghui Yu <yuzenghui@huawei.com>
+>>Cc: Christoffer Dall <christoffer.dall@arm.com>
+>>Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+>>Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+>
+>Please be aware that we need a follow up fix for this patch to fix the
+>problem for THP backed memory.
+>
+>http://lists.infradead.org/pipermail/linux-arm-kernel/2019-April/645324.html
+>
+>
+>It should appear upstream soon.
 
-The reason for above is, currently ADMA driver does not handle DMA_PAUSE/
-DMA_RESUME and relevant callbacks for dma_device are not implemented. This
-patch implements device_pause and device_resume callbacks for the device.
-During pause TRANSFER_PAUSE bit of dma channel control register is set and
-the same is cleared during resume.
+Since it's not upstream yet, I'll drop this patch for now and queue it
+for a later release.
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- drivers/dma/tegra210-adma.c | 51 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 115ee10f..f26c458 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -30,6 +30,7 @@
- #define ADMA_CH_CMD					0x00
- #define ADMA_CH_STATUS					0x0c
- #define ADMA_CH_STATUS_XFER_EN				BIT(0)
-+#define ADMA_CH_STATUS_XFER_PAUSED			BIT(1)
- 
- #define ADMA_CH_INT_STATUS				0x10
- #define ADMA_CH_INT_STATUS_XFER_DONE			BIT(0)
-@@ -41,6 +42,7 @@
- #define ADMA_CH_CTRL_DIR_MEM2AHUB			4
- #define ADMA_CH_CTRL_MODE_CONTINUOUS			(2 << 8)
- #define ADMA_CH_CTRL_FLOWCTRL_EN			BIT(1)
-+#define ADMA_CH_CTRL_XFER_PAUSE_SHIFT			0
- 
- #define ADMA_CH_CONFIG					0x28
- #define ADMA_CH_CONFIG_SRC_BUF(val)			(((val) & 0x7) << 28)
-@@ -67,6 +69,8 @@
- #define ADMA_GLOBAL_CMD					0x00
- #define ADMA_GLOBAL_SOFT_RESET				0x04
- 
-+#define TEGRA_ADMA_BURST_COMPLETE_TIME			20
-+
- #define ADMA_CH_FIFO_CTRL_DEFAULT	(ADMA_CH_FIFO_CTRL_OVRFW_THRES(1) | \
- 					 ADMA_CH_FIFO_CTRL_STARV_THRES(1))
- 
-@@ -437,6 +441,51 @@ static void tegra_adma_issue_pending(struct dma_chan *dc)
- 	spin_unlock_irqrestore(&tdc->vc.lock, flags);
- }
- 
-+static bool tegra_adma_is_paused(struct tegra_adma_chan *tdc)
-+{
-+	u32 csts;
-+
-+	csts = tdma_ch_read(tdc, ADMA_CH_STATUS);
-+	csts &= ADMA_CH_STATUS_XFER_PAUSED;
-+
-+	return csts ? true : false;
-+}
-+
-+static int tegra_adma_pause(struct dma_chan *dc)
-+{
-+	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
-+	struct tegra_adma_desc *desc = tdc->desc;
-+	struct tegra_adma_chan_regs *ch_regs = &desc->ch_regs;
-+	int dcnt = 10;
-+
-+	ch_regs->ctrl = tdma_ch_read(tdc, ADMA_CH_CTRL);
-+	ch_regs->ctrl |= (1 << ADMA_CH_CTRL_XFER_PAUSE_SHIFT);
-+	tdma_ch_write(tdc, ADMA_CH_CTRL, ch_regs->ctrl);
-+
-+	while (dcnt-- && !tegra_adma_is_paused(tdc))
-+		udelay(TEGRA_ADMA_BURST_COMPLETE_TIME);
-+
-+	if (dcnt < 0) {
-+		dev_err(tdc2dev(tdc), "unable to pause DMA channel\n");
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tegra_adma_resume(struct dma_chan *dc)
-+{
-+	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
-+	struct tegra_adma_desc *desc = tdc->desc;
-+	struct tegra_adma_chan_regs *ch_regs = &desc->ch_regs;
-+
-+	ch_regs->ctrl = tdma_ch_read(tdc, ADMA_CH_CTRL);
-+	ch_regs->ctrl &= ~(1 << ADMA_CH_CTRL_XFER_PAUSE_SHIFT);
-+	tdma_ch_write(tdc, ADMA_CH_CTRL, ch_regs->ctrl);
-+
-+	return 0;
-+}
-+
- static int tegra_adma_terminate_all(struct dma_chan *dc)
- {
- 	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
-@@ -798,6 +847,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	tdma->dma_dev.dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
- 	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
- 	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-+	tdma->dma_dev.device_pause = tegra_adma_pause;
-+	tdma->dma_dev.device_resume = tegra_adma_resume;
- 
- 	ret = dma_async_device_register(&tdma->dma_dev);
- 	if (ret < 0) {
--- 
-2.7.4
-
+--
+Thanks,
+Sasha
