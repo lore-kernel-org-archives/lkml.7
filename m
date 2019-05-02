@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394C4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A47C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F353D2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282AE204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811136;
-	bh=bX/q7qkLSeJnBfh86gMhWCiYqGgWCc51M0T+sqV7Au0=;
+	s=default; t=1556811140;
+	bh=4ACLzxXGGweNd17xot1i13hZHjJRXVj1UnMpZx67kak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cwVLu9Sj4Mk87ULYb3XGNjKv11asi5GO5ex8Gp8DV88NoMBvCLRpDA9n1i75OIb+3
-	 LQbc/XR/OQfHy8IgipyvVDoj4+qskuSjXDZChruOWFnw8Y6pK3FWg2BoxOTOWZGjbN
-	 znjFKfyo0RyW/oUlrs8nW2aQM3RmoyC0ahZd4mO0=
+	b=kN+tafsTebkCak3poX/i94e/SAj2kX0wHclAIOnqdRSsff3coM9MuaM7wKxIo3ipR
+	 QMyOuTAfQLCvfAKyAR0JwrKY86JnKIglLX60PNtGzA4CQnSmhBYWs4G9bqJdXkmGRX
+	 nJKbEJLUd9/1MWx7SyL3ieyqIE7UhWnwCvyfi07I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbfEBPcP (ORCPT
+        id S1729161AbfEBPcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51740 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729127AbfEBPcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:32:12 -0400
+        id S1729142AbfEBPcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D01420B7C;
-        Thu,  2 May 2019 15:32:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E8E20675;
+        Thu,  2 May 2019 15:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811131;
-        bh=bX/q7qkLSeJnBfh86gMhWCiYqGgWCc51M0T+sqV7Au0=;
+        s=default; t=1556811137;
+        bh=4ACLzxXGGweNd17xot1i13hZHjJRXVj1UnMpZx67kak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JqMsGBBs2gCsKRHIMY2lIQjGxxt0RGWd2W5O92uKvOMoGrH693Yph3MZx0TLDvKoR
-         Bpv6q4CTXKbbqxnrCh3qfhQpPozHqtN7ShxbmgbhiXyAo+lgqqQDlugXQbcWpY64qn
-         aPUtn8pnB35uhrfTVAGWR14M3OvfkczgO40nkGyA=
+        b=T7wKvPptjPa/Sgq+yXSJr4UQAkB6EX6pTmPCLfq/+w15vIePFcDbL9Kw0wmk4blUc
+         aIjva81biF7VktIBqBx+6aUwNMGGsMZT1izMR24qAsSvtLh8HK78+L2fWCorO3mOD1
+         VM8YdIUb8VZ5OMwQ3+PbbrU/CE5NKKqjBp6mrcbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Richard Leitner <richard.leitner@skidata.com>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 069/101] usb: usb251xb: fix to avoid potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:21:11 +0200
-Message-Id: <20190502143344.437698052@linuxfoundation.org>
+Subject: [PATCH 5.0 088/101] KVM: selftests: disable stack protector for all KVM tests
+Date:   Thu,  2 May 2019 17:21:30 +0200
+Message-Id: <20190502143345.751297735@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,32 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 41f00e6e9e55546390031996b773e7f3c1d95928 ]
+[ Upstream commit ffac839d040619847217647434b2b02469926871 ]
 
-of_match_device in usb251xb_probe can fail and returns a NULL pointer.
-The patch avoids a potential NULL pointer dereference in this scenario.
+Since 4.8.3, gcc has enabled -fstack-protector by default.  This is
+problematic for the KVM selftests as they do not configure fs or gs
+segments (the stack canary is pulled from fs:0x28).  With the default
+behavior, gcc will insert a stack canary on any function that creates
+buffers of 8 bytes or more.  As a result, ucall() will hit a triple
+fault shutdown due to reading a bad fs segment when inserting its
+stack canary, i.e. every test fails with an unexpected SHUTDOWN.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 14c47b7530e2d ("kvm: selftests: introduce ucall")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/misc/usb251xb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/kvm/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index a6efb9a72939..5f7734c729b1 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -601,7 +601,7 @@ static int usb251xb_probe(struct usb251xb *hub)
- 							   dev);
- 	int err;
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 212b8f0032ae..cb4a992d6dd3 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -28,8 +28,8 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
+-CFLAGS += -O2 -g -std=gnu99 -no-pie -I$(LINUX_TOOL_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
+-LDFLAGS += -pthread
++CFLAGS += -O2 -g -std=gnu99 -fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
++LDFLAGS += -pthread -no-pie
  
--	if (np) {
-+	if (np && of_id) {
- 		err = usb251xb_get_ofdata(hub,
- 					  (struct usb251xb_data *)of_id->data);
- 		if (err) {
+ # After inclusion, $(OUTPUT) is defined and
+ # $(TEST_GEN_PROGS) starts with $(OUTPUT)/
 -- 
 2.19.1
 
