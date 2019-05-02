@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523EAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45531C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E79F2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09EE021670
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811102;
-	bh=4xx5P4gXdP0yfMU/LfYb1D92r0sFFc4q/frTIZonXpw=;
+	s=default; t=1556811105;
+	bh=TlKxbaWIZGpv9TtVGGYTktQJNZ3Mj7RiqgeTUz7E6qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=grjnZcLphbTEaB1FrY9iZ+C0UrtaPL2MpbYTKWaokVmI5IW5G/deNCevLdQgSN2Dr
-	 9BK0HYOQL0jxYMbu5dUv9DQJMfNVD94lSsY9H8Mzzo3yLiB9qACwr+TtvIsEVoEXIa
-	 NfsM9d7D1Y16MGj3Ujr81Acng4DBK4LNrlcqe/qg=
+	b=G3Lg6n0UB7L4/7bFBWF76C1HvsHzElJXzAE5GpDowdZ/PdGxC83gqylKL76UNn8qM
+	 6JaCR6Yw1+a4f9mO9hq1tHmAYECfJL8RSMl9qs0cnj2sJOIstFpgsjIVXGfciOPAtS
+	 WMLpEjwja9kMsay/d4Y1UaLod5SIkRXLch/PkBfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfEBPbk (ORCPT
+        id S1729036AbfEBPbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:31:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50754 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:31:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729006AbfEBPbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:31:36 -0400
+        id S1729006AbfEBPbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:31:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DA920675;
-        Thu,  2 May 2019 15:31:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 319F920675;
+        Thu,  2 May 2019 15:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811095;
-        bh=4xx5P4gXdP0yfMU/LfYb1D92r0sFFc4q/frTIZonXpw=;
+        s=default; t=1556811100;
+        bh=TlKxbaWIZGpv9TtVGGYTktQJNZ3Mj7RiqgeTUz7E6qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIzcs2jfO8+ZxIo3D/W6hNAVSy21zfFk8pJiOEwf5hSmURcx+7EkKrqAj8/p51i8K
-         AjDafhgcyT+o/UPxob4AC9I+zuDZ7QS7KD8GpP50nDAgJjJKsSbwr+F1R+o39VPAYc
-         KQb5XmGn6Zy2DZuzI+F5msoo7t0NjmPQtJ2GnCv4=
+        b=kde0dDBaf5ABZE1E3FKgNjGR3gScB/kl8F3+NsdrLrXh2wqJfojpJ1RSWdXqVFUsQ
+         VSY1xJrEJPvgc8Fyh29yhuPhS3s4GFc3+QU/9TcdDXUeLTWA0DAunZfrDBJxJSTE5e
+         YcqmXExxRCpBE4b9wLmtN4m6ERjyvZVgs7pAYtoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Guido Kiener <guido.kiener@rohde-schwarz.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 036/101] usb: gadget: net2280: Fix overrun of OUT messages
-Date:   Thu,  2 May 2019 17:20:38 +0200
-Message-Id: <20190502143342.039690440@linuxfoundation.org>
+Subject: [PATCH 5.0 028/101] ARM: imx51: fix a leaked reference by adding missing of_node_put
+Date:   Thu,  2 May 2019 17:20:30 +0200
+Message-Id: <20190502143341.577830056@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,60 +67,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9d6a54c1430647355a5e23434881b2ca3d192b48 ]
+[ Upstream commit 0c17e83fe423467e3ccf0a02f99bd050a73bbeb4 ]
 
-The OUT endpoint normally blocks (NAK) subsequent packets when a
-short packet was received and returns an incomplete queue entry to
-the gadget driver. Thereby the gadget driver can detect a short packet
-when reading queue entries with a length that is not equal to a
-multiple of packet size.
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-The start_queue() function enables receiving OUT packets regardless of
-the content of the OUT FIFO. This results in a race: With the current
-code, it's possible that the "!ep->is_in && (readl(&ep->regs->ep_stat)
-& BIT(NAK_OUT_PACKETS))" test in start_dma() will fail, then a short
-packet will be received, and then start_queue() will call
-stop_out_naking(). That's what we don't want (OUT naking gets turned
-off while there is data in the FIFO) because then the next driver
-request might receive a mixture of old and new packets.
+Detected by coccinelle with the following warnings:
+./arch/arm/mach-imx/mach-imx51.c:64:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 57, but without a corresponding object release within this function.
 
-With the patch, this race can't occur because the FIFO's state is
-tested after we know that OUT naking is already turned on, and OUT
-naking is stopped only when both of the conditions are met.  This
-ensures that all received data is delivered to the gadget driver,
-which can detect a short packet now before new packets are appended
-to the last short packet.
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2280.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm/mach-imx/mach-imx51.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index e7dae5379e04..dc6f5a78d124 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -866,9 +866,6 @@ static void start_queue(struct net2280_ep *ep, u32 dmactl, u32 td_dma)
- 	(void) readl(&ep->dev->pci->pcimstctl);
+diff --git a/arch/arm/mach-imx/mach-imx51.c b/arch/arm/mach-imx/mach-imx51.c
+index c7169c2f94c4..08c7892866c2 100644
+--- a/arch/arm/mach-imx/mach-imx51.c
++++ b/arch/arm/mach-imx/mach-imx51.c
+@@ -59,6 +59,7 @@ static void __init imx51_m4if_setup(void)
+ 		return;
  
- 	writel(BIT(DMA_START), &dma->dmastat);
--
--	if (!ep->is_in)
--		stop_out_naking(ep);
- }
- 
- static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
-@@ -907,6 +904,7 @@ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
- 			writel(BIT(DMA_START), &dma->dmastat);
- 			return;
- 		}
-+		stop_out_naking(ep);
- 	}
- 
- 	tmp = dmactl_default;
+ 	m4if_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!m4if_base) {
+ 		pr_err("Unable to map M4IF registers\n");
+ 		return;
 -- 
 2.19.1
 
