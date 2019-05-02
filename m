@@ -2,122 +2,179 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516F7C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A45C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199432085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:56:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K1azEk9F"
+	by mail.kernel.org (Postfix) with ESMTP id 0D2822085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfEBH4p (ORCPT
+        id S1726321AbfEBH5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:56:45 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42244 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfEBH4p (ORCPT
+        Thu, 2 May 2019 03:57:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33644 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725905AbfEBH5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:56:45 -0400
-Received: by mail-qt1-f194.google.com with SMTP id p20so1416673qtc.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 00:56:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oRQNrBl3LbUWqyjxjhcKLS8Zdkaq+AHCYKUjrU7AoLE=;
-        b=K1azEk9FUZTF8l2OPl9v0vSzvaDSDakovrJzRcwbtRPQ1Ki/rEsvk6No2vUF4HY1+J
-         GOXHNzqdPU489+RSuELiGvWh09jiS0XtJErSFv0tSB+JV30b3XP21kZbXLPo62tuy8z3
-         wXmBOqchvpNA6BfRQ/EbaK+Bmh9YPtfYK+Un0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oRQNrBl3LbUWqyjxjhcKLS8Zdkaq+AHCYKUjrU7AoLE=;
-        b=UpUAPf/upSvWNRuXQ1aAPzmjhoc95l759p/NPkGXnhs6k7cY2N9wL6JkhVcSWtPLMJ
-         y0Y1ID7A7Ji0GUWYmMBYri2nFsjookzAwtOUHjNHmfaT6/cwSpNmo8jBd9mNxniikHxs
-         qLwkCLMcrj8S0ZT4QV9nr5R2RwbAzErN2UeX0SDHvd34BD5AiQ33gKvLzK4rbmj2/E4S
-         bHpjp9hmgVxx2+zctpsqStfwTr0qROTmtpMzxD9uqVyLsNdHgiSP5uxoNN+y3muheQU+
-         L5vaYzS2ykt944Netz3cr6oJa4+MRKbeosOp/7l50OR5plbWH3wilNkKro5b2n6vIVZf
-         p4mQ==
-X-Gm-Message-State: APjAAAX4CPfoU/3FjqbshfUQIGT4P7LuCPepiILx8cerG0X8mvl2BMIR
-        IBXg/qZ1F0DNIkxha3FcdHhYtXLXafNv56jzOvgBNQ==
-X-Google-Smtp-Source: APXvYqwM6qmZs9QMprvFC8eT7hNgb431bDfnqEf3Whh9ByrBUw3+WOxYgsMMm0S/s1eXLuhWM/HhUi2jlX8+QcMgJeE=
-X-Received: by 2002:ac8:362e:: with SMTP id m43mr1985816qtb.339.1556783804389;
- Thu, 02 May 2019 00:56:44 -0700 (PDT)
+        Thu, 2 May 2019 03:57:52 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x427vlJl117593
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 03:57:51 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s7uh2jpsq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 03:57:50 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 2 May 2019 08:57:35 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 2 May 2019 08:57:33 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x427vW5a52428928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 May 2019 07:57:32 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0574A4040;
+        Thu,  2 May 2019 07:57:31 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 56C2FA4051;
+        Thu,  2 May 2019 07:57:31 +0000 (GMT)
+Received: from [9.145.190.191] (unknown [9.145.190.191])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  2 May 2019 07:57:31 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+ <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+ <20190430152605.3bb21f31.pasic@linux.ibm.com>
+ <622a9ab0-579d-17f4-6fa1-74d73da13b19@linux.ibm.com>
+Date:   Thu, 2 May 2019 09:57:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190418075016.252988-1-pihsun@chromium.org>
-In-Reply-To: <20190418075016.252988-1-pihsun@chromium.org>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 2 May 2019 15:56:33 +0800
-Message-ID: <CANMq1KCwcVawg6L1hTKXBgBi66EKdHQrvxr_chR9Kv1ifFREnA@mail.gmail.com>
-Subject: Re: [PATCH] wireless: Use offsetof instead of custom macro.
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <622a9ab0-579d-17f4-6fa1-74d73da13b19@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050207-4275-0000-0000-0000033087E4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050207-4276-0000-0000-0000383FE5F4
+Message-Id: <42185132-dfc4-c997-3d69-31e43d25e525@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=658 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 3:50 PM Pi-Hsun Shih <pihsun@chromium.org> wrote:
->
-> Use offsetof to calculate offset of a field to take advantage of
-> compiler built-in version when possible, and avoid UBSAN warning when
-> compiling with Clang:
->
-> ==================================================================
-> UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
-> member access within null pointer of type 'struct iw_point'
-> CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
-> Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
-> Call trace:
->  dump_backtrace+0x0/0x194
->  show_stack+0x20/0x2c
->  __dump_stack+0x20/0x28
->  dump_stack+0x70/0x94
->  ubsan_epilogue+0x14/0x44
->  ubsan_type_mismatch_common+0xf4/0xfc
->  __ubsan_handle_type_mismatch_v1+0x34/0x54
->  wireless_send_event+0x3cc/0x470
->  ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
->  __cfg80211_scan_done+0x28/0x34 [cfg80211]
->  process_one_work+0x170/0x35c
->  worker_thread+0x254/0x380
->  kthread+0x13c/0x158
->  ret_from_fork+0x10/0x18
-> ===================================================================
->
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+On 30/04/2019 16:09, Pierre Morel wrote:
+> On 30/04/2019 15:26, Halil Pasic wrote:
+>> On Fri, 26 Apr 2019 15:01:27 +0200
+>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>
+>>> +/**
+>>> + * vfio_ap_clrirq: Disable Interruption for a APQN
+>>> + *
+>>> + * @dev: the device associated with the ap_queue
+>>> + * @q:   the vfio_ap_queue holding AQIC parameters
+>>> + *
+>>> + * Issue the host side PQAP/AQIC
+>>> + * On success: unpin the NIB saved in *q and unregister from GIB
+>>> + * interface
+>>> + *
+>>> + * Return the ap_queue_status returned by the ap_aqic()
+>>> + */
+>>> +static struct ap_queue_status vfio_ap_clrirq(struct vfio_ap_queue *q)
+>>> +{
+>>> +    struct ap_qirq_ctrl aqic_gisa = {};
+>>> +    struct ap_queue_status status;
+>>> +    int checks = 10;
+>>> +
+>>> +    status = ap_aqic(q->apqn, aqic_gisa, NULL);
+>>> +    if (!status.response_code) {
+>>> +        while (status.irq_enabled && checks--) {
+>>> +            msleep(20);
+>>
+>> Hm, that seems like a lot of time to me. And I suppose we are holding the
+>> kvm lock: e.g. no other instruction can be interpreted by kvm in the
+>> meantime.
+>>
+>>> +            status = ap_tapq(q->apqn, NULL);
+>>> +        }
+>>> +        if (checks >= 0)
+>>> +            vfio_ap_free_irq_data(q);
+>>
+>> Actually we don't have to wait for the async part to do it's magic
+>> (indicated by the status.irq_enabled --> !status.irq_enabled transition)
+>> in the instruction handler. We have to wait so we can unpin the NIB but
+>> that could be done async (e.g. workqueue).
+>>
+>> BTW do you have any measurements here? How many msleep(20) do we
+>> experience for one clear on average?
+> 
+> No idea but it is probably linked to the queue state and usage history.
+> I can use a lower sleep time and increment the retry count.
+> 
+>>
+>> If linux is not using clear (you told so offline, and I also remember
+>> something similar), we can probably get away with something like this,
+>> and do it properly (from performance standpoint) later.
+> 
+> In the Linux AP code it is only used once, in the explicit
+> ap_queue_enable_interruption() function.
 
-The warning from clang is spurious, but in another case, we felt that
-the cleanup was worth it, nevertheless
-(https://lore.kernel.org/patchwork/patch/1050040/).
+My answer is not clear: ap_aqic() is used only once, during the bus 
+probe, in the all code to enable interrupt and is never used to disable 
+interrupt.
 
-Reviewed-By: Nicolas Boichat <drinkcat@chromium.org>
+Interrupt disabling is only done by using ap_zapq() or ap_rapq() which 
+can not be intercepted.
 
-> ---
->  include/uapi/linux/wireless.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
-> index 86eca3208b6b..f259cca5cc2b 100644
-> --- a/include/uapi/linux/wireless.h
-> +++ b/include/uapi/linux/wireless.h
-> @@ -1090,8 +1090,7 @@ struct iw_event {
->  /* iw_point events are special. First, the payload (extra data) come at
->   * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
->   * we omit the pointer, so start at an offset. */
-> -#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
-> -                         (char *) NULL)
-> +#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
->  #define IW_EV_POINT_LEN        (IW_EV_LCP_LEN + sizeof(struct iw_point) - \
->                          IW_EV_POINT_OFF)
->
-> --
-> 2.21.0.392.gf8f6787159e-goog
->
+
+> 
+> Yes, thanks, I will keep it as is, may be just play with msleep()time 
+> and retry count.
+> 
+> Regards,
+> Pierre
+> 
+>>
+>> Regards,
+>> Halil
+>>
+>>> +        else
+>>> +            WARN_ONCE("%s: failed disabling IRQ", __func__);
+>>> +    }
+>>> +
+>>> +    return status;
+>>> +}
+>>
+> 
+> 
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
