@@ -2,131 +2,144 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616E7C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86755C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC86205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C772089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfEBNOT (ORCPT
+        id S1726363AbfEBNRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:14:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38550 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726197AbfEBNOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:14:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A1BE5AEFD;
-        Thu,  2 May 2019 13:14:16 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 4FEBFE0117; Thu,  2 May 2019 15:14:16 +0200 (CEST)
-Date:   Thu, 2 May 2019 15:14:16 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Ahern <dsahern@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/3] netlink: add validation of NLA_F_NESTED flag
-Message-ID: <20190502131416.GE21672@unicorn.suse.cz>
-References: <cover.1556798793.git.mkubecek@suse.cz>
- <75a0887b3eb70005c272685d8ef9a712f37d7a54.1556798793.git.mkubecek@suse.cz>
- <3e8291cb2491e9a1830afdb903ed2c52e9f7475c.camel@sipsolutions.net>
+        Thu, 2 May 2019 09:17:01 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:46391 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726197AbfEBNRB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 09:17:01 -0400
+Received: from [IPv6:2001:420:44c1:2579:7549:573e:9131:939b] ([IPv6:2001:420:44c1:2579:7549:573e:9131:939b])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id MBa2hHUMQZVjxMBa5h6NQg; Thu, 02 May 2019 15:16:58 +0200
+Subject: Re: [PATCH v2] media/doc: Allow sizeimage to be set by v4l clients
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
+ <20190502095550.31282c0d@coco.lan>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <ee78effa-f678-5d15-3802-bb787e7057e2@xs4all.nl>
+Date:   Thu, 2 May 2019 15:16:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e8291cb2491e9a1830afdb903ed2c52e9f7475c.camel@sipsolutions.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190502095550.31282c0d@coco.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPo5NU+FPwgCylj9J2C1/mc19GgAGRLUTy76mTdZkMKf5d4iI0KpLba7IlNqmxkTq+XbdITRbvwyD+2Mx+hWj4TMnTA3j8nCH1XfbOF6oWb7oaOB2pG7
+ g6I5akTeIhwMrOp19vGv5vtDawPc+FNjFHeba3a2OjYTotWRIm4DaQOL4Cj7Y7gBS/7ZpQStl6TLbaT6raMdOsTWb6prgkHwy5iFBTr+WU17kENqMfOcRCpU
+ vIem7bsqMZPr3LROEEhJj/2KDPLlGsoVnAxUS64B/jDhr7fi9+Xo8LRSIZIJaegAY9rwvRxIgDZe3aUX78MVoFaG07GS8Djo5ClP7HtIdP0dT+uFokw7ENOo
+ Ns4LTBCuzE43LoQPT4zez5LvgH6NzWhDp9EqjIs/6iRfA5PYB3xoRVXDklRFP9CoNk6dl1wAomjrp1cozdW2/tX76u9zGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 02:54:56PM +0200, Johannes Berg wrote:
-> On Thu, 2019-05-02 at 12:48 +0000, Michal Kubecek wrote:
-> > Add new validation flag NL_VALIDATE_NESTED which adds three consistency
-> > checks of NLA_F_NESTED_FLAG:
-> > 
-> >   - the flag is set on attributes with NLA_NESTED{,_ARRAY} policy
-> >   - the flag is not set on attributes with other policies except NLA_UNSPEC
-> >   - the flag is set on attribute passed to nla_parse_nested()
+On 5/2/19 2:55 PM, Mauro Carvalho Chehab wrote:
+> Em Fri, 12 Apr 2019 18:59:15 +0300
+> Stanimir Varbanov <stanimir.varbanov@linaro.org> escreveu:
 > 
-> Looks good to me!
+>> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
+>> field description to allow v4l clients to set bigger image size
+>> in case of variable length compressed data.
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 13 ++++++++++++-
+>>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 11 ++++++++++-
+>>  2 files changed, 22 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+>> index 5688c816e334..005428a8121e 100644
+>> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+>> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+>> @@ -31,7 +31,18 @@ describing all planes of that format.
+>>  
+>>      * - __u32
+>>        - ``sizeimage``
+>> -      - Maximum size in bytes required for image data in this plane.
+>> +      - Maximum size in bytes required for image data in this plane,
+>> +	set by the driver. When the image consists of variable length
+>> +	compressed data this is the number of bytes required by the
+>> +	codec to support the worst-case compression scenario.
+>> +
+>> +	For uncompressed images the driver will set the value. For
+>> +	variable length compressed data clients are allowed to set
+>> +	the sizeimage field, but the driver may ignore it and set the
+>> +	value itself, or it may modify the provided value based on
+>> +	alignment requirements or minimum/maximum size requirements.
+>> +	If the client wants to leave this to the driver, then it should
+>> +	set sizeimage to 0.
+>>      * - __u32
+>>        - ``bytesperline``
+>>        - Distance in bytes between the leftmost pixels in two adjacent
+>> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+>> index 71eebfc6d853..0f7771151db9 100644
+>> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+>> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+>> @@ -89,7 +89,16 @@ Single-planar format structure
+>>        - Size in bytes of the buffer to hold a complete image, set by the
+>>  	driver. Usually this is ``bytesperline`` times ``height``. When
+>>  	the image consists of variable length compressed data this is the
+>> -	maximum number of bytes required to hold an image.
+>> +	number of bytes required by the codec to support the worst-case
+>> +	compression scenario.
+>> +
+>> +	For uncompressed images the driver will set the value. For
+>> +	variable length compressed data clients are allowed to set
+>> +	the sizeimage field, but the driver may ignore it and set the
+>> +	value itself, or it may modify the provided value based on
+>> +	alignment requirements or minimum/maximum size requirements.
+>> +	If the client wants to leave this to the driver, then it should
+>> +	set sizeimage to 0.
 > 
-> > @@ -415,7 +418,8 @@ enum netlink_validation {
-> >  #define NL_VALIDATE_STRICT (NL_VALIDATE_TRAILING |\
-> >  			    NL_VALIDATE_MAXTYPE |\
-> >  			    NL_VALIDATE_UNSPEC |\
-> > -			    NL_VALIDATE_STRICT_ATTRS)
-> > +			    NL_VALIDATE_STRICT_ATTRS |\
-> > +			    NL_VALIDATE_NESTED)
+> It is very confusing to understand what you meant by the above paragraph,
+> as you inverted the sentence order and forgot a comma.
 > 
-> This is fine _right now_, but in general we cannot keep adding here
-> after the next release :-)
+> I would, instead, write the phrases using the direct order, and break
+> into two paragraphs, e. g., changing the above to:
+> 
+> 	"The driver will set the value for uncompressed images.
+> 
+> 	Clients are allowed to set the sizeimage field for variable length
+> 	compressed data, but the driver may ignore it and set the
+> 	value itself, or it may modify the provided value based on
+> 	alignment requirements or minimum/maximum size requirements.
+> 	If the client wants to leave this to the driver, then it should
+> 	set sizeimage to 0."
+> 
+> That makes it a lot easier to read, hopefully preventing mistakes from
+> app and driver developers when reading about sizeimage.
+> 
+> Yet, I'm not too comfortable on letting this too generic. I mean,
+> how an app writer would know what formats are "variable length
+> compressed data", specially since libv4l may actually change that.
 
-Right, that's why I would like to get this into the same cycle as your
-series.
+It's actually quite clearly defined: compressed formats set the
+V4L2_FMT_FLAG_COMPRESSED flag in VIDIOC_ENUMFMT.
 
-> >  int netlink_rcv_skb(struct sk_buff *skb,
-> >  		    int (*cb)(struct sk_buff *, struct nlmsghdr *,
-> > @@ -1132,6 +1136,10 @@ static inline int nla_parse_nested(struct nlattr *tb[], int maxtype,
-> >  				   const struct nla_policy *policy,
-> >  				   struct netlink_ext_ack *extack)
-> >  {
-> > +	if (!(nla->nla_type & NLA_F_NESTED)) {
-> > +		NL_SET_ERR_MSG_ATTR(extack, nla, "nested attribute expected");
-> 
-> Maybe reword that to say "NLA_F_NESTED is missing" or so? The "nested
-> attribute expected" could result in a lot of headscratching (without
-> looking at the code) because it looks nested if you do nla_nest_start()
-> etc.
+Also bytesperline will be 0 for compressed formats.
 
-How about "NLA_F_NESTED is missing" and "NLA_F_NESTED not expected"?
+Regards,
+
+	Hans
 
 > 
-> > +		return -EINVAL;
-> > +	}
-> >  	return __nla_parse(tb, maxtype, nla_data(nla), nla_len(nla), policy,
-> >  			   NL_VALIDATE_STRICT, extack);
+> Thanks,
+> Mauro
 > 
-> I'd probably put a blank line there but ymmv.
 
-OK
-
-> >  }
-> > diff --git a/lib/nlattr.c b/lib/nlattr.c
-> > index adc919b32bf9..92da65cb6637 100644
-> > --- a/lib/nlattr.c
-> > +++ b/lib/nlattr.c
-> > @@ -184,6 +184,21 @@ static int validate_nla(const struct nlattr *nla, int maxtype,
-> >  		}
-> >  	}
-> >  
-> > +	if (validate & NL_VALIDATE_NESTED) {
-> > +		if ((pt->type == NLA_NESTED || pt->type == NLA_NESTED_ARRAY) &&
-> > +		    !(nla->nla_type & NLA_F_NESTED)) {
-> > +			NL_SET_ERR_MSG_ATTR(extack, nla,
-> > +					    "nested attribute expected");
-> > +			return -EINVAL;
-> > +		}
-> > +		if (pt->type != NLA_NESTED && pt->type != NLA_NESTED_ARRAY &&
-> > +		    pt->type != NLA_UNSPEC && (nla->nla_type & NLA_F_NESTED)) {
-> > +			NL_SET_ERR_MSG_ATTR(extack, nla,
-> > +					    "nested attribute not expected");
-> > +			return -EINVAL;
-> 
-> Same comment here wrt. the messages, I think they should more explicitly
-> refer to the flag.
-> 
-> johannes
-> 
-> (PS: if you CC me on this address I generally can respond quicker)
-
-I'll try to keep that in mind.
-
-Michal
