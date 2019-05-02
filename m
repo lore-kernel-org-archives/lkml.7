@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDBFC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96ADC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA2220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9040020C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810736;
-	bh=ycWLMFE2XQW9iKBkq/OI1zu6AiL1FtXWMJkW9Ii0U3Q=;
+	s=default; t=1556810742;
+	bh=kRawRg+kLkcMJc/eiEA5SPZ7cOmi0+y1rBmsHKgLpvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eaojBbCDfodyEtNnwHQwjAYCl9m+/aosB9hdUpAq4uhd6aosb9zHmtOPpe6vT3LB7
-	 XFK+Go1JnIq39t/grWGSWRuFSaAHaF13y361qoRV+N8v+tEqeG9kpG2FcLfv4nnoqf
-	 m9cbxP7iLmK0bSdb3dNM5/bKrJmNXyjYMiKsoH9o=
+	b=FdhhMLcppnauMAze5L3OEwGanr6/9TrlwHK10K2+mwn7FoYBsedu8DowXhps9f7in
+	 xN4DAZTFfK4T6lEK0S5eOD5oU0GlmOogY73t1TThXcDlRhW0BRW/cn2WXY3k51nyYc
+	 UOQAlO198S3R88fL2KEeVXyKfQQbwu+IYzPDac0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfEBPZf (ORCPT
+        id S1727101AbfEBPZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41874 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:25:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbfEBPZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:25:33 -0400
+        id S1726508AbfEBPZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:25:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78D4320B7C;
-        Thu,  2 May 2019 15:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1473320C01;
+        Thu,  2 May 2019 15:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810733;
-        bh=ycWLMFE2XQW9iKBkq/OI1zu6AiL1FtXWMJkW9Ii0U3Q=;
+        s=default; t=1556810735;
+        bh=kRawRg+kLkcMJc/eiEA5SPZ7cOmi0+y1rBmsHKgLpvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNoKIjLscRNxxxyWwRhkOg55WGOJMJbjSEbOUcpiq91QJKfpKm+Igc3u8XBK/2n+9
-         S2T2m++1oFaAKZJJAS6Uxlmhtb1UNhvw8pZHZf2HgsEtdcuoMWxzMR/DRr1YzAaPFd
-         nDYOsqGZsiQhyWdQmUxSquzTcALJTCF3MjL4DS54=
+        b=lr0ism/1fMJNn4JY3a6/Y5LRTKzJMaOR3fRyI8No9iqytgC7RkIrpojPyjOngw05A
+         pPzWMu+mmQYoXDN1zueK7ayYFNMlg3AZCB12kcBoR/wNkmvS8lNjdnrynqkq8Eojh8
+         nfxb6Jb9W7UblwMTTT48mrR1upkuD3X9wPBF1jss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paulo Alcantara <paulo@paulo.ac>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.19 01/72] selinux: use kernel linux/socket.h for genheaders and mdp
-Date:   Thu,  2 May 2019 17:20:23 +0200
-Message-Id: <20190502143333.507762002@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Hirmke <opensuse@mike.franken.de>,
+        Takashi Iwai <tiwai@suse.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 02/72] Revert "ACPICA: Clear status of GPEs before enabling them"
+Date:   Thu,  2 May 2019 17:20:24 +0200
+Message-Id: <20190502143333.643528154@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,67 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paulo Alcantara <paulo@paulo.ac>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit dfbd199a7cfe3e3cd8531e1353cdbd7175bfbc5e upstream.
+commit 2c2a2fb1e2a9256714338875bede6b7cbd4b9542 upstream.
 
-When compiling genheaders and mdp from a newer host kernel, the
-following error happens:
+Revert commit c8b1917c8987 ("ACPICA: Clear status of GPEs before
+enabling them") that causes problems with Thunderbolt controllers
+to occur if a dock device is connected at init time (the xhci_hcd
+and thunderbolt modules crash which prevents peripherals connected
+through them from working).
 
-    In file included from scripts/selinux/genheaders/genheaders.c:18:
-    ./security/selinux/include/classmap.h:238:2: error: #error New
-    address family defined, please update secclass_map.  #error New
-    address family defined, please update secclass_map.  ^~~~~
-    make[3]: *** [scripts/Makefile.host:107:
-    scripts/selinux/genheaders/genheaders] Error 1 make[2]: ***
-    [scripts/Makefile.build:599: scripts/selinux/genheaders] Error 2
-    make[1]: *** [scripts/Makefile.build:599: scripts/selinux] Error 2
-    make[1]: *** Waiting for unfinished jobs....
+Commit c8b1917c8987 effectively causes commit ecc1165b8b74 ("ACPICA:
+Dispatch active GPEs at init time") to get undone, so the problem
+addressed by commit ecc1165b8b74 appears again as a result of it.
 
-Instead of relying on the host definition, include linux/socket.h in
-classmap.h to have PF_MAX.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Paulo Alcantara <paulo@paulo.ac>
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-[PM: manually merge in mdp.c, subject line tweaks]
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fixes: c8b1917c8987 ("ACPICA: Clear status of GPEs before enabling them")
+Link: https://lore.kernel.org/lkml/s5hy33siofw.wl-tiwai@suse.de/T/#u
+Link: https://bugzilla.opensuse.org/show_bug.cgi?id=1132943
+Reported-by: Michael Hirmke <opensuse@mike.franken.de>
+Reported-by: Takashi Iwai <tiwai@suse.de>
+Cc: 4.17+ <stable@vger.kernel.org> # 4.17+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/selinux/genheaders/genheaders.c |    1 -
- scripts/selinux/mdp/mdp.c               |    1 -
- security/selinux/include/classmap.h     |    1 +
- 3 files changed, 1 insertion(+), 2 deletions(-)
+ drivers/acpi/acpica/evgpe.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/scripts/selinux/genheaders/genheaders.c
-+++ b/scripts/selinux/genheaders/genheaders.c
-@@ -9,7 +9,6 @@
- #include <string.h>
- #include <errno.h>
- #include <ctype.h>
--#include <sys/socket.h>
+--- a/drivers/acpi/acpica/evgpe.c
++++ b/drivers/acpi/acpica/evgpe.c
+@@ -81,12 +81,8 @@ acpi_status acpi_ev_enable_gpe(struct ac
  
- struct security_class_mapping {
- 	const char *name;
---- a/scripts/selinux/mdp/mdp.c
-+++ b/scripts/selinux/mdp/mdp.c
-@@ -32,7 +32,6 @@
- #include <stdlib.h>
- #include <unistd.h>
- #include <string.h>
--#include <sys/socket.h>
+ 	ACPI_FUNCTION_TRACE(ev_enable_gpe);
  
- static void usage(char *name)
- {
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -1,5 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #include <linux/capability.h>
-+#include <linux/socket.h>
- 
- #define COMMON_FILE_SOCK_PERMS "ioctl", "read", "write", "create", \
-     "getattr", "setattr", "lock", "relabelfrom", "relabelto", "append", "map"
+-	/* Clear the GPE status */
+-	status = acpi_hw_clear_gpe(gpe_event_info);
+-	if (ACPI_FAILURE(status))
+-		return_ACPI_STATUS(status);
+-
+ 	/* Enable the requested GPE */
++
+ 	status = acpi_hw_low_set_gpe(gpe_event_info, ACPI_GPE_ENABLE);
+ 	return_ACPI_STATUS(status);
+ }
 
 
