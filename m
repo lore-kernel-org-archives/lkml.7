@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EC3C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5ECC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D3320675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADAC420675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811629;
-	bh=Y4XNUNO9m72VC4aWc7ww6A/+NV1nbcXL9btbHA7Dzec=;
+	s=default; t=1556811635;
+	bh=WJN5iWIvcgKpaO/zBux1NJbNQ6G/V7nfw02+h+bfIvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2Lfdb1s/B3VFD1Maw27B5CZ+XVa/zPMAudMqJUDtG4udSHkAjXWYCx9HZ+y4W02F
-	 0HdgCk1CNUkKsH2VQnc1/UlXHfxzY2C76GxS61MfbUzfmg8f6BdDiaYloTIl+EyOvB
-	 8ayI4N3i5STKQctipguLOrO+F2YXb2vPsg7S2tKU=
+	b=Or/l0q2JOD7Us+hy3VAtA8dAOqXoaFs8e/vp/5ewysykEbOnAOemHjvKXtw+nBthz
+	 82gfs9JOO6k+5B/tcWxmSwxk35EmpOCgPNujLc2d5S/tFrW2Olybj4TBo4vHCQISz3
+	 Upc+n788Ej2TEnlbvlLwUdvGw/sWSCtTPvFjrPRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbfEBP3O (ORCPT
+        id S1728600AbfEBPke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46704 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbfEBP3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:29:08 -0400
+        id S1728327AbfEBP3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD43021734;
-        Thu,  2 May 2019 15:29:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C2CD20B7C;
+        Thu,  2 May 2019 15:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810948;
-        bh=Y4XNUNO9m72VC4aWc7ww6A/+NV1nbcXL9btbHA7Dzec=;
+        s=default; t=1556810950;
+        bh=WJN5iWIvcgKpaO/zBux1NJbNQ6G/V7nfw02+h+bfIvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QXg7bq2griqvieN+/iKiZlv3+trAAmuWXzNi4NWLclJo9Ce5WuLXabjcChDP7JAve
-         dvIElUaTz5rjmX4rTz9Xh8ExWK2tcfched+65O0awEJQnK6ODLOAGUiQW37kbcua6g
-         uFQkVjxDQhhPTjchhe4ZK0q8fGgzrTR9/kG8XbLU=
+        b=cPlMyIHg41hrOk4Wm1x/veLKH1AN27Sstmf71yejy5r9fqdvyIZRkNzPJN0bdw3YU
+         GX9tZqhPrygfM9fqrdBogqgFX1MrnI4asJCfKbVe4JW1WAM+EznIM+qQu6qY64Lqf4
+         EhRsCMaS/hNZ9YatLoObHVacjrzp7RlzVHaxvyew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Jose Abreu <joabreu@synopsys.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 018/101] net: stmmac: fix jumbo frame sending with non-linear skbs
-Date:   Thu,  2 May 2019 17:20:20 +0200
-Message-Id: <20190502143341.207733001@linuxfoundation.org>
+Subject: [PATCH 5.0 019/101] qlcnic: Avoid potential NULL pointer dereference
+Date:   Thu,  2 May 2019 17:20:21 +0200
+Message-Id: <20190502143341.243272955@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,48 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 58f2ce6f61615dfd8dd3cc01c9e5bb54ed35637e ]
+[ Upstream commit 5bf7295fe34a5251b1d241b9736af4697b590670 ]
 
-When sending non-linear skbs with jumbo frames, we set up the non-paged
-data and mark that as a last segment, although the paged fragments are
-also prepared. This will stall the TX queue and trigger a watchdog warning
-(a simple reproducer is to run an iperf client mode TCP test with a large
-MTU - networking fails instantly).
+netdev_alloc_skb can fail and return a NULL pointer which is
+dereferenced without a check. The patch avoids such a scenario.
 
-Fix by checking if the skb is non-linear.
-
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Acked-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/ring_mode.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-index afed0f0f4027..4d9bcb4d0378 100644
---- a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-@@ -79,7 +79,8 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
+index 3b0adda7cc9c..a4cd6f2cfb86 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
+@@ -1048,6 +1048,8 @@ int qlcnic_do_lb_test(struct qlcnic_adapter *adapter, u8 mode)
  
- 		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
- 		stmmac_prepare_tx_desc(priv, desc, 0, len, csum,
--				STMMAC_RING_MODE, 1, true, skb->len);
-+				STMMAC_RING_MODE, 1, !skb_is_nonlinear(skb),
-+				skb->len);
- 	} else {
- 		des2 = dma_map_single(priv->device, skb->data,
- 				      nopaged_len, DMA_TO_DEVICE);
-@@ -91,7 +92,8 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
- 		tx_q->tx_skbuff_dma[entry].is_jumbo = true;
- 		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
- 		stmmac_prepare_tx_desc(priv, desc, 1, nopaged_len, csum,
--				STMMAC_RING_MODE, 0, true, skb->len);
-+				STMMAC_RING_MODE, 0, !skb_is_nonlinear(skb),
-+				skb->len);
- 	}
- 
- 	tx_q->cur_tx = entry;
+ 	for (i = 0; i < QLCNIC_NUM_ILB_PKT; i++) {
+ 		skb = netdev_alloc_skb(adapter->netdev, QLCNIC_ILB_PKT_SIZE);
++		if (!skb)
++			break;
+ 		qlcnic_create_loopback_buff(skb->data, adapter->mac_addr);
+ 		skb_put(skb, QLCNIC_ILB_PKT_SIZE);
+ 		adapter->ahw->diag_cnt = 0;
 -- 
 2.19.1
 
