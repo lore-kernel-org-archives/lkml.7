@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0F4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F31C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB512085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCBB20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810590;
-	bh=4+MLKW1s0b4idKmNOcGKBbMJZpW6NUUvzvQnevY4Vpk=;
+	s=default; t=1556810594;
+	bh=G1gKMeTX9JbVl501Usv3mK5qUwAQA8ljIadRchKIreU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ui3KMDELWSgAflaQnv4K+RvEJgkgh6nAMu8DMIuTrfpZ+Aht99a3vqKcGtAvp4V+g
-	 8urjciuBi2RdPfhVqrldLOsJPDuTN6SKauFQc4IT/ifH87Ot7UiI50JC3DqsFKtgN7
-	 K1UP3hG9ahzXPn9af4L6jlqNjm7UGChuP0tZJ++Q=
+	b=SR36d9yAHdHQnNCa5GihJA6DIUCbZC8rlJvJj2ugID+LzopQbzwwQZCBCwL3FoMbB
+	 RG092M+CiLnJsIVS+Xwrc9u/rZw0qzVAsGPPqHKMar8I8sp4llsGv0icwJE3Ic34g3
+	 iC/SsRAJKu5PWz0nxnKdgK49cKJjeme3wLBvyhUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfEBPXI (ORCPT
+        id S1726324AbfEBPXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38658 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726852AbfEBPXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:23:06 -0400
+        id S1726950AbfEBPXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:23:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B0BA20675;
-        Thu,  2 May 2019 15:23:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2886220449;
+        Thu,  2 May 2019 15:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810585;
-        bh=4+MLKW1s0b4idKmNOcGKBbMJZpW6NUUvzvQnevY4Vpk=;
+        s=default; t=1556810587;
+        bh=G1gKMeTX9JbVl501Usv3mK5qUwAQA8ljIadRchKIreU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u8c0BbQEDpR2H73DKjMDxGc/Q8zUeNtjo05qg4LZcEPK+xI9VSafXLdwltzKm/ZZD
-         nHbb0CBW7ak+8lP1VggIPaKghlUcr1JErhHT/oqvf3/cOAo9KbBbhI0+IwAjXNeVFu
-         34QppXg5EXzT/sZTvLbHl/lp0qvRrBRiv2nQDlZg=
+        b=0ghQPwxs+gab7ge3FEsztMQatcVPtJmulRnmxQFcH42J/VUzxgqWrRD2J3SjS0l1Y
+         TAei+mWCP41Y5G96E1oN0Aau9/Jgy2lQg3VZOTulGtrstg5Ia5voT+GWbfR9BHqMPS
+         dPID7QIgWlgcVjkip6BdFADT5J7hubaEUePtlUOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
         Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Nishanth Menon <nm@ti.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 15/32] net: ks8851: Dequeue RX packets explicitly
-Date:   Thu,  2 May 2019 17:21:01 +0200
-Message-Id: <20190502143319.687222562@linuxfoundation.org>
+Subject: [PATCH 4.9 16/32] net: ks8851: Reassert reset pin if chip ID check fails
+Date:   Thu,  2 May 2019 17:21:02 +0200
+Message-Id: <20190502143319.873877147@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -63,74 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 536d3680fd2dab5c39857d62a3e084198fc74ff9 ]
+[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
 
-The ks8851 driver lets the chip auto-dequeue received packets once they
-have been read in full. It achieves that by setting the ADRFE flag in
-the RXQCR register ("Auto-Dequeue RXQ Frame Enable").
+Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
+reset gpio") amended the ks8851 driver to briefly assert the chip's
+reset pin on probe. It also amended the probe routine's error path to
+reassert the reset pin if a subsequent initialization step fails.
 
-However if allocation of a packet's socket buffer or retrieval of the
-packet over the SPI bus fails, the packet will not have been read in
-full and is not auto-dequeued. Such partial retrieval of a packet
-confuses the chip's RX queue management:  On the next RX interrupt,
-the first packet read from the queue will be the one left there
-previously and this one can be retrieved without issues. But for any
-newly received packets, the frame header status and byte count registers
-(RXFHSR and RXFHBCR) contain bogus values, preventing their retrieval.
-
-The chip allows explicitly dequeueing a packet from the RX queue by
-setting the RRXEF flag in the RXQCR register ("Release RX Error Frame").
-This could be used to dequeue the packet in case of an error, but if
-that error is a failed SPI transfer, it is unknown if the packet was
-transferred in full and was auto-dequeued or if it was only transferred
-in part and requires an explicit dequeue. The safest approach is thus
-to always dequeue packets explicitly and forgo auto-dequeueing.
-
-Without this change, I've witnessed packet retrieval break completely
-when an SPI DMA transfer fails, requiring a chip reset. Explicit
-dequeueing magically fixes this and makes packet retrieval absolutely
-robust for me.
-
-The chip's documentation suggests auto-dequeuing and uses the RRXEF
-flag only to dequeue error frames which the driver doesn't want to
-retrieve. But that seems to be a fair-weather approach.
+However the commit misplaced reassertion of the reset pin in the error
+path such that it is not performed if the check of the Chip ID and
+Enable Register (CIDER) fails. The error path is therefore slightly
+asymmetrical to the probe routine's body. Fix it.
 
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
 Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Nishanth Menon <nm@ti.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/micrel/ks8851.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index 1edc973df4c4..247a3377b951 100644
+index 247a3377b951..a8c5641ff955 100644
 --- a/drivers/net/ethernet/micrel/ks8851.c
 +++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -547,9 +547,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
- 		/* set dma read address */
- 		ks8851_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI | 0x00);
+@@ -1567,9 +1567,9 @@ static int ks8851_probe(struct spi_device *spi)
+ 	free_irq(ndev->irq, ks);
  
--		/* start the packet dma process, and set auto-dequeue rx */
--		ks8851_wrreg16(ks, KS_RXQCR,
--			       ks->rc_rxqcr | RXQCR_SDA | RXQCR_ADRFE);
-+		/* start DMA access */
-+		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
- 
- 		if (rxlen > 4) {
- 			unsigned int rxalign;
-@@ -580,7 +579,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
- 			}
- 		}
- 
--		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
-+		/* end DMA access and dequeue packet */
-+		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_RRXEF);
- 	}
- }
- 
+ err_irq:
++err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+-err_id:
+ 	regulator_disable(ks->vdd_reg);
+ err_reg:
+ 	regulator_disable(ks->vdd_io);
 -- 
 2.19.1
 
