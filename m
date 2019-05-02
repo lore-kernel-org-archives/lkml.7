@@ -2,249 +2,119 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1001CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56D9C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D049720675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9840320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LLL8nE+I"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BR7x3x90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfEBScR (ORCPT
+        id S1726383AbfEBSct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:32:17 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58300 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfEBScQ (ORCPT
+        Thu, 2 May 2019 14:32:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35379 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfEBSct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:32:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OlMWSzvvuWVM+bMJ90y7miF3ovjNqjeLOMeQybDfWCY=; b=LLL8nE+IMEm4e5NbX296wcIJy
-        72ObaVzXBxCiGFsDho7vK/7twOopAQQvm8Fwd9kxcwwybNXa5QUg9cGtwathsMIqjtGeXBB1XigOA
-        4Kb9vCVGVgS9rprRCjuVVlf6yFJcha6+7ECRSl+esDCRqkIG1ZhIdUJJ2CXEVEh6wozpyKfACmN4T
-        SdMTbl+t6Cii05UxH+DurhyM7cGUXMI8Px5yszA4GGLmrV1r6Biymo5WBg77pd1lCEgyAxsh0cgDR
-        PNRzSOHQD0f8ZhcbZ/M5vGNwnOroKraBrpQ4jxMfcqKILPtpZTB/6FyoMrl94psHHbgyYS0gRdU9O
-        jTJnG2dsQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMGU0-0002LM-0f; Thu, 02 May 2019 18:31:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B87382066BB8B; Thu,  2 May 2019 20:30:58 +0200 (CEST)
-Date:   Thu, 2 May 2019 20:30:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-Message-ID: <20190502183058.GD2650@hirez.programming.kicks-ass.net>
-References: <20190501202830.347656894@goodmis.org>
- <20190501203152.397154664@goodmis.org>
- <20190501232412.1196ef18@oasis.local.home>
- <20190502162133.GX2623@hirez.programming.kicks-ass.net>
- <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
- <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        Thu, 2 May 2019 14:32:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t87so965017pfa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=93c55uhr4KFGF95BkRemJ3knn+tMaubaMhwZFRLRXyQ=;
+        b=BR7x3x90tpA0KZFNAitTfhjS1qplr4LpXzdvRCOHwFsakQ7p4g8+DisaRgPLRBmfHR
+         2HI5DZW4Nr/seQW7j67Z5l68jgNwhu2J7r6yvkHLwJ5YZgFhHALh/ow4VRZeC7LwQFxk
+         HMN6deHYkyLeVgyRQ3kOHnTXVYWdh3p3Pq6vY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=93c55uhr4KFGF95BkRemJ3knn+tMaubaMhwZFRLRXyQ=;
+        b=D6onT4gSmDCMtKizjmSLAwD18NTOtTgOcLtkPm5YITVrG3wG0LZ0ep65KwR1iEgpjK
+         UccKW9IpZMGGT2tlO1WkZWRviMSh74Z5KngIU+/SFHciOm1S1dDOOeVnM79OjHlqvoUS
+         HIUg1m/AcnWHBp4U20pGa2s8uedGF/Z2YzGsA3eFAYPvrs9vlEWbwnKr8XGFw6iaMkAt
+         mZwGnuPPzquqncjBTiGT33ZIFoZduuTmNQAmDGpdf/okeK8KDzjwy99DTZZ26EcWkcVq
+         Wp2ezdk1y/CIPyN7zFeOqw2OtflYbCkJ8U7BXMLQ0m04iUxlca5fLNlw9nW8d2d7V4vP
+         EXmQ==
+X-Gm-Message-State: APjAAAXH8F0YNbyLgaeDzbTS0WvQ9pq5gSDm0W0D+ItaWHMOmuQHOTrW
+        zL8Qjc5YCgnN2KzzQ4Xc/WUV9A==
+X-Google-Smtp-Source: APXvYqzOG3Iud4yqTJfLgrP/J9PSYnjxJFAsqN3VfssLJ4G8hndLNeozzfAGi1vq6o1D6P6OQGv/qA==
+X-Received: by 2002:a63:c64c:: with SMTP id x12mr5476408pgg.379.1556821968507;
+        Thu, 02 May 2019 11:32:48 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id k12sm14531027pfk.86.2019.05.02.11.32.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 11:32:47 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] thermal: cpu_cooling: Actually trace CPU load in thermal_power_cpu_get_power
+Date:   Thu,  2 May 2019 11:32:38 -0700
+Message-Id: <20190502183238.182058-1-mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 08:18:11PM +0200, Peter Zijlstra wrote:
+The CPU load values passed to the thermal_power_cpu_get_power
+tracepoint are zero for all CPUs, unless, unless the
+thermal_power_cpu_limit tracepoint is enabled too:
 
-> ARGH; I knew it was too pretty :/ Yes, something like what you suggest
-> will be needed, I'll go look at that once my brain recovers a bit from
-> staring at entry code all day.
+  irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
+  cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
 
-I forgot I can just run the thing, and it works!
+vs
 
+  irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
+  cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
+  irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
+  cpus=0000000f freq=408000 cdev_state=10 power=416
 
+There seems to be no good reason for omitting the CPU load information
+depending on another tracepoint. My guess is that the intention was to
+check whether thermal_power_cpu_get_power is (still) enabled, however
+'load_cpu != NULL' already indicates that it was at least enabled when
+cpufreq_get_requested_power() was entered, there seems little gain
+from omitting the assignment if the tracepoint was just disabled, so
+just remove the check.
+
+Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 7b23431be5cb..73b7bca8712f 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -203,7 +203,7 @@
- .Lend_\@:
- .endm
+ drivers/thermal/cpu_cooling.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+index f7c1f49ec87f..b437804e099b 100644
+--- a/drivers/thermal/cpu_cooling.c
++++ b/drivers/thermal/cpu_cooling.c
+@@ -458,7 +458,7 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
+ 			load = 0;
  
--.macro SAVE_ALL pt_regs_ax=%eax switch_stacks=0
-+.macro SAVE_ALL pt_regs_ax=%eax switch_stacks=0 clear_csh=1
- 	cld
- 	PUSH_GS
- 	pushl	%fs
-@@ -225,7 +225,7 @@
+ 		total_load += load;
+-		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
++		if (load_cpu)
+ 			load_cpu[i] = load;
  
- 	/* Switch to kernel stack if necessary */
- .if \switch_stacks > 0
--	SWITCH_TO_KERNEL_STACK
-+	SWITCH_TO_KERNEL_STACK \clear_csh
- .endif
- 
- .endm
-@@ -377,8 +377,9 @@
- 
- #define CS_FROM_ENTRY_STACK	(1 << 31)
- #define CS_FROM_USER_CR3	(1 << 30)
-+#define CS_FROM_INT3		(1 << 29)
- 
--.macro SWITCH_TO_KERNEL_STACK
-+.macro SWITCH_TO_KERNEL_STACK clear_csh=1
- 
- 	ALTERNATIVE     "", "jmp .Lend_\@", X86_FEATURE_XENPV
- 
-@@ -391,12 +392,13 @@
- 	 * that register for the time this macro runs
- 	 */
- 
-+	.if \clear_csh
- 	/*
--	 * The high bits of the CS dword (__csh) are used for
--	 * CS_FROM_ENTRY_STACK and CS_FROM_USER_CR3. Clear them in case
--	 * hardware didn't do this for us.
-+	 * The high bits of the CS dword (__csh) are used for CS_FROM_*. Clear
-+	 * them in case hardware didn't do this for us.
- 	 */
- 	andl	$(0x0000ffff), PT_CS(%esp)
-+	.endif
- 
- 	/* Are we on the entry stack? Bail out if not! */
- 	movl	PER_CPU_VAR(cpu_entry_area), %ecx
-@@ -1019,6 +1021,40 @@ ENTRY(entry_INT80_32)
- 	/* Restore user state */
- 	RESTORE_REGS pop=4			# skip orig_eax/error_code
- .Lirq_return:
-+	testl $CS_FROM_INT3, 4(%esp)
-+	jz .Lno_iret_fixup
-+
-+	/*
-+	 * Undo the magic from ENTRY(int3), in particular consider the case
-+	 * where regs->sp has been modified.
-+	 *
-+	 * Reconstruct the 3 entry IRET frame right after the (modified)
-+	 * regs->sp without lowering %esp in between, such that an NMI in the
-+	 * middle doesn't scribble our stack.
-+	 */
-+
-+	pushl	%eax
-+	pushl	%ecx
-+	movl	5*4(%esp), %eax		# (modified) regs->sp
-+
-+	movl	4*4(%esp), %ecx		# flags
-+	movl	%ecx, -4(%eax)
-+
-+	movl	3*4(%esp), %ecx		# cs
-+	andl	$0x0000ffff, %ecx
-+	movl	%ecx, -8(%eax)
-+
-+	movl	2*4(%esp), %ecx		# ip
-+	movl	%ecx, -12(%eax)
-+
-+	movl	1*4(%esp), %ecx		# eax
-+	movl	%ecx, -16(%eax)
-+
-+	popl	%ecx
-+	lea	-16(%eax), %esp
-+	popl	%eax
-+
-+.Lno_iret_fixup:
- 	/*
- 	 * ARCH_HAS_MEMBARRIER_SYNC_CORE rely on IRET core serialization
- 	 * when returning from IPI handler and when returning from
-@@ -1477,9 +1513,57 @@ END(nmi)
- 
- ENTRY(int3)
- 	ASM_CLAC
-+
-+	/*
-+	 * The high bits of the CS dword (__csh) are used for CS_FROM_*. Clear
-+	 * them in case hardware didn't do this for us.
-+	 */
-+	andl	$0x0000ffff, 4(%esp)
-+
-+#ifdef CONFIG_VM86
-+	testl	$X86_EFLAGS_VM, 8(%esp)
-+	jnz	.Lfrom_usermode_no_gap
-+#endif
-+	testl	$SEGMENT_RPL_MASK, 4(%esp)
-+	jnz	.Lfrom_usermode_no_gap
-+
-+	/*
-+	 * Here from kernel mode; so the (exception) stack looks like:
-+	 *
-+	 * 12(esp) - <previous context>
-+	 *  8(esp) - flags
-+	 *  4(esp) - cs
-+	 *  0(esp) - ip
-+	 *
-+	 * Lets build a 5 entry IRET frame after that, such that struct pt_regs
-+	 * is complete and in particular regs->sp is correct. This gives us
-+	 * the original 3 enties as gap:
-+	 *
-+	 * 32(esp) - <previous context>
-+	 * 28(esp) - orig_flags / gap
-+	 * 24(esp) - orig_cs	/ gap
-+	 * 20(esp) - orig_ip	/ gap
-+	 * 16(esp) - ss
-+	 * 12(esp) - sp
-+	 *  8(esp) - flags
-+	 *  4(esp) - cs
-+	 *  0(esp) - ip
-+	 */
-+	pushl	%ss	  # ss
-+	pushl	%esp      # sp (points at ss)
-+	pushl	4*4(%esp) # flags
-+	pushl	4*4(%esp) # cs
-+	pushl	4*4(%esp) # ip
-+
-+	add	$16, 12(%esp) # point sp back at the previous context
-+
-+	orl	$CS_FROM_INT3, 4(%esp) # mark magic IRET
-+
-+.Lfrom_usermode_no_gap:
-+
- 	pushl	$-1				# mark this as an int
- 
--	SAVE_ALL switch_stacks=1
-+	SAVE_ALL switch_stacks=1 clear_csh=0
- 	ENCODE_FRAME_POINTER
- 	TRACE_IRQS_OFF
- 	xorl	%edx, %edx			# zero error code
+ 		i++;
+-- 
+2.21.0.593.g511ec345e18-goog
 
