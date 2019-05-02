@@ -2,180 +2,109 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE385C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EC3C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5ED620449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D3320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556811629;
+	bh=Y4XNUNO9m72VC4aWc7ww6A/+NV1nbcXL9btbHA7Dzec=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=p2Lfdb1s/B3VFD1Maw27B5CZ+XVa/zPMAudMqJUDtG4udSHkAjXWYCx9HZ+y4W02F
+	 0HdgCk1CNUkKsH2VQnc1/UlXHfxzY2C76GxS61MfbUzfmg8f6BdDiaYloTIl+EyOvB
+	 8ayI4N3i5STKQctipguLOrO+F2YXb2vPsg7S2tKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfEBP3R (ORCPT
+        id S1728363AbfEBP3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:29:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49688 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728355AbfEBP3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 May 2019 11:29:14 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42FSbrG129929
-        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:29:12 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s81j5w9b5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:29:12 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 2 May 2019 16:29:10 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 16:29:01 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FT0Ls47775884
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 15:29:00 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8FA84C046;
-        Thu,  2 May 2019 15:29:00 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36DAF4C044;
-        Thu,  2 May 2019 15:28:56 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.205.209])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  2 May 2019 15:28:56 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 02 May 2019 18:28:55 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
-        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        nios2-dev@lists.rocketboards.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 02/15] alpha: switch to generic version of pte allocation
-Date:   Thu,  2 May 2019 18:28:29 +0300
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
-References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050215-0008-0000-0000-000002E29918
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050215-0009-0000-0000-0000224F0832
-Message-Id: <1556810922-20248-3-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=823 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905020103
+Received: from mail.kernel.org ([198.145.29.99]:46704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727637AbfEBP3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD43021734;
+        Thu,  2 May 2019 15:29:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556810948;
+        bh=Y4XNUNO9m72VC4aWc7ww6A/+NV1nbcXL9btbHA7Dzec=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QXg7bq2griqvieN+/iKiZlv3+trAAmuWXzNi4NWLclJo9Ce5WuLXabjcChDP7JAve
+         dvIElUaTz5rjmX4rTz9Xh8ExWK2tcfched+65O0awEJQnK6ODLOAGUiQW37kbcua6g
+         uFQkVjxDQhhPTjchhe4ZK0q8fGgzrTR9/kG8XbLU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 018/101] net: stmmac: fix jumbo frame sending with non-linear skbs
+Date:   Thu,  2 May 2019 17:20:20 +0200
+Message-Id: <20190502143341.207733001@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
+References: <20190502143339.434882399@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-alpha allocates PTE pages with __get_free_page() and uses
-GFP_KERNEL | __GFP_ZERO for the allocations.
+[ Upstream commit 58f2ce6f61615dfd8dd3cc01c9e5bb54ed35637e ]
 
-Switch it to the generic version that does exactly the same thing for the
-kernel page tables and adds __GFP_ACCOUNT for the user PTEs.
+When sending non-linear skbs with jumbo frames, we set up the non-paged
+data and mark that as a last segment, although the paged fragments are
+also prepared. This will stall the TX queue and trigger a watchdog warning
+(a simple reproducer is to run an iperf client mode TCP test with a large
+MTU - networking fails instantly).
 
-The alpha pte_free() and pte_free_kernel() versions are identical to the
-generic ones and can be simply dropped.
+Fix by checking if the skb is non-linear.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Acked-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/alpha/include/asm/pgalloc.h | 40 +++-------------------------------------
- 1 file changed, 3 insertions(+), 37 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/ring_mode.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/alpha/include/asm/pgalloc.h b/arch/alpha/include/asm/pgalloc.h
-index 02f9f91..71ded3b 100644
---- a/arch/alpha/include/asm/pgalloc.h
-+++ b/arch/alpha/include/asm/pgalloc.h
-@@ -5,6 +5,8 @@
- #include <linux/mm.h>
- #include <linux/mmzone.h>
+diff --git a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+index afed0f0f4027..4d9bcb4d0378 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
++++ b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+@@ -79,7 +79,8 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
  
-+#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
-+
- /*      
-  * Allocate and free page tables. The xxx_kernel() versions are
-  * used to allocate a kernel page table - this turns on ASN bits
-@@ -41,7 +43,7 @@ pgd_free(struct mm_struct *mm, pgd_t *pgd)
- static inline pmd_t *
- pmd_alloc_one(struct mm_struct *mm, unsigned long address)
- {
--	pmd_t *ret = (pmd_t *)__get_free_page(GFP_KERNEL|__GFP_ZERO);
-+	pmd_t *ret = (pmd_t *)__get_free_page(GFP_PGTABLE_USER);
- 	return ret;
- }
+ 		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
+ 		stmmac_prepare_tx_desc(priv, desc, 0, len, csum,
+-				STMMAC_RING_MODE, 1, true, skb->len);
++				STMMAC_RING_MODE, 1, !skb_is_nonlinear(skb),
++				skb->len);
+ 	} else {
+ 		des2 = dma_map_single(priv->device, skb->data,
+ 				      nopaged_len, DMA_TO_DEVICE);
+@@ -91,7 +92,8 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
+ 		tx_q->tx_skbuff_dma[entry].is_jumbo = true;
+ 		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
+ 		stmmac_prepare_tx_desc(priv, desc, 1, nopaged_len, csum,
+-				STMMAC_RING_MODE, 0, true, skb->len);
++				STMMAC_RING_MODE, 0, !skb_is_nonlinear(skb),
++				skb->len);
+ 	}
  
-@@ -51,42 +53,6 @@ pmd_free(struct mm_struct *mm, pmd_t *pmd)
- 	free_page((unsigned long)pmd);
- }
- 
--static inline pte_t *
--pte_alloc_one_kernel(struct mm_struct *mm)
--{
--	pte_t *pte = (pte_t *)__get_free_page(GFP_KERNEL|__GFP_ZERO);
--	return pte;
--}
--
--static inline void
--pte_free_kernel(struct mm_struct *mm, pte_t *pte)
--{
--	free_page((unsigned long)pte);
--}
--
--static inline pgtable_t
--pte_alloc_one(struct mm_struct *mm)
--{
--	pte_t *pte = pte_alloc_one_kernel(mm);
--	struct page *page;
--
--	if (!pte)
--		return NULL;
--	page = virt_to_page(pte);
--	if (!pgtable_page_ctor(page)) {
--		__free_page(page);
--		return NULL;
--	}
--	return page;
--}
--
--static inline void
--pte_free(struct mm_struct *mm, pgtable_t page)
--{
--	pgtable_page_dtor(page);
--	__free_page(page);
--}
--
- #define check_pgt_cache()	do { } while (0)
- 
- #endif /* _ALPHA_PGALLOC_H */
+ 	tx_q->cur_tx = entry;
 -- 
-2.7.4
+2.19.1
+
+
 
