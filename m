@@ -2,153 +2,129 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62A5C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5554AC04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904C5206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:54:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556762052;
-	bh=q8WYj4f3FZvpzyYrW6jMAI8xesfgJ9f0/LhK04EOxL8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FBSgTb+RvO3dlTNuhKATrHVa2Lb5Fx8iYHYkFdRPdENAvFaWXkfZtauanlOr3r6dA
-	 ZToVS27KTT+5p4G44EK+RA2kF6FBcTACXyxBrO6P2R+ddUxLS1mjdRgtKbrEKSszp+
-	 xEGNwRnrlmmY0BVBcbgfGdixfyD0QfPbuKYhKFME=
+	by mail.kernel.org (Postfix) with ESMTP id 28196208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfEBByL (ORCPT
+        id S1726338AbfEBByQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 21:54:11 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34532 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfEBByL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 21:54:11 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n15so687747ota.1;
-        Wed, 01 May 2019 18:54:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vVw1C6lqqEObhIEkQJZC6varaqiUoICZFVm+SicOMFc=;
-        b=Fy5825i5JqkJeGG4+leTy52sMOYlfW7Jqy5oWHA5KZLx6d4gSsyYVEwkiECwWDXPkQ
-         6sx13ZMMAVhjcDxdJGXXuUBtm1Cenxa9Ko+B34AlVn1vzWMYYUEzvLxkbA6m0IwljgRc
-         1IfXRq+QZH9C/D6hUXz7dDugcVWThKgF8SXGpqJ7KSO1Dru0Y4C+1GcOYkOFb0xmYQrT
-         eopen7ltZv3+JjgBZF3ea1KQ8zX2r/4Psb50YysYznKk723SmrSgCFpnCO63HfcrxTR8
-         4jPuZiQCeYgh2bZpk93dafh9LWTIjbK+TW48g4YEunG+OnRvd1ZyJ8l0/nkcPVXqyntR
-         eUYw==
-X-Gm-Message-State: APjAAAUiWDm6RdINnYJOXRwnhIWBUSB2L1o6RNTIPiitRyD5zBiH95Vj
-        wdnef7Tx0wkAnWj81KpOXg==
-X-Google-Smtp-Source: APXvYqyvSe6l1vLK4cJ5ZxTy/PVn9hSglfwCtCezdanzmXnY1wQ1v0aNKpAxBDRzN1UG/UMo5gmWdg==
-X-Received: by 2002:a9d:6c07:: with SMTP id f7mr740077otq.339.1556762050377;
-        Wed, 01 May 2019 18:54:10 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f17sm8630963oto.5.2019.05.01.18.54.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 18:54:09 -0700 (PDT)
-Date:   Wed, 1 May 2019 20:54:08 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc:     kyungmin.park@samsung.com, bbrezillon@kernel.org,
-        miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org,
-        computersforpeace@gmail.com, marek.vasut@gmail.com,
-        mark.rutland@arm.com, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 4/5] dt-binding: mtd: onenand/samsung: Add device tree
- support
-Message-ID: <20190502015408.GA11612@bogus>
-References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
- <20190426164224.11327-5-pawel.mikolaj.chmiel@gmail.com>
+        Wed, 1 May 2019 21:54:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61668 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726152AbfEBByQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 21:54:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 18:54:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,419,1549958400"; 
+   d="scan'208";a="145299326"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga008.fm.intel.com with ESMTP; 01 May 2019 18:54:12 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 02/10] swiotlb: Factor out slot allocation and free
+To:     Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>
+References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
+ <20190421011719.14909-3-baolu.lu@linux.intel.com>
+ <20190422164555.GA31181@lst.de>
+ <0c6e5983-312b-0d6b-92f5-64861cd6804d@linux.intel.com>
+ <20190423061232.GB12762@lst.de>
+ <dff50b2c-5e31-8b4a-7fdf-99d17852746b@linux.intel.com>
+ <20190424144532.GA21480@lst.de>
+ <a189444b-15c9-8069-901d-8cdf9af7fc3c@linux.intel.com>
+ <20190426150433.GA19930@lst.de>
+ <93b3d627-782d-cae0-2175-77a5a8b3fe6e@linux.intel.com>
+ <90182d27-5764-7676-8ca6-b2773a40cfe1@arm.com>
+ <1361b6ab-c3cf-d8ab-5f6b-9d9b7797bf02@linux.intel.com>
+ <c044c51a-d348-ca37-3eaa-5475e3fec6c9@arm.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <998eadf0-0435-1a6b-7234-71554d95bb70@linux.intel.com>
+Date:   Thu, 2 May 2019 09:47:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <c044c51a-d348-ca37-3eaa-5475e3fec6c9@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190426164224.11327-5-pawel.mikolaj.chmiel@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 06:42:23PM +0200, Paweł Chmiel wrote:
-> From: Tomasz Figa <tomasz.figa@gmail.com>
+Hi Robin,
+
+On 4/30/19 5:53 PM, Robin Murphy wrote:
+> On 30/04/2019 03:02, Lu Baolu wrote:
+>> Hi Robin,
+>>
+>> On 4/29/19 7:06 PM, Robin Murphy wrote:
+>>> On 29/04/2019 06:10, Lu Baolu wrote:
+>>>> Hi Christoph,
+>>>>
+>>>> On 4/26/19 11:04 PM, Christoph Hellwig wrote:
+>>>>> On Thu, Apr 25, 2019 at 10:07:19AM +0800, Lu Baolu wrote:
+>>>>>> This is not VT-d specific. It's just how generic IOMMU works.
+>>>>>>
+>>>>>> Normally, IOMMU works in paging mode. So if a driver issues DMA with
+>>>>>> IOVA  0xAAAA0123, IOMMU can remap it with a physical address 
+>>>>>> 0xBBBB0123.
+>>>>>> But we should never expect IOMMU to remap 0xAAAA0123 with physical
+>>>>>> address of 0xBBBB0000. That's the reason why I said that IOMMU 
+>>>>>> will not
+>>>>>> work there.
+>>>>>
+>>>>> Well, with the iommu it doesn't happen.  With swiotlb it obviosuly
+>>>>> can happen, so drivers are fine with it.  Why would that suddenly
+>>>>> become an issue when swiotlb is called from the iommu code?
+>>>>>
+>>>>
+>>>> I would say IOMMU is DMA remapping, not DMA engine. :-)
+>>>
+>>> I'm not sure I really follow the issue here - if we're copying the 
+>>> buffer to the bounce page(s) there's no conceptual difference from 
+>>> copying it to SWIOTLB slot(s), so there should be no need to worry 
+>>> about the original in-page offset.
+>>>
+>>>  From the reply up-thread I guess you're trying to include an 
+>>> optimisation to only copy the head and tail of the buffer if it spans 
+>>> multiple pages, and directly map the ones in the middle, but AFAICS 
+>>> that's going to tie you to also using strict mode for TLB 
+>>> maintenance, which may not be a win overall depending on the balance 
+>>> between invalidation bandwidth vs. memcpy bandwidth. At least if we 
+>>> use standard SWIOTLB logic to always copy the whole thing, we should 
+>>> be able to release the bounce pages via the flush queue to allow 
+>>> 'safe' lazy unmaps.
+>>>
+>>
+>> With respect, even we use the standard SWIOTLB logic, we need to use
+>> the strict mode for TLB maintenance.
+>>
+>> Say, some swiotbl slots are used by untrusted device for bounce page
+>> purpose. When the device driver unmaps the IOVA, the slots are freed but
+>> the mapping is still cached in IOTLB, hence the untrusted device is 
+>> still able to access the slots. Then the slots are allocated to other
+>> devices. This makes it possible for the untrusted device to access
+>> the data buffer of other devices.
 > 
-> This patch adds dt-bindings for Samsung OneNAND driver.
-> 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  .../bindings/mtd/samsung-onenand.txt          | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> new file mode 100644
-> index 000000000000..341d97cc1513
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> @@ -0,0 +1,46 @@
-> +Device tree bindings for Samsung SoC OneNAND controller
-> +
-> +Required properties:
-> + - compatible : value should be either of the following.
-> +   (a) "samsung,s3c6400-onenand" - for onenand controller compatible with
-> +       S3C6400 SoC,
-> +   (b) "samsung,s3c6410-onenand" - for onenand controller compatible with
-> +       S3C6410 SoC,
-> +   (c) "samsung,s5pc100-onenand" - for onenand controller compatible with
-> +       S5PC100 SoC,
-> +   (d) "samsung,s5pv210-onenand" - for onenand controller compatible with
-> +       S5PC110/S5PV210 SoCs.
-> +
-> + - reg : two memory mapped register regions:
-> +   - first entry: control registers.
-> +   - second and next entries: memory windows of particular OneNAND chips;
-> +     for variants a), b) and c) only one is allowed, in case of d) up to
-> +     two chips can be supported.
-> +
-> + - interrupt-parent : phandle of interrupt controller to which the OneNAND
-> +   controller is wired,
+> Sure, that's indeed how it would work right now - however since the 
+> bounce pages will be freed and reused by the DMA API layer itself (at 
+> the same level as the IOVAs) I see no technical reason why we couldn't 
+> investigate deferred freeing as a future optimisation.
 
-This is implied and can be removed.
+Yes, agreed.
 
-> + - interrupts : specifier of interrupt signal to which the OneNAND controller
-> +   is wired; should contain just one entry.
-> + - clock-names : should contain two entries:
-> +   - "bus" - bus clock of the controller,
-> +   - "onenand" - clock supplied to OneNAND memory.
-
-If the clock just goes to the OneNAND device, then it should be in the 
-nand device node rather than the controller node.
-
-> + - clock: should contain list of phandles and specifiers for all clocks listed
-> +   in clock-names property.
-> + - #address-cells : must be 1,
-> + - #size-cells : must be 1.
-
-This implies some child nodes. What are the child nodes?
-
-> +
-> +For partition table parsing (optional) please refer to:
-> + [1] Documentation/devicetree/bindings/mtd/partition.txt
-> +
-> +Example for an s5pv210 board:
-> +
-> +	onenand@b0600000 {
-> +		compatible = "samsung,s5pv210-onenand";
-> +		reg = <0xb0600000 0x2000>, <0xb0000000 0x20000>;
-> +		interrupt-parent = <&vic1>;
-> +		interrupts = <31>;
-> +		clock-names = "bus", "onenand";
-> +		clocks = <&clocks NANDXL>, <&clocks DOUT_FLASH>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +	};
-> -- 
-> 2.20.1
-> 
+Best regards,
+Lu Baolu
