@@ -2,96 +2,103 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CDCC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5D6C04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 827A120578
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69A820578
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:57:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faB2OjTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfEBU4w (ORCPT
+        id S1726447AbfEBU5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 16:56:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45301 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfEBU4w (ORCPT
+        Thu, 2 May 2019 16:57:13 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46987 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfEBU5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 16:56:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id o5so1566763pls.12;
-        Thu, 02 May 2019 13:56:51 -0700 (PDT)
+        Thu, 2 May 2019 16:57:13 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h21so3442878ljk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 13:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=IM6gRPP9vGYAtrlAGvrZ2f9cRbqq+2XFYVZx5ounwgo=;
+        b=faB2OjTUqLUYYuLoMp7WpkRaNTZEgletqliLc0MZ4+/osrjMIZcLCcfxLJ8eZrgc+F
+         pPhuKsTJfgrf8obzFfOQ9DBQswWwpy3rOilB/ZqgtZ6P7FAtpvwKlPGCcsEZiNfQYsGP
+         sFT/rV14J7xZDOI0G93FUODYhEA2zSR6VoQx36G9kvuAdRt0XaRmiCNreHLM2HzGfI4T
+         3e9FrHEO6d1DITNJXERhocTux647SkuM3zhlBM7n5lgxHkHVHWyrFTMyBy0e5dwPzHs4
+         TLM3Hd9ZAhHg8Dpoasypghsr0LCvxn8F7uUpb05vRxf2ntvETOQUwmk7zJWZN6NrlsUv
+         qr9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=e/6b1F0TJTMRM3bfudiWiJdDExYB3o0dmMac3po5ink=;
-        b=G/eFiqRfOPiNA1yZV8oC+zbplftBOSt3SL1C8IsDOldBaxR4xLylUA0g+JJF4J3V07
-         9Ce4KTDXyW7RuKDXScx4pdKpwzmYxwTTKwfqeibgU7tlqVfF7kBYZ4Xm+z6rXZuhIBj5
-         duCpDtMJAsy5K8WS8Vnlg5tt6iC2+ZcCQI0FOFoXe9jn9vwX3bwL1GhFtf43f+iVvEKl
-         5ktzJBQ9qk4UoDCMhfg60cpkqJzQGEmgc0PpeokGx9Hos7seYqqDqYIl4VpJY/LthOsj
-         isVF0zfBPuO07Jr7P2nZHhG7V/aswsfIi/TDh5lm6intGeC/ik9MQoYKbJLnxfU+ng9b
-         NfZA==
-X-Gm-Message-State: APjAAAXNT2bFO4EnAFVZsutoTBejaGCLMhzdNMlDV/PCbiWuwzYhacfl
-        XCKeZs7LE9ceCcdXcKa9atg=
-X-Google-Smtp-Source: APXvYqwCTZeNDI17Zq5JOzh1cbKyMTWjrIkQaZ+wFrYMImPcrLwBDwk5hBwaVoLtoXzH6v/hIZoS3w==
-X-Received: by 2002:a17:902:3324:: with SMTP id a33mr6137181plc.18.1556830611449;
-        Thu, 02 May 2019 13:56:51 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id l63sm80022pfb.124.2019.05.02.13.56.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=IM6gRPP9vGYAtrlAGvrZ2f9cRbqq+2XFYVZx5ounwgo=;
+        b=fqs68XeeXl0KvtQeFwdUqq5FrxZjxxNDmZBQsnPt+na4VI5PxXYAu/KaE/kOmRDh2w
+         SzE5EvjnQ/c9fJBCV548ZpBk5oda2RdFgHPXpBhul/CsP+lACNJAF4MsZAW3ZnzzurAl
+         TWX1XD1LRyMqcTZb9nYsJLqI5KJzyGw/oxlleZ67XfDej1b8SioXSEK8cImiidT7ucQM
+         EvpnEx/6au4o58mRixHtRL7Bkqjmss4R/aEJFZEv95VgmqG44RMt62EwCTzMU55qjkHx
+         xxqZrkZpV0sPeAYnoZSQswF4nYucSLuiv/0Tz5JOW+kfFW3I9rLppjvFW+PHfg5eF+dN
+         MSyg==
+X-Gm-Message-State: APjAAAUBHBGtOJmjNo3sxf4sKRbq376zGkLQNxzGg3gl3JHm7M3YUBJr
+        sOXk/WEDEs71m5vaToim9GY=
+X-Google-Smtp-Source: APXvYqzpsjoV1s1hnIKwSS9e7RCryB3e50vVNZv0WlsQ5f+zrRhCvMjengCjsMlTvvMImTqrwmPAng==
+X-Received: by 2002:a2e:81d0:: with SMTP id s16mr3098436ljg.145.1556830631022;
+        Thu, 02 May 2019 13:57:11 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id z16sm40915lfi.9.2019.05.02.13.57.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 13:56:50 -0700 (PDT)
-Message-ID: <1556830609.130741.0.camel@acm.org>
-Subject: Re: [PATCH] block: Fix function name in comment
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Raul Rangel <rrangel@chromium.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Date:   Thu, 02 May 2019 13:56:49 -0700
-In-Reply-To: <20190502205109.GA103782@google.com>
-References: <20190502194811.200677-1-rrangel@chromium.org>
-         <1556829225.12970.10.camel@acm.org> <20190502205109.GA103782@google.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 02 May 2019 13:57:09 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 4AE3B4603CA; Thu,  2 May 2019 23:57:09 +0300 (MSK)
+Date:   Thu, 2 May 2019 23:57:09 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     akpm@linux-foundation.org, arunks@codeaurora.org, brgl@bgdev.pl,
+        geert+renesas@glider.be, ldufour@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mguzik@redhat.com, mhocko@kernel.org, rppt@linux.ibm.com,
+        vbabka@suse.cz, ktkhai@virtuozzo.com
+Subject: Re: [PATCH v3 1/2] prctl_set_mm: Refactor checks from
+ validate_prctl_map
+Message-ID: <20190502205709.GD2488@uranus.lan>
+References: <0a48e0a2-a282-159e-a56e-201fbc0faa91@virtuozzo.com>
+ <20190502125203.24014-1-mkoutny@suse.com>
+ <20190502125203.24014-2-mkoutny@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190502125203.24014-2-mkoutny@suse.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-02 at 14:51 -0600, Raul Rangel wrote:
-+AD4 On Thu, May 02, 2019 at 01:33:45PM -0700, Bart Van Assche wrote:
-+AD4 +AD4 On Thu, 2019-05-02 at 13:48 -0600, Raul E Rangel wrote:
-+AD4 +AD4 +AD4 The comment was out of date.
-+AD4 +AD4 +AD4 
-+AD4 +AD4 +AD4 Signed-off-by: Raul E Rangel +ADw-rrangel+AEA-chromium.org+AD4
-+AD4 +AD4 +AD4 ---
-+AD4 +AD4 +AD4 
-+AD4 +AD4 +AD4  block/blk-mq.c +AHw 2 +-
-+AD4 +AD4 +AD4  1 file changed, 1 insertion(), 1 deletion(-)
-+AD4 +AD4 +AD4 
-+AD4 +AD4 +AD4 diff --git a/block/blk-mq.c b/block/blk-mq.c
-+AD4 +AD4 +AD4 index 9516304a38ee..0e467ff440a2 100644
-+AD4 +AD4 +AD4 --- a/block/blk-mq.c
-+AD4 +AD4 +AD4 diff --git a/block/blk-mq.c b/block/blk-mq.c
-+AD4 +AD4 +AD4 index 9516304a38ee..0e467ff440a2 100644
-+AD4 +AD4 +AD4 --- a/block/blk-mq.c
-+AD4 +AD4 +AD4 +-+-+- b/block/blk-mq.c
-+AD4 +AD4 +AD4 +AEAAQA -2062,7 +-2062,7 +AEAAQA void blk+AF8-mq+AF8-free+AF8-rqs(struct blk+AF8-mq+AF8-tag+AF8-set +ACo-set, struct blk+AF8-mq+AF8-tags +ACo-tags,
-+AD4 +AD4 +AD4                 list+AF8-del+AF8-init(+ACY-page-+AD4-lru)+ADs
-+AD4 +AD4 +AD4                 /+ACo
-+AD4 +AD4 +AD4                  +ACo Remove kmemleak object previously allocated in
-+AD4 +AD4 +AD4 -                +ACo blk+AF8-mq+AF8-init+AF8-rq+AF8-map().
-+AD4 +AD4 +AD4 +-                +ACo blk+AF8-mq+AF8-alloc+AF8-rqs().
-+AD4 +AD4 +AD4                  +ACo-/
-+AD4 +AD4 +AD4                 kmemleak+AF8-free(page+AF8-address(page))+ADs
-+AD4 +AD4 +AD4                 +AF8AXw-free+AF8-pages(page, page-+AD4-private)+ADs
-+AD4 +AD4 
-+AD4 +AD4 Does the entire comment fit on a single 80 column line? In other words, can
-+AD4 +AD4 the comment that is spread over four lines be reduced to a single line?
-+AD4 
-+AD4 No, it would put it at 91 characters long.
-
-That's unfortunate ...
+On Thu, May 02, 2019 at 02:52:02PM +0200, Michal Koutný wrote:
+> Despite comment of validate_prctl_map claims there are no capability
+> checks, it is not completely true since commit 4d28df6152aa ("prctl:
+> Allow local CAP_SYS_ADMIN changing exe_file"). Extract the check out of
+> the function and make the function perform purely arithmetic checks.
+> 
+> This patch should not change any behavior, it is mere refactoring for
+> following patch.
+> 
+> v1, v2: ---
+> v3: Remove unused mm variable from validate_prctl_map_addr
+> 
+> CC: Kirill Tkhai <ktkhai@virtuozzo.com>
+> CC: Cyrill Gorcunov <gorcunov@gmail.com>
+> Signed-off-by: Michal Koutný <mkoutny@suse.com>
+> Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
