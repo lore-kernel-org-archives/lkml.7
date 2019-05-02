@@ -2,72 +2,256 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E45C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA8AC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F37420675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062422081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:08:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maX0kka0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfEBPHz (ORCPT
+        id S1726406AbfEBPI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:07:55 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:58650 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBPHy (ORCPT
+        Thu, 2 May 2019 11:08:28 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:54903 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfEBPI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:07:54 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hMDJO-0006PH-Ow; Thu, 02 May 2019 17:07:50 +0200
-Message-ID: <3c683fc0d3ea3d07034366a5fbbd5ed5049d48b9.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next 3/3] netlink: add validation of NLA_F_NESTED
- flag
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Ahern <dsahern@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 02 May 2019 17:07:49 +0200
-In-Reply-To: <20190502131416.GE21672@unicorn.suse.cz>
-References: <cover.1556798793.git.mkubecek@suse.cz>
-         <75a0887b3eb70005c272685d8ef9a712f37d7a54.1556798793.git.mkubecek@suse.cz>
-         <3e8291cb2491e9a1830afdb903ed2c52e9f7475c.camel@sipsolutions.net>
-         <20190502131416.GE21672@unicorn.suse.cz>
+        Thu, 2 May 2019 11:08:27 -0400
+Received: by mail-it1-f194.google.com with SMTP id a190so3884735ite.4;
+        Thu, 02 May 2019 08:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vN+j4+nd5BKyao3Lvpqus6B/aYyzpgJNlMx+q2AjsvM=;
+        b=maX0kka07S2TirIQcAeXMZI/A78EbHhVEa0CawKgApQa0vMzPqhvAJfIvbkvduHi6K
+         Kwht2DoZWwI2uJ1dvudku2iCZlO5bozXFhz5ZovmQedJQBnlBq1WDlJ7ClStqXmfGvSp
+         9xSixbuXn21Yb/id8TBTo2yhTHpaR+2Ufj01A6BO64KEMo4l+MkyQ9f11jUwAJMXRmpc
+         crROedOFVkDi+CXxFDtzpQeiI146nGbc1L0VesyE5qg1KWzlm5wBedOwTfagEzuoGYKx
+         utAO7q71Gz9i7MKYIIumkyof+4nCEYL4axNNMHUdsVtY8C2aTIuyQc91PAcaAuOLKa6z
+         2LzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vN+j4+nd5BKyao3Lvpqus6B/aYyzpgJNlMx+q2AjsvM=;
+        b=qp3lkCQNKjfcvBVxreJNGBjZbEL2BJ/MF1x9mzcUN50Dl+APkcPYmlad8ut6vhl0qw
+         ualNFzmfB5uCV/Lt3gIQ/x8sGY4zQikWuH6MlLYNmM/ulaPOAYkmFIITb4mRnFQXGr8w
+         3yNp2cyCEKM9nA7ckc4RLNavwEx7hYTDyoNVM92YZfv/GTh5nW4gMugYhnxIjkHPvC45
+         SBuF6RPrV6GvrhFqLIOwdKKn08yh6i6qt4acPr25UseUkLyjEfUf++B1AMtwiyWaqDc1
+         +uEgmpmCqKyuXtF4SURSK+tn5O/4IMKpFDvXbb5gakNVWRIlieqUFGaKufuSypm7pxeZ
+         2Lqw==
+X-Gm-Message-State: APjAAAVZrV9eXc/ZuuJEuIcrKvJlbgdCZ+rGaSObO5mr0BsP1BRm3tWp
+        pTWrca3ALCAbxJ3SC1btCLVZLMl8A0vmuIIjCFo=
+X-Google-Smtp-Source: APXvYqzRXnHs/jp8hUcRI6o4ZSLm1l+dCCRmqIRTdj0/iWnMR+SsBGvCQ1M/uMltF6DPwV8qgJIiNekygPL8hs5lW2M=
+X-Received: by 2002:a24:4ace:: with SMTP id k197mr2928742itb.46.1556809706149;
+ Thu, 02 May 2019 08:08:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
+ <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
+ <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
+ <875zqt4igg.fsf@notabene.neil.brown.name> <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
+ <CAJfpegsthQn_=3AQJf7ojxoQBpHMA3dz1fCBjNZXsCA1E0oqnw@mail.gmail.com>
+In-Reply-To: <CAJfpegsthQn_=3AQJf7ojxoQBpHMA3dz1fCBjNZXsCA1E0oqnw@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
+Date:   Thu, 2 May 2019 17:08:14 +0200
+Message-ID: <CAHpGcML0KuoGSyXyyDnXHkSp3nDnSjJPeZeWEmt8CXxQeojxwg@mail.gmail.com>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        NeilBrown <neilb@suse.com>, Amir Goldstein <amir73il@gmail.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-02 at 15:14 +0200, Michal Kubecek wrote:
-> 
-> > > @@ -415,7 +418,8 @@ enum netlink_validation {
-> > >  #define NL_VALIDATE_STRICT (NL_VALIDATE_TRAILING |\
-> > >  			    NL_VALIDATE_MAXTYPE |\
-> > >  			    NL_VALIDATE_UNSPEC |\
-> > > -			    NL_VALIDATE_STRICT_ATTRS)
-> > > +			    NL_VALIDATE_STRICT_ATTRS |\
-> > > +			    NL_VALIDATE_NESTED)
-> > 
-> > This is fine _right now_, but in general we cannot keep adding here
-> > after the next release :-)
-> 
-> Right, that's why I would like to get this into the same cycle as your
-> series.
+Am Do., 2. Mai 2019 um 16:28 Uhr schrieb Miklos Szeredi <miklos@szeredi.hu>=
+:
+> On Thu, May 2, 2019 at 10:05 AM Andreas Gruenbacher <agruenba@redhat.com>=
+ wrote:
+> > On Thu, 2 May 2019 at 05:57, NeilBrown <neilb@suse.com> wrote:
+> > > On Wed, May 01 2019, Amir Goldstein wrote:
+> > > > On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
+> > > >> On Tue, Dec 06 2016, J. Bruce Fields wrote:
+> > > >> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wr=
+ote:
+> > > >> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi=
+.hu> wrote:
+> > > >> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
+> > > >> >> > <andreas.gruenbacher@gmail.com> wrote:
+> > > >> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.g=
+ruenbacher@gmail.com>:
+> > > >> >> >
+> > > >> >> >>> It's not hard to come up with a heuristic that determines i=
+f a
+> > > >> >> >>> system.nfs4_acl value is equivalent to a file mode, and to =
+ignore the
+> > > >> >> >>> attribute in that case. (The file mode is transmitted in it=
+s own
+> > > >> >> >>> attribute already, so actually converting .) That way, over=
+layfs could
+> > > >> >> >>> still fail copying up files that have an actual ACL. It's s=
+till an
+> > > >> >> >>> ugly hack ...
+> > > >> >> >>
+> > > >> >> >> Actually, that kind of heuristic would make sense in the NFS=
+ client
+> > > >> >> >> which could then hide the "system.nfs4_acl" attribute.
+> >
+> > I still think the nfs client could make this problem mostly go away by
+> > not exposing "system.nfs4_acl" xattrs when the acl is equivalent to
+> > the file mode. The richacl patches contain a workable abgorithm for
+> > that. The problem would remain for files that have an actual NFS4 ACL,
+> > which just cannot be mapped to a file mode or to POSIX ACLs in the
+> > general case, as well as for files that have a POSIX ACL. Mapping NFS4
+> > ACL that used to be a POSIX ACL back to POSIX ACLs could be achieved
+> > in many cases as well, but the code would be quite messy. A better way
+> > seems to be to using a filesystem that doesn't support POSIX ACLs in
+> > the first place. Unfortunately, xfs doesn't allow turning off POSIX
+> > ACLs, for example.
+>
+> How about mounting NFSv4 with noacl?  That should fix this issue, right?
 
-Yeah, I know you know, just wanted state it again :-)
+You'll still see permissions that differ from what the filesystem
+enforces, and copy-up would change that behavior.
 
-> How about "NLA_F_NESTED is missing" and "NLA_F_NESTED not expected"?
+Andreas
 
-Looks good to me.
-
-johannes
-
+> Thanks,
+> Miklos
+>
+>
+>
+> >
+> > Andreas
+> >
+> > > >> >> > Even simpler would be if knfsd didn't send the attribute if n=
+ot
+> > > >> >> > necessary.  Looks like there's code actively creating the nfs=
+4_acl on
+> > > >> >> > the wire even if the filesystem had none:
+> > > >> >> >
+> > > >> >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
+> > > >> >> >     if (!pacl)
+> > > >> >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNE=
+L);
+> > > >> >> >
+> > > >> >> > What's the point?
+> > > >> >>
+> > > >> >> That's how the protocol is specified.
+> > > >> >
+> > > >> > Yep, even if we could make that change to nfsd it wouldn't help =
+the
+> > > >> > client with the large number of other servers that are out there
+> > > >> > (including older knfsd's).
+> > > >> >
+> > > >> > --b.
+> > > >> >
+> > > >> >> (I'm not saying that that's very helpful.)
+> > > >> >>
+> > > >> >> Andreas
+> > > >>
+> > > >> Hi everyone.....
+> > > >>  I have a customer facing this problem, and so stumbled onto the e=
+mail
+> > > >>  thread.
+> > > >>  Unfortunately it didn't resolve anything.  Maybe I can help kick =
+things
+> > > >>  along???
+> > > >>
+> > > >>  The core problem here is that NFSv4 and ext4 use different and la=
+rgely
+> > > >>  incompatible ACL implementations.  There is no way to accurately
+> > > >>  translate from one to the other in general (common specific examp=
+les
+> > > >>  can be converted).
+> > > >>
+> > > >>  This means that either:
+> > > >>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vi=
+ce
+> > > >>       versa) or
+> > > >>    2/ overlayfs need to accept that sometimes it cannot copy ACLs,=
+ and
+> > > >>       that is OK.
+> > > >>
+> > > >>  Silently not copying the ACLs is probably not a good idea as it m=
+ight
+> > > >>  result in inappropriate permissions being given away.
+> > > >
+> > > > For example? permissions given away to do what?
+> > > > Note that ovl_permission() only check permissions of *mounter*
+> > > > to read the lower NFS file and ovl_open()/ovl_read_iter() access
+> > > > the lower file with *mounter* credentials.
+> > > >
+> > > > I might be wrong, but seems to me that once admin mounted
+> > > > overlayfs with lower NFS, NFS ACLs are not being enforced at all
+> > > > even before copy up.
+> > >
+> > > I guess it is just as well that copy-up fails then - if the lower-lev=
+el
+> > > permission check is being ignored.
+> > >
+> > > >
+> > > >> So if the
+> > > >>  sysadmin wants this (and some clearly do), they need a way to
+> > > >>  explicitly say "I accept the risk".  If only standard Unix permis=
+sions
+> > > >>  are used, there is no risk, so this seems reasonable.
+> > > >>
+> > > >>  So I would like to propose a new option for overlayfs
+> > > >>     nocopyupacl:   when overlayfs is copying a file (or directory =
+etc)
+> > > >>         from the lower filesystem to the upper filesystem, it does=
+ not
+> > > >>         copy extended attributes with the "system." prefix.  These=
+ are
+> > > >>         used for storing ACL information and this is sometimes not
+> > > >>         compatible between different filesystem types (e.g. ext4 a=
+nd
+> > > >>         NFSv4).  Standard Unix ownership permission flags (rwx) *a=
+re*
+> > > >>         copied so this option does not risk giving away inappropri=
+ate
+> > > >>         permissions unless the lowerfs uses unusual ACLs.
+> > > >>
+> > > >>
+> > > >
+> > > > I am wondering if it would make more sense for nfs to register a
+> > > > security_inode_copy_up_xattr() hook.
+> > > > That is the mechanism that prevents copying up other security.*
+> > > > xattrs?
+> > >
+> > > No, I don't think that would make sense.
+> > > Support some day support for nfs4 acls were added to ext4 (not a tota=
+lly
+> > > ridiculous suggestion).  We would then want NFS to allow it's ACLs to=
+ be
+> > > copied up.
+> > >
+> > > Thanks,
+> > > NeilBrown
+> > >
+> > >
+> > > >
+> > > > Thanks,
+> > > > Amir.
