@@ -7,56 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EA2C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37736C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4352081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09201204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811193;
-	bh=AoYRiac6rFuvgBx94Y9LNGWvmUQAAaWakSRA5xQyUgg=;
+	s=default; t=1556811198;
+	bh=K88QpaDu6awBn+i1ugyXXw2XyuEuhunQVRDth2+HNXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oyRlrmdul/P2Gtm0mVIs32EprlfZq88n6+pvYG71faPp5xo/P9Sv9FS6U3Pqhp23e
-	 gwPuRO3A3V9dTqlm95S+8c00IZfBm5Q7rJ4kawLatxHf49gs6l49u3J0QemeXvwsTA
-	 NfIMDGXrH3LxfnSj8IlKiKiylv8+D4KPKhbnndno=
+	b=lvqewM3DF3OAxkTVDqb7GLa1c4yF4cl6Sq8biX0ManH5Eu9XICp7Ec1jrFLRQLlYk
+	 UytPi8YVM7Zr+DzzIF+fLzZVsj1kcn8cpFhhvArvEfYGCFImaEmfG1MvZ4xqBrf/N8
+	 R4JemQMNsVn3eVdGFWhEIJ+fw58jIzE5N5lv1jEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbfEBPdM (ORCPT
+        id S1729312AbfEBPdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:33:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53270 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbfEBPdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:33:09 -0400
+        id S1729338AbfEBPdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:33:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB33E21743;
-        Thu,  2 May 2019 15:33:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B95C204FD;
+        Thu,  2 May 2019 15:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811188;
-        bh=AoYRiac6rFuvgBx94Y9LNGWvmUQAAaWakSRA5xQyUgg=;
+        s=default; t=1556811190;
+        bh=K88QpaDu6awBn+i1ugyXXw2XyuEuhunQVRDth2+HNXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TjblWLOFmxWapWcboLX3kruhfRxpsNNd5WAPR0/mUK9lEj/Bk0zok2aKQ1lQdIF0u
-         O5s4FqKbljJ5eiQWf3mWlSR1m5ZjVmTLC44PvpRMhBNf4WCBpyMXQbENclmp5DoeRz
-         FmFZvZIeGeqB7q7L4gD+aaIR8NBz5YmjQIYpL9ic=
+        b=OD0nsh92A7R9L/CWLkJTq+lwkXXgJzTLSeOY+j/uqNvIg52bmIDzFelK89Z5sUAFx
+         yVcVwwdVqH0COoLldjiIPv3QShWu6Jas3iVOfD43r510ScQvX3gXk9xy8CnuiKT4S/
+         uTCRruBZbrcviokkv8P+x7+4WNz3qVwHskKhoQ24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Craig Bergstrom <craigb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sander Eikelenboom <linux@eikelenboom.it>,
-        Sean Young <sean@mess.org>,
+        stable@vger.kernel.org, Dave Carroll <david.carroll@microsemi.com>,
+        Sagar Biradar <sagar.biradar@microchip.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 076/101] x86/mm: Dont exceed the valid physical address space
-Date:   Thu,  2 May 2019 17:21:18 +0200
-Message-Id: <20190502143344.976370304@linuxfoundation.org>
+Subject: [PATCH 5.0 067/101] scsi: aacraid: Insure we dont access PCIe space during AER/EEH
+Date:   Thu,  2 May 2019 17:21:09 +0200
+Message-Id: <20190502143344.314278251@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -69,60 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 92c77f7c4d5dfaaf45b2ce19360e69977c264766 ]
+[ Upstream commit b6554cfe09e1f610aed7d57164ab7760be57acd9 ]
 
-valid_phys_addr_range() is used to sanity check the physical address range
-of an operation, e.g., access to /dev/mem. It uses __pa(high_memory)
-internally.
+There are a few windows during AER/EEH when we can access PCIe I/O mapped
+registers. This will harden the access to insure we do not allow PCIe
+access during errors
 
-If memory is populated at the end of the physical address space, then
-__pa(high_memory) is outside of the physical address space because:
-
-   high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
-
-For the comparison in valid_phys_addr_range() this is not an issue, but if
-CONFIG_DEBUG_VIRTUAL is enabled, __pa() maps to __phys_addr(), which
-verifies that the resulting physical address is within the valid physical
-address space of the CPU. So in the case that memory is populated at the
-end of the physical address space, this is not true and triggers a
-VIRTUAL_BUG_ON().
-
-Use __pa(high_memory - 1) to prevent the conversion from going beyond
-the end of valid physical addresses.
-
-Fixes: be62a3204406 ("x86/mm: Limit mmap() of /dev/mem to valid physical addresses")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Craig Bergstrom <craigb@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sander Eikelenboom <linux@eikelenboom.it>
-Cc: Sean Young <sean@mess.org>
-
-Link: https://lkml.kernel.org/r/20190326001817.15413-2-rcampbell@nvidia.com
+Signed-off-by: Dave Carroll <david.carroll@microsemi.com>
+Reviewed-by: Sagar Biradar <sagar.biradar@microchip.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/x86/mm/mmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/aacraid/aacraid.h | 7 ++++++-
+ drivers/scsi/aacraid/commsup.c | 4 ++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
-index db3165714521..dc726e07d8ba 100644
---- a/arch/x86/mm/mmap.c
-+++ b/arch/x86/mm/mmap.c
-@@ -230,7 +230,7 @@ bool mmap_address_hint_valid(unsigned long addr, unsigned long len)
- /* Can we access it for direct reading/writing? Must be RAM: */
- int valid_phys_addr_range(phys_addr_t addr, size_t count)
- {
--	return addr + count <= __pa(high_memory);
-+	return addr + count - 1 <= __pa(high_memory - 1);
+diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
+index 3291d1c16864..8bd09b96ea18 100644
+--- a/drivers/scsi/aacraid/aacraid.h
++++ b/drivers/scsi/aacraid/aacraid.h
+@@ -2640,9 +2640,14 @@ static inline unsigned int cap_to_cyls(sector_t capacity, unsigned divisor)
+ 	return capacity;
  }
  
- /* Can we access it through mmap? Must be a valid physical address: */
++static inline int aac_pci_offline(struct aac_dev *dev)
++{
++	return pci_channel_offline(dev->pdev) || dev->handle_pci_error;
++}
++
+ static inline int aac_adapter_check_health(struct aac_dev *dev)
+ {
+-	if (unlikely(pci_channel_offline(dev->pdev)))
++	if (unlikely(aac_pci_offline(dev)))
+ 		return -1;
+ 
+ 	return (dev)->a_ops.adapter_check_health(dev);
+diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
+index a3adc954f40f..09367b8a3885 100644
+--- a/drivers/scsi/aacraid/commsup.c
++++ b/drivers/scsi/aacraid/commsup.c
+@@ -672,7 +672,7 @@ int aac_fib_send(u16 command, struct fib *fibptr, unsigned long size,
+ 					return -ETIMEDOUT;
+ 				}
+ 
+-				if (unlikely(pci_channel_offline(dev->pdev)))
++				if (unlikely(aac_pci_offline(dev)))
+ 					return -EFAULT;
+ 
+ 				if ((blink = aac_adapter_check_health(dev)) > 0) {
+@@ -772,7 +772,7 @@ int aac_hba_send(u8 command, struct fib *fibptr, fib_callback callback,
+ 
+ 		spin_unlock_irqrestore(&fibptr->event_lock, flags);
+ 
+-		if (unlikely(pci_channel_offline(dev->pdev)))
++		if (unlikely(aac_pci_offline(dev)))
+ 			return -EFAULT;
+ 
+ 		fibptr->flags |= FIB_CONTEXT_FLAG_WAIT;
 -- 
 2.19.1
 
