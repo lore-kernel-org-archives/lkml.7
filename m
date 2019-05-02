@@ -2,57 +2,56 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A159C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CA3C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5FD217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B2C217D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810930;
-	bh=ycWLMFE2XQW9iKBkq/OI1zu6AiL1FtXWMJkW9Ii0U3Q=;
+	s=default; t=1556810933;
+	bh=CKB00b82O/m91mqSznLKclqk4o1K3nQnzd/FY7DCOsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0wbmEGH2f6C3rpzunRoEW8URqn5U1+fa0DO04rtbnUuZFmSKgx6VQ+wfg/4su/YrM
-	 V811hSSegYdYp7F6iEaFQRNG+/0ggVMnkkn3Q/56Cerui9owFemRdTBPIrd87fqC6d
-	 kRiEH2x1WurtD41z8f9MS+olh0xYPf4nP+nGBS1I=
+	b=2T8I61aOIqq0lg676Syc3EWeIGxS/Sv3od03zC7S59gmiIXR/Mu1yTosntBDDQgsU
+	 iykwrMFHyxtCoP08NNmwuegSx/iLBUNbyV8NByYr1+odI46U7cE8RWKyeM9xXPBe7b
+	 F2vkbOqzm5w6CQ7h9VZ1XY0mhCF0ZzS+elkuBVhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfEBP2s (ORCPT
+        id S1727069AbfEBP2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:28:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46120 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:28:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfEBP2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:28:44 -0400
+        id S1727568AbfEBP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:28:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDC2321743;
-        Thu,  2 May 2019 15:28:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9875421783;
+        Thu,  2 May 2019 15:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810924;
-        bh=ycWLMFE2XQW9iKBkq/OI1zu6AiL1FtXWMJkW9Ii0U3Q=;
+        s=default; t=1556810927;
+        bh=CKB00b82O/m91mqSznLKclqk4o1K3nQnzd/FY7DCOsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=og4T5afRqYjY/n/7fBsa5ArotYAB/sgzt7cu0SVhZdI6elHDkxObfp+ky2Ox7JsdB
-         gT5cVAIxrGWwyGerAFdutvW0Zwjai1O6THv3+EC30pkHb3PjQeZj0bwhBO9G4sdDuA
-         cGNqIzeP3w2qy33r0AlbxeDbFgsKU4bkndt/Pq+w=
+        b=TAzSLk5cw9ECIPn1yzriQZC4sXJex/t1fDN1j7xSTAfJdBiJ4t52oMrQhIaQJEsEo
+         3PlscDIWbWL5FanBJPgkDT6gAI/YthNWTPR+AFruq1g77ul7EFtg7WyHuv32NnmZe+
+         MocMm0gB8qXsHv0qCpxec8MEn96UlETmNPI1kGOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paulo Alcantara <paulo@paulo.ac>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.0 001/101] selinux: use kernel linux/socket.h for genheaders and mdp
-Date:   Thu,  2 May 2019 17:20:03 +0200
-Message-Id: <20190502143339.556875625@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Liebler <stli@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 010/101] s390: limit brk randomization to 32MB
+Date:   Thu,  2 May 2019 17:20:12 +0200
+Message-Id: <20190502143340.694072618@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,67 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paulo Alcantara <paulo@paulo.ac>
+[ Upstream commit cd479eccd2e057116d504852814402a1e68ead80 ]
 
-commit dfbd199a7cfe3e3cd8531e1353cdbd7175bfbc5e upstream.
+For a 64-bit process the randomization of the program break is quite
+large with 1GB. That is as big as the randomization of the anonymous
+mapping base, for a test case started with '/lib/ld64.so.1 <exec>'
+it can happen that the heap is placed after the stack. To avoid
+this limit the program break randomization to 32MB for 64-bit and
+keep 8MB for 31-bit.
 
-When compiling genheaders and mdp from a newer host kernel, the
-following error happens:
-
-    In file included from scripts/selinux/genheaders/genheaders.c:18:
-    ./security/selinux/include/classmap.h:238:2: error: #error New
-    address family defined, please update secclass_map.  #error New
-    address family defined, please update secclass_map.  ^~~~~
-    make[3]: *** [scripts/Makefile.host:107:
-    scripts/selinux/genheaders/genheaders] Error 1 make[2]: ***
-    [scripts/Makefile.build:599: scripts/selinux/genheaders] Error 2
-    make[1]: *** [scripts/Makefile.build:599: scripts/selinux] Error 2
-    make[1]: *** Waiting for unfinished jobs....
-
-Instead of relying on the host definition, include linux/socket.h in
-classmap.h to have PF_MAX.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Paulo Alcantara <paulo@paulo.ac>
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-[PM: manually merge in mdp.c, subject line tweaks]
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Stefan Liebler <stli@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- scripts/selinux/genheaders/genheaders.c |    1 -
- scripts/selinux/mdp/mdp.c               |    1 -
- security/selinux/include/classmap.h     |    1 +
- 3 files changed, 1 insertion(+), 2 deletions(-)
+ arch/s390/include/asm/elf.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/scripts/selinux/genheaders/genheaders.c
-+++ b/scripts/selinux/genheaders/genheaders.c
-@@ -9,7 +9,6 @@
- #include <string.h>
- #include <errno.h>
- #include <ctype.h>
--#include <sys/socket.h>
+diff --git a/arch/s390/include/asm/elf.h b/arch/s390/include/asm/elf.h
+index 7d22a474a040..f74639a05f0f 100644
+--- a/arch/s390/include/asm/elf.h
++++ b/arch/s390/include/asm/elf.h
+@@ -252,11 +252,14 @@ do {								\
  
- struct security_class_mapping {
- 	const char *name;
---- a/scripts/selinux/mdp/mdp.c
-+++ b/scripts/selinux/mdp/mdp.c
-@@ -32,7 +32,6 @@
- #include <stdlib.h>
- #include <unistd.h>
- #include <string.h>
--#include <sys/socket.h>
- 
- static void usage(char *name)
- {
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -1,5 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #include <linux/capability.h>
-+#include <linux/socket.h>
- 
- #define COMMON_FILE_SOCK_PERMS "ioctl", "read", "write", "create", \
-     "getattr", "setattr", "lock", "relabelfrom", "relabelto", "append", "map"
+ /*
+  * Cache aliasing on the latest machines calls for a mapping granularity
+- * of 512KB. For 64-bit processes use a 512KB alignment and a randomization
+- * of up to 1GB. For 31-bit processes the virtual address space is limited,
+- * use no alignment and limit the randomization to 8MB.
++ * of 512KB for the anonymous mapping base. For 64-bit processes use a
++ * 512KB alignment and a randomization of up to 1GB. For 31-bit processes
++ * the virtual address space is limited, use no alignment and limit the
++ * randomization to 8MB.
++ * For the additional randomization of the program break use 32MB for
++ * 64-bit and 8MB for 31-bit.
+  */
+-#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ffffUL)
++#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x1fffUL)
+ #define MMAP_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ff80UL)
+ #define MMAP_ALIGN_MASK	(is_compat_task() ? 0 : 0x7fUL)
+ #define STACK_RND_MASK	MMAP_RND_MASK
+-- 
+2.19.1
+
 
 
