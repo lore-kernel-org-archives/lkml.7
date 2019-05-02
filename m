@@ -2,205 +2,90 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683E2C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AD0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F962075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE3720652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:35:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cEHI1Thv"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="kJ/VcYvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfEBJ3A (ORCPT
+        id S1726289AbfEBJfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 05:29:00 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38286 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726202AbfEBJ27 (ORCPT
+        Thu, 2 May 2019 05:35:47 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38120 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfEBJfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 05:28:59 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x429RfYS003613;
-        Thu, 2 May 2019 11:28:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=/2dLYwvIGpRkACmfoPj9weHdPWS9z7ga6G0TrZio5Zg=;
- b=cEHI1ThvDIf7BtZcTNb1KQWRBBLMN2s4wvy0fz2+SYlbOxvuPKMHFPOHTO/4n1KkQk91
- 2UHnwT5o+SebHhTH0WmQ84HDMGN2A2iOrAxR7Gjsia62lUhqd8O+VzjMzVFfJyi/Y5se
- pfqJouCUspqO9mJ9aBkgGxAtWhX9YM06VG3dC9klxVm2JaJnyNAo3Wi+V6rZyTnKA8WC
- SKS+Libee9r1C9xBRHdqYhxge6ygSlGscELQUaoW7nnEXEqmlzz9NwzbyowyfFBYutH0
- t9R7cFmFAgAW4taTuDidC0qLQDn89CRnn6qSiP1T7Ozwv6DzqAxqfzY+5VutacnooaQp Sw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2s6xgcqjb3-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 02 May 2019 11:28:51 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4D74C3D;
-        Thu,  2 May 2019 09:28:50 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 221FC1588;
-        Thu,  2 May 2019 09:28:50 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 2 May 2019
- 11:28:50 +0200
-Received: from localhost (10.48.0.131) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 2 May 2019 11:28:49 +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Dan Williams <dan.j.williams@intel.com>, <arnaud.pouliquen@st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-Subject: [PATCH v2] dmaengine: stm32-dma: fix residue calculation in stm32-dma
-Date:   Thu, 2 May 2019 11:28:42 +0200
-Message-ID: <1556789322-7232-1-git-send-email-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 May 2019 05:35:47 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v1so1371365lfg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 02:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gLiW98ObQ1S6YFlruRE9Fln9ldebb9TO3ZMt7eGSCa4=;
+        b=kJ/VcYvHyjnVugkqfWENJv99k8g6t5EVlK98yNTP787dS27OlftIdT80tN/vQeycG1
+         OLXK58RYd2gV0AN/zXDeGH/7jYGtSmh27vXpnBU5/WBtDMrT3yNMJrOeykV2L9OnsWaM
+         k0q4Ul2eAe/YiFvguNcj0qV85L6744P18qUjYPw4QM17PauwU9dw7t1UKV9G5chzTd3a
+         freJak4M0M62x1Vp4lr3/3hdFX7R67+cCzCHre8/Hj7YG2e6jI+b0DyXSqN/6XL4NYjv
+         znUwLiR/WoEaDmdfdiNAWx58cuDsNy5tHxIkU/9FYUyI3Ot3Pd20VpxN4qkegjx0tHvh
+         Kg4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gLiW98ObQ1S6YFlruRE9Fln9ldebb9TO3ZMt7eGSCa4=;
+        b=ZfV57kYVNaDRPgncOxZJi1YeD5iKOLOsw0lYweoJNdBBbfjvOzTEBV901cR4F3riYg
+         pz+tFCnjqcNGoW7cqA/tiAQB6XiZkiI1FgjRaIzOdgGkk+XpU5JK5yanJ0DBttmUY78E
+         WGtAKGoAflPwfjR7PZjc3hCsBcv1lCtkPa7Wu9pg7oGSEKqiWnVlXXKAXvg/9xOQ0jL9
+         4QOXNwuHZ3bsgn8YUiE4+j7aPAntE2rZITOmHe++55cdJeTmjIyluHzcuZViENpVh7GL
+         0b9gGBFQO0eeeI7+PLuCnxCPEmnVRGspTmxF1AP88qBrC2Y2WnIUsi4ADEYrN15FbarA
+         umLw==
+X-Gm-Message-State: APjAAAXQ/NOmXN4T5Jn8dvX6QRAco9sr4cKpzVwy324gH0eyQzl7IU3l
+        aieKnlvM89FMjKozJezG92iqM8KegIeCcDyrg/X3NA==
+X-Google-Smtp-Source: APXvYqzbPMzpxD0RPAZhpWdShx/+nGO7oeIUDQ2/rulMH8m6jO3wZL7AozC29zzbdQkX6PEqZ8Xr/tJPlZ0x7ozzxpU=
+X-Received: by 2002:ac2:48a5:: with SMTP id u5mr1414737lfg.115.1556789745312;
+ Thu, 02 May 2019 02:35:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.131]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_04:,,
- signatures=0
+References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
+ <1556171696-7741-2-git-send-email-yash.shah@sifive.com> <20190425101318.GA8469@e107155-lin>
+ <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
+ <20190426093358.GA28309@e107155-lin> <CAJ2_jOEoD=Njp+L+H=jG59mA-j9SnwzyNmz7ECogWmbvei_f5Q@mail.gmail.com>
+ <20190502004130.GA20802@bogus> <CAJ2_jOETZa_oC-xSwfQVw-9Q6OivRG2R0rKMhwCk1knbxWJQVw@mail.gmail.com>
+ <20190502091044.GD12498@e107155-lin>
+In-Reply-To: <20190502091044.GD12498@e107155-lin>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Thu, 2 May 2019 15:05:08 +0530
+Message-ID: <CAJ2_jOG7a=gnxWiZ+mDW6KH9cWZC1HO7ZuwCiXBQJuNJJ1NBHA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache Controller
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        mark.rutland@arm.com, Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In double buffer mode, during residue calculation, the DMA can
-automatically switch to the next transfer. Indeed the CT bit that
-gives position in the double buffer can has been updated by the
-hardware, during calculation.
-In this case the SxNDTR register value can not be trusted.
-If a transition is detected we consider that the DMA has switched to
-the beginning of next sg.
+On Thu, May 2, 2019 at 2:40 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> Sorry if I created confusion. I just wanted a note saying all the properties
+> in ePAPR/DeviceTree specification applies for this platform. That would
+> help me check if the standard cacheinfo infrastruction works as is or not.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
----
-V1 to V2 update:
-Change of the comments to provide better explanation of the race condition.
----
- drivers/dma/stm32-dma.c | 90 ++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 77 insertions(+), 13 deletions(-)
+Sure, will add this note.
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index ba239b529fa9..9fcaf882e38d 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -1042,33 +1042,97 @@ static u32 stm32_dma_get_remaining_bytes(struct stm32_dma_chan *chan)
- 	return ndtr << width;
- }
- 
-+/**
-+ * stm32_dma_is_current_sg - check that expected sg_req is currently transferred
-+ * @chan: dma channel
-+ *
-+ * This function called when IRQ are disable, checks that the hardware has not
-+ * switched on the next transfer in double buffer mode. The test is done by
-+ * comparing the next_sg memory address with the hardware related register
-+ * (based on CT bit value).
-+ *
-+ * Returns true if expected current transfer is still running or double
-+ * buffer mode is not activated.
-+ */
-+static bool stm32_dma_is_current_sg(struct stm32_dma_chan *chan)
-+{
-+	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
-+	struct stm32_dma_sg_req *sg_req;
-+	u32 dma_scr, dma_smar, id;
-+
-+	id = chan->id;
-+	dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(id));
-+
-+	if (!(dma_scr & STM32_DMA_SCR_DBM))
-+		return true;
-+
-+	sg_req = &chan->desc->sg_req[chan->next_sg];
-+
-+	if (dma_scr & STM32_DMA_SCR_CT) {
-+		dma_smar = stm32_dma_read(dmadev, STM32_DMA_SM0AR(id));
-+		return (dma_smar == sg_req->chan_reg.dma_sm0ar);
-+	}
-+
-+	dma_smar = stm32_dma_read(dmadev, STM32_DMA_SM1AR(id));
-+
-+	return (dma_smar == sg_req->chan_reg.dma_sm1ar);
-+}
-+
- static size_t stm32_dma_desc_residue(struct stm32_dma_chan *chan,
- 				     struct stm32_dma_desc *desc,
- 				     u32 next_sg)
- {
- 	u32 modulo, burst_size;
--	u32 residue = 0;
-+	u32 residue;
-+	u32 n_sg = next_sg;
-+	struct stm32_dma_sg_req *sg_req = &chan->desc->sg_req[chan->next_sg];
- 	int i;
- 
- 	/*
--	 * In cyclic mode, for the last period, residue = remaining bytes from
--	 * NDTR
-+	 * Calculate the residue means compute the descriptors
-+	 * information:
-+	 * - the sg_req currently transferred
-+	 * - the Hardware remaining position in this sg (NDTR bits field).
-+	 *
-+	 * A race condition may occur if DMA is running in cyclic or double
-+	 * buffer mode, since the DMA register are automatically reloaded at end
-+	 * of period transfer. The hardware may have switched to the next
-+	 * transfer (CT bit updated) just before the position (SxNDTR reg) is
-+	 * read.
-+	 * In this case the SxNDTR reg could (or not) correspond to the new
-+	 * transfer position, and not the expected one.
-+	 * The strategy implemented in the stm32 driver is to:
-+	 *  - read the SxNDTR register
-+	 *  - crosscheck that hardware is still in current transfer.
-+	 * In case of switch, we can assume that the DMA is at the beginning of
-+	 * the next transfer. So we approximate the residue in consequence, by
-+	 * pointing on the beginning of next transfer.
-+	 *
-+	 * This race condition doesn't apply for none cyclic mode, as double
-+	 * buffer is not used. In such situation registers are updated by the
-+	 * software.
- 	 */
--	if (chan->desc->cyclic && next_sg == 0) {
--		residue = stm32_dma_get_remaining_bytes(chan);
--		goto end;
-+
-+	residue = stm32_dma_get_remaining_bytes(chan);
-+
-+	if (!stm32_dma_is_current_sg(chan)) {
-+		n_sg++;
-+		if (n_sg == chan->desc->num_sgs)
-+			n_sg = 0;
-+		residue = sg_req->len;
- 	}
- 
- 	/*
--	 * For all other periods in cyclic mode, and in sg mode,
--	 * residue = remaining bytes from NDTR + remaining periods/sg to be
--	 * transferred
-+	 * In cyclic mode, for the last period, residue = remaining bytes
-+	 * from NDTR,
-+	 * else for all other periods in cyclic mode, and in sg mode,
-+	 * residue = remaining bytes from NDTR + remaining
-+	 * periods/sg to be transferred
- 	 */
--	for (i = next_sg; i < desc->num_sgs; i++)
--		residue += desc->sg_req[i].len;
--	residue += stm32_dma_get_remaining_bytes(chan);
-+	if (!chan->desc->cyclic || n_sg != 0)
-+		for (i = n_sg; i < desc->num_sgs; i++)
-+			residue += desc->sg_req[i].len;
- 
--end:
- 	if (!chan->mem_burst)
- 		return residue;
- 
--- 
-2.7.4
-
+- Yash
+>
+> --
+> Regards,
+> Sudeep
