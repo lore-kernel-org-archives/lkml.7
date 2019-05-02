@@ -2,71 +2,96 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F5EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C167C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11479205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED165205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:13:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZ5UgVsn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfEBNNJ (ORCPT
+        id S1726572AbfEBNNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:13:09 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:56028 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBNNJ (ORCPT
+        Thu, 2 May 2019 09:13:16 -0400
+Received: from mail-yw1-f50.google.com ([209.85.161.50]:46050 "EHLO
+        mail-yw1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBNNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:13:09 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hMBWI-0002Bu-CD; Thu, 02 May 2019 15:13:02 +0200
-Message-ID: <ab9b48a0e21d0a9e5069045c23db36f43e4356e3.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next 1/3] genetlink: do not validate dump requests
- if there is no policy
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Ahern <dsahern@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 02 May 2019 15:13:00 +0200
-In-Reply-To: <20190502131023.GD21672@unicorn.suse.cz>
-References: <cover.1556798793.git.mkubecek@suse.cz>
-         <0a54a4db49c20e76a998ea3e4548b22637fbad34.1556798793.git.mkubecek@suse.cz>
-         <031933f3fc4b26e284912771b480c87483574bea.camel@sipsolutions.net>
-         <20190502131023.GD21672@unicorn.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 2 May 2019 09:13:14 -0400
+Received: by mail-yw1-f50.google.com with SMTP id w18so1472099ywa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 06:13:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pViPqJDl70Zz0sv9Tghpz5k7qN5ZAN+M/zCPCxRvjXM=;
+        b=uZ5UgVsnGuD1YcajKed+YGLrlU/9Gy/HtRzyydbNnBS0nx2QtcOWBRebc9YEaSFJ2S
+         tRTuthzdcHvU0iMnIZOf4687EK3yObRQD6Mtt3sW9sMhKg52/uFRpz1IA6sH0seaCX/S
+         BdF9RyrVBIybgkD5aT6JHWN4GqJu5thrcIkOZ8berYia9FRbSr0cBf+YMtcY6uvBkiQo
+         s17QKA6JJTnEyUwuZTXQFQtFScteQ4rqL9xSJnO69miNljs4QdV6u37AYJ4wDBz4qB+B
+         vkBW4EJYDpoAVCgUr9u1cdctNo1FOqYU9PbKkiWvHXGt2I7AZNdGF0abIAaUVHSEj3n0
+         P91Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pViPqJDl70Zz0sv9Tghpz5k7qN5ZAN+M/zCPCxRvjXM=;
+        b=Yjz4Oh73mWNHOnIKx3pIwGUjUHsgg+AYzbbU2MRyOoSUTP2S4fpyIuWdroA6bt5rqJ
+         S8mH6lKLm3MnIrFluOA8IoKX98oR4MOYlhn2NK7XRlnITKCQ0yuvOtzzbEYYZSXtmaYR
+         2YpAhw68NTM0oVBhTsfzkgO32GB3n8jCeoK9XX5BividNr+hElvfd1cABzU6khvZi1zn
+         htSvUugwcoZgVj+1X40COGts2ORoRkjviHmpPX36itZ30+rpiV2iU8K1p8SH6jTwheb3
+         B5F+JkoaeLmFeV4YLSGc2fHyW0G95YTJOby6Fsi/T9vDMYIah1aEcCOcR7TO6J8UDNnw
+         bbRA==
+X-Gm-Message-State: APjAAAWGxkcg8rzamQWtJsiytvMQ0d1/168zEhSPrlEi4ctX9ZnHYQD9
+        1trzQ0wX/yTgWSFVM4O5TJ8=
+X-Google-Smtp-Source: APXvYqyWUSGVi0iRqzUPNuLad811CF2v27gK1kap8qv72f01T40LwPNZg7n2CAqubuyIqOaF4SwaiA==
+X-Received: by 2002:a25:e687:: with SMTP id d129mr2834387ybh.475.1556802793355;
+        Thu, 02 May 2019 06:13:13 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
+        by smtp.gmail.com with ESMTPSA id e75sm3585229ywe.101.2019.05.02.06.13.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 May 2019 06:13:11 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 036CE4111F; Thu,  2 May 2019 09:13:10 -0400 (EDT)
+Date:   Thu, 2 May 2019 09:13:10 -0400
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH] perf tools: Speed up report for perf compiled with
+ linwunwind
+Message-ID: <20190502131310.GG21436@kernel.org>
+References: <20190426073804.17238-1-jolsa@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426073804.17238-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-02 at 15:10 +0200, Michal Kubecek wrote:
-> On Thu, May 02, 2019 at 02:51:33PM +0200, Johannes Berg wrote:
-> > On Thu, 2019-05-02 at 12:48 +0000, Michal Kubecek wrote:
-> > > Unlike do requests, dump genetlink requests now perform strict validation
-> > > by default even if the genetlink family does not set policy and maxtype
-> > > because it does validation and parsing on its own (e.g. because it wants to
-> > > allow different message format for different commands). While the null
-> > > policy will be ignored, maxtype (which would be zero) is still checked so
-> > > that any attribute will fail validation.
-> > > 
-> > > The solution is to only call __nla_validate() from genl_family_rcv_msg()
-> > > if family->maxtype is set.
-> > 
-> > D'oh. Which family was it that you found this on? I checked only ones
-> > with policy I guess.
+Em Fri, Apr 26, 2019 at 09:38:04AM +0200, Jiri Olsa escreveu:
+> When compiled with libunwind, perf does some preparatory work
+> when processing side-band events. This is not needed when report
+> actually don't unwind dwarf callchains, so it's disabled with
+> dwarf_callchain_users bool.
 > 
-> It was with my ethtool netlink series (still work in progress).
+> However we could move that check to higher level and shield more
+> unwanted code for normal report processing, giving us following
+> speed up on kernel build profile:
 
-Then you should probably *have* a policy to get all the other goodies
-like automatic policy export (once I repost those patches)
+Thanks, applied to perf/core.
 
-johannes
-
+- Arnaldo
