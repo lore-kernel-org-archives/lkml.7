@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9747BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C251C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661B2208C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC772216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810685;
-	bh=iyutgjCnqeEGMv7+w36WlERhI2JO6mPMmmxKpcNWrkY=;
+	s=default; t=1556810689;
+	bh=8YJT1FpzLUsFmD5n9vM9UGGa9NVdyiXY65SPaX5MK94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWQcqz9G0FOhBV0/As8yq8aLlMR8/y9o5A+tWE3h/ovOsViHrEewZlSjy9+pBaF/e
-	 ZCVSqUE5lqrKJ70nHm6uUO7caB2jTXGXXKDC1kgd33oLq4XIQ0qj8Juw95dDUGsLHW
-	 1jH0GGuW6jPJnBU8jdgYYrmP3XtJAz6dZDp6XRAw=
+	b=wJWSwkwkal4AQRIxEfxcYXHyz0oYk80mxtlVIUwRdL4D80yNiqeYE+UJevkp/SK87
+	 DArhxCxhHljCRiDfkmZYMn6oT43xAqf9ST5fxn3tasBndVBjYsevFXrkIcd/nnpa88
+	 QVZjQ6wvKjI6GJAsLiBHdTni4CclAh7mAi21laEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfEBPYn (ORCPT
+        id S1727378AbfEBPYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40616 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbfEBPYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:24:41 -0400
+        id S1727375AbfEBPYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:24:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C1BF208C4;
-        Thu,  2 May 2019 15:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC7472085A;
+        Thu,  2 May 2019 15:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810680;
-        bh=iyutgjCnqeEGMv7+w36WlERhI2JO6mPMmmxKpcNWrkY=;
+        s=default; t=1556810683;
+        bh=8YJT1FpzLUsFmD5n9vM9UGGa9NVdyiXY65SPaX5MK94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyuESeWOIW6yGNuDEVordRuZVu798HHnKb7ofWLvJp4Bj1fuzU2nrV8c21luA4SyY
-         lK+SqRtZHqeMZEOwpN1D5N1l+v7ddpOkBlyQySRrk/SaUeczlvgI1a230tKzDLh5yG
-         OemVewfdT7OOvFM2d6u9iYT0sgAR1sJyQ29t/U/4=
+        b=ze3wKbPme+ezvGvaUcG0Gow6C82m/zaxTQ3FO9qZZN9ZaED7JW76+z1UoxOOkOtXH
+         UEVyGFDf5Dvd8nmYQQVYCNpkRRBd8uOikScCO55PpLAZHGniSNVeznGOktBNOyj1T4
+         KTrC3euCZFPuQ4DMRN4IKfq+nqRzSmuASA9fflX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Richard Leitner <richard.leitner@skidata.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 39/49] scsi: qla4xxx: fix a potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:21:16 +0200
-Message-Id: <20190502143328.907283623@linuxfoundation.org>
+Subject: [PATCH 4.14 40/49] usb: usb251xb: fix to avoid potential NULL pointer dereference
+Date:   Thu,  2 May 2019 17:21:17 +0200
+Message-Id: <20190502143329.061339727@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -62,33 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fba1bdd2a9a93f3e2181ec1936a3c2f6b37e7ed6 ]
+[ Upstream commit 41f00e6e9e55546390031996b773e7f3c1d95928 ]
 
-In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid NULL
-pointer dereference.
+of_match_device in usb251xb_probe can fail and returns a NULL pointer.
+The patch avoids a potential NULL pointer dereference in this scenario.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/misc/usb251xb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 22dc70a2138e..630b7404843d 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -3207,6 +3207,8 @@ static int qla4xxx_conn_bind(struct iscsi_cls_session *cls_session,
- 	if (iscsi_conn_bind(cls_session, cls_conn, is_leading))
- 		return -EINVAL;
- 	ep = iscsi_lookup_endpoint(transport_fd);
-+	if (!ep)
-+		return -EINVAL;
- 	conn = cls_conn->dd_data;
- 	qla_conn = conn->dd_data;
- 	qla_conn->qla_ep = ep->dd_data;
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index 135c91c434bf..ba8fcdb377e8 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -530,7 +530,7 @@ static int usb251xb_probe(struct usb251xb *hub)
+ 							   dev);
+ 	int err;
+ 
+-	if (np) {
++	if (np && of_id) {
+ 		err = usb251xb_get_ofdata(hub,
+ 					  (struct usb251xb_data *)of_id->data);
+ 		if (err) {
 -- 
 2.19.1
 
