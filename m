@@ -2,95 +2,125 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DA6C46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78266C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAEEA2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:29:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="KlNxglbH"
+	by mail.kernel.org (Postfix) with ESMTP id 479D720675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556814557;
+	bh=dkbCGmB8aJGbYDw70GrUnrtJT8x3nxXrvwASHrQjPTw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rN3vjuJ7E1P+QAD29xrxic+uG+GdiujVr5FenAacs8L8FLRo52V91i/vFtaEexHF9
+	 wM9WW3SnA3y2RF+kh8G5TuZuP4DGowxD64uA53xUH3pjmyY5kvPKf3VxjFqzlkoenI
+	 wDpKQEzZpxluYNlEwdKXRCN88u4Wi9d86ov/FUGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfEBQ3F (ORCPT
+        id S1726553AbfEBQ3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:29:05 -0400
-Received: from sonic308-8.consmr.mail.bf2.yahoo.com ([74.6.130.47]:41002 "EHLO
-        sonic308-8.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726300AbfEBQ3F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:29:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1556814543; bh=H2HJJesMA20BcYlJ+IOaax9VIeLCiinnSIhrnVVMHXE=; h=From:Subject:To:Cc:References:Date:In-Reply-To:From:Subject; b=KlNxglbHKJOisGlvlPTmrXU+egzI9pXzdY9co9OQCrQIAyfXMaKzspmvgGItp8d5W8O7cmUhkQmDXSb1FHfjLaehQUCwZtPhC+1LqV2h1GGzMuOrsHvn2KtQPr2xLFbzaerZStbnGPtU4mzd4NZQvhRSHxqxSJZRsFWfH4BHOs79n9oqorgzsEJMa0oMOEF3xud07AJ6ZGEQ1AJ4ybF79s1Lc9JrIPBmoD3D545rx8lptLpWCmfT7YS64cqTqn2xd8EBE3uBva5ReVUNM5Y1+W37/uTEntbWtUevesUnp+3uUDjIzxbBUS4nWuJlKNs21pC2Km59lowKwBJP8FTaOw==
-X-YMail-OSG: KTxj1FUVM1mLqkxD6A.OYugj.k8xCJODq.rjAJmhegyCATWb6r2dAuIZjCJR3Mz
- wbgoL4DCYzB27TxZ78xDMyJupXa1Y3M9ROGneF3Q8U.O3mbGGHUc_wxnXewhtsWWDlBTThcdrPXT
- bQdlCg.99Ds_4rpJSiO40mACqAGTU51nT.dF29EZQFJYzVHA8HuJk0OjUG4LwEs2M1Ur2eDea23y
- bCoFpbF6IDq8OmslgvdQQFXIVbET0KYeHSFaP19qL7Ku1Cs5V8Bw7Ow4gzt8Aq9R32FSrP22Q9u6
- dqf1mZLKVcKPXUCf5mO9bX_u20E0vL4eq6WSWCfht20fe2K2Z05cWmShpdOkIVlQw2ZMiWvtpPIM
- lVherVpi04Hb9kQhsDDlMQ65raphU0t2l09Q1CXle.gREWoo9ceYOP5rGt71x3EVsaSelbLUoY_a
- jLpVsWg9.EYsxy0fDdpsNIdY0Vlt8tLvL6Z1VZciaonhTHSTdv9ni.3QYWnGKkbFpT6EsZ6KJBP2
- AppPJDGh82inBJqCmNBGFpjP5om0aDTuX_8brYDTXzmZQbb0xmMRlKppwV4kN4r672i2u.9Weq9t
- i5m5aQj5qJqhjWAM85EsHZ429Hz9KLso2vnydrkcWpwvDJ_6nkmGPaWD89m.aFuoFdseNR0rFwef
- jpi5Nu9yR4.LNoTC4AMs1ROel.5tAUFP4ZJiL_Pb9j3O8_XWwWx0hiY8xTRowgCR1HjmFGpCgtdy
- DyVgzD9lGG9OGTmjGA6ZMX0.vOX2BmZnZMKpS2V1_gRhObhwQ404H3lsRzGYWfR.3QT_jzx8gITg
- W01U4uwnOh1f_ZFW1ytq5trh8f4TtzQfbvyYICC7D9.qAx5GWeHF55LCJf9O.l81F9TcQZax1mmE
- aqawpk7sKdGTY8XQZomVyiPGbw0v391uelBU.JpQK.GcQSLD0cy6PTJrv73dsBLlzeJDl3bER73V
- oawUN2yM4kjBjsTVrSnS2oagktVBSTseB6g57sEWrCpbcm90A6kwL9wtK.Zev6R_1vZrNiF21gvh
- XPGhdWlG603NAzY2.1_3nEAplhVTcbIHON7.gA70AW4vOFI5lQetDoQ6_uWrJboC6QcJ52xfm23_
- q49EX5GuVmd9OD.NpbICukcA4E8Q_FCH_2swnfSN5pmHfZSfY4wVgggnBOFfuOfowreS8FJOHbo3
- Llyw.duZKK.dVunulCC.DA1fz9JNEuafa
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.bf2.yahoo.com with HTTP; Thu, 2 May 2019 16:29:03 +0000
-Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
-          by smtp402.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 1fa7d2e534e1a0e9e92015fab12bde34;
-          Thu, 02 May 2019 16:29:00 +0000 (UTC)
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Subject: Re: [PATCH] kexec_buffer measure
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        prakhar srivastava <prsriva02@gmail.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        John Johansen <john.johansen@canonical.com>,
-        casey@schaufler-ca.com
-References: <CAEFn8qKkXgxUKtribbtFwvG9NykGQo10jQ5Du_i9wJz-wKreOA@mail.gmail.com>
- <1555978681.4914.305.camel@linux.ibm.com>
- <1556812101.4134.28.camel@linux.ibm.com>
-Message-ID: <7af61ebe-28a8-799c-fe47-d72f247494ed@schaufler-ca.com>
-Date:   Thu, 2 May 2019 09:28:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 12:29:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfEBQ3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:29:15 -0400
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10F421670
+        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 16:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556814554;
+        bh=dkbCGmB8aJGbYDw70GrUnrtJT8x3nxXrvwASHrQjPTw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iLX5/IR0m54fE0vzkkxIiwsbsWgj4Jp37cw4TzUtk/De3AWomS7hp0i2Z/I06e+Qi
+         Hx5xHvrmjx1DgoOQe1qkYH85inCY7lQ6u5c7Yt/WDc+KfPuK7Ro+cHyRFSj3buxfSt
+         wesztiPbo4DB8Xk7azvFK4/662GzvJS25JlKZpxQ=
+Received: by mail-wm1-f44.google.com with SMTP id n25so3424327wmk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 09:29:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAUTyQHRhY7uDpgcJGKHMvAW26+h0n0JyOks7wVmG5P79fyr6C3f
+        dko7CgZNEIiEiWa1rKdmaHjef/5X9ydGRifvQ4rcjA==
+X-Google-Smtp-Source: APXvYqz8qz5MkdiJ1blV68Tc+EBPo9ntpUvf4xz3iOi91gond5CFj6ha5OGRiPqDokWUmLSqYgWAc/K+F+OBWP5fmto=
+X-Received: by 2002:a1c:486:: with SMTP id 128mr2855200wme.83.1556814553206;
+ Thu, 02 May 2019 09:29:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1556812101.4134.28.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
+ <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
+In-Reply-To: <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 2 May 2019 09:29:01 -0700
+X-Gmail-Original-Message-ID: <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com>
+Message-ID: <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com>
+Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end() export
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/2019 8:48 AM, Mimi Zohar wrote:
-> [Cc'ing Paul, John, Casey]
+On Thu, May 2, 2019 at 8:41 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 >
-> On Mon, 2019-04-22 at 20:18 -0400, Mimi Zohar wrote:
->> [Cc'ing LSM mailing list]
->>
->> On Fri, 2019-04-19 at 17:30 -0700, prakhar srivastava wrote:
->>
->>> 2) Adding a LSM hook
->>> We are doing both the command line and kernel version measurement in IMA.
->>> Can you please elaborate on how this can be used outside of the scenario?
->>> That will help me come back with a better design and code. I am
->>> neutral about this.
->> As I said previously, initially you might want to only measure the
->> kexec boot command line, but will you ever want to verify or audit log
->> the boot command line hash?????Perhaps LSMs would be interested in the
->> boot command line. ??Should this be an LSM hook?
->   From an LSM perspective, is there any interest in the boot command line?
-
-I can imagine an LSM that cares about the command line,
-but I don't have interest in it for any work I have in progress.
-
-> Mimi
+> On 2019-05-02 07:42:14 [-0700], Andy Lutomirski wrote:
+> > The FPU is not a super-Linuxy internal detail, so remove the _GPL
+> > from its export.  Without something like this patch, it's impossible
+> > for even highly license-respecting non-GPL modules to use the FPU,
+> > which seems silly to me.  After all, the FPU is a CPU feature, not
+> > really a kernel feature at all.
+> >
+> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Cc:: Borislav Petkov <bp@suse.de>
+> > Cc: Rik van Riel <riel@surriel.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Nicolai Stange <nstange@suse.de>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: x86@kernel.org
+> > Cc: stable@vger.kernel.org
+> > Fixes: 12209993e98c ("x86/fpu: Don't export __kernel_fpu_{begin,end}()"=
+)
+> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> > ---
+> >
+> > This fixes a genuine annoyance for ZFS on Linux.  Regardless of what
+> > one may think about the people who distribute ZFS on Linux
+> > *binaries*, as far as I know, the source and the users who build it
+> > themselves are entirely respectful of everyone's license.  I have no
+> > problem with EXPORT_SYMBOL_GPL() in general, but let's please avoid
+> > using it for things that aren't fundamentally Linux internals.
 >
+> Please don't start this. We have everything _GPL that is used for FPU
+> related code and only a few functions are exported because KVM needs it.
+> Also with the recent FPU rework it is much easier to get this wrong so I
+> would not want for any OOT code to mess with it.
+>
+
+I'm not saying that we should export things for ZFS's benefit.  But,
+as far as I know, _GPL means "this interface is sufficiently specific
+to Linux details that we think that any user must be a derived work".
+I don't think that kernel_fpu_begin() is an example of that.
+
+--Andy
