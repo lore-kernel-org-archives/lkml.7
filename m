@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB99BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F5AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C88F20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3B32081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810708;
-	bh=OIiIwFpL32ezEt1GXclMSHdGI81OzQ4c3atY4iwVccE=;
+	s=default; t=1556810711;
+	bh=qeRtJdY2lVqyEgh89+ZBGB9AihGkjC2DK6ctS8XbHtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q1fxHOHhJU7UsXu2g/f2NiOikAq1KxyHEyaWdi1DLUiQq5QJ1Y1rCXoRHhxfaV7NG
-	 dF2FcNQRmmTAZUBDf3AKNgpImZADspB8TlaEnqotUKgvM0jvnz1kA632LiALLVWb56
-	 1OTWaMC0hiVDrLOBOWUg4x3JeBnlQ8b+kDAnd+Hg=
+	b=ls/MmkPTavWi4101g+6Gk9bzwcj+XU4CmR3hcnuqC2eGIzZ3xCve2NBQQYraqUTgt
+	 G9wUK5yArN7h7PGrdqE6rhVFbUiC8QNCvx6zXGCuMjwQLXKdH7rLsz8VcXQ6oiYunf
+	 r9OxEwkxZ52xGsDEiKQ7PE/MiF79Yd5J8evrVxEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfEBPZH (ORCPT
+        id S1726376AbfEBPZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41132 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbfEBPZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:25:05 -0400
+        id S1726963AbfEBPZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:25:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD36720675;
-        Thu,  2 May 2019 15:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69BF62085A;
+        Thu,  2 May 2019 15:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810704;
-        bh=OIiIwFpL32ezEt1GXclMSHdGI81OzQ4c3atY4iwVccE=;
+        s=default; t=1556810706;
+        bh=qeRtJdY2lVqyEgh89+ZBGB9AihGkjC2DK6ctS8XbHtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Oyo/0+ODlOAXNIICkcVL7XZfHEKVEHDsXigy0lt7ac54H5zb/Irn18+l8A24ycHH
-         RcX5W7qsCBtthNsg3e7EDA4VUhHJc+XEyDRmJiW0+uc0y9MjU1qtWN/FjKx3ruNJ/T
-         KLeeHX0KKuj3OjTzGpJTEWAzI7toofmwtpOTBJ+M=
+        b=PCco3wpb6q3aTYTnxV68+XrvI03/f6mQpeXRai536fjebrW/mqfCu0dN8ocN0Md3H
+         GK9GfcsgTH8vYDTOji4pajLOSmMXwjtdvDEipgASjCdUbOLTNUjfucjUJK7GxcxUyg
+         79GefzMlB9RBtERLQcMlugpXC61uSPYxc5Gn4zWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 30/49] net/sched: dont dereference a->goto_chain to read the chain index
-Date:   Thu,  2 May 2019 17:21:07 +0200
-Message-Id: <20190502143327.657639861@linuxfoundation.org>
+Subject: [PATCH 4.14 48/49] ptrace: take into account saved_sigmask in PTRACE{GET,SET}SIGMASK
+Date:   Thu,  2 May 2019 17:21:25 +0200
+Message-Id: <20190502143329.915572044@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -60,37 +63,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fe384e2fa36ca084a456fd30558cccc75b4b3fbd ]
+[ Upstream commit fcfc2aa0185f4a731d05a21e9f359968fdfd02e7 ]
 
-callers of tcf_gact_goto_chain_index() can potentially read an old value
-of the chain index, or even dereference a NULL 'goto_chain' pointer,
-because 'goto_chain' and 'tcfa_action' are read in the traffic path
-without caring of concurrent write in the control path. The most recent
-value of chain index can be read also from a->tcfa_action (it's encoded
-there together with TC_ACT_GOTO_CHAIN bits), so we don't really need to
-dereference 'goto_chain': just read the chain id from the control action.
+There are a few system calls (pselect, ppoll, etc) which replace a task
+sigmask while they are running in a kernel-space
 
-Fixes: e457d86ada27 ("net: sched: add couple of goto_chain helpers")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When a task calls one of these syscalls, the kernel saves a current
+sigmask in task->saved_sigmask and sets a syscall sigmask.
+
+On syscall-exit-stop, ptrace traps a task before restoring the
+saved_sigmask, so PTRACE_GETSIGMASK returns the syscall sigmask and
+PTRACE_SETSIGMASK does nothing, because its sigmask is replaced by
+saved_sigmask, when the task returns to user-space.
+
+This patch fixes this problem.  PTRACE_GETSIGMASK returns saved_sigmask
+if it's set.  PTRACE_SETSIGMASK drops the TIF_RESTORE_SIGMASK flag.
+
+Link: http://lkml.kernel.org/r/20181120060616.6043-1-avagin@gmail.com
+Fixes: 29000caecbe8 ("ptrace: add ability to get/set signal-blocked mask")
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- include/net/tc_act/tc_gact.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/sched/signal.h | 18 ++++++++++++++++++
+ kernel/ptrace.c              | 15 +++++++++++++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/tc_act/tc_gact.h b/include/net/tc_act/tc_gact.h
-index e82d93346b63..bb74ea83d57d 100644
---- a/include/net/tc_act/tc_gact.h
-+++ b/include/net/tc_act/tc_gact.h
-@@ -51,7 +51,7 @@ static inline bool is_tcf_gact_goto_chain(const struct tc_action *a)
- 
- static inline u32 tcf_gact_goto_chain_index(const struct tc_action *a)
- {
--	return a->goto_chain->index;
-+	return READ_ONCE(a->tcfa_action) & TC_ACT_EXT_VAL_MASK;
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index fbf86ecd149d..bcaba7e8ca6e 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -377,10 +377,20 @@ static inline void set_restore_sigmask(void)
+ 	set_thread_flag(TIF_RESTORE_SIGMASK);
+ 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
  }
++
++static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	clear_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
++}
++
+ static inline void clear_restore_sigmask(void)
+ {
+ 	clear_thread_flag(TIF_RESTORE_SIGMASK);
+ }
++static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	return test_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
++}
+ static inline bool test_restore_sigmask(void)
+ {
+ 	return test_thread_flag(TIF_RESTORE_SIGMASK);
+@@ -398,6 +408,10 @@ static inline void set_restore_sigmask(void)
+ 	current->restore_sigmask = true;
+ 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+ }
++static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	tsk->restore_sigmask = false;
++}
+ static inline void clear_restore_sigmask(void)
+ {
+ 	current->restore_sigmask = false;
+@@ -406,6 +420,10 @@ static inline bool test_restore_sigmask(void)
+ {
+ 	return current->restore_sigmask;
+ }
++static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	return tsk->restore_sigmask;
++}
+ static inline bool test_and_clear_restore_sigmask(void)
+ {
+ 	if (!current->restore_sigmask)
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 84b1367935e4..f1c85b6c39ae 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -29,6 +29,7 @@
+ #include <linux/hw_breakpoint.h>
+ #include <linux/cn_proc.h>
+ #include <linux/compat.h>
++#include <linux/sched/signal.h>
  
- #endif /* __NET_TC_GACT_H */
+ /*
+  * Access another process' address space via ptrace.
+@@ -925,18 +926,26 @@ int ptrace_request(struct task_struct *child, long request,
+ 			ret = ptrace_setsiginfo(child, &siginfo);
+ 		break;
+ 
+-	case PTRACE_GETSIGMASK:
++	case PTRACE_GETSIGMASK: {
++		sigset_t *mask;
++
+ 		if (addr != sizeof(sigset_t)) {
+ 			ret = -EINVAL;
+ 			break;
+ 		}
+ 
+-		if (copy_to_user(datavp, &child->blocked, sizeof(sigset_t)))
++		if (test_tsk_restore_sigmask(child))
++			mask = &child->saved_sigmask;
++		else
++			mask = &child->blocked;
++
++		if (copy_to_user(datavp, mask, sizeof(sigset_t)))
+ 			ret = -EFAULT;
+ 		else
+ 			ret = 0;
+ 
+ 		break;
++	}
+ 
+ 	case PTRACE_SETSIGMASK: {
+ 		sigset_t new_set;
+@@ -962,6 +971,8 @@ int ptrace_request(struct task_struct *child, long request,
+ 		child->blocked = new_set;
+ 		spin_unlock_irq(&child->sighand->siglock);
+ 
++		clear_tsk_restore_sigmask(child);
++
+ 		ret = 0;
+ 		break;
+ 	}
 -- 
 2.19.1
 
