@@ -2,126 +2,105 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689EAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090A2C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCAB2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F7F2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:16:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NYaCI5Lq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfEBLO7 convert rfc822-to-8bit (ORCPT
+        id S1726448AbfEBLQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 07:14:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41897 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfEBLO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 07:14:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vt2m2kCrz9s7T;
-        Thu,  2 May 2019 21:14:56 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v1 2/4] powerpc/mm: Move book3s64 specifics in subdirectory mm/book3s64
-In-Reply-To: <7dbe8476-bfa3-29ac-5155-a67823d39ef4@c-s.fr>
-References: <cover.1553853405.git.christophe.leroy@c-s.fr> <c4afde657ef9e4ad0266ae62e9907313c41c4a16.1553853405.git.christophe.leroy@c-s.fr> <87sgtx5o0j.fsf@concordia.ellerman.id.au> <7dbe8476-bfa3-29ac-5155-a67823d39ef4@c-s.fr>
-Date:   Thu, 02 May 2019 21:14:55 +1000
-Message-ID: <87woj9xg40.fsf@concordia.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        Thu, 2 May 2019 07:16:26 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:32950 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfEBLQZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 07:16:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z28so966018pfk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 04:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=R5swJlAITju8XH6qDqL0ICBlF1jL9P7SgWpPio7VZHA=;
+        b=NYaCI5Lq9sbeex/Hyus53942eETnhAANEybb8Pav+qTxn2QwpygQeTPQ9ijMngIIVi
+         MWZiQ9OR8+52nfEJCJRnWdf87muqgNpsbqZvPlnXLqdiiiXCMSpt5B+lKRIjZk+5FaB4
+         psDwFfwr0qko0Vnjf/Pd5jZN6gLFz5spWZSgGIUXXzqqqj7XRKCqmJsrRjy1jGh+5Yik
+         PIXix3jtrxsLXwyvzF21dFbVZWnYX66hs5XJMJRZk7AQEAR3pOGPhxtrSvqawt7xInuM
+         pVuPXRpetMck8s8L238K0ZaonxcR4gKcebzDnVn5wDtJC/54sgWBu7Q4m92mcw9zNfF+
+         RLiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=R5swJlAITju8XH6qDqL0ICBlF1jL9P7SgWpPio7VZHA=;
+        b=bmhY5qPDFIWvBNJb0kMvFCQw9ZdqAPz+EurqZasaHVsaHdpKNPHS0nuHCl+XnVqg5j
+         nPj+e2OD5GkeIitpaAFXxx+6FJrBiNZnJPYRm3SrrsaA7eKAhuOubZY46irXdxkw55SO
+         gV50xI3Ar3POvRgWqyCAgc1JsdujYrjTMYHAU1p+SAHZxgzUfSlGgcBfPNJAcns4ScEj
+         oXFutr3swQs+DKqvgrXUhnCcqnzIN3NcmL6EE6FSBxSsigyfcssaGrYeA4A+8WnsaP5M
+         z98SXjJcdAZk1zQ3DQPCg9LnAcYboCd0PM+ZSvAgLGE71zVTeP2qG/RTbU6yTLucyibE
+         Fk+Q==
+X-Gm-Message-State: APjAAAWu/nvWL8HpMg8ZIHckCpjn7a6V4Jr4PkM2VIEXp8gMW20MTXjq
+        LRr9AlfNVrlRq9gmflEX/6C/kQ==
+X-Google-Smtp-Source: APXvYqwPrwaCqwJmTsBvyyjLyJcvTq09ZepuI44bbmNSKK6Ky+Diwbr40NVY49IX7vbv8sys9jbz9g==
+X-Received: by 2002:a65:6688:: with SMTP id b8mr3331152pgw.81.1556795785150;
+        Thu, 02 May 2019 04:16:25 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id t65sm5550010pfa.175.2019.05.02.04.16.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 02 May 2019 04:16:24 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     linux-edac@vger.kernel.org, linux-riscv@lists.infradead.org,
+        palmer@sifive.com, bp@alien8.de, james.morse@arm.com
+Cc:     paul.walmsley@sifive.com, linux-kernel@vger.kernel.org,
+        aou@eecs.berkeley.edu, mchehab@kernel.org, sachin.ghadi@sifive.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH] EDAC support for SiFive SoCs
+Date:   Thu,  2 May 2019 16:46:00 +0530
+Message-Id: <1556795761-21630-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Le 02/05/2019 à 09:11, Michael Ellerman a écrit :
->> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> 
->>> Many files in arch/powerpc/mm are only for book3S64. This patch
->>> creates a subdirectory for them.
->>>
->>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>> ---
->>>   arch/powerpc/mm/Makefile                           | 25 +++----------------
->>>   arch/powerpc/mm/book3s64/Makefile                  | 28 ++++++++++++++++++++++
->>>   arch/powerpc/mm/{ => book3s64}/hash64_4k.c         |  0
->>>   arch/powerpc/mm/{ => book3s64}/hash64_64k.c        |  0
->>>   arch/powerpc/mm/{ => book3s64}/hash_native_64.c    |  0
->>>   arch/powerpc/mm/{ => book3s64}/hash_utils_64.c     |  0
->>>   arch/powerpc/mm/{ => book3s64}/hugepage-hash64.c   |  0
->>>   .../powerpc/mm/{ => book3s64}/hugetlbpage-hash64.c |  0
->>>   arch/powerpc/mm/{ => book3s64}/hugetlbpage-radix.c |  0
->>>   .../mm/{ => book3s64}/mmu_context_book3s64.c       |  0
->>>   arch/powerpc/mm/{ => book3s64}/mmu_context_iommu.c |  0
->>>   arch/powerpc/mm/{ => book3s64}/pgtable-book3s64.c  |  0
->>>   arch/powerpc/mm/{ => book3s64}/pgtable-hash64.c    |  0
->>>   arch/powerpc/mm/{ => book3s64}/pgtable-radix.c     |  0
->>>   arch/powerpc/mm/{ => book3s64}/pkeys.c             |  0
->>>   arch/powerpc/mm/{ => book3s64}/slb.c               |  0
->>>   arch/powerpc/mm/{ => book3s64}/subpage-prot.c      |  0
->>>   arch/powerpc/mm/{ => book3s64}/tlb-radix.c         |  0
->>>   arch/powerpc/mm/{ => book3s64}/tlb_hash64.c        |  0
->>>   arch/powerpc/mm/{ => book3s64}/vphn.c              |  0
->>>   arch/powerpc/mm/{ => book3s64}/vphn.h              |  0
->>>   arch/powerpc/mm/numa.c                             |  2 +-
->>>   22 files changed, 32 insertions(+), 23 deletions(-)
->>>   create mode 100644 arch/powerpc/mm/book3s64/Makefile
->>>   rename arch/powerpc/mm/{ => book3s64}/hash64_4k.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/hash64_64k.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/hash_native_64.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/hash_utils_64.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/hugepage-hash64.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/hugetlbpage-hash64.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/hugetlbpage-radix.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/mmu_context_book3s64.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/mmu_context_iommu.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/pgtable-book3s64.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/pgtable-hash64.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/pgtable-radix.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/pkeys.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/slb.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/subpage-prot.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/tlb-radix.c (100%)
->>>   rename arch/powerpc/mm/{ => book3s64}/tlb_hash64.c (100%)
->> 
->> Do you mind if I take this but rework the destination names in the process?
->
-> I don't mind, I think it's a good idea.
->
->> 
->> I don't like having eg. book3s64/pgtable-book3s64.c
->> 
->> And some of the other names could use a bit of cleanup too.
->> 
->> What about:
->> 
->>   arch/powerpc/mm/{hash64_4k.c => book3s64/hash_4k.c}
->>   arch/powerpc/mm/{hash64_64k.c => book3s64/hash_64k.c}
->>   arch/powerpc/mm/{hugepage-hash64.c => book3s64/hash_hugepage.c}
->>   arch/powerpc/mm/{hugetlbpage-hash64.c => book3s64/hash_hugetlbpage.c}
->>   arch/powerpc/mm/{hash_native_64.c => book3s64/hash_native.c}
->>   arch/powerpc/mm/{pgtable-hash64.c => book3s64/hash_pgtable.c}
->>   arch/powerpc/mm/{tlb_hash64.c => book3s64/hash_tlb.c}
->>   arch/powerpc/mm/{hash_utils_64.c => book3s64/hash_utils.c}
->>   arch/powerpc/mm/{mmu_context_iommu.c => book3s64/iommu_api.c}
->>   arch/powerpc/mm/{mmu_context_book3s64.c => book3s64/mmu_context.c}
->>   arch/powerpc/mm/{pgtable-book3s64.c => book3s64/pgtable.c}
->>   arch/powerpc/mm/{hugetlbpage-radix.c => book3s64/radix_hugetlbpage.c}
->>   arch/powerpc/mm/{pgtable-radix.c => book3s64/radix_pgtable.c}
->>   arch/powerpc/mm/{tlb-radix.c => book3s64/radix_tlb.c}
->
-> Looks good
+Adds an EDAC platform driver for SiFive SoCs.
 
-Thanks. I'll do something similar for 32-bit & nohash.
+This patch was earlier part of the patch series:
+'L2 cache controller and EDAC support for SiFive SoCs'
+https://lkml.org/lkml/2019/4/15/320
+In order to merge L2 cache controller driver without any dependency on EDAC,
+this EDAC patch is re-posted separately with updated MAINTAINERS entry.
 
-cheers
+This patch depends on patch
+'RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs'
+https://lkml.org/lkml/2019/5/2/309
+The EDAC driver registers for notifier events from the L2 cache controller
+driver (arch/riscv/mm/sifive_l2_cache.c) for L2 ECC events
+
+The patch is based on Linux 5.1-rc2 and tested on HiFive Unleashed board
+with additional board related patches needed for testing can be found at
+dev/yashs/L2_cache_controller branch of:
+https://github.com/yashshah7/riscv-linux.git
+
+Yash Shah (1):
+  edac: sifive: Add EDAC platform driver for SiFive SoCs
+
+ MAINTAINERS                |   6 +++
+ arch/riscv/Kconfig         |   1 +
+ drivers/edac/Kconfig       |   6 +++
+ drivers/edac/Makefile      |   1 +
+ drivers/edac/sifive_edac.c | 121 +++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 135 insertions(+)
+ create mode 100644 drivers/edac/sifive_edac.c
+
+-- 
+1.9.1
+
