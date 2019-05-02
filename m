@@ -2,241 +2,173 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394DDC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB60C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD802085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:28:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="com3sCaU"
+	by mail.kernel.org (Postfix) with ESMTP id C1F08208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfEBO25 (ORCPT
+        id S1726404AbfEBOaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:28:57 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:53815 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfEBO24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:28:56 -0400
-Received: by mail-it1-f196.google.com with SMTP id l10so3626138iti.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BqHJ4mKCqV4ZGSDIdcnHrlBfq1c/O0ILprJjcbsuKxg=;
-        b=com3sCaUbNmDKYX9/c5R+Szvf04X7EZ4tn/wfCS/BU0LTNv6c+nRVC4wASCSoqTjhz
-         Cn4K7TqAYCy6JbLvppR/ADv/CBq8EBhfNp9GTjKKe96GJewCZvF4Pch1lfqzBBmBFmsC
-         hot8x00MO/pDkp48ppQmvOT2nA1ueTrdl+wlE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BqHJ4mKCqV4ZGSDIdcnHrlBfq1c/O0ILprJjcbsuKxg=;
-        b=Qw0p/6D3uMlMGKFFTfCCcy1JPQUfuGes1JWgKkE0o8w0qkLCDf7fhr/raa6QAe6VTb
-         zCXBO5pYZ1Gt0O3ckGxanUVRD4eaOtOYcHx5z9NTI6hgsdawIstCYCY1b2Y3quPsfVXW
-         zJRFNChXlDEPVKcA2Ymh/G6omxDro8lRAhFjPLqQu3EJWZWzBdY/dPWfrnyePyB2927Q
-         4SvtkhrUnWvx3BIeBY2R9DSvckgZ789cztGuN84lyY4kTtSUKXGWkIDSfp8ktTorBhsM
-         DZ0p30BUw6DnHaq4JfK1H5dW7+pB+f5xbi3qYxqC041af4/Rl2Eodq7HR5Gu7DmBuM/4
-         aZaw==
-X-Gm-Message-State: APjAAAWiAkE7ke13olZWlupvJ8uGSfFg9VZjp8uPpzCTTBu+QrKbUvCs
-        YDLiFswuJcPFIW05NhPSJ1UHNH6CcdNuSHGsHLoduQ==
-X-Google-Smtp-Source: APXvYqwiDaSe7oR13TqnAe4ifdblvh6sX0UjdKbinWlL2NINaz4O5wVQDsGbSp4jFuCH25uLqaqshcY7ngDOXzPt63U=
-X-Received: by 2002:a24:b342:: with SMTP id z2mr2342309iti.121.1556807335385;
- Thu, 02 May 2019 07:28:55 -0700 (PDT)
+        Thu, 2 May 2019 10:30:01 -0400
+Received: from foss.arm.com ([217.140.101.70]:46854 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbfEBOaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:30:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C155F374;
+        Thu,  2 May 2019 07:29:59 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4FB13F5AF;
+        Thu,  2 May 2019 07:29:54 -0700 (PDT)
+Date:   Thu, 2 May 2019 15:29:52 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org
+Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
+Message-ID: <20190502142951.GP3567@e103592.cambridge.arm.com>
+References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
+ <20190502111003.GO3567@e103592.cambridge.arm.com>
 MIME-Version: 1.0
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
- <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
- <875zqt4igg.fsf@notabene.neil.brown.name> <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
-In-Reply-To: <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 2 May 2019 10:28:44 -0400
-Message-ID: <CAJfpegsthQn_=3AQJf7ojxoQBpHMA3dz1fCBjNZXsCA1E0oqnw@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     NeilBrown <neilb@suse.com>, Amir Goldstein <amir73il@gmail.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502111003.GO3567@e103592.cambridge.arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 10:05 AM Andreas Gruenbacher <agruenba@redhat.com> w=
-rote:
->
-> On Thu, 2 May 2019 at 05:57, NeilBrown <neilb@suse.com> wrote:
-> > On Wed, May 01 2019, Amir Goldstein wrote:
-> > > On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
-> > >> On Tue, Dec 06 2016, J. Bruce Fields wrote:
-> > >> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrot=
-e:
-> > >> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.h=
-u> wrote:
-> > >> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
-> > >> >> > <andreas.gruenbacher@gmail.com> wrote:
-> > >> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gru=
-enbacher@gmail.com>:
-> > >> >> >
-> > >> >> >>> It's not hard to come up with a heuristic that determines if =
-a
-> > >> >> >>> system.nfs4_acl value is equivalent to a file mode, and to ig=
-nore the
-> > >> >> >>> attribute in that case. (The file mode is transmitted in its =
-own
-> > >> >> >>> attribute already, so actually converting .) That way, overla=
-yfs could
-> > >> >> >>> still fail copying up files that have an actual ACL. It's sti=
-ll an
-> > >> >> >>> ugly hack ...
-> > >> >> >>
-> > >> >> >> Actually, that kind of heuristic would make sense in the NFS c=
-lient
-> > >> >> >> which could then hide the "system.nfs4_acl" attribute.
->
-> I still think the nfs client could make this problem mostly go away by
-> not exposing "system.nfs4_acl" xattrs when the acl is equivalent to
-> the file mode. The richacl patches contain a workable abgorithm for
-> that. The problem would remain for files that have an actual NFS4 ACL,
-> which just cannot be mapped to a file mode or to POSIX ACLs in the
-> general case, as well as for files that have a POSIX ACL. Mapping NFS4
-> ACL that used to be a POSIX ACL back to POSIX ACLs could be achieved
-> in many cases as well, but the code would be quite messy. A better way
-> seems to be to using a filesystem that doesn't support POSIX ACLs in
-> the first place. Unfortunately, xfs doesn't allow turning off POSIX
-> ACLs, for example.
+On Thu, May 02, 2019 at 12:10:04PM +0100, Dave Martin wrote:
+> On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
+> > An ELF file's .note.gnu.property indicates features the executable file
+> > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+> > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+> > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
+> > 
+> > This patch was part of the Control-flow Enforcement series; the original
+> > patch is here: https://lkml.org/lkml/2018/11/20/205.  Dave Martin responded
+> > that ARM recently introduced new features to NT_GNU_PROPERTY_TYPE_0 with
+> > properties closely modelled on GNU_PROPERTY_X86_FEATURE_1_AND, and it is
+> > logical to split out the generic part.  Here it is.
+> > 
+> > With this patch, if an arch needs to setup features from ELF properties,
+> > it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
+> > arch_setup_property().
+> > 
+> > For example, for X86_64:
+> > 
+> > int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
+> > {
+> > 	int r;
+> > 	uint32_t property;
+> > 
+> > 	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
+> > 			     &property);
+> > 	...
+> > }
 
-How about mounting NFSv4 with noacl?  That should fix this issue, right?
+[...]
 
-Thanks,
-Miklos
+> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c > > index 7d09d125f148..40aa4a4fd64d 100644
+> > --- a/fs/binfmt_elf.c
+> > +++ b/fs/binfmt_elf.c
+> > @@ -1076,6 +1076,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
+> >  		goto out_free_dentry;
+> >  	}
+> >  
+> > +	if (interpreter) {
+> > +		retval = arch_setup_property(&loc->interp_elf_ex,
+> > +					     interp_elf_phdata,
+> > +					     interpreter, true);
+> > +	} else {
+> > +		retval = arch_setup_property(&loc->elf_ex,
+> > +					     elf_phdata,
+> > +					     bprm->file, false);
+> > +	}
 
+This will be too late for arm64, since we need to twiddle the mmap prot
+flags for the executable's pages based on the detected properties.
 
+Can we instead move this much earlier, letting the arch code stash
+something in arch_state that can be consumed later on?
 
->
-> Andreas
->
-> > >> >> > Even simpler would be if knfsd didn't send the attribute if not
-> > >> >> > necessary.  Looks like there's code actively creating the nfs4_=
-acl on
-> > >> >> > the wire even if the filesystem had none:
-> > >> >> >
-> > >> >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
-> > >> >> >     if (!pacl)
-> > >> >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL)=
-;
-> > >> >> >
-> > >> >> > What's the point?
-> > >> >>
-> > >> >> That's how the protocol is specified.
-> > >> >
-> > >> > Yep, even if we could make that change to nfsd it wouldn't help th=
-e
-> > >> > client with the large number of other servers that are out there
-> > >> > (including older knfsd's).
-> > >> >
-> > >> > --b.
-> > >> >
-> > >> >> (I'm not saying that that's very helpful.)
-> > >> >>
-> > >> >> Andreas
-> > >>
-> > >> Hi everyone.....
-> > >>  I have a customer facing this problem, and so stumbled onto the ema=
-il
-> > >>  thread.
-> > >>  Unfortunately it didn't resolve anything.  Maybe I can help kick th=
-ings
-> > >>  along???
-> > >>
-> > >>  The core problem here is that NFSv4 and ext4 use different and larg=
-ely
-> > >>  incompatible ACL implementations.  There is no way to accurately
-> > >>  translate from one to the other in general (common specific example=
-s
-> > >>  can be converted).
-> > >>
-> > >>  This means that either:
-> > >>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
-> > >>       versa) or
-> > >>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, a=
-nd
-> > >>       that is OK.
-> > >>
-> > >>  Silently not copying the ACLs is probably not a good idea as it mig=
-ht
-> > >>  result in inappropriate permissions being given away.
-> > >
-> > > For example? permissions given away to do what?
-> > > Note that ovl_permission() only check permissions of *mounter*
-> > > to read the lower NFS file and ovl_open()/ovl_read_iter() access
-> > > the lower file with *mounter* credentials.
-> > >
-> > > I might be wrong, but seems to me that once admin mounted
-> > > overlayfs with lower NFS, NFS ACLs are not being enforced at all
-> > > even before copy up.
-> >
-> > I guess it is just as well that copy-up fails then - if the lower-level
-> > permission check is being ignored.
-> >
-> > >
-> > >> So if the
-> > >>  sysadmin wants this (and some clearly do), they need a way to
-> > >>  explicitly say "I accept the risk".  If only standard Unix permissi=
-ons
-> > >>  are used, there is no risk, so this seems reasonable.
-> > >>
-> > >>  So I would like to propose a new option for overlayfs
-> > >>     nocopyupacl:   when overlayfs is copying a file (or directory et=
-c)
-> > >>         from the lower filesystem to the upper filesystem, it does n=
-ot
-> > >>         copy extended attributes with the "system." prefix.  These a=
-re
-> > >>         used for storing ACL information and this is sometimes not
-> > >>         compatible between different filesystem types (e.g. ext4 and
-> > >>         NFSv4).  Standard Unix ownership permission flags (rwx) *are=
-*
-> > >>         copied so this option does not risk giving away inappropriat=
-e
-> > >>         permissions unless the lowerfs uses unusual ACLs.
-> > >>
-> > >>
-> > >
-> > > I am wondering if it would make more sense for nfs to register a
-> > > security_inode_copy_up_xattr() hook.
-> > > That is the mechanism that prevents copying up other security.*
-> > > xattrs?
-> >
-> > No, I don't think that would make sense.
-> > Support some day support for nfs4 acls were added to ext4 (not a totall=
-y
-> > ridiculous suggestion).  We would then want NFS to allow it's ACLs to b=
-e
-> > copied up.
-> >
-> > Thanks,
-> > NeilBrown
-> >
-> >
-> > >
-> > > Thanks,
-> > > Amir.
+This also has the advantage that we can report errors to the execve()
+caller before passing the point of no return (i.e., flush_old_exec()).
+
+[...]
+
+> > diff --git a/fs/gnu_property.c b/fs/gnu_property.c
+
+[...]
+
+> > +int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
+> > +		     u32 pr_type, u32 *property)
+> > +{
+> > +	struct elf64_hdr *ehdr64 = ehdr_p;
+> > +	int err = 0;
+> > +
+> > +	*property = 0;
+> > +
+> > +	if (ehdr64->e_ident[EI_CLASS] == ELFCLASS64) {
+> > +		struct elf64_phdr *phdr64 = phdr_p;
+> > +
+> > +		err = scan_segments_64(f, phdr64, ehdr64->e_phnum,
+> > +				       pr_type, property);
+> > +		if (err < 0)
+> > +			goto out;
+> > +	} else {
+> > +#ifdef CONFIG_COMPAT
+> > +		struct elf32_hdr *ehdr32 = ehdr_p;
+> > +
+> > +		if (ehdr32->e_ident[EI_CLASS] == ELFCLASS32) {
+> > +			struct elf32_phdr *phdr32 = phdr_p;
+> > +
+> > +			err = scan_segments_32(f, phdr32, ehdr32->e_phnum,
+> > +					       pr_type, property);
+> > +			if (err < 0)
+> > +				goto out;
+> > +		}
+> > +#else
+> > +	WARN_ONCE(1, "Exec of 32-bit app, but CONFIG_COMPAT is not enabled.\n");
+> > +	return -ENOTSUPP;
+> > +#endif
+> > +	}
+
+We have already made a ton of assumptions about the ELF class by this
+point, and we don't seem to check it explicitly elsewhere, so it is a
+bit weird to police it specifically here.
+
+Can we simply pass the assumed ELF class as a parameter instead?
+
+[...]
+
+Cheers
+---DavE
