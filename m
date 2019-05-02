@@ -2,253 +2,155 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0F8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7EBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDB720651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06AB20651
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fxBWhgwX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kY9LQyUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfEBUXE (ORCPT
+        id S1726379AbfEBUXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 16:23:04 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58852 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfEBUXD (ORCPT
+        Thu, 2 May 2019 16:23:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46442 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfEBUXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 16:23:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DeS5fpBInvb+CBBZI1b/8r9ktgsMiE0FAYJoIYERPB0=; b=fxBWhgwXPeZIWTwyHwOosGbzg
-        6sWeCg9lKr8xMF03VNqcVIXVd1yW5qVrvms00SSarfVssNGxu/vEHYd3KE41CmuZGyl6p97+l9s7U
-        WJQg34/N1KUVwphd3stwWuI+nghXaez8ghWtJ8Kq3gBjO76NRR1Bjod0nfxXKrXLHdFduLIkUBBce
-        SZpfCBnK0JXAwYrORy69u5J/k9Yi+6GmcMYa34lO+qE3hPh5pBI1Wd4bedoNu0Ugc1lDWF7kIWm8R
-        IL2kdMWpejqJJhLqAcokSCeZ6JaMt6sDE4ighHehMxqQTzmi2NkGfT9W/7fOD0xzB4006BwdNb3pH
-        uudV0BFlA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMIDF-0003Ox-1B; Thu, 02 May 2019 20:21:49 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 869DA209A1C85; Thu,  2 May 2019 22:21:46 +0200 (CEST)
-Date:   Thu, 2 May 2019 22:21:46 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-Message-ID: <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
-References: <20190501202830.347656894@goodmis.org>
- <20190501203152.397154664@goodmis.org>
- <20190501232412.1196ef18@oasis.local.home>
- <20190502162133.GX2623@hirez.programming.kicks-ass.net>
- <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
- <20190502181811.GY2623@hirez.programming.kicks-ass.net>
- <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+        Thu, 2 May 2019 16:23:54 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n2so1552210pgg.13;
+        Thu, 02 May 2019 13:23:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1kO1Q8xyPeInFEuVa9YrVjPZKrqRQhoH5hWqL6piNVQ=;
+        b=kY9LQyUGqZ0FVr/++HvUx4Y7nQFfpaOv8Q7FRLpg2RY0aG5pNS01losjKp9fpNP90Z
+         VgTVYGgsKsoaTcpQ/e4d5paVJ30k0qLBxIs0xZbbCm1zVwVvBMHvziwUl17b6rZBkVRf
+         p526iPe00uoy3h30NHZUkqJ4LbvdULvtN+gFmBIiw63aSiTpVoqlWFRz4wyIGqGV6CwP
+         mBQ2DLGmY00I6xkuj3qxlMgPF/Au6ThLvqDR6R8EhSe9OAlEe1v4WRHHWxMpuUCmYJwn
+         MzXNdUJ0+ZWuXBrXm77sDeeIGFXUY1Ds85h2pvB96SnlvL38Nyb8iMHX5gooQwLCLb3s
+         OaWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1kO1Q8xyPeInFEuVa9YrVjPZKrqRQhoH5hWqL6piNVQ=;
+        b=hTfigpVDU+C6LK//YxdvmL7DZbS/HqBxrP03YvFBezZifhJ7DCJoVM43zPaiARbk8k
+         a+FtzUTGi+YR0HX7wYN3Pf0f1+skK6CV4rgSf+JSamajmxnVOwcq8mBBsUh5WN++/lsh
+         YVtKH6tTtXIehY+pzOu3cPqGREZgLATmLEIh/mSZJq2oCyGTveIU5wI2uwyiJXW5YdnP
+         XcWQ2x0khU6iFE+stVUQ9KoWNJj4CDKLPDYMe5S9A+qZJUDnv2IkP3DzpaaetHaaoKbL
+         o8oM1WMXF0dZ8UW3RHmBjrLjmvmZlZ9vafNIfawzLRIFgBG6w/MZCI3jmN8XOlyUvsGG
+         8wHA==
+X-Gm-Message-State: APjAAAVW5JL7ijjctQkkD92/qlMF0YeRyseVLGxr1kMK4R76LYJ8jngS
+        J5XuTaMg3iIGvm4rwJjqhVs=
+X-Google-Smtp-Source: APXvYqz6iymo/ALT6GvocSEczAk4ZxeBc7r9+eHosppkdeZ8l7kIrZ2jQzAKGJzr1yX23EYcVZm0PQ==
+X-Received: by 2002:a63:5014:: with SMTP id e20mr6075785pgb.2.1556828633822;
+        Thu, 02 May 2019 13:23:53 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u5sm17161pfm.121.2019.05.02.13.23.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 13:23:53 -0700 (PDT)
+Date:   Thu, 2 May 2019 13:23:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ludovic Barre <ludovic.Barre@st.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH V2 2/3] watchdog: stm32: update return values recommended
+ by watchdog kernel api
+Message-ID: <20190502202352.GB27894@roeck-us.net>
+References: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
+ <1556806126-15890-3-git-send-email-ludovic.Barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556806126-15890-3-git-send-email-ludovic.Barre@st.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 11:43:37AM -0700, Linus Torvalds wrote:
-> What would it look like with the "int3-from-kernel is special" modification?
+On Thu, May 02, 2019 at 04:08:45PM +0200, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> This patch updates return values on watchdog-kernel-api.txt:
+> return 0 on succes, -EINVAL for "parameter out of range"
+> and -EIO for "could not write value to the watchdog".
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/watchdog/stm32_iwdg.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+> index e191bd8..f19a6d4 100644
+> --- a/drivers/watchdog/stm32_iwdg.c
+> +++ b/drivers/watchdog/stm32_iwdg.c
+> @@ -81,7 +81,6 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
+>  	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
+>  	u32 val = FLAG_PVU | FLAG_RVU;
+>  	u32 reload;
+> -	int ret;
+>  
+>  	dev_dbg(wdd->parent, "%s\n", __func__);
+>  
+> @@ -98,13 +97,11 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
+>  	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+>  
+>  	/* wait for the registers to be updated (max 100ms) */
+> -	ret = readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, val,
+> -					 !(val & (FLAG_PVU | FLAG_RVU)),
+> -					 SLEEP_US, TIMEOUT_US);
+> -	if (ret) {
+> -		dev_err(wdd->parent,
+> -			"Fail to set prescaler or reload registers\n");
+> -		return ret;
+> +	if (readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, val,
+> +				       !(val & (FLAG_PVU | FLAG_RVU)),
+> +				       SLEEP_US, TIMEOUT_US)) {
+> +		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
+> +		return -EIO;
 
-Something like so; it boots; but I could've made some horrible mistake
-(again).
+Please don't. Overriding error values tends to result in complaints by
+static analyzers, and we don't want to have to deal with those.
 
----
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 7b23431be5cb..4de51cff5b8a 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -67,9 +67,20 @@
- # define preempt_stop(clobbers)	DISABLE_INTERRUPTS(clobbers); TRACE_IRQS_OFF
- #else
- # define preempt_stop(clobbers)
--# define resume_kernel		restore_all_kernel
- #endif
- 
-+.macro RETINT_PREEMPT
-+#ifdef CONFIG_PREEMPT
-+	DISABLE_INTERRUPTS(CLBR_ANY)
-+	cmpl	$0, PER_CPU_VAR(__preempt_count)
-+	jnz	.Lend_\@
-+	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)	# interrupts off (exception path) ?
-+	jz	.Lend_\@
-+	call	preempt_schedule_irq
-+.Lend_\@:
-+#endif
-+.endm
-+
- .macro TRACE_IRQS_IRET
- #ifdef CONFIG_TRACE_IRQFLAGS
- 	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)     # interrupts off?
-@@ -755,7 +766,7 @@ END(ret_from_fork)
- 	andl	$SEGMENT_RPL_MASK, %eax
- #endif
- 	cmpl	$USER_RPL, %eax
--	jb	resume_kernel			# not returning to v8086 or userspace
-+	jb	restore_all_kernel		# not returning to v8086 or userspace
- 
- ENTRY(resume_userspace)
- 	DISABLE_INTERRUPTS(CLBR_ANY)
-@@ -765,18 +776,6 @@ ENTRY(resume_userspace)
- 	jmp	restore_all
- END(ret_from_exception)
- 
--#ifdef CONFIG_PREEMPT
--ENTRY(resume_kernel)
--	DISABLE_INTERRUPTS(CLBR_ANY)
--	cmpl	$0, PER_CPU_VAR(__preempt_count)
--	jnz	restore_all_kernel
--	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)	# interrupts off (exception path) ?
--	jz	restore_all_kernel
--	call	preempt_schedule_irq
--	jmp	restore_all_kernel
--END(resume_kernel)
--#endif
--
- GLOBAL(__begin_SYSENTER_singlestep_region)
- /*
-  * All code from here through __end_SYSENTER_singlestep_region is subject
-@@ -1027,6 +1026,7 @@ ENTRY(entry_INT80_32)
- 	INTERRUPT_RETURN
- 
- restore_all_kernel:
-+	RETINT_PREEMPT
- 	TRACE_IRQS_IRET
- 	PARANOID_EXIT_TO_KERNEL_MODE
- 	BUG_IF_WRONG_CR3
-@@ -1477,6 +1477,94 @@ END(nmi)
- 
- ENTRY(int3)
- 	ASM_CLAC
-+
-+#ifdef CONFIG_VM86
-+	testl	$X86_EFLAGS_VM, 8(%esp)
-+	jnz	.Lfrom_usermode_no_gap
-+#endif
-+	testl	$SEGMENT_RPL_MASK, 4(%esp)
-+	jnz	.Lfrom_usermode_no_gap
-+
-+	/*
-+	 * Here from kernel mode; so the (exception) stack looks like:
-+	 *
-+	 * 12(esp) - <previous context>
-+	 *  8(esp) - flags
-+	 *  4(esp) - cs
-+	 *  0(esp) - ip
-+	 *
-+	 * Lets build a 5 entry IRET frame after that, such that struct pt_regs
-+	 * is complete and in particular regs->sp is correct. This gives us
-+	 * the original 3 enties as gap:
-+	 *
-+	 * 32(esp) - <previous context>
-+	 * 28(esp) - orig_flags / gap
-+	 * 24(esp) - orig_cs	/ gap
-+	 * 20(esp) - orig_ip	/ gap
-+	 * 16(esp) - ss
-+	 * 12(esp) - sp
-+	 *  8(esp) - flags
-+	 *  4(esp) - cs
-+	 *  0(esp) - ip
-+	 */
-+	pushl	%ss	  # ss
-+	pushl	%esp      # sp (points at ss)
-+	pushl	4*4(%esp) # flags
-+	pushl	4*4(%esp) # cs
-+	pushl	4*4(%esp) # ip
-+
-+	add	$16, 12(%esp) # point sp back at the previous context
-+
-+	pushl	$-1				# orig_eax; mark as interrupt
-+
-+	SAVE_ALL
-+	ENCODE_FRAME_POINTER
-+	TRACE_IRQS_OFF
-+	xorl	%edx, %edx			# zero error code
-+	movl	%esp, %eax			# pt_regs pointer
-+	call	do_int3
-+
-+	RETINT_PREEMPT
-+	TRACE_IRQS_IRET
-+	/*
-+	 * If we really never INT3 from entry code, it looks like
-+	 * we can skip this one.
-+	PARANOID_EXIT_TO_KERNEL_MODE
-+	 */
-+	BUG_IF_WRONG_CR3
-+	RESTORE_REGS 4				# consume orig_eax
-+
-+	/*
-+	 * Reconstruct the 3 entry IRET frame right after the (modified)
-+	 * regs->sp without lowering %esp in between, such that an NMI in the
-+	 * middle doesn't scribble our stack.
-+	 */
-+
-+	pushl	%eax
-+	pushl	%ecx
-+	movl	5*4(%esp), %eax		# (modified) regs->sp
-+
-+	movl	4*4(%esp), %ecx		# flags
-+	movl	%ecx, -4(%eax)
-+
-+	movl	3*4(%esp), %ecx		# cs
-+	andl	$0x0000ffff, %ecx
-+	movl	%ecx, -8(%eax)
-+
-+	movl	2*4(%esp), %ecx		# ip
-+	movl	%ecx, -12(%eax)
-+
-+	movl	1*4(%esp), %ecx		# eax
-+	movl	%ecx, -16(%eax)
-+
-+	popl	%ecx
-+	lea	-16(%eax), %esp
-+	popl	%eax
-+
-+	jmp	.Lirq_return
-+
-+.Lfrom_usermode_no_gap:
-+
- 	pushl	$-1				# mark this as an int
- 
- 	SAVE_ALL switch_stacks=1
+>  	}
+>  
+>  	/* reload watchdog */
+> @@ -128,8 +125,16 @@ static int stm32_iwdg_ping(struct watchdog_device *wdd)
+>  static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
+>  				  unsigned int timeout)
+>  {
+> +	unsigned int tout = clamp(timeout, wdd->min_timeout,
+> +				  wdd->max_hw_heartbeat_ms / 1000);
+> +
+>  	dev_dbg(wdd->parent, "%s timeout: %d sec\n", __func__, timeout);
+>  
+> +	if (tout != timeout) {
+> +		dev_err(wdd->parent, "parameter out of range\n");
+> +		return -EINVAL;
+> +	}
+
+This is simply wrong. The whole point of max_hw_heartbeat_ms is to
+enable situations where the selected timeout is larger than the
+timeout supported by the hardware. In that situation, the kernel
+pings the hardware until the next ping from userspace is due.
+
+> +
+>  	wdd->timeout = timeout;
+>  
+>  	if (watchdog_active(wdd))
+> -- 
+> 2.7.4
+> 
