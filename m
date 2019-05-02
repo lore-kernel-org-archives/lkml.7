@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3BBC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9314C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A89204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECB6205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811607;
-	bh=NDvVz4P9ETnzeV1AMycWhc1GB4KZgJcAaZTW4I65oug=;
+	s=default; t=1556811617;
+	bh=8jRcYPH5YkiKRc1omdlCiX2F+0bIR3kxC2mztkj37Eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CAxGI7R2a4SbweAQ7OC4IhKEPvFAJdEm6i7fHaZf4kZlVVX4r720wlcKWRo0AP7zY
-	 5CoU8FLOWoAujG3U7AvTjV/3xLBGigDa6CnCm41xSYYVO5JAbmov6Q9ooyiRMEAAIU
-	 YsTZQ3qPTPa0OobX5YOsd7Fu1Pgq4ojChfY0q80A=
+	b=N4aP0CeCkhQVR/aOyNn8utIR+SNA69V2Gtzh5YgyeLdpUU5kf0roLNROEUuo9KF2H
+	 YErN6Rtwovog0YtBGrAr0Yi714/8n9vyppr239g+dfpeoEckt0+ngWcof9X9lqGAJz
+	 +BOgxjzClNJM3YscJz1JW/RoISXd5mPGnazRvh0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfEBPkG (ORCPT
+        id S1728764AbfEBPkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:40:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfEBP3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:29:24 -0400
+        id S1728395AbfEBP3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71C5320B7C;
-        Thu,  2 May 2019 15:29:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3662F21734;
+        Thu,  2 May 2019 15:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810963;
-        bh=NDvVz4P9ETnzeV1AMycWhc1GB4KZgJcAaZTW4I65oug=;
+        s=default; t=1556810958;
+        bh=8jRcYPH5YkiKRc1omdlCiX2F+0bIR3kxC2mztkj37Eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zPs87VcmCIzl+kLtW3XC8VsOOiokBxP+yejs7TOHWKGC2Yri9HJ69ZJ+++18vZMNu
-         bbcKbylAaOjf+zxW8wnyFeOO4euNALhuEONtnfsqokTr2miWMjAdV4MMidE6jRjszB
-         3m75qDAAWt6IuT/HTbwG42wZRSW8Aef2GpZIoyW4=
+        b=IbrlDM6YUpdHzY/gOedduaWgl/+muUrbz7YLQWEWumzZf0b57xlCiUPNtiL/jb26R
+         C9TOZPq5A1/JzxF+BokAywPCEFupLy3oph1IXtvm4VpTH5N04WGM3qYpze1C7ufYBR
+         AKFK7UkEmIqOqWJzFpXoooetQwlgrjBNuwJ8Ajog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?V=C3=A1clav=20Zindulka?= <vaclav.zindulka@tlapnet.cz>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 023/101] netfilter: nft_set_rbtree: check for inactive element after flag mismatch
-Date:   Thu,  2 May 2019 17:20:25 +0200
-Message-Id: <20190502143341.384720385@linuxfoundation.org>
+Subject: [PATCH 5.0 021/101] staging: axis-fifo: add CONFIG_OF dependency
+Date:   Thu,  2 May 2019 17:20:23 +0200
+Message-Id: <20190502143341.309348600@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,43 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05b7639da55f5555b9866a1f4b7e8995232a6323 ]
+[ Upstream commit 1beea6204e2304dd11600791d8dad8e7350af6ad ]
 
-Otherwise, we hit bogus ENOENT when removing elements.
+When building without CONFIG_OF, the compiler loses track of the flow
+control in axis_fifo_probe(), and thinks that many variables are used
+without an initialization even though we actually leave the function
+before the first use:
 
-Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
-Reported-by: Václav Zindulka <vaclav.zindulka@tlapnet.cz>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+drivers/staging/axis-fifo/axis-fifo.c: In function 'axis_fifo_probe':
+drivers/staging/axis-fifo/axis-fifo.c:900:5: error: 'rxd_tdata_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (rxd_tdata_width != 32) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:907:5: error: 'txd_tdata_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (txd_tdata_width != 32) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:914:5: error: 'has_tdest' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (has_tdest) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:919:5: error: 'has_tid' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+
+When CONFIG_OF is set, this does not happen, and since the driver cannot
+work without it, just add that option as a Kconfig dependency.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/staging/axis-fifo/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index fa61208371f8..321a0036fdf5 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -308,10 +308,6 @@ static void *nft_rbtree_deactivate(const struct net *net,
- 		else if (d > 0)
- 			parent = parent->rb_right;
- 		else {
--			if (!nft_set_elem_active(&rbe->ext, genmask)) {
--				parent = parent->rb_left;
--				continue;
--			}
- 			if (nft_rbtree_interval_end(rbe) &&
- 			    !nft_rbtree_interval_end(this)) {
- 				parent = parent->rb_left;
-@@ -320,6 +316,9 @@ static void *nft_rbtree_deactivate(const struct net *net,
- 				   nft_rbtree_interval_end(this)) {
- 				parent = parent->rb_right;
- 				continue;
-+			} else if (!nft_set_elem_active(&rbe->ext, genmask)) {
-+				parent = parent->rb_left;
-+				continue;
- 			}
- 			nft_rbtree_flush(net, set, rbe);
- 			return rbe;
+diff --git a/drivers/staging/axis-fifo/Kconfig b/drivers/staging/axis-fifo/Kconfig
+index 687537203d9c..d9725888af6f 100644
+--- a/drivers/staging/axis-fifo/Kconfig
++++ b/drivers/staging/axis-fifo/Kconfig
+@@ -3,6 +3,7 @@
+ #
+ config XIL_AXIS_FIFO
+ 	tristate "Xilinx AXI-Stream FIFO IP core driver"
++	depends on OF
+ 	default n
+ 	help
+ 	  This adds support for the Xilinx AXI-Stream
 -- 
 2.19.1
 
