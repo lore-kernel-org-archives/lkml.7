@@ -2,154 +2,135 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B9AC04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EA1C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988DE2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D490E2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="b92kOuk4"
+	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="KQrnPe55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfEBKfx (ORCPT
+        id S1726610AbfEBKgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 06:35:53 -0400
-Received: from mail-eopbgr760045.outbound.protection.outlook.com ([40.107.76.45]:13075
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        Thu, 2 May 2019 06:36:33 -0400
+Received: from mail-eopbgr820081.outbound.protection.outlook.com ([40.107.82.81]:64640
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726231AbfEBKfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 06:35:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+        id S1726231AbfEBKgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 06:36:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oHpWHxqskoSlSadAMLt09ozUUUgZ3kzHN+8B/ee8fbI=;
- b=b92kOuk44jUwOEIF/CSUz8pg7uEBY77AMrMhfc7C63ffuXL10DsdVB81CRy7c6MD8lFlTy1B1ImXecnfQl84r1GdbziK0jYWprULykxdnEwBRtlaL6l3X3hs8U6YrujYO+1QFrnm/p9NJ61yaiy8qAd6vDfqfvs5JqK7iJox9nk=
-Received: from BN6PR02CA0030.namprd02.prod.outlook.com (2603:10b6:404:5f::16)
- by CY4PR0201MB3396.namprd02.prod.outlook.com (2603:10b6:910:8b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.11; Thu, 2 May
- 2019 10:35:04 +0000
-Received: from CY1NAM02FT024.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::204) by BN6PR02CA0030.outlook.office365.com
- (2603:10b6:404:5f::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1856.10 via Frontend
- Transport; Thu, 2 May 2019 10:35:03 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT024.mail.protection.outlook.com (10.152.74.210) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1856.11
- via Frontend Transport; Thu, 2 May 2019 10:35:02 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1hM93O-0004iW-Fl; Thu, 02 May 2019 03:35:02 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1hM93J-0007Vo-CX; Thu, 02 May 2019 03:34:57 -0700
-Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x42AYsY9031031;
-        Thu, 2 May 2019 03:34:55 -0700
-Received: from [172.23.155.80] (helo=xhdengvm155080.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <kalyania@xilinx.com>)
-        id 1hM93G-0007VC-ML; Thu, 02 May 2019 03:34:54 -0700
-Received: by xhdengvm155080.xilinx.com (Postfix, from userid 23151)
-        id DA45D81340; Thu,  2 May 2019 16:04:53 +0530 (IST)
-From:   Kalyani Akula <kalyani.akula@xilinx.com>
-To:     <herbert@gondor.apana.org.au>, <kstewart@linuxfoundation.org>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <pombredanne@nexb.com>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <saratcha@xilinx.com>
-CC:     Kalyani Akula <kalyania@xilinx.com>,
-        Kalyani Akula <kalyani.akula@xilinx.com>
-Subject: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
-Date:   Thu, 2 May 2019 16:04:38 +0530
-Message-ID: <1556793282-17346-1-git-send-email-kalyani.akula@xilinx.com>
-X-Mailer: git-send-email 1.9.5
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(39860400002)(2980300002)(189003)(199004)(81166006)(8936002)(81156014)(110136005)(54906003)(16586007)(36756003)(4326008)(6306002)(103686004)(8676002)(42186006)(36386004)(50226002)(44832011)(2906002)(26005)(478600001)(52956003)(51416003)(48376002)(966005)(50466002)(70586007)(70206006)(106002)(2616005)(336012)(486006)(126002)(476003)(6266002)(426003)(186003)(316002)(107886003)(305945005)(90966002)(2201001)(47776003)(5660300002)(356004)(63266004)(6636002)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR0201MB3396;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+ bh=L40Qc+zMat3uNEKq4ePQ2mqCdXjJ4Y1Njlshcn/ZTio=;
+ b=KQrnPe55g3nyuZud6KqHH6HsuPH1Nq9qAgZ4Q9u8XWo6zmhr48869C+2aBuyTFtekiRYeFNJh/x+zdUTQDaRUO4ZSiaHkjc+1Mkezqu3AaX0QgX6wBgwrcIUKbLV1fovz6sA4tsO9IuhhH6s6gFPvjWXX2rqjVulHH91NMz0aDo=
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com (20.179.78.205) by
+ BN8PR10MB3314.namprd10.prod.outlook.com (20.179.139.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Thu, 2 May 2019 10:36:30 +0000
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::24c5:ea68:cff3:4a16]) by BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::24c5:ea68:cff3:4a16%7]) with mapi id 15.20.1856.008; Thu, 2 May 2019
+ 10:36:30 +0000
+From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "madalin.bucur@nxp.com" <madalin.bucur@nxp.com>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "laurentiu.tudor@nxp.com" <laurentiu.tudor@nxp.com>,
+        "roy.pledge@nxp.com" <roy.pledge@nxp.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 9/9] dpaa_eth: fix SG frame cleanup
+Thread-Topic: [PATCH v2 9/9] dpaa_eth: fix SG frame cleanup
+Thread-Index: AQHU/MpTw42IuR0fykCaI1+07jqDiqZQPr+AgAdUG4CAABlegA==
+Date:   Thu, 2 May 2019 10:36:30 +0000
+Message-ID: <728fe477849debcc14bb1af01e35bc7b184a0a03.camel@infinera.com>
+References: <20190427071031.6563-1-laurentiu.tudor@nxp.com>
+         <20190427071031.6563-10-laurentiu.tudor@nxp.com>
+         <2c6f5d170edab346e0a87b1dfeb12e2f65801685.camel@infinera.com>
+         <VI1PR04MB5134C0D6707E78D674B96898EC340@VI1PR04MB5134.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB5134C0D6707E78D674B96898EC340@VI1PR04MB5134.eurprd04.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Joakim.Tjernlund@infinera.com; 
+x-originating-ip: [88.131.87.201]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 59f6c7b0-0605-4284-c375-08d6ceea0a1b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN8PR10MB3314;
+x-ms-traffictypediagnostic: BN8PR10MB3314:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BN8PR10MB3314BDAF20A30D8A5603C850F4340@BN8PR10MB3314.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(366004)(396003)(346002)(376002)(189003)(199004)(13464003)(316002)(118296001)(186003)(6246003)(11346002)(305945005)(66476007)(73956011)(2616005)(64756008)(66446008)(66946007)(66556008)(53936002)(91956017)(76116006)(446003)(476003)(486006)(66066001)(3846002)(6486002)(71190400001)(71200400001)(86362001)(6436002)(6116002)(5660300002)(2201001)(229853002)(966005)(14444005)(8676002)(6306002)(256004)(68736007)(54906003)(110136005)(8936002)(81166006)(81156014)(7736002)(6512007)(7416002)(4326008)(36756003)(25786009)(102836004)(6506007)(76176011)(72206003)(2501003)(2906002)(14454004)(478600001)(99286004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR10MB3314;H:BN8PR10MB3540.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: infinera.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z1YXU6qwY4gFgNMUgdv6tNcgJcx0akvl9NOnrooCO3wJkEL7lQLeI1wnPht93EPWP+t9WGumHzcxkq2D+4fIhxol5Dbgnql+M/m4y99DaKVSRDuuxMwzdMomXay/IIumcWZtmioQoZTP8rvtcjGgGmBNBsY44L4si3ob6rp+30XdbWjpEqRP72UYTOAkMPmh1I/aGLTHs2kgpD7JWWynf3zXQyXfKshyUn2Ki09g6LCDvlMIyCj2jy2A08ThRHYyfc9Mb4YKvTjMEGrbm2/Pk+PCsEyv9Fm1Oh9KARKFPgJlp5AR7cJUPoIasqudgADddZWTBCd3BBsI/PH40QugrjH+asTGdGXS3cOqzr42unqcD3DreaOrx3Fo9jPyBnoo5DDbaj4Wa3BqGdCf6Om+TLuzmsqx0/zwODN6xP1DLpc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1F9602CDEA854A469D9C83B5DEC64BBA@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 25eaa23a-e9aa-498e-725b-08d6cee9d61b
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:CY4PR0201MB3396;
-X-MS-TrafficTypeDiagnostic: CY4PR0201MB3396:
-X-MS-Exchange-PUrlCount: 2
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <CY4PR0201MB33966B386B1474B385E8564CAF340@CY4PR0201MB3396.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 0025434D2D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: 4RyCrrkXPpIRmpPbdRFn/IRL2i3Lkg5jzb87VJRzwCl5SqHSehbGqXTdagJkSgMODCviKXYky4EZ3ep8JcOtgGC9+0u2x/YJr5ItSW3aWVrlkRD851phoU6BaiJkJYct3048SN6s7byWWVatNdVvHN8pfxVXOM1/mTvmi6ruAJB5vwPgcPKWyRv4OAofXsmfaW/PxMcMtimo4Hu7oipFmELlZlbFejFyg9qif+sk4EBDD3D67RFreIMLQtjsZtH5fC9A3gktWhtTFXAoPzjwNZ1FOJixdH5BOTHr83vPhMMYD2Uk2RaSMaG5L1xqQtuj0zrfvwGnJJ3EtRgEfPcPVMGwpaOtD8Yagv9e/EHJIWfdh9vnL4rljOmGeQkN62WIYtQwhAUjGpatkg4SO+VJ4XDIGhAmPVXlyJB810wsFzo=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2019 10:35:02.9474
+X-OriginatorOrg: infinera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59f6c7b0-0605-4284-c375-08d6ceea0a1b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 10:36:30.5005
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25eaa23a-e9aa-498e-725b-08d6cee9d61b
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0201MB3396
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3314
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set adds support for
-- dt-binding docs for Xilinx ZynqMP SHA3 driver
-- Adds communication layer support for sha_hash in zynqmp.c
-- Adds Xilinx ZynqMP driver for SHA3 Algorithm
-- Adds device tree node for ZynqMP SHA3 driver
-
-V3 Changes :
-- Removed zynqmp_sha_import and export APIs.The reason as follows
-The user space code does an accept on an already accepted FD
-when we create AF_ALG socket and call accept on it,
-it calls af_alg_accept and not hash_accept.
-import and export APIs are called from hash_accept.
-The flow is as below
-accept--> af_alg_accept-->hash_accept_parent-->hash_accept_parent_nokey
-for hash salg_type.
-- Resolved comments from 
-        https://patchwork.kernel.org/patch/10753719/
-
-V2 Changes :
-- Added new patch (2/4) for sha_hash zynqmp API support
-- Incorporated code review comments from v1 patch series. Discussed below:
-        https://lore.kernel.org/patchwork/patch/1029433/
-
-
-Kalyani Akula (4):
-  dt-bindings: crypto: Add bindings for ZynqMP SHA3 driver
-  firmware: xilinx: Add ZynqMP sha_hash API for SHA3 functionality
-  crypto: Add Xilinx SHA3 driver
-  ARM64: zynqmp: Add Xilinix SHA-384 node.
-
- .../devicetree/bindings/crypto/zynqmp-sha.txt      |  12 ++
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   4 +
- drivers/crypto/Kconfig                             |  10 +
- drivers/crypto/Makefile                            |   1 +
- drivers/crypto/zynqmp-sha.c                        | 240 +++++++++++++++++++++
- drivers/firmware/xilinx/zynqmp.c                   |  27 +++
- include/linux/firmware/xlnx-zynqmp.h               |   2 +
- 7 files changed, 296 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/zynqmp-sha.txt
- create mode 100644 drivers/crypto/zynqmp-sha.c
-
--- 
-1.9.5
-
+T24gVGh1LCAyMDE5LTA1LTAyIGF0IDA5OjA1ICswMDAwLCBMYXVyZW50aXUgVHVkb3Igd3JvdGU6
+DQo+IEhpIEpvYWtpbSwNCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBG
+cm9tOiBKb2FraW0gVGplcm5sdW5kIDxKb2FraW0uVGplcm5sdW5kQGluZmluZXJhLmNvbT4NCj4g
+PiBTZW50OiBTYXR1cmRheSwgQXByaWwgMjcsIDIwMTkgODoxMSBQTQ0KPiA+IA0KPiA+IE9uIFNh
+dCwgMjAxOS0wNC0yNyBhdCAxMDoxMCArMDMwMCwgbGF1cmVudGl1LnR1ZG9yQG54cC5jb20gd3Jv
+dGU6DQo+ID4gPiBGcm9tOiBMYXVyZW50aXUgVHVkb3IgPGxhdXJlbnRpdS50dWRvckBueHAuY29t
+Pg0KPiA+ID4gDQo+ID4gPiBGaXggaXNzdWUgd2l0aCB0aGUgZW50cnkgaW5kZXhpbmcgaW4gdGhl
+IHNnIGZyYW1lIGNsZWFudXAgY29kZSBiZWluZw0KPiA+ID4gb2ZmLWJ5LTEuIFRoaXMgcHJvYmxl
+bSBzaG93ZWQgdXAgd2hlbiBkb2luZyBzb21lIGJhc2ljIGlwZXJmIHRlc3RzIGFuZA0KPiA+ID4g
+bWFuaWZlc3RlZCBpbiB0cmFmZmljIGNvbWluZyB0byBhIGhhbHQuDQo+ID4gPiANCj4gPiA+IFNp
+Z25lZC1vZmYtYnk6IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+
+ID4gPiBBY2tlZC1ieTogTWFkYWxpbiBCdWN1ciA8bWFkYWxpbi5idWN1ckBueHAuY29tPg0KPiA+
+IA0KPiA+IFdhc24ndCB0aGlzIGEgc3RhYmxlIGNhbmRpZGF0ZSB0b28/DQo+IA0KPiBZZXMsIGl0
+IGlzLiBJIGZvcmdvdCB0byBhZGQgdGhlIGNjOnN0YWJsZSB0YWcsIHNvcnJ5IGFib3V0IHRoYXQu
+DQoNClRoZW4gdGhpcyBpcyBhIGJ1ZyBmaXggdGhhdCBzaG91bGQgZ28gZGlyZWN0bHkgdG8gbGlu
+dXMvc3RhYmxlLg0KDQpJIG5vdGUgdGhhdCBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
+bGludXgva2VybmVsL2dpdC9zdGFibGUvbGludXguZ2l0L2xvZy9kcml2ZXJzL25ldC9ldGhlcm5l
+dC9mcmVlc2NhbGUvZHBhYT9oPWxpbnV4LTQuMTkueQ0KaXMgaW4gNC4xOSBidXQgbm90IGluIDQu
+MTQgLCBpcyBpdCBub3QgYXBwcm9wcmlhdGUgZm9yIDQuMTQ/DQoNCiBKb2NrZQ0KDQo+IA0KPiAt
+LS0NCj4gQmVzdCBSZWdhcmRzLCBMYXVyZW50aXUNCj4gDQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2
+ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBhYS9kcGFhX2V0aC5jIHwgMiArLQ0KPiA+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4gDQo+
+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2RwYWEvZHBh
+YV9ldGguYw0KPiA+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2RwYWEvZHBhYV9l
+dGguYw0KPiA+ID4gaW5kZXggZGFlZGU3MjcyNzY4Li40MDQyMGVkYzljZTYgMTAwNjQ0DQo+ID4g
+PiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBhYS9kcGFhX2V0aC5jDQo+
+ID4gPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBhYS9kcGFhX2V0aC5j
+DQo+ID4gPiBAQCAtMTY2Myw3ICsxNjYzLDcgQEAgc3RhdGljIHN0cnVjdCBza19idWZmICpkcGFh
+X2NsZWFudXBfdHhfZmQoY29uc3QNCj4gPiBzdHJ1Y3QgZHBhYV9wcml2ICpwcml2LA0KPiA+ID4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcW1fc2dfZW50cnlfZ2V0X2xlbigmc2d0
+WzBdKSwgZG1hX2Rpcik7DQo+ID4gPiANCj4gPiA+ICAgICAgICAgICAgICAgICAvKiByZW1haW5p
+bmcgcGFnZXMgd2VyZSBtYXBwZWQgd2l0aCBza2JfZnJhZ19kbWFfbWFwKCkNCj4gPiAqLw0KPiA+
+ID4gLSAgICAgICAgICAgICAgIGZvciAoaSA9IDE7IGkgPCBucl9mcmFnczsgaSsrKSB7DQo+ID4g
+PiArICAgICAgICAgICAgICAgZm9yIChpID0gMTsgaSA8PSBucl9mcmFnczsgaSsrKSB7DQo+ID4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICBXQVJOX09OKHFtX3NnX2VudHJ5X2lzX2V4dCgmc2d0
+W2ldKSk7DQo+ID4gPiANCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGRtYV91bm1hcF9w
+YWdlKGRldiwgcW1fc2dfYWRkcigmc2d0W2ldKSwNCj4gPiA+IC0tDQo+ID4gPiAyLjE3LjENCj4g
+PiA+IA0K
