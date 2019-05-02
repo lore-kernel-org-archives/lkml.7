@@ -2,219 +2,96 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D275C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A014BC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6760820652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE0520652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="E9hwztFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfEBOvy (ORCPT
+        id S1726369AbfEBOxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:51:54 -0400
-Received: from foss.arm.com ([217.140.101.70]:47048 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbfEBOvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:51:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60CEAA78;
-        Thu,  2 May 2019 07:51:53 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AEFB3F5AF;
-        Thu,  2 May 2019 07:51:51 -0700 (PDT)
-Date:   Thu, 2 May 2019 15:51:46 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        bhelgaas@google.com, Jisheng.Zhang@synaptics.com,
-        thierry.reding@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V2 2/2] PCI: dwc: Export APIs to support .remove()
- implementation
-Message-ID: <20190502145146.GA19656@e121166-lin.cambridge.arm.com>
-References: <20190416141516.23908-1-vidyas@nvidia.com>
- <20190416141516.23908-3-vidyas@nvidia.com>
+        Thu, 2 May 2019 10:53:21 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43075 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBOxU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:53:20 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w33so46737edb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dKGCEW6XzK5wy4m1GTL2dVQ217lYhqpqlUuT/Q5YrAk=;
+        b=E9hwztFAlWAIt12OjHM7LZjhNQKHMm9PKOV4hYhj1sqs93tmAJcAHynyx9o1m/Q62l
+         eFO0D2Nb0QO2aKaA6ewG2DLDNbxH6ydmK1i7PRFe8I1cJjnmFkwwDXnCoTEyn7ae78IJ
+         PuIEHYIkx6WC6q2K5Yp411ug3cQtrEbF5nb9OzScSTLtlqUPy/RjdLub06YuwK0IkspB
+         HN5wBjdS0eRi95e8Gd4DiAmo5jvXp4qbwOTz6Y+cESSb4O/49jHWtaKVKs95txPsgK4x
+         qhClgbyewxA1wLSADBtMzY4mgzy1iwa9Q+OfBjDBgQGOKG83eaT9rV8Isd6AuZhV3iQ5
+         Z/9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dKGCEW6XzK5wy4m1GTL2dVQ217lYhqpqlUuT/Q5YrAk=;
+        b=sqRAkzSfxKQLYRDataIjp+7RXBFIMt8z1a3CgGUyHWx2OjTaqCxGcwWRB0UStG6uX4
+         B9Yadf25BEXL8Xi9etao41SdAW+2qIXhizgvl4m1LZkkwlOQeg9QHWTUsATp/LxalFMd
+         JMhewOIF2MTugNaaL9ydkM3NHGfo4DOfp/Pz1/8iXZibNFI+hoWhDFmu2ZI3FYhjI0DC
+         wn8h2CNoc8RADClGtmJFv4NypYlbSvsBY0blBtkwnhKqFu1Jbs8kpH1rmFSSgA538lWR
+         3DxhVSWEU3V/yyShXitw/BLAF30u1ZQMnu0cph/uH+rh2MgFhe6mojr7qf04eMQehote
+         jvGA==
+X-Gm-Message-State: APjAAAX1jFQz3ajRGYzaDiKRhSVUaApLgdY121LABdT6gJkmdsa8V/oZ
+        Lw7aQeIXnwLacvtRDbQmjnFcAG+WxpzrkgtOcWSWLQ==
+X-Google-Smtp-Source: APXvYqzG/pNwhK7Fv/OkZD+XGOAYkZEawBV2i/ZKUmVW/4byaSLkD4xJCAfKtzfrtZdWNgqALb1vdspOkKWJ8CrwwzA=
+X-Received: by 2002:a50:b513:: with SMTP id y19mr2992384edd.100.1556808799112;
+ Thu, 02 May 2019 07:53:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416141516.23908-3-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155552634586.2015392.2662168839054356692.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <155552634586.2015392.2662168839054356692.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 2 May 2019 10:53:08 -0400
+Message-ID: <CA+CK2bCkqLc82G2MW+rYrKTi4KafC+tLCASkaT8zRfVJCCe8HQ@mail.gmail.com>
+Subject: Re: [PATCH v6 02/12] mm/sparsemem: Introduce common definitions for
+ the size and mask of a section
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 07:45:16PM +0530, Vidya Sagar wrote:
-> Export all configuration space access APIs and also other APIs to
-> support host controller drivers of DesignWare core based
-> implementations while adding support for .remove() hook to build their
-> respective drivers as modules
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
-> v2:
-> * s/Designware/DesignWare
-> 
->  .../pci/controller/dwc/pcie-designware-host.c |  4 ++
->  drivers/pci/controller/dwc/pcie-designware.c  | 38 +++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h  | 35 +++--------------
->  3 files changed, 48 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d7881490282d..2a5332e5ccfa 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -333,6 +333,7 @@ void dw_pcie_msi_init(struct pcie_port *pp)
->  	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
->  			    upper_32_bits(msi_target));
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
->  
->  int dw_pcie_host_init(struct pcie_port *pp)
->  {
-> @@ -515,6 +516,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		dw_pcie_free_msi(pp);
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_host_init);
->  
->  void dw_pcie_host_deinit(struct pcie_port *pp)
->  {
-> @@ -522,6 +524,7 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
->  	pci_remove_root_bus(pp->root_bus);
->  	dw_pcie_free_msi(pp);
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
->  
->  static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
->  				     u32 devfn, int where, int size, u32 *val,
-> @@ -731,3 +734,4 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->  	val |= PORT_LOGIC_SPEED_CHANGE;
->  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 31f6331ca46f..f98e2f284ae1 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -40,6 +40,7 @@ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->  
->  	return PCIBIOS_SUCCESSFUL;
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_read);
->  
->  int dw_pcie_write(void __iomem *addr, int size, u32 val)
->  {
-> @@ -57,6 +58,7 @@ int dw_pcie_write(void __iomem *addr, int size, u32 val)
->  
->  	return PCIBIOS_SUCCESSFUL;
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_write);
->  
->  u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
->  		       size_t size)
-> @@ -89,6 +91,42 @@ void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
->  		dev_err(pci->dev, "Write DBI address failed\n");
->  }
->  
-> +void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
-> +{
-> +	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x4, val);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_writel_dbi);
-> +
-> +u32 dw_pcie_readl_dbi(struct dw_pcie *pci, u32 reg)
-> +{
-> +	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x4);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_readl_dbi);
-> +
-> +void dw_pcie_writew_dbi(struct dw_pcie *pci, u32 reg, u16 val)
-> +{
-> +	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x2, val);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_writew_dbi);
-> +
-> +u16 dw_pcie_readw_dbi(struct dw_pcie *pci, u32 reg)
-> +{
-> +	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x2);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_readw_dbi);
-> +
-> +void dw_pcie_writeb_dbi(struct dw_pcie *pci, u32 reg, u8 val)
-> +{
-> +	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x1, val);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_writeb_dbi);
-> +
-> +u8 dw_pcie_readb_dbi(struct dw_pcie *pci, u32 reg)
-> +{
-> +	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x1);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_readb_dbi);
-> +
->  static u32 dw_pcie_readl_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg)
->  {
->  	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index ea8d1caf11c5..86df36701a37 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -265,35 +265,12 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
->  			 enum dw_pcie_region_type type);
->  void dw_pcie_setup(struct dw_pcie *pci);
->  
-> -static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
-> -{
-> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x4, val);
-> -}
-> -
-> -static inline u32 dw_pcie_readl_dbi(struct dw_pcie *pci, u32 reg)
-> -{
-> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x4);
-> -}
-> -
-> -static inline void dw_pcie_writew_dbi(struct dw_pcie *pci, u32 reg, u16 val)
-> -{
-> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x2, val);
-> -}
-> -
-> -static inline u16 dw_pcie_readw_dbi(struct dw_pcie *pci, u32 reg)
-> -{
-> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x2);
-> -}
-> -
-> -static inline void dw_pcie_writeb_dbi(struct dw_pcie *pci, u32 reg, u8 val)
-> -{
-> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x1, val);
-> -}
-> -
-> -static inline u8 dw_pcie_readb_dbi(struct dw_pcie *pci, u32 reg)
-> -{
-> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x1);
-> -}
-> +void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val);
-> +u32 dw_pcie_readl_dbi(struct dw_pcie *pci, u32 reg);
-> +void dw_pcie_writew_dbi(struct dw_pcie *pci, u32 reg, u16 val);
-> +u16 dw_pcie_readw_dbi(struct dw_pcie *pci, u32 reg);
-> +void dw_pcie_writeb_dbi(struct dw_pcie *pci, u32 reg, u8 val);
-> +u8 dw_pcie_readb_dbi(struct dw_pcie *pci, u32 reg);
+On Wed, Apr 17, 2019 at 2:52 PM Dan Williams <dan.j.williams@intel.com> wro=
+te:
+>
+> Up-level the local section size and mask from kernel/memremap.c to
+> global definitions.  These will be used by the new sub-section hotplug
+> support.
+>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-What's the point of exporting all these functions ?
+Should be dropped from this series as it has been replaced by a very
+similar patch in the mainline:
 
-Export __dw_pcie_{write/read}_dbi() and be done with it.
-
-Thanks,
-Lorenzo
-
->  
->  static inline void dw_pcie_writel_dbi2(struct dw_pcie *pci, u32 reg, u32 val)
->  {
-> -- 
-> 2.17.1
-> 
+7c697d7fb5cb14ef60e2b687333ba3efb74f73da
+ mm/memremap: Rename and consolidate SECTION_SIZE
