@@ -2,107 +2,138 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9335AC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DC0C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D17F2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526A12085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:06:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kMYW9Nwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfEBG74 (ORCPT
+        id S1726370AbfEBHG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 02:59:56 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45759 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfEBG7z (ORCPT
+        Thu, 2 May 2019 03:06:56 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16162 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfEBHGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 02:59:55 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hM5gz-0008TR-Au; Thu, 02 May 2019 08:59:41 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hM5gx-0007lH-EQ; Thu, 02 May 2019 08:59:39 +0200
-Date:   Thu, 2 May 2019 08:59:39 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to state
- errata fixed
-Message-ID: <20190502065939.nyejomrsowhy6xox@pengutronix.de>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
- <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
+        Thu, 2 May 2019 03:06:55 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cca970b0000>; Thu, 02 May 2019 00:06:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 02 May 2019 00:06:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 02 May 2019 00:06:54 -0700
+Received: from [10.24.47.93] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
+ 2019 07:06:51 +0000
+Subject: Re: [PATCH V3 1/2] PCI: dwc: Add API support to de-initialize host
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190423044920.19663-1-vidyas@nvidia.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <c9084c70-b580-c57f-3f66-f177c819b5fe@nvidia.com>
+Date:   Thu, 2 May 2019 12:36:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190423044920.19663-1-vidyas@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1556780811; bh=Y4uh7oT7MGNrJWRfdMXdHKz9a+ZKr/tTqay8PTJ3L5Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kMYW9NwpaE0lz79Ugz/dKDLEmutK+jjh5For9f7Ns/CJ+D5bufn8yGnWf19Bej9Mx
+         Hg3p56ZrDAHWJeHVRCQy3m1F9CvRLtLY++1RBYqwzfEf1K8yZhWaMs72JK3a924dT5
+         QRoSWaNKKCeataHhz2Ddr2qV9NH8bs6X/ilHfCygmv7ywvgUMfeqWR82tZb2odM2o7
+         o3+2LThDJea+mn5QeRxL/pJ2hi92jDBqgI4DAdjW9BRk6hGU3Ws8TbGnBlcXaez2TD
+         NqEDBhAFWzVGf6Cvu0r2T+OvLWp0CczV4FqErLDZXPjSWM8aB0Dyt1mhEhMjqVfT/M
+         BNexZUFqHLYrw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 08:05:51AM +0000, Robin Gong wrote:
-> ERR009165 fixed from i.mx6ul, add it to show the errata fixed.
+On 4/23/2019 10:19 AM, Vidya Sagar wrote:
+> Add an API to group all the tasks to be done to de-initialize host which
+> can then be called by any DesignWare core based driver implementations
+> while adding .remove() support in their respective drivers.
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > ---
->  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> v3:
+> * Rebased on top of linux-next top of the tree branch
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> index 2d32641..32c4263d 100644
-> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> @@ -10,6 +10,8 @@ Required properties:
->    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
->    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
->    - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
-> +  - "fsl,imx6ul-ecspi" ERR009165 fixed on i.MX6UL and later Soc
-> +    (https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf)
+> v2:
+> * s/Designware/DesignWare
+> 
+>   drivers/pci/controller/dwc/pcie-designware-host.c | 7 +++++++
+>   drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
+>   2 files changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 77db32529319..f87c9542eb09 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -496,6 +496,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>   	return ret;
+>   }
+>   
+> +void dw_pcie_host_deinit(struct pcie_port *pp)
+> +{
+> +	pci_stop_root_bus(pp->root_bus);
+> +	pci_remove_root_bus(pp->root_bus);
+> +	dw_pcie_free_msi(pp);
+> +}
+> +
+>   static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+>   				     u32 devfn, int where, int size, u32 *val,
+>   				     bool write)
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index deab426affd3..4f48ec78c7b9 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+>   void dw_pcie_free_msi(struct pcie_port *pp);
+>   void dw_pcie_setup_rc(struct pcie_port *pp);
+>   int dw_pcie_host_init(struct pcie_port *pp);
+> +void dw_pcie_host_deinit(struct pcie_port *pp);
+>   int dw_pcie_allocate_domains(struct pcie_port *pp);
+>   #else
+>   static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+>   	return 0;
+>   }
+>   
+> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
+> +{
+> +}
+> +
+>   static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+>   {
+>   	return 0;
+> 
 
-I wouldn't mention this errata in the binding documentation. Just state
-that fsl,imx6ul-ecspi is designed to be used on i.MX6UL. And that it
-might also be used on later SoCs as a "fallback compatible" is a detail
-that is so common that I would expect it not being worth mentioning. So
-for me it would also be OK to drop "fsl,imx53-ecspi" from the list as
-this is only used like:
+Hi Lorenzo,
+Can you please review this patch series?
 
-	compatible = "fsl,imx53-ecspi", "fsl,imx51-ecspi";
-
-(But note that I have no authority here.)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks,
+Vidya Sagar
