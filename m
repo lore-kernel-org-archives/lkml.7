@@ -2,154 +2,195 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD94C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AE0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07E420449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KEfs7RdY"
+	by mail.kernel.org (Postfix) with ESMTP id 24380204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556811737;
+	bh=qDtKRsWuIMmZcc4ZwSMKLWL+HFxXnroOuOmeguBr7aE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wIWPIgadUcvjD4RIZduMfqIitwvx9HjsZzfBuaiobJMOwPowWlUusBICeM/c+lFXP
+	 e0cwRFuRTXwkS0vC047MDZ//o9xmSo1EVQH7PjB4Wc5WrmY+qkXQ8tpxZqC023lemf
+	 sQZKOUUmFgytXNkruYTB37aFHUTteqArFWUHzsqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfEBPmJ (ORCPT
+        id S1728175AbfEBP2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:42:09 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:34206 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727884AbfEBPmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:42:08 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Thu, 2 May 2019 11:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727254AbfEBP2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:28:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 89775C0198;
-        Thu,  2 May 2019 15:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556811729; bh=sgRu//45SGD2+j7pnvClXQRPL0bt1vFUZdg5WSZt8bo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=KEfs7RdYNOY0g05GxZy7Qg/rrMEDhyeoinimve0FYMBxjYihj8dmyVA9yxTOZn+hT
-         GsDEksMD6LUwyJZx3MQVXz1e9OrKRqiach0IFEM45j/PRFMi8vdKniz4kg6bg6mj3N
-         jEZLrFi9iJUlV3heNhy4buiSDQclzMltaMy+zTVPsbA9yKCA7E0wngLZWEBiTRI3P4
-         xnuODvXh/mnbJ+k7z4NkKt2Zi5f1vhRkGuS0xwx6o7Pad81R7JhjWMOjLv4bGwOpcV
-         er/Ar4Ab2PdTzgFIgUL1HKmX5ACa1eN3Ju4OueLdOHBdf41I9CwziUWgP+tUVN5C6V
-         PKnmm9nE9PLyg==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 7F78FA00A1;
-        Thu,  2 May 2019 15:42:07 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 2 May 2019 08:42:07 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 2 May 2019 21:12:15 +0530
-Received: from [10.10.161.89] (10.10.161.89) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 2 May 2019 21:12:14 +0530
-Subject: Re: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins
- number to GMAC node
-To:     Jose Abreu <Jose.Abreu@synopsys.com>, <devicetree@vger.kernel.org>,
-        <linux-snps-arc@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Newsgroups: gmane.linux.kernel
-References: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vgupta@synopsys.com; keydata=
- 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
- hhqBJlyU6MVUa6vZNv8E
-Message-ID: <56933076-879c-78a0-4bae-2613203b93b1@synopsys.com>
-Date:   Thu, 2 May 2019 08:41:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 46A2920449;
+        Thu,  2 May 2019 15:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556810895;
+        bh=qDtKRsWuIMmZcc4ZwSMKLWL+HFxXnroOuOmeguBr7aE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oNvN78cQqA3uJHGYXedWeVpB7WV3MutYMsdJzW6V2ZITURHuJqJ7UEiOBMt1W5w5k
+         miKA9JVTvwMLjnWfpOG4xisTaHurxJV9W/rUHSDeiK795F971mJEqDhXUFGLn7EX3o
+         JnL9Bi0f2ZVP0/s/XvIxPadLS2yQhr/016Qj83YU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 4.19 70/72] ptrace: take into account saved_sigmask in PTRACE{GET,SET}SIGMASK
+Date:   Thu,  2 May 2019 17:21:32 +0200
+Message-Id: <20190502143338.821505814@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
+References: <20190502143333.437607839@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.161.89]
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+CC Alexey, Eugeniy who maintain hsdk support !
+[ Upstream commit fcfc2aa0185f4a731d05a21e9f359968fdfd02e7 ]
 
-On 5/2/19 8:12 AM, Jose Abreu wrote:
-> GMAC controller on HSDK boards supports 256 Hash Table size so we need to
-> add the multicast filter bins property. This allows for the Hash filter
-> to work properly using stmmac driver.
-> 
-> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> ---
->  arch/arc/boot/dts/hsdk.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-> index 69bc1c9e8e50..b0f059377ab0 100644
-> --- a/arch/arc/boot/dts/hsdk.dts
-> +++ b/arch/arc/boot/dts/hsdk.dts
-> @@ -187,6 +187,7 @@
->  			interrupt-names = "macirq";
->  			phy-mode = "rgmii";
->  			snps,pbl = <32>;
-> +			snps,multicast-filter-bins = <256>;
->  			clocks = <&gmacclk>;
->  			clock-names = "stmmaceth";
->  			phy-handle = <&phy0>;
-> 
+There are a few system calls (pselect, ppoll, etc) which replace a task
+sigmask while they are running in a kernel-space
+
+When a task calls one of these syscalls, the kernel saves a current
+sigmask in task->saved_sigmask and sets a syscall sigmask.
+
+On syscall-exit-stop, ptrace traps a task before restoring the
+saved_sigmask, so PTRACE_GETSIGMASK returns the syscall sigmask and
+PTRACE_SETSIGMASK does nothing, because its sigmask is replaced by
+saved_sigmask, when the task returns to user-space.
+
+This patch fixes this problem.  PTRACE_GETSIGMASK returns saved_sigmask
+if it's set.  PTRACE_SETSIGMASK drops the TIF_RESTORE_SIGMASK flag.
+
+Link: http://lkml.kernel.org/r/20181120060616.6043-1-avagin@gmail.com
+Fixes: 29000caecbe8 ("ptrace: add ability to get/set signal-blocked mask")
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ include/linux/sched/signal.h | 18 ++++++++++++++++++
+ kernel/ptrace.c              | 15 +++++++++++++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 1be35729c2c5..660d78c9af6c 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -417,10 +417,20 @@ static inline void set_restore_sigmask(void)
+ 	set_thread_flag(TIF_RESTORE_SIGMASK);
+ 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+ }
++
++static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	clear_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
++}
++
+ static inline void clear_restore_sigmask(void)
+ {
+ 	clear_thread_flag(TIF_RESTORE_SIGMASK);
+ }
++static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	return test_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
++}
+ static inline bool test_restore_sigmask(void)
+ {
+ 	return test_thread_flag(TIF_RESTORE_SIGMASK);
+@@ -438,6 +448,10 @@ static inline void set_restore_sigmask(void)
+ 	current->restore_sigmask = true;
+ 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+ }
++static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	tsk->restore_sigmask = false;
++}
+ static inline void clear_restore_sigmask(void)
+ {
+ 	current->restore_sigmask = false;
+@@ -446,6 +460,10 @@ static inline bool test_restore_sigmask(void)
+ {
+ 	return current->restore_sigmask;
+ }
++static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	return tsk->restore_sigmask;
++}
+ static inline bool test_and_clear_restore_sigmask(void)
+ {
+ 	if (!current->restore_sigmask)
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 21fec73d45d4..fc0d667f5792 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -29,6 +29,7 @@
+ #include <linux/hw_breakpoint.h>
+ #include <linux/cn_proc.h>
+ #include <linux/compat.h>
++#include <linux/sched/signal.h>
+ 
+ /*
+  * Access another process' address space via ptrace.
+@@ -925,18 +926,26 @@ int ptrace_request(struct task_struct *child, long request,
+ 			ret = ptrace_setsiginfo(child, &siginfo);
+ 		break;
+ 
+-	case PTRACE_GETSIGMASK:
++	case PTRACE_GETSIGMASK: {
++		sigset_t *mask;
++
+ 		if (addr != sizeof(sigset_t)) {
+ 			ret = -EINVAL;
+ 			break;
+ 		}
+ 
+-		if (copy_to_user(datavp, &child->blocked, sizeof(sigset_t)))
++		if (test_tsk_restore_sigmask(child))
++			mask = &child->saved_sigmask;
++		else
++			mask = &child->blocked;
++
++		if (copy_to_user(datavp, mask, sizeof(sigset_t)))
+ 			ret = -EFAULT;
+ 		else
+ 			ret = 0;
+ 
+ 		break;
++	}
+ 
+ 	case PTRACE_SETSIGMASK: {
+ 		sigset_t new_set;
+@@ -962,6 +971,8 @@ int ptrace_request(struct task_struct *child, long request,
+ 		child->blocked = new_set;
+ 		spin_unlock_irq(&child->sighand->siglock);
+ 
++		clear_tsk_restore_sigmask(child);
++
+ 		ret = 0;
+ 		break;
+ 	}
+-- 
+2.19.1
+
+
 
