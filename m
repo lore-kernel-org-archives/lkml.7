@@ -4,60 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91173C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0763C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6054621734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0C421783
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763628;
-	bh=Fy2nUASNFehmDOInZXuStOpyE85EnD0tSvbyZRWVvfA=;
+	s=default; t=1556763633;
+	bh=nACu6JnOw6YddVeIiWfa5pkV72At1fLYWtArnVehk/A=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=V4bpF6XEPYXaRKIH8joZvQTsKZoIOcLBXfPMtXiLGhI95CQQ4eXtfbihT4YUViuL6
-	 aXGGB1ZWXZm7ckjE+C8DkO3gaB7eLnpwIYymf77DLji2nToaIxkny0CK61C+iTw5L3
-	 cl0AX+3R6+ja1zE/vMWPxj7X1RKZ24zaORsxLHlI=
+	b=mUVLMe+vfNzhB4pkDCKgyfwhxngXyGrb/75/iJuOtOItFNR31XOXsY7sEhp52JCF+
+	 PpP9uhE7PSotvqXRiCw0c4YGuwdGoe+Tu/RVhpZiFXA9WJ5KxsWHOCw6DwHgoIWMYa
+	 tT46UVdk16kWQ831XARwHLYQNPbg0QLu+OewoUJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfEBCTJ (ORCPT
+        id S1726859AbfEBCUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:19:09 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56422 "EHLO
+        Wed, 1 May 2019 22:20:32 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56636 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfEBCTB (ORCPT
+        with ESMTP id S1726572AbfEBCTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:19:01 -0400
+        Wed, 1 May 2019 22:19:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=s/aeLHmcSaCGZGW2T/ryaeA0ktI3wfHggwlvpiCdiGs=; b=pBr7tviub0M4
-        Y7B+GAiIE0/H/6glIphSg1+JN79huRE/j+YTI3NQ8U8Ngjerot3AmpFSTaWjMQnGMlH6D7sZc9AUF
-        3KdkDIC/cUuL6ULBrrDQkXR65KG+hNHiJxGyDwLWrIXCheEHEoXTtb4tYDKdoVda2u6WvOL4XHiHy
-        b4dDw=;
+        List-Archive; bh=xrGF478Opil57Whl1eQHJAw/ZeOQ1NM8Qj6NusvyTHs=; b=u36bTq++TXGI
+        LqMDoX2k+HyKVz2ff3I5a76amG9nFhdNvRBUZu8QOw/MyisoYn42rY33xOXcYcBWy8hLFiFMKovZL
+        bdIOZNnryYulWAqecpj8D67ULNh2waPo/FW4d+w9cMXMrfJjDI8TNeKtTeMxATl7CNfWFWsOK9jgn
+        6I6go=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1J8-0005tL-2M; Thu, 02 May 2019 02:18:46 +0000
+        id 1hM1JO-0005vM-K7; Thu, 02 May 2019 02:19:02 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 03B03441D3B; Thu,  2 May 2019 03:18:43 +0100 (BST)
+        id 40504441D3E; Thu,  2 May 2019 03:18:59 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        festevam@gmail.com, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com,
-        perex@perex.cz, timur@kernel.org, tiwai@suse.com,
-        Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: fsl_micfil: Remove set but not used variable 'osr'" to the asoc tree
-In-Reply-To:  <20190417150915.37968-1-yuehaibing@huawei.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>
+Subject: Applied "spi: Clear SPI_CS_HIGH flag from bad_bits for GPIO chip-select" to the spi tree
+In-Reply-To: <20190426103007.29612-1-fancer.lancer@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021843.03B03441D3B@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:42 +0100 (BST)
+Message-Id: <20190502021859.40504441D3E@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:59 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: fsl_micfil: Remove set but not used variable 'osr'
+   spi: Clear SPI_CS_HIGH flag from bad_bits for GPIO chip-select
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,42 +87,51 @@ to this mail.
 Thanks,
 Mark
 
-From a0c34c7629bee46ffd8121987d27df25a6433cc7 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Wed, 17 Apr 2019 23:09:15 +0800
-Subject: [PATCH] ASoC: fsl_micfil: Remove set but not used variable 'osr'
+From d61ad23cb3be09ff4956e9b9794134456522817f Mon Sep 17 00:00:00 2001
+From: Serge Semin <fancer.lancer@gmail.com>
+Date: Fri, 26 Apr 2019 13:30:07 +0300
+Subject: [PATCH] spi: Clear SPI_CS_HIGH flag from bad_bits for GPIO
+ chip-select
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When GPIO chip-select is used nothing prevents any available SPI
+controllers to work with both CS-high and traditional CS-low modes.
+In fact the SPI bus core code already does it, so we don't need to
+introduce any modification there. But spi_setup() still fails to
+switch the interface settings if CS-high flag is set for the case
+of GPIO-driven slave chip-select when the SPI controller doesn't
+support the hardwired CS-inversion. Lets fix it by clearing the
+SPI_CS_HIGH flag out from bad_bits (unsupported by controller) when
+client chip is selected by GPIO.
 
-sound/soc/fsl/fsl_micfil.c: In function 'get_clk_div':
-sound/soc/fsl/fsl_micfil.c:154:6: warning: variable 'osr' set but not used [-Wunused-but-set-variable]
+This feature is useful for slave devices, which in accordance with
+communication protocol can work with both active-high and active-low
+chip-selects. I am aware of one such device. It is MMC-SPI interface,
+when at init sequence the driver needs to perform a read operation with
+low and high chip-select sequentially (requirement of 74 clock cycles
+with both chipselect, see the mmc_spi driver for details).
 
-It is never used since introduction in
-commit 47a70e6fc9a8 ("ASoC: Add MICFIL SoC Digital Audio Interface driver.")
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/fsl_micfil.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/spi/spi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-index 40c07e756481..f7f2d29f1bfe 100644
---- a/sound/soc/fsl/fsl_micfil.c
-+++ b/sound/soc/fsl/fsl_micfil.c
-@@ -151,12 +151,9 @@ static inline int get_clk_div(struct fsl_micfil *micfil,
- {
- 	u32 ctrl2_reg;
- 	long mclk_rate;
--	int osr;
- 	int clk_div;
- 
- 	regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
--	osr = 16 - ((ctrl2_reg & MICFIL_CTRL2_CICOSR_MASK)
--		    >> MICFIL_CTRL2_CICOSR_SHIFT);
- 
- 	mclk_rate = clk_get_rate(micfil->mclk);
- 
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 2195fa265aef..5e75944ad5d1 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2945,6 +2945,11 @@ int spi_setup(struct spi_device *spi)
+ 	 * so it is ignored here.
+ 	 */
+ 	bad_bits = spi->mode & ~(spi->controller->mode_bits | SPI_CS_WORD);
++	/* nothing prevents from working with active-high CS in case if it
++	 * is driven by GPIO.
++	 */
++	if (gpio_is_valid(spi->cs_gpio))
++		bad_bits &= ~SPI_CS_HIGH;
+ 	ugly_bits = bad_bits &
+ 		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL |
+ 		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL);
 -- 
 2.20.1
 
