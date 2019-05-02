@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6C8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C931C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDF2208C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38D22081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810667;
-	bh=LmuzgzsK29FiEFdBTUOSiAOaeUrj2ZutR/Tsns6qF1I=;
+	s=default; t=1556810669;
+	bh=yQdOurb/vaJCvTdUw81IcSB46a3Re4bSv1Mh9PjWbiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOdtBs3gpvu1tElc0i/mcp2q3Qg4qDLefOlB0I5P1cj3lk2SzyOv9gi6OWoDl68Ye
-	 xm2/is9K+ar+Pau5kfMm5C3auf68j055nnzIItusdbtdqC7FG6rMqY9cV0T+MZaviQ
-	 XClyJybaNBbMuNiVTF7UPIRu3RlMq7kz3EBUka9I=
+	b=MwOZn1hWKLDVpAB4N75dQqzw/bwQzrOqiJ9Lg15BC176c+LTScWWsn+/XoFZrv8zL
+	 9QBABI9tE+r/yFJpDzB3leMhTsnZ6+8p8TioxooziT994nBsN5PsfVEHDdjQE1e4z8
+	 pRHgxPYL8LKgA5vsQN8cKrT+bVDD2bdjcYPjYxGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfEBPY0 (ORCPT
+        id S1727311AbfEBPY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfEBPYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:24:23 -0400
+        id S1727289AbfEBPY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:24:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F073020B7C;
-        Thu,  2 May 2019 15:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A1B62081C;
+        Thu,  2 May 2019 15:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810662;
-        bh=LmuzgzsK29FiEFdBTUOSiAOaeUrj2ZutR/Tsns6qF1I=;
+        s=default; t=1556810665;
+        bh=yQdOurb/vaJCvTdUw81IcSB46a3Re4bSv1Mh9PjWbiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UD4f3WtR6h2K1xGI/cjmF3Enftx4z6dnHnOGYsZtxAHWJPX7MWVAVIOHEY1nVFpb2
-         G9Wn4/F9AFTQjKzXGx/rv/lTsf+ICQ0UpCGzntv0v35OvbqrG+tOcosUqLaggOlbsQ
-         UvKogFhd0xcewrai6As8EGZb/qf7Qoy5xg/mMBNw=
+        b=GYKlnD0ASeCs7g84NGfYujuiQoxOOv8/51R73/KHLysEO2KMuNV07Me8B9Vfqm8cs
+         yGTKZaCzN0yqlCte69dKgXaLhJroQpjTmbyv8Vl9+Swz8oLr4I7xZDcD9xtDM3NmrX
+         4+OHlRwFWHOZs3dMe+Yq0DS3vHY7GDVRaa38fpPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jann Horn <jannh@google.com>,
         Matthew Wilcox <willy@infradead.org>, stable@kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 06/49] mm: prevent get_user_pages() from overflowing page refcount
-Date:   Thu,  2 May 2019 17:20:43 +0200
-Message-Id: <20190502143324.847288707@linuxfoundation.org>
+Subject: [PATCH 4.14 07/49] fs: prevent page refcount overflow in pipe_buf_get
+Date:   Thu,  2 May 2019 17:20:44 +0200
+Message-Id: <20190502143325.076059104@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -59,153 +59,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Matthew Wilcox <willy@infradead.org>
 
-commit 8fde12ca79aff9b5ba951fce1a2641901b8d8e64 upstream.
+commit 15fab63e1e57be9fdb5eec1bbc5916e9825e9acb upstream.
 
-If the page refcount wraps around past zero, it will be freed while
-there are still four billion references to it.  One of the possible
-avenues for an attacker to try to make this happen is by doing direct IO
-on a page multiple times.  This patch makes get_user_pages() refuse to
-take a new page reference if there are already more than two billion
-references to the page.
+Change pipe_buf_get() to return a bool indicating whether it succeeded
+in raising the refcount of the page (if the thing in the pipe is a page).
+This removes another mechanism for overflowing the page refcount.  All
+callers converted to handle a failure.
 
 Reported-by: Jann Horn <jannh@google.com>
-Acked-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Matthew Wilcox <willy@infradead.org>
 Cc: stable@kernel.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/gup.c     |   45 ++++++++++++++++++++++++++++++++++-----------
- mm/hugetlb.c |   13 +++++++++++++
- 2 files changed, 47 insertions(+), 11 deletions(-)
+ fs/fuse/dev.c             |   12 ++++++------
+ fs/pipe.c                 |    4 ++--
+ fs/splice.c               |   12 ++++++++++--
+ include/linux/pipe_fs_i.h |   10 ++++++----
+ kernel/trace/trace.c      |    6 +++++-
+ 5 files changed, 29 insertions(+), 15 deletions(-)
 
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -153,7 +153,10 @@ retry:
- 	}
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1981,10 +1981,8 @@ static ssize_t fuse_dev_splice_write(str
+ 		rem += pipe->bufs[(pipe->curbuf + idx) & (pipe->buffers - 1)].len;
  
- 	if (flags & FOLL_GET) {
--		get_page(page);
-+		if (unlikely(!try_get_page(page))) {
-+			page = ERR_PTR(-ENOMEM);
-+			goto out;
-+		}
+ 	ret = -EINVAL;
+-	if (rem < len) {
+-		pipe_unlock(pipe);
+-		goto out;
+-	}
++	if (rem < len)
++		goto out_free;
  
- 		/* drop the pgmap reference now that we hold the page */
- 		if (pgmap) {
-@@ -280,7 +283,10 @@ retry_locked:
- 			if (pmd_trans_unstable(pmd))
- 				ret = -EBUSY;
+ 	rem = len;
+ 	while (rem) {
+@@ -2002,7 +2000,9 @@ static ssize_t fuse_dev_splice_write(str
+ 			pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
+ 			pipe->nrbufs--;
  		} else {
--			get_page(page);
-+			if (unlikely(!try_get_page(page))) {
-+				spin_unlock(ptl);
-+				return ERR_PTR(-ENOMEM);
-+			}
- 			spin_unlock(ptl);
- 			lock_page(page);
- 			ret = split_huge_page(page);
-@@ -464,7 +470,10 @@ static int get_gate_page(struct mm_struc
- 		if (is_device_public_page(*page))
- 			goto unmap;
- 	}
--	get_page(*page);
-+	if (unlikely(!try_get_page(*page))) {
-+		ret = -ENOMEM;
-+		goto unmap;
-+	}
- out:
- 	ret = 0;
- unmap:
-@@ -1365,6 +1374,20 @@ static void undo_dev_pagemap(int *nr, in
- 	}
+-			pipe_buf_get(pipe, ibuf);
++			if (!pipe_buf_get(pipe, ibuf))
++				goto out_free;
++
+ 			*obuf = *ibuf;
+ 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
+ 			obuf->len = rem;
+@@ -2025,11 +2025,11 @@ static ssize_t fuse_dev_splice_write(str
+ 	ret = fuse_dev_do_write(fud, &cs, len);
+ 
+ 	pipe_lock(pipe);
++out_free:
+ 	for (idx = 0; idx < nbuf; idx++)
+ 		pipe_buf_release(pipe, &bufs[idx]);
+ 	pipe_unlock(pipe);
+ 
+-out:
+ 	kfree(bufs);
+ 	return ret;
  }
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -194,9 +194,9 @@ EXPORT_SYMBOL(generic_pipe_buf_steal);
+  *	in the tee() system call, when we duplicate the buffers in one
+  *	pipe into another.
+  */
+-void generic_pipe_buf_get(struct pipe_inode_info *pipe, struct pipe_buffer *buf)
++bool generic_pipe_buf_get(struct pipe_inode_info *pipe, struct pipe_buffer *buf)
+ {
+-	get_page(buf->page);
++	return try_get_page(buf->page);
+ }
+ EXPORT_SYMBOL(generic_pipe_buf_get);
  
-+/*
-+ * Return the compund head page with ref appropriately incremented,
-+ * or NULL if that failed.
-+ */
-+static inline struct page *try_get_compound_head(struct page *page, int refs)
-+{
-+	struct page *head = compound_head(page);
-+	if (WARN_ON_ONCE(page_ref_count(head) < 0))
-+		return NULL;
-+	if (unlikely(!page_cache_add_speculative(head, refs)))
-+		return NULL;
-+	return head;
-+}
-+
- #ifdef __HAVE_ARCH_PTE_SPECIAL
- static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- 			 int write, struct page **pages, int *nr)
-@@ -1399,9 +1422,9 @@ static int gup_pte_range(pmd_t pmd, unsi
- 
- 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
- 		page = pte_page(pte);
--		head = compound_head(page);
- 
--		if (!page_cache_get_speculative(head))
-+		head = try_get_compound_head(page, 1);
-+		if (!head)
- 			goto pte_unmap;
- 
- 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-@@ -1537,8 +1560,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
- 
--	head = compound_head(pmd_page(orig));
--	if (!page_cache_add_speculative(head, refs)) {
-+	head = try_get_compound_head(pmd_page(orig), refs);
-+	if (!head) {
- 		*nr -= refs;
- 		return 0;
- 	}
-@@ -1575,8 +1598,8 @@ static int gup_huge_pud(pud_t orig, pud_
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
- 
--	head = compound_head(pud_page(orig));
--	if (!page_cache_add_speculative(head, refs)) {
-+	head = try_get_compound_head(pud_page(orig), refs);
-+	if (!head) {
- 		*nr -= refs;
- 		return 0;
- 	}
-@@ -1612,8 +1635,8 @@ static int gup_huge_pgd(pgd_t orig, pgd_
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
- 
--	head = compound_head(pgd_page(orig));
--	if (!page_cache_add_speculative(head, refs)) {
-+	head = try_get_compound_head(pgd_page(orig), refs);
-+	if (!head) {
- 		*nr -= refs;
- 		return 0;
- 	}
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4255,6 +4255,19 @@ long follow_hugetlb_page(struct mm_struc
- 
- 		pfn_offset = (vaddr & ~huge_page_mask(h)) >> PAGE_SHIFT;
- 		page = pte_page(huge_ptep_get(pte));
-+
-+		/*
-+		 * Instead of doing 'try_get_page()' below in the same_page
-+		 * loop, just check the count once here.
-+		 */
-+		if (unlikely(page_count(page) <= 0)) {
-+			if (pages) {
-+				spin_unlock(ptl);
-+				remainder = 0;
-+				err = -ENOMEM;
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1571,7 +1571,11 @@ retry:
+ 			 * Get a reference to this pipe buffer,
+ 			 * so we can copy the contents over.
+ 			 */
+-			pipe_buf_get(ipipe, ibuf);
++			if (!pipe_buf_get(ipipe, ibuf)) {
++				if (ret == 0)
++					ret = -EFAULT;
 +				break;
 +			}
+ 			*obuf = *ibuf;
+ 
+ 			/*
+@@ -1645,7 +1649,11 @@ static int link_pipe(struct pipe_inode_i
+ 		 * Get a reference to this pipe buffer,
+ 		 * so we can copy the contents over.
+ 		 */
+-		pipe_buf_get(ipipe, ibuf);
++		if (!pipe_buf_get(ipipe, ibuf)) {
++			if (ret == 0)
++				ret = -EFAULT;
++			break;
 +		}
- same_page:
- 		if (pages) {
- 			pages[i] = mem_map_offset(page, pfn_offset);
+ 
+ 		obuf = opipe->bufs + nbuf;
+ 		*obuf = *ibuf;
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -108,18 +108,20 @@ struct pipe_buf_operations {
+ 	/*
+ 	 * Get a reference to the pipe buffer.
+ 	 */
+-	void (*get)(struct pipe_inode_info *, struct pipe_buffer *);
++	bool (*get)(struct pipe_inode_info *, struct pipe_buffer *);
+ };
+ 
+ /**
+  * pipe_buf_get - get a reference to a pipe_buffer
+  * @pipe:	the pipe that the buffer belongs to
+  * @buf:	the buffer to get a reference to
++ *
++ * Return: %true if the reference was successfully obtained.
+  */
+-static inline void pipe_buf_get(struct pipe_inode_info *pipe,
++static inline __must_check bool pipe_buf_get(struct pipe_inode_info *pipe,
+ 				struct pipe_buffer *buf)
+ {
+-	buf->ops->get(pipe, buf);
++	return buf->ops->get(pipe, buf);
+ }
+ 
+ /**
+@@ -179,7 +181,7 @@ struct pipe_inode_info *alloc_pipe_info(
+ void free_pipe_info(struct pipe_inode_info *);
+ 
+ /* Generic pipe buffer ops functions */
+-void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
++bool generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_nosteal(struct pipe_inode_info *, struct pipe_buffer *);
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6739,12 +6739,16 @@ static void buffer_pipe_buf_release(stru
+ 	buf->private = 0;
+ }
+ 
+-static void buffer_pipe_buf_get(struct pipe_inode_info *pipe,
++static bool buffer_pipe_buf_get(struct pipe_inode_info *pipe,
+ 				struct pipe_buffer *buf)
+ {
+ 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 
++	if (refcount_read(&ref->refcount) > INT_MAX/2)
++		return false;
++
+ 	refcount_inc(&ref->refcount);
++	return true;
+ }
+ 
+ /* Pipe buffer operations for a buffer. */
 
 
