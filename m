@@ -2,67 +2,106 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23508C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DB5C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53E920644
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556821209;
-	bh=749fKGYLowajUpAlZ7zn/XSRU7uF2Oswdp3HhTL8JRo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=mAIVQyvcqqd8lVrjdA1hBkMtx2e6QEdFiJatGfWiCc55pWbFrt4Ek8aR3p+uaT36X
-	 cmGCTUj1/9OGUfllFaUH/vEi00rZOf8THroqLsIpFAm3iRGutlhIe4H3ll4oXFKKav
-	 hyi/We67TyIUgeYGK4N56W3weHl6vyfHe6MpP6Jc=
+	by mail.kernel.org (Postfix) with ESMTP id 1BBB420675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfEBSUE (ORCPT
+        id S1726276AbfEBSWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:20:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfEBSUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:20:03 -0400
-Subject: Re: [GIT] Networking
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556821203;
-        bh=749fKGYLowajUpAlZ7zn/XSRU7uF2Oswdp3HhTL8JRo=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=GROTZyEllIurPgWjYOIRT03JT5PEhSU+lCwqrcOhZn8jANmcc/ltxD0bEyg3xTT59
-         n+O1yUb86R1RTYcEh1mBYLYvwN+DXUzlaS76wrzlwMX5RBIJpBij2cbJA+sjJUWOE5
-         EXSQxoXHf5blz56Rvm8wiMWinbtTDl5bMnvDN92E=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190502.112229.169709368531678908.davem@davemloft.net>
-References: <20190502.112229.169709368531678908.davem@davemloft.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190502.112229.169709368531678908.davem@davemloft.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git refs/heads/master
-X-PR-Tracked-Commit-Id: 4dd2b82d5adfbe0b1587ccad7a8f76d826120f37
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ea9866793d1e925b4d320eaea409263b2a568f38
-Message-Id: <155682120306.31369.9008264982480707260.pr-tracker-bot@kernel.org>
-Date:   Thu, 02 May 2019 18:20:03 +0000
-To:     David Miller <davem@davemloft.net>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+        Thu, 2 May 2019 14:22:53 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57862 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfEBSWw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 14:22:52 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id A790E802ED; Thu,  2 May 2019 20:22:40 +0200 (CEST)
+Date:   Thu, 2 May 2019 20:22:50 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Nikitas Angelinas <nikitas.angelinas@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power/poweroff.c: mark variables with __initdata and
+ __maybe_unused
+Message-ID: <20190502182250.GA4845@amd>
+References: <20190502074305.GA6039@vostro>
+ <20190502101500.GA23980@amd>
+ <20190502175958.GA14955@vostro>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Content-Disposition: inline
+In-Reply-To: <20190502175958.GA14955@vostro>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 02 May 2019 11:22:29 -0400 (EDT):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git refs/heads/master
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ea9866793d1e925b4d320eaea409263b2a568f38
+On Thu 2019-05-02 10:59:58, Nikitas Angelinas wrote:
+> On Thu, May 02, 2019 at 12:15:00PM +0200, Pavel Machek wrote:
+> > On Thu 2019-05-02 00:43:05, Nikitas Angelinas wrote:
+> > > There is no need to keep sysrq_poweroff_op after initialization, so m=
+ark
+> > > it with __initdata.
+> >=20
+> > Are you sure?
+> >=20
+> > pavel@duo:/data/l/k$ grep -ri sysrq_key_op . | grep initdata
+> > pavel@duo:/data/l/k$
+> >=20
+> >=20
+> > 									Pavel
+> >=20
+> I am sorry about this. I completely missed the point of registering this
+> structure. Please ignore this patch.
+>=20
 
-Thank you!
+Yup. You can have Acked-by: for the other parts.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+									Pavel
+
+> > > =20
+> > > -static struct sysrq_key_op	sysrq_poweroff_op =3D {
+> > > +static struct sysrq_key_op sysrq_poweroff_op __initdata =3D {
+> > >  	.handler        =3D handle_poweroff,
+> > >  	.help_msg       =3D "poweroff(o)",
+> > >  	.action_msg     =3D "Power Off",
+> >=20
+> > --=20
+> > (english) http://www.livejournal.com/~pavelmachek
+> > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzLNXoACgkQMOfwapXb+vKmjgCgnFC4NkPKTlbkBpxuDlHQPYfp
+TToAoKbW6WSTatCwlvhlp9pUbt/Obi4P
+=kXiy
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
