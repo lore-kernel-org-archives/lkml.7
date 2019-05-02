@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08CDC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9150BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B0A205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D716204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811960;
-	bh=ScwvABuIX5SNOY3h9VyzHGHSbN5CenFYu9PNSsG5ZXI=;
+	s=default; t=1556812000;
+	bh=oa14tgMjU4N5xaPgdT6hJvgc7xxgECrRjtP6VdmlO+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bC4nCO7oc2lHXIQfFPq20iqRmr7dVH6FjK9bbyMlFQAdTwb9DoJqtEZkO7dA33B4j
-	 5+qKA57N4dt8QJGMVc161OdzNDzQ0wspYkXHlDBJVx1tmEmtpTR7LHjyQohqR7IxoY
-	 rC79b9t1+FK9QhaMqYjMpzDSxFCZ55by1RBO/esM=
+	b=e2SMLZ4P3EhTq4qwwQ7tYeFtmaf2kvLq36Apa18/SaS3jgaZnkeB+kRWu5uWl6yMS
+	 Sx00erxcC4Q1VF3uBxy5VKwCKFKos7wY+NKIu8bxUF4IOT5bbwZmUhHpNwUT9IixTs
+	 2ekP0ty8ddyE6ZMMWQFftK7KiG/gnjpvv7VX7V3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfEBPp7 (ORCPT
+        id S1727175AbfEBPqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:45:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41674 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbfEBPZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:25:25 -0400
+        id S1727400AbfEBPYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:24:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DDD02085A;
-        Thu,  2 May 2019 15:25:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3365E2081C;
+        Thu,  2 May 2019 15:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810725;
-        bh=ScwvABuIX5SNOY3h9VyzHGHSbN5CenFYu9PNSsG5ZXI=;
+        s=default; t=1556810693;
+        bh=oa14tgMjU4N5xaPgdT6hJvgc7xxgECrRjtP6VdmlO+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bv1TpbPyXAXm8iSz7drStLd17nyQ/dRXEbP3P8XJGcWU5VNy7TA/Sd/Lz0ETGrZ3A
-         bGkxKdtkFeGHhEx9O9PYj2PeusjFoO5rfxHMLtIAgWrUq+O3Svynkr9qDuskYRAW6f
-         tTA0bTlHfoYBcVyVv0FnZUIdZgqPB21xB3a6WHz4=
+        b=0/FNzDPbbDIZLHft+MH/1LFSFqPduOHWO8eHNvmpI255umdO7RzGZYUiLzuWHYXFM
+         Pf+tao1rzRuLxB0/EaDb2msuVYIt0HLqmZKydgdn1cFHSyV7yYCO+ZaUJN6kY5Y59N
+         HIk/nv3KnrP9LzjdEH9DEfiYvc6PcGFFoEpmb/A8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org, raymond pang <raymondpangxd@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 36/49] gpio: aspeed: fix a potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:21:13 +0200
-Message-Id: <20190502143328.401758664@linuxfoundation.org>
+Subject: [PATCH 4.14 44/49] libata: fix using DMA buffers on stack
+Date:   Thu,  2 May 2019 17:21:21 +0200
+Message-Id: <20190502143329.436013494@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -61,32 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6cf4511e9729c00a7306cf94085f9cc3c52ee723 ]
+[ Upstream commit dd08a8d9a66de4b54575c294a92630299f7e0fe7 ]
 
-In case devm_kzalloc, the patch returns ENOMEM to avoid potential
-NULL pointer dereference.
+When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
+a stack virtual address. Stack DMA buffers must be avoided.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: raymond pang <raymondpangxd@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpio/gpio-aspeed.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index f03fe916eb9d..f6d1bda8a802 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -861,6 +861,8 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index b3ed8f9953a8..173e6f2dd9af 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -52,38 +52,52 @@ static int eject_tray(struct ata_device *dev)
+ /* Per the spec, only slot type and drawer type ODD can be supported */
+ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+ {
+-	char buf[16];
++	char *buf;
+ 	unsigned int ret;
+-	struct rm_feature_desc *desc = (void *)(buf + 8);
++	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+ 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
+-			0, sizeof(buf),
++			0, 16,
+ 			0, 0, 0,
+ 	};
  
- 	gpio->offset_timer =
- 		devm_kzalloc(&pdev->dev, gpio->chip.ngpio, GFP_KERNEL);
-+	if (!gpio->offset_timer)
-+		return -ENOMEM;
++	buf = kzalloc(16, GFP_KERNEL);
++	if (!buf)
++		return ODD_MECH_TYPE_UNSUPPORTED;
++	desc = (void *)(buf + 8);
++
+ 	ata_tf_init(dev, &tf);
+ 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
+ 	tf.command = ATA_CMD_PACKET;
+ 	tf.protocol = ATAPI_PROT_PIO;
+-	tf.lbam = sizeof(buf);
++	tf.lbam = 16;
  
- 	return aspeed_gpio_setup_irqs(gpio, pdev);
+ 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
+-				buf, sizeof(buf), 0);
+-	if (ret)
++				buf, 16, 0);
++	if (ret) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ 
+-	if (be16_to_cpu(desc->feature_code) != 3)
++	if (be16_to_cpu(desc->feature_code) != 3) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ 
+-	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
++	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_SLOT;
+-	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
++	} else if (desc->mech_type == 1 && desc->load == 0 &&
++		   desc->eject == 1) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_DRAWER;
+-	else
++	} else {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
  }
+ 
+ /* Test if ODD is zero power ready by sense code */
 -- 
 2.19.1
 
