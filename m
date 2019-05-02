@@ -2,144 +2,136 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C563C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C33EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E6F20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556792764;
-	bh=2zVXCERhoEhP203OeUU0UZWwpgbXOXZhQLrmdn8U0G0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v5yUQjncnZdhLLAO4ZjXZX0lpzs8ERU9WV9/g4Ix73EIyRbEZB3VZG6Bs6VhIEb8h
-	 JJMDmjSE9LufqceFETrmCCqXckHAinyA/RA5BmcDhZfjVSy+Xxltw3qB3PzfKMMS/D
-	 J5jNQcKL0DEQxjFSMULqMI3S3dJBQycuo7tD5tQo=
+	by mail.kernel.org (Postfix) with ESMTP id 2060B2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfEBK0C (ORCPT
+        id S1726353AbfEBK1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 06:26:02 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40625 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfEBK0C (ORCPT
+        Thu, 2 May 2019 06:27:45 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:43070 "EHLO
+        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfEBK1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 06:26:02 -0400
-Received: by mail-lf1-f68.google.com with SMTP id o16so1464876lfl.7;
-        Thu, 02 May 2019 03:26:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=h2cWxngpT20ZMfG3eOK3pNNe/GlsC/KIDAQpK5RfIwg=;
-        b=BIr6nPRwjadS7Rbnhlm4RxIdDabgyPyj7reDPc9MzQKBLxZLR9TAdhSKV6hLKxbiI5
-         Ind9JEz8+VJ83RW28e8TFjT9A1PiT0J2oq5uNap1S7pPuZ07iCB2plYtvYnoOULgfWzV
-         ePX98uXaRKb4uGMk6PE3s324XkjuZRv0AYNVDbIVCfCrIeiBQFU4Pd4902LzrmF6mLU8
-         m63XgSvQd6IhqoZfMCockysxRgZGnO/zI9PCZA/d5x8ydApkv6R0DVmORW6E2cj3xyxK
-         d3NbAiT2EMbHddOeEAexwxKjVdm75mJmo/1vXJ62Xe5rsNUGcegyp8wSuwZSrsFmcR1B
-         qhng==
-X-Gm-Message-State: APjAAAXDuCQpnnUA/Za56EbgPI5ykxW4zjyFaSjvIWr91tLOUc6UV/q+
-        gCBMPv88TO37DsXoowNQs+4=
-X-Google-Smtp-Source: APXvYqyLVM37TMfk9L9nCPHALYb1CpY8WCN2mVZesSegxWseGQ5TVBvqvuoedXc67VIzvMAl7Pg7Wg==
-X-Received: by 2002:ac2:4465:: with SMTP id y5mr1550419lfl.82.1556792760262;
-        Thu, 02 May 2019 03:26:00 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id k4sm5931777lja.18.2019.05.02.03.25.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 03:25:59 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hM8um-0004gG-I2; Thu, 02 May 2019 12:26:09 +0200
-Date:   Thu, 2 May 2019 12:26:08 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] USB: serial: io_edgeport: mark expected switch
- fall-throughs
-Message-ID: <20190502102608.GS26546@localhost>
-References: <20190501213329.GA26972@embeddedor>
+        Thu, 2 May 2019 06:27:45 -0400
+Received: from [172.17.0.2] (unknown [186.137.130.251])
+        (Authenticated sender: pablo@fliagreco.com.ar)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id 9C6E57B05A2;
+        Thu,  2 May 2019 07:27:40 -0300 (-03)
+Subject: Re: [linux-sunxi] Re: [PATCH v5 7/7] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Add Bluetooth device node
+To:     wens@kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
+ <1556040365-10913-8-git-send-email-pgreco@centosproject.org>
+ <20190502074103.vtuxmsl55u3ygyvl@flea>
+ <CAGb2v65eaRLRkJ2hvoOc1Cr=ncSeqy7Tq2pzt4rk4uiWQeag2w@mail.gmail.com>
+From:   =?UTF-8?Q?Pablo_Sebasti=c3=a1n_Greco?= <pgreco@centosproject.org>
+Message-ID: <c96ecf5a-398c-d34e-72b8-332f0efbade0@centosproject.org>
+Date:   Thu, 2 May 2019 07:27:39 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CAGb2v65eaRLRkJ2hvoOc1Cr=ncSeqy7Tq2pzt4rk4uiWQeag2w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190501213329.GA26972@embeddedor>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Language: en-US
+X-SP2Max-MailScanner-Information: Please contact the ISP for more information
+X-SP2Max-MailScanner-ID: 9C6E57B05A2.A5DC6
+X-SP2Max-MailScanner: Sem Virus encontrado
+X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
+        escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
+        BAYES_00 -1.90)
+X-SP2Max-MailScanner-From: pgreco@centosproject.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 04:33:29PM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
-> 
-> drivers/usb/serial/io_edgeport.c: In function ‘process_rcvd_data’:
-> drivers/usb/serial/io_edgeport.c:1750:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     if (bufferLength == 0) {
->        ^
-> drivers/usb/serial/io_edgeport.c:1755:3: note: here
->    case EXPECT_HDR2:
->    ^~~~
-> drivers/usb/serial/io_edgeport.c:1810:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
->      if (bufferLength == 0) {
->         ^
-> drivers/usb/serial/io_edgeport.c:1816:3: note: here
->    case EXPECT_DATA: /* Expect data */
->    ^~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> Notice that, in this particular case, the code comments are modified
-> in accordance with what GCC is expecting to find.
-> 
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
-> Changes in v2:
->  - Warning level 3 is now used: -Wimplicit-fallthrough=3
->    instead of warning level 2.
->  - All warnings in the switch statement are addressed now.
-> 
-> Notice that these are the last remaining fall-through warnings
-> in the USB subsystem. :)
 
->  drivers/usb/serial/io_edgeport.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
-> index 4ca31c0e4174..7ad10328f4e2 100644
-> --- a/drivers/usb/serial/io_edgeport.c
-> +++ b/drivers/usb/serial/io_edgeport.c
-> @@ -1751,7 +1751,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
->  				edge_serial->rxState = EXPECT_HDR2;
->  				break;
->  			}
-> -			/* otherwise, drop on through */
-> +			/* Fall through - otherwise, drop on through */
->  		case EXPECT_HDR2:
->  			edge_serial->rxHeader2 = *buffer;
->  			++buffer;
-> @@ -1813,6 +1813,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
->  				}
->  				/* Else, drop through */
->  			}
-> +			/* Fall through */
->  		case EXPECT_DATA: /* Expect data */
-
-Looks like you forgot to take the original review feedback you got into
-account:
-
-	https://lkml.kernel.org/r/87k1zf4k24.fsf@miraculix.mork.no
-
-Johan
+El 2/5/19 a las 05:20, Chen-Yu Tsai escribió:
+> On Thu, May 2, 2019 at 3:41 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>> On Tue, Apr 23, 2019 at 02:26:04PM -0300, Pablo Greco wrote:
+>>> The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
+>>> identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+>>>
+>>> The Bluetooth side is connected to UART3 in a 4 wire configuration. Same
+>>> as the WiFi side, due to being the same chip and package, DLDO1 and
+>>> DLDO2 regulator outputs from the PMIC provide overall power via VBAT and
+>>> I/O power via VDDIO. The CLK_OUT_A clock output from the SoC provides
+>>> the LPO low power clock at 32.768 kHz.
+>>>
+>>> This patch enables Bluetooth on this board, and also adds the missing
+>>> LPO clock on the WiFi side. There is also a PCM connection for
+>>> Bluetooth, but this is not covered here.
+>>>
+>>> The LPO clock is fed from CLK_OUT_A, which needs to be muxed on pin
+>>> PI12. This can be represented in multiple ways. This patch puts the
+>>> pinctrl property in the pin controller node. This is due to limitations
+>>> in Linux, where pinmux settings, even the same one, can not be shared
+>>> by multiple devices. Thus we cannot put it in both the WiFi and
+>>> Bluetooth device nodes. Putting it the CCU node is another option, but
+>>> Linux's CCU driver does not handle pinctrl. Also the pin controller is
+>>> guaranteed to be initialized after the CCU, when clocks are available.
+>>> And any other devices that use muxed pins are guaranteed to be
+>>> initialized after the pin controller. Thus having the CLK_OUT_A pinmux
+>>> reference be in the pin controller node is a good choice without having
+>>> to deal with implementation issues.
+>>>
+>>> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+>>> ---
+>>>   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 22 ++++++++++++++++++++++
+>>>   1 file changed, 22 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>>> index c87f2c0..15c22b0 100644
+>>> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>>> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>>> @@ -96,6 +96,8 @@
+>>>        wifi_pwrseq: wifi_pwrseq {
+>>>                compatible = "mmc-pwrseq-simple";
+>>>                reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
+>>> +             clocks = <&ccu CLK_OUTA>;
+>>> +             clock-names = "ext_clock";
+>> So if you don't have that patch (that enables bluetooth) the wifi
+>> doesn't work (even though the previous patch is supposed to enable it)
+> Maybe we should just squash the two (WiFi and Bluetooth) together?
+> After all, they are in the same package, and depend on some of the
+> same things, such as clocks and regulators.
+>
+> ChenYu
+That seems better, I was trying to keep the same logic the patches 
+applied to the ultra.
+>>>        };
+>>>   };
+>>>
+>>> @@ -173,6 +175,7 @@
+>>>
+>>>   &pio {
+>>>        pinctrl-names = "default";
+>>> +     pinctrl-0 = <&clk_out_a_pin>;
+>> This one should bein the previous one as well
+>>
+>> Maxime
+>>
+>> --
+>> Maxime Ripard, Bootlin
+>> Embedded Linux and Kernel engineering
+>> https://bootlin.com
+>>
+>> --
+>> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+>> For more options, visit https://groups.google.com/d/optout.
+Pablo.
