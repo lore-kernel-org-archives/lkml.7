@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41750C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D5BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC72D204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D0B9204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556812056;
-	bh=5GKA2ndTMnBO9OGe+bY2RSGvKe0hCCrXFPdVQ/SPbLg=;
+	s=default; t=1556812069;
+	bh=RNnUtR82YtqJxHxbf9Jh3sB4wZIjls/mwrVbcsuQkXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1pJ+95nBkeKh0JhbUlaGPGegAiCD1x3IBOhUtQyE9B7DnBSvjLWwA4NpF1laATii1
-	 xhZSuavIJAeRBTwLCozJAzxUNpIGY96uZr9hVOCeTmq/pImy97lJE2wNlZah+vYB2C
-	 GhCuN9sk+iVjmDL106s2Z6w/DfJy7jNt9pzN+kGg=
+	b=pu5vbNH/BZ2ajU+7T+4ayQOpg2eGFCcS/R8V37zBakzEc+sx5GUXFDUCpg4qECRta
+	 4lue/MYvqyrchBRVoDNZYxvwdBKAD5erxJjIvEngZa341Pxrmp7YsFv+uJmSWo6Vf2
+	 3Fb6x2gLNhtiwpzHkSFXfHWGZ2E6wUvpJ99SUDL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfEBPre (ORCPT
+        id S1727391AbfEBPrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:47:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39976 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726611AbfEBPYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:24:10 -0400
+        id S1726520AbfEBPX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:23:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E92ED208C4;
-        Thu,  2 May 2019 15:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AA4A20C01;
+        Thu,  2 May 2019 15:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810649;
-        bh=5GKA2ndTMnBO9OGe+bY2RSGvKe0hCCrXFPdVQ/SPbLg=;
+        s=default; t=1556810636;
+        bh=RNnUtR82YtqJxHxbf9Jh3sB4wZIjls/mwrVbcsuQkXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flwfVSUVx3EffgBh/QnFfoAbQKcbodQDXzv7+FDEDuZAteUZIu515RRNuzJsbySdS
-         HlTxbJHokKN5PdNH1IgYMgeoPYcaoQF6jKAifldCnWPEH00xI2MBA03YbrEyogJWd7
-         1rSGv9Y4iOX5yQvUd28PcdLKbTg+y3F8YGNI86G0=
+        b=0Sg7bQtbKqB9GxBe4Vd5WFSduZAs99QsoQuhZKvPXd0EAWU66hfbQL1T1Bh+NUxh8
+         hlqeSFiplUVmhgrXVWnkIfP6CqrvRmVbNJVYgAC/h8f43M4D8ww4z1j6nOPn8bK1GJ
+         OoiXm3kjOfB5eVvc5dF0qOM9bXogMYmDoKAo+7ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mukesh Ojha <mojha@codeaurora.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Frank Pavlic <f.pavlic@kunbus.de>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 26/49] staging: rtlwifi: rtl8822b: fix to avoid potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:21:03 +0200
-Message-Id: <20190502143327.196651698@linuxfoundation.org>
+Subject: [PATCH 4.14 21/49] net: ks8851: Dequeue RX packets explicitly
+Date:   Thu,  2 May 2019 17:20:58 +0200
+Message-Id: <20190502143326.627107032@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -60,32 +63,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d70d70aec9632679dd00dcc1b1e8b2517e2c7da0 ]
+[ Upstream commit 536d3680fd2dab5c39857d62a3e084198fc74ff9 ]
 
-skb allocated via dev_alloc_skb can fail and return a NULL pointer.
-This patch avoids such a scenario and returns, consistent with other
-invocations.
+The ks8851 driver lets the chip auto-dequeue received packets once they
+have been read in full. It achieves that by setting the ADRFE flag in
+the RXQCR register ("Auto-Dequeue RXQ Frame Enable").
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+However if allocation of a packet's socket buffer or retrieval of the
+packet over the SPI bus fails, the packet will not have been read in
+full and is not auto-dequeued. Such partial retrieval of a packet
+confuses the chip's RX queue management:  On the next RX interrupt,
+the first packet read from the queue will be the one left there
+previously and this one can be retrieved without issues. But for any
+newly received packets, the frame header status and byte count registers
+(RXFHSR and RXFHBCR) contain bogus values, preventing their retrieval.
+
+The chip allows explicitly dequeueing a packet from the RX queue by
+setting the RRXEF flag in the RXQCR register ("Release RX Error Frame").
+This could be used to dequeue the packet in case of an error, but if
+that error is a failed SPI transfer, it is unknown if the packet was
+transferred in full and was auto-dequeued or if it was only transferred
+in part and requires an explicit dequeue. The safest approach is thus
+to always dequeue packets explicitly and forgo auto-dequeueing.
+
+Without this change, I've witnessed packet retrieval break completely
+when an SPI DMA transfer fails, requiring a chip reset. Explicit
+dequeueing magically fixes this and makes packet retrieval absolutely
+robust for me.
+
+The chip's documentation suggests auto-dequeuing and uses the RRXEF
+flag only to dequeue error frames which the driver doesn't want to
+retrieve. But that seems to be a fair-weather approach.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/staging/rtlwifi/rtl8822be/fw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/micrel/ks8851.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/rtlwifi/rtl8822be/fw.c b/drivers/staging/rtlwifi/rtl8822be/fw.c
-index acabb2470d55..02ca3157c5a5 100644
---- a/drivers/staging/rtlwifi/rtl8822be/fw.c
-+++ b/drivers/staging/rtlwifi/rtl8822be/fw.c
-@@ -752,6 +752,8 @@ void rtl8822be_set_fw_rsvdpagepkt(struct ieee80211_hw *hw, bool b_dl_finished)
- 		      u1_rsvd_page_loc, 3);
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 2fe96f1f3fe5..556666b0d756 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -526,9 +526,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 		/* set dma read address */
+ 		ks8851_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI | 0x00);
  
- 	skb = dev_alloc_skb(totalpacketlen);
-+	if (!skb)
-+		return;
- 	memcpy((u8 *)skb_put(skb, totalpacketlen), &reserved_page_packet,
- 	       totalpacketlen);
+-		/* start the packet dma process, and set auto-dequeue rx */
+-		ks8851_wrreg16(ks, KS_RXQCR,
+-			       ks->rc_rxqcr | RXQCR_SDA | RXQCR_ADRFE);
++		/* start DMA access */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
+ 
+ 		if (rxlen > 4) {
+ 			unsigned int rxalign;
+@@ -559,7 +558,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 			}
+ 		}
+ 
+-		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
++		/* end DMA access and dequeue packet */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_RRXEF);
+ 	}
+ }
  
 -- 
 2.19.1
