@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8168C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0B0C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B930720C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCE82085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810726;
-	bh=u5BK6ImEGbM0YWKuKATM4tD/cWtn4clQb4UjM9HLQFA=;
+	s=default; t=1556810729;
+	bh=Z5Q3p7tnXJAzzJtZccMCQ5DxuI62SO5FeHj3JdloG34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/7uq7/Zy+SwOAmNn5HDkI0+U0AXCm1l0b3Le1ZrEnY1lhiswPDjyz6aqwY8Aqfvy
-	 gcaaEwIJaZdKSACrAdAOIEOyuMyHxN9VEC8Ir1vRSCuQQFpMdu845iOYifUHXap8uo
-	 mohR2CI872eeWtCkpVPiDZwlRBv0XSxxah5TWy0E=
+	b=sbJ/ltSq3bxl8NUm5HteP2GqwYV7f3mX80EgGlUVVmGoqMKnBPeYCNDK6/Dmpwmww
+	 F42vX72vWRejwrk/YHQcxbkB4eG23XWR+Rp5LxV4uDij1MptUw/7p9cnakHa6Sx3zF
+	 P7Bhy8W8vrV+lqNYB3PCPQ1opqyO/OfXIFFc4hmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfEBPZZ (ORCPT
+        id S1727553AbfEBPZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:25:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41600 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfEBPZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:25:23 -0400
+        id S1727018AbfEBPZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:25:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC2CE2081C;
-        Thu,  2 May 2019 15:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7048721670;
+        Thu,  2 May 2019 15:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810722;
-        bh=u5BK6ImEGbM0YWKuKATM4tD/cWtn4clQb4UjM9HLQFA=;
+        s=default; t=1556810719;
+        bh=Z5Q3p7tnXJAzzJtZccMCQ5DxuI62SO5FeHj3JdloG34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TrFI1T1PHbi37HFqdl3kVLlwujQIoyY2aCDWg6tCuDAkBEN9szp28BVOoq297Hp/z
-         +in1Noq/fyNeRYch/RtpI3yDs7kWsSaVtvCLwkF3IA0r1LZLZqIDcT3KA73f1yoj8w
-         HKzDVOsj31Z7KruUYiJXOkG9ukLeWzfxXY2RcfWc=
+        b=fyYyp0SYzq0tVgU0CXTUZF5HnZRd7fxhFu+pZ+LGQ2mFSzEx+TidUUcaXhHGoeHF+
+         9gj3Jnxwth9wvQxzWofD/IP/iOH7vJ/h4l8BZP+DhmpMermkUb0aNxg0TbAKjpfABK
+         VcZpCTNQOz+5OkUeDSapeYElF4AdoLMCNslmUqTo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
+        Douglas Miller <dougmill@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 35/49] net: ethernet: ti: fix possible object reference leak
-Date:   Thu,  2 May 2019 17:21:12 +0200
-Message-Id: <20190502143328.292206371@linuxfoundation.org>
+Subject: [PATCH 4.14 34/49] net: ibm: fix possible object reference leak
+Date:   Thu,  2 May 2019 17:21:11 +0200
+Message-Id: <20190502143328.133935883@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -62,51 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 75eac7b5f68b0a0671e795ac636457ee27cc11d8 ]
+[ Upstream commit be693df3cf9dd113ff1d2c0d8150199efdba37f6 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
+The call to ehea_get_eth_dn returns a node pointer with refcount
 incremented thus it must be explicitly decremented after the last
 usage.
 
 Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ti/netcp_ethss.c:3661:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
-./drivers/net/ethernet/ti/netcp_ethss.c:3665:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
+./drivers/net/ethernet/ibm/ehea/ehea_main.c:3163:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3154, but without a corresponding object release within this function.
 
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Wingman Kwok <w-kwok2@ti.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Douglas Miller <dougmill@linux.ibm.com>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 28cb38af1a34..ff7a71ca0b13 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -3538,12 +3538,16 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 4878b7169e0f..30cbdf0fed59 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -3176,6 +3176,7 @@ static ssize_t ehea_probe_port(struct device *dev,
  
- 	ret = netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
- 				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
+ 	if (ehea_add_adapter_mr(adapter)) {
+ 		pr_err("creating MR failed\n");
++		of_node_put(eth_dn);
+ 		return -EIO;
+ 	}
  
- 	ret = netcp_txpipe_open(&gbe_dev->tx_pipe);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
- 
- 	/* Create network interfaces */
- 	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
 -- 
 2.19.1
 
