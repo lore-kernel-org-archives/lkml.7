@@ -2,134 +2,149 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3781C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4C4C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AFD20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A0C21670
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="efZz3vRD"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="LCS9VKDB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="guWCvW61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfEBIbi (ORCPT
+        id S1726394AbfEBIcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:31:38 -0400
-Received: from ozlabs.org ([203.11.71.1]:55423 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfEBIbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:31:38 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vpQF72TLz9s55;
-        Thu,  2 May 2019 18:31:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556785894;
-        bh=DMfzUvGe1OmVYxaTmVHfjp1BzeSQSpcGDRjgM7qARvs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=efZz3vRDDoYL5Kt0A+senS+bIMbmypGY3RSoGOe0wva5MgBTRkeqgZBzfzpHborol
-         Uz97VpSSkwPK6bCCCLMggEEBMJ6rOCPge4e1Tz9irYzTpdd+uhMO/FYUAv63ncQp0A
-         ukW3St9rRBWDq3T0XlFtXO7Q6FFXpRcywxc1XafyjxM/hzKV1LY63JaZ5t+9tZ7y4y
-         SAX/Tw8TiJDw8+r7VN9kpakKTWXLSUxrEWcsv7aAtHkQoZ125F4sjaqa7FTV9jShLK
-         8RmFcu/hKW4v8kUwFgGx7Q7hBHt6WlFqqumQdMuSn6CVL0+u97dD3kFKwsVHYEYEh5
-         gOKeGYoCzDDng==
-Date:   Thu, 2 May 2019 18:31:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the pidfd tree with the kbuild tree
-Message-ID: <20190502183125.3b53300e@canb.auug.org.au>
+        Thu, 2 May 2019 04:32:05 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34327 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725905AbfEBIcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 04:32:05 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 24D5923026;
+        Thu,  2 May 2019 04:32:04 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 02 May 2019 04:32:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=9T+k5rhFq2p15SaNrTJiSOQ3z5m
+        GBYA29Dg0f0zyPFA=; b=LCS9VKDB8hFVerPvgo0PQU4B+6ha5Pi+xRLsKNnjxdQ
+        x5/ufZHh1BrbdBn9G3b58HlYhlfffxYjiVa26wUK8qJgFGDlXUS7nCoXJx6Nkbof
+        aRg+NAnMFPDukyNrrSPYME62frATSHqItpKxegkFXXuTNOvMk8+qdJ7w2GvKczl0
+        0kvm7JN8qSiwE/Xy0j+2AoCktdxvzXhWQ2zr5NNI+ZpxNoaAfZJsH97upMIJ5F+K
+        xev2wko0ZLACB6hdty6+G5zaZi2u6l9BQRNIwyh1ehZt9jB01fH5MsmH5hbPy8ZC
+        o/vay6fSKkZ4Cc51miPb8wZW+9X4SFQHFRzLyA+2O9Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=9T+k5r
+        hFq2p15SaNrTJiSOQ3z5mGBYA29Dg0f0zyPFA=; b=guWCvW61i6EowDvseB24sm
+        EtLzX3+mMiYdj7D5pH/vBvDRws0JtdhB0BiQ4lVGn1l+R+MWZGgbVGzU5mFcalr4
+        hCQfJm6s0MqocJEuMNXY/us4RnqF50twCG6KmlqI3rfiJazfoueOsu0/MYMF5w4l
+        zvVly3YsF4P7kD2Q+2s0kGD8dcxwwCt0BaYY2XDypEAneouqU/VuvxZulqqEDWnJ
+        tq0M5AVOVO6y+7z1CZPkuENug1EEtvqfUFQ3kk1g8msEaK4MH8hmv9WP4xZVpwz+
+        yUZ5Ap2Z/B0MIKGxOLokVNoIZrYWD2hbbDlpZjNxgOkl40NH/E5VAJscNx/GGRUg
+        ==
+X-ME-Sender: <xms:A6vKXBqdFENsK-Y8vFlXq4WRa87p9OHrxYZ7EOgOwQnRNPAYwJCgeA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieelgddthecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:A6vKXJ-ITQhwgQYDE-mO-5H4th5r39-Q3XqwZT7ZJ193z8NMG5ewzw>
+    <xmx:A6vKXEN74vdRizpOmlsLgUHuyxAwCm7ChwOUQd9OBLDswxbnbLQR3w>
+    <xmx:A6vKXKNO7SCvVBINoNtn2NC-u_xjYvZOb0bPN0T-8RhlW1NLTC1n0w>
+    <xmx:BKvKXLlinelSkvnmO0Ix6gEbhxNNa8hinddUJ0PHufFISoqFN6Vh7A>
+Received: from localhost (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 64262E4625;
+        Thu,  2 May 2019 04:32:02 -0400 (EDT)
+Date:   Thu, 2 May 2019 18:31:27 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 5/5] livepatch: Do not manually track kobject
+ initialization
+Message-ID: <20190502083127.GC18363@eros.localdomain>
+References: <20190502023142.20139-1-tobin@kernel.org>
+ <20190502023142.20139-6-tobin@kernel.org>
+ <20190502071232.GB16247@kroah.com>
+ <20190502073044.bfzugymrncnaajxe@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/c7UPOCWZDr0blwyXwvs0FsM"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502073044.bfzugymrncnaajxe@pathway.suse.cz>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/c7UPOCWZDr0blwyXwvs0FsM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 02, 2019 at 09:30:44AM +0200, Petr Mladek wrote:
+> On Thu 2019-05-02 09:12:32, Greg Kroah-Hartman wrote:
+> > On Thu, May 02, 2019 at 12:31:42PM +1000, Tobin C. Harding wrote:
+> > > Currently we use custom logic to track kobject initialization.  Recently
+> > > a predicate function was added to the kobject API so we now no longer
+> > > need to do this.
+> > > 
+> > > Use kobject API to check for initialized state of kobjects instead of
+> > > using custom logic to track state.
+> > > 
+> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > > ---
+> > >  include/linux/livepatch.h |  6 ------
+> > >  kernel/livepatch/core.c   | 18 +++++-------------
+> > >  2 files changed, 5 insertions(+), 19 deletions(-)
+> > > 
+> > > @@ -626,7 +626,7 @@ static void __klp_free_objects(struct klp_patch *patch, bool nops_only)
+> > >  		list_del(&obj->node);
+> > >  
+> > >  		/* Might be called from klp_init_patch() error path. */
+> > > -		if (obj->kobj_added) {
+> > > +		if (kobject_is_initialized(&obj->kobj)) {
+> > >  			kobject_put(&obj->kobj);
+> > >  		} else if (obj->dynamic) {
+> > >  			klp_free_object_dynamic(obj);
+> > 
+> > Same here, let's not be lazy.
+> > 
+> > The code should "know" if the kobject has been initialized or not
+> > because it is the entity that asked for it to be initialized.  Don't add
+> > extra logic to the kobject core (like the patch before this did) just
+> > because this one subsystem wanted to only write 1 "cleanup" function.
+> 
+> We use kobject for a mix of statically and dynamically defined
+> structures[*]. And we misunderstood the behavior of kobject_init().
+> 
+> Anyway, the right solution is to call kobject_init()
+> already in klp_init_patch_early() for the statically
+> defined structures and in klp_alloc*() for the dynamically
+> allocated ones. Then we could simply call kobject_put()
+> every time.
+> 
+> Tobin, this goes deeper into the livepatching code that
+> you probably expected. Do you want to do the above
+> suggested change or should I prepare the patch?
 
-Hi all,
+I'd love for you to handle this one Petr, I'd say its a net gain
+time wise that way since if I do it you'll have to review it too
+carefully anyways.
 
-Today's linux-next merge of the pidfd tree got a conflict in:
+So that will mean patch #1 and #5 of this series are dropped and handed
+off to you (thanks).  Patch #2 and #3 Greg said he will take.  Patch #4
+is not needed.  That's a win in my books :)
 
-  samples/Makefile
-
-between commit:
-
-  a757ed09d672 ("samples: guard sub-directories with CONFIG options")
-
-from the kbuild tree and commit:
-
-  eb364bbe6791 ("samples: show race-free pidfd metadata access")
-
-from the pidfd tree.
-
-I fixed it up (iI did the minimal fixup - see below) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc samples/Makefile
-index 0f2d70d785f5,fadadb1c3b05..000000000000
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@@ -1,21 -1,6 +1,21 @@@
- +# SPDX-License-Identifier: GPL-2.0
-  # Makefile for Linux samples code
- =20
- -obj-$(CONFIG_SAMPLES)	+=3D kobject/ kprobes/ trace_events/ livepatch/ \
- -			   hw_breakpoint/ kfifo/ kdb/ hidraw/ rpmsg/ seccomp/ \
- -			   configfs/ connector/ v4l/ trace_printk/ \
- -			   vfio-mdev/ statx/ qmi/ binderfs/ pidfd/
- +obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+=3D binderfs/
- +obj-$(CONFIG_SAMPLE_CONFIGFS)		+=3D configfs/
- +obj-$(CONFIG_SAMPLE_CONNECTOR)		+=3D connector/
- +subdir-y				+=3D hidraw
- +obj-$(CONFIG_SAMPLE_HW_BREAKPOINT)	+=3D hw_breakpoint/
- +obj-$(CONFIG_SAMPLE_KDB)		+=3D kdb/
- +obj-$(CONFIG_SAMPLE_KFIFO)		+=3D kfifo/
- +obj-$(CONFIG_SAMPLE_KOBJECT)		+=3D kobject/
- +obj-$(CONFIG_SAMPLE_KPROBES)		+=3D kprobes/
- +obj-$(CONFIG_SAMPLE_LIVEPATCH)		+=3D livepatch/
- +obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+=3D qmi/
- +obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+=3D rpmsg/
- +subdir-$(CONFIG_SAMPLE_SECCOMP)		+=3D seccomp
- +subdir-$(CONFIG_SAMPLE_STATX)		+=3D statx
- +obj-$(CONFIG_SAMPLE_TRACE_EVENTS)	+=3D trace_events/
- +obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+=3D trace_printk/
- +obj-$(CONFIG_VIDEO_PCI_SKELETON)	+=3D v4l/
-- obj-y					+=3D vfio-mdev/
-++obj-y					+=3D vfio-mdev/ pidfd/
-
---Sig_/c7UPOCWZDr0blwyXwvs0FsM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKqt0ACgkQAVBC80lX
-0Gz0eQf+Kbg+tH0icN2dRRvQWMLlgOKX/9kxBiFC7qi47prbysX+cs7HmRiwp5gs
-/1p3ro92jaoM9X1vHnVQHdVVwZ+eqZAdXeMwSsAScE3ifVQP69WCGo0Sm0On4X7z
-7AKwmdZBsTc2RTel0gbnficnFYiTzDmNY9pP7oGbEXFx8WKOKJE/IyePdynE0BLm
-6cZV7hxpYiIy2MeFXyeSOuRxaRuMTqMmO4oHPN2JFHS0J5bN/L4S4hNV6KQ6vgtC
-RbgWhlZD5Ar440AAPM5wYcUPadIekJNlWXcwUCExaPYXf3x5Fa1Q/zWeOZnVj8Kf
-IcsexXLWoO9F8WRuStyc4FFIf4S5UA==
-=4Pn4
------END PGP SIGNATURE-----
-
---Sig_/c7UPOCWZDr0blwyXwvs0FsM--
+Thanks,
+Tobin.
