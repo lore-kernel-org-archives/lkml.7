@@ -2,137 +2,159 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB91C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEB5C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F542081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8478F208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iy/Sn6Xa"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i9AJNHwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfEBAxE (ORCPT
+        id S1726302AbfEBAxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 20:53:04 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:55734 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfEBAxE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 20:53:04 -0400
-Received: by mail-it1-f195.google.com with SMTP id i131so528954itf.5;
-        Wed, 01 May 2019 17:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SMeSIjBMoztFLs1N6yeylbhEwFQ8aE16zamS1zR69mw=;
-        b=iy/Sn6XaDIKRiDSuy0xTaguACJf6ApHbDUyojNS1rXStyorLACsb0v6xqDZ/RxD+D7
-         dn7+rhRXc69rcLC/sDFHT/DqJJBU9EbuhBQmC+AoUsq1I1DIPuSLxVNYuSzAxnVZy+LU
-         yfriT2A10Lm2/4Zy1PSYiDXbmIKa0hgDeC0dT6oAIpVXH6xh3kYPPV6EM+hF1KTpLbJZ
-         Nla30v/MTpGqk3M+hYHJEDR9Q1z45PSmeGhXGUv7X13IbgDVk+6RK7Rh7wcvFinFu+vH
-         Yj3avo4TqzqlICz+BG7kCu/IChct8jmUxDs9pnXMWLUa/z4vEcAFYml4gvBh+40F5Usj
-         3uYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SMeSIjBMoztFLs1N6yeylbhEwFQ8aE16zamS1zR69mw=;
-        b=jVHdkM1eLVj8fd0F5Qp3NZ59MeXG33pIhaj5r2rnFelYqVeptpN1s+q832jhBWkg8M
-         UVaTLwKihCz4K4mLTrIMGQFlRt8H2jdhtZV3l+Rupt7TxTvh5dYhjuc0AFxTmAx7Jnma
-         HeGND1W3NqI0AONWXY5TWdJk70rUYOHdTLljiTHmI1EeT2RnK9I9C6DD6S2odrWp1EZr
-         kLfa6+4dos/qDQbPY9b3jO1b8N4B9kFCTOYN+y6ZOUM6U0hZkLUMlIX0T/0oMEhQBlE5
-         OHe8iZVfpzol6dE3KBNkNZQNnnTVLtyWC2z30kMSxy4uS1aLIjhjUDUCCkbu+Qeb0aT8
-         OZJQ==
-X-Gm-Message-State: APjAAAVywGWpYJYN68igFdGKkrUAt2QJJcItKUPRL++nMWPgVIbAixPa
-        xcmwmYUGS7OVzjVEVDZKrdjFUTgJ
-X-Google-Smtp-Source: APXvYqy3d6dJXuMHx07TIlwjPLHrrzD18rTenNrcq63rPhYmeSCO98a7pjuckVpAlPuBAvYyFxZv3Q==
-X-Received: by 2002:a02:6307:: with SMTP id j7mr525665jac.65.1556758383076;
-        Wed, 01 May 2019 17:53:03 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id d10sm4370934ios.72.2019.05.01.17.52.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 17:53:02 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] dt-bindings: memory: Add binding for NVIDIA
- Tegra30 External Memory Controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190414202009.31268-1-digetx@gmail.com>
- <20190414202009.31268-3-digetx@gmail.com> <20190429220542.GA17924@bogus>
- <137c766e-66f6-828a-5c3b-f526d66d37bd@gmail.com>
- <CAL_JsqKCWytgQEDPLX27xdaDrARtHssbhFcL47RO0zfECm0Gig@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <27d24f4e-cf4c-b2d1-140a-5dcef021fa40@gmail.com>
-Date:   Thu, 2 May 2019 03:52:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 20:53:30 -0400
+Received: from ozlabs.org ([203.11.71.1]:46209 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfEBAx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 20:53:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vcFf1pL7z9s9N;
+        Thu,  2 May 2019 10:53:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556758406;
+        bh=HtpvA16fOwU/i+EQwwdigCqMz/ob7XM7tO7oJrJfCRE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=i9AJNHwAl8lQBW47oRKPztcwZ2nNcP96wl4vEtu4Kdof5LK4wpMUttDCKB15yLABw
+         zpguBag+Oj156cK4y5yoOg+AmYADO59Vgs8q2CZQ3C/B9sT4XS1P+X/VtCJO4BsPYi
+         AhhEkiOQ7ZXia3AFWGP2VifGbi42STPVy2Z9xB4xLf6dSm8Ddx59KHkuNQ0q6Vxo/S
+         JRseiDVYHDeJZSyt/iEQbeLxdlkWhiSyhsI7N2CRiuq2YiWSdLsJFunqMytRna88r1
+         QXdFW6qzipSrIlhx+aMlhGkqFSUWmyjJTR9kV5ZJM7JCT1IpzbzVzEEg5vBZP25ZMg
+         blIhrQwhmiv9w==
+Date:   Thu, 2 May 2019 10:53:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: linux-next: build failure after merge of the f2fs tree
+Message-ID: <20190502105309.7ad51660@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKCWytgQEDPLX27xdaDrARtHssbhFcL47RO0zfECm0Gig@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/mjvae70KivZvaKfso_KbnL3"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.05.2019 3:17, Rob Herring пишет:
-> On Wed, May 1, 2019 at 7:06 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 30.04.2019 1:05, Rob Herring пишет:
->>> On Sun, Apr 14, 2019 at 11:20:07PM +0300, Dmitry Osipenko wrote:
->>>> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
->>>> The binding is based on the Tegra124 EMC binding since hardware is
->>>> similar, although there are couple significant differences.
->>>
->>> My comments on Tegra124 binding apply here.
->>
->> The common timing definition doesn't fully match the definition that is
->> used by Tegra's Memory Controller, thus the DQS (data strobe) timing
->> parameter is comprised of multiple sub-parameters that describe how to
->> generate the strobe in hardware. There are also more additional
->> parameters that are specific to Tegra and they are individually
->> characterized for each memory model and clock rate. Hence the common
->> timing definition isn't usable.
-> 
-> I don't understand. Every PC in the world can work with any DIMM
-> (within a given generation) just with SPD data. Why is that not
-> sufficient here?
+--Sig_/mjvae70KivZvaKfso_KbnL3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Because this is not a standard PC, but a custom embedded hardware that
-is simpler and also doesn't fully follow the standards in some cases.
+Hi Jaegeuk,
 
-> In any case, it seems for Tegra124 a different approach is going to be
-> taken. Seems like an "avoid DT" solution to me, but if it's contained
-> within the firmware it's not my problem.
+After merging the f2fs tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-My above comment really applies to all Terga's.
+In file included from include/trace/define_trace.h:96,
+                 from include/trace/events/f2fs.h:1724,
+                 from fs/f2fs/super.c:35:
+include/trace/events/f2fs.h: In function 'trace_raw_output_f2fs_filemap_fau=
+lt':
+include/trace/events/f2fs.h:1310:3: error: '_entry' undeclared (first use i=
+n this function); did you mean 'dentry'?
+   _entry->ret)
+   ^~~~~~
+include/trace/trace_events.h:360:22: note: in definition of macro 'DECLARE_=
+EVENT_CLASS'
+  trace_seq_printf(s, print);     \
+                      ^~~~~
+include/trace/trace_events.h:79:9: note: in expansion of macro 'PARAMS'
+         PARAMS(print));         \
+         ^~~~~~
+include/trace/events/f2fs.h:1287:1: note: in expansion of macro 'TRACE_EVEN=
+T'
+ TRACE_EVENT(f2fs_filemap_fault,
+ ^~~~~~~~~~~
+include/trace/events/f2fs.h:1307:2: note: in expansion of macro 'TP_printk'
+  TP_printk("dev =3D (%d,%d), ino =3D %lu, index =3D %lu, ret =3D %lx",
+  ^~~~~~~~~
+include/trace/events/f2fs.h:1310:3: note: each undeclared identifier is rep=
+orted only once for each function it appears in
+   _entry->ret)
+   ^~~~~~
+include/trace/trace_events.h:360:22: note: in definition of macro 'DECLARE_=
+EVENT_CLASS'
+  trace_seq_printf(s, print);     \
+                      ^~~~~
+include/trace/trace_events.h:79:9: note: in expansion of macro 'PARAMS'
+         PARAMS(print));         \
+         ^~~~~~
+include/trace/events/f2fs.h:1287:1: note: in expansion of macro 'TRACE_EVEN=
+T'
+ TRACE_EVENT(f2fs_filemap_fault,
+ ^~~~~~~~~~~
+include/trace/events/f2fs.h:1307:2: note: in expansion of macro 'TP_printk'
+  TP_printk("dev =3D (%d,%d), ino =3D %lu, index =3D %lu, ret =3D %lx",
+  ^~~~~~~~~
 
-The Tegra210 is also a bit more complicated case because of the
-proprietary signed firmware that can't be easily replaced with
-opensource alternative without special hacks, but AFAIK the unofficial
-opensource firmware will be available in some form for at least one
-consumer device (Nintendo Switch).
+Caused by commit
 
-Please write a detailed comment to the Tegra210's patch, saying what you
-would want to see changed. I'm sure Joseph will try to do his best.
+  90a238561901 ("f2fs: add tracepoint for f2fs_filemap_fault()")
 
-Note that it is always possible to define a proper device tree binding
-and then also "unofficially" support the downstream binding, IIRC that's
-what some drivers are already doing in upstream kernel. So I think you
-could just demand for the proper binding regardless of the firmware
-situation.
+I have applied the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 2 May 2019 10:44:46 +1000
+Subject: [PATCH] f2fs: fix up for "f2fs: add tracepoint for
+ f2fs_filemap_fault()"
+
+Fixes: 90a238561901 ("f2fs: add tracepoint for f2fs_filemap_fault()")
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ include/trace/events/f2fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 6a53c793cf20..53b96f12300c 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -1307,7 +1307,7 @@ TRACE_EVENT(f2fs_filemap_fault,
+ 	TP_printk("dev =3D (%d,%d), ino =3D %lu, index =3D %lu, ret =3D %lx",
+ 		show_dev_ino(__entry),
+ 		(unsigned long)__entry->index,
+-		_entry->ret)
++		__entry->ret)
+ );
+=20
+ TRACE_EVENT(f2fs_writepages,
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/mjvae70KivZvaKfso_KbnL3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKP3UACgkQAVBC80lX
+0GxomAf+PvRbGvZzUz5s+c+oY2LoUiGQ5PMkbrlvhizdMTEssjzMLN3gSZxcMRfu
+PIc4FquWPSMxj/UsuQGDIf7cVImzlKaJdoz7gtXldIVGtKK7gIg0b4N53wxWfnjk
+yeTC6u4k2g/DhFkJB7S4uhBnsyJeGgMf1xSi7MEphOm4OWQANH9XHYioq0uUSSJH
+SKQCwN7JfTqtBu4azBs+ct8N46iXWjHv5AtQEACHy8fET3tdb+MrchNz8MIzwFE+
+C7lad+Qt2aUjeWM3O0kRmhMHAdhZ423l1NH88iF++z0TTqN8dH3NAJjnahGiGiQq
+G9CD6UV3+kCh81k4tqvf/9dcH4NL6A==
+=jdKv
+-----END PGP SIGNATURE-----
+
+--Sig_/mjvae70KivZvaKfso_KbnL3--
