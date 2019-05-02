@@ -2,118 +2,132 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFA6C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A71C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015EB20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C9B2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FxhZsRMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfEBMzC (ORCPT
+        id S1726553AbfEBMza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:55:02 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:55590 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfEBMzC (ORCPT
+        Thu, 2 May 2019 08:55:30 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17095 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfEBMz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:55:02 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hMBEn-000103-Sz; Thu, 02 May 2019 14:54:58 +0200
-Message-ID: <3e8291cb2491e9a1830afdb903ed2c52e9f7475c.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next 3/3] netlink: add validation of NLA_F_NESTED
- flag
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Michal Kubecek <mkubecek@suse.cz>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Ahern <dsahern@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 02 May 2019 14:54:56 +0200
-In-Reply-To: <75a0887b3eb70005c272685d8ef9a712f37d7a54.1556798793.git.mkubecek@suse.cz>
-References: <cover.1556798793.git.mkubecek@suse.cz>
-         <75a0887b3eb70005c272685d8ef9a712f37d7a54.1556798793.git.mkubecek@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 2 May 2019 08:55:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ccae8bd0000>; Thu, 02 May 2019 05:55:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 02 May 2019 05:55:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 02 May 2019 05:55:28 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
+ 2019 12:55:28 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 2 May 2019 12:55:28 +0000
+Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ccae8bd0000>; Thu, 02 May 2019 05:55:28 -0700
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <ldewangan@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH 0/6] Add support for Tegra186/Tegra194 and generic fixes
+Date:   Thu, 2 May 2019 18:25:11 +0530
+Message-ID: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1556801725; bh=xyGsJZTzhujgVWu4NMnFenNqEk9EavZ+0dkdg0MyO7M=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=FxhZsRMeolt75QngFCSxHZ2dckUMoYrFccMSsycY6kv/HQj5XUE/niiUYg1L+2c9g
+         PLrIrjy4IwHHn3Bf3ogc6PnZ53s20gwM0XQJH+I+ZC/dTNMyUvyTd/TXQB/wmNzICW
+         QTIOU52jckyPNvwCtJuAunSRDloOOTl9S6AnwL8cwFlLdlELQVEFBYuny8x2uJGxOq
+         aXNpRXa+/gJWaNDBTP1B7fgjB+xP1HF6DCs7zIZZCpKjcd6qzSeJw+pQW8ihZRof4V
+         tLdygaa8MAVT9uRPfXjx0rYsKyQAewlh56Us1b1ftFP8kaDcqDLG1PIagj/EhonxXo
+         PWzFiGb/Eo0QA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-02 at 12:48 +0000, Michal Kubecek wrote:
-> Add new validation flag NL_VALIDATE_NESTED which adds three consistency
-> checks of NLA_F_NESTED_FLAG:
-> 
->   - the flag is set on attributes with NLA_NESTED{,_ARRAY} policy
->   - the flag is not set on attributes with other policies except NLA_UNSPEC
->   - the flag is set on attribute passed to nla_parse_nested()
+Audio DMA(ADMA) interface is a gateway in the AHUB for facilitating DMA
+transfers between memory and all of its clients. Currently the driver
+supports Tegra210 based platforms. This series adds support for Tegra186
+and Tegra194 based platforms and fixes few functional issues.
 
-Looks good to me!
+Patches in the series are classified into three categories,
+  1. Add support for Tegra186 and Tegra194
+  2. Add DMA pause/resume feature
+  3. Fixes common to differernt Tegra generations
 
-> @@ -415,7 +418,8 @@ enum netlink_validation {
->  #define NL_VALIDATE_STRICT (NL_VALIDATE_TRAILING |\
->  			    NL_VALIDATE_MAXTYPE |\
->  			    NL_VALIDATE_UNSPEC |\
-> -			    NL_VALIDATE_STRICT_ATTRS)
-> +			    NL_VALIDATE_STRICT_ATTRS |\
-> +			    NL_VALIDATE_NESTED)
+Below change log describes the patches in detail.
 
-This is fine _right now_, but in general we cannot keep adding here
-after the next release :-)
+Change log:
+=====================================
+v1
+----
+The series can be classified into 3 categories,
+  1. Add support for Tegra186 and Tegra194
+     [Patch 1/6] dmaengine: tegra210-adma: prepare for supporting newer
+     Tegra chips
+       * The support was there only for Tegra210
+       * This is a preparation for adding support for newer Tegra chips
+       * chip_data is enhanced to support differences between Tegra210 and
+         Tegra186/Tegra194
+     [Patch 2/6] Documentation: DT: Add compatibility binding for Tegra186
+       * New compatibility string is required for driver to work for
+         Tegra186 and Tegra194. Hence new compatibility is introduced.
+       * Tegra194 can use the same compatibility as Tegra186
+     [Patch 3/6] dmaengine: tegra210-adma: add support for Tegra186/
+     Tegra194
+       * Populates chip specific information for Tegra186
+       * There is a difference in the way ADMA CH_CONFIG registers are
+         encoded for Tegra210 and Tegra186. Added helper fucntions to
+         support different versions of burst size configuration
 
->  int netlink_rcv_skb(struct sk_buff *skb,
->  		    int (*cb)(struct sk_buff *, struct nlmsghdr *,
-> @@ -1132,6 +1136,10 @@ static inline int nla_parse_nested(struct nlattr *tb[], int maxtype,
->  				   const struct nla_policy *policy,
->  				   struct netlink_ext_ack *extack)
->  {
-> +	if (!(nla->nla_type & NLA_F_NESTED)) {
-> +		NL_SET_ERR_MSG_ATTR(extack, nla, "nested attribute expected");
+  2. Add DMA pause/resume feature
+     [Patch 4/6] dmaengine: tegra210-adma: add pause/resume support
+       * Adds support for ADMA pause/resume, otherwise audio loss was seen
+         during continuous pause/resume of audio playback.
 
-Maybe reword that to say "NLA_F_NESTED is missing" or so? The "nested
-attribute expected" could result in a lot of headscratching (without
-looking at the code) because it looks nested if you do nla_nest_start()
-etc.
+  3. Fixes common to differernt Tegra generations
+     [Patch 5/6] dmaengine: tegra210-dma: free dma controller in remove()
+       * Fixes kernel panic observed during driver reload. DMA controller
+         needs to be freed when driver is unloaded
+     [Patch 6/6] dmaengine: tegra210-adma: restore channel status
+       * Fixes resume across system suspend. If the channel state is not
+         restored, the transfers won't resume from the state from where it
+         was left during suspend entry. In this case, audio playback did
+         not resume properly once system exited from low power state.
 
-> +		return -EINVAL;
-> +	}
->  	return __nla_parse(tb, maxtype, nla_data(nla), nla_len(nla), policy,
->  			   NL_VALIDATE_STRICT, extack);
+===============================
+Sameer Pujar (6):
+  dmaengine: tegra210-adma: prepare for supporting newer Tegra chips
+  Documentation: DT: Add compatibility binding for Tegra186
+  dmaengine: tegra210-adma: add support for Tegra186/Tegra194
+  dmaengine: tegra210-adma: add pause/resume support
+  dmaengine: tegra210-dma: free dma controller in remove()
+  dmaengine: tegra210-adma: restore channel status
 
-I'd probably put a blank line there but ymmv.
+ .../bindings/dma/nvidia,tegra210-adma.txt     |   4 +-
+ drivers/dma/tegra210-adma.c                   | 232 +++++++++++++++++----
+ 2 files changed, 193 insertions(+), 43 deletions(-)
 
->  }
-> diff --git a/lib/nlattr.c b/lib/nlattr.c
-> index adc919b32bf9..92da65cb6637 100644
-> --- a/lib/nlattr.c
-> +++ b/lib/nlattr.c
-> @@ -184,6 +184,21 @@ static int validate_nla(const struct nlattr *nla, int maxtype,
->  		}
->  	}
->  
-> +	if (validate & NL_VALIDATE_NESTED) {
-> +		if ((pt->type == NLA_NESTED || pt->type == NLA_NESTED_ARRAY) &&
-> +		    !(nla->nla_type & NLA_F_NESTED)) {
-> +			NL_SET_ERR_MSG_ATTR(extack, nla,
-> +					    "nested attribute expected");
-> +			return -EINVAL;
-> +		}
-> +		if (pt->type != NLA_NESTED && pt->type != NLA_NESTED_ARRAY &&
-> +		    pt->type != NLA_UNSPEC && (nla->nla_type & NLA_F_NESTED)) {
-> +			NL_SET_ERR_MSG_ATTR(extack, nla,
-> +					    "nested attribute not expected");
-> +			return -EINVAL;
-
-Same comment here wrt. the messages, I think they should more explicitly
-refer to the flag.
-
-johannes
-
-(PS: if you CC me on this address I generally can respond quicker)
+-- 
+2.7.4
 
