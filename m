@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB88C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F25C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 297592081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BE820449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810832;
-	bh=FDNU4kDC2n76Cl9nLieE106/2Os9s6nt8AFRwtENVIo=;
+	s=default; t=1556810836;
+	bh=ZnbOD2K9O2375a4FDRGPeFIFshZDPFGH+/6kgXnTawY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JgbTDDW6Dg1UCsvLHLPz70cnGWMvE3yJwt7OOsKi3QF9SEj19LNhwBIMhezt8zHO6
-	 00eSsH654XRE20q1YZQWsKMDxT1Hx9fk/9qJCiYuOmkGij7Br66IPPL/d5LVLNHU4p
-	 Q2Tz0h4fQTobVxGwECu2eh1JE1KG6Clp6YFa8YP0=
+	b=yV/MytZLZVTJ9u+favE3xiRMItSfEHHAPGLnTn0xm48khkiZLPhdOvyxpPMc0QSIt
+	 7zdWYscB8ilfz6hdApU/kiFj/LZQERQqZ9pDxuXcYTRvJhjUdvKhafV+cPBQEnQgE2
+	 Nq52IovJjVlEb4v6axiejYOW4OjUI7QPoMyfX61Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfEBP1L (ORCPT
+        id S1727920AbfEBP1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:27:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43786 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbfEBP1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:27:04 -0400
+        id S1727913AbfEBP1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:27:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E884320675;
-        Thu,  2 May 2019 15:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 776ED20675;
+        Thu,  2 May 2019 15:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810823;
-        bh=FDNU4kDC2n76Cl9nLieE106/2Os9s6nt8AFRwtENVIo=;
+        s=default; t=1556810830;
+        bh=ZnbOD2K9O2375a4FDRGPeFIFshZDPFGH+/6kgXnTawY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U3swyAHHUo+ZIT/E/cr9a8xJ20zrZAH8IG3mSXWBPzDLVUn7/Q+RMadX0u7FPt8ap
-         W0iy2YwLmQyTTxAgAPPtlAxjLYwyO7QgVV9loW+OCJlQmlep2MK20b9ec6p1qKxH65
-         aDntSVtx6dh7I24W+z9Bmawma4E4LE5zFUZeOpnA=
+        b=c31FlmT0g+oFyRJPiVQPPyt5lTrSsdsYT2B2B+aXnVa94UZX6I3iUvQ96zgEZZH4V
+         qS5ZJWIF/r/DlYdV6eSNjnD3Naas67mbFshp/C79ye8fpkiWTLS3PmabTsM0rVNnMR
+         Tn+IyW/A0ktW3l1jVIODDQEFvHuXYb7fSTzodAYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Thierry Reding <treding@nvidia.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 41/72] net: macb: Add null check for PCLK and HCLK
-Date:   Thu,  2 May 2019 17:21:03 +0200
-Message-Id: <20190502143336.755702883@linuxfoundation.org>
+Subject: [PATCH 4.19 44/72] drm/tegra: hub: Fix dereference before check
+Date:   Thu,  2 May 2019 17:21:06 +0200
+Message-Id: <20190502143336.984820665@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,48 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd5afa91f078c0787be0a62b5ef90301c00b0271 ]
+[ Upstream commit 7cf77b273a8fc51e7de622fa6691abd4436a9a6b ]
 
-Both PCLK and HCLK are "required" clocks according to macb devicetree
-documentation. There is a chance that devm_clk_get doesn't return a
-negative error but just a NULL clock structure instead. In such a case
-the driver proceeds as usual and uses pclk value 0 to calculate MDC
-divisor which is incorrect. Hence fix the same in clock initialization.
-
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/hub.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 8abea1c3844f..7d7b51383adf 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3323,14 +3323,20 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
- 		*hclk = devm_clk_get(&pdev->dev, "hclk");
- 	}
+diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
+index 8f4fcbb515fb..bb97cad1eb69 100644
+--- a/drivers/gpu/drm/tegra/hub.c
++++ b/drivers/gpu/drm/tegra/hub.c
+@@ -378,14 +378,16 @@ static int tegra_shared_plane_atomic_check(struct drm_plane *plane,
+ static void tegra_shared_plane_atomic_disable(struct drm_plane *plane,
+ 					      struct drm_plane_state *old_state)
+ {
+-	struct tegra_dc *dc = to_tegra_dc(old_state->crtc);
+ 	struct tegra_plane *p = to_tegra_plane(plane);
++	struct tegra_dc *dc;
+ 	u32 value;
  
--	if (IS_ERR(*pclk)) {
-+	if (IS_ERR_OR_NULL(*pclk)) {
- 		err = PTR_ERR(*pclk);
-+		if (!err)
-+			err = -ENODEV;
-+
- 		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
- 		return err;
- 	}
+ 	/* rien ne va plus */
+ 	if (!old_state || !old_state->crtc)
+ 		return;
  
--	if (IS_ERR(*hclk)) {
-+	if (IS_ERR_OR_NULL(*hclk)) {
- 		err = PTR_ERR(*hclk);
-+		if (!err)
-+			err = -ENODEV;
++	dc = to_tegra_dc(old_state->crtc);
 +
- 		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
- 		return err;
- 	}
+ 	/*
+ 	 * XXX Legacy helpers seem to sometimes call ->atomic_disable() even
+ 	 * on planes that are already disabled. Make sure we fallback to the
 -- 
 2.19.1
 
