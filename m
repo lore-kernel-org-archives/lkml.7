@@ -2,160 +2,104 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46E1C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D16C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BBC2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:46:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPwIGZG6"
+	by mail.kernel.org (Postfix) with ESMTP id 1A3F12081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfEBLqh (ORCPT
+        id S1726391AbfEBLrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 07:46:37 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:34594 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfEBLqh (ORCPT
+        Thu, 2 May 2019 07:47:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44329 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfEBLrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 07:46:37 -0400
-Received: by mail-yw1-f67.google.com with SMTP id u14so1319038ywe.1;
-        Thu, 02 May 2019 04:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jcBWOdKL4HM/5gs4c1naDvVj+y0UvTNyJvldP+RZuLU=;
-        b=YPwIGZG6R8/FHkEfbb10H6h7MXPFJKKCpFppbkLgu5/NkiWY8lGn+CxuKnRkBVGi1u
-         1xIDiL+Gx5Umn1JV92T06sf774OfUTapy6s1B/pUZDqChAJ5AaaTCDJBo6KNoyD00E4e
-         lA/XkmZPvx1bqInfL5AxUx4VXqLk+IuDV/CGWNoobAxf/3uz7IhF9JaGWpBc3Ds+dcWI
-         BvRvm4YUgspx+ry95hkF+743T1RIf4ICA5bJwMHE9QUUCtct60lMX+Tbic9Q3y0e8csu
-         /Fu9f2dcGM6+DXDB+SH9kXRJ2cW5e46Hv3UfXBOM0SAQfqm1kHoi76eHC6jiW5bL8LRq
-         XVUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jcBWOdKL4HM/5gs4c1naDvVj+y0UvTNyJvldP+RZuLU=;
-        b=iKXy23aqfNYSukgBM3xWBi99+Rc+GQJFyGJq1b00+Xiawb+PBtT9Fc55EKiUBYtbnS
-         kzvoRixI8R4eEuS8mRlyzhaLxklxqXcbup3GDsotU1gJ1SjaSppbvhrLvv/CjbQRiEcg
-         mXY/un6zfEzX2xwy8y3n99jNBXZF5ORMDYyyihZQKbL3zNta+I+DEVHYvGvqHV6cvpQ2
-         Z+GV0Dy1gwEgXYTIav8aFQU5IpQwMF2dNA1dj0QOOD2Boh5b1trdgK2c2r+V+AfHEKul
-         7IyFAlOe9j9ab9E9JkZhwYtGYyNyp0sYl1e1hcT/at5JafM2Xy9kq0b1rrYp76ZXh5An
-         Boeg==
-X-Gm-Message-State: APjAAAWADWHgmEr6LgMlgEGbCBNqE0PSO6V1MxuS58dA/eA9Zj5Xtq7+
-        F0Vkqg+Al146kguvKtCU6x5ZXKyWcQNG89DImsU=
-X-Google-Smtp-Source: APXvYqxOfXWXJ7hpacnqd3cjaM2qO/7GdpaVENgE1LUX5ufb85Rr1U9YIHTn6PAb1kXavD+KmYtxpL26e+lE3X6MhyY=
-X-Received: by 2002:a25:b883:: with SMTP id w3mr2641606ybj.337.1556797595677;
- Thu, 02 May 2019 04:46:35 -0700 (PDT)
+        Thu, 2 May 2019 07:47:42 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hMABg-0007bp-2z; Thu, 02 May 2019 11:47:40 +0000
+To:     Sugaya Taichi <sugaya.taichi@socionext.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: re: serial: Add Milbeaut serial control
+Message-ID: <246f81ba-0ed1-d5bc-1a48-bcf0fb2cc05e@canonical.com>
+Date:   Thu, 2 May 2019 12:47:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
- <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <8736lx4goa.fsf@notabene.neil.brown.name>
-In-Reply-To: <8736lx4goa.fsf@notabene.neil.brown.name>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 2 May 2019 07:46:24 -0400
-Message-ID: <CAOQ4uxgREaBznnr-jNy-g1oX2gH6dXx9zj8wrs5JBJuVMv_9Pw@mail.gmail.com>
-Subject: Re: [PATCH] OVL: add honoracl=off mount option.
-To:     NeilBrown <neilb@suse.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 12:35 AM NeilBrown <neilb@suse.com> wrote:
->
->
-> If the upper and lower layers use incompatible ACL formats, it is not
-> possible to copy the ACL xttr from one to the other, so overlayfs
-> cannot work with them.
-> This happens particularly with NFSv4 which uses system.nfs4_acl, and
-> ext4 which uses system.posix_acl_access.
->
-> If all ACLs actually make to Unix permissions, then there is no need
-> to copy up the ACLs, but overlayfs cannot determine this.
->
-> So allow the sysadmin it assert that ACLs are not needed with a mount
-> option
->   honoracl=off
-> This causes the ACLs to not be copied, so filesystems with different
-> ACL formats can be overlaid together.
->
-> Signed-off-by: NeilBrown <neilb@suse.com>
-> ---
->  Documentation/filesystems/overlayfs.txt | 24 ++++++++++++++++++++++++
->  fs/overlayfs/copy_up.c                  |  9 +++++++--
->  fs/overlayfs/dir.c                      |  2 +-
->  fs/overlayfs/overlayfs.h                |  2 +-
->  fs/overlayfs/ovl_entry.h                |  1 +
->  fs/overlayfs/super.c                    | 15 +++++++++++++++
->  6 files changed, 49 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/filesystems/overlayfs.txt b/Documentation/filesystems/overlayfs.txt
-> index eef7d9d259e8..7ad675940c93 100644
-> --- a/Documentation/filesystems/overlayfs.txt
-> +++ b/Documentation/filesystems/overlayfs.txt
-> @@ -245,6 +245,30 @@ filesystem - future operations on the file are barely noticed by the
->  overlay filesystem (though an operation on the name of the file such as
->  rename or unlink will of course be noticed and handled).
->
-> +ACL copy-up
-> +-----------
-> +
-> +When a file that only exists on the lower layer is modified it needs
-> +to be copied up to the upper layer.  This means copying the metadata
-> +and (usually) the data (though see "Metadata only copy up" below).
-> +One part of the metadata can be problematic: the ACLs.
-> +
-> +Now all filesystems support ACLs, and when they do they don't all use
-> +the same format.  A significant conflict appears between POSIX acls
-> +used on many local filesystems, and NFSv4 ACLs used with NFSv4.  There
-> +two formats are, in general, not inter-convertible.
-> +
-> +If a site only uses regular Unix permissions (Read, Write, eXecute by
-> +User, Group and Other), then as these permissions are compatible with
-> +all ACLs, there is no need to copy ACLs.  overlayfs cannot determine
-> +if this is the case itself.
-> +
-> +For this reason, overlayfs supports a mount option "honoracl=off"
-> +which causes ACLs, any "system." extended attribute, on the lower
-> +layer to be ignored and, particularly, not copied to the upper later.
-> +This allows NFSv4 to be overlaid with a local filesystem, but should
-> +only be used if the only access controls used on the filesystem are
-> +Unix permission bits.
->
+Hi,
 
-I don't know. On the one hand "system." is not only ACLs.
-On the other hand, "honoracl=off" is not the same as -o noacl,
-but it sure sounds the same.
+Static analysis with Coverity has picked up an issue in commit:
 
-I'd be a lot more comfortable with "ignore_xattrs=system.nfs4_acl"
-argument takes a comma separated list of xattr prefixes to ignore.
+commit ba44dc04300441b47618f9933bf36e75a280e5fe
+Author: Sugaya Taichi <sugaya.taichi@socionext.com>
+Date:   Mon Apr 15 20:31:40 2019 +0900
 
-ovl_is_private_xattr() can be generalized to ovl_is_ignored_xattr(),
-going over a blacklist of N>=1 which will also be called from
-ovl_can_list(), because there is no point in listing the ACLs that
-are ignored. right?
+    serial: Add Milbeaut serial control
 
-Thanks,
-Amir.
+In function mlb_usio_rx_chars() the u8 status is being bit-wise AND'd
+with MLB_USIO_SSR_BRK (which is 1UL << 8) and hence the result is always
+false, which looks incorrect to me.  Is this intentional?
+
+Colin
+
