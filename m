@@ -2,56 +2,91 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2F8C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54EAC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C362020873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B21420873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Eo3yE/Uy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfEBJIR (ORCPT
+        id S1726282AbfEBJKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 05:08:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3307 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfEBJIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 05:08:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 02:08:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,421,1549958400"; 
-   d="scan'208";a="136182103"
-Received: from ikonopko-mobl.ger.corp.intel.com (HELO [10.237.142.30]) ([10.237.142.30])
-  by orsmga007.jf.intel.com with ESMTP; 02 May 2019 02:08:15 -0700
-Subject: Re: [PATCH] lightnvm: pblk: Introduce hot-cold data separation
-To:     Heiner Litz <hlitz@ucsc.edu>,
-        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>
-Cc:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190425052152.6571-1-hlitz@ucsc.edu>
- <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
- <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com>
- <a1df8967-2169-1c43-c55a-e2144fa53b9a@intel.com>
- <CAJbgVnWsHQRpEPkd77E6u0hoW5jKQaOGR-3dW9+drGNq_JYpfA@mail.gmail.com>
- <139AF16B-E69C-4AA5-A9AC-38576BB9BD4B@javigon.com>
- <CAJbgVnWTRWZB_Dc7F1cvtgWdYPCbJ_aJJ_mas01m51+8siHvHA@mail.gmail.com>
-From:   Igor Konopko <igor.j.konopko@intel.com>
-Message-ID: <b7c03f26-90bb-ffd6-e744-6daf3bbe348d@intel.com>
-Date:   Thu, 2 May 2019 11:08:14 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAJbgVnWTRWZB_Dc7F1cvtgWdYPCbJ_aJJ_mas01m51+8siHvHA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 2 May 2019 05:10:43 -0400
+Received: from mail-eopbgr30067.outbound.protection.outlook.com ([40.107.3.67]:21694
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726196AbfEBJKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 05:10:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mLoDalNMvJO2k9ZH9S2I3msqVINEPnwBYV3c1d4FHYc=;
+ b=Eo3yE/UyUAi83xZd+52e4TW9y4zCx9h7Xanj7yGVMID4O5+fZ0Xz3lyEroJnD1c4XANKJow4Ism6K0ZnNAv3SYpSth7muXmym/8ITQi78+TIHxQ6L4GPTd2CO4beLiMX/uo1uVvbuNXwyHBJ5m/yC5OkHNwDt/8Zjc4/kbyuhgo=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
+ VI1PR04MB4221.eurprd04.prod.outlook.com (52.134.31.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Thu, 2 May 2019 09:10:39 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::81d8:f74b:f91e:f071]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::81d8:f74b:f91e:f071%7]) with mapi id 15.20.1835.018; Thu, 2 May 2019
+ 09:10:39 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v2 7/9] dpaa_eth: fix iova handling for contiguous frames
+Thread-Topic: [PATCH v2 7/9] dpaa_eth: fix iova handling for contiguous frames
+Thread-Index: AQHU/MhTJGEcyHulVEGnKf6u21efK6ZQN+AAgAdbO3A=
+Date:   Thu, 2 May 2019 09:10:38 +0000
+Message-ID: <VI1PR04MB513490961A52D86E46C02B49EC340@VI1PR04MB5134.eurprd04.prod.outlook.com>
+References: <20190427071031.6563-1-laurentiu.tudor@nxp.com>
+ <20190427071031.6563-8-laurentiu.tudor@nxp.com>
+ <20190427164612.GA12450@infradead.org>
+In-Reply-To: <20190427164612.GA12450@infradead.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [192.88.166.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 949729a3-b344-4971-ab0e-08d6cede0b7c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4221;
+x-ms-traffictypediagnostic: VI1PR04MB4221:
+x-microsoft-antispam-prvs: <VI1PR04MB42210DAD43AADA76D8A8ACE7EC340@VI1PR04MB4221.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(376002)(396003)(13464003)(51444003)(199004)(189003)(66066001)(33656002)(44832011)(476003)(14444005)(71190400001)(486006)(71200400001)(186003)(2906002)(55016002)(52536014)(53936002)(9686003)(6246003)(229853002)(6116002)(3846002)(11346002)(256004)(446003)(81156014)(8936002)(8676002)(6916009)(5660300002)(81166006)(54906003)(14454004)(99286004)(25786009)(76176011)(478600001)(6506007)(26005)(102836004)(7696005)(6436002)(68736007)(305945005)(74316002)(66446008)(64756008)(73956011)(86362001)(316002)(66946007)(66556008)(4326008)(76116006)(66476007)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4221;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sBJMuIh7ZVYNoZaRTfgNPy7W7P809zWGFM7EdbsDCmnSHzLgZlornyv/IW//mcN2XIS2kJjfm9i9DhL66lMFSVpk4FWkVORjMuOGhDfnE1oN2kB9LH/bMbsy+Rq7KQSNY+LZCc/ZPMltm9u69EnlvTLZLs5wMVA1YVIhgo0r+7RkycaJs8L/uA6tAU8IS6sauefu7JrQQ18JMPqT2RtCPWbebKWv80Th8YZPBXMuT2IACjl6UQmr1YMla/T2W7nNf5pXLPDV6YcxAynNPZF9CandBotx9sEGUNSPVJKYJTF/aA589lwKYJlUcprD71tGZFAVVqt+piXg8RgPBMb9alv93I6usw/08pmjDFol4ZZimGFb01fq4g7EBlZJlyAXyxFUBPXPhH4EvUH2hhi6AjL3rtmua/7UabMVKiA2eAI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 949729a3-b344-4971-ab0e-08d6cede0b7c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 09:10:38.8633
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,118 +94,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 01.05.2019 22:20, Heiner Litz wrote:
-> Javier, Igor,
-> you are correct. The problem exists if we have a power loss and we
-> have an open gc and an open user line and both contain the same LBA.
-> In that case, I think we need to care about the 4 scenarios:
-> 
-> 1. user_seq_id > gc_seq_id and user_write after gc_write: No issue
-> 2. user_seq_id > gc_seq_id and gc_write > user_write: Cannot happen,
-> open user lines are not gc'ed
+> -----Original Message-----
+> From: Christoph Hellwig <hch@infradead.org>
+> Sent: Saturday, April 27, 2019 7:46 PM
+>=20
+> On Sat, Apr 27, 2019 at 10:10:29AM +0300, laurentiu.tudor@nxp.com wrote:
+> > From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> >
+> > The driver relies on the no longer valid assumption that dma addresses
+> > (iovas) are identical to physical addressees and uses phys_to_virt() to
+> > make iova -> vaddr conversions. Fix this by adding a function that does
+> > proper iova -> phys conversions using the iommu api and update the code
+> > to use it.
+> > Also, a dma_unmap_single() call had to be moved further down the code
+> > because iova -> vaddr conversions were required before the unmap.
+> > For now only the contiguous frame case is handled and the SG case is
+> > split in a following patch.
+> > While at it, clean-up a redundant dpaa_bpid2pool() and pass the bp
+> > as parameter.
+>=20
+> Err, this is broken.  A driver using the DMA API has no business
+> call IOMMU APIs.  Just save the _virtual_ address used for the mapping
+> away and use that again.  We should not go through crazy gymnastics
+> like this.
 
-Maybe it would be just a theoretical scenario, but I'm not seeing any 
-reason why this cannot happen in pblk implementation:
-Let assume that user line X+1 is opened when GC line X is already open 
-and the user line is closed when GC line X is still in use. Then GC 
-quickly choose user line X+1 as a GC victim and we are hitting 2nd case.
+I think that due to the particularity of this hardware we don't have a way =
+of saving the VA, but I'd let my colleagues maintaining this driver to comm=
+ent more on why we need to do this.
 
-> 3. gc_seq_id > user_seq_id and user_write after gc_write: RACE
-> 4. gc_seq_id > user_seq_id and gc_write after user_write: No issue
-> 
-> To address 3.) we can do the following:
-> Whenever a gc line is opened, determine all open user lines and store
-> them in a field of pblk_line. When choosing a victim for GC, ignore
-> those lines.
-
-Your solution sounds right, but I would extend this based on my previous 
-comment to 2nd case by sth like: during opening new user data also add 
-this line ID to this "blacklist" for the GC selection.
-
-Igor
-
-> 
-> Let me know if that sounds good and I will send a v2
-> Heiner
-> 
-> On Tue, Apr 30, 2019 at 11:19 PM Javier González <javier@javigon.com> wrote:
->>
->>> On 26 Apr 2019, at 18.23, Heiner Litz <hlitz@ucsc.edu> wrote:
->>>
->>> Nice catch Igor, I hadn't thought of that.
->>>
->>> Nevertheless, here is what I think: In the absence of a flush we don't
->>> need to enforce ordering so we don't care about recovering the older
->>> gc'ed write. If we completed a flush after the user write, we should
->>> have already invalidated the gc mapping and hence will not recover it.
->>> Let me know if I am missing something.
->>
->> I think that this problem is orthogonal to a flush on the user path. For example
->>
->>     - Write to LBA0 + completion to host
->>     - […]
->>     - GC LBA0
->>     - Write to LBA0 + completion to host
->>     - fsync() + completion
->>     - Power Failure
->>
->> When we power up and do recovery in the current implementation, you
->> might get the old LBA0 mapped correctly in the L2P table.
->>
->> If we enforce ID ordering for GC lines this problem goes away as we can
->> continue ordering lines based on ID and then recovering sequentially.
->>
->> Thoughts?
->>
->> Thanks,
->> Javier
->>
->>>
->>> On Fri, Apr 26, 2019 at 6:46 AM Igor Konopko <igor.j.konopko@intel.com> wrote:
->>>> On 26.04.2019 12:04, Javier González wrote:
->>>>>> On 26 Apr 2019, at 11.11, Igor Konopko <igor.j.konopko@intel.com> wrote:
->>>>>>
->>>>>> On 25.04.2019 07:21, Heiner Litz wrote:
->>>>>>> Introduce the capability to manage multiple open lines. Maintain one line
->>>>>>> for user writes (hot) and a second line for gc writes (cold). As user and
->>>>>>> gc writes still utilize a shared ring buffer, in rare cases a multi-sector
->>>>>>> write will contain both gc and user data. This is acceptable, as on a
->>>>>>> tested SSD with minimum write size of 64KB, less than 1% of all writes
->>>>>>> contain both hot and cold sectors.
->>>>>>
->>>>>> Hi Heiner
->>>>>>
->>>>>> Generally I really like this changes, I was thinking about sth similar since a while, so it is very good to see that patch.
->>>>>>
->>>>>> I have a one question related to this patch, since it is not very clear for me - how you ensure the data integrity in following scenarios:
->>>>>> -we have open line X for user data and line Y for GC
->>>>>> -GC writes LBA=N to line Y
->>>>>> -user writes LBA=N to line X
->>>>>> -we have power failure when both line X and Y were not written completely
->>>>>> -during pblk creation we are executing OOB metadata recovery
->>>>>> And here is the question, how we distinguish whether LBA=N from line Y or LBA=N from line X is the valid one?
->>>>>> Line X and Y might have seq_id either descending or ascending - this would create two possible scenarios too.
->>>>>>
->>>>>> Thanks
->>>>>> Igor
->>>>>
->>>>> You are right, I think this is possible in the current implementation.
->>>>>
->>>>> We need an extra constrain so that we only GC lines above the GC line
->>>>> ID. This way, when we order lines on recovery, we can guarantee
->>>>> consistency. This means potentially that we would need several open
->>>>> lines for GC to avoid padding in case this constrain forces to choose a
->>>>> line with an ID higher than the GC line ID.
->>>>>
->>>>> What do you think?
->>>>
->>>> I'm not sure yet about your approach, I need to think and analyze this a
->>>> little more.
->>>>
->>>> I also believe that probably we need to ensure that current user data
->>>> line seq_id is always above the current GC line seq_id or sth like that.
->>>> We cannot also then GC any data from the lines which are still open, but
->>>> I believe that this is a case even right now.
->>>>
->>>>> Thanks,
->>>>> Javier
+---
+Best Regards, Laurentiu
