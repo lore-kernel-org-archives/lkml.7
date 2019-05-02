@@ -2,143 +2,189 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE8BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 03:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A38C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 03:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA402081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 03:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556768556;
-	bh=ApmPWhKcbXqiUmCqMT7flsb2t6g+TFEMVI5IYvB+0aM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UhhHYD+9+piVGYZHywunNTfzuuOOEpkPl1MQINzDzawavCNVm/0SJaAemauylQCHZ
-	 Sgzf9DA4t7Crv6j/LOTukDOZUCiOOTbf+8jWYLoUhJ9/WXjc/EIp2hOWbFkuuiwJxj
-	 WG3Pqv17RD4a/TO+0ZPqrD6cXS6ZFrjFezXrWASU=
+	by mail.kernel.org (Postfix) with ESMTP id 914332089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 03:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfEBDmR (ORCPT
+        id S1726249AbfEBD5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 23:42:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbfEBDmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 23:42:16 -0400
-Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 269D32081C;
-        Thu,  2 May 2019 03:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556768535;
-        bh=ApmPWhKcbXqiUmCqMT7flsb2t6g+TFEMVI5IYvB+0aM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NuW936WeaX+HEtMiWEAyxQLaLlidHsg44K4UqS0IuKqyabPiIUagL/3UKUZEWuBda
-         u4fKXo7hQTj/ql/5Xvg+s5yxLU4jqFR629CeqmbFmdWrHhjR8ds5BKksSIzZ1dC8kv
-         Dj7zFuDtojlc1rpEqiNV9HqasVtXYSv6dqdyGtZc=
-Date:   Wed, 1 May 2019 20:42:14 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: Re: linux-next: build failure after merge of the f2fs tree
-Message-ID: <20190502034214.GA37709@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190502105309.7ad51660@canb.auug.org.au>
+        Wed, 1 May 2019 23:57:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46684 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726186AbfEBD5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 23:57:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A63C2AC10;
+        Thu,  2 May 2019 03:57:13 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 02 May 2019 13:57:03 +1000
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
+        <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs\@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+In-Reply-To: <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
+References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com> <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com> <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com> <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com> <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com> <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com> <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com> <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name> <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
+Message-ID: <875zqt4igg.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502105309.7ad51660@canb.auug.org.au>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/02, Stephen Rothwell wrote:
-> Hi Jaegeuk,
-> 
-> After merging the f2fs tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> In file included from include/trace/define_trace.h:96,
->                  from include/trace/events/f2fs.h:1724,
->                  from fs/f2fs/super.c:35:
-> include/trace/events/f2fs.h: In function 'trace_raw_output_f2fs_filemap_fault':
-> include/trace/events/f2fs.h:1310:3: error: '_entry' undeclared (first use in this function); did you mean 'dentry'?
->    _entry->ret)
->    ^~~~~~
-> include/trace/trace_events.h:360:22: note: in definition of macro 'DECLARE_EVENT_CLASS'
->   trace_seq_printf(s, print);     \
->                       ^~~~~
-> include/trace/trace_events.h:79:9: note: in expansion of macro 'PARAMS'
->          PARAMS(print));         \
->          ^~~~~~
-> include/trace/events/f2fs.h:1287:1: note: in expansion of macro 'TRACE_EVENT'
->  TRACE_EVENT(f2fs_filemap_fault,
->  ^~~~~~~~~~~
-> include/trace/events/f2fs.h:1307:2: note: in expansion of macro 'TP_printk'
->   TP_printk("dev = (%d,%d), ino = %lu, index = %lu, ret = %lx",
->   ^~~~~~~~~
-> include/trace/events/f2fs.h:1310:3: note: each undeclared identifier is reported only once for each function it appears in
->    _entry->ret)
->    ^~~~~~
-> include/trace/trace_events.h:360:22: note: in definition of macro 'DECLARE_EVENT_CLASS'
->   trace_seq_printf(s, print);     \
->                       ^~~~~
-> include/trace/trace_events.h:79:9: note: in expansion of macro 'PARAMS'
->          PARAMS(print));         \
->          ^~~~~~
-> include/trace/events/f2fs.h:1287:1: note: in expansion of macro 'TRACE_EVENT'
->  TRACE_EVENT(f2fs_filemap_fault,
->  ^~~~~~~~~~~
-> include/trace/events/f2fs.h:1307:2: note: in expansion of macro 'TP_printk'
->   TP_printk("dev = (%d,%d), ino = %lu, index = %lu, ret = %lx",
->   ^~~~~~~~~
-> 
-> Caused by commit
-> 
->   90a238561901 ("f2fs: add tracepoint for f2fs_filemap_fault()")
-> 
-> I have applied the following patch for today:
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Thu, 2 May 2019 10:44:46 +1000
-> Subject: [PATCH] f2fs: fix up for "f2fs: add tracepoint for
->  f2fs_filemap_fault()"
-> 
-> Fixes: 90a238561901 ("f2fs: add tracepoint for f2fs_filemap_fault()")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  include/trace/events/f2fs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-> index 6a53c793cf20..53b96f12300c 100644
-> --- a/include/trace/events/f2fs.h
-> +++ b/include/trace/events/f2fs.h
-> @@ -1307,7 +1307,7 @@ TRACE_EVENT(f2fs_filemap_fault,
->  	TP_printk("dev = (%d,%d), ino = %lu, index = %lu, ret = %lx",
->  		show_dev_ino(__entry),
->  		(unsigned long)__entry->index,
-> -		_entry->ret)
-> +		__entry->ret)
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-My bad. I was so hurried up. Uploaded again w/ fix.
+On Wed, May 01 2019, Amir Goldstein wrote:
+
+> On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
+>>
+>> On Tue, Dec 06 2016, J. Bruce Fields wrote:
+>>
+>> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
+>> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> w=
+rote:
+>> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
+>> >> > <andreas.gruenbacher@gmail.com> wrote:
+>> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gruenba=
+cher@gmail.com>:
+>> >> >
+>> >> >>> It's not hard to come up with a heuristic that determines if a
+>> >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignore=
+ the
+>> >> >>> attribute in that case. (The file mode is transmitted in its own
+>> >> >>> attribute already, so actually converting .) That way, overlayfs =
+could
+>> >> >>> still fail copying up files that have an actual ACL. It's still an
+>> >> >>> ugly hack ...
+>> >> >>
+>> >> >> Actually, that kind of heuristic would make sense in the NFS client
+>> >> >> which could then hide the "system.nfs4_acl" attribute.
+>> >> >
+>> >> > Even simpler would be if knfsd didn't send the attribute if not
+>> >> > necessary.  Looks like there's code actively creating the nfs4_acl =
+on
+>> >> > the wire even if the filesystem had none:
+>> >> >
+>> >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
+>> >> >     if (!pacl)
+>> >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+>> >> >
+>> >> > What's the point?
+>> >>
+>> >> That's how the protocol is specified.
+>> >
+>> > Yep, even if we could make that change to nfsd it wouldn't help the
+>> > client with the large number of other servers that are out there
+>> > (including older knfsd's).
+>> >
+>> > --b.
+>> >
+>> >> (I'm not saying that that's very helpful.)
+>> >>
+>> >> Andreas
+>>
+>> Hi everyone.....
+>>  I have a customer facing this problem, and so stumbled onto the email
+>>  thread.
+>>  Unfortunately it didn't resolve anything.  Maybe I can help kick things
+>>  along???
+>>
+>>  The core problem here is that NFSv4 and ext4 use different and largely
+>>  incompatible ACL implementations.  There is no way to accurately
+>>  translate from one to the other in general (common specific examples
+>>  can be converted).
+>>
+>>  This means that either:
+>>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
+>>       versa) or
+>>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
+>>       that is OK.
+>>
+>>  Silently not copying the ACLs is probably not a good idea as it might
+>>  result in inappropriate permissions being given away.
+>
+> For example? permissions given away to do what?
+> Note that ovl_permission() only check permissions of *mounter*
+> to read the lower NFS file and ovl_open()/ovl_read_iter() access
+> the lower file with *mounter* credentials.
+>
+> I might be wrong, but seems to me that once admin mounted
+> overlayfs with lower NFS, NFS ACLs are not being enforced at all
+> even before copy up.
+
+I guess it is just as well that copy-up fails then - if the lower-level
+permission check is being ignored.
+
+>
+>> So if the
+>>  sysadmin wants this (and some clearly do), they need a way to
+>>  explicitly say "I accept the risk".  If only standard Unix permissions
+>>  are used, there is no risk, so this seems reasonable.
+>>
+>>  So I would like to propose a new option for overlayfs
+>>     nocopyupacl:   when overlayfs is copying a file (or directory etc)
+>>         from the lower filesystem to the upper filesystem, it does not
+>>         copy extended attributes with the "system." prefix.  These are
+>>         used for storing ACL information and this is sometimes not
+>>         compatible between different filesystem types (e.g. ext4 and
+>>         NFSv4).  Standard Unix ownership permission flags (rwx) *are*
+>>         copied so this option does not risk giving away inappropriate
+>>         permissions unless the lowerfs uses unusual ACLs.
+>>
+>>
+>
+> I am wondering if it would make more sense for nfs to register a
+> security_inode_copy_up_xattr() hook.
+> That is the mechanism that prevents copying up other security.*
+> xattrs?
+
+No, I don't think that would make sense.
+Support some day support for nfs4 acls were added to ext4 (not a totally
+ridiculous suggestion).  We would then want NFS to allow it's ACLs to be
+copied up.
 
 Thanks,
-
->  );
->  
->  TRACE_EVENT(f2fs_writepages,
-> -- 
-> 2.20.1
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
+NeilBrown
 
 
+>
+> Thanks,
+> Amir.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzKao8ACgkQOeye3VZi
+gblRlBAAvBfk2jX/vg9m1uaP0EEz3Ta0ixcKfA562CyVPtxCJ1i2folavvKXbA7i
+zUK9ZURimMkmGoN06wIepjCJRaaCA3G9Q2fw03Z2+LQdzecbfzsWKNQgITJ5IUP9
+q3114hOw+oKFPMKDpJBYqwWQfP0gc7mTC114UhTm8gpBfbSwNVeNFzNYO+XX7cjx
+VLVvzjNXNgTcSRv3ojhcR3nKE29eCwGlQM4Adr0GEcvUW6lfh/6A89jEHegXmH+j
+AJ+15UjNSMNB2MXMT0hZ1GVj1DFPfSu64iP1ZRInVVnYGSphp0EB3atok65dDWU7
+TxCgvHU1mOXb8wXY2zQxF+XxZ1Mw+70ADX2JVhFYqJ/aT4FKH9xeHg+AGgXZOv0s
+0GhTLr5ffcVDLCcD+Q0MGvEMJDlVEwrjzt8gFNtXbhAQSumkURuDWqJlen+M6GAn
+jN0+qRbDZ3fKdlLQOLVdwgdeAxSZmLMPnnbNwt6REFiT7htF67sQUY1wA04lh4o0
+rnodztakNYHAUdxM/9mUH66UZuWGvKG7ap+VHjawvboIW788iKLuhAz4PsFyBJW3
+v+RMsD/4H2EvrSQN1IzeU5qz1HiPdsbF3QgkFLuciEpfIs8nkNKnnWViNC/hB7tn
+Q+VRDogKoYelNX3tlq4812N2EccBkTbQykyayhMiEvzugKsmDvA=
+=eO7x
+-----END PGP SIGNATURE-----
+--=-=-=--
