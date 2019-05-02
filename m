@@ -2,152 +2,162 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D99C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C0AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2774208C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkDrQqdz"
+	by mail.kernel.org (Postfix) with ESMTP id 53C672085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfEBGpt (ORCPT
+        id S1726300AbfEBGzY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 02:45:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39582 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbfEBGps (ORCPT
+        Thu, 2 May 2019 02:55:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38680 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfEBGzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 02:45:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n25so1071498wmk.4;
-        Wed, 01 May 2019 23:45:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q5TbwoEekfcdWv0mvvbYsS+6EAW/pbX53UiDfesuTQE=;
-        b=NkDrQqdzsz7vqv7J7Z+qWoH4I7sKeTclvlPsys8BOFZ/pGQEYnXZiqU468Xukcb5ej
-         EaTL3lS7Ua692kp9CFF3u5r8eLdUc9fAq9fA2aMWDK22JbzSO6AvHTTUOTiUcg5mb8hv
-         n7afcTWrB5ZVtZLFViHCYbdHOwFb2ujoIWMc23aM9q3zlVlfdqYktm8mshhlYmhvtA/u
-         n4D2ltETl+EXDtC2UY+W71va/YDbalvSMIpcC4oidwuT0LzdvKhS62Xkc6PklohFVSjl
-         b9H9uGD+Ao4lz/rzP/fvn2hWFSaH7iawNpgUJsrD5NcEyDRVqpmovOAQiU8NViCtYGx/
-         uoRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q5TbwoEekfcdWv0mvvbYsS+6EAW/pbX53UiDfesuTQE=;
-        b=g8IAIl0WWRn+WHDcxtHYRiAGtj5/IfR0TXZS0ryOrD49gyhe6wRgdrs0M6+14/jUZJ
-         8fH7pxpPIU9b9vazSVZd65lPqhykTKUl/oCdSCVBcoJiXaGAQyr/eI1rnPNKUYeCFrEA
-         bUYkncPPafA1dnwnNNUTe32Z0CAGZx29t1no782TC3HEffv4vOqKSVLHpJA9MRCPObr4
-         1mdWl1wtthTFlc7sZZ2QPwW6r056PTMgMhjrCwzoWL2NMFxCdtFHSVzDmt89D0uAi2pT
-         KXMh6SzJFaoY6BkYUW3KbPrY/rnSZ7NPvY1GvK5iw7mp9pGT/sKhDTJHUa8Pz9lJ6Wf0
-         BMSg==
-X-Gm-Message-State: APjAAAX3HU9T9aAYouzmyaGIeeRR4+7EOCb5grskSa9eoJJ1apiYav/x
-        4On8jp/NVkeJ2KIbrN87srDFNVjwxhOCE7bSC/k=
-X-Google-Smtp-Source: APXvYqxacmpdifyZqaQ70wlBxsip7duNZrsQz8yyYGYo8OFOM9BWyr7LJEEvIFkHeyZpTzKAL1znrY1h3nxxfQ8EWdM=
-X-Received: by 2002:a1c:f719:: with SMTP id v25mr1087705wmh.90.1556779545217;
- Wed, 01 May 2019 23:45:45 -0700 (PDT)
+        Thu, 2 May 2019 02:55:24 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 544E2261282;
+        Thu,  2 May 2019 07:55:21 +0100 (BST)
+Date:   Thu, 2 May 2019 08:55:18 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Tomasz Figa <tomasz.figa@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
+        David Woodhouse <dwmw2@infradead.org>,
+        computersforpeace@gmail.com, marek.vasut@gmail.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 4/5] dt-binding: mtd: onenand/samsung: Add device tree
+ support
+Message-ID: <20190502085518.5d248167@collabora.com>
+In-Reply-To: <CA+Ln22H4ua9Zuh4eKaWfHtqh8DieyiS=5s7wS6-TbmA5Dsop4A@mail.gmail.com>
+References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
+        <20190426164224.11327-5-pawel.mikolaj.chmiel@gmail.com>
+        <20190502015408.GA11612@bogus>
+        <CA+Ln22HLqnbbY37FG6CwjZvZH7G35Z+0kNq7XFU4WtZyk_EqZQ@mail.gmail.com>
+        <20190502083632.0ec0fb4e@collabora.com>
+        <CA+Ln22H4ua9Zuh4eKaWfHtqh8DieyiS=5s7wS6-TbmA5Dsop4A@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190227202658.197113-1-matthewgarrett@google.com>
- <20190227202658.197113-3-matthewgarrett@google.com> <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
- <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com> <CACdnJuvYAfFboej4e5jQ=iwhb-5Pi7BgSKEWGqJ0q=uarCoOfQ@mail.gmail.com>
-In-Reply-To: <CACdnJuvYAfFboej4e5jQ=iwhb-5Pi7BgSKEWGqJ0q=uarCoOfQ@mail.gmail.com>
-From:   Bartosz Szczepanek <barteks7r@gmail.com>
-Date:   Thu, 2 May 2019 08:45:34 +0200
-Message-ID: <CAJzaN5ofshg4KseGhOL2LSLDQNoAHC6Ve25gpgWU69bEfBq1fw@mail.gmail.com>
-Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Second patch tries to unmap "mapping" which is not declared. I'm on
-top of jjs/master and your TPM_MEMREMAP patches are already there, so
-the first patch applied cleanly. Using it, kernel still panicked on
-boot:
+On Thu, 2 May 2019 15:42:59 +0900
+Tomasz Figa <tomasz.figa@gmail.com> wrote:
 
-EFI stub: Booting Linux Kernel...
-EFI stub: EFI_RNG_PROTOCOL unavailable, no randomness supplied
-EFI stub: Using DTB from configuration table
-EFI stub: Exiting boot services and installing virtual address map...
-[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x420f5162]
-[    0.000000] Linux version 5.1.0-rc2+ (root@localhost.localdomain)
-(gcc version 7.3.1 20180712 (Red Hat 7.3.1-6) (GCC)) #78 SMP Wed May 1
-01:05:38 EDT 2019
-[    0.000000] earlycon: pl11 at MMIO 0x0000000402020000 (options '115200n8')
-[    0.000000] printk: bootconsole [pl11] enabled
-[    0.000000] efi: Getting EFI parameters from FDT:
-[    0.000000] efi: EFI v2.60 by Cavium Inc.
-TX2-FW-Release-7.2-build_08-0-g14f8c5bf8a Apr 15 2019 18:51:41
-[    0.000000] efi:  TPMFinalLog=0xed5f0000  SMBIOS=0xfad90000  SMBIOS
-3.0=0xed530000  ACPI 2.0=0xeda90000  ESRT=0xfafdb218
-MEMATTR=0xf8489018  TPMEventLog=0xedaa9018  MEMRESERVE=0xedaa8018
-[    0.000000] Unhandled fault at 0xffff7dfffe77a018
-[    0.000000] Mem abort info:
-[    0.000000]   ESR = 0x96000003
-[    0.000000]   Exception class = DABT (current EL), IL = 32 bits
-[    0.000000]   SET = 0, FnV = 0
-[    0.000000]   EA = 0, S1PTW = 0
-[    0.000000] Data abort info:
-[    0.000000]   ISV = 0, ISS = 0x00000003
-[    0.000000]   CM = 0, WnR = 0
-[    0.000000] swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
-[    0.000000] [ffff7dfffe77a018] pgd=0000000081b12003
-[    0.000000] ------------[ cut here ]------------
-[    0.000000] kernel BUG at arch/arm64/mm/fault.c:189!
-[    0.000000] Internal error: Oops - BUG: 0 [#1] SMP
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.1.0-rc2+ #78
-[    0.000000] pstate: 60400089 (nZCv daIf +PAN -UAO)
-[    0.000000] pc : show_pte+0x1d0/0x1f0
-[    0.000000] lr : show_pte+0x88/0x1f0
-[    0.000000] sp : ffff000011533b30
-[    0.000000] x29: ffff000011533b30 x28: ffff0000115473c0
-[    0.000000] x27: ffff000011542500 x26: ffff7dfffe73a010
-[    0.000000] x25: 0000000000000018 x24: 0000000000000025
-[    0.000000] x23: 00000000000000fb x22: ffff0000117fc000
-[    0.000000] x21: ffff000010f32000 x20: ffffffffffffffff
-[    0.000000] x19: ffff7dfffe77a018 x18: ffffffffffffffff
-[    0.000000] x17: 0000000000000000 x16: 0000000000000000
-[    0.000000] x15: ffff00001153d708 x14: ffff00001172f420
-[    0.000000] x13: ffff00001172f069 x12: ffff000011568000
-[    0.000000] x11: ffff000011533800 x10: ffff000011533800
-[    0.000000] x9 : ffff00001153ef58 x8 : 303030303030303d
-[    0.000000] x7 : 646770205d383130 x6 : ffff00001172e7ff
-[    0.000000] x5 : 0000000000000000 x4 : 0000000000000000
-[    0.000000] x3 : 0000000000000000 x2 : 0000000000000000
-[    0.000000] x1 : 0000000081b12000 x0 : 0000000000000ff8
-[    0.000000] Process swapper (pid: 0, stack limit = 0x(____ptrval____))
-[    0.000000] Call trace:
-[    0.000000]  show_pte+0x1d0/0x1f0
-[    0.000000]  do_mem_abort+0xa8/0xb0
-[    0.000000]  el1_da+0x20/0xc4
-[    0.000000]  efi_tpm_eventlog_init+0xe8/0x268
-[    0.000000]  efi_config_parse_tables+0x180/0x29c
-[    0.000000]  uefi_init+0x1d0/0x22c
-[    0.000000]  efi_init+0x90/0x180
-[    0.000000]  setup_arch+0x1f4/0x5fc
-[    0.000000]  start_kernel+0x90/0x51c
-[    0.000000] Code: 910d6000 94030b20 17ffffe6 d503201f (d4210000)
-[    0.000000] random: get_random_bytes called from
-print_oops_end_marker+0x54/0x70 with crng_init=0
-[    0.000000] ---[ end trace 0000000000000000 ]---
-[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
-[    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill
-the idle task! ]---
+> 2019年5月2日(木) 15:36 Boris Brezillon <boris.brezillon@collabora.com>:
+> >
+> > Hi Tomasz,
+> >
+> > On Thu, 2 May 2019 15:23:33 +0900
+> > Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> >  
+> > > 2019年5月2日(木) 10:54 Rob Herring <robh@kernel.org>:  
+> > > >
+> > > > On Fri, Apr 26, 2019 at 06:42:23PM +0200, Paweł Chmiel wrote:  
+> > > > > From: Tomasz Figa <tomasz.figa@gmail.com>
+> > > > >
+> > > > > This patch adds dt-bindings for Samsung OneNAND driver.
+> > > > >
+> > > > > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> > > > > Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > > > > ---
+> > > > >  .../bindings/mtd/samsung-onenand.txt          | 46 +++++++++++++++++++
+> > > > >  1 file changed, 46 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > > > > new file mode 100644
+> > > > > index 000000000000..341d97cc1513
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > > > > @@ -0,0 +1,46 @@
+> > > > > +Device tree bindings for Samsung SoC OneNAND controller
+> > > > > +
+> > > > > +Required properties:
+> > > > > + - compatible : value should be either of the following.
+> > > > > +   (a) "samsung,s3c6400-onenand" - for onenand controller compatible with
+> > > > > +       S3C6400 SoC,
+> > > > > +   (b) "samsung,s3c6410-onenand" - for onenand controller compatible with
+> > > > > +       S3C6410 SoC,
+> > > > > +   (c) "samsung,s5pc100-onenand" - for onenand controller compatible with
+> > > > > +       S5PC100 SoC,
+> > > > > +   (d) "samsung,s5pv210-onenand" - for onenand controller compatible with
+> > > > > +       S5PC110/S5PV210 SoCs.
+> > > > > +
+> > > > > + - reg : two memory mapped register regions:
+> > > > > +   - first entry: control registers.
+> > > > > +   - second and next entries: memory windows of particular OneNAND chips;
+> > > > > +     for variants a), b) and c) only one is allowed, in case of d) up to
+> > > > > +     two chips can be supported.
+> > > > > +
+> > > > > + - interrupt-parent : phandle of interrupt controller to which the OneNAND
+> > > > > +   controller is wired,  
+> > > >
+> > > > This is implied and can be removed.
+> > > >  
+> > > > > + - interrupts : specifier of interrupt signal to which the OneNAND controller
+> > > > > +   is wired; should contain just one entry.
+> > > > > + - clock-names : should contain two entries:
+> > > > > +   - "bus" - bus clock of the controller,
+> > > > > +   - "onenand" - clock supplied to OneNAND memory.  
+> > > >
+> > > > If the clock just goes to the OneNAND device, then it should be in the
+> > > > nand device node rather than the controller node.
+> > > >  
+> > >
+> > > (Trying hard to recall the details about this hardware.)
+> > > AFAIR the clock goes to the controller and the controller then feeds
+> > > it to the memory chips.
+> > >
+> > > Also I don't think we should have any nand device nodes here, since
+> > > the memory itself is only exposed via the controller, which offers
+> > > various queries to probe the memory at runtime, so there is no need to
+> > > describe it in DT.  
+> >
+> > It's probably true, though not providing this controller/device
+> > separation for NAND controller/devices has proven to be a mistake for
+> > raw NAND controllers (some props apply to the controllers and others to
+> > the NAND device, not to mention that some controllers support
+> > interacting with several chips), so, if that's a new binding, I'd
+> > recommend having this separation even if it's not strictly required.
+> >  
+> 
+> Note that OneNAND is a totally different thing than the typical NAND
+> memory with NAND interface. OneNAND chips have a NOR-like interface,
+> with internal controller and buffers inside, so technically they can
+> be even used without any special controller on the SoC, via a generic
+> parallel host interface and possibly some regular DMA engine for CPU
+> offload.
+
+Yes, I know that.
+
+> 
+> The controller design of the SoCs in question further abstracts the
+> OneNAND's programming interface into a number of high level operations
+> and attempts to hide the details of the underlying memory, so I don't
+> see the point of describing the memory in DT here, it would actually
+> defeat the purpose of this controller.
+
+I don't see how having a subnode for the NAND chip would change
+anything on how the controller interacts with the NAND device. My point
+is, if we ever need to add props that apply to the device rather than
+the controller itself, having a single node to represent both elements
+is not that great.
