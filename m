@@ -2,83 +2,72 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5730CC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53648C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2602081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D4320C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VBKWWoTI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QQ7tllZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfEBQz2 (ORCPT
+        id S1726833AbfEBQzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:55:28 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36810 "EHLO mail.skyhub.de"
+        Thu, 2 May 2019 12:55:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52471 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbfEBQz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:55:27 -0400
-Received: from zn.tnic (p200300EC2F0E5C0069C19C6EF142D33D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:5c00:69c1:9c6e:f142:d33d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BCC4F1EC0B6E;
-        Thu,  2 May 2019 18:55:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556816125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=PIj7f6Vl60nev2X9MXU4zduEfn5AFhZWx8S2Y6kNuFY=;
-        b=VBKWWoTIRwRO+so2mNIFiuv8DEQ6x8Qop4ZdrGzhLGe8Vdx05fFvBonbB421hMEH5dJazr
-        S1PF1s6nvBExTETc0yN0/MFoCLJ5k6yb64/Y1aKrNFbRQNl7GWui1P/bUmi5oXr7be2fnT
-        UBPZT7LFq3M9ZunTN78JNPDNKgl22nU=
-Date:   Thu, 2 May 2019 18:55:20 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-Message-ID: <20190502165520.GC6565@zn.tnic>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
- <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
- <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com>
+        id S1726193AbfEBQzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:55:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=xMqzWPWYIN6jeOd3YVkBiCmwBqYgASR2+g0UEvKZ2P4=; b=QQ7tllZlxmWjEuXWSr4a2ioKAC
+        vpAwCvBriqVDIYwJdYna1C6EGvz4pzbJpnFWZ3euQ9D/PMIOPMtu0y9iyoLmkpJHHO2aYo5ohas3b
+        Ju/w4dGj0jXgCzVUXMI13hFoeHCoSasBeRLiLWU/0uepkuK1W5wxWqOmOti2+gfmWlaI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hMEza-0001Tk-BB; Thu, 02 May 2019 18:55:30 +0200
+Date:   Thu, 2 May 2019 18:55:30 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        vivien.didelot@gmail.com, netdev <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 net-next 00/12] NXP SJA1105 DSA driver
+Message-ID: <20190502165530.GJ19809@lunn.ch>
+References: <20190429001706.7449-1-olteanv@gmail.com>
+ <20190430.234425.732219702361005278.davem@davemloft.net>
+ <CA+h21hrmXaAAepTrY-HfbrmZPVRf3Qg1-fA8EW4prwSkrGYogQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+h21hrmXaAAepTrY-HfbrmZPVRf3Qg1-fA8EW4prwSkrGYogQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 09:29:01AM -0700, Andy Lutomirski wrote:
-> I'm not saying that we should export things for ZFS's benefit.  But,
-> as far as I know, _GPL means "this interface is sufficiently specific
-> to Linux details that we think that any user must be a derived work".
-> I don't think that kernel_fpu_begin() is an example of that.
+> Wow I am sorry, Gmail apparently moved your reply to spam and I only
+> got it when I posted my message just now.
+> Do you know what causes these whitespace errors, so I can avoid them
+> next time? I think I'm generating my patches rather normally, with
+> $(git format-patch -12 --subject-prefix="PATCH v4 net-next"
+> --cover-letter).
 
-But it is sufficiently specific. It is present on x86 and s390 only -
-other arches don't have it.
+What happens when you run checkpatch on the patches? Does it report
+white space problems.
 
--- 
-Regards/Gruss,
-    Boris.
+Another possibility is your email system has mangled the patches.
+First try applying the patches you generated from format-patch to a
+clean tree. If you don't get any warnings, email the patches to
+yourself, and then apply them.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+     Andrew
