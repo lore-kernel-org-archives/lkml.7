@@ -4,61 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B00AC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91173C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDEF821734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6054621734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763623;
-	bh=vdf56QCrDHkK4clC6bSoLTgsaqCWOakMwyYtHadA+18=;
+	s=default; t=1556763628;
+	bh=Fy2nUASNFehmDOInZXuStOpyE85EnD0tSvbyZRWVvfA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=aA1zLc1FzDwp9z/jpY2RkLmaUZB9sAjwnuegLiy/5ELqKcDh/PtM9VCzCJMVN2HET
-	 kyfoAQyErDyBQnmcpPBN+cbHoDVtRcWMPmdyLjEvS0dHhwEuODNDQza8ldHsd1IpFr
-	 vP2PNSY3H6X5wGTCyUV37RowW+V5TZWughixWSMs=
+	b=V4bpF6XEPYXaRKIH8joZvQTsKZoIOcLBXfPMtXiLGhI95CQQ4eXtfbihT4YUViuL6
+	 aXGGB1ZWXZm7ckjE+C8DkO3gaB7eLnpwIYymf77DLji2nToaIxkny0CK61C+iTw5L3
+	 cl0AX+3R6+ja1zE/vMWPxj7X1RKZ24zaORsxLHlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfEBCUW (ORCPT
+        id S1726597AbfEBCTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:20:22 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56768 "EHLO
+        Wed, 1 May 2019 22:19:09 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56422 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfEBCTK (ORCPT
+        with ESMTP id S1726520AbfEBCTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:19:10 -0400
+        Wed, 1 May 2019 22:19:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=EVE8bSshKnItl0eubjnAOH03ySne216GQtby64RJnLw=; b=o/KTDwk9QvFN
-        JbyIwDUjCkoApEnDiMcp9eGEfksDBNbbkmixJ9q/eSkc5uf5H6M0obEMaeddqAgL8hk/PRnu4e9Te
-        5mKxR1TIbJaifkAs6AjbZ1aGIhQliBJMt8vkmthjnB1bHjAT38RgLDP9jzaUe7RLx+kCGXaUb4K+M
-        JYbLE=;
+        List-Archive; bh=s/aeLHmcSaCGZGW2T/ryaeA0ktI3wfHggwlvpiCdiGs=; b=pBr7tviub0M4
+        Y7B+GAiIE0/H/6glIphSg1+JN79huRE/j+YTI3NQ8U8Ngjerot3AmpFSTaWjMQnGMlH6D7sZc9AUF
+        3KdkDIC/cUuL6ULBrrDQkXR65KG+hNHiJxGyDwLWrIXCheEHEoXTtb4tYDKdoVda2u6WvOL4XHiHy
+        b4dDw=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1JJ-0005ul-Lx; Thu, 02 May 2019 02:18:58 +0000
+        id 1hM1J8-0005tL-2M; Thu, 02 May 2019 02:18:46 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id C9DFB441D3C; Thu,  2 May 2019 03:18:54 +0100 (BST)
+        id 03B03441D3B; Thu,  2 May 2019 03:18:43 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Fabien Dessenne <fabien.dessenne@st.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Applied "spi: stm32: return the get_irq error" to the spi tree
-In-Reply-To: <1556109524-21874-1-git-send-email-fabien.dessenne@st.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        festevam@gmail.com, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com,
+        perex@perex.cz, timur@kernel.org, tiwai@suse.com,
+        Xiubo.Lee@gmail.com
+Subject: Applied "ASoC: fsl_micfil: Remove set but not used variable 'osr'" to the asoc tree
+In-Reply-To:  <20190417150915.37968-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021854.C9DFB441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:54 +0100 (BST)
+Message-Id: <20190502021843.03B03441D3B@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:42 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: stm32: return the get_irq error
+   ASoC: fsl_micfil: Remove set but not used variable 'osr'
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,37 +90,42 @@ to this mail.
 Thanks,
 Mark
 
-From 8d1467a68426c61807c97163459b481ecb714523 Mon Sep 17 00:00:00 2001
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Date: Wed, 24 Apr 2019 14:38:44 +0200
-Subject: [PATCH] spi: stm32: return the get_irq error
+From a0c34c7629bee46ffd8121987d27df25a6433cc7 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Wed, 17 Apr 2019 23:09:15 +0800
+Subject: [PATCH] ASoC: fsl_micfil: Remove set but not used variable 'osr'
 
-During probe, return the "get_irq" error value instead of -ENOENT. This
-allows the driver to be defer probed if needed.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Acked-by: Amelie Delaunay <amelie.delaunay@st.com>
+sound/soc/fsl/fsl_micfil.c: In function 'get_clk_div':
+sound/soc/fsl/fsl_micfil.c:154:6: warning: variable 'osr' set but not used [-Wunused-but-set-variable]
+
+It is never used since introduction in
+commit 47a70e6fc9a8 ("ASoC: Add MICFIL SoC Digital Audio Interface driver.")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-stm32.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/soc/fsl/fsl_micfil.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 4186ed20d796..b222ce8d083e 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -1839,8 +1839,9 @@ static int stm32_spi_probe(struct platform_device *pdev)
+diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
+index 40c07e756481..f7f2d29f1bfe 100644
+--- a/sound/soc/fsl/fsl_micfil.c
++++ b/sound/soc/fsl/fsl_micfil.c
+@@ -151,12 +151,9 @@ static inline int get_clk_div(struct fsl_micfil *micfil,
+ {
+ 	u32 ctrl2_reg;
+ 	long mclk_rate;
+-	int osr;
+ 	int clk_div;
  
- 	spi->irq = platform_get_irq(pdev, 0);
- 	if (spi->irq <= 0) {
--		dev_err(&pdev->dev, "no irq: %d\n", spi->irq);
--		ret = -ENOENT;
-+		ret = spi->irq;
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "failed to get irq: %d\n", ret);
- 		goto err_master_put;
- 	}
- 	ret = devm_request_threaded_irq(&pdev->dev, spi->irq,
+ 	regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
+-	osr = 16 - ((ctrl2_reg & MICFIL_CTRL2_CICOSR_MASK)
+-		    >> MICFIL_CTRL2_CICOSR_SHIFT);
+ 
+ 	mclk_rate = clk_get_rate(micfil->mclk);
+ 
 -- 
 2.20.1
 
