@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D66C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496DEC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6685220675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2043320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811162;
-	bh=k4+S0ew6Ouj4ybxeRKaDzF9S1RhQIjIaFrWOyEUVUB8=;
+	s=default; t=1556811165;
+	bh=IrfZlWArowlj4XAYmIMnowmF9GVSWBoqIzTFQcWYWMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=htzYwgGqiLdP0Bxni1PCvCJNNI/tR97KUwjSRfwr9N8O/XSQvqMNtsJYLo3g+UDcw
-	 iMdPJuQ+hq7z9/fNXkz/9Z2uGB7AA3qifKSB+47FoRhfN17uRZoISBBVJ1Qg1C16LR
-	 z7EM7WLsamYBYcJrgqs+PsWEXOoSUNqS7i8lF0xQ=
+	b=pcCcPKuzk7MOd9dFcXLFAVWNYATNxleNu2ew9IVe3dISgY21O1iM7awEKAEDv6q4l
+	 aB0sp0IUkpgHZ+jZzSl13tJuImCYwioyvg1CAdCbgf/8lg9MXjXAMETCKUVDG0VZA8
+	 BIhbKtNCziNeke/Ys/tq16AZqvmkPuvlLbLkAsdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfEBPck (ORCPT
+        id S1729244AbfEBPcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:32:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:32:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729222AbfEBPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:32:37 -0400
+        id S1729234AbfEBPck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5CCD20C01;
-        Thu,  2 May 2019 15:32:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D562214DA;
+        Thu,  2 May 2019 15:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811157;
-        bh=k4+S0ew6Ouj4ybxeRKaDzF9S1RhQIjIaFrWOyEUVUB8=;
+        s=default; t=1556811159;
+        bh=IrfZlWArowlj4XAYmIMnowmF9GVSWBoqIzTFQcWYWMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yqb154dsDWR2g8WIzy5UEiQ6NlIq3eG/vDJ+I2u9U6yDIbQWazTV8QND4y6fjr9Ac
-         jxJltvnJ0uz68Vd/Ix3YIvlF3mKnpKC0bQKXZFeEq2OSRtT+J4mhgzXhU2IqIjxzYn
-         mIzoB+JJBRdHeGtJnMbwVWMRa7gDMoMd/aX2Z5bg=
+        b=f9FuVaCnAX/etNBR3if3IsLb+CuHXw3Rrp7HfLoQtHJZzxGVIyLcuauKiDstytyEW
+         LAT3DjOikibgWo8zcg/yxlZ3JfzBbCAJEXcJQL7qISNfv3rvghp30SbBZcx2bF4ZMT
+         FsvwFMBICRnFdf/7akugI7tdSCapThcU6JzLeG/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 096/101] kconfig/[mn]conf: handle backspace (^H) key
-Date:   Thu,  2 May 2019 17:21:38 +0200
-Message-Id: <20190502143346.293306876@linuxfoundation.org>
+Subject: [PATCH 5.0 070/101] leds: trigger: netdev: fix refcnt leak on interface rename
+Date:   Thu,  2 May 2019 17:21:12 +0200
+Message-Id: <20190502143344.567363208@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,63 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
+[ Upstream commit 4cb6560514fa19d556954b88128f3846fee66a03 ]
 
-Backspace is not working on some terminal emulators which do not send the
-key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
-But currently only '^?' is handled. Let's also handle '^H' for those
-terminals.
+Renaming a netdev-trigger-tracked interface was resulting in an
+unbalanced dev_hold().
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Example:
+> iw phy phy0 interface add foo type __ap
+> echo netdev > trigger
+> echo foo > device_name
+> ip link set foo name bar
+> iw dev bar del
+[  237.355366] unregister_netdevice: waiting for bar to become free. Usage count = 1
+[  247.435362] unregister_netdevice: waiting for bar to become free. Usage count = 1
+[  257.545366] unregister_netdevice: waiting for bar to become free. Usage count = 1
+
+Above problem was caused by trigger checking a dev->name which obviously
+changes after renaming an interface. It meant missing all further events
+including the NETDEV_UNREGISTER which is required for calling dev_put().
+
+This change fixes that by:
+1) Comparing device struct *address* for notification-filtering purposes
+2) Dropping unneeded NETDEV_CHANGENAME code (no behavior change)
+
+Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- scripts/kconfig/lxdialog/inputbox.c | 3 ++-
- scripts/kconfig/nconf.c             | 2 +-
- scripts/kconfig/nconf.gui.c         | 3 ++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/leds/trigger/ledtrig-netdev.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
-index 611945611bf8..1dcfb288ee63 100644
---- a/scripts/kconfig/lxdialog/inputbox.c
-+++ b/scripts/kconfig/lxdialog/inputbox.c
-@@ -113,7 +113,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
- 			case KEY_DOWN:
- 				break;
- 			case KEY_BACKSPACE:
--			case 127:
-+			case 8:   /* ^H */
-+			case 127: /* ^? */
- 				if (pos) {
- 					wattrset(dialog, dlg.inputbox.atr);
- 					if (input_x == 0) {
-diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
-index a4670f4e825a..ac92c0ded6c5 100644
---- a/scripts/kconfig/nconf.c
-+++ b/scripts/kconfig/nconf.c
-@@ -1048,7 +1048,7 @@ static int do_match(int key, struct match_state *state, int *ans)
- 		state->match_direction = FIND_NEXT_MATCH_UP;
- 		*ans = get_mext_match(state->pattern,
- 				state->match_direction);
--	} else if (key == KEY_BACKSPACE || key == 127) {
-+	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
- 		state->pattern[strlen(state->pattern)-1] = '\0';
- 		adj_match_dir(&state->match_direction);
- 	} else
-diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
-index 7be620a1fcdb..77f525a8617c 100644
---- a/scripts/kconfig/nconf.gui.c
-+++ b/scripts/kconfig/nconf.gui.c
-@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
- 		case KEY_F(F_EXIT):
- 		case KEY_F(F_BACK):
- 			break;
--		case 127:
-+		case 8:   /* ^H */
-+		case 127: /* ^? */
- 		case KEY_BACKSPACE:
- 			if (cursor_position > 0) {
- 				memmove(&result[cursor_position-1],
+diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+index 3dd3ed46d473..167a94c02d05 100644
+--- a/drivers/leds/trigger/ledtrig-netdev.c
++++ b/drivers/leds/trigger/ledtrig-netdev.c
+@@ -301,11 +301,11 @@ static int netdev_trig_notify(struct notifier_block *nb,
+ 		container_of(nb, struct led_netdev_data, notifier);
+ 
+ 	if (evt != NETDEV_UP && evt != NETDEV_DOWN && evt != NETDEV_CHANGE
+-	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER
+-	    && evt != NETDEV_CHANGENAME)
++	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER)
+ 		return NOTIFY_DONE;
+ 
+-	if (strcmp(dev->name, trigger_data->device_name))
++	if (!(dev == trigger_data->net_dev ||
++	      (evt == NETDEV_REGISTER && !strcmp(dev->name, trigger_data->device_name))))
+ 		return NOTIFY_DONE;
+ 
+ 	cancel_delayed_work_sync(&trigger_data->work);
+@@ -320,12 +320,9 @@ static int netdev_trig_notify(struct notifier_block *nb,
+ 		dev_hold(dev);
+ 		trigger_data->net_dev = dev;
+ 		break;
+-	case NETDEV_CHANGENAME:
+ 	case NETDEV_UNREGISTER:
+-		if (trigger_data->net_dev) {
+-			dev_put(trigger_data->net_dev);
+-			trigger_data->net_dev = NULL;
+-		}
++		dev_put(trigger_data->net_dev);
++		trigger_data->net_dev = NULL;
+ 		break;
+ 	case NETDEV_UP:
+ 	case NETDEV_CHANGE:
 -- 
 2.19.1
 
