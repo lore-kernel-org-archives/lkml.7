@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9940C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18215C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE7020C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D226C21670
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811064;
-	bh=H4BmzPu75TbcvgMnOx08EDQr38HeGXYDIua4wtQW1U4=;
+	s=default; t=1556811067;
+	bh=mR+u4Caz6YnEub7R/AE3gj73TlqcHvIq8vNBjHJ9mjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPduHMv/drlE5/UHG2Bz6L1QEmqmy5bm8yBw35poYW82eKup8rVr3MU63ApoupgRC
-	 W3g1p595j4Ry0hMzRUuCfKWd09Exjce2M34i0k8O770cK2H8w27oqrLL18WfWIF7z7
-	 AjTU+5Gb10M5LDGSw1dT+qqtrVpY8/cRzf4d2R5s=
+	b=TGlkiGPq/KACT1mTKM1gvDoT9KTvkAet1jZeGR4hwL29HOjPmCz8l3ZsdOFNDdBfG
+	 RfmNpH53euVujkUORDNK1a/Rrc7Yr7i+hp12KWKKLoT2Af5uqwCPZfGnR/bb3cAF6T
+	 xoniLidsC8SeAAm94xsOzpQpLsK5n50vYHdB8NQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfEBPbD (ORCPT
+        id S1728935AbfEBPbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728901AbfEBPbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:31:01 -0400
+        id S1728922AbfEBPbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:31:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 743A820B7C;
-        Thu,  2 May 2019 15:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06565216FD;
+        Thu,  2 May 2019 15:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811061;
-        bh=H4BmzPu75TbcvgMnOx08EDQr38HeGXYDIua4wtQW1U4=;
+        s=default; t=1556811063;
+        bh=mR+u4Caz6YnEub7R/AE3gj73TlqcHvIq8vNBjHJ9mjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0vfiolCHnpUrzSqPJaeblTuMHax0UQrUPTTgAlhSu4lX2W07y+/RjNbGcRpPh5YQ
-         Sa0sbppFhIvbY/WDsKY7kpcoCyGzA98W7Ov4oTbSCTOyrehhmKVqFcaSI3Mfq6yuai
-         YFPUN8bBUka/lLeZW5EU6Ibo6WIePYYV+d0ZC/kw=
+        b=x01/xsX/+OG9JY7UQMHWFGNlG7s13uxUe73Uw6nkm4tuQIcEa9uNcDRcy40oRqa5O
+         5T9WsdciRuZkrt4CHaqTQ3kc+rRWrX6vdaW8Zyd7gIJPFQRYO2Jeooh0boTTAFlpm0
+         nj2oFnIPagWzpQZ6SGgIdUYzvD0myIlac43uo0lk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <sean@poorly.run>, Dave Airlie <airlied@redhat.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 058/101] net: ethernet: ti: fix possible object reference leak
-Date:   Thu,  2 May 2019 17:21:00 +0200
-Message-Id: <20190502143343.551515987@linuxfoundation.org>
+Subject: [PATCH 5.0 059/101] drm: Fix drm_release() and device unplug
+Date:   Thu,  2 May 2019 17:21:01 +0200
+Message-Id: <20190502143343.626814362@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -62,51 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 75eac7b5f68b0a0671e795ac636457ee27cc11d8 ]
+[ Upstream commit 3f04e0a6cfebf48152ac64502346cdc258811f79 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+If userspace has open fd(s) when drm_dev_unplug() is run, it will result
+in drm_dev_unregister() being called twice. First in drm_dev_unplug() and
+then later in drm_release() through the call to drm_put_dev().
 
-Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ti/netcp_ethss.c:3661:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
-./drivers/net/ethernet/ti/netcp_ethss.c:3665:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
+Since userspace already holds a ref on drm_device through the drm_minor,
+it's not necessary to add extra ref counting based on no open file
+handles. Instead just drm_dev_put() unconditionally in drm_dev_unplug().
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Wingman Kwok <w-kwok2@ti.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We now have this:
+- Userpace holds a ref on drm_device as long as there's open fd(s)
+- The driver holds a ref on drm_device as long as it's bound to the
+  struct device
+
+When both sides are done with drm_device, it is released.
+
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190208140103.28919-2-noralf@tronnes.org
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_drv.c  | 6 +-----
+ drivers/gpu/drm/drm_file.c | 6 ++----
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 5174d318901e..0a920c5936b2 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -3657,12 +3657,16 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 12e5e2be7890..7a59b8b3ed5a 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -381,11 +381,7 @@ void drm_dev_unplug(struct drm_device *dev)
+ 	synchronize_srcu(&drm_unplug_srcu);
  
- 	ret = netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
- 				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
+ 	drm_dev_unregister(dev);
+-
+-	mutex_lock(&drm_global_mutex);
+-	if (dev->open_count == 0)
+-		drm_dev_put(dev);
+-	mutex_unlock(&drm_global_mutex);
++	drm_dev_put(dev);
+ }
+ EXPORT_SYMBOL(drm_dev_unplug);
  
- 	ret = netcp_txpipe_open(&gbe_dev->tx_pipe);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
+diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+index 46f48f245eb5..3f20f598cd7c 100644
+--- a/drivers/gpu/drm/drm_file.c
++++ b/drivers/gpu/drm/drm_file.c
+@@ -479,11 +479,9 @@ int drm_release(struct inode *inode, struct file *filp)
  
- 	/* Create network interfaces */
- 	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
+ 	drm_file_free(file_priv);
+ 
+-	if (!--dev->open_count) {
++	if (!--dev->open_count)
+ 		drm_lastclose(dev);
+-		if (drm_dev_is_unplugged(dev))
+-			drm_put_dev(dev);
+-	}
++
+ 	mutex_unlock(&drm_global_mutex);
+ 
+ 	drm_minor_release(minor);
 -- 
 2.19.1
 
