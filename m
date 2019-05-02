@@ -2,114 +2,84 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA2CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02CAC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17752081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:43:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="EXLy1HDZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8A6FC2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfEBLnD (ORCPT
+        id S1726446AbfEBLnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 07:43:03 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:5179 "EHLO pegase1.c-s.fr"
+        Thu, 2 May 2019 07:43:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53490 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfEBLnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 07:43:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44vtg83SdBzB09ZH;
-        Thu,  2 May 2019 13:43:00 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=EXLy1HDZ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id KxwpglQ6XV5S; Thu,  2 May 2019 13:43:00 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44vtg82KKYzB09ZF;
-        Thu,  2 May 2019 13:43:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556797380; bh=cMkTXTCMVvl2JDSWZdRJlzPRMgw1uvnG3jkjZKVvvsk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EXLy1HDZv52mN/1dlOI3ETPX2N0L3qyIz1HsaOh/OyZ9yN0bXdxRFyNe84tECqkd+
-         sd/uksma7l8uPfYyZkNThvD/GsjFZI3suXI2876n57CgQ39O7jlfvQzCErWRKc3ga/
-         LPuKAgdU93mOX+1JFnoJjjxOVCX8/FPFZqpp0BFM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F5A18B8F7;
-        Thu,  2 May 2019 13:43:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Hd4E6wWeUzz0; Thu,  2 May 2019 13:43:01 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 49A5B8B899;
-        Thu,  2 May 2019 13:43:01 +0200 (CEST)
-Subject: Re: [PATCH v1 3/4] powerpc/mm: Move book3s32 specifics in
- subdirectory mm/book3s64
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <cover.1553853405.git.christophe.leroy@c-s.fr>
- <12c1ba4fc9e2e55ca44c5c57225669b296d48c74.1553853405.git.christophe.leroy@c-s.fr>
- <87tvedxfa6.fsf@concordia.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <9577f0d2-2447-5407-0b69-339a89cf40e1@c-s.fr>
-Date:   Thu, 2 May 2019 13:43:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726189AbfEBLnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 07:43:10 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 65D8089C42;
+        Thu,  2 May 2019 11:43:10 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 9F51739C1;
+        Thu,  2 May 2019 11:43:01 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  2 May 2019 13:43:08 +0200 (CEST)
+Date:   Thu, 2 May 2019 13:42:59 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>, jack@suse.com,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
+ current) with fsfreeze (4.19.25-rt16)
+Message-ID: <20190502114258.GB7323@redhat.com>
+References: <20190326093421.GA29508@localhost.localdomain>
+ <20190419085627.GI4742@localhost.localdomain>
+ <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
+ <20190430132811.GB2589@hirez.programming.kicks-ass.net>
+ <20190501170953.GB2650@hirez.programming.kicks-ass.net>
+ <20190502100932.GA7323@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <87tvedxfa6.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502100932.GA7323@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 02 May 2019 11:43:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05/02, Oleg Nesterov wrote:
+>
+> But this all is cosmetic, it seems that we can remove ->rw_sem altogether
+> but I am not sure...
+
+I mean, afaics percpu_down_read() can just do
+
+	wait_event(readers_block == 0);
+
+in the slow path, while percpu_down_write()
+
+	wait_even_exclusive(xchg(readers_block, 1) == 0);
+
+we do not really need ->rw_sem if we rely on wait_queue_head.
 
 
-Le 02/05/2019 à 13:32, Michael Ellerman a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> 
->> Several files in arch/powerpc/mm are only for book3S32. This patch
->> creates a subdirectory for them.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/mm/Makefile                            | 3 +--
->>   arch/powerpc/mm/book3s32/Makefile                   | 6 ++++++
->>   arch/powerpc/mm/{ => book3s32}/hash_low_32.S        | 0
->>   arch/powerpc/mm/{ => book3s32}/mmu_context_hash32.c | 0
->>   arch/powerpc/mm/{ => book3s32}/ppc_mmu_32.c         | 0
->>   arch/powerpc/mm/{ => book3s32}/tlb_hash32.c         | 0
->>   6 files changed, 7 insertions(+), 2 deletions(-)
->>   create mode 100644 arch/powerpc/mm/book3s32/Makefile
->>   rename arch/powerpc/mm/{ => book3s32}/hash_low_32.S (100%)
->>   rename arch/powerpc/mm/{ => book3s32}/mmu_context_hash32.c (100%)
->>   rename arch/powerpc/mm/{ => book3s32}/ppc_mmu_32.c (100%)
->>   rename arch/powerpc/mm/{ => book3s32}/tlb_hash32.c (100%)
-> 
-> I shortened them to:
-> 
->    arch/powerpc/mm/{hash_low_32.S => book3s32/hash_low.S}
->    arch/powerpc/mm/{ppc_mmu_32.c => book3s32/mmu.c}
+But in fact, either way it seems that we going to implement another simple
+"non owner" read/write lock, so perhaps we should do this explicitly?
 
-To be consistent with what you did in nohash/ dir, shouldn't we rename 
-the above 'ppc.c' or 'ppc_32.c' instead of 'mmu.c' ?
+Oleg.
 
-Christophe
-
->    arch/powerpc/mm/{mmu_context_hash32.c => book3s32/mmu_context.c}
->    arch/powerpc/mm/{tlb_hash32.c => book3s32/tlb.c}
-> 
-> cheers
-> 
