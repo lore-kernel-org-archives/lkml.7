@@ -2,105 +2,66 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEE6C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B191C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 917B22063F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05308206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfEBN4q (ORCPT
+        id S1726327AbfEBOBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:56:46 -0400
-Received: from mfb02-md.ns.itscom.net ([175.177.155.110]:50375 "EHLO
-        mfb02-md.ns.itscom.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBN4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:56:45 -0400
-X-Greylist: delayed 574 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 May 2019 09:56:44 EDT
-Received: from mail03-md.ns.itscom.net (mail03-md.ns.itscom.net [175.177.155.113])
-        by mfb02-md.ns.itscom.net (Postfix) with ESMTP id DCEB617489F8
-        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 22:47:10 +0900 (JST)
-Received: from cmsa01-mds.s.noc.itscom.net (cmsa01-md.ns.itscom.net [175.177.0.91])
-        by mail03-md-outgoing.ns.itscom.net (Postfix) with ESMTP id 4F3C4FF0530;
-        Thu,  2 May 2019 22:47:09 +0900 (JST)
-Received: from jromail.nowhere ([219.110.243.48])
-        by cmsa-md with ESMTP
-        id MC3JhjzYCz4K5MC3JhE3t5; Thu, 02 May 2019 22:47:09 +0900
-Received: from jro by jrobl id 1hMC3J-0000ZV-0P ; Thu, 02 May 2019 22:47:09 +0900
-From:   "J. R. Okajima" <hooanon05g@gmail.com>
-Subject: Re: [PATCH] OVL: add honoracl=off mount option.
-To:     NeilBrown <neilb@suse.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs\@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <8736lx4goa.fsf@notabene.neil.brown.name>
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com> <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com> <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com> <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com> <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com> <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com> <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com> <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name> <8736lx4goa.fsf@notabene.neil.brown.name>
+        Thu, 2 May 2019 10:01:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44032 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbfEBOBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:01:35 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC2A9307EA9F;
+        Thu,  2 May 2019 14:01:28 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id DE7E57D3E6;
+        Thu,  2 May 2019 14:01:24 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  2 May 2019 16:01:27 +0200 (CEST)
+Date:   Thu, 2 May 2019 16:01:22 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: remove asm-generic/ptrace.h
+Message-ID: <20190502140122.GC7323@redhat.com>
+References: <20190501173943.5688-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2199.1556804828.1@jrobl>
-Date:   Thu, 02 May 2019 22:47:08 +0900
-Message-ID: <2200.1556804828@jrobl>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501173943.5688-1-hch@lst.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 02 May 2019 14:01:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NeilBrown:
-> If the upper and lower layers use incompatible ACL formats, it is not
-> possible to copy the ACL xttr from one to the other, so overlayfs
-> cannot work with them.
-> This happens particularly with NFSv4 which uses system.nfs4_acl, and
-> ext4 which uses system.posix_acl_access.
+On 05/01, Christoph Hellwig wrote:
+>
+> Hi all,
+>
+> asm-generic/ptrace.h is a little weird in that it doesn't actually
+> implement any functionality, but it provided multiple layers of macros
+> that just implement trivial inline functions.  We implement those
+> directly in the few architectures and be off with a much simpler
+> design.
 
-FYI,
-Aufs had met the same problem many years ago, and I introduced some
-options called ICEX (Ignore Copyup Error on Xattr).
+Oh, thanks, I was always confused by these macros ;)
 
-(from the design doc in aufs)
-----------------------------------------
-For example, the src branch supports ACL but the dst branch doesn't
-because the dst branch may natively un-support it or temporary
-un-support it due to "noacl" mount option. Of course, the dst branch fs
-may NOT return an error even if the XATTR is not supported. It is
-totally up to the branch fs.
+Oleg.
 
-Anyway when the aufs internal copy-up gets an error from the dst branch
-fs, then aufs tries removing the just copied entry and returns the error
-to the userspace. The worst case of this situation will be all copy-up
-will fail.
-
-For the copy-up operation, there two basic approaches.
-- copy the specified XATTR only (by category above), and return the
-  error unconditionally if it happens.
-- copy all XATTR, and ignore the error on the specified category only.
-
-In order to support XATTR and to implement the correct behaviour, aufs
-chooses the latter approach and introduces some new branch attributes,
-"icexsec", "icexsys", "icextr", "icexusr", and "icexoth".
-They correspond to the XATTR namespaces (see above). Additionally, to be
-convenient, "icex" is also provided which means all "icex*" attributes
-are set (here the word "icex" stands for "ignore copy-error on XATTR").
-
-The meaning of these attributes is to ignore the error from setting
-XATTR on that branch.
-Note that aufs tries copying all XATTR unconditionally, and ignores the
-error from the dst branch according to the specified attributes.
-----------------------------------------
-
-But recent nfs4 got changed its behaviour around ACL, and it didn't pass
-my local tests.  I had posted about that, but got no reply.
-
-
-J. R. Okajima
