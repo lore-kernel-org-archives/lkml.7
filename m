@@ -2,108 +2,214 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CEBC04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434EFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3558206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E72206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Wglm0Ja8"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UFHGOIH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfEBOQV (ORCPT
+        id S1726562AbfEBOQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:16:21 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41258 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBOQV (ORCPT
+        Thu, 2 May 2019 10:16:53 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43927 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBOQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:16:21 -0400
-Received: by mail-ed1-f67.google.com with SMTP id m4so2257563edd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:16:20 -0700 (PDT)
+        Thu, 2 May 2019 10:16:53 -0400
+Received: by mail-ed1-f65.google.com with SMTP id j20so2244596edq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F9aLUsv55ITOjNiKYrvVJTstOAfJJ4bjs1xsqsYJZDQ=;
-        b=Wglm0Ja8Is5t6Pe+C39FK43FXDgUihPAL66hPy1y4u5yc2bjsKAODKww+7X5qtMNq5
-         PbUXwFDcvRFq0LAgV2XIV24RKvFaLy4+Jk9GJYezxhn5AlNEzzhz8abjwcZNxXD9zlji
-         e5nlWFVG4bsIB4/YdkBoDHM6o1TSAyn93KJf3vcwSYLmgFnlgEumav98ILuqSoa4je8o
-         AFbnIN4HyiGrHybIdEqKo89zqDoKruqFcQ4OfcjnNLSk5jVrpkfQPrVUs7D0XYOyds57
-         zhuWswdfRLeN+sHLVlfRkfc2fNW9damh+qz/C5Exemg6en0dyyKw1qNwtwq2GtQLO5wR
-         RaFg==
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j6jUhArYSkidgJUMQ6b0WS+/knU0557UDozCsjweJWs=;
+        b=UFHGOIH302CnF6JpJHIaEB1nf04/eQzLwfnVDas8dsLvkpH29rOZVhgNglnFzzidu+
+         M+Q97vTxbRGNzagU9B9kO8u/k0UXJmpNv9q5YEker0ICoHosdbgAOU9MzI71il1E6+BL
+         mkIqvJeR+HAAxcxDhaXSmlYAMDuR0qNgj5CFs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F9aLUsv55ITOjNiKYrvVJTstOAfJJ4bjs1xsqsYJZDQ=;
-        b=RURNr533Hj6UYIXUCqITmRgw7atHKZU/C4OJjR2s30zCZr7QZ4178CkbpkY1pmDzcD
-         IDYPkA5NnVueSGgYyzcjHi0xudTl5CjjwCvQj6TiYddriYIyddOyXpjhrmCXj3pgSoDp
-         jwDq0dgj+adHdGIx23724mzgRZuOLLwuIKXdgPV2Q5gsQNAwdLS1aDS5aPISIUPwmPGs
-         7rMKmJR5fjBQEoCH8ZWsZLncI720vvwIgMRBMIC5dXmjMUmwfL+bByPPYA5MS4CQi2Au
-         gaunqvJES3B58L4P0OVAe7iITDQh8PA9H9MjrgA9yPldbqblDtpl1424XcxfaCPaBpx6
-         gBLQ==
-X-Gm-Message-State: APjAAAWiIDbzTgM6VGOduzMNzmpWpoLDEyao97BDmoTkuOzciYySVXs/
-        AZXvFv6J7uGe7Myk2cCWQYu0tuaFMp9SCT1lVMXFfIexmDc=
-X-Google-Smtp-Source: APXvYqz9Dz0MllP0/JVZaWYqSMxagrbWwyxnqyReg5hTSdZBuyzEtjj571LYBRrDHp5eRfJaAMIOIYRbPk8/bxfuLaY=
-X-Received: by 2002:a50:a951:: with SMTP id m17mr2606324edc.79.1556806579550;
- Thu, 02 May 2019 07:16:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j6jUhArYSkidgJUMQ6b0WS+/knU0557UDozCsjweJWs=;
+        b=TGPqXmiKRYWQ6++nuE91lk8Uk5ooeXsPDmYqmtL8WiKjdvcvWjr5rmU4yNO0t4T4qj
+         b851uLAha2kdDpmQ7MK1pvvZsfTvO/Q7EDMR8YA8B/aH/URizadu4IJJWBgzRQ7/UxLp
+         LZGuasA95d0j1my5GUiRdimFIhfEEq5vuyGZasQ8njaXf21qvqAmpB+ak2dqFjkWQnh3
+         OigXj+5eZ8n3qXHnzhDFIPAt2ImnpS8N+MRmY+QWGkPjhOdMuhIY3MMTr573bFUZpejS
+         nfTZTBs5sna3c4gC6Sjryjusmpvbp+PjvipTUcoBepHiw1S7sxxCYtkTHD6fRGachH+k
+         8Q/g==
+X-Gm-Message-State: APjAAAUc/04rL+yFxNEeyLUfU84R5M1WynoMETOl+zGx7aWC4gB/OdrT
+        e1WFs/ZZ5Q6yhz/Yfqj0HWA7bo+whZc=
+X-Google-Smtp-Source: APXvYqwzjvqcm5mLeQ58eJqQE74D+fxLzITraKbx389wNBvLg+qlVeqNsgPzBKf/xRqh3fnu5xr+Sw==
+X-Received: by 2002:a17:906:65d4:: with SMTP id z20mr1979407ejn.38.1556806610779;
+        Thu, 02 May 2019 07:16:50 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id r24sm5339705ejo.84.2019.05.02.07.16.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 07:16:49 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] RFC: console: hack up console_trylock more
+Date:   Thu,  2 May 2019 16:16:43 +0200
+Message-Id: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190501232517.crbmgcuk7u4gvujr@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
- <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com>
-In-Reply-To: <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 2 May 2019 10:16:08 -0400
-Message-ID: <CA+CK2bA_5uaEK1vjOwNZC9Ta+T-_yTL9etOUEvOUSrtNEOe8og@mail.gmail.com>
-Subject: Re: [PATCH v6 01/12] mm/sparsemem: Introduce struct mem_section_usage
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 2:07 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Wed, May 1, 2019 at 4:25 PM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
-> >
-> > On 19-04-17 11:39:00, Dan Williams wrote:
-> > > Towards enabling memory hotplug to track partial population of a
-> > > section, introduce 'struct mem_section_usage'.
-> > >
-> > > A pointer to a 'struct mem_section_usage' instance replaces the existing
-> > > pointer to a 'pageblock_flags' bitmap. Effectively it adds one more
-> > > 'unsigned long' beyond the 'pageblock_flags' (usemap) allocation to
-> > > house a new 'map_active' bitmap.  The new bitmap enables the memory
-> > > hot{plug,remove} implementation to act on incremental sub-divisions of a
-> > > section.
-> > >
-> > > The primary motivation for this functionality is to support platforms
-> > > that mix "System RAM" and "Persistent Memory" within a single section,
-> > > or multiple PMEM ranges with different mapping lifetimes within a single
-> > > section. The section restriction for hotplug has caused an ongoing saga
-> > > of hacks and bugs for devm_memremap_pages() users.
-> > >
-> > > Beyond the fixups to teach existing paths how to retrieve the 'usemap'
-> > > from a section, and updates to usemap allocation path, there are no
-> > > expected behavior changes.
-> > >
-> > > Cc: Michal Hocko <mhocko@suse.com>
-> > > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > > Cc: Logan Gunthorpe <logang@deltatee.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+console_trylock, called from within printk, can be called from pretty
+much anywhere. Including try_to_wake_up. Note that this isn't common,
+usually the box is in pretty bad shape at that point already. But it
+really doesn't help when then lockdep jumps in and spams the logs,
+potentially obscuring the real backtrace we're really interested in.
+One case I've seen (slightly simplified backtrace):
 
-Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+ Call Trace:
+  <IRQ>
+  console_trylock+0xe/0x60
+  vprintk_emit+0xf1/0x320
+  printk+0x4d/0x69
+  __warn_printk+0x46/0x90
+  native_smp_send_reschedule+0x2f/0x40
+  check_preempt_curr+0x81/0xa0
+  ttwu_do_wakeup+0x14/0x220
+  try_to_wake_up+0x218/0x5f0
+  pollwake+0x6f/0x90
+  credit_entropy_bits+0x204/0x310
+  add_interrupt_randomness+0x18f/0x210
+  handle_irq+0x67/0x160
+  do_IRQ+0x5e/0x130
+  common_interrupt+0xf/0xf
+  </IRQ>
+
+This alone isn't a problem, but the spinlock in the semaphore is also
+still held while waking up waiters (up() -> __up() -> try_to_wake_up()
+callchain), which then closes the runqueue vs. semaphore.lock loop,
+and upsets lockdep, which issues a circular locking splat to dmesg.
+Worse it upsets developers, since we don't want to spam dmesg with
+clutter when the machine is dying already.
+
+Fix this by creating a __down_trylock which only trylocks the
+semaphore.lock. This isn't correct in full generality, but good enough
+for console_lock:
+
+- there's only ever one console_lock holder, we won't fail spuriously
+  because someone is doing a down() or up() while there's still room
+  (unlike other semaphores with count > 1).
+
+- console_unlock() has one massive retry loop, which will catch anyone
+  who races the trylock against the up(). This makes sure that no
+  printk lines will get lost. Making the trylock more racy therefore
+  has no further impact.
+
+Also cc'ing John Ogness since perhaps his printk rework fixes this all
+properly.
+
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+---
+ include/linux/semaphore.h  |  1 +
+ kernel/locking/semaphore.c | 33 +++++++++++++++++++++++++++++++++
+ kernel/printk/printk.c     |  2 +-
+ 3 files changed, 35 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/semaphore.h b/include/linux/semaphore.h
+index 11c86fbfeb98..82f6db6121c3 100644
+--- a/include/linux/semaphore.h
++++ b/include/linux/semaphore.h
+@@ -40,6 +40,7 @@ extern void down(struct semaphore *sem);
+ extern int __must_check down_interruptible(struct semaphore *sem);
+ extern int __must_check down_killable(struct semaphore *sem);
+ extern int __must_check down_trylock(struct semaphore *sem);
++extern int __must_check __down_trylock(struct semaphore *sem);
+ extern int __must_check down_timeout(struct semaphore *sem, long jiffies);
+ extern void up(struct semaphore *sem);
+ 
+diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
+index 561acdd39960..345123336019 100644
+--- a/kernel/locking/semaphore.c
++++ b/kernel/locking/semaphore.c
+@@ -143,6 +143,39 @@ int down_trylock(struct semaphore *sem)
+ }
+ EXPORT_SYMBOL(down_trylock);
+ 
++/**
++ * __down_trylock - try to acquire the semaphore, without any locking
++ * @sem: the semaphore to be acquired
++ *
++ * Try to acquire the semaphore atomically.  Returns 0 if the semaphore has
++ * been acquired successfully or 1 if it it cannot be acquired.
++ *
++ * NOTE: This return value is inverted from both spin_trylock and
++ * mutex_trylock!  Be careful about this when converting code.
++ *
++ * Unlike mutex_trylock, this function can be used from interrupt context,
++ * and the semaphore can be released by any task or interrupt.
++ *
++ * WARNING: Unlike down_trylock this function doesn't guarantee that that the
++ * semaphore will be acquired if it could, it's best effort only. Use for
++ * down_trylock_console_sem only.
++ */
++int __down_trylock(struct semaphore *sem)
++{
++	unsigned long flags;
++	int count;
++
++	if (!raw_spin_trylock_irqsave(&sem->lock, flags))
++		return 1;
++	count = sem->count - 1;
++	if (likely(count >= 0))
++		sem->count = count;
++	raw_spin_unlock_irqrestore(&sem->lock, flags);
++
++	return (count < 0);
++}
++EXPORT_SYMBOL(__down_trylock);
++
+ /**
+  * down_timeout - acquire the semaphore within a specified time
+  * @sem: the semaphore to be acquired
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 02ca827b8fac..5293803eec1f 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -217,7 +217,7 @@ static int __down_trylock_console_sem(unsigned long ip)
+ 	 * deadlock in printk()->down_trylock_console_sem() otherwise.
+ 	 */
+ 	printk_safe_enter_irqsave(flags);
+-	lock_failed = down_trylock(&console_sem);
++	lock_failed = __down_trylock(&console_sem);
+ 	printk_safe_exit_irqrestore(flags);
+ 
+ 	if (lock_failed)
+-- 
+2.20.1
+
