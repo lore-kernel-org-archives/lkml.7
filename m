@@ -2,151 +2,135 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2512CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FF4C04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D7F204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:49:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bs/G3q2N"
+	by mail.kernel.org (Postfix) with ESMTP id 0EF8D204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfEBVt0 (ORCPT
+        id S1726267AbfEBVv4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 17:49:26 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44756 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfEBVtZ (ORCPT
+        Thu, 2 May 2019 17:51:56 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:34954 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726030AbfEBVv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 17:49:25 -0400
-Received: by mail-io1-f68.google.com with SMTP id r71so3562857iod.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 14:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5HcxFLAOHYDm4q2/95LW5i6fvHO9cvLeIClq07OW1cE=;
-        b=bs/G3q2NO3R7R77rcvcPtDWwGM2ladbRMjfmPf00RcM7rE3Njq768jyhnQeD9J1aca
-         1X3wIi2FiSK+mYsbJQ6jkqvPliE9mym5t9XfDaBQWltnggp7ZNXQeQMEZPudi0PBktCB
-         zmQ24hmSGif6wDITjq3HIlOwqK6GYlYFZJx8BN6u78IeSJ3C5iZkhj6UPjMELQeE46fg
-         51qRTjxviLt+4zcd1KXCugFlJfbGoY7xz5ETOC5G9/2RZCWY0/RfAzAbU1sl5FkNcDK5
-         irZ7hV2C0Ghx2GXyaldlx71tDpPU8hh6OIjSSYahcpHgybiEbUl6DMHt2H09Gu90Uo09
-         1gNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5HcxFLAOHYDm4q2/95LW5i6fvHO9cvLeIClq07OW1cE=;
-        b=Pa6Cyn85vhUiSvjMencrLgm63tJn4MAsXVXz64Wy4L0Yed1p9cAPJNBZ4M9mg8eQXf
-         H4BBWh5wy7es5aQxg1BwWL/sqRMKLFy1cEMM5j3ho8FFD6AqJrQC11foraHlVOq8W1SC
-         ZR+XF1RGQGNwGNX/xzDXRft+xDLommTzuyaDkg+nyvvWHoqIFo4ct9cuTN8BiUzllXhV
-         Ec7awmMhABKnEFeBGFy53aDKkwEmY45pRBEoMRke93SkoweIbKNEwmyONcYQ/OheE9Wo
-         835hDG2f/Hy77lew/sEfFRNnVJWrGqYVFHntT3vK3eHI0gii3z9NPlU4sH6khwb7bSVR
-         XLOQ==
-X-Gm-Message-State: APjAAAWjOYuwxAoSn7sY4bElJ2YbBjbDMYdrcUDThdLEF9azQnmEOdQy
-        oiw71EQP1CPwU7Ele7sJV1zWE3WZur/lznp0K/g=
-X-Google-Smtp-Source: APXvYqyL+fSS75OSNlrmFLI4cVv58J8ILudV9rN0q5GJ0JSDgJOcdIs8BxZ/V5E4gOhWMPygYZ4VBZgbu1o6orWh6xA=
-X-Received: by 2002:a5d:9d48:: with SMTP id k8mr4684210iok.194.1556833764935;
- Thu, 02 May 2019 14:49:24 -0700 (PDT)
+        Thu, 2 May 2019 17:51:56 -0400
+Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42Lp1lN006788;
+        Thu, 2 May 2019 21:51:49 GMT
+Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2s84x29x8u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 May 2019 21:51:49 +0000
+Received: from G2W6311.americas.hpqcorp.net (g2w6311.austin.hp.com [16.197.64.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by g9t5009.houston.hpe.com (Postfix) with ESMTPS id 0819D65;
+        Thu,  2 May 2019 21:51:48 +0000 (UTC)
+Received: from G4W9334.americas.hpqcorp.net (16.208.32.120) by
+ G2W6311.americas.hpqcorp.net (16.197.64.53) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 May 2019 21:51:47 +0000
+Received: from G4W10204.americas.hpqcorp.net (2002:10cf:5210::10cf:5210) by
+ G4W9334.americas.hpqcorp.net (2002:10d0:2078::10d0:2078) with Microsoft SMTP
+ Server (TLS) id 15.0.1367.3; Thu, 2 May 2019 21:51:47 +0000
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (15.241.52.11) by
+ G4W10204.americas.hpqcorp.net (16.207.82.16) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3 via Frontend Transport; Thu, 2 May 2019 21:51:47 +0000
+Received: from AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM (10.169.7.147) by
+ AT5PR8401MB1314.NAMPRD84.PROD.OUTLOOK.COM (10.169.9.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.12; Thu, 2 May 2019 21:51:44 +0000
+Received: from AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::2884:44eb:25bf:b376]) by AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::2884:44eb:25bf:b376%12]) with mapi id 15.20.1856.012; Thu, 2 May 2019
+ 21:51:44 +0000
+From:   "Elliott, Robert (Servers)" <elliott@hpe.com>
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+CC:     Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.com>,
+        "Omar Sandoval" <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Greg Edwards <gedwards@ddn.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] blkdev.h: Introduce size_to_sectors hlper function
+Thread-Topic: [PATCH 1/2] blkdev.h: Introduce size_to_sectors hlper function
+Thread-Index: AQHU/vSYwfJTOAaXv0uIxnt7/osef6ZYYxZg
+Date:   Thu, 2 May 2019 21:51:44 +0000
+Message-ID: <AT5PR8401MB11694BE736D8E344C94C2FFCAB340@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
+References: <20190430013205.1561708-1-marcos.souza.org@gmail.com>
+ <20190430013205.1561708-2-marcos.souza.org@gmail.com>
+In-Reply-To: <20190430013205.1561708-2-marcos.souza.org@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [15.211.195.7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 65d69356-7f57-448f-3be9-08d6cf485e0e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AT5PR8401MB1314;
+x-ms-traffictypediagnostic: AT5PR8401MB1314:
+x-microsoft-antispam-prvs: <AT5PR8401MB1314FD5C94BDDBF7D30ABC7BAB340@AT5PR8401MB1314.NAMPRD84.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(396003)(376002)(366004)(13464003)(189003)(199004)(14454004)(478600001)(305945005)(7736002)(229853002)(54906003)(68736007)(7416002)(8936002)(71190400001)(52536014)(5660300002)(11346002)(4744005)(476003)(73956011)(66446008)(64756008)(66556008)(66476007)(66946007)(486006)(76116006)(256004)(71200400001)(26005)(186003)(446003)(74316002)(76176011)(4326008)(53546011)(6116002)(3846002)(53936002)(2906002)(6246003)(99286004)(25786009)(316002)(110136005)(6506007)(102836004)(7696005)(86362001)(33656002)(8676002)(6436002)(81166006)(81156014)(2501003)(9686003)(55016002)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:AT5PR8401MB1314;H:AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hpe.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BiKFbIGZiPBIKfWJEFoqkyzKEnpoHRBReIPGQzE8oGD50Eqo7hCxQviUBxnVqjno6toRBdlMyh8FCG7+amnlORv1DTktj4pA91YCKCkSQ4zSzaQNxiABozRSZ66fq8QyvdHmbmgZnB0E+Vte3hCoT9iCjTX3KSdpilOOA9BPDCMmZci6MHLhCuGRLQQ+PatZWDq2sqkpN7wBLUdmnDjeTGkctEbqxENdsSkTgM/9TsNx4oUdKy7eFXrxj/MflKKV2tiCjeT9jhXep6ALwjcyMmUgyBTl4QX/isABC7rYsJyP551+V9qX4whaIe9q9VHgJ4FqdNS3Pvj+QrlscCy8wr2NbIfU8cYGK6oidYyXjP/pEF8MUCs1V40aTbgAr/KIARa4WMjBfEPjXA+0r9WE0B+yF21Uh+QnDi1OJp5WjQ8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <1556830342-32307-1-git-send-email-jsavitz@redhat.com> <1556830342-32307-2-git-send-email-jsavitz@redhat.com>
-In-Reply-To: <1556830342-32307-2-git-send-email-jsavitz@redhat.com>
-From:   Yury Norov <norov.maillist@gmail.com>
-Date:   Thu, 2 May 2019 14:49:14 -0700
-Message-ID: <CAJu-Uz4r+s=v8p_jzd=fsa8+e8c4dH3S5iN60u8EFT0O_X2DOw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kernel/sys: add PR_GET_TASK_SIZE option to prctl(2)
-To:     Joel Savitz <jsavitz@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Micah Morton <mortonm@chromium.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Jann Horn <jannh@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>, yury.norov@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65d69356-7f57-448f-3be9-08d6cf485e0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 21:51:44.0758
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AT5PR8401MB1314
+X-OriginatorOrg: hpe.com
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=804 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D1=87=D1=82, 2 =D0=BC=D0=B0=D1=8F 2019 =D0=B3. =D0=B2 13:52, Joel Savitz <=
-jsavitz@redhat.com>:
->
-> When PR_GET_TASK_SIZE is passed to prctl, the kernel will attempt to
-> copy the value of TASK_SIZE to the userspace address in arg2.
->
-> Suggested-by: Alexey Dobriyan <adobriyan@gmail.com>
-> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
-> ---
->  include/uapi/linux/prctl.h |  3 +++
->  kernel/sys.c               | 10 ++++++++++
->  2 files changed, 13 insertions(+)
->
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index 094bb03b9cc2..2335fe0a8db8 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -229,4 +229,7 @@ struct prctl_mm_map {
->  # define PR_PAC_APDBKEY                        (1UL << 3)
->  # define PR_PAC_APGAKEY                        (1UL << 4)
->
-> +/* Get the process virtual memory size */
-> +#define PR_GET_TASK_SIZE               55
-> +
->  #endif /* _LINUX_PRCTL_H */
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index 12df0e5434b8..7ced7dbd035d 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2252,6 +2252,13 @@ static int propagate_has_child_subreaper(struct ta=
-sk_struct *p, void *data)
->         return 1;
->  }
->
-> +static int prctl_get_tasksize(void __user * uaddr)
+
+
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of
+> Marcos Paulo de Souza
+> Sent: Monday, April 29, 2019 8:32 PM
+> Subject: [PATCH 1/2] blkdev.h: Introduce size_to_sectors hlper function
+> 
+> This function takes an argument to specify the size of a block device,
+> in bytes, and return the number of sectors of 512 bytes.
+> 
+...
+> +static inline sector_t size_to_sectors(long long size)
 > +{
-> +       unsigned long task_size =3D TASK_SIZE;
-> +       return copy_to_user(uaddr, &task_size, sizeof(unsigned long))
-> +                       ? -EFAULT : 0;
+> +	return size >> SECTOR_SHIFT;
 > +}
-> +
 
-Joel, you missed my point from the comment to v1.
-This is still broken for compat architectures. On 64 bit machines
-compat userspace
-has unsigned long as u32, and therefore you corrupt user data.
+At least one of the users in PATCH 2/2 passes an unsigned value that won't
+fit in a signed argument:
+
+-	blk_queue_max_discard_sectors(nullb->q, UINT_MAX >> 9);
++	blk_queue_max_discard_sectors(nullb->q, size_to_sectors(UINT_MAX));
 
 
->  int __weak arch_prctl_spec_ctrl_get(struct task_struct *t, unsigned long=
- which)
->  {
->         return -EINVAL;
-> @@ -2486,6 +2493,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, =
-arg2, unsigned long, arg3,
->                         return -EINVAL;
->                 error =3D PAC_RESET_KEYS(me, arg2);
->                 break;
-> +       case PR_GET_TASK_SIZE:
-> +               error =3D prctl_get_tasksize((void *)arg2) ;
-> +               break;
->         default:
->                 error =3D -EINVAL;
->                 break;
-> --
-> 2.18.1
->
+
+
