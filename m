@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72D4C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF28C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945BA2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCF420C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811038;
-	bh=nqqXkG8lR/5IvEvEXeBbKuPr7SNqVPy48g/pxuo01Gk=;
+	s=default; t=1556811041;
+	bh=e3eVxnadCoGxRSoPfyWsk0nMuC6MS0NgJ5rOnYWkLRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zR30mYIV6WdfRbIBYNJwEqesYEjjqztGr8qEwEcRSA3PMhUyJ2KRzSINbj6Xyhlgl
-	 DWYxeKmFtxwO6gHggx4xc3GxYodxzyx8waL0XztxPgViyqQF7xAph+44tff48AAiJU
-	 DH5t2Q/xSwoFuieuH6kvRHSImlkYHVujDJYpHbvc=
+	b=BKV8gzorigrRi7Gc8sy7H6KzN7rmUiKX1rXquTnVAXaSr96UwkXnuw5NdUiePPpFp
+	 RjUB7RqG4dA7q/4Ac5o623JE7nI8927k/MON0zj92UvLJXijrGmpp1GdDLSKR/L6ZC
+	 /AgEnp6BO2d3TsU/QL5Irl7nAu1tUVscsoRJEFMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfEBPah (ORCPT
+        id S1728792AbfEBPaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49040 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbfEBPaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:30 -0400
+        id S1728758AbfEBPad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E129D20675;
-        Thu,  2 May 2019 15:30:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 780C02081C;
+        Thu,  2 May 2019 15:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811029;
-        bh=nqqXkG8lR/5IvEvEXeBbKuPr7SNqVPy48g/pxuo01Gk=;
+        s=default; t=1556811033;
+        bh=e3eVxnadCoGxRSoPfyWsk0nMuC6MS0NgJ5rOnYWkLRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rPBiMPN4E4CU809QMthW8cSM6roOliE6JdFX1asEUtWSPjko02BXdbL+qz7B+Upih
-         se8/5HlXAGEp6igbVV4RHj7T6YmJKQvTbA6LQ22LSrwwnXSw6jjHTM9BwNAZv5Xssk
-         cWBZe73QI4u4VZgRvySo+7v7smtbDTZnBK/kisUQ=
+        b=H1sSlLiFz35kYcZyymwAEe275DD5H63bKUD3utGAdrYj7ST7AW4+0i1DP2wkYnNPk
+         ZyNSkJ+tTqS0SzVYTtNCKFg+O49agFw+3RVSnzjI2bnUgdwmfHiaq9G7zg3ZZYbh7F
+         UD76WSJJw6jo764ygNeufvaBc3IdkWWa28lFDMYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Andrey Batyiev <batyiev@gmail.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 030/101] serial: ar933x_uart: Fix build failure with disabled console
-Date:   Thu,  2 May 2019 17:20:32 +0200
-Message-Id: <20190502143341.671005424@linuxfoundation.org>
+Subject: [PATCH 5.0 048/101] staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+Date:   Thu,  2 May 2019 17:20:50 +0200
+Message-Id: <20190502143342.907776006@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,97 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 72ff51d8dd262d1fef25baedc2ac35116435be47 ]
+[ Upstream commit 22c971db7dd4b0ad8dd88e99c407f7a1f4231a2e ]
 
-Andrey has reported on OpenWrt's bug tracking system[1], that he
-currently can't use ar93xx_uart as pure serial UART without console
-(CONFIG_SERIAL_8250_CONSOLE and CONFIG_SERIAL_AR933X_CONSOLE undefined),
-because compilation ends with following error:
+Colin King reported a bug in read_bbreg_hdl():
 
- ar933x_uart.c: In function 'ar933x_uart_console_write':
- ar933x_uart.c:550:14: error: 'struct uart_port' has no
-                               member named 'sysrq'
+	memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
 
-So this patch moves all the code related to console handling behind
-series of CONFIG_SERIAL_AR933X_CONSOLE ifdefs.
+The problem is that "val" is uninitialized.
 
-1. https://bugs.openwrt.org/index.php?do=details&task_id=2152
+This code is obviously not useful, but so far as I can tell
+"pcmd->cmdcode" is never GEN_CMD_CODE(_Read_BBREG) so it's not harmful
+either.  For now the easiest fix is to just call r8712_free_cmd_obj()
+and return.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: Andrey Batyiev <batyiev@gmail.com>
-Reported-by: Andrey Batyiev <batyiev@gmail.com>
-Tested-by: Andrey Batyiev <batyiev@gmail.com>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/tty/serial/ar933x_uart.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ drivers/staging/rtl8712/rtl8712_cmd.c | 10 +---------
+ drivers/staging/rtl8712/rtl8712_cmd.h |  2 +-
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index db5df3d54818..3bdd56a1021b 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -49,11 +49,6 @@ struct ar933x_uart_port {
- 	struct clk		*clk;
- };
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.c b/drivers/staging/rtl8712/rtl8712_cmd.c
+index 1920d02f7c9f..8c36acedf507 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.c
++++ b/drivers/staging/rtl8712/rtl8712_cmd.c
+@@ -147,17 +147,9 @@ static u8 write_macreg_hdl(struct _adapter *padapter, u8 *pbuf)
  
--static inline bool ar933x_uart_console_enabled(void)
--{
--	return IS_ENABLED(CONFIG_SERIAL_AR933X_CONSOLE);
--}
--
- static inline unsigned int ar933x_uart_read(struct ar933x_uart_port *up,
- 					    int offset)
+ static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
  {
-@@ -508,6 +503,7 @@ static const struct uart_ops ar933x_uart_ops = {
- 	.verify_port	= ar933x_uart_verify_port,
- };
+-	u32 val;
+-	void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj	*pcmd);
+ 	struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
  
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
- static struct ar933x_uart_port *
- ar933x_console_ports[CONFIG_SERIAL_AR933X_NR_UARTS];
+-	if (pcmd->rsp && pcmd->rspsz > 0)
+-		memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+-	pcmd_callback = cmd_callback[pcmd->cmdcode].callback;
+-	if (!pcmd_callback)
+-		r8712_free_cmd_obj(pcmd);
+-	else
+-		pcmd_callback(padapter, pcmd);
++	r8712_free_cmd_obj(pcmd);
+ 	return H2C_SUCCESS;
+ }
  
-@@ -604,14 +600,7 @@ static struct console ar933x_uart_console = {
- 	.index		= -1,
- 	.data		= &ar933x_uart_driver,
- };
--
--static void ar933x_uart_add_console_port(struct ar933x_uart_port *up)
--{
--	if (!ar933x_uart_console_enabled())
--		return;
--
--	ar933x_console_ports[up->port.line] = up;
--}
-+#endif /* CONFIG_SERIAL_AR933X_CONSOLE */
- 
- static struct uart_driver ar933x_uart_driver = {
- 	.owner		= THIS_MODULE,
-@@ -700,7 +689,9 @@ static int ar933x_uart_probe(struct platform_device *pdev)
- 	baud = ar933x_uart_get_baud(port->uartclk, 0, AR933X_UART_MAX_STEP);
- 	up->max_baud = min_t(unsigned int, baud, AR933X_UART_MAX_BAUD);
- 
--	ar933x_uart_add_console_port(up);
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
-+	ar933x_console_ports[up->port.line] = up;
-+#endif
- 
- 	ret = uart_add_one_port(&ar933x_uart_driver, &up->port);
- 	if (ret)
-@@ -749,8 +740,9 @@ static int __init ar933x_uart_init(void)
- {
- 	int ret;
- 
--	if (ar933x_uart_console_enabled())
--		ar933x_uart_driver.cons = &ar933x_uart_console;
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
-+	ar933x_uart_driver.cons = &ar933x_uart_console;
-+#endif
- 
- 	ret = uart_register_driver(&ar933x_uart_driver);
- 	if (ret)
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.h b/drivers/staging/rtl8712/rtl8712_cmd.h
+index 92fb77666d44..1ef86b8c592f 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.h
++++ b/drivers/staging/rtl8712/rtl8712_cmd.h
+@@ -140,7 +140,7 @@ enum rtl8712_h2c_cmd {
+ static struct _cmd_callback	cmd_callback[] = {
+ 	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
+ 	{GEN_CMD_CODE(_Write_MACREG), NULL},
+-	{GEN_CMD_CODE(_Read_BBREG), &r8712_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_Read_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Write_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Read_RFREG), &r8712_getbbrfreg_cmdrsp_callback},
+ 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
 -- 
 2.19.1
 
