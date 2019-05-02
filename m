@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4925C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C559C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687EC204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669D8204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811866;
-	bh=wh/+CGYcjcOyd00zfoAleIkvjxkt7sjKpRDXbfPKTD0=;
+	s=default; t=1556811875;
+	bh=WJN5iWIvcgKpaO/zBux1NJbNQ6G/V7nfw02+h+bfIvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Juib1XLUA3muB7GjOKfSijldWr+bnyho7gDpnEjfANuVlyyKKnNACOY7bwQZNFzdm
-	 s0C5/qFE3VCPM/sAPDzpfEM8qh0z/8oSG0nXm/8xjPx5BAqwh8mAbxFZ6IDFn74TVq
-	 Xw9IAUXoY2LmKh7/g3GbCix4B9NcusCq5uJrfomc=
+	b=u9iPN6IlvZCYPhcCEV+vSILKLHQrdXlJ1cuHZe3RIN+ulKUGfdA2593vBx+Zy22P8
+	 q86eCPn8qO7eQTxOAAEQW3F370AvuJWgqAF4H2Lq+hoHhCCk0O5JDrwFPwc446wLU+
+	 ICDzQ2IJBiRJM2Ru1DlfXfSB8R8rhzeZy9N32zC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfEBP0j (ORCPT
+        id S1727726AbfEBPoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:26:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43308 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:44:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfEBP0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:26:37 -0400
+        id S1726976AbfEBP03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:26:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08BD520449;
-        Thu,  2 May 2019 15:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5630120449;
+        Thu,  2 May 2019 15:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810796;
-        bh=wh/+CGYcjcOyd00zfoAleIkvjxkt7sjKpRDXbfPKTD0=;
+        s=default; t=1556810788;
+        bh=WJN5iWIvcgKpaO/zBux1NJbNQ6G/V7nfw02+h+bfIvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fNPoD6ag6WrC95QUS/KR0vpQ0BQ/bu5uXgxWD4U6CugfwaU5mGlfb5bC/IEF5fQz2
-         60TZ9oq6x/K8jUK9N/tbLDi0NdqNgwjk/ebrE/lpVpGy017sR+2ugQwGzeWzUDbhAy
-         /AREJ9MZ5B6IrGcgRa02aDX050xvY7x97jJn3h6M=
+        b=LcPq7Z0bAgky1CfcofTyjiHiCc37UAB6Lf3/zZXpXKANDCiM+D1fMuhVEyD+ey1Uo
+         VKVBrRT+Do9zh1I9f+TvRkESNMq80+SLHz+xZ1Y0G0ziaD4+fTSrV0euZeGsO1O1SH
+         VXNHEkz7Hcevl/aaz+WUAWGNByknepSpeRLop4lc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 32/72] i2c: i801: Add support for Intel Comet Lake
-Date:   Thu,  2 May 2019 17:20:54 +0200
-Message-Id: <20190502143336.054332206@linuxfoundation.org>
+Subject: [PATCH 4.19 12/72] qlcnic: Avoid potential NULL pointer dereference
+Date:   Thu,  2 May 2019 17:20:34 +0200
+Message-Id: <20190502143334.402515249@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -62,80 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5cd1c56c42beb6d228cc8d4373fdc5f5ec78a5ad ]
+[ Upstream commit 5bf7295fe34a5251b1d241b9736af4697b590670 ]
 
-Add PCI ID for Intel Comet Lake PCH.
+netdev_alloc_skb can fail and return a NULL pointer which is
+dereferenced without a check. The patch avoids such a scenario.
 
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- Documentation/i2c/busses/i2c-i801 | 1 +
- drivers/i2c/busses/Kconfig        | 1 +
- drivers/i2c/busses/i2c-i801.c     | 4 ++++
- 3 files changed, 6 insertions(+)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/i2c/busses/i2c-i801 b/Documentation/i2c/busses/i2c-i801
-index d1ee484a787d..ee9984f35868 100644
---- a/Documentation/i2c/busses/i2c-i801
-+++ b/Documentation/i2c/busses/i2c-i801
-@@ -36,6 +36,7 @@ Supported adapters:
-   * Intel Cannon Lake (PCH)
-   * Intel Cedar Fork (PCH)
-   * Intel Ice Lake (PCH)
-+  * Intel Comet Lake (PCH)
-    Datasheets: Publicly available at the Intel website
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
+index 3b0adda7cc9c..a4cd6f2cfb86 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
+@@ -1048,6 +1048,8 @@ int qlcnic_do_lb_test(struct qlcnic_adapter *adapter, u8 mode)
  
- On Intel Patsburg and later chipsets, both the normal host SMBus controller
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index ac4b09642f63..8f803812ea24 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -131,6 +131,7 @@ config I2C_I801
- 	    Cannon Lake (PCH)
- 	    Cedar Fork (PCH)
- 	    Ice Lake (PCH)
-+	    Comet Lake (PCH)
- 
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-i801.
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index c91e145ef5a5..679c6c41f64b 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -71,6 +71,7 @@
-  * Cannon Lake-LP (PCH)		0x9da3	32	hard	yes	yes	yes
-  * Cedar Fork (PCH)		0x18df	32	hard	yes	yes	yes
-  * Ice Lake-LP (PCH)		0x34a3	32	hard	yes	yes	yes
-+ * Comet Lake (PCH)		0x02a3	32	hard	yes	yes	yes
-  *
-  * Features supported by this driver:
-  * Software PEC				no
-@@ -240,6 +241,7 @@
- #define PCI_DEVICE_ID_INTEL_LEWISBURG_SSKU_SMBUS	0xa223
- #define PCI_DEVICE_ID_INTEL_KABYLAKE_PCH_H_SMBUS	0xa2a3
- #define PCI_DEVICE_ID_INTEL_CANNONLAKE_H_SMBUS		0xa323
-+#define PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS		0x02a3
- 
- struct i801_mux_config {
- 	char *gpio_chip;
-@@ -1038,6 +1040,7 @@ static const struct pci_device_id i801_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CANNONLAKE_H_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CANNONLAKE_LP_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS) },
- 	{ 0, }
- };
- 
-@@ -1534,6 +1537,7 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	case PCI_DEVICE_ID_INTEL_DNV_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_KABYLAKE_PCH_H_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS:
-+	case PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS:
- 		priv->features |= FEATURE_I2C_BLOCK_READ;
- 		priv->features |= FEATURE_IRQ;
- 		priv->features |= FEATURE_SMBUS_PEC;
+ 	for (i = 0; i < QLCNIC_NUM_ILB_PKT; i++) {
+ 		skb = netdev_alloc_skb(adapter->netdev, QLCNIC_ILB_PKT_SIZE);
++		if (!skb)
++			break;
+ 		qlcnic_create_loopback_buff(skb->data, adapter->mac_addr);
+ 		skb_put(skb, QLCNIC_ILB_PKT_SIZE);
+ 		adapter->ahw->diag_cnt = 0;
 -- 
 2.19.1
 
