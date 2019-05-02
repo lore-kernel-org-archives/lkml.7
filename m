@@ -2,142 +2,181 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B6FC04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CC7C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031DD208C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556801765;
-	bh=wv+mgDneohG38AY2L0hUxKbaLVYUeDN4c6JUgJDvYdU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fTqBQY8+GDcAVUVFm6aWEd5wg93l9J4FD+DyuSR72RgGtwvUFVFxf/f+WG6+qsn0+
-	 AgWlYg29Yw+UkHC4XWFEUSXVGqsQvtq/krWBROOdOKChPJ+O0d5NdXULxGpE9GuxIM
-	 16sX/Ti4YFuUsvuxUIUG8MiLnPzkdk9bY91bad1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 9789A20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n2lidRma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfEBM4E (ORCPT
+        id S1726754AbfEBM4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:56:04 -0400
-Received: from casper.infradead.org ([85.118.1.10]:33114 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfEBM4B (ORCPT
+        Thu, 2 May 2019 08:56:06 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15822 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfEBM4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:56:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=tcHL2blm9ynOYpWqMzfbIx2YVy5kv7jk6z9Ht/ZJGMo=; b=Ye2vyuEt1720XjqEirU81HuFcI
-        sSatA2vLMSPIIZup8V0sLaHawpOaLhfeUuezk0LsH2nPXTDYiPFgoeck9CEExOmXEtcfBQZHrjV24
-        NygfavLsmfQ3SYElZrQorV70Ey/J60KyTyqxmrZDXM09XmAsfINtJd9+GeWImefjp51LjxTITAEaQ
-        cuUFbthCdvLHLf28W6iZ2lSWidExHke/CyPXOs/jVP7hZ9rrI4T1oBa8+K6GcOJGC9iAPzoxkXSMD
-        23FxlWVbNsDAxUtJU+J7YAtC07LBtejiIDs8L83Dl0qMuUij6/lNp40HiGgA4VtBQyGxFLOXgeLl6
-        d3mt788g==;
-Received: from [177.159.247.19] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMBFl-0002uH-Oa; Thu, 02 May 2019 12:55:58 +0000
-Date:   Thu, 2 May 2019 09:55:50 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media/doc: Allow sizeimage to be set by v4l clients
-Message-ID: <20190502095550.31282c0d@coco.lan>
-In-Reply-To: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
-References: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 2 May 2019 08:56:04 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ccae8ea0001>; Thu, 02 May 2019 05:56:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 02 May 2019 05:56:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 02 May 2019 05:56:03 -0700
+Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
+ 2019 12:56:03 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 2 May 2019 12:56:03 +0000
+Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ccae8e00000>; Thu, 02 May 2019 05:56:02 -0700
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <ldewangan@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH 6/6] dmaengine: tegra210-adma: restore channel status
+Date:   Thu, 2 May 2019 18:25:17 +0530
+Message-ID: <1556801717-31507-7-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
+References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1556801770; bh=ID1XhaNkmlyJ4/V2Ya86P+TASPDdWK0Uaupkd2J88Bw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:Content-Type;
+        b=n2lidRma0qX0AogLFQDPKxyZVWcErquDzWjfn6Bx9UVSk8IPl3QLiElIh0dQ+apHL
+         yeAD6UfKBnatpe5KXo4es19Mcy168IiXU4gvws3WD1fcWjlvzLpMtRIjENeVuxbg5i
+         /ynIjXqC/KjbNAdrPV7KmhNpa3K+DAgBfvX3vqEChvbgyOhGaG04q4uuC1HFRrrlFe
+         6EggbaUn5iv8DBbrM8k1hBC/MG3UYpoZGD9dlNlDYTh0+ZWTLJMKTkcczqTMoy05TZ
+         b0xTjsUwHHNUxmOxKucDDKU28F75CZu44/ZHH/ktvYw/ACsWk/VFaxqNUVLm6JU9oX
+         bs0j84nX/ZW4g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 12 Apr 2019 18:59:15 +0300
-Stanimir Varbanov <stanimir.varbanov@linaro.org> escreveu:
+Status of ADMA channel registers is not saved and restored during system
+suspend. During active playback if system enters suspend, this results in
+wrong state of channel registers during system resume and playback fails
+to resume properly. Fix this by saving following channel registers in
+runtime suspend and restore during runtime resume.
+ * ADMA_CH_LOWER_SRC_ADDR
+ * ADMA_CH_LOWER_TRG_ADDR
+ * ADMA_CH_FIFO_CTRL
+ * ADMA_CH_CONFIG
+ * ADMA_CH_CTRL
+ * ADMA_CH_CMD
+ * ADMA_CH_TC
+Runtime PM calls will be inovked during system resume path if a playback
+or capture needs to be resumed. Hence above changes work fine for system
+suspend case.
 
-> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
-> field description to allow v4l clients to set bigger image size
-> in case of variable length compressed data.
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 13 ++++++++++++-
->  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 11 ++++++++++-
->  2 files changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-> index 5688c816e334..005428a8121e 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-> @@ -31,7 +31,18 @@ describing all planes of that format.
->  
->      * - __u32
->        - ``sizeimage``
-> -      - Maximum size in bytes required for image data in this plane.
-> +      - Maximum size in bytes required for image data in this plane,
-> +	set by the driver. When the image consists of variable length
-> +	compressed data this is the number of bytes required by the
-> +	codec to support the worst-case compression scenario.
-> +
-> +	For uncompressed images the driver will set the value. For
-> +	variable length compressed data clients are allowed to set
-> +	the sizeimage field, but the driver may ignore it and set the
-> +	value itself, or it may modify the provided value based on
-> +	alignment requirements or minimum/maximum size requirements.
-> +	If the client wants to leave this to the driver, then it should
-> +	set sizeimage to 0.
->      * - __u32
->        - ``bytesperline``
->        - Distance in bytes between the leftmost pixels in two adjacent
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-> index 71eebfc6d853..0f7771151db9 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-> @@ -89,7 +89,16 @@ Single-planar format structure
->        - Size in bytes of the buffer to hold a complete image, set by the
->  	driver. Usually this is ``bytesperline`` times ``height``. When
->  	the image consists of variable length compressed data this is the
-> -	maximum number of bytes required to hold an image.
-> +	number of bytes required by the codec to support the worst-case
-> +	compression scenario.
-> +
-> +	For uncompressed images the driver will set the value. For
-> +	variable length compressed data clients are allowed to set
-> +	the sizeimage field, but the driver may ignore it and set the
-> +	value itself, or it may modify the provided value based on
-> +	alignment requirements or minimum/maximum size requirements.
-> +	If the client wants to leave this to the driver, then it should
-> +	set sizeimage to 0.
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ drivers/dma/tegra210-adma.c | 46 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
 
-It is very confusing to understand what you meant by the above paragraph,
-as you inverted the sentence order and forgot a comma.
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index 953669d..21f6be1 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -112,6 +112,7 @@ struct tegra_adma_chan_regs {
+ 	unsigned int src_addr;
+ 	unsigned int trg_addr;
+ 	unsigned int fifo_ctrl;
++	unsigned int cmd;
+ 	unsigned int tc;
+ };
+ 
+@@ -141,6 +142,7 @@ struct tegra_adma_chan {
+ 	enum dma_transfer_direction	sreq_dir;
+ 	unsigned int			sreq_index;
+ 	bool				sreq_reserved;
++	struct tegra_adma_chan_regs	ch_regs;
+ 
+ 	/* Transfer count and position info */
+ 	unsigned int			tx_buf_count;
+@@ -711,8 +713,30 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
+ static int tegra_adma_runtime_suspend(struct device *dev)
+ {
+ 	struct tegra_adma *tdma = dev_get_drvdata(dev);
++	struct tegra_adma_chan_regs *ch_reg;
++	struct tegra_adma_chan *tdc;
++	int i;
+ 
+ 	tdma->global_cmd = tdma_read(tdma, ADMA_GLOBAL_CMD);
++	if (!tdma->global_cmd)
++		goto clk_disable;
++
++	for (i = 0; i < tdma->nr_channels; i++) {
++		tdc = &tdma->channels[i];
++		ch_reg = &tdc->ch_regs;
++		ch_reg->cmd = tdma_ch_read(tdc, ADMA_CH_CMD);
++		/* skip if channel is not active */
++		if (!ch_reg->cmd)
++			continue;
++		ch_reg->tc = tdma_ch_read(tdc, ADMA_CH_TC);
++		ch_reg->src_addr = tdma_ch_read(tdc, ADMA_CH_LOWER_SRC_ADDR);
++		ch_reg->trg_addr = tdma_ch_read(tdc, ADMA_CH_LOWER_TRG_ADDR);
++		ch_reg->ctrl = tdma_ch_read(tdc, ADMA_CH_CTRL);
++		ch_reg->fifo_ctrl = tdma_ch_read(tdc, ADMA_CH_FIFO_CTRL);
++		ch_reg->config = tdma_ch_read(tdc, ADMA_CH_CONFIG);
++	}
++
++clk_disable:
+ 	clk_disable_unprepare(tdma->ahub_clk);
+ 
+ 	return 0;
+@@ -721,7 +745,9 @@ static int tegra_adma_runtime_suspend(struct device *dev)
+ static int tegra_adma_runtime_resume(struct device *dev)
+ {
+ 	struct tegra_adma *tdma = dev_get_drvdata(dev);
+-	int ret;
++	struct tegra_adma_chan_regs *ch_reg;
++	struct tegra_adma_chan *tdc;
++	int ret, i;
+ 
+ 	ret = clk_prepare_enable(tdma->ahub_clk);
+ 	if (ret) {
+@@ -730,6 +756,24 @@ static int tegra_adma_runtime_resume(struct device *dev)
+ 	}
+ 	tdma_write(tdma, ADMA_GLOBAL_CMD, tdma->global_cmd);
+ 
++	if (!tdma->global_cmd)
++		return 0;
++
++	for (i = 0; i < tdma->nr_channels; i++) {
++		tdc = &tdma->channels[i];
++		ch_reg = &tdc->ch_regs;
++		/* skip if channel was not active earlier */
++		if (!ch_reg->cmd)
++			continue;
++		tdma_ch_write(tdc, ADMA_CH_TC, ch_reg->tc);
++		tdma_ch_write(tdc, ADMA_CH_LOWER_SRC_ADDR, ch_reg->src_addr);
++		tdma_ch_write(tdc, ADMA_CH_LOWER_TRG_ADDR, ch_reg->trg_addr);
++		tdma_ch_write(tdc, ADMA_CH_CTRL, ch_reg->ctrl);
++		tdma_ch_write(tdc, ADMA_CH_FIFO_CTRL, ch_reg->fifo_ctrl);
++		tdma_ch_write(tdc, ADMA_CH_CONFIG, ch_reg->config);
++		tdma_ch_write(tdc, ADMA_CH_CMD, ch_reg->cmd);
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
 
-I would, instead, write the phrases using the direct order, and break
-into two paragraphs, e. g., changing the above to:
-
-	"The driver will set the value for uncompressed images.
-
-	Clients are allowed to set the sizeimage field for variable length
-	compressed data, but the driver may ignore it and set the
-	value itself, or it may modify the provided value based on
-	alignment requirements or minimum/maximum size requirements.
-	If the client wants to leave this to the driver, then it should
-	set sizeimage to 0."
-
-That makes it a lot easier to read, hopefully preventing mistakes from
-app and driver developers when reading about sizeimage.
-
-Yet, I'm not too comfortable on letting this too generic. I mean,
-how an app writer would know what formats are "variable length
-compressed data", specially since libv4l may actually change that.
-
-Thanks,
-Mauro
