@@ -2,129 +2,137 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6604C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB91C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847962089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:48:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556758133;
-	bh=DZcQobR9/wQCf0xZy2gO/3nNgDwOdfTWMRJMmL87hls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YIBtqZJ6LIZd47OVvsmlXI4g+bV27AC8cFts8Uh7PU1z+VFfkauvJuzciRvjeCNOn
-	 ZBnKb6HYjxSZuXbR9Z74mLk8th5OMK9gFhdwMHTsryT+i12W84P6geqaxYyYe9s1jO
-	 Dfp0ZVbB3Cr/azMlIq2bX1jsEKh/H4jEraGa3XnI=
+	by mail.kernel.org (Postfix) with ESMTP id D9F542081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iy/Sn6Xa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfEBAsw (ORCPT
+        id S1726244AbfEBAxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 20:48:52 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34225 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfEBAsw (ORCPT
+        Wed, 1 May 2019 20:53:04 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:55734 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfEBAxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 20:48:52 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v10so427778oib.1;
-        Wed, 01 May 2019 17:48:51 -0700 (PDT)
+        Wed, 1 May 2019 20:53:04 -0400
+Received: by mail-it1-f195.google.com with SMTP id i131so528954itf.5;
+        Wed, 01 May 2019 17:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SMeSIjBMoztFLs1N6yeylbhEwFQ8aE16zamS1zR69mw=;
+        b=iy/Sn6XaDIKRiDSuy0xTaguACJf6ApHbDUyojNS1rXStyorLACsb0v6xqDZ/RxD+D7
+         dn7+rhRXc69rcLC/sDFHT/DqJJBU9EbuhBQmC+AoUsq1I1DIPuSLxVNYuSzAxnVZy+LU
+         yfriT2A10Lm2/4Zy1PSYiDXbmIKa0hgDeC0dT6oAIpVXH6xh3kYPPV6EM+hF1KTpLbJZ
+         Nla30v/MTpGqk3M+hYHJEDR9Q1z45PSmeGhXGUv7X13IbgDVk+6RK7Rh7wcvFinFu+vH
+         Yj3avo4TqzqlICz+BG7kCu/IChct8jmUxDs9pnXMWLUa/z4vEcAFYml4gvBh+40F5Usj
+         3uYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=/DJSVXUD6ihdDGPu0GZjl5uPL7+MwkMGdNWZHLgSEZ0=;
-        b=FV2f99ZGRYMYUthNqY65zhIZx0jdIuRg49qo49W6Okp+Ncmymi6C/PPiSJ7LwIq2wH
-         V/py9IEexclqxm2NJG1q3HlskOh8TkhjMlGjpLHgZPjyFOyDmrLsOdW3aWco9eEsLpKL
-         E/2vpKbQIB3FXtBhuNOQQZixzrLEuPH33X6X+8X8f3tw2ZNkZkwABGdnoLdMEuLg0OKC
-         ItlbqqR9Lv4//rv7D7C6tRW2x+9w0p29Cv3uRFeSBl7TCfCb924j/aw9CkkS22tMTFJC
-         S7ECsCXxP516Jzbh3DYcdheHRj560mqUOKlMDm13+LkZmMzgx9qRUYDgVGTdDpkIr/NN
-         yWOg==
-X-Gm-Message-State: APjAAAWHHjf9qpesIAoEfSrH7Gwta7svu4ZleaP60nGxk6O/91KFpMNP
-        As9zbrEJLyqZ9sD1xFlMGb4AhSY=
-X-Google-Smtp-Source: APXvYqzw6vNDK3Wzkdy9CxKtL6Q3ubGrIjPHnrFf021GVDCBaGS2/NFROx9ihayNuO+j0GGbsvHoYg==
-X-Received: by 2002:aca:3306:: with SMTP id z6mr748777oiz.25.1556758131022;
-        Wed, 01 May 2019 17:48:51 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i11sm16269124otl.27.2019.05.01.17.48.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 17:48:50 -0700 (PDT)
-Date:   Wed, 1 May 2019 19:48:49 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: input: Add support for the MPR121
- without interrupt line
-Message-ID: <20190502004849.GA8232@bogus>
-References: <1556267420-93219-1-git-send-email-michal.vokac@ysoft.com>
- <1556267420-93219-2-git-send-email-michal.vokac@ysoft.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SMeSIjBMoztFLs1N6yeylbhEwFQ8aE16zamS1zR69mw=;
+        b=jVHdkM1eLVj8fd0F5Qp3NZ59MeXG33pIhaj5r2rnFelYqVeptpN1s+q832jhBWkg8M
+         UVaTLwKihCz4K4mLTrIMGQFlRt8H2jdhtZV3l+Rupt7TxTvh5dYhjuc0AFxTmAx7Jnma
+         HeGND1W3NqI0AONWXY5TWdJk70rUYOHdTLljiTHmI1EeT2RnK9I9C6DD6S2odrWp1EZr
+         kLfa6+4dos/qDQbPY9b3jO1b8N4B9kFCTOYN+y6ZOUM6U0hZkLUMlIX0T/0oMEhQBlE5
+         OHe8iZVfpzol6dE3KBNkNZQNnnTVLtyWC2z30kMSxy4uS1aLIjhjUDUCCkbu+Qeb0aT8
+         OZJQ==
+X-Gm-Message-State: APjAAAVywGWpYJYN68igFdGKkrUAt2QJJcItKUPRL++nMWPgVIbAixPa
+        xcmwmYUGS7OVzjVEVDZKrdjFUTgJ
+X-Google-Smtp-Source: APXvYqy3d6dJXuMHx07TIlwjPLHrrzD18rTenNrcq63rPhYmeSCO98a7pjuckVpAlPuBAvYyFxZv3Q==
+X-Received: by 2002:a02:6307:: with SMTP id j7mr525665jac.65.1556758383076;
+        Wed, 01 May 2019 17:53:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id d10sm4370934ios.72.2019.05.01.17.52.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 17:53:02 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] dt-bindings: memory: Add binding for NVIDIA
+ Tegra30 External Memory Controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190414202009.31268-1-digetx@gmail.com>
+ <20190414202009.31268-3-digetx@gmail.com> <20190429220542.GA17924@bogus>
+ <137c766e-66f6-828a-5c3b-f526d66d37bd@gmail.com>
+ <CAL_JsqKCWytgQEDPLX27xdaDrARtHssbhFcL47RO0zfECm0Gig@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <27d24f4e-cf4c-b2d1-140a-5dcef021fa40@gmail.com>
+Date:   Thu, 2 May 2019 03:52:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAL_JsqKCWytgQEDPLX27xdaDrARtHssbhFcL47RO0zfECm0Gig@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556267420-93219-2-git-send-email-michal.vokac@ysoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 10:30:17AM +0200, Michal Vokáč wrote:
-> Normally, the MPR121 controller uses separate interrupt line to notify
-> the I2C host that a key was touched/released. To support platforms that
-> can not use the interrupt line, polling of the MPR121 registers can be
-> used.
+02.05.2019 3:17, Rob Herring пишет:
+> On Wed, May 1, 2019 at 7:06 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 30.04.2019 1:05, Rob Herring пишет:
+>>> On Sun, Apr 14, 2019 at 11:20:07PM +0300, Dmitry Osipenko wrote:
+>>>> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
+>>>> The binding is based on the Tegra124 EMC binding since hardware is
+>>>> similar, although there are couple significant differences.
+>>>
+>>> My comments on Tegra124 binding apply here.
+>>
+>> The common timing definition doesn't fully match the definition that is
+>> used by Tegra's Memory Controller, thus the DQS (data strobe) timing
+>> parameter is comprised of multiple sub-parameters that describe how to
+>> generate the strobe in hardware. There are also more additional
+>> parameters that are specific to Tegra and they are individually
+>> characterized for each memory model and clock rate. Hence the common
+>> timing definition isn't usable.
+> 
+> I don't understand. Every PC in the world can work with any DIMM
+> (within a given generation) just with SPD data. Why is that not
+> sufficient here?
 
-Other than making the 'interrupts' property optional, that's a driver 
-change, not a DT change. IOW, we shouldn't need a whole new binding.
+Because this is not a standard PC, but a custom embedded hardware that
+is simpler and also doesn't fully follow the standards in some cases.
 
-> 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-> ---
->  .../bindings/input/mpr121-touchkey-polled.txt      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt b/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
-> new file mode 100644
-> index 000000000000..6bb1d312614c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
-> @@ -0,0 +1,26 @@
-> +* Freescale MPR121 Controller without interrupt line
-> +
-> +Required Properties:
-> +- compatible:		Should be "fsl,mpr121-touchkey-polled"
-> +- reg:			The I2C slave address of the device.
-> +- vdd-supply:		Phandle to the Vdd power supply.
-> +- linux,keycodes:	Specifies an array of numeric keycode values to
-> +			be used for reporting button presses. The array can
-> +			contain up to 12 entries.
-> +
-> +Optional Properties:
-> +- autorepeat:		Enable autorepeat feature.
-> +
-> +Example:
-> +
-> +#include "dt-bindings/input/input.h"
-> +
-> +	touchkeys: keys@5a {
-> +		compatible = "fsl,mpr121-touchkey-polled";
-> +		reg = <0x5a>;
-> +		autorepeat;
-> +		vdd-supply = <&ldo4_reg>;
-> +		linux,keycodes = <KEY_0>, <KEY_1>, <KEY_2>, <KEY_3>,
-> +				<KEY_4> <KEY_5>, <KEY_6>, <KEY_7>,
-> +				<KEY_8>, <KEY_9>, <KEY_A>, <KEY_B>;
-> +	};
-> -- 
-> 2.1.4
-> 
+> In any case, it seems for Tegra124 a different approach is going to be
+> taken. Seems like an "avoid DT" solution to me, but if it's contained
+> within the firmware it's not my problem.
+
+My above comment really applies to all Terga's.
+
+The Tegra210 is also a bit more complicated case because of the
+proprietary signed firmware that can't be easily replaced with
+opensource alternative without special hacks, but AFAIK the unofficial
+opensource firmware will be available in some form for at least one
+consumer device (Nintendo Switch).
+
+Please write a detailed comment to the Tegra210's patch, saying what you
+would want to see changed. I'm sure Joseph will try to do his best.
+
+Note that it is always possible to define a proper device tree binding
+and then also "unofficially" support the downstream binding, IIRC that's
+what some drivers are already doing in upstream kernel. So I think you
+could just demand for the proper binding regardless of the firmware
+situation.
