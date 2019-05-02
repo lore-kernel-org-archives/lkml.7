@@ -2,101 +2,161 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEE5C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD72C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2325D20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="QXat18OM"
+	by mail.kernel.org (Postfix) with ESMTP id 3E84720652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfEBRoi (ORCPT
+        id S1726386AbfEBRqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:44:38 -0400
-Received: from mail-ed1-f51.google.com ([209.85.208.51]:32823 "EHLO
-        mail-ed1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfEBRoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:44:37 -0400
-Received: by mail-ed1-f51.google.com with SMTP id n17so2892183edb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 10:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DaSPhFrdJ9xcb9w7nOB/hv2LmsH6V06QJTIIuydXt8E=;
-        b=QXat18OMVYiFj1J2lwckErIND4VxtD7m3nZmTH2CGaJZ+Hw7fVyhiWqHLoK622HkMp
-         U9yMIC+ePTVWRGsI21RjnrUuMDsRxTmmjgzsyI3fQ3Qprp0+kiDd7tOOuYY19ZJMOfhl
-         l/1rt08HauRtiP2hRqk2NjpJPuP+O+9ngov5zkBNLTuR7qrPf6ExGNub4tU8rsI/TrCn
-         n8s8mKEfj18Fxht+PV1z/8GAgInkc9Qc/e9giORQoOAL+mVUg59lDwUFBXIKKGSVU4af
-         HayfIxQWJSZlQl6kr16/h15Hk5Reu50LKaP/QJCHnyPavmaX8LyepIFk7cqxBrWSjJxB
-         gfgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DaSPhFrdJ9xcb9w7nOB/hv2LmsH6V06QJTIIuydXt8E=;
-        b=Qx1rAaJurspK23qrm6GiT/i/ww/5ItMjcBo+dhH15T013+enih8+f8TkfMXm61seZm
-         CCOLAJBlUqIWO6tLn20OyQB1u6C7M3ucljNGXYJ7m+C/CauFUUm5ck4ZcmuF2eSp/5BT
-         AZzHJ7/EL9cqPymFmj1rpbboTPOFmM8dvuobkpeqCmoqBFIkInV1a66R49SjMfc9CLcc
-         rzadLlQXpYuWz/ACVCAfy+4SzlKvw4f7YULTywZONoWGDSE3o2eJPQUCFt62up3hvaks
-         zQkPM4PsM0Lgz812ANuB9jsbZSuhfLLv+1x0RpPGpBLaAcBTwwHMtyBNE3GyH2HsEgVr
-         dEoQ==
-X-Gm-Message-State: APjAAAXL0m3mRQ55/DkmCWN5Wp+2JEKhD6autdGG8OxVIUPUFTgoznWh
-        uBffUfZK+hX05BG4B6kZGc7hyKIvKHbG6p0O4Xl6EA==
-X-Google-Smtp-Source: APXvYqwFjCWrvwlJewJq8jESh0fLZdmcYO3yLeAKyzDonK3UsuXpek6fTdQl1z2LIrzbiszd7BG6f/7lz+swTO1hQHI=
-X-Received: by 2002:a50:a951:: with SMTP id m17mr3313780edc.79.1556819075931;
- Thu, 02 May 2019 10:44:35 -0700 (PDT)
+        Thu, 2 May 2019 13:46:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58357 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbfEBRqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 13:46:18 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D2E463082E72;
+        Thu,  2 May 2019 17:46:17 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E7AC17D50;
+        Thu,  2 May 2019 17:46:17 +0000 (UTC)
+Subject: Re: [PATCH v3] kernel/module: Reschedule while waiting for modules to
+ finish loading
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Arcari <darcari@redhat.com>
+References: <20190430222207.3002-1-prarit@redhat.com>
+ <90e18809-2b70-52d8-00b3-9c16768db9ad@redhat.com>
+ <20190502094813.GA6690@linux-8ccs>
+ <f0bc15a4-0f99-c899-b7d7-2d4db86e287e@redhat.com>
+Message-ID: <4849a5af-b2bb-95ad-6b58-2f0c403c9ebb@redhat.com>
+Date:   Thu, 2 May 2019 13:46:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190501191846.12634-1-pasha.tatashin@soleen.com>
- <20190501191846.12634-3-pasha.tatashin@soleen.com> <20190502173419.GA3048@sasha-vm>
-In-Reply-To: <20190502173419.GA3048@sasha-vm>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 2 May 2019 13:44:24 -0400
-Message-ID: <CA+CK2bA-jVEXvF-gi1N=8jD-+MPsqtn0aod=iBNJ0TrgiqqBSg@mail.gmail.com>
-Subject: Re: [v4 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     James Morris <jmorris@namei.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f0bc15a4-0f99-c899-b7d7-2d4db86e287e@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 02 May 2019 17:46:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >device-dax/kmem driver. So, operations should look like this:
-> >
-> >echo offline > echo offline > /sys/devices/system/memory/memoryN/state
 
->
-> This looks wrong :)
->
 
-Indeed, I  will fix patch log in the next version.
+On 5/2/19 8:41 AM, Prarit Bhargava wrote:
+> 
+> 
+> On 5/2/19 5:48 AM, Jessica Yu wrote:
+>> +++ Prarit Bhargava [01/05/19 17:26 -0400]:
+>>>
+>>>
+>>> On 4/30/19 6:22 PM, Prarit Bhargava wrote:
+>>>> On a s390 z14 LAR with 2 cpus about stalls about 3% of the time while
+>>>> loading the s390_trng.ko module.
+>>>>
+>>>> Add a reschedule point to the loop that waits for modules to complete
+>>>> loading.
+>>>>
+>>>> v3: cleanup Fixes line.
+>>>
+>>> Jessica, even with this additional patch there appears to be some other issues
+>>> in the module code that are causing significant delays in boot up on large
+>>> systems.
+>>
+>> Is this limited to only s390? Or are you seeing this on other arches
+>> as well? And is it limited to specific modules (like s390_trng)?
+> 
+> Other arches.  We're seeing a hang on a new 192 CPU x86_64 box & the
+> acpi_cpufreq driver.  The system is MUCH faster than any other x86_64 box I've
+> seen and that's likely why I'm seeing a problem.
+> 
+>>
+>>> FWIW, the logic in the original patch is correct.  It's just that there's, as
+>>> Heiko discovered, some poor scheduling, etc., that is impacting the module
+>>> loading code after these changes.
+>>
+>> I am really curious to see what these performance regressions look
+>> like :/ Please update us when you find out more.
+>>
+> 
+> I sent Heiko a private v4 RFC last night with this patch (sorry for the
+> cut-and-paste)
+> 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 1c429d8d2d74..a4ef8628f26f 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3568,12 +3568,12 @@ static int add_unformed_module(struct module *mod)
+> 	mutex_lock(&module_mutex);
+> 	old = find_module_all(mod->name, strlen(mod->name), true);
+> 	if (old != NULL) {
+> -		if (old->state == MODULE_STATE_COMING
+> -		    || old->state == MODULE_STATE_UNFORMED) {
+> +		if (old->state != MODULE_STATE_LIVE) {
+> 			/* Wait in case it fails to load. */
+> 			mutex_unlock(&module_mutex);
+> -			err = wait_event_interruptible(module_wq,
+> -					       finished_loading(mod->name));
+> +			err = wait_event_interruptible_timeout(module_wq,
+> +					       finished_loading(mod->name),
+> +					       HZ / 10000);
+> 			if (err)
+> 				goto out_unlocked;
+> 			goto again;
+> 
+> The original module dependency race issue is fixed simply by changing the
+> conditional to checking !MODULE_STATE_LIVE.  This, unfortunately, exposed some
+> other problems within the code.
+> 
+> The module_wq is only run when a module fails to load.  It's possible that
+> the time between the module's failed init() call and running module_wq
+> (kernel/module.c:3455) takes a while.  Any thread entering the
+> add_unformed_module() code while the old module is unloading is put to sleep
+> waiting for the module_wq to execute.
+> 
+> On the 192 thread box I have noticed that the acpi_cpufreq module attempts
+> to load 392 times (that is not a typo and I am going to try to figure that
+> problem out after this one).  This means 191 cpus are put to sleep, and one
+> cpu is executing the acpi_cpufreq module unload which is executing
+> do_init_module() and is now at
+> 
+> fail_free_freeinit:
+>         kfree(freeinit);
+> fail:
+>         /* Try to protect us from buggy refcounters. */
+>         mod->state = MODULE_STATE_GOING;
+>         synchronize_rcu();
+>         module_put(mod);
+>         blocking_notifier_call_chain(&module_notify_list,
+>                                      MODULE_STATE_GOING, mod);
+>         klp_module_going(mod);
+>         ftrace_release_mod(mod);
+>         free_module(mod);
+>         wake_up_all(&module_wq);
+>         return ret;
+> }
+> 
+> The 191 threads cannot schedule and the system is effectively stuck.  It *does*
+> eventually free itself but in some cases it takes minutes to do so.
+> 
+> A simple fix for this is to, as I've done above, to add a timeout so that
+> the threads can be scheduled which allows other processes to run.  
 
-Thank you,
-Pasha
+After taking a much closer look the above patch appears to be correct.  I am not
+seeing any boot failures associated with it anywhere.  I would like to hear from
+Heiko as to whether or not this works for him though.
+
+P.
