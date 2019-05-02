@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DB0C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02827C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510CB20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C610020873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="HAhHVFUw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="ckSN3bxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfEBFtf (ORCPT
+        id S1726341AbfEBFtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 01:49:35 -0400
-Received: from mail1.skidata.com ([91.230.2.99]:28144 "EHLO mail1.skidata.com"
+        Thu, 2 May 2019 01:49:36 -0400
+Received: from mail2.skidata.com ([91.230.2.91]:53825 "EHLO mail2.skidata.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbfEBFte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 01:49:34 -0400
+        id S1726291AbfEBFtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 01:49:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1556776196; x=1588312196;
+  t=1556776197; x=1588312197;
   h=subject:to:cc:references:from:message-id:date:
    mime-version:in-reply-to:content-transfer-encoding;
-  bh=+rh5gv9W5GlQRkk6kNOSWglbe02krW6W1cUYUx6+EZM=;
-  b=HAhHVFUwa471myjZ69k4kEVyaM0a7vjCea2VMxwd1KPBWO6O+mX0YErl
-   FiqvT2ahW1HlM3p4XFGPG7SPd6JjeFe3nNhglGuBU/GJKPCgezdEbJyw2
-   v++ZJYMhwvUdfU9s5r2RQPkfiN+fWsyzyVLuAYxf2oZHfjf09xkB4Olod
-   pU/trnPB8EoKbfje7npgKyfH+/s2idOo47uG4puSO+uyQ8Jgeif967SDo
-   cbsxFuuFloHEM9f2+1pCvo442sBDJi0tOrL2GBucaNdE0RhwaSjgQlF3L
-   nm7eQdTduXTj/9W290m8R80KjkSfTNM08ACCtSW9LJ7tiabX8S9nARfYy
-   A==;
-IronPort-SDR: TMoFwjRA8pYF1rDBStDY7lZeYT4oM/8ZnHkGglL0g/mFk2gXVsV+EeK4JQkHghG9sVlkPmqlGp
- CN4w2f23T66F6eNVclj3fybhYgoAxIlLg76JzyyPfJSu46yZtFLtifV93FhrWtyQFBXNgY0whU
- +40xGEI9ueSCVaZnsRJI9Zc7wth0gNlgdPdPWzAL15EuLoTbZ2HaRvUZeHH2ePBZyz+9Vu+dm4
- uJoBk2KZu8sNDxTCI2BPgyp8hjXvO3U+oSAVCH01Y+8vCrz17T8ebf3sCWaBHG9gHOH5qNdA6o
- LxY=
+  bh=cOnYhEx5pXVlfHn6Zs23yAt72R9SWUDC2PhFzOaJjEY=;
+  b=ckSN3bxz0mlcC03/i1dCvSSmUpvgM8zJQfcrT3tQ9OvOo4iXSDHy6Zuq
+   xCfv9fuVXcOQB/XOfkOWK9RzMC9JqAfcM53Cj26JbzhRw7BIE3vajC9/b
+   wTtAN4/idDQ9aIUMFPYld2icsk4bht1SWf5txTB8svKRY0STOIjOrN8W9
+   cIjDOtSztfRpsfdYM3N2a/Vo6p7e1c9GxxCzBH8wdBygicWfr8PxNX2fe
+   RKp6UvsHqBnBu9jBrryJhHgK/LyiNHhiZDZ6biRBDQ/TUsbe/bMinW7f9
+   J4SMdmBiblKur5TylIUsnDnTc5iC4UyDRjCrzevbrlYNhS5+OxoYF0T0k
+   Q==;
+IronPort-SDR: MIy5BJHLa/U3XJG72jLA3Hk08QIcy/ZpWW7TH+Xo+qztfMList5auJAb99dkynpJbRZ9hA/C/z
+ Qpb1QVcslgR0it2eK2YrXqL3J5PaT3kipRP8BGivdlRVnEQV5cz/G/lyj4EO+KyOR1zn/Fl77K
+ Zef0Q5Bcey+m2ZMhagi7BRmd1MiHWuCGXoShJmJGtMTVGUElyPVkdKcwLuN0g+QctyjAG/q44A
+ PDbXv45HOMS2ssPDQOs5S2W6tXOt3d6pQon3BeTIWbzaR3q96zwwd71KqoeHitpno8TPWICfcj
+ IOE=
 X-IronPort-AV: E=Sophos;i="5.60,420,1549926000"; 
-   d="scan'208";a="16784896"
-Subject: Re: [PATCH 2/3] usb: usb251xb: Create a ports field collector method
+   d="scan'208";a="2117530"
+Subject: Re: [PATCH 3/3] usb: usb251xb: Add US port lanes inversion property
 To:     Serge Semin <fancer.lancer@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 CC:     Serge Semin <Sergey.Semin@t-platforms.ru>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 References: <20190424211208.17499-1-fancer.lancer@gmail.com>
- <20190424211208.17499-3-fancer.lancer@gmail.com>
+ <20190424211208.17499-4-fancer.lancer@gmail.com>
 From:   Richard Leitner <richard.leitner@skidata.com>
-Message-ID: <9d8fddf3-52aa-f20f-e19c-a53f863cd3ef@skidata.com>
-Date:   Thu, 2 May 2019 07:42:24 +0200
+Message-ID: <74095a9d-5af3-1e1c-33c0-74c9784d3854@skidata.com>
+Date:   Thu, 2 May 2019 07:42:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190424211208.17499-3-fancer.lancer@gmail.com>
+In-Reply-To: <20190424211208.17499-4-fancer.lancer@gmail.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,21 +69,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 24/04/2019 23:12, Serge Semin wrote:
-> Seeing the ports field collection functionality is used four times per
-> just one function, it's better to have a dedicated method performing
-> the task. Note that this fix filters the port 0 out from the lanes
-> swapping property the same way as it has been programmed for the rest
-> multi-ports properties. But unlike the rest of ports config registers
-> the BIT(0) of the Port Lanes Swap register refers to the Upstream Port
-> lanes inversion. This fact hasn't been documented in the driver bindings
-> nor there were any mentioning about port 0 being treated as upstream
-> port. Lets then leave this fix as is for the properties unification
-> and create an additional "swap-us-lanes" in the next patch.
+> The driver bindings already declare the "swap-dx-lanes" property to
+> invert the downstream ports lanes polarity. The similar config
+> can be defined for a single upstream port - "swap-us-lanes". It's
+> going to be boolean since there is only one upstream port
+> on the hub.
 > 
 > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 > ---
->   drivers/usb/misc/usb251xb.c | 71 ++++++++++++++-----------------------
->   1 file changed, 26 insertions(+), 45 deletions(-)
-> 
+>   drivers/usb/misc/usb251xb.c | 2 ++
+>   1 file changed, 2 insertions(+)
 
 Acked-by: Richard Leitner <richard.leitner@skidata.com>
