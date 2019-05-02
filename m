@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CEAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9747BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F71120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661B2208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810682;
-	bh=rfnD1DDuit9QawVxPT4jQHRi6d0WphtiqeoarjV9JJo=;
+	s=default; t=1556810685;
+	bh=iyutgjCnqeEGMv7+w36WlERhI2JO6mPMmmxKpcNWrkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mNLMMwWuQDN1UnRbxGJpjUZZDi29KGjp5moC1uQUrhaG/OY/60+4xHXlBN0HX1IBw
-	 uFfGzc3bNzo10Io0NbB6zR623EBLNwW5S4rJaTLrCC4ihejSPogn7IoS8YlMzoCXuR
-	 F1f25Wazx0k3WfmJE/vcHZoHe3gQqcTLrBrrgCZw=
+	b=QWQcqz9G0FOhBV0/As8yq8aLlMR8/y9o5A+tWE3h/ovOsViHrEewZlSjy9+pBaF/e
+	 ZCVSqUE5lqrKJ70nHm6uUO7caB2jTXGXXKDC1kgd33oLq4XIQ0qj8Juw95dDUGsLHW
+	 1jH0GGuW6jPJnBU8jdgYYrmP3XtJAz6dZDp6XRAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfEBPYk (ORCPT
+        id S1727376AbfEBPYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:24:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfEBPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:24:38 -0400
+        id S1727359AbfEBPYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:24:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADA382085A;
-        Thu,  2 May 2019 15:24:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C1BF208C4;
+        Thu,  2 May 2019 15:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810678;
-        bh=rfnD1DDuit9QawVxPT4jQHRi6d0WphtiqeoarjV9JJo=;
+        s=default; t=1556810680;
+        bh=iyutgjCnqeEGMv7+w36WlERhI2JO6mPMmmxKpcNWrkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qqwydqLrzkdPNZdrJlecWERtxIKEj6GohGLbS7W3MawTX+Y0+qExzSZM7NkrnVHzz
-         /+FcO7/7mSG3PQyubklBbuSsBYbf1lSFfkNykfd/qqVzyzxVQ2X9VEp7HyUmLusS3B
-         zlHQAoKMPgrIXZXPPF9NUt++laCGkw7U0l5OqSeg=
+        b=uyuESeWOIW6yGNuDEVordRuZVu798HHnKb7ofWLvJp4Bj1fuzU2nrV8c21luA4SyY
+         lK+SqRtZHqeMZEOwpN1D5N1l+v7ddpOkBlyQySRrk/SaUeczlvgI1a230tKzDLh5yG
+         OemVewfdT7OOvFM2d6u9iYT0sgAR1sJyQ29t/U/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 38/49] drm/meson: Uninstall IRQ handler
-Date:   Thu,  2 May 2019 17:21:15 +0200
-Message-Id: <20190502143328.724426473@linuxfoundation.org>
+Subject: [PATCH 4.14 39/49] scsi: qla4xxx: fix a potential NULL pointer dereference
+Date:   Thu,  2 May 2019 17:21:16 +0200
+Message-Id: <20190502143328.907283623@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -61,54 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d8f92897ad816f5dda54b2ed2fd9f2d7cb1abde ]
+[ Upstream commit fba1bdd2a9a93f3e2181ec1936a3c2f6b37e7ed6 ]
 
-meson_drv_unbind() doesn't unregister the IRQ handler, which can lead to
-use-after-free if the IRQ fires after unbind:
+In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid NULL
+pointer dereference.
 
-[   64.656876] Unable to handle kernel paging request at virtual address ffff000011706dbc
-...
-[   64.662001] pc : meson_irq+0x18/0x30 [meson_drm]
-
-I'm assuming that a similar problem could happen on the error path of
-bind(), so uninstall the IRQ handler there as well.
-
-Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190322152657.13752-2-jean-philippe.brucker@arm.com
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpu/drm/meson/meson_drv.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
-index 1a1b0b9cf1fa..0608243c3387 100644
---- a/drivers/gpu/drm/meson/meson_drv.c
-+++ b/drivers/gpu/drm/meson/meson_drv.c
-@@ -277,10 +277,12 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
- 
- 	ret = drm_dev_register(drm, 0);
- 	if (ret)
--		goto free_drm;
-+		goto uninstall_irq;
- 
- 	return 0;
- 
-+uninstall_irq:
-+	drm_irq_uninstall(drm);
- free_drm:
- 	drm_dev_unref(drm);
- 
-@@ -298,6 +300,7 @@ static void meson_drv_unbind(struct device *dev)
- 	struct drm_device *drm = priv->drm;
- 
- 	drm_dev_unregister(drm);
-+	drm_irq_uninstall(drm);
- 	drm_kms_helper_poll_fini(drm);
- 	drm_fbdev_cma_fini(priv->fbdev);
- 	drm_mode_config_cleanup(drm);
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 22dc70a2138e..630b7404843d 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -3207,6 +3207,8 @@ static int qla4xxx_conn_bind(struct iscsi_cls_session *cls_session,
+ 	if (iscsi_conn_bind(cls_session, cls_conn, is_leading))
+ 		return -EINVAL;
+ 	ep = iscsi_lookup_endpoint(transport_fd);
++	if (!ep)
++		return -EINVAL;
+ 	conn = cls_conn->dd_data;
+ 	qla_conn = conn->dd_data;
+ 	qla_conn->qla_ep = ep->dd_data;
 -- 
 2.19.1
 
