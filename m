@@ -2,101 +2,133 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D0AC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7467CC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91672075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4504F2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556799693;
-	bh=R/ozEIIEfsa2BBgUE6Zb0DzWINwSciwlbxuHIoiZm/s=;
+	s=default; t=1556799918;
+	bh=ZoX9V1s0qrt4r08myB/QcycPRJk8L7cmiOd5yFSi16w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O1afbVJE9Jlj3hD5bAUsUC0M49CRVBXXHVUZrNXX7Nk94o3Rsp9M2QvTeB5yBfS7t
-	 YLKDQzeA+MVEx0AlaLGZAqGeMPs0qTX8yxyglU7XITWYpQ7pVBpxenWlnhT6E0cCfq
-	 iC98jOOLFHh5kbDb/chMVlnBXQtnB26WzDruVk38=
+	b=1ntVga3j0avVXPpKKBY6NURo9qER4EwacxRMptm/bNQkq7ORw1vjG8gxyPk64ZVEF
+	 /YL0obErWiMn5Iqj8yoR1A4hjb0MEuJrp3meQDfwsFdo42I0g8Yv5zAGOWjIxq8GzE
+	 Gv2vWegvRsXG60GwLxLNd6+cULzYrLJS73JKEIE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfEBMVc (ORCPT
+        id S1726327AbfEBMZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 08:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfEBMVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:21:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726268AbfEBMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:25:17 -0400
+Received: from localhost (unknown [171.76.113.243])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE6C920645;
-        Thu,  2 May 2019 12:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E0C2081C;
+        Thu,  2 May 2019 12:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556799691;
-        bh=R/ozEIIEfsa2BBgUE6Zb0DzWINwSciwlbxuHIoiZm/s=;
+        s=default; t=1556799915;
+        bh=ZoX9V1s0qrt4r08myB/QcycPRJk8L7cmiOd5yFSi16w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0XTRRMUhLI54mTjNUrl3u8Pgw1CnKMLL7BU/VWQQLVvLwEqsg2QGEFYkOLCrfMefg
-         72/5LLgQvaEFw/NGIvQTFrCbD2sBmrd1FZVuXsTUDJcnapwzEJij3k7uGBg9fKZk6J
-         NYNl4NCI3Zb1X9/mQWzxXz0YyeQTvgjb68kltXAw=
-Date:   Thu, 2 May 2019 14:21:28 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-Message-ID: <20190502122128.GA2670@kroah.com>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
- <20190415051919.GA31481@infradead.org>
- <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+        b=DXa59V3/IVeQhweQz6Szgs5iufgkdTHBndGtJ5rzHVEdMfqANb1HgO/GTql8iS+DU
+         NVjolkeiM4TFMnkUzeV7LiByQZCfGMdu3x7Zao/xE4J5RyfkotEVdoBGYNXkl2SYYR
+         aMWRed160THlVgdbPtlxjX/y4mHgop5mi8ZX65aQ=
+Date:   Thu, 2 May 2019 17:55:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     dan.j.williams@intel.com, tiwai@suse.com, jonathanh@nvidia.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+Message-ID: <20190502122506.GP3845@vkoul-mobl.Dlink>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
-> On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > Can we please have the page refcount overflow fixes out on the list
-> > for review, even if it is after the fact?
+On 02-05-19, 16:23, Sameer Pujar wrote:
 > 
-> They were actually on a list for review long before the fact, but it
-> was the security mailing list. The issue actually got discussed back
-> in January along with early versions of the patches, but then we
-> dropped the ball because it just wasn't on anybody's radar and it got
-> resurrected late March. Willy wrote a rather bigger patch-series, and
-> review of that is what then resulted in those commits. So they may
-> look recent, but that's just because the original patches got
-> seriously edited down and rewritten.
-> 
-> That said, powerpc and s390 should at least look at maybe adding a
-> check for the page ref in their gup paths too. Powerpc has the special
-> gup_hugepte() case, and s390 has its own version of gup entirely. I
-> was actually hoping the s390 guys would look at using the generic gup
-> code.
-> 
-> I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
-> largely irrelevant, partly since even theoretically this whole issue
-> needs a _lot_ of memory.
-> 
-> Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
-> (page ref overflow)"). You may or may not really care.
+> On 5/2/2019 11:34 AM, Vinod Koul wrote:
+> > On 30-04-19, 17:00, Sameer Pujar wrote:
+> > > During the DMA transfers from memory to I/O, it was observed that transfers
+> > > were inconsistent and resulted in glitches for audio playback. It happened
+> > > because fifo size on DMA did not match with slave channel configuration.
+> > > 
+> > > currently 'dma_slave_config' structure does not have a field for fifo size.
+> > > Hence the platform pcm driver cannot pass the fifo size as a slave_config.
+> > > Note that 'snd_dmaengine_dai_dma_data' structure has fifo_size field which
+> > > cannot be used to pass the size info. This patch introduces fifo_size field
+> > > and the same can be populated on slave side. Users can set required size
+> > > for slave peripheral (multiple channels can be independently running with
+> > > different fifo sizes) and the corresponding sizes are programmed through
+> > > dma_slave_config on DMA side.
+> > FIFO size is a hardware property not sure why you would want an
+> > interface to program that?
+> > 
+> > On mismatch, I guess you need to take care of src/dst_maxburst..
+> Yes, FIFO size is a HW property. But it is SW configurable(atleast in my
+> case) on
+> slave side and can be set to different sizes. The src/dst_maxburst is
 
-I've now queued these patches up for the next round of stable releases,
-as some people seem to care about these.
+Are you sure, have you talked to HW folks on that? IIUC you are
+programming the data to be used in FIFO not the FIFO length!
 
-I didn't see any follow-on patches for s390 or ppc64 hit the tree for
-these changes, am I just missing them and should also queue up a few
-more to handle this issue on those platforms?
+> programmed
+> for specific values, I think this depends on few factors related to
+> bandwidth
+> needs of client, DMA needs of the system etc.,
 
-thanks,
+Precisely
 
-greg k-h
+> In such cases how does DMA know the actual FIFO depth of slave peripheral?
+
+Why should DMA know? Its job is to push/pull data as configured by
+peripheral driver. The peripheral driver knows and configures DMA
+accordingly.
+
+ 
+> > > Request for feedback/suggestions.
+> > > 
+> > > Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> > > ---
+> > >   include/linux/dmaengine.h | 3 +++
+> > >   1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > > index d49ec5c..9ec198b 100644
+> > > --- a/include/linux/dmaengine.h
+> > > +++ b/include/linux/dmaengine.h
+> > > @@ -351,6 +351,8 @@ enum dma_slave_buswidth {
+> > >    * @slave_id: Slave requester id. Only valid for slave channels. The dma
+> > >    * slave peripheral will have unique id as dma requester which need to be
+> > >    * pass as slave config.
+> > > + * @fifo_size: Fifo size value. The dma slave peripheral can configure required
+> > > + * fifo size and the same needs to be passed as slave config.
+> > >    *
+> > >    * This struct is passed in as configuration data to a DMA engine
+> > >    * in order to set up a certain channel for DMA transport at runtime.
+> > > @@ -376,6 +378,7 @@ struct dma_slave_config {
+> > >   	u32 dst_port_window_size;
+> > >   	bool device_fc;
+> > >   	unsigned int slave_id;
+> > > +	u32 fifo_size;
+> > >   };
+> > >   /**
+> > > -- 
+> > > 2.7.4
+
+-- 
+~Vinod
