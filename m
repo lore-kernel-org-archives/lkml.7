@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E38C04AAB
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D75CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9A720C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA97214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+zSv8aq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLfb6q5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfEBUZP (ORCPT
+        id S1726705AbfEBUZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 16:25:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42807 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfEBUYu (ORCPT
+        Thu, 2 May 2019 16:25:44 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43707 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbfEBUYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 16:24:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l2so5116858wrb.9;
-        Thu, 02 May 2019 13:24:48 -0700 (PDT)
+        Thu, 2 May 2019 16:24:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a12so5107955wrq.10;
+        Thu, 02 May 2019 13:24:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CWJqz6DthZLgwnOAsHSywgj6nKZaEgLjz5fYgg8lfFI=;
-        b=g+zSv8aq6DMhXdvDfeBlXY1S20z/HSg9oIgwWnSEu1yovK35mRhw7CP+rdGUH1xAR8
-         j9xcmgUgXAxWRXEbZQH+E1pj98Rkps1tZccLaLxAqnX+vnAlHLnnyWzCEEfBmrPxYGni
-         dkb/GW96RvgOH6fRPknfwj4PA/ZxbU5AHIU7SPO/WCxNUNYO4Pb0H82O1UYam0y+NGB2
-         BCJ6l7PWX7uPEXXHuCzIISRF/e7X/GTpgZ9OFS9FjLolFME1pzgItscgW0Ugkt0rlVH/
-         k5qYdsOx1VjVRjatLWonj/h+/GwGAmlIEwcxhTat1GT8TlFv6gpjvi3je2ACk6L64fe2
-         x5rg==
+        bh=jf2kOfcFwhC5hgcJnB1jFK3+poVVivYESV876e0dzPE=;
+        b=rLfb6q5g77wj4QG0H3930+TFWsAUVpDuHMU/c9KR5VeJwju+lCZ7ase5Wd2i6RC3d4
+         /5I9UNYbZX7kkAhqztyA02dIhMzM83b5AaSbFSf4yi5RyPxsNuocOzl214jxF4YPdWC7
+         4OQxwnUIGWrQmqxwiAHYrMH09dxj0rrjZOzfNHFHzEQSiwqmjZJVeEHL5jJo7dEm8wip
+         93fAiwkxM5a8BCv3IXqJ9Tx+tZTnZ6oDjsVt6vGI/XRaEGcosFoVxl5/gcFCjwIjpKBV
+         kXXTeHojtzYEweduVHW3GNq7x/kj+IQERqJzNvyhwuAVGgzTfEWEL0so9gtyz4nLmC8h
+         qKmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=CWJqz6DthZLgwnOAsHSywgj6nKZaEgLjz5fYgg8lfFI=;
-        b=MUYcEnaCeIS3z+9sVYwDcRMnM1opWq7jqho44L2vzRlqi5qFQop+x6jWZ2dGhI454b
-         fyoJyzeRa1tjcXudr2Fdzfkdedh7g3zlo5EBtbnB3pV/7Gbk8s3wI1v3nbNED8zf8awp
-         vcyOerk7bIv1X3ZCtQ3zClSvMcXU/dzIOrxirTZsUk5rlb6j/VRPHduNN02TCG3i2hjo
-         EKLLvSNt2aPFWAnN/LAvVYN27Myirelt16GmCN7Cmm20jL9tYIKxOUX4i5zQLT1X8KKz
-         Z49nqy2PIiWBuSdZYpyN+uJPdLjasezJBO+JYhZRZW9/K32bBKkjoK0Pcf62pQhvLFLi
-         Ly4g==
-X-Gm-Message-State: APjAAAWNdwiqdaNnBfWx3J6LPLKLH2KhRke5Q3pYx+7uCIXHeDxLaMGc
-        UYBLcLojef05IoIgwUfJRSc=
-X-Google-Smtp-Source: APXvYqxEdvkmkkHgGienLrMSKZq+47BrBKiHxlCTr5cDliQ0sZOgA2V9aFUBTGnR9ZQSFUlOvH6KlQ==
-X-Received: by 2002:a5d:6a04:: with SMTP id m4mr3222468wru.84.1556828687976;
-        Thu, 02 May 2019 13:24:47 -0700 (PDT)
+        bh=jf2kOfcFwhC5hgcJnB1jFK3+poVVivYESV876e0dzPE=;
+        b=LGJrls7SpfXzw7rxrS2QbH+q/ulPF0YPrRN0JYYplycldUEiDOR0UeDsoJLPl89ODJ
+         QZBWSN6lKO5BPJkqYVBYyl1vfQyy7CWANtE6bKHINHm+upEDMBvma+Ctb0agFyi7AQ7W
+         V5DOFHqnCqHY7jJn6hOq8zqvu852bdQ83TxF4ddPWXpMJG1ciu3H1ntFYdMdukFCk1jA
+         dgve2Zot5Hl0k5s6KJKVlSrmHK4O5sdl/R0yaXlBRWLOql3iMHEmQuEVMZ9zzDkxl4+x
+         +9VFZJL995bwVW6Qes134BXUMqdCYTATJ6OizQdszLSTb9gVyPlZdO++l5vjzE3SEt26
+         XX8A==
+X-Gm-Message-State: APjAAAXtXv+2PdM/aP/L8EO0zV6EC4CrZvFH2H80DslFRl9pnW4yOTyZ
+        sef31VpXTeWtyzj2HItNToY=
+X-Google-Smtp-Source: APXvYqw71dp4zvw6zuHvWPjydqgPrUmpMneG/Tqnumx/fkgbGL9WfcgP7IOSMMMj1n5bgx9kbq5mRA==
+X-Received: by 2002:adf:dd8e:: with SMTP id x14mr3959974wrl.252.1556828686060;
+        Thu, 02 May 2019 13:24:46 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id s124sm217655wmf.42.2019.05.02.13.24.47
+        by smtp.gmail.com with ESMTPSA id s124sm217655wmf.42.2019.05.02.13.24.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 13:24:47 -0700 (PDT)
+        Thu, 02 May 2019 13:24:45 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v5 net-next 10/12] net: dsa: sja1105: Reject unsupported link modes for AN
-Date:   Thu,  2 May 2019 23:23:38 +0300
-Message-Id: <20190502202340.21054-11-olteanv@gmail.com>
+Subject: [PATCH v5 net-next 08/12] net: dsa: sja1105: Add support for configuring address ageing time
+Date:   Thu,  2 May 2019 23:23:36 +0300
+Message-Id: <20190502202340.21054-9-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190502202340.21054-1-olteanv@gmail.com>
 References: <20190502202340.21054-1-olteanv@gmail.com>
@@ -71,91 +71,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ethernet flow control:
+If STP is active, this setting is applied on bridged ports each time an
+Ethernet link is established (topology changes).
 
-The switch MAC does not consume, nor does it emit pause frames. It
-simply forwards them as any other Ethernet frame (and since the DMAC is,
-per IEEE spec, 01-80-C2-00-00-01, it means they are filtered as
-link-local traffic and forwarded to the CPU, which can't do anything
-useful with them).
-
-Duplex:
-
-There is no duplex setting in the SJA1105 MAC. It is known to forward
-traffic at line rate on the same port in both directions. Therefore it
-must be that it only supports full duplex.
+Since the setting is global to the switch and a reset is required to
+change it, resets are prevented if the new callback does not change the
+value that the hardware already is programmed for.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
 Changes in v5:
-None.
+Changed "aging" to "ageing" in commit message to be consistent with the
+code.
 
 Changes in v4:
-None.
-
-Changes in v3:
-None.
-
-Changes in v2:
 Patch is new.
 
- drivers/net/dsa/sja1105/sja1105_main.c | 31 ++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/net/dsa/sja1105/sja1105.h      |  4 ++++
+ drivers/net/dsa/sja1105/sja1105_main.c | 29 ++++++++++++++++++++++++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+index 38506bde83c6..0489d9adf957 100644
+--- a/drivers/net/dsa/sja1105/sja1105.h
++++ b/drivers/net/dsa/sja1105/sja1105.h
+@@ -12,6 +12,10 @@
+ #define SJA1105_NUM_PORTS		5
+ #define SJA1105_NUM_TC			8
+ #define SJA1105ET_FDB_BIN_SIZE		4
++/* The hardware value is in multiples of 10 ms.
++ * The passed parameter is in multiples of 1 ms.
++ */
++#define SJA1105_AGEING_TIME_MS(ms)	((ms) / 10)
+ 
+ /* Keeps the different addresses between E/T and P/Q/R/S */
+ struct sja1105_regs {
 diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index f5205ce85dbe..74f8ff9e17e0 100644
+index 28b11c7a81e7..f5205ce85dbe 100644
 --- a/drivers/net/dsa/sja1105/sja1105_main.c
 +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -11,6 +11,7 @@
- #include <linux/spi/spi.h>
- #include <linux/errno.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/phylink.h>
- #include <linux/of.h>
- #include <linux/of_net.h>
- #include <linux/of_mdio.h>
-@@ -726,6 +727,35 @@ static void sja1105_adjust_link(struct dsa_switch *ds, int port,
- 		sja1105_adjust_port_config(priv, port, phydev->speed, true);
+@@ -193,8 +193,8 @@ static int sja1105_init_l2_lookup_params(struct sja1105_private *priv)
+ {
+ 	struct sja1105_table *table;
+ 	struct sja1105_l2_lookup_params_entry default_l2_lookup_params = {
+-		/* TODO Learned FDB entries are never forgotten */
+-		.maxage = 0,
++		/* Learned FDB entries are forgotten after 300 seconds */
++		.maxage = SJA1105_AGEING_TIME_MS(300000),
+ 		/* All entries within a FDB bin are available for learning */
+ 		.dyn_tbsz = SJA1105ET_FDB_BIN_SIZE,
+ 		/* 2^8 + 2^5 + 2^3 + 2^2 + 2^1 + 1 in Koopman notation */
+@@ -1249,10 +1249,35 @@ static int sja1105_setup(struct dsa_switch *ds)
+ 	return 0;
  }
  
-+static void sja1105_phylink_validate(struct dsa_switch *ds, int port,
-+				     unsigned long *supported,
-+				     struct phylink_link_state *state)
++/* The MAXAGE setting belongs to the L2 Forwarding Parameters table,
++ * which cannot be reconfigured at runtime. So a switch reset is required.
++ */
++static int sja1105_set_ageing_time(struct dsa_switch *ds,
++				   unsigned int ageing_time)
 +{
-+	/* Construct a new mask which exhaustively contains all link features
-+	 * supported by the MAC, and then apply that (logical AND) to what will
-+	 * be sent to the PHY for "marketing".
-+	 */
-+	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
++	struct sja1105_l2_lookup_params_entry *l2_lookup_params;
 +	struct sja1105_private *priv = ds->priv;
-+	struct sja1105_xmii_params_entry *mii;
++	struct sja1105_table *table;
++	unsigned int maxage;
 +
-+	mii = priv->static_config.tables[BLK_IDX_XMII_PARAMS].entries;
++	table = &priv->static_config.tables[BLK_IDX_L2_LOOKUP_PARAMS];
++	l2_lookup_params = table->entries;
 +
-+	/* The MAC does not support pause frames, and also doesn't
-+	 * support half-duplex traffic modes.
-+	 */
-+	phylink_set(mask, Autoneg);
-+	phylink_set(mask, MII);
-+	phylink_set(mask, 10baseT_Full);
-+	phylink_set(mask, 100baseT_Full);
-+	if (mii->xmii_mode[port] == XMII_MODE_RGMII)
-+		phylink_set(mask, 1000baseT_Full);
++	maxage = SJA1105_AGEING_TIME_MS(ageing_time);
 +
-+	bitmap_and(supported, supported, mask, __ETHTOOL_LINK_MODE_MASK_NBITS);
-+	bitmap_and(state->advertising, state->advertising, mask,
-+		   __ETHTOOL_LINK_MODE_MASK_NBITS);
++	if (l2_lookup_params->maxage == maxage)
++		return 0;
++
++	l2_lookup_params->maxage = maxage;
++
++	return sja1105_static_config_reload(priv);
 +}
 +
- /* First-generation switches have a 4-way set associative TCAM that
-  * holds the FDB entries. An FDB index spans from 0 to 1023 and is comprised of
-  * a "bin" (grouping of 4 entries) and a "way" (an entry within a bin).
-@@ -1278,6 +1308,7 @@ static const struct dsa_switch_ops sja1105_switch_ops = {
+ static const struct dsa_switch_ops sja1105_switch_ops = {
+ 	.get_tag_protocol	= sja1105_get_tag_protocol,
  	.setup			= sja1105_setup,
  	.adjust_link		= sja1105_adjust_link,
- 	.set_ageing_time	= sja1105_set_ageing_time,
-+	.phylink_validate	= sja1105_phylink_validate,
++	.set_ageing_time	= sja1105_set_ageing_time,
  	.get_strings		= sja1105_get_strings,
  	.get_ethtool_stats	= sja1105_get_ethtool_stats,
  	.get_sset_count		= sja1105_get_sset_count,
