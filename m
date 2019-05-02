@@ -2,66 +2,65 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34FBC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81390C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977FE2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 531232075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfEBMsI (ORCPT
+        id S1726444AbfEBMvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:48:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33946 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726383AbfEBMsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:48:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0874DAEDB;
-        Thu,  2 May 2019 12:48:00 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 63222E0156; Thu,  2 May 2019 14:48:00 +0200 (CEST)
-Message-Id: <e7a5efb0d4acbd473286a9e5923d1a97c68fcb09.1556798793.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1556798793.git.mkubecek@suse.cz>
+        Thu, 2 May 2019 08:51:40 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:55502 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfEBMvj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:51:39 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hMBBW-0000vp-Eu; Thu, 02 May 2019 14:51:34 +0200
+Message-ID: <031933f3fc4b26e284912771b480c87483574bea.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next 1/3] genetlink: do not validate dump requests
+ if there is no policy
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        David Ahern <dsahern@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 02 May 2019 14:51:33 +0200
+In-Reply-To: <0a54a4db49c20e76a998ea3e4548b22637fbad34.1556798793.git.mkubecek@suse.cz>
 References: <cover.1556798793.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next 2/3] netlink: set bad attribute also on maxtype check
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org
-Date:   Thu,  2 May 2019 14:48:00 +0200 (CEST)
+         <0a54a4db49c20e76a998ea3e4548b22637fbad34.1556798793.git.mkubecek@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The check that attribute type is within 0...maxtype range in
-__nla_validate_parse() sets only error message but not bad_attr in extack.
-Set also bad_attr to tell userspace which attribute failed validation.
+On Thu, 2019-05-02 at 12:48 +0000, Michal Kubecek wrote:
+> Unlike do requests, dump genetlink requests now perform strict validation
+> by default even if the genetlink family does not set policy and maxtype
+> because it does validation and parsing on its own (e.g. because it wants to
+> allow different message format for different commands). While the null
+> policy will be ignored, maxtype (which would be zero) is still checked so
+> that any attribute will fail validation.
+> 
+> The solution is to only call __nla_validate() from genl_family_rcv_msg()
+> if family->maxtype is set.
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- lib/nlattr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+D'oh. Which family was it that you found this on? I checked only ones
+with policy I guess.
 
-diff --git a/lib/nlattr.c b/lib/nlattr.c
-index 29f6336e2422..adc919b32bf9 100644
---- a/lib/nlattr.c
-+++ b/lib/nlattr.c
-@@ -356,7 +356,8 @@ static int __nla_validate_parse(const struct nlattr *head, int len, int maxtype,
- 
- 		if (type == 0 || type > maxtype) {
- 			if (validate & NL_VALIDATE_MAXTYPE) {
--				NL_SET_ERR_MSG(extack, "Unknown attribute type");
-+				NL_SET_ERR_MSG_ATTR(extack, nla,
-+						    "Unknown attribute type");
- 				return -EINVAL;
- 			}
- 			continue;
--- 
-2.21.0
+Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
+
+johannes
 
