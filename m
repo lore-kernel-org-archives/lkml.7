@@ -6,31 +6,30 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E780BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34FBC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF0B12075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977FE2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfEBMsG (ORCPT
+        id S1726599AbfEBMsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:48:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33940 "EHLO mx1.suse.de"
+        Thu, 2 May 2019 08:48:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33946 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726278AbfEBMsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726383AbfEBMsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 May 2019 08:48:02 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 055F3ADE0;
+        by mx1.suse.de (Postfix) with ESMTP id 0874DAEDB;
         Thu,  2 May 2019 12:48:00 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 60A55E00D0; Thu,  2 May 2019 14:48:00 +0200 (CEST)
-Message-Id: <0a54a4db49c20e76a998ea3e4548b22637fbad34.1556798793.git.mkubecek@suse.cz>
+        id 63222E0156; Thu,  2 May 2019 14:48:00 +0200 (CEST)
+Message-Id: <e7a5efb0d4acbd473286a9e5923d1a97c68fcb09.1556798793.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1556798793.git.mkubecek@suse.cz>
 References: <cover.1556798793.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next 1/3] genetlink: do not validate dump requests if
- there is no policy
+Subject: [PATCH net-next 2/3] netlink: set bad attribute also on maxtype check
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     netdev@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
         David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org
@@ -40,62 +39,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike do requests, dump genetlink requests now perform strict validation
-by default even if the genetlink family does not set policy and maxtype
-because it does validation and parsing on its own (e.g. because it wants to
-allow different message format for different commands). While the null
-policy will be ignored, maxtype (which would be zero) is still checked so
-that any attribute will fail validation.
+The check that attribute type is within 0...maxtype range in
+__nla_validate_parse() sets only error message but not bad_attr in extack.
+Set also bad_attr to tell userspace which attribute failed validation.
 
-The solution is to only call __nla_validate() from genl_family_rcv_msg()
-if family->maxtype is set.
-
-Fixes: ef6243acb478 ("genetlink: optionally validate strictly/dumps")
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 ---
- net/netlink/genetlink.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+ lib/nlattr.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-index 72668759cd2b..9814d6dbd2d6 100644
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -537,21 +537,25 @@ static int genl_family_rcv_msg(const struct genl_family *family,
- 			return -EOPNOTSUPP;
+diff --git a/lib/nlattr.c b/lib/nlattr.c
+index 29f6336e2422..adc919b32bf9 100644
+--- a/lib/nlattr.c
++++ b/lib/nlattr.c
+@@ -356,7 +356,8 @@ static int __nla_validate_parse(const struct nlattr *head, int len, int maxtype,
  
- 		if (!(ops->validate & GENL_DONT_VALIDATE_DUMP)) {
--			unsigned int validate = NL_VALIDATE_STRICT;
- 			int hdrlen = GENL_HDRLEN + family->hdrsize;
- 
--			if (ops->validate & GENL_DONT_VALIDATE_DUMP_STRICT)
--				validate = NL_VALIDATE_LIBERAL;
--
- 			if (nlh->nlmsg_len < nlmsg_msg_size(hdrlen))
+ 		if (type == 0 || type > maxtype) {
+ 			if (validate & NL_VALIDATE_MAXTYPE) {
+-				NL_SET_ERR_MSG(extack, "Unknown attribute type");
++				NL_SET_ERR_MSG_ATTR(extack, nla,
++						    "Unknown attribute type");
  				return -EINVAL;
- 
--			rc = __nla_validate(nlmsg_attrdata(nlh, hdrlen),
--					    nlmsg_attrlen(nlh, hdrlen),
--					    family->maxattr, family->policy,
--					    validate, extack);
--			if (rc)
--				return rc;
-+			if (family->maxattr) {
-+				unsigned int validate = NL_VALIDATE_STRICT;
-+
-+				if (ops->validate &
-+				    GENL_DONT_VALIDATE_DUMP_STRICT)
-+					validate = NL_VALIDATE_LIBERAL;
-+				rc = __nla_validate(nlmsg_attrdata(nlh, hdrlen),
-+						    nlmsg_attrlen(nlh, hdrlen),
-+						    family->maxattr,
-+						    family->policy,
-+						    validate, extack);
-+				if (rc)
-+					return rc;
-+			}
- 		}
- 
- 		if (!family->parallel_ops) {
+ 			}
+ 			continue;
 -- 
 2.21.0
 
