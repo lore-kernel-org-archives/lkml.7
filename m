@@ -2,217 +2,163 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E1FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7900BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD67F20C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811013;
-	bh=7Iyaf6jf1Bvb6rz700mdG28gfVARJsxhyzrN5GnKVUU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U0Xw5VFCNUWghARsXVW/RmKSbsZ1nCdIcAVfY7o+C7XrzV3StTBX9iZWZepi24T1E
-	 /C3A7XRi8sSg+3waiNTsvuD71HSkXQ2kDFxadO4ddv6Dq4OFCaOUC5MOXTcMPT0LRM
-	 jpqez2XqGbmt3t3ZzvZjNFkFXEtVDZv1JbD66wJA=
+	by mail.kernel.org (Postfix) with ESMTP id 51BD620B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbfEBPaM (ORCPT
+        id S1728711AbfEBPaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728659AbfEBPaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4EC20B7C;
-        Thu,  2 May 2019 15:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811010;
-        bh=7Iyaf6jf1Bvb6rz700mdG28gfVARJsxhyzrN5GnKVUU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NJ9k0FMuZ1FsuVzciUxxxGLMbT8XrRpaM6CRmCo+Js6K2RJ8N0uY9JAJQ60Xq0MeD
-         h/6H5ll7RnQCxEtEayWbBluuY5IsCYNWyUjH1TJ9vD5PQuPP/prf2IS+4l+hpt/S8m
-         4kvsa0wXVWqKucrXvnHcQNinXPoMhZFUwKgbO7Pw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zheng Xiang <zhengxiang9@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 041/101] KVM: arm/arm64: Fix handling of stage2 huge mappings
-Date:   Thu,  2 May 2019 17:20:43 +0200
-Message-Id: <20190502143342.432628466@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
-References: <20190502143339.434882399@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 2 May 2019 11:30:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60952 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728674AbfEBPaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:16 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42FS3xN120997
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:30:14 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s824xbdbm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:30:14 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 2 May 2019 16:30:12 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 2 May 2019 16:30:04 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FU3Rx47448134
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 May 2019 15:30:03 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3ED79A4051;
+        Thu,  2 May 2019 15:30:03 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B33DCA4057;
+        Thu,  2 May 2019 15:29:58 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.205.209])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  2 May 2019 15:29:58 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 02 May 2019 18:29:57 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
+        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Richard Kuo <rkuo@codeaurora.org>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH 13/15] riscv: switch to generic version of pte allocation
+Date:   Thu,  2 May 2019 18:28:40 +0300
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
+References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19050215-0016-0000-0000-00000277A12E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050215-0017-0000-0000-000032D4363D
+Message-Id: <1556810922-20248-14-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=975 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c3736cd32bf5197aed1410ae826d2d254a5b277 ]
+The only difference between the generic and RISC-V implementation of PTE
+allocation is the usage of __GFP_RETRY_MAYFAIL for both kernel and user
+PTEs and the absence of __GFP_ACCOUNT for the user PTEs.
 
-We rely on the mmu_notifier call backs to handle the split/merge
-of huge pages and thus we are guaranteed that, while creating a
-block mapping, either the entire block is unmapped at stage2 or it
-is missing permission.
+The conversion to the generic version removes the __GFP_RETRY_MAYFAIL and
+ensures that GFP_ACCOUNT is used for the user PTE allocations.
 
-However, we miss a case where the block mapping is split for dirty
-logging case and then could later be made block mapping, if we cancel the
-dirty logging. This not only creates inconsistent TLB entries for
-the pages in the the block, but also leakes the table pages for
-PMD level.
+The pte_free() and pte_free_kernel() versions are identical to the generic
+ones and can be simply dropped.
 
-Handle this corner case for the huge mappings at stage2 by
-unmapping the non-huge mapping for the block. This could potentially
-release the upper level table. So we need to restart the table walk
-once we unmap the range.
-
-Fixes : ad361f093c1e31d ("KVM: ARM: Support hugetlbfs backed huge pages")
-Reported-by: Zheng Xiang <zhengxiang9@huawei.com>
-Cc: Zheng Xiang <zhengxiang9@huawei.com>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Cc: Christoffer Dall <christoffer.dall@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/arm/include/asm/stage2_pgtable.h |  2 +
- virt/kvm/arm/mmu.c                    | 59 +++++++++++++++++++--------
- 2 files changed, 45 insertions(+), 16 deletions(-)
+ arch/riscv/include/asm/pgalloc.h | 29 ++---------------------------
+ 1 file changed, 2 insertions(+), 27 deletions(-)
 
-diff --git a/arch/arm/include/asm/stage2_pgtable.h b/arch/arm/include/asm/stage2_pgtable.h
-index de2089501b8b..9e11dce55e06 100644
---- a/arch/arm/include/asm/stage2_pgtable.h
-+++ b/arch/arm/include/asm/stage2_pgtable.h
-@@ -75,6 +75,8 @@ static inline bool kvm_stage2_has_pud(struct kvm *kvm)
+diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
+index 94043cf..48f28bb 100644
+--- a/arch/riscv/include/asm/pgalloc.h
++++ b/arch/riscv/include/asm/pgalloc.h
+@@ -18,6 +18,8 @@
+ #include <linux/mm.h>
+ #include <asm/tlb.h>
  
- #define S2_PMD_MASK				PMD_MASK
- #define S2_PMD_SIZE				PMD_SIZE
-+#define S2_PUD_MASK				PUD_MASK
-+#define S2_PUD_SIZE				PUD_SIZE
- 
- static inline bool kvm_stage2_has_pmd(struct kvm *kvm)
- {
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 5cc22cdaa5ba..31e22b615d99 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1060,25 +1060,43 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
- {
- 	pmd_t *pmd, old_pmd;
- 
-+retry:
- 	pmd = stage2_get_pmd(kvm, cache, addr);
- 	VM_BUG_ON(!pmd);
- 
- 	old_pmd = *pmd;
-+	/*
-+	 * Multiple vcpus faulting on the same PMD entry, can
-+	 * lead to them sequentially updating the PMD with the
-+	 * same value. Following the break-before-make
-+	 * (pmd_clear() followed by tlb_flush()) process can
-+	 * hinder forward progress due to refaults generated
-+	 * on missing translations.
-+	 *
-+	 * Skip updating the page table if the entry is
-+	 * unchanged.
-+	 */
-+	if (pmd_val(old_pmd) == pmd_val(*new_pmd))
-+		return 0;
++#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
 +
- 	if (pmd_present(old_pmd)) {
- 		/*
--		 * Multiple vcpus faulting on the same PMD entry, can
--		 * lead to them sequentially updating the PMD with the
--		 * same value. Following the break-before-make
--		 * (pmd_clear() followed by tlb_flush()) process can
--		 * hinder forward progress due to refaults generated
--		 * on missing translations.
-+		 * If we already have PTE level mapping for this block,
-+		 * we must unmap it to avoid inconsistent TLB state and
-+		 * leaking the table page. We could end up in this situation
-+		 * if the memory slot was marked for dirty logging and was
-+		 * reverted, leaving PTE level mappings for the pages accessed
-+		 * during the period. So, unmap the PTE level mapping for this
-+		 * block and retry, as we could have released the upper level
-+		 * table in the process.
- 		 *
--		 * Skip updating the page table if the entry is
--		 * unchanged.
-+		 * Normal THP split/merge follows mmu_notifier callbacks and do
-+		 * get handled accordingly.
- 		 */
--		if (pmd_val(old_pmd) == pmd_val(*new_pmd))
--			return 0;
--
-+		if (!pmd_thp_or_huge(old_pmd)) {
-+			unmap_stage2_range(kvm, addr & S2_PMD_MASK, S2_PMD_SIZE);
-+			goto retry;
-+		}
- 		/*
- 		 * Mapping in huge pages should only happen through a
- 		 * fault.  If a page is merged into a transparent huge
-@@ -1090,8 +1108,7 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
- 		 * should become splitting first, unmapped, merged,
- 		 * and mapped back in on-demand.
- 		 */
--		VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
--
-+		WARN_ON_ONCE(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
- 		pmd_clear(pmd);
- 		kvm_tlb_flush_vmid_ipa(kvm, addr);
- 	} else {
-@@ -1107,6 +1124,7 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
+ static inline void pmd_populate_kernel(struct mm_struct *mm,
+ 	pmd_t *pmd, pte_t *pte)
  {
- 	pud_t *pudp, old_pud;
+@@ -82,33 +84,6 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
  
-+retry:
- 	pudp = stage2_get_pud(kvm, cache, addr);
- 	VM_BUG_ON(!pudp);
+ #endif /* __PAGETABLE_PMD_FOLDED */
  
-@@ -1114,14 +1132,23 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
- 
- 	/*
- 	 * A large number of vcpus faulting on the same stage 2 entry,
--	 * can lead to a refault due to the
--	 * stage2_pud_clear()/tlb_flush(). Skip updating the page
--	 * tables if there is no change.
-+	 * can lead to a refault due to the stage2_pud_clear()/tlb_flush().
-+	 * Skip updating the page tables if there is no change.
- 	 */
- 	if (pud_val(old_pud) == pud_val(*new_pudp))
- 		return 0;
- 
- 	if (stage2_pud_present(kvm, old_pud)) {
-+		/*
-+		 * If we already have table level mapping for this block, unmap
-+		 * the range for this block and retry.
-+		 */
-+		if (!stage2_pud_huge(kvm, old_pud)) {
-+			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
-+			goto retry;
-+		}
-+
-+		WARN_ON_ONCE(kvm_pud_pfn(old_pud) != kvm_pud_pfn(*new_pudp));
- 		stage2_pud_clear(kvm, pudp);
- 		kvm_tlb_flush_vmid_ipa(kvm, addr);
- 	} else {
+-static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+-{
+-	return (pte_t *)__get_free_page(
+-		GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
+-}
+-
+-static inline struct page *pte_alloc_one(struct mm_struct *mm)
+-{
+-	struct page *pte;
+-
+-	pte = alloc_page(GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
+-	if (likely(pte != NULL))
+-		pgtable_page_ctor(pte);
+-	return pte;
+-}
+-
+-static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+-{
+-	free_page((unsigned long)pte);
+-}
+-
+-static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
+-{
+-	pgtable_page_dtor(pte);
+-	__free_page(pte);
+-}
+-
+ #define __pte_free_tlb(tlb, pte, buf)   \
+ do {                                    \
+ 	pgtable_page_dtor(pte);         \
 -- 
-2.19.1
-
-
+2.7.4
 
