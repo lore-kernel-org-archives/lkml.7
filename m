@@ -2,227 +2,62 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FC6C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9894DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227B82075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724062075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfEBNXd (ORCPT
+        id S1726349AbfEBN03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:23:33 -0400
-Received: from gateway34.websitewelcome.com ([192.185.150.114]:13361 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726267AbfEBNXc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:23:32 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 02F64963D2
-        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 08:22:34 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id MBfVhTmOn4FKpMBfWhu8ts; Thu, 02 May 2019 08:22:34 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.203] (port=51198 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hMBfU-004AjH-F8; Thu, 02 May 2019 08:22:33 -0500
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190501213329.GA26972@embeddedor>
- <20190502102608.GS26546@localhost>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH v2] USB: serial: io_edgeport: mark expected switch
- fall-throughs
-Message-ID: <df1feb28-58d0-7ac8-644d-0b48e5078edf@embeddedor.com>
-Date:   Thu, 2 May 2019 08:22:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 09:26:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:59294 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbfEBN02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 09:26:28 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id ABBCA68AA6; Thu,  2 May 2019 15:26:10 +0200 (CEST)
+Date:   Thu, 2 May 2019 15:26:10 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Nicolin Chen <nicoleotsuka@gmail.com>, robin.murphy@arm.com,
+        vdumpa@nvidia.com, linux@armlinux.org.uk, will.deacon@arm.com,
+        joro@8bytes.org, m.szyprowski@samsung.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, tony@atomide.com
+Subject: Re: [PATCH v2 RFC/RFT 1/5] ARM: dma-mapping: Add fallback normal
+ page allocations
+Message-ID: <20190502132610.GA3107@lst.de>
+References: <20190326230131.16275-1-nicoleotsuka@gmail.com> <20190326230131.16275-2-nicoleotsuka@gmail.com> <20190424150638.GA22191@lst.de> <20190424183310.GA6168@Asurada-Nvidia.nvidia.com> <20190424192652.GA29032@lst.de> <20190430152421.GE29799@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190502102608.GS26546@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.203
-X-Source-L: No
-X-Exim-ID: 1hMBfU-004AjH-F8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:51198
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430152421.GE29799@arrakis.emea.arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/2/19 5:26 AM, Johan Hovold wrote:
-> On Wed, May 01, 2019 at 04:33:29PM -0500, Gustavo A. R. Silva wrote:
->> In preparation to enabling -Wimplicit-fallthrough, mark switch
->> cases where we are expecting to fall through.
->>
->> This patch fixes the following warnings:
->>
->> drivers/usb/serial/io_edgeport.c: In function ‘process_rcvd_data’:
->> drivers/usb/serial/io_edgeport.c:1750:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>     if (bufferLength == 0) {
->>        ^
->> drivers/usb/serial/io_edgeport.c:1755:3: note: here
->>    case EXPECT_HDR2:
->>    ^~~~
->> drivers/usb/serial/io_edgeport.c:1810:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>      if (bufferLength == 0) {
->>         ^
->> drivers/usb/serial/io_edgeport.c:1816:3: note: here
->>    case EXPECT_DATA: /* Expect data */
->>    ^~~~
->>
->> Warning level 3 was used: -Wimplicit-fallthrough=3
->>
->> Notice that, in this particular case, the code comments are modified
->> in accordance with what GCC is expecting to find.
->>
->> This patch is part of the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->> Changes in v2:
->>  - Warning level 3 is now used: -Wimplicit-fallthrough=3
->>    instead of warning level 2.
->>  - All warnings in the switch statement are addressed now.
->>
->> Notice that these are the last remaining fall-through warnings
->> in the USB subsystem. :)
+On Tue, Apr 30, 2019 at 04:24:21PM +0100, Catalin Marinas wrote:
+> My reading of the arm32 __dma_alloc() is that if the conditions are
+> right for the CMA allocator (allows blocking) and there is a default CMA
+> area or a per-device one, the call ends up in cma_alloc() without any
+> fallback if such allocation fails. Whether this is on purpose, I'm not
+> entirely sure. There are a couple of arm32 SoCs which call
+> dma_declare_contiguous() or dma_contiguous_reserve_area() and a few DT
+> files describing a specific CMA range (e.g. arch/arm/boot/dts/sun5i.dtsi
+> with a comment that address must be kept in the lower 256MB).
 > 
->>  drivers/usb/serial/io_edgeport.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
->> index 4ca31c0e4174..7ad10328f4e2 100644
->> --- a/drivers/usb/serial/io_edgeport.c
->> +++ b/drivers/usb/serial/io_edgeport.c
->> @@ -1751,7 +1751,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
->>  				edge_serial->rxState = EXPECT_HDR2;
->>  				break;
->>  			}
->> -			/* otherwise, drop on through */
->> +			/* Fall through - otherwise, drop on through */
->>  		case EXPECT_HDR2:
->>  			edge_serial->rxHeader2 = *buffer;
->>  			++buffer;
->> @@ -1813,6 +1813,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
->>  				}
->>  				/* Else, drop through */
->>  			}
->> +			/* Fall through */
->>  		case EXPECT_DATA: /* Expect data */
-> 
-> Looks like you forgot to take the original review feedback you got into
-> account:
-> 
-> 	https://lkml.kernel.org/r/87k1zf4k24.fsf@miraculix.mork.no
-> 
+> If ZONE_DMA is set up correctly so that cma_alloc() is (or can be made)
+> interchangeable with alloc_pages(GFP_DMA) from a device DMA capability
+> perspective , I think it should be fine to have such fallback.
 
-Oh, the thing is that the fall-through comments have to be placed at
-the very bottom of the case. Also, based on that feedback, this time
-I left the "Else, drop through" comment in place, so people can be
-informed that such fall-through is conditional.
-
-What do you think about this:
-
-diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
-index 4ca31c0e4174..52f27fc82563 100644
---- a/drivers/usb/serial/io_edgeport.c
-+++ b/drivers/usb/serial/io_edgeport.c
-@@ -1751,7 +1751,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
-                                edge_serial->rxState = EXPECT_HDR2;
-                                break;
-                        }
--                       /* otherwise, drop on through */
-+                       /* Fall through - otherwise, drop on through */
-                case EXPECT_HDR2:
-                        edge_serial->rxHeader2 = *buffer;
-                        ++buffer;
-@@ -1813,6 +1813,11 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
-                                }
-                                /* Else, drop through */
-                        }
-+                       /* Beware that, currently, there are at least three
-+                        * break statements in this case block, so the
-+                        * fall-through marked below is NOT unconditional.
-+                        */
-+                       /* Fall through */
-                case EXPECT_DATA: /* Expect data */
-                        if (bufferLength < edge_serial->rxBytesRemaining) {
-                                rxLen = bufferLength;
-
-
-
-Thanks
---
-Gustavo
-
-
+Indeed.  I missed arm32 being different from everyone else, but we
+already addresses that in another thread.  Sorry for misleading
+everyone.
