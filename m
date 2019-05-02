@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A80C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9673C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560DB2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBFE9217D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810719;
-	bh=ZpSva/7ng3z8Mr/qZon87bIcz7DbOSjL1o9WCZ8Py34=;
+	s=default; t=1556810722;
+	bh=C4nozow8gOo9PQ0g1mFGiwvrZqi9ijSsNSNSMiuWTus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vYsF8AcDp08EXWPGnSF7AAedq9+Dzg6z5qExDOXZhFhH/2nPW+Ds0etH9EYA8mDxu
-	 7UsespnJnyKhfxjGma71nlWwgvEl6/tkjFokEK8e5noRb+6uozHzRXWCaw1MWxX+XG
-	 LaKsnqe6DNMDI01Js02exbVgjWdIKoHz9jotLPuI=
+	b=l36UFdjegjyBWM9U0hkFP2Fu2+R8QBKXkjRZIedQr+2c95lxOvHMWSj4aJ7zd73mz
+	 GFZ1+W5SQImZU748/7xP6ovu4noPa+fp5pL94bP5nXTLkw5e0jHXmMSEgpaCUbBzWB
+	 TskB1j+oxr+R6qYTnsu1kktxr3Y+VG87s02Ium7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfEBPZS (ORCPT
+        id S1727521AbfEBPZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:25:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:25:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727488AbfEBPZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:25:15 -0400
+        id S1727499AbfEBPZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:25:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DD5C20449;
-        Thu,  2 May 2019 15:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF26020675;
+        Thu,  2 May 2019 15:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810714;
-        bh=ZpSva/7ng3z8Mr/qZon87bIcz7DbOSjL1o9WCZ8Py34=;
+        s=default; t=1556810717;
+        bh=C4nozow8gOo9PQ0g1mFGiwvrZqi9ijSsNSNSMiuWTus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z1jbgtavMMIp60J6r2W2jPzhcJjKDr+FPLLKHTRb5gYGG8KMDQc9DZEnpsx30/q8r
-         6E3SC7iterIewuE+DT9QxvtjuE5Su29qotD673Qvr+9i6jS7RZIa9iDM0123uKhQWC
-         8mrypOm2LtJxEDXTRoFy3xsWQSFGgymKck4YqabE=
+        b=ZHISrQg/AIx8xqwEfZeuknMBgpZJz7Boi42JoWrNnB4eucQOXR4XXkRy0CNwCZlSX
+         X6NM1UglJWBH7xxit/+Ch7zwVdUdimaKiuLJxKZ6D86aaYoRbysNYB07e7DU///V0m
+         /s4mCe5IMbwpoptcisDLs/vxtoHuj2h5sTzXzQlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Anirudha Sarangi <anirudh@xilinx.com>,
+        John Linn <John.Linn@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 32/49] NFS: Fix a typo in nfs_init_timeout_values()
-Date:   Thu,  2 May 2019 17:21:09 +0200
-Message-Id: <20190502143327.917700218@linuxfoundation.org>
+Subject: [PATCH 4.14 33/49] net: xilinx: fix possible object reference leak
+Date:   Thu,  2 May 2019 17:21:10 +0200
+Message-Id: <20190502143328.063359749@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -60,32 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5a698243930c441afccec04e4d5dc8febfd2b775 ]
+[ Upstream commit fa3a419d2f674b431d38748cb58fb7da17ee8949 ]
 
-Specifying a retrans=0 mount parameter to a NFS/TCP mount, is
-inadvertently causing the NFS client to rewrite any specified
-timeout parameter to the default of 60 seconds.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Fixes: a956beda19a6 ("NFS: Allow the mount option retrans=0")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Detected by coccinelle with the following warnings:
+./drivers/net/ethernet/xilinx/xilinx_axienet_main.c:1624:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1569, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Anirudha Sarangi <anirudh@xilinx.com>
+Cc: John Linn <John.Linn@xilinx.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- fs/nfs/client.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 7d6ddfd60271..a98d64a6eda5 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -459,7 +459,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
- 	case XPRT_TRANSPORT_RDMA:
- 		if (retrans == NFS_UNSPEC_RETRANS)
- 			to->to_retries = NFS_DEF_TCP_RETRANS;
--		if (timeo == NFS_UNSPEC_TIMEO || to->to_retries == 0)
-+		if (timeo == NFS_UNSPEC_TIMEO || to->to_initval == 0)
- 			to->to_initval = NFS_DEF_TCP_TIMEO * HZ / 10;
- 		if (to->to_initval > NFS_MAX_TCP_TIMEOUT)
- 			to->to_initval = NFS_MAX_TCP_TIMEOUT;
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index e74e1e897864..d46dc8cd1670 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -1575,12 +1575,14 @@ static int axienet_probe(struct platform_device *pdev)
+ 	ret = of_address_to_resource(np, 0, &dmares);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "unable to get DMA resource\n");
++		of_node_put(np);
+ 		goto free_netdev;
+ 	}
+ 	lp->dma_regs = devm_ioremap_resource(&pdev->dev, &dmares);
+ 	if (IS_ERR(lp->dma_regs)) {
+ 		dev_err(&pdev->dev, "could not map DMA regs\n");
+ 		ret = PTR_ERR(lp->dma_regs);
++		of_node_put(np);
+ 		goto free_netdev;
+ 	}
+ 	lp->rx_irq = irq_of_parse_and_map(np, 1);
 -- 
 2.19.1
 
