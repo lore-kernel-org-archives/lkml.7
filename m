@@ -2,156 +2,116 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1B4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00EBC04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9352054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903362089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:05:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rw4iV60C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfEBCCq (ORCPT
+        id S1726256AbfEBCFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:02:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36436 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726152AbfEBCCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:02:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 67EFEAC23;
-        Thu,  2 May 2019 02:02:43 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 02 May 2019 12:02:33 +1000
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs\@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-In-Reply-To: <20161206185806.GC31197@fieldses.org>
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com> <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com> <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com> <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com> <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com> <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com> <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com> <20161206185806.GC31197@fieldses.org>
-Message-ID: <87bm0l4nra.fsf@notabene.neil.brown.name>
+        Wed, 1 May 2019 22:05:09 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43178 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfEBCFJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 22:05:09 -0400
+Received: by mail-qt1-f193.google.com with SMTP id g4so764410qtq.10;
+        Wed, 01 May 2019 19:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ux5b965d508SI5nyhUWR5JM2SSNy1WKrzRHcMYwUexE=;
+        b=rw4iV60Ck+fjUmTU9oUz6dTdQVc1A9uiwQfjMjVPHoJvrzak6iCg1wy+0Nb2j8n1bm
+         NCbDQjTm9MNyWhrE0jF7jofmB66HaCdgPToSNyCowQ/4qgb6D5w+vBmZp//mnzGYrTu8
+         gYleIgBAT/oy8OXP1gF5t+C9YjjRmAmz6JnYi4gbqwfm+MQPzcSzx66Xq7v+urARtKoH
+         zmqxAU9szkxg+gGFVRMBEnB2Lv0nOfCZfRQwaTqu5y1jIxFXkHnxrrvxNU4LdA+X6t3+
+         JXMKbbWYUh4k5CQY95oxS33vwWhGvuzku9cRyFxWPpdx+mG21Dc3ACzYWtcOAO61rSwm
+         PnHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ux5b965d508SI5nyhUWR5JM2SSNy1WKrzRHcMYwUexE=;
+        b=JZoh5DyB2KeLJFVaoxIta1/n0VnjpIxnfTY6VuYI9/orO2O7ah+N1DLeBO6hX60XHw
+         9PFs3R/hSXr4fUdCxNrmXpJIepPRCtPDajiy5W5DgHSYEsht5M5mztsTDWHtFN3nUBPe
+         JeWUIeQfTBHBZQhmjiLAx7SGJaG+TKU6JZBMd/rXUlgLWUA78FSx03jC2iKESPigXOUn
+         X1eTxDpzv6P8IG5qd7b6mixt4EvPbFu9HyEH5pwrhE2FiwButY3Uo/4Buu9iag4uKncb
+         Ar3oX0HjWy41m/rGc7XC2yyZDp1aqK9x5Ox3NLRnJQTYHcfz48Drj4FgTLSRT/8AN1A9
+         5VGA==
+X-Gm-Message-State: APjAAAV0pK+6ekhQR0o/H0Zomu59z4yxf7MKYvmYzBfvOvpyQz9LcaES
+        Ye4dm6Gnw3jD0zL/6N9S0Goa1HzU8sg=
+X-Google-Smtp-Source: APXvYqz29ToL8dwP614jRR3suZl7AeEDj7LX0sNAHG8r1I8hQfjaMjfJHPb8TRvaaJms5WBT/YHWsw==
+X-Received: by 2002:ac8:3334:: with SMTP id t49mr1058795qta.295.1556762707557;
+        Wed, 01 May 2019 19:05:07 -0700 (PDT)
+Received: from laptop (189.26.185.89.dynamic.adsl.gvt.net.br. [189.26.185.89])
+        by smtp.gmail.com with ESMTPSA id n21sm14714915qkk.30.2019.05.01.19.05.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 19:05:06 -0700 (PDT)
+Date:   Wed, 1 May 2019 23:04:57 -0300
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        Chaitanya.Kulkarni@wdc.com
+Subject: Re: [PATCH v2 1/3] blk-mq.c: Add documention of function
+ blk_mq_init_queue
+Message-ID: <20190502020455.GA71748@laptop>
+References: <20190416032801.200694-1-marcos.souza.org@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416032801.200694-1-marcos.souza.org@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+gentle ping v2.
 
-On Tue, Dec 06 2016, J. Bruce Fields wrote:
+On Tue, Apr 16, 2019 at 12:27:59AM -0300, Marcos Paulo de Souza wrote:
+> Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+> ---
+> 
+>  No changes from v1.
+> 
+>  block/blk-mq.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 9516304a38ee..4a8277a54c03 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2650,6 +2650,15 @@ void blk_mq_release(struct request_queue *q)
+>  	blk_mq_sysfs_deinit(q);
+>  }
+>  
+> +/**
+> + * blk_mq_init_queue - Create a new request queue associating a blk_mq_tag_set
+> + * @set: tag_set to be associated with the request queue
+> + *
+> + * Description:
+> + * This function creates a new request queue, associating @set with it.
+> + *
+> + * Returns a new request queue on success, or ERR_PTR() on failure.
+> + */
+>  struct request_queue *blk_mq_init_queue(struct blk_mq_tag_set *set)
+>  {
+>  	struct request_queue *uninit_q, *q;
+> -- 
+> 2.16.4
+> 
 
-> On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
->> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> wrot=
-e:
->> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
->> > <andreas.gruenbacher@gmail.com> wrote:
->> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gruenbache=
-r@gmail.com>:
->> >
->> >>> It's not hard to come up with a heuristic that determines if a
->> >>> system.nfs4_acl value is equivalent to a file mode, and to ignore the
->> >>> attribute in that case. (The file mode is transmitted in its own
->> >>> attribute already, so actually converting .) That way, overlayfs cou=
-ld
->> >>> still fail copying up files that have an actual ACL. It's still an
->> >>> ugly hack ...
->> >>
->> >> Actually, that kind of heuristic would make sense in the NFS client
->> >> which could then hide the "system.nfs4_acl" attribute.
->> >
->> > Even simpler would be if knfsd didn't send the attribute if not
->> > necessary.  Looks like there's code actively creating the nfs4_acl on
->> > the wire even if the filesystem had none:
->> >
->> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
->> >     if (!pacl)
->> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
->> >
->> > What's the point?
->>=20
->> That's how the protocol is specified.
->
-> Yep, even if we could make that change to nfsd it wouldn't help the
-> client with the large number of other servers that are out there
-> (including older knfsd's).
->
-> --b.
->
->> (I'm not saying that that's very helpful.)
->>=20
->> Andreas
-
-Hi everyone.....
- I have a customer facing this problem, and so stumbled onto the email
- thread.
- Unfortunately it didn't resolve anything.  Maybe I can help kick things
- along???
-
- The core problem here is that NFSv4 and ext4 use different and largely
- incompatible ACL implementations.  There is no way to accurately
- translate from one to the other in general (common specific examples
- can be converted).
-
- This means that either:
-   1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
-      versa) or
-   2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
-      that is OK.
-
- Silently not copying the ACLs is probably not a good idea as it might
- result in inappropriate permissions being given away.  So if the
- sysadmin wants this (and some clearly do), they need a way to
- explicitly say "I accept the risk".  If only standard Unix permissions
- are used, there is no risk, so this seems reasonable.
-
- So I would like to propose a new option for overlayfs
-    nocopyupacl:   when overlayfs is copying a file (or directory etc)
-        from the lower filesystem to the upper filesystem, it does not
-        copy extended attributes with the "system." prefix.  These are
-        used for storing ACL information and this is sometimes not
-        compatible between different filesystem types (e.g. ext4 and
-        NFSv4).  Standard Unix ownership permission flags (rwx) *are*
-        copied so this option does not risk giving away inappropriate
-        permissions unless the lowerfs uses unusual ACLs.
-
-
- Miklos: would you find that acceptable?
-
+-- 
 Thanks,
-NeilBrown
-
-=20=20=20
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzKT7oACgkQOeye3VZi
-gblpcxAAhkgtWxI/Ufbcn5G3QjgOMkoI4zADgCE+YIUasdaU4RlHK6bUBg4JjuFO
-HzT4v1gazEc6KAgosxUfGqpmVxqAe5vuopibRv3mlGOfOOE7LzETrmICivK03D7P
-JQ4jINpExBf6I+5ZetGM6geV1XCcsrm1YayDRDbT0VlMgSJPUKIv5lE6OVMFIhrh
-T4USmDiuTelW6Ihe2ikHHpQVBDZ1x8TUKX0BuypLGMi0+KmBaoRhjHde/aT4X1jE
-g4xWZqaejNIrYwMKM/VK5D8QZICZQEq/oJwfXmMwSU3qbqH2I4yKfQR/mVJyffqg
-ylOoB7/8Q1SmPFhjn/xxLOxBts89LPMoLZFvZ41pCArGKvcury55j4caXXey8OUo
-Ly2mCByvpu38FLP5XqhuCrHXcQyWWTB57C4LYa3GNyEWQiJAGWMPuC3Jr33e91im
-KLd4LxEpN0iwJQucN9spcCVffZZciJ+YLfphHDXY7gISoTjny8TaxhtmT5VApMwt
-ZVAhm79MVQ4k4jAyVWCae0LwUGtHDGq6tbYiyCXwpsv6ItL0iYEYrYSNsu4rSIDm
-QAVzmMYfi/N8fcWoq/Q5MSi0SPDsxvgmtHEB+k8G+YYKyJx577mTio6AWEO5cO9y
-Nlh/kw0MBzTRpED8NzLMxQR6H1sncXzl17BOxNvLXxnrUzq9/gk=
-=/YHz
------END PGP SIGNATURE-----
---=-=-=--
+Marcos
