@@ -2,149 +2,98 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D72C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADEBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7DD62075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556823101;
-	bh=3UmAsUJNtf9bvtz4GHkqUnzOcLvCU4i5Y5vxHvB4z/M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EVz6AuIjTrL5FXKNNBFTpluTEVlmWwDR7bVFBMyagU4PCbC+GX9UwKY9CvzAvJM8k
-	 ztg17Awc1SCNuxvH3TQXP/nSLtyA6nF2w+v6+gnj5HGRYZKz36H6ny8BQoNarz9Aku
-	 Ug/FV2vQ3LHnkpbN9qYBfMTQl2dLyHU6dymZvdKQ=
+	by mail.kernel.org (Postfix) with ESMTP id 379A020645
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfEBSvk (ORCPT
+        id S1726373AbfEBSwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:51:40 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46611 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfEBSvk (ORCPT
+        Thu, 2 May 2019 14:52:54 -0400
+Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:52807 "EHLO
+        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725962AbfEBSwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:51:40 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h21so3120327ljk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:51:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jRZt+D8O8akEME1deiXcwDybfKiwpthrXzyaDQKQw+o=;
-        b=DOe1Odxc1gK8brv9R5zvAAh8GUyJ0YnhuXPXnXKLY6rlveLN+SrMsrIhlmdzjwzc3A
-         +gpmg7E+x+gFu/OGE9tnfORqGbP7/EJEKg5bLaODW4PNZqGswJ1xp/er7T39ChKACNGs
-         gUroHv8DdOMTYzXZZhWIDTz6VqI7ZdBhWPnGk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jRZt+D8O8akEME1deiXcwDybfKiwpthrXzyaDQKQw+o=;
-        b=dbQEldQIp6waaxS/AYplu6/6/6uZ1OMImx3iCQXBM3pDWhVjr0RT9xe1UyAtRS2CRL
-         7SY2RaaNzj2tOI7jBuTt3sub52SjPbzQiA5o97fUQVRUhO3M8TK/s9oRsYmP1xGsmFsp
-         Yp6/Ok0GqRAV3rvFJ1XSjemDl6T/ORssdDgHDi8gEsM/Micgx6BbCZXIr3Un1Bh9jXTw
-         6ZV0Ed3z3hb46HMw7292i6HS2kQkgMsAO59Ccy4eofIh3TpZ2E+Pgi2dgrVQAnKQjHRz
-         sEgdliL9RiTEtjyLwi/oqhI2LJStzmNVA8PIqqoro6zZhSTjss0s6BzHuuYtSbdccBp6
-         kBlw==
-X-Gm-Message-State: APjAAAWuBr60qMEtYRpiSP0m1uyaR/R5lPcEtbfZ1vJSj1FHfPFpd2BJ
-        RjJ4cr/536NnAf7SyQ7XlkH1Y9TwKA8=
-X-Google-Smtp-Source: APXvYqz75hwNfBzsxvhfbt080ImCb6f1uQUYXmdzXobdWAzEPno/fqLaoRPBkzPAv+h97YU5ggm0jg==
-X-Received: by 2002:a2e:9283:: with SMTP id d3mr2857941ljh.8.1556823097483;
-        Thu, 02 May 2019 11:51:37 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id z6sm2832450ljb.56.2019.05.02.11.51.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 11:51:37 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id e18so3165617lja.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:51:37 -0700 (PDT)
-X-Received: by 2002:a2e:9a84:: with SMTP id p4mr2295002lji.22.1556822633649;
- Thu, 02 May 2019 11:43:53 -0700 (PDT)
+        Thu, 2 May 2019 14:52:53 -0400
+Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
+        id CB101461D3A; Thu,  2 May 2019 14:52:50 -0400 (EDT)
+Date:   Thu, 2 May 2019 14:52:50 -0400
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
+ packets
+Message-ID: <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
+References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
+ <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
+ <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca>
+ <CAKgT0Uc_OUAcPfRe6yCSwpYXCXomOXKG2Yvy9c1_1RJn-7Cb5g@mail.gmail.com>
+ <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca>
+ <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
+ <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca>
 MIME-Version: 1.0
-References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goodmis.org>
- <20190501232412.1196ef18@oasis.local.home> <20190502162133.GX2623@hirez.programming.kicks-ass.net>
- <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com> <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 May 2019 11:43:37 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-Message-ID: <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca>
+User-Agent: NeoMutt/20170113 (1.7.2)
+From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 11:18 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> We could fix this by not using the common exit path on int3; not sure we
-> want to go there, but that is an option.
+On Thu, May 02, 2019 at 01:55:13PM -0400, Lennart Sorensen wrote:
+> Here is the same packets as before with the link level header included
+> (I forgot to use -XX rather than -X):
+> 
+> 13:43:49.081567 54:ee:75:30:f1:e1 > a4:bf:01:4e:0c:87, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 21783, offset 0, flags [DF], proto UDP (17), length 160)
+>     1.99.99.2.4500 > 1.99.99.1.4500: [no cksum] UDP-encap: ESP(spi=0x8de82290,seq=0x6a56), length 132
+>         0x0000:  a4bf 014e 0c87 54ee 7530 f1e1 0800 4500  ...N..T.u0....E.
+>         0x0010:  00a0 5517 4000 4011 1c6d 0163 6302 0163  ..U.@.@..m.cc..c
+>         0x0020:  6301 1194 1194 008c 0000 8de8 2290 0000  c..........."...
+>         0x0030:  6a56 72da 0734 52f6 406e 9346 f946 c698  jVr..4R.@n.F.F..
+>         0x0040:  a38c 280c 94da 53e1 91e0 35bf 812a 4500  ..(...S...5..*E.
+>         0x0050:  6003 ca7d 6872 a50b d41a 5c4d 7c22 3fb8  `..}hr....\M|"?.
+>         0x0060:  56d8 2a0f bc3f d3a6 5853 682c 914c c1b1  V.*..?..XSh,.L..
+>         0x0070:  c5c3 94e8 4789 d8b4 4ab4 e5f9 d20a e5ef  ....G...J.......
+>         0x0080:  de1d 05dd e98a 996b 5c11 6657 b667 6af1  .......k\.fW.gj.
+>         0x0090:  2a97 694b 16de 74e2 f8fe 13a3 d45e e3e9  *.iK..t......^..
+>         0x00a0:  f0b1 b83b 99e3 55cb b40b 5ba8 9c23       ...;..U...[..#
+> 13:43:49.081658 a4:bf:01:4e:0c:87 > 54:ee:75:30:f1:e1, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 44552, offset 0, flags [none], proto UDP (17), length 160)
+>     1.99.99.1.4500 > 1.99.99.2.4500: [no cksum] UDP-encap: ESP(spi=0x1d4ecfdf,seq=0x6a56), length 132
+>         0x0000:  54ee 7530 f1e1 a4bf 014e 0c87 0800 4500  T.u0.....N....E.
+>         0x0010:  00a0 ae08 0000 4011 037c 0163 6301 0163  ......@..|.cc..c
+>         0x0020:  6302 1194 1194 008c 0000 1d4e cfdf 0000  c..........N....
+>         0x0030:  6a56 28ca 4809 8933 911d f2be 4510 e757  jV(.H..3....E..W
+>         0x0040:  3885 7d26 5238 8c58 38e3 6c07 2f8e 335a  8.}&R8.X8.l./.3Z
+>         0x0050:  6d48 2a72 4619 e8a3 c421 bc54 48b2 6239  mH*rF....!.TH.b9
+>         0x0060:  5e07 7e89 a68e 0161 4e6a 5b6f 8b89 9f53  ^.~....aNj[o...S
+>         0x0070:  4c40 1c6c d159 60f8 68e7 24db 8b21 2ec2  L@.l.Y`.h.$..!..
+>         0x0080:  4b67 9b83 643b b0ac 6e2d bf4f 1ee1 9508  Kg..d;..n-.O....
+>         0x0090:  d1bd dcd4 74ee e4dc 78d0 578a 5905 1f4d  ....t...x.W.Y..M
+>         0x00a0:  74be e643 910b b4d3 f428 8822 e22b       t..C.....(.".+
+> 
+> I will try to see what I can do with netperf.
 
-I don't think it's an option in general, because *some* int3
-invocations will need all the usual error return.
+Hmm, maybe UDP isn't doing as well as I thought.
 
-But I guess we could make "int3 from kernel space" special.
+Playing with packit doing this:
 
-I'm not sure how much that would help, but it might be worth looking into.
+packit -t UDP -d 1.99.99.1 -D 32432 -S 4500 -i enp0s25 -h -p "0x 00 11 22 33 44 55 66 77 88 99 00 11 22 33 44 55 66 77 88 99 00 11 22 33 44 55 66 77 88 99" -c 5
 
-> ARGH; I knew it was too pretty :/ Yes, something like what you suggest
-> will be needed, I'll go look at that once my brain recovers a bit from
-> staring at entry code all day.
+I have played with the source and destination port numbers, and so far
+I have only managed to hit queues 0, 1 and 2 (mostly 0 and 2).  No port
+number I have tried has made it hit any other queue.  That is weird.
+Making random changes ought to distribute more than that.  And changing
+the hkey certainly ought to make a difference, and so far it doesn't
+seem to for these packets (I know I saw icmp move around just fine before
+when changing the hkey).
 
-Looks like it works based on your other email.
-
-What would it look like with the "int3-from-kernel is special" modification?
-
-Because *if* we can make the "kernel int3" entirely special, that
-would make the "Eww factor" much less of this whole thing.
-
-I forget: is #BP _only_ for the "int3" instruction? I know we have
-really nasty cases with #DB (int1) because of "pending exceptions
-happen on the first instruction in kernel space", and that makes it
-really really nasty to handle with all the stack switch and %cr3
-handling etc.
-
-But if "int3 from kernel space" _only_ happens on actual "int3"
-instructions, then we really could just special-case that case. We'd
-know that %cr3 has been switched, we'd know that we don't need to do
-fsgs switching, we'd know we already have a good stack and percpu data
-etc set up.
-
-So then special casing #BP would actually allow us to have a simple
-and straightforward kernel-int3-only sequence?
-
-And then having that odd stack setup special case would be *much* more
-palatable to me.
-
-               Linus
+-- 
+Len Sorensen
