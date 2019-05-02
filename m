@@ -2,96 +2,96 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28A5C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D97C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71FF204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811710;
-	bh=7v1BeYu2wyp5sZIlcIHXzFbRN1Twg/ra8ChEFniQ45g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vx5ZcvncSMt1SN3auVNoVryDPetotH8urwd4RfX+keT3rtxW1PuYDuE9Gr5yEQvqm
-	 2yW3pdxQyV9D1uqL/FJhcGqcvx00oO9YgfD8ABTSN9BHn30KMiPY5VpRkp7u68R8R3
-	 XR1yP7+sOQKe6h4WRWmjeqwt7ZtMTom1OetEW/qs=
+	by mail.kernel.org (Postfix) with ESMTP id DA9C620449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfEBP2a (ORCPT
+        id S1728214AbfEBP23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:28:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45648 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:28:29 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:44828 "EHLO smtp.infotech.no"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfEBP20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726889AbfEBP20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 May 2019 11:28:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 930F1214DA;
-        Thu,  2 May 2019 15:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810906;
-        bh=7v1BeYu2wyp5sZIlcIHXzFbRN1Twg/ra8ChEFniQ45g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rl6k0nooyAaEYaERYD8pS2se2lwJLffB/eV9Up+4tdMUIx5vOYXT00/3akO0gK1jZ
-         v129E9I4PRTF7Vi9Gj759i7M3d3ITMrWqXRmDOwna91ONCOGUwDJyK6mEHz1qe6OlZ
-         4psPCSQznRWGXLQqbAwlBNRYcafDLkSfZ/73FLwo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        David Lechner <david@lechnology.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 53/72] ARM: davinci: fix build failure with allnoconfig
-Date:   Thu,  2 May 2019 17:21:15 +0200
-Message-Id: <20190502143337.621159192@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
-References: <20190502143333.437607839@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id 31A8320423D;
+        Thu,  2 May 2019 17:28:24 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fB7tSKAzudgu; Thu,  2 May 2019 17:28:24 +0200 (CEST)
+Received: from [82.134.31.185] (unknown [82.134.31.185])
+        by smtp.infotech.no (Postfix) with ESMTPA id 05EAC204154;
+        Thu,  2 May 2019 17:28:23 +0200 (CEST)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH 21/24] sg: switch to SPDX tags
+To:     Christoph Hellwig <hch@lst.de>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
+        Chris Leech <cleech@redhat.com>, Willem Riede <osst@riede.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
+        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+        osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <20190501161417.32592-1-hch@lst.de>
+ <20190501161417.32592-22-hch@lst.de>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <c69c06d1-7bdf-b130-ee3e-3b3e4879f832@interlog.com>
+Date:   Thu, 2 May 2019 17:28:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190501161417.32592-22-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2dbed152e2d4c3fe2442284918d14797898b1e8a ]
+On 2019-05-01 6:14 p.m., Christoph Hellwig wrote:
+> Use the the GPLv2+ SPDX tag instead of verbose boilerplate text.
 
-allnoconfig build with just ARCH_DAVINCI enabled
-fails because drivers/clk/davinci/* depends on
-REGMAP being enabled.
+IOWs replace 3.5 lines with 1.
 
-Fix it by selecting REGMAP_MMIO when building in
-DaVinci support.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Reviewed-by: David Lechner <david@lechnology.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- arch/arm/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index cd4c74daf71e..51794c7fa6d5 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -612,6 +612,7 @@ config ARCH_DAVINCI
- 	select HAVE_IDE
- 	select PM_GENERIC_DOMAINS if PM
- 	select PM_GENERIC_DOMAINS_OF if PM && OF
-+	select REGMAP_MMIO
- 	select RESET_CONTROLLER
- 	select USE_OF
- 	select ZONE_DMA
--- 
-2.19.1
-
-
+> ---
+>   drivers/scsi/sg.c | 7 +------
+>   1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+> index d3f15319b9b3..bcdc28e5ede7 100644
+> --- a/drivers/scsi/sg.c
+> +++ b/drivers/scsi/sg.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+>   /*
+>    *  History:
+>    *  Started: Aug 9 by Lawrence Foard (entropy@world.std.com),
+> @@ -8,12 +9,6 @@
+>    *        Copyright (C) 1992 Lawrence Foard
+>    * Version 2 and 3 extensions to driver:
+>    *        Copyright (C) 1998 - 2014 Douglas Gilbert
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License as published by
+> - * the Free Software Foundation; either version 2, or (at your option)
+> - * any later version.
+> - *
+>    */
+>   
+>   static int sg_version_num = 30536;	/* 2 digits for each component */
+> 
 
