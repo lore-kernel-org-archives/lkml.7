@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70C3C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD3BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E85320C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AA020B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811050;
-	bh=IntiuBaH0skzQDjeZ66JasE10npj0bxke5OBWuHmkHQ=;
+	s=default; t=1556811053;
+	bh=Qc4WrYPkG7zpu49vQ/9U7rHXma7VTH1nY6PgLIOK7Bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIiVZ/wPEs7mLhoKmoiZp2UvD480qu0EamstMsLnTA3dlpEolbztVM/yhz0pf4ynH
-	 BjzGQOOP7rj2pB50jiopneKYVcI5U7mU6IaBYFYMtdnXZS2SsPfmiQ1xmMXRW6ND+t
-	 TtE3Ml6mFo8IyAO7rdCJ3ky9FgGSj7RhontbFw40=
+	b=BAD3x2CLWB47Cnua3OxgqFQY4xbEKCd5vDBAjz5CYIXg8yjRHkGdMvciRKiO48L4d
+	 gRC1CoxpDOmHkre4d8oKCdS1DGOUICruZpuZKQ5EmET3Iie1f8ZJlbI7RFrUlhx+GQ
+	 3y+XpV+R1rGp8pgx0elpY3z4MrPBKaFLh16wIlPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfEBPat (ORCPT
+        id S1728862AbfEBPaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49550 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfEBPas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:48 -0400
+        id S1727097AbfEBPav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D400F2081C;
-        Thu,  2 May 2019 15:30:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B91F20B7C;
+        Thu,  2 May 2019 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811048;
-        bh=IntiuBaH0skzQDjeZ66JasE10npj0bxke5OBWuHmkHQ=;
+        s=default; t=1556811050;
+        bh=Qc4WrYPkG7zpu49vQ/9U7rHXma7VTH1nY6PgLIOK7Bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C1VhgK7waMZtlko34Om3Mo59luppuqQf3W1UgK4Lo9nHkdUdmzRhdrkfI6fwxZKA8
-         /pnTPVXvoJXxyK3D/lFIw30uj0TQI2nkgRRTVl8roiEI7K2CipBlQ/MB5V6+/9e6SJ
-         O+Q29GKb6BsZTEoy06buGwWvqYWr5NZXyGkXLk2k=
+        b=VWeOewu2omTC2wDh4uKIJiRXje+4Ow6155tfjCsqXdxN2tfPb2muUy3zrH4Ginkx5
+         Tpi8Krl8gYabNXUOFHP5T0vWOSXFFR8qU9AxteZfM94Gf/SK/72jLlAk8/GlTd4t8o
+         zN2o18sZcUjhe6wJJI1HWq4Ii+10+phgcRpJpfK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 054/101] drm/tegra: hub: Fix dereference before check
-Date:   Thu,  2 May 2019 17:20:56 +0200
-Message-Id: <20190502143343.285843755@linuxfoundation.org>
+Subject: [PATCH 5.0 055/101] NFS: Fix a typo in nfs_init_timeout_values()
+Date:   Thu,  2 May 2019 17:20:57 +0200
+Message-Id: <20190502143343.350822916@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,37 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7cf77b273a8fc51e7de622fa6691abd4436a9a6b ]
+[ Upstream commit 5a698243930c441afccec04e4d5dc8febfd2b775 ]
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Specifying a retrans=0 mount parameter to a NFS/TCP mount, is
+inadvertently causing the NFS client to rewrite any specified
+timeout parameter to the default of 60 seconds.
+
+Fixes: a956beda19a6 ("NFS: Allow the mount option retrans=0")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/hub.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/nfs/client.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
-index 922a48d5a483..c7c612579270 100644
---- a/drivers/gpu/drm/tegra/hub.c
-+++ b/drivers/gpu/drm/tegra/hub.c
-@@ -378,14 +378,16 @@ static int tegra_shared_plane_atomic_check(struct drm_plane *plane,
- static void tegra_shared_plane_atomic_disable(struct drm_plane *plane,
- 					      struct drm_plane_state *old_state)
- {
--	struct tegra_dc *dc = to_tegra_dc(old_state->crtc);
- 	struct tegra_plane *p = to_tegra_plane(plane);
-+	struct tegra_dc *dc;
- 	u32 value;
- 
- 	/* rien ne va plus */
- 	if (!old_state || !old_state->crtc)
- 		return;
- 
-+	dc = to_tegra_dc(old_state->crtc);
-+
- 	/*
- 	 * XXX Legacy helpers seem to sometimes call ->atomic_disable() even
- 	 * on planes that are already disabled. Make sure we fallback to the
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index fb1cf1a4bda2..90d71fda65ce 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -453,7 +453,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
+ 	case XPRT_TRANSPORT_RDMA:
+ 		if (retrans == NFS_UNSPEC_RETRANS)
+ 			to->to_retries = NFS_DEF_TCP_RETRANS;
+-		if (timeo == NFS_UNSPEC_TIMEO || to->to_retries == 0)
++		if (timeo == NFS_UNSPEC_TIMEO || to->to_initval == 0)
+ 			to->to_initval = NFS_DEF_TCP_TIMEO * HZ / 10;
+ 		if (to->to_initval > NFS_MAX_TCP_TIMEOUT)
+ 			to->to_initval = NFS_MAX_TCP_TIMEOUT;
 -- 
 2.19.1
 
