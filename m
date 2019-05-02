@@ -2,96 +2,78 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614C3C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81469C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324AE2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RHWBaOC+"
+	by mail.kernel.org (Postfix) with ESMTP id 466EC2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfEBMzn (ORCPT
+        id S1726656AbfEBMzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:55:43 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17111 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfEBMzl (ORCPT
+        Thu, 2 May 2019 08:55:50 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:53910 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfEBMzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:55:41 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ccae8c90000>; Thu, 02 May 2019 05:55:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 02 May 2019 05:55:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 02 May 2019 05:55:40 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 12:55:40 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 2 May 2019 12:55:40 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ccae8c90000>; Thu, 02 May 2019 05:55:40 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <ldewangan@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 2/6] Documentation: DT: Add compatibility binding for Tegra186
-Date:   Thu, 2 May 2019 18:25:13 +0530
-Message-ID: <1556801717-31507-3-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
-References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556801737; bh=L0yrmYX9Yuz1r3hflXw6ZiWZWallxxnZWXwST9deuNs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=RHWBaOC+ZC8GVM+PZoBFjLz2ihALnwspZXlVha1hsgBWLoC5bMdU//+qdlUQdheNe
-         2OrgQ/rF/UvmdjiOp54ywr9PDTiQbYC6CRCAG/urNSSsNWDKqAKlZAYmkX+NSVRI2Q
-         myVQTDzccRgCBJ141+LZ4qukoWnNBrySpQ+eYD3AVvd6apCjUMJwJbowdpaw8du5uK
-         t7wrgtisBGTZn6hPTl+/hnEGdw1/SH+wEPWpMO7vSzMV95ab8s0v/o+Q7dwybePr9Q
-         54QPOXAWMICfMQxxKirodp0EF2NgnVmgmZ+Th+VLHWvbqN4m0K1U15AYEcsWjXsz2h
-         vcX2Q8j3DBuQw==
+        Thu, 2 May 2019 08:55:49 -0400
+Received: from ramsan ([84.194.111.163])
+        by xavier.telenet-ops.be with bizsmtp
+        id 7Qvm200073XaVaC01Qvm19; Thu, 02 May 2019 14:55:47 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hMBFa-0007if-ER; Thu, 02 May 2019 14:55:46 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hMBFa-0001px-C2; Thu, 02 May 2019 14:55:46 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Matteo Croce <mcroce@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: VDSO: Don't leak kernel addresses
+Date:   Thu,  2 May 2019 14:55:45 +0200
+Message-Id: <20190502125545.7020-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra186 Audio DMA controller has new updates from Tegra210 version.
-Thus add new compatibility binding string and the same can be used
-by Tegra194 as well.
+Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with
+%p"), an obfuscated kernel pointer is printed at every boot if
+debugging is enabled:
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+    vdso: 1 text pages at base (____ptrval____)
+
+Remove the print completely, as it's useless without the address.
+
+Based on commit 0f1bf7e39822476b ("arm64/vdso: don't leak kernel
+addresses").
+
+Fixes: ad67b74d2469d9b8 ("printk: hash addresses printed with %p")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/kernel/vdso.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
-index 2f35b04..245d306 100644
---- a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
-+++ b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
-@@ -4,7 +4,9 @@ The Tegra Audio DMA controller that is used for transferring data
- between system memory and the Audio Processing Engine (APE).
+diff --git a/arch/arm/kernel/vdso.c b/arch/arm/kernel/vdso.c
+index f4dd7f9663c10a70..e8cda5e02b4ea7bd 100644
+--- a/arch/arm/kernel/vdso.c
++++ b/arch/arm/kernel/vdso.c
+@@ -205,7 +205,6 @@ static int __init vdso_init(void)
+ 	}
  
- Required properties:
--- compatible: Must be "nvidia,tegra210-adma".
-+- compatible: Should contain one of the following:
-+  - "nvidia,tegra210-adma": for Tegra210
-+  - "nvidia,tegra186-adma": for Tegra186 and Tegra194
- - reg: Should contain DMA registers location and length. This should be
-   a single entry that includes all of the per-channel registers in one
-   contiguous bank.
+ 	text_pages = (vdso_end - vdso_start) >> PAGE_SHIFT;
+-	pr_debug("vdso: %i text pages at base %p\n", text_pages, vdso_start);
+ 
+ 	/* Allocate the VDSO text pagelist */
+ 	vdso_text_pagelist = kcalloc(text_pages, sizeof(struct page *),
 -- 
-2.7.4
+2.17.1
 
