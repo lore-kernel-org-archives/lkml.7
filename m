@@ -2,173 +2,98 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB60C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C220FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F08208C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CF5205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:30:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hnOQUAPW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfEBOaB (ORCPT
+        id S1726413AbfEBOac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:30:01 -0400
-Received: from foss.arm.com ([217.140.101.70]:46854 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbfEBOaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:30:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C155F374;
-        Thu,  2 May 2019 07:29:59 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4FB13F5AF;
-        Thu,  2 May 2019 07:29:54 -0700 (PDT)
-Date:   Thu, 2 May 2019 15:29:52 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org
-Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
-Message-ID: <20190502142951.GP3567@e103592.cambridge.arm.com>
-References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
- <20190502111003.GO3567@e103592.cambridge.arm.com>
+        Thu, 2 May 2019 10:30:32 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45184 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfEBOac (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:30:32 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x42EUKOo064994;
+        Thu, 2 May 2019 09:30:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556807420;
+        bh=FJIj/BoQ7RJOLW73Y4u8uBWdtHI8Oi5sBlOJ1Q0rzMA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hnOQUAPWScvNqNC8MxaDVCtohyrzJ7UuV38CBtSKnhA2iNkjDNqGipLMwzV4W9JW3
+         Er4w4BkhlO/TbpCtfTTaX2VAuOGdnAqFr4+lsNXg30PHE94CAXOS92rmCC2ov2t2at
+         8Lm208sxjKyH7Zj6Yapzv2S8yg3H8dg9R4yjB958=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x42EUKvH082701
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 May 2019 09:30:20 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 2 May
+ 2019 09:30:19 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 2 May 2019 09:30:19 -0500
+Received: from [10.250.139.87] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x42EUFHb024717;
+        Thu, 2 May 2019 09:30:16 -0500
+Subject: Re: [PATCH] ARM: dts: am57xx-idk: Remove support for voltage
+ switching for SD card
+To:     Tony Lindgren <tony@atomide.com>, Faiz Abbas <faiz_abbas@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <bcousson@baylibre.com>,
+        <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>
+References: <20190502084748.22518-1-faiz_abbas@ti.com>
+ <20190502142016.GO8007@atomide.com>
+From:   Faiz Abbas <a0230074@ti.com>
+Message-ID: <50559611-a501-4331-c88b-5d05f6e756e9@ti.com>
+Date:   Thu, 2 May 2019 20:00:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502111003.GO3567@e103592.cambridge.arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190502142016.GO8007@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 12:10:04PM +0100, Dave Martin wrote:
-> On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
-> > An ELF file's .note.gnu.property indicates features the executable file
-> > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
-> > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
-> > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
-> > 
-> > This patch was part of the Control-flow Enforcement series; the original
-> > patch is here: https://lkml.org/lkml/2018/11/20/205.  Dave Martin responded
-> > that ARM recently introduced new features to NT_GNU_PROPERTY_TYPE_0 with
-> > properties closely modelled on GNU_PROPERTY_X86_FEATURE_1_AND, and it is
-> > logical to split out the generic part.  Here it is.
-> > 
-> > With this patch, if an arch needs to setup features from ELF properties,
-> > it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
-> > arch_setup_property().
-> > 
-> > For example, for X86_64:
-> > 
-> > int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
-> > {
-> > 	int r;
-> > 	uint32_t property;
-> > 
-> > 	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
-> > 			     &property);
-> > 	...
-> > }
+Hi Tony,
 
-[...]
+On 02/05/19 7:50 PM, Tony Lindgren wrote:
+> * Faiz Abbas <faiz_abbas@ti.com> [190502 01:48]:
+>> If UHS speed modes are enabled, a compatible SD card switches down to
+>> 1.8V during enumeration. If after this a software reboot/crash takes
+>> place and on-chip ROM tries to enumerate the SD card, the difference in
+>> IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
+>>
+>> The fix for this is to have support for power cycling the card in
+>> hardware (with a PORz/soft-reset line causing a power cycle of the
+>> card). Since am571x-, am572x- and am574x-idk don't have this
+>> capability, disable voltage switching for these boards.
+>>
+>> The major effect of this is that the maximum supported speed
+>> mode is now high speed(50 MHz) down from SDR104(200 MHz).
+> 
+> This sounds a bit urgent, does it also need a stable tag or is
+> it safe to apply against any earlier kernels?
+> 
 
-> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c > > index 7d09d125f148..40aa4a4fd64d 100644
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -1076,6 +1076,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  		goto out_free_dentry;
-> >  	}
-> >  
-> > +	if (interpreter) {
-> > +		retval = arch_setup_property(&loc->interp_elf_ex,
-> > +					     interp_elf_phdata,
-> > +					     interpreter, true);
-> > +	} else {
-> > +		retval = arch_setup_property(&loc->elf_ex,
-> > +					     elf_phdata,
-> > +					     bprm->file, false);
-> > +	}
+This should be good to apply on any previous releases.
 
-This will be too late for arm64, since we need to twiddle the mmap prot
-flags for the executable's pages based on the detected properties.
-
-Can we instead move this much earlier, letting the arch code stash
-something in arch_state that can be consumed later on?
-
-This also has the advantage that we can report errors to the execve()
-caller before passing the point of no return (i.e., flush_old_exec()).
-
-[...]
-
-> > diff --git a/fs/gnu_property.c b/fs/gnu_property.c
-
-[...]
-
-> > +int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
-> > +		     u32 pr_type, u32 *property)
-> > +{
-> > +	struct elf64_hdr *ehdr64 = ehdr_p;
-> > +	int err = 0;
-> > +
-> > +	*property = 0;
-> > +
-> > +	if (ehdr64->e_ident[EI_CLASS] == ELFCLASS64) {
-> > +		struct elf64_phdr *phdr64 = phdr_p;
-> > +
-> > +		err = scan_segments_64(f, phdr64, ehdr64->e_phnum,
-> > +				       pr_type, property);
-> > +		if (err < 0)
-> > +			goto out;
-> > +	} else {
-> > +#ifdef CONFIG_COMPAT
-> > +		struct elf32_hdr *ehdr32 = ehdr_p;
-> > +
-> > +		if (ehdr32->e_ident[EI_CLASS] == ELFCLASS32) {
-> > +			struct elf32_phdr *phdr32 = phdr_p;
-> > +
-> > +			err = scan_segments_32(f, phdr32, ehdr32->e_phnum,
-> > +					       pr_type, property);
-> > +			if (err < 0)
-> > +				goto out;
-> > +		}
-> > +#else
-> > +	WARN_ONCE(1, "Exec of 32-bit app, but CONFIG_COMPAT is not enabled.\n");
-> > +	return -ENOTSUPP;
-> > +#endif
-> > +	}
-
-We have already made a ton of assumptions about the ELF class by this
-point, and we don't seem to check it explicitly elsewhere, so it is a
-bit weird to police it specifically here.
-
-Can we simply pass the assumed ELF class as a parameter instead?
-
-[...]
-
-Cheers
----DavE
+Thanks,
+Faiz
