@@ -3,348 +3,174 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3B9C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802FAC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DDD20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589F820873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbfEBIYL (ORCPT
+        id S1726413AbfEBIZL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:24:11 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:42233 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbfEBIYK (ORCPT
+        Thu, 2 May 2019 04:25:11 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:53479 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfEBIZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:24:10 -0400
-Received: from [192.168.2.10] ([46.9.232.72])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id M70bhvpw3NExlM70ehmMnQ; Thu, 02 May 2019 10:24:07 +0200
-Subject: Re: [PATCH 18/20] lib: image-formats: Add v4l2 formats support
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
- <a9af304793a38b6001c9155f36e370002926841c.1555487650.git-series.maxime.ripard@bootlin.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <5c904167-14f3-8e64-42f1-650d0689f78d@xs4all.nl>
-Date:   Thu, 2 May 2019 10:24:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 04:25:10 -0400
+Received: from xps13 (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 3B27810001D;
+        Thu,  2 May 2019 08:25:05 +0000 (UTC)
+Date:   Thu, 2 May 2019 10:25:04 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH] mtd: nand: raw: brcmnand: When oops in progress use pio
+ and interrupt polling
+Message-ID: <20190502102504.32b45247@xps13>
+In-Reply-To: <1556733121-20133-1-git-send-email-kdasu.kdev@gmail.com>
+References: <1556733121-20133-1-git-send-email-kdasu.kdev@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <a9af304793a38b6001c9155f36e370002926841c.1555487650.git-series.maxime.ripard@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfK2oLcO4yRgTOk3hNM0fIcHIfQYN+EnKbGvw+wrdrrBNXji62ugoSC7OmbD2C0HjZsGFFjU64Pb3N+v5GncsKJecfhZFzDiS+1z9UB4jWY88XLGMFsY7
- 4WIoORtOksdn+hGMS912G9N1ejB2dHgIoOkKaQM4HMyWu3zlEnBzv0Ywtp9+XXP3MrTK/7HBSAqvYUbEaX0PEkW8cz+N6nZpwjj4W66NAw3Q7YDQAQU82lve
- 9E1fbl+Nxd/3HD+iRXivkSvkj3mXojttKjGijTID8rKsGt3WzNYjDhiO/fFWqPXZu0jMYYjmI+OP0knKSBBaCxu3m26c78BzsrsJ10T8fAkW0Omp7nn9xhgY
- GfmexGAOk8AOOcc8wmfYpsudbfDrvN6fKFViabL//D4OKLuLHWxd/wIbl3hba9MWO8vml/T6T7DR8ItY9HSONGI/N3WKrIa1JNH+WrZkdw6Hsm8jY/H3GLge
- n0PkMndezBERfVmcbY5iQbVxZMaeuO7dcdg6Rfg2ADginEOuH0gi+pTROFCsOyQOINY9A05MgFfaAC1BxJ3aIRPUvd7qK6a6ziktgRVDTgrakgOPoYU8EiBx
- ul7jx/6qriP113MP/Ro6A2gj2wbgZ5olb7oTzNktqHbufm2fgxqTCryDOp7LR4ZqKkQBQzsvWzZAdBj3e9IkX2HBIDfabTVNDkmYvi4IuIUXcQ==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+Hi Kamal,
 
-On 4/17/19 9:54 AM, Maxime Ripard wrote:
-> V4L2 uses different fourcc's than DRM, and has a different set of formats.
-> For now, let's add the v4l2 fourcc's for the already existing formats.
+Kamal Dasu <kdasu.kdev@gmail.com> wrote on Wed,  1 May 2019 13:46:15
+-0400:
 
-For this lib to be more useful for V4L2, would it be a good idea to add
-Bayer formats as well? This can be done in a separate patch.
+> If mtd_oops is in progress switch to polling for nand command completion
 
-Those formats are V4L specific, but are very common.
+s/nand/NAND/
 
-Regards,
+> interrupts and use PIO mode wihtout DMA so that the mtd_oops buffer can
+> be completely written in the assinged nand partition.
 
-	Hans
+What about:
+
+"If mtd_oops is in progress, switch to polling during NAND command
+completion instead of relying on DMA/interrupts so that the mtd_oops
+buffer can be completely written in the assigned NAND partition."
+
+> This is needed in
+> cases where the panic does not happen on cpu0 and there is only one online
+> CPU and the panic is not on cpu0.
+
+"This is needed in case the panic does not happen on CPU0 and there is
+only one online CPU."
+
+I am not sure to understand the problem or how this can happen (and
+be a problem). Have you met such issue already or is this purely
+speculative?
 
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 > ---
->  include/linux/image-formats.h |  9 +++++-
->  lib/image-formats.c           | 62 ++++++++++++++++++++++++++++++++++++-
->  2 files changed, 71 insertions(+)
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 55 ++++++++++++++++++++++++++++++--
+>  1 file changed, 52 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/linux/image-formats.h b/include/linux/image-formats.h
-> index ec43d9f9a527..b78b8e861fc9 100644
-> --- a/include/linux/image-formats.h
-> +++ b/include/linux/image-formats.h
-> @@ -50,6 +50,13 @@ struct image_format_info {
->  	};
->  
->  	/**
-> +	 * @v4l2_fmt:
-> +	 *
-> +	 * V4L2 4CC format identifier (V4L2_PIX_FMT_*)
-> +	 */
-> +	u32 v4l2_fmt;
-> +
-> +	/**
->  	 * @depth:
->  	 *
->  	 * Color depth (number of bits per pixel excluding padding bits),
-> @@ -382,6 +389,8 @@ uint64_t image_format_info_min_pitch(const struct image_format_info *info,
+> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> index 482c6f0..cfbe51a 100644
+> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> @@ -823,6 +823,12 @@ static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
+>  	return ctrl->flash_dma_base;
 >  }
 >  
->  const struct image_format_info *__image_format_drm_lookup(u32 drm);
-> +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2);
->  const struct image_format_info *image_format_drm_lookup(u32 drm);
-> +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2);
->  
->  #endif /* _IMAGE_FORMATS_H_ */
-> diff --git a/lib/image-formats.c b/lib/image-formats.c
-> index 1e52a7410222..25fa22d243fb 100644
-> --- a/lib/image-formats.c
-> +++ b/lib/image-formats.c
-> @@ -25,12 +25,14 @@
->  #include <linux/image-formats.h>
->  #include <linux/kernel.h>
->  #include <linux/math64.h>
-> +#include <linux/videodev2.h>
->  
->  #include <uapi/drm/drm_fourcc.h>
->  
->  static const struct image_format_info formats[] = {
->  	{
->  		.drm_fmt = DRM_FORMAT_C8,
-> +		.v4l2_fmt = V4L2_PIX_FMT_GREY,
->  		.depth = 8,
->  		.num_planes = 1,
->  		.cpp = { 1, 0, 0 },
-> @@ -38,6 +40,7 @@ static const struct image_format_info formats[] = {
->  		.vsub = 1,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_RGB332,
-> +		.v4l2_fmt = V4L2_PIX_FMT_RGB332,
->  		.depth = 8,
->  		.num_planes = 1,
->  		.cpp = { 1, 0, 0 },
-> @@ -172,6 +175,7 @@ static const struct image_format_info formats[] = {
->  		.has_alpha = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_RGB565,
-> +		.v4l2_fmt = V4L2_PIX_FMT_RGB565X,
->  		.depth = 16,
->  		.num_planes = 1,
->  		.cpp = { 2, 0, 0 },
-> @@ -186,6 +190,7 @@ static const struct image_format_info formats[] = {
->  		.vsub = 1,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_RGB888,
-> +		.v4l2_fmt = V4L2_PIX_FMT_BGR24,
->  		.depth = 24,
->  		.num_planes = 1,
->  		.cpp = { 3, 0, 0 },
-> @@ -193,6 +198,7 @@ static const struct image_format_info formats[] = {
->  		.vsub = 1,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_BGR888,
-> +		.v4l2_fmt = V4L2_PIX_FMT_RGB24,
->  		.depth = 24,
->  		.num_planes = 1,
->  		.cpp = { 3, 0, 0 },
-> @@ -200,6 +206,7 @@ static const struct image_format_info formats[] = {
->  		.vsub = 1,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_XRGB8888,
-> +		.v4l2_fmt = V4L2_PIX_FMT_XBGR32,
->  		.depth = 24,
->  		.num_planes = 1,
->  		.cpp = { 4, 0, 0 },
-> @@ -304,6 +311,7 @@ static const struct image_format_info formats[] = {
->  		.has_alpha = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_ARGB8888,
-> +		.v4l2_fmt = V4L2_PIX_FMT_ABGR32,
->  		.depth = 32,
->  		.num_planes = 1,
->  		.cpp = { 4, 0, 0 },
-> @@ -384,6 +392,7 @@ static const struct image_format_info formats[] = {
->  		.has_alpha = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_YUV410,
-> +		.v4l2_fmt = V4L2_PIX_FMT_YUV410,
->  		.depth = 0,
->  		.num_planes = 3,
->  		.cpp = { 1, 1, 1 },
-> @@ -392,6 +401,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_YVU410,
-> +		.v4l2_fmt = V4L2_PIX_FMT_YVU410,
->  		.depth = 0,
->  		.num_planes = 3,
->  		.cpp = { 1, 1, 1 },
-> @@ -416,6 +426,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_YUV420,
-> +		.v4l2_fmt = V4L2_PIX_FMT_YUV420,
->  		.depth = 0,
->  		.num_planes = 3,
->  		.cpp = { 1, 1, 1 },
-> @@ -424,6 +435,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_YVU420,
-> +		.v4l2_fmt = V4L2_PIX_FMT_YVU420,
->  		.depth = 0,
->  		.num_planes = 3,
->  		.cpp = { 1, 1, 1 },
-> @@ -432,6 +444,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_YUV422,
-> +		.v4l2_fmt = V4L2_PIX_FMT_YUV422P,
->  		.depth = 0,
->  		.num_planes = 3,
->  		.cpp = { 1, 1, 1 },
-> @@ -448,6 +461,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_YUV444,
-> +		.v4l2_fmt = V4L2_PIX_FMT_YUV444,
->  		.depth = 0,
->  		.num_planes = 3,
->  		.cpp = { 1, 1, 1 },
-> @@ -464,6 +478,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_NV12,
-> +		.v4l2_fmt = V4L2_PIX_FMT_NV12,
->  		.depth = 0,
->  		.num_planes = 2,
->  		.cpp = { 1, 2, 0 },
-> @@ -472,6 +487,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_NV21,
-> +		.v4l2_fmt = V4L2_PIX_FMT_NV21,
->  		.depth = 0,
->  		.num_planes = 2,
->  		.cpp = { 1, 2, 0 },
-> @@ -480,6 +496,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_NV16,
-> +		.v4l2_fmt = V4L2_PIX_FMT_NV16,
->  		.depth = 0,
->  		.num_planes = 2,
->  		.cpp = { 1, 2, 0 },
-> @@ -488,6 +505,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_NV61,
-> +		.v4l2_fmt = V4L2_PIX_FMT_NV61,
->  		.depth = 0,
->  		.num_planes = 2,
->  		.cpp = { 1, 2, 0 },
-> @@ -496,6 +514,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_NV24,
-> +		.v4l2_fmt = V4L2_PIX_FMT_NV24,
->  		.depth = 0,
->  		.num_planes = 2,
->  		.cpp = { 1, 2, 0 },
-> @@ -504,6 +523,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_NV42,
-> +		.v4l2_fmt = V4L2_PIX_FMT_NV42,
->  		.depth = 0,
->  		.num_planes = 2,
->  		.cpp = { 1, 2, 0 },
-> @@ -512,6 +532,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_YUYV,
-> +		.v4l2_fmt = V4L2_PIX_FMT_YUYV,
->  		.depth = 0,
->  		.num_planes = 1,
->  		.cpp = { 2, 0, 0 },
-> @@ -520,6 +541,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_YVYU,
-> +		.v4l2_fmt = V4L2_PIX_FMT_YVYU,
->  		.depth = 0,
->  		.num_planes = 1,
->  		.cpp = { 2, 0, 0 },
-> @@ -528,6 +550,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_UYVY,
-> +		.v4l2_fmt = V4L2_PIX_FMT_UYVY,
->  		.depth = 0,
->  		.num_planes = 1,
->  		.cpp = { 2, 0, 0 },
-> @@ -536,6 +559,7 @@ static const struct image_format_info formats[] = {
->  		.is_yuv = true,
->  	}, {
->  		.drm_fmt = DRM_FORMAT_VYUY,
-> +		.v4l2_fmt = V4L2_PIX_FMT_VYUY,
->  		.depth = 0,
->  		.num_planes = 1,
->  		.cpp = { 2, 0, 0 },
-> @@ -653,3 +677,41 @@ const struct image_format_info *image_format_drm_lookup(u32 drm)
->  	return format;
+> +static inline void disable_flash_dma_xfer(struct brcmnand_controller *ctrl)
+> +{
+> +	if (has_flash_dma(ctrl))
+> +		ctrl->flash_dma_base = 0;
+> +}
+> +
+>  static inline bool flash_dma_buf_ok(const void *buf)
+>  {
+>  	return buf && !is_vmalloc_addr(buf) &&
+> @@ -1237,15 +1243,58 @@ static void brcmnand_cmd_ctrl(struct nand_chip *chip, int dat,
+>  	/* intentionally left blank */
 >  }
->  EXPORT_SYMBOL(image_format_drm_lookup);
-> +
-> +/**
-> + * __image_format_v4l2_lookup - query information for a given format
-> + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
-> + *
-> + * The caller should only pass a supported pixel format to this function.
-> + *
-> + * Returns:
-> + * The instance of struct image_format_info that describes the pixel format, or
-> + * NULL if the format is unsupported.
-> + */
-> +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2)
+>  
+> +static bool is_mtd_oops_in_progress(void)
 > +{
-> +	return __image_format_lookup(v4l2_fmt, v4l2);
-> +}
-> +EXPORT_SYMBOL(__image_format_v4l2_lookup);
+> +	int i = 0;
 > +
-> +/**
-> + * image_format_v4l2_lookup - query information for a given format
-> + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
-> + *
-> + * The caller should only pass a supported pixel format to this function.
-> + * Unsupported pixel formats will generate a warning in the kernel log.
-> + *
-> + * Returns:
-> + * The instance of struct image_format_info that describes the pixel format, or
-> + * NULL if the format is unsupported.
-> + */
-> +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2)
-> +{
-> +	const struct image_format_info *format;
+> +#ifdef CONFIG_MTD_OOPS
+> +	if (oops_in_progress && smp_processor_id()) {
+> +		int cpu = 0;
 > +
-> +	format = __image_format_v4l2_lookup(v4l2);
-> +
-> +	WARN_ON(!format);
-> +	return format;
-> +}
-> +EXPORT_SYMBOL(image_format_v4l2_lookup);
-> 
+> +		for_each_online_cpu(cpu)
+> +			++i;
+> +	}
+> +#endif
+> +	return i == 1 ? true : false;
 
+I suppose return (i == 1); is enough
+
+> +}
+> +
+> +static bool brcmstb_nand_wait_for_completion(struct nand_chip *chip)
+> +{
+> +	struct brcmnand_host *host = nand_get_controller_data(chip);
+> +	struct brcmnand_controller *ctrl = host->ctrl;
+> +	bool err = false;
+> +	int sts;
+> +
+> +	if (is_mtd_oops_in_progress()) {
+> +		/* Switch to interrupt polling and PIO mode */
+> +		disable_flash_dma_xfer(ctrl);
+> +		sts = bcmnand_ctrl_poll_status(ctrl, NAND_CTRL_RDY |
+> +					       NAND_STATUS_READY,
+> +					       NAND_CTRL_RDY |
+> +					       NAND_STATUS_READY, 0);
+> +		err = (sts < 0) ? true : false;
+> +	} else {
+> +		unsigned long timeo = msecs_to_jiffies(
+> +						NAND_POLL_STATUS_TIMEOUT_MS);
+> +		/* wait for completion interrupt */
+> +		sts = wait_for_completion_timeout(&ctrl->done, timeo);
+> +		err = (sts <= 0) ? true : false;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>  static int brcmnand_waitfunc(struct nand_chip *chip)
+>  {
+>  	struct brcmnand_host *host = nand_get_controller_data(chip);
+>  	struct brcmnand_controller *ctrl = host->ctrl;
+> -	unsigned long timeo = msecs_to_jiffies(100);
+> +	bool err = false;
+>  
+>  	dev_dbg(ctrl->dev, "wait on native cmd %d\n", ctrl->cmd_pending);
+> -	if (ctrl->cmd_pending &&
+> -			wait_for_completion_timeout(&ctrl->done, timeo) <= 0) {
+
+What about the wait_for_completion_timeout() call in brcmnand_write()?
+
+> +	if (ctrl->cmd_pending)
+> +		err = brcmstb_nand_wait_for_completion(chip);
+> +
+> +	if (err) {
+>  		u32 cmd = brcmnand_read_reg(ctrl, BRCMNAND_CMD_START)
+>  					>> brcmnand_cmd_shift(ctrl);  
+>  
+
+
+Thanks,
+Miquèl
