@@ -2,256 +2,137 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D40FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6544EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2542081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B5E20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:35:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556811327;
+	bh=ENEOq8ymi8u9HzFnaKNC83uaP7dAPwUmnYmnsnS2nFY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FOL8rafu5Xu/jS3cpnshMRTHvXEJCXLPgxBez8pskNbYnKA8+gZcHPocl2Sha8tmY
+	 zLJDjdYMs228Ca6U8QyVzBsQKYDIkeLlLGLRXZlFO/ZDiLXjtHkj+qbjAIOrDMYpRl
+	 Os1NPJfTq5RHXHGZcn7UdUie7LjwpL1Bvm4ExFSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfEBPfS (ORCPT
+        id S1728995AbfEBPb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:35:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:8760 "EHLO mga03.intel.com"
+        Thu, 2 May 2019 11:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbfEBPba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:31:30 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 08:31:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,422,1549958400"; 
-   d="scan'208";a="154169893"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 May 2019 08:31:25 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hMDgC-0006jn-8O; Thu, 02 May 2019 18:31:24 +0300
-Date:   Thu, 2 May 2019 18:31:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Esben Haabendal <esben@haabendal.dk>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
-        Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial: 8250: Add support for using platform_device
- resources
-Message-ID: <20190502153124.GA9224@smile.fi.intel.com>
-References: <20190430140416.4707-1-esben@geanix.com>
- <20190430153736.GL9224@smile.fi.intel.com>
- <874l6efxta.fsf@haabendal.dk>
- <20190502104556.GS9224@smile.fi.intel.com>
- <87pnp11112.fsf@haabendal.dk>
+        id S1728121AbfEBPb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:31:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9B7A20C01;
+        Thu,  2 May 2019 15:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556811085;
+        bh=ENEOq8ymi8u9HzFnaKNC83uaP7dAPwUmnYmnsnS2nFY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TVbn7jOyvTmVD2w/6gJLHf5OlS/Nu0s3TISoHp8Uovio0UxgaH5vr0mgBaCdq6YzQ
+         aLPuY5XDw4A9nW8+gZBxF2nMGldVVScNrd7EK3DcV7ZBScPA+jzuArxULUq/jKFCdd
+         nk4h86bPAPh+TiXm4eeZwqg5Jdcprav7CxD8LIUg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nianyao Tang <tangnianyao@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 032/101] arm64: KVM: Always set ICH_HCR_EL2.EN if GICv4 is enabled
+Date:   Thu,  2 May 2019 17:20:34 +0200
+Message-Id: <20190502143341.783223402@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
+References: <20190502143339.434882399@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pnp11112.fsf@haabendal.dk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 02:41:45PM +0200, Esben Haabendal wrote:
-> Hi Lee
-> 
-> Could you help clarify whether or not this patch is trying to do
-> something odd/wrong?
-> 
-> I might be misunderstanding Andy (probably is), but the discussion
-> revolves around the changes I propose where I change the serial8250
-> driver to use platform_get_resource() in favour of
-> request_mem_region()/release_mem_region().
-> 
-> In my understanding, use of platform_get_resource() is the right thing
-> to do in order to integrate properly with with MFD drivers that splits a
-> common memory resource in mfd_add_device() using the mem_base argument.
-> 
-> Discussion follows:
-> 
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-> 
-> > On Wed, May 01, 2019 at 09:17:37AM +0200, Esben Haabendal wrote:
-> >> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-> >
-> >> > Hmm... Currently it's done inside individual port drivers, like 8250_dw.c.
-> >> > Each of the drivers can do it differently, for example 8250_lpss.c or
-> >> > 8250_pnp.c.
-> >> 
-> >> So, you would prefer to create a new "specialized" port driver that uses
-> >> platform resources?  I am not doing anything else different from
-> >> the generic port driver here in 8250_core.c.
-> >
-> > If it's required and using serial8250 directly is not enough.
-> 
-> Sorry, I am not sure what you mean by that.
+[ Upstream commit ca71228b42a96908eca7658861eafacd227856c9 ]
 
-The serial8250 is the name of (generic) platform driver of 8250 which can be
-used as a child for MFD.
+The normal interrupt flow is not to enable the vgic when no virtual
+interrupt is to be injected (i.e. the LRs are empty). But when a guest
+is likely to use GICv4 for LPIs, we absolutely need to switch it on
+at all times. Otherwise, VLPIs only get delivered when there is something
+in the LRs, which doesn't happen very often.
 
-> >> >> +				if (!(port->flags & UPF_DEV_RESOURCES))
-> >> >> +					release_mem_region(port->mapbase, size);
-> >> >
-> >> > This is again same issue. The parent should not request resource it
-> >> > doesn't use.
-> >> 
-> >> Yes, this is same issue.
-> >> 
-> >> But the last part is not true.  A parent mfd driver might "use" a memory
-> >> resource for the sole purpose of splitting it up for it's mfd child
-> >> devices.  This is a core part of mfd framework, and not something I am
-> >> inventing with this patch.  I am just trying to make it possible to use
-> >> 8250 driver in that context.
-> >> 
-> >> > I think I understand what is a confusion here.
-> >> >
-> >> > For the IO resources we have two operations:
-> >> > - mapping / re-mapping (may be shared)
-> >> > - requesting (exclusive)
-> >> >
-> >> > In the parenthesis I put a level of access to it. While many device
-> >> > drivers can *share* same resource (mapped or unmapped), the only one
-> >> > can actually request it.
-> >> 
-> >> Mostly true.  But there is an important twist to the exclusive restriction.
-> >> 
-> >> The exclusive part of the request is limited to the the same root/parent
-> >> resource.
-> >> 
-> >> When you request a memory resource from the root resource
-> >> (iomem_resource), the resource returned can be used as a new parent
-> >> resource.  This new parent can then be used to give exclusive access to
-> >> slices of that resource.  When used like that, I expect that the parent
-> >> resource is not supposed to be used for anything else than honoring
-> >> resource requests.
-> >> 
-> >> And this is exactly what mfd-core uses the mem_base argument
-> >> in mfd_add_devices().
-> >> 
-> >> > So, the parent can take an slice resources as it would be
-> >> > appropriated, but not requesting them.
-> >> 
-> >> The parent is not and should not be doing that by itself.  The request
-> >> is done on by mfd-core when mfd_add_devices() is called.
-> >
-> > No, MFD *does not* (and actually *may not* in order to allow standalone drivers
-> > to be used as children w/o modifications) request resources. It just passes
-> > them to children as parent suggested.
-> 
-> In drivers/mfd/mfd-core.c:mfd_add_device() :
-> 
->         for (r = 0; r < cell->num_resources; r++) {
->                 res[r].name = cell->resources[r].name;
->                 res[r].flags = cell->resources[r].flags;
-> 
->                 /* Find out base to use */
->                 if ((cell->resources[r].flags & IORESOURCE_MEM) && mem_base) {
->                         res[r].parent = mem_base;
->                         res[r].start = mem_base->start +
->                                 cell->resources[r].start;
->                         res[r].end = mem_base->start +
->                                 cell->resources[r].end;
->                 } else if (cell->resources[r].flags & IORESOURCE_IRQ) {
->                         if (domain) {
->                                 /* Unable to create mappings for IRQ ranges. */
->                                 WARN_ON(cell->resources[r].start !=
->                                         cell->resources[r].end);
->                                 res[r].start = res[r].end = irq_create_mapping(
->                                         domain, cell->resources[r].start);
->                         } else {
->                                 res[r].start = irq_base +
->                                         cell->resources[r].start;
->                                 res[r].end   = irq_base +
->                                         cell->resources[r].end;
->                         }
->                 } else {
->                         res[r].parent = cell->resources[r].parent;
->                         res[r].start = cell->resources[r].start;
->                         res[r].end   = cell->resources[r].end;
->                 }
-> 
->                 if (!cell->ignore_resource_conflicts) {
->                         if (has_acpi_companion(&pdev->dev)) {
->                                 ret = acpi_check_resource_conflict(&res[r]);
->                                 if (ret)
->                                         goto fail_alias;
->                         }
->                 }
->         }
-> 
->         ret = platform_device_add_resources(pdev, res, cell->num_resources);
-> 
-> This creates the child resources.  Whether we call that requesting the
-> resources or not, is a matter of word.  But it is what it is.  When it
-> is done, you cannot use request_mem_region() for those memory resources,
-> they are now locked/exclusive for the mfd parent *and* for the
-> respective mfd child device.
+Reported-by: Nianyao Tang <tangnianyao@huawei.com>
+Tested-by: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ virt/kvm/arm/hyp/vgic-v3-sr.c |  4 ++--
+ virt/kvm/arm/vgic/vgic.c      | 14 ++++++++++----
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
-Why not? Again, *slicing* resources is OK and that's what MFD for, *requesting*
-them in the parent is not.
-
-> In order to use them, child devices simply use platform_get_resource(),
-> and everything works nicely.  It works fine for normal (non-mfd)
-> devices, as they get (requests) the resources from the root resource
-> (iomem_resource), and works fine for mfd devices as well.  So no changes
-> are needed for drivers to work with mfd.
-> 
-> Whether you call the thing that mfd_add_device() does for "request
-> resources" or just "pass them to children" is a matter of words.
-
-Nope, *requesting* resources as you mentioned lock them to the certain user.
-
-> The
-> mfd (parent) has a resource which it cuts up into slices for its
-> children, and these slices are passed to the child devices.  The drivers
-> for these child devices must then pickup the resource(s) using
-> platform_get_resource().  At no point is any "request_*" function
-> called.
-> 
-> Looking at in another way.
-> 
-> The request_mem_region() macro call __request_resource(), which which
-> simply creates a new 'struct resource' in the iomem_resource resource.
-> 
-> In mfd_add_device(), almost the same happens.  A new 'struct resource'
-> is created in the mem_base resource.
-> 
-> In both cases, a 'struct resource' is created, representing exclusive
-> access to the resource.  And like it or not, this is something that MFD
-> already *do*, and I think it is way out of scope of this patch to change
-> that.
-> 
-> I just try to make serial8250 driver work nicely in that (mfd) context,
-> without changing how mfd is working.
-
-There is nothing to change. It's already working. I don't see a problem here.
-
-> >> > OTOH, it's possible to have a (weird) MFD case where parent *requested*
-> >> > resources, and *all* of its children are aware of that.
-> >> 
-> >> I am not sure what you mean with this, but mfd drivers should not pass
-> >> along it's intire requested memory resource(s) to child devices.  The
-> >> child devices will get the requested resource slices, as implemented by
-> >> mfd_add_devices().
-> >> 
-> >> I hope you can see that I am not violating any fundamental design
-> >> decissions here, but actually try adhere to them (resource management,
-> >> platform_device resource management, and mfd-core).
-
+diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
+index 9652c453480f..3c3f7cda95c7 100644
+--- a/virt/kvm/arm/hyp/vgic-v3-sr.c
++++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
+@@ -222,7 +222,7 @@ void __hyp_text __vgic_v3_save_state(struct kvm_vcpu *vcpu)
+ 		}
+ 	}
+ 
+-	if (used_lrs) {
++	if (used_lrs || cpu_if->its_vpe.its_vm) {
+ 		int i;
+ 		u32 elrsr;
+ 
+@@ -247,7 +247,7 @@ void __hyp_text __vgic_v3_restore_state(struct kvm_vcpu *vcpu)
+ 	u64 used_lrs = vcpu->arch.vgic_cpu.used_lrs;
+ 	int i;
+ 
+-	if (used_lrs) {
++	if (used_lrs || cpu_if->its_vpe.its_vm) {
+ 		write_gicreg(cpu_if->vgic_hcr, ICH_HCR_EL2);
+ 
+ 		for (i = 0; i < used_lrs; i++)
+diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+index abd9c7352677..3af69f2a3866 100644
+--- a/virt/kvm/arm/vgic/vgic.c
++++ b/virt/kvm/arm/vgic/vgic.c
+@@ -867,15 +867,21 @@ void kvm_vgic_flush_hwstate(struct kvm_vcpu *vcpu)
+ 	 * either observe the new interrupt before or after doing this check,
+ 	 * and introducing additional synchronization mechanism doesn't change
+ 	 * this.
++	 *
++	 * Note that we still need to go through the whole thing if anything
++	 * can be directly injected (GICv4).
+ 	 */
+-	if (list_empty(&vcpu->arch.vgic_cpu.ap_list_head))
++	if (list_empty(&vcpu->arch.vgic_cpu.ap_list_head) &&
++	    !vgic_supports_direct_msis(vcpu->kvm))
+ 		return;
+ 
+ 	DEBUG_SPINLOCK_BUG_ON(!irqs_disabled());
+ 
+-	raw_spin_lock(&vcpu->arch.vgic_cpu.ap_list_lock);
+-	vgic_flush_lr_state(vcpu);
+-	raw_spin_unlock(&vcpu->arch.vgic_cpu.ap_list_lock);
++	if (!list_empty(&vcpu->arch.vgic_cpu.ap_list_head)) {
++		raw_spin_lock(&vcpu->arch.vgic_cpu.ap_list_lock);
++		vgic_flush_lr_state(vcpu);
++		raw_spin_unlock(&vcpu->arch.vgic_cpu.ap_list_lock);
++	}
+ 
+ 	if (can_access_vgic_from_kernel())
+ 		vgic_restore_state(vcpu);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.19.1
+
 
 
