@@ -2,78 +2,71 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591ACC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F4BC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3F1206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4C72081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfEBOTL (ORCPT
+        id S1726442AbfEBOTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:19:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52408 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726267AbfEBOTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:19:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF83CAD7E;
-        Thu,  2 May 2019 14:19:09 +0000 (UTC)
-Subject: Re: [PATCH 24/24] osst: add a SPDX tag to osst.c
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Willem Riede <osst@riede.org>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
-        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
-        osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Chriosstoph Hellwig <hch@losst.de>
-References: <20190501161417.32592-1-hch@lst.de>
- <20190501161417.32592-25-hch@lst.de>
- <70277444-5b5b-6e3c-5af3-c658a841b144@suse.de> <20190502125312.GA2560@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <10a8c8f5-879c-685f-f43c-d5af678b2187@suse.de>
-Date:   Thu, 2 May 2019 16:19:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 10:19:47 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39513 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfEBOTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:19:47 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 44vy803DdJz9sBr; Fri,  3 May 2019 00:19:44 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     linux-edac@vger.kernel.org
+Cc:     morbidrsa@gmail.com, bp@alien8.de, mchehab@kernel.org,
+        james.morse@arm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org
+Subject: [PATCH] EDAC, mpc85xx: Prevent building as a module
+Date:   Fri,  3 May 2019 00:19:41 +1000
+Message-Id: <20190502141941.12927-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190502125312.GA2560@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/19 2:53 PM, Christoph Hellwig wrote:
-> On Thu, May 02, 2019 at 08:06:38AM +0200, Hannes Reinecke wrote:
->> On 5/1/19 6:14 PM, Christoph Hellwig wrote:
->>> osst.c is the only osst file missing licensing information.  Add a
->>> GPLv2 tag for the default kernel license.
->>>
->>> Signed-off-by: Chriosstoph Hellwig <hch@losst.de>
-> 
-> FYI, my s/st/osst/ on the commit message message up my signoff, this
-> should be:
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> 
-Maybe it's time to kill osst.c for good ...
+The mpc85xx EDAC code can be configured as a module but then fails to
+build because it uses two unexported symbols:
 
-Cheers,
+  ERROR: ".pci_find_hose_for_OF_device" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
+  ERROR: ".early_find_capability" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
 
-Hannes
+We don't want to export those symbols just for this driver, so make
+the driver only configurable as a built-in.
+
+This seems to have been broken since at least commit c92132f59806
+("edac/85xx: Add PCIe error interrupt edac support") (Nov 2013).
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ drivers/edac/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 47eb4d13ed5f..6317519f9d88 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -263,7 +263,7 @@ config EDAC_PND2
+ 	  micro-server but may appear on others in the future.
+ 
+ config EDAC_MPC85XX
+-	tristate "Freescale MPC83xx / MPC85xx"
++	bool "Freescale MPC83xx / MPC85xx"
+ 	depends on FSL_SOC
+ 	help
+ 	  Support for error detection and correction on the Freescale
 -- 
-Dr. Hannes Reinecke		   Teamlead Storage & Networking
-hare@suse.de			               +49 911 74053 688
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+2.20.1
+
