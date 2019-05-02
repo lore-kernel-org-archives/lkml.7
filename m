@@ -2,86 +2,183 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108C4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B19C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE2F20651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556818469;
-	bh=k1Mng5fkxG2kqXsRSaQDBN/3qrjtIBnMdTR42nRFITQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K0p/F1aweWkbBx2cQfEY3d5B29xJVWburQMsDTigiTFZmUdKlsh7tn5KuW5PD17kK
-	 SAa69mHaktmA3VZGTmoNVkyff4MNyfwOlehQBzs0AwjzNn4TzUQmUqNN8H0hNz80pq
-	 BHTR+GeboKrhXksqg5dZKU27qvCsYn+NlZ1G29C4=
+	by mail.kernel.org (Postfix) with ESMTP id B4FBF205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfEBRe2 (ORCPT
+        id S1726477AbfEBReY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfEBRe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:34:26 -0400
-Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C09C5205F4;
-        Thu,  2 May 2019 17:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556818466;
-        bh=k1Mng5fkxG2kqXsRSaQDBN/3qrjtIBnMdTR42nRFITQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hp6CAJKtym6IoN734hnJoB9bKolzpSd0R7qRYpUjsgNKYsINuqSetNrT1/y1xcNaN
-         6xMHqCPis63NBoZhcvCRXmKfvQQYWd1l/DP9A5DA3xV1FqO6dXcr1bM8eS8DJT8DaH
-         JFX5NmJuqQJsTHn1vYCIS0QS8K+KpZZYBJoG9Pjs=
-Date:   Thu, 2 May 2019 13:34:19 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        akpm@linux-foundation.org, mhocko@suse.com,
-        dave.hansen@linux.intel.com, dan.j.williams@intel.com,
-        keith.busch@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, zwisler@kernel.org, thomas.lendacky@amd.com,
-        ying.huang@intel.com, fengguang.wu@intel.com, bp@suse.de,
-        bhelgaas@google.com, baiyaowei@cmss.chinamobile.com, tiwai@suse.de,
-        jglisse@redhat.com, david@redhat.com
-Subject: Re: [v4 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-Message-ID: <20190502173419.GA3048@sasha-vm>
-References: <20190501191846.12634-1-pasha.tatashin@soleen.com>
- <20190501191846.12634-3-pasha.tatashin@soleen.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190501191846.12634-3-pasha.tatashin@soleen.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 2 May 2019 13:34:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726418AbfEBReW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 13:34:22 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42HMh8A152243
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 13:34:20 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s83w7k05u-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 13:34:20 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 2 May 2019 18:34:19 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 2 May 2019 18:34:15 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42HYEeO47251554
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 May 2019 17:34:14 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 469924C044;
+        Thu,  2 May 2019 17:34:14 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A471C4C040;
+        Thu,  2 May 2019 17:34:13 +0000 (GMT)
+Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.190.191])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  2 May 2019 17:34:13 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: [PATCH v8 2/4] vfio: ap: register IOMMU VFIO notifier
+Date:   Thu,  2 May 2019 19:34:09 +0200
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556818451-1806-1-git-send-email-pmorel@linux.ibm.com>
+References: <1556818451-1806-1-git-send-email-pmorel@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19050217-4275-0000-0000-00000330B6E4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050217-4276-0000-0000-0000384016EE
+Message-Id: <1556818451-1806-3-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 03:18:46PM -0400, Pavel Tatashin wrote:
->It is now allowed to use persistent memory like a regular RAM, but
->currently there is no way to remove this memory until machine is
->rebooted.
->
->This work expands the functionality to also allows hotremoving
->previously hotplugged persistent memory, and recover the device for use
->for other purposes.
->
->To hotremove persistent memory, the management software must first
->offline all memory blocks of dax region, and than unbind it from
->device-dax/kmem driver. So, operations should look like this:
->
->echo offline > echo offline > /sys/devices/system/memory/memoryN/state
+To be able to use the VFIO interface to facilitate the
+mediated device memory pinning/unpinning we need to register
+a notifier for IOMMU.
 
-This looks wrong :)
+While we will start to pin one guest page for the interrupt indicator
+byte, this is still ok with ballooning as this page will never be
+used by the guest virtio-balloon driver.
+So the pinned page will never be freed. And even a broken guest does
+so, that would not impact the host as the original page is still
+in control by vfio.
 
---
-Thanks,
-Sasha
+Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c     | 43 ++++++++++++++++++++++++++++++++++-
+ drivers/s390/crypto/vfio_ap_private.h |  2 ++
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 900b9cf..e8e87bf 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -759,6 +759,35 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+ 	return 0;
+ }
+ 
++/*
++ * vfio_ap_mdev_iommu_notifier: IOMMU notifier callback
++ *
++ * @nb: The notifier block
++ * @action: Action to be taken
++ * @data: data associated with the request
++ *
++ * For an UNMAP request, unpin the guest IOVA (the NIB guest address we
++ * pinned before). Other requests are ignored.
++ *
++ */
++static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
++				       unsigned long action, void *data)
++{
++	struct ap_matrix_mdev *matrix_mdev;
++
++	matrix_mdev = container_of(nb, struct ap_matrix_mdev, iommu_notifier);
++
++	if (action == VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
++		struct vfio_iommu_type1_dma_unmap *unmap = data;
++		unsigned long g_pfn = unmap->iova >> PAGE_SHIFT;
++
++		vfio_unpin_pages(mdev_dev(matrix_mdev->mdev), &g_pfn, 1);
++		return NOTIFY_OK;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+ 				       unsigned long action, void *data)
+ {
+@@ -858,7 +887,17 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+ 		return ret;
+ 	}
+ 
+-	return 0;
++	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
++	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
++	ret = vfio_register_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
++				     &events, &matrix_mdev->iommu_notifier);
++	if (!ret)
++		return ret;
++
++	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
++				 &matrix_mdev->group_notifier);
++	module_put(THIS_MODULE);
++	return ret;
+ }
+ 
+ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+@@ -869,6 +908,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+ 		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+ 
+ 	vfio_ap_mdev_reset_queues(mdev);
++	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
++				 &matrix_mdev->iommu_notifier);
+ 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
+ 				 &matrix_mdev->group_notifier);
+ 	matrix_mdev->kvm = NULL;
+diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+index a910be1..18dcc4d 100644
+--- a/drivers/s390/crypto/vfio_ap_private.h
++++ b/drivers/s390/crypto/vfio_ap_private.h
+@@ -81,8 +81,10 @@ struct ap_matrix_mdev {
+ 	struct list_head node;
+ 	struct ap_matrix matrix;
+ 	struct notifier_block group_notifier;
++	struct notifier_block iommu_notifier;
+ 	struct kvm *kvm;
+ 	struct kvm_s390_module_hook pqap_hook;
++	struct mdev_device *mdev;
+ };
+ 
+ extern int vfio_ap_mdev_register(void);
+-- 
+2.7.4
+
