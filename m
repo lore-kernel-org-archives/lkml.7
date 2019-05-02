@@ -2,283 +2,152 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AD9C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDBEC04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD932085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:16:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="BRWAVdva"
+	by mail.kernel.org (Postfix) with ESMTP id 369342075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfEBLQd (ORCPT
+        id S1726321AbfEBL1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 07:16:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43976 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfEBLQc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 07:16:32 -0400
-Received: by mail-pl1-f193.google.com with SMTP id n8so861378plp.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 04:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=t9hGIgdJ3F1naTsmPTDkEYuXyH0knzvZIFOUxu/fNvQ=;
-        b=BRWAVdvaQWhA8yUpan+L65fEoh/KPDrCaPnGc66OT7Q50492PHFToDP8YNOuHokYOW
-         k+evmLJZ+w0aSVGfCb5XvUhMGZajV9Bs1its4sjpnwTUhAnvpBciL14bMCeEZQFSGlaT
-         qcGMw+ohyWVtlxrNKi16cTVHG0n7EtrVf0q4dY0StOoOQvP0/WFwVsY8mjb4Lu8zC1WB
-         vnUHrr+LrHub3b9oVKhpb4Z5I7Hn0S6CIz3bSnufc8cA9DoPjFsI0JfRl2AegkeQ3u9F
-         cQpuDz2kKbcWPz+gaNwohkvCJ9Amxfu8pIOvoj+Agwv4kge/MUj5o82063l2eDBU+Dl+
-         XDow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=t9hGIgdJ3F1naTsmPTDkEYuXyH0knzvZIFOUxu/fNvQ=;
-        b=eaArXbjrkpPFLLESlDbiypA4OXhMpFbCavcgaZZCmVWZXA5gGSi2cJ26ESQi5wwbam
-         LTU7bR2HNuU2+vmf6V6XW+mq9dmU3e5007sa5ZUT87q2XDzlNJ3uHSuSQg3D6RjkMb0W
-         EY0sCS5KVcgHEGOOV0EBerV9teWY1Xzd8GAQMlJ9oyE7ihvdpsRYkk7QYGOgnmJV1rIt
-         OiUnwn/s+Bb+lxsmL5yzaEn7AsghmII4znHGwlywQ/dwpEcCYxOCtSsvbXkffLUUQARQ
-         3Tq04D4QBs/sWg3m5mtSJaMn3FjpaILctxEWUiAcYkKer4E8Rksz36fi5gjDQKB/xzb/
-         Yolw==
-X-Gm-Message-State: APjAAAUAEgWqnxRD/1Rt0hF9Awwb4qSLIDshjKzM+7ePNK9w/Yt3Ny0Y
-        3LGOhPo2+JA0CSKJsazFb3T69A==
-X-Google-Smtp-Source: APXvYqyDFCENMtG6ogPi3xzmHAx+vyLaCtKKY3B3RCqG3FE5OXpUYLrokseWzwwfZWsAlMORlGRvtw==
-X-Received: by 2002:a17:902:e70c:: with SMTP id co12mr3104577plb.339.1556795791785;
-        Thu, 02 May 2019 04:16:31 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id t65sm5550010pfa.175.2019.05.02.04.16.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 May 2019 04:16:31 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     linux-edac@vger.kernel.org, linux-riscv@lists.infradead.org,
-        palmer@sifive.com, bp@alien8.de, james.morse@arm.com
-Cc:     paul.walmsley@sifive.com, linux-kernel@vger.kernel.org,
-        aou@eecs.berkeley.edu, mchehab@kernel.org, sachin.ghadi@sifive.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH] edac: sifive: Add EDAC platform driver for SiFive SoCs
-Date:   Thu,  2 May 2019 16:46:01 +0530
-Message-Id: <1556795761-21630-2-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556795761-21630-1-git-send-email-yash.shah@sifive.com>
-References: <1556795761-21630-1-git-send-email-yash.shah@sifive.com>
+        Thu, 2 May 2019 07:27:07 -0400
+Received: from foss.arm.com ([217.140.101.70]:44252 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfEBL1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 07:27:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 074E5A78;
+        Thu,  2 May 2019 04:27:06 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2340C3F719;
+        Thu,  2 May 2019 04:27:03 -0700 (PDT)
+Subject: Re: [PATCH v5 2/3] iommu/dma: Reserve IOVA for PCIe inaccessible DMA
+ address
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
+ <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
+ <20190502110152.GA7313@e121166-lin.cambridge.arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2f4b9492-0caf-d6e3-e727-e3c869eefb58@arm.com>
+Date:   Thu, 2 May 2019 12:27:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190502110152.GA7313@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The initial ver of EDAC driver supports:
-- ECC event monitoring and reporting through the EDAC framework for SiFive
-  L2 cache controller.
+Hi Lorenzo,
 
-This patch depends on patch
-'RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs'
-https://lkml.org/lkml/2019/5/2/309
-The EDAC driver registers for notifier events from the L2 cache controller
-driver (arch/riscv/mm/sifive_l2_cache.c) for L2 ECC events
+On 02/05/2019 12:01, Lorenzo Pieralisi wrote:
+> On Wed, May 01, 2019 at 11:06:25PM +0530, Srinath Mannam wrote:
+>> dma_ranges field of PCI host bridge structure has resource entries in
+>> sorted order of address range given through dma-ranges DT property. This
+>> list is the accessible DMA address range. So that this resource list will
+>> be processed and reserve IOVA address to the inaccessible address holes in
+>> the list.
+>>
+>> This method is similar to PCI IO resources address ranges reserving in
+>> IOMMU for each EP connected to host bridge.
+>>
+>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+>> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+>> Acked-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>   drivers/iommu/dma-iommu.c | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+>> index 77aabe6..da94844 100644
+>> --- a/drivers/iommu/dma-iommu.c
+>> +++ b/drivers/iommu/dma-iommu.c
+>> @@ -212,6 +212,7 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>>   	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>>   	struct resource_entry *window;
+>>   	unsigned long lo, hi;
+>> +	phys_addr_t start = 0, end;
+>>   
+>>   	resource_list_for_each_entry(window, &bridge->windows) {
+>>   		if (resource_type(window->res) != IORESOURCE_MEM)
+>> @@ -221,6 +222,24 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>>   		hi = iova_pfn(iovad, window->res->end - window->offset);
+>>   		reserve_iova(iovad, lo, hi);
+>>   	}
+>> +
+>> +	/* Get reserved DMA windows from host bridge */
+>> +	resource_list_for_each_entry(window, &bridge->dma_ranges) {
+> 
+> If this list is not sorted it seems to me the logic in this loop is
+> broken and you can't rely on callers to sort it because it is not a
+> written requirement and it is not enforced (you know because you
+> wrote the code but any other developer is not supposed to guess
+> it).
+> 
+> Can't we rewrite this loop so that it does not rely on list
+> entries order ?
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- MAINTAINERS                |   6 +++
- arch/riscv/Kconfig         |   1 +
- drivers/edac/Kconfig       |   6 +++
- drivers/edac/Makefile      |   1 +
- drivers/edac/sifive_edac.c | 121 +++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 135 insertions(+)
- create mode 100644 drivers/edac/sifive_edac.c
+The original idea was that callers should be required to provide a 
+sorted list, since it keeps things nice and simple...
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ba4f104..6e433db 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5679,6 +5679,12 @@ L:	linux-edac@vger.kernel.org
- S:	Maintained
- F:	drivers/edac/sb_edac.c
- 
-+EDAC-SIFIVE
-+M:	Yash Shah <yash.shah@sifive.com>
-+L:	linux-edac@vger.kernel.org
-+S:	Maintained
-+F:	drivers/edac/sifive_edac.c
-+
- EDAC-SKYLAKE
- M:	Tony Luck <tony.luck@intel.com>
- L:	linux-edac@vger.kernel.org
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index eb56c82..31999a6 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -49,6 +49,7 @@ config RISCV
- 	select GENERIC_IRQ_MULTI_HANDLER
- 	select ARCH_HAS_PTE_SPECIAL
- 	select HAVE_EBPF_JIT if 64BIT
-+	select EDAC_SUPPORT
- 
- config MMU
- 	def_bool y
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 47eb4d1..3e05228 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -460,6 +460,12 @@ config EDAC_ALTERA_SDMMC
- 	  Support for error detection and correction on the
- 	  Altera SDMMC FIFO Memory for Altera SoCs.
- 
-+config EDAC_SIFIVE
-+	bool "Sifive platform EDAC driver"
-+	depends on EDAC=y && RISCV
-+	help
-+	  Support for error detection and correction on the SiFive SoCs.
-+
- config EDAC_SYNOPSYS
- 	tristate "Synopsys DDR Memory Controller"
- 	depends on ARCH_ZYNQ || ARCH_ZYNQMP
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 89ad4a84..165ca65e 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -79,6 +79,7 @@ obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
- obj-$(CONFIG_EDAC_THUNDERX)		+= thunderx_edac.o
- 
- obj-$(CONFIG_EDAC_ALTERA)		+= altera_edac.o
-+obj-$(CONFIG_EDAC_SIFIVE)		+= sifive_edac.o
- obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
- obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
- obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
-diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
-new file mode 100644
-index 0000000..eb7a9b9
---- /dev/null
-+++ b/drivers/edac/sifive_edac.c
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SiFive Platform EDAC Driver
-+ *
-+ * Copyright (C) 2018-2019 SiFive, Inc.
-+ *
-+ * This driver is partially based on octeon_edac-pc.c
-+ *
-+ */
-+#include <linux/edac.h>
-+#include <linux/platform_device.h>
-+#include "edac_module.h"
-+
-+#define DRVNAME "sifive_edac"
-+
-+extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
-+extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
-+
-+struct sifive_edac_priv {
-+	struct notifier_block notifier;
-+	struct edac_device_ctl_info *dci;
-+};
-+
-+/**
-+ * EDAC error callback
-+ *
-+ * @event: non-zero if unrecoverable.
-+ */
-+static
-+int ecc_err_event(struct notifier_block *this, unsigned long event, void *ptr)
-+{
-+	const char *msg = (char *)ptr;
-+	struct sifive_edac_priv *p;
-+
-+	p = container_of(this, struct sifive_edac_priv, notifier);
-+
-+	if (event)
-+		edac_device_handle_ue(p->dci, 0, 0, msg);
-+	else
-+		edac_device_handle_ce(p->dci, 0, 0, msg);
-+
-+	return NOTIFY_STOP;
-+}
-+
-+static int ecc_register(struct platform_device *pdev)
-+{
-+	struct sifive_edac_priv *p;
-+
-+	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	p->notifier.notifier_call = ecc_err_event;
-+	platform_set_drvdata(pdev, p);
-+
-+	p->dci = edac_device_alloc_ctl_info(sizeof(*p), "sifive_ecc", 1,
-+					    "sifive_ecc", 1, 1, NULL, 0,
-+					    edac_device_alloc_index());
-+	if (IS_ERR(p->dci))
-+		return PTR_ERR(p->dci);
-+
-+	p->dci->dev = &pdev->dev;
-+	p->dci->mod_name = "Sifive ECC Manager";
-+	p->dci->ctl_name = dev_name(&pdev->dev);
-+	p->dci->dev_name = dev_name(&pdev->dev);
-+
-+	if (edac_device_add_device(p->dci)) {
-+		dev_err(p->dci->dev, "failed to register with EDAC core\n");
-+		goto err;
-+	}
-+
-+	register_sifive_l2_error_notifier(&p->notifier);
-+
-+	return 0;
-+
-+err:
-+	edac_device_free_ctl_info(p->dci);
-+
-+	return -ENXIO;
-+}
-+
-+static int ecc_unregister(struct platform_device *pdev)
-+{
-+	struct sifive_edac_priv *p = platform_get_drvdata(pdev);
-+
-+	unregister_sifive_l2_error_notifier(&p->notifier);
-+	edac_device_del_device(&pdev->dev);
-+	edac_device_free_ctl_info(p->dci);
-+
-+	return 0;
-+}
-+
-+struct platform_device *sifive_pdev;
-+
-+static int __init sifive_edac_init(void)
-+{
-+	int ret;
-+
-+	sifive_pdev = platform_device_register_simple(DRVNAME, 0, NULL, 0);
-+	if (IS_ERR(sifive_pdev))
-+		return PTR_ERR(sifive_pdev);
-+
-+	ret = ecc_register(sifive_pdev);
-+	if (ret)
-+		platform_device_unregister(sifive_pdev);
-+
-+	return ret;
-+}
-+
-+static void __exit sifive_edac_exit(void)
-+{
-+	ecc_unregister(sifive_pdev);
-+	platform_device_unregister(sifive_pdev);
-+}
-+
-+module_init(sifive_edac_init);
-+module_exit(sifive_edac_exit);
-+
-+MODULE_AUTHOR("SiFive Inc.");
-+MODULE_DESCRIPTION("SiFive platform EDAC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+> I won't merge this series unless you sort it, no pun intended.
+> 
+> Lorenzo
+> 
+>> +		end = window->res->start - window->offset;
 
+...so would you consider it sufficient to add
+
+		if (end < start)
+			dev_err(...);
+
+here, plus commenting the definition of pci_host_bridge::dma_ranges that 
+it must be sorted in ascending order?
+
+[ I guess it might even make sense to factor out the parsing and list 
+construction from patch #3 into an of_pci core helper from the 
+beginning, so that there's even less chance of another driver 
+reimplementing it incorrectly in future. ]
+
+Failing that, although I do prefer the "simple by construction" 
+approach, I'd have no objection to just sticking a list_sort() call in 
+here instead, if you'd rather it be entirely bulletproof.
+
+Robin.
+
+>> +resv_iova:
+>> +		if (end - start) {
+>> +			lo = iova_pfn(iovad, start);
+>> +			hi = iova_pfn(iovad, end);
+>> +			reserve_iova(iovad, lo, hi);
+>> +		}
+>> +		start = window->res->end - window->offset + 1;
+>> +		/* If window is last entry */
+>> +		if (window->node.next == &bridge->dma_ranges &&
+>> +		    end != ~(dma_addr_t)0) {
+>> +			end = ~(dma_addr_t)0;
+>> +			goto resv_iova;
+>> +		}
+>> +	}
+>>   }
+>>   
+>>   static int iova_reserve_iommu_regions(struct device *dev,
+>> -- 
+>> 2.7.4
+>>
