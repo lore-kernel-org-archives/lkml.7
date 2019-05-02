@@ -2,225 +2,91 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83260C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F8CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379A121479
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168872085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h8z77/Mb"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="P+qLA+Jt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfEBUJz (ORCPT
+        id S1726294AbfEBULz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 16:09:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35770 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfEBUJz (ORCPT
+        Thu, 2 May 2019 16:11:55 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:33499 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfEBULz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 16:09:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y197so4230897wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 13:09:53 -0700 (PDT)
+        Thu, 2 May 2019 16:11:55 -0400
+Received: by mail-it1-f195.google.com with SMTP id u16so1526215itc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 13:11:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HW4SbB3KBHe9bRL0VlP/PJqEOuDxOC8P1nukhCffYWo=;
-        b=h8z77/MbeE7n7BavEdaP0BOUlwpzvJ5jtp6tgzNMaP8N28RJMK2COb25uAt1EOlnPx
-         OY428iKmJccCuMsthVYwfLS2H3LYKHMBOL/VWbgP/FdcyH8V47lHxwM3Rp8CKHraloQA
-         huDcFlE2k5PIm12rTAN/BwAERxq0LAfrE08nricZtSAK2Jrsu8e+q6RrpBXX4tdlLvwF
-         8NGnTW9iEAh/7O4PgMI8qGRUNDJ7FHSyeeyFOhFGGYdz9V5JX7U4hOf/vOn7Ocjm0kN4
-         0tX/rA08xUaYDPh+J7tQSRL0n7SKTt3bMtB/HtfgXCNHuMB+4oUPvvKPOh+zAyYQjgtR
-         KUVQ==
+        bh=pvckd5liEsMXk3SQVRYFMm9nVV/fz8aPm/503hwbENU=;
+        b=P+qLA+JtbrZ4IvqT2Nw2c/DtVkzUL1OcnjW0iN7JmQ7Z8147Jl2nSlIzHYDiHFa/bQ
+         h60Aa/b1WHs3ul7uheOfeXezQ0qcZJXf4fgM2tgARC9sL3u04KUlSKuHE7uBNO1yM4/C
+         hefB6NQSteaZMKRL46INLlIeSRAfHTu6jXWhdv1/LULsxInBLz6Pz9giPbiqQYa0UWfb
+         eueS0ut/cEebX2Le4Yrh4AqN4JWMsie82t10EvC93P8ftA0hQ6s8iExeK9/z+QMFIhGt
+         OZnL5FApelucM5AKiN+hpnX+Vlz9xUTpnV4+iXTnjt4JrxtjJbky5vyd3r7Bbrb8Z3i0
+         ARXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=HW4SbB3KBHe9bRL0VlP/PJqEOuDxOC8P1nukhCffYWo=;
-        b=c9Nl8Uu4m32KmHp2OO/EfRyvP6CR/pC9ygTebQySdJlPkltKuL5oWy5T+qkpNNt4iO
-         OD4aOPgc384AwgK0dujfRudFGQeuV0E/SRHceUJFcdwxIZUejNlA/vSvYjujrTswIrqG
-         8VFmF+87/43FJnTM7vH0dWeAZchvVaugI6ftflHbXIP+iPUwgLes3147k9LyfNrlyjOV
-         VUeF/jz34yyJIYR7l/eabu7s8/hUYlL1/T0SDdtcr6ZqwuTHnJi1+K7zsGykwUQWrLG5
-         ZT3F6zwsxRCUUG+LrVi05X3tDxAQbD/skTco1OlWBeLMr+ueL23avutnHmZ1IHCAySIq
-         zK1w==
-X-Gm-Message-State: APjAAAX36WwoC2C6azn1V9HpvcAntaMC0eWw5VzkYZ5KM2l7bZB+h8iW
-        Kvi3GEItUR+iaFFnV/bKDZc1FLP1Kdk=
-X-Google-Smtp-Source: APXvYqxlo8jyi6vBQeh19cyTKM4Pg+7rPPUD0TfdgOYYMRiMVuhSDkjvgWxDKe326k36jjpQmD1FmQ==
-X-Received: by 2002:a1c:2109:: with SMTP id h9mr3695160wmh.68.1556827792261;
-        Thu, 02 May 2019 13:09:52 -0700 (PDT)
-Received: from [192.168.0.41] (71.193.95.92.rev.sfr.net. [92.95.193.71])
-        by smtp.googlemail.com with ESMTPSA id a22sm103477wmb.47.2019.05.02.13.09.50
+        bh=pvckd5liEsMXk3SQVRYFMm9nVV/fz8aPm/503hwbENU=;
+        b=oOvxMfNq+sowBNKf2sbZagcqyj5qoBKo2VVUVYZfRUyilVxyIiI1oSMSRPvLnocqGW
+         +RpWff4jtrc211h+SKXoT4w/Tf4tfHUYePizA6aWB4qBI51ii6i+OESfdkh+LxZPMgdD
+         aZ2MZtTNiaB6YKC30higyeDrUZSAZG//zvidBqZC1xGJJiZkKXSUXGY+XAEiuVE32+9H
+         xE28E/dUg4NXKY47I+GdBux0ShWje9QTNPQuemijcrlfDf66SJ4xz2Weh/f3thuLOFkY
+         jpyGObvpvTlGCmIfcl0IM2LR6yOaa3OcConLJjcu8bFI1+rD+BIkYuxBmg2uaHZvjMQ5
+         Dl2w==
+X-Gm-Message-State: APjAAAVcEn3oxrh5+zyQENa+eQ5SXyC12g4h9wFUNr0SA0UFWJ8YkIQL
+        rEhkyLjSUoN0HXW0LYU+jte/wA==
+X-Google-Smtp-Source: APXvYqwEnX0yThK8XsdwR0dtFxS61ceOMwbOekkT2iYCvkS7BdulOWZ51T4Im9ecSdbsIFVJIruzxA==
+X-Received: by 2002:a24:f942:: with SMTP id l63mr3031065ith.52.1556827914127;
+        Thu, 02 May 2019 13:11:54 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id 7sm46112iog.26.2019.05.02.13.11.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 13:09:51 -0700 (PDT)
-Subject: Re: linux-next: Tree for May 2
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, maxime.ripard@bootlin.com,
-        andre.przywara@arm.com, samuel@sholland.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190502201028.707453d8@canb.auug.org.au>
- <CADYN=9LHJpDyvA=3wkcqdS5f3kahD0vdXFY415k8UmLHMDzL+Q@mail.gmail.com>
- <20190502190845.GA19485@archlinux-i9>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <0a28f5b8-296a-451c-c2f4-c0057833fb00@linaro.org>
-Date:   Thu, 2 May 2019 22:09:49 +0200
+        Thu, 02 May 2019 13:11:53 -0700 (PDT)
+Subject: Re: [PATCH] mmc: Fix tag set memory leak
+To:     Raul E Rangel <rrangel@chromium.org>, linux-mmc@vger.kernel.org
+Cc:     avri.altman@wdc.com, djkurtz@chromium.org, zwisler@chromium.org,
+        Ming Lei <ming.lei@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Hannes Reinecke <hare@suse.com>, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20190502190714.181664-1-rrangel@chromium.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9233014c-8528-6cae-c48a-5b75160fa100@kernel.dk>
+Date:   Thu, 2 May 2019 14:11:51 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190502190845.GA19485@archlinux-i9>
+In-Reply-To: <20190502190714.181664-1-rrangel@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/05/2019 21:08, Nathan Chancellor wrote:
-> On Thu, May 02, 2019 at 09:00:58PM +0200, Anders Roxell wrote:
->> On Thu, 2 May 2019 at 12:10, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>
->>> Hi all,
->>>
->>> Changes since 20190501:
->>>
->>> The kbuild tree gained a conflict against Linus' tree.
->>>
->>> The f2fs tree gained a build failure for which I applied a patch.
->>>
->>> The net-next tree gained a conflict against the net tree.
->>>
->>> The pidfd tree gained a conflict against the kbuild tree.
->>>
->>> The akpm-current tree gained a conflict against the parisc-hd tree.
->>>
->>> Non-merge commits (relative to Linus' tree): 10425
->>>  10206 files changed, 459072 insertions(+), 301989 deletions(-)
->>>
->>> ----------------------------------------------------------------------------
->>>
->>> I have created today's linux-next tree at
->>> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->>> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
->>> are tracking the linux-next tree using git, you should not use "git pull"
->>> to do so as that will try to merge the new linux-next release with the
->>> old one.  You should use "git fetch" and checkout or reset to the new
->>> master.
->>>
->>> You can see which trees have been included by looking in the Next/Trees
->>> file in the source.  There are also quilt-import.log and merge.log
->>> files in the Next directory.  Between each merge, the tree was built
->>> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
->>> multi_v7_defconfig for arm and a native build of tools/perf. After
->>> the final fixups (if any), I do an x86_64 modules_install followed by
->>> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
->>> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
->>> and sparc64 defconfig. And finally, a simple boot test of the powerpc
->>> pseries_le_defconfig kernel in qemu (with and without kvm enabled).
->>>
->>> Below is a summary of the state of the merge.
->>>
->>> I am currently merging 298 trees (counting Linus' and 69 trees of bug
->>> fix patches pending for the current merge release).
->>>
->>> Stats about the size of the tree over time can be seen at
->>> http://neuling.org/linux-next-size.html .
->>>
->>> Status of my local build tests will be at
->>> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
->>> advice about cross compilers/configs that work, we are always open to add
->>> more builds.
->>>
->>> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
->>> Gortmaker for triage and bug fixes.
+On 5/2/19 1:07 PM, Raul E Rangel wrote:
+> The tag set is allocated in mmc_init_queue but never freed. This results
+> in a memory leak. This change makes sure we free the tag set when the
+> queue is also freed.
 
-[ ... ]
-
->> Hi, I've noticed a build error if CONFIG_50I_ERRATUM_UNKNOWN1=y is enabled:
->>
->> ../drivers/clocksource/arm_arch_timer.c:402:20: error: redefinition of
->> â€˜sun50i_a64_read_cntpct_el0â€™
->>  static u64 notrace sun50i_a64_read_cntpct_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../drivers/clocksource/arm_arch_timer.c:360:20: note: previous
->> definition of â€˜sun50i_a64_read_cntpct_el0â€™ was here
->>  static u64 notrace sun50i_a64_read_cntpct_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../drivers/clocksource/arm_arch_timer.c:407:20: error: redefinition of
->> â€˜sun50i_a64_read_cntvct_el0â€™
->>  static u64 notrace sun50i_a64_read_cntvct_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../drivers/clocksource/arm_arch_timer.c:365:20: note: previous
->> definition of â€˜sun50i_a64_read_cntvct_el0â€™ was here
->>  static u64 notrace sun50i_a64_read_cntvct_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../drivers/clocksource/arm_arch_timer.c:412:20: error: redefinition of
->> â€˜sun50i_a64_read_cntp_tval_el0â€™
->>  static u32 notrace sun50i_a64_read_cntp_tval_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../drivers/clocksource/arm_arch_timer.c:370:20: note: previous
->> definition of â€˜sun50i_a64_read_cntp_tval_el0â€™ was here
->>  static u32 notrace sun50i_a64_read_cntp_tval_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../drivers/clocksource/arm_arch_timer.c:417:20: error: redefinition of
->> â€˜sun50i_a64_read_cntv_tval_el0â€™
->>  static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../drivers/clocksource/arm_arch_timer.c:375:20: note: previous
->> definition of â€˜sun50i_a64_read_cntv_tval_el0â€™ was here
->>  static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ../drivers/clocksource/arm_arch_timer.c:375:20: warning:
->> â€˜sun50i_a64_read_cntv_tval_el0â€™ defined but not used
->> [-Wunused-function]
->> ../drivers/clocksource/arm_arch_timer.c:370:20: warning:
->> â€˜sun50i_a64_read_cntp_tval_el0â€™ defined but not used
->> [-Wunused-function]
->>  static u32 notrace sun50i_a64_read_cntp_tval_el0(void)
->>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> make[3]: *** [../scripts/Makefile.build:279:
->> drivers/clocksource/arm_arch_timer.o] Error 1
->> make[3]: Target '__build' not remade because of errors.
->> make[2]: *** [../scripts/Makefile.build:489: drivers/clocksource] Error 2
->>
->> I think commit c950ca8c35ee ("clocksource/drivers/arch_timer:
->> Workaround for Allwinner A64 timer instability") introduced the issue.
->>
->> Cheers,
->> Anders
-> 
-> It actually looks like it is the clocksource tree merge that causes it:
-> 
-> https://git.kernel.org/next/linux-next/c/5e70bc4029d33b14a6cee87707e7b402801ca310
-> 
-> Since that commit exists in two different trees.
-
-Yes, I picked the patch and it was merged it via the tip tree [1] as
-requested by Marc Zyngier [2] and notified [3].
-
-In any case, this patch should have go through my tree initially, so if
-it is found somewhere else that's wrong.
-
-I did a respin of my branch and pushed it again in case there was
-something wrong from it.
-
-Thanks
-
-  -- Daniel
-
-[1] https://lkml.org/lkml/2019/3/5/274
-[2] https://lkml.org/lkml/2019/1/14/122
-[3] https://lkml.org/lkml/2019/1/14/381
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Jens Axboe
 
