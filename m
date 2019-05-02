@@ -2,108 +2,184 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB08C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11754C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F284520645
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556765148;
-	bh=/hDmWA7dnyHTUrdOnqHq9eJMVYQfdiYuVSfsp/O00wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=so/iGJOzdXkIpnCoFupRkg30NN5utbhVXJdoPqlfwh5e/R5FA4IotqXGiFuQLg782
-	 ZY9JX947SzeqxrjYhAO+qehC2CLc57uy91J5fHpXHoucKtbEpd9lUnmYezo70ya2kb
-	 YHdtu1jV5WPlXcoLW3A9KN5X1Ps9o8y0zA71eNII=
+	by mail.kernel.org (Postfix) with ESMTP id B0C9A2086C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:55:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNca5O+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfEBCpr (ORCPT
+        id S1726356AbfEBCzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:45:47 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45128 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfEBCpq (ORCPT
+        Wed, 1 May 2019 22:55:05 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40378 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbfEBCzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:45:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aNhvX/Q8oZJ4/XJ3D47vwJgCQyOxntjtayZOPxGIk4I=; b=lQ/mfkYWf/Cm15lXSr9bc3bPC
-        vU/4/jANVvYHM4KagxLuaxHAzzPT7nMSz5M/BTVrj+HsCYOy9Qhf36RH4s3Y22trd8zw9WFfoJ41M
-        bssOL7yIQj7Fe7gVIkaBxsLnJup4fbjDUfb6N82h0PudXI/82l0VGzXDqzYrD2l1VB02E=;
-Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1j2-000611-OW; Thu, 02 May 2019 02:45:33 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id C099A441D3C; Thu,  2 May 2019 03:45:24 +0100 (BST)
-Date:   Thu, 2 May 2019 11:45:24 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tthayer@opensource.altera.com" <tthayer@opensource.altera.com>
-Subject: Re: [PATCH 0/3] spi: SPI bus multiplexer
-Message-ID: <20190502024524.GV14916@sirena.org.uk>
-References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
- <20190412082913.GA6909@sirena.org.uk>
- <d91ab2261a1f4069bc48e090bd4ec702@svr-chch-ex1.atlnz.lc>
+        Wed, 1 May 2019 22:55:05 -0400
+Received: by mail-yw1-f66.google.com with SMTP id t79so510484ywc.7;
+        Wed, 01 May 2019 19:55:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=z26n6/sH1AsDLpioQphX4q8VPU5RJ6kDUqodat8Mtow=;
+        b=NNca5O+WSrABeS7FxwX2kVyi55yKQZ3Y0LgWmt/HcJXj4uY1JAUHblmApUu4o+Ci+s
+         xWyL61X7MmIpAYoUr07WZD3vGP9xoPa0uM1nf1w7pgLgA4bD94jozmXKMYhpU6vHx9RK
+         PpsfYnjaeLfrjJ0uc7SnPZpmQcetdMuJh2eMZZ2KGY1FiQGCdRRh8kCW8mfY44M9U46q
+         1Z7qjI+oZ+DTvgMGWlWhYajGM5Cg1tSztOL8Mv1xBSSqJMuOMwa3ObGCnPbJoJHeQlM4
+         YA9poXCVtSl9iVUyrEAsmMR+ACiDbmArDwl77rypSOCxY9HwP2itpZzFM0SSXRRY3Lhf
+         H5Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=z26n6/sH1AsDLpioQphX4q8VPU5RJ6kDUqodat8Mtow=;
+        b=k+Dqx0mjLyp74WzDDLcdFOC6yfNNjN/+ixbr5tIX9P53aablHP0X05mG1bpzPhfejT
+         cncR3lY0EYAETROVsxTF7ySxfEzfjnezqMVvHpfsrPzPpMBkdHV7scvmbF88055EJenj
+         9pmnMyH1LwwQUJDOwsHQPXeY9F7GnZO9RI/SuZ1IW2VAy0vC4E219Uffrf3JYW2R/2Iy
+         ZggIwubbwhkRbxjyq/mtDrnV5WxPxfIKcOqNUqQvTvgS++KoiedNhmcNEGP4hKhVqG22
+         +g22/wyzZPo1TYit02DRDETycs781pkpvB0icfgil2XeyTMXcE5hPuPAnYUItR7xF+ZO
+         BJoQ==
+X-Gm-Message-State: APjAAAUTDB28aAInIa60i5mWuguboq/99SsntZb9NsDa2Os+VDGLwJTl
+        BGMsTtHkfthv77E7bo9QVHcxBGFRcScXAKXkyIU=
+X-Google-Smtp-Source: APXvYqznaWNQLzQJptPPiF6oL+1IzIuegKrmT2CGGjSizksqtM7XGR6nr9+kccqVb+vnJbWv3cWxnjocNb/7rtuT1bY=
+X-Received: by 2002:a25:d64a:: with SMTP id n71mr1069731ybg.462.1556765703443;
+ Wed, 01 May 2019 19:55:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="worL9B4ITIAQZ1FS"
-Content-Disposition: inline
-In-Reply-To: <d91ab2261a1f4069bc48e090bd4ec702@svr-chch-ex1.atlnz.lc>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
+ <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
+ <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
+In-Reply-To: <87bm0l4nra.fsf@notabene.neil.brown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 1 May 2019 22:54:52 -0400
+Message-ID: <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+To:     NeilBrown <neilb@suse.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
+>
+> On Tue, Dec 06 2016, J. Bruce Fields wrote:
+>
+> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
+> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> wr=
+ote:
+> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
+> >> > <andreas.gruenbacher@gmail.com> wrote:
+> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gruenbac=
+her@gmail.com>:
+> >> >
+> >> >>> It's not hard to come up with a heuristic that determines if a
+> >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignore =
+the
+> >> >>> attribute in that case. (The file mode is transmitted in its own
+> >> >>> attribute already, so actually converting .) That way, overlayfs c=
+ould
+> >> >>> still fail copying up files that have an actual ACL. It's still an
+> >> >>> ugly hack ...
+> >> >>
+> >> >> Actually, that kind of heuristic would make sense in the NFS client
+> >> >> which could then hide the "system.nfs4_acl" attribute.
+> >> >
+> >> > Even simpler would be if knfsd didn't send the attribute if not
+> >> > necessary.  Looks like there's code actively creating the nfs4_acl o=
+n
+> >> > the wire even if the filesystem had none:
+> >> >
+> >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
+> >> >     if (!pacl)
+> >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+> >> >
+> >> > What's the point?
+> >>
+> >> That's how the protocol is specified.
+> >
+> > Yep, even if we could make that change to nfsd it wouldn't help the
+> > client with the large number of other servers that are out there
+> > (including older knfsd's).
+> >
+> > --b.
+> >
+> >> (I'm not saying that that's very helpful.)
+> >>
+> >> Andreas
+>
+> Hi everyone.....
+>  I have a customer facing this problem, and so stumbled onto the email
+>  thread.
+>  Unfortunately it didn't resolve anything.  Maybe I can help kick things
+>  along???
+>
+>  The core problem here is that NFSv4 and ext4 use different and largely
+>  incompatible ACL implementations.  There is no way to accurately
+>  translate from one to the other in general (common specific examples
+>  can be converted).
+>
+>  This means that either:
+>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
+>       versa) or
+>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
+>       that is OK.
+>
+>  Silently not copying the ACLs is probably not a good idea as it might
+>  result in inappropriate permissions being given away.
 
---worL9B4ITIAQZ1FS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For example? permissions given away to do what?
+Note that ovl_permission() only check permissions of *mounter*
+to read the lower NFS file and ovl_open()/ovl_read_iter() access
+the lower file with *mounter* credentials.
 
-On Sun, Apr 28, 2019 at 10:28:16PM +0000, Chris Packham wrote:
+I might be wrong, but seems to me that once admin mounted
+overlayfs with lower NFS, NFS ACLs are not being enforced at all
+even before copy up.
 
-> One other problem that I encounter is the interaction between cs-gpio=20
-> and SPI_MASTER_GPIO_SS. Having cs-gpio automatically sets SPI_CS_HIGH=20
-> which has the undesired side-effect that now my real chip select is=20
-> inverted. I actually wonder if this change breaks commit 8eee6b9dd30d=20
-> ("spi: Add Flag to Enable Slave Select with GPIO Chip Select.") since=20
-> now there is an extra inversion on the CS enable.
+> So if the
+>  sysadmin wants this (and some clearly do), they need a way to
+>  explicitly say "I accept the risk".  If only standard Unix permissions
+>  are used, there is no risk, so this seems reasonable.
+>
+>  So I would like to propose a new option for overlayfs
+>     nocopyupacl:   when overlayfs is copying a file (or directory etc)
+>         from the lower filesystem to the upper filesystem, it does not
+>         copy extended attributes with the "system." prefix.  These are
+>         used for storing ACL information and this is sometimes not
+>         compatible between different filesystem types (e.g. ext4 and
+>         NFSv4).  Standard Unix ownership permission flags (rwx) *are*
+>         copied so this option does not risk giving away inappropriate
+>         permissions unless the lowerfs uses unusual ACLs.
+>
+>
 
-That sounds like a framework bug which should just be fixed - we
-shouldn't be disrupting users of real chip selects when using a GPIO
-chip select.  Depending on the hardware we might need a chip select
-assigned that isn't connected to anything for use while the GPIOs are
-doing the real work but otherwise we shouldn't be breaking things.
+I am wondering if it would make more sense for nfs to register a
+security_inode_copy_up_xattr() hook.
+That is the mechanism that prevents copying up other security.*
+xattrs?
 
---worL9B4ITIAQZ1FS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzKWcQACgkQJNaLcl1U
-h9A8mgf+NUGeTId/vCKU5fgsyKAKgLFNNREzR640DJheAW8jSR+tFvdWIcS+Xzui
-wHoMW2SYbEQ9jOoDzhPQKNU9PM4q03Pz3NlbFRkHub9Mz76XQgLzV89K/FvBfOkf
-xhh7repFxc81GLG9gTot2SHBOrsHIPz5LkpXK7FgRQJFiemZEdrDpDn6hmZuiK+v
-kcU4mVpd7rza0fXLRoOcTCSnwjUU7+leF6zx4VsEqSWZ5Sl8oUy2LlvRqfziRKSg
-uvCeyZAn7dYif/78KcjBs5fex/Eb3ac49T85SFAo1GhHPuyQtYJfe2ZxEtz4qrVB
-czstXt8yaIV2diO5m+pXnum3mzstaQ==
-=ou6s
------END PGP SIGNATURE-----
-
---worL9B4ITIAQZ1FS--
+Thanks,
+Amir.
