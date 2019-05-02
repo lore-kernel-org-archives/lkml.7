@@ -2,115 +2,392 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857A2C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F4FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BA620B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:35:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="RC29ySgJ"
+	by mail.kernel.org (Postfix) with ESMTP id 72A4120675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfEBSfx (ORCPT
+        id S1726448AbfEBSf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:35:53 -0400
-Received: from mail-eopbgr710127.outbound.protection.outlook.com ([40.107.71.127]:16667
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        Thu, 2 May 2019 14:35:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44756 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726120AbfEBSfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:35:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CW3M9GASHKnVeoB82q76TUa/+ngbnYFHa2gPc3gyhL4=;
- b=RC29ySgJgXo7CTuyhZymN+kMZPK03yRM+GqtCPRfY8nc8i4S/v68mzfYtQXM1svqV6iiHdJqkHLdNGcMir02xOk4/2bSUxR9ouGsrlbixRR70htIRLP9HPwSW6TlaWcyoWQx/qvtj6xuhzqbci9daKquBKHYa6fq2Yr/oyp3eMY=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1582.namprd22.prod.outlook.com (10.174.167.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Thu, 2 May 2019 18:35:49 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1835.018; Thu, 2 May 2019
- 18:35:49 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH 05/12] mips: Discard post-CMA-init foreach loop
-Thread-Topic: [PATCH 05/12] mips: Discard post-CMA-init foreach loop
-Thread-Index: AQHU+ibRWe6RzUktm0+0HvNuqWcOC6ZYN2sA
-Date:   Thu, 2 May 2019 18:35:49 +0000
-Message-ID: <MWHPR2201MB12776E9CFF2B64CA6A5071CFC1340@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190423224748.3765-6-fancer.lancer@gmail.com>
-In-Reply-To: <20190423224748.3765-6-fancer.lancer@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR11CA0084.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::25) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3cd200da-3d46-4ff1-e846-08d6cf2cff96
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1582;
-x-ms-traffictypediagnostic: MWHPR2201MB1582:
-x-microsoft-antispam-prvs: <MWHPR2201MB15822363B8717B5E423E0F14C1340@MWHPR2201MB1582.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(376002)(366004)(39840400004)(199004)(189003)(33656002)(53936002)(52116002)(9686003)(99286004)(54906003)(229853002)(7696005)(6916009)(6436002)(186003)(4326008)(486006)(6116002)(476003)(3846002)(2906002)(26005)(11346002)(42882007)(102836004)(6506007)(386003)(446003)(44832011)(71190400001)(71200400001)(8676002)(4744005)(66066001)(81166006)(7736002)(478600001)(55016002)(76176011)(74316002)(7416002)(52536014)(316002)(66476007)(66556008)(73956011)(64756008)(66446008)(66946007)(256004)(25786009)(8936002)(81156014)(14454004)(68736007)(5660300002)(305945005)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1582;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: B95AZDzjrMEj9gECkbmYCiX5at5E2DUChhxecrGaPIR5/YX+0BdDXEBQEz7Yuvnl6UKdcUWM069CuuupZLPOMGI0aVZZbzNN96fdG0at5PF2D5mVGBvF6W4j09X3nnb3sFWyZeVLOSamwyXiZP2cnYeSUE9vcJ5YimL3Uq4a8jJv09dPTr0tssmuQwxwyqiYiGOxIwEpWv1vA1hvDGEkZHWd4fNMFmUl8j+/9I7ixWGaCvxHJWidBUdfYZYwy7sJGUK6Vo+34GVPcETwZjtB0vpKzy973EHbeejZSoedFAW6Aid16kdm102h2kRKiexRmqj6xHIQhvvadCN+bU65dH2ZVXCAF/8SkEebOzU+EBQ3sRvY5pyfPpxSSOhDjwZ4CEishl6T62Kcfu9x4Lo7lMHrAqXdYXaOSVQFawS7Dj4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cd200da-3d46-4ff1-e846-08d6cf2cff96
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 18:35:49.6527
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1582
+        id S1726231AbfEBSfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 14:35:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6B1A9ADBE;
+        Thu,  2 May 2019 18:35:52 +0000 (UTC)
+Date:   Thu, 02 May 2019 20:35:52 +0200
+Message-ID: <s5hzho4n1pz.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.1
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNClNlcmdlIFNlbWluIHdyb3RlOg0KPiBSZWFsbHkgdGhlIGxvb3AgaXMgcG9pbnRs
-ZXNzLCBzaW5jZSBpdCB3YWxrcyBvdmVyIG1lbWJsb2NrLXJlc2VydmVkDQo+IG1lbW9yeSByZWdp
-b25zIGFuZCBtYXJrIHRoZW0gYXMgcmVzZXJ2ZWQgaW4gbWVtYmxvY2suIEJlZm9yZQ0KPiBib290
-bWVtIHdhcyByZW1vdmVkIGZyb20gdGhlIGtlcm5lbCwgdGhpcyBsb29wIGhhZCBiZWVuDQo+IHVz
-ZWQgdG8gbWFwIHRoZSBtZW1vcnkgcmVzZXJ2ZWQgYnkgQ01BIGludG8gdGhlIGxlZ2FjeSBib290
-bWVtDQo+IGFsbG9jYXRvci4gQnV0IG5vdyB0aGUgZWFybHkgbWVtb3J5IGFsbG9jYXRvciBpcyBt
-ZW1ibG9jaywNCj4gd2hpY2ggaXMgdXNlZCBieSBDTUEgZm9yIHJlc2VydmF0aW9uLCBzbyB3ZSBk
-b24ndCBuZWVkIGFueSBtYXBwaW5nDQo+IGFueW1vcmUuDQo+IA0KPiBSZXZpZXdlZC1ieTogTWF0
-dCBSZWRmZWFybiA8bWF0dC5yZWRmZWFybkBtaXBzLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogU2Vy
-Z2UgU2VtaW4gPGZhbmNlci5sYW5jZXJAZ21haWwuY29tPg0KDQpBcHBsaWVkIHRvIG1pcHMtbmV4
-dC4NCg0KVGhhbmtzLA0KICAgIFBhdWwNCg0KWyBUaGlzIG1lc3NhZ2Ugd2FzIGF1dG8tZ2VuZXJh
-dGVkOyBpZiB5b3UgYmVsaWV2ZSBhbnl0aGluZyBpcyBpbmNvcnJlY3QNCiAgdGhlbiBwbGVhc2Ug
-ZW1haWwgcGF1bC5idXJ0b25AbWlwcy5jb20gdG8gcmVwb3J0IGl0LiBdDQo=
+Linus,
+
+please pull sound fixes for v5.1 from:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.1
+
+The topmost commit is 3887c26c0e24d50a4d0ce20cf4726737cee1a2fd
+
+----------------------------------------------------------------
+
+sound fixes for 5.1
+
+A few stable fixes at this round.
+The USB Line6 audio fixes are a bit large, but they are rather trivial
+and pretty much device-specific, so should be safe to apply at this
+late stage.  Ditto for other HD-audio quirks.
+
+----------------------------------------------------------------
+
+Greg Kroah-Hartman (1):
+      ALSA: line6: use dynamic buffers
+
+Kailang Yang (2):
+      ALSA: hda/realtek - Add new Dell platform for headset mode
+      ALSA: hda/realtek - Fixed Dell AIO speaker noise
+
+Takashi Iwai (1):
+      ALSA: hda/realtek - Apply the fixup for ASUS Q325UAR
+
+---
+ sound/pci/hda/patch_realtek.c | 13 ++++++++++
+ sound/usb/line6/driver.c      | 60 +++++++++++++++++++++++++------------------
+ sound/usb/line6/podhd.c       | 21 ++++++++-------
+ sound/usb/line6/toneport.c    | 24 ++++++++++++-----
+ 4 files changed, 78 insertions(+), 40 deletions(-)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index f5b510f119ed..42cd3945e0de 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5450,6 +5450,8 @@ static void alc274_fixup_bind_dacs(struct hda_codec *codec,
+ 		return;
+ 
+ 	spec->gen.preferred_dacs = preferred_pairs;
++	spec->gen.auto_mute_via_amp = 1;
++	codec->power_save_node = 0;
+ }
+ 
+ /* The DAC of NID 0x3 will introduce click/pop noise on headphones, so invalidate it */
+@@ -7268,6 +7270,10 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
+ 		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		{0x21, 0x02211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x12, 0x40000000},
++		{0x14, 0x90170110},
++		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
+ 		{0x14, 0x90170110},
+ 		{0x21, 0x02211020}),
+@@ -7541,6 +7547,13 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
+ 		{0x12, 0x90a60130},
+ 		{0x17, 0x90170110},
+ 		{0x21, 0x04211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
++		{0x12, 0x90a60130},
++		{0x17, 0x90170110},
++		{0x21, 0x03211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x14, 0x90170110},
++		{0x21, 0x04211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		ALC295_STANDARD_PINS,
+ 		{0x17, 0x21014020},
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index 7afe8fae4939..b61f65bed4e4 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -351,12 +351,16 @@ int line6_read_data(struct usb_line6 *line6, unsigned address, void *data,
+ {
+ 	struct usb_device *usbdev = line6->usbdev;
+ 	int ret;
+-	unsigned char len;
++	unsigned char *len;
+ 	unsigned count;
+ 
+ 	if (address > 0xffff || datalen > 0xff)
+ 		return -EINVAL;
+ 
++	len = kmalloc(sizeof(*len), GFP_KERNEL);
++	if (!len)
++		return -ENOMEM;
++
+ 	/* query the serial number: */
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+ 			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+@@ -365,7 +369,7 @@ int line6_read_data(struct usb_line6 *line6, unsigned address, void *data,
+ 
+ 	if (ret < 0) {
+ 		dev_err(line6->ifcdev, "read request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	/* Wait for data length. We'll get 0xff until length arrives. */
+@@ -375,28 +379,29 @@ int line6_read_data(struct usb_line6 *line6, unsigned address, void *data,
+ 		ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+ 				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+ 				      USB_DIR_IN,
+-				      0x0012, 0x0000, &len, 1,
++				      0x0012, 0x0000, len, 1,
+ 				      LINE6_TIMEOUT * HZ);
+ 		if (ret < 0) {
+ 			dev_err(line6->ifcdev,
+ 				"receive length failed (error %d)\n", ret);
+-			return ret;
++			goto exit;
+ 		}
+ 
+-		if (len != 0xff)
++		if (*len != 0xff)
+ 			break;
+ 	}
+ 
+-	if (len == 0xff) {
++	ret = -EIO;
++	if (*len == 0xff) {
+ 		dev_err(line6->ifcdev, "read failed after %d retries\n",
+ 			count);
+-		return -EIO;
+-	} else if (len != datalen) {
++		goto exit;
++	} else if (*len != datalen) {
+ 		/* should be equal or something went wrong */
+ 		dev_err(line6->ifcdev,
+ 			"length mismatch (expected %d, got %d)\n",
+-			(int)datalen, (int)len);
+-		return -EIO;
++			(int)datalen, (int)*len);
++		goto exit;
+ 	}
+ 
+ 	/* receive the result: */
+@@ -405,12 +410,12 @@ int line6_read_data(struct usb_line6 *line6, unsigned address, void *data,
+ 			      0x0013, 0x0000, data, datalen,
+ 			      LINE6_TIMEOUT * HZ);
+ 
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_err(line6->ifcdev, "read failed (error %d)\n", ret);
+-		return ret;
+-	}
+ 
+-	return 0;
++exit:
++	kfree(len);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(line6_read_data);
+ 
+@@ -422,12 +427,16 @@ int line6_write_data(struct usb_line6 *line6, unsigned address, void *data,
+ {
+ 	struct usb_device *usbdev = line6->usbdev;
+ 	int ret;
+-	unsigned char status;
++	unsigned char *status;
+ 	int count;
+ 
+ 	if (address > 0xffff || datalen > 0xffff)
+ 		return -EINVAL;
+ 
++	status = kmalloc(sizeof(*status), GFP_KERNEL);
++	if (!status)
++		return -ENOMEM;
++
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+ 			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 			      0x0022, address, data, datalen,
+@@ -436,7 +445,7 @@ int line6_write_data(struct usb_line6 *line6, unsigned address, void *data,
+ 	if (ret < 0) {
+ 		dev_err(line6->ifcdev,
+ 			"write request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	for (count = 0; count < LINE6_READ_WRITE_MAX_RETRIES; count++) {
+@@ -447,28 +456,29 @@ int line6_write_data(struct usb_line6 *line6, unsigned address, void *data,
+ 				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+ 				      USB_DIR_IN,
+ 				      0x0012, 0x0000,
+-				      &status, 1, LINE6_TIMEOUT * HZ);
++				      status, 1, LINE6_TIMEOUT * HZ);
+ 
+ 		if (ret < 0) {
+ 			dev_err(line6->ifcdev,
+ 				"receiving status failed (error %d)\n", ret);
+-			return ret;
++			goto exit;
+ 		}
+ 
+-		if (status != 0xff)
++		if (*status != 0xff)
+ 			break;
+ 	}
+ 
+-	if (status == 0xff) {
++	if (*status == 0xff) {
+ 		dev_err(line6->ifcdev, "write failed after %d retries\n",
+ 			count);
+-		return -EIO;
+-	} else if (status != 0) {
++		ret = -EIO;
++	} else if (*status != 0) {
+ 		dev_err(line6->ifcdev, "write failed (error %d)\n", ret);
+-		return -EIO;
++		ret = -EIO;
+ 	}
+-
+-	return 0;
++exit:
++	kfree(status);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(line6_write_data);
+ 
+diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
+index 36ed9c85c0eb..5f3c87264e66 100644
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -225,28 +225,32 @@ static void podhd_startup_start_workqueue(struct timer_list *t)
+ static int podhd_dev_start(struct usb_line6_podhd *pod)
+ {
+ 	int ret;
+-	u8 init_bytes[8];
++	u8 *init_bytes;
+ 	int i;
+ 	struct usb_device *usbdev = pod->line6.usbdev;
+ 
++	init_bytes = kmalloc(8, GFP_KERNEL);
++	if (!init_bytes)
++		return -ENOMEM;
++
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
+ 					0x67, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 					0x11, 0,
+ 					NULL, 0, LINE6_TIMEOUT * HZ);
+ 	if (ret < 0) {
+ 		dev_err(pod->line6.ifcdev, "read request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	/* NOTE: looks like some kind of ping message */
+ 	ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+ 					USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
+ 					0x11, 0x0,
+-					&init_bytes, 3, LINE6_TIMEOUT * HZ);
++					init_bytes, 3, LINE6_TIMEOUT * HZ);
+ 	if (ret < 0) {
+ 		dev_err(pod->line6.ifcdev,
+ 			"receive length failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	pod->firmware_version =
+@@ -255,7 +259,7 @@ static int podhd_dev_start(struct usb_line6_podhd *pod)
+ 	for (i = 0; i <= 16; i++) {
+ 		ret = line6_read_data(&pod->line6, 0xf000 + 0x08 * i, init_bytes, 8);
+ 		if (ret < 0)
+-			return ret;
++			goto exit;
+ 	}
+ 
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
+@@ -263,10 +267,9 @@ static int podhd_dev_start(struct usb_line6_podhd *pod)
+ 					USB_TYPE_STANDARD | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 					1, 0,
+ 					NULL, 0, LINE6_TIMEOUT * HZ);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++exit:
++	kfree(init_bytes);
++	return ret;
+ }
+ 
+ static void podhd_startup_workqueue(struct work_struct *work)
+diff --git a/sound/usb/line6/toneport.c b/sound/usb/line6/toneport.c
+index f47ba94e6f4a..19bee725de00 100644
+--- a/sound/usb/line6/toneport.c
++++ b/sound/usb/line6/toneport.c
+@@ -365,16 +365,21 @@ static bool toneport_has_source_select(struct usb_line6_toneport *toneport)
+ /*
+ 	Setup Toneport device.
+ */
+-static void toneport_setup(struct usb_line6_toneport *toneport)
++static int toneport_setup(struct usb_line6_toneport *toneport)
+ {
+-	u32 ticks;
++	u32 *ticks;
+ 	struct usb_line6 *line6 = &toneport->line6;
+ 	struct usb_device *usbdev = line6->usbdev;
+ 
++	ticks = kmalloc(sizeof(*ticks), GFP_KERNEL);
++	if (!ticks)
++		return -ENOMEM;
++
+ 	/* sync time on device with host: */
+ 	/* note: 32-bit timestamps overflow in year 2106 */
+-	ticks = (u32)ktime_get_real_seconds();
+-	line6_write_data(line6, 0x80c6, &ticks, 4);
++	*ticks = (u32)ktime_get_real_seconds();
++	line6_write_data(line6, 0x80c6, ticks, 4);
++	kfree(ticks);
+ 
+ 	/* enable device: */
+ 	toneport_send_cmd(usbdev, 0x0301, 0x0000);
+@@ -389,6 +394,7 @@ static void toneport_setup(struct usb_line6_toneport *toneport)
+ 		toneport_update_led(toneport);
+ 
+ 	mod_timer(&toneport->timer, jiffies + TONEPORT_PCM_DELAY * HZ);
++	return 0;
+ }
+ 
+ /*
+@@ -451,7 +457,9 @@ static int toneport_init(struct usb_line6 *line6,
+ 			return err;
+ 	}
+ 
+-	toneport_setup(toneport);
++	err = toneport_setup(toneport);
++	if (err)
++		return err;
+ 
+ 	/* register audio system: */
+ 	return snd_card_register(line6->card);
+@@ -463,7 +471,11 @@ static int toneport_init(struct usb_line6 *line6,
+ */
+ static int toneport_reset_resume(struct usb_interface *interface)
+ {
+-	toneport_setup(usb_get_intfdata(interface));
++	int err;
++
++	err = toneport_setup(usb_get_intfdata(interface));
++	if (err)
++		return err;
+ 	return line6_resume(interface);
+ }
+ #endif
