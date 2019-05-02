@@ -2,108 +2,158 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65916C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A96CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4BB20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0397020C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:58:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=utexas.onmicrosoft.com header.i=@utexas.onmicrosoft.com header.b="Hlgi0+EA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfEBRzQ (ORCPT
+        id S1726376AbfEBR6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:55:16 -0400
-Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:44981 "EHLO
-        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725962AbfEBRzQ (ORCPT
+        Thu, 2 May 2019 13:58:22 -0400
+Received: from esa10.utexas.iphmx.com ([216.71.150.156]:14296 "EHLO
+        esa10.utexas.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfEBR6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:55:16 -0400
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-        id DC830461D3A; Thu,  2 May 2019 13:55:13 -0400 (EDT)
-Date:   Thu, 2 May 2019 13:55:13 -0400
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
- packets
-Message-ID: <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca>
-References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
- <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
- <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca>
- <CAKgT0Uc_OUAcPfRe6yCSwpYXCXomOXKG2Yvy9c1_1RJn-7Cb5g@mail.gmail.com>
- <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca>
- <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
+        Thu, 2 May 2019 13:58:21 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 May 2019 13:58:20 EDT
+X-Utexas-Sender-Group: RELAYLIST-O365
+X-IronPort-MID: 147469355
+IronPort-PHdr: =?us-ascii?q?9a23=3A0lKsXxNp7Et6E7naUjQl6mtXPHoupqn0MwgJ65?=
+ =?us-ascii?q?Eul7NJdOG58o//OFDEu6g/l0fHCIPc7f8My/HbtaztQyQh2d6AqzhDFf4ETB?=
+ =?us-ascii?q?oZkYMTlg0kDtSCDBjjI/nncz4SGc1eVBl443yrOFMTFcrjNBXf?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EkAABqLMtchzMwL2hlHAEBAQQBAQc?=
+ =?us-ascii?q?EAQGBUwUBAQsBgT1QgWEECygKhAaDRwOFMYlRgjIlmFCBJAMYPAEOAS0ChD4?=
+ =?us-ascii?q?CF4ZANgcOAQMBAQUBAQEBAgICEAEBAQgNCQgpIwyDRTkyAQEBAQEBAQEBAQE?=
+ =?us-ascii?q?BAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBBQI4OQEBBBIREQwBATcBDwIBCA4?=
+ =?us-ascii?q?KAgImAgICMBUCAQ0CBA4FGweDAIFrAx0Bogw9AmICC4EBKYhfcYEvgnkBAQW?=
+ =?us-ascii?q?FAhhBB4FGCYELJwGLXAaBQT6BOAyCXz6EMBSDCoJYizmBaCyGWpIcZQkCggm?=
+ =?us-ascii?q?SOgYCGZVBoHkCBAIEBQIOAQEFgVYMgXxyE4Mngg8ag1WKU0ABMYEpkGOBMAG?=
+ =?us-ascii?q?BIAEB?=
+X-IPAS-Result: =?us-ascii?q?A2EkAABqLMtchzMwL2hlHAEBAQQBAQcEAQGBUwUBAQsBg?=
+ =?us-ascii?q?T1QgWEECygKhAaDRwOFMYlRgjIlmFCBJAMYPAEOAS0ChD4CF4ZANgcOAQMBA?=
+ =?us-ascii?q?QUBAQEBAgICEAEBAQgNCQgpIwyDRTkyAQEBAQEBAQEBAQEBAQEBAQEBAQEBA?=
+ =?us-ascii?q?QEBAQEBAQEBAQEBAQEBBQI4OQEBBBIREQwBATcBDwIBCA4KAgImAgICMBUCA?=
+ =?us-ascii?q?Q0CBA4FGweDAIFrAx0Bogw9AmICC4EBKYhfcYEvgnkBAQWFAhhBB4FGCYELJ?=
+ =?us-ascii?q?wGLXAaBQT6BOAyCXz6EMBSDCoJYizmBaCyGWpIcZQkCggmSOgYCGZVBoHkCB?=
+ =?us-ascii?q?AIEBQIOAQEFgVYMgXxyE4Mngg8ag1WKU0ABMYEpkGOBMAGBIAEB?=
+X-IronPort-AV: E=Sophos;i="5.60,422,1549951200"; 
+   d="scan'208";a="147469355"
+X-Utexas-Seen-Outbound: true
+Received: from mail-co1nam05lp2051.outbound.protection.outlook.com (HELO NAM05-CO1-obe.outbound.protection.outlook.com) ([104.47.48.51])
+  by esa10.utexas.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 May 2019 12:51:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=utexas.onmicrosoft.com; s=selector1-utexas-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cBil9MNwU3c3MwJpc3Ej1bXxs5s1gcPPCD7c6NO11Pg=;
+ b=Hlgi0+EAAZCq9pOYQKkidOKCcpk8A5iWfWIusPRW4Y8n5dJdkJRgQB92qn+2wgf1mrdaGJhlMzYldIk/kRgIof+BYV46j0a3/TcBT2dUjkRi5LO5OK1pIMC+x/Cj6dmJV9SIco8QAm19yZc9/mBpRr6rmuwy/HZDIpvojPVFXo8=
+Received: from DM5PR0601MB3718.namprd06.prod.outlook.com (10.167.109.15) by
+ DM5PR0601MB3735.namprd06.prod.outlook.com (10.167.109.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.14; Thu, 2 May 2019 17:51:12 +0000
+Received: from DM5PR0601MB3718.namprd06.prod.outlook.com
+ ([fe80::d02d:6aa3:ca06:3507]) by DM5PR0601MB3718.namprd06.prod.outlook.com
+ ([fe80::d02d:6aa3:ca06:3507%6]) with mapi id 15.20.1856.008; Thu, 2 May 2019
+ 17:51:12 +0000
+From:   "Goetz, Patrick G" <pgoetz@math.utexas.edu>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+CC:     NeilBrown <neilb@suse.com>, Amir Goldstein <amir73il@gmail.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        =?utf-8?B?QW5kcmVhcyBHcsO8bmJhY2hlcg==?= 
+        <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+Thread-Topic: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+Thread-Index: AQHVAIspItZqAESGCECfW8viq8okK6ZXI70AgAARYICAAI5xAIAAWKOAgAAB8oA=
+Date:   Thu, 2 May 2019 17:51:12 +0000
+Message-ID: <31520294-b2cc-c1cb-d9c5-d3811e00939a@math.utexas.edu>
+References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
+ <20161205151933.GA17517@fieldses.org>
+ <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
+ <20161205162559.GB17517@fieldses.org>
+ <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
+ <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org>
+ <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
+ <875zqt4igg.fsf@notabene.neil.brown.name>
+ <8f3ba729-ed44-7bed-5ff8-b962547e5582@math.utexas.edu>
+ <CAHc6FU4czPQ8xxv5efvhkizU3obpV_05VEWYKydXDDDYcp8j=w@mail.gmail.com>
+In-Reply-To: <CAHc6FU4czPQ8xxv5efvhkizU3obpV_05VEWYKydXDDDYcp8j=w@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YT1PR01CA0001.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::14)
+ To DM5PR0601MB3718.namprd06.prod.outlook.com (2603:10b6:4:7d::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pgoetz@math.utexas.edu; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [128.83.133.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 16015bef-47bb-4f55-98e5-08d6cf26c3d2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR0601MB3735;
+x-ms-traffictypediagnostic: DM5PR0601MB3735:
+x-microsoft-antispam-prvs: <DM5PR0601MB37355CD99EA7A034ED7DB89283340@DM5PR0601MB3735.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(346002)(366004)(39860400002)(199004)(189003)(6506007)(386003)(53546011)(88552002)(14454004)(102836004)(186003)(31696002)(6512007)(66066001)(86362001)(53936002)(26005)(478600001)(6246003)(4326008)(54906003)(786003)(25786009)(316002)(73956011)(66946007)(6916009)(229853002)(31686004)(66476007)(66446008)(64756008)(66556008)(75432002)(7416002)(256004)(3846002)(6116002)(486006)(14444005)(446003)(11346002)(2616005)(476003)(68736007)(6486002)(8676002)(6436002)(2906002)(8936002)(81156014)(99286004)(5660300002)(305945005)(7736002)(81166006)(71200400001)(76176011)(52116002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR0601MB3735;H:DM5PR0601MB3718.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: math.utexas.edu does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JSsCTRzYVQaBbkDKoSIXjdDF98muhvKc+dX38ZMAnccxWjimqJCGLn46co+0N5mz1evGFMmoAjCdcVTnux/JVxqMNYnNiz0lKwkcMCJaD4vEF4b/jqtAg5SBTl4zZiGlITR3F/rqYJKN/Oyl/fLUAucEeZEc7+hsup+tVZGl9KW5HgDMkMT0T7H8CV+3jWJRz2ch2cvsdGwUTiekwvoZXw3KkQklU9GfbH6/CjMiLbG49NCW2hL/QTUf/K835saq7coaWyxfhl76+SCtLDKf2khbBa73u25Ax5coojVsjTZlFsa0JsVN6tF3IDBxZbewz5S8klDeYQrOKDuRaWBFwhumF9P/Gohbh8AIVO1nrQjUbvfUoTIl884lNCNLPTLpKp1/Yul+5x1SikMiDKRQT2i/orkU/dGJdq6mO7QFQ0Y=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <07CB6D9727B74B4EB8D9F2DD984EB149@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+X-OriginatorOrg: math.utexas.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16015bef-47bb-4f55-98e5-08d6cf26c3d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 17:51:12.3281
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 31d7e2a5-bdd8-414e-9e97-bea998ebdfe1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0601MB3735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 10:28:22AM -0700, Alexander Duyck wrote:
-> The thing is the firmware has to have some idea what it is dealing
-> with. As far as I know I don't believe port number 4500 is being
-> auto-flagged as any special type. In the case of the other tunnel
-> types such as VXLAN, NVGRE, and GENEVE the driver has to set a port
-> value indicating that the port will receive special handling. If it
-> isn't added via i40e_udp_tunnel_add then the firmware/hardware
-> shouldn't know anything about the tunnel.
-
-Well that makes some sense.  I was wondering why there didn't seem to
-be an on/off switch for that feature.
-
-> It really isn't that unusual of a feature. Many NICs have this
-> functionality now. In order to support it we usually have to populate
-> the port values for the device so the internal parser knows to expect
-> them.
-> 
-> That is one of the reasons I suggested testing with netperf as I did
-> below. Basically if we construct all the outer headers the same as
-> your packet we can see if some specific combination is causing a
-> parsing issue. I tested the netperf approach on an XL710 and didn't
-> see any issues, but perhaps the XL722 is doing something differently.
-> 
-> Thanks. If nothing else it should make it possible to just use
-> tcpreplay if needed to reproduce the issue.
-
-Here is the same packets as before with the link level header included
-(I forgot to use -XX rather than -X):
-
-13:43:49.081567 54:ee:75:30:f1:e1 > a4:bf:01:4e:0c:87, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 21783, offset 0, flags [DF], proto UDP (17), length 160)
-    1.99.99.2.4500 > 1.99.99.1.4500: [no cksum] UDP-encap: ESP(spi=0x8de82290,seq=0x6a56), length 132
-        0x0000:  a4bf 014e 0c87 54ee 7530 f1e1 0800 4500  ...N..T.u0....E.
-        0x0010:  00a0 5517 4000 4011 1c6d 0163 6302 0163  ..U.@.@..m.cc..c
-        0x0020:  6301 1194 1194 008c 0000 8de8 2290 0000  c..........."...
-        0x0030:  6a56 72da 0734 52f6 406e 9346 f946 c698  jVr..4R.@n.F.F..
-        0x0040:  a38c 280c 94da 53e1 91e0 35bf 812a 4500  ..(...S...5..*E.
-        0x0050:  6003 ca7d 6872 a50b d41a 5c4d 7c22 3fb8  `..}hr....\M|"?.
-        0x0060:  56d8 2a0f bc3f d3a6 5853 682c 914c c1b1  V.*..?..XSh,.L..
-        0x0070:  c5c3 94e8 4789 d8b4 4ab4 e5f9 d20a e5ef  ....G...J.......
-        0x0080:  de1d 05dd e98a 996b 5c11 6657 b667 6af1  .......k\.fW.gj.
-        0x0090:  2a97 694b 16de 74e2 f8fe 13a3 d45e e3e9  *.iK..t......^..
-        0x00a0:  f0b1 b83b 99e3 55cb b40b 5ba8 9c23       ...;..U...[..#
-13:43:49.081658 a4:bf:01:4e:0c:87 > 54:ee:75:30:f1:e1, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 44552, offset 0, flags [none], proto UDP (17), length 160)
-    1.99.99.1.4500 > 1.99.99.2.4500: [no cksum] UDP-encap: ESP(spi=0x1d4ecfdf,seq=0x6a56), length 132
-        0x0000:  54ee 7530 f1e1 a4bf 014e 0c87 0800 4500  T.u0.....N....E.
-        0x0010:  00a0 ae08 0000 4011 037c 0163 6301 0163  ......@..|.cc..c
-        0x0020:  6302 1194 1194 008c 0000 1d4e cfdf 0000  c..........N....
-        0x0030:  6a56 28ca 4809 8933 911d f2be 4510 e757  jV(.H..3....E..W
-        0x0040:  3885 7d26 5238 8c58 38e3 6c07 2f8e 335a  8.}&R8.X8.l./.3Z
-        0x0050:  6d48 2a72 4619 e8a3 c421 bc54 48b2 6239  mH*rF....!.TH.b9
-        0x0060:  5e07 7e89 a68e 0161 4e6a 5b6f 8b89 9f53  ^.~....aNj[o...S
-        0x0070:  4c40 1c6c d159 60f8 68e7 24db 8b21 2ec2  L@.l.Y`.h.$..!..
-        0x0080:  4b67 9b83 643b b0ac 6e2d bf4f 1ee1 9508  Kg..d;..n-.O....
-        0x0090:  d1bd dcd4 74ee e4dc 78d0 578a 5905 1f4d  ....t...x.W.Y..M
-        0x00a0:  74be e643 910b b4d3 f428 8822 e22b       t..C.....(.".+
-
-I will try to see what I can do with netperf.
-
--- 
-Len Sorensen
+DQoNCk9uIDUvMi8xOSAxMjo0NCBQTSwgQW5kcmVhcyBHcnVlbmJhY2hlciB3cm90ZToNCj4gT24g
+VGh1LCAyIE1heSAyMDE5IGF0IDE5OjI3LCBHb2V0eiwgUGF0cmljayBHIDxwZ29ldHpAbWF0aC51
+dGV4YXMuZWR1PiB3cm90ZToNCj4+IE9uIDUvMS8xOSAxMDo1NyBQTSwgTmVpbEJyb3duIHdyb3Rl
+Og0KPj4+IFN1cHBvcnQgc29tZSBkYXkgc3VwcG9ydCBmb3IgbmZzNCBhY2xzIHdlcmUgYWRkZWQg
+dG8gZXh0NCAobm90IGEgdG90YWxseQ0KPj4+IHJpZGljdWxvdXMgc3VnZ2VzdGlvbikuICBXZSB3
+b3VsZCB0aGVuIHdhbnQgTkZTIHRvIGFsbG93IGl0J3MgQUNMcyB0byBiZQ0KPj4+IGNvcGllZCB1
+cC4NCj4+DQo+PiBJcyB0aGVyZSBzb21lIHJlYXNvbiB3aHkgdGhlcmUgaGFzbid0IGJlZW4gYSBn
+cmVhdGVyIGVmZm9ydCB0byBhZGQgTkZTdjQNCj4+IEFDTCBzdXBwb3J0IHRvIHRoZSBtYWluc3Ry
+ZWFtIGxpbnV4IGZpbGVzeXN0ZW1zPyAgSSBoYXZlIHRvIHN1cHBvcnQgYQ0KPj4gaHlicmlkIGxp
+bnV4L3dpbmRvd3MgZW52aXJvbm1lbnQgYW5kIG5vdCBoYXZpbmcgdGhlc2UgQUNMcyBvbiBleHQ0
+IGlzIGENCj4+IGRhaWx5IGhlYWRhY2hlIGZvciBtZS4NCj4gDQo+IFRoZSBwYXRjaGVzIGZvciBp
+bXBsZW1lbnRpbmcgdGhhdCBoYXZlIGJlZW4gcmVqZWN0ZWQgb3ZlciBhbmQgb3Zlcg0KPiBhZ2Fp
+biwgYW5kIG5vYm9keSBpcyB3b3JraW5nIG9uIHRoZW0gYW55bW9yZS4NCj4gDQo+IEFuZHJlYXMN
+Cj4gDQoNCg0KVGhhdCdzIHRoZSBwYXJ0IEkgZG9uJ3QgdW5kZXJzdGFuZCAtLSB3aHkgYXJlIHRo
+ZSBSaWNoQUNMIHBhdGNoZXMgYmVpbmcgDQpyZWplY3RlZD8NCg0KRXZlcnlvbmUgbG92ZXMgdGhl
+IHNpbXBsaWNpdHkgb2YgbW9kZSBiaXRzIChpbmNsdWRpbmcgbWUpIHVudGlsIHlvdSBydW4gDQpp
+bnRvIHRoaW5ncyBsaWtlIHRoZSBuZWVkIHRvIGF1dG9tYXRpY2FsbHkgY3JlYXRlIGhvbWUgZGly
+ZWN0b3JpZXMgb24gYW4gDQpORlMtbW91bnRlZCBmaWxlc3lzdGVtIG9yIHNlY3VyaXR5IHNpdHVh
+dGlvbnMgd2hlcmUsIGZvciBleGFtcGxlLCB5b3UgDQp3YW50IHVzZXJzIHRvIGJlIGFibGUgdG8g
+ZWRpdCBidXQgbm90IGRlbGV0ZSBmaWxlcywgYW5kIHRoZW4geW91J3JlIGtpbmQgDQpvZiBzdHVj
+ayBsaXN0ZW5pbmcgdG8geW91ciBXaW5kb3dzIGNvbGxlYWd1ZXMgcHJvcG9zZSBhIFN0b3JhZ2Ug
+U3BhY2VzIA0Kc29sdXRpb24uDQoNCg==
