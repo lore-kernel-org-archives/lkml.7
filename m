@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242BBC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29237C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F0421734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7B72081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810580;
-	bh=UxxP16QCIPhoLx3KhYdXtv4AQlgH/cih9ULv5+o93Hc=;
+	s=default; t=1556810584;
+	bh=lBH4euxWsbc31ffPe/vjrAQWtFU+61FTad3Lf8HK/fU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=le+qZsIww4EYkGefaVdVQY3E8/399WgSF7C1jsDCGnYKDaD+AqTkNq3d4544nXFs1
-	 QCiy6M6/c0hhVjUQPO6c0kDqbl3yoCpZVyO/0gbD5POBjTB8mRg+7kitwaZsNELXPB
-	 301w244tVeMJT6C22JjDl2rg0lU6H1dvHjlxx0V8=
+	b=G9W01jtt45J0i5MqiM9MAVNf++HHFHbWXZZunSs4DzmhNDSVK/rrXYngTK8r1QvQH
+	 9X1A5faH9qZMS4hfUCqjmM9aogA7GUJ3OVmYWk/t5wDHnsnLhy95JNazoloH1QZT8Q
+	 MyDJuRE88PFopa6RowFlzkIFU5Str3x3vN2s6ng4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfEBPW7 (ORCPT
+        id S1726922AbfEBPXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726852AbfEBPWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:52 -0400
+        id S1726852AbfEBPXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:23:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70006217F5;
-        Thu,  2 May 2019 15:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4765620675;
+        Thu,  2 May 2019 15:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810572;
-        bh=UxxP16QCIPhoLx3KhYdXtv4AQlgH/cih9ULv5+o93Hc=;
+        s=default; t=1556810579;
+        bh=lBH4euxWsbc31ffPe/vjrAQWtFU+61FTad3Lf8HK/fU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pKRpRxO+nVbnYNSievM5ytlwk3J2KRiS1dhUZwHHZk2O292ZwCVNwU7UTlXHO+u+t
-         RL9GtPVhIwqatY6L7gdUoDOKSZaNBAM7NzrRYbsi6zmmiNAx4MZoXvthCx5DzaG95S
-         Qj3SBhgflrhKNSeM1X2qfjqYzHQ0+5x98rfDNY0M=
+        b=Xn9+fgBkzRIGEvmHGi8pcEB6PRqrnbWzPDPcBywEO8IwkrISI1ghGXrhebNB4jNBj
+         EZVSIvhZQCRxuK7TJXvXNLV/yUuQH8T4ThGufGYNdsrwSn43PuUJtODQWNYtmNpd9Z
+         hs4USm5tdeOT+GCKbsFa9r5tuzCZRvTcMSwXZmq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 30/32] kconfig/[mn]conf: handle backspace (^H) key
-Date:   Thu,  2 May 2019 17:21:16 +0200
-Message-Id: <20190502143323.212877920@linuxfoundation.org>
+Subject: [PATCH 4.9 13/32] usb: gadget: net2272: Fix net2272_dequeue()
+Date:   Thu,  2 May 2019 17:20:59 +0200
+Message-Id: <20190502143319.113341619@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -60,63 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
+[ Upstream commit 091dacc3cc10979ab0422f0a9f7fcc27eee97e69 ]
 
-Backspace is not working on some terminal emulators which do not send the
-key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
-But currently only '^?' is handled. Let's also handle '^H' for those
-terminals.
+Restore the status of ep->stopped in function net2272_dequeue().
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+When the given request is not found in the endpoint queue
+the function returns -EINVAL without restoring the state of
+ep->stopped. Thus the endpoint keeps blocked and does not transfer
+any data anymore.
+
+This fix is only compile-tested, since we do not have a
+corresponding hardware. An analogous fix was tested in the sibling
+driver. See "usb: gadget: net2280: Fix net2280_dequeue()"
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- scripts/kconfig/lxdialog/inputbox.c | 3 ++-
- scripts/kconfig/nconf.c             | 2 +-
- scripts/kconfig/nconf.gui.c         | 3 ++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/udc/net2272.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
-index d58de1dc5360..510049a7bd1d 100644
---- a/scripts/kconfig/lxdialog/inputbox.c
-+++ b/scripts/kconfig/lxdialog/inputbox.c
-@@ -126,7 +126,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
- 			case KEY_DOWN:
- 				break;
- 			case KEY_BACKSPACE:
--			case 127:
-+			case 8:   /* ^H */
-+			case 127: /* ^? */
- 				if (pos) {
- 					wattrset(dialog, dlg.inputbox.atr);
- 					if (input_x == 0) {
-diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
-index d42d534a66cd..f7049e288e93 100644
---- a/scripts/kconfig/nconf.c
-+++ b/scripts/kconfig/nconf.c
-@@ -1046,7 +1046,7 @@ static int do_match(int key, struct match_state *state, int *ans)
- 		state->match_direction = FIND_NEXT_MATCH_UP;
- 		*ans = get_mext_match(state->pattern,
- 				state->match_direction);
--	} else if (key == KEY_BACKSPACE || key == 127) {
-+	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
- 		state->pattern[strlen(state->pattern)-1] = '\0';
- 		adj_match_dir(&state->match_direction);
- 	} else
-diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
-index 4b2f44c20caf..9a65035cf787 100644
---- a/scripts/kconfig/nconf.gui.c
-+++ b/scripts/kconfig/nconf.gui.c
-@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
- 		case KEY_F(F_EXIT):
- 		case KEY_F(F_BACK):
+diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
+index 40396a265a3f..f57d293a1791 100644
+--- a/drivers/usb/gadget/udc/net2272.c
++++ b/drivers/usb/gadget/udc/net2272.c
+@@ -958,6 +958,7 @@ net2272_dequeue(struct usb_ep *_ep, struct usb_request *_req)
  			break;
--		case 127:
-+		case 8:   /* ^H */
-+		case 127: /* ^? */
- 		case KEY_BACKSPACE:
- 			if (cursor_position > 0) {
- 				memmove(&result[cursor_position-1],
+ 	}
+ 	if (&req->req != _req) {
++		ep->stopped = stopped;
+ 		spin_unlock_irqrestore(&ep->dev->lock, flags);
+ 		return -EINVAL;
+ 	}
 -- 
 2.19.1
 
