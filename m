@@ -2,280 +2,214 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758F2C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6E7C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E4D2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:08:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7I8E/jv"
+	by mail.kernel.org (Postfix) with ESMTP id D07D72085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfEBGIu (ORCPT
+        id S1726509AbfEBGJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 02:08:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41590 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfEBGIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 02:08:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so609382pfd.8;
-        Wed, 01 May 2019 23:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WmtQTHpqD8h10ZK1NxAw5cdZrq5WyjBaKApCo1yE804=;
-        b=Y7I8E/jv4MaKIw9Q6kOe0VW6Gp7vDzRRr6sx99FX6ovTaDd5JN+REGH6mPpGJgIjWr
-         RBAknQmh57VGzd7bMlRxoLAWteR7LFQnzHT3vfAjGUtqJmR4O+b7nBpbUWDcsL9Qzt1d
-         O9txtvOcBMih0U+oT6EVA/YqCKqw3z7/lFfwxrV+tD7HYRxBSthh5XZlJodfAvnV7W+A
-         XXy88/9OEs3IkIME9wya2tzZFWk9JcNnpljG0FR3Je2ny1As2g40H4xFEq3AU5V70vEO
-         eFDlmvEpZKWZBWHWfYirgypq/ShC0Zu6DSFSsX1gmjCE/0oRKwL8bs9onvC3HP2aSk5X
-         KAJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WmtQTHpqD8h10ZK1NxAw5cdZrq5WyjBaKApCo1yE804=;
-        b=UHr3neN4SS6DMdT5jToBeDdyUQRr0bDQ9XpCEXP98QAXMBQie1Vu8r1HNkjzqYxDVT
-         YKR+NL9A8IHuLs0omoHFTjcycCUj2DXt+CB/dH1TpeMEiUVkP9B/x/DyeURSAK7Equd8
-         EfpGAaBp8CGJ1FqZatc+SVJWF/cslrQpD0zOdEqPRGlMJnJ01YCrzB8x0NqkZG2b91Ni
-         ltTml1Pownn1VLHaXEHPM68XrbTRdoeqDFu0oPmuB14MDovYpP0dFJZP4srP2U1WXDpm
-         iOhicSIwEzzGeanjN5ehW5oBcHtZ8Kk85QUgN/nq9bYZzhUeOVdTjsi0cvBBZL+eMeQ1
-         PXHw==
-X-Gm-Message-State: APjAAAX9d2ll/ufPsvALhmEe57QljCB3bXjTow0AmQSVJJpv91AyPm1a
-        JkCy+Se4E1QHOSQGyJHa6Zs=
-X-Google-Smtp-Source: APXvYqyUqeL06JvMAGAtVCQXjFCn944o7wjsR+9BvTufEe9daCN/GlLCYU5ekfZ4t2FaoCUhwJP3iQ==
-X-Received: by 2002:a63:2c06:: with SMTP id s6mr2162000pgs.245.1556777326331;
-        Wed, 01 May 2019 23:08:46 -0700 (PDT)
-Received: from gmail.com (c-73-140-212-29.hsd1.wa.comcast.net. [73.140.212.29])
-        by smtp.gmail.com with ESMTPSA id k9sm50059546pga.22.2019.05.01.23.08.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 23:08:45 -0700 (PDT)
-Date:   Wed, 1 May 2019 23:08:43 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Dmitry Safonov <dima@arista.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        Linux API <linux-api@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCHv3 19/27] timens/fs/proc: Introduce
- /proc/pid/timens_offsets
-Message-ID: <20190502060842.GA4608@gmail.com>
-References: <20190425161416.26600-1-dima@arista.com>
- <20190425161416.26600-20-dima@arista.com>
- <CAG48ez1ws9qXyNHfScY1RoajG=pquFe4y9QpM1c_xtPSeC2SNA@mail.gmail.com>
+        Thu, 2 May 2019 02:09:10 -0400
+Received: from mga18.intel.com ([134.134.136.126]:9514 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbfEBGJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 02:09:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 23:09:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,420,1549958400"; 
+   d="scan'208";a="320740307"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga005.jf.intel.com with ESMTP; 01 May 2019 23:09:08 -0700
+Subject: [PATCH v7 00/12] mm: Sub-section memory hotplug support
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        =?utf-8?b?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, osalvador@suse.de, mhocko@suse.com
+Date:   Wed, 01 May 2019 22:55:22 -0700
+Message-ID: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <CAG48ez1ws9qXyNHfScY1RoajG=pquFe4y9QpM1c_xtPSeC2SNA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jann,
+Changes since v6 [1]:
 
-Thank you for the review. Here are a few comments inline.
+- Rebase on next-20190501, no related conflicts or updates
 
-On Thu, Apr 25, 2019 at 08:16:41PM +0200, Jann Horn wrote:
-> On Thu, Apr 25, 2019 at 6:15 PM Dmitry Safonov <dima@arista.com> wrote:
-> > API to set time namespace offsets for children processes, i.e.:
-> > echo "clockid off_ses off_nsec" > /proc/self/timens_offsets
-> [...]
-> > diff --git a/fs/proc/base.c b/fs/proc/base.c
-> > index 6a803a0b75df..76d58e9b5178 100644
-> > --- a/fs/proc/base.c
-> > +++ b/fs/proc/base.c
-> [...]
-> > @@ -1521,6 +1522,103 @@ static const struct file_operations proc_pid_sched_autogroup_operations = {
-> >
-> >  #endif /* CONFIG_SCHED_AUTOGROUP */
-> >
-> > +#ifdef CONFIG_TIME_NS
-> > +static int timens_offsets_show(struct seq_file *m, void *v)
-> > +{
-> > +       struct inode *inode = m->private;
-> > +       struct task_struct *p;
-> > +
-> > +       p = get_proc_task(inode);
-> 
-> (FYI, this could also be "p = get_proc_task(file_inode(m->file));".
-> But this works, too.)
-> 
-> > +       if (!p)
-> > +               return -ESRCH;
-> > +       proc_timens_show_offsets(p, m);
-> > +
-> > +       put_task_struct(p);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static ssize_t
-> > +timens_offsets_write(struct file *file, const char __user *buf,
-> > +           size_t count, loff_t *ppos)
-> > +{
-> > +       struct inode *inode = file_inode(file);
-> > +       struct proc_timens_offset offsets[2];
-> > +       char *kbuf = NULL, *pos, *next_line;
-> > +       struct task_struct *p;
-> > +       int ret, noffsets;
-> > +
-> > +       /* Only allow < page size writes at the beginning of the file */
-> > +       if ((*ppos != 0) || (count >= PAGE_SIZE))
-> > +               return -EINVAL;
-> > +
-> > +       /* Slurp in the user data */
-> > +       kbuf = memdup_user_nul(buf, count);
-> > +       if (IS_ERR(kbuf))
-> > +               return PTR_ERR(kbuf);
-> > +
-> > +       /* Parse the user data */
-> > +       ret = -EINVAL;
-> > +       noffsets = 0;
-> > +       pos = kbuf;
-> > +       for (; pos; pos = next_line) {
-> > +               struct proc_timens_offset *off = &offsets[noffsets];
-> > +               int err;
-> > +
-> > +               /* Find the end of line and ensure I don't look past it */
-> > +               next_line = strchr(pos, '\n');
-> > +               if (next_line) {
-> > +                       *next_line = '\0';
-> > +                       next_line++;
-> > +                       if (*next_line == '\0')
-> > +                               next_line = NULL;
-> > +               }
-> > +
-> > +               err = sscanf(pos, "%u %lld %lu", &off->clockid,
-> > +                               &off->val.tv_sec, &off->val.tv_nsec);
-> > +               if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
-> > +                       goto out;
-> > +               if (noffsets++ == ARRAY_SIZE(offsets))
-> > +                       break;
-> 
-> This is equivalent to:
-> 
-> if (noffsets == ARRAY_SIZE(offsets)) {
-	  noffsets++;
->         break;
-  }
-> noffsets++;
-> 
-> So we can reach the start of the loop with
-> noffsets==ARRAY_SIZE(offsets), right? Which means that an
-> out-of-bounds write can happen?
+- Fix boot crash due to inaccurate setup of the initial section
+  ->map_active bitmask caused by multiple activations of the same
+  section. (Jane, Jeff)
 
-good catch. I will add a test for this case.
+- Fix pmem startup crash when devm_memremap_pages() needs to instantiate
+  a new section. (Jeff)
 
-> 
-> I think that for code like this, it makes sense to write the increment
-> and the check out separately so that it's easier to spot problems;
-> e.g. like this:
-> 
-> noffsets++;
-> if (noffsets == ARRAY_SIZE(offsets))
->         break;
+- Drop mhp_restrictions for the __remove_pages() path in favor of
+  find_memory_block() to detect cases where section-aligned remove is
+  required (David)
 
-will rewrite this way. Thanks!
+- Add "[PATCH v7 06/12] mm/hotplug: Kill is_dev_zone() usage in
+  __remove_pages()"
 
-> 
-> > +       }
-> > +
-> > +       ret = -ESRCH;
-> > +       p = get_proc_task(inode);
-> > +       if (!p)
-> > +               goto out;
-> > +       ret = proc_timens_set_offset(p, offsets, noffsets);
-> > +       put_task_struct(p);
-> > +       if (ret)
-> > +               goto out;
-> > +
-> > +       ret = count;
-> > +out:
-> > +       kfree(kbuf);
-> > +       return ret;
-> > +}
-> > +
-> > +static int timens_offsets_open(struct inode *inode, struct file *filp)
-> > +{
-> > +       int ret;
-> > +
-> > +       ret = single_open(filp, timens_offsets_show, NULL);
-> > +       if (!ret) {
-> > +               struct seq_file *m = filp->private_data;
-> > +
-> > +               m->private = inode;
-> > +       }
-> > +       return ret;
-> > +}
-> 
-> Why did you write it like this? Wouldn't the following be equivalent?
+- Cleanup shrink_{zone,pgdat}_span to remove no longer necessary @ms
+  section variables. (Oscar)
 
-Probably I looked at sched_autogroup_open
+- Add subsection_check() to the __add_pages() path to prevent
+  inadvertent sub-section misuse.
 
-> 
-> static int timens_offsets_open(struct inode *inode, struct file *file)
-> {
->         return single_open(file, timens_offsets_show, inode);
-> }
-> 
-> (But also, you can reach the inode of a seq_file as file_inode(m->file).)
-> 
-> [...]
-> > diff --git a/kernel/time_namespace.c b/kernel/time_namespace.c
-> > index e806accc4eaf..9ad4b63c4ed2 100644
-> > --- a/kernel/time_namespace.c
-> > +++ b/kernel/time_namespace.c
-> [...]
-> > +
-> > +int proc_timens_set_offset(struct task_struct *p,
-> > +                          struct proc_timens_offset *offsets, int noffsets)
-> > +{
-> > +       struct ns_common *ns;
-> > +       struct time_namespace *time_ns;
-> > +       struct timens_offsets *ns_offsets;
-> > +       struct timespec64 *offset;
-> > +       struct timespec64 tp;
-> > +       int i, err;
-> > +
-> > +       ns = timens_for_children_get(p);
-> > +       if (!ns)
-> > +               return -ESRCH;
-> > +       time_ns = to_time_ns(ns);
-> > +
-> > +       if (!time_ns->offsets || time_ns->initialized ||
-> > +           !ns_capable(time_ns->user_ns, CAP_SYS_TIME)) {
-> 
-> Capability checks in VFS read/write handlers are bad. Please pass
-> through the file pointer to this function and replace the call with
-> "file_ns_capable(file, time_ns->user_ns, CAP_SYS_TIME)".
+[1]: https://lore.kernel.org/lkml/155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com/
 
-Will fix. Thanks!
-> 
-> > +               put_time_ns(time_ns);
-> > +               return -EPERM;
-> > +       }
-> [...]
-> > +}
+---
+[merge logistics]
+
+Hi Andrew,
+
+I believe this is ready for another spin in -mm now that the boot
+regression has been squashed. In a chat with Michal last night at LSF/MM
+I submitted to his assertion that the boot regression validates the
+general concern that there were/are subtle dependencies on sections
+beyond what I found to date by code inspection. Of course I want to
+relieve the pain that the section constraint inflicts on libnvdimm and
+devm_memremap_pages() as soon as possible (i.e. v5.2), but deferment to
+v5.3 to give Michal time to do an in-depth look is also acceptable.
+
+---
+[cover letter]
+
+The memory hotplug section is an arbitrary / convenient unit for memory
+hotplug. 'Section-size' units have bled into the user interface
+('memblock' sysfs) and can not be changed without breaking existing
+userspace. The section-size constraint, while mostly benign for typical
+memory hotplug, has and continues to wreak havoc with 'device-memory'
+use cases, persistent memory (pmem) in particular. Recall that pmem uses
+devm_memremap_pages(), and subsequently arch_add_memory(), to allocate a
+'struct page' memmap for pmem. However, it does not use the 'bottom
+half' of memory hotplug, i.e. never marks pmem pages online and never
+exposes the userspace memblock interface for pmem. This leaves an
+opening to redress the section-size constraint.
+
+To date, the libnvdimm subsystem has attempted to inject padding to
+satisfy the internal constraints of arch_add_memory(). Beyond
+complicating the code, leading to bugs [2], wasting memory, and limiting
+configuration flexibility, the padding hack is broken when the platform
+changes this physical memory alignment of pmem from one boot to the
+next. Device failure (intermittent or permanent) and physical
+reconfiguration are events that can cause the platform firmware to
+change the physical placement of pmem on a subsequent boot, and device
+failure is an everyday event in a data-center.
+
+It turns out that sections are only a hard requirement of the
+user-facing interface for memory hotplug and with a bit more
+infrastructure sub-section arch_add_memory() support can be added for
+kernel internal usages like devm_memremap_pages(). Here is an analysis
+of the current design assumptions in the current code and how they are
+addressed in the new implementation:
+
+Current design assumptions:
+
+- Sections that describe boot memory (early sections) are never
+  unplugged / removed.
+
+- pfn_valid(), in the CONFIG_SPARSEMEM_VMEMMAP=y, case devolves to a
+  valid_section() check
+
+- __add_pages() and helper routines assume all operations occur in
+  PAGES_PER_SECTION units.
+
+- The memblock sysfs interface only comprehends full sections
+
+New design assumptions:
+
+- Sections are instrumented with a sub-section bitmask to track (on x86)
+  individual 2MB sub-divisions of a 128MB section.
+
+- Partially populated early sections can be extended with additional
+  sub-sections, and those sub-sections can be removed with
+  arch_remove_memory(). With this in place we no longer lose usable memory
+  capacity to padding.
+
+- pfn_valid() is updated to look deeper than valid_section() to also check the
+  active-sub-section mask. This indication is in the same cacheline as
+  the valid_section() so the performance impact is expected to be
+  negligible. So far the lkp robot has not reported any regressions.
+
+- Outside of the core vmemmap population routines which are replaced,
+  other helper routines like shrink_{zone,pgdat}_span() are updated to
+  handle the smaller granularity. Core memory hotplug routines that deal
+  with online memory are not touched.
+
+- The existing memblock sysfs user api guarantees / assumptions are
+  not touched since this capability is limited to !online
+  !memblock-sysfs-accessible sections.
+
+Meanwhile the issue reports continue to roll in from users that do not
+understand when and how the 128MB constraint will bite them. The current
+implementation relied on being able to support at least one misaligned
+namespace, but that immediately falls over on any moderately complex
+namespace creation attempt. Beyond the initial problem of 'System RAM'
+colliding with pmem, and the unsolvable problem of physical alignment
+changes, Linux is now being exposed to platforms that collide pmem
+ranges with other pmem ranges by default [3]. In short,
+devm_memremap_pages() has pushed the venerable section-size constraint
+past the breaking point, and the simplicity of section-aligned
+arch_add_memory() is no longer tenable.
+
+These patches are exposed to the kbuild robot on my libnvdimm-pending
+branch [4], and a preview of the unit test for this functionality is
+available on the 'subsection-pending' branch of ndctl [5].
+
+[2]: https://lore.kernel.org/r/155000671719.348031.2347363160141119237.stgit@dwillia2-desk3.amr.corp.intel.com
+[3]: https://github.com/pmem/ndctl/issues/76
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/log/?h=libnvdimm-pending
+[5]: https://github.com/pmem/ndctl/commit/7c59b4867e1c
+
+---
+
+Dan Williams (12):
+      mm/sparsemem: Introduce struct mem_section_usage
+      mm/sparsemem: Introduce common definitions for the size and mask of a section
+      mm/sparsemem: Add helpers track active portions of a section at boot
+      mm/hotplug: Prepare shrink_{zone,pgdat}_span for sub-section removal
+      mm/sparsemem: Convert kmalloc_section_memmap() to populate_section_memmap()
+      mm/hotplug: Kill is_dev_zone() usage in __remove_pages()
+      mm: Kill is_dev_zone() helper
+      mm/sparsemem: Prepare for sub-section ranges
+      mm/sparsemem: Support sub-section hotplug
+      mm/devm_memremap_pages: Enable sub-section remap
+      libnvdimm/pfn: Fix fsdax-mode namespace info-block zero-fields
+      libnvdimm/pfn: Stop padding pmem namespaces to section alignment
+
+
+ arch/x86/mm/init_64.c          |    4 
+ drivers/nvdimm/dax_devs.c      |    2 
+ drivers/nvdimm/pfn.h           |   12 -
+ drivers/nvdimm/pfn_devs.c      |   93 +++-------
+ include/linux/memory_hotplug.h |    7 -
+ include/linux/mm.h             |    4 
+ include/linux/mmzone.h         |   72 ++++++--
+ kernel/memremap.c              |   63 +++----
+ mm/hmm.c                       |    2 
+ mm/memory_hotplug.c            |  172 ++++++++++---------
+ mm/page_alloc.c                |    8 +
+ mm/sparse-vmemmap.c            |   21 ++
+ mm/sparse.c                    |  370 ++++++++++++++++++++++++++++------------
+ 13 files changed, 490 insertions(+), 340 deletions(-)
