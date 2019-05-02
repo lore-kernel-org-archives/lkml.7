@@ -2,133 +2,171 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0402BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2D8C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C338D2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:12:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqMTh4Ij"
+	by mail.kernel.org (Postfix) with ESMTP id 7B52F2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556781158;
+	bh=a4vsmkRT/YqiHtnSj6HjWrvWp+m23XNS2L56x09x+Dw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QT3vc3055AaPKTsTxNDoZBeDv8aFYaJQZacm3Kf/IY5Cq9F6MQNmliBtLfJBoEvHZ
+	 zOxlBn1PT7pgq7f7TbmDdRdSjepDfd9gCkRz9+4JiL5dUIlhsgR3R3rTQ/4Aw1V40G
+	 VWlgVQp8rKYYENUenLYZMWdzT7W9ZBTerPLOFmiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfEBHMI (ORCPT
+        id S1726574AbfEBHMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:12:08 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45865 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfEBHMH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:12:07 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i21so631472pgi.12;
-        Thu, 02 May 2019 00:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YaNnLqU9o2lpY1nR/3WwmAgKR0IVYxRkeI3qUXiAw/Y=;
-        b=QqMTh4IjiuCKjE+ZXpNCaPibFnWWmDjJLBu9GCvAalwli10RsMnTFi9cTdQgKKooQY
-         8QVkPA0UnVk+YRWACLFtTIIw5qUibNjIPqhO8LFQgBzZZ2zmmejt83gJGy3m/vBaHefs
-         3KQ86O6s5Q4agajUQgxd8ICMIBeumAgpDOAjygvb8mbj2JXT32KBD4HHxticNiYMrYxN
-         s+7XUSE7KaHknapfG8q1zEcpypN2s7iKg5JQM5EwCLyXkQNene9h/l+PjDHW6jypQH8b
-         wn6Fe6bdMpJkF70u27FkS911N4jjHTX9PWoz+LFQNdHryZJxPY5iRlhhGkuJ/miIST8S
-         d4wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YaNnLqU9o2lpY1nR/3WwmAgKR0IVYxRkeI3qUXiAw/Y=;
-        b=e+IJKJQnJK/7hmTRpKArr1g8uLJ8hIe240QvWFAiKEETGtOnHtN9XUGAgEEwizy7dj
-         O7vvNyjuKCAzW/gP+ARKCzT955Lww4L7L3kYHpKBrsLsdy2Q9iXTKfve3+QY3luoMFCj
-         0Cx2bJSSVuJ+/pnQ90Sn0VMNV7Rn7I1jnXBRyersC6u93qgTnAbZpIcRRCliR888EuT4
-         jP/uQ/5EfIUfeQZsNDraVDJtP8SxbRB6EkcsZvl7QfPbPXBE+6SsVtZ/OG9wZabuETIT
-         LGViTkAEAOxbd68kQeRVebkA+VM+rgqMz3Kicp2ciLttRonY4YnGb2xi6E7bKrDoLXZx
-         i5HA==
-X-Gm-Message-State: APjAAAWHRKGnT865sRTWGsNJ/r2VGz+j5EFeD/f8RylQRV75sUV6rRQ2
-        iJ9NvlixbHMQsTgT4PuiaaQ=
-X-Google-Smtp-Source: APXvYqxNcOufLKQ1FgALFEGNWwmWDEakWbES4s56JUN0KpSWcfLerd1IPflwOE2uHoEnjFk9HY8rTg==
-X-Received: by 2002:a63:1b04:: with SMTP id b4mr2359807pgb.305.1556781127085;
-        Thu, 02 May 2019 00:12:07 -0700 (PDT)
-Received: from laptop.DHCP ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id u24sm4686976pfh.91.2019.05.02.00.12.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 00:12:06 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v2 27/27] Documentation: x86: convert x86_64/machinecheck to reST
-Date:   Thu,  2 May 2019 15:06:33 +0800
-Message-Id: <20190502070633.9809-28-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190502070633.9809-1-changbin.du@gmail.com>
-References: <20190502070633.9809-1-changbin.du@gmail.com>
+        Thu, 2 May 2019 03:12:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbfEBHMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 03:12:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B05F82085A;
+        Thu,  2 May 2019 07:12:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556781155;
+        bh=a4vsmkRT/YqiHtnSj6HjWrvWp+m23XNS2L56x09x+Dw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ACEmOVXh9UquCm10yyqI5N7dznFL8uGxTRyD/S2sW2z71Abwct83ikmAhd+nL6mO9
+         bnMnJZQ9VbbkKscP6HKPxRAQL1vKr1VgRVbvWtJLmzN4Q8Alo+1MzlWN6XqFLXWo0W
+         v5ze9RFBDlKiDwVBiERNLLVdwzT5Afi2c/DCuNIs=
+Date:   Thu, 2 May 2019 09:12:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 5/5] livepatch: Do not manually track kobject
+ initialization
+Message-ID: <20190502071232.GB16247@kroah.com>
+References: <20190502023142.20139-1-tobin@kernel.org>
+ <20190502023142.20139-6-tobin@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502023142.20139-6-tobin@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+On Thu, May 02, 2019 at 12:31:42PM +1000, Tobin C. Harding wrote:
+> Currently we use custom logic to track kobject initialization.  Recently
+> a predicate function was added to the kobject API so we now no longer
+> need to do this.
+> 
+> Use kobject API to check for initialized state of kobjects instead of
+> using custom logic to track state.
+> 
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> ---
+>  include/linux/livepatch.h |  6 ------
+>  kernel/livepatch/core.c   | 18 +++++-------------
+>  2 files changed, 5 insertions(+), 19 deletions(-)
+> 
+> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> index 53551f470722..955d46f37b72 100644
+> --- a/include/linux/livepatch.h
+> +++ b/include/linux/livepatch.h
+> @@ -47,7 +47,6 @@
+>   * @stack_node:	list node for klp_ops func_stack list
+>   * @old_size:	size of the old function
+>   * @new_size:	size of the new function
+> - * @kobj_added: @kobj has been added and needs freeing
+>   * @nop:        temporary patch to use the original code again; dyn. allocated
+>   * @patched:	the func has been added to the klp_ops list
+>   * @transition:	the func is currently being applied or reverted
+> @@ -86,7 +85,6 @@ struct klp_func {
+>  	struct list_head node;
+>  	struct list_head stack_node;
+>  	unsigned long old_size, new_size;
+> -	bool kobj_added;
+>  	bool nop;
+>  	bool patched;
+>  	bool transition;
+> @@ -126,7 +124,6 @@ struct klp_callbacks {
+>   * @node:	list node for klp_patch obj_list
+>   * @mod:	kernel module associated with the patched object
+>   *		(NULL for vmlinux)
+> - * @kobj_added: @kobj has been added and needs freeing
+>   * @dynamic:    temporary object for nop functions; dynamically allocated
+>   * @patched:	the object's funcs have been added to the klp_ops list
+>   */
+> @@ -141,7 +138,6 @@ struct klp_object {
+>  	struct list_head func_list;
+>  	struct list_head node;
+>  	struct module *mod;
+> -	bool kobj_added;
+>  	bool dynamic;
+>  	bool patched;
+>  };
+> @@ -154,7 +150,6 @@ struct klp_object {
+>   * @list:	list node for global list of actively used patches
+>   * @kobj:	kobject for sysfs resources
+>   * @obj_list:	dynamic list of the object entries
+> - * @kobj_added: @kobj has been added and needs freeing
+>   * @enabled:	the patch is enabled (but operation may be incomplete)
+>   * @forced:	was involved in a forced transition
+>   * @free_work:	patch cleanup from workqueue-context
+> @@ -170,7 +165,6 @@ struct klp_patch {
+>  	struct list_head list;
+>  	struct kobject kobj;
+>  	struct list_head obj_list;
+> -	bool kobj_added;
+>  	bool enabled;
+>  	bool forced;
+>  	struct work_struct free_work;
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index 98295de2172b..0b94aa5b38c9 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -590,7 +590,7 @@ static void __klp_free_funcs(struct klp_object *obj, bool nops_only)
+>  		list_del(&func->node);
+>  
+>  		/* Might be called from klp_init_patch() error path. */
+> -		if (func->kobj_added) {
+> +		if (kobject_is_initialized(&func->kobj)) {
+>  			kobject_put(&func->kobj);
+>  		} else if (func->nop) {
+>  			klp_free_func_nop(func);
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/x86/x86_64/index.rst                   |  1 +
- .../x86/x86_64/{machinecheck => machinecheck.rst}    | 12 +++++++-----
- 2 files changed, 8 insertions(+), 5 deletions(-)
- rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
+This feels really odd to me, why do we need to keep track of this type
+of thing?
 
-diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
-index c04b6eab3c76..d6eaaa5a35fc 100644
---- a/Documentation/x86/x86_64/index.rst
-+++ b/Documentation/x86/x86_64/index.rst
-@@ -13,3 +13,4 @@ x86_64 Support
-    5level-paging
-    fake-numa-for-cpusets
-    cpu-hotplug-spec
-+   machinecheck
-diff --git a/Documentation/x86/x86_64/machinecheck b/Documentation/x86/x86_64/machinecheck.rst
-similarity index 92%
-rename from Documentation/x86/x86_64/machinecheck
-rename to Documentation/x86/x86_64/machinecheck.rst
-index d0648a74fceb..e189168406fa 100644
---- a/Documentation/x86/x86_64/machinecheck
-+++ b/Documentation/x86/x86_64/machinecheck.rst
-@@ -1,5 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
- 
--Configurable sysfs parameters for the x86-64 machine check code.
-+===============================================================
-+Configurable sysfs parameters for the x86-64 machine check code
-+===============================================================
- 
- Machine checks report internal hardware error conditions detected
- by the CPU. Uncorrected errors typically cause a machine check
-@@ -16,14 +19,13 @@ log then mcelog should run to collect and decode machine check entries
- from /dev/mcelog. Normally mcelog should be run regularly from a cronjob.
- 
- Each CPU has a directory in /sys/devices/system/machinecheck/machinecheckN
--(N = CPU number)
-+(N = CPU number).
- 
- The directory contains some configurable entries:
- 
--Entries:
--
- bankNctl
--(N bank number)
-+	(N bank number)
-+
- 	64bit Hex bitmask enabling/disabling specific subevents for bank N
- 	When a bit in the bitmask is zero then the respective
- 	subevent will not be reported.
--- 
-2.20.1
+How can the kobject _not_ be initialized?  If it's just because we don't
+want to write two separate error cleanup paths, that's not ok.
 
+> @@ -626,7 +626,7 @@ static void __klp_free_objects(struct klp_patch *patch, bool nops_only)
+>  		list_del(&obj->node);
+>  
+>  		/* Might be called from klp_init_patch() error path. */
+> -		if (obj->kobj_added) {
+> +		if (kobject_is_initialized(&obj->kobj)) {
+>  			kobject_put(&obj->kobj);
+>  		} else if (obj->dynamic) {
+>  			klp_free_object_dynamic(obj);
+
+Same here, let's not be lazy.
+
+The code should "know" if the kobject has been initialized or not
+because it is the entity that asked for it to be initialized.  Don't add
+extra logic to the kobject core (like the patch before this did) just
+because this one subsystem wanted to only write 1 "cleanup" function.
+
+thanks,
+
+greg k-h
