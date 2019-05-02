@@ -2,100 +2,112 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BD8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211E8C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63822080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D76B62081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKBTrfby"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYGN5u3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfEBW4N (ORCPT
+        id S1726300AbfEBW7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 18:56:13 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34678 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfEBW4N (ORCPT
+        Thu, 2 May 2019 18:59:15 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40697 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfEBW7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 18:56:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ck18so1721960plb.1;
-        Thu, 02 May 2019 15:56:13 -0700 (PDT)
+        Thu, 2 May 2019 18:59:15 -0400
+Received: by mail-oi1-f196.google.com with SMTP id y64so3084541oia.7;
+        Thu, 02 May 2019 15:59:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yYIDXzsF5fvEyzgU5d3tO5SefJfzaF9fpPhpJPjIMWI=;
-        b=OKBTrfbyTYMGYlbj+6jkYEKZBKOIW02JjJy+SniE2CnpK4qC1E1JHiC84R/MMS8hMK
-         sRdYumKZZ3vhO5u086rn2CzBKp9ewJpRM9qhOmgsJIv8m//LHzGEQRGIb5Zkxfsgam9i
-         Ghr0iJXzcMvrggQ3EjENnngy2MkGzI3Hps+JUiwwktezQONfaKnkFa858UobXz2BUBHj
-         N6pyIw6+rrNA5n3bLYlIJwx0xvnuWX0M4CZlvjQHdBcigfD1vqYzxhFOBLNs29AhWssN
-         NR/S5f5rMvTbW8tF4+J+7murVOmvdrXO1RdEKylMeD3zIRVcNXrIKQxgsvsmjCzBMBDi
-         hi/w==
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AmMJvvqepFQ5FHhs6fnEWr1vFGhqHnFVdKxKjcKH6a4=;
+        b=lYGN5u3UrNDWpzULcNN9d1p0UrAFqtE3esM8eOVv6AwDw+bAC03dZVwqCIvE5/Ik2k
+         6pZAfZAU2YVG+SkHXay5xUaWpLN87MFck5zdsLX4DpfjudEH/VmeR3CoPeFQdF+E8Sz1
+         mXZQka7ySmS0niH6abC6mJhMG5fxGwXHfTeTvUSG5fsdcEtA+iSxke7dPGe6viu/bwxy
+         liGscJWr/OzDwf42DN9fIVcQjphxUEvjYadYLDDW+WuR89sqdVYvYxlfy97ajuC1bsLU
+         msyU/Hr8OTXgiJ/iiq9RTYjIDRAQ+kHTOJmP1zVX98vqw0piJvIbG+cite/qmvY5Nbp2
+         hl4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yYIDXzsF5fvEyzgU5d3tO5SefJfzaF9fpPhpJPjIMWI=;
-        b=lSzmR1UFf094x5M+3p29FpWn23qG2Ug25W+RtImm61eacHiSrJNtI6sx4B9RYT18QC
-         vllBKPqoS2ghOY0zNSj1c9gaqGHhes2IG6e+TfNPQnHuqnx7UVCJ84tFjU9zPE/I+a3A
-         OFDiXJ2qye3M2mJlsen9eFIQQYuNCF5YXqHezFxUVcBm9ntVmfg2snlR08LVvQQnA8+8
-         EMCutZJ2c1gCrw8hNRKMESvtkVOS85OIIAOaQhHX2Z+DimCKoUyral+58FOHjTOfNTUL
-         qL5MMGEe5ooQAGxBmxnPiSQJnNC3nCmSlpC6Cj8bpf59XdayEhS55NZ99PrtqUehhFHA
-         m2DQ==
-X-Gm-Message-State: APjAAAUbZuo3TmlqYDf4XRBO7ao845PaI2oc8OJ4HCchmC5sX0jedW82
-        2Mwg4dFGV90rkQwIkpoD+WfMQiG4
-X-Google-Smtp-Source: APXvYqwVbK1OXAG423NH9+vSp6oHPJ9nEAClioZQiyQCf2R0Gm8PoyiNA2bZAPiUJ3tzV8am6r8XQA==
-X-Received: by 2002:a17:902:822:: with SMTP id 31mr6430968plk.41.1556837772510;
-        Thu, 02 May 2019 15:56:12 -0700 (PDT)
-Received: from ?IPv6:2601:282:800:fd80:ac7a:3232:c2d1:fdde? ([2601:282:800:fd80:ac7a:3232:c2d1:fdde])
-        by smtp.googlemail.com with ESMTPSA id r138sm327790pfr.2.2019.05.02.15.56.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 15:56:11 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 3/3] netlink: add validation of NLA_F_NESTED
- flag
-To:     Michal Kubecek <mkubecek@suse.cz>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-References: <cover.1556806084.git.mkubecek@suse.cz>
- <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <17889318-db59-5c29-fd29-7babe8c63030@gmail.com>
-Date:   Thu, 2 May 2019 16:56:09 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=AmMJvvqepFQ5FHhs6fnEWr1vFGhqHnFVdKxKjcKH6a4=;
+        b=MFp7KqXtgh+9oHjqtFs2oDPEicnJjg07UY5mHYcZzS7hpPm/DBphn0Ppy9E2faESRA
+         lL/eLaYAG2BySuUDgccCJtsxnvFmzUJ1yCeFC86dvUcZOm4VxJ7B+Xvud4shRgE4K3pX
+         4lahFviMUl6E9vWdZA1VDBQZufeNhWdUNrfp2wcsuXkuyBHaMKI5iH5T33mEmybiCRyk
+         wpPkmT6yfNDSuZFCWxAQrzsmJUp6E/1wumENTUQGnfRk2JHL5eOT92rfw0hhd+p9a9vN
+         AEXmp1UeAT05sPo1rynwsxZExc8x5HY17Ism7oq1hNeNDPMMCNl0VDF5umGRUqowjWr5
+         ZM7w==
+X-Gm-Message-State: APjAAAUzR0IUWktoEZV2TUT2gEzofpuvx4XmgxkpI4AFxaU2I9FDszeW
+        TfnBn9+aqkkyBmcSDFKFo/lCSF4=
+X-Google-Smtp-Source: APXvYqyYXI7eM4RiSHHR622mlEhE46EDMKMga5m5wSUJbkTPZI2Br29mAru7VL7oa25eQPjzYsdJDA==
+X-Received: by 2002:aca:ef82:: with SMTP id n124mr4074950oih.177.1556837954144;
+        Thu, 02 May 2019 15:59:14 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.134.43])
+        by smtp.gmail.com with ESMTPSA id m124sm280130oia.3.2019.05.02.15.59.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 May 2019 15:59:13 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:d5e:aa5a:44d8:6907])
+        by serve.minyard.net (Postfix) with ESMTPSA id 296321800D6;
+        Thu,  2 May 2019 22:59:12 +0000 (UTC)
+Date:   Thu, 2 May 2019 17:59:11 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Vadim Pasternak <vadimp@mellanox.com>
+Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        Michael Shych <michaelsh@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH v4 0/1] Add support for IPMB driver
+Message-ID: <20190502225910.GK6623@minyard.net>
+Reply-To: minyard@acm.org
+References: <cover.1556645340.git.Asmaa@mellanox.com>
+ <AM6PR05MB5224FCACBD4EF55F3890EC6AA23A0@AM6PR05MB5224.eurprd05.prod.outlook.com>
+ <VI1PR05MB62392EDC0FD3C960519C91ABDA340@VI1PR05MB6239.eurprd05.prod.outlook.com>
+ <20190502194954.GJ6623@minyard.net>
+ <VI1PR05MB6239E3C9B9BBBA226DCFDD12DA340@VI1PR05MB6239.eurprd05.prod.outlook.com>
+ <AM6PR05MB522465330E2C594B0309AE78A2340@AM6PR05MB5224.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR05MB522465330E2C594B0309AE78A2340@AM6PR05MB5224.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/19 8:15 AM, Michal Kubecek wrote:
-> Add new validation flag NL_VALIDATE_NESTED which adds three consistency
-> checks of NLA_F_NESTED_FLAG:
+On Thu, May 02, 2019 at 09:14:46PM +0000, Vadim Pasternak wrote:
+>  [...]
+> > >
+> > > >>Better, if you can avoid cast.
+> > > >>Would compiler warn if you use for example rol16(client->addr, 1) &
+> > GENMASK(7, 0); or something like it?
+> > > I thought it wouldn't be too much of an issue to use typecast here since other
+> > existing ipmi drivers use typecasting: bt-bmc.c, kcs_bmc_aspeed.c,
+> > kcs_bmc_npcm7xx.c all use (u8) typecasting.
+> > > But if you really think it is worth it, I could do that.
+> > > I just think it is not as straight forward to read this code as using a simple
+> > typecast. Some might wonder why a GENMASK is needed in this case.
+> > >
 > 
->   - the flag is set on attributes with NLA_NESTED{,_ARRAY} policy
->   - the flag is not set on attributes with other policies except NLA_UNSPEC
->   - the flag is set on attribute passed to nla_parse_nested()
+> Hi Asmaa,
 > 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+> I will not insist in case it's OK with maintainers.
 > 
-> v2: change error messages to mention NLA_F_NESTED explicitly
-> ---
->  include/net/netlink.h | 11 ++++++++++-
->  lib/nlattr.c          | 15 +++++++++++++++
->  2 files changed, 25 insertions(+), 1 deletion(-)
-> 
+>  [...]
 
-Reviewed-by: David Ahern <dsahern@gmail.com>
+I'm mostly against casts unless they are necessary, as they tend
+to clutter up the code.  But I don't feel that strongly about
+it.  I'm not sure how other maintainers feel.
 
+-corey
