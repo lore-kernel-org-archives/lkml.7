@@ -2,129 +2,125 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5554AC04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7261FC04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28196208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421F02054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EF+G73WB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfEBByQ (ORCPT
+        id S1726282AbfEBB5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 21:54:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:61668 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726152AbfEBByQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 21:54:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 18:54:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,419,1549958400"; 
-   d="scan'208";a="145299326"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga008.fm.intel.com with ESMTP; 01 May 2019 18:54:12 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 02/10] swiotlb: Factor out slot allocation and free
-To:     Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>
-References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
- <20190421011719.14909-3-baolu.lu@linux.intel.com>
- <20190422164555.GA31181@lst.de>
- <0c6e5983-312b-0d6b-92f5-64861cd6804d@linux.intel.com>
- <20190423061232.GB12762@lst.de>
- <dff50b2c-5e31-8b4a-7fdf-99d17852746b@linux.intel.com>
- <20190424144532.GA21480@lst.de>
- <a189444b-15c9-8069-901d-8cdf9af7fc3c@linux.intel.com>
- <20190426150433.GA19930@lst.de>
- <93b3d627-782d-cae0-2175-77a5a8b3fe6e@linux.intel.com>
- <90182d27-5764-7676-8ca6-b2773a40cfe1@arm.com>
- <1361b6ab-c3cf-d8ab-5f6b-9d9b7797bf02@linux.intel.com>
- <c044c51a-d348-ca37-3eaa-5475e3fec6c9@arm.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <998eadf0-0435-1a6b-7234-71554d95bb70@linux.intel.com>
-Date:   Thu, 2 May 2019 09:47:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <c044c51a-d348-ca37-3eaa-5475e3fec6c9@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 1 May 2019 21:57:49 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45839 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfEBB5s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 21:57:48 -0400
+Received: by mail-qt1-f195.google.com with SMTP id t1so51875qtc.12;
+        Wed, 01 May 2019 18:57:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Z+DRQaFjZkBlZYOjQJXjHBpmiOuABPVHwmMcg8Ng0pg=;
+        b=EF+G73WBZk1M7Xoi3RyKWPF+13GKMkKe9MjVF+zQsg4hIUYj418u686I5KU1WDbrco
+         DdhJ/za0mzWk4alweKYT2vGuVOGQT/H50P7+E6RjGUm8RIIKeQj2VlmyOCiHgqxirpJo
+         OXD5N6IDmKF8eEZi0J9zuzXBDIdkEIOk3YIJOzUNf5peUkEUxukBkdeI6BXA0f06w7t2
+         nJcPEv9wFb1OvrOX1QkZ17MPoJwwvNg6fK7bRRlk+5cGCy2PFyxpN4++CMy9pHtxeOja
+         7Furc0HOXpB8KyeTanrig84OfZWf5Zv+KDyBO89cpkWWs088qkpgZHsAAIePkHjssXdn
+         wtmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Z+DRQaFjZkBlZYOjQJXjHBpmiOuABPVHwmMcg8Ng0pg=;
+        b=APUch7H2eIquwMLV2ulVSCLfUstwCnFpJBJLzSISYRS7H/s6C98vNEItU8H5LsyaRP
+         yEgKmpe9khe9nHC6iQf9CRQ875pwpr/2lm7G/NiABQetNNhAnOZv6EsCo8Yyzqoqiewx
+         49XN25RuTUGgbjylF6l9c9zjQyUU+1uspoS3dpHX/+YHKC+yMoh6dBqG6fYn1z2+BNOd
+         uPTeaOO20Z0xQ/oYTQXRPuwPUe7NMnJ4EpbZaM5QKhrDPkl27IG1rud40b43xq52V8fB
+         MyLs/vPf6P7b2kK8pRZlv513HOCPAYZ3ftx2Ic0/VdCCsFl9fu9IKVxj7dHG9JwgoOBp
+         aUVg==
+X-Gm-Message-State: APjAAAWLvXgIFg6VySPj8YFjbhj6cvlf950BPiHQqjmuUAAq4xwKlG8i
+        6jPPE/kYX3sicfg5zrb5H8qLZVtzp6U=
+X-Google-Smtp-Source: APXvYqy7LW/LUMw4O7vB+JMioj0y9zvvE+9HVQB3/3M1B7S640Jp8OxbzTdOnco4YkD+yRWmVQdfAg==
+X-Received: by 2002:a0c:99d7:: with SMTP id y23mr1171716qve.0.1556762267214;
+        Wed, 01 May 2019 18:57:47 -0700 (PDT)
+Received: from localhost.localdomain (189.26.185.89.dynamic.adsl.gvt.net.br. [189.26.185.89])
+        by smtp.gmail.com with ESMTPSA id d55sm9031059qtb.59.2019.05.01.18.57.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 May 2019 18:57:46 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-block@vger.kernel.org
+Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Greg Edwards <gedwards@ddn.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] blkdev.h: Introduce bytes_to_sectors helper function
+Date:   Wed,  1 May 2019 22:57:27 -0300
+Message-Id: <20190502015728.71468-2-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190502015728.71468-1-marcos.souza.org@gmail.com>
+References: <20190502015728.71468-1-marcos.souza.org@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+This function takes an argument to specify the size of a block device,
+in bytes, and return the number of sectors of 512 bytes.
 
-On 4/30/19 5:53 PM, Robin Murphy wrote:
-> On 30/04/2019 03:02, Lu Baolu wrote:
->> Hi Robin,
->>
->> On 4/29/19 7:06 PM, Robin Murphy wrote:
->>> On 29/04/2019 06:10, Lu Baolu wrote:
->>>> Hi Christoph,
->>>>
->>>> On 4/26/19 11:04 PM, Christoph Hellwig wrote:
->>>>> On Thu, Apr 25, 2019 at 10:07:19AM +0800, Lu Baolu wrote:
->>>>>> This is not VT-d specific. It's just how generic IOMMU works.
->>>>>>
->>>>>> Normally, IOMMU works in paging mode. So if a driver issues DMA with
->>>>>> IOVA  0xAAAA0123, IOMMU can remap it with a physical address 
->>>>>> 0xBBBB0123.
->>>>>> But we should never expect IOMMU to remap 0xAAAA0123 with physical
->>>>>> address of 0xBBBB0000. That's the reason why I said that IOMMU 
->>>>>> will not
->>>>>> work there.
->>>>>
->>>>> Well, with the iommu it doesn't happen.  With swiotlb it obviosuly
->>>>> can happen, so drivers are fine with it.  Why would that suddenly
->>>>> become an issue when swiotlb is called from the iommu code?
->>>>>
->>>>
->>>> I would say IOMMU is DMA remapping, not DMA engine. :-)
->>>
->>> I'm not sure I really follow the issue here - if we're copying the 
->>> buffer to the bounce page(s) there's no conceptual difference from 
->>> copying it to SWIOTLB slot(s), so there should be no need to worry 
->>> about the original in-page offset.
->>>
->>>  From the reply up-thread I guess you're trying to include an 
->>> optimisation to only copy the head and tail of the buffer if it spans 
->>> multiple pages, and directly map the ones in the middle, but AFAICS 
->>> that's going to tie you to also using strict mode for TLB 
->>> maintenance, which may not be a win overall depending on the balance 
->>> between invalidation bandwidth vs. memcpy bandwidth. At least if we 
->>> use standard SWIOTLB logic to always copy the whole thing, we should 
->>> be able to release the bounce pages via the flush queue to allow 
->>> 'safe' lazy unmaps.
->>>
->>
->> With respect, even we use the standard SWIOTLB logic, we need to use
->> the strict mode for TLB maintenance.
->>
->> Say, some swiotbl slots are used by untrusted device for bounce page
->> purpose. When the device driver unmaps the IOVA, the slots are freed but
->> the mapping is still cached in IOTLB, hence the untrusted device is 
->> still able to access the slots. Then the slots are allocated to other
->> devices. This makes it possible for the untrusted device to access
->> the data buffer of other devices.
-> 
-> Sure, that's indeed how it would work right now - however since the 
-> bounce pages will be freed and reused by the DMA API layer itself (at 
-> the same level as the IOVAs) I see no technical reason why we couldn't 
-> investigate deferred freeing as a future optimisation.
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+---
+ Changes from v1:
+ Rename size_to_sectors to bytes_to_sectors. (Martin K. Petersen)
 
-Yes, agreed.
+ Changes from RFC:
+ Reworked the documentation of size_to_sectors by removing a sentence that was
+ explaining the size -> sectors math, which wasn't necessary given the
+ description prior to the example. (suggested by Chaitanya)
 
-Best regards,
-Lu Baolu
+ include/linux/blkdev.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 317ab30d2904..7ade2e24dbae 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -871,6 +871,23 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+ #define SECTOR_SIZE (1 << SECTOR_SHIFT)
+ #endif
+ 
++/**
++ * bytes_to_sectors - Convert size in bytes to number of sectors of 512 bytes
++ * @bytes: number of bytes to be converted to sectors
++ *
++ * Description:
++ * Kernel I/O operations are always made in "sectors". In order to set the
++ * correct number of sectors for a given number of bytes, we need to group the
++ * number of bytes in "sectors of 512 bytes" by shifting the size value by 9,
++ * which is the same than dividing the size by 512.
++ *
++ * Returns the number of sectors by the given number of bytes.
++ */
++static inline sector_t bytes_to_sectors(long long bytes)
++{
++	return bytes >> SECTOR_SHIFT;
++}
++
+ /*
+  * blk_rq_pos()			: the current sector
+  * blk_rq_bytes()		: bytes left in the entire request
+-- 
+2.16.4
+
