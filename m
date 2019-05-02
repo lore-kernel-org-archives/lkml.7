@@ -2,147 +2,331 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2974BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0917DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0117A2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB82D20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfEBPLE (ORCPT
+        id S1726451AbfEBPLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:11:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38686 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726270AbfEBPLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:11:03 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42F7WYO067791
-        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:11:01 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s81j5vk94-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:11:01 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Thu, 2 May 2019 16:11:00 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 16:10:57 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FAuLs21954804
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 15:10:57 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C94CFA4053;
-        Thu,  2 May 2019 15:10:56 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F9A0A4051;
-        Thu,  2 May 2019 15:10:56 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.152.212.60])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 May 2019 15:10:56 +0000 (GMT)
-Date:   Thu, 2 May 2019 17:10:55 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-In-Reply-To: <20190502143110.GC17577@kroah.com>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
-        <20190415051919.GA31481@infradead.org>
-        <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
-        <20190502122128.GA2670@kroah.com>
-        <20190502161758.26972bb2@mschwideX1>
-        <20190502143110.GC17577@kroah.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 2 May 2019 11:11:21 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:55324 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbfEBPLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:11:20 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 09964FB03;
+        Thu,  2 May 2019 17:11:16 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id amy3yl9ufzJA; Thu,  2 May 2019 17:11:13 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 67027472C0; Thu,  2 May 2019 17:11:13 +0200 (CEST)
+Date:   Thu, 2 May 2019 17:11:13 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Johan Hovold <johan@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy found on
+ NXP's i.MX8 SoCs
+Message-ID: <20190502151113.GA30132@bogon.m.sigxcpu.org>
+References: <cover.1556633413.git.agx@sigxcpu.org>
+ <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
+ <20190430203108.GA20545@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050215-0020-0000-0000-0000033897C2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050215-0021-0000-0000-0000218B205B
-Message-Id: <20190502171055.132f023c@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=931 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905020102
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190430203108.GA20545@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019 16:31:10 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> On Thu, May 02, 2019 at 04:17:58PM +0200, Martin Schwidefsky wrote:
-> > On Thu, 2 May 2019 14:21:28 +0200
-> > Greg KH <gregkh@linuxfoundation.org> wrote:
-> >   
-> > > On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:  
-> > > > On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:    
-> > > > >
-> > > > > Can we please have the page refcount overflow fixes out on the list
-> > > > > for review, even if it is after the fact?    
-> > > > 
-> > > > They were actually on a list for review long before the fact, but it
-> > > > was the security mailing list. The issue actually got discussed back
-> > > > in January along with early versions of the patches, but then we
-> > > > dropped the ball because it just wasn't on anybody's radar and it got
-> > > > resurrected late March. Willy wrote a rather bigger patch-series, and
-> > > > review of that is what then resulted in those commits. So they may
-> > > > look recent, but that's just because the original patches got
-> > > > seriously edited down and rewritten.
-> > > > 
-> > > > That said, powerpc and s390 should at least look at maybe adding a
-> > > > check for the page ref in their gup paths too. Powerpc has the special
-> > > > gup_hugepte() case, and s390 has its own version of gup entirely. I
-> > > > was actually hoping the s390 guys would look at using the generic gup
-> > > > code.
-> > > > 
-> > > > I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
-> > > > largely irrelevant, partly since even theoretically this whole issue
-> > > > needs a _lot_ of memory.
-> > > > 
-> > > > Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
-> > > > (page ref overflow)"). You may or may not really care.    
-> > > 
-> > > I've now queued these patches up for the next round of stable releases,
-> > > as some people seem to care about these.
-> > > 
-> > > I didn't see any follow-on patches for s390 or ppc64 hit the tree for
-> > > these changes, am I just missing them and should also queue up a few
-> > > more to handle this issue on those platforms?  
-> > 
-> > I fixed that with a different approach. The following two patches are
-> > queued for the next merge window:
-> > 
-> > d1874a0c2805 "s390/mm: make the pxd_offset functions more robust"
-> > 1a42010cdc26 "s390/mm: convert to the generic get_user_pages_fast code"
-> > 
-> > With these two s390 now uses the generic gup code in mm/gup.c  
+Hi,
+On Tue, Apr 30, 2019 at 10:31:08PM +0200, Sam Ravnborg wrote:
+> Hi Guido.
 > 
-> Nice!  Do you want me to queue those up for the stable backports once
-> they hit a public -rc release?
+> Took a look at this, but feedback is trivial as
+> I have no experience with PHYs so use only
+> the feedback you consider relevant.
 
-Yes please!
+They all made sense so I've incorporated them for v10.
 
--- 
-blue skies,
-   Martin.
+> 
+> 	Sam
+> 
+> > diff --git a/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
+> > new file mode 100644
+> > index 000000000000..d6b5af0b3380
+> > --- /dev/null
+> > +++ b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
+> > @@ -0,0 +1,506 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2017,2018 NXP
+> > + * Copyright 2019 Purism SPC
+> > + */
+> > +
+> > +
+> > +/* DPHY registers */
+> > +#define DPHY_PD_DPHY			0x00
+> > +#define DPHY_M_PRG_HS_PREPARE		0x04
+> > +#define DPHY_MC_PRG_HS_PREPARE		0x08
+> > +#define DPHY_M_PRG_HS_ZERO		0x0c
+> > +#define DPHY_MC_PRG_HS_ZERO		0x10
+> > +#define DPHY_M_PRG_HS_TRAIL		0x14
+> > +#define DPHY_MC_PRG_HS_TRAIL		0x18
+> > +#define DPHY_PD_PLL			0x1c
+> > +#define DPHY_TST			0x20
+> > +#define DPHY_CN				0x24
+> > +#define DPHY_CM				0x28
+> > +#define DPHY_CO				0x2c
+> > +#define DPHY_LOCK			0x30
+> > +#define DPHY_LOCK_BYP			0x34
+> > +#define DPHY_REG_BYPASS_PLL		0x4C
+> > +
+> > +#define MBPS(x) ((x) * 1000000)
+> > +
+> > +#define DATA_RATE_MAX_SPEED MBPS(1500)
+> > +#define DATA_RATE_MIN_SPEED MBPS(80)
+> > +
+> > +#define PLL_LOCK_SLEEP 10
+> > +#define PLL_LOCK_TIMEOUT 1000
+> > +
+> > +#define CN_BUF	0xcb7a89c0
+> > +#define CO_BUF	0x63
+> > +#define CM(x)	(				\
+> > +		((x) <	32)?0xe0|((x)-16) :	\
+> > +		((x) <	64)?0xc0|((x)-32) :	\
+> > +		((x) < 128)?0x80|((x)-64) :	\
+> > +		((x) - 128))
+> > +#define CN(x)	(((x) == 1)?0x1f : (((CN_BUF)>>((x)-1))&0x1f))
+> > +#define CO(x)	((CO_BUF)>>(8-(x))&0x3)
+> > +
+> > +/* PHY power on is active low */
+> > +#define PWR_ON	0
+> > +#define PWR_OFF	1
+> > +
+> > +enum mixel_dphy_devtype {
+> > +	MIXEL_IMX8MQ,
+> > +};
+> > +
+> > +struct mixel_dphy_devdata {
+> > +	u8 reg_tx_rcal;
+> > +	u8 reg_auto_pd_en;
+> > +	u8 reg_rxlprp;
+> > +	u8 reg_rxcdrp;
+> > +	u8 reg_rxhs_settle;
+> > +};
+> > +
+> > +static const struct mixel_dphy_devdata mixel_dphy_devdata[] = {
+> > +	[MIXEL_IMX8MQ] = {
+> > +		.reg_tx_rcal = 0x38,
+> > +		.reg_auto_pd_en = 0x3c,
+> > +		.reg_rxlprp = 0x40,
+> > +		.reg_rxcdrp = 0x44,
+> > +		.reg_rxhs_settle = 0x48,
+> > +	},
+> > +};
+> > +
+> > +struct mixel_dphy_cfg {
+> > +	/* DPHY PLL parameters */
+> > +	u32 cm;
+> > +	u32 cn;
+> > +	u32 co;
+> > +	/* DPHY register values */
+> > +	u8 mc_prg_hs_prepare;
+> > +	u8 m_prg_hs_prepare;
+> > +	u8 mc_prg_hs_zero;
+> > +	u8 m_prg_hs_zero;
+> > +	u8 mc_prg_hs_trail;
+> > +	u8 m_prg_hs_trail;
+> > +	u8 rxhs_settle;
+> > +};
+> > +
+> > +struct mixel_dphy_priv {
+> > +	struct mixel_dphy_cfg cfg;
+> > +	struct regmap *regs;
+> It is a little confusing that the regmap is named regs.
+> As regs in many other cases is used as name for the variable
+> with pointer to registers.
+> See for example call to devm_regmap_init_mmio()
 
-"Reality continues to ruin my life." - Calvin.
+Changed to regmap and base.
 
+> 
+> > +	struct clk *phy_ref_clk;
+> > +	const struct mixel_dphy_devdata *devdata;
+> > +};
+> > +
+> > +static const struct regmap_config mixel_dphy_regmap_config = {
+> > +	.reg_bits = 8,
+> > +	.val_bits = 32,
+> > +	.reg_stride = 4,
+> > +	.max_register = DPHY_REG_BYPASS_PLL,
+> > +	.name = "mipi-dphy",
+> > +};
+> > +
+> > +static int phy_write(struct phy *phy, u32 value, unsigned int reg)
+> > +{
+> > +	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = regmap_write(priv->regs, reg, value);
+> > +	if (ret < 0)
+> > +		dev_err(&phy->dev, "Failed to write DPHY reg %d: %d", reg, ret);
+> > +	return ret;
+> > +}
+> > +
+> > +/*
+> > + * Find a ratio close to the desired one using continued fraction
+> > + * approximation ending either at exact match or maximum allowed
+> > + * nominator, denominator.
+> > + */
+> > +static void get_best_ratio(u32 *pnum, u32 *pdenom, unsigned int max_n,
+> > +			   unsigned int max_d)
+> > +{
+> Maybe use u32 for all parameters?
+> That would also match usage below.
+
+Less confusing, done.
+
+> 
+> > +	u32 a = *pnum;
+> > +	u32 b = *pdenom;
+> > +	u32 c;
+> > +	u32 n[] = {0, 1};
+> > +	u32 d[] = {1, 0};
+> > +	u32 whole;
+> > +	unsigned int i = 1;
+> > +
+> > +	while (b) {
+> > +		i ^= 1;
+> > +		whole = a / b;
+> > +		n[i] += (n[i ^ 1] * whole);
+> > +		d[i] += (d[i ^ 1] * whole);
+> > +		if ((n[i] > max_n) || (d[i] > max_d)) {
+> > +			i ^= 1;
+> > +			break;
+> > +		}
+> > +		c = a - (b * whole);
+> > +		a = b;
+> > +		b = c;
+> > +	}
+> > +	*pnum = n[i];
+> > +	*pdenom = d[i];
+> > +}
+> > +
+> > +static int mixel_dphy_config_from_opts(struct phy *phy,
+> > +	       struct phy_configure_opts_mipi_dphy *dphy_opts,
+> > +	       struct mixel_dphy_cfg *cfg)
+> > +{
+> > +	struct mixel_dphy_priv *priv = dev_get_drvdata(phy->dev.parent);
+> > +	unsigned long ref_clk = clk_get_rate(priv->phy_ref_clk);
+> > +	u32 lp_t, numerator, denominator;
+> > +	unsigned long long tmp;
+> > +	u32 n;
+> > +	int i;
+> > +
+> > +	if (dphy_opts->hs_clk_rate > DATA_RATE_MAX_SPEED ||
+> > +	    dphy_opts->hs_clk_rate < DATA_RATE_MIN_SPEED)
+> > +		return -EINVAL;
+> > +
+> > +	numerator = dphy_opts->hs_clk_rate;
+> > +	denominator = ref_clk;
+> > +	get_best_ratio(&numerator, &denominator, 255, 256);
+> > +	if (!numerator || !denominator) {
+> > +		dev_err(&phy->dev, "Invalid %d/%d for %ld/%ld\n",
+> > +			numerator, denominator,
+> > +			dphy_opts->hs_clk_rate, ref_clk);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	while ((numerator < 16) && (denominator <= 128)) {
+> > +		numerator <<= 1;
+> > +		denominator <<= 1;
+> > +	}
+> > +	/*
+> > +	 * CM ranges between 16 and 255
+> > +	 * CN ranges between 1 and 32
+> > +	 * CO is power of 2: 1, 2, 4, 8
+> > +	 */
+> > +	i = __ffs(denominator);
+> > +	if (i > 3)
+> > +		i = 3;
+> > +	cfg->cn = denominator >> i;
+> > +	cfg->co = 1 << i;
+> > +	cfg->cm = numerator;
+> > +
+> > +	if (cfg->cm < 16 || cfg->cm > 255 ||
+> > +	    cfg->cn < 1 || cfg->cn > 32 ||
+> > +	    cfg->co < 1 || cfg->co > 8) {
+> > +		dev_err(&phy->dev, "Invalid CM/CN/CO values: %u/%u/%u\n",
+> > +			cfg->cm, cfg->cn, cfg->co);
+> > +		dev_err(&phy->dev, "for hs_clk/ref_clk=%ld/%ld ⩰ %d/%d\n",
+> Hmm, my mutt does not like this symbol?  ⩰
+
+Changed to the ascii '~'.
+
+> 
+> > +
+> > +	phy_write(phy, PWR_ON, DPHY_PD_PLL);
+> > +	ret = regmap_read_poll_timeout(priv->regs, DPHY_LOCK, locked,
+> > +				       locked, PLL_LOCK_SLEEP,
+> > +				       PLL_LOCK_TIMEOUT);
+> > +	if (ret < 0) {
+> > +		dev_err(&phy->dev, "Could not get DPHY lock (%d)!\n", ret);
+> > +		goto clock_disable;
+> > +	}
+> > +	phy_write(phy, PWR_ON, DPHY_PD_DPHY);
+> 
+> Are then no other timing constrains than the poll of DPHY_LOCK?
+> Some panel (I know this is not a panel, but amyway) have some
+> ridgid timing constrains around power ON/OFF.
+
+NXPs BSP doesn't have any additional timing constraints and that's the
+best we have in that area. Even the new imx8mq reference manual
+published last week isn't any more precise regarding DPHY power up.
+> 
+> > +
+> > +MODULE_AUTHOR("NXP Semiconductor");
+> > +MODULE_DESCRIPTION("Mixel MIPI-DSI PHY driver");
+> 
+> > +MODULE_LICENSE("GPL v2");
+> Does this match the SPDX tag?
+
+I've changed this to MODULE_LICENSE("GPL") since this seems to be used
+by driver that are v2+.
+
+> "
+> > +// SPDX-License-Identifier: GPL-2.0+
+> "
+> 
+Thanks!
+ -- Guido
