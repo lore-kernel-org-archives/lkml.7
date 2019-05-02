@@ -2,148 +2,132 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842C2C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD3DC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456E72085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:00:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3jKZzup"
+	by mail.kernel.org (Postfix) with ESMTP id 2F4A22063F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfEBU76 (ORCPT
+        id S1726324AbfEBVBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 16:59:58 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:36886 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfEBU76 (ORCPT
+        Thu, 2 May 2019 17:01:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42512 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfEBVBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 16:59:58 -0400
-Received: by mail-it1-f196.google.com with SMTP id r85so5886143itc.2;
-        Thu, 02 May 2019 13:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DRhbL5cuEkeQdyIknIrO0b3fJ/vf0E8zx48sg0Cxl8U=;
-        b=U3jKZzupr7YFHDHjWLHoqS+eWxDWlp3xXWj8Z5pC+mmOJnsF61+sR51YnhNRhpqqf4
-         kOFCatyyKZKQTGoc/XoOwHkBQvyBYp9UK8jpelP57xrPqe3JYs9M7SYm26z+wcHBXy09
-         e0f+wQI1/DoFAT/6b3bOTWK3zPrW42HuTFmij0f8ANtjwRNsSOYPMTUXQY/GwO699ASR
-         DioCQEKCU95kNHPlwZ+ZkouQ9d8xOdcQoo8gwSvcEwB7utmqs9UCYy7U2mT2ns9dHluz
-         8XddbGbNA5H69hZWSUNLyyyjLGqKkP1zHGXEaYOgxMgtIIncitbXLc9KVt3osb+6Kuf8
-         poJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DRhbL5cuEkeQdyIknIrO0b3fJ/vf0E8zx48sg0Cxl8U=;
-        b=Cyfh5cIaZifhiN2YLg9QZpQEJpzRHwGe7/1Ff8hH8nFvVvtCEA+MTWBANeOl8nIFVw
-         ufjdc/ByWqjyt7Ajpcd4fcsTjrFxgTjNrJcymxU1GzUhJBWWud1n8B2S4pQyXBJOotxb
-         lbOwfgqCYv1GQskBIbooqBCGJhK5z7fCH45C5SLX+vfTDoVrms8H5KsqTwR5J+uf0E2G
-         Uws8Ts77/ddL89UDl6dajoK+UwMCV4GbDQH77DWlepXQjVUGKSRjmM+BWWDu7AW2SZEq
-         XbO7hhcrTc+RUjArcbyjPDxj5emyhlh6bn3zin7I/5tAkziPkh8QvVkptxRyB7cQVdsq
-         G2GQ==
-X-Gm-Message-State: APjAAAXhB44uihki4WyH5xRHGa99uqI++AEDEzsGRmugd2UTIcV7m8mi
-        5Fwv9NsEgOH0EdWSCqL+6+yx6Hp7pItXmbdpDm0=
-X-Google-Smtp-Source: APXvYqxLhrSPaDtNkdTFNC1d3ZAsLyZdGcyVekYpH9xAia0RfeIvgxznK/SATtlo/MkQohnnAvLNOrhfDgiB5K2eoJo=
-X-Received: by 2002:a24:ce44:: with SMTP id v65mr4270596itg.146.1556830797128;
- Thu, 02 May 2019 13:59:57 -0700 (PDT)
+        Thu, 2 May 2019 17:01:42 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 815DC2804F8
+Received: by earth.universe (Postfix, from userid 1000)
+        id C4E233C0D1B; Thu,  2 May 2019 23:01:38 +0200 (CEST)
+Date:   Thu, 2 May 2019 23:01:38 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-pm@vger.kernel.org,
+        Sameer Nanda <snanda@chromium.org>, bleung@chromium.org,
+        rjw@rjwysocki.net, gwendal@chromium.org,
+        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        groeck@chromium.org, Adam.Thomson.Opensource@diasemi.com,
+        kernel@collabora.com
+Subject: Re: [RESEND PATCH v3 1/2] power: supply: add input voltage limit
+ property
+Message-ID: <20190502210138.ekrjvg4jex5x2tbo@earth.universe>
+References: <20190415220049.14924-1-enric.balletbo@collabora.com>
+ <20190416071941.GB14538@amd>
+ <8d1f70a7-46d6-f278-f58c-6a7e7a644d46@collabora.com>
 MIME-Version: 1.0
-References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
- <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
- <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca> <CAKgT0Uc_OUAcPfRe6yCSwpYXCXomOXKG2Yvy9c1_1RJn-7Cb5g@mail.gmail.com>
- <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca> <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
- <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca> <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
-In-Reply-To: <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 2 May 2019 13:59:46 -0700
-Message-ID: <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
-To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vwdv5qwmkpp26lsd"
+Content-Disposition: inline
+In-Reply-To: <8d1f70a7-46d6-f278-f58c-6a7e7a644d46@collabora.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 11:52 AM Lennart Sorensen
-<lsorense@csclub.uwaterloo.ca> wrote:
->
-> On Thu, May 02, 2019 at 01:55:13PM -0400, Lennart Sorensen wrote:
-> > Here is the same packets as before with the link level header included
-> > (I forgot to use -XX rather than -X):
-> >
-> > 13:43:49.081567 54:ee:75:30:f1:e1 > a4:bf:01:4e:0c:87, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 21783, offset 0, flags [DF], proto UDP (17), length 160)
-> >     1.99.99.2.4500 > 1.99.99.1.4500: [no cksum] UDP-encap: ESP(spi=0x8de82290,seq=0x6a56), length 132
-> >         0x0000:  a4bf 014e 0c87 54ee 7530 f1e1 0800 4500  ...N..T.u0....E.
-> >         0x0010:  00a0 5517 4000 4011 1c6d 0163 6302 0163  ..U.@.@..m.cc..c
-> >         0x0020:  6301 1194 1194 008c 0000 8de8 2290 0000  c..........."...
-> >         0x0030:  6a56 72da 0734 52f6 406e 9346 f946 c698  jVr..4R.@n.F.F..
-> >         0x0040:  a38c 280c 94da 53e1 91e0 35bf 812a 4500  ..(...S...5..*E.
-> >         0x0050:  6003 ca7d 6872 a50b d41a 5c4d 7c22 3fb8  `..}hr....\M|"?.
-> >         0x0060:  56d8 2a0f bc3f d3a6 5853 682c 914c c1b1  V.*..?..XSh,.L..
-> >         0x0070:  c5c3 94e8 4789 d8b4 4ab4 e5f9 d20a e5ef  ....G...J.......
-> >         0x0080:  de1d 05dd e98a 996b 5c11 6657 b667 6af1  .......k\.fW.gj.
-> >         0x0090:  2a97 694b 16de 74e2 f8fe 13a3 d45e e3e9  *.iK..t......^..
-> >         0x00a0:  f0b1 b83b 99e3 55cb b40b 5ba8 9c23       ...;..U...[..#
-> > 13:43:49.081658 a4:bf:01:4e:0c:87 > 54:ee:75:30:f1:e1, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 44552, offset 0, flags [none], proto UDP (17), length 160)
-> >     1.99.99.1.4500 > 1.99.99.2.4500: [no cksum] UDP-encap: ESP(spi=0x1d4ecfdf,seq=0x6a56), length 132
-> >         0x0000:  54ee 7530 f1e1 a4bf 014e 0c87 0800 4500  T.u0.....N....E.
-> >         0x0010:  00a0 ae08 0000 4011 037c 0163 6301 0163  ......@..|.cc..c
-> >         0x0020:  6302 1194 1194 008c 0000 1d4e cfdf 0000  c..........N....
-> >         0x0030:  6a56 28ca 4809 8933 911d f2be 4510 e757  jV(.H..3....E..W
-> >         0x0040:  3885 7d26 5238 8c58 38e3 6c07 2f8e 335a  8.}&R8.X8.l./.3Z
-> >         0x0050:  6d48 2a72 4619 e8a3 c421 bc54 48b2 6239  mH*rF....!.TH.b9
-> >         0x0060:  5e07 7e89 a68e 0161 4e6a 5b6f 8b89 9f53  ^.~....aNj[o...S
-> >         0x0070:  4c40 1c6c d159 60f8 68e7 24db 8b21 2ec2  L@.l.Y`.h.$..!..
-> >         0x0080:  4b67 9b83 643b b0ac 6e2d bf4f 1ee1 9508  Kg..d;..n-.O....
-> >         0x0090:  d1bd dcd4 74ee e4dc 78d0 578a 5905 1f4d  ....t...x.W.Y..M
-> >         0x00a0:  74be e643 910b b4d3 f428 8822 e22b       t..C.....(.".+
-> >
-> > I will try to see what I can do with netperf.
->
-> Hmm, maybe UDP isn't doing as well as I thought.
->
-> Playing with packit doing this:
->
-> packit -t UDP -d 1.99.99.1 -D 32432 -S 4500 -i enp0s25 -h -p "0x 00 11 22 33 44 55 66 77 88 99 00 11 22 33 44 55 66 77 88 99 00 11 22 33 44 55 66 77 88 99" -c 5
->
-> I have played with the source and destination port numbers, and so far
-> I have only managed to hit queues 0, 1 and 2 (mostly 0 and 2).  No port
-> number I have tried has made it hit any other queue.  That is weird.
-> Making random changes ought to distribute more than that.  And changing
-> the hkey certainly ought to make a difference, and so far it doesn't
-> seem to for these packets (I know I saw icmp move around just fine before
-> when changing the hkey).
->
-> --
-> Len Sorensen
 
-If I recall correctly RSS is only using something like the lower 9
-bits (indirection table size of 512) of the resultant hash on the
-X722, even fewer if you have fewer queues that are a power of 2 and
-happen to program the indirection table in a round robin fashion. So
-for example on my system setup with 32 queues it is technically only
-using the lower 5 bits of the hash.
+--vwdv5qwmkpp26lsd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-One issue as a result of that is that you can end up with swaths of
-bits that don't really seem to impact the hash all that much since it
-will never actually change those bits of the resultant hash. In order
-to guarantee that every bit in the input impacts the hash you have to
-make certain you have to gaps in the key wider than the bits you
-examine in the final hash.
+Hi,
 
-A quick and dirty way to verify that the hash key is part of the issue
-would be to use something like a simple repeating value such as AA:55
-as your hash key. With something like that every bit you change in the
-UDP port number should result in a change in the final RSS hash for
-queue counts of 3 or greater. The downside is the upper 16 bits of the
-hash are identical to the lower 16 so the actual hash value itself
-isn't as useful.
+On Tue, Apr 16, 2019 at 10:42:30AM +0200, Enric Balletbo i Serra wrote:
+> On 16/4/19 9:19, Pavel Machek wrote:
+> >> This patch exposes a new property, similar to input current limit, to
+> >> re-configure the maximum voltage from the external supply at runtime
+> >> based on system-level knowledge or user input.
+> >=20
+> > Well, and I suspect it should expose input power limit, not input
+> > voltage limit.
+>=20
+> Oh, ok, I thought we were agree that input voltage had sense after had so=
+me
+> discussion in v3. Seems that no, let me try to give you another example...
+>=20
+> > DC-DC convertor efficiency normally does not much depend on input
+> > voltage....
+>=20
+> As we said we have a heat "problem" due the internal voltage conversions.
+>=20
+> Lets assume you have a linear regulator instead with a Vin range from 5V =
+to 9V
+> and we want an output of 3.3V/1A
+>
+> For 9V:
+>  Input power : P(in) =3D 9V x 1A =3D 9W
+>  Output power: P(out) =3D 3.3V x 1A =3D 3.3W
+>  Regulator power dissipated: P(reg) =3D P(in) - P(out) =3D 9W - 3.3W =3D =
+5.7W
+>=20
+> For 5V:
+>  Input power : P(in) =3D 5V x 1A =3D 5W
+>  Output power: P(out) =3D 3.3V x 1A =3D 3.3W
+>  Regulator power dissipated: P(reg) =3D P(in) - P(out) =3D 5W - 3.3W =3D =
+1,7W
+>=20
+> In the first case the regulator needs to dissipate more power, hence the
+> temperature is greater than the second case.
+
+I would be surprised, if a linear regulator is being used in this
+place :) That would basically render functionality of higher voltage
+completley useless and a good reason to always limit to 5V. For the
+generic case I agree with Pavel, that control over the power (voltage
+* current) is the better choice. Still I believe it makes sense to
+have a control knob for the voltage available, since some hardware
+designs suck.
+
+For example the bad hardware design might be the remote side,
+that has issues providing some voltages and this would make it
+possible to debug that.
+
+-- Sebastian
+
+--vwdv5qwmkpp26lsd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzLWq0ACgkQ2O7X88g7
++pqzKhAAk5VXBCW5KI1uBgScQTbWw/6eWgTGX9m/vUX5YVUhvRBfVg0h4l6HmOJl
+bbg71lCAGtp0xS0h9YPxuU1MrrLW/HlnbSdz69/WB6zPeKbYx3Wn4v/3M1UnbcCf
+HE0svSdJhyFY0Iyo7g3VMiJRjDesw1ceUoVHDSD092o/H4PECMuFFqqFnCes4j3X
+Fgaztk2H6EEpuJ7cmov/266hmL59SsDBx05O0Zk2ezVku1eoYh4BHS1stt3jMOZj
+xbTo7Meq0oIra6EpB1jdKh7DAkwRNkaChlLuXJdZZ6VkmULCQtQ6K91/mG3qg9rR
+MEbPJDGuzbB+zqYoCLVHEc7ykhgxiAuWoXTe9NB9rR9JfQATtworXuUg3M715/Id
+D52e7xbLMR1CGxPKeybUmg+oJE6dUDnGSwRHnTFOL222hmE5hvEXI8i0dNUV0dqQ
+s2aqeMaagd10jWmdDazKYGC6xGj616XqNABKwo0QzKaWprhhtF6qE5/EyBtywECX
+4V3KoF3H9a/47hj9dXEy3BHsqHE4j9vfUuT5GxTHtDaEYiR+ZmOamixd6m3jrkL6
+zc6dNZV5Sa1I39Ofi4F/Wu+ds2kP3Akm8HlvAzic4i7CjeYbcTuP9WuPvtZ5Lt/U
+x6zMXiOOMlghHzwmbrFkn9DRSot0Pk00QBFFU5F4HEm89utFRHE=
+=wEeJ
+-----END PGP SIGNATURE-----
+
+--vwdv5qwmkpp26lsd--
