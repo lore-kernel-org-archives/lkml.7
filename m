@@ -2,139 +2,139 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D13EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4BCC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07C6204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811645;
-	bh=oOKUrr0Ez26leioFSInvPPnvZigoZ19MteDvUal0BX4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAvKgE3EYQdURrwsleIVcHwDqmSusaUfxsAoEd5T7m9+SNejDDuxRcmfwf4QcV94S
-	 NpsaI6ekLoFUmxSrdzLiSs9e5aM+2QsGhhq0OQy53qVqUhJYbDjWH3jDvqt7shK9yG
-	 mMPZaW0bUOwJNSxk4fD5tgL9VSMOvZrsOJzZ9DqU=
+	by mail.kernel.org (Postfix) with ESMTP id 11F7320449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfEBPkp (ORCPT
+        id S1728759AbfEBPkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:40:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728338AbfEBP3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:29:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E36D120B7C;
-        Thu,  2 May 2019 15:29:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810945;
-        bh=oOKUrr0Ez26leioFSInvPPnvZigoZ19MteDvUal0BX4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q/v/paov/W2XXBt1AZRWgIrINpFsnBVYGwKg17W8QSwWhm36sfzzg7kmI8paZWZPU
-         qh6jHLpXYo3GGARPWAzyCbjddkJWp0WH43wYT0Am+UKWgDuS8xEjHN6gGqlRcClTKp
-         MdelJ2d7rDZVK764Exn5OjDPSWFXwNtbVxgjQGXc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 017/101] net: stmmac: dont set own bit too early for jumbo frames
-Date:   Thu,  2 May 2019 17:20:19 +0200
-Message-Id: <20190502143341.179623330@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
-References: <20190502143339.434882399@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 2 May 2019 11:40:47 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:59304 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728322AbfEBP3E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:04 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hMDdr-0006zB-2J; Thu, 02 May 2019 17:28:59 +0200
+Message-ID: <d0cfa4c1a17c336f1ad48a31897787469c302092.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next 1/3] genetlink: do not validate dump requests
+ if there is no policy
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     David Ahern <dsahern@gmail.com>, Michal Kubecek <mkubecek@suse.cz>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 02 May 2019 17:28:57 +0200
+In-Reply-To: <fd3b0c89-2475-166d-e2b8-1479af7b79bc@gmail.com> (sfid-20190502_153641_028378_FAA2A3FF)
+References: <cover.1556798793.git.mkubecek@suse.cz>
+         <0a54a4db49c20e76a998ea3e4548b22637fbad34.1556798793.git.mkubecek@suse.cz>
+         <031933f3fc4b26e284912771b480c87483574bea.camel@sipsolutions.net>
+         <20190502131023.GD21672@unicorn.suse.cz>
+         <ab9b48a0e21d0a9e5069045c23db36f43e4356e3.camel@sipsolutions.net>
+         <20190502133231.GF21672@unicorn.suse.cz>
+         <fd3b0c89-2475-166d-e2b8-1479af7b79bc@gmail.com>
+         (sfid-20190502_153641_028378_FAA2A3FF)
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 80acbed9f8fca1db3fbe915540b756f048aa0fd7 ]
+On Thu, 2019-05-02 at 07:36 -0600, David Ahern wrote:
+> On 5/2/19 7:32 AM, Michal Kubecek wrote:
+> > Wouldn't it mean effecitvely ending up with only one command (in
+> > genetlink sense) and having to distinguish actual commands with
+> > atributes? Even if I wanted to have just "get" and "set" command, common
+> > policy wouldn't allow me to say which attributes are allowed for each of
+> > them.
+> 
+> yes, I have been stuck on that as well.
+> 
+> There are a number of RTA attributes that are only valid for GET
+> requests or only used in the response or only valid in NEW requests.
+> Right now there is no discriminator when validating policies and the
+> patch set to expose the policies to userspace
 
-Commit 0e80bdc9a72d ("stmmac: first frame prep at the end of xmit
-routine") overlooked jumbo frames when re-ordering the code, and as a
-result the own bit was not getting set anymore for the first jumbo frame
-descriptor. Commit 487e2e22ab79 ("net: stmmac: Set OWN bit for jumbo
-frames") tried to fix this, but now the bit is getting set too early and
-the DMA may start while we are still setting up the remaining descriptors.
-And with the chain mode the own bit remains still unset.
+Yeah. As I've been discussing with Pablo in various threads recently,
+this is definitely something we're missing.
 
-Fix by setting the own bit at the end of xmit also with jumbo frames.
+As I said there though, I think it's something we should treat as
+orthogonal to the policies.
 
-Fixes: 0e80bdc9a72d ("stmmac: first frame prep at the end of xmit routine")
-Fixes: 487e2e22ab79 ("net: stmmac: Set OWN bit for jumbo frames")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Acked-by: Jose Abreu <joabreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- drivers/net/ethernet/stmicro/stmmac/ring_mode.c   |  4 ++--
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 ++++++++------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+I haven't looked at your ethtool patches really now (if you have a git
+tree that'd be nice), but I saw e.g.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-index c0c75c111abb..afed0f0f4027 100644
---- a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-@@ -59,7 +59,7 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
- 
- 		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
- 		stmmac_prepare_tx_desc(priv, desc, 1, bmax, csum,
--				STMMAC_RING_MODE, 1, false, skb->len);
-+				STMMAC_RING_MODE, 0, false, skb->len);
- 		tx_q->tx_skbuff[entry] = NULL;
- 		entry = STMMAC_GET_ENTRY(entry, DMA_TX_SIZE);
- 
-@@ -91,7 +91,7 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
- 		tx_q->tx_skbuff_dma[entry].is_jumbo = true;
- 		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
- 		stmmac_prepare_tx_desc(priv, desc, 1, nopaged_len, csum,
--				STMMAC_RING_MODE, 1, true, skb->len);
-+				STMMAC_RING_MODE, 0, true, skb->len);
- 	}
- 
- 	tx_q->cur_tx = entry;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 1d8d6f2ddfd6..0bc3632880b5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3190,14 +3190,16 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 		stmmac_prepare_tx_desc(priv, first, 1, nopaged_len,
- 				csum_insertion, priv->mode, 1, last_segment,
- 				skb->len);
--
--		/* The own bit must be the latest setting done when prepare the
--		 * descriptor and then barrier is needed to make sure that
--		 * all is coherent before granting the DMA engine.
--		 */
--		wmb();
-+	} else {
-+		stmmac_set_tx_owner(priv, first);
- 	}
- 
-+	/* The own bit must be the latest setting done when prepare the
-+	 * descriptor and then barrier is needed to make sure that
-+	 * all is coherent before granting the DMA engine.
-+	 */
-+	wmb();
++When appropriate, network device is identified by a nested attribute named
++ETHA_*_DEV. This attribute can contain
 +
- 	netdev_tx_sent_queue(netdev_get_tx_queue(dev, queue), skb->len);
- 
- 	stmmac_enable_dma_transmission(priv, priv->ioaddr);
--- 
-2.19.1
++    ETHA_DEV_INDEX	(u32)		device ifindex
++    ETHA_DEV_NAME	(string)	device name
+
+Presumably, this is valid for each and every command, right?
+
+I'm not sure I understand the "ETHA_*_DEV" part, but splitting the
+policy per command means that things like this that are available/valid
+for each command need to be stated over and over again. This opens up
+the very easy possibility that you have one command that takes an
+ETHA_DEV_INDEX as u32, and another that - for some reason - takes a u64
+for example, or similar confusion between the same attribute stated in
+different policies.
+
+This is why I believe that when we have a flat namespace for attributes,
+like ETHA_*, we should also have a flat policy for those attributes, and
+that's why I made the genetlink to have a single policy.
+
+At the same time, I do realize that this is not ideal. So far I've sort
+of pushed this to be something that we should treat orthogonally to the
+validation for the above reasons, i.e. *not* state this specifically in
+the policy.
+
+If we were able to express this in C, I'd probably say we should have
+something like
+
+static const struct genl_ops ops[] = {
+        {
+                .cmd = MY_CMD,
+                .doit = my_cmd_doit,
+		.valid_attrs = { MY_ATTR_A, MY_ATTR_B },
+        },
+
+	...
+};
+
+However, there's no way to express this in C code, except for
+
+static const u16 my_cmd_valid_attrs[] = { MY_ATTR_A, MY_ATTR_B, 0 };
+
+static const struct genl_ops ops[] = {
+        {
+                .cmd = MY_CMD,
+                .doit = my_cmd_doit,
+		.valid_attrs = my_cmd_valid_attrs,
+        },
+
+	...
+};
+
+which is clearly ugly to write. We could generate this code from a
+domain-specific language like Pablo suggested, but I'm not really sure
+that's ideal either.
 
 
+Regardless, I think we should solve this problem orthogonally from the
+policy, given that otherwise we can end up with the same attribute
+meaning different things in different commands.
+
+johannes
 
