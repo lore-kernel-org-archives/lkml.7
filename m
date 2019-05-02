@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426FDC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AA2C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12275216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D468321743
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810555;
-	bh=RvbaS50n8BAOHNKetrV2fo2cbJ5HTC4bN1DVMO5NOA0=;
+	s=default; t=1556810558;
+	bh=aK1j+ztpyv7vMhEEePNUn/E/rZXm/tqeKprs5SZhO24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eU98Fg1XhltsbqP+dWOzCjRIyrOiu9PZQYLOefrp64iS4XQcwSd0LFitaqtx2qkKG
-	 EjuelAwU2Fnx2wjP7IDZlmpSyzjUMeLCQQgKhmETJfDEIUpD2Gcv/qe/Mf2xNGna4t
-	 gtmRzoPAjKTZwA/mqCilHMVsAvQGc7Nw4HriAsX4=
+	b=ddLs4xoL37wVCHI17PZuUWtckQ1tz6Dk5x4cWi2T2OzkCi+t1oLfaIwV82s08HVJw
+	 wrhOqzjFKZUsHsFlfRb8qZuCfBAyPm07kHkKsuBcI/bKtCJDRFoTop8BXHLBRGnsHh
+	 Zd33VpmweRhH8rF+tmzWt3F3w8mXviJWOUAanojs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfEBPWd (ORCPT
+        id S1726762AbfEBPWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:22:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37864 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbfEBPWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:31 -0400
+        id S1726711AbfEBPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5336B208C4;
-        Thu,  2 May 2019 15:22:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8638214DA;
+        Thu,  2 May 2019 15:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810550;
-        bh=RvbaS50n8BAOHNKetrV2fo2cbJ5HTC4bN1DVMO5NOA0=;
+        s=default; t=1556810553;
+        bh=aK1j+ztpyv7vMhEEePNUn/E/rZXm/tqeKprs5SZhO24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WatU6FwmnLg5i3jsbad8Uo5vrl0oUpIHnX6tm2m49yWKVHSmFpOB1/ECeW9BvKltt
-         lkOjqpJ+DpqP0V7Bn1V0D3d6T7zMl39PMQLq0omwJP+SXeqST+xvlf+xwl5tcpEXVZ
-         0wTSoocIdpuDdQxVh2iJFjjk6fgKtmqfek9x1uPU=
+        b=e3AX4piTPTLLHB2YSUcnO6QPCcz7EoEldpqNM2J7KOiFAOY22iDQvq7/kCWStgKRz
+         ++YIXbW/E0O3uQHvB8A8YwSmFk40NqBYW5eYzu9Q9RPP75MtTlyfjxC8wKT2Lqg1w/
+         DJqExesx7wMn9AOHVzuGCnsADkSOy2OOeF6sE8OI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 23/32] net: ethernet: ti: fix possible object reference leak
-Date:   Thu,  2 May 2019 17:21:09 +0200
-Message-Id: <20190502143321.467458638@linuxfoundation.org>
+Subject: [PATCH 4.9 24/32] scsi: qla4xxx: fix a potential NULL pointer dereference
+Date:   Thu,  2 May 2019 17:21:10 +0200
+Message-Id: <20190502143321.601253652@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -62,51 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 75eac7b5f68b0a0671e795ac636457ee27cc11d8 ]
+[ Upstream commit fba1bdd2a9a93f3e2181ec1936a3c2f6b37e7ed6 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid NULL
+pointer dereference.
 
-Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ti/netcp_ethss.c:3661:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
-./drivers/net/ethernet/ti/netcp_ethss.c:3665:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Wingman Kwok <w-kwok2@ti.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index d543298d6750..ff24524e7f46 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -3122,12 +3122,16 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
- 
- 	ret = netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
- 				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
- 
- 	ret = netcp_txpipe_open(&gbe_dev->tx_pipe);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
- 
- 	/* Create network interfaces */
- 	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index f9f899ec9427..c158967b59d7 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -3207,6 +3207,8 @@ static int qla4xxx_conn_bind(struct iscsi_cls_session *cls_session,
+ 	if (iscsi_conn_bind(cls_session, cls_conn, is_leading))
+ 		return -EINVAL;
+ 	ep = iscsi_lookup_endpoint(transport_fd);
++	if (!ep)
++		return -EINVAL;
+ 	conn = cls_conn->dd_data;
+ 	qla_conn = conn->dd_data;
+ 	qla_conn->qla_ep = ep->dd_data;
 -- 
 2.19.1
 
