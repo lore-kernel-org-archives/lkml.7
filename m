@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81061C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF605C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF4920645
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5A52133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfEBMwS (ORCPT
+        id S1726567AbfEBMwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:52:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34592 "EHLO mx1.suse.de"
+        Thu, 2 May 2019 08:52:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34622 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726267AbfEBMwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:52:16 -0400
+        id S1726506AbfEBMwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:52:17 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BCDC9AE9D;
-        Thu,  2 May 2019 12:52:14 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 916A7AEDB;
+        Thu,  2 May 2019 12:52:16 +0000 (UTC)
 From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
 To:     gorcunov@gmail.com
 Cc:     akpm@linux-foundation.org, arunks@codeaurora.org, brgl@bgdev.pl,
@@ -30,9 +30,9 @@ Cc:     akpm@linux-foundation.org, arunks@codeaurora.org, brgl@bgdev.pl,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         mguzik@redhat.com, mhocko@kernel.org, mkoutny@suse.com,
         rppt@linux.ibm.com, vbabka@suse.cz, ktkhai@virtuozzo.com
-Subject: [PATCH v3 1/2] prctl_set_mm: Refactor checks from validate_prctl_map
-Date:   Thu,  2 May 2019 14:52:02 +0200
-Message-Id: <20190502125203.24014-2-mkoutny@suse.com>
+Subject: [PATCH v3 2/2] prctl_set_mm: downgrade mmap_sem to read lock
+Date:   Thu,  2 May 2019 14:52:03 +0200
+Message-Id: <20190502125203.24014-3-mkoutny@suse.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20190502125203.24014-1-mkoutny@suse.com>
 References: <0a48e0a2-a282-159e-a56e-201fbc0faa91@virtuozzo.com>
@@ -45,132 +45,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Despite comment of validate_prctl_map claims there are no capability
-checks, it is not completely true since commit 4d28df6152aa ("prctl:
-Allow local CAP_SYS_ADMIN changing exe_file"). Extract the check out of
-the function and make the function perform purely arithmetic checks.
+The commit a3b609ef9f8b ("proc read mm's {arg,env}_{start,end} with mmap
+semaphore taken.") added synchronization of reading argument/environment
+boundaries under mmap_sem. Later commit 88aa7cc688d4 ("mm: introduce
+arg_lock to protect arg_start|end and env_start|end in mm_struct")
+avoided the coarse use of mmap_sem in similar situations. But there
+still remained two places that (mis)use mmap_sem.
 
-This patch should not change any behavior, it is mere refactoring for
-following patch.
+get_cmdline should also use arg_lock instead of mmap_sem when it reads the
+boundaries.
 
-v1, v2: ---
-v3: Remove unused mm variable from validate_prctl_map_addr
+The second place that should use arg_lock is in prctl_set_mm. By
+protecting the boundaries fields with the arg_lock, we can downgrade
+mmap_sem to reader lock (analogous to what we already do in
+prctl_set_mm_map).
 
-CC: Kirill Tkhai <ktkhai@virtuozzo.com>
+v2: call find_vma without arg_lock held
+v3: squashed get_cmdline arg_lock patch
+
+Fixes: 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end and env_start|end in mm_struct")
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Mateusz Guzik <mguzik@redhat.com>
 CC: Cyrill Gorcunov <gorcunov@gmail.com>
+Co-developed-by: Laurent Dufour <ldufour@linux.ibm.com>
+Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 Signed-off-by: Michal Koutný <mkoutny@suse.com>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
- kernel/sys.c | 46 ++++++++++++++++++++--------------------------
- 1 file changed, 20 insertions(+), 26 deletions(-)
+ kernel/sys.c | 10 ++++++++--
+ mm/util.c    |  4 ++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/sys.c b/kernel/sys.c
-index 12df0e5434b8..5e0a5edf47f8 100644
+index 5e0a5edf47f8..14be57840511 100644
 --- a/kernel/sys.c
 +++ b/kernel/sys.c
-@@ -1882,13 +1882,14 @@ static int prctl_set_mm_exe_file(struct mm_struct *mm, unsigned int fd)
- }
+@@ -2122,9 +2122,14 @@ static int prctl_set_mm(int opt, unsigned long addr,
  
- /*
-+ * Check arithmetic relations of passed addresses.
-+ *
-  * WARNING: we don't require any capability here so be very careful
-  * in what is allowed for modification from userspace.
-  */
--static int validate_prctl_map(struct prctl_mm_map *prctl_map)
-+static int validate_prctl_map_addr(struct prctl_mm_map *prctl_map)
- {
- 	unsigned long mmap_max_addr = TASK_SIZE;
--	struct mm_struct *mm = current->mm;
- 	int error = -EINVAL, i;
+ 	error = -EINVAL;
  
- 	static const unsigned char offsets[] = {
-@@ -1949,24 +1950,6 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
- 			      prctl_map->start_data))
- 			goto out;
+-	down_write(&mm->mmap_sem);
++	/*
++	 * arg_lock protects concurent updates of arg boundaries, we need mmap_sem for
++	 * a) concurrent sys_brk, b) finding VMA for addr validation.
++	 */
++	down_read(&mm->mmap_sem);
+ 	vma = find_vma(mm, addr);
  
--	/*
--	 * Someone is trying to cheat the auxv vector.
--	 */
--	if (prctl_map->auxv_size) {
--		if (!prctl_map->auxv || prctl_map->auxv_size > sizeof(mm->saved_auxv))
--			goto out;
--	}
--
--	/*
--	 * Finally, make sure the caller has the rights to
--	 * change /proc/pid/exe link: only local sys admin should
--	 * be allowed to.
--	 */
--	if (prctl_map->exe_fd != (u32)-1) {
--		if (!ns_capable(current_user_ns(), CAP_SYS_ADMIN))
--			goto out;
--	}
--
++	spin_lock(&mm->arg_lock);
+ 	prctl_map.start_code	= mm->start_code;
+ 	prctl_map.end_code	= mm->end_code;
+ 	prctl_map.start_data	= mm->start_data;
+@@ -2212,7 +2217,8 @@ static int prctl_set_mm(int opt, unsigned long addr,
+ 
  	error = 0;
  out:
+-	up_write(&mm->mmap_sem);
++	spin_unlock(&mm->arg_lock);
++	up_read(&mm->mmap_sem);
  	return error;
-@@ -1993,11 +1976,17 @@ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data
- 	if (copy_from_user(&prctl_map, addr, sizeof(prctl_map)))
- 		return -EFAULT;
+ }
  
--	error = validate_prctl_map(&prctl_map);
-+	error = validate_prctl_map_addr(&prctl_map);
- 	if (error)
- 		return error;
+diff --git a/mm/util.c b/mm/util.c
+index 43a2984bccaa..5cf0e84a0823 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -758,12 +758,12 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
+ 	if (!mm->arg_end)
+ 		goto out_mm;	/* Shh! No looking before we're done */
  
- 	if (prctl_map.auxv_size) {
-+		/*
-+		 * Someone is trying to cheat the auxv vector.
-+		 */
-+		if (!prctl_map.auxv || prctl_map.auxv_size > sizeof(mm->saved_auxv))
-+			return -EINVAL;
-+
- 		memset(user_auxv, 0, sizeof(user_auxv));
- 		if (copy_from_user(user_auxv,
- 				   (const void __user *)prctl_map.auxv,
-@@ -2010,6 +1999,14 @@ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data
- 	}
+-	down_read(&mm->mmap_sem);
++	spin_lock(&mm->arg_lock);
+ 	arg_start = mm->arg_start;
+ 	arg_end = mm->arg_end;
+ 	env_start = mm->env_start;
+ 	env_end = mm->env_end;
+-	up_read(&mm->mmap_sem);
++	spin_unlock(&mm->arg_lock);
  
- 	if (prctl_map.exe_fd != (u32)-1) {
-+		/*
-+		 * Make sure the caller has the rights to
-+		 * change /proc/pid/exe link: only local sys admin should
-+		 * be allowed to.
-+		 */
-+		if (!ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-+			return -EINVAL;
-+
- 		error = prctl_set_mm_exe_file(mm, prctl_map.exe_fd);
- 		if (error)
- 			return error;
-@@ -2097,7 +2094,7 @@ static int prctl_set_mm(int opt, unsigned long addr,
- 			unsigned long arg4, unsigned long arg5)
- {
- 	struct mm_struct *mm = current->mm;
--	struct prctl_mm_map prctl_map;
-+	struct prctl_mm_map prctl_map = { .auxv = NULL, .auxv_size = 0, .exe_fd = -1 };
- 	struct vm_area_struct *vma;
- 	int error;
- 
-@@ -2139,9 +2136,6 @@ static int prctl_set_mm(int opt, unsigned long addr,
- 	prctl_map.arg_end	= mm->arg_end;
- 	prctl_map.env_start	= mm->env_start;
- 	prctl_map.env_end	= mm->env_end;
--	prctl_map.auxv		= NULL;
--	prctl_map.auxv_size	= 0;
--	prctl_map.exe_fd	= -1;
- 
- 	switch (opt) {
- 	case PR_SET_MM_START_CODE:
-@@ -2181,7 +2175,7 @@ static int prctl_set_mm(int opt, unsigned long addr,
- 		goto out;
- 	}
- 
--	error = validate_prctl_map(&prctl_map);
-+	error = validate_prctl_map_addr(&prctl_map);
- 	if (error)
- 		goto out;
+ 	len = arg_end - arg_start;
  
 -- 
 2.16.4
