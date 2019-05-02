@@ -2,124 +2,185 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577F6C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95CDC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235342085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757922081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:25:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FZ06Vi01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbfEBVY7 (ORCPT
+        id S1726334AbfEBVZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 17:24:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36244 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfEBVY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 17:24:59 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B2611308620F;
-        Thu,  2 May 2019 21:24:58 +0000 (UTC)
-Received: from x230.aquini.net (dhcp-17-61.bos.redhat.com [10.18.17.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B7D7419C4F;
-        Thu,  2 May 2019 21:24:53 +0000 (UTC)
-Date:   Thu, 2 May 2019 17:24:52 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Joel Savitz <jsavitz@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Micah Morton <mortonm@chromium.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Jann Horn <jannh@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Yury Norov <norov.maillist@gmail.com>
-Subject: Re: [PATCH v2 1/2] kernel/sys: add PR_GET_TASK_SIZE option to
- prctl(2)
-Message-ID: <20190502212451.GA13077@x230.aquini.net>
-References: <1556830342-32307-1-git-send-email-jsavitz@redhat.com>
- <1556830342-32307-2-git-send-email-jsavitz@redhat.com>
+        Thu, 2 May 2019 17:25:20 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:52898 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfEBVZT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 17:25:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1556832314; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=wplknZmLov6wC+mWLkV3AuUEvMpefSHU8GtOCBjTcIg=;
+        b=FZ06Vi01hFrMcldZW3/z1kxvQabQuBdwEOPBVEdXAgy608nqxUqRLdu5BpRtewYJYdj+2T
+        dnBdaDMP8C44qAhVGtfGuzEdu2nP3ZAaRgPWlkVKTR3Y/0ZMlflWFePT/SnzVngb01ivMi
+        W/HmvXMpCCFEmca5P3fEOpRK5ZuWgSY=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/5] clk: ingenic: Add support for divider tables
+Date:   Thu,  2 May 2019 23:24:58 +0200
+Message-Id: <20190502212502.24330-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556830342-32307-2-git-send-email-jsavitz@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 02 May 2019 21:24:59 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 04:52:21PM -0400, Joel Savitz wrote:
-> When PR_GET_TASK_SIZE is passed to prctl, the kernel will attempt to
-> copy the value of TASK_SIZE to the userspace address in arg2.
-> 
-> Suggested-by: Alexey Dobriyan <adobriyan@gmail.com>
-> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
-> ---
->  include/uapi/linux/prctl.h |  3 +++
->  kernel/sys.c               | 10 ++++++++++
->  2 files changed, 13 insertions(+)
-> 
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index 094bb03b9cc2..2335fe0a8db8 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -229,4 +229,7 @@ struct prctl_mm_map {
->  # define PR_PAC_APDBKEY			(1UL << 3)
->  # define PR_PAC_APGAKEY			(1UL << 4)
->  
-> +/* Get the process virtual memory size */
-> +#define PR_GET_TASK_SIZE 		55
-> +
->  #endif /* _LINUX_PRCTL_H */
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index 12df0e5434b8..7ced7dbd035d 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2252,6 +2252,13 @@ static int propagate_has_child_subreaper(struct task_struct *p, void *data)
->  	return 1;
->  }
->  
-> +static int prctl_get_tasksize(void __user * uaddr)
-> +{
-> +	unsigned long task_size = TASK_SIZE;
-> +	return copy_to_user(uaddr, &task_size, sizeof(unsigned long))
-> +			? -EFAULT : 0;
+Some clocks provided on Ingenic SoCs have dividers, whose hardware value
+as written in the register cannot be expressed as an affine function
+to the actual divider value.
 
-Minor pick: I would keep the all of the ternary statement above in the
-same line, to help on improving readability (even though it bursts a
-little longer than 80 columns of text)
+For instance, for the CPU clock on the JZ4770, the dividers are coded as
+follows:
 
-> +}
-> +
->  int __weak arch_prctl_spec_ctrl_get(struct task_struct *t, unsigned long which)
->  {
->  	return -EINVAL;
-> @@ -2486,6 +2493,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->  			return -EINVAL;
->  		error = PAC_RESET_KEYS(me, arg2);
->  		break;
-> +	case PR_GET_TASK_SIZE:
-> +		error = prctl_get_tasksize((void *)arg2) ;
-> +		break;
->  	default:
->  		error = -EINVAL;
->  		break;
-> -- 
-> 2.18.1
-> 
+    ------------------
+    | Bits     | Div |
+    ------------------
+    | 0  0  0  |  1  |
+    | 0  0  1  |  2  |
+    | 0  1  0  |  3  |
+    | 0  1  1  |  4  |
+    | 1  0  0  |  6  |
+    | 1  0  1  |  8  |
+    | 1  1  0  | 12  |
+    ------------------
+
+To support this setup, we introduce a new field in the
+ingenic_cgu_div_info structure that allows to specify the divider table.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/clk/ingenic/cgu.c | 41 +++++++++++++++++++++++++++++++++------
+ drivers/clk/ingenic/cgu.h |  3 +++
+ 2 files changed, 38 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index 510b685212d3..6a8c4fb0f6d5 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -383,8 +383,11 @@ ingenic_clk_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 		div_reg = readl(cgu->base + clk_info->div.reg);
+ 		div = (div_reg >> clk_info->div.shift) &
+ 		      GENMASK(clk_info->div.bits - 1, 0);
+-		div += 1;
+-		div *= clk_info->div.div;
++
++		if (clk_info->div.div_table)
++			div = clk_info->div.div_table[div];
++		else
++			div = (div + 1) * clk_info->div.div;
+ 
+ 		rate /= div;
+ 	} else if (clk_info->type & CGU_CLK_FIXDIV) {
+@@ -394,16 +397,37 @@ ingenic_clk_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	return rate;
+ }
+ 
++static unsigned int
++ingenic_clk_calc_hw_div(const struct ingenic_cgu_clk_info *clk_info,
++			unsigned int div)
++{
++	unsigned int i;
++
++	for (i = 0; i < (1 << clk_info->div.bits)
++				&& clk_info->div.div_table[i]; i++) {
++		if (clk_info->div.div_table[i] >= div)
++			return i;
++	}
++
++	return i - 1;
++}
++
+ static unsigned
+ ingenic_clk_calc_div(const struct ingenic_cgu_clk_info *clk_info,
+ 		     unsigned long parent_rate, unsigned long req_rate)
+ {
+-	unsigned div;
++	unsigned int div, hw_div;
+ 
+ 	/* calculate the divide */
+ 	div = DIV_ROUND_UP(parent_rate, req_rate);
+ 
+-	/* and impose hardware constraints */
++	if (clk_info->div.div_table) {
++		hw_div = ingenic_clk_calc_hw_div(clk_info, div);
++
++		return clk_info->div.div_table[hw_div];
++	}
++
++	/* Impose hardware constraints */
+ 	div = min_t(unsigned, div, 1 << clk_info->div.bits);
+ 	div = max_t(unsigned, div, 1);
+ 
+@@ -446,7 +470,7 @@ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	const struct ingenic_cgu_clk_info *clk_info;
+ 	const unsigned timeout = 100;
+ 	unsigned long rate, flags;
+-	unsigned div, i;
++	unsigned int hw_div, div, i;
+ 	u32 reg, mask;
+ 	int ret = 0;
+ 
+@@ -459,13 +483,18 @@ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 		if (rate != req_rate)
+ 			return -EINVAL;
+ 
++		if (clk_info->div.div_table)
++			hw_div = ingenic_clk_calc_hw_div(clk_info, div);
++		else
++			hw_div = ((div / clk_info->div.div) - 1);
++
+ 		spin_lock_irqsave(&cgu->lock, flags);
+ 		reg = readl(cgu->base + clk_info->div.reg);
+ 
+ 		/* update the divide */
+ 		mask = GENMASK(clk_info->div.bits - 1, 0);
+ 		reg &= ~(mask << clk_info->div.shift);
+-		reg |= ((div / clk_info->div.div) - 1) << clk_info->div.shift;
++		reg |= hw_div << clk_info->div.shift;
+ 
+ 		/* clear the stop bit */
+ 		if (clk_info->div.stop_bit != -1)
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index e12716d8ce3c..8dcd83aeab84 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -88,6 +88,8 @@ struct ingenic_cgu_mux_info {
+  *          isn't one
+  * @busy_bit: the index of the busy bit within reg, or -1 if there isn't one
+  * @stop_bit: the index of the stop bit within reg, or -1 if there isn't one
++ * @div_table: optional table to map the value read from the register to the
++ *             actual divider value
+  */
+ struct ingenic_cgu_div_info {
+ 	unsigned reg;
+@@ -97,6 +99,7 @@ struct ingenic_cgu_div_info {
+ 	s8 ce_bit;
+ 	s8 busy_bit;
+ 	s8 stop_bit;
++	const u8 *div_table;
+ };
+ 
+ /**
+-- 
+2.21.0.593.g511ec345e18
+
