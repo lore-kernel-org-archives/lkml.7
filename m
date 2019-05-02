@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A24C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B485C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1397204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2140E204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811208;
-	bh=trZFVr/mcfnl1e/lvg9fpklzwz9lS/uDICL5IXnW5wA=;
+	s=default; t=1556811215;
+	bh=TIF04Z/Lv3iGuadkLwXaDkgKC/e5kCrQWQcV1wlwvIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YO2vZ4dsLTg0T8AC21l3FDsOKiNOchgZLzI4KOPTZ7bOY0byn/dbVjtJOdw3kcE1Q
-	 FkrJPjQ4QXByRlR2jrXwy7N5KmOcWsK11RpzYqq3wCMokSry5B5GP1MC1fxy3+ngNf
-	 MzoavCAC2X8vC6YBjcrQRA1mYzmrU7mdu89qdtsA=
+	b=ay6oJYzDNVtFOAzgUB531F7a3CvHlNWM10m0fp5DdkbTjzJB0uUz/5SsylyYRBxGR
+	 CE61Vcb03zt7oC7T1792vYmCuTxpL90ruKpb4HEu/cVWmGLxoFp6iiOPEC9iPS30BJ
+	 Oo9Eoh0AaqtquMJOyOySjWwwEI/wtGyD0QgMYb38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbfEBPd0 (ORCPT
+        id S1729305AbfEBPde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:33:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:33:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbfEBPdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:33:03 -0400
+        id S1729285AbfEBPcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE95121479;
-        Thu,  2 May 2019 15:33:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBCBD2081C;
+        Thu,  2 May 2019 15:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811183;
-        bh=trZFVr/mcfnl1e/lvg9fpklzwz9lS/uDICL5IXnW5wA=;
+        s=default; t=1556811175;
+        bh=TIF04Z/Lv3iGuadkLwXaDkgKC/e5kCrQWQcV1wlwvIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7ZqERK2sPmDL1AiArml3LAuXv6aP3yNhxfEd3Pq8rCNEb2Tyr4WzUp2y/gLRh4x1
-         bsC6+rZirNIbUi41Z9A5nc9AXciNfx2eQ4symDJ/XwH9k0hyGs8PWNYCPeYKsRbe/z
-         HXH7/4H4fXAxa/Asnefx5BpxuXzbvjKJSWUcANqk=
+        b=af41vASEa6oId0gmIOyG/+Wxlf2SFhSPVW9cVIyNM1wXimWIDFwE3Jyv2ZScIDhDg
+         nxCoBZYjtg2ZrPX0yC4q4lKXNh203dNiAu5OcBsSLE50+Qbg9x2YpNm4yVp+Pnx3Cr
+         V0MkIyPlJe95U+vMVbrs1Kyy/0W0hvvTB6VDCnYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Alakesh Haloi <alakesh.haloi@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 074/101] ceph: fix use-after-free on symlink traversal
-Date:   Thu,  2 May 2019 17:21:16 +0200
-Message-Id: <20190502143344.855114210@linuxfoundation.org>
+Subject: [PATCH 5.0 071/101] SUNRPC: fix uninitialized variable warning
+Date:   Thu,  2 May 2019 17:21:13 +0200
+Message-Id: <20190502143344.684910273@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,40 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit daf5cc27eed99afdea8d96e71b89ba41f5406ef6 ]
+[ Upstream commit 01f2f5b82a2b523ae76af53f2ff43c48dde10a00 ]
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
+Avoid following compiler warning on uninitialized variable
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+net/sunrpc/xprtsock.c: In function ‘xs_read_stream_request.constprop’:
+net/sunrpc/xprtsock.c:525:10: warning: ‘read’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+   return read;
+          ^~~~
+net/sunrpc/xprtsock.c:529:23: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  return ret < 0 ? ret : read;
+         ~~~~~~~~~~~~~~^~~~~~
+
+Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/xprtsock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 9d1f34d46627..f7f9e305aaf8 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -524,6 +524,7 @@ static void ceph_i_callback(struct rcu_head *head)
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	struct ceph_inode_info *ci = ceph_inode(inode);
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 7754aa3e434f..f88c2bd1335a 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -486,8 +486,8 @@ xs_read_stream_request(struct sock_xprt *transport, struct msghdr *msg,
+ 		int flags, struct rpc_rqst *req)
+ {
+ 	struct xdr_buf *buf = &req->rq_private_buf;
+-	size_t want, read;
+-	ssize_t ret;
++	size_t want, uninitialized_var(read);
++	ssize_t uninitialized_var(ret);
  
-+	kfree(ci->i_symlink);
- 	kmem_cache_free(ceph_inode_cachep, ci);
- }
+ 	xs_read_header(transport, buf);
  
-@@ -561,7 +562,6 @@ void ceph_destroy_inode(struct inode *inode)
- 		ceph_put_snap_realm(mdsc, realm);
- 	}
- 
--	kfree(ci->i_symlink);
- 	while ((n = rb_first(&ci->i_fragtree)) != NULL) {
- 		frag = rb_entry(n, struct ceph_inode_frag, node);
- 		rb_erase(n, &ci->i_fragtree);
 -- 
 2.19.1
 
