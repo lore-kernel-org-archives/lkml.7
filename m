@@ -2,161 +2,94 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD72C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E957BC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E84720652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1A820652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfEBRqT (ORCPT
+        id S1726396AbfEBRxZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:46:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58357 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfEBRqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:46:18 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D2E463082E72;
-        Thu,  2 May 2019 17:46:17 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E7AC17D50;
-        Thu,  2 May 2019 17:46:17 +0000 (UTC)
-Subject: Re: [PATCH v3] kernel/module: Reschedule while waiting for modules to
- finish loading
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Arcari <darcari@redhat.com>
-References: <20190430222207.3002-1-prarit@redhat.com>
- <90e18809-2b70-52d8-00b3-9c16768db9ad@redhat.com>
- <20190502094813.GA6690@linux-8ccs>
- <f0bc15a4-0f99-c899-b7d7-2d4db86e287e@redhat.com>
-Message-ID: <4849a5af-b2bb-95ad-6b58-2f0c403c9ebb@redhat.com>
-Date:   Thu, 2 May 2019 13:46:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 13:53:25 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35831 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfEBRxZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 13:53:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g24so2916746otq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 10:53:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GBDNR7dZoJr86zYykorTJ/IjzJwi83xXzsZS+RvPfCM=;
+        b=DZKHx6EQMIiCJRF+A1q8iyuOsT7TOaN/LSrKLqez0bAcuSFtwIqq5N8C6hfI0qyJeI
+         Q5s1kR3zfUXyM08p0exB2PXzK1do+OQ4ry3CHe9zDwOOVwaga0eEDFdjN2uFNYkpwLdI
+         +NWb+KNoi8RrpvGsCOQnfTi2wDlAAYHJwhJJ6dZOb9J4NatmNPYbWGIZQ7kbywOu4DfE
+         vTxBo8NDtQVM5frO/G7TzGFVnkVMzeBU7wUrFbsQeS0sWK/+LOqLjQDqnOi0so/8Zw9+
+         4BeF9AfzxSfG/3+TVKYIJvUlDBQcmy1G2Z4za3rGpO1lg4aPAVYb+n/AOcZA5b5u7vAw
+         71cQ==
+X-Gm-Message-State: APjAAAWYCwJBX5w/NrwJzeutoWz6Vcw4LxcVMEl7wiS7p/fdc/o80KCy
+        iyTLgVSrNPq6Mk5eTZmqEOSBU9Qatj7+1uHzYqV0Uw==
+X-Google-Smtp-Source: APXvYqzST1Dup9n2jNMYyXmGV8wykLPR0kBeWfOpX/RmNcI7EMUp4H3q7uEXhTXI757a8zkKf8qMd/e6iIelmwu8cxc=
+X-Received: by 2002:a9d:61c6:: with SMTP id h6mr3337115otk.316.1556819604755;
+ Thu, 02 May 2019 10:53:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f0bc15a4-0f99-c899-b7d7-2d4db86e287e@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 02 May 2019 17:46:17 +0000 (UTC)
+References: <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
+ <875zqt4igg.fsf@notabene.neil.brown.name> <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
+ <CAJfpegsthQn_=3AQJf7ojxoQBpHMA3dz1fCBjNZXsCA1E0oqnw@mail.gmail.com>
+ <CAHpGcML0KuoGSyXyyDnXHkSp3nDnSjJPeZeWEmt8CXxQeojxwg@mail.gmail.com> <20190502171603.GA1778@fieldses.org>
+In-Reply-To: <20190502171603.GA1778@fieldses.org>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Thu, 2 May 2019 19:53:13 +0200
+Message-ID: <CAHc6FU5fBorvOCkxvX58hEKmDgwu+-m_RDwEWDY36XpH1F03Hw@mail.gmail.com>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, NeilBrown <neilb@suse.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2 May 2019 at 19:16, J. Bruce Fields <bfields@fieldses.org> wrote:
+> On Thu, May 02, 2019 at 05:08:14PM +0200, Andreas Grünbacher wrote:
+> > You'll still see permissions that differ from what the filesystem
+> > enforces, and copy-up would change that behavior.
+>
+> That's always true, and this issue isn't really specific to NFSv4 ACLs
+> (or ACLs at all), it already exists with just mode bits.  The client
+> doesn't know how principals may be mapped on the server, doesn't know
+> group membership, etc.
+>
+> That's the usual model, anyway.  Permissions are almost entirely the
+> server's responsibility, and we just provide a few attributes to set/get
+> those server-side permissions.
 
+Sure, if the client and server don't share the same user and group
+databases, ACLs can get a very different meaning.
 
-On 5/2/19 8:41 AM, Prarit Bhargava wrote:
-> 
-> 
-> On 5/2/19 5:48 AM, Jessica Yu wrote:
->> +++ Prarit Bhargava [01/05/19 17:26 -0400]:
->>>
->>>
->>> On 4/30/19 6:22 PM, Prarit Bhargava wrote:
->>>> On a s390 z14 LAR with 2 cpus about stalls about 3% of the time while
->>>> loading the s390_trng.ko module.
->>>>
->>>> Add a reschedule point to the loop that waits for modules to complete
->>>> loading.
->>>>
->>>> v3: cleanup Fixes line.
->>>
->>> Jessica, even with this additional patch there appears to be some other issues
->>> in the module code that are causing significant delays in boot up on large
->>> systems.
->>
->> Is this limited to only s390? Or are you seeing this on other arches
->> as well? And is it limited to specific modules (like s390_trng)?
-> 
-> Other arches.  We're seeing a hang on a new 192 CPU x86_64 box & the
-> acpi_cpufreq driver.  The system is MUCH faster than any other x86_64 box I've
-> seen and that's likely why I'm seeing a problem.
-> 
->>
->>> FWIW, the logic in the original patch is correct.  It's just that there's, as
->>> Heiko discovered, some poor scheduling, etc., that is impacting the module
->>> loading code after these changes.
->>
->> I am really curious to see what these performance regressions look
->> like :/ Please update us when you find out more.
->>
-> 
-> I sent Heiko a private v4 RFC last night with this patch (sorry for the
-> cut-and-paste)
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 1c429d8d2d74..a4ef8628f26f 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3568,12 +3568,12 @@ static int add_unformed_module(struct module *mod)
-> 	mutex_lock(&module_mutex);
-> 	old = find_module_all(mod->name, strlen(mod->name), true);
-> 	if (old != NULL) {
-> -		if (old->state == MODULE_STATE_COMING
-> -		    || old->state == MODULE_STATE_UNFORMED) {
-> +		if (old->state != MODULE_STATE_LIVE) {
-> 			/* Wait in case it fails to load. */
-> 			mutex_unlock(&module_mutex);
-> -			err = wait_event_interruptible(module_wq,
-> -					       finished_loading(mod->name));
-> +			err = wait_event_interruptible_timeout(module_wq,
-> +					       finished_loading(mod->name),
-> +					       HZ / 10000);
-> 			if (err)
-> 				goto out_unlocked;
-> 			goto again;
-> 
-> The original module dependency race issue is fixed simply by changing the
-> conditional to checking !MODULE_STATE_LIVE.  This, unfortunately, exposed some
-> other problems within the code.
-> 
-> The module_wq is only run when a module fails to load.  It's possible that
-> the time between the module's failed init() call and running module_wq
-> (kernel/module.c:3455) takes a while.  Any thread entering the
-> add_unformed_module() code while the old module is unloading is put to sleep
-> waiting for the module_wq to execute.
-> 
-> On the 192 thread box I have noticed that the acpi_cpufreq module attempts
-> to load 392 times (that is not a typo and I am going to try to figure that
-> problem out after this one).  This means 191 cpus are put to sleep, and one
-> cpu is executing the acpi_cpufreq module unload which is executing
-> do_init_module() and is now at
-> 
-> fail_free_freeinit:
->         kfree(freeinit);
-> fail:
->         /* Try to protect us from buggy refcounters. */
->         mod->state = MODULE_STATE_GOING;
->         synchronize_rcu();
->         module_put(mod);
->         blocking_notifier_call_chain(&module_notify_list,
->                                      MODULE_STATE_GOING, mod);
->         klp_module_going(mod);
->         ftrace_release_mod(mod);
->         free_module(mod);
->         wake_up_all(&module_wq);
->         return ret;
-> }
-> 
-> The 191 threads cannot schedule and the system is effectively stuck.  It *does*
-> eventually free itself but in some cases it takes minutes to do so.
-> 
-> A simple fix for this is to, as I've done above, to add a timeout so that
-> the threads can be scheduled which allows other processes to run.  
+Andreas
 
-After taking a much closer look the above patch appears to be correct.  I am not
-seeing any boot failures associated with it anywhere.  I would like to hear from
-Heiko as to whether or not this works for him though.
-
-P.
+> The overlayfs/NFS case is different, I think: the nfs filesystem may be
+> just a static read-only template for a filesystem that's only ever used
+> by clients, and for all I know maybe permissions should only be
+> interpreted on the client side in that case.
+>
+> --b.
