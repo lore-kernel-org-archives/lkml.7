@@ -7,115 +7,158 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87ECC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52D8C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB96A20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E8520675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kEVBJPmT"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OJHuatp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfEBIIg (ORCPT
+        id S1726468AbfEBIKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:08:36 -0400
-Received: from mail-eopbgr140073.outbound.protection.outlook.com ([40.107.14.73]:42560
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726338AbfEBIGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:06:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D7PUOPhG0pA0jWDdcfQv9NZdpnckzyspBXeabEN7aa8=;
- b=kEVBJPmT42sruVifUsEaZlybZfGQJms/dNlN14qJCCSLi68xS6jnSATFT3/BuWZ2e3K3oq//g7pRAurPDiBJTXsq+fMGFK6UNsrph1pgw+b0oVuSIZGWLWJOx1EUDEQm90//tFMSXjOjiemWnDhktmklOwmL3vcLbVUn4X3MbKM=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB4563.eurprd04.prod.outlook.com (52.135.144.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.15; Thu, 2 May 2019 08:06:42 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::c19b:5964:bfcb:96a8]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::c19b:5964:bfcb:96a8%7]) with mapi id 15.20.1856.008; Thu, 2 May 2019
- 08:06:42 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Thu, 2 May 2019 04:10:36 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10358 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726264AbfEBIKf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 04:10:35 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42828JO023659;
+        Thu, 2 May 2019 10:10:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=znP6MuezR8h50yNvDKE3YfX4j0A9PVjb37XPJEMCwbU=;
+ b=OJHuatp2xrdeg8+qugcJrJ67kI+rH6UoWzukJgyz7kVOnFXLq2v/AYNHU1H6YFAeV6pR
+ Q1j0QRnAuhFy5hLFZnKdJuhT+ue6DfmoBOS00aSARGCb47HJBiD4HUJ/0/v91wpqkKuw
+ bVPGB1r/ZE9ZTwb4HXmV7U/DknaquIjx33ckC6yWzyKr9/O8ZZIqy0/AGayqhXDY+u2P
+ MUHY///UWAM+8kI7cRnsAPD5Gw0gtDOul6U/pQICssUSBFKDYsA3wQzfhjxn1ZODIgP+
+ 2LN7CZZMZGGuoAJh1W2HX7wGw4AH95WZl13UoANBD24JlKxnqB2ZrNi31bhHcbUo8iny zw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2s6xhbf3q9-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 02 May 2019 10:10:20 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2152B3F;
+        Thu,  2 May 2019 08:10:19 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E2EB3FD8;
+        Thu,  2 May 2019 08:10:18 +0000 (GMT)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 2 May 2019
+ 10:10:18 +0200
+Received: from localhost (10.129.4.86) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 2 May 2019 10:10:18 +0200
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 03/18] clk: imx6q: Do not reparent uninitialized
- IMX6QDL_CLK_PERIPH2 clock
-Thread-Topic: [PATCH v2 03/18] clk: imx6q: Do not reparent uninitialized
- IMX6QDL_CLK_PERIPH2 clock
-Thread-Index: AQHVAL36FVOgLCrgTk2aJfrH28ZViw==
-Date:   Thu, 2 May 2019 08:06:42 +0000
-Message-ID: <1556784376-7191-4-git-send-email-abel.vesa@nxp.com>
-References: <1556784376-7191-1-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1556784376-7191-1-git-send-email-abel.vesa@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0501CA0041.eurprd05.prod.outlook.com
- (2603:10a6:800:60::27) To AM0PR04MB5779.eurprd04.prod.outlook.com
- (2603:10a6:208:131::23)
-x-originating-ip: [89.37.124.34]
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b40d0542-088f-4e6d-c8e2-08d6ced51c77
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4563;
-x-ms-traffictypediagnostic: AM0PR04MB4563:
-x-microsoft-antispam-prvs: <AM0PR04MB456370EA40972576B928A4ACF6340@AM0PR04MB4563.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1051;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(376002)(346002)(366004)(199004)(189003)(53936002)(66476007)(66556008)(64756008)(66946007)(73956011)(66446008)(66066001)(6116002)(36756003)(3846002)(305945005)(86362001)(6486002)(81156014)(6512007)(81166006)(25786009)(8676002)(4326008)(71200400001)(71190400001)(99286004)(8936002)(14454004)(76176011)(50226002)(11346002)(446003)(2616005)(68736007)(478600001)(386003)(2906002)(6506007)(52116002)(316002)(44832011)(54906003)(110136005)(26005)(7736002)(5660300002)(256004)(102836004)(186003)(486006)(476003)(6436002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4563;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KwwTc0xDw9v5gUm0fHfBqX08d49AsdLAqwMcs3aXhPDFbWy9lfz+xoPiV4Tl71N2tlngCWggEVxTKFM8dZ54TzpBhJ1RW3AWN70OJCyb7jgS774LJudXMyAI7GQIvlChQmDd7BrhSFV90TE19INYRiixesDlri4hVHzN6FqldgwVEKL3jjWgw715yHdY0OP1T2qClyRBYJJlp5/mXYPzl/jeq85CDpQteoqmeF/KNPjWCkmI6JzrZ2rZ4w37Dr5GxGAMqkDV9snhs+RYG86Vc90mMGGrVidMILwSo9TDcEt2U47h4kfg0Kzn9spI5TLDwxf4/gw9/BrUhcu2J6TI+tUt+5IR+kc3sMYJQjnsKa9CbuVWmPHE2cr048pNXS62PEAUFI29P5F8FkKyctZrAtNVWY9vDHC0Qx5iICFK4gM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        "Ludovic Barre" <ludovic.barre@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v3 2/8] dt-bindings: remoteproc: add bindings for stm32 remote processor driver
+Date:   Thu, 2 May 2019 10:10:00 +0200
+Message-ID: <1556784606-3016-3-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556784606-3016-1-git-send-email-fabien.dessenne@st.com>
+References: <1556784606-3016-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b40d0542-088f-4e6d-c8e2-08d6ced51c77
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 08:06:42.3600
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4563
+Content-Type: text/plain
+X-Originating-IP: [10.129.4.86]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIGNsb2NrIGlzIHJlZ2lzdGVyZWQgbGF0ZXIgdGhhbiB0aGVzZSB0d28gcmUtcGFyZW50aW5n
-cy4NCg0KU2lnbmVkLW9mZi1ieTogQWJlbCBWZXNhIDxhYmVsLnZlc2FAbnhwLmNvbT4NCi0tLQ0K
-IGRyaXZlcnMvY2xrL2lteC9jbGstaW14NnEuYyB8IDggLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdl
-ZCwgOCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstaW14
-NnEuYyBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14NnEuYw0KaW5kZXggNzA4ZTdjNS4uYzdiNjcx
-ZSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGstaW14NnEuYw0KKysrIGIvZHJpdmVy
-cy9jbGsvaW14L2Nsay1pbXg2cS5jDQpAQCAtMjkxLDEyICsyOTEsNiBAQCBzdGF0aWMgdm9pZCBt
-bWRjX2NoMV9kaXNhYmxlKHZvaWQgX19pb21lbSAqY2NtX2Jhc2UpDQogCWNsa19zZXRfcGFyZW50
-KGNsa1tJTVg2UURMX0NMS19QRVJJUEgyX0NMSzJfU0VMXSwNCiAJCSAgICAgICBjbGtbSU1YNlFE
-TF9DTEtfUExMM19VU0JfT1RHXSk7DQogDQotCS8qDQotCSAqIEhhbmRzaGFrZSB3aXRoIG1tZGNf
-Y2gxIG1vZHVsZSBtdXN0IGJlIG1hc2tlZCB3aGVuIGNoYW5naW5nDQotCSAqIHBlcmlwaDJfY2xr
-X3NlbC4NCi0JICovDQotCWNsa19zZXRfcGFyZW50KGNsa1tJTVg2UURMX0NMS19QRVJJUEgyXSwg
-Y2xrW0lNWDZRRExfQ0xLX1BFUklQSDJfQ0xLMl0pOw0KLQ0KIAkvKiBEaXNhYmxlIHBsbDNfc3df
-Y2xrIGJ5IHNlbGVjdGluZyB0aGUgYnlwYXNzIGNsb2NrIHNvdXJjZSAqLw0KIAlyZWcgPSByZWFk
-bF9yZWxheGVkKGNjbV9iYXNlICsgQ0NNX0NDU1IpOw0KIAlyZWcgfD0gQ0NTUl9QTEwzX1NXX0NM
-S19TRUw7DQpAQCAtMzExLDggKzMwNSw2IEBAIHN0YXRpYyB2b2lkIG1tZGNfY2gxX3JlZW5hYmxl
-KHZvaWQgX19pb21lbSAqY2NtX2Jhc2UpDQogCXJlZyA9IHJlYWRsX3JlbGF4ZWQoY2NtX2Jhc2Ug
-KyBDQ01fQ0NTUik7DQogCXJlZyAmPSB+Q0NTUl9QTEwzX1NXX0NMS19TRUw7DQogCXdyaXRlbF9y
-ZWxheGVkKHJlZywgY2NtX2Jhc2UgKyBDQ01fQ0NTUik7DQotDQotCWNsa19zZXRfcGFyZW50KGNs
-a1tJTVg2UURMX0NMS19QRVJJUEgyXSwgY2xrW0lNWDZRRExfQ0xLX1BFUklQSDJfUFJFXSk7DQog
-fQ0KIA0KIC8qDQotLSANCjIuNy40DQoNCg==
+Add the device tree bindings document for the stm32 remoteproc devices.
+
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ .../devicetree/bindings/remoteproc/stm32-rproc.txt | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+new file mode 100644
+index 0000000..a495757
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+@@ -0,0 +1,63 @@
++STMicroelectronics STM32 Remoteproc
++-----------------------------------
++This document defines the binding for the remoteproc component that loads and
++boots firmwares on the ST32MP family chipset.
++
++Required properties:
++- compatible:	Must be "st,stm32mp1-m4"
++- reg:		Address ranges of the RETRAM and MCU SRAM memories used by the
++		remote processor.
++- resets:	Reference to a reset controller asserting the remote processor.
++- st,syscfg-holdboot: Reference to the system configuration which holds the
++		remote processor reset hold boot
++	1st cell: phandle of syscon block
++	2nd cell: register offset containing the hold boot setting
++	3rd cell: register bitmask for the hold boot field
++- st,syscfg-tz: Reference to the system configuration which holds the RCC trust
++		zone mode
++	1st cell: phandle to syscon block
++	2nd cell: register offset containing the RCC trust zone mode setting
++	3rd cell: register bitmask for the RCC trust zone mode bit
++
++Optional properties:
++- interrupts:	Should contain the watchdog interrupt
++- mboxes:	This property is required only if the rpmsg/virtio functionality
++		is used. List of phandle and mailbox channel specifiers:
++		- a channel (a) used to communicate through virtqueues with the
++		  remote proc.
++		  Bi-directional channel:
++		      - from local to remote = send message
++		      - from remote to local = send message ack
++		- a channel (b) working the opposite direction of channel (a)
++		- a channel (c) used by the local proc to notify the remote proc
++		  that it is about to be shut down.
++		  Unidirectional channel:
++		      - from local to remote, where ACK from the remote means
++		        that it is ready for shutdown
++- mbox-names:	This property is required if the mboxes property is used.
++		- must be "vq0" for channel (a)
++		- must be "vq1" for channel (b)
++		- must be "shutdown" for channel (c)
++- memory-region: List of phandles to the reserved memory regions associated with
++		the remoteproc device. This is variable and describes the
++		memories shared with the remote processor (eg: remoteproc
++		firmware and carveouts, rpmsg vrings, ...).
++		(see ../reserved-memory/reserved-memory.txt)
++- st,syscfg-pdds: Reference to the system configuration which holds the remote
++		processor deep sleep setting
++	1st cell: phandle to syscon block
++	2nd cell: register offset containing the deep sleep setting
++	3rd cell: register bitmask for the deep sleep bit
++- st,auto_boot:	If defined, when remoteproc is probed, it loads the default
++		firmware and starts the remote processor.
++
++Example:
++	m4_rproc: m4@38000000 {
++		compatible = "st,stm32mp1-m4";
++		reg = <0x00000000 0x10000>,
++		      <0x10000000 0x40000>,
++		      <0x30000000 0x40000>;
++		resets = <&rcc MCU_R>;
++		st,syscfg-holdboot = <&rcc 0x10C 0x1>;
++		st,syscfg-tz = <&rcc 0x000 0x1>;
++	};
+-- 
+2.7.4
+
