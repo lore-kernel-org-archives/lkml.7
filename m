@@ -2,179 +2,136 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A45C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5598C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2822085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0EF2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:03:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="2FcjTUGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfEBH5x (ORCPT
+        id S1726249AbfEBIDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:57:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33644 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725905AbfEBH5w (ORCPT
+        Thu, 2 May 2019 04:03:05 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:38722 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfEBIDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:57:52 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x427vlJl117593
-        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 03:57:51 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s7uh2jpsq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 03:57:50 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 2 May 2019 08:57:35 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 08:57:33 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x427vW5a52428928
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 07:57:32 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0574A4040;
-        Thu,  2 May 2019 07:57:31 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56C2FA4051;
-        Thu,  2 May 2019 07:57:31 +0000 (GMT)
-Received: from [9.145.190.191] (unknown [9.145.190.191])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 May 2019 07:57:31 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
- <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
- <20190430152605.3bb21f31.pasic@linux.ibm.com>
- <622a9ab0-579d-17f4-6fa1-74d73da13b19@linux.ibm.com>
-Date:   Thu, 2 May 2019 09:57:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <622a9ab0-579d-17f4-6fa1-74d73da13b19@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 2 May 2019 04:03:04 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Christian.Gromm@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Christian.Gromm@microchip.com";
+  x-sender="Christian.Gromm@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Christian.Gromm@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Christian.Gromm@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,421,1549954800"; 
+   d="scan'208";a="31310964"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES128-SHA; 02 May 2019 01:03:03 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.37) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Thu, 2 May 2019 01:03:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jB8R2wPHmZpW5wkNFuZCjbE7fqD7E2KMeFbTFZmgzsg=;
+ b=2FcjTUGsFoqNqsoK8JiK1jKUPzLLBdhuNSeY7aE+bNAJE6rfj0i1ILw6upYDfVCWKRjubeqZMVzELohWkH4EpqRPQEOa9xX/tHrCPa2PEEWGKzqztSKa294qBzgHXg2fZvHA1GgsfQ1ATngCMU98o1AhF/cxAfi/mwI97cp4QPY=
+Received: from MN2PR11MB3710.namprd11.prod.outlook.com (20.178.252.215) by
+ MN2PR11MB3902.namprd11.prod.outlook.com (10.255.180.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Thu, 2 May 2019 08:02:56 +0000
+Received: from MN2PR11MB3710.namprd11.prod.outlook.com
+ ([fe80::8dab:655a:59a2:ba40]) by MN2PR11MB3710.namprd11.prod.outlook.com
+ ([fe80::8dab:655a:59a2:ba40%4]) with mapi id 15.20.1835.018; Thu, 2 May 2019
+ 08:02:56 +0000
+From:   <Christian.Gromm@microchip.com>
+To:     <erosca@de.adit-jv.com>, <linux-kernel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>
+CC:     <dan.carpenter@oracle.com>, <sudipi@jp.adit-jv.com>,
+        <o-takashi@sakamocchi.jp>, <colin.king@canonical.com>,
+        <andrey.shvetsov@k2l.de>, <tiwai@suse.de>,
+        <roscaeugeniu@gmail.com>, <marcin.s.ciupak@gmail.com>
+Subject: Re: [PATCH] staging: most: cdev: fix chrdev_region leak in mod_exit
+Thread-Topic: [PATCH] staging: most: cdev: fix chrdev_region leak in mod_exit
+Thread-Index: AQHU+tN5IgKTYbcaoU6Jhe9IvPmqQaZXhhyA
+Date:   Thu, 2 May 2019 08:02:56 +0000
+Message-ID: <1556784361.2199.1.camel@microchip.com>
+References: <20190424192343.15418-1-erosca@de.adit-jv.com>
+In-Reply-To: <20190424192343.15418-1-erosca@de.adit-jv.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050207-4275-0000-0000-0000033087E4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050207-4276-0000-0000-0000383FE5F4
-Message-Id: <42185132-dfc4-c997-3d69-31e43d25e525@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=658 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905020061
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.154.213.229]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3efd87c5-e797-4cbb-94e6-08d6ced49608
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR11MB3902;
+x-ms-traffictypediagnostic: MN2PR11MB3902:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR11MB3902557063B2393724C3D504F8340@MN2PR11MB3902.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:179;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(366004)(136003)(396003)(346002)(199004)(189003)(66946007)(91956017)(486006)(305945005)(66476007)(73956011)(256004)(102836004)(2501003)(66556008)(6486002)(14444005)(14454004)(36756003)(76116006)(6436002)(72206003)(7736002)(64756008)(66446008)(446003)(966005)(478600001)(110136005)(2616005)(54906003)(186003)(11346002)(26005)(6506007)(6512007)(6306002)(476003)(7416002)(2906002)(53936002)(2201001)(229853002)(6116002)(68736007)(316002)(4326008)(103116003)(99286004)(76176011)(66066001)(5660300002)(25786009)(86362001)(81166006)(8676002)(81156014)(6246003)(8936002)(71200400001)(71190400001)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3902;H:MN2PR11MB3710.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: n45SNq1uszvdoqFIxzWSaoWBYu5js7cPtZuxb638V3+iT2KJ98GTyrTb1kWR1DOSXcXhrpYCX+8JdECQePZjpOWjhpVG9U2x2d1O0qu6bvndH8y7Oqed6vnFNzconkX1jjBF0r7Awl6QEPkeVuhvwiZD4yyQRBZY0ehtunaoahUqameGm/cacBsK3bevjYOSSyBhh5TrS/h4bBfNvYfbkpZ0tBJvCejy768jtQRToCOUCIDAz66Xq8ju0H9OuxmYk1H8WQ/Sz0rqTrlV7mj8GufscU8J47OeJ9soxOpRW8paybEbi0Q5M/QICK958i2cM0TAkGE3UMh4kmDazn29xhh4bOHWFdmdvHbVo9Ifjg5nU/rVWT/+tTpIeIuT5KG8E2t8/oJ9BxF1Q/RWtdEDCTvtD8rzDpMtePA8s/xj1uI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F55FE955468DD548A67FA09241931D1C@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3efd87c5-e797-4cbb-94e6-08d6ced49608
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 08:02:56.3856
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3902
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2019 16:09, Pierre Morel wrote:
-> On 30/04/2019 15:26, Halil Pasic wrote:
->> On Fri, 26 Apr 2019 15:01:27 +0200
->> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>
->>> +/**
->>> + * vfio_ap_clrirq: Disable Interruption for a APQN
->>> + *
->>> + * @dev: the device associated with the ap_queue
->>> + * @q:   the vfio_ap_queue holding AQIC parameters
->>> + *
->>> + * Issue the host side PQAP/AQIC
->>> + * On success: unpin the NIB saved in *q and unregister from GIB
->>> + * interface
->>> + *
->>> + * Return the ap_queue_status returned by the ap_aqic()
->>> + */
->>> +static struct ap_queue_status vfio_ap_clrirq(struct vfio_ap_queue *q)
->>> +{
->>> +    struct ap_qirq_ctrl aqic_gisa = {};
->>> +    struct ap_queue_status status;
->>> +    int checks = 10;
->>> +
->>> +    status = ap_aqic(q->apqn, aqic_gisa, NULL);
->>> +    if (!status.response_code) {
->>> +        while (status.irq_enabled && checks--) {
->>> +            msleep(20);
->>
->> Hm, that seems like a lot of time to me. And I suppose we are holding the
->> kvm lock: e.g. no other instruction can be interpreted by kvm in the
->> meantime.
->>
->>> +            status = ap_tapq(q->apqn, NULL);
->>> +        }
->>> +        if (checks >= 0)
->>> +            vfio_ap_free_irq_data(q);
->>
->> Actually we don't have to wait for the async part to do it's magic
->> (indicated by the status.irq_enabled --> !status.irq_enabled transition)
->> in the instruction handler. We have to wait so we can unpin the NIB but
->> that could be done async (e.g. workqueue).
->>
->> BTW do you have any measurements here? How many msleep(20) do we
->> experience for one clear on average?
-> 
-> No idea but it is probably linked to the queue state and usage history.
-> I can use a lower sleep time and increment the retry count.
-> 
->>
->> If linux is not using clear (you told so offline, and I also remember
->> something similar), we can probably get away with something like this,
->> and do it properly (from performance standpoint) later.
-> 
-> In the Linux AP code it is only used once, in the explicit
-> ap_queue_enable_interruption() function.
-
-My answer is not clear: ap_aqic() is used only once, during the bus 
-probe, in the all code to enable interrupt and is never used to disable 
-interrupt.
-
-Interrupt disabling is only done by using ap_zapq() or ap_rapq() which 
-can not be intercepted.
-
-
-> 
-> Yes, thanks, I will keep it as is, may be just play with msleep()time 
-> and retry count.
-> 
-> Regards,
-> Pierre
-> 
->>
->> Regards,
->> Halil
->>
->>> +        else
->>> +            WARN_ONCE("%s: failed disabling IRQ", __func__);
->>> +    }
->>> +
->>> +    return status;
->>> +}
->>
-> 
-> 
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+T24gTWksIDIwMTktMDQtMjQgYXQgMjE6MjMgKzAyMDAsIEV1Z2VuaXUgUm9zY2Egd3JvdGU6DQo+
+IEV4dGVybmFsIEUtTWFpbA0KPiANCj4gDQo+IEZyb206IFN1cmVzaCBVZGlwaSA8c3VkaXBpQGpw
+LmFkaXQtanYuY29tPg0KPiANCj4gSXQgbG9va3MgbGlrZSB2NC4xOC1yYzEgY29tbWl0IFswXSB3
+aGljaCB1cHN0cmVhbXMgbWxkLTEuOC4wDQo+IGNvbW1pdCBbMV0gbWlzc2VkIHRvIGZpeCB0aGUg
+bWVtb3J5IGxlYWsgaW4gbW9kX2V4aXQgZnVuY3Rpb24uDQo+IA0KPiBEbyBpdCBub3cuDQo+IA0K
+PiBbMF0gYWJhMjU4YjczMTAxNjcgKCJzdGFnaW5nOiBtb3N0OiBjZGV2OiBmaXggY2hyZGV2X3Jl
+Z2lvbiBsZWFrIikNCj4gWzFdIGh0dHBzOi8vZ2l0aHViLmNvbS9taWNyb2NoaXAtYWlzL2xpbnV4
+L2NvbW1pdC9hMmQ4ZjdhZTdlYTM4MQ0KPiDCoMKgwqDCoCgic3RhZ2luZzogbW9zdDogY2Rldjog
+Zml4IGxlYWsgZm9yIGNocmRldl9yZWdpb24iKQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogU3VyZXNo
+IFVkaXBpIDxzdWRpcGlAanAuYWRpdC1qdi5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuaXUg
+Um9zY2EgPGVyb3NjYUBkZS5hZGl0LWp2LmNvbT4NCg0KQWNrZWQtYnk6IENocmlzdGlhbiBHcm9t
+bSA8Y2hyaXN0aWFuLmdyb21tQG1pY3JvY2hpcC5jb20+DQoNCj4gLS0tDQo+IMKgZHJpdmVycy9z
+dGFnaW5nL21vc3QvY2Rldi9jZGV2LmMgfCAyICstDQo+IMKgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFn
+aW5nL21vc3QvY2Rldi9jZGV2LmMNCj4gYi9kcml2ZXJzL3N0YWdpbmcvbW9zdC9jZGV2L2NkZXYu
+Yw0KPiBpbmRleCBmMmIzNDdjZGE4YjcuLmQ1ZjIzNjg4OTAyMSAxMDA2NDQNCj4gLS0tIGEvZHJp
+dmVycy9zdGFnaW5nL21vc3QvY2Rldi9jZGV2LmMNCj4gKysrIGIvZHJpdmVycy9zdGFnaW5nL21v
+c3QvY2Rldi9jZGV2LmMNCj4gQEAgLTU0OSw3ICs1NDksNyBAQCBzdGF0aWMgdm9pZCBfX2V4aXQg
+bW9kX2V4aXQodm9pZCkNCj4gwqAJCWRlc3Ryb3lfY2RldihjKTsNCj4gwqAJCWRlc3Ryb3lfY2hh
+bm5lbChjKTsNCj4gwqAJfQ0KPiAtCXVucmVnaXN0ZXJfY2hyZGV2X3JlZ2lvbihjb21wLmRldm5v
+LCAxKTsNCj4gKwl1bnJlZ2lzdGVyX2NocmRldl9yZWdpb24oY29tcC5kZXZubywgQ0hSREVWX1JF
+R0lPTl9TSVpFKTsNCj4gwqAJaWRhX2Rlc3Ryb3koJmNvbXAubWlub3JfaWQpOw0KPiDCoAljbGFz
+c19kZXN0cm95KGNvbXAuY2xhc3MpOw0KPiDCoH0=
