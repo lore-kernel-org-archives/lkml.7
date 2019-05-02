@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3395CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026ECC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 030F221479
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF01B21479
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763562;
-	bh=czJ2gGl1dfjH/l57awPvh4sM5OwFICV7oNoavQNVK2Q=;
+	s=default; t=1556763564;
+	bh=Ms7RcGfNib00QZz9P0pZuOW5pdOm4nJEAlGMGSRXfpU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=mjrHE9ALc6ObtkduurnozbM3dDdxunxMSyZesfoJRULpn3vm51iX9uDMQfMvLXoTV
-	 eq1GtvENNoDtLj9I3Bq5I5S78mohlQ9qUe1lMmVnMSE854i7bneznO9Sxo+gE85XwR
-	 Z4fWa529ffPzHH3afe/+PjHgUz7b9CO3hEC2VfdY=
+	b=UXNfSibOrp2hTMM4OTt3GcyW8YgK+2VbHiL/FgKPa+SSoo16yQ9UVs7piJyTrCw2G
+	 mJFmR/vu9XuiYLLCb8zwI8NXtIar9BRopzWcD58TXQ1/2J/mP3nlYJV4XdyHC0b9oR
+	 XiY5k8LcXbPwQWFc+RwfTzfVt1BrjvdSDLAljxwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfEBCTU (ORCPT
+        id S1726722AbfEBCTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:19:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56980 "EHLO
+        Wed, 1 May 2019 22:19:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57114 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfEBCTR (ORCPT
+        with ESMTP id S1726681AbfEBCTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:19:17 -0400
+        Wed, 1 May 2019 22:19:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=UHEfdzY2SRblr5bwZcw14SwkQj4L3ql7iy+ou6Q9jpY=; b=RRkiWZznDnkq
-        9i1BJ9BDacg3nhd5+AAC2FWqBYdHF0aOqh+HPw+42Kz5ePNCW35qSAWdrWOKRiPGQaatodjC9RWxf
-        2s09OxcrRo5I/lxpff9XGc64maZTWk4ByZSDzlu/VUOjftvzNCzhieVUtYOetI+ev9D90owDQk804
-        z8VnM=;
+        List-Archive; bh=C9XRTvvku7YohEoOselFNompaVQM73w7LtDDtIUkluY=; b=wJ3NgXseGvrx
+        iT+1+Lz86m37j/B8N7zsETj6gF1yNMJPOnMGLyfYsa0eyGk26tu1pgcPCFFkSOYQ6bg0RoKSwh6SK
+        5lF7hwsuu7fMpSqi3tl1Ro6DiXr4bqSkQfPXdxeD8wMuGFxIf4w+mRPBeoDAXNsDnqF9CGu5cPCI5
+        GJ2RE=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1J3-0005sr-SV; Thu, 02 May 2019 02:18:42 +0000
+        id 1hM1JQ-0005vW-3J; Thu, 02 May 2019 02:19:04 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id BE8A2441D3B; Thu,  2 May 2019 03:18:38 +0100 (BST)
+        id EAF91441D41; Thu,  2 May 2019 03:19:00 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        colin.king@canonical.com, Hulk Robot <hulkci@huawei.com>,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, maruthi.bayyavarapu@amd.com,
-        perex@perex.cz, tiwai@suse.com, Vijendar.Mukunda@amd.com
-Subject: Applied "ASoC: amd: acp3x: Make acp3x_dai_i2s_ops static" to the asoc tree
-In-Reply-To:  <20190416145251.16800-1-yuehaibing@huawei.com>
+To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org, dwmw2@infradead.org,
+        kbuild test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
+        Mark Brown <broonie@kernel.org>, michals@xilinx.com,
+        nagasuresh12@gmail.com, richard@nod.at, vigneshr@ti.com
+Subject: Applied "spi: spi-mem: zynq-qspi: Fix build error on architectures missing readsl/writesl" to the spi tree
+In-Reply-To: <1555918009-13172-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021838.BE8A2441D3B@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:38 +0100 (BST)
+Message-Id: <20190502021900.EAF91441D41@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:19:00 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: amd: acp3x: Make acp3x_dai_i2s_ops static
+   spi: spi-mem: zynq-qspi: Fix build error on architectures missing readsl/writesl
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,36 +90,49 @@ to this mail.
 Thanks,
 Mark
 
-From a1a86e1bd4a87fd09171fd8555fe7490917e4e94 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Tue, 16 Apr 2019 22:52:51 +0800
-Subject: [PATCH] ASoC: amd: acp3x: Make acp3x_dai_i2s_ops static
+From ba3ce8cb3808cad0f9b8303fad4bd1c887834c82 Mon Sep 17 00:00:00 2001
+From: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Date: Mon, 22 Apr 2019 12:56:49 +0530
+Subject: [PATCH] spi: spi-mem: zynq-qspi: Fix build error on architectures
+ missing readsl/writesl
 
-Fix sparse warning:
+Alpha and some of the architectures are missing readsl/writesl functions.
+so the zynq-qspi driver won't be able to build on these arches. hence use
+ioread32_rep()/iowrite32_rep() instead of readsl()/writesl().
 
-sound/soc/amd/raven/acp3x-pcm-dma.c:561:24: warning:
- symbol 'acp3x_dai_i2s_ops' was not declared. Should it be static?
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/amd/raven/acp3x-pcm-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-zynq-qspi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 1a2e15ff1456..9775bda2a4ca 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -558,7 +558,7 @@ static int acp3x_dai_i2s_trigger(struct snd_pcm_substream *substream,
- 	return ret;
- }
+diff --git a/drivers/spi/spi-zynq-qspi.c b/drivers/spi/spi-zynq-qspi.c
+index 8079d0062d03..c6bee67decb5 100644
+--- a/drivers/spi/spi-zynq-qspi.c
++++ b/drivers/spi/spi-zynq-qspi.c
+@@ -407,8 +407,8 @@ static void zynq_qspi_write_op(struct zynq_qspi *xqspi, int txcount,
+ 		count = txcount;
  
--struct snd_soc_dai_ops acp3x_dai_i2s_ops = {
-+static struct snd_soc_dai_ops acp3x_dai_i2s_ops = {
- 	.hw_params = acp3x_dai_i2s_hwparams,
- 	.trigger   = acp3x_dai_i2s_trigger,
- 	.set_fmt = acp3x_dai_i2s_set_fmt,
+ 	if (xqspi->txbuf) {
+-		writesl(xqspi->regs + ZYNQ_QSPI_TXD_00_00_OFFSET,
+-			xqspi->txbuf, count);
++		iowrite32_rep(xqspi->regs + ZYNQ_QSPI_TXD_00_00_OFFSET,
++			      xqspi->txbuf, count);
+ 		xqspi->txbuf += count * 4;
+ 	} else {
+ 		for (k = 0; k < count; k++)
+@@ -433,8 +433,8 @@ static void zynq_qspi_read_op(struct zynq_qspi *xqspi, int rxcount)
+ 	if (count > rxcount)
+ 		count = rxcount;
+ 	if (xqspi->rxbuf) {
+-		readsl(xqspi->regs + ZYNQ_QSPI_RXD_OFFSET,
+-		       xqspi->rxbuf, count);
++		ioread32_rep(xqspi->regs + ZYNQ_QSPI_RXD_OFFSET,
++			     xqspi->rxbuf, count);
+ 		xqspi->rxbuf += count * 4;
+ 	} else {
+ 		for (k = 0; k < count; k++)
 -- 
 2.20.1
 
