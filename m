@@ -2,133 +2,131 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27658C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED2BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58442133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A6C20644
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZrJ2qK2x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WsqGR+fQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfEBSST (ORCPT
+        id S1726546AbfEBSS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:18:19 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42698 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfEBSSO (ORCPT
+        Thu, 2 May 2019 14:18:57 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58240 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfEBSS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:18:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p6so1419867pgh.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i5E3RSE8lQiSqCimg0Jp86ttgCCec2oGoZPCpZScr5E=;
-        b=ZrJ2qK2x6e2tQD/KrenlD7nA9vWWuqna7yfhiZinM8ZcBfkNkimmxMOpECoVPitUCd
-         5jN/aErSVoNujlZPhBvusaVinK3xQs5FjR/WOwBKcpOZUuhflXXDO8QPjOb8JomTWyng
-         9VQwAc1oNcwde0b84L/5+7A28zMNGAqaZ02Dgi1qPueMQKA+Qoz9TebxZ3SYwAJRw/ch
-         CUbZ0H1OLS5xWQq+FTfvwOB0/daVUcbj/7BqhJVN5b89udMs6DSKAnPnAUtNipR7mSgl
-         BWf8BAjrpLiUj2GI+8Mj0agUYDoNOJI3m++ArVGXyngbBexIChDs6fTCQ9ZvyQr+QKcB
-         Nnxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i5E3RSE8lQiSqCimg0Jp86ttgCCec2oGoZPCpZScr5E=;
-        b=TP/x4XO05bR9qYshkOBwn78DD3MJaTbCXnhu6KQKy/KFbxqWLmywWVZQ+W9e4/4pMd
-         hJMA3ELBpxHbpFYCsSyeqoU77MWrHRxtBU2HDWGY2pPCX2pOlC12MYE19lLzRPU0yqjl
-         zr1HSzgUgXWfCnB/1heegLWpdtWjeE0SaOxE60IUu8BfpA1vKgR0MOjl5Zbf6/7S9gnk
-         gaTk9Edm3YLvBwT9A0BBg6FgKbFHoB1Nt3wNl5TiE11FiYJ6eHVO14ffw+oH2rt5Esb1
-         NHpsi9oV7Leu04x2XUGXgkO3OxIlWQ09KJTcoxWXV6c3fM5VzJCM+6GxII2fq4BWBCed
-         fGlQ==
-X-Gm-Message-State: APjAAAXX6xTtQ46n7YaQtjbPA6P8t7ePdliKyYKVuidtoqz6CrHmWzkw
-        ArIVkF0juEQpdyIW7YbUofdy3TyN4dBBV4hKImCnXg==
-X-Google-Smtp-Source: APXvYqyum+u6TX+AnvXMQhK0hPsMGunXOwrUrgK8auFMJ/68iASPoxxQrweBV/uzyUaDhVMRGKLMVQum8VJ0vnhhgEE=
-X-Received: by 2002:aa7:8096:: with SMTP id v22mr5731088pff.94.1556821092860;
- Thu, 02 May 2019 11:18:12 -0700 (PDT)
+        Thu, 2 May 2019 14:18:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OUOTgiwlJlyZHx9KJsKpSdKtPOxMeVL7eOFNyapCTik=; b=WsqGR+fQ18Y7cQXaFj2PBR02v
+        siV99KT4OxQS33ZTF4/KhMGLopbfOEy4qIqFqmlrCQKyXadrdliOch0gxjFo36IcvxUXyp4/I+8E0
+        Bt+/C9Rws0ye6wGr+2M0kEBR/Fh56+eO0qLl4vjM33C1+haONnTBfkkDrJtQ/yatcor+M7a489jC6
+        t1+StvXmvEK1c5zs4lIYiuKDgzytIXU9N5gBwohiHgGN0jzWcHUw2NFJ3Ix+sztlRL2UliPb7OTBa
+        0GHQP6eKghAhHNeaNvLCIChZ/r7egen0P+JCVAhtErt1P2lUDj4lDnxBjI65lESFDfb46oB+TcWnv
+        CNRUWs51Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMGHf-0002Df-16; Thu, 02 May 2019 18:18:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D1CE12066BB8E; Thu,  2 May 2019 20:18:11 +0200 (CEST)
+Date:   Thu, 2 May 2019 20:18:11 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Message-ID: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+References: <20190501202830.347656894@goodmis.org>
+ <20190501203152.397154664@goodmis.org>
+ <20190501232412.1196ef18@oasis.local.home>
+ <20190502162133.GX2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190502151548.11143-1-natechancellor@gmail.com>
-In-Reply-To: <20190502151548.11143-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 2 May 2019 11:18:01 -0700
-Message-ID: <CAKwvOd=nvKGGW5jvN+WFUXzOm9xeiNNUD0F9--9YcpuRmnWWhA@mail.gmail.com>
-Subject: Re: [PATCH] rsi: Properly initialize data in rsi_sdio_ta_reset
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 8:16 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> When building with -Wuninitialized, Clang warns:
->
-> drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: warning: variable 'data'
-> is uninitialized when used here [-Wuninitialized]
->         put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
->                                                  ^~~~
-> drivers/net/wireless/rsi/rsi_91x_sdio.c:930:10: note: initialize the
-> variable 'data' to silence this warning
->         u8 *data;
->                 ^
->                  = NULL
-> 1 warning generated.
->
-> Using Clang's suggestion of initializing data to NULL wouldn't work out
-> because data will be dereferenced by put_unaligned_le32. Use kzalloc to
-> properly initialize data, which matches a couple of other places in this
-> driver.
->
-> Fixes: e5a1ecc97e5f ("rsi: add firmware loading for 9116 device")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/464
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/net/wireless/rsi/rsi_91x_sdio.c | 21 ++++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-> index f9c67ed473d1..b35728564c7b 100644
-> --- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
-> +++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-> @@ -929,11 +929,15 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
->         u32 addr;
->         u8 *data;
->
-> +       data = kzalloc(sizeof(u32), GFP_KERNEL);
+On Thu, May 02, 2019 at 11:02:40AM -0700, Linus Torvalds wrote:
+> On Thu, May 2, 2019 at 9:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > TL;DR, on x86_32 kernel->kernel IRET frames are only 3 entries and do
+> > not include ESP/SS, so not only wasn't regs->sp setup, if you changed it
+> > it wouldn't be effective and corrupt random stack state.
+> 
+> Indeed, the 32-bit case for same-RPL exceptions/iret is entirely
+> different, and I'd forgotten about that.
+> 
+> And honestly, this makes the 32-bit case much worse. Now the entry
+> stack modifications of int3 suddenly affect not just the entry, but
+> every exit too.
 
-Something fishy is going on here.  We allocate 4 B but declare data as
-a u8* (pointer to individual bytes)?  In general, dynamically
-allocating that few bytes is a code smell; either you meant to just
-use the stack, or this memory's lifetime extends past the lifetime of
-this stackframe, at which point you probably just meant to stack
-allocate space in a higher parent frame and pass this preallocated
-memory down to the child frame to get filled in.
+We could fix this by not using the common exit path on int3; not sure we
+want to go there, but that is an option.
 
-Reading through this code, I don't think that the memory is meant to
-outlive the stack frame.  Is there a reason why we can't just declare
-data as:
+> This is _exactly_ the kind of subtle kernel entry/exit code I wanted
+> us to avoid.
+> 
+> And while your code looks kind of ok, it's subtly buggy. This sequence:
+> 
+> +       pushl   %eax
+> +       movl    %esp, %eax
+> +
+> +       movl    4*4(%eax), %esp         # restore (modified) regs->sp
+> +
+> +       /* rebuild IRET frame */
+> +       pushl   3*4(%eax)               # flags
+> +       pushl   2*4(%eax)               # cs
+> +       pushl   1*4(%eax)               # ip
+> +
+> +       andl    $0x0000ffff, 4(%esp)    # clear high CS bits
+> +
+> +       movl    (%eax), %eax            # restore eax
+> 
+> looks very wrong to me. When you do that "restore (modified)
+> regs->sp", isn't that now resetting %esp to the point where %eax now
+> points below the stack? So if we get an NMI in this sequence, that
+> will overwrite the parts you are trying to copy from?
 
-u8 data [4];
-
-then use ARRAY_SIZE(data) or RSI_9116_REG_SIZE in rsi_reset_chip(),
-getting rid of the kzalloc/kfree?
-
-(Sorry, I hate when a simple fixup becomes a "hey let's rewrite all
-this code" thus becoming "that guy.")
--- 
-Thanks,
-~Nick Desaulniers
+ARGH; I knew it was too pretty :/ Yes, something like what you suggest
+will be needed, I'll go look at that once my brain recovers a bit from
+staring at entry code all day.
