@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B868CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D45C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6212520B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E5F20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZEX2KMA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPOmCXnO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfEBUYs (ORCPT
+        id S1726569AbfEBUYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 16:24:48 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39985 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbfEBUYn (ORCPT
+        Thu, 2 May 2019 16:24:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52829 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfEBUYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 16:24:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h4so5119352wre.7;
-        Thu, 02 May 2019 13:24:42 -0700 (PDT)
+        Thu, 2 May 2019 16:24:49 -0400
+Received: by mail-wm1-f66.google.com with SMTP id j13so4619045wmh.2;
+        Thu, 02 May 2019 13:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eNwEq5Or4bWTUzwzELHbHDLYFqTs+RWmHegQP5AuHJs=;
-        b=gZEX2KMAz1ouktZbqMZSabpSdxuQ1f9Ak5DFy2bPJZHQtcPiAe+TopOEdF04ZSEzq6
-         4q0c2omPbOrJ8416GG3hj8A8U+I31hfgN8IQdGiiDSX3MHqCAnH0NAMjYpMoRi+5lWo/
-         y2HYmN8Z+A3b25w8b25xpd9ZXD9NUBGTH/xcHkTduFFdbPp9L95IydWJNBCS6oSWMzBZ
-         m8cFYsI/Y3+KV5zLurdDZ+HJGTi5le3tbdj6F3poCTiS6IRtJrEOCTR/vQwEkj6wXnTf
-         wo19DIOv7xZR6Dklp24bndiBEV5cDSurjiUmmJgvs0DSngYasq1HU//CoRFjtBOtyLmV
-         cOxA==
+        bh=AWaTyH8RHpe0iP1Y4M5mqWTStpzXizrVz7rLXWNoFA8=;
+        b=EPOmCXnO0qrNMPpMbDa4WU3v6OkXefwA/3rslvxZttZIiz0Z4jzUneZdJX/ieXsiTg
+         I5d1vaBAlweTmLLjjggjbV/fAhM0lwlSBdLbxAfoazfnhT9qpkbtvd6ASXGMpX+RrUDd
+         JWY5Y95E42ZGIsvCmI70/YqAYps/Fr6lui1nrjGq2mxmcXUbBJxPJ5Ca2TH3ZVhzv+l+
+         ofATFohf9ucou7ZjUZ0UgXT/IGtJAw8g5zy5A8xK7p4QMkx0sMq8sfBQ0Hu4rmqU5EwB
+         MtWDhMvgLJTi1orhPkGE4A59BXOOqQK9dZE6cZf14R+6cuxJgrwSnEV7uWBMijj6V7K3
+         WNXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=eNwEq5Or4bWTUzwzELHbHDLYFqTs+RWmHegQP5AuHJs=;
-        b=KX0WRWkQM9uPHNlYMt5HUGGzwcZI6F1q/0tCBdMs15ZyR3Gp7uy/XDfagvFKRzCMlb
-         9WSIJ4qoIBaxmVXCarpGRxQEOcExhzCdk3Vs8/pZCp6wyLLz3Txh9FyttjcvAP71x5dh
-         /gzNeN3EZe6s9tt3HQs7FHCw4tCaOrger7NfTzQNrspe69zGXa5ULt/NLMM6CjJBgeno
-         EHieHBcWe1xZC6JbKcYndg1dvKsr81hYCNXea+NSNs/+AD2E1wCmqvbkItb/lIcARKDd
-         UIpLIifp3/70VtrkmLnzETazAVZ2MUK3caKBheHOGNOE/djIim3k1t63T54sSJvnh/pe
-         PsfQ==
-X-Gm-Message-State: APjAAAVVYXbJQ/Zti6gcFkCStWLOIxJmHE1/1EmD9yZoUmDg34p2qb2y
-        OoebNbHql53OOKo1BlDlltA=
-X-Google-Smtp-Source: APXvYqxSpDaPmUx3zE2W3yEggWNO3mO/gSrgpE3HjxOmJFAvZfhamcJ0XHi7g24V5iNMzUWU1MJ3Lw==
-X-Received: by 2002:adf:dccc:: with SMTP id x12mr4230273wrm.168.1556828682018;
-        Thu, 02 May 2019 13:24:42 -0700 (PDT)
+        bh=AWaTyH8RHpe0iP1Y4M5mqWTStpzXizrVz7rLXWNoFA8=;
+        b=ezkHZ23c6I10Lvp5GobYPlHlPo+wAsWAgwn8Em+kcCsBaDG0Yrd1v32MiBLgyR1Qzf
+         uoxmY2SBDDSxZzjznEeiRd4P03iwXTfnuZJQVpL2JT1A/2rwn4WqQiGKkEjwV913pYqu
+         qwUGUGfjalSPOTi4cxNwipEPvv7nHEjzHvBWxlnqwhrsnsmNlWk+1gRr/45v1qxDmHv6
+         9pmJrt6L+GQx0VrtH0Dj8cCWuqAVBD95zDotwdb+6XZ4G21motL9M1b/ntjs0iybLVGm
+         kNbCWW4E0DZfYwaVOKieGWewYRxKVxUvXBBjZp/hheTZ0UVZczkzu9ssydFDDz4Esg3t
+         qMgQ==
+X-Gm-Message-State: APjAAAXLEClxFut8M4XNBftH+AEU1gGgWV4riy3dmeg8+tipSPzNYyVI
+        vCW2YMfArmv6seHHd1op9aY=
+X-Google-Smtp-Source: APXvYqyrHxTA7SsTQI72ukWQyk63YJOqWKc6oCJO43abP/TiVsIH522/zqXQ9kdzXACNLsS59PHpDw==
+X-Received: by 2002:a7b:c243:: with SMTP id b3mr3570965wmj.122.1556828686997;
+        Thu, 02 May 2019 13:24:46 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id s124sm217655wmf.42.2019.05.02.13.24.41
+        by smtp.gmail.com with ESMTPSA id s124sm217655wmf.42.2019.05.02.13.24.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 13:24:41 -0700 (PDT)
+        Thu, 02 May 2019 13:24:46 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v5 net-next 04/12] net: dsa: sja1105: Error out if RGMII delays are requested in DT
-Date:   Thu,  2 May 2019 23:23:32 +0300
-Message-Id: <20190502202340.21054-5-olteanv@gmail.com>
+Subject: [PATCH v5 net-next 09/12] net: dsa: sja1105: Prevent PHY jabbering during switch reset
+Date:   Thu,  2 May 2019 23:23:37 +0300
+Message-Id: <20190502202340.21054-10-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190502202340.21054-1-olteanv@gmail.com>
 References: <20190502202340.21054-1-olteanv@gmail.com>
@@ -71,58 +71,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation/devicetree/bindings/net/ethernet.txt is confusing because
-it says what the MAC should not do, but not what it *should* do:
+Resetting the switch at runtime is currently done while changing the
+vlan_filtering setting (due to the required TPID change).
 
-  * "rgmii-rxid" (RGMII with internal RX delay provided by the PHY, the MAC
-     should not add an RX delay in this case)
+But reset is asynchronous with packet egress, and the switch core will
+not wait for egress to finish before carrying on with the reset
+operation.
 
-The gap in semantics is threefold:
-1. Is it illegal for the MAC to apply the Rx internal delay by itself,
-   and simplify the phy_mode (mask off "rgmii-rxid" into "rgmii") before
-   passing it to of_phy_connect? The documentation would suggest yes.
-1. For "rgmii-rxid", while the situation with the Rx clock skew is more
-   or less clear (needs to be added by the PHY), what should the MAC
-   driver do about the Tx delays? Is it an implicit wild card for the
-   MAC to apply delays in the Tx direction if it can? What if those were
-   already added as serpentine PCB traces, how could that be made more
-   obvious through DT bindings so that the MAC doesn't attempt to add
-   them twice and again potentially break the link?
-3. If the interface is a fixed-link and therefore the PHY object is
-   fixed (a purely software entity that obviously cannot add clock
-   skew), what is the meaning of the above property?
+As a result, a connected PHY such as the BCM5464 would see an
+unterminated Ethernet frame and start to jabber (repeat the last seen
+Ethernet symbols - jabber is by definition an oversized Ethernet frame
+with bad FCS). This behavior is strange in itself, but it also causes
+the MACs of some link partners (such as the FRDM-LS1012A) to completely
+lock up.
 
-So an interpretation of the RGMII bindings was chosen that hopefully
-does not contradict their intention but also makes them more applied.
-The SJA1105 driver understands to act upon "rgmii-*id" phy-mode bindings
-if the port is in the PHY role (either explicitly, or if it is a
-fixed-link). Otherwise it always passes the duty of setting up delays to
-the PHY driver.
-
-The error behavior that this patch adds is required on SJA1105E/T where
-the MAC really cannot apply internal delays. If the other end of the
-fixed-link cannot apply RGMII delays either (this would be specified
-through its own DT bindings), then the situation requires PCB delays.
-
-For SJA1105P/Q/R/S, this is however hardware supported and the error is
-thus only temporary. I created a stub function pointer for configuring
-delays per-port on RXC and TXC, and will implement it when I have access
-to a board with this hardware setup.
-
-Meanwhile do not allow the user to select an invalid configuration.
+So as a remedy for this situation, when switch reset is required, simply
+inhibit Tx on all ports, and wait for the necessary time for the
+eventual one frame left in the egress queue (not even the Tx inhibit
+command is instantaneous) to be flushed.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
 Changes in v5:
 None.
 
 Changes in v4:
-Moved RGMII delay settings to an array in sja1105_private. The
-sja1105_port structure will be used to share info with the tagger (in a
-future patchset), and RGMII delays are not an example of that.
-Not setting to NULL function pointers that don't need to.
+Changed SIZE_PORT_CTRL to SJA1105_SIZE_PORT_CTRL.
 
 Changes in v3:
 None.
@@ -130,98 +105,105 @@ None.
 Changes in v2:
 Patch is new.
 
- drivers/net/dsa/sja1105/sja1105.h          |  3 ++
- drivers/net/dsa/sja1105/sja1105_clocking.c |  5 +++-
- drivers/net/dsa/sja1105/sja1105_main.c     | 34 ++++++++++++++++++++++
- 3 files changed, 41 insertions(+), 1 deletion(-)
+ drivers/net/dsa/sja1105/sja1105.h     |  1 +
+ drivers/net/dsa/sja1105/sja1105_spi.c | 37 +++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
 
 diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-index 50ab9282c4f1..87dee6794d98 100644
+index 0489d9adf957..b0a155b57e17 100644
 --- a/drivers/net/dsa/sja1105/sja1105.h
 +++ b/drivers/net/dsa/sja1105/sja1105.h
-@@ -48,11 +48,14 @@ struct sja1105_info {
- 	const struct sja1105_table_ops *static_ops;
- 	const struct sja1105_regs *regs;
- 	int (*reset_cmd)(const void *ctx, const void *data);
-+	int (*setup_rgmii_delay)(const void *ctx, int port);
- 	const char *name;
- };
+@@ -22,6 +22,7 @@ struct sja1105_regs {
+ 	u64 device_id;
+ 	u64 prod_id;
+ 	u64 status;
++	u64 port_control;
+ 	u64 rgu;
+ 	u64 config;
+ 	u64 rmii_pll1;
+diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+index 07890bbf40f8..244a94ccfc18 100644
+--- a/drivers/net/dsa/sja1105/sja1105_spi.c
++++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+@@ -7,6 +7,7 @@
+ #include <linux/packing.h>
+ #include "sja1105.h"
  
- struct sja1105_private {
- 	struct sja1105_static_config static_config;
-+	bool rgmii_rx_delay[SJA1105_NUM_PORTS];
-+	bool rgmii_tx_delay[SJA1105_NUM_PORTS];
- 	const struct sja1105_info *info;
- 	struct gpio_desc *reset_gpio;
- 	struct spi_device *spidev;
-diff --git a/drivers/net/dsa/sja1105/sja1105_clocking.c b/drivers/net/dsa/sja1105/sja1105_clocking.c
-index 598544297931..94bfe0ee50a8 100644
---- a/drivers/net/dsa/sja1105/sja1105_clocking.c
-+++ b/drivers/net/dsa/sja1105/sja1105_clocking.c
-@@ -427,7 +427,10 @@ static int sja1105_rgmii_clocking_setup(struct sja1105_private *priv, int port)
- 		dev_err(dev, "Failed to configure Tx pad registers\n");
- 		return rc;
- 	}
--	return 0;
-+	if (!priv->info->setup_rgmii_delay)
-+		return 0;
-+
-+	return priv->info->setup_rgmii_delay(priv, port);
++#define SJA1105_SIZE_PORT_CTRL		4
+ #define SJA1105_SIZE_RESET_CMD		4
+ #define SJA1105_SIZE_SPI_MSG_HEADER	4
+ #define SJA1105_SIZE_SPI_MSG_MAXLEN	(64 * 4)
+@@ -282,6 +283,25 @@ static int sja1105_cold_reset(const struct sja1105_private *priv)
+ 	return priv->info->reset_cmd(priv, &reset);
  }
  
- static int sja1105_cgu_rmii_ref_clk_config(struct sja1105_private *priv,
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index ec8137eff223..d27b9c178cba 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -518,6 +518,30 @@ static int sja1105_static_config_load(struct sja1105_private *priv,
- 	return sja1105_static_config_upload(priv);
- }
- 
-+static int sja1105_parse_rgmii_delays(struct sja1105_private *priv,
-+				      const struct sja1105_dt_port *ports)
++static int sja1105_inhibit_tx(const struct sja1105_private *priv,
++			      const unsigned long *port_bitmap)
 +{
-+	int i;
++	const struct sja1105_regs *regs = priv->info->regs;
++	u64 inhibit_cmd;
++	int port, rc;
 +
-+	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
-+		if (ports->role == XMII_MAC)
-+			continue;
++	rc = sja1105_spi_send_int(priv, SPI_READ, regs->port_control,
++				  &inhibit_cmd, SJA1105_SIZE_PORT_CTRL);
++	if (rc < 0)
++		return rc;
 +
-+		if (ports->phy_mode == PHY_INTERFACE_MODE_RGMII_RXID ||
-+		    ports->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
-+			priv->rgmii_rx_delay[i] = true;
++	for_each_set_bit(port, port_bitmap, SJA1105_NUM_PORTS)
++		inhibit_cmd |= BIT(port);
 +
-+		if (ports->phy_mode == PHY_INTERFACE_MODE_RGMII_TXID ||
-+		    ports->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
-+			priv->rgmii_tx_delay[i] = true;
-+
-+		if ((priv->rgmii_rx_delay[i] || priv->rgmii_tx_delay[i]) &&
-+		     !priv->info->setup_rgmii_delay)
-+			return -EINVAL;
-+	}
-+	return 0;
++	return sja1105_spi_send_int(priv, SPI_WRITE, regs->port_control,
++				    &inhibit_cmd, SJA1105_SIZE_PORT_CTRL);
 +}
 +
- static int sja1105_parse_ports_node(struct sja1105_private *priv,
- 				    struct sja1105_dt_port *ports,
- 				    struct device_node *ports_node)
-@@ -959,6 +983,16 @@ static int sja1105_setup(struct dsa_switch *ds)
- 		dev_err(ds->dev, "Failed to parse DT: %d\n", rc);
- 		return rc;
+ struct sja1105_status {
+ 	u64 configs;
+ 	u64 crcchkl;
+@@ -370,6 +390,7 @@ static_config_buf_prepare_for_upload(struct sja1105_private *priv,
+ 
+ int sja1105_static_config_upload(struct sja1105_private *priv)
+ {
++	unsigned long port_bitmap = GENMASK_ULL(SJA1105_NUM_PORTS - 1, 0);
+ 	struct sja1105_static_config *config = &priv->static_config;
+ 	const struct sja1105_regs *regs = priv->info->regs;
+ 	struct device *dev = &priv->spidev->dev;
+@@ -388,6 +409,20 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+ 		dev_err(dev, "Invalid config, cannot upload\n");
+ 		return -EINVAL;
  	}
-+
-+	/* Error out early if internal delays are required through DT
-+	 * and we can't apply them.
++	/* Prevent PHY jabbering during switch reset by inhibiting
++	 * Tx on all ports and waiting for current packet to drain.
++	 * Otherwise, the PHY will see an unterminated Ethernet packet.
 +	 */
-+	rc = sja1105_parse_rgmii_delays(priv, ports);
++	rc = sja1105_inhibit_tx(priv, &port_bitmap);
 +	if (rc < 0) {
-+		dev_err(ds->dev, "RGMII delay not supported\n");
-+		return rc;
++		dev_err(dev, "Failed to inhibit Tx on ports\n");
++		return -ENXIO;
 +	}
-+
- 	/* Create and send configuration down to device */
- 	rc = sja1105_static_config_load(priv, ports);
- 	if (rc < 0) {
++	/* Wait for an eventual egress packet to finish transmission
++	 * (reach IFG). It is guaranteed that a second one will not
++	 * follow, and that switch cold reset is thus safe
++	 */
++	usleep_range(500, 1000);
+ 	do {
+ 		/* Put the SJA1105 in programming mode */
+ 		rc = sja1105_cold_reset(priv);
+@@ -452,6 +487,7 @@ struct sja1105_regs sja1105et_regs = {
+ 	.device_id = 0x0,
+ 	.prod_id = 0x100BC3,
+ 	.status = 0x1,
++	.port_control = 0x11,
+ 	.config = 0x020000,
+ 	.rgu = 0x100440,
+ 	.pad_mii_tx = {0x100800, 0x100802, 0x100804, 0x100806, 0x100808},
+@@ -476,6 +512,7 @@ struct sja1105_regs sja1105pqrs_regs = {
+ 	.device_id = 0x0,
+ 	.prod_id = 0x100BC3,
+ 	.status = 0x1,
++	.port_control = 0x12,
+ 	.config = 0x020000,
+ 	.rgu = 0x100440,
+ 	.pad_mii_tx = {0x100800, 0x100802, 0x100804, 0x100806, 0x100808},
 -- 
 2.17.1
 
