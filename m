@@ -2,158 +2,117 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CE8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B0DC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B182081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134D120675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Y9N0v0jb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEBP4N (ORCPT
+        id S1726486AbfEBP5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:56:13 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8954 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbfEBP4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:56:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 08:56:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,422,1549958400"; 
-   d="scan'208";a="147702137"
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga007.fm.intel.com with ESMTP; 02 May 2019 08:56:09 -0700
-Message-ID: <ed56d7930e630213d74a7df8b9144d01415dac7c.camel@intel.com>
-Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org
-Date:   Thu, 02 May 2019 08:48:42 -0700
-In-Reply-To: <20190502142951.GP3567@e103592.cambridge.arm.com>
-References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
-         <20190502111003.GO3567@e103592.cambridge.arm.com>
-         <20190502142951.GP3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 2 May 2019 11:57:08 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:39146 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726282AbfEBP5H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:57:07 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 323CBC020C;
+        Thu,  2 May 2019 15:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556812623; bh=RBOX3eQrC5rsRBXO9Yo4WNgviqeI5NSvve/zb+XLVxc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=Y9N0v0jbsVcHuNWEyS1eF82Jf4TrB1GjTxL4ay82AZzmkjfu9VriSg14I27lP0YdC
+         fQEqLS2NlVx9dDvL4mFiu+c+/9kpgO72N6F/2v+ZtNs4AW0Xg84LLUq4P/MCC9N1DV
+         rqsN7sYzVG0fDGI36mF3d6qChyQ4AfjURSYmMLyy5kj1/6Elmzy1g4MsrAQo1nZrHE
+         AHslJ8cnBPiJjPWui/RyUJz/RDflxwpyS6i8MUfjgSg9svZpoTp/CvDojnVgBFMWxQ
+         tuIE91wmOvITeiZo35AtcBJ/860RMj8IrTtpt6awXJ4Mz6XjwdhPq31e6lCA2cJseX
+         NfdwXAyzG/1Zw==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id BEF7BA005D;
+        Thu,  2 May 2019 15:57:04 +0000 (UTC)
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 2 May 2019 08:57:04 -0700
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 2 May 2019 21:27:12 +0530
+Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.10.161.89) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 2 May 2019 21:27:12 +0530
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+CC:     <netdev@vger.kernel.org>, Wang Nan <wangnan0@huawei.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-snps-arc@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <arnaldo.melo@gmail.com>,
+        Y Song <ys114321@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH v2] tools/bpf: fix perf build error with uClibc (seen on ARC)
+Date:   Thu, 2 May 2019 08:56:50 -0700
+Message-ID: <1556812610-27957-1-git-send-email-vgupta@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <CAH3MdRVkUFfwKkgT-pi-RLBpcEf6n0bAwWZOu-=7+qctPTCpkw@mail.gmail.com>
+References: <CAH3MdRVkUFfwKkgT-pi-RLBpcEf6n0bAwWZOu-=7+qctPTCpkw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.10.161.89]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-02 at 15:29 +0100, Dave Martin wrote:
-> On Thu, May 02, 2019 at 12:10:04PM +0100, Dave Martin wrote:
-> > On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
-> 
-> [...]
-> 
-> > > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c > > index
-> > > 7d09d125f148..40aa4a4fd64d 100644
-> > > --- a/fs/binfmt_elf.c
-> > > +++ b/fs/binfmt_elf.c
-> > > @@ -1076,6 +1076,19 @@ static int load_elf_binary(struct linux_binprm
-> > > *bprm)
-> > >  		goto out_free_dentry;
-> > >  	}
-> > >  
-> > > +	if (interpreter) {
-> > > +		retval = arch_setup_property(&loc->interp_elf_ex,
-> > > +					     interp_elf_phdata,
-> > > +					     interpreter, true);
-> > > +	} else {
-> > > +		retval = arch_setup_property(&loc->elf_ex,
-> > > +					     elf_phdata,
-> > > +					     bprm->file, false);
-> > > +	}
-> 
-> This will be too late for arm64, since we need to twiddle the mmap prot
-> flags for the executable's pages based on the detected properties.
-> 
-> Can we instead move this much earlier, letting the arch code stash
-> something in arch_state that can be consumed later on?
-> 
-> This also has the advantage that we can report errors to the execve()
-> caller before passing the point of no return (i.e., flush_old_exec()).
+When build perf for ARC recently, there was a build failure due to lack
+of __NR_bpf.
 
-I will look into that.
+| Auto-detecting system features:
+|
+| ...                     get_cpuid: [ OFF ]
+| ...                           bpf: [ on  ]
+|
+| #  error __NR_bpf not defined. libbpf does not support your arch.
+    ^~~~~
+| bpf.c: In function 'sys_bpf':
+| bpf.c:66:17: error: '__NR_bpf' undeclared (first use in this function)
+|  return syscall(__NR_bpf, cmd, attr, size);
+|                 ^~~~~~~~
+|                 sys_bpf
 
-> 
-> [...]
-> 
-> > > diff --git a/fs/gnu_property.c b/fs/gnu_property.c
-> 
-> [...]
-> 
-> > > +int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
-> > > +		     u32 pr_type, u32 *property)
-> > > +{
-> > > +	struct elf64_hdr *ehdr64 = ehdr_p;
-> > > +	int err = 0;
-> > > +
-> > > +	*property = 0;
-> > > +
-> > > +	if (ehdr64->e_ident[EI_CLASS] == ELFCLASS64) {
-> > > +		struct elf64_phdr *phdr64 = phdr_p;
-> > > +
-> > > +		err = scan_segments_64(f, phdr64, ehdr64->e_phnum,
-> > > +				       pr_type, property);
-> > > +		if (err < 0)
-> > > +			goto out;
-> > > +	} else {
-> > > +#ifdef CONFIG_COMPAT
-> > > +		struct elf32_hdr *ehdr32 = ehdr_p;
-> > > +
-> > > +		if (ehdr32->e_ident[EI_CLASS] == ELFCLASS32) {
-> > > +			struct elf32_phdr *phdr32 = phdr_p;
-> > > +
-> > > +			err = scan_segments_32(f, phdr32, ehdr32-
-> > > >e_phnum,
-> > > +					       pr_type, property);
-> > > +			if (err < 0)
-> > > +				goto out;
-> > > +		}
-> > > +#else
-> > > +	WARN_ONCE(1, "Exec of 32-bit app, but CONFIG_COMPAT is not
-> > > enabled.\n");
-> > > +	return -ENOTSUPP;
-> > > +#endif
-> > > +	}
-> 
-> We have already made a ton of assumptions about the ELF class by this
-> point, and we don't seem to check it explicitly elsewhere, so it is a
-> bit weird to police it specifically here.
-> 
-> Can we simply pass the assumed ELF class as a parameter instead?
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+---
+v1 -> v2
+  - Only add syscall nr for ARC, as asm-generic won't work with arm/sh [Y Song]
+---
+ tools/lib/bpf/bpf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Yes.
+diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+index 9cd015574e83..d82edadf7589 100644
+--- a/tools/lib/bpf/bpf.c
++++ b/tools/lib/bpf/bpf.c
+@@ -46,6 +46,8 @@
+ #  define __NR_bpf 349
+ # elif defined(__s390__)
+ #  define __NR_bpf 351
++# elif defined(__arc__)
++#  define __NR_bpf 280
+ # else
+ #  error __NR_bpf not defined. libbpf does not support your arch.
+ # endif
+-- 
+2.7.4
 
-Yu-cheng
