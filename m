@@ -2,137 +2,99 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EB3C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E01C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BBE2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCD32081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dnr+o15R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOwCFJtf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfEBREr (ORCPT
+        id S1726561AbfEBRFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:04:47 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11354 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfEBREq (ORCPT
+        Thu, 2 May 2019 13:05:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43880 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfEBRFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:04:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ccb23280000>; Thu, 02 May 2019 10:04:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 02 May 2019 10:04:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 02 May 2019 10:04:44 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 17:04:44 +0000
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 17:04:34 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 2 May 2019 17:04:35 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ccb23200001>; Thu, 02 May 2019 10:04:34 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>,
-        <sagar.tv@gmail.com>, <vidyas@nvidia.com>
-Subject: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-Date:   Thu, 2 May 2019 22:34:25 +0530
-Message-ID: <20190502170426.28688-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        Thu, 2 May 2019 13:05:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a12so4380561wrq.10;
+        Thu, 02 May 2019 10:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=in1uQTMBWtOh64av0pw1ODlK0jXEz8TDIIxX4L0HSRA=;
+        b=kOwCFJtflkHUjyiXGdvExSqjhcE5ZYlpIXr5N+Iaq/I7vPUktq+UOIo6Ddbgl29+Kd
+         t145ckjj9usNhRH61XvBAw06oO9570T9O25OFCelvhXRnA7Hl9pzjjB0nc0enMJcnfLw
+         /BW78bYnTn6bg1hTqKPOh0MsdcORklFgNpj5UOsTVV8oUUdGosPonUFtrK+amxHBCp21
+         4zX91N0M1tdODQt2dcSdoKcICUKsANr3txBbtTan44bjzFqbESdFBXPXlQL3CdZY5CZT
+         uDkRBv8nr6yB8/Zy1yy0AR2Pn9KtKxzPZYkCrnqFYh6p9s6niYqvga8SBhSQwZ/PpFHT
+         Ak9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=in1uQTMBWtOh64av0pw1ODlK0jXEz8TDIIxX4L0HSRA=;
+        b=bz8nYG9qtwgLNE7WQxHvXEAZIt/crkok2FlvkX8KgJ3XKZGDno5I/838ilLALzU3yv
+         cpMmeHsVJg0j/5hOiKY3JXFk89b4/nE3h4voIWJ1kWMD9H9KSnGqP1rIDtP2gtHS2Pk1
+         7aT5xbp/0GtH0M0AObJtoV4Rah3PA2e9H4ZGX3PYMXG+h/b+wqEuVHFfW1JPRR0VSmZI
+         qX1ZYqi+fbFqcuUf1CNWW265U/PM55G08iEStgOO/TXgizOWsKyKsa1d3K+/3iTpoJce
+         bnB3ZUFrsHvx/b3aFJeKXKsnLlvj3ZDs9lDIhN2o6bc50mhj0sCDzCEKJ3VGw4OBTsIJ
+         Oq/A==
+X-Gm-Message-State: APjAAAU1iwy5tvtIvlvlTxOU2W7HsMwaIBBqp9dRpEUqCRVLq/r4UvmC
+        nsFJaSRkdJSTbwxi7WcxMB0W69r6jmw3l+QUam+FJOd5
+X-Google-Smtp-Source: APXvYqzJDJeZH+u5wLZrtMk5dWcg78roX9gJZ5vsT311mdXiEx6qouJx5Vb1BhPWlULehIojAMrngHojXiE6gEFNXmk=
+X-Received: by 2002:a5d:4dc1:: with SMTP id f1mr3668977wru.300.1556816749412;
+ Thu, 02 May 2019 10:05:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556816681; bh=KU92sWXq4K53rDOlHCdvyaqWnJeE7djISnWrJVyYy44=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=dnr+o15REp7Ky9MInLuEg9Ote+2ZG7Dws5xAAjRGOjdol4zzlcnouPO9txwtXtOnJ
-         QyhWjYScgxxXAM2+Z8j05tYLt9pTXN+vlje581E7DqmbBs8A+UOP0nZ8FdC+Kjyjts
-         wzFvWrF/ikuUsMwTY05Gt5GiH/DheOwnYrgEzbUOCX6WR5QEbDirUgeMUEcnyh9iDv
-         KfGIfoN4loEiPTkvsJmoYttT0BGJu/YV6wwF/ezyuAR2oh1HGtV+jGxpGenowxNtNF
-         uuWv2bLxg+btizFEO4BEcqNE88kQ0BwRWTHjwk5Hi0jSmnA1ev59K4LNEqc43xklRI
-         1zxfEibc8rUjg==
+References: <20190429001706.7449-1-olteanv@gmail.com> <20190430.234425.732219702361005278.davem@davemloft.net>
+ <CA+h21hrmXaAAepTrY-HfbrmZPVRf3Qg1-fA8EW4prwSkrGYogQ@mail.gmail.com> <20190502165530.GJ19809@lunn.ch>
+In-Reply-To: <20190502165530.GJ19809@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 2 May 2019 20:05:38 +0300
+Message-ID: <CA+h21hrBY+TW9cqyovH93HE=Ho26Qdm12s4J4JqMmwNF2YNb6Q@mail.gmail.com>
+Subject: Re: [PATCH v4 net-next 00/12] NXP SJA1105 DSA driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        vivien.didelot@gmail.com, netdev <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an API to group all the tasks to be done to de-initialize host which
-can then be called by any DesignWare core based driver implementations
-while adding .remove() support in their respective drivers.
+On Thu, 2 May 2019 at 19:55, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > Wow I am sorry, Gmail apparently moved your reply to spam and I only
+> > got it when I posted my message just now.
+> > Do you know what causes these whitespace errors, so I can avoid them
+> > next time? I think I'm generating my patches rather normally, with
+> > $(git format-patch -12 --subject-prefix="PATCH v4 net-next"
+> > --cover-letter).
+>
+> What happens when you run checkpatch on the patches? Does it report
+> white space problems.
+>
+> Another possibility is your email system has mangled the patches.
+> First try applying the patches you generated from format-patch to a
+> clean tree. If you don't get any warnings, email the patches to
+> yourself, and then apply them.
+>
+>      Andrew
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Changes from v3:
-* Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
-  dw_pcie_free_msi() API to mimic init path
+Hi Andrew,
 
-Changes from v2:
-* Rebased on top of linux-next top of the tree branch
+checkpatch.pl --strict doesn't appear to catch this. It looks like
+it's caused by introducing new files that are terminated in a blank
+line. I will stop doing that.
 
-Changes from v1:
-* s/Designware/DesignWare
-
- drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
- drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 77db32529319..d069e4290180 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	return ret;
- }
- 
-+void dw_pcie_host_deinit(struct pcie_port *pp)
-+{
-+	pci_stop_root_bus(pp->root_bus);
-+	pci_remove_root_bus(pp->root_bus);
-+	if (pci_msi_enabled() && !pp->ops->msi_host_init)
-+		dw_pcie_free_msi(pp);
-+}
-+
- static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 				     u32 devfn, int where, int size, u32 *val,
- 				     bool write)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index deab426affd3..4f48ec78c7b9 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
- void dw_pcie_free_msi(struct pcie_port *pp);
- void dw_pcie_setup_rc(struct pcie_port *pp);
- int dw_pcie_host_init(struct pcie_port *pp);
-+void dw_pcie_host_deinit(struct pcie_port *pp);
- int dw_pcie_allocate_domains(struct pcie_port *pp);
- #else
- static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
-@@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
- 	return 0;
- }
- 
-+static inline void dw_pcie_host_deinit(struct pcie_port *pp)
-+{
-+}
-+
- static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
- {
- 	return 0;
--- 
-2.17.1
-
+Thanks,
+-Vladimir
