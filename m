@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32F8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA12C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739F720449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE8A20449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811262;
-	bh=g12iT4gdSLDmpyEcT8+qkZptIkafLkOcusTzNzd0og8=;
+	s=default; t=1556811268;
+	bh=65ruzGAENGirINjoKdB+RVXEuqlPR6pfOjvTO9q47JE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ouyv6aJ1n7Jqfx+SObh/aWRazRPT6H3LqzNQfe9VSkkSacOacwBde91lmCOhmO49S
-	 6PlbiZsA8oGiWIsv5r4nQ1ywfZPiTcNrNCEleTzjFMx5LtEzzBoSFcgD2u0Vfu1ziE
-	 mzJgySmXMSaroI9sBmQGbwYugv3eF1Gj4sy4MarE=
+	b=OyqSIqbD9S+iElPLgVhg5ICeYOyVqeADbJEtTmrVCxkU0GXkiAPYhE0lSlfS1fMCl
+	 c+uVb1oEfV6oZSP9tH1U7TcUuQbeFmrKZxYj8zYcQary9r0ej2n6uSirmu/uPR9mPy
+	 CLeL/4hN38+goqIN9LSRmP8L0oCxUxbddez4i4FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbfEBPcN (ORCPT
+        id S1728235AbfEBPe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:32:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51680 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:34:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbfEBPcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:32:10 -0400
+        id S1729109AbfEBPcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C296620C01;
-        Thu,  2 May 2019 15:32:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F5F820C01;
+        Thu,  2 May 2019 15:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811129;
-        bh=g12iT4gdSLDmpyEcT8+qkZptIkafLkOcusTzNzd0og8=;
+        s=default; t=1556811126;
+        bh=65ruzGAENGirINjoKdB+RVXEuqlPR6pfOjvTO9q47JE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PtEHHwB/QVo9pMFPnedMQZx1heo+BYj8oTZGws9nlYVcKR1CPvmWwXJLE7oTaGtmK
-         WRgBLLcbqRNkal47eCV+cjAKdFUtb+P5TuO5vsFlIRg0jglrMOgTyssp8ZnAy+DZQg
-         TZnExlidBo60+Cjb2ZUg0PPBUwDq1bC/LNHd7OHg=
+        b=OBr86lxsktL/c+5BGZskf999eeQMaLUmlSDDck3wPGM4vtchMglNX9zL9g22QMDFK
+         7Yms0jrcRZ+8qhBwFeAbEkdMNUVWqqqqukd2blCtcLxeKFA3diIXbFxCIZdirGkuD9
+         S2rJYyVQJI9ooazTJAI4bNrbEt/i/PUoqUlzO4PY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Huang <wei@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 086/101] KVM: selftests: assert on exit reason in CR4/cpuid sync test
-Date:   Thu,  2 May 2019 17:21:28 +0200
-Message-Id: <20190502143345.623099440@linuxfoundation.org>
+Subject: [PATCH 5.0 085/101] x86/kvm/hyper-v: avoid spurious pending stimer on vCPU init
+Date:   Thu,  2 May 2019 17:21:27 +0200
+Message-Id: <20190502143345.557664615@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,66 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8df98ae0ab2ead9a02228756eec26f8d7b17f499 ]
+[ Upstream commit 013cc6ebbf41496ce4badedd71ea6d4a6d198c14 ]
 
-...so that the test doesn't end up in an infinite loop if it fails for
-whatever reason, e.g. SHUTDOWN due to gcc inserting stack canary code
-into ucall() and attempting to derefence a null segment.
+When userspace initializes guest vCPUs it may want to zero all supported
+MSRs including Hyper-V related ones including HV_X64_MSR_STIMERn_CONFIG/
+HV_X64_MSR_STIMERn_COUNT. With commit f3b138c5d89a ("kvm/x86: Update SynIC
+timers on guest entry only") we began doing stimer_mark_pending()
+unconditionally on every config change.
 
-Fixes: ca359066889f7 ("kvm: selftests: add cr4_cpuid_sync_test")
-Cc: Wei Huang <wei@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+The issue I'm observing manifests itself as following:
+- Qemu writes 0 to STIMERn_{CONFIG,COUNT} MSRs and marks all stimers as
+  pending in stimer_pending_bitmap, arms KVM_REQ_HV_STIMER;
+- kvm_hv_has_stimer_pending() starts returning true;
+- kvm_vcpu_has_events() starts returning true;
+- kvm_arch_vcpu_runnable() starts returning true;
+- when kvm_arch_vcpu_ioctl_run() gets into
+  (vcpu->arch.mp_state == KVM_MP_STATE_UNINITIALIZED) case:
+  - kvm_vcpu_block() gets in 'kvm_vcpu_check_block(vcpu) < 0' and returns
+    immediately, avoiding normal wait path;
+  - -EAGAIN is returned from kvm_arch_vcpu_ioctl_run() immediately forcing
+    userspace to retry.
+
+So instead of normal wait path we get a busy loop on all secondary vCPUs
+before they get INIT signal. This seems to be undesirable, especially given
+that this happens even when Hyper-V extensions are not used.
+
+Generally, it seems to be pointless to mark an stimer as pending in
+stimer_pending_bitmap and arm KVM_REQ_HV_STIMER as the only thing
+kvm_hv_process_stimers() will do is clear the corresponding bit. We may
+just not mark disabled timers as pending instead.
+
+Fixes: f3b138c5d89a ("kvm/x86: Update SynIC timers on guest entry only")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- .../kvm/x86_64/cr4_cpuid_sync_test.c          | 35 ++++++++++---------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ arch/x86/kvm/hyperv.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c b/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-index d503a51fad30..7c2c4d4055a8 100644
---- a/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-@@ -87,22 +87,25 @@ int main(int argc, char *argv[])
- 	while (1) {
- 		rc = _vcpu_run(vm, VCPU_ID);
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 89d20ed1d2e8..371c669696d7 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -526,7 +526,9 @@ static int stimer_set_config(struct kvm_vcpu_hv_stimer *stimer, u64 config,
+ 		new_config.enable = 0;
+ 	stimer->config.as_uint64 = new_config.as_uint64;
  
--		if (run->exit_reason == KVM_EXIT_IO) {
--			switch (get_ucall(vm, VCPU_ID, &uc)) {
--			case UCALL_SYNC:
--				/* emulate hypervisor clearing CR4.OSXSAVE */
--				vcpu_sregs_get(vm, VCPU_ID, &sregs);
--				sregs.cr4 &= ~X86_CR4_OSXSAVE;
--				vcpu_sregs_set(vm, VCPU_ID, &sregs);
--				break;
--			case UCALL_ABORT:
--				TEST_ASSERT(false, "Guest CR4 bit (OSXSAVE) unsynchronized with CPUID bit.");
--				break;
--			case UCALL_DONE:
--				goto done;
--			default:
--				TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
--			}
-+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-+			    "Unexpected exit reason: %u (%s),\n",
-+			    run->exit_reason,
-+			    exit_reason_str(run->exit_reason));
+-	stimer_mark_pending(stimer, false);
++	if (stimer->config.enable)
++		stimer_mark_pending(stimer, false);
 +
-+		switch (get_ucall(vm, VCPU_ID, &uc)) {
-+		case UCALL_SYNC:
-+			/* emulate hypervisor clearing CR4.OSXSAVE */
-+			vcpu_sregs_get(vm, VCPU_ID, &sregs);
-+			sregs.cr4 &= ~X86_CR4_OSXSAVE;
-+			vcpu_sregs_set(vm, VCPU_ID, &sregs);
-+			break;
-+		case UCALL_ABORT:
-+			TEST_ASSERT(false, "Guest CR4 bit (OSXSAVE) unsynchronized with CPUID bit.");
-+			break;
-+		case UCALL_DONE:
-+			goto done;
-+		default:
-+			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
- 		}
- 	}
+ 	return 0;
+ }
+ 
+@@ -542,7 +544,10 @@ static int stimer_set_count(struct kvm_vcpu_hv_stimer *stimer, u64 count,
+ 		stimer->config.enable = 0;
+ 	else if (stimer->config.auto_enable)
+ 		stimer->config.enable = 1;
+-	stimer_mark_pending(stimer, false);
++
++	if (stimer->config.enable)
++		stimer_mark_pending(stimer, false);
++
+ 	return 0;
+ }
  
 -- 
 2.19.1
