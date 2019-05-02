@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F3BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70C3C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD5F2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E85320C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811047;
-	bh=5gLCUtPlgb6hs75ZALfG5QUZSaVgK2jJsYzhOTnA9Uw=;
+	s=default; t=1556811050;
+	bh=IntiuBaH0skzQDjeZ66JasE10npj0bxke5OBWuHmkHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pG39Q6uFZFY7nP9I3iykuFeet7TFl+gwqbp16OZaihBgZ+U4b8FRabMlfSMv6JFPk
-	 R0idBzO8v9PtQhMxzSg8GJNngIXnuZPSdW3zVTlb8q29YUpNOqHduzxGxjYxr12Ce4
-	 l5yyCOf5bGnkHnCzbZggAXq8pk2rlUQ72c2y4j6I=
+	b=UIiVZ/wPEs7mLhoKmoiZp2UvD480qu0EamstMsLnTA3dlpEolbztVM/yhz0pf4ynH
+	 BjzGQOOP7rj2pB50jiopneKYVcI5U7mU6IaBYFYMtdnXZS2SsPfmiQ1xmMXRW6ND+t
+	 TtE3Ml6mFo8IyAO7rdCJ3ky9FgGSj7RhontbFw40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfEBPar (ORCPT
+        id S1728853AbfEBPat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49472 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728821AbfEBPaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:46 -0400
+        id S1727377AbfEBPas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 410572081C;
-        Thu,  2 May 2019 15:30:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D400F2081C;
+        Thu,  2 May 2019 15:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811045;
-        bh=5gLCUtPlgb6hs75ZALfG5QUZSaVgK2jJsYzhOTnA9Uw=;
+        s=default; t=1556811048;
+        bh=IntiuBaH0skzQDjeZ66JasE10npj0bxke5OBWuHmkHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbRIMRnq6KC2KlXGcL2G1d7x9hMVe6YuL2HvVBpIG3YEbbMXb5YMz4wuKjjSWO9jb
-         LCV7bIteSr1hqwsfZ3N+jWfXAvcM8jy2oKihJu7neDHJ4H3QDxoJ8/75Y7ZRXKnSs1
-         ox0ykh7jEqrIbEXLh5+unus8kq+83UipTSmXjj7w=
+        b=C1VhgK7waMZtlko34Om3Mo59luppuqQf3W1UgK4Lo9nHkdUdmzRhdrkfI6fwxZKA8
+         /pnTPVXvoJXxyK3D/lFIw30uj0TQI2nkgRRTVl8roiEI7K2CipBlQ/MB5V6+/9e6SJ
+         O+Q29GKb6BsZTEoy06buGwWvqYWr5NZXyGkXLk2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masanari Iida <standby24x7@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Thierry Reding <treding@nvidia.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 053/101] ARM: dts: imx6qdl: Fix typo in imx6qdl-icore-rqs.dtsi
-Date:   Thu,  2 May 2019 17:20:55 +0200
-Message-Id: <20190502143343.219839823@linuxfoundation.org>
+Subject: [PATCH 5.0 054/101] drm/tegra: hub: Fix dereference before check
+Date:   Thu,  2 May 2019 17:20:56 +0200
+Message-Id: <20190502143343.285843755@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,40 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 41b37f4c0fa67185691bcbd30201cad566f2f0d1 ]
+[ Upstream commit 7cf77b273a8fc51e7de622fa6691abd4436a9a6b ]
 
-This patch fixes a spelling typo.
-
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-Fixes: cc42603de320 ("ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/hub.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-index 1d1b4bd0670f..a4217f564a53 100644
---- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -264,7 +264,7 @@
- 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
- 	vmcc-supply = <&reg_sd3_vmmc>;
- 	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
--	bus-witdh = <4>;
-+	bus-width = <4>;
- 	no-1-8-v;
- 	status = "okay";
- };
-@@ -275,7 +275,7 @@
- 	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
- 	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
- 	vmcc-supply = <&reg_sd4_vmmc>;
--	bus-witdh = <8>;
-+	bus-width = <8>;
- 	no-1-8-v;
- 	non-removable;
- 	status = "okay";
+diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
+index 922a48d5a483..c7c612579270 100644
+--- a/drivers/gpu/drm/tegra/hub.c
++++ b/drivers/gpu/drm/tegra/hub.c
+@@ -378,14 +378,16 @@ static int tegra_shared_plane_atomic_check(struct drm_plane *plane,
+ static void tegra_shared_plane_atomic_disable(struct drm_plane *plane,
+ 					      struct drm_plane_state *old_state)
+ {
+-	struct tegra_dc *dc = to_tegra_dc(old_state->crtc);
+ 	struct tegra_plane *p = to_tegra_plane(plane);
++	struct tegra_dc *dc;
+ 	u32 value;
+ 
+ 	/* rien ne va plus */
+ 	if (!old_state || !old_state->crtc)
+ 		return;
+ 
++	dc = to_tegra_dc(old_state->crtc);
++
+ 	/*
+ 	 * XXX Legacy helpers seem to sometimes call ->atomic_disable() even
+ 	 * on planes that are already disabled. Make sure we fallback to the
 -- 
 2.19.1
 
