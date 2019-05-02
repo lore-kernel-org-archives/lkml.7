@@ -2,325 +2,184 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58806C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182CCC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDC32085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7FE20873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LWGFPhb3"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="5BCi+hdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfEBKf0 (ORCPT
+        id S1726383AbfEBKfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 06:35:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33985 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfEBKfY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 06:35:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c13so872157pgt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 03:35:23 -0700 (PDT)
+        Thu, 2 May 2019 06:35:09 -0400
+Received: from mail-eopbgr710041.outbound.protection.outlook.com ([40.107.71.41]:9683
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726289AbfEBKfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 06:35:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gla8W0VcIaKCNYDoMpCJ/dAJtzrxBYSm4bxzw12y5b0=;
-        b=LWGFPhb3eIYp32ggoe32vmRuIcrsJaaQV6P48HNlsOEpHzEOKbvqe14GdnfxIggF20
-         1n0SlrH02nrcZK8thEs1NjNjTBnDRuN5MY8eS6WhwvK31FG7tHaGROfPeWTcTrUvHRUT
-         7rwN9D00eB5EU5keAJKHsxaY07zaOf74Z57jfdTTfvOPuAhGx6I8aTUSIJRYMDwNaI8G
-         c7PggqvB7kkSXrD4Nm8vKDl2n5mGGTNvn4jvApjrjmzASi/wUzJiUSfWorOd2tcN8KkR
-         ma/8mHu4Ky/BKPjVBBLq85qNR+w1GHkEru3yNg+rzyc3SyMlzOQbWtxJVUb3il02NvgZ
-         gcNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=gla8W0VcIaKCNYDoMpCJ/dAJtzrxBYSm4bxzw12y5b0=;
-        b=HUrVcPFPlAlmq1Mo9clTZPhwFWkguzf50pviL1DxVt3j/uPoi/R6sUCnyOpuKGRuhH
-         LAyaKCIZDUZF8A8Ehn1lPuRSE5ppVxW4WT4L2qct2skU02E2VYs2zu4sSV/zka/wLOcy
-         cCRHHGUvwi46SrpK1jlayED3GT9Aat+1PS2yqrOjDWFIFn3GupZ5kMsBPZYtdMjQJvUT
-         RrgyrHt7ejwV1nL6E+Vlk5pzxORBVVhraESCzRcW9ySC2YM0aTdfzNCk0LJc8RlZiCzR
-         2x2nORfOBIRiP2CLVqMMbbITXQA08nk4uVCzeaGH5sGvSv9cODTMfW0/aPYslOiVc3uk
-         2QOQ==
-X-Gm-Message-State: APjAAAVfs41ZtjAdVjPzYMBU4yBBFDlNvCwWD/MW9L5Xe6XunK2kuzfs
-        iJ2ouXX7r4vM7z4TUDD47XD8+Q==
-X-Google-Smtp-Source: APXvYqzqNYTmQyuQDYqxh0FSZvVztNfPbJzy0gr2jgxi1o61S2zACE5TdFO4V9cHB3kAjge2uTaeOg==
-X-Received: by 2002:aa7:8a8d:: with SMTP id a13mr3459163pfc.2.1556793323456;
-        Thu, 02 May 2019 03:35:23 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id h187sm69141133pfc.52.2019.05.02.03.35.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 May 2019 03:35:22 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        palmer@sifive.com
-Cc:     paul.walmsley@sifive.com, linux-kernel@vger.kernel.org,
-        aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org,
-        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v2 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs
-Date:   Thu,  2 May 2019 16:04:53 +0530
-Message-Id: <1556793293-21019-3-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556793293-21019-1-git-send-email-yash.shah@sifive.com>
-References: <1556793293-21019-1-git-send-email-yash.shah@sifive.com>
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f94YMxikbA1iu7DB/qLaywMCKnwwT1mUfUgS1qM7Hjw=;
+ b=5BCi+hdHM4OUnHjE/RGJ5ohyIakpRFNCT2jPuOVqbGMfx6sIKlcfzo303H+L0IBNBNRW8A99G7ebRT6Mm39n4hLgW/TcPTQ0YlSSy6Q14Ec6zdIzG2oHcJ2fXIxLDX0iwgaXmVaItUCQMgqDev5UVF10JTPKFsCpsxVvW8J6/A0=
+Received: from BN6PR02CA0074.namprd02.prod.outlook.com (2603:10b6:405:60::15)
+ by BYAPR02MB5239.namprd02.prod.outlook.com (2603:10b6:a03:68::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1835.14; Thu, 2 May
+ 2019 10:35:04 +0000
+Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::203) by BN6PR02CA0074.outlook.office365.com
+ (2603:10b6:405:60::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1856.11 via Frontend
+ Transport; Thu, 2 May 2019 10:35:03 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1856.11
+ via Frontend Transport; Thu, 2 May 2019 10:35:03 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:33460 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <kalyani.akula@xilinx.com>)
+        id 1hM93O-0006ri-LO; Thu, 02 May 2019 03:35:02 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <kalyani.akula@xilinx.com>)
+        id 1hM93J-0007Vo-IW; Thu, 02 May 2019 03:34:57 -0700
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x42AYtt9032631;
+        Thu, 2 May 2019 03:34:55 -0700
+Received: from [172.23.155.80] (helo=xhdengvm155080.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <kalyania@xilinx.com>)
+        id 1hM93G-0007VE-Mo; Thu, 02 May 2019 03:34:54 -0700
+Received: by xhdengvm155080.xilinx.com (Postfix, from userid 23151)
+        id DFCA381417; Thu,  2 May 2019 16:04:53 +0530 (IST)
+From:   Kalyani Akula <kalyani.akula@xilinx.com>
+To:     <herbert@gondor.apana.org.au>, <kstewart@linuxfoundation.org>,
+        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
+        <pombredanne@nexb.com>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <saratcha@xilinx.com>
+CC:     Kalyani Akula <kalyania@xilinx.com>,
+        Kalyani Akula <kalyani.akula@xilinx.com>
+Subject: [RFC PATCH V3 2/4] firmware: xilinx: Add ZynqMP sha_hash API for SHA3 functionality
+Date:   Thu, 2 May 2019 16:04:40 +0530
+Message-ID: <1556793282-17346-3-git-send-email-kalyani.akula@xilinx.com>
+X-Mailer: git-send-email 1.9.5
+In-Reply-To: <1556793282-17346-1-git-send-email-kalyani.akula@xilinx.com>
+References: <1556793282-17346-1-git-send-email-kalyani.akula@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(136003)(346002)(39860400002)(2980300002)(189003)(199004)(446003)(478600001)(11346002)(6266002)(336012)(426003)(90966002)(26005)(51416003)(305945005)(107886003)(4326008)(14444005)(110136005)(106002)(76176011)(54906003)(47776003)(186003)(63266004)(5660300002)(36756003)(103686004)(42186006)(316002)(16586007)(50466002)(52956003)(48376002)(70586007)(70206006)(476003)(126002)(356004)(6636002)(36386004)(6666004)(50226002)(486006)(8936002)(44832011)(2616005)(81156014)(81166006)(2906002)(8676002)(2201001)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5239;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;MX:1;A:1;
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2ded1e9d-6871-474f-790e-08d6cee9d633
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:BYAPR02MB5239;
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5239:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <BYAPR02MB5239B59778B4D6803D95AD4AAF340@BYAPR02MB5239.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 0025434D2D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: c0u5DmQJXZ5c19kN9MZEj9kVbiAZaudmv3JVMemSKy4qzzxfbkyIZBqlL9MBHKVH/GHslzYi2h259chsV6uHhnkXU/CQMcPALzbrpHmv82D9Du3o07yJa9VxtrzcUtoDBffOiXkcIMk02gxMCSokQoAazzYOcS6gIRdotke6F2ZDL+pWIhpCtRQ6LK9+v3k0QmJWI3txHD/stvaWbghxsDzujMh/P6IsveL0BV23JSAT0XHxFz1LmAvlNMIFKRlzW8Dat3FmPXKbl6hCb6cpYqC3qFj5kp4MIGF5+H512sp1bWeUmAuYte5vzZMpMvJEYJBXcnuWoYrDGJUt1IQwaULNmo7l/oOJBauhUbNMv0ULmlqmDZDdkcvZyIKqasbnSbIwlc3dwjFziqidipnWZufj3eoWHGf3uC32Vka1IwE=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2019 10:35:03.1279
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ded1e9d-6871-474f-790e-08d6cee9d633
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5239
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver currently supports only SiFive FU540-C000 platform.
+Add ZynqMP firmware SHA_HASH API to compute SHA3 hash of given data.
 
-The initial version of L2 cache controller driver includes:
-- Initial configuration reporting at boot up.
-- Support for ECC related functionality.
-
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
 ---
- arch/riscv/mm/Makefile          |   1 +
- arch/riscv/mm/sifive_l2_cache.c | 221 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100644 arch/riscv/mm/sifive_l2_cache.c
+ drivers/firmware/xilinx/zynqmp.c     | 27 +++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h |  2 ++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-index eb22ab4..1523ee5 100644
---- a/arch/riscv/mm/Makefile
-+++ b/arch/riscv/mm/Makefile
-@@ -3,3 +3,4 @@ obj-y += fault.o
- obj-y += extable.o
- obj-y += ioremap.o
- obj-y += cacheflush.o
-+obj-y += sifive_l2_cache.o
-diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
-new file mode 100644
-index 0000000..923ab34
---- /dev/null
-+++ b/arch/riscv/mm/sifive_l2_cache.c
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SiFive L2 cache controller Driver
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 98f9361..22a062a 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -619,9 +619,36 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
+ 				   qos, ack, NULL);
+ }
+ 
++/**
++ * zynqmp_pm_sha_hash - Access the SHA engine to calculate the hash
++ * @address:	Address of the data/ Address of output buffer where
++ *		hash should be stored.
++ * @size:	Size of the data.
++ * @flags:
++ *	BIT(0) - for initializing csudma driver and SHA3(Here address
++ *		 and size inputs can be NULL).
++ *	BIT(1) - to call Sha3_Update API which can be called multiple
++ *		 times when data is not contiguous.
++ *	BIT(2) - to get final hash of the whole updated data.
++ *		 Hash will be overwritten at provided address with
++ *		 48 bytes.
 + *
-+ * Copyright (C) 2018-2019 SiFive, Inc.
-+ *
++ * Return:	Returns status, either success or error code.
 + */
-+#include <linux/debugfs.h>
-+#include <linux/interrupt.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+
-+#define SIFIVE_L2_DIRECCFIX_LOW 0x100
-+#define SIFIVE_L2_DIRECCFIX_HIGH 0x104
-+#define SIFIVE_L2_DIRECCFIX_COUNT 0x108
-+
-+#define SIFIVE_L2_DATECCFIX_LOW 0x140
-+#define SIFIVE_L2_DATECCFIX_HIGH 0x144
-+#define SIFIVE_L2_DATECCFIX_COUNT 0x148
-+
-+#define SIFIVE_L2_DATECCFAIL_LOW 0x160
-+#define SIFIVE_L2_DATECCFAIL_HIGH 0x164
-+#define SIFIVE_L2_DATECCFAIL_COUNT 0x168
-+
-+#define SIFIVE_L2_CONFIG 0x00
-+#define SIFIVE_L2_WAYENABLE 0x08
-+#define SIFIVE_L2_ECCINJECTERR 0x40
-+
-+#define SIFIVE_L2_ERR_TYPE_CE 0
-+#define SIFIVE_L2_ERR_TYPE_UE 1
-+#define SIFIVE_L2_MAX_ECCINTR 3
-+
-+static void __iomem *l2_base;
-+static int g_irq[SIFIVE_L2_MAX_ECCINTR];
-+
-+enum {
-+	DIR_CORR = 0,
-+	DATA_CORR,
-+	DATA_UNCORR,
-+};
-+
-+static unsigned int l2_dirfix_addr_high(void)
++static int zynqmp_pm_sha_hash(const u64 address, const u32 size,
++			      const u32 flags)
 +{
-+	return readl(l2_base + SIFIVE_L2_DIRECCFIX_HIGH);
++	u32 lower_32_bits = (u32)address;
++	u32 upper_32_bits = (u32)(address >> 32);
++
++	return zynqmp_pm_invoke_fn(PM_SECURE_SHA, upper_32_bits, lower_32_bits,
++				   size, flags, NULL);
 +}
 +
-+static unsigned int l2_dirfix_addr_low(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_DIRECCFIX_LOW);
-+}
-+
-+static unsigned int l2_dirfix_count(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_DIRECCFIX_COUNT);
-+}
-+
-+static unsigned int l2_datfix_addr_high(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_DATECCFIX_HIGH);
-+}
-+
-+static unsigned int l2_datfix_addr_low(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_DATECCFIX_LOW);
-+}
-+
-+static unsigned int l2_datfix_count(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_DATECCFIX_COUNT);
-+}
-+
-+static unsigned int l2_datfail_addr_high(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_DATECCFAIL_HIGH);
-+}
-+
-+static unsigned int l2_datfail_addr_low(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_DATECCFAIL_LOW);
-+}
-+
-+static unsigned int l2_datfail_count(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
-+}
-+
-+#ifdef CONFIG_DEBUG_FS
-+static struct dentry *sifive_test;
-+
-+static ssize_t l2_write(struct file *file, const char __user *data,
-+			size_t count, loff_t *ppos)
-+{
-+	unsigned int val;
-+
-+	if (kstrtouint_from_user(data, count, 0, &val))
-+		return -EINVAL;
-+	if ((val >= 0 && val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
-+		writel(val, l2_base + SIFIVE_L2_ECCINJECTERR);
-+	else
-+		return -EINVAL;
-+	return count;
-+}
-+
-+static const struct file_operations l2_fops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.write = l2_write
-+};
-+
-+static void setup_sifive_debug(void)
-+{
-+	sifive_test = debugfs_create_dir("sifive_l2_cache", NULL);
-+
-+	debugfs_create_file("sifive_debug_inject_error", 0200,
-+			    sifive_test, NULL, &l2_fops);
-+}
-+#endif
-+
-+static void l2_config_read(void)
-+{
-+	u32 regval, val;
-+
-+	regval = readl(l2_base + SIFIVE_L2_CONFIG);
-+	val = regval & 0xFF;
-+	pr_info("L2CACHE: No. of Banks in the cache: %d\n", val);
-+	val = (regval & 0xFF00) >> 8;
-+	pr_info("L2CACHE: No. of ways per bank: %d\n", val);
-+	val = (regval & 0xFF0000) >> 16;
-+	pr_info("L2CACHE: Sets per bank: %llu\n", (uint64_t)1 << val);
-+	val = (regval & 0xFF000000) >> 24;
-+	pr_info("L2CACHE: Bytes per cache block: %llu\n", (uint64_t)1 << val);
-+
-+	regval = readl(l2_base + SIFIVE_L2_WAYENABLE);
-+	pr_info("L2CACHE: Index of the largest way enabled: %d\n", regval);
-+}
-+
-+static const struct of_device_id sifive_l2_ids[] = {
-+	{ .compatible = "sifive,fu540-c000-ccache" },
-+	{ /* end of table */ },
-+};
-+
-+static ATOMIC_NOTIFIER_HEAD(l2_err_chain);
-+
-+int register_sifive_l2_error_notifier(struct notifier_block *nb)
-+{
-+	return atomic_notifier_chain_register(&l2_err_chain, nb);
-+}
-+EXPORT_SYMBOL_GPL(register_sifive_l2_error_notifier);
-+
-+int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
-+{
-+	return atomic_notifier_chain_unregister(&l2_err_chain, nb);
-+}
-+EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
-+
-+static irqreturn_t l2_int_handler(int irq, void *device)
-+{
-+	unsigned int regval, add_h, add_l;
-+
-+	if (irq == g_irq[DIR_CORR]) {
-+		add_h = l2_dirfix_addr_high();
-+		add_l = l2_dirfix_addr_low();
-+		pr_err("L2CACHE: DirError @ 0x%08X.%08X\n", add_h, add_l);
-+		regval = l2_dirfix_count();
-+		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
-+					   "DirECCFix");
-+	}
-+	if (irq == g_irq[DATA_CORR]) {
-+		add_h = l2_datfix_addr_high();
-+		add_l = l2_datfix_addr_low();
-+		pr_err("L2CACHE: DataError @ 0x%08X.%08X\n", add_h, add_l);
-+		regval = l2_datfix_count();
-+		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
-+					   "DatECCFix");
-+	}
-+	if (irq == g_irq[DATA_UNCORR]) {
-+		add_h = l2_datfail_addr_high();
-+		add_l = l2_datfail_addr_low();
-+		pr_err("L2CACHE: DataFail @ 0x%08X.%08X\n", add_h, add_l);
-+		regval = l2_datfail_count();
-+		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_UE,
-+					   "DatECCFail");
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+int __init sifive_l2_init(void)
-+{
-+	struct device_node *np;
-+	struct resource res;
-+	int i, rc;
-+
-+	np = of_find_matching_node(NULL, sifive_l2_ids);
-+	if (!np)
-+		return -ENODEV;
-+
-+	if (of_address_to_resource(np, 0, &res))
-+		return -ENODEV;
-+
-+	l2_base = ioremap(res.start, resource_size(&res));
-+	if (!l2_base)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < SIFIVE_L2_MAX_ECCINTR; i++) {
-+		g_irq[i] = irq_of_parse_and_map(np, i);
-+		rc = request_irq(g_irq[i], l2_int_handler, 0, "l2_ecc", NULL);
-+		if (rc) {
-+			pr_err("L2CACHE: Could not request IRQ %d\n", g_irq[i]);
-+			return rc;
-+		}
-+	}
-+
-+	l2_config_read();
-+
-+#ifdef CONFIG_DEBUG_FS
-+	setup_sifive_debug();
-+#endif
-+	return 0;
-+}
-+device_initcall(sifive_l2_init);
+ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.get_api_version = zynqmp_pm_get_api_version,
+ 	.get_chipid = zynqmp_pm_get_chipid,
++	.sha_hash = zynqmp_pm_sha_hash,
+ 	.query_data = zynqmp_pm_query_data,
+ 	.clock_enable = zynqmp_pm_clock_enable,
+ 	.clock_disable = zynqmp_pm_clock_disable,
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 642dab1..124e5f0 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -57,6 +57,7 @@ enum pm_api_id {
+ 	PM_RESET_GET_STATUS,
+ 	PM_PM_INIT_FINALIZE = 21,
+ 	PM_GET_CHIPID = 24,
++	PM_SECURE_SHA = 26,
+ 	PM_IOCTL = 34,
+ 	PM_QUERY_DATA,
+ 	PM_CLOCK_ENABLE,
+@@ -283,6 +284,7 @@ struct zynqmp_eemi_ops {
+ 			       const u32 capabilities,
+ 			       const u32 qos,
+ 			       const enum zynqmp_pm_request_ack ack);
++	int (*sha_hash)(const u64 address, const u32 size, const u32 flags);
+ };
+ 
+ int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
 -- 
-1.9.1
+1.9.5
 
