@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475F2C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C3CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18CC1214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CADDF2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810846;
-	bh=X3/SJQRgAxYK1bfN/J10AEXd9aG7K/IkSDsI4wTKuJ4=;
+	s=default; t=1556810848;
+	bh=8jRcYPH5YkiKRc1omdlCiX2F+0bIR3kxC2mztkj37Eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcsHI9REBcQrTdhTWnJfAAhr+Xu4RosmKNBn5vHWYpAHV6ImRuXDqPQnvJZ5QSROc
-	 8gL/keqaFpTl63rJaspWMLOpuMnKtFKZLU+f2BxBTaQBbw41XumaYwN6NQD5yS7GE4
-	 iXtOb8y/QZaQDrj9Udf/9AJX+Mx5iW4K3Aw+gq6A=
+	b=uHGiOazitJK9ZvUE2mWjs+pmLxIe/4zXd6rEPMUWOxszA5/vQw7o22zi5T+yjpTnS
+	 w1q3OgeOOO56SQVPaTmELO/HEXPuua6HI48/wIiIQcKAZ2DUNOZjamN/OapKLGV3Pn
+	 CxKPqYsQxhwpDwTYZQoxh3qk6RxfCJ3YKuhCq8Gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfEBP1Y (ORCPT
+        id S1727972AbfEBP11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44182 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:27:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfEBP1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:27:22 -0400
+        id S1727960AbfEBP1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:27:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C8521670;
-        Thu,  2 May 2019 15:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD0912081C;
+        Thu,  2 May 2019 15:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810841;
-        bh=X3/SJQRgAxYK1bfN/J10AEXd9aG7K/IkSDsI4wTKuJ4=;
+        s=default; t=1556810844;
+        bh=8jRcYPH5YkiKRc1omdlCiX2F+0bIR3kxC2mztkj37Eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gIOyPU5ND18+oS+ricYerocaPrNY4BKqKrt49sc51IaYPsVfTgFSU5WHcDm/ujVL
-         C58pO435iEzzqA0yA1AVUD8Y+DDx7z11iGl3qo4N9EkrsQKqQiKvuTmdr+SCoksFY3
-         t85cbKPtDIAPAIioBoJ68HFHy4UXSiKtgiMMRhQ8=
+        b=c1TvPTKzRpj9b15+dZatEVk+TNpVlWeHqUunnN5p+ckHSwbvsX91099GvL00Yolgx
+         Q/Q3WTmO1M+Jf1gDnuJT4bfdLSOUj/+hc7F5Fb5fNoUy6NzVGOGFnDXsAfwur+bSpu
+         D3BdHnANLhnAjSXeQIwpBLvw4LBfojoQGe/ju76A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 48/72] net: ethernet: ti: fix possible object reference leak
-Date:   Thu,  2 May 2019 17:21:10 +0200
-Message-Id: <20190502143337.240097308@linuxfoundation.org>
+Subject: [PATCH 4.19 14/72] staging: axis-fifo: add CONFIG_OF dependency
+Date:   Thu,  2 May 2019 17:20:36 +0200
+Message-Id: <20190502143334.493667656@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -62,51 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 75eac7b5f68b0a0671e795ac636457ee27cc11d8 ]
+[ Upstream commit 1beea6204e2304dd11600791d8dad8e7350af6ad ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+When building without CONFIG_OF, the compiler loses track of the flow
+control in axis_fifo_probe(), and thinks that many variables are used
+without an initialization even though we actually leave the function
+before the first use:
 
-Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ti/netcp_ethss.c:3661:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
-./drivers/net/ethernet/ti/netcp_ethss.c:3665:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
+drivers/staging/axis-fifo/axis-fifo.c: In function 'axis_fifo_probe':
+drivers/staging/axis-fifo/axis-fifo.c:900:5: error: 'rxd_tdata_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (rxd_tdata_width != 32) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:907:5: error: 'txd_tdata_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (txd_tdata_width != 32) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:914:5: error: 'has_tdest' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (has_tdest) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:919:5: error: 'has_tid' may be used uninitialized in this function [-Werror=maybe-uninitialized]
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Wingman Kwok <w-kwok2@ti.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When CONFIG_OF is set, this does not happen, and since the driver cannot
+work without it, just add that option as a Kconfig dependency.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/staging/axis-fifo/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 72b98e27c992..d177dfd1df89 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -3655,12 +3655,16 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
- 
- 	ret = netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
- 				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
- 
- 	ret = netcp_txpipe_open(&gbe_dev->tx_pipe);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
- 
- 	/* Create network interfaces */
- 	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
+diff --git a/drivers/staging/axis-fifo/Kconfig b/drivers/staging/axis-fifo/Kconfig
+index 687537203d9c..d9725888af6f 100644
+--- a/drivers/staging/axis-fifo/Kconfig
++++ b/drivers/staging/axis-fifo/Kconfig
+@@ -3,6 +3,7 @@
+ #
+ config XIL_AXIS_FIFO
+ 	tristate "Xilinx AXI-Stream FIFO IP core driver"
++	depends on OF
+ 	default n
+ 	help
+ 	  This adds support for the Xilinx AXI-Stream
 -- 
 2.19.1
 
