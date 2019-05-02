@@ -2,164 +2,137 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4844C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E206DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CA2205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:33:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zJCC6NV/"
+	by mail.kernel.org (Postfix) with ESMTP id AA74D208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfEBMdQ (ORCPT
+        id S1726455AbfEBMgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:33:16 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:52163 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfEBMdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:33:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=hIZ2r4SHmJaCkF2EdisXrrWwKAQXEwuZvn4QXzFxD7w=; b=zJCC6NV/LulBNFOyb7zANwOp7f
-        2OjqNtVlSchdm8gSp8kJaAcCM+qtp5Cv+n4jZKNZUaWYtUVazU7MzLbfMSUMZDBlQuV+rdMSpPRiD
-        MNI2CCar4Z/sWrAmBsfc1rZ4lgXhxtHQiaOStuqOtze/dYdAL/rnKQJ81TGhwghncOl8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hMAtJ-00087U-Bv; Thu, 02 May 2019 14:32:45 +0200
-Date:   Thu, 2 May 2019 14:32:45 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Joergen Andreasen <joergen.andreasen@microchip.com>
-Cc:     netdev@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/3] net: mscc: ocelot: Implement port policers
- via tc command
-Message-ID: <20190502123245.GB9844@lunn.ch>
-References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
- <20190502094029.22526-3-joergen.andreasen@microchip.com>
+        Thu, 2 May 2019 08:36:07 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:55256 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfEBMgH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:36:07 -0400
+Received: by mail-io1-f70.google.com with SMTP id v3so1647645ioq.21
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 05:36:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=EdFVC5S60Y+bv3d5pdvArFduSX28U6lrqd5FfJfZmAw=;
+        b=Cwj8zOuDzaKZtQAsZ4aiFTBtcOmzTbCKv2Xu+kHyzwp04wEmwywGLNy9LgQ3807YZ9
+         lPiO6pZRR/hMSCjm41Ey+e0EXA7tG1ku9X0r9VjkbXJ6QEHCsli7y4NIEWQk6aRjhRsB
+         ZP0JLno3JkzUxVERhn63VCDIxW4oHniLQUL25iebPMGr1aAdJ86SDxcTqbv7aAkvm8Yo
+         a9d5KrutG8yDR8IC+vgAhEEv6Yo0QL2flSg1i6tpIKFlIx4Kbhl019taTAvfl7HGuxAM
+         a7aNySiQ9JkHYa431wv/CrxLYLqFp1LW/F3jLURIaq9ypM+Na3SXD88CbK4IFXpgLqUH
+         2WQA==
+X-Gm-Message-State: APjAAAXBoZe5EmK4C82VJAm0crfAwjNQmeZHMd0uueXUr5B7YMyYyLOk
+        mDQkrUrPktgL99lmsMuE5iJgReugbihqrdZ3aAMuSO9XC4va
+X-Google-Smtp-Source: APXvYqzqmEvLfxIttO7dkCQ65xNcrPttbrL4TaYtkuofj4pTwYBaZHLiCGY10P5pvzDb0HfI9wVFWWeVpAWWyFRGHNBvtKsURbdx
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502094029.22526-3-joergen.andreasen@microchip.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Received: by 2002:a5e:8b09:: with SMTP id g9mr2306017iok.137.1556800566222;
+ Thu, 02 May 2019 05:36:06 -0700 (PDT)
+Date:   Thu, 02 May 2019 05:36:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bc655f0587e6e01f@google.com>
+Subject: KASAN: global-out-of-bounds Read in hdpvr_probe
+From:   syzbot <syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, hverkuil@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joergen
-
-> +
-> +#define MSCC_RC(expr)				\
-> +	do {					\
-> +		int __rc__ = (expr);		\
-> +		if (__rc__ < 0)			\
-> +			return __rc__;		\
-> +	}					\
-> +	while (0)
-
-I'm sure checkpatch warned about this. A return inside a macros is a
-bad idea. I inherited code doing this, and broke it when adding
-locking, because it was not obvious there was a return.
-
-> +
-> +/* The following two functions do the same as in iproute2 */
-> +#define TIME_UNITS_PER_SEC	1000000
-> +static unsigned int tc_core_tick2time(unsigned int tick)
-> +{
-> +	return (tick * (u32)PSCHED_TICKS2NS(1)) / 1000;
-> +}
-> +
-> +static unsigned int tc_calc_xmitsize(u64 rate, unsigned int ticks)
-> +{
-> +	return div_u64(rate * tc_core_tick2time(ticks), TIME_UNITS_PER_SEC);
-> +}
-
-Should these but put somewhere others can use them?
-
-> +
-> +enum mscc_qos_rate_mode {
-> +	MSCC_QOS_RATE_MODE_DISABLED, /* Policer/shaper disabled */
-> +	MSCC_QOS_RATE_MODE_LINE, /* Measure line rate in kbps incl. IPG */
-> +	MSCC_QOS_RATE_MODE_DATA, /* Measures data rate in kbps excl. IPG */
-> +	MSCC_QOS_RATE_MODE_FRAME, /* Measures frame rate in fps */
-> +	__MSCC_QOS_RATE_MODE_END,
-> +	NUM_MSCC_QOS_RATE_MODE = __MSCC_QOS_RATE_MODE_END,
-> +	MSCC_QOS_RATE_MODE_MAX = __MSCC_QOS_RATE_MODE_END - 1,
-> +};
-> +
-> +/* Round x divided by y to nearest integer. x and y are integers */
-> +#define MSCC_ROUNDING_DIVISION(x, y) (((x) + ((y) / 2)) / (y))
-
-linux/kernel.h defines DIV_ROUND_UP(). Maybe add DIV_ROUND_DOWN()?
-
-> +
-> +/* Round x divided by y to nearest higher integer. x and y are integers */
-> +#define MSCC_DIV_ROUND_UP(x, y) (((x) + (y) - 1) / (y))
-
-DIV_ROUND_UP() ?
-
-> +	/* Limit to maximum values */
-> +	pir = min_t(u32, GENMASK(15, 0), pir);
-> +	cir = min_t(u32, GENMASK(15, 0), cir);
-> +	pbs = min_t(u32, pbs_max, pbs);
-> +	cbs = min_t(u32, cbs_max, cbs);
-
-If it does need to limit, maybe return -EOPNOTSUPP?
-
-> +int ocelot_port_policer_add(struct ocelot_port *port,
-> +			    struct tcf_police *p)
-> +{
-> +	struct ocelot *ocelot = port->ocelot;
-> +	struct qos_policer_conf pp;
-> +
-> +	if (!p)
-> +		return -EINVAL;
-> +
-> +	netdev_dbg(port->dev,
-> +		   "result %d ewma_rate %u burst %lld mtu %u mtu_pktoks %lld\n",
-> +		   p->params->tcfp_result,
-> +		   p->params->tcfp_ewma_rate,
-> +		   p->params->tcfp_burst,
-> +		   p->params->tcfp_mtu,
-> +		   p->params->tcfp_mtu_ptoks);
-> +
-> +	if (p->params->rate_present)
-> +		netdev_dbg(port->dev,
-> +			   "rate: rate %llu mult %u over %u link %u shift %u\n",
-> +			   p->params->rate.rate_bytes_ps,
-> +			   p->params->rate.mult,
-> +			   p->params->rate.overhead,
-> +			   p->params->rate.linklayer,
-> +			   p->params->rate.shift);
-> +
-> +	if (p->params->peak_present)
-> +		netdev_dbg(port->dev,
-> +			   "peak: rate %llu mult %u over %u link %u shift %u\n",
-> +			   p->params->peak.rate_bytes_ps,
-> +			   p->params->peak.mult,
-> +			   p->params->peak.overhead,
-> +			   p->params->peak.linklayer,
-> +			   p->params->peak.shift);
-> +
-> +	memset(&pp, 0, sizeof(pp));
-
-Rather than memset, you can do:
-
-	struct qos_policer_conf pp = { 0 };
-
-	Andrew
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgNDMxNTFkNmMgdXNiLWZ1enplcjogbWFpbiB1c2IgZ2FkZ2V0IGZ1enplciBkcml2
+ZXINCmdpdCB0cmVlOiAgICAgICBodHRwczovL2dpdGh1Yi5jb20vZ29vZ2xlL2thc2FuLmdpdCB1
+c2ItZnV6emVyDQpjb25zb2xlIG91dHB1dDogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20v
+eC9sb2cudHh0P3g9MTU0NTk3NDJhMDAwMDANCmtlcm5lbCBjb25maWc6ICBodHRwczovL3N5emth
+bGxlci5hcHBzcG90LmNvbS94Ly5jb25maWc/eD00MTgzZWVlZjY1MGQxMjM0DQpkYXNoYm9hcmQg
+bGluazogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20vYnVnP2V4dGlkPWFhYzhkMGQ3MjA1
+ZjExMjA0NWQyDQpjb21waWxlcjogICAgICAgZ2NjIChHQ0MpIDkuMC4wIDIwMTgxMjMxIChleHBl
+cmltZW50YWwpDQpzeXogcmVwcm86ICAgICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20v
+eC9yZXByby5zeXo/eD0xNjZmYzM2MmEwMDAwMA0KQyByZXByb2R1Y2VyOiAgIGh0dHBzOi8vc3l6
+a2FsbGVyLmFwcHNwb3QuY29tL3gvcmVwcm8uYz94PTEzMDA2NTE0YTAwMDAwDQoNCklNUE9SVEFO
+VDogaWYgeW91IGZpeCB0aGUgYnVnLCBwbGVhc2UgYWRkIHRoZSBmb2xsb3dpbmcgdGFnIHRvIHRo
+ZSBjb21taXQ6DQpSZXBvcnRlZC1ieTogc3l6Ym90K2FhYzhkMGQ3MjA1ZjExMjA0NWQyQHN5emth
+bGxlci5hcHBzcG90bWFpbC5jb20NCg0KdXNiIDEtMTogY29uZmlnIDAgaW50ZXJmYWNlIDIzNyBh
+bHRzZXR0aW5nIDAgYnVsayBlbmRwb2ludCAweDgxIGhhcyBpbnZhbGlkICANCm1heHBhY2tldCAw
+DQp1c2IgMS0xOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRWZW5kb3I9MjA0MCwgaWRQcm9kdWN0
+PTQ5ODIsICANCmJjZERldmljZT1kMy44Zg0KdXNiIDEtMTogTmV3IFVTQiBkZXZpY2Ugc3RyaW5n
+czogTWZyPTAsIFByb2R1Y3Q9MCwgU2VyaWFsTnVtYmVyPTANCnVzYiAxLTE6IGNvbmZpZyAwIGRl
+c2NyaXB0b3I/Pw0KaGRwdnIgMS0xOjAuMjM3OiBmaXJtd2FyZSB2ZXJzaW9uIDB4MWUgZGF0ZWQg
+PCAgDQo977+9P03vv71XC++/ve+/ve+/ve+/ve+/vSbvv70/77+9J2UWAe+/vRzvv71d77+9yq0i
+Qm1bNe+/vWYNCmlyLWtiZC1pMmMgMC0wMDcxOiBJUiBmb3IgSERQVlIgaXMga25vd24gdG8gY2F1
+c2UgcHJvYmxlbXMgZHVyaW5nICANCnJlY29yZGluZywgdXNlIGVuYWJsZV9oZHB2ciBtb2RwYXJh
+bSB0byBlbmFibGUNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KQlVHOiBLQVNBTjogZ2xvYmFsLW91dC1vZi1ib3VuZHMg
+aW4gaGRwdnJfcHJvYmUuY29sZCsweDExZTgvMHgxMjdkICANCmRyaXZlcnMvbWVkaWEvdXNiL2hk
+cHZyL2hkcHZyLWNvcmUuYzozNzUNClJlYWQgb2Ygc2l6ZSA0IGF0IGFkZHIgZmZmZmZmZmY5MmYz
+MDA4MCBieSB0YXNrIGt3b3JrZXIvMDoxLzEyDQoNCkNQVTogMCBQSUQ6IDEyIENvbW06IGt3b3Jr
+ZXIvMDoxIE5vdCB0YWludGVkIDUuMS4wLXJjMy0zMTkwMDQtZzQzMTUxZDYgIzYNCkhhcmR3YXJl
+IG5hbWU6IEdvb2dsZSBHb29nbGUgQ29tcHV0ZSBFbmdpbmUvR29vZ2xlIENvbXB1dGUgRW5naW5l
+LCBCSU9TICANCkdvb2dsZSAwMS8wMS8yMDExDQpXb3JrcXVldWU6IHVzYl9odWJfd3EgaHViX2V2
+ZW50DQpDYWxsIFRyYWNlOg0KICBfX2R1bXBfc3RhY2sgbGliL2R1bXBfc3RhY2suYzo3NyBbaW5s
+aW5lXQ0KICBkdW1wX3N0YWNrKzB4ZTgvMHgxNmUgbGliL2R1bXBfc3RhY2suYzoxMTMNCiAgcHJp
+bnRfYWRkcmVzc19kZXNjcmlwdGlvbisweDZjLzB4MjM2IG1tL2thc2FuL3JlcG9ydC5jOjE4Nw0K
+ICBrYXNhbl9yZXBvcnQuY29sZCsweDFhLzB4M2MgbW0va2FzYW4vcmVwb3J0LmM6MzE3DQogIGhk
+cHZyX3Byb2JlLmNvbGQrMHgxMWU4LzB4MTI3ZCBkcml2ZXJzL21lZGlhL3VzYi9oZHB2ci9oZHB2
+ci1jb3JlLmM6Mzc1DQogIHVzYl9wcm9iZV9pbnRlcmZhY2UrMHgzMWQvMHg4MjAgZHJpdmVycy91
+c2IvY29yZS9kcml2ZXIuYzozNjENCiAgcmVhbGx5X3Byb2JlKzB4MmRhLzB4YjEwIGRyaXZlcnMv
+YmFzZS9kZC5jOjUwOQ0KICBkcml2ZXJfcHJvYmVfZGV2aWNlKzB4MjFkLzB4MzUwIGRyaXZlcnMv
+YmFzZS9kZC5jOjY3MQ0KICBfX2RldmljZV9hdHRhY2hfZHJpdmVyKzB4MWQ4LzB4MjkwIGRyaXZl
+cnMvYmFzZS9kZC5jOjc3OA0KICBidXNfZm9yX2VhY2hfZHJ2KzB4MTYzLzB4MWUwIGRyaXZlcnMv
+YmFzZS9idXMuYzo0NTQNCiAgX19kZXZpY2VfYXR0YWNoKzB4MjIzLzB4M2EwIGRyaXZlcnMvYmFz
+ZS9kZC5jOjg0NA0KICBidXNfcHJvYmVfZGV2aWNlKzB4MWYxLzB4MmEwIGRyaXZlcnMvYmFzZS9i
+dXMuYzo1MTQNCiAgZGV2aWNlX2FkZCsweGFkMi8weDE2ZTAgZHJpdmVycy9iYXNlL2NvcmUuYzoy
+MTA2DQogIHVzYl9zZXRfY29uZmlndXJhdGlvbisweGRmNy8weDE3NDAgZHJpdmVycy91c2IvY29y
+ZS9tZXNzYWdlLmM6MjAyMw0KICBnZW5lcmljX3Byb2JlKzB4YTIvMHhkYSBkcml2ZXJzL3VzYi9j
+b3JlL2dlbmVyaWMuYzoyMTANCiAgdXNiX3Byb2JlX2RldmljZSsweGMwLzB4MTUwIGRyaXZlcnMv
+dXNiL2NvcmUvZHJpdmVyLmM6MjY2DQogIHJlYWxseV9wcm9iZSsweDJkYS8weGIxMCBkcml2ZXJz
+L2Jhc2UvZGQuYzo1MDkNCiAgZHJpdmVyX3Byb2JlX2RldmljZSsweDIxZC8weDM1MCBkcml2ZXJz
+L2Jhc2UvZGQuYzo2NzENCiAgX19kZXZpY2VfYXR0YWNoX2RyaXZlcisweDFkOC8weDI5MCBkcml2
+ZXJzL2Jhc2UvZGQuYzo3NzgNCiAgYnVzX2Zvcl9lYWNoX2RydisweDE2My8weDFlMCBkcml2ZXJz
+L2Jhc2UvYnVzLmM6NDU0DQogIF9fZGV2aWNlX2F0dGFjaCsweDIyMy8weDNhMCBkcml2ZXJzL2Jh
+c2UvZGQuYzo4NDQNCiAgYnVzX3Byb2JlX2RldmljZSsweDFmMS8weDJhMCBkcml2ZXJzL2Jhc2Uv
+YnVzLmM6NTE0DQogIGRldmljZV9hZGQrMHhhZDIvMHgxNmUwIGRyaXZlcnMvYmFzZS9jb3JlLmM6
+MjEwNg0KICB1c2JfbmV3X2RldmljZS5jb2xkKzB4NTM3LzB4Y2NmIGRyaXZlcnMvdXNiL2NvcmUv
+aHViLmM6MjUzNA0KICBodWJfcG9ydF9jb25uZWN0IGRyaXZlcnMvdXNiL2NvcmUvaHViLmM6NTA4
+OSBbaW5saW5lXQ0KICBodWJfcG9ydF9jb25uZWN0X2NoYW5nZSBkcml2ZXJzL3VzYi9jb3JlL2h1
+Yi5jOjUyMDQgW2lubGluZV0NCiAgcG9ydF9ldmVudCBkcml2ZXJzL3VzYi9jb3JlL2h1Yi5jOjUz
+NTAgW2lubGluZV0NCiAgaHViX2V2ZW50KzB4MTM4ZS8weDNiMDAgZHJpdmVycy91c2IvY29yZS9o
+dWIuYzo1NDMyDQogIHByb2Nlc3Nfb25lX3dvcmsrMHg5MGYvMHgxNTgwIGtlcm5lbC93b3JrcXVl
+dWUuYzoyMjY5DQogIHByb2Nlc3Nfc2NoZWR1bGVkX3dvcmtzIGtlcm5lbC93b3JrcXVldWUuYzoy
+MzMxIFtpbmxpbmVdDQogIHdvcmtlcl90aHJlYWQrMHg3YjAvMHhlMjAga2VybmVsL3dvcmtxdWV1
+ZS5jOjI0MTcNCiAga3RocmVhZCsweDMxMy8weDQyMCBrZXJuZWwva3RocmVhZC5jOjI1Mw0KICBy
+ZXRfZnJvbV9mb3JrKzB4M2EvMHg1MCBhcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TOjM1Mg0KDQpU
+aGUgYnVnZ3kgYWRkcmVzcyBiZWxvbmdzIHRvIHRoZSB2YXJpYWJsZToNCiAgdmlkZW9fbnIrMHgy
+MC8weDFiZTANCg0KTWVtb3J5IHN0YXRlIGFyb3VuZCB0aGUgYnVnZ3kgYWRkcmVzczoNCiAgZmZm
+ZmZmZmY5MmYyZmY4MDogZmEgZmEgZmEgZmEgMDQgZmEgZmEgZmEgZmEgZmEgZmEgZmEgMDQgZmEg
+ZmEgZmENCiAgZmZmZmZmZmY5MmYzMDAwMDogZmEgZmEgZmEgZmEgMDQgZmEgZmEgZmEgZmEgZmEg
+ZmEgZmEgMDAgMDAgMDAgMDANCj4gZmZmZmZmZmY5MmYzMDA4MDogZmEgZmEgZmEgZmEgMDAgMDAg
+MDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDANCiAgICAgICAgICAgICAgICAgICAgXg0KICBm
+ZmZmZmZmZjkyZjMwMTAwOiAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAw
+MCAwMCAwMA0KICBmZmZmZmZmZjkyZjMwMTgwOiAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAw
+MCAwMCAwMCAwMCAwMCAwMCAwMA0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQoNCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5l
+cmF0ZWQgYnkgYSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBodHRwczovL2dvby5n
+bC90cHNtRUogZm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2lu
+ZWVycyBjYW4gYmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6
+Ym90IHdpbGwga2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29v
+LmdsL3Rwc21FSiNzdGF0dXMgZm9yIGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCnN5
+emJvdCBjYW4gdGVzdCBwYXRjaGVzIGZvciB0aGlzIGJ1ZywgZm9yIGRldGFpbHMgc2VlOg0KaHR0
+cHM6Ly9nb28uZ2wvdHBzbUVKI3Rlc3RpbmctcGF0Y2hlcw0K
