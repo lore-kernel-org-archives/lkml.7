@@ -2,127 +2,95 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE61BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9950CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBBC21734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r0Ah6TDQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6A29E20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556810943;
+	bh=yyMPE9cEVt9Iu1b2UKe0SrMnndHzDIif32M3JP+1pk8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TqhDQmCIOojVQnRRX5Nr0hOD1ih8dMSlo9C4Xm+5zd6xo+0u5iT9xXrtEZBwFis6L
+	 OWm6sxoCLxkJiLEISLpSMpwQfR1BhOr0HlugBEV1xp0cpbn1Yb8IHp75YC87FiIuuw
+	 OUyfbaB9DmkLo/zMhExbXJszMIxogGoYYbTRIl/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfEBP26 (ORCPT
+        id S1728336AbfEBP3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 2 May 2019 11:29:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728322AbfEBP26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 May 2019 11:28:58 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40161 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728305AbfEBP2y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:28:54 -0400
-Received: by mail-lf1-f68.google.com with SMTP id o16so2194143lfl.7;
-        Thu, 02 May 2019 08:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=prm1fyhXs0jWTAHPn6CLV/HtaSlxTqydNTX71G2xSCs=;
-        b=r0Ah6TDQTHwK7cH76U0v6wgZe6avx5iEHW7ZyZtQeMWJ0BM96xdA5Cl0z7TybVCWq2
-         GdJs4hBIjaMk2+bN1HDaTf6zOqe5hO2sgp6ZtwfTS5/fgwSJDtrNJWjCDsbNjpl3/Sa4
-         pymiyFG6nYLpfuMR0Z6lMg2u0eUJ4y2Q7N2OfhBsIvVvaOFxPAvTamFXL7Nc7D/v6Wfu
-         IAjQPZdRp88rdrNlYeCMsQUlqoccabRM797x4zAWUFICHLLBwyerZdw7uU9+/LxV2+Cf
-         JPDpJOTOT9fun6uCI1IgogwQHc91rbibBlm3/21cJycV86XiKrFcKaWknQV1nMlUbn7F
-         S9lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=prm1fyhXs0jWTAHPn6CLV/HtaSlxTqydNTX71G2xSCs=;
-        b=da7XReLoTdCycnQ2Jbl/0iF4haiP5uF7YMWetEv/mlynALo1sON1DqkLzlp+KpL35p
-         NbSN1tZ781FacuMU9QCa5SgC8Vy2GqEKzpqbi+zwO6d6CNVm6PmsIAbnRZmVHgAEuueB
-         0Z4Y2/6LiwEk02FiwwTQn2UcQyZctJRle/lDIdteQSUGg/awodmE0rX42xNPxBXxYAA2
-         0EHI2nB+Q31dmngcLqvT348X3mfBUJZSiv+JRxUiQCeY8v1sChSHWqDG8dWP3fzYY37V
-         qkgSeC8x0YikSVxT43/ddoaajmkXJl7BH1VLtxXotFw18+7e5Ve7cIqt36S2vlJ3P7EE
-         gLkQ==
-X-Gm-Message-State: APjAAAXfHWs61zcOWrSXzrVx6WgavmHMaGmrAZXaXtilHl242T/6sCRw
-        ojA4g93aLpQE0PHiIJcBbVdbr729ATcqKuXD+9s=
-X-Google-Smtp-Source: APXvYqzMcVGIejleD+/wKh8TcnzqGnJxMNAmrH86SrHVOreuURuClXNb7c4WEX+3sFRf5peisBBVvSR/1IhjXSA4LuM=
-X-Received: by 2002:a19:f001:: with SMTP id p1mr2498539lfc.27.1556810932481;
- Thu, 02 May 2019 08:28:52 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1050E20C01;
+        Thu,  2 May 2019 15:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556810937;
+        bh=yyMPE9cEVt9Iu1b2UKe0SrMnndHzDIif32M3JP+1pk8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ycZzoNYKrK1IMqga6VRhkW1FFjYRnEgYbITnVXYkgfy0/2uYLaPsaKOUyd6Xq3uUB
+         dknGMOjit11rm8DnCZs80pbgBjs2x83Ue0OyjXaDNG70ABJIBiS2A9pZrsvR9XFBur
+         KrqG/eY6qucxIYGNjTO+xIX8PfHOh80kY3FucJ64=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 014/101] net: ieee802154: fix a potential NULL pointer dereference
+Date:   Thu,  2 May 2019 17:20:16 +0200
+Message-Id: <20190502143341.081097405@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
+References: <20190502143339.434882399@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
-In-Reply-To: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 2 May 2019 12:28:46 -0300
-Message-ID: <CAOMZO5D=BHWgOieLfz4bxL8v4bDmNOutUUnYSzW89KNtYn=Z9g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: Add csi node
-To:     =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Rui Miguel Silva <rui.silva@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Adding Rui]
+[ Upstream commit 2795e8c251614ac0784c9d41008551109f665716 ]
 
-On Tue, Apr 30, 2019 at 4:47 AM S=C3=A9bastien Szymanski
-<sebastien.szymanski@armadeus.com> wrote:
->
-> Add csi node for i.MX6UL SoC.
->
-> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
->
-> ---
->  arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dts=
-i
-> index 62ed30c781ed..af322bc58333 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -951,6 +951,17 @@
->                                 };
->                         };
->
-> +                       csi: csi@21c4000 {
-> +                               compatible =3D "fsl,imx6ul-csi", "fsl,imx=
-7-csi";
-> +                               reg =3D <0x021c4000 0x4000>;
-> +                               interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_=
-HIGH>;
-> +                               clocks =3D <&clks IMX6UL_CLK_DUMMY>,
-> +                                        <&clks IMX6UL_CLK_CSI>,
-> +                                        <&clks IMX6UL_CLK_DUMMY>;
-> +                               clock-names =3D "axi", "mclk", "dcic";
+In case alloc_ordered_workqueue fails, the fix releases
+sources and returns -ENOMEM to avoid NULL pointer dereference.
 
-Also, I understand you followed
-Documentation/devicetree/bindings/media/imx7-csi.txt and passed these
-three clocks, but looking at the i.MX7D and i.MX6UL/ULL Reference
-Manuals, I don't find the  the descriptions for the "axi" and "dcic"
-CSI clocks.
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ drivers/net/ieee802154/adf7242.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-It looks like that only "mclk" is what we really need here.
+diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
+index cd1d8faccca5..cd6b95e673a5 100644
+--- a/drivers/net/ieee802154/adf7242.c
++++ b/drivers/net/ieee802154/adf7242.c
+@@ -1268,6 +1268,10 @@ static int adf7242_probe(struct spi_device *spi)
+ 	INIT_DELAYED_WORK(&lp->work, adf7242_rx_cal_work);
+ 	lp->wqueue = alloc_ordered_workqueue(dev_name(&spi->dev),
+ 					     WQ_MEM_RECLAIM);
++	if (unlikely(!lp->wqueue)) {
++		ret = -ENOMEM;
++		goto err_hw_init;
++	}
+ 
+ 	ret = adf7242_hw_init(lp);
+ 	if (ret)
+-- 
+2.19.1
 
-Should we change the bindings and the imx7-csi driver to not request
-"axi" and "dcic" clocks?
 
-Rui, what do you think? If you agree I can send a fix for this.
 
-Thanks
