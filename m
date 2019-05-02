@@ -2,114 +2,130 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956D2C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD8FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DEB2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21AD02075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jlPMKdBl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PCC0xq5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfEBPAG (ORCPT
+        id S1726446AbfEBPBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:00:06 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36737 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfEBPAG (ORCPT
+        Thu, 2 May 2019 11:01:25 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44835 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfEBPBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:00:06 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 85so1190568pgc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 08:00:05 -0700 (PDT)
+        Thu, 2 May 2019 11:01:24 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b8so2381507edm.11;
+        Thu, 02 May 2019 08:01:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+h3hw8s9AtbUTxjsRg8h8D8msF/wrKXAgqEpw8EeNOA=;
-        b=jlPMKdBldP3f4gKDgtqtVH6KYU8BBSCgulAP9KFpHF3ggzd6GSvZz16mK18TthOsMB
-         1vIdQs+yeoBsgHJk6YekXKdpVP9K50gEgw25xuVBTGoxyyoHb29xzJ1Ag7owhc4iWbJH
-         3vtoFqsW+jMQOE51MrgTIxpPqNuJeob2IO2cLCizNlQi3tIitPvtK0sQj6ZbAjSSmi7Q
-         How1Fdr5GunZ9wIhUNpe8lJnwvz4fLYdBh0eoo7nwRiWBdB4lO/rCUKPbZYMYOEWstK6
-         X9eprPBu7iBiQdu2/W6KBPXy8NJJCdW7KNyEh5OU4DREjJDfxop3p+3u0QEieu4jXfUx
-         qsOg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F4ystsakZfQavkq/1h2e8hRLzNto9oFi+KNjdeCmL64=;
+        b=PCC0xq5ufyxEAa9KaVRkdQWnkVxx/kVb6SxM6C8v1f4VnXfLkIJvpS+U8VKy7KHfv5
+         ji63O9XTc/P1fkA8UGQ330CURPKWxcV1UVg9cv8zY8+GClAWeyIjub9tSSWmOR/z/4If
+         f11F4PM8T0FwHh1dR/WpPAPuAdDXLYbnydg1KcSjm1BoVE8FWkYcYTScPn7evoyZS4qd
+         X7FwrsTSjb4YggILF3p+ZDTiNTWxmwEc/Yv94ChVdcKnlSrNBO8iKa6cPCz9XUsxy1AC
+         Sn16cqVh3Dm42xBXsNjH8oCZZeEbKlKgA1uFCWCrVLsPOTqyRJhhTLtXk1Tvh8QNMDOC
+         SQLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+h3hw8s9AtbUTxjsRg8h8D8msF/wrKXAgqEpw8EeNOA=;
-        b=QFqrSp3G+i+SV6DXBBKyMKndOroAQRzTXp+6BB+5QBpJ+uPb6nWNwq1AiUgy+6b4g9
-         ALdACQL5azQZTFk+IpIYtmh9gqt7TtFNSCaTGvzv0M1DalhZkWOLYSgBZxfHhBTYeBpH
-         vumNcxVRjhtTRHx0c3H6AyZNTgbiEthav12E4uKRBDSbfMB68CTtimXIzx8KxnfMxEE5
-         /iJEXf92Ql/3fc8ThMquIGgntX1W1CLau85E3rU6DxOKfxk0HJKthm2jMObrvqHV5odr
-         OEpt0+wjCW8P1s7Je41xXGvoVr6MjBr4XxlYtHwSiaHH1uy2zkW3ZCgydBEkgmTBVSiY
-         smZA==
-X-Gm-Message-State: APjAAAXdjPllxLL76PDntFtKnYbVcOvTl1mo3/PtGnPmQvcQciEYiH6W
-        YgpGM8oMoP/20sE+753kKioGTw==
-X-Google-Smtp-Source: APXvYqxWyfb9Mb0R98oD1S3XalY5sExRiMmQ78TIyJ0AR6QKTKJB4fZ9Az+LDCDt3uqkWQ2xI1kwEg==
-X-Received: by 2002:aa7:9242:: with SMTP id 2mr1888978pfp.230.1556809205168;
-        Thu, 02 May 2019 08:00:05 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i3sm60549129pfa.90.2019.05.02.08.00.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 08:00:03 -0700 (PDT)
-Date:   Thu, 2 May 2019 08:00:06 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-Message-ID: <20190502150006.GL2938@tuxbook-pro>
-References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
- <20190502001955.10575-2-bjorn.andersson@linaro.org>
- <20190502115351.GM3845@vkoul-mobl.Dlink>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F4ystsakZfQavkq/1h2e8hRLzNto9oFi+KNjdeCmL64=;
+        b=tOBD9qX+zoAN59OQ6N6JIvTyXYrF99CWhr4nNj85A+zzcoluY3SZICZCUJLHB0ITcu
+         eBVlr1dNgDRk9DSyYs/BqVysCr87yD/Wo2f9S6skDtUfJ5TGw3zrwZHOxiJHrf6XrlAD
+         jgtuis2w5WpXJCo22kvCOncxmD/kOdTK3FxSMeCMvkXDFIKJk4WpwvS5myPRIXkQ0V31
+         D1SICqf1IpA3awkABULwgR7R5zHjMs9cy1F3wDG1681+HYhsm5jqUS1xFgOjs/7X3f/Q
+         ADhaNR6qeB+ZwkNnyqhWsY3k1VXoD2L5aeKArnIAqquZKHpyWPYic4XnVBoLopoeW90f
+         BBTQ==
+X-Gm-Message-State: APjAAAVfM8QazsorjNjkS+zqORqx6X9ow4OTa++kHeMBlIR6+7HGEVHm
+        YQseG5p+98BeSHZF/Va/DA8=
+X-Google-Smtp-Source: APXvYqx885g/yRDrtzqXx6mkE80l3zSptxcZjU6uKFdcZqN3zMHnJiaGnbk139arXon5BQo2eX0tgw==
+X-Received: by 2002:aa7:c403:: with SMTP id j3mr2903456edq.144.1556809282579;
+        Thu, 02 May 2019 08:01:22 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id f8sm3579312edd.15.2019.05.02.08.01.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 08:01:21 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] rtw88: Made RA_MASK macros ULL
+Date:   Thu,  2 May 2019 08:00:22 -0700
+Message-Id: <20190502150022.4182-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502115351.GM3845@vkoul-mobl.Dlink>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02 May 04:53 PDT 2019, Vinod Koul wrote:
-> On 01-05-19, 17:19, Bjorn Andersson wrote:
-[..]
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0ed235d560e3..d740cbe0e56d 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
-> >  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
-> >  };
-> >  
-> > +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
-> 
-> empty line after the define please
-> 
+Clang warns about the definitions of these macros (full warnings trimmed
+for brevity):
 
-This follows the style of QCOM_PCIE_2_3_2_MAX_SUPPLY one block up, so
-I think this is the way we want it.
+drivers/net/wireless/realtek/rtw88/main.c:524:15: warning: signed shift
+result (0x3FF00000000) requires 43 bits to represent, but 'int' only has
+32 bits [-Wshift-overflow]
+                        ra_mask &= RA_MASK_VHT_RATES | RA_MASK_OFDM_IN_VHT;
+                                   ^~~~~~~~~~~~~~~~~
+drivers/net/wireless/realtek/rtw88/main.c:527:15: warning: signed shift
+result (0xFF0000000) requires 37 bits to represent, but 'int' only has
+32 bits [-Wshift-overflow]
+                        ra_mask &= RA_MASK_HT_RATES | RA_MASK_OFDM_IN_HT_5G;
+                                   ^~~~~~~~~~~~~~~~
 
-> >  struct qcom_pcie_resources_2_4_0 {
-[..]
-> 
-> 
-> rest lgtm:
-> 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> 
+Given that these are all used with ra_mask, which is of type u64, we can
+just declare the macros to be ULL as well.
 
-Thanks!
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/467
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/wireless/realtek/rtw88/main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Regards,
-Bjorn
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index 9893e5e297e3..a14a5f1b4b6d 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -462,15 +462,15 @@ static u8 get_rate_id(u8 wireless_set, enum rtw_bandwidth bw_mode, u8 tx_num)
+ 
+ #define RA_MASK_CCK_RATES	0x0000f
+ #define RA_MASK_OFDM_RATES	0x00ff0
+-#define RA_MASK_HT_RATES_1SS	(0xff000 << 0)
+-#define RA_MASK_HT_RATES_2SS	(0xff000 << 8)
+-#define RA_MASK_HT_RATES_3SS	(0xff000 << 16)
++#define RA_MASK_HT_RATES_1SS	(0xff000ULL << 0)
++#define RA_MASK_HT_RATES_2SS	(0xff000ULL << 8)
++#define RA_MASK_HT_RATES_3SS	(0xff000ULL << 16)
+ #define RA_MASK_HT_RATES	(RA_MASK_HT_RATES_1SS | \
+ 				 RA_MASK_HT_RATES_2SS | \
+ 				 RA_MASK_HT_RATES_3SS)
+-#define RA_MASK_VHT_RATES_1SS	(0x3ff000 << 0)
+-#define RA_MASK_VHT_RATES_2SS	(0x3ff000 << 10)
+-#define RA_MASK_VHT_RATES_3SS	(0x3ff000 << 20)
++#define RA_MASK_VHT_RATES_1SS	(0x3ff000ULL << 0)
++#define RA_MASK_VHT_RATES_2SS	(0x3ff000ULL << 10)
++#define RA_MASK_VHT_RATES_3SS	(0x3ff000ULL << 20)
+ #define RA_MASK_VHT_RATES	(RA_MASK_VHT_RATES_1SS | \
+ 				 RA_MASK_VHT_RATES_2SS | \
+ 				 RA_MASK_VHT_RATES_3SS)
+-- 
+2.21.0
+
