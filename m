@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE90EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFA4C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C932184D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7432177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763552;
-	bh=asrfQSJ8hpwZNAvbHsdwQeI11QbijPd897kuk4Pa2lA=;
+	s=default; t=1556763556;
+	bh=xmDYXP70K6kQoVrzTUB35XnCUcff/iFnnZTl7EG/ojU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=sFcKweOUceEeOOTT/xlcVtkHhQJwzq5YyLF8m6p9+u7caqKGww44fpmA3fvhBncxr
-	 GcuR2C/iPHKeHgAKijiqBTOCeLQPKF14nY/wx75vI+vY9F464ECDCfb4g/grB/fv5U
-	 zxueEepRRoRzAopjs+iPSaVc812xDuteJaRfuzpE=
+	b=oIJ82xJwnFjeaHYzJ8mGUjQSkxiOP6XJ1h2KZz40Z/7SIDiE3pvdRnaix/cTdlSKQ
+	 ns4Tp13rokfEtUiTEIvNJ7xkMgKjCgfOhSIXgbDNRwJYYPlUxxWJyqmQ2t/zVfQUeD
+	 JLd92AqtU6tREUVLwvOg1CjHzTgwDC21le17Pn8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfEBCTL (ORCPT
+        id S1726661AbfEBCTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:19:11 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56650 "EHLO
+        Wed, 1 May 2019 22:19:16 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56874 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfEBCTH (ORCPT
+        with ESMTP id S1726578AbfEBCTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:19:07 -0400
+        Wed, 1 May 2019 22:19:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=LmwUh5ppi0jIXNLd0yCXMXthQMJBz2ccK6O6VVIHxIk=; b=pwAkIXn9s5Zz
-        xJid5ZilUDMo1D7boLbd2Ik4UEBzUOCa/RisOKTAEyuL8PdxSk2i8EsXdt/7dadwAseBGmU5yKQqN
-        xWb8h57sk9s9p+04MDaUZwowX4qdhDek0Zf9vtQfJ1QlrdFgRbP/lkJ7s/+BJO4sQzfwVzXBHLj5p
-        xxZm8=;
+        List-Archive; bh=TFHxH28B7UfMNIBcUFzJu3t9vBTVEM+AKFNiSzoLIGk=; b=NjVnHuct88Cw
+        pK1b8ccx2ARPRZy2Cj2aQWrkrhvk7zlkv+XbV6rRqzm6pYWtj95lTljQiE0dQ0iGVQRTvtD7aPhbl
+        g2n2Xii/uOUG2T+oTB/fH5GWZbgJ3lLoeS25HFbFBZzVgXFo/G+ZObualzi36zNw46N0IkqsmudF6
+        YcscY=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1JH-0005uI-A6; Thu, 02 May 2019 02:18:55 +0000
+        id 1hM1JJ-0005ud-Dc; Thu, 02 May 2019 02:18:57 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 16630441D3F; Thu,  2 May 2019 03:18:52 +0100 (BST)
+        id 4C752441D57; Thu,  2 May 2019 03:18:54 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Chen Feng <puck.chen@hisilicon.com>,
-        Guodong Xu <guodong.xu@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-Subject: Applied "regulator: hi6xxx: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190501011131.16186-1-axel.lin@ingics.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     alexandre.belloni@bootlin.com, broonie@kernel.org,
+        Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Ludovic.Desroches@microchip.com, Mark Brown <broonie@kernel.org>,
+        Nicolas.Ferre@microchip.com
+Subject: Applied "spi: atmel-quadspi: fix crash while suspending" to the spi tree
+In-Reply-To: <1556097463-29672-1-git-send-email-claudiu.beznea@microchip.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021852.16630441D3F@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:52 +0100 (BST)
+Message-Id: <20190502021854.4C752441D57@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:54 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: hi6xxx: Switch to SPDX identifier
+   spi: atmel-quadspi: fix crash while suspending
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,117 +89,47 @@ to this mail.
 Thanks,
 Mark
 
-From 8b9085200681329233d645466698596b87be77f2 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 1 May 2019 09:11:31 +0800
-Subject: [PATCH] regulator: hi6xxx: Switch to SPDX identifier
+From e5c27498a0403b270620b1a8a0a66e3efc222fb6 Mon Sep 17 00:00:00 2001
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Date: Wed, 24 Apr 2019 09:17:59 +0000
+Subject: [PATCH] spi: atmel-quadspi: fix crash while suspending
 
-Convert HiSilicon hi6xxx PMIC drivers to SPDX identifier.
+atmel_qspi objects are kept in spi_controller objects, so, first get
+pointer to spi_controller object and then get atmel_qspi object from
+spi_controller object.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Fixes: 2d30ac5ed633 ("mtd: spi-nor: atmel-quadspi: Use spi-mem interface for atmel-quadspi driver")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/hi6421-regulator.c     | 24 +++++++++-------------
- drivers/regulator/hi6421v530-regulator.c | 26 ++++++++++--------------
- drivers/regulator/hi655x-regulator.c     | 22 ++++++++------------
- 3 files changed, 30 insertions(+), 42 deletions(-)
+ drivers/spi/atmel-quadspi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/hi6421-regulator.c b/drivers/regulator/hi6421-regulator.c
-index 6c7ea4eb4bb0..5ac3d7c29725 100644
---- a/drivers/regulator/hi6421-regulator.c
-+++ b/drivers/regulator/hi6421-regulator.c
-@@ -1,17 +1,13 @@
--/*
-- * Device driver for regulators in Hi6421 IC
-- *
-- * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
-- *              http://www.hisilicon.com
-- * Copyright (c) <2013-2014> Linaro Ltd.
-- *              http://www.linaro.org
-- *
-- * Author: Guodong Xu <guodong.xu@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Device driver for regulators in Hi6421 IC
-+//
-+// Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
-+//              http://www.hisilicon.com
-+// Copyright (c) <2013-2014> Linaro Ltd.
-+//              http://www.linaro.org
-+//
-+// Author: Guodong Xu <guodong.xu@linaro.org>
+diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+index fffc21cd5f79..b3173ebddade 100644
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -570,7 +570,8 @@ static int atmel_qspi_remove(struct platform_device *pdev)
  
- #include <linux/slab.h>
- #include <linux/device.h>
-diff --git a/drivers/regulator/hi6421v530-regulator.c b/drivers/regulator/hi6421v530-regulator.c
-index c09bc71538a5..06ae65199afd 100644
---- a/drivers/regulator/hi6421v530-regulator.c
-+++ b/drivers/regulator/hi6421v530-regulator.c
-@@ -1,18 +1,14 @@
--/*
-- * Device driver for regulators in Hi6421V530 IC
-- *
-- * Copyright (c) <2017> HiSilicon Technologies Co., Ltd.
-- *              http://www.hisilicon.com
-- * Copyright (c) <2017> Linaro Ltd.
-- *              http://www.linaro.org
-- *
-- * Author: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-- *         Guodong Xu <guodong.xu@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Device driver for regulators in Hi6421V530 IC
-+//
-+// Copyright (c) <2017> HiSilicon Technologies Co., Ltd.
-+//              http://www.hisilicon.com
-+// Copyright (c) <2017> Linaro Ltd.
-+//              http://www.linaro.org
-+//
-+// Author: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-+//         Guodong Xu <guodong.xu@linaro.org>
+ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
+ {
+-	struct atmel_qspi *aq = dev_get_drvdata(dev);
++	struct spi_controller *ctrl = dev_get_drvdata(dev);
++	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
  
- #include <linux/mfd/hi6421-pmic.h>
- #include <linux/module.h>
-diff --git a/drivers/regulator/hi655x-regulator.c b/drivers/regulator/hi655x-regulator.c
-index 6f6635daa026..ac2ee2030211 100644
---- a/drivers/regulator/hi655x-regulator.c
-+++ b/drivers/regulator/hi655x-regulator.c
-@@ -1,16 +1,12 @@
--/*
-- * Device driver for regulators in Hi655x IC
-- *
-- * Copyright (c) 2016 Hisilicon.
-- *
-- * Authors:
-- * Chen Feng <puck.chen@hisilicon.com>
-- * Fei  Wang <w.f@huawei.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Device driver for regulators in Hi655x IC
-+//
-+// Copyright (c) 2016 Hisilicon.
-+//
-+// Authors:
-+// Chen Feng <puck.chen@hisilicon.com>
-+// Fei  Wang <w.f@huawei.com>
+ 	clk_disable_unprepare(aq->qspick);
+ 	clk_disable_unprepare(aq->pclk);
+@@ -580,7 +581,8 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
  
- #include <linux/bitops.h>
- #include <linux/device.h>
+ static int __maybe_unused atmel_qspi_resume(struct device *dev)
+ {
+-	struct atmel_qspi *aq = dev_get_drvdata(dev);
++	struct spi_controller *ctrl = dev_get_drvdata(dev);
++	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
+ 
+ 	clk_prepare_enable(aq->pclk);
+ 	clk_prepare_enable(aq->qspick);
 -- 
 2.20.1
 
