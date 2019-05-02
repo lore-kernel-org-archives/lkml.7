@@ -2,84 +2,107 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7776C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF9DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791712053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51F820651
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gfokrAic"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dUdXhGJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfEBVyd (ORCPT
+        id S1726278AbfEBWDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 17:54:33 -0400
-Received: from mail-pg1-f177.google.com ([209.85.215.177]:46989 "EHLO
-        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfEBVyc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 17:54:32 -0400
-Received: by mail-pg1-f177.google.com with SMTP id n2so1650159pgg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 14:54:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MBID6pBuuXLp9VD3vm7yEVW/E0fVBtd0jBdpqdXVLC0=;
-        b=gfokrAicLKNGer/uo0EkviXH3nnCofvHPG9FIRrkF+5Oj1bmdkbcVVSCHjnMHpgZnF
-         hz0+cKKKbq/QQ/3QzXgJzXwuaG/2OYo6YkMmmux7LNzf4EOC/7KJWtk7bMVALPcU2siP
-         txZddaANjlieQT9vDwmH1OvOubliJMluG5kA4QSLwO6x+OwUh0BPOSck0hELCBmzu0GE
-         WiI29FelhNMxankj023zpy6B+FRkeSOX+ZPtIvqT1Y0dpleXm9KpKhiG0VrqmEY3/mWF
-         Q6KZkYTS24ShbIkZtYK4S59Ia1AV+5jfClKGAP5BEX4ngu2uNFhFQdpUrj2C3aLJrEy+
-         AJUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MBID6pBuuXLp9VD3vm7yEVW/E0fVBtd0jBdpqdXVLC0=;
-        b=dyU0Wul6+ZNZWxH4tn9H9l9y7ENwge65g0IRhXGdDmoVJw0WnKcZR4ewdQtyxDSbvL
-         CgtaDyiIBjxq1zxA7Pv3NOzxWEEcVggYxBwojHojYfviyYzDgTtslM5jyzprZQ4TI2gc
-         27lDwBl1WMqtiQsPrTKoU4FUVmTId/lXjkWkmObsrmcO1r6srP89CFd5uuEIsF4b57R3
-         ne03a2ZXMFOZdaIUVvzjX2ZT0axFUyn/iQjN+K9B/yI7D3N8Wzqbrl4SSGAnUgmTXubk
-         l2HyJQxZ2J/nZfZX9aHrU+jJ+NI8uU00QGzNCLi6p+PNWzZJ4OZLGopRv/3yXVY4meJK
-         kXPw==
-X-Gm-Message-State: APjAAAWvD7sVePleMYv/BXou3MdCsk6ikjXN6PbGml1u1SqMh3mGX375
-        4dmrvkRxIVnmm0BRgTUe492/wv3VWZTayA==
-X-Google-Smtp-Source: APXvYqyhV1eEt6chsop8uJjOJ+wfqlGOQH4zCm2/kWX1Rwv0owrFJMOClqEdxV67K+VYlA5QFhd1RA==
-X-Received: by 2002:a63:7c6:: with SMTP id 189mr6257276pgh.247.1556834071704;
-        Thu, 02 May 2019 14:54:31 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id z9sm239392pga.92.2019.05.02.14.54.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 14:54:30 -0700 (PDT)
-Subject: Re: [PATCH] block: Fix function name in comment
-To:     Raul E Rangel <rrangel@chromium.org>, linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20190502194811.200677-1-rrangel@chromium.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4c620d95-0194-eaf1-f492-62716e188efd@kernel.dk>
-Date:   Thu, 2 May 2019 15:54:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 18:03:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49469 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbfEBWDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 18:03:37 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44w8R95MJ1z9s55;
+        Fri,  3 May 2019 08:03:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556834615;
+        bh=1XcVg5iNreGDjZX9Sk7gu3lAAG04wWFYAfB6eyN8v3w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dUdXhGJ4ltYtHDdPmiGKMf0AyvqIUDJJIolhkPUNyLhAqU0gvQzfla5r0rvqzzwpS
+         0ODTvAIW/g6MjYLDLJtatLUqHaXDXcMTEJYTwg52yE/AL1Au2PINbMrMeAEKTnqEP4
+         A7tSP+7ky10MqU+CEvVBqTMdElz5KWHt9HrMGtopVOMlW3tk2h7UCviw6fHeerxtU5
+         5bFmcgao1f9U7G6EdG2rSk5l+0Ur/+ALZG6OMy6PT4hogjxXeR1O4ASVBHNtetSjGR
+         WOrL69LB9ZcNOaLjWX9GcXawY2CscYn6Uh6xuz1rxnKDBEwGuZwzmq5U5l6htixnrp
+         tjqj19wK5DwnQ==
+Date:   Fri, 3 May 2019 08:03:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        maxime.ripard@bootlin.com, andre.przywara@arm.com,
+        samuel@sholland.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for May 2
+Message-ID: <20190503080331.0ccc2419@canb.auug.org.au>
+In-Reply-To: <0a28f5b8-296a-451c-c2f4-c0057833fb00@linaro.org>
+References: <20190502201028.707453d8@canb.auug.org.au>
+        <CADYN=9LHJpDyvA=3wkcqdS5f3kahD0vdXFY415k8UmLHMDzL+Q@mail.gmail.com>
+        <20190502190845.GA19485@archlinux-i9>
+        <0a28f5b8-296a-451c-c2f4-c0057833fb00@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190502194811.200677-1-rrangel@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/LDFhNINO6Q+CN8C=9JPJzpA"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/19 1:48 PM, Raul E Rangel wrote:
-> The comment was out of date.
+--Sig_/LDFhNINO6Q+CN8C=9JPJzpA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi Daniel,
 
--- 
-Jens Axboe
+On Thu, 2 May 2019 22:09:49 +0200 Daniel Lezcano <daniel.lezcano@linaro.org=
+> wrote:
+>
+> Yes, I picked the patch and it was merged it via the tip tree [1] as
+> requested by Marc Zyngier [2] and notified [3].
+>=20
+> In any case, this patch should have go through my tree initially, so if
+> it is found somewhere else that's wrong.
+>=20
+> I did a respin of my branch and pushed it again in case there was
+> something wrong from it.
 
+The patch ("clocksource/drivers/arch_timer: Workaround for Allwinner
+A64 timer instability") was merged into v5.1-rc1 via the tip tree as
+you say, however the version of your clockevents tree in yesterday's
+linux-next was based on v5.0-rc1 and contained the patch again ...
+
+Today's should be better.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/LDFhNINO6Q+CN8C=9JPJzpA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzLaTMACgkQAVBC80lX
+0GwK2gf/T46LsHptfQcVHZYq0BKp3GlqA/KAkpndiWhiqzVF4j12VWKizW7fskBG
+jO6IQiEjlLugRilJxK8AH28UtkvETvLaiMeHBBGjxW4rvOpkkeVymsCZkVmGnNc/
+3Ywm6kkQWQ8bn+h1jmeSKm35+kNepC7Xa9/ll5ParMz0bsBoeKQ+p8Au0uLroEva
+DzGfgXq3m/5eihWwMlNcam7Kb6OjnN1+T9ArIg78y/UviaBvecBkzGsvJYJ07Nk1
+dwjNZliVpesEDiDT1iFMGcStQ04SEhZ6Cu+F1cSvL+LRoA1Pyjscp7ITP5/NQLuz
+mNJCgqfarwjbRYd8jPf/pXwpfT5q5w==
+=+AWD
+-----END PGP SIGNATURE-----
+
+--Sig_/LDFhNINO6Q+CN8C=9JPJzpA--
