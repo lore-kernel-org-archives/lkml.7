@@ -2,145 +2,98 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4500C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6463FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD81D20651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556831401;
-	bh=Y9UIWBSCOJdHFyLzTwSGOFc5TFVaYpYyZYhYZZzuFbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i13eNvCrH7xDEKglyUb9P9cfEQ3+4FnDuEO46K1GzASERL1p/cNtRHZFZDp0V2VRy
-	 b9UEDxmlE/9yJo4RCZ62D72fYmUMNkmWyl1XPNkFv4g6T4nKyFqofxWwGRixowopJM
-	 penekIUhNFq7qldXm0RJH+CkmcwtzhcW2xn6iIOQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2FEE62087F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FlSUJ7/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfEBVKA (ORCPT
+        id S1726455AbfEBVKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 17:10:00 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39226 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfEBVJ7 (ORCPT
+        Thu, 2 May 2019 17:10:07 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44671 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfEBVKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 17:09:59 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o39so3453249ota.6;
-        Thu, 02 May 2019 14:09:59 -0700 (PDT)
+        Thu, 2 May 2019 17:10:05 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n134so1134595lfn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 14:10:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tcMOLF2Npln0wz4ssEpXXJP5i/zIoQ58cnAHA6z5aF0=;
+        b=FlSUJ7/piDYFhxvCgI0Gt4KnW4fnyXCozKS4bJVx96EUwoY0MZMrAW2YzwOqdIHivo
+         GMAcHUpu+MrTppPzdzUlzMLssEIuv186RlYmshd6nhkX30kC24z/8NMJGqD/DVd/TzwE
+         h9Pl7y5nNn2FPDIOM3D0ijgs5SXCsMWMoFHTERCVfyxHf2qr+FRnx7wpbrCBBfynM1KH
+         AVWDZ+2vYFW9Srt2w3HZ1CZboOJyrtlR7zrZr/7z7YFxv/lJm7fEbEK4l8d1j4dzGBDP
+         I+WVDVL7abhklp6lQagcdCu4kW5jedt/CTXWDRDmZTBLVvXTlBFnJ/2b5R1PTfQeQ+HR
+         ODHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QtkqH6IpA43h0KuYAycj7yzP1AGC1MU/BxNPtjJYr3s=;
-        b=QwDzL7z3wxUmkH1SZ97Eex5jesLQtxjwgwV8tVXzae5Hk+MH1lw9PL6lAKbgwf8f7W
-         QhZuFpFotJl00HGKnkNKtXWu2MnbVoGQuGq9/bY7palwPJ114d862w6Glj7eDtpVsU4m
-         cJoSeOD/jHqfhX0G1KhuZddf0g4ToYzOYJRuv+MuW6mBD7RXAwVIEH9wGEHsfUzbEXb/
-         IP75AaNRbXMGO6DMbRjIHkDy/oYPsaVBL0pKGA3K754d9R1F/IuOuLkvEL+vbfStLbW1
-         Yhd5DzJNNC8wAqcGjSFo/rePzVfsbKDpP8IrPiMi2xJ7djI8i6eaXd9qPgIAUS7vxbS2
-         L0nQ==
-X-Gm-Message-State: APjAAAXeg58ad0fDFgK4W30CWjZqpOS5+Hp30zsN+74QAQp6gTmiWPWc
-        dwX6YSAhafMW0YFiY1BXsgHown8=
-X-Google-Smtp-Source: APXvYqxnZxXvfqjHdophlaBthbXEy4/BcPCcWZUXO7xwC3VYB/+OhqEMFQzMzayuAotgP38xuu7vgw==
-X-Received: by 2002:a9d:7f0b:: with SMTP id j11mr4397270otq.132.1556831398985;
-        Thu, 02 May 2019 14:09:58 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j14sm43899otk.14.2019.05.02.14.09.57
+        bh=tcMOLF2Npln0wz4ssEpXXJP5i/zIoQ58cnAHA6z5aF0=;
+        b=b62aYqFf+4RlRA263dAmTwXV1qkd9wBtvEfIB6kWxWFuKqiWfkqJLjrYaA9cdF+gE6
+         WiLhw3sch2NH3cE8RP3xIVgM1bN+KgM11EEY9O3Jf0ViercRg3Vhw/xy+Sa9W0bI0GOM
+         XcFYbnhVWKmCF4YLzRVxxlWXzfC5cf7PWTDynSpImgiNb1skwKbMAI4LEgGRhOjKul3P
+         xyvETCQEFCvG0cwZ8gBwzUUzXBInHxRvc89iFWJvpAB8ah3xmHFLhv3P3rVzWjk8tRBe
+         EdLKJtZtqNaMJs6rzKdTQrYaZ4oJ16Vm1XBVq627IR96HDb3Sct804Bra/EGkgDcpjWn
+         2yjQ==
+X-Gm-Message-State: APjAAAXPP/Gr7z/4OZBWBTf1/lSCFWHd1TKECyVEw4F0fgjXQ2XbHvrH
+        le4FvSWw+wZjSvP9M1AWjz0=
+X-Google-Smtp-Source: APXvYqw8Ghmz1lkWfXNcRpu7G+pfnoHq6Ocam2APpRN5a/nkeh9y8/7k71k5HmQ69t1P6/RbkHWzew==
+X-Received: by 2002:a19:4acf:: with SMTP id x198mr3125176lfa.7.1556831403244;
+        Thu, 02 May 2019 14:10:03 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id k10sm15730ljh.86.2019.05.02.14.10.02
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 14:09:58 -0700 (PDT)
-Date:   Thu, 2 May 2019 16:09:57 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: net: wiznet: add w5x00 support
-Message-ID: <20190502210957.GA12202@bogus>
-References: <20190430185215.21685-1-nsaenzjulienne@suse.de>
- <20190430185215.21685-2-nsaenzjulienne@suse.de>
+        Thu, 02 May 2019 14:10:02 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 18D194603CA; Fri,  3 May 2019 00:10:02 +0300 (MSK)
+Date:   Fri, 3 May 2019 00:10:02 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Jann Horn <jannh@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yury Norov <norov.maillist@gmail.com>
+Subject: Re: [PATCH v2 0/2] sys/prctl: expose TASK_SIZE value to userspace
+Message-ID: <20190502211002.GG2488@uranus.lan>
+References: <1556830342-32307-1-git-send-email-jsavitz@redhat.com>
+ <8bb9fe29-65d3-e977-1932-4a2f17ead333@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430185215.21685-2-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8bb9fe29-65d3-e977-1932-4a2f17ead333@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 08:52:14PM +0200, Nicolas Saenz Julienne wrote:
-> Add bindings for Wiznet's w5x00 series of SPI interfaced Ethernet chips.
+On Thu, May 02, 2019 at 05:01:38PM -0400, Waiman Long wrote:
 > 
-> Based on the bindings for microchip,enc28j60.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  .../devicetree/bindings/net/wiznet,w5x00.txt  | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wiznet,w5x00.txt b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-> new file mode 100644
-> index 000000000000..2cbedefb1607
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-> @@ -0,0 +1,48 @@
-> +* Wiznet w5x00
-> +
-> +This is a standalone 10/100 MBit Ethernet controller with SPI interface.
-> +
-> +For each device connected to a SPI bus, define a child node within
-> +the SPI master node.
-> +
-> +Required properties:
-> +- compatible: Should be "wiznet,w5100", "wiznet,w5200" or "wiznet,w5500"
+> What did you change in v2 versus v1?
 
-One per line please.
-
-> +- reg: Specify the SPI chip select the chip is wired to.
-> +- interrupts: Specify the interrupt index within the interrupt controller (referred
-> +              to above in interrupt-parent) and interrupt type. w5x00 natively
-> +              generates falling edge interrupts, however, additional board logic
-> +              might invert the signal.
-> +- pinctrl-names: List of assigned state names, see pinctrl binding documentation.
-> +- pinctrl-0: List of phandles to configure the GPIO pin used as interrupt line,
-> +             see also generic and your platform specific pinctrl binding
-> +             documentation.
-> +
-> +Optional properties:
-> +- spi-max-frequency: Maximum frequency of the SPI bus when accessing the w5500.
-> +  According to the w5500 datasheet, the chip allows a maximum of 80 MHz, however,
-> +  board designs may need to limit this value.
-> +- local-mac-address: See ethernet.txt in the same directory.
-> +
-> +
-> +Example (for Raspberry Pi with pin control stuff for GPIO irq):
-> +
-> +&spi {
-> +	eth1: w5500@0 {
-
-ethernet@0
-
-> +		compatible = "wiznet,w5500";
-> +		reg = <0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&eth1_pins>;
-> +		interrupt-parent = <&gpio>;
-> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +		spi-max-frequency = <30000000>;
-> +	};
-> +};
-> +
-> +&gpio {
-> +	eth1_pins: eth1_pins {
-> +		brcm,pins = <25>;
-> +		brcm,function = <0>; /* in */
-> +		brcm,pull = <0>; /* none */
-> +	};
-> +};
-> +
-> -- 
-> 2.21.0
-> 
+Seems unsigned long long has been changed to unsigned long.
