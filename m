@@ -6,97 +6,68 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930FAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEC0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5308020873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489DB2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556781574;
-	bh=BkSh3FIMwtQhnHhI9uVzzrmkVqCsaczpGUTBFako1F0=;
+	s=default; t=1556781610;
+	bh=otilETRd29CkIhyLirC9XZ6k4DP9hiNq+U0b66iznaI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gyJwdrAEtEwsNwrfxsSkeeg3d1dDhEDVqwzTdFSjECWV5fOCe/Uk9V7b5Vyg6SxYI
-	 LyM1EoEctBU6iQBSXIL8/meGytJocDALAA/h9LW5KC83Ran2iGWXYivKuymWYDdoGj
-	 MIYMIYclX4zd+HC78BbzLIWnA45JGDXA1MkzbiCA=
+	b=qYC+maJIFp2xHSqIbM6MlZV+wjFEwMHwG63fTSvG6D9ylZhFb8nFJrz6hH0R6KjX4
+	 WihLGnc3/qB5EbAvrSzpY938sT9asYYPjTmYzZR95n81t78WoDSMjS4bSAawz3tzaA
+	 1lWNKvrk5DHIxDSMH3gPJTnMZyECeDpPxQ8QBqd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfEBHTd (ORCPT
+        id S1726328AbfEBHUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:19:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44514 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 03:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfEBHTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:19:32 -0400
+        id S1726055AbfEBHUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 03:20:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EE5A2085A;
-        Thu,  2 May 2019 07:19:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954002085A;
+        Thu,  2 May 2019 07:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556781571;
-        bh=BkSh3FIMwtQhnHhI9uVzzrmkVqCsaczpGUTBFako1F0=;
+        s=default; t=1556781608;
+        bh=otilETRd29CkIhyLirC9XZ6k4DP9hiNq+U0b66iznaI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NDNXVSmG9ZZmNQhafwrMk+Wouh+FE5BDIAFxhOWExL/pCWm6dq9krH1gbEiSXb7A1
-         1bL9WQ4VZSFJhHxZlZdSgaywgcspow1qvXMwjI4uOhusMBmPMtiy3J8N3tPU85NFtJ
-         XRRBQp/bdA2OR1Vd8SMYFox0hvPDI4RD6VBRNc3I=
-Date:   Thu, 2 May 2019 09:19:29 +0200
+        b=HwZe7aQlz+VB2W8iPsolYzOeFs3Qzs9CkjaJgC1FlAuyDlFLJKyKsQ6f/yLQlJrcG
+         RoSWtNoSs9al0h3vaf7tnpQcYU7Yup2VtghMxrNRgSf4f8pKULG+L2u8L8HxTUK3I1
+         QWUaSCKQSsaHwKrDa5SM5TjasCIwDhM9w16cIlK8=
+Date:   Thu, 2 May 2019 09:20:05 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
         Miroslav Benes <mbenes@suse.cz>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: kobject_init_and_add() confusion
-Message-ID: <20190502071929.GD16247@kroah.com>
-References: <20190430233803.GB10777@eros.localdomain>
- <20190501111022.GA15959@kroah.com>
- <20190501215858.GE18827@eros.localdomain>
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
+Message-ID: <20190502072005.GE16247@kroah.com>
+References: <20190502023142.20139-1-tobin@kernel.org>
+ <20190502023142.20139-4-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501215858.GE18827@eros.localdomain>
+In-Reply-To: <20190502023142.20139-4-tobin@kernel.org>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 07:58:58AM +1000, Tobin C. Harding wrote:
-> On Wed, May 01, 2019 at 01:10:22PM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, May 01, 2019 at 09:38:03AM +1000, Tobin C. Harding wrote:
-> > > Hi,
-> > > 
-> > > Looks like I've created a bit of confusion trying to fix memleaks in
-> > > calls to kobject_init_and_add().  Its spread over various patches and
-> > > mailing lists so I'm starting a new thread and CC'ing anyone that
-> > > commented on one of those patches.
-> > > 
-> > > If there is a better way to go about this discussion please do tell me.
-> > > 
-> > > The problem
-> > > -----------
-> > > 
-> > > Calls to kobject_init_and_add() are leaking memory throughout the kernel
-> > > because of how the error paths are handled.
-> > 
-> > s/are leaking/have the potential to leak/
-> > 
-> > Note, no one ever hits these error paths, so it isn't a big issue, and
-> > is why no one has seen this except for the use of syzbot at times.
-> 
-> One day I'll find an important issue to fix in the kernel.  At the
-> moment sweeping these up is good practice/learning.  If you have any
-> _real_ issues that need someone to turn the crank on feel free to dump
-> them on me :)
+On Thu, May 02, 2019 at 12:31:40PM +1000, Tobin C. Harding wrote:
+> kernel-doc comments have a prescribed format.  This includes parenthesis
+> on the function name.  To be _particularly_ correct we should also
+> capitalise the brief description and terminate it with a period.
 
-Once you get this done, I do have some "fun" ideas about the cdev api
-and how it can be "fixed up".
-
-Your knowledge of reference counts and kobjects will come in handy
-there, so talk to me off-list when you are ready :)
-
-keep up the great work,
+Ah, I didn't know that, sorry about that, my fault.  I'll take patch 2
+and 3 now in my tree, thanks!
 
 greg k-h
