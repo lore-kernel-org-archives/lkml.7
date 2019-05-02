@@ -4,62 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFD2C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B8CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A84521783
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8FD21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763616;
-	bh=Rkn7dFmNcFlrzGYmDT2bONK7yOYFkCgPt9YzFGN7NZk=;
+	s=default; t=1556763619;
+	bh=LcgLSAhMXWi6ZgRt4C1++suODvNUMXt3J+PL2fQp0HM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=N2E9Z2rjtBqXB+4MKvAyr0v/MyBAnTYUbQHijdTYXKVceIW7WvR3IZ2381NX/c1R4
-	 FisyYtKrLg9w8UO/YLK3AQ1NWVDxj2ww6s8ku+yGoehoP2OnIMmIoCqxqL5TYY2xDP
-	 Y8H1dSqwNZXoUgktQYQan8p8wzXFf0zveZ4ItISY=
+	b=nfhbGsOWe7jfaB6ofa4ot6ZFy7WBizcKCLxQgU13ztvzWWsH2zT2Fr9jfM7m6ozNt
+	 lE4f4CMNqWledl12w3eqTsbuJ2f2PYOPtGjdbsn1KntlnzAqWo/BBTJnG2yff/Pe2I
+	 vHOimk/Uf1/c2Lp7RjIFxvFssytAypZE0syyRI3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfEBCUO (ORCPT
+        id S1726614AbfEBCTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:20:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56770 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbfEBCTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 May 2019 22:19:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56602 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfEBCTG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 22:19:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=kubXXWC5hG9Tf1ZSHpSxNXJFgzmFjFMboy4IdHsOOYE=; b=Eu4Z2dQK2d5s
-        7+OPZea8vdm5txFIQ3PXmk2cFESM+o/bLD/y0Y2GZ4yWVnh+BCMG2J8wGq1+nK+v81wtpJ3It4n2g
-        ZU8rdxq++CEIysOxPTqpcdvevSj9kMWV8xpzeW2IGFs6OzMwMpzesxpa9y9EqvusxgkcJEIaIwVa/
-        jR7wU=;
+        List-Archive; bh=JSlPcUnFqX1tN5EF+WG+3VLibdvupztBzoEMjhd4pBY=; b=g7HBSZHxEi41
+        FbJOFo6XXTQJJ4jd7ljgytbHAlajKmV+/HndsXkAQtOvo+vHj106e0vJhsG1vuijAWw29aiNl3EzG
+        l/oQinOz18TveSp+rV+4A6u9ko4jCwW9hCw7RotfC5h/NLZMi2ntyWQSGKNgQlD9a849ZiCNpPHal
+        mCKTk=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1JQ-0005va-TA; Thu, 02 May 2019 02:19:05 +0000
+        id 1hM1IX-0005qB-G5; Thu, 02 May 2019 02:18:09 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 7345A441D56; Thu,  2 May 2019 03:19:01 +0100 (BST)
+        id 39C17441D3C; Thu,  2 May 2019 03:18:06 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Fabien Dessenne <fabien.dessenne@st.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Christophe KERELLO <christophe.kerello@st.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Ludovic Barre <ludovic.barre@st.com>,
+To:     Viorel Suman <viorel.suman@nxp.com>
+Cc:     alsa-devel@alsa-project.org,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Applied "spi: stm32-qspi: manage the get_irq error case" to the spi tree
-In-Reply-To: <1556119140-3319-1-git-send-email-fabien.dessenne@st.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Timur Tabi <timur@kernel.org>,
+        Viorel Suman <viorel.suman@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>
+Subject: Applied "ASoC: fsl_audmix: cache pdev->dev pointer" to the asoc tree
+In-Reply-To:  <1554894380-25153-5-git-send-email-viorel.suman@nxp.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021901.7345A441D56@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:19:01 +0100 (BST)
+Message-Id: <20190502021806.39C17441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:06 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,11 +81,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: stm32-qspi: manage the get_irq error case
+   ASoC: fsl_audmix: cache pdev->dev pointer
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -92,37 +106,99 @@ to this mail.
 Thanks,
 Mark
 
-From 4b562de4e227dbc2267c367b0a1ec83051c364f6 Mon Sep 17 00:00:00 2001
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Date: Wed, 24 Apr 2019 17:19:00 +0200
-Subject: [PATCH] spi: stm32-qspi: manage the get_irq error case
+From 62be484f7ad8443c393293a415392fbf3190c864 Mon Sep 17 00:00:00 2001
+From: Viorel Suman <viorel.suman@nxp.com>
+Date: Wed, 10 Apr 2019 11:06:39 +0000
+Subject: [PATCH] ASoC: fsl_audmix: cache pdev->dev pointer
 
-During probe, check the "get_irq" error value.
+There should be no trouble to understand dev = pdev->dev.
+This can save some space to have more print info or save
+some wrapped lines.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Acked-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+Suggested-by: Nicolin Chen <nicoleotsuka@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-stm32-qspi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/fsl/fsl_audmix.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 11a89aa15d56..42f8e3c6aa1f 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -574,6 +574,12 @@ static int stm32_qspi_probe(struct platform_device *pdev)
+diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
+index dc802d5c4ccd..3897a54a11fe 100644
+--- a/sound/soc/fsl/fsl_audmix.c
++++ b/sound/soc/fsl/fsl_audmix.c
+@@ -456,6 +456,7 @@ MODULE_DEVICE_TABLE(of, fsl_audmix_ids);
+ 
+ static int fsl_audmix_probe(struct platform_device *pdev)
+ {
++	struct device *dev = &pdev->dev;
+ 	struct fsl_audmix *priv;
+ 	struct resource *res;
+ 	const char *mdrv;
+@@ -463,52 +464,50 @@ static int fsl_audmix_probe(struct platform_device *pdev)
+ 	void __iomem *regs;
+ 	int ret;
+ 
+-	of_id = of_match_device(fsl_audmix_ids, &pdev->dev);
++	of_id = of_match_device(fsl_audmix_ids, dev);
+ 	if (!of_id || !of_id->data)
+ 		return -EINVAL;
+ 
+ 	mdrv = of_id->data;
+ 
+-	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+ 	/* Get the addresses */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	regs = devm_ioremap_resource(&pdev->dev, res);
++	regs = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
+ 
+-	priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "ipg", regs,
++	priv->regmap = devm_regmap_init_mmio_clk(dev, "ipg", regs,
+ 						 &fsl_audmix_regmap_config);
+ 	if (IS_ERR(priv->regmap)) {
+-		dev_err(&pdev->dev, "failed to init regmap\n");
++		dev_err(dev, "failed to init regmap\n");
+ 		return PTR_ERR(priv->regmap);
  	}
  
- 	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		if (irq != -EPROBE_DEFER)
-+			dev_err(dev, "IRQ error missing or invalid\n");
-+		return irq;
-+	}
-+
- 	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
- 			       dev_name(dev), qspi);
+-	priv->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
++	priv->ipg_clk = devm_clk_get(dev, "ipg");
+ 	if (IS_ERR(priv->ipg_clk)) {
+-		dev_err(&pdev->dev, "failed to get ipg clock\n");
++		dev_err(dev, "failed to get ipg clock\n");
+ 		return PTR_ERR(priv->ipg_clk);
+ 	}
+ 
+ 	platform_set_drvdata(pdev, priv);
+-	pm_runtime_enable(&pdev->dev);
++	pm_runtime_enable(dev);
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_audmix_component,
++	ret = devm_snd_soc_register_component(dev, &fsl_audmix_component,
+ 					      fsl_audmix_dai,
+ 					      ARRAY_SIZE(fsl_audmix_dai));
  	if (ret) {
+-		dev_err(&pdev->dev, "failed to register ASoC DAI\n");
++		dev_err(dev, "failed to register ASoC DAI\n");
+ 		return ret;
+ 	}
+ 
+-	priv->pdev = platform_device_register_data(&pdev->dev, mdrv, 0, NULL,
+-						   0);
++	priv->pdev = platform_device_register_data(dev, mdrv, 0, NULL, 0);
+ 	if (IS_ERR(priv->pdev)) {
+ 		ret = PTR_ERR(priv->pdev);
+-		dev_err(&pdev->dev, "failed to register platform %s: %d\n",
+-			mdrv, ret);
++		dev_err(dev, "failed to register platform %s: %d\n", mdrv, ret);
+ 	}
+ 
+ 	return ret;
 -- 
 2.20.1
 
