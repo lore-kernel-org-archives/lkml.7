@@ -2,103 +2,152 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E1DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A797C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD2F205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED152205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556812136;
+	bh=xEwRVn6vW+YzMDRZ0xmL2n1BTiwlSjzDzU4hfBMfsfY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=snElPaAfeHv1jP1zvjfVjBHqtOV0Y5dyU/nCrYBQVTEkpoNkzGGMeuIIiyWnena+8
+	 mP9Tcy04z8ICP394yk24Ie3hWt/H6P5bDjK95AHyLF4pK5XoYaodLYTWYl6cENfQz2
+	 9mndVwopMOYH9kXav9TWjK7aUVPF5z7IbuBBRhWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfEBPsm (ORCPT
+        id S1727348AbfEBPsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:48:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726958AbfEBPsl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:48:41 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42Fl4El006839
-        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:48:40 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s81j3x4xp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:48:39 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 2 May 2019 16:48:38 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 16:48:34 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FmX7O47448276
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 15:48:33 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2EC26A404D;
-        Thu,  2 May 2019 15:48:33 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E117A4051;
-        Thu,  2 May 2019 15:48:32 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.95.175])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 May 2019 15:48:31 +0000 (GMT)
-Subject: Re: [PATCH] kexec_buffer measure
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     prakhar srivastava <prsriva02@gmail.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>
-Date:   Thu, 02 May 2019 11:48:21 -0400
-In-Reply-To: <1555978681.4914.305.camel@linux.ibm.com>
-References: <CAEFn8qKkXgxUKtribbtFwvG9NykGQo10jQ5Du_i9wJz-wKreOA@mail.gmail.com>
-         <1555978681.4914.305.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Thu, 2 May 2019 11:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726809AbfEBPW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FAF220C01;
+        Thu,  2 May 2019 15:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556810577;
+        bh=xEwRVn6vW+YzMDRZ0xmL2n1BTiwlSjzDzU4hfBMfsfY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dL3eAgAwngHPuZY+5oEZ8RhCFph5V69Oy926PDModq7Z2NGhV3FV8kWFcbpK0cP/r
+         7wzZaj3IeRfbQ9Hn6H/1+lUQVxDGHI33RBtEKSaa6ebxfV+GrGxL85ro7SRpme/ZwH
+         /NY4Eo0dTk9OgjUlaRDV+eEJmkZgO0UDAgfIshTk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 32/32] vfio/type1: Limit DMA mappings per container
+Date:   Thu,  2 May 2019 17:21:18 +0200
+Message-Id: <20190502143323.641847384@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
+References: <20190502143314.649935114@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050215-0012-0000-0000-000003179DCD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050215-0013-0000-0000-000021500DB5
-Message-Id: <1556812101.4134.28.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=975 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905020105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing Paul, John, Casey]
+From: Alex Williamson <alex.williamson@redhat.com>
 
-On Mon, 2019-04-22 at 20:18 -0400, Mimi Zohar wrote:
-> [Cc'ing LSM mailing list]
-> 
-> On Fri, 2019-04-19 at 17:30 -0700, prakhar srivastava wrote:
-> 
-> > 2) Adding a LSM hook
-> > We are doing both the command line and kernel version measurement in IMA.
-> > Can you please elaborate on how this can be used outside of the scenario?
-> > That will help me come back with a better design and code. I am
-> > neutral about this.
-> 
-> As I said previously, initially you might want to only measure the
-> kexec boot command line, but will you ever want to verify or audit log
-> the boot command line hash?  Perhaps LSMs would be interested in the
-> boot command line.  Should this be an LSM hook?
+commit 492855939bdb59c6f947b0b5b44af9ad82b7e38c upstream.
 
-From an LSM perspective, is there any interest in the boot command line?
+Memory backed DMA mappings are accounted against a user's locked
+memory limit, including multiple mappings of the same memory.  This
+accounting bounds the number of such mappings that a user can create.
+However, DMA mappings that are not backed by memory, such as DMA
+mappings of device MMIO via mmaps, do not make use of page pinning
+and therefore do not count against the user's locked memory limit.
+These mappings still consume memory, but the memory is not well
+associated to the process for the purpose of oom killing a task.
 
-Mimi
+To add bounding on this use case, we introduce a limit to the total
+number of concurrent DMA mappings that a user is allowed to create.
+This limit is exposed as a tunable module option where the default
+value of 64K is expected to be well in excess of any reasonable use
+case (a large virtual machine configuration would typically only make
+use of tens of concurrent mappings).
+
+This fixes CVE-2019-3882.
+
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Tested-by: Eric Auger <eric.auger@redhat.com>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[groeck: Adjust for missing upstream commit]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/vfio/vfio_iommu_type1.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -53,10 +53,16 @@ module_param_named(disable_hugepages,
+ MODULE_PARM_DESC(disable_hugepages,
+ 		 "Disable VFIO IOMMU support for IOMMU hugepages.");
+ 
++static unsigned int dma_entry_limit __read_mostly = U16_MAX;
++module_param_named(dma_entry_limit, dma_entry_limit, uint, 0644);
++MODULE_PARM_DESC(dma_entry_limit,
++		 "Maximum number of user DMA mappings per container (65535).");
++
+ struct vfio_iommu {
+ 	struct list_head	domain_list;
+ 	struct mutex		lock;
+ 	struct rb_root		dma_list;
++	unsigned int		dma_avail;
+ 	bool			v2;
+ 	bool			nesting;
+ };
+@@ -384,6 +390,7 @@ static void vfio_remove_dma(struct vfio_
+ 	vfio_unmap_unpin(iommu, dma);
+ 	vfio_unlink_dma(iommu, dma);
+ 	kfree(dma);
++	iommu->dma_avail++;
+ }
+ 
+ static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
+@@ -584,12 +591,18 @@ static int vfio_dma_do_map(struct vfio_i
+ 		return -EEXIST;
+ 	}
+ 
++	if (!iommu->dma_avail) {
++		mutex_unlock(&iommu->lock);
++		return -ENOSPC;
++	}
++
+ 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
+ 	if (!dma) {
+ 		mutex_unlock(&iommu->lock);
+ 		return -ENOMEM;
+ 	}
+ 
++	iommu->dma_avail--;
+ 	dma->iova = iova;
+ 	dma->vaddr = vaddr;
+ 	dma->prot = prot;
+@@ -905,6 +918,7 @@ static void *vfio_iommu_type1_open(unsig
+ 
+ 	INIT_LIST_HEAD(&iommu->domain_list);
+ 	iommu->dma_list = RB_ROOT;
++	iommu->dma_avail = dma_entry_limit;
+ 	mutex_init(&iommu->lock);
+ 
+ 	return iommu;
+
 
