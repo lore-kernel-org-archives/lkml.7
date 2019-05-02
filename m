@@ -2,133 +2,161 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7467CC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6A0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4504F2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556799918;
-	bh=ZoX9V1s0qrt4r08myB/QcycPRJk8L7cmiOd5yFSi16w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1ntVga3j0avVXPpKKBY6NURo9qER4EwacxRMptm/bNQkq7ORw1vjG8gxyPk64ZVEF
-	 /YL0obErWiMn5Iqj8yoR1A4hjb0MEuJrp3meQDfwsFdo42I0g8Yv5zAGOWjIxq8GzE
-	 Gv2vWegvRsXG60GwLxLNd6+cULzYrLJS73JKEIE4=
+	by mail.kernel.org (Postfix) with ESMTP id 1715E205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:28:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u2Fb0VEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfEBMZR (ORCPT
+        id S1726350AbfEBM22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfEBMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:25:17 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07E0C2081C;
-        Thu,  2 May 2019 12:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556799915;
-        bh=ZoX9V1s0qrt4r08myB/QcycPRJk8L7cmiOd5yFSi16w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DXa59V3/IVeQhweQz6Szgs5iufgkdTHBndGtJ5rzHVEdMfqANb1HgO/GTql8iS+DU
-         NVjolkeiM4TFMnkUzeV7LiByQZCfGMdu3x7Zao/xE4J5RyfkotEVdoBGYNXkl2SYYR
-         aMWRed160THlVgdbPtlxjX/y4mHgop5mi8ZX65aQ=
-Date:   Thu, 2 May 2019 17:55:06 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com, jonathanh@nvidia.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-Message-ID: <20190502122506.GP3845@vkoul-mobl.Dlink>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+        Thu, 2 May 2019 08:28:28 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39863 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBM21 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:28:27 -0400
+Received: by mail-it1-f194.google.com with SMTP id t200so3014696itf.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 05:28:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qS8OB3VzoLdC268eCczKcFn55LM1oxTu+ok9okBkG08=;
+        b=u2Fb0VEiEPKYS2lyoP0w+zDLAxdc0Y+Lu+XmbcPk0hOncu35cxJdVQNfyR1Kr9iRSl
+         D6JqBV6XIUH2J/LuCfg1+m5IEzBmvJJ0LeGtTyII1hnKt7v8PXLmZHuXbYiyhFG6LvKy
+         ACa2kX+fyH0aZWvCQTmRIjYpux7MJDyJu1zn0Qr2qLEnd2RTyjioyd87O4DbcyyW9UHg
+         UvnXg7LMBYNhVpCL5q9PZgHSpiFLT0O3NJ/wc8YHO5+cMQO6HjjL4M1KGaW6OIQQus5F
+         w8vm6injChmckOvBLbP6YhWBQEZKZ9cynhjTXoDTX6YDOzmkHyMp9zqA8vgN5EtIB7aG
+         T8OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qS8OB3VzoLdC268eCczKcFn55LM1oxTu+ok9okBkG08=;
+        b=UNXxs8OEZCpSpZArj2z0csjty0svB038DgR9xsnY6p0imnDuQJUrB5IIIFR6qjpHG2
+         gPBPUXZ497VPHe6Ppj2y5u2sqyyrrZDYghxhIKEx890bJoPAeLwI2HgREDpzwUU15xV7
+         pfIFcm3m0w1M/6YHcBHvMAsLu+OJBpCky+UdocNWDvKfhD7uDKLbrsXZV6k92sCYrZ3r
+         ILwHCOWsTf4LC1X+eGdAYBxkd0TxWC529QB9678bM0EydtYWsp3YqlnP4necvI66KPgb
+         4K5Jv9wfOBDOIA2MuWZWpFavfkx7sfKL04UDxcxux4kDciZmRNm0OJn7shPDEpEzE3Gn
+         EKtw==
+X-Gm-Message-State: APjAAAWgHu6CbU8E04+qQBXiQrxdsYhSo1WBPIwp9sS+oxf9Rs/kU7b/
+        UffqAkVMjWJwwh/jhqJIWHj6+ry5eWAVuH0vyW27NA==
+X-Google-Smtp-Source: APXvYqwJETuC7vw+qurNB5pJo86YjOPjRJ86zJ3FKV/99cEXgbC9zDaW7HI8pfE7rfIP+OLD3HQncoxYMtEUhye/4pc=
+X-Received: by 2002:a24:59c1:: with SMTP id p184mr2312120itb.158.1556800106816;
+ Thu, 02 May 2019 05:28:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190408163319.10382-1-vichy.kuo@gmail.com>
+In-Reply-To: <20190408163319.10382-1-vichy.kuo@gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 2 May 2019 14:28:15 +0200
+Message-ID: <CAKv+Gu9gfq6PdwwLJd-zXYTiVT0oKtkhJHG4+AaOdD+N0k6c=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] kaslr: shift linear region randomization ahead of memory_limit
+To:     pierre Kuo <vichy.kuo@gmail.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        steven.price@arm.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-05-19, 16:23, Sameer Pujar wrote:
-> 
-> On 5/2/2019 11:34 AM, Vinod Koul wrote:
-> > On 30-04-19, 17:00, Sameer Pujar wrote:
-> > > During the DMA transfers from memory to I/O, it was observed that transfers
-> > > were inconsistent and resulted in glitches for audio playback. It happened
-> > > because fifo size on DMA did not match with slave channel configuration.
-> > > 
-> > > currently 'dma_slave_config' structure does not have a field for fifo size.
-> > > Hence the platform pcm driver cannot pass the fifo size as a slave_config.
-> > > Note that 'snd_dmaengine_dai_dma_data' structure has fifo_size field which
-> > > cannot be used to pass the size info. This patch introduces fifo_size field
-> > > and the same can be populated on slave side. Users can set required size
-> > > for slave peripheral (multiple channels can be independently running with
-> > > different fifo sizes) and the corresponding sizes are programmed through
-> > > dma_slave_config on DMA side.
-> > FIFO size is a hardware property not sure why you would want an
-> > interface to program that?
-> > 
-> > On mismatch, I guess you need to take care of src/dst_maxburst..
-> Yes, FIFO size is a HW property. But it is SW configurable(atleast in my
-> case) on
-> slave side and can be set to different sizes. The src/dst_maxburst is
+On Mon, 8 Apr 2019 at 18:33, pierre Kuo <vichy.kuo@gmail.com> wrote:
+>
+> The following is schematic diagram of the program before and after the
+> modification.
+>
+> Before:
+> if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} --(a)
+> if (memory_limit != PHYS_ADDR_MAX) {}                               --(b)
+> if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}       --(c)
+> if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}                           --(d)*
+>
+> After:
+> if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} --(a)
+> if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}                           --(d)*
+> if (memory_limit != PHYS_ADDR_MAX) {}                               --(b)
+> if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}       --(c)
+>
+> After grouping modification of memstart_address by moving linear region
+> randomization ahead of memory_init, driver can safely using macro,
+> __phys_to_virt, in (b) or (c), if necessary.
+>
 
-Are you sure, have you talked to HW folks on that? IIUC you are
-programming the data to be used in FIFO not the FIFO length!
+Why is this an advantage?
 
-> programmed
-> for specific values, I think this depends on few factors related to
-> bandwidth
-> needs of client, DMA needs of the system etc.,
-
-Precisely
-
-> In such cases how does DMA know the actual FIFO depth of slave peripheral?
-
-Why should DMA know? Its job is to push/pull data as configured by
-peripheral driver. The peripheral driver knows and configures DMA
-accordingly.
-
- 
-> > > Request for feedback/suggestions.
-> > > 
-> > > Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> > > ---
-> > >   include/linux/dmaengine.h | 3 +++
-> > >   1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > > index d49ec5c..9ec198b 100644
-> > > --- a/include/linux/dmaengine.h
-> > > +++ b/include/linux/dmaengine.h
-> > > @@ -351,6 +351,8 @@ enum dma_slave_buswidth {
-> > >    * @slave_id: Slave requester id. Only valid for slave channels. The dma
-> > >    * slave peripheral will have unique id as dma requester which need to be
-> > >    * pass as slave config.
-> > > + * @fifo_size: Fifo size value. The dma slave peripheral can configure required
-> > > + * fifo size and the same needs to be passed as slave config.
-> > >    *
-> > >    * This struct is passed in as configuration data to a DMA engine
-> > >    * in order to set up a certain channel for DMA transport at runtime.
-> > > @@ -376,6 +378,7 @@ struct dma_slave_config {
-> > >   	u32 dst_port_window_size;
-> > >   	bool device_fc;
-> > >   	unsigned int slave_id;
-> > > +	u32 fifo_size;
-> > >   };
-> > >   /**
-> > > -- 
-> > > 2.7.4
-
--- 
-~Vinod
+> Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
+> ---
+> Changes in v2:
+> - add Fixes tag
+>
+> Changes in v3:
+> - adding patch of shifting linear region randomization ahead of
+>  memory_limit
+>
+>  arch/arm64/mm/init.c | 33 +++++++++++++++++----------------
+>  1 file changed, 17 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 7205a9085b4d..5142020fc146 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -389,6 +389,23 @@ void __init arm64_memblock_init(void)
+>                 memblock_remove(0, memstart_addr);
+>         }
+>
+> +       if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+> +               extern u16 memstart_offset_seed;
+> +               u64 range = linear_region_size -
+> +                           (memblock_end_of_DRAM() - memblock_start_of_DRAM());
+> +
+> +               /*
+> +                * If the size of the linear region exceeds, by a sufficient
+> +                * margin, the size of the region that the available physical
+> +                * memory spans, randomize the linear region as well.
+> +                */
+> +               if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN) {
+> +                       range /= ARM64_MEMSTART_ALIGN;
+> +                       memstart_addr -= ARM64_MEMSTART_ALIGN *
+> +                                        ((range * memstart_offset_seed) >> 16);
+> +               }
+> +       }
+> +
+>         /*
+>          * Apply the memory limit if it was set. Since the kernel may be loaded
+>          * high up in memory, add back the kernel region that must be accessible
+> @@ -428,22 +445,6 @@ void __init arm64_memblock_init(void)
+>                 }
+>         }
+>
+> -       if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+> -               extern u16 memstart_offset_seed;
+> -               u64 range = linear_region_size -
+> -                           (memblock_end_of_DRAM() - memblock_start_of_DRAM());
+> -
+> -               /*
+> -                * If the size of the linear region exceeds, by a sufficient
+> -                * margin, the size of the region that the available physical
+> -                * memory spans, randomize the linear region as well.
+> -                */
+> -               if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN) {
+> -                       range /= ARM64_MEMSTART_ALIGN;
+> -                       memstart_addr -= ARM64_MEMSTART_ALIGN *
+> -                                        ((range * memstart_offset_seed) >> 16);
+> -               }
+> -       }
+>
+>         /*
+>          * Register the kernel text, kernel data, initrd, and initial
+> --
+> 2.17.1
+>
