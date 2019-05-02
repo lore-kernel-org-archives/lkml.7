@@ -2,226 +2,102 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6492BC46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A6FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1FF2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF459206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U2AKWiVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfEBXY5 (ORCPT
+        id S1726406AbfEBXZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 19:24:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55420 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726022AbfEBXY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 19:24:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 00C10AE1C;
-        Thu,  2 May 2019 23:24:55 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Fri, 03 May 2019 09:24:47 +1000
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs\@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Thu, 2 May 2019 19:25:22 -0400
+Received: from ozlabs.org ([203.11.71.1]:35907 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbfEBXZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 19:25:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wBFW06WPz9s5c;
+        Fri,  3 May 2019 09:25:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556839519;
+        bh=qf5YqcLzwb1kOcTamLG+PVNNunhxERBinB5SrkA9BR8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=U2AKWiVt4hzSGDsnkp2KvCtZZmY9BgZAlCDRRbUA3aeNNZzxtpXAJm7psSrzFqp/X
+         /AG8YGmIDHM6PqqL9vV8gBGdlHRQ8gHj+oLwNDHgs1gxWdVPmZmJmFZTOx1iT44OEX
+         Wo4bzO+yFeaDdyxGoOqX753I3E1Rud8UMt94BzxXTsirx77egcCMnG4ygwn0K7uDyt
+         N26+PQyzIQDd4n37KOKwSbLg7Ixm3e55X/bl7+BIbAfUNuDqG1tcnYRw2gxp/IjSA4
+         D2Tg3CcFSBpfv3hlKyBAvSqcWC9S8zuliRsB9vL4JdRor/bvQ4Rzzh4WGPdRZT9Q3u
+         vbSqgJXJle3Fg==
+Date:   Fri, 3 May 2019 09:25:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-In-Reply-To: <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com> <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com> <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com> <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com> <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com> <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com> <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com> <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name> <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com> <875zqt4igg.fsf@notabene.neil.brown.name> <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
-Message-ID: <87r29g30e8.fsf@notabene.neil.brown.name>
+Subject: linux-next: build failure after merge of the clk tree
+Message-ID: <20190503092511.0054911e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/gFfI+SNKNCDM.A9s2hfbtor"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
+--Sig_/gFfI+SNKNCDM.A9s2hfbtor
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 02 2019, Andreas Gruenbacher wrote:
+Hi all,
 
-> On Thu, 2 May 2019 at 05:57, NeilBrown <neilb@suse.com> wrote:
->> On Wed, May 01 2019, Amir Goldstein wrote:
->> > On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
->> >> On Tue, Dec 06 2016, J. Bruce Fields wrote:
->> >> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
->> >> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu=
-> wrote:
->> >> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
->> >> >> > <andreas.gruenbacher@gmail.com> wrote:
->> >> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.grue=
-nbacher@gmail.com>:
->> >> >> >
->> >> >> >>> It's not hard to come up with a heuristic that determines if a
->> >> >> >>> system.nfs4_acl value is equivalent to a file mode, and to ign=
-ore the
->> >> >> >>> attribute in that case. (The file mode is transmitted in its o=
-wn
->> >> >> >>> attribute already, so actually converting .) That way, overlay=
-fs could
->> >> >> >>> still fail copying up files that have an actual ACL. It's stil=
-l an
->> >> >> >>> ugly hack ...
->> >> >> >>
->> >> >> >> Actually, that kind of heuristic would make sense in the NFS cl=
-ient
->> >> >> >> which could then hide the "system.nfs4_acl" attribute.
->
-> I still think the nfs client could make this problem mostly go away by
-> not exposing "system.nfs4_acl" xattrs when the acl is equivalent to
-> the file mode.
+After merging the clk tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Maybe ... but this feels a bit like "sweeping it under the carpet".
-What happens if some file on the lower layer does have a more complex
-ACL?
-Do we just fail any attempt to modify that object?  Doesn't that violate
-the law of least surprise?
+arch/arm/mach-omap2/omap_hwmod.c: In function '_get_clkdm':
+arch/arm/mach-omap2/omap_hwmod.c:669:35: error: 'CLK_IS_BASIC' undeclared (=
+first use in this function); did you mean 'CLOCKS_MASK'?
+   if (__clk_get_flags(oh->_clk) & CLK_IS_BASIC)
+                                   ^~~~~~~~~~~~
+                                   CLOCKS_MASK
+arch/arm/mach-omap2/omap_hwmod.c:669:35: note: each undeclared identifier i=
+s reported only once for each function it appears in
 
-Maybe if the lower-layer has an i_op->permission method, then overlayfs
-should *always* call that for permission checking - unless a
-chmod/chown/etc has happened on the file.  That way, we wouldn't need to
-copy-up the ACL, but would still get correct ACL testing.
+Caused by commit
 
-Thanks,
-NeilBrown
+  7c36ec8a90a8 ("clk: Remove CLK_IS_BASIC clk flag")
+
+I have used the clk tree from next-20190502 for today.  (The above commit
+does not revert cleanly.)
 
 
-> The richacl patches contain a workable abgorithm for
-> that. The problem would remain for files that have an actual NFS4 ACL,
-> which just cannot be mapped to a file mode or to POSIX ACLs in the
-> general case, as well as for files that have a POSIX ACL. Mapping NFS4
-> ACL that used to be a POSIX ACL back to POSIX ACLs could be achieved
-> in many cases as well, but the code would be quite messy. A better way
-> seems to be to using a filesystem that doesn't support POSIX ACLs in
-> the first place. Unfortunately, xfs doesn't allow turning off POSIX
-> ACLs, for example.
->
-> Andreas
->
->> >> >> > Even simpler would be if knfsd didn't send the attribute if not
->> >> >> > necessary.  Looks like there's code actively creating the nfs4_a=
-cl on
->> >> >> > the wire even if the filesystem had none:
->> >> >> >
->> >> >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
->> >> >> >     if (!pacl)
->> >> >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
->> >> >> >
->> >> >> > What's the point?
->> >> >>
->> >> >> That's how the protocol is specified.
->> >> >
->> >> > Yep, even if we could make that change to nfsd it wouldn't help the
->> >> > client with the large number of other servers that are out there
->> >> > (including older knfsd's).
->> >> >
->> >> > --b.
->> >> >
->> >> >> (I'm not saying that that's very helpful.)
->> >> >>
->> >> >> Andreas
->> >>
->> >> Hi everyone.....
->> >>  I have a customer facing this problem, and so stumbled onto the email
->> >>  thread.
->> >>  Unfortunately it didn't resolve anything.  Maybe I can help kick thi=
-ngs
->> >>  along???
->> >>
->> >>  The core problem here is that NFSv4 and ext4 use different and large=
-ly
->> >>  incompatible ACL implementations.  There is no way to accurately
->> >>  translate from one to the other in general (common specific examples
->> >>  can be converted).
->> >>
->> >>  This means that either:
->> >>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
->> >>       versa) or
->> >>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
->> >>       that is OK.
->> >>
->> >>  Silently not copying the ACLs is probably not a good idea as it might
->> >>  result in inappropriate permissions being given away.
->> >
->> > For example? permissions given away to do what?
->> > Note that ovl_permission() only check permissions of *mounter*
->> > to read the lower NFS file and ovl_open()/ovl_read_iter() access
->> > the lower file with *mounter* credentials.
->> >
->> > I might be wrong, but seems to me that once admin mounted
->> > overlayfs with lower NFS, NFS ACLs are not being enforced at all
->> > even before copy up.
->>
->> I guess it is just as well that copy-up fails then - if the lower-level
->> permission check is being ignored.
->>
->> >
->> >> So if the
->> >>  sysadmin wants this (and some clearly do), they need a way to
->> >>  explicitly say "I accept the risk".  If only standard Unix permissio=
-ns
->> >>  are used, there is no risk, so this seems reasonable.
->> >>
->> >>  So I would like to propose a new option for overlayfs
->> >>     nocopyupacl:   when overlayfs is copying a file (or directory etc)
->> >>         from the lower filesystem to the upper filesystem, it does not
->> >>         copy extended attributes with the "system." prefix.  These are
->> >>         used for storing ACL information and this is sometimes not
->> >>         compatible between different filesystem types (e.g. ext4 and
->> >>         NFSv4).  Standard Unix ownership permission flags (rwx) *are*
->> >>         copied so this option does not risk giving away inappropriate
->> >>         permissions unless the lowerfs uses unusual ACLs.
->> >>
->> >>
->> >
->> > I am wondering if it would make more sense for nfs to register a
->> > security_inode_copy_up_xattr() hook.
->> > That is the mechanism that prevents copying up other security.*
->> > xattrs?
->>
->> No, I don't think that would make sense.
->> Support some day support for nfs4 acls were added to ext4 (not a totally
->> ridiculous suggestion).  We would then want NFS to allow it's ACLs to be
->> copied up.
->>
->> Thanks,
->> NeilBrown
->>
->>
->> >
->> > Thanks,
->> > Amir.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gFfI+SNKNCDM.A9s2hfbtor
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzLfD8ACgkQOeye3VZi
-gblSbhAAg6MuQuMSczkW5alaN6PqD0JiouqJ40yEE0mjB7sGVYBEyuk9kB0tj4aQ
-Mu58Xm0ZJk3z51m5crM+JTCiJwr2rtZijvaHa808/qeLcw1gZJceSa0zXd/ma3cB
-GAgQWnmHX3G6IZ0Nzk+m77MxYqD4GSyLMY5fWF8ItJKAlcfmhA8aGp23IsF9EyGN
-KXmE+gQEDvs7W1uuiqaug87AxAm1zK+49qWv2no5Br9nmOCHHUC7opmaO9uTg/Ez
-iyrb/2qkbgDO9G1c0cLE+b8ZFd2Ndo9T43PFLS2+2eJ4Lv2T8w8QnN6ZBdSuRd6/
-PWJzb+2VQDb9qPWV2XRReWJokflbLkcV6/4hhHiW5SnAMujsG24forDKQRt1Av7X
-bGupRXEbZJx54AbOJhmIdoEjlOcvl5rEG+ljGcB+6ylPN/BBYxsB4rwQoTb0/vRT
-eMb89V+ulB/bCEgrL6jQECwnl/unZw2X10h5bh4X8ZOTAz6wB+raGr8EgtzUm2sH
-w9AjWNgTv9vjt3pmITgY+AiDEyx8SWrVJXF9Svs52iPkOGCnYpebWzNXjQuBXyof
-fheyBuFA27bng/oIPPEUEiS1vq1JynScygBSb/0odcnEJbFTLn5WJjPa0itanWqq
-Eymd6C8pWDT4gF8scQQmxOcBqFUU+qaav6Cz5CeFBGnKsrVxMrM=
-=RTQU
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzLfFcACgkQAVBC80lX
+0GyepAf/W4XM6u3R+Sg7mSYJXwVPIsHCIho/yBw2mU2uJv+bFJvV+9GK+4OYmJIM
+L/cJ9Y4UEHswQuyXE+n7g6k/9C2j6WK/CkMhShzYuN0bGs+mYDWILOtRt4JYVmq0
+kiZZG1puq2hKnB/znXq1h3kvXeeoYjKORcXO9pvIkmI+nyhHWgtcSgQTqi2KxSM/
+paRRNMQyCtR64fQMsJaVtjCnVrah/tP5nwqk87R+6kuLCem+Z8bBKcP0rdTcXqQt
+f7HFkB55msnAjzAqA50iHnfQB26E+uzt45MUMTLr9gAFMUOEOynYZUxnebq1Pvw0
+dR5fQq0Mm8iDH5in036CW/thbea9/w==
+=QEbq
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--Sig_/gFfI+SNKNCDM.A9s2hfbtor--
