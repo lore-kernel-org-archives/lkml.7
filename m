@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9D5C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECABC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9C22081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D434420675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810824;
-	bh=JQbYPHIpqP8fqYTV7zW572CvJ9OkL86ocBrnCAKxIwI=;
+	s=default; t=1556810827;
+	bh=FAOdV6X0lvrtwWMnvZw0fTD6ooo1Cg8DxlUZNEtRbho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yO1cHx2pWbnq5F/jiyvDuqKK3cYDTW/4CV9mVFH6hQF8xMQuptOVbjLp8bhFiHEKR
-	 VqcnqgsxxUqNA6li39K7yjlWa7h/ir7m2/IfTHoloV6K8+onFRYbm6ajH3IiuQXOiA
-	 glOTYHGF8qcnNsQuL+m5tK6N75jtVEeLTyAXR75s=
+	b=HhV8pmvg6NNui2Rr7HCOst+aXe4nj6vuRYY701XP0w4bdsQiQEEuUXeVv56Rjg4uJ
+	 NETaQURboneQzDhkSLBX5WZg5iqpUJk+AsOwNU5JEo7lzWYqZWmDLgXeZNkY1tZMs/
+	 +TVFZtjJw2zCCLrnsMiM3RWfNSYOdsCAYyDyU0/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbfEBP1D (ORCPT
+        id S1727881AbfEBP1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbfEBP1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 May 2019 11:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727105AbfEBP07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:26:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E7E520675;
-        Thu,  2 May 2019 15:27:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B005C20449;
+        Thu,  2 May 2019 15:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810820;
-        bh=JQbYPHIpqP8fqYTV7zW572CvJ9OkL86ocBrnCAKxIwI=;
+        s=default; t=1556810818;
+        bh=FAOdV6X0lvrtwWMnvZw0fTD6ooo1Cg8DxlUZNEtRbho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WTb0L0scw2rXGGZRsiIjlzPsa+ByVsdFHk7+Exw3tAgkUvClry/iHtZQQqZyeD+jY
-         WVNzHFwy6Lfw3yyzi5bsxz00OhMrxZxzf2e5RflGxJgIEZz+NatsS9hjrqCfN2AGIq
-         By795rdyQyDuyYKcxLnPox+6Y3oCwbN5LGVCTvC4=
+        b=o97akdYxDtzmVR014Hi/MKd6CuqNfzPez01IlbifxkqE096/izN1RCuODzsI9KQfR
+         wsxglsVDW3IsIm7CFY3iRvVmZwlzURzmi68bQpelvbyDKshRxUeyUl+7mnR+ctA1DU
+         hIWGzVQC9rS//izWFDuqCi/5wivm+WtxMAtF89Io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mukesh Ojha <mojha@codeaurora.org>,
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 40/72] staging: rtlwifi: Fix potential NULL pointer dereference of kzalloc
-Date:   Thu,  2 May 2019 17:21:02 +0200
-Message-Id: <20190502143336.695229343@linuxfoundation.org>
+Subject: [PATCH 4.19 13/72] xsk: fix umem memory leak on cleanup
+Date:   Thu,  2 May 2019 17:20:35 +0200
+Message-Id: <20190502143334.454298740@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,32 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6a8ca24590a2136921439b376c926c11a6effc0e ]
+[ Upstream commit 044175a06706d516aa42874bb44dbbfc3c4d20eb ]
 
-phydm.internal is allocated using kzalloc which is used multiple
-times without a check for NULL pointer. This patch avoids such a
-scenario by returning 0, consistent with the failure case.
+When the umem is cleaned up, the task that created it might already be
+gone. If the task was gone, the xdp_umem_release function did not free
+the pages member of struct xdp_umem.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It turned out that the task lookup was not needed at all; The code was
+a left-over when we moved from task accounting to user accounting [1].
+
+This patch fixes the memory leak by removing the task lookup logic
+completely.
+
+[1] https://lore.kernel.org/netdev/20180131135356.19134-3-bjorn.topel@gmail.com/
+
+Link: https://lore.kernel.org/netdev/c1cb2ca8-6a14-3980-8672-f3de0bb38dfd@suse.cz/
+Fixes: c0c77d8fb787 ("xsk: add user memory registration support sockopt")
+Reported-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/staging/rtlwifi/phydm/rtl_phydm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/net/xdp_sock.h |  1 -
+ net/xdp/xdp_umem.c     | 19 +------------------
+ 2 files changed, 1 insertion(+), 19 deletions(-)
 
-diff --git a/drivers/staging/rtlwifi/phydm/rtl_phydm.c b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-index 9930ed954abb..4cc77b2016e1 100644
---- a/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-+++ b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-@@ -180,6 +180,8 @@ static int rtl_phydm_init_priv(struct rtl_priv *rtlpriv,
+diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
+index 7161856bcf9c..c2c10cc9ffa0 100644
+--- a/include/net/xdp_sock.h
++++ b/include/net/xdp_sock.h
+@@ -34,7 +34,6 @@ struct xdp_umem {
+ 	u32 headroom;
+ 	u32 chunk_size_nohr;
+ 	struct user_struct *user;
+-	struct pid *pid;
+ 	unsigned long address;
+ 	refcount_t users;
+ 	struct work_struct work;
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index bfe2dbea480b..a3b037fbfecd 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -152,9 +152,6 @@ static void xdp_umem_unaccount_pages(struct xdp_umem *umem)
  
- 	rtlpriv->phydm.internal =
- 		kzalloc(sizeof(struct phy_dm_struct), GFP_KERNEL);
-+	if (!rtlpriv->phydm.internal)
-+		return 0;
+ static void xdp_umem_release(struct xdp_umem *umem)
+ {
+-	struct task_struct *task;
+-	struct mm_struct *mm;
+-
+ 	xdp_umem_clear_dev(umem);
  
- 	_rtl_phydm_init_com_info(rtlpriv, ic, params);
+ 	if (umem->fq) {
+@@ -169,21 +166,10 @@ static void xdp_umem_release(struct xdp_umem *umem)
+ 
+ 	xdp_umem_unpin_pages(umem);
+ 
+-	task = get_pid_task(umem->pid, PIDTYPE_PID);
+-	put_pid(umem->pid);
+-	if (!task)
+-		goto out;
+-	mm = get_task_mm(task);
+-	put_task_struct(task);
+-	if (!mm)
+-		goto out;
+-
+-	mmput(mm);
+ 	kfree(umem->pages);
+ 	umem->pages = NULL;
+ 
+ 	xdp_umem_unaccount_pages(umem);
+-out:
+ 	kfree(umem);
+ }
+ 
+@@ -312,7 +298,6 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
+ 	if (size_chk < 0)
+ 		return -EINVAL;
+ 
+-	umem->pid = get_task_pid(current, PIDTYPE_PID);
+ 	umem->address = (unsigned long)addr;
+ 	umem->props.chunk_mask = ~((u64)chunk_size - 1);
+ 	umem->props.size = size;
+@@ -328,7 +313,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
+ 
+ 	err = xdp_umem_account_pages(umem);
+ 	if (err)
+-		goto out;
++		return err;
+ 
+ 	err = xdp_umem_pin_pages(umem);
+ 	if (err)
+@@ -347,8 +332,6 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
+ 
+ out_account:
+ 	xdp_umem_unaccount_pages(umem);
+-out:
+-	put_pid(umem->pid);
+ 	return err;
+ }
  
 -- 
 2.19.1
