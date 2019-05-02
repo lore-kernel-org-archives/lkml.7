@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5576FC04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E867C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CD02080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525AF2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="myoH4NG/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RwI3FCTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfEBWyb (ORCPT
+        id S1726401AbfEBWyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 18:54:31 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34836 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfEBWy1 (ORCPT
+        Thu, 2 May 2019 18:54:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39347 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfEBWy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 18:54:27 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so1719396plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 15:54:26 -0700 (PDT)
+        Thu, 2 May 2019 18:54:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z26so1854426pfg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 15:54:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BCfT3guVZby54KoAuU06+BY6v/qUrN3VwEkT+0PJiPM=;
-        b=myoH4NG/U3H7QRfzmXh4KXBkwHqlnBXLuw+YtDbLUP16dgiGTtAys0/bk3SYGDdI70
-         6K+XsQzwdrj70SZjh8KM5efvveW/76bJR9i09nnkUlZn/ZFw1ZqUNUvi7N6yAStsPwSx
-         uiRq7YcNI6KCMxbDCNVDo5hZeJamSb50B5Czo=
+        bh=l64/bY1LxWfLDdKRyx3HvfnrnrE3pPmc5ecC8BHS8F8=;
+        b=RwI3FCTdhPlmT+vMtbOwvhHezJhcz6S3wikgsAnwkzLmQ+9lRGGWZfnNLQ7JOD3f3V
+         O618Ee2olbH1vL5uLwrwyxrNnp/TRnW88UEo6BeI7bB6wvtvXpGkZYd/9QPsiyrQWmTc
+         S0/rHacmhEwblVNjhViOt5F8O/gOx/K3I45VM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BCfT3guVZby54KoAuU06+BY6v/qUrN3VwEkT+0PJiPM=;
-        b=iJ98ezYikTBzP6Sm2ZtLWFFmYwjmeEDYw5nrRVC3q6cxMmGe1QAFU/8xYL9HSexwup
-         n1kCUgCNq7UC4Yf48ypXFcTdEUCFk3hnJNAMoaat7t+hDKMGIEjisUkFASu1AgiqkuCj
-         GLt0WjreuMF1n4N88+ekwNWTcqI2OjeSoYkgo63bppy9KIG9diJxe2ICtELKoSbmfN9H
-         lDaRWdGZ/GsJCbEew1dY/TgaaU/q27YSU7hnJ0aCbMwAOLVCzXqpGoksKowYRvv5wnjN
-         lUWH7KGcu2Vsip688Sr1z4HxyvSrjUi4M+7NZm4INbtznSvzyAvkD6SRG20yS+wnxCy9
-         dG1A==
-X-Gm-Message-State: APjAAAXZfvfBzH9EdQ3VDgQavVtVsf97fVB3kEZCoOXLUOY+7Guu3Z5C
-        pITK/52Rs5GrtSotc9if/zAFkg==
-X-Google-Smtp-Source: APXvYqw7cw2KkNl8Nu4qGTRrZSO9BSZbc8Jug59xzytFinnS0nDNEMXcfMRtFwgbTp5rGb5QpsTCQQ==
-X-Received: by 2002:a17:902:1602:: with SMTP id g2mr6499886plg.325.1556837666467;
-        Thu, 02 May 2019 15:54:26 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id v15sm264736pff.105.2019.05.02.15.54.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=l64/bY1LxWfLDdKRyx3HvfnrnrE3pPmc5ecC8BHS8F8=;
+        b=GvH5ADHIn0GJk2H2gtNtE6URfK8U3wzuG+ok9vGR/z1pHze4IjUzGocDTpr/ijMjrr
+         ZqH91o6gquSkhEkz+4Ksj6nudmgCxAaiwp791f43RlWwWa5ykKXFG5Oqr0DbdIqfyJfJ
+         43T0L/FMJN1JMsKS8ERw0nj1f6FUmQRPHDLfjarIJOx7ZAcZ/NQdLrc4qIuhZi2lXDq+
+         eMZS+478J1LiXM/JGSXvdpVJDWTBZPAg84yWZONvXWx/M+yjFPz5CQ3EIuQzJdR2RtCt
+         TQ4YtScAXS48jTMLRV3hCKPzideRPcUiEhgws5ck3oa2hKY4JiSxzx9I2ScnxvV79b8I
+         9VeQ==
+X-Gm-Message-State: APjAAAXaD5M4VQi73QXwG+VsKeVY/8RBhou199jxxW7j0kYhoTfyZrBL
+        7izFHrz8KnRVsIeUehtF7NFsBQ==
+X-Google-Smtp-Source: APXvYqw76PWYSXX61eOhftbcTudFyvpDPm4S/i4gNcHsWTvjZHUKRbeYb0d9ibyOWF51AFQB+grXKg==
+X-Received: by 2002:a63:f707:: with SMTP id x7mr6521431pgh.343.1556837665388;
         Thu, 02 May 2019 15:54:25 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id v15sm264736pff.105.2019.05.02.15.54.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 15:54:24 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
         Andrzej Hajda <a.hajda@samsung.com>,
@@ -63,11 +63,13 @@ Cc:     linux-rockchip@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>, mka@chromium.org,
         Sean Paul <seanpaul@chromium.org>,
         Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/5] ARM: dts: rockchip: Switch to builtin HDMI DDC bus on rk3288-veyron
-Date:   Thu,  2 May 2019 15:53:34 -0700
-Message-Id: <20190502225336.206885-3-dianders@chromium.org>
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH 2/5] drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc bus
+Date:   Thu,  2 May 2019 15:53:33 -0700
+Message-Id: <20190502225336.206885-2-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190502225336.206885-1-dianders@chromium.org>
 References: <20190502225336.206885-1-dianders@chromium.org>
@@ -78,48 +80,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Downstream Chrome OS kernels use the builtin DDC bus from dw_hdmi on
-veyron.  This is the only way to get them to negotiate HDCP.
+See the PhD thesis in the comments in this patch for details, but to
+summarize this adds a hacky "unwedge" feature to the dw_hdmi i2c bus to
+workaround what appears to be a hardware errata.  This relies on a
+pinctrl entry to help change around muxing to perform the unwedge.
 
-Although HDCP isn't currently all supported upstream, it still seems
-like it makes sense to use dw_hdmi's builtin I2C.  Maybe eventually we
-can get HDCP negotiation working.
+NOTE that the specific TV this was tested on was the "Samsung
+UN40HU6950FXZA" and the specific port was the "STB" port.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- arch/arm/boot/dts/rk3288-veyron.dtsi | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 116 +++++++++++++++++++---
+ 1 file changed, 100 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 1252522392c7..e1bee663d2c5 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -163,7 +163,8 @@
- };
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index db761329a1e3..c66587e33813 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -19,6 +19,7 @@
+ #include <linux/hdmi.h>
+ #include <linux/mutex.h>
+ #include <linux/of_device.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/regmap.h>
+ #include <linux/spinlock.h>
  
- &hdmi {
--	ddc-i2c-bus = <&i2c5>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_ddc>;
- 	status = "okay";
- };
+@@ -169,6 +170,10 @@ struct dw_hdmi {
+ 	bool sink_is_hdmi;
+ 	bool sink_has_audio;
  
-@@ -334,14 +335,6 @@
- 	i2c-scl-rising-time-ns = <300>;		/* 225ns measured */
- };
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *default_state;
++	struct pinctrl_state *unwedge_state;
++
+ 	struct mutex mutex;		/* for state below and previous_mode */
+ 	enum drm_connector_force force;	/* mutex-protected force state */
+ 	bool disabled;			/* DRM has disabled our bridge */
+@@ -247,11 +252,82 @@ static void dw_hdmi_i2c_init(struct dw_hdmi *hdmi)
+ 		    HDMI_IH_MUTE_I2CM_STAT0);
+ }
  
--&i2c5 {
--	status = "okay";
++static bool dw_hdmi_i2c_unwedge(struct dw_hdmi *hdmi)
++{
++	/* If no unwedge state then give up */
++	if (IS_ERR(hdmi->unwedge_state))
++		return false;
++
++	dev_info(hdmi->dev, "Attempting to unwedge stuck i2c bus\n");
++
++	/*
++	 * This is a huge hack to workaround a problem where the dw_hdmi i2c
++	 * bus could sometimes get wedged.  Once wedged there doesn't appear
++	 * to be any way to unwedge it (including the HDMI_I2CM_SOFTRSTZ)
++	 * other than pulsing the SDA line.
++	 *
++	 * We appear to be able to pulse the SDA line (in the eyes of dw_hdmi)
++	 * by:
++	 * 1. Remux the pin as a GPIO output, driven low.
++	 * 2. Wait a little while.  1 ms seems to work, but we'll do 10.
++	 * 3. Immediately jump to remux the pin as dw_hdmi i2c again.
++	 *
++	 * At the moment of remuxing, the line will still be low due to its
++	 * recent stint as an output, but then it will be pulled high by the
++	 * (presumed) external pullup.  dw_hdmi seems to see this as a rising
++	 * edge and that seems to get it out of its jam.
++	 *
++	 * This wedging was only ever seen on one TV, and only on one of
++	 * its HDMI ports.  It happened when the TV was powered on while the
++	 * device was plugged in.  A scope trace shows the TV bringing both SDA
++	 * and SCL low, then bringing them both back up at roughly the same
++	 * time.  Presumably this confuses dw_hdmi because it saw activity but
++	 * no real STOP (maybe it thinks there's another master on the bus?).
++	 * Giving it a clean rising edge of SDA while SCL is already high
++	 * presumably makes dw_hdmi see a STOP which seems to bring dw_hdmi out
++	 * of its stupor.
++	 *
++	 * Note that after coming back alive, transfers seem to immediately
++	 * resume, so if we unwedge due to a timeout we should wait a little
++	 * longer for our transfer to finish, since it might have just started
++	 * now.
++	 */
++	pinctrl_select_state(hdmi->pinctrl, hdmi->unwedge_state);
++	msleep(10);
++	pinctrl_select_state(hdmi->pinctrl, hdmi->default_state);
++
++	return true;
++}
++
++static int dw_hdmi_i2c_wait(struct dw_hdmi *hdmi)
++{
++	struct dw_hdmi_i2c *i2c = hdmi->i2c;
++	int stat;
++
++	stat = wait_for_completion_timeout(&i2c->cmp, HZ / 10);
++	if (!stat) {
++		/* If we can't unwedge, return timeout */
++		if (!dw_hdmi_i2c_unwedge(hdmi))
++			return -EAGAIN;
++
++		/* We tried to unwedge; give it another chance */
++		stat = wait_for_completion_timeout(&i2c->cmp, HZ / 10);
++		if (!stat)
++			return -EAGAIN;
++	}
++
++	/* Check for error condition on the bus */
++	if (i2c->stat & HDMI_IH_I2CM_STAT0_ERROR)
++		return -EIO;
++
++	return 0;
++}
++
+ static int dw_hdmi_i2c_read(struct dw_hdmi *hdmi,
+ 			    unsigned char *buf, unsigned int length)
+ {
+ 	struct dw_hdmi_i2c *i2c = hdmi->i2c;
+-	int stat;
++	int ret;
+ 
+ 	if (!i2c->is_regaddr) {
+ 		dev_dbg(hdmi->dev, "set read register address to 0\n");
+@@ -270,13 +346,9 @@ static int dw_hdmi_i2c_read(struct dw_hdmi *hdmi,
+ 			hdmi_writeb(hdmi, HDMI_I2CM_OPERATION_READ,
+ 				    HDMI_I2CM_OPERATION);
+ 
+-		stat = wait_for_completion_timeout(&i2c->cmp, HZ / 10);
+-		if (!stat)
+-			return -EAGAIN;
 -
--	clock-frequency = <100000>;
--	i2c-scl-falling-time-ns = <300>;
--	i2c-scl-rising-time-ns = <1000>;
--};
--
- &io_domains {
- 	status = "okay";
+-		/* Check for error condition on the bus */
+-		if (i2c->stat & HDMI_IH_I2CM_STAT0_ERROR)
+-			return -EIO;
++		ret = dw_hdmi_i2c_wait(hdmi);
++		if (ret)
++			return ret;
  
+ 		*buf++ = hdmi_readb(hdmi, HDMI_I2CM_DATAI);
+ 	}
+@@ -289,7 +361,7 @@ static int dw_hdmi_i2c_write(struct dw_hdmi *hdmi,
+ 			     unsigned char *buf, unsigned int length)
+ {
+ 	struct dw_hdmi_i2c *i2c = hdmi->i2c;
+-	int stat;
++	int ret;
+ 
+ 	if (!i2c->is_regaddr) {
+ 		/* Use the first write byte as register address */
+@@ -307,13 +379,9 @@ static int dw_hdmi_i2c_write(struct dw_hdmi *hdmi,
+ 		hdmi_writeb(hdmi, HDMI_I2CM_OPERATION_WRITE,
+ 			    HDMI_I2CM_OPERATION);
+ 
+-		stat = wait_for_completion_timeout(&i2c->cmp, HZ / 10);
+-		if (!stat)
+-			return -EAGAIN;
+-
+-		/* Check for error condition on the bus */
+-		if (i2c->stat & HDMI_IH_I2CM_STAT0_ERROR)
+-			return -EIO;
++		ret = dw_hdmi_i2c_wait(hdmi);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	return 0;
+@@ -2606,6 +2674,22 @@ __dw_hdmi_probe(struct platform_device *pdev,
+ 
+ 	/* If DDC bus is not specified, try to register HDMI I2C bus */
+ 	if (!hdmi->ddc) {
++		/* Look for (optional) stuff related to unwedging */
++		hdmi->pinctrl = devm_pinctrl_get(dev);
++		if (!IS_ERR(hdmi->pinctrl)) {
++			hdmi->unwedge_state =
++				pinctrl_lookup_state(hdmi->pinctrl, "unwedge");
++			hdmi->default_state =
++				pinctrl_lookup_state(hdmi->pinctrl, "default");
++
++			if (IS_ERR(hdmi->default_state) &&
++			    !IS_ERR(hdmi->unwedge_state)) {
++				dev_warn(dev,
++					 "Unwedge requires default pinctrl\n");
++				hdmi->unwedge_state = ERR_PTR(-ENODEV);
++			}
++		}
++
+ 		hdmi->ddc = dw_hdmi_i2c_adapter(hdmi);
+ 		if (IS_ERR(hdmi->ddc))
+ 			hdmi->ddc = NULL;
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
