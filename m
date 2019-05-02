@@ -2,96 +2,131 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C167C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616E7C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED165205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:13:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZ5UgVsn"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC86205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfEBNNQ (ORCPT
+        id S1726520AbfEBNOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:13:16 -0400
-Received: from mail-yw1-f50.google.com ([209.85.161.50]:46050 "EHLO
-        mail-yw1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBNNO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:13:14 -0400
-Received: by mail-yw1-f50.google.com with SMTP id w18so1472099ywa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 06:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pViPqJDl70Zz0sv9Tghpz5k7qN5ZAN+M/zCPCxRvjXM=;
-        b=uZ5UgVsnGuD1YcajKed+YGLrlU/9Gy/HtRzyydbNnBS0nx2QtcOWBRebc9YEaSFJ2S
-         tRTuthzdcHvU0iMnIZOf4687EK3yObRQD6Mtt3sW9sMhKg52/uFRpz1IA6sH0seaCX/S
-         BdF9RyrVBIybgkD5aT6JHWN4GqJu5thrcIkOZ8berYia9FRbSr0cBf+YMtcY6uvBkiQo
-         s17QKA6JJTnEyUwuZTXQFQtFScteQ4rqL9xSJnO69miNljs4QdV6u37AYJ4wDBz4qB+B
-         vkBW4EJYDpoAVCgUr9u1cdctNo1FOqYU9PbKkiWvHXGt2I7AZNdGF0abIAaUVHSEj3n0
-         P91Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pViPqJDl70Zz0sv9Tghpz5k7qN5ZAN+M/zCPCxRvjXM=;
-        b=Yjz4Oh73mWNHOnIKx3pIwGUjUHsgg+AYzbbU2MRyOoSUTP2S4fpyIuWdroA6bt5rqJ
-         S8mH6lKLm3MnIrFluOA8IoKX98oR4MOYlhn2NK7XRlnITKCQ0yuvOtzzbEYYZSXtmaYR
-         2YpAhw68NTM0oVBhTsfzkgO32GB3n8jCeoK9XX5BividNr+hElvfd1cABzU6khvZi1zn
-         htSvUugwcoZgVj+1X40COGts2ORoRkjviHmpPX36itZ30+rpiV2iU8K1p8SH6jTwheb3
-         B5F+JkoaeLmFeV4YLSGc2fHyW0G95YTJOby6Fsi/T9vDMYIah1aEcCOcR7TO6J8UDNnw
-         bbRA==
-X-Gm-Message-State: APjAAAWGxkcg8rzamQWtJsiytvMQ0d1/168zEhSPrlEi4ctX9ZnHYQD9
-        1trzQ0wX/yTgWSFVM4O5TJ8=
-X-Google-Smtp-Source: APXvYqyWUSGVi0iRqzUPNuLad811CF2v27gK1kap8qv72f01T40LwPNZg7n2CAqubuyIqOaF4SwaiA==
-X-Received: by 2002:a25:e687:: with SMTP id d129mr2834387ybh.475.1556802793355;
-        Thu, 02 May 2019 06:13:13 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (adsl-173-228-226-134.prtc.net. [173.228.226.134])
-        by smtp.gmail.com with ESMTPSA id e75sm3585229ywe.101.2019.05.02.06.13.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 06:13:11 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 036CE4111F; Thu,  2 May 2019 09:13:10 -0400 (EDT)
-Date:   Thu, 2 May 2019 09:13:10 -0400
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH] perf tools: Speed up report for perf compiled with
- linwunwind
-Message-ID: <20190502131310.GG21436@kernel.org>
-References: <20190426073804.17238-1-jolsa@kernel.org>
+        Thu, 2 May 2019 09:14:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38550 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726197AbfEBNOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 09:14:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A1BE5AEFD;
+        Thu,  2 May 2019 13:14:16 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 4FEBFE0117; Thu,  2 May 2019 15:14:16 +0200 (CEST)
+Date:   Thu, 2 May 2019 15:14:16 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        David Ahern <dsahern@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 3/3] netlink: add validation of NLA_F_NESTED flag
+Message-ID: <20190502131416.GE21672@unicorn.suse.cz>
+References: <cover.1556798793.git.mkubecek@suse.cz>
+ <75a0887b3eb70005c272685d8ef9a712f37d7a54.1556798793.git.mkubecek@suse.cz>
+ <3e8291cb2491e9a1830afdb903ed2c52e9f7475c.camel@sipsolutions.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190426073804.17238-1-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <3e8291cb2491e9a1830afdb903ed2c52e9f7475c.camel@sipsolutions.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Apr 26, 2019 at 09:38:04AM +0200, Jiri Olsa escreveu:
-> When compiled with libunwind, perf does some preparatory work
-> when processing side-band events. This is not needed when report
-> actually don't unwind dwarf callchains, so it's disabled with
-> dwarf_callchain_users bool.
+On Thu, May 02, 2019 at 02:54:56PM +0200, Johannes Berg wrote:
+> On Thu, 2019-05-02 at 12:48 +0000, Michal Kubecek wrote:
+> > Add new validation flag NL_VALIDATE_NESTED which adds three consistency
+> > checks of NLA_F_NESTED_FLAG:
+> > 
+> >   - the flag is set on attributes with NLA_NESTED{,_ARRAY} policy
+> >   - the flag is not set on attributes with other policies except NLA_UNSPEC
+> >   - the flag is set on attribute passed to nla_parse_nested()
 > 
-> However we could move that check to higher level and shield more
-> unwanted code for normal report processing, giving us following
-> speed up on kernel build profile:
+> Looks good to me!
+> 
+> > @@ -415,7 +418,8 @@ enum netlink_validation {
+> >  #define NL_VALIDATE_STRICT (NL_VALIDATE_TRAILING |\
+> >  			    NL_VALIDATE_MAXTYPE |\
+> >  			    NL_VALIDATE_UNSPEC |\
+> > -			    NL_VALIDATE_STRICT_ATTRS)
+> > +			    NL_VALIDATE_STRICT_ATTRS |\
+> > +			    NL_VALIDATE_NESTED)
+> 
+> This is fine _right now_, but in general we cannot keep adding here
+> after the next release :-)
 
-Thanks, applied to perf/core.
+Right, that's why I would like to get this into the same cycle as your
+series.
 
-- Arnaldo
+> >  int netlink_rcv_skb(struct sk_buff *skb,
+> >  		    int (*cb)(struct sk_buff *, struct nlmsghdr *,
+> > @@ -1132,6 +1136,10 @@ static inline int nla_parse_nested(struct nlattr *tb[], int maxtype,
+> >  				   const struct nla_policy *policy,
+> >  				   struct netlink_ext_ack *extack)
+> >  {
+> > +	if (!(nla->nla_type & NLA_F_NESTED)) {
+> > +		NL_SET_ERR_MSG_ATTR(extack, nla, "nested attribute expected");
+> 
+> Maybe reword that to say "NLA_F_NESTED is missing" or so? The "nested
+> attribute expected" could result in a lot of headscratching (without
+> looking at the code) because it looks nested if you do nla_nest_start()
+> etc.
+
+How about "NLA_F_NESTED is missing" and "NLA_F_NESTED not expected"?
+
+> 
+> > +		return -EINVAL;
+> > +	}
+> >  	return __nla_parse(tb, maxtype, nla_data(nla), nla_len(nla), policy,
+> >  			   NL_VALIDATE_STRICT, extack);
+> 
+> I'd probably put a blank line there but ymmv.
+
+OK
+
+> >  }
+> > diff --git a/lib/nlattr.c b/lib/nlattr.c
+> > index adc919b32bf9..92da65cb6637 100644
+> > --- a/lib/nlattr.c
+> > +++ b/lib/nlattr.c
+> > @@ -184,6 +184,21 @@ static int validate_nla(const struct nlattr *nla, int maxtype,
+> >  		}
+> >  	}
+> >  
+> > +	if (validate & NL_VALIDATE_NESTED) {
+> > +		if ((pt->type == NLA_NESTED || pt->type == NLA_NESTED_ARRAY) &&
+> > +		    !(nla->nla_type & NLA_F_NESTED)) {
+> > +			NL_SET_ERR_MSG_ATTR(extack, nla,
+> > +					    "nested attribute expected");
+> > +			return -EINVAL;
+> > +		}
+> > +		if (pt->type != NLA_NESTED && pt->type != NLA_NESTED_ARRAY &&
+> > +		    pt->type != NLA_UNSPEC && (nla->nla_type & NLA_F_NESTED)) {
+> > +			NL_SET_ERR_MSG_ATTR(extack, nla,
+> > +					    "nested attribute not expected");
+> > +			return -EINVAL;
+> 
+> Same comment here wrt. the messages, I think they should more explicitly
+> refer to the flag.
+> 
+> johannes
+> 
+> (PS: if you CC me on this address I generally can respond quicker)
+
+I'll try to keep that in mind.
+
+Michal
