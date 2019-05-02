@@ -2,149 +2,99 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA30CC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8817AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1242085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588562075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pyqAnV2p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBQqCTAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfEBNgS (ORCPT
+        id S1726445AbfEBNgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:36:18 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19016 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfEBNgS (ORCPT
+        Thu, 2 May 2019 09:36:41 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39454 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfEBNgk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:36:18 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ccaf24b0000>; Thu, 02 May 2019 06:36:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 02 May 2019 06:36:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 02 May 2019 06:36:15 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 13:36:12 +0000
-Subject: Re: [PATCH 0/6] Add support for Tegra186/Tegra194 and generic fixes
-To:     Sameer Pujar <spujar@nvidia.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <thierry.reding@gmail.com>, <ldewangan@nvidia.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f8486dab-f95b-a4b1-36f2-89b98086d0cb@nvidia.com>
-Date:   Thu, 2 May 2019 14:36:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 09:36:40 -0400
+Received: by mail-it1-f194.google.com with SMTP id t200so3392950itf.4;
+        Thu, 02 May 2019 06:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FZaRquiiRZ727WpMV1CUt4EPSYYxBfbOwZ0lGxB9EFk=;
+        b=ZBQqCTAdJE4vcfm0ykvp8iCpcPnxzEbpJwwRGCR6EC/Uam4tWku1vfHeokv79O99c5
+         bIjaiFJX9J29WNxUvZzoyvDjCcyctYPGaQF7biMiFRA6C3VpDe0GagQ8rS40kaz+NJz6
+         kBAFWLCBhFjyLt1yJU1MBpNryQJQuwGByTGxyxPxTKOC/IqhWtnYSDpmRHWtNeXtYRla
+         DEj4Ngm/8bBOKrlN4xP3nzWwb8tKtj6mHpQTXxQtD4Mn/m8xkYswuF5F4eYy38QzI/7x
+         FHgWuIkYrigNRMJ/p8u/QPE+yWXK6NnQ+FYT/KXq/iMOyQ+pHCRSb7gUbTnpzXGYPeah
+         CQBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FZaRquiiRZ727WpMV1CUt4EPSYYxBfbOwZ0lGxB9EFk=;
+        b=tQu2bB+65acFSkfB7WSHvf59eXn/LYyDb48blobzxhQdVvgQvtgGSGfdTM8FhiXGES
+         u48rjh4jjrN6R/fDi6DMmX/s83XLBxV4xspIsX8V4SDopgr0OcUZotjZTR+5AY7u4RUY
+         REbEN8e3ALauztFp6b/gVLevRHGnNS/uyhfApu70Io/a64d4Yz5l2V0ZicNj1GMIC1Is
+         ob793zPiLeu6SAlX618Zcc4eJB0VkhOR+cyXFuXbcU6Wul2oEjafj1zmOQSOn+CThVtv
+         tjPft5JFqBLXOgRk1FBuxky3L/w8ArJn0In3PEzI1BJvJFICY0fSKAmRB9nOulDrrqrX
+         6C5A==
+X-Gm-Message-State: APjAAAUJOeKdthPuaa1EKO3kDboKi4HBRxfWOWc5Tym4W4N78SHRV2tV
+        YkCUI3ZcPPWZz41o5ApMj/hVyHmZ
+X-Google-Smtp-Source: APXvYqwm9IjiZs6Lz5yoewhDGoaiApoU5Pw/01eOgwsSySEguTS9TbsOdCVlfXoFVOrN4Sbd1CuSiQ==
+X-Received: by 2002:a24:7405:: with SMTP id o5mr2378800itc.24.1556804199466;
+        Thu, 02 May 2019 06:36:39 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:7d41:7f77:8419:85e7? ([2601:282:800:fd80:7d41:7f77:8419:85e7])
+        by smtp.googlemail.com with ESMTPSA id t196sm4830473ita.4.2019.05.02.06.36.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 06:36:38 -0700 (PDT)
+Subject: Re: [PATCH net-next 1/3] genetlink: do not validate dump requests if
+ there is no policy
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1556798793.git.mkubecek@suse.cz>
+ <0a54a4db49c20e76a998ea3e4548b22637fbad34.1556798793.git.mkubecek@suse.cz>
+ <031933f3fc4b26e284912771b480c87483574bea.camel@sipsolutions.net>
+ <20190502131023.GD21672@unicorn.suse.cz>
+ <ab9b48a0e21d0a9e5069045c23db36f43e4356e3.camel@sipsolutions.net>
+ <20190502133231.GF21672@unicorn.suse.cz>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <fd3b0c89-2475-166d-e2b8-1479af7b79bc@gmail.com>
+Date:   Thu, 2 May 2019 07:36:37 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190502133231.GF21672@unicorn.suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556804172; bh=zQW3UmrtuFX0g5vUoqAHKLUOOl8w+C8rfhpSmD8+zhk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=pyqAnV2poqrhI/+V/m5PoRRYO9zOVdkIGqBjd7mJZpBUz5Hwq3qv3oAwA0bO+Resk
-         YXQEzi/3XX626Ghcf9jMnbCqEC4FNnphYu2UvtuOZLEbYUarQU/1JVhEKgUDVG47Nw
-         ABnf6z1ke3aaRJ6Tpt1/SMHiv7gxcS1af/K2a2QxZjZmgO8lOc3sFE8ToBH5Rnsc+h
-         ytBMnAimMS08Ulji4WreVCeyYIvn/jheqYfYiZmNyxRK+l6NKOGuDJgHanv0Q7D/ii
-         ZmZtd4ySIRI1PvCBJez2hROmoo+0qMbcnQnJ2sWgvepEYMqZ+u3WhAi8K2dreBYJTA
-         Y5hnrQ/EDE3ww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/2/19 7:32 AM, Michal Kubecek wrote:
+> Wouldn't it mean effecitvely ending up with only one command (in
+> genetlink sense) and having to distinguish actual commands with
+> atributes? Even if I wanted to have just "get" and "set" command, common
+> policy wouldn't allow me to say which attributes are allowed for each of
+> them.
 
-On 02/05/2019 13:55, Sameer Pujar wrote:
-> Audio DMA(ADMA) interface is a gateway in the AHUB for facilitating DMA
-> transfers between memory and all of its clients. Currently the driver
-> supports Tegra210 based platforms. This series adds support for Tegra186
-> and Tegra194 based platforms and fixes few functional issues.
-> 
-> Patches in the series are classified into three categories,
->   1. Add support for Tegra186 and Tegra194
->   2. Add DMA pause/resume feature
->   3. Fixes common to differernt Tegra generations
-> 
-> Below change log describes the patches in detail.
-> 
-> Change log:
-> =====================================
-> v1
-> ----
-> The series can be classified into 3 categories,
->   1. Add support for Tegra186 and Tegra194
->      [Patch 1/6] dmaengine: tegra210-adma: prepare for supporting newer
->      Tegra chips
->        * The support was there only for Tegra210
->        * This is a preparation for adding support for newer Tegra chips
->        * chip_data is enhanced to support differences between Tegra210 and
->          Tegra186/Tegra194
->      [Patch 2/6] Documentation: DT: Add compatibility binding for Tegra186
->        * New compatibility string is required for driver to work for
->          Tegra186 and Tegra194. Hence new compatibility is introduced.
->        * Tegra194 can use the same compatibility as Tegra186
->      [Patch 3/6] dmaengine: tegra210-adma: add support for Tegra186/
->      Tegra194
->        * Populates chip specific information for Tegra186
->        * There is a difference in the way ADMA CH_CONFIG registers are
->          encoded for Tegra210 and Tegra186. Added helper fucntions to
->          support different versions of burst size configuration
-> 
->   2. Add DMA pause/resume feature
->      [Patch 4/6] dmaengine: tegra210-adma: add pause/resume support
->        * Adds support for ADMA pause/resume, otherwise audio loss was seen
->          during continuous pause/resume of audio playback.
-> 
->   3. Fixes common to differernt Tegra generations
->      [Patch 5/6] dmaengine: tegra210-dma: free dma controller in remove()
->        * Fixes kernel panic observed during driver reload. DMA controller
->          needs to be freed when driver is unloaded
->      [Patch 6/6] dmaengine: tegra210-adma: restore channel status
->        * Fixes resume across system suspend. If the channel state is not
->          restored, the transfers won't resume from the state from where it
->          was left during suspend entry. In this case, audio playback did
->          not resume properly once system exited from low power state.
-> 
-> ===============================
-> Sameer Pujar (6):
->   dmaengine: tegra210-adma: prepare for supporting newer Tegra chips
->   Documentation: DT: Add compatibility binding for Tegra186
->   dmaengine: tegra210-adma: add support for Tegra186/Tegra194
->   dmaengine: tegra210-adma: add pause/resume support
->   dmaengine: tegra210-dma: free dma controller in remove()
->   dmaengine: tegra210-adma: restore channel status
-> 
->  .../bindings/dma/nvidia,tegra210-adma.txt     |   4 +-
->  drivers/dma/tegra210-adma.c                   | 232 +++++++++++++++++----
->  2 files changed, 193 insertions(+), 43 deletions(-)
-> 
+yes, I have been stuck on that as well.
 
-Thanks!
-
-For the series ...
-
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+There are a number of RTA attributes that are only valid for GET
+requests or only used in the response or only valid in NEW requests.
+Right now there is no discriminator when validating policies and the
+patch set to expose the policies to userspace
