@@ -7,57 +7,54 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CED6C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F55FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4896A21479
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2075D21479
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763573;
-	bh=//TE5Mkd+uHnGQECFqkuLAmQ725LGtEjW6L/dAlbLZs=;
+	s=default; t=1556763578;
+	bh=Zvjzbvut9HbMCRHLidFpe7lfQXh7uQRWVq+GprAOflY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=tGPDf647tJuKTfdZ3WXMdpn7cXV3vaTBgGOdTzgYoJTDKL4pN0/gfHV7RJM3f7jNN
-	 gP9+0krn7eJ1NjvWEBT18Pd/jk2UOFHxO7x+9MgMyodOkgN1yHQECIt5XuVPQyPNYA
-	 srp63hddf6y0ABuHE/buhwZpmwb3j0O8GX7jf1is=
+	b=sW61Ai7SLTsNI/wBs423n+jO6k6IjErzlkYRBxKeVRo02AMxlw+EPi89lkY0dk1FC
+	 pfAP2+GT+mAS/x99y7eNvLyrfTQr54jaoPfigZDuPc19g7+BFPO+DymjWvegx87Ch1
+	 6X4dZ/Q//RNFac0P2Gy+nmkGf5GXa8NtU1ux6Xe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfEBCTc (ORCPT
+        id S1726790AbfEBCTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:19:32 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57330 "EHLO
+        Wed, 1 May 2019 22:19:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57546 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfEBCT2 (ORCPT
+        with ESMTP id S1726769AbfEBCTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:19:28 -0400
+        Wed, 1 May 2019 22:19:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=feyKP1du32lu5/MyQZS18HeItBqnrlQxBxyoBKEM4vw=; b=o7XMYTMHWz1G
-        l6VKr+6EowJPK/aYtjvkDbM65ihBQyrnNUmzovRNCY2KGX7GWYpHTIrmzK+Nlcl/OYBbDjqw2S4AH
-        l8g1p48G9daOvC/GS9efKGtTMFaRn/JKFhdMs9Ps1ba8Js/lLrXtr6fOxXCAQX1ZpxO1946QzYuOv
-        TqNGQ=;
+        List-Archive; bh=ytMjbST+anWJlvnHvDRKqP3PLS0n+wI621UWd6xOcqk=; b=xNAr75sX/2Bb
+        K1oShW2JbRlApRgBHzFERFDxK5Et/t4lwEojfQvXcITw1Vdyns5qxO7OcSEESHraLnYONoC4hC3Ou
+        9FUfLISUnZ3r/ACSc5dmRGaYdMIu9fxIFg27Qa3zb9AZuAKbC+7XaSfyuUXtdl4dpamUcaRUVh0VP
+        FTUEQ=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1JN-0005vL-Rg; Thu, 02 May 2019 02:19:02 +0000
+        id 1hM1Jo-0005xf-SY; Thu, 02 May 2019 02:19:29 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id B4B5E441D3C; Thu,  2 May 2019 03:18:58 +0100 (BST)
+        id 8EB28441D3D; Thu,  2 May 2019 03:19:24 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Applied "spi: pxa2xx: fix SCR (divisor) calculation" to the spi tree
-In-Reply-To:  <1555054339-17096-1-git-send-email-f.suligoi@asem.it>
+        naga.sureshkumar.relli@xilinx.com, vigneshr@ti.com
+Subject: Applied "spi: spi-mem: Make spi_mem_default_supports_op() static inline" to the spi tree
+In-Reply-To:  <20190410131828.35316-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021858.B4B5E441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:58 +0100 (BST)
+Message-Id: <20190502021924.8EB28441D3D@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:19:24 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: pxa2xx: fix SCR (divisor) calculation
+   spi: spi-mem: Make spi_mem_default_supports_op() static inline
 
 has been applied to the spi tree at
 
@@ -90,61 +87,33 @@ to this mail.
 Thanks,
 Mark
 
-From 29f2133717c527f492933b0622a4aafe0b3cbe9e Mon Sep 17 00:00:00 2001
-From: Flavio Suligoi <f.suligoi@asem.it>
-Date: Fri, 12 Apr 2019 09:32:19 +0200
-Subject: [PATCH] spi: pxa2xx: fix SCR (divisor) calculation
+From b5881b153bc81d63a5a7e82a35e8a4bdbe1f8c73 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Wed, 10 Apr 2019 21:18:28 +0800
+Subject: [PATCH] spi: spi-mem: Make spi_mem_default_supports_op() static
+ inline
 
-Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-that the SSP transmission rate can be greater than the device rate.
+Stub helper spi_mem_default_supports_op() should
+be set to static inline
 
-When the division between the SSP clock and the device rate generates
-a reminder, we have to increment by one the divisor.
-In this way the resulting SSP clock will never be greater than the
-device SPI max frequency.
-
-For example, with:
-
- - ssp_clk  = 50 MHz
- - dev freq = 15 MHz
-
-without this patch the SSP clock will be greater than 15 MHz:
-
- - 25 MHz for PXA25x_SSP and CE4100_SSP
- - 16,56 MHz for the others
-
-Instead, with this patch, we have in both case an SSP clock of 12.5MHz,
-so the max rate of the SPI device clock is respected.
-
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/linux/spi/spi-mem.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index b6ddba833d02..d2076f2f468f 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -884,10 +884,14 @@ static unsigned int ssp_get_clk_div(struct driver_data *drv_data, int rate)
- 
- 	rate = min_t(int, ssp_clk, rate);
- 
-+	/*
-+	 * Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-+	 * that the SSP transmission rate can be greater than the device rate
-+	 */
- 	if (ssp->type == PXA25x_SSP || ssp->type == CE4100_SSP)
--		return (ssp_clk / (2 * rate) - 1) & 0xff;
-+		return (DIV_ROUND_UP(ssp_clk, 2 * rate) - 1) & 0xff;
- 	else
--		return (ssp_clk / rate - 1) & 0xfff;
-+		return (DIV_ROUND_UP(ssp_clk, rate) - 1)  & 0xfff;
+diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
+index 1941b845aa15..af9ff2f0f1b2 100644
+--- a/include/linux/spi/spi-mem.h
++++ b/include/linux/spi/spi-mem.h
+@@ -315,6 +315,7 @@ spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
+ {
  }
  
- static unsigned int pxa2xx_ssp_get_clk_div(struct driver_data *drv_data,
++static inline
+ bool spi_mem_default_supports_op(struct spi_mem *mem,
+ 				 const struct spi_mem_op *op)
+ {
 -- 
 2.20.1
 
