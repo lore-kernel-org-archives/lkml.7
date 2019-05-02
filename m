@@ -2,128 +2,110 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6A1C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43758C04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABE0208CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556815531;
-	bh=QM72Bwd7tUi663wsT6pedXakz44FmVlca2e5Raih7J8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FuC4yxqfvY8fjDmtGBuWj1gtNSTOsCE76ib1n0OICbu6qqKjI+UgqI4ezVLe7sBbI
-	 x/BVrbIy+YkyeA/hxNx10xEwTVNYElWyoj0BNpyQtJ0fWEJpMGYAtGjg5IUBY6MBe0
-	 VCTw60OwOaDcUEvkhRp86Eu8zJVunVQ3zYL2iR0k=
+	by mail.kernel.org (Postfix) with ESMTP id 1203A20C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="SFbei6R/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfEBQp3 (ORCPT
+        id S1726572AbfEBQsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:45:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38642 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfEBQp3 (ORCPT
+        Thu, 2 May 2019 12:48:05 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34864 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfEBQsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:45:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w15so3514987wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 09:45:28 -0700 (PDT)
+        Thu, 2 May 2019 12:48:05 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p26so2737702edr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 09:48:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SHbOKq6JTWffgCJIRF2gWVsgGXQKKc8XkaWvGai2ZzI=;
-        b=GDh4zbm8o1D5vEGeall/FUSpxnl5A4A4A1Vx4vkOZ0saj8PUnNDArYn9ndi0iyOk/P
-         LZ149e7pqokqCO5cIb/GTItBA32ERhPaKlTDcGQBvqIanGsaADzEiukMAV2rDZKs/3/X
-         uP2S6o+O7g68iT0I2UNW4dfPsm3R7m4sn/d4rKhI35BLvLPCeNVFO4/wbvARLnYxxKNf
-         niEk1wl3kfPmpB5AsFUk6vUzSxVPwa3mKt27sYIwmpg75bFDFDv58Tf1OgZ1ZG6Pi6Bz
-         a5c/Ahd2wh8MwKUWve+nc8s7gIIApXRMAy4xTP8C3RAT9r+JvIFCCtGIZHstdYD/3znd
-         f5RQ==
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rcAYlClV3WYMLJTodjrLc+GMcN8cBX8qnEYUrl9knag=;
+        b=SFbei6R/fTHbrGWi+/N+oWim6SS5KPKvxv1TfgMvbJ1pIR8OajbduDS3nFo+mTzicg
+         XVys/It0mRnuhAz4kjM8EiZPi2qESa1Ad7BuVtZXc1AhD6SYmi1WTfMnCEAxTNkaT811
+         wtR9FZXA8gRcO+e/pbRwpO9NwRgtNQkNQixypgNzB90FxwHw7uDXDkb5kVruMBFHCmWK
+         aDFBzlffvUNDnS4Q6tEIHtK+tlNPSguzMFFvyNwltQHrvgbB4cHlbIie4LsGFzTGdkuJ
+         7Yg0FEJD9BqWiLWh/W+DXQN7jVHxZsopXpdlsd205vwlCjzC9uuOvIUXoBsgyR88IvAg
+         zT4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SHbOKq6JTWffgCJIRF2gWVsgGXQKKc8XkaWvGai2ZzI=;
-        b=ksobRVd6ngFt5vfQmsGR+CKIH5332ABhAu/SMzpxPMi1DelYyHQ5ssggUQBIxqpcJe
-         vmd9hkJZVJyM6ZaP/A/E1zI+C4UK6ttql4s0dqgHayvffrcH+iRytOSzFW7M8pnZ7QxP
-         OBjqLHD1zNm4LpeYu4Lh4FVRbb7W4Eg0veuh8M+jWzBeS25xklJy+i/mlSeK/7ZS3L/R
-         91b7UUjPQms3xXKAu5tO2g8A/T5J7oTkACdO1pkqLqJUD3vkn4f9P1eHqFfopiVQJ4bE
-         GKyeHtWk+lEBZxinukS7XX9L6WH4o7dqadjMLQdqbQR0ivKSBU1NNBnIKvKtZzIJP3xl
-         DJbw==
-X-Gm-Message-State: APjAAAVKJZOOYhbsn8s5qask+sIx7weNlTKEMif5Znpz4wDEDMVFGANX
-        FPWzdHEajIZ5BEt0hI++2/w=
-X-Google-Smtp-Source: APXvYqx78ge2PWAznH68jzDDmhIEmnCqzUBWvSUXwlz7WqMS15/4/uUfBXvQPl1FfRRu66xTqs6BTQ==
-X-Received: by 2002:a1c:7518:: with SMTP id o24mr3034462wmc.42.1556815527776;
-        Thu, 02 May 2019 09:45:27 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id v184sm12334603wma.6.2019.05.02.09.45.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 09:45:27 -0700 (PDT)
-Date:   Thu, 2 May 2019 18:45:24 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Message-ID: <20190502164524.GB115950@gmail.com>
-References: <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
- <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com>
- <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
- <20190502150853.GA16779@gmail.com>
- <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rcAYlClV3WYMLJTodjrLc+GMcN8cBX8qnEYUrl9knag=;
+        b=qdB+ueB+etR+mH5kca/lBXHklnl612oHdqUPE+9MauTM0JF2TQRScgluq6Ufdx60+c
+         k6VnuYmzUrE2pvwI24ReWOBqgRrFfJTd9qzd4cNxwb5YMQPFgZecdq4hqDLj3e7P4Ubx
+         ZiW4OxraS5guTe4dvXJfD0oeD3NcsBu5bEW15AE2konYfnHA5JOMyZ3YO4Me84L7Vv77
+         roG8tByI3nt9mMApNCjHL8y1uETJqi9Fc/jazYhYp10TqSPyw/mHn6JMeKOPtBxHQsxW
+         oBDQ6ePXRBIT3oI1esxmfiDUBArVBaapWLGYK492Kb4aVl7zhQs6TQq8XqqZVOrHngL+
+         Odpg==
+X-Gm-Message-State: APjAAAWHja5sUpdCgKRQtqF9ojWlXp+u83d+KxR/8iYp0Ios5edvvWOb
+        NHVge3MRdbj2l6R4FpRntD0MaTsXjoWfP0Nrq3zGXQ==
+X-Google-Smtp-Source: APXvYqzbaWRuAebout5s4Iqp5ku1hhP9/l4QkLIfxTg/R4+sKpNKvDwBBtR0sOzGL8kxvPpg3HdXxRKpBddZWv64kk8=
+X-Received: by 2002:a17:906:3154:: with SMTP id e20mr2340820eje.263.1556815683667;
+ Thu, 02 May 2019 09:48:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190501191846.12634-1-pasha.tatashin@soleen.com>
+ <20190501191846.12634-3-pasha.tatashin@soleen.com> <CAPcyv4iPzpP-gzuDtPB2ixd6_uTuO8-YdVSfGw_Dq=igaKuOEg@mail.gmail.com>
+In-Reply-To: <CAPcyv4iPzpP-gzuDtPB2ixd6_uTuO8-YdVSfGw_Dq=igaKuOEg@mail.gmail.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 2 May 2019 12:47:52 -0400
+Message-ID: <CA+CK2bB3G_tO04M1eXPdm4b=OojD6QpYkW51YArj6z44RhQo+g@mail.gmail.com>
+Subject: Re: [v4 2/2] device-dax: "Hotremove" persistent memory that is used
+ like normal RAM
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Currently the kmem driver can be built as a module, and I don't see a
+> need to drop that flexibility. What about wrapping these core
+> routines:
+>
+>     unlock_device_hotplug
+>     __remove_memory
+>     walk_memory_range
+>     lock_device_hotplug
+>
+> ...into a common exported (gpl) helper like:
+>
+>     int try_remove_memory(int nid, struct resource *res)
+>
+> Because as far as I can see there's nothing device-dax specific about
+> this "try remove iff offline" functionality outside of looking up the
+> related 'struct resource'. The check_devdax_mem_offlined_cb callback
+> can be made generic if the callback argument is the resource pointer.
 
-* David Laight <David.Laight@ACULAB.COM> wrote:
+Makes sense, I will do both things that you suggested.
 
-> It has already been measured - it is far too slow.
-
-I don't think proper buffering was tested, was it? Only a per syscall 
-RDRAND overhead which I can imagine being not too good.
-
-> > Because calling tens of millions of system calls per second will 
-> > deplete any non-CPU-RNG sources of entropy and will also starve all 
-> > other users of random numbers, which might have a more legitimate 
-> > need for randomness, such as the networking stack ...
-> 
-> If the function you use to generate random numbers from the 'entropy 
-> pool' isn't reversible (in a finite time) I don't think you really need 
-> to worry about bits-in v bits-out.
-
-Ok.
-
-Thanks,
-
-	Ingo
+Thank you,
+Pasha
