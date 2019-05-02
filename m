@@ -2,85 +2,86 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F5EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E50CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8D82081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06665206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfEBOUV (ORCPT
+        id S1726462AbfEBOUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:20:21 -0400
-Received: from muru.com ([72.249.23.125]:47948 "EHLO muru.com"
+        Thu, 2 May 2019 10:20:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51520 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfEBOUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:20:20 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 213E9809B;
-        Thu,  2 May 2019 14:20:37 +0000 (UTC)
-Date:   Thu, 2 May 2019 07:20:16 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, bcousson@baylibre.com, ulf.hansson@linaro.org,
-        adrian.hunter@intel.com
-Subject: Re: [PATCH] ARM: dts: am57xx-idk: Remove support for voltage
- switching for SD card
-Message-ID: <20190502142016.GO8007@atomide.com>
-References: <20190502084748.22518-1-faiz_abbas@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502084748.22518-1-faiz_abbas@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        id S1726203AbfEBOUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:20:43 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B380530ADBC3;
+        Thu,  2 May 2019 14:20:42 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA761827BC;
+        Thu,  2 May 2019 14:20:32 +0000 (UTC)
+Message-ID: <be56bf51cebb7f373c279adf3e9a46e6df5dfe76.camel@redhat.com>
+Subject: Re: [PATCH v2 08/10] nvme/pci: implement the mdev external queue
+ allocation interface
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-nvme@lists.infradead.org
+Cc:     Fam Zheng <fam@euphon.net>, Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        John Ferlan <jferlan@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Amnon Ilan <ailan@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Date:   Thu, 02 May 2019 17:20:31 +0300
+In-Reply-To: <20190502114801.23116-9-mlevitsk@redhat.com>
+References: <20190502114801.23116-1-mlevitsk@redhat.com>
+         <20190502114801.23116-9-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 02 May 2019 14:20:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [190502 01:48]:
-> If UHS speed modes are enabled, a compatible SD card switches down to
-> 1.8V during enumeration. If after this a software reboot/crash takes
-> place and on-chip ROM tries to enumerate the SD card, the difference in
-> IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
+On Thu, 2019-05-02 at 14:47 +0300, Maxim Levitsky wrote:
+> Note that currently the number of hw queues reserved for mdev,
+> has to be pre determined on module load.
 > 
-> The fix for this is to have support for power cycling the card in
-> hardware (with a PORz/soft-reset line causing a power cycle of the
-> card). Since am571x-, am572x- and am574x-idk don't have this
-> capability, disable voltage switching for these boards.
+> (I used to allocate the queues dynamicaly on demand, but
+> recent changes to allocate polled/read queues made
+> this somewhat difficult, so I dropped this for now)
 > 
-> The major effect of this is that the maximum supported speed
-> mode is now high speed(50 MHz) down from SDR104(200 MHz).
-
-This sounds a bit urgent, does it also need a stable tag or is
-it safe to apply against any earlier kernels?
-
-Regards,
-
-Tony
-
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 > ---
->  arch/arm/boot/dts/am57xx-idk-common.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
-> index f7bd26458915..42e433da79ec 100644
-> --- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
-> +++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
-> @@ -420,6 +420,7 @@
->  	vqmmc-supply = <&ldo1_reg>;
->  	bus-width = <4>;
->  	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
-> +	no-1-8-v;
->  };
->  
->  &mmc2 {
-> -- 
-> 2.19.2
-> 
+>  drivers/nvme/host/pci.c  | 375 ++++++++++++++++++++++++++++++++++++++-
+>  drivers/nvme/mdev/host.c |  46 ++---
+>  drivers/nvme/mdev/io.c   |  46 +++--
+>  drivers/nvme/mdev/mmio.c |   3 -
+>  4 files changed, 421 insertions(+), 49 deletions(-)
+
+The changes in drivers/nvme/mdev aren't supposed to be here, this was some code
+moving around to reduce the diff in the generic block layer support code,
+it supposed to go to the main mdev commit.
+
+Best regards,
+	Maxim Levitsky
+
