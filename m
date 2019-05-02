@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED18C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242BBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0B9217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F0421734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810573;
-	bh=rPDTKpxLtWVx3Ngis1eC/2Bn9FdqpXs4F64UVxD6DTA=;
+	s=default; t=1556810580;
+	bh=UxxP16QCIPhoLx3KhYdXtv4AQlgH/cih9ULv5+o93Hc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4Z+3RGWI4HFS67EDfeX45d+MhV+XBSRcgs9GXYFWfwg3vI6gbSEe1SYFvP+vmz1M
-	 E/EdEvuSWmLb2XBnKEBScBf019oqmLkHqCqIfmas2rBZwkX9YItvwrHT1RJjcpQwEv
-	 kn8Ai0NCqfMRQ3CWjpCHcx6qDbUL5Unx5VdCEUFA=
+	b=le+qZsIww4EYkGefaVdVQY3E8/399WgSF7C1jsDCGnYKDaD+AqTkNq3d4544nXFs1
+	 QCiy6M6/c0hhVjUQPO6c0kDqbl3yoCpZVyO/0gbD5POBjTB8mRg+7kitwaZsNELXPB
+	 301w244tVeMJT6C22JjDl2rg0lU6H1dvHjlxx0V8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfEBPWw (ORCPT
+        id S1726901AbfEBPW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38236 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbfEBPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:47 -0400
+        id S1726852AbfEBPWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1687A20675;
-        Thu,  2 May 2019 15:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70006217F5;
+        Thu,  2 May 2019 15:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810566;
-        bh=rPDTKpxLtWVx3Ngis1eC/2Bn9FdqpXs4F64UVxD6DTA=;
+        s=default; t=1556810572;
+        bh=UxxP16QCIPhoLx3KhYdXtv4AQlgH/cih9ULv5+o93Hc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MncP7KfghXYzgiWO5DUVbDo+iz3uSmwcxJ/hVuspJlxFsMYR4iBXRl2H0Y1twK3PX
-         jEoX1tZVJOE6C5unDjWiIQFa/iTLZygqgjxcByjYQziYpKMNHOYJrhiMi+pmwpoUG2
-         JTqWuBz1yHpLQ7xiJRjBP8MtUz/5WEkAfKHC14yI=
+        b=pKRpRxO+nVbnYNSievM5ytlwk3J2KRiS1dhUZwHHZk2O292ZwCVNwU7UTlXHO+u+t
+         RL9GtPVhIwqatY6L7gdUoDOKSZaNBAM7NzrRYbsi6zmmiNAx4MZoXvthCx5DzaG95S
+         Qj3SBhgflrhKNSeM1X2qfjqYzHQ0+5x98rfDNY0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 29/32] gpio: of: Fix of_gpiochip_add() error path
-Date:   Thu,  2 May 2019 17:21:15 +0200
-Message-Id: <20190502143322.727461789@linuxfoundation.org>
+Subject: [PATCH 4.9 30/32] kconfig/[mn]conf: handle backspace (^H) key
+Date:   Thu,  2 May 2019 17:21:16 +0200
+Message-Id: <20190502143323.212877920@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -62,46 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f7299d441a4da8a5088e651ea55023525a793a13 ]
+[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
 
-If the call to of_gpiochip_scan_gpios() in of_gpiochip_add() fails, no
-error handling is performed.  This lead to the need of callers to call
-of_gpiochip_remove() on failure, which causes "BAD of_node_put() on ..."
-if the failure happened before the call to of_node_get().
+Backspace is not working on some terminal emulators which do not send the
+key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
+But currently only '^?' is handled. Let's also handle '^H' for those
+terminals.
 
-Fix this by adding proper error handling.
-
-Note that calling gpiochip_remove_pin_ranges() multiple times causes no
-harm: subsequent calls are a no-op.
-
-Fixes: dfbd379ba9b7431e ("gpio: of: Return error if gpio hog configuration failed")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ scripts/kconfig/lxdialog/inputbox.c | 3 ++-
+ scripts/kconfig/nconf.c             | 2 +-
+ scripts/kconfig/nconf.gui.c         | 3 ++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index aac84329c759..b863386be911 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -531,7 +531,13 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 
- 	of_node_get(chip->of_node);
- 
--	return of_gpiochip_scan_gpios(chip);
-+	status = of_gpiochip_scan_gpios(chip);
-+	if (status) {
-+		of_node_put(chip->of_node);
-+		gpiochip_remove_pin_ranges(chip);
-+	}
-+
-+	return status;
- }
- 
- void of_gpiochip_remove(struct gpio_chip *chip)
+diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
+index d58de1dc5360..510049a7bd1d 100644
+--- a/scripts/kconfig/lxdialog/inputbox.c
++++ b/scripts/kconfig/lxdialog/inputbox.c
+@@ -126,7 +126,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
+ 			case KEY_DOWN:
+ 				break;
+ 			case KEY_BACKSPACE:
+-			case 127:
++			case 8:   /* ^H */
++			case 127: /* ^? */
+ 				if (pos) {
+ 					wattrset(dialog, dlg.inputbox.atr);
+ 					if (input_x == 0) {
+diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+index d42d534a66cd..f7049e288e93 100644
+--- a/scripts/kconfig/nconf.c
++++ b/scripts/kconfig/nconf.c
+@@ -1046,7 +1046,7 @@ static int do_match(int key, struct match_state *state, int *ans)
+ 		state->match_direction = FIND_NEXT_MATCH_UP;
+ 		*ans = get_mext_match(state->pattern,
+ 				state->match_direction);
+-	} else if (key == KEY_BACKSPACE || key == 127) {
++	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
+ 		state->pattern[strlen(state->pattern)-1] = '\0';
+ 		adj_match_dir(&state->match_direction);
+ 	} else
+diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
+index 4b2f44c20caf..9a65035cf787 100644
+--- a/scripts/kconfig/nconf.gui.c
++++ b/scripts/kconfig/nconf.gui.c
+@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
+ 		case KEY_F(F_EXIT):
+ 		case KEY_F(F_BACK):
+ 			break;
+-		case 127:
++		case 8:   /* ^H */
++		case 127: /* ^? */
+ 		case KEY_BACKSPACE:
+ 			if (cursor_position > 0) {
+ 				memmove(&result[cursor_position-1],
 -- 
 2.19.1
 
