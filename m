@@ -2,127 +2,108 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5DBC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CEBC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD06206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3558206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:16:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Wglm0Ja8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfEBOPk (ORCPT
+        id S1726561AbfEBOQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:15:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51398 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726320AbfEBOPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:15:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 785D9AD7E;
-        Thu,  2 May 2019 14:15:11 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id D29B5E0157; Thu,  2 May 2019 16:15:10 +0200 (CEST)
-Message-Id: <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1556806084.git.mkubecek@suse.cz>
-References: <cover.1556806084.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v2 3/3] netlink: add validation of NLA_F_NESTED flag
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>,
-        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org
-Date:   Thu,  2 May 2019 16:15:10 +0200 (CEST)
+        Thu, 2 May 2019 10:16:21 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41258 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBOQV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:16:21 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m4so2257563edd.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F9aLUsv55ITOjNiKYrvVJTstOAfJJ4bjs1xsqsYJZDQ=;
+        b=Wglm0Ja8Is5t6Pe+C39FK43FXDgUihPAL66hPy1y4u5yc2bjsKAODKww+7X5qtMNq5
+         PbUXwFDcvRFq0LAgV2XIV24RKvFaLy4+Jk9GJYezxhn5AlNEzzhz8abjwcZNxXD9zlji
+         e5nlWFVG4bsIB4/YdkBoDHM6o1TSAyn93KJf3vcwSYLmgFnlgEumav98ILuqSoa4je8o
+         AFbnIN4HyiGrHybIdEqKo89zqDoKruqFcQ4OfcjnNLSk5jVrpkfQPrVUs7D0XYOyds57
+         zhuWswdfRLeN+sHLVlfRkfc2fNW9damh+qz/C5Exemg6en0dyyKw1qNwtwq2GtQLO5wR
+         RaFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F9aLUsv55ITOjNiKYrvVJTstOAfJJ4bjs1xsqsYJZDQ=;
+        b=RURNr533Hj6UYIXUCqITmRgw7atHKZU/C4OJjR2s30zCZr7QZ4178CkbpkY1pmDzcD
+         IDYPkA5NnVueSGgYyzcjHi0xudTl5CjjwCvQj6TiYddriYIyddOyXpjhrmCXj3pgSoDp
+         jwDq0dgj+adHdGIx23724mzgRZuOLLwuIKXdgPV2Q5gsQNAwdLS1aDS5aPISIUPwmPGs
+         7rMKmJR5fjBQEoCH8ZWsZLncI720vvwIgMRBMIC5dXmjMUmwfL+bByPPYA5MS4CQi2Au
+         gaunqvJES3B58L4P0OVAe7iITDQh8PA9H9MjrgA9yPldbqblDtpl1424XcxfaCPaBpx6
+         gBLQ==
+X-Gm-Message-State: APjAAAWiIDbzTgM6VGOduzMNzmpWpoLDEyao97BDmoTkuOzciYySVXs/
+        AZXvFv6J7uGe7Myk2cCWQYu0tuaFMp9SCT1lVMXFfIexmDc=
+X-Google-Smtp-Source: APXvYqz9Dz0MllP0/JVZaWYqSMxagrbWwyxnqyReg5hTSdZBuyzEtjj571LYBRrDHp5eRfJaAMIOIYRbPk8/bxfuLaY=
+X-Received: by 2002:a50:a951:: with SMTP id m17mr2606324edc.79.1556806579550;
+ Thu, 02 May 2019 07:16:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190501232517.crbmgcuk7u4gvujr@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
+ <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com>
+In-Reply-To: <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 2 May 2019 10:16:08 -0400
+Message-ID: <CA+CK2bA_5uaEK1vjOwNZC9Ta+T-_yTL9etOUEvOUSrtNEOe8og@mail.gmail.com>
+Subject: Re: [PATCH v6 01/12] mm/sparsemem: Introduce struct mem_section_usage
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new validation flag NL_VALIDATE_NESTED which adds three consistency
-checks of NLA_F_NESTED_FLAG:
+On Thu, May 2, 2019 at 2:07 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Wed, May 1, 2019 at 4:25 PM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
+> >
+> > On 19-04-17 11:39:00, Dan Williams wrote:
+> > > Towards enabling memory hotplug to track partial population of a
+> > > section, introduce 'struct mem_section_usage'.
+> > >
+> > > A pointer to a 'struct mem_section_usage' instance replaces the existing
+> > > pointer to a 'pageblock_flags' bitmap. Effectively it adds one more
+> > > 'unsigned long' beyond the 'pageblock_flags' (usemap) allocation to
+> > > house a new 'map_active' bitmap.  The new bitmap enables the memory
+> > > hot{plug,remove} implementation to act on incremental sub-divisions of a
+> > > section.
+> > >
+> > > The primary motivation for this functionality is to support platforms
+> > > that mix "System RAM" and "Persistent Memory" within a single section,
+> > > or multiple PMEM ranges with different mapping lifetimes within a single
+> > > section. The section restriction for hotplug has caused an ongoing saga
+> > > of hacks and bugs for devm_memremap_pages() users.
+> > >
+> > > Beyond the fixups to teach existing paths how to retrieve the 'usemap'
+> > > from a section, and updates to usemap allocation path, there are no
+> > > expected behavior changes.
+> > >
+> > > Cc: Michal Hocko <mhocko@suse.com>
+> > > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > > Cc: Logan Gunthorpe <logang@deltatee.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-  - the flag is set on attributes with NLA_NESTED{,_ARRAY} policy
-  - the flag is not set on attributes with other policies except NLA_UNSPEC
-  - the flag is set on attribute passed to nla_parse_nested()
-
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-
-v2: change error messages to mention NLA_F_NESTED explicitly
----
- include/net/netlink.h | 11 ++++++++++-
- lib/nlattr.c          | 15 +++++++++++++++
- 2 files changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/include/net/netlink.h b/include/net/netlink.h
-index 679f649748d4..395b4406f4b0 100644
---- a/include/net/netlink.h
-+++ b/include/net/netlink.h
-@@ -401,6 +401,8 @@ struct nl_info {
-  *	are enforced going forward.
-  * @NL_VALIDATE_STRICT_ATTRS: strict attribute policy parsing (e.g.
-  *	U8, U16, U32 must have exact size, etc.)
-+ * @NL_VALIDATE_NESTED: Check that NLA_F_NESTED is set for NLA_NESTED(_ARRAY)
-+ *	and unset for other policies.
-  */
- enum netlink_validation {
- 	NL_VALIDATE_LIBERAL = 0,
-@@ -408,6 +410,7 @@ enum netlink_validation {
- 	NL_VALIDATE_MAXTYPE = BIT(1),
- 	NL_VALIDATE_UNSPEC = BIT(2),
- 	NL_VALIDATE_STRICT_ATTRS = BIT(3),
-+	NL_VALIDATE_NESTED = BIT(4),
- };
- 
- #define NL_VALIDATE_DEPRECATED_STRICT (NL_VALIDATE_TRAILING |\
-@@ -415,7 +418,8 @@ enum netlink_validation {
- #define NL_VALIDATE_STRICT (NL_VALIDATE_TRAILING |\
- 			    NL_VALIDATE_MAXTYPE |\
- 			    NL_VALIDATE_UNSPEC |\
--			    NL_VALIDATE_STRICT_ATTRS)
-+			    NL_VALIDATE_STRICT_ATTRS |\
-+			    NL_VALIDATE_NESTED)
- 
- int netlink_rcv_skb(struct sk_buff *skb,
- 		    int (*cb)(struct sk_buff *, struct nlmsghdr *,
-@@ -1132,6 +1136,11 @@ static inline int nla_parse_nested(struct nlattr *tb[], int maxtype,
- 				   const struct nla_policy *policy,
- 				   struct netlink_ext_ack *extack)
- {
-+	if (!(nla->nla_type & NLA_F_NESTED)) {
-+		NL_SET_ERR_MSG_ATTR(extack, nla, "NLA_F_NESTED is missing");
-+		return -EINVAL;
-+	}
-+
- 	return __nla_parse(tb, maxtype, nla_data(nla), nla_len(nla), policy,
- 			   NL_VALIDATE_STRICT, extack);
- }
-diff --git a/lib/nlattr.c b/lib/nlattr.c
-index adc919b32bf9..cace9b307781 100644
---- a/lib/nlattr.c
-+++ b/lib/nlattr.c
-@@ -184,6 +184,21 @@ static int validate_nla(const struct nlattr *nla, int maxtype,
- 		}
- 	}
- 
-+	if (validate & NL_VALIDATE_NESTED) {
-+		if ((pt->type == NLA_NESTED || pt->type == NLA_NESTED_ARRAY) &&
-+		    !(nla->nla_type & NLA_F_NESTED)) {
-+			NL_SET_ERR_MSG_ATTR(extack, nla,
-+					    "NLA_F_NESTED is missing");
-+			return -EINVAL;
-+		}
-+		if (pt->type != NLA_NESTED && pt->type != NLA_NESTED_ARRAY &&
-+		    pt->type != NLA_UNSPEC && (nla->nla_type & NLA_F_NESTED)) {
-+			NL_SET_ERR_MSG_ATTR(extack, nla,
-+					    "NLA_F_NESTED not expected");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	switch (pt->type) {
- 	case NLA_EXACT_LEN:
- 		if (attrlen != pt->len)
--- 
-2.21.0
-
+Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
