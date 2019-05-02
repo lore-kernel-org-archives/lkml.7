@@ -2,102 +2,123 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F8AC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB478C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E62A20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556794945;
-	bh=nOdygw9Kk1rPOSBt7SYd7W2YRVezyBvv7bv92jfZhHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aH+IuvIZBZ+zaD9+CSUSQJltESIG/jR17FgtZsGW/CtQJdyKe6/lCvjYwHrQi7z4O
-	 jhkmXVr75K8LwmSEv5jDTaEfql/shegb1nnjNpQwxkXVcyeNki9++FNDzTLUu/CdEj
-	 GpO3U7yHf8VJxmY23fHmoJGJA6S+ckObiUhQ1yEU=
+	by mail.kernel.org (Postfix) with ESMTP id 8B8CD20873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfEBLCY (ORCPT
+        id S1726458AbfEBLCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 07:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfEBLCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 07:02:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A6B20656;
-        Thu,  2 May 2019 11:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556794942;
-        bh=nOdygw9Kk1rPOSBt7SYd7W2YRVezyBvv7bv92jfZhHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QVhLNVl+kFCGa4qKMxbE3iXUhUTDNoqNjOrwG/PTklDuyc/zZitjl4iGVIUEcK9mq
-         ZjtTSTPd/IYzKKg9UaCBiZ1iUe+zjqgu6eX3MtWFfMyatUxvweOtiAQ0LBZimoeXJA
-         oWjvyASNbWkhMa6vm3fnEL/GbAHDE6uY2kQH7jq4=
-Date:   Thu, 2 May 2019 13:02:20 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     frowand.list@gmail.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-Message-ID: <20190502110220.GD12416@kroah.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com>
+        Thu, 2 May 2019 07:02:46 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43930 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbfEBLCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 07:02:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70351A78;
+        Thu,  2 May 2019 04:02:45 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B7143F719;
+        Thu,  2 May 2019 04:02:43 -0700 (PDT)
+Date:   Thu, 2 May 2019 12:01:52 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] iommu/dma: Reserve IOVA for PCIe inaccessible DMA
+ address
+Message-ID: <20190502110152.GA7313@e121166-lin.cambridge.arm.com>
+References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
+ <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501230126.229218-13-brendanhiggins@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
-> From: Felix Guo <felixguoxiuping@gmail.com>
+On Wed, May 01, 2019 at 11:06:25PM +0530, Srinath Mannam wrote:
+> dma_ranges field of PCI host bridge structure has resource entries in
+> sorted order of address range given through dma-ranges DT property. This
+> list is the accessible DMA address range. So that this resource list will
+> be processed and reserve IOVA address to the inaccessible address holes in
+> the list.
 > 
-> The ultimate goal is to create minimal isolated test binaries; in the
-> meantime we are using UML to provide the infrastructure to run tests, so
-> define an abstract way to configure and run tests that allow us to
-> change the context in which tests are built without affecting the user.
-> This also makes pretty and dynamic error reporting, and a lot of other
-> nice features easier.
+> This method is similar to PCI IO resources address ranges reserving in
+> IOMMU for each EP connected to host bridge.
 > 
-> kunit_config.py:
->   - parse .config and Kconfig files.
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+> Acked-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/iommu/dma-iommu.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> kunit_kernel.py: provides helper functions to:
->   - configure the kernel using kunitconfig.
->   - build the kernel with the appropriate configuration.
->   - provide function to invoke the kernel and stream the output back.
-> 
-> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 77aabe6..da94844 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -212,6 +212,7 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>  	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>  	struct resource_entry *window;
+>  	unsigned long lo, hi;
+> +	phys_addr_t start = 0, end;
+>  
+>  	resource_list_for_each_entry(window, &bridge->windows) {
+>  		if (resource_type(window->res) != IORESOURCE_MEM)
+> @@ -221,6 +222,24 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>  		hi = iova_pfn(iovad, window->res->end - window->offset);
+>  		reserve_iova(iovad, lo, hi);
+>  	}
+> +
+> +	/* Get reserved DMA windows from host bridge */
+> +	resource_list_for_each_entry(window, &bridge->dma_ranges) {
 
-Ah, here's probably my answer to my previous logging format question,
-right?  What's the chance that these wrappers output stuff in a standard
-format that test-framework-tools can already parse?  :)
+If this list is not sorted it seems to me the logic in this loop is
+broken and you can't rely on callers to sort it because it is not a
+written requirement and it is not enforced (you know because you
+wrote the code but any other developer is not supposed to guess
+it).
 
-thanks,
+Can't we rewrite this loop so that it does not rely on list
+entries order ?
 
-greg k-h
+I won't merge this series unless you sort it, no pun intended.
+
+Lorenzo
+
+> +		end = window->res->start - window->offset;
+> +resv_iova:
+> +		if (end - start) {
+> +			lo = iova_pfn(iovad, start);
+> +			hi = iova_pfn(iovad, end);
+> +			reserve_iova(iovad, lo, hi);
+> +		}
+> +		start = window->res->end - window->offset + 1;
+> +		/* If window is last entry */
+> +		if (window->node.next == &bridge->dma_ranges &&
+> +		    end != ~(dma_addr_t)0) {
+> +			end = ~(dma_addr_t)0;
+> +			goto resv_iova;
+> +		}
+> +	}
+>  }
+>  
+>  static int iova_reserve_iommu_regions(struct device *dev,
+> -- 
+> 2.7.4
+> 
