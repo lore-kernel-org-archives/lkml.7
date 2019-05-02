@@ -2,182 +2,131 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3264AC04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B0AC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8A62087F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 742DC206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViH32LHW"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="VyGHNfvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfEBWoW (ORCPT
+        id S1726334AbfEBWqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 18:44:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37359 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfEBWoW (ORCPT
+        Thu, 2 May 2019 18:46:23 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44433 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfEBWqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 18:44:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k23so5482640wrd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 15:44:20 -0700 (PDT)
+        Thu, 2 May 2019 18:46:22 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b8so3739059edm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 15:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=soleen.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SuUpfHu3jsyrHNGkijE3t4kxZS81qdHPL95LsioUnGs=;
-        b=ViH32LHWXkf+gwRwBFv9arWh1x/EQk3jp2GPbg9ZDbhOQGKi18HcFZ2a2WhvUdi0E2
-         hLvmZB7C0IFgBg2Wt5nPCV3wA+dJCEcrgd8xjJ5KKdM2aS0VsIPysO9DPqo1Y5f9lYLo
-         qaAhnsjBl9hDzPhHjUXmIAW3wvTicKFLDFu7kZq52ny7jUEI//hYwQuWSMS3chSvHm+Z
-         VO0Wdt5xL/wnXtyjcztI2b0wSpaSa5bw4RaFt5QAqXPbUY35WUbALfrrAL/ZYAb1oMdX
-         OltRwihVxtM4GvvA+QkJh+Xvo+IGoR8HSfpyGf6+K0hBJW1uT5Suj0QV35es4Q/JcWMf
-         9MWg==
+         :cc;
+        bh=GA6AE3nbkJUtYedDned7ovjPAtRn38Gv/WcLw3WyhRM=;
+        b=VyGHNfvlwO8ONwk/KifhHlo6j+UxiIO6vZVAJEIh/1HVZiBQdm6hsv7Pe0s7LBhtib
+         DYwvUG89sAGEQgMraZsleAVrkfz3yCSF5e3mdty7AI3w8fvGzLvrD6iNdbwKzPPO6tB2
+         WB6DAwnVzZVm4VW3ZepbbgIK47+nbIKMwSPeEpBw3fktP/V2czpbTX5jTue1sPbgj/eG
+         6O2VZ1pwM/NbdV22t+0aEDCpaSSB5dVP9kd5aYfREuFkFv28OxBKfCldjaWjhv274Pe7
+         2KZs9Qw1vLvH2eDnNdOeFw5/7sMhPbarlsTLuWEEHjLPnsnzTcCJN1/Gaatld2q9auYL
+         jgjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SuUpfHu3jsyrHNGkijE3t4kxZS81qdHPL95LsioUnGs=;
-        b=mxcy5KXY8xzb7OnVobvFap6coEKDIs8kU1Q3GaeVAz9d4Tj8xCrUX4KvRUie6i20vh
-         bxxgcuirIs/xyniFvbbPoxEtHL+Z6flDEyaB19wdZ7kAYw6ZXLy8oqNKLuY17MfS+hIS
-         tUJMTybHs3zTnRqiB1jG90C98S4qPgzOR1gjD0JHWHOB8W+8qJ+pwB1ozR+Si037V50O
-         rApWLQZJNdTx3OYFTaZNNp62dyW6NCMVHIyG6IyaKbRgmxIMqjdAVZQtyNMxBMJFTu1N
-         Ux38B1dpXz6RdVGHcZvM7NfJpfEi+EA1qOCDkd18pFkLDGlPh6qnKJHQC7+W7sMwvFrF
-         M0eQ==
-X-Gm-Message-State: APjAAAXG8M5uzLlfvA7y7bqAwZrV1hJ3XD+SIHdwr1fUolPJAy0YvO++
-        vzLHU6wQvNDIrevekCnOZjD4rIWPSLKZ+uWI50Y=
-X-Google-Smtp-Source: APXvYqwNoLYrunH147NNmfIlbuaw02XNIikLKmKRNPweSoKWE52cBbTEMFCd6StVQmgpG2uMD74V9CWt37ZivUZ4L9I=
-X-Received: by 2002:a5d:6101:: with SMTP id v1mr4479676wrt.222.1556837059885;
- Thu, 02 May 2019 15:44:19 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=GA6AE3nbkJUtYedDned7ovjPAtRn38Gv/WcLw3WyhRM=;
+        b=jEkXH92clqickkGETcuVtcwuOWgAOkZeLIzgke5r66kCyv2EnU7iSSzQwl4G+W9qCY
+         mMvV+YLN9Pn/rW0flwoKf58sk5b9M/kk4zHVeBnVhwiwnQ46WUvWlepJaXvWCAdcalPR
+         Cy6Acox62MQv7EAQasX8ubmicPGearEAagcKCj5C57W9Qod8sTBYj+CDfNvZU+pJzDMO
+         e3O4vxYCCNrkj5EOfRovmdOkfqEtOKt+iqQP/PFD7gRtU/PjtCJyzpg0rMIz8RhGArRx
+         uiw24sIG4nPl60msPX5K7wTbGmyEyHCstUfoR7rea4NGrl67JHiS8afIMhUZymGXaHwf
+         8yhw==
+X-Gm-Message-State: APjAAAUAvR7EyMNmDYfVcVISjBR8MfSL/7nu/wIV0Ncem+TEV46B21vm
+        xj/GsmAy+zq+1IOADaAWoBWUfF+VN54G2b0stJi2Dw==
+X-Google-Smtp-Source: APXvYqyxp62Y9u8Dg6nAw9ZEhyrJmqsbIRm9Uomm765huXXDRUc3RQdFsZu/ihmrxpq8Al0EC7JMIkEOIXHtl4sV7+o=
+X-Received: by 2002:a50:fb19:: with SMTP id d25mr4513007edq.61.1556837180746;
+ Thu, 02 May 2019 15:46:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190502181332.5503-1-sravanhome@gmail.com>
-In-Reply-To: <20190502181332.5503-1-sravanhome@gmail.com>
-From:   =?UTF-8?Q?Beno=C3=AEt_Th=C3=A9baudeau?= 
-        <benoit.thebaudeau.dev@gmail.com>
-Date:   Fri, 3 May 2019 00:44:31 +0200
-Message-ID: <CA+sos7-U49b7DyQ76h-RohhGqPSPqsV-u-r+oaZnB5=DAkbm6w@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH v3] ASoC: tlv320aic3x: Add support for high
- power analog output
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, Alsa-devel <alsa-devel@alsa-project.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 2 May 2019 18:46:09 -0400
+Message-ID: <CA+CK2bBT=goxf5KWLhca7uQutUj9670aL9r02_+BsJ+bLkjj=g@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Saravanan Sekar,
+Hi Dan,
 
-On Thu, May 2, 2019 at 8:14 PM Saravanan Sekar <sravanhome@gmail.com> wrote=
-:
->
-> Add support to output level control for the analog high power output
-> drivers HPOUT and HPCOM.
->
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->
-> Notes:
->     Changes in V3:
->     -Fixed compilation error
->
->     Changes in V2:
->     - Removed power control as it is handled by DAPM
->     - Added level control for left channel
->
->  sound/soc/codecs/tlv320aic3x.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3=
-x.c
-> index 516d17cb2182..489a6d89d63d 100644
-> --- a/sound/soc/codecs/tlv320aic3x.c
-> +++ b/sound/soc/codecs/tlv320aic3x.c
-> @@ -324,6 +324,9 @@ static DECLARE_TLV_DB_SCALE(adc_tlv, 0, 50, 0);
->   */
->  static DECLARE_TLV_DB_SCALE(output_stage_tlv, -5900, 50, 1);
->
-> +/* HP/HPCOM volumes. From 0 to 9 dB in 1 dB steps */
-> +static DECLARE_TLV_DB_SCALE(hp_tlv, 0, 100, 0);
+How do you test these patches? Do you have any instructions?
 
-This could be made "const" (as well as the other instances of
-DECLARE_TLV_DB_SCALE()).
+I see for example that check_hotplug_memory_range() still enforces
+memory_block_size_bytes() alignment.
 
-The hp_tlv naming is fine for the change here, but something not
-HP-specific, such as out_tlv would be better if you consider the
-further changes that could use this definition:
-static DECLARE_TLV_DB_SCALE(output_stage_tlv, -5900, 50, 1);
-+/* Output volumes. From 0 to 9 dB in 1 dB steps */
-+static const DECLARE_TLV_DB_SCALE(out_tlv, 0, 100, 0);
+Also, after removing check_hotplug_memory_range(), I tried to online
+16M aligned DAX memory, and got the following panic:
 
-E.g., the following control could be added to aic3x_snd_controls[]:
-+SOC_DOUBLE_R_TLV("Line Playback Volume", LLOPM_CTRL, RLOPM_CTRL, 4,
-9, 0, out_tlv),
+# echo online > /sys/devices/system/memory/memory7/state
+[  202.193132] WARNING: CPU: 2 PID: 351 at drivers/base/memory.c:207
+memory_block_action+0x110/0x178
+[  202.193391] Modules linked in:
+[  202.193698] CPU: 2 PID: 351 Comm: sh Not tainted
+5.1.0-rc7_pt_devdax-00038-g865af4385544-dirty #9
+[  202.193909] Hardware name: linux,dummy-virt (DT)
+[  202.194122] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  202.194243] pc : memory_block_action+0x110/0x178
+[  202.194404] lr : memory_block_action+0x90/0x178
+[  202.194506] sp : ffff000016763ca0
+[  202.194592] x29: ffff000016763ca0 x28: ffff80016fd29b80
+[  202.194724] x27: 0000000000000000 x26: 0000000000000000
+[  202.194838] x25: ffff000015546000 x24: 00000000001c0000
+[  202.194949] x23: 0000000000000000 x22: 0000000000040000
+[  202.195058] x21: 00000000001c0000 x20: 0000000000000008
+[  202.195168] x19: 0000000000000007 x18: 0000000000000000
+[  202.195281] x17: 0000000000000000 x16: 0000000000000000
+[  202.195393] x15: 0000000000000000 x14: 0000000000000000
+[  202.195505] x13: 0000000000000000 x12: 0000000000000000
+[  202.195614] x11: 0000000000000000 x10: 0000000000000000
+[  202.195744] x9 : 0000000000000000 x8 : 0000000180000000
+[  202.195858] x7 : 0000000000000018 x6 : ffff000015541930
+[  202.195966] x5 : ffff000015541930 x4 : 0000000000000001
+[  202.196074] x3 : 0000000000000001 x2 : 0000000000000000
+[  202.196185] x1 : 0000000000000070 x0 : 0000000000000000
+[  202.196366] Call trace:
+[  202.196455]  memory_block_action+0x110/0x178
+[  202.196589]  memory_subsys_online+0x3c/0x80
+[  202.196681]  device_online+0x6c/0x90
+[  202.196761]  state_store+0x84/0x100
+[  202.196841]  dev_attr_store+0x18/0x28
+[  202.196927]  sysfs_kf_write+0x40/0x58
+[  202.197010]  kernfs_fop_write+0xcc/0x1d8
+[  202.197099]  __vfs_write+0x18/0x40
+[  202.197187]  vfs_write+0xa4/0x1b0
+[  202.197295]  ksys_write+0x64/0xd8
+[  202.197430]  __arm64_sys_write+0x18/0x20
+[  202.197521]  el0_svc_common.constprop.0+0x7c/0xe8
+[  202.197621]  el0_svc_handler+0x28/0x78
+[  202.197706]  el0_svc+0x8/0xc
+[  202.197828] ---[ end trace 57719823dda6d21e ]---
 
-And this control could be added to aic3x_mono_controls[]:
-+SOC_SINGLE_TLV("Mono Playback Volume", MONOLOPM_CTRL, 4, 9, 0, out_tlv),
-
-The MONOLOPM_CTRL register exists for the 33 and 3106, but not for the
-31, 32, 3007, and 3104 (it should not be written to for these CODECs).
-However, the driver uses this register for the 31 and 32 too, which
-should be fixed rather than disabling the corresponding pin as
-suggested in the file top comment.
-
-> +
->  static const struct snd_kcontrol_new aic3x_snd_controls[] =3D {
->         /* Output */
->         SOC_DOUBLE_R_TLV("PCM Playback Volume",
-> @@ -419,6 +422,12 @@ static const struct snd_kcontrol_new aic3x_snd_contr=
-ols[] =3D {
->         /* Pop reduction */
->         SOC_ENUM("Output Driver Power-On time", aic3x_poweron_time_enum),
->         SOC_ENUM("Output Driver Ramp-up step", aic3x_rampup_step_enum),
-> +
-> +       /* Analog HPOUT, HPCOM output level controls */
-> +       SOC_DOUBLE_R_TLV("HP Playback Volume", HPLOUT_CTRL, HPROUT_CTRL,
-> +                       4, 9, 0, hp_tlv),
-
-Correct for all the supported CODECs.
-
-> +       SOC_DOUBLE_R_TLV("HPCOM Playback Volume", HPLCOM_CTRL, HPRCOM_CTR=
-L,
-> +                       4, 9, 0, hp_tlv),
-
-Correct for all the supported CODECs but the TLV320AIC3007. The latter
-has no HPRCOM output, but only HPCOM (=3D HPLCOM). The HPRCOM_CTRL
-register of this CODEC is reserved and should not be written to. All
-the references to this register for this CODEC are actually broken in
-this driver. You could still add this control, and the 3007 issue
-could be fixed separately by you or someone else.
-
-You could keep the volumes grouped with the corresponding switches,
-just like all the AGC or PGA Capture controls are grouped together:
--/* Output pin mute controls */
-+/* Output pin controls */
-+SOC_DOUBLE_R_TLV("Line Playback Volume", LLOPM_CTRL, RLOPM_CTRL, 4,
-9, 0, out_tlv),
-SOC_DOUBLE_R("Line Playback Switch", LLOPM_CTRL, RLOPM_CTRL, 3, 0x01, 0),
-+SOC_DOUBLE_R_TLV("HP Playback Volume", HPLOUT_CTRL, HPROUT_CTRL, 4,
-9, 0, out_tlv),
-SOC_DOUBLE_R("HP Playback Switch", HPLOUT_CTRL, HPROUT_CTRL, 3, 0x01, 0),
-+SOC_DOUBLE_R_TLV("HPCOM Playback Volume", HPLCOM_CTRL, HPRCOM_CTRL,
-4, 9, 0, out_tlv),
-SOC_DOUBLE_R("HPCOM Playback Switch", HPLCOM_CTRL, HPRCOM_CTRL, 3, 0x01, 0)=
-,
-
-And:
-+SOC_SINGLE_TLV("Mono Playback Volume", MONOLOPM_CTRL, 4, 9, 0, out_tlv),
-SOC_SINGLE("Mono Playback Switch", MONOLOPM_CTRL, 3, 0x01, 0),
-
->  };
->
->  /* For other than tlv320aic3104 */
-
-Best regards
-Beno=C3=AEt
+Thank you,
+Pasha
