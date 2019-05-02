@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8DCC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DDDC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA44E2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E16520675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811399;
-	bh=XTacDxyNCC4ihSVlkcv8rr0jsw2yfHYGXcCX7hTEZfI=;
+	s=default; t=1556811403;
+	bh=5IKcHb/BiqpQ9jsv0SapryPbCO4oCW5m2Nfmbwo9D9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oq+lpoeNLgEkZYPvPowAWQJdoxDQzw8+RjlXJOTi1meoUiOf/BSsozhPbdkXWnZ0e
-	 IPp/LwqSvqBUSzKew6rj45EFe8idz7YjsA5n6X5fVImQJ2IG0FH8G2vGjYGMD0WIIt
-	 t2MKaeE9pLgmCvIxbq3Lu8xgBHnD+A84ZUXqkWxU=
+	b=cjMCIuyrEr5EtGTbxnjlLOBgx2WHqvtcMUGUYaPcH5jUkpMBib7K/7AywKOM/TGaY
+	 jxCYXYEZv27fEZp0ULPXbKpztF27UyS3KBpqdlVCx95Tg5347b5i12VVQA4aNmKj3g
+	 1wH/VxZtqucra/Z6QVdwRDPb7rMXq9sFXAPfFUIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfEBPap (ORCPT
+        id S1728665AbfEBPgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49282 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728291AbfEBPai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:38 -0400
+        id S1728810AbfEBPan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9782C20B7C;
-        Thu,  2 May 2019 15:30:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B326C20B7C;
+        Thu,  2 May 2019 15:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811038;
-        bh=XTacDxyNCC4ihSVlkcv8rr0jsw2yfHYGXcCX7hTEZfI=;
+        s=default; t=1556811043;
+        bh=5IKcHb/BiqpQ9jsv0SapryPbCO4oCW5m2Nfmbwo9D9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWU5kshRRzzwnu0Ah9yUAPR05BdVipHqXOan8Y5XBT7t3ZikCHNQ0/E37BIrvbqPZ
-         5KOLLmwV+JsfAKmPYqIRdfbO32KQCMhIN4s2cF5jEnpSaHD9e+i0ziwmC4hkpc3hCP
-         vJuvru71aTxRMSbOns/VC/KXCVhbKyObwEQyHxKg=
+        b=C7QItkPQpmtOvEVNC3XrdBi7O7JPOLsHMTYZTCG5mwryqWFePS3kk5SwJigg5uHar
+         dJ3R+JL67ebuyXHN0vowrV53SAiGZDXn54OxOuNT6ov/TQUgSZ5GB1r4KEmX0hISYq
+         SrUnB5JaBG7zMIzK2evSxdwnruvNgLSV+/vnQHFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
+        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 050/101] net: phy: Add DP83825I to the DP83822 driver
-Date:   Thu,  2 May 2019 17:20:52 +0200
-Message-Id: <20190502143343.035266894@linuxfoundation.org>
+Subject: [PATCH 5.0 052/101] net/sched: dont dereference a->goto_chain to read the chain index
+Date:   Thu,  2 May 2019 17:20:54 +0200
+Message-Id: <20190502143343.161539260@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,82 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 06acc17a96215a11134114aee26532b12dc8fde1 ]
+[ Upstream commit fe384e2fa36ca084a456fd30558cccc75b4b3fbd ]
 
-Add the DP83825I ethernet PHY to the DP83822 driver.
-These devices share the same WoL register bits and addresses.
+callers of tcf_gact_goto_chain_index() can potentially read an old value
+of the chain index, or even dereference a NULL 'goto_chain' pointer,
+because 'goto_chain' and 'tcfa_action' are read in the traffic path
+without caring of concurrent write in the control path. The most recent
+value of chain index can be read also from a->tcfa_action (it's encoded
+there together with TC_ACT_GOTO_CHAIN bits), so we don't really need to
+dereference 'goto_chain': just read the chain id from the control action.
 
-The phy_driver init was made into a macro as there may be future
-devices appended to this driver that will share the register space.
-
-http://www.ti.com/lit/gpn/dp83825i
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Fixes: e457d86ada27 ("net: sched: add couple of goto_chain helpers")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/phy/dp83822.c | 34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ include/net/tc_act/tc_gact.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-index 24c7f149f3e6..e11057892f07 100644
---- a/drivers/net/phy/dp83822.c
-+++ b/drivers/net/phy/dp83822.c
-@@ -23,6 +23,8 @@
- #include <linux/netdevice.h>
+diff --git a/include/net/tc_act/tc_gact.h b/include/net/tc_act/tc_gact.h
+index ef8dd0db70ce..56935bf027a7 100644
+--- a/include/net/tc_act/tc_gact.h
++++ b/include/net/tc_act/tc_gact.h
+@@ -56,7 +56,7 @@ static inline bool is_tcf_gact_goto_chain(const struct tc_action *a)
  
- #define DP83822_PHY_ID	        0x2000a240
-+#define DP83825I_PHY_ID		0x2000a150
-+
- #define DP83822_DEVADDR		0x1f
- 
- #define MII_DP83822_PHYSCR	0x11
-@@ -312,26 +314,30 @@ static int dp83822_resume(struct phy_device *phydev)
- 	return 0;
+ static inline u32 tcf_gact_goto_chain_index(const struct tc_action *a)
+ {
+-	return a->goto_chain->index;
++	return READ_ONCE(a->tcfa_action) & TC_ACT_EXT_VAL_MASK;
  }
  
-+#define DP83822_PHY_DRIVER(_id, _name)				\
-+	{							\
-+		PHY_ID_MATCH_MODEL(_id),			\
-+		.name		= (_name),			\
-+		.features	= PHY_BASIC_FEATURES,		\
-+		.soft_reset	= dp83822_phy_reset,		\
-+		.config_init	= dp83822_config_init,		\
-+		.get_wol = dp83822_get_wol,			\
-+		.set_wol = dp83822_set_wol,			\
-+		.ack_interrupt = dp83822_ack_interrupt,		\
-+		.config_intr = dp83822_config_intr,		\
-+		.suspend = dp83822_suspend,			\
-+		.resume = dp83822_resume,			\
-+	}
-+
- static struct phy_driver dp83822_driver[] = {
--	{
--		.phy_id = DP83822_PHY_ID,
--		.phy_id_mask = 0xfffffff0,
--		.name = "TI DP83822",
--		.features = PHY_BASIC_FEATURES,
--		.config_init = dp83822_config_init,
--		.soft_reset = dp83822_phy_reset,
--		.get_wol = dp83822_get_wol,
--		.set_wol = dp83822_set_wol,
--		.ack_interrupt = dp83822_ack_interrupt,
--		.config_intr = dp83822_config_intr,
--		.suspend = dp83822_suspend,
--		.resume = dp83822_resume,
--	 },
-+	DP83822_PHY_DRIVER(DP83822_PHY_ID, "TI DP83822"),
-+	DP83822_PHY_DRIVER(DP83825I_PHY_ID, "TI DP83825I"),
- };
- module_phy_driver(dp83822_driver);
- 
- static struct mdio_device_id __maybe_unused dp83822_tbl[] = {
- 	{ DP83822_PHY_ID, 0xfffffff0 },
-+	{ DP83825I_PHY_ID, 0xfffffff0 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(mdio, dp83822_tbl);
+ #endif /* __NET_TC_GACT_H */
 -- 
 2.19.1
 
