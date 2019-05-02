@@ -3,165 +3,184 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87717C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A04EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576692085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:29:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qqH17PIb"
+	by mail.kernel.org (Postfix) with ESMTP id 1BE5F2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556803805;
+	bh=QWF9a+sk/Kmr4ujFgu4u9HoEFhe2xAPxquZieTcKHWc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=um6oEt9QE8BmVDSLjHSSyrnnfqDCuVLgMBtmQ8ZoX+7LXevm/qN4NVof6SpyF57Gc
+	 KlLD3ynBNI2CmXsYcs9pFlBRbYbd7cbePyObopV3w+cpeBOLiqYyIHX3tj25eE/0y6
+	 CRwXHMFy7cZOb7Z4hBOUxRLMNC6aZDcias/ke0so=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfEBN3Q (ORCPT
+        id S1726380AbfEBNaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:29:16 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10323 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfEBN3Q (ORCPT
+        Thu, 2 May 2019 09:30:04 -0400
+Received: from casper.infradead.org ([85.118.1.10]:36284 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfEBNaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:29:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ccaf08b0000>; Thu, 02 May 2019 06:28:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 02 May 2019 06:29:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 02 May 2019 06:29:14 -0700
-Received: from [10.24.44.78] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 13:29:11 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
-Date:   Thu, 2 May 2019 18:59:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 09:30:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xwymtSVqN1lovVQt6NGsb0j+Ksp6Gq6pqoqeUUx9qlY=; b=JvQlEI5RM4kReI5CmEtGZ0pJ0T
+        ap26TUWdn4Ue6aZ4FpNTcV8aWippQYhCijsNBIH/ugiGhS/ZOkSKh18rJopKMz2TW2ms5ec7B5BvB
+        0w+CtMfWC1k/SIkZ8ahK23dkU/n1fPlw8cS4u4YkI38vTCCl7mr0byND/MHB4h596+Hl8ZGmWf9ev
+        06fbGizsKPmaAvdipxJeqy1sYNx6vIXA5xZT8nmmRwHYW7yGWJTDRMWtW7DcaZs0CpWAyjxqkivIA
+        KDThFvg9a/5brrvL/mtoaQDv/tb0Iulqs2VsRZcHu7sBhdl6W98uw/jbZyr7Ac5Je2VcFcceiTG+G
+        T3GCIZlw==;
+Received: from [177.159.247.19] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMBmi-0004FZ-L8; Thu, 02 May 2019 13:30:01 +0000
+Date:   Thu, 2 May 2019 10:29:56 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] media/doc: Allow sizeimage to be set by v4l clients
+Message-ID: <20190502102956.70aed1c3@coco.lan>
+In-Reply-To: <ee78effa-f678-5d15-3802-bb787e7057e2@xs4all.nl>
+References: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
+        <20190502095550.31282c0d@coco.lan>
+        <ee78effa-f678-5d15-3802-bb787e7057e2@xs4all.nl>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190502122506.GP3845@vkoul-mobl.Dlink>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556803723; bh=AdTdnFdGb95uuDZYfMlLD8jAKvCKcvu9pKn4BNSdgLA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=qqH17PIb5KX1bXfx5ja/MF/7rFeP0VguWPW+ERXHoo/D9dC9pTr7ECuE1Othlb1mI
-         VucqTCZzHuRL1uHpgODgP3Gt0LKkt31FLW20ugGD/LUL4smV4ALZHn2G6ErZ34GyK1
-         Aob//SQJ9S9RqjrzN6lpx3bx9a7CJLzzQ8VTGajVkrIDlLJ3TVNefiYS6j+O2YzhJS
-         Z5bZ44ibFdZ9dD6jAfTbVQA7ZEloEUT+GEQTg+zeT0IBVJ7TiIW+REVtpU+7o7XPAn
-         RfrgelcOpivRDGKEHs79f4HgwS64RSqLerAfCgMjLZ3DHNS+79T96odebGhOlBaqB3
-         6wTdLv0MByLPA==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Thu, 2 May 2019 15:16:54 +0200
+Hans Verkuil <hverkuil@xs4all.nl> escreveu:
 
-On 5/2/2019 5:55 PM, Vinod Koul wrote:
-> On 02-05-19, 16:23, Sameer Pujar wrote:
->> On 5/2/2019 11:34 AM, Vinod Koul wrote:
->>> On 30-04-19, 17:00, Sameer Pujar wrote:
->>>> During the DMA transfers from memory to I/O, it was observed that tran=
-sfers
->>>> were inconsistent and resulted in glitches for audio playback. It happ=
-ened
->>>> because fifo size on DMA did not match with slave channel configuratio=
-n.
->>>>
->>>> currently 'dma_slave_config' structure does not have a field for fifo =
-size.
->>>> Hence the platform pcm driver cannot pass the fifo size as a slave_con=
-fig.
->>>> Note that 'snd_dmaengine_dai_dma_data' structure has fifo_size field w=
-hich
->>>> cannot be used to pass the size info. This patch introduces fifo_size =
-field
->>>> and the same can be populated on slave side. Users can set required si=
-ze
->>>> for slave peripheral (multiple channels can be independently running w=
-ith
->>>> different fifo sizes) and the corresponding sizes are programmed throu=
-gh
->>>> dma_slave_config on DMA side.
->>> FIFO size is a hardware property not sure why you would want an
->>> interface to program that?
->>>
->>> On mismatch, I guess you need to take care of src/dst_maxburst..
->> Yes, FIFO size is a HW property. But it is SW configurable(atleast in my
->> case) on
->> slave side and can be set to different sizes. The src/dst_maxburst is
-> Are you sure, have you talked to HW folks on that? IIUC you are
-> programming the data to be used in FIFO not the FIFO length!
-Yes, I mentioned about FIFO length.
+> On 5/2/19 2:55 PM, Mauro Carvalho Chehab wrote:
+> > Em Fri, 12 Apr 2019 18:59:15 +0300
+> > Stanimir Varbanov <stanimir.varbanov@linaro.org> escreveu:
+> >   
+> >> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
+> >> field description to allow v4l clients to set bigger image size
+> >> in case of variable length compressed data.
+> >>
+> >> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> >> ---
+> >>  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 13 ++++++++++++-
+> >>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 11 ++++++++++-
+> >>  2 files changed, 22 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> >> index 5688c816e334..005428a8121e 100644
+> >> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> >> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> >> @@ -31,7 +31,18 @@ describing all planes of that format.
+> >>  
+> >>      * - __u32
+> >>        - ``sizeimage``
+> >> -      - Maximum size in bytes required for image data in this plane.
+> >> +      - Maximum size in bytes required for image data in this plane,
+> >> +	set by the driver. When the image consists of variable length
+> >> +	compressed data this is the number of bytes required by the
+> >> +	codec to support the worst-case compression scenario.
+> >> +
+> >> +	For uncompressed images the driver will set the value. For
+> >> +	variable length compressed data clients are allowed to set
+> >> +	the sizeimage field, but the driver may ignore it and set the
+> >> +	value itself, or it may modify the provided value based on
+> >> +	alignment requirements or minimum/maximum size requirements.
+> >> +	If the client wants to leave this to the driver, then it should
+> >> +	set sizeimage to 0.
+> >>      * - __u32
+> >>        - ``bytesperline``
+> >>        - Distance in bytes between the leftmost pixels in two adjacent
+> >> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> >> index 71eebfc6d853..0f7771151db9 100644
+> >> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> >> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> >> @@ -89,7 +89,16 @@ Single-planar format structure
+> >>        - Size in bytes of the buffer to hold a complete image, set by the
+> >>  	driver. Usually this is ``bytesperline`` times ``height``. When
+> >>  	the image consists of variable length compressed data this is the
+> >> -	maximum number of bytes required to hold an image.
+> >> +	number of bytes required by the codec to support the worst-case
+> >> +	compression scenario.
+> >> +
+> >> +	For uncompressed images the driver will set the value. For
+> >> +	variable length compressed data clients are allowed to set
+> >> +	the sizeimage field, but the driver may ignore it and set the
+> >> +	value itself, or it may modify the provided value based on
+> >> +	alignment requirements or minimum/maximum size requirements.
+> >> +	If the client wants to leave this to the driver, then it should
+> >> +	set sizeimage to 0.  
+> > 
+> > It is very confusing to understand what you meant by the above paragraph,
+> > as you inverted the sentence order and forgot a comma.
+> > 
+> > I would, instead, write the phrases using the direct order, and break
+> > into two paragraphs, e. g., changing the above to:
+> > 
+> > 	"The driver will set the value for uncompressed images.
+> > 
+> > 	Clients are allowed to set the sizeimage field for variable length
+> > 	compressed data, but the driver may ignore it and set the
+> > 	value itself, or it may modify the provided value based on
+> > 	alignment requirements or minimum/maximum size requirements.
+> > 	If the client wants to leave this to the driver, then it should
+> > 	set sizeimage to 0."
+> > 
+> > That makes it a lot easier to read, hopefully preventing mistakes from
+> > app and driver developers when reading about sizeimage.
+> > 
+> > Yet, I'm not too comfortable on letting this too generic. I mean,
+> > how an app writer would know what formats are "variable length
+> > compressed data", specially since libv4l may actually change that.  
+> 
+> It's actually quite clearly defined: compressed formats set the
+> V4L2_FMT_FLAG_COMPRESSED flag in VIDIOC_ENUMFMT.
 
-1. MAX FIFO size is fixed in HW. But there is a way to limit the usage=20
-per channel
- =C2=A0=C2=A0 in multiples of 64 bytes.
-2. Having a separate member would give independent control over MAX=20
-BURST SIZE and
- =C2=A0=C2=A0 FIFO SIZE.
->
->> programmed
->> for specific values, I think this depends on few factors related to
->> bandwidth
->> needs of client, DMA needs of the system etc.,
-> Precisely
->
->> In such cases how does DMA know the actual FIFO depth of slave periphera=
-l?
-> Why should DMA know? Its job is to push/pull data as configured by
-> peripheral driver. The peripheral driver knows and configures DMA
-> accordingly.
-I am not sure if there is any HW logic that mandates DMA to know the size
-of configured FIFO depth on slave side. I will speak to HW folks and
-would update here.
->  =20
->>>> Request for feedback/suggestions.
->>>>
->>>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->>>> ---
->>>>    include/linux/dmaengine.h | 3 +++
->>>>    1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
->>>> index d49ec5c..9ec198b 100644
->>>> --- a/include/linux/dmaengine.h
->>>> +++ b/include/linux/dmaengine.h
->>>> @@ -351,6 +351,8 @@ enum dma_slave_buswidth {
->>>>     * @slave_id: Slave requester id. Only valid for slave channels. Th=
-e dma
->>>>     * slave peripheral will have unique id as dma requester which need=
- to be
->>>>     * pass as slave config.
->>>> + * @fifo_size: Fifo size value. The dma slave peripheral can configur=
-e required
->>>> + * fifo size and the same needs to be passed as slave config.
->>>>     *
->>>>     * This struct is passed in as configuration data to a DMA engine
->>>>     * in order to set up a certain channel for DMA transport at runtim=
-e.
->>>> @@ -376,6 +378,7 @@ struct dma_slave_config {
->>>>    	u32 dst_port_window_size;
->>>>    	bool device_fc;
->>>>    	unsigned int slave_id;
->>>> +	u32 fifo_size;
->>>>    };
->>>>    /**
->>>> --=20
->>>> 2.7.4
+Ok, so let's be explicit here, e. g. something like:
+
+ 	"Clients are allowed to set the sizeimage field for variable length
+ 	compressed data flagged with V4L2_FMT_FLAG_COMPRESSED at
+	VIDIOC_ENUMFMT, but the driver may ignore it and set the
+ 	value itself, or it may modify the provided value based on
+ 	alignment requirements or minimum/maximum size requirements.
+ 	If the client wants to leave this to the driver, then it should
+ 	set sizeimage to 0."
+
+That makes clear for app developers when they can use this new
+feature.
+
+That still leads us to what happens at libv4l with sizeimage
+for a compressed format that got uncompressed by the library, in
+order to ensure that a change like this won't cause breakages at
+existing userspace apps.
+
+> 
+> Also bytesperline will be 0 for compressed formats.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > 
+> > Thanks,
+> > Mauro
+> >   
+> 
+
+
+
+Thanks,
+Mauro
