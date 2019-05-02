@@ -2,86 +2,89 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8E4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D82C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757AB2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D07620675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="j1pLWpAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfEBPLn (ORCPT
+        id S1726477AbfEBPMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:11:43 -0400
-Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:52225 "EHLO
-        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726270AbfEBPLm (ORCPT
+        Thu, 2 May 2019 11:12:41 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:32990 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726203AbfEBPMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:11:42 -0400
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-        id 3485F461D3A; Thu,  2 May 2019 11:11:40 -0400 (EDT)
-Date:   Thu, 2 May 2019 11:11:40 -0400
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
- packets
-Message-ID: <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca>
-References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
- <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+        Thu, 2 May 2019 11:12:41 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1DF77C01F1;
+        Thu,  2 May 2019 15:12:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556809962; bh=nbxnvC5IsjfFaLonIOAbwjN79asF92ckV1yrBYSaHus=;
+        h=From:To:Cc:Subject:Date:From;
+        b=j1pLWpADLhsfNTWATom9WObhnk570vMXr7kPhUx+D390jR7MkcziBiqgQx7mSPLZj
+         dl5F0VQIBjCaMZG3EZPtDykg4PQ8P9/q3ps53NVvB13xOJKHw6dLXVO7TPoaOkYe5Q
+         7XtYLmsvMIW3Wm8l871apSCNuXZaPWQbJiJpKQZbdOSxIicrZpQlIVWRDDAb45yvB7
+         pnFHdOr8ns4MtCc2nfapPZTmQbt892/ggvK/9uC8GzU+vsOXcayuMgJBC88cfth8mw
+         7iGHzdhGdAEHrH31y2tM134FTIF300YpmR3HO9hwpqJ49ctTOHChZHTcnH6UL+sYyG
+         yI6JmLg+cEtQA==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id CB4D0A0256;
+        Thu,  2 May 2019 15:12:34 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id D9C103F475;
+        Thu,  2 May 2019 17:12:33 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
+Date:   Thu,  2 May 2019 17:12:32 +0200
+Message-Id: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 03:52:57PM -0700, Alexander Duyck wrote:
-> I'm not sure how RSS will do much for you here. Basically you only
-> have the source IP address as your only source of entropy when it
-> comes to RSS since the destination IP should always be the same if you
-> are performing a server role and terminating packets on the local
-> system and as far as the ports in your example you seem to only be
-> using 4500 for both the source and the destination.
+GMAC controller on HSDK boards supports 256 Hash Table size so we need to
+add the multicast filter bins property. This allows for the Hash filter
+to work properly using stmmac driver.
 
-I have thousands of IPsec clients connecting.  Simply treating them as
-normal UDP packets would work.  The IP address is different, and often
-the port too.
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+---
+ arch/arc/boot/dts/hsdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-> In your testing are you only looking at a point to point connection
-> between two systems, or do you have multiple systems accessing the
-> system you are testing? I ask as the only way this should do any
-> traffic spreading via RSS would be if the source IPs are different and
-> that would require multiple client systems accessing the server.
-
-I tried changing the client IP address and the RSS hash key.  It never
-changed to another queue.  Something is broken.
-
-> In the case of other encapsulation types over UDP, such as VXLAN, I
-> know that a hash value is stored in the UDP source port location
-> instead of the true source port number. This allows the RSS hashing to
-> occur on this extra information which would allow for a greater
-> diversity in hash results. Depending on how you are generating the ESP
-> encapsulation you might look at seeing if it would be possible to have
-> a hash on the inner data used as the UDP source port in the outgoing
-> packets. This would help to resolve this sort of issue.
-
-Well it works on every other network card except this one.  Every other
-intel card in the past we have used had no problem doing this right.
-
-You want all the packets for a given ipsec tunnel to go to the same queue.
-That is not a problem here.  What you don't want is every ipsec packet
-from everyone going to the same queue (always queue 0).  So simply
-treating them as UDP packets with a source and destination IP and port
-would work perfectly fine.  The X722 isn't doing that.  It is always
-assigning a hash value of 0 to these packets.
-
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 69bc1c9e8e50..b0f059377ab0 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -187,6 +187,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = <32>;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
 -- 
-Len Sorensen
+2.7.4
+
