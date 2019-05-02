@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9FEC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223B0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C08C2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F692085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810597;
-	bh=D/64HTEq5TJyB4qOEq58aXDKxa6owfviGOt17SJA/X4=;
+	s=default; t=1556810601;
+	bh=7txGcVyoUCHAkF+h3UiYC9pjFD6QBIsiwjOWqny7tVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=syf3ntynhlnFi2zW+fQdcjjVoUpLNh6svGADXAECFx4k76t8b6Y/LQb99V4KuAX6W
-	 QWbjaWfkP02MFxZIG0k7rmEzhB03JYNtRfybhrJw8NoRF3XCyBgnRwpuiNGwo4qlSx
-	 hDGi6RFuWG+uf3dzGP85PRZnsNeNj0Y2hUyElk44=
+	b=JDIc/uAYhgXnbRtr1z/MHnh2lbOWXM8pdCCKT2g+3uZWegqpParkHvLhWIKxUNDeG
+	 cAIodYY0s+FLGcDHy80UKfKz4Twv60yIQNxSMX/B+Tcvx44DDiCf0QuDI9GxDneEu7
+	 JwSNZ7jsYXjIebHp/7Q1dITRFYcq7vnUEpwxupoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfEBPXQ (ORCPT
+        id S1727001AbfEBPXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38838 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:23:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbfEBPXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:23:13 -0400
+        id S1726978AbfEBPXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:23:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79B6220449;
-        Thu,  2 May 2019 15:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DBA320675;
+        Thu,  2 May 2019 15:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810593;
-        bh=D/64HTEq5TJyB4qOEq58aXDKxa6owfviGOt17SJA/X4=;
+        s=default; t=1556810595;
+        bh=7txGcVyoUCHAkF+h3UiYC9pjFD6QBIsiwjOWqny7tVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cp+GNhJlBoeC5tKMc7BBD8/rsiiTKvFmX8eNQHP39acMmY49SmoLEmwO5MXY9/KUS
-         SUEWFb7r2maz4yC7DqqyUDunIxcl9WUaHyHOswZb+5Si6G0s7NGwOE1GmoWrWgzxjM
-         yBUfwbmW15JryKn4bujJ+UqBC+632mCfuJXzIF4k=
+        b=woPseF32U/30lDG+lETlmOz26/dFi5o1dVCLMbAHpGpxzyp6S9jjDOTe5yhl7hTNs
+         FVGwyyB9jd/VnqVm/ELOxXoQALhqRAUV1/NhGNVTV9G9X+XIItKR6nZU8lVBDWXtQb
+         MR7n/ThCYzs9JPrxmS3t4LG5GTD6DByf6T4vv7wU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 18/32] net: ks8851: Set initial carrier state to down
-Date:   Thu,  2 May 2019 17:21:04 +0200
-Message-Id: <20190502143320.348282258@linuxfoundation.org>
+Subject: [PATCH 4.9 19/32] staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+Date:   Thu,  2 May 2019 17:21:05 +0200
+Message-Id: <20190502143320.447183085@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -63,52 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9624bafa5f6418b9ca5b3f66d1f6a6a2e8bf6d4c ]
+[ Upstream commit 22c971db7dd4b0ad8dd88e99c407f7a1f4231a2e ]
 
-The ks8851 chip's initial carrier state is down. A Link Change Interrupt
-is signaled once interrupts are enabled if the carrier is up.
+Colin King reported a bug in read_bbreg_hdl():
 
-The ks8851 driver has it backwards by assuming that the initial carrier
-state is up. The state is therefore misrepresented if the interface is
-opened with no cable attached. Fix it.
+	memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
 
-The Link Change interrupt is sometimes not signaled unless the P1MBSR
-register (which contains the Link Status bit) is read on ->ndo_open().
-This might be a hardware erratum. Read the register by calling
-mii_check_link(), which has the desirable side effect of setting the
-carrier state to down if the cable was detached while the interface was
-closed.
+The problem is that "val" is uninitialized.
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This code is obviously not useful, but so far as I can tell
+"pcmd->cmdcode" is never GEN_CMD_CODE(_Read_BBREG) so it's not harmful
+either.  For now the easiest fix is to just call r8712_free_cmd_obj()
+and return.
+
+Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/rtl8712/rtl8712_cmd.c | 10 +---------
+ drivers/staging/rtl8712/rtl8712_cmd.h |  2 +-
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index ff6cab4f6343..7377dca6eb57 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -870,6 +870,7 @@ static int ks8851_net_open(struct net_device *dev)
- 	netif_dbg(ks, ifup, ks->netdev, "network device up\n");
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.c b/drivers/staging/rtl8712/rtl8712_cmd.c
+index 9f61583af150..41b667c8385c 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.c
++++ b/drivers/staging/rtl8712/rtl8712_cmd.c
+@@ -158,17 +158,9 @@ static u8 write_macreg_hdl(struct _adapter *padapter, u8 *pbuf)
  
- 	mutex_unlock(&ks->lock);
-+	mii_check_link(&ks->mii);
- 	return 0;
+ static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
+ {
+-	u32 val;
+-	void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj	*pcmd);
+ 	struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
+ 
+-	if (pcmd->rsp && pcmd->rspsz > 0)
+-		memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+-	pcmd_callback = cmd_callback[pcmd->cmdcode].callback;
+-	if (!pcmd_callback)
+-		r8712_free_cmd_obj(pcmd);
+-	else
+-		pcmd_callback(padapter, pcmd);
++	r8712_free_cmd_obj(pcmd);
+ 	return H2C_SUCCESS;
  }
  
-@@ -1527,6 +1528,7 @@ static int ks8851_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, ks);
- 
-+	netif_carrier_off(ks->netdev);
- 	ndev->if_port = IF_PORT_100BASET;
- 	ndev->netdev_ops = &ks8851_netdev_ops;
- 	ndev->irq = spi->irq;
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.h b/drivers/staging/rtl8712/rtl8712_cmd.h
+index 67e9e910aef9..d10a59d4a550 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.h
++++ b/drivers/staging/rtl8712/rtl8712_cmd.h
+@@ -152,7 +152,7 @@ enum rtl8712_h2c_cmd {
+ static struct _cmd_callback	cmd_callback[] = {
+ 	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
+ 	{GEN_CMD_CODE(_Write_MACREG), NULL},
+-	{GEN_CMD_CODE(_Read_BBREG), &r8712_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_Read_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Write_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Read_RFREG), &r8712_getbbrfreg_cmdrsp_callback},
+ 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
 -- 
 2.19.1
 
