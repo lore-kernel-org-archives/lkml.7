@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB70C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF080C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE6420449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90730214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810789;
-	bh=fCTKQbpDjbLFW+41dr2DCnqUwGn0k4TigEQXyKRoi7w=;
+	s=default; t=1556810793;
+	bh=ffm1ZePdkczTXlneRZz7fsIlj9QJKLtDsTaRRetpzSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ptGrcH0brMW9qXTEAeblCBxdySOtIG6xu+zhNu8jig5zFhwV8wWLgtuGB7NRKKTH4
-	 npm7yIMi7+YTZeu0/ijmgSJDgSr4aMbNHHRHIMoRtMuhfui37LkiaFwn5bUlWZSRD8
-	 c6vSGeoL+tKsLUT++jdlgYIywzf27cxwa3j0tuMs=
+	b=tAbZZrQkhGqKuwuKmxBjXGOlxiiTyuHoHZDlytL6nGRKC5VF1ScbjnG+hMWaIHQNW
+	 iFbX4QJpS6tOPxDQ1ucD4w8LHzRn5b5BMpxyP12OuZjugMLeF240yrS/acz56vj9wn
+	 TGGHIgveq9DoquMSU2AzDQyBrZsat6I2rK8UOA4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfEBP02 (ORCPT
+        id S1727753AbfEBP0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:26:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43062 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfEBP0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:26:24 -0400
+        id S1726998AbfEBP01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:26:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A1320449;
-        Thu,  2 May 2019 15:26:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C760120B7C;
+        Thu,  2 May 2019 15:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810783;
-        bh=fCTKQbpDjbLFW+41dr2DCnqUwGn0k4TigEQXyKRoi7w=;
+        s=default; t=1556810786;
+        bh=ffm1ZePdkczTXlneRZz7fsIlj9QJKLtDsTaRRetpzSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GxZtfOYu1fNJKhfal256Fta/bWw9kM6XG1+df3hST2anl+MedqxeSwDsC4ELivtGo
-         3xNmw65WmnTlW6u3qf/30i/QT3an1FkZSct3ac+qaj5ZnpOusYR3mkSekzS4Bx7WfP
-         Qo7Gaw1Padcozu/AfQyLB0sJClLm7G51jF2NNKPw=
+        b=D5RQLC5ccRtMOYkPr9gKwIyvmmwBREsQ4XWF1a3Bi7IE/EFUO8+paIPp8hsTjU+06
+         MslcVyjCqiQ0UXosJ2480TAN22zxiu7jVh2A/jXG1c3aIWgUA9TLLylcZz/mCRIUJB
+         hwyQ/X8ZYKZbyMnecJ2IoUjWDCq0e/oLicGo900Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Guido Kiener <guido.kiener@rohde-schwarz.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 28/72] usb: gadget: net2280: Fix overrun of OUT messages
-Date:   Thu,  2 May 2019 17:20:50 +0200
-Message-Id: <20190502143335.718228247@linuxfoundation.org>
+Subject: [PATCH 4.19 29/72] usb: gadget: net2280: Fix net2280_dequeue()
+Date:   Thu,  2 May 2019 17:20:51 +0200
+Message-Id: <20190502143335.814488479@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -61,60 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9d6a54c1430647355a5e23434881b2ca3d192b48 ]
+[ Upstream commit f1d3fba17cd4eeea20397f1324b7b9c69a6a935c ]
 
-The OUT endpoint normally blocks (NAK) subsequent packets when a
-short packet was received and returns an incomplete queue entry to
-the gadget driver. Thereby the gadget driver can detect a short packet
-when reading queue entries with a length that is not equal to a
-multiple of packet size.
-
-The start_queue() function enables receiving OUT packets regardless of
-the content of the OUT FIFO. This results in a race: With the current
-code, it's possible that the "!ep->is_in && (readl(&ep->regs->ep_stat)
-& BIT(NAK_OUT_PACKETS))" test in start_dma() will fail, then a short
-packet will be received, and then start_queue() will call
-stop_out_naking(). That's what we don't want (OUT naking gets turned
-off while there is data in the FIFO) because then the next driver
-request might receive a mixture of old and new packets.
-
-With the patch, this race can't occur because the FIFO's state is
-tested after we know that OUT naking is already turned on, and OUT
-naking is stopped only when both of the conditions are met.  This
-ensures that all received data is delivered to the gadget driver,
-which can detect a short packet now before new packets are appended
-to the last short packet.
+When a request must be dequeued with net2280_dequeue() e.g. due
+to a device clear action and the same request is finished by the
+function scan_dma_completions() then the function net2280_dequeue()
+does not find the request in the following search loop and
+returns the error -EINVAL without restoring the status ep->stopped.
+Thus the endpoint keeps blocked and does not receive any data
+anymore.
+This fix restores the status and does not issue an error message.
 
 Acked-by: Alan Stern <stern@rowland.harvard.edu>
 Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2280.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/usb/gadget/udc/net2280.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index b02ab2a8d927..c57046b1da0e 100644
+index c57046b1da0e..ee872cad5270 100644
 --- a/drivers/usb/gadget/udc/net2280.c
 +++ b/drivers/usb/gadget/udc/net2280.c
-@@ -866,9 +866,6 @@ static void start_queue(struct net2280_ep *ep, u32 dmactl, u32 td_dma)
- 	(void) readl(&ep->dev->pci->pcimstctl);
- 
- 	writel(BIT(DMA_START), &dma->dmastat);
--
--	if (!ep->is_in)
--		stop_out_naking(ep);
- }
- 
- static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
-@@ -907,6 +904,7 @@ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
- 			writel(BIT(DMA_START), &dma->dmastat);
- 			return;
- 		}
-+		stop_out_naking(ep);
+@@ -1273,9 +1273,9 @@ static int net2280_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+ 			break;
+ 	}
+ 	if (&req->req != _req) {
++		ep->stopped = stopped;
+ 		spin_unlock_irqrestore(&ep->dev->lock, flags);
+-		dev_err(&ep->dev->pdev->dev, "%s: Request mismatch\n",
+-								__func__);
++		ep_dbg(ep->dev, "%s: Request mismatch\n", __func__);
+ 		return -EINVAL;
  	}
  
- 	tmp = dmactl_default;
 -- 
 2.19.1
 
