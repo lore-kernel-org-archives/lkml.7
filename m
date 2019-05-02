@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EFBC46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31304C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E1A21734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C8E21670
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811108;
-	bh=zn5jH/OC4aWEgOArc6P+D5g7YekNHyRe53EHLABXjwg=;
+	s=default; t=1556811112;
+	bh=oa14tgMjU4N5xaPgdT6hJvgc7xxgECrRjtP6VdmlO+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=plC4hldmVozYBXKGleoTQP+90e0SKAy7R1gya2D6Kj0qBWXruYAluYMp4Ircoe3sZ
-	 yxLzSCqw/OuiJvSvMorahbqZ/4pAMZ/pZveCNox0aGS8bNx0nnQVmkM8I1tMdyG9lK
-	 zAkG5jSY+Iy5q4C9hVRxij9NIjqKv2kBROc2Mvoc=
+	b=oCftqvaSVDGBEHTZ2/Q5vDKoXDh7Vp2xZOCSeq57zyYRMdotbhMbxwXKzCD9pW//P
+	 bOnw7zBfkW1e3nHsYwauNTzA6evdx6LxBqnGEkOPKBrLtFo7rmS+J2Gkp0jAPmPsOd
+	 +QP4GAyuZc1dkPAwtTgvfxALvV5+zavdAdHcMjw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbfEBPbr (ORCPT
+        id S1729060AbfEBPbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:31:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50964 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:31:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbfEBPbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:31:44 -0400
+        id S1729043AbfEBPbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:31:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3D7C20C01;
-        Thu,  2 May 2019 15:31:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AAB8216FD;
+        Thu,  2 May 2019 15:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811103;
-        bh=zn5jH/OC4aWEgOArc6P+D5g7YekNHyRe53EHLABXjwg=;
+        s=default; t=1556811106;
+        bh=oa14tgMjU4N5xaPgdT6hJvgc7xxgECrRjtP6VdmlO+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ONTTpZqyK7UUzlzcu9oEqV0r8aaDqrS9tAHhbrdrv+uGhEaYuNw8TpsM6rmoGih/w
-         +bVnU+oH3iB2IL1zDh0hBYzgySzupHbwr8HLUbb36M5Vg/Ip2jFzXO8i7E1BpUJb5w
-         zHOIxRVv9qC3GtBjqD/AF1aYLy2AJZUja+8aI5ps=
+        b=q5xVxVhyC7aLXrkYI0tiCBn1btQTyqiiOPDr+CSu6JwimJmoaKoEJKINL/Y3a/ocz
+         AE+C/Mz4dwFXATfADdJkIcv98TAuS7/kRWze8a59HVuehZ1lC8mAmDp4+MTwOpWEwZ
+         3A4Nhv0oeMI/cuP+2ItZ4R0Hmng95rerK5yCAbYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, raymond pang <raymondpangxd@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 068/101] scsi: qla4xxx: fix a potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:21:10 +0200
-Message-Id: <20190502143344.371305501@linuxfoundation.org>
+Subject: [PATCH 5.0 077/101] libata: fix using DMA buffers on stack
+Date:   Thu,  2 May 2019 17:21:19 +0200
+Message-Id: <20190502143345.035305841@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -62,33 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fba1bdd2a9a93f3e2181ec1936a3c2f6b37e7ed6 ]
+[ Upstream commit dd08a8d9a66de4b54575c294a92630299f7e0fe7 ]
 
-In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid NULL
-pointer dereference.
+When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
+a stack virtual address. Stack DMA buffers must be avoided.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: raymond pang <raymondpangxd@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index a77bfb224248..80289c885c07 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -3203,6 +3203,8 @@ static int qla4xxx_conn_bind(struct iscsi_cls_session *cls_session,
- 	if (iscsi_conn_bind(cls_session, cls_conn, is_leading))
- 		return -EINVAL;
- 	ep = iscsi_lookup_endpoint(transport_fd);
-+	if (!ep)
-+		return -EINVAL;
- 	conn = cls_conn->dd_data;
- 	qla_conn = conn->dd_data;
- 	qla_conn->qla_ep = ep->dd_data;
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index b3ed8f9953a8..173e6f2dd9af 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -52,38 +52,52 @@ static int eject_tray(struct ata_device *dev)
+ /* Per the spec, only slot type and drawer type ODD can be supported */
+ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+ {
+-	char buf[16];
++	char *buf;
+ 	unsigned int ret;
+-	struct rm_feature_desc *desc = (void *)(buf + 8);
++	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+ 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
+-			0, sizeof(buf),
++			0, 16,
+ 			0, 0, 0,
+ 	};
+ 
++	buf = kzalloc(16, GFP_KERNEL);
++	if (!buf)
++		return ODD_MECH_TYPE_UNSUPPORTED;
++	desc = (void *)(buf + 8);
++
+ 	ata_tf_init(dev, &tf);
+ 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
+ 	tf.command = ATA_CMD_PACKET;
+ 	tf.protocol = ATAPI_PROT_PIO;
+-	tf.lbam = sizeof(buf);
++	tf.lbam = 16;
+ 
+ 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
+-				buf, sizeof(buf), 0);
+-	if (ret)
++				buf, 16, 0);
++	if (ret) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ 
+-	if (be16_to_cpu(desc->feature_code) != 3)
++	if (be16_to_cpu(desc->feature_code) != 3) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ 
+-	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
++	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_SLOT;
+-	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
++	} else if (desc->mech_type == 1 && desc->load == 0 &&
++		   desc->eject == 1) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_DRAWER;
+-	else
++	} else {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ }
+ 
+ /* Test if ODD is zero power ready by sense code */
 -- 
 2.19.1
 
