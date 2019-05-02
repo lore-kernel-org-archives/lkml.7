@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AA9C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE9AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B976A20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F41520449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811223;
-	bh=BdzpmYzAWExyfYKpHVJvoGGI6FCQygD2FkuFSOg7x7s=;
+	s=default; t=1556811243;
+	bh=nhABnP/eZJca2ySwVW8EZE45ezHpT5DkPiUpZAu3HQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mDXn+KqaaG9nJAj/cnxHEzjg0x9MVIhQ1mPdBqcIthL18u8e8zt1BCOJJI0HxBOCP
-	 zEsXdGdtmuSSR32i/jh1ajkzLBwcA1S4zfyoIhHd6RwSMzDkT0WqUCEZYOTZIeb6ow
-	 FjC84QMcPETtYbSNRh8As6w1M+P84/9NLqisa6rE=
+	b=IBb/JBMNx694MO8EhAZpVpWiRZyz3xN5FzvjcTGx9PGl+GvPw8U3Jj/fXzDueFoC/
+	 NDjBgByFRVTRU9s0Snso12vmhtr1/2chqhBRtvS8mDmo1iSR9t2maF0+ukj8AnIBYM
+	 4rZr54Yp1YTbz5B9UbtaB1Zlx6ovrflxWoleBuRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfEBPct (ORCPT
+        id S1729196AbfEBPca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:32:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:32:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729251AbfEBPcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:32:45 -0400
+        id S1728705AbfEBPc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C882204FD;
-        Thu,  2 May 2019 15:32:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D90CC204FD;
+        Thu,  2 May 2019 15:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811165;
-        bh=BdzpmYzAWExyfYKpHVJvoGGI6FCQygD2FkuFSOg7x7s=;
+        s=default; t=1556811147;
+        bh=nhABnP/eZJca2ySwVW8EZE45ezHpT5DkPiUpZAu3HQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RNNoy4AbJfQ4THE8H+2/ztV4CIYP2gzBJKYDma612omkNs8drG2UEXO2pqv37MAL7
-         dECkp2WEOZ/xstvY+4t0orzMAZd7XuYOEerzHm3pSQGS7z3sxdXjopCs2ZrU98UFe0
-         ycRp7tp2N+mfGmoFAr9m8tol7wNzBTYKJxkcqWOg=
+        b=VQD8NRI38pGVS1NBVgu/F6cmamzqfuiWAsr7HTDdhoOQC0W6aVVww9s7/hT+LfiMt
+         K1NIUXTQK1m5tRhkB9ki/2FqmCUZeUgPN9Cp6XkdHPIbwtyYAVN2nOJiXlgeY+WCSK
+         OtU5Xg7jw4lkErOTJ4uDAqwQdBCSyIAcuhg4ACwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Yi Zhang <yi.zhang@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 098/101] kasan: fix variable tag set but not used warning
-Date:   Thu,  2 May 2019 17:21:40 +0200
-Message-Id: <20190502143346.401658504@linuxfoundation.org>
+Subject: [PATCH 5.0 092/101] nvmet: fix building bvec from sg list
+Date:   Thu,  2 May 2019 17:21:34 +0200
+Message-Id: <20190502143346.030401859@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -65,45 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c412a769d2452161e97f163c4c4f31efc6626f06 ]
+[ Upstream commit 02db99548d3608a625cf481cff2bb7b626829b3f ]
 
-set_tag() compiles away when CONFIG_KASAN_SW_TAGS=n, so make
-arch_kasan_set_tag() a static inline function to fix warnings below.
+There are two mistakes for building bvec from sg list for file
+backed ns:
 
-  mm/kasan/common.c: In function '__kasan_kmalloc':
-  mm/kasan/common.c:475:5: warning: variable 'tag' set but not used [-Wunused-but-set-variable]
-    u8 tag;
-       ^~~
+- use request data length to compute number of io vector, this way
+doesn't consider sg->offset, and the result may be smaller than required
+io vectors
 
-Link: http://lkml.kernel.org/r/20190307185244.54648-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+- bvec->bv_len isn't capped by sg->length
+
+This patch fixes this issue by building bvec from sg directly, given
+the whole IO stack is ready for multi-page bvec.
+
+Reported-by: Yi Zhang <yi.zhang@redhat.com>
+Fixes: 3a85a5de29ea ("nvme-loop: add a NVMe loopback host driver")
+
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- mm/kasan/kasan.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/nvme/target/io-cmd-file.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-index ea51b2d898ec..c980ce43e3ba 100644
---- a/mm/kasan/kasan.h
-+++ b/mm/kasan/kasan.h
-@@ -164,7 +164,10 @@ static inline u8 random_tag(void)
- #endif
+diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
+index 517522305e5c..9a0fa3943ca7 100644
+--- a/drivers/nvme/target/io-cmd-file.c
++++ b/drivers/nvme/target/io-cmd-file.c
+@@ -75,11 +75,11 @@ int nvmet_file_ns_enable(struct nvmet_ns *ns)
+ 	return ret;
+ }
  
- #ifndef arch_kasan_set_tag
--#define arch_kasan_set_tag(addr, tag)	((void *)(addr))
-+static inline const void *arch_kasan_set_tag(const void *addr, u8 tag)
-+{
-+	return addr;
-+}
- #endif
- #ifndef arch_kasan_reset_tag
- #define arch_kasan_reset_tag(addr)	((void *)(addr))
+-static void nvmet_file_init_bvec(struct bio_vec *bv, struct sg_page_iter *iter)
++static void nvmet_file_init_bvec(struct bio_vec *bv, struct scatterlist *sg)
+ {
+-	bv->bv_page = sg_page_iter_page(iter);
+-	bv->bv_offset = iter->sg->offset;
+-	bv->bv_len = PAGE_SIZE - iter->sg->offset;
++	bv->bv_page = sg_page(sg);
++	bv->bv_offset = sg->offset;
++	bv->bv_len = sg->length;
+ }
+ 
+ static ssize_t nvmet_file_submit_bvec(struct nvmet_req *req, loff_t pos,
+@@ -128,14 +128,14 @@ static void nvmet_file_io_done(struct kiocb *iocb, long ret, long ret2)
+ 
+ static bool nvmet_file_execute_io(struct nvmet_req *req, int ki_flags)
+ {
+-	ssize_t nr_bvec = DIV_ROUND_UP(req->data_len, PAGE_SIZE);
+-	struct sg_page_iter sg_pg_iter;
++	ssize_t nr_bvec = req->sg_cnt;
+ 	unsigned long bv_cnt = 0;
+ 	bool is_sync = false;
+ 	size_t len = 0, total_len = 0;
+ 	ssize_t ret = 0;
+ 	loff_t pos;
+-
++	int i;
++	struct scatterlist *sg;
+ 
+ 	if (req->f.mpool_alloc && nr_bvec > NVMET_MAX_MPOOL_BVEC)
+ 		is_sync = true;
+@@ -147,8 +147,8 @@ static bool nvmet_file_execute_io(struct nvmet_req *req, int ki_flags)
+ 	}
+ 
+ 	memset(&req->f.iocb, 0, sizeof(struct kiocb));
+-	for_each_sg_page(req->sg, &sg_pg_iter, req->sg_cnt, 0) {
+-		nvmet_file_init_bvec(&req->f.bvec[bv_cnt], &sg_pg_iter);
++	for_each_sg(req->sg, sg, req->sg_cnt, i) {
++		nvmet_file_init_bvec(&req->f.bvec[bv_cnt], sg);
+ 		len += req->f.bvec[bv_cnt].bv_len;
+ 		total_len += req->f.bvec[bv_cnt].bv_len;
+ 		bv_cnt++;
+@@ -225,7 +225,7 @@ static void nvmet_file_submit_buffered_io(struct nvmet_req *req)
+ 
+ static void nvmet_file_execute_rw(struct nvmet_req *req)
+ {
+-	ssize_t nr_bvec = DIV_ROUND_UP(req->data_len, PAGE_SIZE);
++	ssize_t nr_bvec = req->sg_cnt;
+ 
+ 	if (!req->sg_cnt || !nr_bvec) {
+ 		nvmet_req_complete(req, 0);
 -- 
 2.19.1
 
