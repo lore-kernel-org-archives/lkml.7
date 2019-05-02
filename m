@@ -2,137 +2,81 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C2CC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917EAC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7376A20651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542F120652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUcPnxxM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k9zdyIbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfEBRev (ORCPT
+        id S1726304AbfEBRhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:34:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45634 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfEBRet (ORCPT
+        Thu, 2 May 2019 13:37:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41534 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfEBRhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:34:49 -0400
-Received: by mail-io1-f68.google.com with SMTP id e8so2876926ioe.12;
-        Thu, 02 May 2019 10:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=2CcPxb2C1RD8skQYG5/aPu30Ko1ajsjTfrv46WpisqI=;
-        b=pUcPnxxMpboqsl0DnnCKyfxXhc+Ju34Ex6IxNulCB2V8gIBk4Z6WikMHKUI6RbMw2/
-         +B1uaIq/My7DQE9yln36akCU7M78apGBz5vyUXyLvitYcy52iZtpXXhA4lXBDItXclm/
-         h4px6LFiGmvEeYlISVpctg8/UXzDdp0N5UAEU9asQxb2KnrUPnhjFMmg83kf2Of3/V2/
-         pqlsnFiRagqIMBAT5/7i/THqxLpp9c3/eM8u2B0MfmOnxr4J13gwaDvDWoqNF8p7OCGs
-         AC3suog2DW8SGAskQEdtIkA6bRYutD706Ml8wl7H8REhbbHXQb/QFV1kf4UmlmH+fX81
-         4p/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=2CcPxb2C1RD8skQYG5/aPu30Ko1ajsjTfrv46WpisqI=;
-        b=ShsHcxtjcdio1q45Fvonv3vzCMYgZVN7UUK+uogAbzoJhkBsZ+pnXucSFKOFaGi6ub
-         lTQeO+EGwsm4Bd08LHb+yzOw49fe16LNY7aaTskPjIPm3WKYZ8x5wp+48E1VJr7lxtsa
-         sULzDbvbpwDAQXwZGP2PDpcifrdC+SZj6WqUVeU3RWvJvIuyHBWl0SbzOYEQLqG8YlE/
-         9LdQo6Dbzt2NGrW5n8Jx3UyCOq6gB4gRckv+8ske1QYu+859EZuwjO3U7+cwg6wPWX86
-         0bffjwvCnphpLjtIZa1wQoLpC/AIQpk1lR6LBHx3KuhWl3ALBe81v9AaSyoER9ByShyq
-         7+Iw==
-X-Gm-Message-State: APjAAAVtxsQBMdep8lByzayPQEBQwanoTMAVhqNOKAetToh+Czb9Qeqo
-        Hn5MjYswECXLuA93lVWyWvfqz4GiRUQ=
-X-Google-Smtp-Source: APXvYqx6SrP8/++xoGglIQuLcit+fmbzIuZ56KH2b+ep4v2HFjsR6MFF3Afq993aQcqeNSAYBHA60w==
-X-Received: by 2002:a05:6602:55:: with SMTP id z21mr3458329ioz.101.1556818488067;
-        Thu, 02 May 2019 10:34:48 -0700 (PDT)
-Received: from ubu (2600-6c48-437f-c81d-b1d9-7ff0-b1de-5362.dhcp6.chtrptr.net. [2600:6c48:437f:c81d:b1d9:7ff0:b1de:5362])
-        by smtp.gmail.com with ESMTPSA id l1sm16146729iop.67.2019.05.02.10.34.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 10:34:46 -0700 (PDT)
-From:   Kimberly Brown <kimbrownkd@gmail.com>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: sysfs: Replace default_attrs in ktypes with groups
-Date:   Thu,  2 May 2019 13:34:45 -0400
-Message-Id: <20190502173445.5308-1-kimbrownkd@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 2 May 2019 13:37:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o99cW773qcjEmGIZO5ggLbo3P9UD9jURPgj3nCcr96Y=; b=k9zdyIbMVJi44PJ9i/cPXeqSc
+        nw4sDkixiRpwwPNe9hoA+IWjtIAU27mZIRYnltuOe8kSK8yoAUZJZyjnoKowiK/ANatfxadAVio1S
+        +anvLam+433Dzz7jMdOxt4nzbFg9fjKG5IWPPtXj53aGME+ZZwbenfnBuhoEVuIawYMsYhsb20DSU
+        PyeZ4XG09X76b1nPUXkFBhzNnB8Tx2puxVKpjXwOjHGmat2y3Tho3MtVsvrMJiF9MgBrWL80QG+PE
+        9D87Wqais8PZ+j3O7zqaxRiVXwjj6fEZPDpP7pkwxJXnQR1GmzlUhxi2Dfe4ExXNJpI976HPDmnyb
+        EeA7k9vHQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMFe1-0004D2-0M; Thu, 02 May 2019 17:37:17 +0000
+Date:   Thu, 2 May 2019 10:37:16 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: Alloc refcount increments to fail
+Message-ID: <20190502173716.GD18948@bombadil.infradead.org>
+References: <20190502152621.GB18948@bombadil.infradead.org>
+ <20190502154644.GV23075@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502154644.GV23075@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kobj_type default_attrs field is being replaced by the
-default_groups field. Replace the default_attrs fields in
-btrfs_raid_ktype and space_info_ktype with default_groups.
+On Thu, May 02, 2019 at 04:46:44PM +0100, Al Viro wrote:
+> On Thu, May 02, 2019 at 08:26:21AM -0700, Matthew Wilcox wrote:
+> 
+> > +/**
+> > + * refcount_try_inc - Increment a refcount if it's below INT_MAX
+> > + * @r: the refcount to increment
+> > + *
+> > + * Avoid the counter saturating by declining to increment the counter
+> > + * if it is more than halfway to saturation.
+> > + */
+> > +static inline __must_check bool refcount_try_inc(refcount_t *r)
+> > +{
+> > +	if (refcount_read(r) < 0)
+> > +		return false;
+> > +	refcount_inc(r);
+> > +	return true;
+> > +}
+> 
+> So two of those in parallel with have zero protection, won't they?
 
-Change "raid_attributes" to "raid_attrs", and use the ATTRIBUTE_GROUPS
-macro to create raid_groups and space_info_groups.
-
-Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
----
-
-This patch depends on a patch in the driver-core tree: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=aa30f47cf666111f6bbfd15f290a27e8a7b9d854
-
-GregKH can take this patch through the driver-core tree, or this patch
-can wait a release cycle and go through the subsystem's tree, whichever
-the subsystem maintainer is more comfortable with.
-
-
- fs/btrfs/sysfs.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-index 5a5930e3d32b..ae0ad84a11aa 100644
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -303,11 +303,12 @@ static ssize_t raid_bytes_show(struct kobject *kobj,
- 	return snprintf(buf, PAGE_SIZE, "%llu\n", val);
- }
- 
--static struct attribute *raid_attributes[] = {
-+static struct attribute *raid_attrs[] = {
- 	BTRFS_ATTR_PTR(raid, total_bytes),
- 	BTRFS_ATTR_PTR(raid, used_bytes),
- 	NULL
- };
-+ATTRIBUTE_GROUPS(raid);
- 
- static void release_raid_kobj(struct kobject *kobj)
- {
-@@ -317,7 +318,7 @@ static void release_raid_kobj(struct kobject *kobj)
- struct kobj_type btrfs_raid_ktype = {
- 	.sysfs_ops = &kobj_sysfs_ops,
- 	.release = release_raid_kobj,
--	.default_attrs = raid_attributes,
-+	.default_groups = raid_groups,
- };
- 
- #define SPACE_INFO_ATTR(field)						\
-@@ -364,6 +365,7 @@ static struct attribute *space_info_attrs[] = {
- 	BTRFS_ATTR_PTR(space_info, total_bytes_pinned),
- 	NULL,
- };
-+ATTRIBUTE_GROUPS(space_info);
- 
- static void space_info_release(struct kobject *kobj)
- {
-@@ -375,7 +377,7 @@ static void space_info_release(struct kobject *kobj)
- struct kobj_type space_info_ktype = {
- 	.sysfs_ops = &kobj_sysfs_ops,
- 	.release = space_info_release,
--	.default_attrs = space_info_attrs,
-+	.default_groups = space_info_groups,
- };
- 
- static const struct attribute *allocation_attrs[] = {
--- 
-2.17.1
-
+We check that we're only halfway to saturation; sure we might go a
+few dozen steps from INT_MAX towards UINT_MAX, but I have a hard time
+believing that we'll get preempted for long enough that we'd get all
+the way to UINT_MAX by unchecked increments on other CPUs/threads.
