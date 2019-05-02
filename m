@@ -3,211 +3,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54225C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EE2C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A662075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39079208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfEBKpC (ORCPT
+        id S1726400AbfEBKpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 06:45:02 -0400
-Received: from foss.arm.com ([217.140.101.70]:43664 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfEBKpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 06:45:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5846CA78;
-        Thu,  2 May 2019 03:45:01 -0700 (PDT)
-Received: from [10.1.198.115] (e108754-lin.cambridge.arm.com [10.1.198.115])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EFFD33F719;
-        Thu,  2 May 2019 03:44:58 -0700 (PDT)
-Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, rui.zhang@intel.com
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <8eed9601-8bbb-9f62-f786-f08bd4a72907@arm.com>
- <8371be92-635b-1979-b1cd-6985ecb4811f@arm.com> <5CC87362.6080307@linaro.org>
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-Message-ID: <632321a8-d7f0-49a6-9577-95fac4c87b1c@arm.com>
-Date:   Thu, 2 May 2019 11:44:57 +0100
+        Thu, 2 May 2019 06:45:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38788 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726353AbfEBKpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 06:45:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4ABD8AEF6;
+        Thu,  2 May 2019 10:45:06 +0000 (UTC)
+Subject: Re: [PATCH] clk: actions: Use the correct style for SPDX License
+ Identifier
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Joe Perches <joe@perches.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+References: <20190501070707.GA5619@nishad>
+ <057d9b37-7475-1902-bce7-6d519c2e0fdf@suse.de>
+ <20190502070746.GA16247@kroah.com>
+ <315de620-b638-aea4-d8d2-e00f5a493625@suse.de>
+ <20190502103848.GA17256@kroah.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Openpgp: preference=signencrypt
+Organization: SUSE Linux GmbH
+Message-ID: <f52484fc-b35b-f92a-9c7b-ce53fd731ab5@suse.de>
+Date:   Thu, 2 May 2019 12:45:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <5CC87362.6080307@linaro.org>
+In-Reply-To: <20190502103848.GA17256@kroah.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thara,
-
->> After cleaning it up I'm getting results around 5.6s for this test case.
->> I've run 50 iterations for each test, with 90s cool down period between
->> them.
->>
->>
->>  			Hackbench: (1 group , 30000 loops, 50 runs)
->>  				Result            Standard Deviation
->>  				(Time Secs)        (% of mean)
->>
->>  No Thermal Pressure(step_wise)  5.644                   7.760%
->>  No Thermal Pressure(IPA)        5.677                   9.062%
->>
->>  Thermal Pressure Averaging
->>  non-PELT Algo. Decay : 250 ms   5.627                   5.593%
->>  (step-wise, bigs capped only)
->>
->>  Thermal Pressure Averaging
->>  non-PELT Algo. Decay : 250 ms   5.690                   3.738%
->>  (IPA)
->>
->> All of the results above are within 1.1% difference with a
->> significantly higher standard deviation.
-> 
-> Hi Ionela,
-> 
-> I have replied to your original emails without seeing this one. So,
-> interesting results. I see IPA is worse off (Slightly) than step wise in
-> both thermal pressure and non-thermal pressure scenarios. Did you try
-> 500 ms decay period by any chance?
->
-
-I don't think we can draw a conclusion on that given how close the
-results are and given the high standard deviation. Probably if I run
-them again the tables will be turned :).
-
-I did not run experiments with different decay periods yet, as I want to
-have first a list  of experiments that are relevant for thermal pressure,
-that can help later with refining the solution, which can mean either
-deciding on a decay period or possibly going with the instantaneous
-thermal pressure. Please find more details below.
-
->>
->> I wanted to run this initially to validate my setup and understand
->> if there is any conclusion we can draw from a test like this, that
->> floods the CPUs with tasks. Looking over the traces, the tasks are
->> running almost back to back, trying to use all available resources,
->> on all the CPUs.
->> Therefore, I doubt that there could be better decisions that could be
->> made, knowing about thermal pressure, for this usecase.
->>
->> I'll try next some capacity inversion usecase and post the results when
->> they are ready.
-> 
-
-I've started looking into this, starting from the most obvious case of
-capacity inversion: using the user-space thermal governor and capping
-the bigs to their lowest OPP. The LITTLEs are left uncapped.
-
-This was not enough on the Hikey960 as the bigs at their lowest OPP were
-in the capacity margin of the LITTLEs at their highest OPP. That meant
-that LITTLEs would not pull tasks from the bigs, even if they had higher
-capacity, as the capacity was in within the 25% margin. So another
-change I've made was to set the capacity margin in fair.c to 10%.
-
-I've run both sysbench and dhrystone. I'll put here only the results for
-sysbench, interleaved, with and without considering thermal pressure (TP
-and !TP).
-As before, the TP solution uses averaging with a 250ms decay period.
-
-               			Sysbench: (500000 req, 4 runs)
-  				Result            Standard Deviation
-  				(Time Secs)        (% of mean)
-
-  !TP/4 threads                   146.46          0.063%
-  TP/4 threads                    136.36          0.002%
-
-  !TP/5 threads                   115.38          0.028%
-  TP/5 threads                    110.62          0.006%
-
-  !TP/6 threads                   95.38           0.051%
-  TP/6 threads                    93.07           0.054%
-
-  !TP/7 threads                   81.19           0.012%
-  TP/7 threads                    80.32           0.028%
-
-  !TP/8 threads                   72.58           2.295%
-  TP/8 threads                    71.37           0.044%
-
-As expected, the results are significantly improved when the scheduler
-is let know of reduced capacity on the bigs which results in tasks being
-placed or migrated to the littles which are able to provide better
-performance. Traces nicely confirm this.
-
-To be noted that these results only show that reflecting thermal
-pressure in the capacity of the CPUs is useful and the scheduler is
-equipped to make proper use of this information.
-Possibly a thing to consider is whether or not to reduce the capacity
-margin, but that's for another discussion.
-
-This does not reflect the benefits of averaging, as, with the bigs
-always being capped to the lowest OPP, the thermal pressure value will
-be constant over the duration of the workload. The same results would
-have been obtained with instantaneous thermal pressure.
-
-
-Secondly, I've tried to use the step-wise governor, modified to only
-cap the big CPUs, with the intention to obtain smaller periods of
-capacity inversion for which a thermal pressure solution would show its
-benefits.
-
-Unfortunately dhrystone was misbehaving for some reason and was
-giving me a high variation between results for the same test case.
-Also, sysbench, ran with the same arguments as above, was not creating
-enough load and thermal capping as to show the benefits of considering
-thermal pressure.
-
-So my recommendation is continue exploiting more test-cases like these.
-I would continue with sysbench as it looks more stable, but modify the
-the temperature threshold to determine periods of drastic capping of the
-bigs. Once a dynamic test case and setup like this (no fixing
-frequencies) is identified, it can be used to understand if averaging
-is needed and to refine the decay period, and establish a good default.
-
-What do you think? Does this make sense as a direction for obtaining
-test cases? In my opinion the previous test cases were not  triggering
-the right behaviors that can help prove the need for thermal pressure,
-or help refine it. 
-
-I will try to continue in this direction, but I won't be able to get to
-in for a few days.
-
-You'll find more results at: 
-https://docs.google.com/spreadsheets/d/1ibxDSSSLTodLzihNAw6jM36eVZABuPMMnjvV-Xh4NEo/edit?usp=sharing
-
-
-> Sure. let me know if I can help.
-
-Any test results or recommendations for test cases would be helpful.
-The need for thermal pressure is obvious, but the way that thermal
-pressure is reflected in the capacity of the CPUs could be supported by
-more thorough testing.
-
-Regards,
-Ionela.
-
-> 
-> Regards
-> Thara
-> 
->>
->> Hope it helps,
->> Ionela.
->>
->>
->>> Thank you,
->>> Ionela.
+Am 02.05.19 um 12:38 schrieb Greg Kroah-Hartman:
+> On Thu, May 02, 2019 at 12:25:36PM +0200, Andreas Färber wrote:
+>> Am 02.05.19 um 09:07 schrieb Greg Kroah-Hartman:
+>>> On Wed, May 01, 2019 at 10:20:44PM +0200, Andreas Färber wrote:
+>>>> + linux-actions
+>>>>
+>>>> Am 01.05.19 um 09:07 schrieb Nishad Kamdar:
+>>>>> This patch corrects the SPDX License Identifier style
+>>>>> in header files related to Clock Drivers for Actions Semi Socs.
+>>>>> For C header files Documentation/process/license-rules.rst
+>>>>> mandates C-like comments (opposed to C source files where
+>>>>> C++ style should be used)
+>>>> [...]
+>>>>>  drivers/clk/actions/owl-common.h       | 2 +-
+>>>>>  drivers/clk/actions/owl-composite.h    | 2 +-
+>>>>>  drivers/clk/actions/owl-divider.h      | 2 +-
+>>>>>  drivers/clk/actions/owl-factor.h       | 2 +-
+>>>>>  drivers/clk/actions/owl-fixed-factor.h | 2 +-
+>>>>>  drivers/clk/actions/owl-gate.h         | 2 +-
+>>>>>  drivers/clk/actions/owl-mux.h          | 2 +-
+>>>>>  drivers/clk/actions/owl-pll.h          | 2 +-
+>>>>>  drivers/clk/actions/owl-reset.h        | 2 +-
+>>>>>  9 files changed, 9 insertions(+), 9 deletions(-)
+>>>>
+>>>> Where's the practical benefit of this patch? These are all private
+>>>> headers used from C files, so they can handle C++ comments just fine,
+>>>> otherwise we would've seen build failures.
 >>>
+>>> Please read Documentation/process/license-rules.rst, the section
+>>> entitled "Style", for what the documented formats are for SPDX lines,
+>>> depending on the file type.
+>>
+>> That does in no way answer my question! You conveniently dropped my
+>> paragraph indicating that I understand why we would do that for public
+>> headers in include/, but none of these private headers here are included
+>> in .lds files. So there really seems to be no benefit of switching from
+>> one style to another for in-tree code.
 > 
+> It should answer the question, it was "decreed" that all header files
+> use /* */, and all C files use // for their SPDX lines, so we documented
+> it that way.
 > 
+> Yes, maybe it doesn't make "sense" in that this really is only needed
+> for headers that get included into asm files, which is why we had to do
+> it this way, but it's better to be consistant than to have random
+> breakages at times.
+> 
+> It's not an issue of public headers at all, sorry.
+> 
+> Consistency is good, as we can have automatic tools check these types of
+> things, which is the only way to reliably handle the format of something
+> that needs to be in every file in a project with 63,100+ different
+> files.
+
+Okay, if it's about consistency then there will be more cases to fix.
+
+What about this one:
+
+My interpretation of the documentation has been that I should end the
+comment after the identifiers:
+
+/* SPDX-... */
+/* ...
+ */
+
+Some people deviate by doing
+
+/* SPDX-...
+ * foo
+ */
+
+So the documentation may need to be extended to clarify that for full
+consistency, as well as clarify the previous scenario:
+  "If a specific tool cannot handle the standard comment style, then the
+   appropriate comment mechanism which the tool accepts shall be used."
+To me that reads very different from what you just said above.
+
+Thanks,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
