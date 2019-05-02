@@ -2,115 +2,170 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A7EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F2BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094DC20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F8420651
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:38:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNHVBPlA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfEBQeu convert rfc822-to-8bit (ORCPT
+        id S1726542AbfEBQig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:34:50 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:33168 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726300AbfEBQeu (ORCPT
+        Thu, 2 May 2019 12:38:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44077 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfEBQig (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:34:50 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-160-SA7C3NSCNyuEpoaJBQmVzg-1; Thu, 02 May 2019 17:34:47 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
- 2 May 2019 17:34:46 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 2 May 2019 17:34:46 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Ingo Molnar' <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>
-CC:     "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Thu, 2 May 2019 12:38:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c5so4255660wrs.11;
+        Thu, 02 May 2019 09:38:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WCg55UBvofcQY30vp8bMKEAotS2TiPrUJ6KwYRg11YI=;
+        b=lNHVBPlAVsb+yxpdWN5v/UhJVOtaNgJFPQb2sQSuiYfFLlL2CrW5ZDWAQ9KiMpdF0K
+         nDjQNufIYiyVlwikLnJiauBUAeae84SvldowG/xD9BUW5UA2GjCEaQ5myb9AdvnZODFw
+         oY1q96dW8qRCBcHYb9Q/qGSlorHE+N4cVdBc26ooXCamWDGQVUc7QP3z/vuT8UEsiTYY
+         UqxpuUWz+hYCOI4c7pdsK7Iwhbaac0Oi1MJj3ddun33u7ROsbegX8W7I7A1nmzdEKBFv
+         lqnmGGhaXJMoMN17uv48NVzE9uOiChHXUhFVLG02nYoYlNwwz+BcLKbQOzgW5hnYO83A
+         Mnqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WCg55UBvofcQY30vp8bMKEAotS2TiPrUJ6KwYRg11YI=;
+        b=eyTdecZoLpaVQXfPOT/24bHYQ/F2En3SuN39BJfN3uuXtlCAZngcETyX8WsvvDGvpg
+         aXe7d3aDXPXavEOoYaqeaC2NxFq1gbSGqjpzoKpxn6eUASJKvWjM4OdjjAcBmTt/qwxj
+         qJN2lOlvY/zzeryr199Jnilq9zXjLlSfTs3b090xMne4LaXu+ro7HZ/yWqWHWEdUv89K
+         jIy4paoqMCF/pZzWpq4bQHNNNVNlLIsAmmDY3o9FYqrbU3RiZtmjsYut7gzfyPYhsEv0
+         D17buyUndBp7ZpUSqLvNFQxYVJoLnFbVCmYKLnfrk1OMPWOD5QNv8UYltpMvIpeWQPAd
+         +tiw==
+X-Gm-Message-State: APjAAAWNSPA3Y8qHtSZ8hNWi337XaU3ZPIHFMPbRU6rIAMRcPTfACCuR
+        Qr/y9ikOlp2PgbjNaHNWnYu6go+z
+X-Google-Smtp-Source: APXvYqxgguvaBA/sLmAZwJGt4LrBldv5la5wkWpKEvQwNY1Z/EXq01oe4B3DJzXGTQ0gN+7LJNy+rw==
+X-Received: by 2002:adf:dd46:: with SMTP id u6mr3355658wrm.228.1556815113954;
+        Thu, 02 May 2019 09:38:33 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id u64sm1122347wmg.23.2019.05.02.09.38.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 09:38:23 -0700 (PDT)
+Date:   Thu, 2 May 2019 18:38:21 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Kalyani Akula <kalyania@xilinx.com>
+Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
         "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Index: AQHU9E1UquBTkhVACE2y3BuRFoekIqY8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA9yhggAF9YoCAABkBsIAAayebgAAR3KA=
-Date:   Thu, 2 May 2019 16:34:46 +0000
-Message-ID: <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
-References: <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
- <20190426140102.GA4922@mit.edu>
- <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
- <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com>
- <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
- <20190502150853.GA16779@gmail.com>
-In-Reply-To: <20190502150853.GA16779@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pombredanne@nexb.com" <pombredanne@nexb.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Sarat Chand Savitala <saratcha@xilinx.com>
+Subject: Re: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
+Message-ID: <20190502163821.GA22561@Red>
+References: <1556793282-17346-1-git-send-email-kalyani.akula@xilinx.com>
+ <20190502120012.GA19008@Red>
+ <BN7PR02MB512413C534A8EFA925105441AF340@BN7PR02MB5124.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-X-MC-Unique: SA7C3NSCNyuEpoaJBQmVzg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN7PR02MB512413C534A8EFA925105441AF340@BN7PR02MB5124.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ingo Molnar
-> Sent: 02 May 2019 16:09
-> * Andy Lutomirski <luto@kernel.org> wrote:
+On Thu, May 02, 2019 at 03:12:55PM +0000, Kalyani Akula wrote:
+> Hi Corentin,
 > 
-> > Or we decide that calling get_random_bytes() is okay with IRQs off and
-> > this all gets a bit simpler.
+> Please find my response inline.
 > 
-> BTW., before we go down this path any further, is the plan to bind this
-> feature to a real CPU-RNG capability, i.e. to the RDRAND instruction,
-> which excludes a significant group of x86 of CPUs?
+> > -----Original Message-----
+> > From: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > Sent: Thursday, May 2, 2019 5:30 PM
+> > To: Kalyani Akula <kalyania@xilinx.com>
+> > Cc: herbert@gondor.apana.org.au; kstewart@linuxfoundation.org;
+> > gregkh@linuxfoundation.org; tglx@linutronix.de; pombredanne@nexb.com;
+> > linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > netdev@vger.kernel.org; Sarat Chand Savitala <saratcha@xilinx.com>; Kalyani
+> > Akula <kalyania@xilinx.com>
+> > Subject: Re: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
+> > 
+> > On Thu, May 02, 2019 at 04:04:38PM +0530, Kalyani Akula wrote:
+> > > This patch set adds support for
+> > > - dt-binding docs for Xilinx ZynqMP SHA3 driver
+> > > - Adds communication layer support for sha_hash in zynqmp.c
+> > > - Adds Xilinx ZynqMP driver for SHA3 Algorithm
+> > > - Adds device tree node for ZynqMP SHA3 driver
+> > >
+> > > V3 Changes :
+> > > - Removed zynqmp_sha_import and export APIs.The reason as follows The
+> > > user space code does an accept on an already accepted FD when we
+> > > create AF_ALG socket and call accept on it, it calls af_alg_accept and
+> > > not hash_accept.
+> > > import and export APIs are called from hash_accept.
+> > > The flow is as below
+> > > accept--> af_alg_accept-->hash_accept_parent-->hash_accept_parent_noke
+> > > accept--> y
+> > > for hash salg_type.
+> > > - Resolved comments from
+> > >         https://patchwork.kernel.org/patch/10753719/
+> > >
+> > 
+> > 
+> > Your driver still doesnt handle the case where two hash are done in parallel.
+> > 
+> 
+> Our Firmware uses IPI protocol to send this SHA3 requests to SHA3 HW engine, which doesn't support parallel processing of 2 hash requests.
+> The flow is 
+> SHA3 request from App -> SHA3 driver-> ZynqMp driver-> Firmware (which doesn't support parallel processing of 2 requests) -> SHA3 HW Engine
+> 
+> 
 
-It has already been measured - it is far too slow.
-Even just using 6 bits so it doesn't have to be read every system call is
-probably a significant overhead (I don't think that was tested though).
+So your driver will just send bad result in that case.
 
-I do agree that using 'real' randomness is probably OTT here.
+You need to export and store the intermediate result in a request context.
 
-> Because calling tens of millions of system calls per second will deplete
-> any non-CPU-RNG sources of entropy and will also starve all other users
-> of random numbers, which might have a more legitimate need for
-> randomness, such as the networking stack ...
+> > Furthermore, you miss the export/import functions.
+> > 
+> 
+> When user space code does an accept on an already accepted FD as below
+> sockfd = socket(AF_ALG, SOCK_SEQPACKET, 0);
+> bind(sockfd, (struct sockaddr *)&sa, sizeof(sa));
+> fd = accept(sockfd, NULL, 0);
+> 
+> where my sockaddr is 
+> struct sockaddr_alg sa = {
+>         .salg_family = AF_ALG,
+>         .salg_type = "hash",
+>         .salg_name = "xilinx-sha3-384"
+>  };
+> 
+> Upon calling accept the flow in the kernel is as mentioned
+> accept--> af_alg_accept-->hash_accept_parent-->hash_accept_parent_nokey
+> for hash salg_type.
+> 
+> And where import and export functions are called from hash_accept. hence, these functions never be called from the application.
+> So, I removed those from the driver.
+> 
+> Regards
+> Kalyani.
+> 
 
-If the function you use to generate random numbers from the 'entropy
-pool' isn't reversible (in a finite time) I don't think you really need
-to worry about bits-in v bits-out.
+Handling your own worflow is not enough.
 
-	David
+You need to support two client doing multiple update in parallel.
+It seems that your driver is bugged in that case.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Furthermore, i am pretty sure that export and import are mandatory, and without them self-test should fail.
+Do you have self test enabled and tryed to load the tcrypt module ?
 
+Regards
